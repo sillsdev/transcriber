@@ -26,6 +26,12 @@ class App extends React.Component {
             <Route path='/' component={AppBar} />
             <Route path='/login' component={Login} />
             <Route path='/main' component={Drawer} />
+            <Route path='/main/dashboard' component={Drawer} />
+            <Route path='/main/project' component={Drawer} />
+            <Route path='/main/task' component={Drawer} />
+            <Route path='/main/scheme' component={Drawer} />
+            <Route path='/main/backup' component={Drawer} />
+            <Route path='/main/user' component={Drawer} />
             <Route path='/' component={DevTools} />
           </MuiThemeProvider>
         </Router>

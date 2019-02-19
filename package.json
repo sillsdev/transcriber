@@ -33,6 +33,7 @@
     "typescript": "3.3.3"
   },
   "scripts": {
+    "clean": "rimraf build coverage",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
