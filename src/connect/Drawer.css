@@ -1,0 +1,15 @@
+#AppIcon {
+    display: flex;
+    justify-content: center;
+}
+
+#AppIcon * {
+    height: 100%;
+    align-self: center;
+}
+
+#ToolBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
