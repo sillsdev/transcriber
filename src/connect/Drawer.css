@@ -13,3 +13,7 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+#main-container {
+    min-height: 0;
+}

@@ -1,0 +1,6 @@
+#SchemeTable thead tr:nth-child(2) th:nth-child(3) * {
+    visibility: hidden;
+}
+main:first-child() {
+    min-height: 0;
+}
