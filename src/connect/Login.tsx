@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Theme, withStyles, FormControl, InputLabel, Input, InputAdornment, Button, Icon } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withData } from 'react-orbitjs';
@@ -47,6 +50,14 @@ class LoginPage extends React.Component<ILoginProps, ICredential> {
         }
 
         return (
+            <div className={classes.root}>
+            <AppBar position="static">
+            <Toolbar>
+                <Typography variant="h6" color="inherit" className={classes.grow}>
+                Transcriber Signup
+                </Typography>
+            </Toolbar>
+            </AppBar>
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <h2>{'Login'}</h2>
@@ -89,6 +100,8 @@ class LoginPage extends React.Component<ILoginProps, ICredential> {
                     </div>
                 </Paper>
             </div>
+        </div>
+
         );
     }
 }

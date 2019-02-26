@@ -3,6 +3,8 @@ import './App.scss';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import DevTools from '../DevTool';
 import AppBar from '../present/AppBar';
+import AdminPanel from '../connect/AdminPanel';
+import Welcome from '../connect/Welcome';
 import Drawer from './Drawer';
 import Login from './Login';
 import { Provider } from 'react-redux';
@@ -46,9 +48,10 @@ class App extends React.Component {
         <Provider store={store}>
           <Router>
             <MuiThemeProvider theme={theme}>
-              <Route path='/' component={AppBar} />
+              <Route path='/' exact={true} component={Login} />
               <Route path='/login' component={Login} />
-              <Route path='/main' component={Drawer} />
+              <Route path='/main' component={Welcome} />
+              <Route path='/admin' component={AdminPanel} />
               <Route path='/main/dashboard' component={Drawer} />
               <Route path='/main/project' component={Drawer} />
               <Route path='/main/task' component={Drawer} />
