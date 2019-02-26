@@ -3,12 +3,14 @@ import { Theme, withStyles, FormControl, InputLabel, Input, InputAdornment, Butt
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, Record } from '@orbit/data';
 import { IState, ICredential } from '../model/state';
 import * as action from '../action/userActions';
 import * as querystring from 'querystring';
 import { Redirect } from 'react-router';
 
-interface ILoginProps extends IStateProps, IDispatchProps {
+interface ILoginProps extends IStateProps, IDispatchProps, IRecordProps {
     match?: any;
     location?: any;
     classes?: any;
@@ -29,7 +31,10 @@ class LoginPage extends React.Component<ILoginProps, ICredential> {
     }
 
     private handleLogin = () => {
-        this.props.loginUser(this.state);
+        const selectedUser = this.props.validUsers.filter((u: Record) => u.attributes && u.attributes.fullName &&  u.attributes.fullName === this.state.email);
+        if (selectedUser.length === 1) {
+            this.props.loginUser(this.state);
+        }
     }
 
     public render(): JSX.Element {
@@ -139,5 +144,13 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     }, dispatch),
 });
 
-export default withStyles(styles, { withTheme: true })(connect(mapStateToProps, mapDispatchToProps)(LoginPage) as any) as any;
+interface IRecordProps {
+    validUsers: Array<Record>;
+}
+
+const mapRecordsToProps = {
+    validUsers: (q: QueryBuilder) => q.findRecords("user")
+}
+
+export default withStyles(styles, { withTheme: true })(withData(mapRecordsToProps)(connect(mapStateToProps, mapDispatchToProps)(LoginPage) as any)  as any) as any;
 

@@ -1,0 +1,27 @@
+﻿default namespace = ""
+
+start =
+  element jsonApiRecord {
+    type,
+    id,
+    element attributes {
+      element projectName { xsd:NCName },
+      element projectType { xsd:NCName },
+      element paratextGuid { xsd:NCName }?,
+      element paratextShortName { xsd:NCName }?,
+      element languageBcp47 { xsd:NCName },
+      element fontFamily { xsd:NCName }?,
+      element fontSize { xsd:NCName }?,
+      element fontFeatures { xsd:NCName }?,
+      element direction { xsd:NCName },
+      element allowClaiming { xsd:boolean },
+      element autoSync { xsd:boolean }
+    },
+    element relationships {
+      element passages { data }*,
+      element users { data }*
+    }
+  }
+type = element type { xsd:NCName }
+id = element id { xsd:NCName }
+data = element data { type, id }

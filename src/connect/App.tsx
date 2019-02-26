@@ -7,9 +7,17 @@ import Drawer from './Drawer';
 import Login from './Login';
 import { Provider } from 'react-redux';
 import store from '../store';
+import { DataProvider } from 'react-orbitjs';
+import { Record, Schema } from '@orbit/data';
+import Store from '@orbit/store';
+import SchemaObject from '../model/orbitSchema'
 import blue from '@material-ui/core/colors/blue';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { pink } from '@material-ui/core/colors';
+
+const schema = new Schema(SchemaObject);
+
+const dataStore = new Store({ schema });
 
 const theme = createMuiTheme({
   palette: {
@@ -17,25 +25,41 @@ const theme = createMuiTheme({
     secondary: pink,
   }
 })
+
+const user = {
+  type: 'user',
+  id: 'admin',
+  attributes: {
+    fullName: 'Admin',
+    avatarUri: '/api/tommy.png'
+  }
+} as Record;
+
 class App extends React.Component {
   public render() {
+    dataStore.update( t => [
+      t.addRecord(user)
+    ])
+
     return (
-      <Provider store={store}>
-        <Router>
-          <MuiThemeProvider theme={theme}>
-            <Route path='/' component={AppBar} />
-            <Route path='/login' component={Login} />
-            <Route path='/main' component={Drawer} />
-            <Route path='/main/dashboard' component={Drawer} />
-            <Route path='/main/project' component={Drawer} />
-            <Route path='/main/task' component={Drawer} />
-            <Route path='/main/scheme' component={Drawer} />
-            <Route path='/main/backup' component={Drawer} />
-            <Route path='/main/user' component={Drawer} />
-            <Route path='/' component={DevTools} />
-          </MuiThemeProvider>
-        </Router>
-      </Provider>
+      <DataProvider dataStore={dataStore}>
+        <Provider store={store}>
+          <Router>
+            <MuiThemeProvider theme={theme}>
+              <Route path='/' component={AppBar} />
+              <Route path='/login' component={Login} />
+              <Route path='/main' component={Drawer} />
+              <Route path='/main/dashboard' component={Drawer} />
+              <Route path='/main/project' component={Drawer} />
+              <Route path='/main/task' component={Drawer} />
+              <Route path='/main/scheme' component={Drawer} />
+              <Route path='/main/backup' component={Drawer} />
+              <Route path='/main/user' component={Drawer} />
+              <Route path='/' component={DevTools} />
+            </MuiThemeProvider>
+          </Router>
+        </Provider>
+      </DataProvider>
     );
   }
 }
