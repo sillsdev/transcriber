@@ -1,0 +1,72 @@
+﻿default namespace = ""
+
+start =
+  element user {
+    attribute type { "user" },
+    attribute id { xsd:ID },
+    element keys {
+      attribute remoteId { xsd:ID }
+    }?,
+    element attributes {
+      
+      ## unique user chosen name (without spaces)
+      attribute id { xsd:NCName },
+      (element fullName { xsd:string }?
+       | 
+         ## identity tokens are reuired (if present) and for admin users
+         element identityToken { xsd:string }?
+       | element avatarName { xsd:string }?
+       | element transcriberSettings {
+           attribute lastProject {
+             
+             ## project
+             xsd:IDREF
+           }?
+           | 
+             ## BCP-47 value of UI language for transcriber
+             attribute uiLanguageBcp47 {
+               xsd:string {
+                 pattern =
+                   "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?"
+               }
+             }?
+           | attribute timer { "countup" | "countdown" }?
+           | 
+             ## percentage between 25 and 200 for playback
+             attribute playBackSpeed {
+               xsd:integer { minInclusive = "25" maxInclusive = "200" }
+             }?
+           | attribute progressBarType { "bar" | "waveform" }?
+           | element hotKey {
+               attribute hotKeyType {
+                 "play-pause" | "back" | "forward" | "slower" | "faster"
+               },
+               attribute keyCode { xsd:string }
+             }*
+         }?
+       | element projectSettings {
+           attribute projectId {
+             
+             ## project
+             xsd:IDREF
+           }
+           | attribute role { "admin" | "reviewer" | "transcriber" }
+           | element fontFamily { xsd:string }?
+           | attribute fontFeatures { xsd:string }?
+           | element fontSize {
+               "medium"
+               | "xx-small"
+               | "x-small"
+               | "small"
+               | "large"
+               | "x-large"
+               | "xx-large"
+             }?
+         }*
+       | element knownLanguages {
+           xsd:string {
+             pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?"
+           }
+         }*)
+    }
+  }+

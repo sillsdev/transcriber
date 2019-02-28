@@ -1,0 +1,97 @@
+﻿default namespace = ""
+
+start =
+	element passage {
+		attribute type { "passage" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element attributes {
+			(
+				## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
+				attribute reference {
+					xsd:string { pattern = "[a-zA-Z0-9]{3}-\d{3}-\d{3}\d{3}" }
+				}?
+				| attribute book { xsd:positiveInteger }?
+				| attribute set { xsd:positiveInteger }?
+				| attribute passage { xsd:positiveInteger }?
+				| attribute position { xsd:decimal }?
+				| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
+				| attribute hold { xsd:boolean }?),
+			(
+				## user friendly name
+				element passageTitle { xsd:string }?
+				| element version {
+							(attribute number { xsd:positiveInteger }
+								| attribute textQuality { "unacceptable" | "questionable" | "good" }?
+								| attribute audioQuality { "redo" | "acceptable" | "high" }?
+								| attribute eafName { xsd:string }?
+								| attribute audioName { xsd:string }
+								| attribute duration { xsd:nonNegativeInteger }),
+							element transcription { xsd:string }?,
+							element thread {
+								(attribute startLocation { xsd:nonNegativeInteger }
+									| attribute resolved { xsd:boolean }),
+								element targetText { xsd:string },
+								element comment {
+									(
+										## user
+										attribute author { xsd:IDREF }
+										| attribute sequence { xsd:positiveInteger }),
+									element commentText { xsd:string }
+								}+
+							}?
+						}*
+				| element history {
+							(
+								## sequential number beginning at zero
+								attribute historyEntry { xsd:positiveInteger }
+								| 
+										## date and time when it happened
+										attribute datetime { xsd:dateTime }?
+								| 
+										## type of action completed
+										attribute action {
+											"Incomplete"
+											| "Ready"
+											| "Assigned"
+											| "Unassigned"
+											| "TranscribeStart"
+											| "TranscribeEnd"
+											| "ReviewStart"
+											| "ReviewEnd"
+											| "HoldStart"
+											| "HoldEnd"
+											| "Upload"
+											| "Complete"
+										}
+								| 
+										## user who is involved
+										attribute userid { xsd:IDREF }),
+							
+							## comments may need to be required for tasks placed on hold
+							element comment { xsd:string }?
+						}*)
+		}*,
+		element relationships {
+			element assignedTo {
+				element data {
+					attribute type { "user" },
+					attribute id { xsd:IDREF }
+				}
+			}?
+			| element lastTranscriber {
+						element data {
+							attribute type { "user" },
+							attribute id { xsd:IDREF }
+						}
+					}?
+			| element lastReviewer {
+						element data {
+							attribute type { "user" },
+							attribute id { xsd:IDREF }
+						}
+					}?
+		}?
+	}*
