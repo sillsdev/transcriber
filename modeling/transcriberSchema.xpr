@@ -122,13 +122,19 @@
         </options>
     </meta>
     <projectTree name="transcriberSchema.xpr">
+        <file name="comment.rnc"/>
+        <file name="event.rnc"/>
         <file name="models.rnc"/>
         <file name="models.rng"/>
         <file name="passage.rnc"/>
         <file name="project.rnc"/>
+        <file name="setting.rnc"/>
+        <file name="template.rnc"/>
+        <file name="thread.rnc"/>
         <file name="transcriberOrbitSchema.json"/>
         <file name="transcriberOrbitSchema.xml"/>
         <file name="transcriberSample.xml"/>
         <file name="user.rnc"/>
+        <file name="version.rnc"/>
     </projectTree>
 </project>

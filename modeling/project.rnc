@@ -7,6 +7,9 @@ start =
 		element keys {
 			attribute remoteId { xsd:ID }
 		}?,
+		element meta {
+			attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+		}?,
 		element attributes {
 			attribute paratextShortName { xsd:string }?
 			| attribute paratextName { xsd:string }?
@@ -38,6 +41,12 @@ start =
 			| element users {
 						element data {
 							attribute type { "user" },
+							attribute id { xsd:IDREF }
+						}*
+					}?
+			| element settingss {
+						element data {
+							attribute type { "setting" },
 							attribute id { xsd:IDREF }
 						}*
 					}?

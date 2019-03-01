@@ -1,0 +1,24 @@
+﻿default namespace = ""
+
+start =
+	element template {
+		attribute type { "template" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element meta {
+			attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+		}?,
+		element attributes {
+			attribute schemeName { xsd:string }
+		}?,
+		element relationships {
+			element passages {
+				element data {
+					attribute type { "passage" },
+					attribute id { xsd:IDREF }
+				}*
+			}?
+		}?
+	}*

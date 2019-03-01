@@ -2,16 +2,14 @@
 
 start =
 	element models {
-		
-		## version of file format
-		attribute version {
-			xsd:string { pattern = "[0-9]+\.[0-9]+" }
-		},
 		element project {
 			attribute type { "project" },
 			attribute id { xsd:ID },
 			element keys {
 				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
 			}?,
 			element attributes {
 				attribute paratextShortName { xsd:string }?
@@ -47,6 +45,12 @@ start =
 								attribute id { xsd:IDREF }
 							}*
 						}?
+				| element settingss {
+							element data {
+								attribute type { "setting" },
+								attribute id { xsd:IDREF }
+							}*
+						}?
 			}?
 		}*,
 		element passage {
@@ -54,6 +58,9 @@ start =
 			attribute id { xsd:ID },
 			element keys {
 				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
 			}?,
 			element attributes {
 				(
@@ -67,61 +74,10 @@ start =
 					| attribute position { xsd:decimal }?
 					| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
 					| attribute hold { xsd:boolean }?),
-				(
-					## user friendly name
-					element passageTitle { xsd:string }?
-					| element version {
-								(attribute number { xsd:positiveInteger }
-									| attribute textQuality { "unacceptable" | "questionable" | "good" }?
-									| attribute audioQuality { "redo" | "acceptable" | "high" }?
-									| attribute eafName { xsd:string }?
-									| attribute audioName { xsd:string }
-									| attribute duration { xsd:nonNegativeInteger }),
-								element transcription { xsd:string }?,
-								element thread {
-									(attribute startLocation { xsd:nonNegativeInteger }
-										| attribute resolved { xsd:boolean }),
-									element targetText { xsd:string },
-									element comment {
-										(
-											## user
-											attribute author { xsd:IDREF }
-											| attribute sequence { xsd:positiveInteger }),
-										element commentText { xsd:string }
-									}+
-								}?
-							}*
-					| element history {
-								(
-									## sequential number beginning at zero
-									attribute historyEntry { xsd:positiveInteger }
-									| 
-											## date and time when it happened
-											attribute datetime { xsd:dateTime }?
-									| 
-											## type of action completed
-											attribute action {
-												"Incomplete"
-												| "Ready"
-												| "Assigned"
-												| "Unassigned"
-												| "TranscribeStart"
-												| "TranscribeEnd"
-												| "ReviewStart"
-												| "ReviewEnd"
-												| "HoldStart"
-												| "HoldEnd"
-												| "Upload"
-												| "Complete"
-											}
-									| 
-											## user who is involved
-											attribute userid { xsd:IDREF }),
-								
-								## comments may need to be required for tasks placed on hold
-								element comment { xsd:string }?
-							}*)
-			}*,
+				
+				## user friendly name
+				element passageTitle { xsd:string }?
+			}?,
 			element relationships {
 				element assignedTo {
 					element data {
@@ -141,6 +97,208 @@ start =
 								attribute id { xsd:IDREF }
 							}
 						}?
+				| element versions {
+							element data {
+								attribute type { "version" },
+								attribute id { xsd:IDREF }
+							}*
+						}?
+				| element events {
+							element data {
+								attribute type { "event" },
+								attribute id { xsd:IDREF }
+							}*
+						}?
+			}?
+		}*,
+		element version {
+			attribute type { "version" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			}?,
+			element attributes {
+				(attribute number { xsd:positiveInteger }
+					| attribute textQuality { "unacceptable" | "questionable" | "good" }?
+					| attribute audioQuality { "redo" | "acceptable" | "high" }?
+					| attribute duration { xsd:nonNegativeInteger }),
+				element transcription { xsd:string }?
+			}?,
+			element links {
+				attribute eafUrl { xsd:anyURI }?
+				| attribute audioUrl { xsd:anyURI }?
+			}?,
+			element relationships {
+				
+				## instrinsic
+				element threads {
+					element data {
+						attribute type { "thread" },
+						attribute id { xsd:IDREF }
+					}*
+				}?
+				| 
+						## instrinsic
+						element passage {
+							element data {
+								attribute type { "passage" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+			}?
+		}*,
+		element thread {
+			attribute type { "thread" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			}?,
+			element attributes {
+				(attribute startLocation { xsd:nonNegativeInteger }
+					| attribute resolved { xsd:boolean }),
+				element targetText { xsd:string }
+			}?,
+			element relationships {
+				
+				## intrinsic
+				element version {
+					element data {
+						attribute type { "version" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| 
+						## intrinsic
+						element comments {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}*
+						}?
+			}?
+		}*,
+		element comment {
+			attribute type { "comment" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			}?,
+			element attributes {
+				attribute sequence { xsd:positiveInteger }
+				| element commentText { xsd:string }
+			}?,
+			element relationships {
+				element author {
+					element data {
+						attribute type { "user" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| 
+						## intrinsic
+						element thread {
+							element data {
+								attribute type { "thread" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+			}?
+		}*,
+		element event {
+			attribute type { "event" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			}?,
+			element attributes {
+				(
+					## sequential number beginning at zero
+					attribute historyEntry { xsd:positiveInteger }
+					| 
+							## date and time when it happened
+							attribute datetime { xsd:dateTime }?
+					| 
+							## type of action completed
+							attribute action {
+								"Incomplete"
+								| "AddVersion"
+								| "DeleteVersion"
+								| "AddThread"
+								| "ResolveThread"
+								| "DeleteThread"
+								| "AddComment"
+								| "DeleteComment"
+								| "UpdatePassage"
+								| "Ready"
+								| "Assigned"
+								| "Unassigned"
+								| "TranscribeStart"
+								| "TranscribeEnd"
+								| "ReviewStart"
+								| "ReviewEnd"
+								| "HoldStart"
+								| "HoldEnd"
+								| "Upload"
+								| "Complete"
+							}),
+				
+				## comments may need to be required for tasks placed on hold
+				element comment { xsd:string }?
+			}?,
+			element relationships {
+				
+				## intrinsic
+				element passage {
+					element data {
+						attribute type { "passage" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| element assignedUser {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+				| element agent {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+			}?
+		}*,
+		element template {
+			attribute type { "template" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			}?,
+			element attributes {
+				attribute schemeName { xsd:string }
+			}?,
+			element relationships {
+				element passages {
+					element data {
+						attribute type { "passage" },
+						attribute id { xsd:IDREF }
+					}*
+				}?
 			}?
 		}*,
 		element user {
@@ -148,6 +306,9 @@ start =
 			attribute id { xsd:ID },
 			element keys {
 				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
 			}?,
 			element attributes {
 				
@@ -157,92 +318,126 @@ start =
 					| 
 							## identity tokens are reuired (if present) and for admin users
 							element identityToken { xsd:string }?
-					| element avatarName { xsd:string }?
 					| element transcriberSettings {
-								attribute lastProject {
-									
-									## project
-									xsd:IDREF
+								
+								## BCP-47 value of UI language for transcriber
+								attribute uiLanguageBcp47 {
+									xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" }
 								}?
-								| 
-										## BCP-47 value of UI language for transcriber
-										attribute uiLanguageBcp47 {
-											xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" }
-										}?
-								| attribute timer { "countUp" | "countDown" }?
+								| attribute timer { "countup" | "countdown" }?
 								| 
 										## percentage between 25 and 200 for playback
-										attribute playSpeed {
+										attribute playBackSpeed {
 											xsd:integer { minInclusive = "25" maxInclusive = "200" }
 										}?
-								| attribute progressType { "bar" | "waveform" }?
+								| attribute progressBarType { "bar" | "waveform" }?
 								| element hotKey {
-											attribute hotKeyType { "playPause" | "back" | "forward" | "slower" | "faster" },
+											attribute hotKeyType { "play-pause" | "back" | "forward" | "slower" | "faster" },
 											attribute keyCode { xsd:string }
 										}*
 							}?
-					| element projectSettings {
-								attribute projectId {
-									
-									## project
-									xsd:IDREF
-								}
-								| attribute role { "admin" | "reviewer" | "transcriber" }
-								| element fontFamily { xsd:string }?
-								| attribute fontFeatures { xsd:string }?
-								| element fontSize {
-											"medium" | "xx-small" | "x-small" | "small" | "large" | "x-large" | "xx-large"
-										}?
-							}*
 					| element knownLanguages {
 								xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" }
 							}*)
-			}
+			}?,
+			element links {
+				element avatarUrl { xsd:anyURI }?
+			}?,
+			element relationships {
+				element lastTranscriberProject {
+					element data {
+						attribute type { "project" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| element lastTranscriberPassage {
+							element data {
+								attribute type { "passage" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+				| element settings {
+							element data {
+								attribute type { "setting" },
+								attribute id { xsd:IDREF }
+							}*
+						}?
+			}?
+		}+,
+		element setting {
+			attribute type { "setting" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			}?,
+			element attributes {
+				attribute role { "admin" | "reviewer" | "transcriber" }
+				| attribute fontFamily { xsd:string }?
+				| attribute fontFeatures { xsd:string }?
+				| attribute fontSize {
+							"medium" | "xx-small" | "x-small" | "small" | "large" | "x-large" | "xx-large"
+						}?
+			}?,
+			element relationships {
+				element user {
+					element data {
+						attribute type { "user" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| element project {
+							element data {
+								attribute type { "project" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+			}?
 		}+,
 		element transcriberTypes {
-			element roleValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element fontSizeValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element natureValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element destinationValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element stateValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element textQualitValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element audioQualitValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element historyActionValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element timerValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element textQualitValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
-			| element hotKeyValues {
-				attribute sequence {xsd:positiveInteger},
-				attribute deacription { xsd:NCName}
-				}*
+			attribute type { "transcriberTypes" },
+			
+			## value must be 1
+			attribute id { xsd:ID },
+			element meta {
+				attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			}?,
+			element attributes {
+				element roleValues {
+					element value { xsd:NCName }+
+				}?
+				| element fontSizeValues {
+							element value { xsd:NCName }+
+						}?
+				| element natureValues {
+							element value { xsd:NCName }+
+						}?
+				| element destinationValues {
+							element value { xsd:NCName }+
+						}?
+				| element stateValues {
+							element value { xsd:NCName }+
+						}?
+				| element textQualitValues {
+							element value { xsd:NCName }+
+						}?
+				| element audioQualitValues {
+							element value { xsd:NCName }+
+						}?
+				| element historyActionValues {
+							element value { xsd:NCName }+
+						}?
+				| element timerValues {
+							element value { xsd:NCName }+
+						}?
+				| element textQualitValues {
+							element value { xsd:NCName }+
+						}?
+				| element hotKeyValues {
+							element value { xsd:NCName }+
+						}?
+			}
 		}
 	}

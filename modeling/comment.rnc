@@ -1,0 +1,33 @@
+﻿default namespace = ""
+
+start =
+	element comment {
+		attribute type { "comment" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element meta {
+			attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+		}?,
+		element attributes {
+			attribute sequence { xsd:positiveInteger }
+			| element commentText { xsd:string }
+		}?,
+		element relationships {
+			element author {
+				element data {
+					attribute type { "user" },
+					attribute id { xsd:IDREF }
+				}
+			}?
+			| 
+					## intrinsic
+					element thread {
+						element data {
+							attribute type { "thread" },
+							attribute id { xsd:IDREF }
+						}
+					}?
+		}?
+	}*
