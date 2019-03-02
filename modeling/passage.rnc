@@ -1,61 +1,65 @@
 ﻿default namespace = ""
 
 start =
-	element passage {
-		attribute type { "passage" },
-		attribute id { xsd:ID },
-		element keys {
-			attribute remoteId { xsd:ID }
-		}?,
-		element meta {
-			attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
-		}?,
-		element attributes {
-			(
-				## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
-				attribute reference {
-					xsd:string { pattern = "[a-zA-Z0-9]{3}-\d{3}-\d{3}\d{3}" }
-				}?
-				| attribute book { xsd:positiveInteger }?
-				| attribute set { xsd:positiveInteger }?
-				| attribute passage { xsd:positiveInteger }?
-				| attribute position { xsd:decimal }?
-				| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
-				| attribute hold { xsd:boolean }?),
-			
-			## user friendly name
-			element passageTitle { xsd:string }?
-		}?,
-		element relationships {
-			element assignedTo {
-				element data {
-					attribute type { "user" },
-					attribute id { xsd:IDREF }
+	element data {
+		element passage {
+			attribute type { "passage" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version {
+					xsd:string { pattern = "[0-9]+\.[0-9]+" }
 				}
+			}?,
+			element attributes {
+				(
+						## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
+						attribute reference {
+							xsd:string { pattern = "[a-zA-Z0-9]{3} \d+:\d+-\d+" }
+						}?
+						| attribute book { xsd:positiveInteger }?
+						| attribute set { xsd:positiveInteger }?
+						| attribute passage { xsd:positiveInteger }?
+						| attribute position { xsd:decimal }?
+						| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
+						| attribute hold { xsd:boolean }?)*,
+					
+					## user friendly name
+					element passageTitle { xsd:string }?
+			}?,
+			element relationships {
+				(element assignedTo {
+						element data {
+							attribute type { "user" },
+							attribute id { xsd:IDREF }
+						}
+					}?
+					| element lastTranscriber {
+								element data {
+									attribute type { "user" },
+									attribute id { xsd:IDREF }
+								}
+							}?
+					| element lastReviewer {
+								element data {
+									attribute type { "user" },
+									attribute id { xsd:IDREF }
+								}
+							}?
+					| element versions {
+								element data {
+									attribute type { "version" },
+									attribute id { xsd:IDREF }
+								}*
+							}?
+					| element events {
+								element data {
+									attribute type { "event" },
+									attribute id { xsd:IDREF }
+								}*
+							}?)*
 			}?
-			| element lastTranscriber {
-						element data {
-							attribute type { "user" },
-							attribute id { xsd:IDREF }
-						}
-					}?
-			| element lastReviewer {
-						element data {
-							attribute type { "user" },
-							attribute id { xsd:IDREF }
-						}
-					}?
-			| element versions {
-						element data {
-							attribute type { "version" },
-							attribute id { xsd:IDREF }
-						}*
-					}?
-			| element events {
-						element data {
-							attribute type { "event" },
-							attribute id { xsd:IDREF }
-						}*
-					}?
-		}?
-	}*
+		}*
+	}

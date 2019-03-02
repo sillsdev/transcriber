@@ -1,0 +1,585 @@
+{
+    "project": [{
+        "type": "project",
+        "id": "ztt",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "name": "Sample",
+            "languageBcp47": "und",
+            "autoSync": true,
+            "allowClaiming": true
+        },
+        "relationships": {
+            "passages": {
+                "data": [{
+                    "type": "passage",
+                    "id": "ztt-LUK-001-001004"
+                }, {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-005025"
+                }, {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-026038"
+                }, {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-039045"
+                }, {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-046056"
+                }, {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-057066"
+                }, {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-067080"
+                }]
+            }
+        }
+    }],
+    "passage": [{
+        "type": "passage",
+        "id": "ztt-LUK-001-001004",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "reference": "LUK 1:1-4",
+            "book": 42,
+            "set": 1,
+            "passage": 1,
+            "position": 0,
+            "state": "Transcribe"
+        },
+        "relationships": {
+            "assignedTo": {
+                "data": {
+                    "type": "user",
+                    "id": "tommy"
+                }
+            },
+            "lastTranscriber": {
+                "data": {
+                    "type": "user",
+                    "id": "tommy"
+                }
+            },
+            "versions": {
+                "data": {
+                    "type": "version",
+                    "id": "ztt-LUK-001-001004v001"
+                }
+            },
+            "events": {
+                "data": {
+                    "type": "event",
+                    "id": "ztt-LUK-001-001004-1"
+                }
+            }
+        }
+    }, {
+        "type": "passage",
+        "id": "ztt-LUK-001-005025",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "reference": "LUK 1:5-25",
+            "book": 42,
+            "set": 1,
+            "passage": 2,
+            "position": 22.837632782122906,
+            "state": "Transcribe"
+        },
+        "relationships": {
+            "assignedTo": {
+                "data": {
+                    "type": "user",
+                    "id": "tommy"
+                }
+            },
+            "lastTranscriber": {
+                "data": {
+                    "type": "user",
+                    "id": "tommy"
+                }
+            },
+            "versions": {
+                "data": {
+                    "type": "version",
+                    "id": "ztt-LUK-001-005025v001"
+                }
+            },
+            "events": {
+                "data": {
+                    "type": "event",
+                    "id": "ztt-LUK-001-005025-1"
+                }
+            }
+        }
+    }, {
+        "type": "passage",
+        "id": "ztt-LUK-001-026038",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "reference": "LUK 1:26-38",
+            "book": 42,
+            "set": 1,
+            "passage": 3,
+            "state": "Transcribe"
+        },
+        "relationships": {
+            "versions": {
+                "data": {
+                    "type": "version",
+                    "id": "ztt-LUK-001-026038v001"
+                }
+            }
+        }
+    }, {
+        "type": "passage",
+        "id": "ztt-LUK-001-039045",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "reference": "LUK 1:39-45",
+            "book": 42,
+            "set": 1,
+            "passage": 4,
+            "state": "Transcribe"
+        },
+        "relationships": {
+            "versions": {
+                "data": {
+                    "type": "version",
+                    "id": "ztt-LUK-001-039045v001"
+                }
+            }
+        }
+    }, {
+        "type": "passage",
+        "id": "ztt-LUK-001-046056",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "reference": "LUK 1:46-56",
+            "book": 42,
+            "set": 1,
+            "passage": 5,
+            "state": "Transcribe"
+        },
+        "relationships": {
+            "versions": {
+                "data": {
+                    "type": "version",
+                    "id": "ztt-LUK-001-046056v001"
+                }
+            }
+        }
+    }, {
+        "type": "passage",
+        "id": "ztt-LUK-001-057066",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "reference": "LUK 1:57-66",
+            "book": 42,
+            "set": 1,
+            "passage": 6,
+            "state": "Transcribe"
+        },
+        "relationships": {
+            "versions": {
+                "data": {
+                    "type": "version",
+                    "id": "ztt-LUK-001-057066v001"
+                }
+            }
+        }
+    }, {
+        "type": "passage",
+        "id": "ztt-LUK-001-067080",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "reference": "LUK 1:67-80",
+            "book": 42,
+            "set": 1,
+            "passage": 7,
+            "state": "Transcribe"
+        },
+        "relationships": {
+            "versions": {
+                "data": {
+                    "type": "version",
+                    "id": "ztt-LUK-001-067080v001"
+                }
+            }
+        }
+    }],
+    "version": [{
+        "type": "version",
+        "id": "ztt-LUK-001-001004",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "number": 1,
+            "duration": 28.3689795918367
+        },
+        "links": {
+            "eafUrl": "audio/ztt-LUK-001-001004v001.eaf",
+            "audioUrl": "audio/ztt-LUK-001-001004v001.mp3"
+        },
+        "relationships": {
+            "passage": {
+                "data": {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-001004"
+                }
+            }
+        }
+    }, {
+        "type": "version",
+        "id": "ztt-LUK-001-005025",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "number": 1,
+            "duration": 157.204897959184
+        },
+        "links": {
+            "eafUrl": "audio/ztt-LUK-001-005025v001.eaf",
+            "audioUrl": "audio/ztt-LUK-001-005025v001.mp3"
+        },
+        "relationships": {
+            "passage": {
+                "data": {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-005025"
+                }
+            }
+        }
+    }, {
+        "type": "version",
+        "id": "ztt-LUK-001-026038",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "number": 1,
+            "duration": 79.3861224489796
+        },
+        "links": {
+            "eafUrl": "audio/ztt-LUK-001-026038v001.eaf",
+            "audioUrl": "audio/ztt-LUK-001-026038v001.mp3"
+        },
+        "relationships": {
+            "passage": {
+                "data": {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-026038"
+                }
+            }
+        }
+    }, {
+        "type": "version",
+        "id": "ztt-LUK-001-039045",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "number": 1,
+            "duration": 36.7281632653061
+        },
+        "links": {
+            "eafUrl": "audio/ztt-LUK-001-039045v001.eaf",
+            "audioUrl": "audio/ztt-LUK-001-039045v001.mp3"
+        },
+        "relationships": {
+            "passage": {
+                "data": {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-039045"
+                }
+            }
+        }
+    }, {
+        "type": "version",
+        "id": "ztt-LUK-001-046056",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "number": 1,
+            "duration": 54.0734693877551
+        },
+        "links": {
+            "eafUrl": "audio/ztt-LUK-001-046056v001.eaf",
+            "audioUrl": "audio/ztt-LUK-001-046056v001.mp3"
+        },
+        "relationships": {
+            "passage": {
+                "data": {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-046056"
+                }
+            }
+        }
+    }, {
+        "type": "version",
+        "id": "ztt-LUK-001-057066",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "number": 1,
+            "duration": 58.6448979591837
+        },
+        "links": {
+            "eafUrl": "audio/ztt-LUK-001-057066v001.eaf",
+            "audioUrl": "audio/ztt-LUK-001-057066v001.mp3"
+        },
+        "relationships": {
+            "passage": {
+                "data": {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-057066"
+                }
+            }
+        }
+    }, {
+        "type": "version",
+        "id": "ztt-LUK-001-067080",
+        "meta": {
+            "version": 1
+        },
+        "attributes": {
+            "number": 1,
+            "duration": 68.5714285714286
+        },
+        "links": {
+            "eafUrl": "audio/ztt-LUK-001-067080v001.eaf",
+            "audioUrl": "audio/ztt-LUK-001-067080v001.mp3"
+        },
+        "relationships": {
+            "passage": {
+                "data": {
+                    "type": "passage",
+                    "id": "ztt-LUK-001-067080"
+                }
+            }
+        }
+    }],
+    "event": [{
+            "type": "event",
+            "id": "ztt-LUK-001-001004-1",
+            "meta": {
+                "version": 1
+            },
+            "attributes": {
+                "historyEntry": 1,
+                "datetime": "2019-01-24T23:23:40Z",
+                "action": "Assigned",
+                "comment": ""
+            },
+            "relationships": {
+                "passage": {
+                    "data": {
+                        "type": "passage",
+                        "id": "ztt-LUK-001-001004"
+                    }
+                },
+                "assignedUser": {
+                    "data": {
+                        "type": "user",
+                        "id": "tommy"
+                    }
+                },
+                "agent": {
+                    "data": {
+                        "type": "user",
+                        "id": "admin"
+                    }
+                }
+            }
+        }, {
+            "type": "event",
+            "id": "ztt-LUK-001-005025-1",
+            "meta": {
+                "version": 1
+            },
+            "attributes": {
+                "historyEntry": 1,
+                "datetime": "2019-01-24T23:23:43Z",
+                "action": "Assigned",
+                "comment": ""
+            },
+            "relationships": {
+                "passage": {
+                    "data": {
+                        "type": "passage",
+                        "id": "ztt-LUK-001-005025"
+                    }
+                },
+                "assignedUser": {
+                    "data": {
+                        "type": "user",
+                        "id": "tommy"
+                    }
+                },
+                "agent": {
+                    "data": {
+                        "type": "user",
+                        "id": "admin"
+                    }
+                }
+            }
+        }],
+        "user": [{
+            "type": "user",
+            "id": "admin",
+            "meta": {
+                "version": 1
+            },
+            "attributes": {
+                "id": "admin",
+                "fullName": "Adam",
+                "transcriberSettings": {
+                    "uiLanguageBcp47": "en",
+                    "timer": "countup",
+                    "playBackSpeed": 100,
+                    "progressBarType": "bar"
+                }
+            },
+            "links": {
+                "avatarUrl": "images/admin1.png"
+            },
+            "relationships": ""
+        }, {
+            "type": "user",
+            "id": "tommy",
+            "meta": {
+                "version": 1
+            },
+            "attributes": {
+                "id": "tommy",
+                "fullName": "Tommy",
+                "transcriberSettings": {
+                    "uiLanguageBcp47": "en",
+                    "timer": "countup",
+                    "playBackSpeed": 100,
+                    "progressBarType": "bar"
+                }
+            },
+            "links": {
+                "avatarUrl": "images/tommy1.png"
+            },
+            "relationships": {
+                "lastTranscriberProject": {
+                    "data": {
+                        "type": "project",
+                        "id": "ztt"
+                    }
+                },
+                "settings": {
+                    "data": {
+                        "type": "setting",
+                        "id": "tommy-ztt"
+                    }
+                }
+            }
+        }, {
+            "type": "user",
+            "id": "rachel",
+            "meta": {
+                "version": 1
+            },
+            "attributes": {
+                "id": "rachel",
+                "fullName": "Rachel",
+                "transcriberSettings": {
+                    "uiLanguageBcp47": "en",
+                    "timer": "countup",
+                    "playBackSpeed": 100,
+                    "progressBarType": "bar"
+                }
+            },
+            "links": {
+                "avatarUrl": "images/rachel1.png"
+            },
+            "relationships": {
+                "lastTranscriberProject": {
+                    "data": {
+                        "type": "project",
+                        "id": "ztt"
+                    }
+                },
+                "settings": {
+                    "data": {
+                        "type": "setting",
+                        "id": "rachel-ztt"
+                    }
+                }
+            }
+        }],
+        "setting": [{
+            "type": "setting",
+            "id": "tommy-ztt",
+            "meta": {
+                "version": 1
+            },
+            "attributes": {
+                "role": "transcriber",
+                "fontFamily": "SIL Charis",
+                "fontSize": "large"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "tommy"
+                    }
+                },
+                "project": {
+                    "data": {
+                        "type": "project",
+                        "id": "ztt"
+                    }
+                }
+            }
+        }, {
+            "type": "setting",
+            "id": "rachel-ztt",
+            "meta": {
+                "version": 1
+            },
+            "attributes": {
+                "role": "reviewer",
+                "fontFamily": "SIL Charis",
+                "fontSize": "large"
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "rachel"
+                    }
+                },
+                "project": {
+                    "data": {
+                        "type": "project",
+                        "id": "ztt"
+                    }
+                }
+            }
+        }]
+}

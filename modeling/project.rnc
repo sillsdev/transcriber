@@ -1,54 +1,58 @@
 ﻿default namespace = ""
 
 start =
-	element project {
-		attribute type { "project" },
-		attribute id { xsd:ID },
-		element keys {
-			attribute remoteId { xsd:ID }
-		}?,
-		element meta {
-			attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
-		}?,
-		element attributes {
-			attribute paratextShortName { xsd:string }?
-			| attribute paratextName { xsd:string }?
-			| attribute paratextGuid { xsd:string }?
-			| attribute languageBcp47 {
-						xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" }
-					}
-			| attribute languageName { xsd:string }?
-			| attribute defaultFontFamily { xsd:string }?
-			| attribute fontFeatures { xsd:string }?
-			| attribute defaultFontSize {
-				"medium" | "xx-small" | "x-small" | "small" | "large" | "x-large" | "xx-large"
-			}?
-			| attribute textDirection { "ltr" | "rtl" }?
-			| attribute autoSync { xsd:boolean }?
-			| attribute allowClaiming { xsd:boolean }?
-			| attribute nature {
-						"Scripture" | "Scripture Story" | "Lexical" | "Didactic" | "Other" | "Test"
-					}?
-			| attribute destination { "audio" | "text" }?
-		}?,
-		element relationships {
-			element passages {
-				element data {
-					attribute type { "passage" },
-					attribute id { xsd:IDREF }
-				}*
-			}?
-			| element users {
+	element data {
+		element project {
+			attribute type { "project" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element meta {
+				attribute version {
+					xsd:string { pattern = "[0-9]+\.[0-9]+" }
+				}
+			}?,
+			element attributes {
+				(attribute name { xsd:string }?
+					| attribute paratextShortName { xsd:string }?
+					| attribute paratextGuid { xsd:string }?
+					| attribute languageBcp47 {
+								xsd:string { pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?" }
+							}
+					| attribute languageName { xsd:string }?
+					| attribute defaultFontFamily { xsd:string }?
+					| attribute fontFeatures { xsd:string }?
+					| attribute defaultFontSize {
+								"medium" | "xx-small" | "x-small" | "small" | "large" | "x-large" | "xx-large"
+							}?
+					| attribute textDirection { "ltr" | "rtl" }?
+					| attribute autoSync { xsd:boolean }?
+					| attribute allowClaiming { xsd:boolean }?
+					| attribute nature {
+								"Scripture" | "Scripture Story" | "Lexical" | "Didactic" | "Other" | "Test"
+							}?
+					| attribute destination { "audio" | "text" }?)*
+			}?,
+			element relationships {
+				(element passages {
 						element data {
-							attribute type { "user" },
+							attribute type { "passage" },
 							attribute id { xsd:IDREF }
 						}*
 					}?
-			| element settingss {
-						element data {
-							attribute type { "setting" },
-							attribute id { xsd:IDREF }
-						}*
-					}?
-		}?
-	}*
+					| element users {
+								element data {
+									attribute type { "user" },
+									attribute id { xsd:IDREF }
+								}*
+							}?
+					| element settings {
+								element data {
+									attribute type { "setting" },
+									attribute id { xsd:IDREF }
+								}*
+							}?)*
+			}?
+		}*
+	}
