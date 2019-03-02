@@ -1,39 +1,37 @@
 ﻿default namespace = ""
 
 start =
-	element data {
-		element setting {
-			attribute type { "setting" },
-			attribute id { xsd:ID },
-			element keys {
-				attribute remoteId { xsd:ID }
-			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
-			element attributes {
-				(attribute role { "admin" | "reviewer" | "transcriber" }
-					| attribute fontFamily { xsd:string }?
-					| attribute fontFeatures { xsd:string }?
-					| attribute fontSize {
-								"medium" | "xx-small" | "x-small" | "small" | "large" | "x-large" | "xx-large"
-							}?)*
-			}?,
-			element relationships {
-				(element user {
-						element data {
-							attribute type { "user" },
-							attribute id { xsd:IDREF }
-						}
-					}?
-					| element project {
-								element data {
-									attribute type { "project" },
-									attribute id { xsd:IDREF }
-								}
-							}?)*
-			}?
-		}+
+	element setting {
+		attribute type { "setting" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element meta {
+			attribute version {
+				xsd:string { pattern = "[0-9]+\.[0-9]+" }
+			}
+		}?,
+		element attributes {
+			(attribute role { "admin" | "reviewer" | "transcriber" }
+				| attribute fontFamily { xsd:string }?
+				| attribute fontFeatures { xsd:string }?
+				| attribute fontSize {
+							"medium" | "xx-small" | "x-small" | "small" | "large" | "x-large" | "xx-large"
+						}?)*
+		}?,
+		element relationships {
+			(element user {
+					element data {
+						attribute type { "user" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| element project {
+							element data {
+								attribute type { "project" },
+								attribute id { xsd:IDREF }
+							}
+						}?)*
+		}?
 	}

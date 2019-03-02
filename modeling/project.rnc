@@ -1,7 +1,6 @@
 ﻿default namespace = ""
 
 start =
-	element data {
 		element project {
 			attribute type { "project" },
 			attribute id { xsd:ID },
@@ -54,5 +53,4 @@ start =
 								}*
 							}?)*
 			}?
-		}*
-	}
+		}

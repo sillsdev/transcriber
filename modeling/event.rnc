@@ -1,74 +1,72 @@
 ﻿default namespace = ""
 
 start =
-	element data {
-		element event {
-			attribute type { "event" },
-			attribute id { xsd:ID },
-			element keys {
-				attribute remoteId { xsd:ID }
-			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
-			element attributes {
-				(
-					## sequential number beginning at zero
-					attribute historyEntry { xsd:positiveInteger }
-					| 
-							## date and time when it happened
-							attribute datetime { xsd:dateTime }?
-					| 
-							## type of action completed
-							attribute action {
-								"Incomplete"
-								| "AddVersion"
-								| "DeleteVersion"
-								| "AddThread"
-								| "ResolveThread"
-								| "DeleteThread"
-								| "AddComment"
-								| "DeleteComment"
-								| "UpdatePassage"
-								| "Ready"
-								| "Assigned"
-								| "Unassigned"
-								| "TranscribeStart"
-								| "TranscribeEnd"
-								| "ReviewStart"
-								| "ReviewEnd"
-								| "HoldStart"
-								| "HoldEnd"
-								| "Upload"
-								| "Complete"
-							})*,
-				
-				## comments may need to be required for tasks placed on hold
-				element comment { xsd:string }?
-			}?,
-			element relationships {
-				(
-					## intrinsic
-					element passage {
-						element data {
-							attribute type { "passage" },
-							attribute id { xsd:IDREF }
-						}
-					}?
-					| element assignedUser {
-								element data {
-									attribute type { "user" },
-									attribute id { xsd:IDREF }
-								}
-							}?
-					| element agent {
-								element data {
-									attribute type { "user" },
-									attribute id { xsd:IDREF }
-								}
-							}?)*
-			}?
-		}*
+	element event {
+		attribute type { "event" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element meta {
+			attribute version {
+				xsd:string { pattern = "[0-9]+\.[0-9]+" }
+			}
+		}?,
+		element attributes {
+			(
+				## sequential number beginning at zero
+				attribute historyEntry { xsd:positiveInteger }
+				| 
+						## date and time when it happened
+						attribute datetime { xsd:dateTime }?
+				| 
+						## type of action completed
+						attribute action {
+							"Incomplete"
+							| "AddVersion"
+							| "DeleteVersion"
+							| "AddThread"
+							| "ResolveThread"
+							| "DeleteThread"
+							| "AddComment"
+							| "DeleteComment"
+							| "UpdatePassage"
+							| "Ready"
+							| "Assigned"
+							| "Unassigned"
+							| "TranscribeStart"
+							| "TranscribeEnd"
+							| "ReviewStart"
+							| "ReviewEnd"
+							| "HoldStart"
+							| "HoldEnd"
+							| "Upload"
+							| "Complete"
+						})*,
+			
+			## comments may need to be required for tasks placed on hold
+			element comment { xsd:string }?
+		}?,
+		element relationships {
+			(
+				## intrinsic
+				element passage {
+					element data {
+						attribute type { "passage" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| element assignedUser {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+				| element agent {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}
+						}?)*
+		}?
 	}

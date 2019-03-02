@@ -1,46 +1,44 @@
 ﻿default namespace = ""
 
 start =
-	element data {
-		element version {
-			attribute type { "version" },
-			attribute id { xsd:ID },
-			element keys {
-				attribute remoteId { xsd:ID }
-			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
-			element attributes {
-				(attribute number { xsd:positiveInteger }
-					| attribute textQuality { "unacceptable" | "questionable" | "good" }?
-					| attribute audioQuality { "redo" | "acceptable" | "high" }?
-					| attribute duration { xsd:decimal })*,
-				element transcription { xsd:string }?
-			}?,
-			element links {
-				(attribute eafUrl { xsd:anyURI }?
-					| attribute audioUrl { xsd:anyURI }?)*
-			}?,
-			element relationships {
-				(
-					## instrinsic
-					element threads {
-						element data {
-							attribute type { "thread" },
-							attribute id { xsd:IDREF }
-						}*
-					}?
-					| 
-							## instrinsic
-							element passage {
-								element data {
-									attribute type { "passage" },
-									attribute id { xsd:IDREF }
-								}
-							}?)*
-			}?
-		}*
+	element version {
+		attribute type { "version" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element meta {
+			attribute version {
+				xsd:string { pattern = "[0-9]+\.[0-9]+" }
+			}
+		}?,
+		element attributes {
+			(attribute number { xsd:positiveInteger }
+				| attribute textQuality { "unacceptable" | "questionable" | "good" }?
+				| attribute audioQuality { "redo" | "acceptable" | "high" }?
+				| attribute duration { xsd:decimal })*,
+			element transcription { xsd:string }?
+		}?,
+		element links {
+			(attribute eafUrl { xsd:anyURI }?
+				| attribute audioUrl { xsd:anyURI }?)*
+		}?,
+		element relationships {
+			(
+				## instrinsic
+				element threads {
+					element data {
+						attribute type { "thread" },
+						attribute id { xsd:IDREF }
+					}*
+				}?
+				| 
+						## instrinsic
+						element passage {
+							element data {
+								attribute type { "passage" },
+								attribute id { xsd:IDREF }
+							}
+						}?)*
+		}?
 	}
