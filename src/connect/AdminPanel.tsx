@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 import { IState } from '../model/state'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -112,6 +113,9 @@ function AdminPanel(props: Props) {
         <MediaCard type="Media" explain="Add or manage audio files"/>
         <MediaCard type="Organizations" explain="Add or manage organizations"/>
         <MediaCard type="Set Templates" explain="Add or manage task templates"/>
+        <Link to="/task">
+          <MediaCard type="Task" explain="Link to Lambda API"/>
+        </Link>
       </div>
     </div>
   );

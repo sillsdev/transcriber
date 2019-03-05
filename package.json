@@ -48,7 +48,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "deploy": "aws s3 cp --recursive ./build s3://siltranscriber-admin",
+    "deploy": "aws s3 cp --recursive ./build s3://sil-transcriber-poc",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

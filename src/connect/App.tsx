@@ -2,7 +2,7 @@ import * as React from 'react';
 import './App.scss';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import DevTools from '../DevTool';
-import AppBar from '../present/AppBar';
+import TaskTable from '../connect/TaskTable';
 import AdminPanel from '../connect/AdminPanel';
 import Welcome from '../connect/Welcome';
 import Drawer from './Drawer';
@@ -52,13 +52,14 @@ class App extends React.Component {
               <Route path='/login' component={Login} />
               <Route path='/main' component={Welcome} />
               <Route path='/admin' component={AdminPanel} />
+              <Route path='/task' component={TaskTable} />
               <Route path='/main/dashboard' component={Drawer} />
               <Route path='/main/project' component={Drawer} />
               <Route path='/main/task' component={Drawer} />
               <Route path='/main/scheme' component={Drawer} />
               <Route path='/main/backup' component={Drawer} />
               <Route path='/main/user' component={Drawer} />
-              <Route path='/' component={DevTools} />
+              <Route path='/' exact={false} component={DevTools} />
             </MuiThemeProvider>
           </Router>
         </Provider>
