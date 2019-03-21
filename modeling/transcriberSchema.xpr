@@ -725,25 +725,24 @@
         </options>
     </meta>
     <projectTree name="transcriberSchema.xpr">
+        <file name="book.rnc"/>
         <file name="comment.rnc"/>
         <file name="event.rnc"/>
         <file name="makeSetting.xsl"/>
         <file name="makeUser.xsl"/>
+        <file name="media.rnc"/>
         <file name="mkEvent.xsl"/>
         <file name="mkPassage.xsl"/>
         <file name="mkProject.xsl"/>
         <file name="mkVersion.xsl"/>
         <file name="models.rnc"/>
         <file name="models.rng"/>
-        <file name="passage.rnc"/>
+        <file name="organization.rnc"/>
         <file name="project.rnc"/>
-        <file name="setting.rnc"/>
-        <file name="template.rnc"/>
+        <file name="sets.rnc"/>
+        <file name="task.rnc"/>
         <file name="thread.rnc"/>
-        <file name="transcriberOrbitSchema.json"/>
-        <file name="transcriberOrbitSchema.xml"/>
-        <file name="transcriberSample.xml"/>
         <file name="user.rnc"/>
-        <file name="version.rnc"/>
+        <file name="UserProject.rnc"/>
     </projectTree>
 </project>

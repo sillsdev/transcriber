@@ -50,9 +50,9 @@ start =
 		element relationships {
 			(
 				## intrinsic
-				element passage {
+				element set {
 					element data {
-						attribute type { "passage" },
+						attribute type { "set" },
 						attribute id { xsd:IDREF }
 					}
 				}?

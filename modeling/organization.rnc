@@ -1,8 +1,8 @@
 ﻿default namespace = ""
 
 start =
-	element setting {
-		attribute type { "setting" },
+	element organization {
+		attribute type { "organization" },
 		attribute id { xsd:ID },
 		element keys {
 			attribute remoteId { xsd:ID }
@@ -13,25 +13,21 @@ start =
 			}
 		}?,
 		element attributes {
-			(attribute role { "admin" | "reviewer" | "transcriber" }
-				| attribute fontFamily { xsd:string }?
-				| attribute fontFeatures { xsd:string }?
-				| attribute fontSize {
-							"medium" | "xx-small" | "x-small" | "small" | "large" | "x-large" | "xx-large"
-						}?)*
+			(attribute name { xsd:string }
+				| attribute abbr { xsd:string })*
 		}?,
 		element relationships {
-			(element user {
+			(element users {
 					element data {
 						attribute type { "user" },
 						attribute id { xsd:IDREF }
 					}
-				}?
-				| element project {
+				}*
+				| element projects {
 							element data {
 								attribute type { "project" },
 								attribute id { xsd:IDREF }
 							}
-						}?)*
+						}*)*
 		}?
-	}
+	}*

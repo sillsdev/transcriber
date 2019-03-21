@@ -1,101 +1,39 @@
 ﻿default namespace = ""
 
 start =
-  element tasks {
-    ## version of file format
-    attribute version {
-      xsd:string { pattern = "[0-9]+\.[0-9]+" }
-    },
-    element project {
-      (
-		## Paratext short name
-		attribute id { xsd:string }
-       | 
-		## Paratext full name
-		attribute name { xsd:string }?
-       |
-		## Paratext guid
-		attribute guid { xsd:string }?
-       |
-		## BCP-47 language of project
-		attribute lang {
-			xsd:string {
-				pattern = "[a-z]{2,3}(-[A-Za-z]{4})?(-[A-Z]{2})?(-[a-z]+)?"
+	element task {
+		attribute type { "task" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element meta {
+			attribute version {
+				xsd:string { pattern = "[0-9]+\.[0-9]+" }
 			}
-		}
-       |
-		## Language name
-		attribute langName { xsd:string }?
-       |
-		## font family
-		attribute font { xsd:string }?
-       |
-		## font size
-		attribute size { xsd:string }?
-       |
-		## font features
-		attribute features { xsd:string }?
-       |
-		attribute direction { "ltr" | "rtl" }?
-       | attribute sync { xsd:boolean }?
-       | attribute claim { xsd:boolean }?
-       |
-         ## type defaults to bible if none is present
-         attribute type { "Bible" | "Story" | "Other" | "Test" }?),
-      element task {
-        (
-         ## PPP-BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
-         attribute id {
-           xsd:string {
-             pattern = "[a-zA-Z0-9]+-[a-zA-Z0-9]{3}-\d{3}-\d{3}\d{3}"
-           }
-         }
-         | attribute length {
-             xsd:string { pattern = "[0-9]+" }
-           }?
-         | attribute position {
-             xsd:string { pattern = "[0-9]+(\.[0-9]+)?" }
-           }?
-         | attribute state {
-             "Transcribe" | "Review" | "Upload" | "Complete"
-           }
-         | attribute hold { xsd:boolean }?
-         | 
-           ## user name assibned by administrator or to self
-           attribute assignedto { xsd:string }?),
-        
-        ## user friendly name
-        element name { xsd:string }?,
-        element history {
-          (
-           ## sequential number beginning at zero
-           attribute id {
-             xsd:integer { minInclusive = "0" }
-           }
-           | 
-             ## date and time when it happened
-             attribute datetime { xsd:dateTime }?
-           | 
-             ## type of action completed
-             attribute action {
-               "Assigned"
-               | "Unassigned"
-               | "TranscribeStart"
-               | "TranscribeEnd"
-               | "ReviewStart"
-               | "ReviewEnd"
-               | "HoldStart"
-               | "HoldEnd"
-               | "Upload"
-               | "Complete"
-             }
-           | 
-             ## user who is involved
-             attribute userid { xsd:string }),
-          
-          ## comments may need to be required for tasks placed on hold
-          element comment { xsd:string }?
-        }*
-      }*
-    }*
-  }
+		}?,
+		element attributes {
+			(
+				## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
+				attribute reference {
+					xsd:string { pattern = "[a-zA-Z0-9]{3} \d+:\d+-\d+" }
+				}?
+				| attribute book { xsd:positiveInteger }?
+				| attribute position { xsd:decimal }?),
+			    element title { xsd:string }?
+		}?,
+		element relationships {
+			(element set {
+					element data {
+						attribute type { "set" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| element medias {
+							element data {
+								attribute type { "media" },
+								attribute id { xsd:IDREF }
+							}*
+						}?)*
+		}?
+	}

@@ -8,7 +8,9 @@ start =
 			attribute remoteId { xsd:ID }
 		}?,
 		element meta {
-			attribute version { xsd:string { pattern = "[0-9]+\.[0-9]+" } }
+			attribute version {
+				xsd:string { pattern = "[0-9]+\.[0-9]+" }
+			}
 		}?,
 		element attributes {
 			(attribute startLocation { xsd:nonNegativeInteger }
@@ -16,21 +18,21 @@ start =
 			element targetText { xsd:string }
 		}?,
 		element relationships {
-			
-			## intrinsic
-			element version {
-				element data {
-					attribute type { "version" },
-					attribute id { xsd:IDREF }
-				}
-			}?
-			| 
-					## intrinsic
-					element comments {
-						element data {
-							attribute type { "user" },
-							attribute id { xsd:IDREF }
-						}*
-					}?
+			(
+				## intrinsic
+				element media {
+					element data {
+						attribute type { "media" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| 
+						## intrinsic
+						element comments {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}*
+						}?)*
 		}?
 	}

@@ -52,12 +52,18 @@ start =
 						attribute id { xsd:IDREF }
 					}
 				}?
-				| element lastTranscriberPassage {
+				| element lastTask {
 							element data {
-								attribute type { "passage" },
+								attribute type { "task" },
 								attribute id { xsd:IDREF }
 							}
 						}?
+				| element assignedSets {
+							element data {
+								attribute type { "set" },
+								attribute id { xsd:IDREF }
+							}
+						}*
 				| element settings {
 							element data {
 								attribute type { "setting" },

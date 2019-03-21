@@ -15,7 +15,7 @@ start =
 			| element commentText { xsd:string }
 		}?,
 		element relationships {
-			element author {
+			(element author {
 				element data {
 					attribute type { "user" },
 					attribute id { xsd:IDREF }
@@ -28,6 +28,6 @@ start =
 							attribute type { "thread" },
 							attribute id { xsd:IDREF }
 						}
-					}?
+					}?)*
 		}?
 	}*

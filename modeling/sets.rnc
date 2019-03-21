@@ -1,8 +1,8 @@
 ﻿default namespace = ""
 
 start =
-	element passage {
-		attribute type { "passage" },
+	element set {
+		attribute type { "set" },
 		attribute id { xsd:ID },
 		element keys {
 			attribute remoteId { xsd:ID }
@@ -13,20 +13,11 @@ start =
 			}
 		}?,
 		element attributes {
-			(
-				## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
-				attribute reference {
-					xsd:string { pattern = "[a-zA-Z0-9]{3} \d+:\d+-\d+" }
-				}?
-				| attribute book { xsd:positiveInteger }?
-				| attribute set { xsd:positiveInteger }?
-				| attribute passage { xsd:positiveInteger }?
-				| attribute position { xsd:decimal }?
+			(attribute book { xsd:positiveInteger }?
+				| attribute index { xsd:decimal }?
 				| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
 				| attribute hold { xsd:boolean }?)*,
-			
-			## user friendly name
-			element passageTitle { xsd:string }?
+			element setTitle { xsd:string }?
 		}?,
 		element relationships {
 			(element assignedTo {
@@ -47,15 +38,15 @@ start =
 								attribute id { xsd:IDREF }
 							}
 						}?
-				| element versions {
-							element data {
-								attribute type { "version" },
-								attribute id { xsd:IDREF }
-							}*
-						}?
 				| element events {
 							element data {
 								attribute type { "event" },
+								attribute id { xsd:IDREF }
+							}*
+						}?
+				| element tasks {
+							element data {
+								attribute type { "task" },
 								attribute id { xsd:IDREF }
 							}*
 						}?)*

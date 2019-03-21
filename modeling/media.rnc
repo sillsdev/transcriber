@@ -1,8 +1,8 @@
 ﻿default namespace = ""
 
 start =
-	element version {
-		attribute type { "version" },
+	element media {
+		attribute type { "media" },
 		attribute id { xsd:ID },
 		element keys {
 			attribute remoteId { xsd:ID }
@@ -34,9 +34,9 @@ start =
 				}?
 				| 
 						## instrinsic
-						element passage {
+						element task {
 							element data {
-								attribute type { "passage" },
+								attribute type { "task" },
 								attribute id { xsd:IDREF }
 							}
 						}?)*

@@ -1,0 +1,29 @@
+﻿default namespace = ""
+
+start =
+	element book {
+		attribute type { "book" },
+		attribute id { xsd:ID },
+		element keys {
+			attribute remoteId { xsd:ID }
+		}?,
+		element meta {
+			attribute version {
+				xsd:string { pattern = "[0-9]+\.[0-9]+" }
+			}
+		}?,
+		element attributes {
+			(attribute shortName { xsd:string }
+				| attribute abbr { xsd:string }
+				| attribute longName { xsd:string }
+				| attribute index { xsd:nonNegativeInteger })*
+		}?,
+		element relationships {
+			element sets {
+				element data {
+					attribute type { "set" },
+					attribute id { xsd:IDREF }
+				}*
+			}?
+		}?
+	}
