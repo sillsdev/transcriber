@@ -7,11 +7,6 @@ start =
 		element keys {
 			attribute remoteId { xsd:ID }
 		}?,
-		element meta {
-			attribute version {
-				xsd:string { pattern = "[0-9]+\.[0-9]+" }
-			}
-		}?,
 		element attributes {
 			(
 				## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
@@ -19,7 +14,9 @@ start =
 					xsd:string { pattern = "[a-zA-Z0-9]{3} \d+:\d+-\d+" }
 				}?
 				| attribute book { xsd:positiveInteger }?
-				| attribute position { xsd:decimal }?),
+				| attribute position { xsd:decimal }?
+				| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
+				| attribute hold { xsd:boolean }?),
 			    element title { xsd:string }?
 		}?,
 		element relationships {
@@ -29,6 +26,30 @@ start =
 						attribute id { xsd:IDREF }
 					}
 				}?
+				| element assignedTo {
+					element data {
+						attribute type { "user" },
+						attribute id { xsd:IDREF }
+					}
+				}?
+				| element lastTranscriber {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+				| element lastReviewer {
+							element data {
+								attribute type { "user" },
+								attribute id { xsd:IDREF }
+							}
+						}?
+				| element events {
+							element data {
+								attribute type { "event" },
+								attribute id { xsd:IDREF }
+							}*
+						}?
 				| element medias {
 							element data {
 								attribute type { "media" },

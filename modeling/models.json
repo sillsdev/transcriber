@@ -1,0 +1,199 @@
+﻿"models": {
+    "project": {
+        "attributes": {
+            "name": {"type": "string"},
+            "paratextShortName": {"type": "string"},
+            "paratextGuid": {"type": "string"},
+            "languageBcp47": {"type": "string"},
+            "languageName": {"type": "string"},
+            "defaultFontFamily": {"type": "string"},
+            "fontFeatures": {"type": "string"},
+            "defaultFontSize": {"type": "string"},
+            "textDirection": {"type": "string"},
+            "autoSync": {"type": "boolean"},
+            "allowClaiming": {"type": "boolean"},
+            "projectType": {"type": "string"},
+            "destination": {"type": "string"}
+        },
+        "relationships": {
+            "sets": {
+                "type": "hasMany",
+                "model": "set"
+            },
+            "users": {
+                "type": "hasMany",
+                "model": "user"
+            }
+        }
+    },
+    "set": {
+        "attributes": {
+            "book": {"type": "positiveInteger"},
+            "index": {"type": "decimal"},
+            "setTitle": {"type": "string"}
+        },
+        "relationships": {"tasks": {
+            "type": "hasMany",
+            "model": "task"
+        }}
+    },
+    "task": {
+        "attributes": {
+            "reference": {"type": "string"},
+            "book": {"type": "positiveInteger"},
+            "position": {"type": "decimal"},
+            "state": {"type": "string"},
+            "hold": {"type": "boolean"},
+            "title": {"type": "string"}
+        },
+        "relationships": {
+            "set": {
+                "type": "hasOne",
+                "model": "set"
+            },
+            "assignedTo": {
+                "type": "hasOne",
+                "model": "user"
+            },
+            "lastTranscriber": {
+                "type": "hasOne",
+                "model": "user"
+            },
+            "lastReviewer": {
+                "type": "hasOne",
+                "model": "user"
+            },
+            "events": {
+                "type": "hasMany",
+                "model": "event"
+            },
+            "medias": {
+                "type": "hasMany",
+                "model": "media"
+            }
+        }
+    },
+    "media": {
+        "attributes": {
+            "number": {"type": "positiveInteger"},
+            "textQuality": {"type": "string"},
+            "audioQuality": {"type": "string"},
+            "duration": {"type": "decimal"},
+            "transcription": {"type": "string"}
+        },
+        "links": {
+            "eafUrl": {"type": "anyURI"},
+            "audioUrl": {"type": "anyURI"}
+        },
+        "relationships": {
+            "task": {
+                "type": "hasOne",
+                "model": "task"
+            }
+        }
+    },
+    "event": {
+        "attributes": {
+            "historyEntry": {"type": "positiveInteger"},
+            "datetime": {"type": "dateTime"},
+            "action": {"type": "string"},
+            "comment": {"type": "string"}
+        },
+        "relationships": {
+            "set": {
+                "type": "hasOne",
+                "model": "set"
+            },
+            "assignedUser": {
+                "type": "hasOne",
+                "model": "user"
+            },
+            "agent": {
+                "type": "hasOne",
+                "model": "user"
+            }
+        }
+    },
+    "book": {
+        "attributes": {
+            "shortName": {"type": "string"},
+            "abbr": {"type": "string"},
+            "longName": {"type": "string"},
+            "index": {"type": "nonNegativeInteger"},
+			"bookType": {"type": "string"}
+        },
+        "relationships": {"sets": {
+            "type": "hasMany",
+            "model": "set"
+        }}
+    },
+    "user": {
+        "attributes": {
+            "fullName": {"type": "string"},
+            "identityToken": {"type": "string"},
+            "transcriberSettings": {
+                "uiLanguageBcp47": {"type": "string"},
+                "timer": {"type": "string"},
+                "playBackSpeed": {"type": "integer"},
+                "progressBarType": {"type": "string"},
+                "hotKey": {
+                    "hotKeyType": {"type": "string"},
+                    "keyCode": {"type": "string"}
+                }
+            },
+            "knownLanguages": {"type": "string"}
+        },
+        "links": {"avatarUrl": {"type": "anyURI"}},
+        "relationships": {
+            "lastTranscriberProject": {
+                "type": "hasOne",
+                "model": "project"
+            },
+            "lastTask": {
+                "type": "hasOne",
+                "model": "task"
+            },
+            "assignedSets": {
+                "type": "hasOne",
+                "model": "set"
+            },
+            "settings": {
+                "type": "hasMany",
+                "model": "setting"
+            }
+        }
+    },
+    "userProject": {
+        "attributes": {
+            "role": {"type": "string"},
+            "fontFamily": {"type": "string"},
+            "fontFeatures": {"type": "string"},
+            "fontSize": {"type": "string"}
+        },
+        "relationships": {
+            "user": {
+                "type": "hasOne",
+                "model": "user"
+            },
+            "project": {
+                "type": "hasOne",
+                "model": "project"
+            }
+        }
+    },
+    "transcriberMetadata": {
+        "attributes": {
+            "roleValues": {"value": {"type": "NCName"}},
+            "fontSizeValues": {"value": {"type": "NCName"}},
+			"projectTypeValues": {"value": {"type": "NCName"}},
+            "bookTypeValues": {"value": {"type": "NCName"}},
+            "destinationValues": {"value": {"type": "NCName"}},
+            "stateValues": {"value": {"type": "NCName"}},
+            "textQualitValues": {"value": {"type": "NCName"}},
+            "audioQualitValues": {"value": {"type": "NCName"}},
+            "eventActionValues": {"value": {"type": "NCName"}},
+            "timerValues": {"value": {"type": "NCName"}},
+            "hotKeyValues": {"value": {"type": "NCName"}}
+        }
+    }
+}

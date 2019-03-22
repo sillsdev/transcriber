@@ -8,11 +8,6 @@ start =
 			element keys {
 				attribute remoteId { xsd:ID }
 			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
 			element attributes {
 				(attribute name { xsd:string }?
 					| attribute paratextShortName { xsd:string }?
@@ -55,25 +50,51 @@ start =
 			element keys {
 				attribute remoteId { xsd:ID }
 			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
 			element attributes {
 				(attribute book { xsd:positiveInteger }?
-					| attribute index { xsd:decimal }?
-					| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
-					| attribute hold { xsd:boolean }?)*,
+					| attribute index { xsd:decimal }?)*,
 				element setTitle { xsd:string }?
 			}?,
 			element relationships {
-				(element assignedTo {
+				(element tasks {
 						element data {
-							attribute type { "user" },
+							attribute type { "task" },
+							attribute id { xsd:IDREF }
+						}*
+					}?)*
+			}?
+		}*,
+		element task {
+			attribute type { "task" },
+			attribute id { xsd:ID },
+			element keys {
+				attribute remoteId { xsd:ID }
+			}?,
+			element attributes {
+				(
+					## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
+					attribute reference {
+						xsd:string { pattern = "[a-zA-Z0-9]{3} \d+:\d+-\d+" }
+					}?
+					| attribute book { xsd:positiveInteger }?
+					| attribute position { xsd:decimal }?
+					| attribute state { "Incomplete" | "Ready" | "Transcribe" | "Review" | "Upload" | "Complete" }
+					| attribute hold { xsd:boolean }?),
+				element title { xsd:string }?
+			}?,
+			element relationships {
+				(element set {
+						element data {
+							attribute type { "set" },
 							attribute id { xsd:IDREF }
 						}
 					}?
+					| element assignedTo {
+								element data {
+									attribute type { "user" },
+									attribute id { xsd:IDREF }
+								}
+							}?
 					| element lastTranscriber {
 								element data {
 									attribute type { "user" },
@@ -92,42 +113,6 @@ start =
 									attribute id { xsd:IDREF }
 								}*
 							}?
-					| element tasks {
-								element data {
-									attribute type { "task" },
-									attribute id { xsd:IDREF }
-								}*
-							}?)*
-			}?
-		}*,
-		element task {
-			attribute type { "task" },
-			attribute id { xsd:ID },
-			element keys {
-				attribute remoteId { xsd:ID }
-			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
-			element attributes {
-				(
-					## BBB-CCC-ssseee, PPP=project, BBB=Book, CCC=Chapter, sss=start, eee=end
-					attribute reference {
-						xsd:string { pattern = "[a-zA-Z0-9]{3} \d+:\d+-\d+" }
-					}?
-					| attribute book { xsd:positiveInteger }?
-					| attribute position { xsd:decimal }?),
-				element title { xsd:string }?
-			}?,
-			element relationships {
-				(element set {
-						element data {
-							attribute type { "set" },
-							attribute id { xsd:IDREF }
-						}
-					}?
 					| element medias {
 								element data {
 									attribute type { "media" },
@@ -141,11 +126,6 @@ start =
 			attribute id { xsd:ID },
 			element keys {
 				attribute remoteId { xsd:ID }
-			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
 			}?,
 			element attributes {
 				(attribute number { xsd:positiveInteger }
@@ -182,11 +162,6 @@ start =
 			attribute id { xsd:ID },
 			element keys {
 				attribute remoteId { xsd:ID }
-			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
 			}?,
 			element attributes {
 				(
@@ -252,11 +227,6 @@ start =
 			element keys {
 				attribute remoteId { xsd:ID }
 			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
 			element attributes {
 				(attribute shortName { xsd:string }
 					| attribute abbr { xsd:string }
@@ -278,15 +248,10 @@ start =
 			element keys {
 				attribute remoteId { xsd:ID }
 			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
 			element attributes {
 				
 				## unique user chosen name (without spaces)
-				attribute id { xsd:NCName },
+				attribute userId { xsd:NCName },
 				(element fullName { xsd:string }?
 					| 
 							## identity tokens are reuired (if present) and for admin users
@@ -335,9 +300,9 @@ start =
 									attribute id { xsd:IDREF }
 								}
 							}*
-					| element userProjects {
+					| element settings {
 								element data {
-									attribute type { "userProject" },
+									attribute type { "setting" },
 									attribute id { xsd:IDREF }
 								}*
 							}?)*
@@ -348,11 +313,6 @@ start =
 			attribute id { xsd:ID },
 			element keys {
 				attribute remoteId { xsd:ID }
-			}?,
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
 			}?,
 			element attributes {
 				(attribute role { "admin" | "reviewer" | "transcriber" }
@@ -382,11 +342,6 @@ start =
 			
 			## value must be 1
 			attribute id { xsd:ID },
-			element meta {
-				attribute version {
-					xsd:string { pattern = "[0-9]+\.[0-9]+" }
-				}
-			}?,
 			element attributes {
 				element roleValues {
 					element value { xsd:NCName }+

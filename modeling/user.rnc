@@ -7,15 +7,10 @@ start =
 		element keys {
 			attribute remoteId { xsd:ID }
 		}?,
-		element meta {
-			attribute version {
-				xsd:string { pattern = "[0-9]+\.[0-9]+" }
-			}
-		}?,
 		element attributes {
 			
 			## unique user chosen name (without spaces)
-			attribute id { xsd:NCName },
+			attribute userId { xsd:NCName },
 			(element fullName { xsd:string }?
 				| 
 						## identity tokens are reuired (if present) and for admin users

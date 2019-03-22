@@ -7,11 +7,6 @@ start =
 		element keys {
 			attribute remoteId { xsd:ID }
 		}?,
-		element meta {
-			attribute version {
-				xsd:string { pattern = "[0-9]+\.[0-9]+" }
-			}
-		}?,
 		element attributes {
 			(attribute startLocation { xsd:nonNegativeInteger }
 				| attribute resolved { xsd:boolean }),
