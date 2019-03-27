@@ -12,12 +12,10 @@ import store from '../store';
 import { DataProvider } from 'react-orbitjs';
 import { Record, Schema } from '@orbit/data';
 import Store from '@orbit/store';
-import SchemaObject from '../model/orbitSchema'
+import { schema } from '../model/schema'
 import blue from '@material-ui/core/colors/blue';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { pink } from '@material-ui/core/colors';
-
-const schema = new Schema(SchemaObject);
 
 const dataStore = new Store({ schema });
 
@@ -42,6 +40,8 @@ class App extends React.Component {
     dataStore.update( t => [
       t.addRecord(user)
     ])
+
+    console.log(dataStore)
 
     return (
       <DataProvider dataStore={dataStore}>
