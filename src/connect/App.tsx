@@ -6,7 +6,7 @@ import TaskTable from '../connect/TaskTable';
 import AdminPanel from '../connect/AdminPanel';
 import Welcome from '../connect/Welcome';
 import Drawer from './Drawer';
-import Login from './Login';
+import Access from './Access';
 import { Provider } from 'react-redux';
 import store from '../store';
 import { DataProvider } from 'react-orbitjs';
@@ -48,8 +48,8 @@ class App extends React.Component {
         <Provider store={store}>
           <Router>
             <MuiThemeProvider theme={theme}>
-              <Route path='/' exact={true} component={Login} />
-              <Route path='/login' component={Login} />
+              <Route path='/' exact={true} component={Access} />
+              <Route path='/access' component={Access} />
               <Route path='/main' component={Welcome} />
               <Route path='/admin' component={AdminPanel} />
               <Route path='/task' component={TaskTable} />
