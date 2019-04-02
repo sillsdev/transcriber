@@ -1,26 +1,47 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { setGlobal } from 'reactn';
+import blue from '@material-ui/core/colors/blue';
+import { createMuiTheme, MuiThemeProvider, Theme } from '@material-ui/core';
+import { yellow } from '@material-ui/core/colors';
+import Access from './Access';
+import Welcome from './Welcome';
+import AdminPanel from './AdminPanel';
+import CreateOrg from './CreateOrg';
+import OrganizationTable from './OrganizationTable';
+import ProjectTable from './ProjectTable';
+import UserTable from './UserTable';
+import ProjectStatus from './ProjectStatus';
 
-class App extends Component {
-  render() {
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+    secondary: yellow,
+  },
+});
+
+setGlobal({
+  organization: null,
+  user: null,
+});
+
+class App extends React.Component {
+  public render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+        <MuiThemeProvider theme={theme}>
+          <Route path='/' exact={true} component={Access} />
+          <Route path='/access' component={Access} />
+          <Route path='/welcome' component={Welcome} />
+          <Route path='/admin' component={AdminPanel} />
+          <Route path='/neworg' component={CreateOrg} />
+          <Route path='/organization' component={OrganizationTable} />
+          <Route path='/project' component={ProjectTable} />
+          <Route path='/projectstatus' component={ProjectStatus} />
+          <Route path='/user' component={UserTable} />
+        </MuiThemeProvider>
+      </Router>
     );
   }
 }

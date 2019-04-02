@@ -5,17 +5,8 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import logo from '../logo.svg';
+import logo from './logo.svg';
 import Typography from '@material-ui/core/Typography';
-
-const styles = {
-  card: {
-    maxWidth: 150,
-  },
-  media: {
-    height: 150,
-  },
-};
 
 export interface Props extends WithStyles<typeof styles> {
     type: string;
@@ -23,21 +14,22 @@ export interface Props extends WithStyles<typeof styles> {
     graphic?: string;
 }
 
-function MediaCard(props: Props) {
-  const { classes, type, explain } = props;
+export function MediaCard(props: Props) {
+  const { classes, type, explain, graphic } = props;
+  console.log(graphic)
   return (
     <Card className={classes.card}>
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={logo}
+          image={graphic != null? graphic: logo}
           title="Contemplative Reptile"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h5" component="h2" style={{textDecoration: 'none'}}>
             {type}
           </Typography>
-          <Typography component="p">
+          <Typography component="p" style={{textDecoration: 'none'}}>
             {explain}
           </Typography>
         </CardContent>
@@ -49,5 +41,17 @@ function MediaCard(props: Props) {
 MediaCard.propTypes = {
   classes: PropTypes.object.isRequired,
 } as any;
+
+const styles = {
+  card: {
+    maxWidth: 150,
+    marginLeft: 8,
+    marginRight: 8,
+    marginBottom: 16,
+  },
+  media: {
+    height: 150,
+  },
+};
 
 export default withStyles(styles)(MediaCard);

@@ -1,2 +1,3 @@
 /// <reference types="react-scripts" />
-export declare module '*.svg';
+
+declare module '@devexpress/dx-chart-core';
