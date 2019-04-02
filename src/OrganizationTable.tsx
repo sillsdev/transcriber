@@ -99,7 +99,7 @@ export function OrganizationTable(props: any) {
     }
   }, [view]);
 
-  return view === '' || currentOrganization === null? (
+  return view === '' || (view === '/welcome' && currentOrganization === null)? (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <MuiToolbar>
