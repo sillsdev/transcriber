@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { setGlobal } from 'reactn';
 import blue from '@material-ui/core/colors/blue';
-import { createMuiTheme, MuiThemeProvider, Theme } from '@material-ui/core';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import { yellow } from '@material-ui/core/colors';
 import Access from './Access';
 import Welcome from './Welcome';
