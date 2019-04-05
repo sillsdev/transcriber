@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
-import dataSource from './dataSource';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -46,7 +44,7 @@ interface Project {
 };
 
 export function ProjectTable(props: any) {
-  const { classes } = props;
+  const { classes, projects } = props;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'description', title: 'Description' },
@@ -61,16 +59,14 @@ export function ProjectTable(props: any) {
   const handleContinue = () => { setView('/projectstatus') };
 
   useEffect(() => {
-    const [url, doc] = dataSource();
-    axios(url + '/projects' + doc)
-      .then(result => setRows(result.data.data.map((o: Project) => ({
-        type: o.type,
-        id: o.id,
-        name: o.attributes.name,
-        description: o.attributes.description,
-        language: o.attributes.language,
-        public: o.attributes.ispublic,
-      }))))
+    setRows(projects.map((o: Project) => ({
+      type: o.type,
+      id: o.id,
+      name: o.attributes.name,
+      description: o.attributes.description,
+      language: o.attributes.language,
+      public: o.attributes.ispublic,
+    })))
   }, []);
 
   return view === ''? (

@@ -58,6 +58,19 @@ function Sources(schema: Schema, store: Store): Promise<any> {
         blocking: false
     }));
 
+    remote.pull(q => q.findRecords('organization'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('user'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('book'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('booktype'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('projecttype'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('role'))
+        .then(transform => store.sync(transform));
+
     return (backup.pull(q => q.findRecords())
         .then(transform => store.sync(transform))
         .then(() => coordinator.activate()));

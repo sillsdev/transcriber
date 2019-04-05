@@ -12,8 +12,8 @@ import Welcome from './Welcome';
 import AdminPanel from './AdminPanel';
 import CreateOrg from './CreateOrg';
 import OrganizationData from './OrganizationData';
-import ProjectTable from './ProjectTable';
-import UserTable from './UserTable';
+import ProjectData from './ProjectData';
+import UserData from './UserData';
 import ProjectStatus from './ProjectStatus';
 import Store from '@orbit/store';
 import { schema } from './schema';
@@ -48,9 +48,9 @@ class App extends React.Component {
               <Route path='/admin' component={AdminPanel} />
               <Route path='/neworg' component={CreateOrg} />
               <Route path='/organization' component={OrganizationData} />
-              <Route path='/project' component={ProjectTable} />
+              <Route path='/project' component={ProjectData} />
               <Route path='/projectstatus' component={ProjectStatus} />
-              <Route path='/user' component={UserTable} />
+              <Route path='/user' component={UserData} />
             </MuiThemeProvider>
           </Router>
         </Provider>
