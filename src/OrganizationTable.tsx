@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
-import axios from "axios";
-import dataSource from "./dataSource";
 import AppBar from "@material-ui/core/AppBar";
 import MuiToolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
@@ -60,13 +58,12 @@ interface Row {
 // see: https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/selection/
 
 export function OrganizationTable(props: any) {
-  const { classes } = props;
+  const { classes, organizations } = props;
   const [columns, setColumns] = useState([{ name: "name", title: "Name" }]);
   const [pageSizes, setPageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [currentOrganization, setOrganization] = useGlobal('organization');
-
 
   const handleCancel = () => {setView('/access')};
   const handleContinue = () => {setView('/welcome')};
@@ -80,16 +77,13 @@ export function OrganizationTable(props: any) {
   };
 
   useEffect(() => {
-    const [url, doc] = dataSource();
-    axios(url + "/organizations" + doc).then(result =>
-      setRows(
-        result.data.data.map((o: Organization) => ({
-          type: o.type,
-          id: o.id,
-          name: o.attributes.name
-        }))
-      )
-    );
+    setRows(
+      organizations.map((o: Organization) => ({
+        type: o.type,
+        id: o.id,
+        name: o.attributes.name
+      }))
+    )
   }, []);
 
   useEffect(() => {
