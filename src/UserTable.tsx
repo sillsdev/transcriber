@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
-import dataSource from './dataSource';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -43,7 +41,7 @@ interface User {
 };
 
 export function UserTable(props: any) {
-  const { classes } = props;
+  const { classes, users } = props;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'email', title: 'Email' },
@@ -59,17 +57,15 @@ export function UserTable(props: any) {
   const handleContinue = () => { setView('/admin') };
 
   useEffect(() => {
-    const [url, doc] = dataSource();
-    axios(url + '/users' + doc)
-      .then(result => setRows(result.data.data.map((o: User) => ({
-        type: o.type,
-        id: o.id,
-        name: o.attributes.name,
-        email: o.attributes.email,
-        locale: o.attributes.locale,
-        phone: o.attributes.phone,
-        timezone: o.attributes.timezone,
-      }))))
+    setRows(users.map((o: User) => ({
+      type: o.type,
+      id: o.id,
+      name: o.attributes.name,
+      email: o.attributes.email,
+      locale: o.attributes.locale,
+      phone: o.attributes.phone,
+      timezone: o.attributes.timezone,
+    })))
   }, []);
 
   return view === ''? (
