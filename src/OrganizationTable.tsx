@@ -66,7 +66,11 @@ export function OrganizationTable(props: any) {
   const [currentOrganization, setOrganization] = useGlobal('organization');
 
   const handleCancel = () => {setView('/access')};
-  const handleContinue = () => {setView('/welcome')};
+  const handleContinue = () => {
+    if (currentOrganization !== null) {
+      setView('/welcome')
+    }
+  };
   const handleSelection = (s: any) => {
     if (s.length !== 1) {
       alert('One organization should be selected');
@@ -93,7 +97,7 @@ export function OrganizationTable(props: any) {
     }
   }, [view]);
 
-  return view === '' || (view === '/welcome' && currentOrganization === null)? (
+  return view === ''? (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <MuiToolbar>
