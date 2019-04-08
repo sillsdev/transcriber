@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useGlobal } from 'reactn';
+import Organization from './model/organization';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, Record } from '@orbit/data';
 import AppBar from "@material-ui/core/AppBar";
 import MuiToolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
@@ -28,25 +33,11 @@ import {
   TableSelection,
   Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
-import { NONAME } from "dns";
 
-interface TableRelationship {
-  links: { self: string; related: string };
-  data: { type: string; id: string };
-}
-
-interface Organization {
-  type: string;
-  id: string;
-  attributes: {
-    name: string;
-    "website-url": string;
-    "logo-url": string;
-    "public-by-default": string;
-  };
-  relationships: {
-    owner: TableRelationship;
-  };
+class OrganizationData extends React.Component<IRecordProps, object> {
+  public render(): JSX.Element {
+      return <OrganizationTable {...this.props} />
+  }
 }
 
 interface Row {
@@ -64,19 +55,33 @@ export function OrganizationTable(props: any) {
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [currentOrganization, setOrganization] = useGlobal('organization');
+  const [entryOrganization, setEntryOrganization] = useState(0);
 
-  const handleCancel = () => {setView('/access')};
+  const handleCancel = () => {
+    if (currentOrganization === null) {
+      setView('/access')
+    } else {
+      setView('/admin');
+    }
+  };
   const handleContinue = () => {
     if (currentOrganization !== null) {
-      setView('/welcome')
+      if (entryOrganization !== currentOrganization) {
+        setView('/welcome')
+      } else if (currentOrganization !== null) {
+        setView('/admin');
+      }
     }
   };
   const handleSelection = (s: any) => {
-    if (s.length !== 1) {
-      alert('One organization should be selected');
-    } else {
-      const selectedRow: Row = rows[s[0]];
-      setOrganization(selectedRow.name)
+    if (currentOrganization === null) {
+      if (s.length !== 1) {
+        alert('One organization should be selected');
+      } else {
+        const selectedRow: Row = rows[s[0]];
+        setOrganization(selectedRow.id)
+        setView('/welcome');
+      }
     }
   };
 
@@ -87,7 +92,8 @@ export function OrganizationTable(props: any) {
         id: o.id,
         name: o.attributes.name
       }))
-    )
+    );
+    setEntryOrganization(currentOrganization);
   }, []);
 
   useEffect(() => {
@@ -200,6 +206,23 @@ const styles = (theme: Theme) =>
     }
   });
 
-export default withStyles(styles, { withTheme: true })(
-  OrganizationTable
-) as any;
+  const mapStateToProps = () => ({});
+  const mapDispatchToProps = (dispatch: any) => ({
+      ...bindActionCreators({
+      }, dispatch),
+  });
+  
+  interface IRecordProps {
+      organizations: () => Array<Record>;
+  }
+  
+  const mapRecordsToProps = {
+      organizations: (q: QueryBuilder) => q.findRecords('organization')
+  }
+  
+  export default withStyles(styles, { withTheme: true })(
+      withData(mapRecordsToProps)(
+          connect(mapStateToProps, mapDispatchToProps)(OrganizationData) as any
+          ) as any
+      ) as any;
+  

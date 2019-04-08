@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import { useGlobal } from 'reactn';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import Project from './model/project';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, Record } from '@orbit/data';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -26,12 +32,26 @@ import IntegrationIcon from '@material-ui/icons/UnarchiveTwoTone'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Chart from './Chart';
+import { CSSProperties } from 'jss/css';
 
 const drawerWidth = 240;
 
-export function ProjectStatus(props: any) {
-  const { classes, theme } = props;
+interface IProps extends IRecordProps {
+  classes: CSSProperties;
+  theme: Theme;
+}
+
+class ProjectStatusData extends React.Component<IProps, object> {
+  public render(): JSX.Element {
+      return <ProjectStatus {...this.props} />
+  }
+}
+
+export function ProjectStatus(props: any): JSX.Element {
+  const { classes, theme, projects } = props;
   const [open, setOpen] = useState(true);
+  const [project, setProject] = useGlobal('project');
+  const currentProject = projects.filter((p: Project) => p.id === project)[0];
 
   const handleDrawerOpen = () => { setOpen(true) };
   const handleDrawerClose = () => { setOpen(false) };
@@ -116,7 +136,7 @@ export function ProjectStatus(props: any) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <h2 className={classes.dialogHeader}>
-          {'Project A'}
+          {(currentProject && currentProject.attributes.name) || 'Project A'}
         </h2>
 
         <Chart/>
@@ -239,4 +259,23 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(ProjectStatus);
+
+const mapStateToProps = () => ({});
+const mapDispatchToProps = (dispatch: any) => ({
+    ...bindActionCreators({
+    }, dispatch),
+});
+
+interface IRecordProps {
+  projects: () => Array<Record>;
+}
+
+const mapRecordsToProps = {
+  projects: (q: QueryBuilder) => q.findRecords('project'),
+}
+
+export default withStyles(styles, { withTheme: true })(
+  withData(mapRecordsToProps)(
+      connect(mapStateToProps, mapDispatchToProps)(ProjectStatusData) as any
+      ) as any
+  ) as any;

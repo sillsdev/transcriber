@@ -11,8 +11,8 @@ import Access from './Access';
 import Welcome from './Welcome';
 import AdminPanel from './AdminPanel';
 import CreateOrg from './CreateOrg';
-import OrganizationData from './OrganizationData';
-import ProjectData from './ProjectData';
+import OrganizationTable from './OrganizationTable';
+import ProjectTable from './ProjectTable';
 import UserData from './UserData';
 import ProjectStatus from './ProjectStatus';
 import Store from '@orbit/store';
@@ -32,6 +32,7 @@ Sources(schema, dataStore);
 
 setGlobal({
   organization: null,
+  project: null,
   user: null,
 });
 
@@ -47,8 +48,8 @@ class App extends React.Component {
               <Route path='/welcome' component={Welcome} />
               <Route path='/admin' component={AdminPanel} />
               <Route path='/neworg' component={CreateOrg} />
-              <Route path='/organization' component={OrganizationData} />
-              <Route path='/project' component={ProjectData} />
+              <Route path='/organization' component={OrganizationTable} />
+              <Route path='/project' component={ProjectTable} />
               <Route path='/projectstatus' component={ProjectStatus} />
               <Route path='/user' component={UserData} />
             </MuiThemeProvider>

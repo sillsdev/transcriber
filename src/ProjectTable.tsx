@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
+import Project from './model/project';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, Record } from '@orbit/data';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -18,30 +24,20 @@ import {
   TableHeaderRow, TableSelection, Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
-interface TableRelationship {
-  links: { self: string; related: string; };
-  data: { type: string; id: string; };
-};
+export class ProjectTableData extends React.Component<IRecordProps, object> {
+  public render(): JSX.Element {
+      return <ProjectTable {...this.props} />
+  }
+}
 
-interface Project {
+interface Row {
   type: string;
-  id: string;
-  attributes: {
-    name: string;
-    description: string;
-    language: string;
-    ispublic: boolean;
-  };
-  relationships: {
-    projecttypes: TableRelationship;
-    sets: TableRelationship;
-    projectusers: TableRelationship;
-    usertasks: TableRelationship;
-    owner: TableRelationship;
-    projectintegrations: TableRelationship;
-    Organizations: TableRelationship;
-  };
-};
+  id: number;
+  name: string;
+  description: string;
+  language: string;
+  ispublic: string;
+}
 
 export function ProjectTable(props: any) {
   const { classes, projects } = props;
@@ -54,9 +50,19 @@ export function ProjectTable(props: any) {
   const [pageSizes, setPageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
+  const [project, setProject] = useGlobal('project');
 
   const handleCancel = () => { setView('/admin') };
   const handleContinue = () => { setView('/projectstatus') };
+  const handleSelection = (s: any) => {
+    if (s.length !== 1) {
+      alert('One project should be selected');
+      setProject(null);
+    } else {
+      const selectedRow: Row = rows[s[0]];
+      setProject(selectedRow.id)
+    }
+  };
 
   useEffect(() => {
     setRows(projects.map((o: Project) => ({
@@ -94,7 +100,7 @@ export function ProjectTable(props: any) {
               ]}
             />
 
-            <SelectionState />
+            <SelectionState onSelectionChange={handleSelection} />
 
             <PagingState />
 
@@ -106,7 +112,7 @@ export function ProjectTable(props: any) {
             <DragDropProvider />
 
             <Table />
-            <TableSelection showSelectAll={true} />
+            <TableSelection selectByRowClick={true} />
             <TableColumnResizing minColumnWidth={50}
               defaultColumnWidths={[
                 { columnName: 'name', width: 200 },
@@ -180,4 +186,22 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(ProjectTable) as any;
+const mapStateToProps = () => ({});
+const mapDispatchToProps = (dispatch: any) => ({
+    ...bindActionCreators({
+    }, dispatch),
+});
+
+interface IRecordProps {
+    projects: () => Array<Record>;
+}
+
+const mapRecordsToProps = {
+    projects: (q: QueryBuilder) => q.findRecords('project'),
+}
+
+export default withStyles(styles, { withTheme: true })(
+    withData(mapRecordsToProps)(
+        connect(mapStateToProps, mapDispatchToProps)(ProjectTable) as any
+        ) as any
+    ) as any;
