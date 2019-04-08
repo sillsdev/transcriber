@@ -33,6 +33,7 @@ import {
   TableSelection,
   Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
+import SnackBar from "./SnackBar";
 
 class OrganizationData extends React.Component<IRecordProps, object> {
   public render(): JSX.Element {
@@ -56,6 +57,7 @@ export function OrganizationTable(props: any) {
   const [view, setView] = useState('');
   const [currentOrganization, setOrganization] = useGlobal('organization');
   const [entryOrganization, setEntryOrganization] = useState(0);
+  const [message, setMessage] = useState('');
 
   const handleCancel = () => {
     if (currentOrganization === null) {
@@ -71,19 +73,18 @@ export function OrganizationTable(props: any) {
       } else if (currentOrganization !== null) {
         setView('/admin');
       }
+    } else {
+      setMessage('One organization should be selected');
     }
   };
   const handleSelection = (s: any) => {
     if (currentOrganization === null) {
-      if (s.length !== 1) {
-        alert('One organization should be selected');
-      } else {
-        const selectedRow: Row = rows[s[0]];
-        setOrganization(selectedRow.id)
-        setView('/welcome');
-      }
+      const selectedRow: Row = rows[s[0]];
+      setOrganization(selectedRow.id)
+      setView('/welcome');
     }
   };
+  const handleMessageReset = () => { setMessage('') };
 
   useEffect(() => {
     setRows(
@@ -164,6 +165,7 @@ export function OrganizationTable(props: any) {
           </div>
         </Paper>
       </div>
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   ): <Redirect to={view}/>;
 }

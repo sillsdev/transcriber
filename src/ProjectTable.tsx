@@ -11,6 +11,7 @@ import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import SnackBar from './SnackBar';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import {
   FilteringState,
@@ -23,6 +24,7 @@ import {
   Table, TableColumnResizing, TableFilterRow,
   TableHeaderRow, TableSelection, Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
+import { Slide } from '@material-ui/core';
 
 export class ProjectTableData extends React.Component<IRecordProps, object> {
   public render(): JSX.Element {
@@ -51,18 +53,25 @@ export function ProjectTable(props: any) {
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [project, setProject] = useGlobal('project');
+  const [selected, setSelected] = useState([]);
+  const [message, setMessage] = useState('');
 
   const handleCancel = () => { setView('/admin') };
-  const handleContinue = () => { setView('/projectstatus') };
-  const handleSelection = (s: any) => {
-    if (s.length !== 1) {
-      alert('One project should be selected');
-      setProject(null);
+  const handleContinue = () => {
+    if (selected.length === 1) {
+      setView('/projectstatus')
     } else {
+      setMessage('Please select a single project')
+    }
+  };
+  const handleSelection = (s: any) => {
+    setSelected(s);
+    if (s.length === 1) {
       const selectedRow: Row = rows[s[0]];
       setProject(selectedRow.id)
     }
   };
+  const handleMessageReset = () => { setMessage('') }
 
   useEffect(() => {
     setRows(projects.map((o: Project) => ({
@@ -145,6 +154,7 @@ export function ProjectTable(props: any) {
           </div>
         </Paper>
       </div>
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   ): <Redirect to={view}/>;
 }
