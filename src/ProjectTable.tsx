@@ -10,7 +10,11 @@ import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import SnackBar from './SnackBar';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -24,7 +28,6 @@ import {
   Table, TableColumnResizing, TableFilterRow,
   TableHeaderRow, TableSelection, Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Slide } from '@material-ui/core';
 
 export class ProjectTableData extends React.Component<IRecordProps, object> {
   public render(): JSX.Element {
@@ -56,8 +59,10 @@ export function ProjectTable(props: any) {
   const [selected, setSelected] = useState([]);
   const [message, setMessage] = useState('');
 
+  const handleDelete = () => { alert('Delete') };
+  const handleAdd = () => { alert('Add') };
   const handleCancel = () => { setView('/admin') };
-  const handleContinue = () => {
+  const handleEdit = () => {
     if (selected.length === 1) {
       setView('/projectstatus')
     } else {
@@ -84,29 +89,22 @@ export function ProjectTable(props: any) {
     })))
   }, []);
 
-  return view === ''? (
+  return view === "" ? (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <MuiToolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {'SIL Transcriber Admin'}
+            {"SIL Transcriber Admin"}
           </Typography>
         </MuiToolbar>
       </AppBar>
       <div className={classes.container}>
-        <Paper id='ProjectTable' className={classes.paper}>
-          <h2 className={classes.dialogHeader}>
-            {'Choose Project'}
-          </h2>
-          <Grid
-            rows={rows}
-            columns={columns}
-          >
+        <Paper id="ProjectTable" className={classes.paper}>
+          <h2 className={classes.dialogHeader}>{"Choose Project"}</h2>
+          <Grid rows={rows} columns={columns}>
             <FilteringState />
             <SortingState
-              defaultSorting={[
-                { columnName: 'name', direction: 'asc' },
-              ]}
+              defaultSorting={[{ columnName: "name", direction: "asc" }]}
             />
 
             <SelectionState onSelectionChange={handleSelection} />
@@ -122,12 +120,13 @@ export function ProjectTable(props: any) {
 
             <Table />
             <TableSelection selectByRowClick={true} />
-            <TableColumnResizing minColumnWidth={50}
+            <TableColumnResizing
+              minColumnWidth={50}
               defaultColumnWidths={[
-                { columnName: 'name', width: 200 },
-                { columnName: 'description', width: 400 },
-                { columnName: 'language', width: 100 },
-                { columnName: 'public', width: 100 },
+                { columnName: "name", width: 200 },
+                { columnName: "description", width: 400 },
+                { columnName: "language", width: 100 },
+                { columnName: "public", width: 100 }
               ]}
             />
 
@@ -138,25 +137,50 @@ export function ProjectTable(props: any) {
             <Toolbar />
           </Grid>
           <div className={classes.actions}>
-            <Button
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
               onClick={handleCancel}
-              variant="raised"
-              className={classes.button}>
-              Cancel
-                        </Button>
-            <Button
-              onClick={handleContinue}
-              variant="raised"
-              color="primary"
-              className={classes.button}>
-              Continue
-                        </Button>
+            >
+              <CancelIcon /> {'Cancel'}
+            </IconButton>
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={handleDelete}
+            >
+              <DeleteIcon /> {'Delete'}
+            </IconButton>
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={handleAdd}
+            >
+              <AddIcon /> {'Add'}
+            </IconButton>
+            <IconButton
+              key="close"
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={handleEdit}
+            >
+              <EditIcon /> {'Edit'}
+            </IconButton>
           </div>
         </Paper>
       </div>
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
-  ): <Redirect to={view}/>;
+  ) : (
+    <Redirect to={view} />
+  );
 }
 
 const styles = (theme: Theme) => createStyles({
