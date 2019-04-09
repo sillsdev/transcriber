@@ -14,8 +14,8 @@ import Button from '@material-ui/core/Button';
 import BackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import lightBlue from '@material-ui/core/colors/lightBlue';
 import SnackBar from './SnackBar';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -64,8 +64,9 @@ export function ProjectTable(props: any) {
   const handleAdd = () => { alert('Add') };
   const handleCancel = () => { setView('/admin') };
   const handleEdit = (e:any) => {
-      setProject(projects.filter((p: Project) => p.attributes.name === e.target.text)[0].id);
-      setView('/projectstatus')
+    //console.log(e.target.innerText)
+    setProject(projects.filter((p: Project) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0].id);
+    setView('/projectstatus')
   };
   const handleSelection = (s: any) => {
     setSelected(s);
@@ -91,12 +92,16 @@ export function ProjectTable(props: any) {
       }}
       value={value}
     >
-      <a
+      <Button
+        key={value}
+        aria-label={value}
+        color="primary"
         className={classes.link}
         onClick={handleEdit}
       >
         {value}
-      </a>
+        <EditIcon className={classes.editIcon} />
+      </Button>
     </Table.Cell>
   );
 
@@ -217,10 +222,6 @@ const styles = (theme: Theme) => createStyles({
     flexDirection: 'row',
     justifyContent: 'center'
   }),
-  link: theme.mixins.gutters({
-    color: lightBlue[500],
-    textDecoration: 'none'
-  }),
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
@@ -232,6 +233,9 @@ const styles = (theme: Theme) => createStyles({
   },
   icon: {
     marginLeft: theme.spacing.unit
+  },
+  editIcon: {
+    fontSize: 16,
   },
 });
 
