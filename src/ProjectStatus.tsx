@@ -34,6 +34,7 @@ import IntegrationIcon from '@material-ui/icons/UnarchiveTwoTone'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Chart from './Chart';
+import ProjectSettings from './ProjectSettings';
 import { CSSProperties } from 'jss/css';
 
 const drawerWidth = 240;
@@ -55,11 +56,16 @@ export function ProjectStatus(props: any): JSX.Element {
   const [project, setProject] = useGlobal('project');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
   const [view, setView] = useState('');
+  const [content, setContent] = useState('chart');
 
   const handleDrawerOpen = () => { setOpen(true) };
   const handleDrawerClose = () => { setOpen(false) };
-  const handleProjectItem = (e: any) => { alert(e.target.innerText) }
+  const handleProjectItem = (e: any) => { setContent(e.target.innerText) }
   const handleCancel = () => { setView('/project') };
+
+  const contentJsx = content.toLowerCase() === 'settings'? <ProjectSettings />:
+    <Chart />;
+
 
   return view ===''? (
     <div className={classes.root}>
@@ -146,7 +152,7 @@ export function ProjectStatus(props: any): JSX.Element {
           {(currentProject && currentProject.attributes.name) || 'Project A'}
         </h2>
 
-        <Chart/>
+        {contentJsx}
       </main>
     </div>
   ): <Redirect to={view} />;
