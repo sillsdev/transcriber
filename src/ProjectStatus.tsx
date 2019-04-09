@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Project from './model/project';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withData } from 'react-orbitjs';
@@ -27,6 +28,7 @@ import SettingsIcon from '@material-ui/icons/SettingsTwoTone';
 import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import SetIcon from '@material-ui/icons/WidgetsTwoTone';
 import TaskIcon from '@material-ui/icons/ListTwoTone';
+import BackIcon from '@material-ui/icons/ArrowBack';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone'
 import IntegrationIcon from '@material-ui/icons/UnarchiveTwoTone'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -52,12 +54,14 @@ export function ProjectStatus(props: any): JSX.Element {
   const [open, setOpen] = useState(true);
   const [project, setProject] = useGlobal('project');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
+  const [view, setView] = useState('');
 
   const handleDrawerOpen = () => { setOpen(true) };
   const handleDrawerClose = () => { setOpen(false) };
   const handleProjectItem = (e: any) => { alert(e.target.innerText) }
+  const handleCancel = () => { setView('/project') };
 
-  return (
+  return view ===''? (
     <div className={classes.root}>
       <AppBar
         position="fixed"
@@ -75,6 +79,9 @@ export function ProjectStatus(props: any): JSX.Element {
             })}
           >
             <MenuIcon />
+          </IconButton>
+          <IconButton >
+            <BackIcon onClick={handleCancel} />
           </IconButton>
           <Typography variant="h6" color="inherit" noWrap>
             {'SIL Transcriber Admin - Project'}
@@ -142,7 +149,7 @@ export function ProjectStatus(props: any): JSX.Element {
         <Chart/>
       </main>
     </div>
-  );
+  ): <Redirect to={view} />;
 };
 
 

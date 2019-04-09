@@ -15,6 +15,7 @@ import BackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import lightBlue from '@material-ui/core/colors/lightBlue';
 import SnackBar from './SnackBar';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -62,19 +63,12 @@ export function ProjectTable(props: any) {
   const handleDelete = () => { alert('Delete') };
   const handleAdd = () => { alert('Add') };
   const handleCancel = () => { setView('/admin') };
-  const handleEdit = () => {
-    if (selected.length === 1) {
+  const handleEdit = (e:any) => {
+      setProject(projects.filter((p: Project) => p.attributes.name === e.target.text)[0].id);
       setView('/projectstatus')
-    } else {
-      setMessage('Please select a single project')
-    }
   };
   const handleSelection = (s: any) => {
     setSelected(s);
-    if (s.length === 1) {
-      const selectedRow: Row = rows[s[0]];
-      setProject(selectedRow.id)
-    }
   };
   const handleMessageReset = () => { setMessage('') }
 
@@ -88,6 +82,31 @@ export function ProjectTable(props: any) {
       public: o.attributes.ispublic,
     })))
   }, []);
+
+  const LinkCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
+    <Table.Cell
+      {...restProps}
+      style={{
+        ...style,
+      }}
+      value={value}
+    >
+      <a
+        className={classes.link}
+        onClick={handleEdit}
+      >
+        {value}
+      </a>
+    </Table.Cell>
+  );
+
+  const Cell = (props: any) => {
+    const { column } = props;
+    if (column.name === 'name') {
+      return <LinkCell {...props} />
+    }
+    return <Table.Cell {...props} />
+  };
 
   return view === "" ? (
     <div className={classes.root}>
@@ -121,8 +140,8 @@ export function ProjectTable(props: any) {
 
             <DragDropProvider />
 
-            <Table />
-            <TableSelection selectByRowClick={true} />
+            <Table cellComponent={Cell} />
+            <TableSelection />
             <TableColumnResizing
               minColumnWidth={50}
               defaultColumnWidths={[
@@ -197,6 +216,10 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center'
+  }),
+  link: theme.mixins.gutters({
+    color: lightBlue[500],
+    textDecoration: 'none'
   }),
   actions: theme.mixins.gutters({
     paddingBottom: 16,
