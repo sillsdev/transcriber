@@ -10,11 +10,11 @@ import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import CancelIcon from '@material-ui/icons/Cancel';
+import Button from '@material-ui/core/Button';
+import BackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
 import SnackBar from './SnackBar';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -93,6 +93,9 @@ export function ProjectTable(props: any) {
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <MuiToolbar>
+          <IconButton >
+            <BackIcon onClick={handleCancel} />
+          </IconButton>
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {"SIL Transcriber Admin"}
           </Typography>
@@ -137,42 +140,28 @@ export function ProjectTable(props: any) {
             <Toolbar />
           </Grid>
           <div className={classes.actions}>
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={handleCancel}
-            >
-              <CancelIcon /> {'Cancel'}
-            </IconButton>
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
+            <Button
+              key="delete"
+              aria-label="Delete"
+              variant="contained"
+              color="secondary"
+              className={classes.button}
               onClick={handleDelete}
             >
-              <DeleteIcon /> {'Delete'}
-            </IconButton>
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
+              {'Delete'}
+              <DeleteIcon className={classes.icon} />
+            </Button>
+            <Button
+              key="add"
+              aria-label="Add"
+              variant="contained"
+              color="primary"
+              className={classes.button}
               onClick={handleAdd}
             >
-              <AddIcon /> {'Add'}
-            </IconButton>
-            <IconButton
-              key="close"
-              aria-label="Close"
-              color="inherit"
-              className={classes.close}
-              onClick={handleEdit}
-            >
-              <EditIcon /> {'Edit'}
-            </IconButton>
+              {'Add'}
+              <AddIcon className={classes.icon} />
+            </Button>
           </div>
         </Paper>
       </div>
@@ -216,7 +205,10 @@ const styles = (theme: Theme) => createStyles({
     justifyContent: 'right'
   }),
   button: {
-    marginRight: theme.spacing.unit
+    margin: theme.spacing.unit
+  },
+  icon: {
+    marginLeft: theme.spacing.unit
   },
 });
 
