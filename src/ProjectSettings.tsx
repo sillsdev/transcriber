@@ -53,6 +53,8 @@ export function ProjectSettings(props: IProps) {
         setRtl(safeFonts.filter(option => option.label === e.target.value)[0].rtl);
     };
     const handleDefaultFontSizeChange = (e:any) => { setDefaultFontSize(e.target.value) };
+    const handleRtlChange = () => { setRtl(!rtl) };
+    const handleIsPublicChange = () => { setIsPublic(!isPublic) };
     const handleSave = () => { alert('saving...') };
 
     useEffect(() => {
@@ -261,9 +263,10 @@ export function ProjectSettings(props: IProps) {
               <FormControlLabel
                 control={
                   <Switch
+                    id="switch-rtl"
                     checked={rtl}
-                    readOnly
-                    color={rtl ? "secondary" : "default"}
+                    color="secondary"
+                    onChange={handleRtlChange}
                   />
                 }
                 label={"Right to left?"}
@@ -271,9 +274,10 @@ export function ProjectSettings(props: IProps) {
               <FormControlLabel
                 control={
                   <Switch
+                    id="switch-is-public"
                     checked={isPublic}
-                    readOnly
-                    color={isPublic ? "default": "secondary"}
+                    color="default"
+                    onChange={handleIsPublicChange}
                   />
                 }
                 label={"Is Public?"}
