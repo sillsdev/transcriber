@@ -5,18 +5,29 @@ interface Project {
     id: string;
     attributes: {
       name: string;
-      description: string;
+      projectTypeId: number;
+      description: string | null;
+      ownerId: number;
+      organizationId: number;
+      uilanguagebcp47: string | null;
       language: string;
-      ispublic: boolean;
+      languageName: string | null;
+      defaultFont: string | null;
+      defaultFontSize: string | null;
+      rtl: boolean;
+      allowClaim: boolean;
+      isPublic: boolean;
+      dateCreated: string | null;
+      dateUpdated: string | null;
+      dateArchived: string | null;
     };
     relationships: {
-      projecttypes: TableRelationship;
-      sets: TableRelationship;
-      projectusers: TableRelationship;
-      usertasks: TableRelationship;
+      type: TableRelationship;
       owner: TableRelationship;
+      organization: TableRelationship;
       projectintegrations: TableRelationship;
-      Organizations: TableRelationship;
+      users: TableRelationship;
+      sets: TableRelationship;
     };
   };
 export default Project;  

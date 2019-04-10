@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
+import Project from './model/project';
+import ProjectType from './model/projectType';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder } from '@orbit/data';
 import { withStyles, Theme } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
@@ -11,15 +17,29 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 
-export function ProjectSettings(props: any) {
-    const { classes } = props;
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+export class ProjectSettingsData extends React.Component<IRecordProps, object> {
+    public render(): JSX.Element {
+        return <ProjectSettings {...this.props} />
+    }
+  }
+
+  interface IProps extends IRecordProps {
+      classes?: any;
+  }
+  
+export function ProjectSettings(props: IProps) {
+    const { classes, projects, projectTypes } = props;
+    const [project, setProject] = useGlobal('project');
+    const currentProject = projects.filter((p: Project) => p.id === project)[0];
+    const [name, setName] = useState((currentProject && currentProject.attributes.name) || '');
+    const [description, setDescription] = useState((currentProject && currentProject.attributes.description) || '');
     const [projectType, setProjectType] = useState('');
-    const [bcp47, setBcp47] = useState('en');
-    const [languageName, setLanguageName] = useState('English');
-    const [defaultFont, setDefaultFont] = useState('');
-    const [rtl, setRtl] = useState(false);
+    const [bcp47, setBcp47] = useState((currentProject && currentProject.attributes.language) || 'en');
+    const [languageName, setLanguageName] = useState((currentProject && currentProject.attributes.languageName) || 'English');
+    const [defaultFont, setDefaultFont] = useState((currentProject && currentProject.attributes.defaultFont) || '');
+    const [defaultFontSize, setDefaultFontSize] = useState((currentProject && currentProject.attributes.defaultFontSize) || 'large');
+    const [rtl, setRtl] = useState((currentProject && currentProject.attributes.rtl) || false);
+    const [isPublic, setIsPublic] = useState((currentProject && currentProject.attributes.isPublic) || true);
 
     const handleNameChange = (e:any) => { setName(e.target.value) };
     const handleDescriptionChange = (e:any) => { setDescription(e.target.value) };
@@ -30,12 +50,18 @@ export function ProjectSettings(props: any) {
         setDefaultFont(e.target.value)
         setRtl(safeFonts.filter(option => option.label === e.target.value)[0].rtl);
     };
-    const handleSave = () => { alert('saving...') }
+    const handleDefaultFontSizeChange = (e:any) => { setDefaultFontSize(e.target.value) };
+    const handleSave = () => { alert('saving...') };
 
-    const projectTypes = [
-        { value: 1, label: 'Oral Drafting' },
-        { value: 2, label: 'Audio Scripture' },
-    ];
+    useEffect(() => {
+      if (projectTypes && projectTypes.length !== 0 && currentProject) {
+        const t = projectTypes.filter((t: ProjectType) => t.id === currentProject.attributes.projectTypeId.toString());
+        if (t.length !== 0) {
+          setProjectType(t[0].id);
+        }
+      }
+      
+    }, [currentProject])
 
     const safeFonts = [
         { value: 'Roboto', label: 'Roboto', rtl: false },
@@ -49,9 +75,13 @@ export function ProjectSettings(props: any) {
         { value: 'SimSun', label: 'SimSun', rtl: false },
     ];
 
+    const fontSizes = [
+      "xx-small", "x-small", "small", "medium", "large", "x-large", "xx-large"
+    ]
+
     return (
       <div className={classes.container}>
-        <Paper className={classes.paper}>
+        <div className={classes.paper}>
           <FormControl>
             <FormLabel>{"General"}</FormLabel>
             <FormGroup>
@@ -105,9 +135,9 @@ export function ProjectSettings(props: any) {
                     variant="filled"
                     required={true}
                   >
-                    {projectTypes.map(option => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    {projectTypes.map((option: ProjectType) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.attributes.name}
                       </MenuItem>
                     ))}
                   </TextField>
@@ -183,13 +213,50 @@ export function ProjectSettings(props: any) {
               />
               <FormControlLabel
                 control={
+                  <TextField
+                    id="select-default-font-size"
+                    select
+                    label={"Default Font Size"}
+                    className={classes.textField}
+                    value={defaultFontSize}
+                    onChange={handleDefaultFontSizeChange}
+                    SelectProps={{
+                      MenuProps: {
+                        className: classes.menu
+                      }
+                    }}
+                    helperText={"Please select the default font size"}
+                    margin="normal"
+                    variant="filled"
+                  >
+                    {fontSizes.map((v, i) => (
+                      <MenuItem key={i} value={v}>
+                        {v}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                }
+                label=""
+              />
+              <FormControlLabel
+                control={
                   <Switch
                     checked={rtl}
                     readOnly
                     color={rtl ? "secondary" : "default"}
                   />
                 }
-                label="Right to left"
+                label={"Right to left?"}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isPublic}
+                    readOnly
+                    color={isPublic ? "default": "secondary"}
+                  />
+                }
+                label={"Is Public?"}
               />
             </FormGroup>
           </FormControl>
@@ -206,7 +273,7 @@ export function ProjectSettings(props: any) {
               <SaveIcon className={classes.icon} />
             </Button>
             </div>
-        </Paper>
+        </div>
       </div>
     );
 }
@@ -247,4 +314,25 @@ const styles = (theme: Theme) => ({
       },
       });
   
-  export default withStyles(styles, { withTheme: true })(ProjectSettings);
+      const mapStateToProps = () => ({});
+      const mapDispatchToProps = (dispatch: any) => ({
+          ...bindActionCreators({
+          }, dispatch),
+      });
+      
+      interface IRecordProps {
+          projects: Array<Project>;
+          projectTypes: Array<ProjectType>;
+      }
+      
+      const mapRecordsToProps = {
+          projects: (q: QueryBuilder) => q.findRecords('project'),
+          projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
+      }
+      
+      export default withStyles(styles, { withTheme: true })(
+          withData(mapRecordsToProps)(
+              connect(mapStateToProps, mapDispatchToProps)(ProjectSettings) as any
+              ) as any
+          ) as any;
+      

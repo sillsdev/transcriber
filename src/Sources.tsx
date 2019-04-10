@@ -68,9 +68,13 @@ function Sources(schema: Schema, store: Store): Promise<any> {
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('project'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('projecttype'))
-        .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('role'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('integration'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('projectintegration'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('projecttype'))
         .then(transform => store.sync(transform));
 
     return (backup.pull(q => q.findRecords())

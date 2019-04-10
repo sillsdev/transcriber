@@ -32,7 +32,7 @@ const schemaDefinition: SchemaSettings =  {
         url: { type: 'string' },
       },
       relationships: {
-        projectIntegrations: { type: 'hasMany', model: 'projectintegrations', inverse: 'projects' },
+        projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
       },
     },
     organization: {
@@ -76,137 +76,137 @@ const schemaDefinition: SchemaSettings =  {
         type: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
         owner: { type: 'hasOne', model: 'user', inverse: 'projectUsers' },
         organization: { type: 'hasOne', model: 'organization', inverse: 'projects' },
-        projectIntegrations: { type: 'hasMany', model: 'projectintegrations', inverse: 'projects' },
+        projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
         sets: { type: 'hasMany', model: 'set', inverse: 'project' },
         users: { type: 'hasMany', model: 'usertask', inverse: 'project' },
       }
     },
-      projectintegrations: {
-        keys: { remoteId: {} },
-        attributes: {
-          projectId: { type: 'number' },
-          integrationId: { type: 'number' },
-          settings: { type: 'string' },
-        },
-        relationships: {
-          integration: { type: 'hasOne', model: 'integration', inverse: 'projectIntegrations' },
-          project: { type: 'hasOne', model: 'project', inverse: 'projectIntegrations' },
-        },
+    projectintegration: {
+      keys: { remoteId: {} },
+      attributes: {
+        projectId: { type: 'number' },
+        integrationId: { type: 'number' },
+        settings: { type: 'string' },
       },
-      projecttype: {
-        keys: { remoteId: {} },
-        attributes: {
-          name: { type: 'string' },
-          description: { type: 'string' },
-        },
-        relationships: {
-          projects: { type: 'hasMany', model: 'project', inverse: 'type' },
-        },
+      relationships: {
+        integration: { type: 'hasOne', model: 'integration', inverse: 'projectIntegrations' },
+        project: { type: 'hasOne', model: 'project', inverse: 'projectIntegrations' },
       },
-      role: {
-        keys: { remoteId: {} },
-        attributes: {
-          rolename: { type: 'string' },
-        },
-        relationships: {
-          userRoles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
-        },
+    },
+    projecttype: {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        description: { type: 'string' },
       },
-      set: {
-        keys: { remoteId: {} },
-        attributes: {
-          name: { type: 'string' },
-        },
-        relationships: {
-          book: { type: 'hasOne', model: 'book', inverse: 'sets' },
-          project: { type: 'hasOne', model: 'project', inverse: 'sets' },
-        },
+      relationships: {
+        projects: { type: 'hasMany', model: 'project', inverse: 'type' },
       },
-      task: {
-        keys: { remoteId: {} },
-        attributes: {
-          reference: { type: 'string' },
-          passage: { type: 'string' },
-          position: { type: 'number' },
-          taskstate: { type: 'string' },
-          hold: { type: 'number' },
-          title: { type: 'string' },
-          datecreated: { type: 'date' },
-          dateupdated: { type: 'date' },
-        },
-        relationships: {
-          usertasks: { type: 'hasMany', model: 'usertask', inverse: 'task' },
-          media: { type: 'hasMany', model: 'taskmedia', inverse: 'task' },
-          sets: { type: 'hasMany', model: 'set', inverse: 'task' },
-        },
+    },
+    role: {
+      keys: { remoteId: {} },
+      attributes: {
+        rolename: { type: 'string' },
       },
-      taskmedia: {
-        keys: { remoteId: {} },
-        attributes: {
-          versionnumber: { type: 'number' },
-          artifacttype: { type: 'string' },
-          eafurl: { type: 'string' },
-          audiourl: { type: 'string' },
-          duration: { type: 'number' },
-          contenttype: { type: 'string' },
-          audioquality: { type: 'string' },
-          textquality: { type: 'string' },
-          transcription: { type: 'string' },
-          datecreated: { type: 'date' },
-          dateupdated: { type: 'date' },
-        },
-        relationships: {
-          task: { type: 'hasOne', model: 'taskmedia', inverse: 'media' },
-        },
+      relationships: {
+        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
       },
-      user: {
-        keys: { remoteId: {} },
-        attributes: {
-          name: { type: 'string' },
-          givenName: { type: 'string' },
-          familyName: { type: 'string' },
-          email: { type: 'string' },
-          phone: { type: 'string' },
-          timezone: { type: 'string' },
-          locale: { type: 'string' },
-          isLocked: { type: 'boolean' },
-          auth0Id: { type: 'string' },
-          dateCreated: { type: 'date' },
-          dateUpdated: { type: 'date' },
-        },
-        relationships: {
-          projectUsers: { type: 'hasMany', model: 'project', inverse: 'owner' },
-          organizationMemberships: { type: 'hasMany', model: 'organization', inverse: 'organizationMemberships' },
-          userRoles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
-          ownedOrganizations: { type: 'hasMany', model: 'user', inverse: 'owner' },
-        },
+    },
+    set: {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
       },
-      userrole: {
-        keys: { remoteId: {} },
-        attributes: {
-          rolename: { type: 'string' },
-        },
-        relationships: {
-          user: { type: 'hasOne', model: 'user', inverse: 'userroles' },
-          role: { type: 'hasOne', model: 'role', inverse: 'userroles' },
-          organization: { type: 'hasOne', model: 'organization', inverse: 'userroles' },
-        },
+      relationships: {
+        book: { type: 'hasOne', model: 'book', inverse: 'sets' },
+        project: { type: 'hasOne', model: 'project', inverse: 'sets' },
       },
-      usertask: {
-        keys: { remoteId: {} },
-        attributes: {
-          activityname: { type: 'string' },
-          taskstate: { type: 'string' },
-          comment: { type: 'string' },
-          datecreated: { type: 'date' },
-          dateupdated: { type: 'date' },
-        },
-        relationships: {
-          project: { type: 'hasOne', model: 'project', inverse: 'usertasks' },
-          task: { type: 'hasOne', model: 'task', inverse: 'usertasks' },
-          assigned: { type: 'hasOne', model: 'user', inverse: 'assignedTasks' },
-        },
+    },
+    task: {
+      keys: { remoteId: {} },
+      attributes: {
+        reference: { type: 'string' },
+        passage: { type: 'string' },
+        position: { type: 'number' },
+        taskstate: { type: 'string' },
+        hold: { type: 'number' },
+        title: { type: 'string' },
+        datecreated: { type: 'date' },
+        dateupdated: { type: 'date' },
       },
+      relationships: {
+        usertasks: { type: 'hasMany', model: 'usertask', inverse: 'task' },
+        media: { type: 'hasMany', model: 'taskmedia', inverse: 'task' },
+        sets: { type: 'hasMany', model: 'set', inverse: 'task' },
+      },
+    },
+    taskmedia: {
+      keys: { remoteId: {} },
+      attributes: {
+        versionnumber: { type: 'number' },
+        artifacttype: { type: 'string' },
+        eafurl: { type: 'string' },
+        audiourl: { type: 'string' },
+        duration: { type: 'number' },
+        contenttype: { type: 'string' },
+        audioquality: { type: 'string' },
+        textquality: { type: 'string' },
+        transcription: { type: 'string' },
+        datecreated: { type: 'date' },
+        dateupdated: { type: 'date' },
+      },
+      relationships: {
+        task: { type: 'hasOne', model: 'taskmedia', inverse: 'media' },
+      },
+    },
+    user: {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        givenName: { type: 'string' },
+        familyName: { type: 'string' },
+        email: { type: 'string' },
+        phone: { type: 'string' },
+        timezone: { type: 'string' },
+        locale: { type: 'string' },
+        isLocked: { type: 'boolean' },
+        auth0Id: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+      },
+      relationships: {
+        projectUsers: { type: 'hasMany', model: 'project', inverse: 'owner' },
+        organizationMemberships: { type: 'hasMany', model: 'organization', inverse: 'organizationMemberships' },
+        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
+        ownedOrganizations: { type: 'hasMany', model: 'user', inverse: 'owner' },
+      },
+    },
+    userrole: {
+      keys: { remoteId: {} },
+      attributes: {
+        rolename: { type: 'string' },
+      },
+      relationships: {
+        user: { type: 'hasOne', model: 'user', inverse: 'userroles' },
+        role: { type: 'hasOne', model: 'role', inverse: 'userroles' },
+        organization: { type: 'hasOne', model: 'organization', inverse: 'userroles' },
+      },
+    },
+    usertask: {
+      keys: { remoteId: {} },
+      attributes: {
+        activityname: { type: 'string' },
+        taskstate: { type: 'string' },
+        comment: { type: 'string' },
+        datecreated: { type: 'date' },
+        dateupdated: { type: 'date' },
+      },
+      relationships: {
+        project: { type: 'hasOne', model: 'project', inverse: 'usertasks' },
+        task: { type: 'hasOne', model: 'task', inverse: 'usertasks' },
+        assigned: { type: 'hasOne', model: 'user', inverse: 'assignedTasks' },
+      },
+    },
   }
 };
 

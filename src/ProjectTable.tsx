@@ -80,7 +80,7 @@ export function ProjectTable(props: any) {
       name: o.attributes.name,
       description: o.attributes.description,
       language: o.attributes.language,
-      public: o.attributes.ispublic,
+      public: o.attributes.isPublic,
     })))
   }, []);
 
