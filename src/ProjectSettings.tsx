@@ -34,8 +34,9 @@ export function ProjectSettings(props: IProps) {
     const [name, setName] = useState((currentProject && currentProject.attributes.name) || '');
     const [description, setDescription] = useState((currentProject && currentProject.attributes.description) || '');
     const [projectType, setProjectType] = useState('');
-    const [bcp47, setBcp47] = useState((currentProject && currentProject.attributes.language) || 'en');
-    const [languageName, setLanguageName] = useState((currentProject && currentProject.attributes.languageName) || 'English');
+    const [uiBcp47, setUiBcp47] = useState((currentProject && currentProject.attributes.uilanguagebcp47) || 'en');
+    const [bcp47, setBcp47] = useState((currentProject && currentProject.attributes.language) || 'und');
+    const [languageName, setLanguageName] = useState((currentProject && currentProject.attributes.languageName) || bcp47);
     const [defaultFont, setDefaultFont] = useState((currentProject && currentProject.attributes.defaultFont) || '');
     const [defaultFontSize, setDefaultFontSize] = useState((currentProject && currentProject.attributes.defaultFontSize) || 'large');
     const [rtl, setRtl] = useState((currentProject && currentProject.attributes.rtl) || false);
@@ -44,6 +45,7 @@ export function ProjectSettings(props: IProps) {
     const handleNameChange = (e:any) => { setName(e.target.value) };
     const handleDescriptionChange = (e:any) => { setDescription(e.target.value) };
     const handleTypeChange = (e:any) => { setProjectType(e.target.value) };
+    const handleUiBcp47Change = (e:any) => { alert('Language Picker') };
     const handleBcp47Change = (e:any) => { alert('Language Picker') };
     const handleLanguageNameChange = (e:any) => { setLanguageName(e.target.value) };
     const handleDefaultFontChange = (e:any) => {
@@ -144,6 +146,24 @@ export function ProjectSettings(props: IProps) {
                 }
                 label=""
               />
+              <FormControlLabel
+                control={
+                  <TextField
+                    id="ui-language-picker"
+                    label="User Interface Language"
+                    defaultValue={uiBcp47}
+                    className={classes.textField}
+                    margin="normal"
+                    onClick={handleUiBcp47Change}
+                    InputProps={{
+                      readOnly: true
+                    }}
+                    variant="filled"
+                    required={true}
+                  />
+                }
+                label=""
+              />
             </FormGroup>
             <FormLabel className={classes.label}>{"Language"}</FormLabel>
             <FormGroup>
@@ -151,7 +171,7 @@ export function ProjectSettings(props: IProps) {
                 control={
                   <TextField
                     id="language-picker"
-                    label="Language"
+                    label="Transcription Language"
                     defaultValue={bcp47}
                     className={classes.textField}
                     margin="normal"
@@ -169,7 +189,7 @@ export function ProjectSettings(props: IProps) {
                 control={
                   <TextField
                     id="language-name"
-                    label={"Language Name"}
+                    label={"Preferred Language Name"}
                     className={classes.textField}
                     value={languageName}
                     onChange={handleLanguageNameChange}
