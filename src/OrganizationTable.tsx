@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { useGlobal } from 'reactn';
 import Organization from './model/organization';
 import { Redirect } from 'react-router-dom';
@@ -10,25 +10,16 @@ import AppBar from "@material-ui/core/AppBar";
 import MuiToolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import { createStyles, withStyles, Theme } from "@material-ui/core/styles";
 import {
-  FilteringState,
-  IntegratedFiltering,
-  IntegratedPaging,
   IntegratedSelection,
   IntegratedSorting,
-  PagingState,
   SelectionState,
   SortingState
 } from "@devexpress/dx-react-grid";
 import {
-  DragDropProvider,
   Grid,
-  PagingPanel,
   Table,
-  TableColumnResizing,
-  TableFilterRow,
   TableHeaderRow,
   TableSelection,
   Toolbar
@@ -52,37 +43,16 @@ interface Row {
 export function OrganizationTable(props: any) {
   const { classes, organizations } = props;
   const [columns, setColumns] = useState([{ name: "name", title: "Name" }]);
-  const [pageSizes, setPageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [currentOrganization, setOrganization] = useGlobal('organization');
   const [entryOrganization, setEntryOrganization] = useState(0);
   const [message, setMessage] = useState('');
 
-  const handleCancel = () => {
-    if (currentOrganization === null) {
-      setView('/access')
-    } else {
-      setView('/admin');
-    }
-  };
-  const handleContinue = () => {
-    if (currentOrganization !== null) {
-      if (entryOrganization !== currentOrganization) {
-        setView('/welcome')
-      } else if (currentOrganization !== null) {
-        setView('/admin');
-      }
-    } else {
-      setMessage('One organization should be selected');
-    }
-  };
   const handleSelection = (s: any) => {
-    if (currentOrganization === null) {
-      const selectedRow: Row = rows[s[0]];
-      setOrganization(selectedRow.id)
-      setView('/welcome');
-    }
+    const selectedRow: Row = rows[s[0]];
+    setOrganization(selectedRow.id)
+    setView('/welcome');
   };
   const handleMessageReset = () => { setMessage('') };
 
@@ -124,7 +94,7 @@ export function OrganizationTable(props: any) {
             <IntegratedSorting />
             <IntegratedSelection />
             <Table />
-            <TableSelection selectByRowClick={true} />
+            <TableSelection selectByRowClick={true} showSelectionColumn={false}/>
             <TableHeaderRow showSortingControls={true} />
             <Toolbar />
           </Grid>
@@ -162,15 +132,6 @@ const styles = (theme: Theme) =>
       flexDirection: "row",
       justifyContent: "center"
     }),
-    actions: theme.mixins.gutters({
-      paddingBottom: 16,
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "right"
-    }),
-    button: {
-      marginRight: theme.spacing.unit
-    }
   });
 
   const mapStateToProps = () => ({});
