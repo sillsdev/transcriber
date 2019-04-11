@@ -9,6 +9,7 @@ import { QueryBuilder, Record } from '@orbit/data';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
+import Fab from '@material-ui/core/Fab';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import BackIcon from '@material-ui/icons/ArrowBack';
@@ -29,6 +30,7 @@ import {
   Table, TableColumnResizing, TableFilterRow,
   TableHeaderRow, TableSelection, Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
+import { TableCell } from '@material-ui/core';
 
 export class ProjectTableData extends React.Component<IRecordProps, object> {
   public render(): JSX.Element {
@@ -42,7 +44,7 @@ interface Row {
   name: string;
   description: string;
   language: string;
-  ispublic: string;
+  delete: string;
 }
 
 export function ProjectTable(props: any) {
@@ -51,7 +53,7 @@ export function ProjectTable(props: any) {
     { name: 'name', title: 'Name' },
     { name: 'description', title: 'Description' },
     { name: 'language', title: 'Language' },
-    { name: 'public', title: 'Public' },
+    { name: 'delete', title: 'Delete' },
   ]);
   const [pageSizes, setPageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState([]);
@@ -80,18 +82,12 @@ export function ProjectTable(props: any) {
       name: o.attributes.name,
       description: o.attributes.description,
       language: o.attributes.language,
-      public: o.attributes.isPublic,
+      delete: o.id,
     })))
   }, []);
 
   const LinkCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
-    <Table.Cell
-      {...restProps}
-      style={{
-        ...style,
-      }}
-      value={value}
-    >
+    <Table.Cell {...restProps} style={{...style}} value >
       <Button
         key={value}
         aria-label={value}
@@ -105,10 +101,26 @@ export function ProjectTable(props: any) {
     </Table.Cell>
   );
 
+  const DeleteCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
+    <Table.Cell {...restProps} style={{...style}} value >
+      <IconButton
+        key={value}
+        aria-label={value}
+        color="default"
+        className={classes.deleteIcon}
+        onClick={handleDelete}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </Table.Cell>
+  );
+
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'name') {
       return <LinkCell {...props} />
+    } else if (column.name === 'delete') {
+      return <DeleteCell {...props} />
     }
     return <Table.Cell {...props} />
   };
@@ -127,66 +139,38 @@ export function ProjectTable(props: any) {
       </AppBar>
       <div className={classes.container}>
         <Paper id="ProjectTable" className={classes.paper}>
-          <h2 className={classes.dialogHeader}>{"Choose Project"}</h2>
-          <Grid rows={rows} columns={columns}>
-            <FilteringState />
-            <SortingState
-              defaultSorting={[{ columnName: "name", direction: "asc" }]}
-            />
-
-            <SelectionState onSelectionChange={handleSelection} />
-
-            <PagingState />
-
-            <IntegratedFiltering />
+        <div className={classes.dialogHeader}>
+        <div className={classes.grow} />
+        <h2>{"Choose Project"}</h2>
+        <div className={classes.grow} />
+          <Fab
+            key="add"
+            aria-label="Add"
+            color="primary"
+            className={classes.button}
+            onClick={handleAdd}
+          >
+            <AddIcon className={classes.icon} />
+          </Fab>
+        </div>
+        <Grid rows={rows} columns={columns}>
+          <SortingState
+            defaultSorting={[{ columnName: "name", direction: "asc" }]}
+          />
             <IntegratedSorting />
-            <IntegratedPaging />
-            <IntegratedSelection />
-
-            <DragDropProvider />
-
             <Table cellComponent={Cell} />
-            <TableSelection />
-            <TableColumnResizing
-              minColumnWidth={50}
-              defaultColumnWidths={[
-                { columnName: "name", width: 200 },
-                { columnName: "description", width: 400 },
-                { columnName: "language", width: 100 },
-                { columnName: "public", width: 100 }
-              ]}
-            />
-
+              <TableColumnResizing
+                minColumnWidth={50}
+                defaultColumnWidths={[
+                  { columnName: "name", width: 200 },
+                  { columnName: "description", width: 400 },
+                  { columnName: "language", width: 100 },
+                  { columnName: "delete", width: 100 }
+                ]}
+              />
             <TableHeaderRow showSortingControls={true} />
-            <TableFilterRow showFilterSelector={true} />
-            <PagingPanel pageSizes={pageSizes} />
-
             <Toolbar />
           </Grid>
-          <div className={classes.actions}>
-            <Button
-              key="delete"
-              aria-label="Delete"
-              variant="contained"
-              color="secondary"
-              className={classes.button}
-              onClick={handleDelete}
-            >
-              {'Delete'}
-              <DeleteIcon className={classes.icon} />
-            </Button>
-            <Button
-              key="add"
-              aria-label="Add"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleAdd}
-            >
-              {'Add'}
-              <AddIcon className={classes.icon} />
-            </Button>
-          </div>
         </Paper>
       </div>
       <SnackBar {...props} message={message} reset={handleMessageReset} />
@@ -217,6 +201,9 @@ const styles = (theme: Theme) => createStyles({
       width: '100%',
     },
   }),
+  grow: {
+    flexGrow: 1,
+  },
   dialogHeader: theme.mixins.gutters({
     display: 'flex',
     flexDirection: 'row',
@@ -232,7 +219,6 @@ const styles = (theme: Theme) => createStyles({
     margin: theme.spacing.unit
   },
   icon: {
-    marginLeft: theme.spacing.unit
   },
   editIcon: {
     fontSize: 16,

@@ -117,52 +117,17 @@ export function OrganizationTable(props: any) {
         <Paper id="OrganizationTable" className={classes.paper}>
           <h2 className={classes.dialogHeader}>{"Choose Organization"}</h2>
           <Grid rows={rows} columns={columns}>
-            <FilteringState />
             <SortingState
               defaultSorting={[{ columnName: "name", direction: "asc" }]}
             />
-
             <SelectionState onSelectionChange={handleSelection} />
-
-            <PagingState />
-
-            <IntegratedFiltering />
             <IntegratedSorting />
-            <IntegratedPaging />
             <IntegratedSelection />
-
-            <DragDropProvider />
-
             <Table />
             <TableSelection selectByRowClick={true} />
-            <TableColumnResizing
-              minColumnWidth={50}
-              defaultColumnWidths={[{ columnName: "name", width: 200 }]}
-            />
-
             <TableHeaderRow showSortingControls={true} />
-            <TableFilterRow showFilterSelector={true} />
-            <PagingPanel pageSizes={pageSizes} />
-
             <Toolbar />
           </Grid>
-          <div className={classes.actions}>
-              <Button
-                onClick={handleCancel}
-                variant="raised"
-                className={classes.button}
-              >
-                {'Cancel'}
-              </Button>
-              <Button
-                onClick={handleContinue}
-                variant="raised"
-                color="primary"
-                className={classes.button}
-              >
-                {'Continue'}
-              </Button>
-          </div>
         </Paper>
       </div>
       <SnackBar {...props} message={message} reset={handleMessageReset} />
