@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, Record } from '@orbit/data';
+import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -17,20 +17,10 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import SnackBar from './SnackBar';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
-import {
-  FilteringState,
-  IntegratedFiltering, IntegratedPaging, IntegratedSelection, IntegratedSorting,
-  PagingState, SelectionState, SortingState,
-} from '@devexpress/dx-react-grid';
-import {
-  DragDropProvider,
-  Grid, PagingPanel,
-  Table, TableColumnResizing, TableFilterRow,
-  TableHeaderRow, TableSelection, Toolbar,
-} from '@devexpress/dx-react-grid-material-ui';
-import { TableCell } from '@material-ui/core';
+import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
+import { Grid, Table, TableColumnResizing,
+  TableHeaderRow, Toolbar } from '@devexpress/dx-react-grid-material-ui';
 
 export class ProjectTableData extends React.Component<IRecordProps, object> {
   public render(): JSX.Element {
@@ -48,32 +38,29 @@ interface Row {
 }
 
 export function ProjectTable(props: any) {
-  const { classes, projects } = props;
+  const { classes, projects, updateStore } = props;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'description', title: 'Description' },
     { name: 'language', title: 'Language' },
     { name: 'delete', title: 'Delete' },
   ]);
-  const [pageSizes, setPageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [project, setProject] = useGlobal('project');
-  const [selected, setSelected] = useState([]);
-  const [message, setMessage] = useState('');
 
-  const handleDelete = () => { alert('Delete') };
+  const handleDelete = (e:any) => {
+    updateStore((t: TransformBuilder) => t.removeRecord({
+      type: 'project',
+      id: e.currentTarget.id
+    }))
+  };
   const handleAdd = () => { alert('Add') };
   const handleCancel = () => { setView('/admin') };
   const handleEdit = (e:any) => {
-    //console.log(e.target.innerText)
     setProject(projects.filter((p: Project) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0].id);
     setView('/projectstatus')
   };
-  const handleSelection = (s: any) => {
-    setSelected(s);
-  };
-  const handleMessageReset = () => { setMessage('') }
 
   useEffect(() => {
     setRows(projects.map((o: Project) => ({
@@ -104,6 +91,7 @@ export function ProjectTable(props: any) {
   const DeleteCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
     <Table.Cell {...restProps} style={{...style}} value >
       <IconButton
+        id={value}
         key={value}
         aria-label={value}
         color="default"
@@ -173,7 +161,6 @@ export function ProjectTable(props: any) {
           </Grid>
         </Paper>
       </div>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   ) : (
     <Redirect to={view} />
@@ -209,17 +196,6 @@ const styles = (theme: Theme) => createStyles({
     flexDirection: 'row',
     justifyContent: 'center'
   }),
-  actions: theme.mixins.gutters({
-    paddingBottom: 16,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'right'
-  }),
-  button: {
-    margin: theme.spacing.unit
-  },
-  icon: {
-  },
   editIcon: {
     fontSize: 16,
   },
