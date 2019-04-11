@@ -74,7 +74,7 @@ export function ProjectTable(props: any) {
       language: o.attributes.language,
       delete: o.id,
     })))
-  }, []);
+  }, [projects]);
 
   const LinkCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
     <Table.Cell {...restProps} style={{...style}} value >
