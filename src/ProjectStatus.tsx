@@ -42,6 +42,7 @@ const drawerWidth = 240;
 interface IProps extends IRecordProps {
   classes: CSSProperties;
   theme: Theme;
+  history: any;
 }
 
 class ProjectStatusData extends React.Component<IProps, object> {
@@ -51,7 +52,7 @@ class ProjectStatusData extends React.Component<IProps, object> {
 }
 
 export function ProjectStatus(props: any): JSX.Element {
-  const { classes, theme, projects } = props;
+  const { classes, history, theme, projects } = props;
   const [open, setOpen] = useState(true);
   const [project, setProject] = useGlobal('project');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
@@ -63,8 +64,10 @@ export function ProjectStatus(props: any): JSX.Element {
   const handleProjectItem = (e: any) => { setContent(e.target.innerText) }
   const handleCancel = () => { setView('/project') };
 
-  const contentJsx = content.toLowerCase() === 'settings'? <ProjectSettings />:
-    <Chart />;
+  const contentJsx = (content.toLowerCase() === 'settings' ||
+      history.location.search === '?add')
+    ? <ProjectSettings />
+    : <Chart />;
 
 
   return view ===''? (
@@ -149,7 +152,7 @@ export function ProjectStatus(props: any): JSX.Element {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <h2 className={classes.dialogHeader}>
-          {(currentProject && currentProject.attributes.name) || 'Project A'}
+          {(currentProject && currentProject.attributes.name) || 'New Project'}
         </h2>
 
         {contentJsx}

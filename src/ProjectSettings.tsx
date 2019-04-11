@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import Orbit from '@orbit/core';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -35,6 +36,8 @@ export class ProjectSettingsData extends React.Component<IRecordProps, object> {
 export function ProjectSettings(props: IProps) {
     const { classes, projects, projectTypes, updateStore } = props;
     const [project, setProject] = useGlobal('project');
+    const [user, setUser] = useGlobal('user');
+    const [organization, setOrganization] = useGlobal('organization');
     const currentProject = projects.filter((p: Project) => p.id === project)[0];
     const [name, setName] = useState((currentProject && currentProject.attributes.name) || '');
     const [description, setDescription] = useState((currentProject && currentProject.attributes.description) || '');
@@ -87,6 +90,37 @@ export function ProjectSettings(props: IProps) {
         'type',
         { type: 'projecttype', id: projectType }
       ))
+    };
+    const handleAdd = () => {
+      const newId = Orbit.uuid();
+      updateStore((t: TransformBuilder) => t.addRecord({
+        type: 'project',
+        id: newId,
+        attributes: {
+          name: name,
+          projectTypeId: parseInt(projectType),
+          description: description,
+          ownerId: user || 1,
+          organizationId: organization || 1,
+          uilanguagebcp47: null,
+          language: bcp47,
+          languageName: languageName,
+          defaultFont: defaultFont,
+          defaultFontSize: defaultFontSize,
+          rtl: rtl,
+          allowClaim: true,
+          isPublic: true,
+          dateCreated: new Date().toISOString(),
+          dateUpdated: new Date().toISOString(),
+          dateArchived: null,
+        },
+      }))
+      updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
+        { type: 'project', id: project },
+        'type',
+        { type: 'projecttype', id: projectType }
+      ))
+      setProject(newId);
     };
 
     useEffect(() => {
@@ -304,9 +338,9 @@ export function ProjectSettings(props: IProps) {
               variant="contained"
               color="primary"
               className={classes.button}
-              onClick={handleSave}
+              onClick={currentProject === undefined? handleAdd: handleSave}
             >
-              {'Save'}
+              {currentProject === undefined? 'Add': 'Save'}
               <SaveIcon className={classes.icon} />
             </Button>
             </div>

@@ -55,7 +55,10 @@ export function ProjectTable(props: any) {
       id: e.currentTarget.id
     }))
   };
-  const handleAdd = () => { alert('Add') };
+  const handleAdd = () => {
+    setProject(null);
+    setView('/projectstatus?add')
+  };
   const handleCancel = () => { setView('/admin') };
   const handleEdit = (e:any) => {
     setProject(projects.filter((p: Project) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0].id);
