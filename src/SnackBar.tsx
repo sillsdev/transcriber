@@ -18,10 +18,11 @@ function SimpleSnackbar(props: any) {
   };
 
   useEffect(() => {
-    setOpen(message !== '');
+    console.log(message)
+    setOpen(message.type === 'span' || (message.type === 'string' && message !== ''));
   }, [message])
 
-  return (message !== ''? (
+  return (message.type === 'span' || (message.type === 'string' && message !== '')? (
     <Snackbar
       anchorOrigin={{
         vertical: "bottom",
@@ -58,7 +59,9 @@ function SimpleSnackbar(props: any) {
 };
 
 SimpleSnackbar.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  message: PropTypes.object.isRequired,
+  reset: PropTypes.func,
 };
 
 const styles = (theme: Theme) => {

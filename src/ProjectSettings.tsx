@@ -16,6 +16,10 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import blue from '@material-ui/core/colors/blue';
+import yellow from '@material-ui/core/colors/yellow';
+import SnackBar from './SnackBar';
 
 export class ProjectSettingsData extends React.Component<IRecordProps, object> {
     public render(): JSX.Element {
@@ -34,27 +38,26 @@ export function ProjectSettings(props: IProps) {
     const [name, setName] = useState((currentProject && currentProject.attributes.name) || '');
     const [description, setDescription] = useState((currentProject && currentProject.attributes.description) || '');
     const [projectType, setProjectType] = useState('');
-    const [uiBcp47, setUiBcp47] = useState((currentProject && currentProject.attributes.uilanguagebcp47) || 'en');
     const [bcp47, setBcp47] = useState((currentProject && currentProject.attributes.language) || 'und');
     const [languageName, setLanguageName] = useState((currentProject && currentProject.attributes.languageName) || bcp47);
     const [defaultFont, setDefaultFont] = useState((currentProject && currentProject.attributes.defaultFont) || '');
     const [defaultFontSize, setDefaultFontSize] = useState((currentProject && currentProject.attributes.defaultFontSize) || 'large');
     const [rtl, setRtl] = useState((currentProject && currentProject.attributes.rtl) || false);
-    const [isPublic, setIsPublic] = useState((currentProject && currentProject.attributes.isPublic) || true);
-
+    const [message, setMessage] = useState(<></>);
+    
     const handleNameChange = (e:any) => { setName(e.target.value) };
     const handleDescriptionChange = (e:any) => { setDescription(e.target.value) };
     const handleTypeChange = (e:any) => { setProjectType(e.target.value) };
-    const handleUiBcp47Change = (e:any) => { alert('Language Picker') };
     const handleBcp47Change = (e:any) => { alert('Language Picker') };
     const handleLanguageNameChange = (e:any) => { setLanguageName(e.target.value) };
     const handleDefaultFontChange = (e:any) => {
         setDefaultFont(e.target.value)
-        setRtl(safeFonts.filter(option => option.label === e.target.value)[0].rtl);
+        setRtl(safeFonts.filter(option => option.value === e.target.value)[0].rtl);
     };
     const handleDefaultFontSizeChange = (e:any) => { setDefaultFontSize(e.target.value) };
     const handleRtlChange = () => { setRtl(!rtl) };
-    const handleIsPublicChange = () => { setIsPublic(!isPublic) };
+    const handleNeedFont = () => { setMessage(<span><a className={classes.link} href='https://community.scripture.software.sil.org/c/transcriber'>Contact developers</a> to request font</span>) };
+    const handleMessageReset = () => { setMessage(<></>) }
     const handleSave = () => { alert('saving...') };
 
     useEffect(() => {
@@ -68,15 +71,10 @@ export function ProjectSettings(props: IProps) {
     }, [currentProject])
 
     const safeFonts = [
-        { value: 'Roboto', label: 'Roboto', rtl: false },
-        { value: 'Noto Sans', label: 'Noto Sans', rtl: false },
-        { value: 'Segoe UI', label: 'Segoe UI', rtl: false },
-        { value: 'Charis SIL', label: 'Charis SIL', rtl: false },
-        { value: 'Ezra SIL', label: 'Ezra SIL', rtl: true },
-        { value: 'Galatia SIL', label: 'Galatia SIL', rtl: false },
-        { value: 'Annapurna SIL', label: 'Annapurna SIL', rtl: false },
-        { value: 'Scheherazade', label: 'Scheherazade', rtl: true },
-        { value: 'SimSun', label: 'SimSun', rtl: false },
+        { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
+        { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
+        { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
+        { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
     ];
 
     const fontSizes = [
@@ -87,8 +85,8 @@ export function ProjectSettings(props: IProps) {
       <div className={classes.container}>
         <div className={classes.paper}>
           <FormControl>
-            <FormLabel>{"General"}</FormLabel>
-            <FormGroup>
+            <FormLabel className={classes.label}>{"General"}</FormLabel>
+            <FormGroup className={classes.group}>
               <FormControlLabel
                 control={
                   <TextField
@@ -148,27 +146,9 @@ export function ProjectSettings(props: IProps) {
                 }
                 label=""
               />
-              <FormControlLabel
-                control={
-                  <TextField
-                    id="ui-language-picker"
-                    label="User Interface Language"
-                    defaultValue={uiBcp47}
-                    className={classes.textField}
-                    margin="normal"
-                    onClick={handleUiBcp47Change}
-                    InputProps={{
-                      readOnly: true
-                    }}
-                    variant="filled"
-                    required={true}
-                  />
-                }
-                label=""
-              />
             </FormGroup>
             <FormLabel className={classes.label}>{"Language"}</FormLabel>
-            <FormGroup>
+            <FormGroup className={classes.group}>
               <FormControlLabel
                 control={
                   <TextField
@@ -202,6 +182,7 @@ export function ProjectSettings(props: IProps) {
                 }
                 label=""
               />
+              <FormLabel className={classes.info}>{"(User interface languages are set in the user profile.)"}</FormLabel>
             </FormGroup>
             <FormLabel className={classes.label}>{"Text Editor"}</FormLabel>
             <FormGroup>
@@ -231,6 +212,20 @@ export function ProjectSettings(props: IProps) {
                     ))}
                   </TextField>
                 }
+                label=""
+              />
+              <FormControlLabel
+                control={<Button
+                    key="missing-font"
+                    aria-label="Need Font"
+                    color="secondary"
+                    className={classes.moreButton}
+                    onClick={handleNeedFont}
+                    style={{lineHeight: 1}}
+                  >
+                    <HelpOutlineIcon className={classes.smallIcon} />
+                    {"Can't find the font you need?"}
+                  </Button>}
                 label=""
               />
               <FormControlLabel
@@ -271,17 +266,6 @@ export function ProjectSettings(props: IProps) {
                 }
                 label={"Right to left?"}
               />
-              <FormControlLabel
-                control={
-                  <Switch
-                    id="switch-is-public"
-                    checked={isPublic}
-                    color="default"
-                    onChange={handleIsPublicChange}
-                  />
-                }
-                label={"Is Public?"}
-              />
             </FormGroup>
           </FormControl>
           <div className={classes.actions}>
@@ -298,6 +282,7 @@ export function ProjectSettings(props: IProps) {
             </Button>
             </div>
         </div>
+        <SnackBar {...props} message={message} reset={handleMessageReset} />
       </div>
     );
 }
@@ -308,11 +293,16 @@ const styles = (theme: Theme) => ({
         margin: theme.spacing.unit * 4,
     },
     paper: {
-        paddingTop: theme.spacing.unit * 2,
         paddingLeft: theme.spacing.unit * 4,
     },
+    group: {
+      paddingBottom: theme.spacing.unit * 3,
+    },
     label: {
-        paddingTop: theme.spacing.unit * 2,
+        color: blue[500],
+    },
+    info: {
+        justifyContent: 'right',
     },
     textField: {
       marginLeft: theme.spacing.unit,
@@ -330,33 +320,42 @@ const styles = (theme: Theme) => ({
         flexDirection: 'row',
         justifyContent: 'right'
       }),
-      button: {
-        margin: theme.spacing.unit
-      },
-      icon: {
-        marginLeft: theme.spacing.unit
-      },
-      });
+    button: {
+      margin: theme.spacing.unit
+    },
+    icon: {
+      marginLeft: theme.spacing.unit
+    },
+    moreButton: {
+    },
+    smallIcon: {
+      marginRight: theme.spacing.unit,
+      fontSize: 12,
+    },
+    link: {
+      color: yellow[500],
+    },
+    });
+
+const mapStateToProps = () => ({});
+const mapDispatchToProps = (dispatch: any) => ({
+    ...bindActionCreators({
+    }, dispatch),
+});
   
-      const mapStateToProps = () => ({});
-      const mapDispatchToProps = (dispatch: any) => ({
-          ...bindActionCreators({
-          }, dispatch),
-      });
-      
-      interface IRecordProps {
-          projects: Array<Project>;
-          projectTypes: Array<ProjectType>;
-      }
-      
-      const mapRecordsToProps = {
-          projects: (q: QueryBuilder) => q.findRecords('project'),
-          projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
-      }
-      
-      export default withStyles(styles, { withTheme: true })(
-          withData(mapRecordsToProps)(
-              connect(mapStateToProps, mapDispatchToProps)(ProjectSettings) as any
-              ) as any
-          ) as any;
+interface IRecordProps {
+    projects: Array<Project>;
+    projectTypes: Array<ProjectType>;
+}
+
+const mapRecordsToProps = {
+    projects: (q: QueryBuilder) => q.findRecords('project'),
+    projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
+}
+
+export default withStyles(styles, { withTheme: true })(
+    withData(mapRecordsToProps)(
+        connect(mapStateToProps, mapDispatchToProps)(ProjectSettings) as any
+        ) as any
+    ) as any;
       
