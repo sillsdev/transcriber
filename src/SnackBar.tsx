@@ -18,7 +18,6 @@ function SimpleSnackbar(props: any) {
   };
 
   useEffect(() => {
-    console.log(message)
     setOpen(message.type === 'span' || (message.type === 'string' && message !== ''));
   }, [message])
 

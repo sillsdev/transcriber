@@ -5,7 +5,7 @@ import ProjectType from './model/projectType';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -29,10 +29,11 @@ export class ProjectSettingsData extends React.Component<IRecordProps, object> {
 
   interface IProps extends IRecordProps {
       classes?: any;
+      updateStore?: any
   }
   
 export function ProjectSettings(props: IProps) {
-    const { classes, projects, projectTypes } = props;
+    const { classes, projects, projectTypes, updateStore } = props;
     const [project, setProject] = useGlobal('project');
     const currentProject = projects.filter((p: Project) => p.id === project)[0];
     const [name, setName] = useState((currentProject && currentProject.attributes.name) || '');
@@ -44,7 +45,7 @@ export function ProjectSettings(props: IProps) {
     const [defaultFontSize, setDefaultFontSize] = useState((currentProject && currentProject.attributes.defaultFontSize) || 'large');
     const [rtl, setRtl] = useState((currentProject && currentProject.attributes.rtl) || false);
     const [message, setMessage] = useState(<></>);
-    
+
     const handleNameChange = (e:any) => { setName(e.target.value) };
     const handleDescriptionChange = (e:any) => { setDescription(e.target.value) };
     const handleTypeChange = (e:any) => { setProjectType(e.target.value) };
@@ -58,7 +59,35 @@ export function ProjectSettings(props: IProps) {
     const handleRtlChange = () => { setRtl(!rtl) };
     const handleNeedFont = () => { setMessage(<span><a className={classes.link} href='https://community.scripture.software.sil.org/c/transcriber'>Contact developers</a> to request font</span>) };
     const handleMessageReset = () => { setMessage(<></>) }
-    const handleSave = () => { alert('saving...') };
+    const handleSave = () => {
+      updateStore((t: TransformBuilder) => t.replaceRecord({
+        type: 'project',
+        id: project,
+        attributes: {
+          name: name,
+          projectTypeId: parseInt(projectType),
+          description: description,
+          ownerId: currentProject.attributes.ownerId,
+          organizationId: currentProject.attributes.organizationId,
+          uilanguagebcp47: currentProject.attributes.uilanguagebcp47,
+          language: bcp47,
+          languageName: languageName,
+          defaultFont: defaultFont,
+          defaultFontSize: defaultFontSize,
+          rtl: rtl,
+          allowClaim: currentProject.attributes.allowClaim,
+          isPublic: currentProject.attributes.isPublic,
+          dateCreated: currentProject.attributes.dateCreated,
+          dateUpdated: new Date().toISOString(),
+          dateArchived: currentProject.attributes.dateArchived,
+        },
+      }))
+      updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
+        { type: 'project', id: project },
+        'type',
+        { type: 'projecttype', id: projectType }
+      ))
+    };
 
     useEffect(() => {
       if (projectTypes && projectTypes.length !== 0 && currentProject) {
