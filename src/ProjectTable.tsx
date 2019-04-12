@@ -21,6 +21,8 @@ import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
 import { Grid, Table, TableColumnResizing,
   TableHeaderRow, Toolbar } from '@devexpress/dx-react-grid-material-ui';
+import Confirm from './AlertDialog';
+import AlertDialog from './AlertDialog';
 
 export class ProjectTableData extends React.Component<IRecordProps, object> {
   public render(): JSX.Element {
@@ -47,14 +49,17 @@ export function ProjectTable(props: any) {
   ]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
+  const [deleteItem, setDeleteItem] = useState('');
   const [project, setProject] = useGlobal('project');
 
-  const handleDelete = (e:any) => {
+  const handleDelete = (e: any) => { setDeleteItem(e.currentTarget.id) };
+  const handleDeleteConfirmed = () => {
     updateStore((t: TransformBuilder) => t.removeRecord({
       type: 'project',
-      id: e.currentTarget.id
+      id: deleteItem,
     }))
   };
+  const handleDeleteRefused = () => { setDeleteItem('') };
   const handleAdd = () => {
     setProject(null);
     setView('/projectstatus?add')
@@ -164,6 +169,12 @@ export function ProjectTable(props: any) {
           </Grid>
         </Paper>
       </div>
+      {deleteItem !== ''
+        ? <AlertDialog
+            yesResponse={handleDeleteConfirmed}
+            noResponse={handleDeleteRefused}
+          />
+        : <></>}
     </div>
   ) : (
     <Redirect to={view} />
