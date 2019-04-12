@@ -19,8 +19,11 @@ import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
 import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
-import { Grid, Table, TableColumnResizing,
-  TableHeaderRow, Toolbar } from '@devexpress/dx-react-grid-material-ui';
+import { Grid,
+  Table,
+  TableColumnResizing,
+  TableHeaderRow,
+  Toolbar } from '@devexpress/dx-react-grid-material-ui';
 import Confirm from './AlertDialog';
 import AlertDialog from './AlertDialog';
 

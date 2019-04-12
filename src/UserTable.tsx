@@ -78,7 +78,7 @@ export function UserTable(props: any) {
         </MuiToolbar>
       </AppBar>
       <div className={classes.container}>
-        <Paper id='UserTable' className={classes.paper}>
+        <Paper id='user-table' className={classes.paper}>
           <h2 className={classes.dialogHeader}>
             {'Choose User'}
           </h2>

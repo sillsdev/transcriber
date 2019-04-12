@@ -14,7 +14,7 @@ export function Access(props: any) {
             <AppBar className={classes.appBar} position="static">
                 <Toolbar>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
-                        SIL Transcriber Access
+                        {'SIL Transcriber Access'}
               </Typography>
                 </Toolbar>
             </AppBar>

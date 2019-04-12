@@ -22,7 +22,7 @@ export function CreateOrg(props: any) {
             <AppBar className={classes.appBar} position="static">
                 <Toolbar>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
-                        SIL Transcriber Admin
+                        {'SIL Transcriber Admin'}
               </Typography>
                 </Toolbar>
             </AppBar>
@@ -32,19 +32,19 @@ export function CreateOrg(props: any) {
                         {'Create Organization'}
                     </h2>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel>Find an existing Organization</InputLabel>
+                        <InputLabel>{'Find an existing Organization'}</InputLabel>
                         <Input
                             value={findOrganization}
                             onChange={handleFindOrganizationChange}
-                            id="findOrganization"
+                            id="find-organization"
                         />
                     </FormControl>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel>Organization Name</InputLabel>
+                        <InputLabel>{'Organization Name'}</InputLabel>
                         <Input
                             value={organizationName}
                             onChange={handleOrganizationNameChange}
-                            id="findOrganization"
+                            id="organization-name"
                         />
                     </FormControl>
                     <div className={classes.actions}>
@@ -52,14 +52,14 @@ export function CreateOrg(props: any) {
                             onClick={handleCancel}
                             variant="raised"
                             className={classes.button}>
-                            Cancel
+                            {'Cancel'}
                         </Button>
                         <Button
                             onClick={handleContinue}
                             variant="raised"
                             color="primary"
                             className={classes.button}>
-                            Continue
+                            {'Continue'}
                         </Button>
                     </div>
                 </Paper>

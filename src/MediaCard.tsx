@@ -23,10 +23,10 @@ export function MediaCard(props: Props) {
         <CardMedia
           className={classes.media}
           image={graphic != null? graphic: logo}
-          title="Contemplative Reptile"
+          title={'Section'}
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2" style={{textDecoration: 'none'}}>
+          <Typography gutterBottom variant={type.length > 8? "h6": "h5"} component="h2" style={{textDecoration: 'none'}}>
             {type}
           </Typography>
           <Typography component="p" style={{textDecoration: 'none'}}>

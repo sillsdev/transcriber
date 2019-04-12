@@ -28,7 +28,7 @@ function AdminPanel(props: Props) {
       <AppBar className={classes.appBar} position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-            Transcriber Admin
+            {'Transcriber Admin'}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -36,7 +36,7 @@ function AdminPanel(props: Props) {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder={'Search…'}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -52,19 +52,19 @@ function AdminPanel(props: Props) {
         justify='center'
         alignItems='flex-start' >
         <Link to='/organization' className={classes.link}>
-          <MediaCard type="Organizations" explain="Add or manage organizations" graphic={organizationSvg} />
+          <MediaCard type={'Organizations'} explain={'Add or manage organizations'} graphic={organizationSvg} />
         </Link>
         <Link to='/user' className={classes.link}>
-          <MediaCard type="Users" explain="Add or manage users" graphic={usersSvg} />
+          <MediaCard type={'Users'} explain={'Add or manage users'} graphic={usersSvg} />
         </Link>
         <Link to='/project' className={classes.link}>
-          <MediaCard type="Projects" explain="Add or manage projects" graphic={projectSvg} />
+          <MediaCard type={'Projects'} explain={'Add or manage projects'} graphic={projectSvg} />
         </Link>
         <Link to='/admin' className={classes.link}>
-          <MediaCard type="Media" explain="Add or manage audio files" graphic={mediaSvg} />
+          <MediaCard type={'Media'} explain={'Add or manage audio files'} graphic={mediaSvg} />
         </Link>
         <Link to='/admin' className={classes.link}>
-          <MediaCard type="Books" explain="Add or manage books" graphic={bookSvg} />
+          <MediaCard type={'Books'} explain={'Add or manage books'} graphic={bookSvg} />
         </Link>
       </Grid>
     </div>

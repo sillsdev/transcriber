@@ -14,33 +14,33 @@ export function Welcome(props: any) {
             <AppBar className={classes.appBar} position="static">
                 <Toolbar>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
-                        SIL Transcriber Admin
+                        {'SIL Transcriber Admin'}
                     </Typography>
                 </Toolbar>
             </AppBar>
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <Typography variant="h4" className={classes.dialogHeader}>
-                        Thanks for signing up!
+                        {'Thanks for signing up!'}
                     </Typography>
                     <Typography variant="h5" className={classes.text}>
-                        Do you want to start transcribing immediately?
+                        {'Do you want to start transcribing immediately?'}
                     </Typography>
                     <div className={classes.actions}>
                         <Button variant="contained" className={classes.button}>
-                            Transcriber Web
+                            {'Transcriber Web'}
                         </Button>
                         <Button variant="contained" className={classes.button}>
-                            Transcriber Desktop
+                            {'Transcriber Desktop'}
                         </Button>
                     </div>
                     <Typography variant="h5" className={classes.text}>
-                        Do you want to configure a transcription project?
+                        {'Do you want to configure a transcription project?'}
                     </Typography>
                     <div className={classes.actions}>
                         <Link to="/admin">
                             <Button variant="contained" className={classes.button}>
-                                Transcriber Admin
+                                {'Transcriber Admin'}
                             </Button>
                         </Link>
                     </div>

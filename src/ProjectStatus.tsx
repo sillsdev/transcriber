@@ -81,7 +81,7 @@ export function ProjectStatus(props: any): JSX.Element {
         <Toolbar disableGutters={!open}>
           <IconButton
             color="inherit"
-            aria-label="Open drawer"
+            aria-label={'Open drawer'}
             onClick={handleDrawerOpen}
             className={classNames(classes.menuButton, {
               [classes.hide]: open,
@@ -101,7 +101,7 @@ export function ProjectStatus(props: any): JSX.Element {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder={'Search…'}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
