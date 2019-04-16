@@ -85,11 +85,13 @@ export function ProjectSettings(props: IProps) {
           dateArchived: currentProject.attributes.dateArchived,
         },
       }))
-      updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-        { type: 'project', id: project },
-        'type',
-        { type: 'projecttype', id: projectType }
-      ))
+      if (projectType !== currentProject.attributes.projectTypeId.toString()) {
+        updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
+          { type: 'project', id: project },
+          'type',
+          { type: 'projecttype', id: projectType }
+        ))
+        }
     };
     const handleAdd = () => {
       const newId = Orbit.uuid();
@@ -116,18 +118,28 @@ export function ProjectSettings(props: IProps) {
         },
       }))
       updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-        { type: 'project', id: project },
+        { type: 'project', id: newId },
         'type',
         { type: 'projecttype', id: projectType }
       ))
+      // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
+      //   { type: 'project', id: newId },
+      //   'owner',
+      //   { type: 'user', id: user || "1" }
+      // ))
+      // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
+      //   { type: 'project', id: newId },
+      //   'organization',
+      //   { type: 'organization', id: organization }
+      // ))
       setProject(newId);
     };
 
     useEffect(() => {
       if (projectTypes && projectTypes.length !== 0 && currentProject) {
-        const t = projectTypes.filter((t: ProjectType) => t.id === currentProject.attributes.projectTypeId.toString());
+        const t = projectTypes.filter((t: ProjectType) => (t.keys && t.keys.remoteId || t.id) === currentProject.attributes.projectTypeId.toString());
         if (t.length !== 0) {
-          setProjectType(t[0].id);
+          setProjectType((t[0].keys && t[0].keys.remoteId && t[0].keys.remoteId) || t[0].id);
         }
       }
       
@@ -201,7 +213,7 @@ export function ProjectSettings(props: IProps) {
                     required={true}
                   >
                     {projectTypes.map((option: ProjectType) => (
-                      <MenuItem key={option.id} value={option.id}>
+                      <MenuItem key={option.id} value={option.keys && option.keys.remoteId || option.id}>
                         {option.attributes.name}
                       </MenuItem>
                     ))}

@@ -3,6 +3,9 @@ import TableRelationship from './relationsihp';
 interface Organization {
     type: string;
     id: string;
+    keys?: {
+      remoteId?: string;
+    };
     attributes: {
       name: string;
       "website-url": string;

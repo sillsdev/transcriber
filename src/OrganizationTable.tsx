@@ -60,7 +60,7 @@ export function OrganizationTable(props: any) {
     setRows(
       organizations.map((o: Organization) => ({
         type: o.type,
-        id: o.id,
+        id: (o.keys && o.keys.remoteId) || o.id,
         name: o.attributes.name
       }))
     );

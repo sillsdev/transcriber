@@ -3,6 +3,9 @@ import TableRelationship from './relationsihp';
 interface Project {
     type: string;
     id: string;
+    keys?: {
+      remoteId?: string;
+    };
     attributes: {
       name: string;
       projectTypeId: number;

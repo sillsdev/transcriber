@@ -1,22 +1,25 @@
 import Coordinator, { RequestStrategy, SyncStrategy } from "@orbit/coordinator";
 import IndexedDBSource from "@orbit/indexeddb";
 import JSONAPISource from '@orbit/jsonapi';
-import { Schema } from "@orbit/data";
+import { Schema, KeyMap } from "@orbit/data";
 import Store from "@orbit/store";
 
-function Sources(schema: Schema, store: Store): Promise<any> {
+function Sources(schema: Schema, store: Store, keyMap: KeyMap): Promise<any> {
     const backup = new IndexedDBSource({
         schema,
+        keyMap,
         name: "backup",
         namespace: "transcriber"
     });
 	
     const remote = new JSONAPISource({
         schema,
+        keyMap,
         name: 'remote',
         namespace: 'api',
-        host: 'https://26nj47s4eh.execute-api.us-east-2.amazonaws.com/dev',
+        host: 'https://26nj47s4eh.execute-api.us-east-2.amazonaws.com/qa',
     })
+    remote.serializer.resourceKey = () => { return 'remoteId' };
 
     const coordinator = new Coordinator({
         sources: [store, backup, remote]

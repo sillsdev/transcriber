@@ -16,7 +16,7 @@ import ProjectTable from './ProjectTable';
 import UserData from './UserData';
 import ProjectStatus from './ProjectStatus';
 import Store from '@orbit/store';
-import { schema } from './schema';
+import { schema, keyMap } from './schema';
 import Sources from './Sources';
 
 
@@ -27,8 +27,8 @@ const theme = createMuiTheme({
   },
 });
 
-const dataStore = new Store({ schema });
-Sources(schema, dataStore);
+const dataStore = new Store({ schema, keyMap });
+Sources(schema, dataStore, keyMap);
 
 setGlobal({
   organization: null,
