@@ -6,6 +6,9 @@ import Project from './model/project';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { IState } from './model/state'
+import { IProjectstatusStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record } from '@orbit/data';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -81,7 +84,7 @@ export function ProjectStatus(props: any): JSX.Element {
         <Toolbar disableGutters={!open}>
           <IconButton
             color="inherit"
-            aria-label={'Open drawer'}
+            aria-label={'List Options'}
             onClick={handleDrawerOpen}
             className={classNames(classes.menuButton, {
               [classes.hide]: open,
@@ -276,7 +279,13 @@ const styles = (theme: Theme) => createStyles({
 });
 
 
-const mapStateToProps = () => ({});
+interface IStateProps {
+  t: IProjectstatusStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, {layout: "projectstatus"})
+});
+
 const mapDispatchToProps = (dispatch: any) => ({
     ...bindActionCreators({
     }, dispatch),

@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { IState } from './model/state'
+import { IAdminpanelStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
@@ -18,17 +22,17 @@ import projectSvg from './assets/project.svg';
 import mediaSvg from './assets/media.svg';
 import bookSvg from './assets/book.svg';
 
-export interface Props extends WithStyles<typeof styles> { }
+interface IProps extends IStateProps, WithStyles<typeof styles>{ };
 
-function AdminPanel(props: Props) {
-  const { classes } = props;
+function AdminPanel(props: IProps) {
+  const { classes, t } = props;
 
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-            {'Transcriber Admin'}
+            {t.transcriberAdmin}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -36,7 +40,7 @@ function AdminPanel(props: Props) {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder={'Search…'}
+              placeholder={t.search}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -52,19 +56,19 @@ function AdminPanel(props: Props) {
         justify='center'
         alignItems='flex-start' >
         <Link to='/organization' className={classes.link}>
-          <MediaCard type={'Organizations'} explain={'Add or manage organizations'} graphic={organizationSvg} />
+          <MediaCard type={t.organizations} explain={t.addManageOrganizations} graphic={organizationSvg} />
         </Link>
         <Link to='/user' className={classes.link}>
-          <MediaCard type={'Users'} explain={'Add or manage users'} graphic={usersSvg} />
+          <MediaCard type={t.users} explain={t.addManageUsers} graphic={usersSvg} />
         </Link>
         <Link to='/project' className={classes.link}>
-          <MediaCard type={'Projects'} explain={'Add or manage projects'} graphic={projectSvg} />
+          <MediaCard type={t.projects} explain={t.addManageProjects} graphic={projectSvg} />
         </Link>
         <Link to='/admin' className={classes.link}>
-          <MediaCard type={'Media'} explain={'Add or manage audio files'} graphic={mediaSvg} />
+          <MediaCard type={t.media} explain={t.addManageAudioFiles} graphic={mediaSvg} />
         </Link>
         <Link to='/admin' className={classes.link}>
-          <MediaCard type={'Books'} explain={'Add or manage books'} graphic={bookSvg} />
+          <MediaCard type={t.books} explain={t.addManageBooks} graphic={bookSvg} />
         </Link>
       </Grid>
     </div>
@@ -149,4 +153,13 @@ const styles = (theme: Theme) =>
     }
   });
 
-export default withStyles(styles)(AdminPanel);
+interface IStateProps {
+  t: IAdminpanelStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, {layout: "adminpanel"})
+});
+
+export default withStyles(styles, { withTheme: true })(
+      connect(mapStateToProps)(AdminPanel) as any
+  ) as any;

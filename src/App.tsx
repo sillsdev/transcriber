@@ -34,30 +34,29 @@ setGlobal({
   organization: null,
   project: null,
   user: null,
+  lang: 'en',
 });
 
-class App extends React.Component {
-  public render() {
-    return (
-      <DataProvider dataStore={dataStore}>
-        <Provider store={store}>
-          <Router>
-            <MuiThemeProvider theme={theme}>
-              <Route path='/' exact={true} component={Access} />
-              <Route path='/access' component={Access} />
-              <Route path='/welcome' component={Welcome} />
-              <Route path='/admin' component={AdminPanel} />
-              <Route path='/neworg' component={CreateOrg} />
-              <Route path='/organization' component={OrganizationTable} />
-              <Route path='/project' component={ProjectTable} />
-              <Route path='/projectstatus' component={ProjectStatus} />
-              <Route path='/user' component={UserData} />
-            </MuiThemeProvider>
-          </Router>
-        </Provider>
-      </DataProvider>
-    );
-  }
+function App() {
+  return (
+    <DataProvider dataStore={dataStore}>
+      <Provider store={store}>
+        <Router>
+          <MuiThemeProvider theme={theme}>
+            <Route path='/' exact={true} component={Access} />
+            <Route path='/access' component={Access} />
+            <Route path='/welcome' component={Welcome} />
+            <Route path='/admin' component={AdminPanel} />
+            <Route path='/neworg' component={CreateOrg} />
+            <Route path='/organization' component={OrganizationTable} />
+            <Route path='/project' component={ProjectTable} />
+            <Route path='/projectstatus' component={ProjectStatus} />
+            <Route path='/user' component={UserData} />
+          </MuiThemeProvider>
+        </Router>
+      </Provider>
+    </DataProvider>
+  );
 }
 
 export default App;

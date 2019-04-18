@@ -1,46 +1,52 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Theme, withStyles, Button } from '@material-ui/core';
+import { connect } from 'react-redux';
+import { IState } from './model/state'
+import { IWelcomeStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
+import { Theme, withStyles, WithStyles, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-export function Welcome(props: any) {
-    const { classes } = props;
+interface IProps extends IStateProps, WithStyles<typeof styles>{ };
+
+export function Welcome(props: IProps) {
+    const { classes, t } = props;
 
     return (
         <div className={classes.root}>
             <AppBar className={classes.appBar} position="static">
                 <Toolbar>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
-                        {'SIL Transcriber Admin'}
+                        {t.silTranscriberAdmin}
                     </Typography>
                 </Toolbar>
             </AppBar>
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <Typography variant="h4" className={classes.dialogHeader}>
-                        {'Thanks for signing up!'}
+                        {t.thanksSigningUp}
                     </Typography>
                     <Typography variant="h5" className={classes.text}>
-                        {'Do you want to start transcribing immediately?'}
+                        {t.StartTranscribingImmediately}
                     </Typography>
                     <div className={classes.actions}>
                         <Button variant="contained" className={classes.button}>
-                            {'Transcriber Web'}
+                            {t.transcriberWeb}
                         </Button>
                         <Button variant="contained" className={classes.button}>
-                            {'Transcriber Desktop'}
+                            {t.transcriberDesktop}
                         </Button>
                     </div>
                     <Typography variant="h5" className={classes.text}>
-                        {'Do you want to configure a transcription project?'}
+                        {t.ConfigureTranscriptionProject}
                     </Typography>
                     <div className={classes.actions}>
                         <Link to="/admin">
                             <Button variant="contained" className={classes.button}>
-                                {'Transcriber Admin'}
+                                {t.transcriberAdmin}
                             </Button>
                         </Link>
                     </div>
@@ -51,7 +57,13 @@ export function Welcome(props: any) {
 }
 
 const styles = (theme: Theme) => ({
-    container: {
+    root: {
+        width: '100%',
+      },
+      grow: {
+        flexGrow: 1,
+      },
+      container: {
         display: 'flex',
         justifyContent: 'center'
     },
@@ -94,4 +106,14 @@ const styles = (theme: Theme) => ({
     }),
 });
 
-export default withStyles(styles, { withTheme: true })(Welcome);
+interface IStateProps {
+    t: IWelcomeStrings;
+  }
+  const mapStateToProps = (state: IState): IStateProps => ({
+    t: localStrings(state, {layout: "welcome"})
+  });
+  
+  export default withStyles(styles, { withTheme: true })(
+        connect(mapStateToProps)(Welcome) as any
+    ) as any;
+  

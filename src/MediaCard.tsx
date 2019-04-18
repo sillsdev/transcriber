@@ -1,5 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { IState } from './model/state'
+import { IMediacardStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -8,14 +12,14 @@ import CardMedia from '@material-ui/core/CardMedia';
 import logo from './logo.svg';
 import Typography from '@material-ui/core/Typography';
 
-export interface Props extends WithStyles<typeof styles> {
+export interface IProps extends IStateProps, WithStyles<typeof styles> {
     type: string;
     explain?: string;
     graphic?: string;
 }
 
-export function MediaCard(props: Props) {
-  const { classes, type, explain, graphic } = props;
+export function MediaCard(props: IProps) {
+  const { classes, type, explain, graphic, t } = props;
   console.log(graphic)
   return (
     <Card className={classes.card}>
@@ -23,7 +27,7 @@ export function MediaCard(props: Props) {
         <CardMedia
           className={classes.media}
           image={graphic != null? graphic: logo}
-          title={'Section'}
+          title={t.section}
         />
         <CardContent>
           <Typography gutterBottom variant={type.length > 8? "h6": "h5"} component="h2" style={{textDecoration: 'none'}}>
@@ -54,4 +58,13 @@ const styles = {
   },
 };
 
-export default withStyles(styles)(MediaCard);
+interface IStateProps {
+  t: IMediacardStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, {layout: "mediacard"})
+});
+
+export default withStyles(styles, { withTheme: true })(
+      connect(mapStateToProps)(MediaCard) as any
+  ) as any;

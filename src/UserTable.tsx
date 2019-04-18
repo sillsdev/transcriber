@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { IState } from './model/state'
+import { IUsertableStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import {
   FilteringState,
   IntegratedFiltering, IntegratedPaging, IntegratedSelection, IntegratedSorting,
@@ -40,8 +44,22 @@ interface User {
   };
 };
 
-export function UserTable(props: any) {
-  const { classes, users } = props;
+interface IUserRow {
+  type: string;
+  id: string;
+  name: string;
+  email: string;
+  locale: string;
+  phone: string;
+  timezone: string;
+};
+
+interface IProps extends IStateProps, WithStyles<typeof styles>{
+  users: Array<User>;
+};
+
+export function UserTable(props: IProps) {
+  const { classes, users, t } = props;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'email', title: 'Email' },
@@ -50,7 +68,7 @@ export function UserTable(props: any) {
     { name: 'timezone', title: 'Timezone' },
   ]);
   const [pageSizes, setPageSizes] = useState([5, 10, 15]);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(Array<IUserRow>());
   const [view, setView] = useState('');
 
   const handleCancel = () => { setView('/admin') };
@@ -144,6 +162,12 @@ export function UserTable(props: any) {
 }
 
 const styles = (theme: Theme) => createStyles({
+  root: {
+    width: '100%',
+  },
+  grow: {
+    flexGrow: 1,
+  },
   container: {
     display: 'flex',
     justifyContent: 'center'
@@ -180,4 +204,13 @@ const styles = (theme: Theme) => createStyles({
   },
 });
 
-export default withStyles(styles, { withTheme: true })(UserTable) as any;
+interface IStateProps {
+  t: IUsertableStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, {layout: "usertable"})
+});
+
+export default withStyles(styles, { withTheme: true })(
+      connect(mapStateToProps)(UserTable) as any
+  ) as any;

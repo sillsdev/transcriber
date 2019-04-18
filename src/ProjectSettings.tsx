@@ -85,13 +85,13 @@ export function ProjectSettings(props: IProps) {
           dateArchived: currentProject.attributes.dateArchived,
         },
       }))
-      if (projectType !== currentProject.attributes.projectTypeId.toString()) {
-        updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-          { type: 'project', id: project },
-          'type',
-          { type: 'projecttype', id: projectType }
-        ))
-        }
+      // if (projectType !== currentProject.attributes.projectTypeId.toString()) {
+      //   updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
+      //     { type: 'project', id: project },
+      //     'type',
+      //     { type: 'projecttype', id: projectType }
+      //   ))
+      // }
     };
     const handleAdd = () => {
       const newId = Orbit.uuid();
@@ -117,11 +117,11 @@ export function ProjectSettings(props: IProps) {
           dateArchived: null,
         },
       }))
-      updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-        { type: 'project', id: newId },
-        'type',
-        { type: 'projecttype', id: projectType }
-      ))
+      // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
+      //   { type: 'project', id: newId },
+      //   'type',
+      //   { type: 'projecttype', id: projectType }
+      // ))
       // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
       //   { type: 'project', id: newId },
       //   'owner',

@@ -3,9 +3,11 @@ import { useGlobal } from 'reactn';
 import Project from './model/project';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { IState } from './model/state'
+import { IProjectTableStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, Record, TransformBuilder, RemoveRecordOperation } from '@orbit/data';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -17,7 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
 import { Grid,
   Table,
@@ -26,12 +28,6 @@ import { Grid,
   Toolbar } from '@devexpress/dx-react-grid-material-ui';
 import Confirm from './AlertDialog';
 import AlertDialog from './AlertDialog';
-
-export class ProjectTableData extends React.Component<IRecordProps, object> {
-  public render(): JSX.Element {
-      return <ProjectTable {...this.props} />
-  }
-}
 
 interface Row {
   type: string;
@@ -42,8 +38,13 @@ interface Row {
   delete: string;
 }
 
-export function ProjectTable(props: any) {
-  const { classes, projects, updateStore } = props;
+interface IProps extends IStateProps, WithStyles<typeof styles>{
+  projects: any;
+  updateStore: any;
+};
+
+export function ProjectTable(props: IProps) {
+  const { classes, projects, updateStore, t } = props;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'description', title: 'Description' },
@@ -132,7 +133,7 @@ export function ProjectTable(props: any) {
             <BackIcon onClick={handleCancel} />
           </IconButton>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {"SIL Transcriber Admin"}
+            {t.silTranscriberAdmin}
           </Typography>
         </MuiToolbar>
       </AppBar>
@@ -140,7 +141,7 @@ export function ProjectTable(props: any) {
         <Paper id="ProjectTable" className={classes.paper}>
         <div className={classes.dialogHeader}>
         <div className={classes.grow} />
-        <h2>{"Choose Project"}</h2>
+        <h2>{t.chooseProject}</h2>
         <div className={classes.grow} />
           <Fab
             key="add"
@@ -185,6 +186,9 @@ export function ProjectTable(props: any) {
 }
 
 const styles = (theme: Theme) => createStyles({
+  root: {
+    width: '100%',
+  },
   container: {
     display: 'flex',
     justifyContent: 'center'
@@ -216,12 +220,17 @@ const styles = (theme: Theme) => createStyles({
   editIcon: {
     fontSize: 16,
   },
+  link: {},
+  deleteIcon: {},
+  button: {},
+  icon: {},
 });
 
-const mapStateToProps = () => ({});
-const mapDispatchToProps = (dispatch: any) => ({
-    ...bindActionCreators({
-    }, dispatch),
+interface IStateProps {
+  t: IProjectTableStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, {layout: "projectTable"})
 });
 
 interface IRecordProps {
@@ -234,6 +243,6 @@ const mapRecordsToProps = {
 
 export default withStyles(styles, { withTheme: true })(
     withData(mapRecordsToProps)(
-        connect(mapStateToProps, mapDispatchToProps)(ProjectTable) as any
+        connect(mapStateToProps)(ProjectTable) as any
         ) as any
     ) as any;

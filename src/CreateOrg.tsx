@@ -1,13 +1,25 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Theme, withStyles, FormControl, InputLabel, Input, Button } from '@material-ui/core';
+import { connect } from 'react-redux';
+import { IState } from './model/state'
+import { ICreateorgStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
+import { Theme,
+    withStyles,
+    WithStyles,
+    FormControl,
+    InputLabel,
+    Input,
+    Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-export function CreateOrg(props: any) {
-    const { classes } = props;
+interface IProps extends IStateProps, WithStyles<typeof styles>{ };
+
+export function CreateOrg(props: IProps) {
+    const { classes, t } = props;
     const [findOrganization, setFindOrganization] = useState('');
     const [organizationName, setOrganizationName] = useState('');
     const [view, setView] = useState('');
@@ -22,17 +34,17 @@ export function CreateOrg(props: any) {
             <AppBar className={classes.appBar} position="static">
                 <Toolbar>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
-                        {'SIL Transcriber Admin'}
+                        {t.silTranscriberAdmin}
               </Typography>
                 </Toolbar>
             </AppBar>
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <h2 className={classes.dialogHeader}>
-                        {'Create Organization'}
+                        {t.createOrganization}
                     </h2>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel>{'Find an existing Organization'}</InputLabel>
+                        <InputLabel>{t.findExistingOrganization}</InputLabel>
                         <Input
                             value={findOrganization}
                             onChange={handleFindOrganizationChange}
@@ -40,7 +52,7 @@ export function CreateOrg(props: any) {
                         />
                     </FormControl>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel>{'Organization Name'}</InputLabel>
+                        <InputLabel>{t.organizationName}</InputLabel>
                         <Input
                             value={organizationName}
                             onChange={handleOrganizationNameChange}
@@ -52,14 +64,14 @@ export function CreateOrg(props: any) {
                             onClick={handleCancel}
                             variant="raised"
                             className={classes.button}>
-                            {'Cancel'}
+                            {t.cancel}
                         </Button>
                         <Button
                             onClick={handleContinue}
                             variant="raised"
                             color="primary"
                             className={classes.button}>
-                            {'Continue'}
+                            {t.continue}
                         </Button>
                     </div>
                 </Paper>
@@ -69,6 +81,12 @@ export function CreateOrg(props: any) {
 }
 
 const styles = (theme: Theme) => ({
+    root: {
+      width: '100%',
+    },
+    grow: {
+      flexGrow: 1,
+    },
     container: {
         display: 'flex',
         justifyContent: 'center'
@@ -110,4 +128,14 @@ const styles = (theme: Theme) => ({
     },
 });
 
-export default withStyles(styles, { withTheme: true })(CreateOrg);
+interface IStateProps {
+    t: ICreateorgStrings;
+  }
+  const mapStateToProps = (state: IState): IStateProps => ({
+    t: localStrings(state, {layout: "createorg"})
+  });
+  
+  export default withStyles(styles, { withTheme: true })(
+        connect(mapStateToProps)(CreateOrg) as any
+    ) as any;
+  

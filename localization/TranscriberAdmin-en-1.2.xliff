@@ -167,8 +167,8 @@
 					<context context-type="sourcefile">MediaCard.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="projectstatus.openDrawer">
-				<source>Open drawer</source>
+			<trans-unit id="projectstatus.listOptions">
+				<source>List Options</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
@@ -216,14 +216,14 @@
 					<context context-type="sourcefile">Welcome.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.thanksSigningUp!">
+			<trans-unit id="welcome.thanksSigningUp">
 				<source>Thanks for signing up!</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Welcome.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.StartTranscribingImmediately?">
+			<trans-unit id="welcome.StartTranscribingImmediately">
 				<source>Do you want to start transcribing immediately?</source>
 				<target/>
 				<context-group>
@@ -244,7 +244,7 @@
 					<context context-type="sourcefile">Welcome.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.ConfigureTranscriptionProject?">
+			<trans-unit id="welcome.ConfigureTranscriptionProject">
 				<source>Do you want to configure a transcription project?</source>
 				<target/>
 				<context-group>
@@ -256,6 +256,62 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Welcome.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="alert.confirmation">
+				<source>Confirmation</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AlertDialog.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="alert.areYouSure">
+				<source>Are you sure?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AlertDialog.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="alert.no">
+				<source>No</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AlertDialog.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="alert.yes">
+				<source>Yes</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AlertDialog.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="organizationTable.silTranscriberAdmin">
+				<source>SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrganizationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="organizationTable.chooseOrganization">
+				<source>Choose Organization</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrganizationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectTable.silTranscriberAdmin">
+				<source>SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectTable.chooseProject">
+				<source>Choose Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

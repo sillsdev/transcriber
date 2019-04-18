@@ -17,7 +17,7 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap): Promise<any> {
         keyMap,
         name: 'remote',
         namespace: 'api',
-        host: 'https://26nj47s4eh.execute-api.us-east-2.amazonaws.com/qa',
+        host: ' https://ukepgrpe6l.execute-api.us-east-2.amazonaws.com/qa',
     })
     remote.serializer.resourceKey = () => { return 'remoteId' };
 
