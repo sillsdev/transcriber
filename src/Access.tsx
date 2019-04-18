@@ -15,10 +15,11 @@ import Typography from '@material-ui/core/Typography';
 
 interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
     history: any;
+    auth: any;
 };
 
 export function Access(props: IProps) {
-    const { classes, t } = props;
+    const { classes, auth, t } = props;
     const { fetchLocalization, setLanguage } = props;
 
     useEffect(() => {
@@ -33,7 +34,7 @@ export function Access(props: IProps) {
                 <Toolbar>
                     <Typography variant="h6" color="inherit" className={classes.grow}>
                         {t.silTranscriberAccess}
-              </Typography>
+                    </Typography>
                 </Toolbar>
             </AppBar>
             <div className={classes.container}>
@@ -52,14 +53,14 @@ export function Access(props: IProps) {
                         </Link>
                     </div>
                     <div className={classes.actions}>
-                        <Link to='/organization' className={classes.link}>
                             <Button
                                 variant="raised"
                                 color="primary"
-                                className={classes.button}>
+                                className={classes.button}
+                                onClick= {() => auth.login()}
+                            >
                                 {t.accessExistingAccount}
                             </Button>
-                        </Link>
                     </div>
                 </Paper>
             </div>

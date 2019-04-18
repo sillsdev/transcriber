@@ -1,4 +1,5 @@
 import React from 'react';
+import Auth from './auth/Auth';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState } from './model/state'
@@ -10,10 +11,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{ };
+interface IProps extends IStateProps, WithStyles<typeof styles>{
+    auth: Auth
+};
 
 export function Welcome(props: IProps) {
-    const { classes, t } = props;
+    const { classes, auth, t } = props;
+    const { isAuthenticated, accessToken } = auth;
+
+    alert(accessToken);
 
     return (
         <div className={classes.root}>
