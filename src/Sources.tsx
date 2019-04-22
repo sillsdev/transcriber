@@ -21,7 +21,7 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         // host: ' https://ukepgrpe6l.execute-api.us-east-2.amazonaws.com/qa',
         host: 'https://9u6wlhwuha.execute-api.us-east-2.amazonaws.com/dev',
         defaultFetchHeaders: {
-            "Authorization": "Bearer " + auth.idToken,
+            "Authorization": "Bearer " + auth.accessToken,
         }
     })
     remote.serializer.resourceKey = () => { return 'remoteId' };
