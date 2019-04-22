@@ -441,14 +441,147 @@
 				<source>Tasks Completed</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectTable.tsx</context>
+					<context context-type="sourcefile">Chart.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="chart.totalTransactions">
 				<source>Total Transactions</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectTable.tsx</context>
+					<context context-type="sourcefile">Chart.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.general">
+				<source>General</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.description">
+				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.projectType">
+				<source>Project Type</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.selectProjectType">
+				<source>Please select your project type</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.language">
+				<source>Language</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.transcriptionLanguage">
+				<source>Transcription Language</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.preferredLanguageName">
+				<source>Preferred Language Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.uiLanguagInUserProfile">
+				<source>(User interface languages are set in the user profile.)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.textEditor">
+				<source>Text Editor</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.defaultFont">
+				<source>Default Font</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.selectDefaultFont">
+				<source>Please select the preferred default font</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.needFont">
+				<source>Need Font</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.addMissingFont">
+				<source>Can't find the font you need?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.defaultFontSize">
+				<source>Default Font Size</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.selectFontSize">
+				<source>Please select the default font size</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.rightToLeft">
+				<source>Right to left?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

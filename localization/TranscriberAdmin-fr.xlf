@@ -385,5 +385,119 @@
 				<target>Total des transactions</target>
 			</segment>
 		</unit>
-	</file>
+	<unit id="projectSettings.general">
+         <segment>
+            <source>General</source>
+         	<target>Général</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.name">
+         <segment>
+            <source>Name</source>
+            <target>Nom</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.description">
+         <segment>
+            <source>Description</source>
+         	<target>Description du projet</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.projectType">
+         <segment>
+            <source>Project Type</source>
+         	<target>Type de projet</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.selectProjectType">
+         <segment>
+            <source>Please select your project type</source>
+         	<target>Veuillez sélectionner votre type de projet</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.language">
+         <segment>
+            <source>Language</source>
+         	<target>Langue</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.transcriptionLanguage">
+         <segment>
+            <source>Transcription Language</source>
+         	<target>Langue de transcription</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.preferredLanguageName">
+         <segment>
+            <source>Preferred Language Name</source>
+         	<target>Nom de la langue préférée</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.uiLanguagInUserProfile">
+         <segment>
+            <source>(User interface languages are set in the user profile.)</source>
+         	<target>(Les langues de l'interface utilisateur sont définies dans le profil utilisateur.)</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.textEditor">
+         <segment>
+            <source>Text Editor</source>
+         	<target>Éditeur de texte</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.defaultFont">
+         <segment>
+            <source>Default Font</source>
+         	<target>Police par défaut</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.selectDefaultFont">
+         <segment>
+            <source>Please select the preferred default font</source>
+         	<target>Veuillez sélectionner la police par défaut préférée</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.needFont">
+         <segment>
+            <source>Need Font</source>
+         	<target>Besoin d'une police de caractères</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.addMissingFont">
+         <segment>
+            <source>Can't find the font you need?</source>
+         	<target>Vous ne trouvez pas la police dont vous avez besoin ?</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.defaultFontSize">
+         <segment>
+            <source>Default Font Size</source>
+         	<target>Taille de police par défaut</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.selectFontSize">
+         <segment>
+            <source>Please select the default font size</source>
+         	<target>Veuillez sélectionner la taille de police par défaut</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.rightToLeft">
+         <segment>
+            <source>Right to left?</source>
+         	<target>De droite à gauche ?</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.add">
+         <segment>
+            <source>Add</source>
+            <target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.save">
+         <segment>
+            <source>Save</source>
+            <target>Sauvegarder</target>
+         </segment>
+      </unit>
+   </file>
 </xliff>

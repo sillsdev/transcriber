@@ -101,6 +101,28 @@ export interface IChartStrings extends Localize.LocalizedStringsMethods {
     "totalTransactions": string;
 };
 
+export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethods {
+    "general": string;
+    "name": string;
+    "description": string;
+    "projectType": string;
+    "selectProjectType": string;
+    "language": string;
+    "transcriptionLanguage": string;
+    "preferredLanguageName": string;
+    "uiLanguagInUserProfile": string;
+    "textEditor": string;
+    "defaultFont": string;
+    "selectDefaultFont": string;
+    "needFont": string;
+    "addMissingFont": string;
+    "defaultFontSize": string;
+    "selectFontSize": string;
+    "rightToLeft": string;
+    "add": string;
+    "save": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -116,5 +138,6 @@ export interface ILocalizedStrings {
 	organizationTable: IOrganizationTableStrings;
 	projectTable: IProjectTableStrings;
 	chart: IChartStrings;
+	projectSettings: IProjectSettingsStrings;
 	[key: string]: any;
 };

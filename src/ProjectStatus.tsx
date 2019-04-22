@@ -66,12 +66,12 @@ export function ProjectStatus(props: any): JSX.Element {
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
-  const contentJsx = (content.toLowerCase() === 'settings' ||
+  const optionList = [t.settings, t.team, t.sets, t.tasks, t.media, t.integrations];
+
+  const contentJsx = (content.toLowerCase() === t.settings.toLowerCase() ||
       history.location.search === '?add')
     ? <ProjectSettings />
     : <Chart />;
-
-  const optionList = [t.settings, t.team, t.sets, t.tasks, t.media, t.integrations];
 
   return view ===''? (
     <div className={classes.root}>

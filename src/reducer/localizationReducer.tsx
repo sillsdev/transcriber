@@ -118,6 +118,29 @@ const initialState = {
 			"totalTransactions": "Total Transactions",
 		}
 	}),
+	"projectSettings": new LocalizedStrings({
+		"en": {
+			"general": "General",
+			"name": "Name",
+			"description": "Description",
+			"projectType": "Project Type",
+			"selectProjectType": "Please select your project type",
+			"language": "Language",
+			"transcriptionLanguage": "Transcription Language",
+			"preferredLanguageName": "Preferred Language Name",
+			"uiLanguagInUserProfile": "(User interface languages are set in the user profile.)",
+			"textEditor": "Text Editor",
+			"defaultFont": "Default Font",
+			"selectDefaultFont": "Please select the preferred default font",
+			"needFont": "Need Font",
+			"addMissingFont": "Can't find the font you need?",
+			"defaultFontSize": "Default Font Size",
+			"selectFontSize": "Please select the default font size",
+			"rightToLeft": "Right to left?",
+			"add": "Add",
+			"save": "Save",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -138,6 +161,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"organizationTable" : new LocalizedStrings(action.payload.data.organizationTable),
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),
 				"chart" : new LocalizedStrings(action.payload.data.chart),
+				"projectSettings" : new LocalizedStrings(action.payload.data.projectSettings),
 			};
 		case SET_LANGUAGE:
 			return {
