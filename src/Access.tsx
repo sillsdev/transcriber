@@ -22,9 +22,17 @@ export function Access(props: IProps) {
     const { classes, auth, t } = props;
     const { fetchLocalization, setLanguage } = props;
 
+
     useEffect(() => {
         const qLang = queryString.parse(props.history.location.search).lang;
-        if (qLang) { setLanguage(qLang.toString()) };
+        const sLang = localStorage.getItem('lang') || 'en';
+        if (qLang) {
+            setLanguage(qLang.toString());
+            // Set langage in localStorage
+            localStorage.setItem('lang', qLang.toString());
+        } else {
+            setLanguage(sLang);
+        };
         fetchLocalization();
     }, [])
 
@@ -123,7 +131,7 @@ interface IStateProps {
     t: IAccessStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
-    t: localStrings(state, {layout: "access"})
+    t: localStrings(state, {layout: "access"}),
 });
 
 interface IDispatchProps {

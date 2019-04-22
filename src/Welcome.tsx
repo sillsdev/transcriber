@@ -15,22 +15,31 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import * as action from './actions/orbitAction';
+import * as action from './actions';
 
 interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
     auth: Auth
 };
 
 export function Welcome(props: IProps) {
-    const { classes, orbitLoaded, auth, t } = props;
-    const { fetchOrbitData } = props;
+    const { classes, orbitLoaded, stringsLoaded, auth, t } = props;
+    const { fetchOrbitData, fetchLocalization, setLanguage } = props;
     const [view, setView] = useState('');
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
     const [keyMap] = useGlobal('keyMap');
     const { isAuthenticated, accessToken } = auth;
+    const lang = localStorage.getItem('lang') || 'en';
 
     if (!isAuthenticated()) return <Redirect to="/" />;
+
+    useEffect(() => {
+        fetchLocalization();
+    }, [])
+
+    useEffect(() => {
+        setLanguage(lang);
+    }, [stringsLoaded])
 
     if (!orbitLoaded) {
         fetchOrbitData(schema as Schema, dataStore as Store, keyMap as KeyMap, auth);
@@ -130,17 +139,23 @@ const styles = (theme: Theme) => ({
 interface IStateProps {
     t: IWelcomeStrings;
     orbitLoaded: boolean;
+    stringsLoaded: boolean;
 };
 const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "welcome"}),
     orbitLoaded: state.orbit.loaded,
+    stringsLoaded: state.strings.loaded,
 });
 
 interface IDispatchProps {
+    fetchLocalization: typeof action.fetchLocalization;
+    setLanguage: typeof action.setLanguage;
     fetchOrbitData: typeof action.fetchOrbitData;
 };
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     ...bindActionCreators({
+        fetchLocalization: action.fetchLocalization,
+        setLanguage: action.setLanguage,
         fetchOrbitData: action.fetchOrbitData,
     }, dispatch),
 });
