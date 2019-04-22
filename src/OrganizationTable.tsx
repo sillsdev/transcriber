@@ -27,6 +27,7 @@ import {
   Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
 import SnackBar from "./SnackBar";
+import Auth from "./auth/Auth";
 
 interface Row {
   type: string;
@@ -36,17 +37,21 @@ interface Row {
 
 // see: https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/selection/
 interface IProps extends IStateProps, WithStyles<typeof styles>{
+  auth: Auth;
   organizations: any;
 };
 
 export function OrganizationTable(props: IProps) {
-  const { classes, organizations, t } = props;
+  const { classes, organizations, auth, t } = props;
+  const { isAuthenticated, accessToken } = auth;
   const [columns, setColumns] = useState([{ name: "name", title: "Name" }]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [currentOrganization, setOrganization] = useGlobal('organization');
   const [entryOrganization, setEntryOrganization] = useState(0);
   const [message, setMessage] = useState('');
+
+  if (!isAuthenticated()) return <Redirect to='/' />;
 
   const handleSelection = (s: any) => {
     const selectedRow: Row = rows[s[0]];

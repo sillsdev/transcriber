@@ -39,6 +39,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Chart from './Chart';
 import ProjectSettings from './ProjectSettings';
 import { CSSProperties } from 'jss/css';
+import Auth from './auth/Auth';
 
 const drawerWidth = 240;
 
@@ -46,16 +47,12 @@ interface IProps extends IRecordProps {
   classes: CSSProperties;
   theme: Theme;
   history: any;
-}
-
-class ProjectStatusData extends React.Component<IProps, object> {
-  public render(): JSX.Element {
-      return <ProjectStatus {...this.props} />
-  }
+  auth: Auth;
 }
 
 export function ProjectStatus(props: any): JSX.Element {
-  const { classes, history, theme, projects } = props;
+  const { classes, history, theme, projects, auth } = props;
+  const { isAuthenticated, accessToken } = auth;
   const [open, setOpen] = useState(true);
   const [project, setProject] = useGlobal('project');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
@@ -66,6 +63,8 @@ export function ProjectStatus(props: any): JSX.Element {
   const handleDrawerClose = () => { setOpen(false) };
   const handleProjectItem = (e: any) => { setContent(e.target.innerText) }
   const handleCancel = () => { setView('/project') };
+
+  if (!isAuthenticated()) return <Redirect to='/' />;
 
   const contentJsx = (content.toLowerCase() === 'settings' ||
       history.location.search === '?add')
@@ -301,6 +300,6 @@ const mapRecordsToProps = {
 
 export default withStyles(styles, { withTheme: true })(
   withData(mapRecordsToProps)(
-      connect(mapStateToProps, mapDispatchToProps)(ProjectStatusData) as any
+      connect(mapStateToProps, mapDispatchToProps)(ProjectStatus) as any
       ) as any
   ) as any;

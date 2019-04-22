@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import { Redirect } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState } from './model/state'
 import { IAdminpanelStrings } from './model/localizeModel';
@@ -21,11 +21,17 @@ import usersSvg from './assets/users.svg';
 import projectSvg from './assets/project.svg';
 import mediaSvg from './assets/media.svg';
 import bookSvg from './assets/book.svg';
+import Auth from './auth/Auth';
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{ };
+interface IProps extends IStateProps, WithStyles<typeof styles>{
+  auth: Auth;
+};
 
 function AdminPanel(props: IProps) {
-  const { classes, t } = props;
+  const { classes, auth, t } = props;
+  const { isAuthenticated, accessToken } = auth;
+
+  if (!isAuthenticated()) return <Redirect to='/' />;
 
   return (
     <div className={classes.root}>

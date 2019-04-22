@@ -13,7 +13,7 @@ import AdminPanel from './AdminPanel';
 import CreateOrg from './CreateOrg';
 import OrganizationTable from './OrganizationTable';
 import ProjectTable from './ProjectTable';
-import UserData from './UserData';
+import UserTable from './UserTable';
 import ProjectStatus from './ProjectStatus';
 import Store from '@orbit/store';
 import { schema, keyMap } from './schema';
@@ -57,12 +57,12 @@ function App() {
           <MuiThemeProvider theme={theme}>
             <Route path='/' exact={true} render={(props) => <Access auth={auth} {...props} />} />
             <Route path='/welcome' render={(props) => <Welcome auth={auth} {...props} />} />
-            <Route path='/admin' component={AdminPanel} />
-            <Route path='/neworg' component={CreateOrg} />
-            <Route path='/organization' component={OrganizationTable} />
-            <Route path='/project' component={ProjectTable} />
-            <Route path='/projectstatus' component={ProjectStatus} />
-            <Route path='/user' component={UserData} />
+            <Route path='/admin' render={(props) => <AdminPanel auth={auth} {...props} />} />
+            <Route path='/neworg' render={(props) => <CreateOrg auth={auth} {...props} />} />
+            <Route path='/organization' render={(props) => <OrganizationTable auth={auth} {...props} />} />
+            <Route path='/project' render={(props) => <ProjectTable auth={auth} {...props} />} />
+            <Route path='/projectstatus' render={(props) => <ProjectStatus auth={auth} {...props} />} />
+            <Route path='/user' render={(props) => <UserTable auth={auth} {...props} />} />
             <Route path="/callback" render={(props) => {
               handleAuthentication(props);
               return <Callback {...props} /> 

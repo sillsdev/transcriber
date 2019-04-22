@@ -27,7 +27,7 @@ import { Grid,
   TableHeaderRow,
   Toolbar } from '@devexpress/dx-react-grid-material-ui';
 import Confirm from './AlertDialog';
-import AlertDialog from './AlertDialog';
+import Auth from './auth/Auth';
 
 interface Row {
   type: string;
@@ -41,10 +41,12 @@ interface Row {
 interface IProps extends IStateProps, WithStyles<typeof styles>{
   projects: any;
   updateStore: any;
+  auth: Auth;
 };
 
 export function ProjectTable(props: IProps) {
-  const { classes, projects, updateStore, t } = props;
+  const { classes, projects, updateStore, auth, t } = props;
+  const { isAuthenticated, accessToken } = auth;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'description', title: 'Description' },
@@ -55,6 +57,8 @@ export function ProjectTable(props: IProps) {
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [project, setProject] = useGlobal('project');
+
+  if (!isAuthenticated()) return <Redirect to='/' />;
 
   const handleDelete = (e: any) => { setDeleteItem(e.currentTarget.id) };
   const handleDeleteConfirmed = () => {
@@ -174,7 +178,7 @@ export function ProjectTable(props: IProps) {
         </Paper>
       </div>
       {deleteItem !== ''
-        ? <AlertDialog
+        ? <Confirm
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
           />

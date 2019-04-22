@@ -9,6 +9,8 @@ import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, Record } from '@orbit/data';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import {
   FilteringState,
@@ -21,6 +23,7 @@ import {
   Table, TableColumnResizing, TableFilterRow,
   TableHeaderRow, TableSelection, Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
+import Auth from './auth/Auth';
 
 interface TableRelationship {
   links: { self: string; related: string; };
@@ -56,10 +59,12 @@ interface IUserRow {
 
 interface IProps extends IStateProps, WithStyles<typeof styles>{
   users: Array<User>;
+  auth: Auth;
 };
 
 export function UserTable(props: IProps) {
-  const { classes, users, t } = props;
+  const { classes, users, auth, t } = props;
+  const { isAuthenticated, accessToken } = auth;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'email', title: 'Email' },
@@ -70,6 +75,8 @@ export function UserTable(props: IProps) {
   const [pageSizes, setPageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState(Array<IUserRow>());
   const [view, setView] = useState('');
+
+  if (!isAuthenticated()) return <Redirect to='/' />;
 
   const handleCancel = () => { setView('/admin') };
   const handleContinue = () => { setView('/admin') };
@@ -91,14 +98,14 @@ export function UserTable(props: IProps) {
       <AppBar className={classes.appBar} position="static">
         <MuiToolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {'SIL Transcriber Admin'}
+            {t.silTranscriberAdmin}
           </Typography>
         </MuiToolbar>
       </AppBar>
       <div className={classes.container}>
         <Paper id='user-table' className={classes.paper}>
           <h2 className={classes.dialogHeader}>
-            {'Choose User'}
+            {t.chooseUser}
           </h2>
           <Grid
             rows={rows}
@@ -211,6 +218,12 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "usertable"})
 });
 
+const mapRecordsToProps = {
+  users: (q: QueryBuilder) => q.findRecords('user')
+}
+
 export default withStyles(styles, { withTheme: true })(
+  withData(mapRecordsToProps)(
       connect(mapStateToProps)(UserTable) as any
+      ) as any
   ) as any;
