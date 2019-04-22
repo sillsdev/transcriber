@@ -46,7 +46,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
 
 export function ProjectTable(props: IProps) {
   const { classes, projects, updateStore, auth, t } = props;
-  const { isAuthenticated, accessToken } = auth;
+  const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'description', title: 'Description' },
@@ -79,6 +79,12 @@ export function ProjectTable(props: IProps) {
   };
 
   useEffect(() => {
+    setColumns([
+      { name: 'name', title: t.name },
+      { name: 'description', title: t.description },
+      { name: 'language', title: t.language },
+      { name: 'delete', title: t.delete },
+    ])
     setRows(projects.map((o: Project) => ({
       type: o.type,
       id: o.id,

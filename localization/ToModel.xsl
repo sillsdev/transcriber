@@ -7,6 +7,7 @@
 	<xsl:output method="text"/>
 	
 	<xsl:template match="/">
+		<xsl:text>// WARNING: This file is generated using ToModel.xsl. Changes made here may be lost.&#10;</xsl:text>
 		<xsl:text>import * as Localize from 'react-localization';&#10;&#10;</xsl:text>
 		<xsl:for-each select="//xliff:trans-unit[not(substring-before(@id,'.') = preceding::xliff:trans-unit/substring-before(@id,'.'))]">
 			<xsl:variable name="section" select="substring-before(@id,'.')"/>

@@ -1,3 +1,4 @@
+// WARNING: This file is generated using ToModel.xsl. Changes made here may be lost.
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
@@ -36,9 +37,15 @@ export interface IMediacardStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IProjectstatusStrings extends Localize.LocalizedStringsMethods {
-    "listOptions": string;
     "silTranscriberAdminProject": string;
     "search": string;
+    "listOptions": string;
+    "settings": string;
+    "team": string;
+    "sets": string;
+    "tasks": string;
+    "media": string;
+    "integrations": string;
 };
 
 export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
@@ -48,6 +55,13 @@ export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
 export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "chooseUser": string;
+    "name": string;
+    "email": string;
+    "locale": string;
+    "phone": string;
+    "timezone": string;
+    "cancel": string;
+    "continue": string;
 };
 
 export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
@@ -70,11 +84,21 @@ export interface IAlertStrings extends Localize.LocalizedStringsMethods {
 export interface IOrganizationTableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "chooseOrganization": string;
+    "name": string;
 };
 
 export interface IProjectTableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "chooseProject": string;
+    "name": string;
+    "description": string;
+    "language": string;
+    "delete": string;
+};
+
+export interface IChartStrings extends Localize.LocalizedStringsMethods {
+    "tasksCompleted": string;
+    "totalTransactions": string;
 };
 
 export interface ILocalizedStrings {
@@ -91,5 +115,6 @@ export interface ILocalizedStrings {
 	alert: IAlertStrings;
 	organizationTable: IOrganizationTableStrings;
 	projectTable: IProjectTableStrings;
+	chart: IChartStrings;
 	[key: string]: any;
 };

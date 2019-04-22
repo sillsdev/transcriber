@@ -43,7 +43,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
 
 export function OrganizationTable(props: IProps) {
   const { classes, organizations, auth, t } = props;
-  const { isAuthenticated, accessToken } = auth;
+  const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([{ name: "name", title: "Name" }]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
@@ -61,6 +61,7 @@ export function OrganizationTable(props: IProps) {
   const handleMessageReset = () => { setMessage('') };
 
   useEffect(() => {
+    setColumns([{ name: "name", title: t.name }]);
     setRows(
       organizations.map((o: Organization) => ({
         type: o.type,

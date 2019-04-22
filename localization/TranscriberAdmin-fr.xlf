@@ -1,269 +1,389 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
-   <file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
-      <unit id="access.silTranscriberAccess">
-         <segment>
-            <source>SIL Transcriber Access</source>
-         	<target>Accès du Transcripteur SIL</target>
-         </segment>
-      </unit>
-      <unit id="access.accessSilTranscriber">
-         <segment>
-            <source>Access SIL Transcriber</source>
-         	<target>Accès au Transcripteur SIL</target>
-         </segment>
-      </unit>
-      <unit id="access.createAccount">
-         <segment>
-            <source>Create an Account</source>
-         	<target>Créer un compte</target>
-         </segment>
-      </unit>
-      <unit id="access.accessExistingAccount">
-         <segment>
-            <source>Access with existing Account</source>
-         	<target>Accès avec compte existant</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.transcriberAdmin">
-         <segment>
-            <source>Transcriber Admin</source>
-         	<target>Administration du Transcripteur</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.search">
-         <segment>
-            <source>Search…</source>
-         	<target>Chercher</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.organizations">
-         <segment>
-            <source>Organizations</source>
-         	<target>Les organisations</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageOrganizations">
-         <segment>
-            <source>Add or manage organizations</source>
-         	<target>Ajouter ou gérer des organisations</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.users">
-         <segment>
-            <source>Users</source>
-         	<target>Utilisatrices</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageUsers">
-         <segment>
-            <source>Add or manage users</source>
-         	<target>Ajouter ou gérer des utilisateurs</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.projects">
-         <segment>
-            <source>Projects</source>
-         	<target>Projets</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageProjects">
-         <segment>
-            <source>Add or manage projects</source>
-         	<target>Ajouter ou gérer des projets</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.media">
-         <segment>
-            <source>Media</source>
-         	<target>Fichiers audio</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageAudioFiles">
-         <segment>
-            <source>Add or manage audio files</source>
-         	<target>Ajouter ou gérer des fichiers audio</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.books">
-         <segment>
-            <source>Books</source>
-            <target>Publications</target>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageBooks">
-         <segment>
-            <source>Add or manage books</source>
-         	<target>Ajouter ou gérer des publications</target>
-         </segment>
-      </unit>
-      <unit id="createorg.silTranscriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-         	<target>Administration du Transcripteur SIL</target>
-         </segment>
-      </unit>
-      <unit id="createorg.createOrganization">
-         <segment>
-            <source>Create organization</source>
-         	<target>Créer une organisation</target>
-         </segment>
-      </unit>
-      <unit id="createorg.findExistingOrganization">
-         <segment>
-            <source>Find an existing Organization</source>
-         	<target>Trouver une organisation existante</target>
-         </segment>
-      </unit>
-      <unit id="createorg.organizationName">
-         <segment>
-            <source>Organization Name</source>
-         	<target>Nom de l'organisation</target>
-         </segment>
-      </unit>
-      <unit id="createorg.cancel">
-         <segment>
-            <source>Cancel</source>
-         	<target>Annuler</target>
-         </segment>
-      </unit>
-      <unit id="createorg.continue">
-         <segment>
-            <source>Continue</source>
-         	<target>Continuer</target>
-         </segment>
-      </unit>
-      <unit id="mediacard.section">
-         <segment>
-            <source>Section</source>
-         	<target>Section</target>
-         </segment>
-      </unit>
-      <unit id="projectstatus.listOptions">
-         <segment>
-            <source>Open drawer</source>
-         	<target>Énumérer des options</target>
-         </segment>
-      </unit>
-      <unit id="projectstatus.silTranscriberAdminProject">
-         <segment>
-            <source>SIL Transcriber Admin - Project</source>
-         	<target>Administration du Transcripteur SIL - Projet</target>
-         </segment>
-      </unit>
-      <unit id="projectstatus.search">
-         <segment>
-            <source>Search…</source>
-            <target>Chercher</target>
-         </segment>
-      </unit>
-      <unit id="snackbar.undo">
-         <segment>
-            <source>UNDO</source>
-         	<target>Annuler</target>
-         </segment>
-      </unit>
-      <unit id="usertable.silTranscriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-         	<target>Administration du Transcripteur SIL</target>
-         </segment>
-      </unit>
-      <unit id="usertable.chooseUser">
-         <segment>
-            <source>Choose User</source>
-         	<target>Choisissez un utilisateur</target>
-         </segment>
-      </unit>
-      <unit id="welcome.silTranscriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-         	<target>Administration du Transcripteur SIL</target>
-         </segment>
-      </unit>
-      <unit id="welcome.thanksSigningUp">
-         <segment>
-            <source>Thanks for signing up!</source>
-         	<target>Merci pour votre inscription!</target>
-         </segment>
-      </unit>
-      <unit id="welcome.StartTranscribingImmediately">
-         <segment>
-            <source>Do you want to start transcribing immediately?</source>
-         	<target>Voulez-vous commencer à transcrire immédiatement?</target>
-         </segment>
-      </unit>
-      <unit id="welcome.transcriberWeb">
-         <segment>
-            <source>Transcriber Web</source>
-         	<target>Transcripteur du web</target>
-         </segment>
-      </unit>
-      <unit id="welcome.transcriberDesktop">
-         <segment>
-            <source>Transcriber Desktop</source>
-         	<target>Transcripteur du bureau</target>
-         </segment>
-      </unit>
-      <unit id="welcome.ConfigureTranscriptionProject">
-         <segment>
-            <source>Do you want to configure a transcription project?</source>
-         	<target>Voulez-vous configurer un projet de transcription?</target>
-         </segment>
-      </unit>
-      <unit id="welcome.transcriberAdmin">
-         <segment>
-            <source>Transcriber Admin</source>
-         	<target>Administration du Transcripteur</target>
-         </segment>
-      </unit>
-   	<unit id="alert.confirmation">
-   		<segment>
-   			<source>Confirmation</source>
-   			<target>Confirmation</target>
-   		</segment>
-   	</unit>
-   	<unit id="alert.areYouSure">
-   		<segment>
-   			<source>Are you sure?</source>
-   			<target>Voulez-vous continuer?</target>
-   		</segment>
-   	</unit>
-   	<unit id="alert.no">
-   		<segment>
-   			<source>No</source>
-   			<target>Non</target>
-   		</segment>
-   	</unit>
-   	<unit id="alert.yes">
-   		<segment>
-   			<source>Yes</source>
-   			<target>Oui</target>
-   		</segment>
-   	</unit>
-   	<unit id="organizationTable.silTranscriberAdmin">
-   		<segment>
-   			<source>SIL Transcriber Admin</source>
-   			<target>Administration du Transcripteur SIL</target>
-   		</segment>
-   	</unit>
-   	<unit id="organizationTable.chooseOrganization">
-   		<segment>
-   			<source>Choose Organization</source>
-   			<target>Choisissez une organisation</target>
-   		</segment>
-   	</unit>
-   	<unit id="projectTable.silTranscriberAdmin">
-   		<segment>
-   			<source>SIL Transcriber Admin</source>
-   			<target>Administration du Transcripteur SIL</target>
-   		</segment>
-   	</unit>
-   	<unit id="projectTable.chooseProject">
-   		<segment>
-   			<source>Choose Project</source>
-   			<target>Choisissez une projet</target>
-   		</segment>
-   	</unit>
-   </file>
+	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
+		<unit id="access.silTranscriberAccess">
+			<segment>
+				<source>SIL Transcriber Access</source>
+				<target>Accès du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="access.accessSilTranscriber">
+			<segment>
+				<source>Access SIL Transcriber</source>
+				<target>Accès au Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="access.createAccount">
+			<segment>
+				<source>Create an Account</source>
+				<target>Créer un compte</target>
+			</segment>
+		</unit>
+		<unit id="access.accessExistingAccount">
+			<segment>
+				<source>Access with existing Account</source>
+				<target>Accès avec compte existant</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.transcriberAdmin">
+			<segment>
+				<source>Transcriber Admin</source>
+				<target>Administration du Transcripteur</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.search">
+			<segment>
+				<source>Search…</source>
+				<target>Chercher</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.organizations">
+			<segment>
+				<source>Organizations</source>
+				<target>Les organisations</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.addManageOrganizations">
+			<segment>
+				<source>Add or manage organizations</source>
+				<target>Ajouter ou gérer des organisations</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.users">
+			<segment>
+				<source>Users</source>
+				<target>Utilisatrices</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.addManageUsers">
+			<segment>
+				<source>Add or manage users</source>
+				<target>Ajouter ou gérer des utilisateurs</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.projects">
+			<segment>
+				<source>Projects</source>
+				<target>Projets</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.addManageProjects">
+			<segment>
+				<source>Add or manage projects</source>
+				<target>Ajouter ou gérer des projets</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.media">
+			<segment>
+				<source>Media</source>
+				<target>Fichiers audio</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.addManageAudioFiles">
+			<segment>
+				<source>Add or manage audio files</source>
+				<target>Ajouter ou gérer des fichiers audio</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.books">
+			<segment>
+				<source>Books</source>
+				<target>Publications</target>
+			</segment>
+		</unit>
+		<unit id="adminpanel.addManageBooks">
+			<segment>
+				<source>Add or manage books</source>
+				<target>Ajouter ou gérer des publications</target>
+			</segment>
+		</unit>
+		<unit id="createorg.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="createorg.createOrganization">
+			<segment>
+				<source>Create organization</source>
+				<target>Créer une organisation</target>
+			</segment>
+		</unit>
+		<unit id="createorg.findExistingOrganization">
+			<segment>
+				<source>Find an existing Organization</source>
+				<target>Trouver une organisation existante</target>
+			</segment>
+		</unit>
+		<unit id="createorg.organizationName">
+			<segment>
+				<source>Organization Name</source>
+				<target>Nom de l'organisation</target>
+			</segment>
+		</unit>
+		<unit id="createorg.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="createorg.continue">
+			<segment>
+				<source>Continue</source>
+				<target>Continuer</target>
+			</segment>
+		</unit>
+		<unit id="mediacard.section">
+			<segment>
+				<source>Section</source>
+				<target>Section</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.silTranscriberAdminProject">
+			<segment>
+				<source>SIL Transcriber Admin - Project</source>
+				<target>Administration du Transcripteur SIL - Projet</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.search">
+			<segment>
+				<source>Search…</source>
+				<target>Chercher</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.listOptions">
+			<segment>
+				<source>Open drawer</source>
+				<target>Énumérer des options</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.settings">
+			<segment>
+				<source>Settings</source>
+				<target>Paramètres</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.team">
+			<segment>
+				<source>Team</source>
+				<target>Equipes</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.sets">
+			<segment>
+				<source>Sets</source>
+				<target>Ensembles</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.tasks">
+			<segment>
+				<source>Tasks</source>
+				<target>Taches</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.media">
+			<segment>
+				<source>Media</source>
+				<target>Fichier multimédia</target>
+			</segment>
+		</unit>
+		<unit id="projectstatus.integrations">
+			<segment>
+				<source>Integrations</source>
+				<target>Intégrations</target>
+			</segment>
+		</unit>
+		<unit id="snackbar.undo">
+			<segment>
+				<source>UNDO</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="usertable.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="usertable.chooseUser">
+			<segment>
+				<source>Choose User</source>
+				<target>Choisissez un utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="usertable.name">
+			<segment>
+				<source>Name</source>
+				<target>Nom</target>
+			</segment>
+		</unit>
+		<unit id="usertable.email">
+			<segment>
+				<source>Email</source>
+				<target>e-mail</target>
+			</segment>
+		</unit>
+		<unit id="usertable.locale">
+			<segment>
+				<source>Locale</source>
+				<target>paramètres régionaux</target>
+			</segment>
+		</unit>
+		<unit id="usertable.phone">
+			<segment>
+				<source>Phone</source>
+				<target>Téléphone</target>
+			</segment>
+		</unit>
+		<unit id="usertable.timezone">
+			<segment>
+				<source>Timezone</source>
+				<target>Fuseau horaire</target>
+			</segment>
+		</unit>
+		<unit id="usertable.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="usertable.continue">
+			<segment>
+				<source>Continue</source>
+				<target>Continuer</target>
+			</segment>
+		</unit>
+		<unit id="welcome.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="welcome.thanksSigningUp">
+			<segment>
+				<source>Thanks for signing up!</source>
+				<target>Merci pour votre inscription!</target>
+			</segment>
+		</unit>
+		<unit id="welcome.StartTranscribingImmediately">
+			<segment>
+				<source>Do you want to start transcribing immediately?</source>
+				<target>Voulez-vous commencer à transcrire immédiatement?</target>
+			</segment>
+		</unit>
+		<unit id="welcome.transcriberWeb">
+			<segment>
+				<source>Transcriber Web</source>
+				<target>Transcripteur du web</target>
+			</segment>
+		</unit>
+		<unit id="welcome.transcriberDesktop">
+			<segment>
+				<source>Transcriber Desktop</source>
+				<target>Transcripteur du bureau</target>
+			</segment>
+		</unit>
+		<unit id="welcome.ConfigureTranscriptionProject">
+			<segment>
+				<source>Do you want to configure a transcription project?</source>
+				<target>Voulez-vous configurer un projet de transcription?</target>
+			</segment>
+		</unit>
+		<unit id="welcome.transcriberAdmin">
+			<segment>
+				<source>Transcriber Admin</source>
+				<target>Administration du Transcripteur</target>
+			</segment>
+		</unit>
+		<unit id="alert.confirmation">
+			<segment>
+				<source>Confirmation</source>
+				<target>Confirmation</target>
+			</segment>
+		</unit>
+		<unit id="alert.areYouSure">
+			<segment>
+				<source>Are you sure?</source>
+				<target>Voulez-vous continuer?</target>
+			</segment>
+		</unit>
+		<unit id="alert.no">
+			<segment>
+				<source>No</source>
+				<target>Non</target>
+			</segment>
+		</unit>
+		<unit id="alert.yes">
+			<segment>
+				<source>Yes</source>
+				<target>Oui</target>
+			</segment>
+		</unit>
+		<unit id="organizationTable.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="organizationTable.chooseOrganization">
+			<segment>
+				<source>Choose Organization</source>
+				<target>Choisissez une organisation</target>
+			</segment>
+		</unit>
+		<unit id="organizationTable.name">
+			<segment>
+				<source>Name</source>
+				<target>Nom</target>
+			</segment>
+		</unit>
+		<unit id="projectTable.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="projectTable.chooseProject">
+			<segment>
+				<source>Choose Project</source>
+				<target>Choisissez une projet</target>
+			</segment>
+		</unit>
+		<unit id="projectTable.name">
+			<segment>
+				<source>Name</source>
+				<target>Nom</target>
+			</segment>
+		</unit>
+		<unit id="projectTable.description">
+			<segment>
+				<source>Description</source>
+				<target>Description du projet</target>
+			</segment>
+		</unit>
+		<unit id="projectTable.language">
+			<segment>
+				<source>Language</source>
+				<target>Langue</target>
+			</segment>
+		</unit>
+		<unit id="projectTable.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Supprimer</target>
+			</segment>
+		</unit>
+		<unit id="chart.tasksCompleted">
+			<segment>
+				<source>Tasks Completed</source>
+				<target>Tâches achevées</target>
+			</segment>
+		</unit>
+		<unit id="chart.totalTransactions">
+			<segment>
+				<source>Total Transactions</source>
+				<target>Total des transactions</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>

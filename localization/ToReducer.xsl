@@ -7,6 +7,7 @@
 	<xsl:output method="text"/>
 	
 	<xsl:template match="/">
+		<xsl:text>// WARNING: This file is generated using ToReducer.xsl. Changes made here may be lost.&#10;</xsl:text>
 		<xsl:text>import LocalizedStrings from 'react-localization';&#10;</xsl:text>
 		<xsl:text>import { FETCH_LOCALIZATION, SET_LANGUAGE } from '../actions/types';&#10;</xsl:text>
 		<xsl:text>import { ILocalizedStrings } from '../model/localizeModel';&#10;&#10;</xsl:text>

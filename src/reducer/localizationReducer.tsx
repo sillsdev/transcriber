@@ -1,3 +1,4 @@
+// WARNING: This file is generated using ToReducer.xsl. Changes made here may be lost.
 import LocalizedStrings from 'react-localization';
 import { FETCH_LOCALIZATION, SET_LANGUAGE } from '../actions/types';
 import { ILocalizedStrings } from '../model/localizeModel';
@@ -46,9 +47,15 @@ const initialState = {
 	}),
 	"projectstatus": new LocalizedStrings({
 		"en": {
-			"listOptions": "List Options",
 			"silTranscriberAdminProject": "SIL Transcriber Admin - Project",
 			"search": "Search…",
+			"listOptions": "List Options",
+			"settings": "Settings",
+			"team": "Team",
+			"sets": "Sets",
+			"tasks": "Tasks",
+			"media": "Media",
+			"integrations": "Integrations",
 		}
 	}),
 	"snackbar": new LocalizedStrings({
@@ -60,6 +67,13 @@ const initialState = {
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"chooseUser": "Choose User",
+			"name": "Name",
+			"email": "Email",
+			"locale": "Locale",
+			"phone": "Phone",
+			"timezone": "Timezone",
+			"cancel": "Cancel",
+			"continue": "Continue",
 		}
 	}),
 	"welcome": new LocalizedStrings({
@@ -85,12 +99,23 @@ const initialState = {
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"chooseOrganization": "Choose Organization",
+			"name": "Name",
 		}
 	}),
 	"projectTable": new LocalizedStrings({
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"chooseProject": "Choose Project",
+			"name": "Name",
+			"description": "Description",
+			"language": "Language",
+			"delete": "Delete",
+		}
+	}),
+	"chart": new LocalizedStrings({
+		"en": {
+			"tasksCompleted": "Tasks Completed",
+			"totalTransactions": "Total Transactions",
 		}
 	}),
 };
@@ -112,6 +137,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"organizationTable" : new LocalizedStrings(action.payload.data.organizationTable),
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),
+				"chart" : new LocalizedStrings(action.payload.data.chart),
 			};
 		case SET_LANGUAGE:
 			return {

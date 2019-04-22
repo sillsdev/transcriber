@@ -1,10 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd"
-	xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 
-	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en"
-		datatype="plaintext">
+	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
 		<body>
 			<trans-unit id="access.silTranscriberAccess">
 				<source>SIL Transcriber Access</source>
@@ -167,13 +164,6 @@
 					<context context-type="sourcefile">MediaCard.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="projectstatus.listOptions">
-				<source>List Options</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
 			<trans-unit id="projectstatus.silTranscriberAdminProject">
 				<source>SIL Transcriber Admin - Project</source>
 				<target/>
@@ -183,6 +173,55 @@
 			</trans-unit>
 			<trans-unit id="projectstatus.search">
 				<source>Search…</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.listOptions">
+				<source>List Options</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.settings">
+				<source>Settings</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.team">
+				<source>Team</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.sets">
+				<source>Sets</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.tasks">
+				<source>Tasks</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.media">
+				<source>Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.integrations">
+				<source>Integrations</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
@@ -204,6 +243,55 @@
 			</trans-unit>
 			<trans-unit id="usertable.chooseUser">
 				<source>Choose User</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.email">
+				<source>Email</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.locale">
+				<source>Locale</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.phone">
+				<source>Phone</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.timezone">
+				<source>Timezone</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.continue">
+				<source>Continue</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">UserTable.tsx</context>
@@ -300,6 +388,13 @@
 					<context context-type="sourcefile">OrganizationTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="organizationTable.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrganizationTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="projectTable.silTranscriberAdmin">
 				<source>SIL Transcriber Admin</source>
 				<target/>
@@ -309,6 +404,48 @@
 			</trans-unit>
 			<trans-unit id="projectTable.chooseProject">
 				<source>Choose Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectTable.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectTable.description">
+				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectTable.language">
+				<source>Language</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectTable.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="chart.tasksCompleted">
+				<source>Tasks Completed</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="chart.totalTransactions">
+				<source>Total Transactions</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectTable.tsx</context>

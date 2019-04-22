@@ -24,11 +24,11 @@ interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
 export function Welcome(props: IProps) {
     const { classes, orbitLoaded, stringsLoaded, auth, t } = props;
     const { fetchOrbitData, fetchLocalization, setLanguage } = props;
+    const { isAuthenticated } = auth;
     const [view, setView] = useState('');
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
     const [keyMap] = useGlobal('keyMap');
-    const { isAuthenticated, accessToken } = auth;
     const lang = localStorage.getItem('lang') || 'en';
 
     if (!isAuthenticated()) return <Redirect to="/" />;

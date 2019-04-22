@@ -51,8 +51,8 @@ interface IProps extends IRecordProps {
 }
 
 export function ProjectStatus(props: any): JSX.Element {
-  const { classes, history, theme, projects, auth } = props;
-  const { isAuthenticated, accessToken } = auth;
+  const { classes, history, theme, projects, auth, t } = props;
+  const { isAuthenticated } = auth;
   const [open, setOpen] = useState(true);
   const [project, setProject] = useGlobal('project');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
@@ -71,6 +71,7 @@ export function ProjectStatus(props: any): JSX.Element {
     ? <ProjectSettings />
     : <Chart />;
 
+  const optionList = [t.settings, t.team, t.sets, t.tasks, t.media, t.integrations];
 
   return view ===''? (
     <div className={classes.root}>
@@ -83,7 +84,7 @@ export function ProjectStatus(props: any): JSX.Element {
         <Toolbar disableGutters={!open}>
           <IconButton
             color="inherit"
-            aria-label={'List Options'}
+            aria-label={t.listOptions}
             onClick={handleDrawerOpen}
             className={classNames(classes.menuButton, {
               [classes.hide]: open,
@@ -95,7 +96,7 @@ export function ProjectStatus(props: any): JSX.Element {
             <BackIcon onClick={handleCancel} />
           </IconButton>
           <Typography variant="h6" color="inherit" noWrap>
-            {'SIL Transcriber Admin - Project'}
+            {t.silTranscriberAdminProject}
           </Typography>
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -103,7 +104,7 @@ export function ProjectStatus(props: any): JSX.Element {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder={'Search…'}
+              placeholder={t.search}
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
@@ -134,7 +135,7 @@ export function ProjectStatus(props: any): JSX.Element {
         </div>
         <Divider />
         <List>
-          {['Settings', 'Team', 'Sets', 'Tasks', 'Media', 'Integrations'].map((text, index) => (
+          {optionList.map((text, index) => (
             <ListItem button key={text} onClick={handleProjectItem}>
               <ListItemIcon>{index === 0 ? <SettingsIcon /> : (
                 index === 1 ? <TeamIcon /> : (

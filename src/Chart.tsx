@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { IState } from './model/state'
+import { IChartStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
+import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import {
     Chart,
@@ -20,7 +25,10 @@ const Point = (props: any) => {
     );
 };
 
-export default function Demo() {
+export interface IProps extends IStateProps, WithStyles<typeof styles> { };
+
+export function Status(props: IProps) {
+    const { t } = props;
     const [data, setData] = useState([
         { month: 'Jan', tasks: 50, total: 987 },
         { month: 'Feb', tasks: 100, total: 3000 },
@@ -43,7 +51,7 @@ export default function Demo() {
                 <ValueAxis scaleName="total" position="right" showGrid={false} showLine showTicks />
 
                 <BarSeries
-                    name="Tasks Completed"
+                    name={t.tasksCompleted}
                     valueField="tasks"
                     argumentField="month"
                     scaleName="tasks"
@@ -51,7 +59,7 @@ export default function Demo() {
                 />
 
                 <SplineSeries
-                    name="Total Transactions"
+                    name={t.totalTransactions}
                     valueField="total"
                     argumentField="month"
                     scaleName="total"
@@ -62,3 +70,17 @@ export default function Demo() {
         </Paper>
     );
 }
+
+const styles = {};
+
+interface IStateProps {
+    t: IChartStrings;
+  }
+  const mapStateToProps = (state: IState): IStateProps => ({
+    t: localStrings(state, {layout: "chart"})
+  });
+  
+  export default withStyles(styles, { withTheme: true })(
+        connect(mapStateToProps)(Status) as any
+    ) as any;
+  

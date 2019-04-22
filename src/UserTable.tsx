@@ -64,7 +64,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
 
 export function UserTable(props: IProps) {
   const { classes, users, auth, t } = props;
-  const { isAuthenticated, accessToken } = auth;
+  const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'email', title: 'Email' },
@@ -82,6 +82,13 @@ export function UserTable(props: IProps) {
   const handleContinue = () => { setView('/admin') };
 
   useEffect(() => {
+    setColumns([
+      { name: 'name', title: t.name },
+      { name: 'email', title: t.email },
+      { name: 'locale', title: t.locale },
+      { name: 'phone', title: t.phone },
+      { name: 'timezone', title: t.timezone },
+    ])
     setRows(users.map((o: User) => ({
       type: o.type,
       id: o.id,
@@ -151,16 +158,18 @@ export function UserTable(props: IProps) {
             <Button
               onClick={handleCancel}
               variant="raised"
-              className={classes.button}>
-              Cancel
-                        </Button>
+              className={classes.button}
+            >
+              {t.cancel}
+            </Button>
             <Button
               onClick={handleContinue}
               variant="raised"
               color="primary"
-              className={classes.button}>
-              Continue
-                        </Button>
+              className={classes.button}
+            >
+              {t.continue}
+            </Button>
           </div>
         </Paper>
       </div>

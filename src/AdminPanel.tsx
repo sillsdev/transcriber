@@ -29,7 +29,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
 
 function AdminPanel(props: IProps) {
   const { classes, auth, t } = props;
-  const { isAuthenticated, accessToken } = auth;
+  const { isAuthenticated } = auth;
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
