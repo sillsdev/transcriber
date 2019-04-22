@@ -17,7 +17,6 @@ import UserData from './UserData';
 import ProjectStatus from './ProjectStatus';
 import Store from '@orbit/store';
 import { schema, keyMap } from './schema';
-import Sources from './Sources';
 import Callback from './callback/Callback';
 import Auth from './auth/Auth';
 import history from './history';
@@ -39,13 +38,15 @@ const theme = createMuiTheme({
 });
 
 const dataStore = new Store({ schema, keyMap });
-Sources(schema, dataStore, keyMap);
 
 setGlobal({
   organization: null,
   project: null,
   user: null,
   lang: 'en',
+  dataStore: dataStore,
+  schema: schema,
+  keyMap: keyMap,
 });
 
 function App() {

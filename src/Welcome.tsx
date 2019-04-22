@@ -1,27 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import Auth from './auth/Auth';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { IState } from './model/state'
 import { IWelcomeStrings } from './model/localizeModel';
 import localStrings from './selector/localize';
+import { withData } from 'react-orbitjs';
+import { Schema, KeyMap } from '@orbit/data';
+import Store from '@orbit/store';
 import { Theme, withStyles, WithStyles, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import * as action from './actions/orbitAction';
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{
+interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
     auth: Auth
 };
 
 export function Welcome(props: IProps) {
-    const { classes, auth, t } = props;
+    const { classes, orbitLoaded, auth, t } = props;
+    const { fetchOrbitData } = props;
+    const [view, setView] = useState('');
+    const [dataStore] = useGlobal('dataStore');
+    const [schema] = useGlobal('schema');
+    const [keyMap] = useGlobal('keyMap');
     const { isAuthenticated, accessToken } = auth;
 
-    alert(accessToken);
+    if (!isAuthenticated()) return <Redirect to="/" />;
 
-    return (
+    if (!orbitLoaded) {
+        fetchOrbitData(schema as Schema, dataStore as Store, keyMap as KeyMap, auth);
+    };
+
+    return view === ''? (
         <div className={classes.root}>
             <AppBar className={classes.appBar} position="static">
                 <Toolbar>
@@ -59,7 +74,7 @@ export function Welcome(props: IProps) {
                 </Paper>
             </div>
         </div>
-    );
+    ): <Redirect to={view} />;
 }
 
 const styles = (theme: Theme) => ({
@@ -114,12 +129,26 @@ const styles = (theme: Theme) => ({
 
 interface IStateProps {
     t: IWelcomeStrings;
-  }
-  const mapStateToProps = (state: IState): IStateProps => ({
-    t: localStrings(state, {layout: "welcome"})
-  });
+    orbitLoaded: boolean;
+};
+const mapStateToProps = (state: IState): IStateProps => ({
+    t: localStrings(state, {layout: "welcome"}),
+    orbitLoaded: state.orbit.loaded,
+});
+
+interface IDispatchProps {
+    fetchOrbitData: typeof action.fetchOrbitData;
+};
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+    ...bindActionCreators({
+        fetchOrbitData: action.fetchOrbitData,
+    }, dispatch),
+});
   
-  export default withStyles(styles, { withTheme: true })(
-        connect(mapStateToProps)(Welcome) as any
+const mapRecordsToProps = { };
+
+export default withStyles(styles, { withTheme: true })(
+    withData(mapRecordsToProps)(
+        connect(mapStateToProps, mapDispatchToProps)(Welcome) as any
+        ) as any
     ) as any;
-  

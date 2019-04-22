@@ -3,8 +3,9 @@ import IndexedDBSource from "@orbit/indexeddb";
 import JSONAPISource from '@orbit/jsonapi';
 import { Schema, KeyMap } from "@orbit/data";
 import Store from "@orbit/store";
+import Auth from './auth/Auth';
 
-function Sources(schema: Schema, store: Store, keyMap: KeyMap): Promise<any> {
+function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Promise<any> {
     const backup = new IndexedDBSource({
         schema,
         keyMap,
@@ -17,7 +18,11 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap): Promise<any> {
         keyMap,
         name: 'remote',
         namespace: 'api',
-        host: ' https://ukepgrpe6l.execute-api.us-east-2.amazonaws.com/qa',
+        // host: ' https://ukepgrpe6l.execute-api.us-east-2.amazonaws.com/qa',
+        host: 'https://9u6wlhwuha.execute-api.us-east-2.amazonaws.com/dev',
+        defaultFetchHeaders: {
+            "Authorization": "Bearer " + auth.idToken,
+        }
     })
     remote.serializer.resourceKey = () => { return 'remoteId' };
 
@@ -74,6 +79,8 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap): Promise<any> {
     remote.pull(q => q.findRecords('projectintegration'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('projecttype'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('book'))
         .then(transform => store.sync(transform));
 
     return (backup.pull(q => q.findRecords())
