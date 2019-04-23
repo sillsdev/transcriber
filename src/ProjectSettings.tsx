@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import Project from './model/project';
 import ProjectType from './model/projectType';
 import { connect } from 'react-redux';
-import { IState } from './model/state'
-import { IProjectSettingsStrings } from './model/localizeModel';
+import { IState, Project, IProjectSettingsStrings } from './model';
 import localStrings from './selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import Orbit from '@orbit/core';
-import { withStyles, Theme } from '@material-ui/core/styles';
+import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
@@ -24,10 +22,68 @@ import blue from '@material-ui/core/colors/blue';
 import yellow from '@material-ui/core/colors/yellow';
 import SnackBar from './SnackBar';
 
-interface IProps extends IStateProps, IRecordProps {
-  classes?: any;
+const styles = (theme: Theme) => ({
+  container: {
+      display: 'flex',
+      margin: theme.spacing.unit * 4,
+  },
+  paper: {
+      paddingLeft: theme.spacing.unit * 4,
+  },
+  group: {
+    paddingBottom: theme.spacing.unit * 3,
+  },
+  label: {
+      color: blue[500],
+  },
+  info: {
+      justifyContent: 'right',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  dense: {
+    marginTop: 16,
+  },
+  menu: {
+    width: 200,
+  },
+  actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'right'
+    }),
+  button: {
+    margin: theme.spacing.unit
+  },
+  icon: {
+    marginLeft: theme.spacing.unit
+  },
+  moreButton: {
+  },
+  smallIcon: {
+    marginRight: theme.spacing.unit,
+    fontSize: 12,
+  },
+  link: {
+    color: yellow[500],
+  },
+  });
+
+interface IStateProps {
+  t: IProjectSettingsStrings;
+};
+
+interface IRecordProps {
+  projects: Array<Project>;
+  projectTypes: Array<ProjectType>;
+};
+
+interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   updateStore?: any
-}
+};
   
 export function ProjectSettings(props: IProps) {
     const { classes, projects, projectTypes, updateStore, t } = props;
@@ -358,76 +414,18 @@ export function ProjectSettings(props: IProps) {
     );
 }
 
-const styles = (theme: Theme) => ({
-    container: {
-        display: 'flex',
-        margin: theme.spacing.unit * 4,
-    },
-    paper: {
-        paddingLeft: theme.spacing.unit * 4,
-    },
-    group: {
-      paddingBottom: theme.spacing.unit * 3,
-    },
-    label: {
-        color: blue[500],
-    },
-    info: {
-        justifyContent: 'right',
-    },
-    textField: {
-      marginLeft: theme.spacing.unit,
-      marginRight: theme.spacing.unit,
-    },
-    dense: {
-      marginTop: 16,
-    },
-    menu: {
-      width: 200,
-    },
-    actions: theme.mixins.gutters({
-        paddingBottom: 16,
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'right'
-      }),
-    button: {
-      margin: theme.spacing.unit
-    },
-    icon: {
-      marginLeft: theme.spacing.unit
-    },
-    moreButton: {
-    },
-    smallIcon: {
-      marginRight: theme.spacing.unit,
-      fontSize: 12,
-    },
-    link: {
-      color: yellow[500],
-    },
-    });
-
-interface IStateProps {
-  t: IProjectSettingsStrings;
-}
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "projectSettings"})
 });
     
-interface IRecordProps {
-    projects: Array<Project>;
-    projectTypes: Array<ProjectType>;
-}
-
 const mapRecordsToProps = {
-    projects: (q: QueryBuilder) => q.findRecords('project'),
-    projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
+  projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
 }
 
 export default withStyles(styles, { withTheme: true })(
-    withData(mapRecordsToProps)(
-        connect(mapStateToProps)(ProjectSettings) as any
-        ) as any
-    ) as any;
+  withData(mapRecordsToProps)(
+    connect(mapStateToProps)(ProjectSettings) as any
+  ) as any
+) as any;
       

@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Redirect } from 'react-router';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState } from './model/state'
-import { IAdminpanelStrings } from './model/localizeModel';
+import { IState, IAdminpanelStrings } from './model';
 import localStrings from './selector/localize';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -22,68 +20,6 @@ import projectSvg from './assets/project.svg';
 import mediaSvg from './assets/media.svg';
 import bookSvg from './assets/book.svg';
 import Auth from './auth/Auth';
-
-interface IProps extends IStateProps, WithStyles<typeof styles>{
-  auth: Auth;
-};
-
-function AdminPanel(props: IProps) {
-  const { classes, auth, t } = props;
-  const { isAuthenticated } = auth;
-
-  if (!isAuthenticated()) return <Redirect to='/' />;
-
-  return (
-    <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <Toolbar>
-          <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-            {t.transcriberAdmin}
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder={t.search}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-          </div>
-          <Avatar className={classes.avatar} />
-        </Toolbar>
-      </AppBar>
-      <Grid className={classes.grid}
-        container
-        direction='row'
-        justify='center'
-        alignItems='flex-start' >
-        <Link to='/organization' className={classes.link}>
-          <MediaCard type={t.organizations} explain={t.addManageOrganizations} graphic={organizationSvg} />
-        </Link>
-        <Link to='/user' className={classes.link}>
-          <MediaCard type={t.users} explain={t.addManageUsers} graphic={usersSvg} />
-        </Link>
-        <Link to='/project' className={classes.link}>
-          <MediaCard type={t.projects} explain={t.addManageProjects} graphic={projectSvg} />
-        </Link>
-        <Link to='/admin' className={classes.link}>
-          <MediaCard type={t.media} explain={t.addManageAudioFiles} graphic={mediaSvg} />
-        </Link>
-        <Link to='/admin' className={classes.link}>
-          <MediaCard type={t.books} explain={t.addManageBooks} graphic={bookSvg} />
-        </Link>
-      </Grid>
-    </div>
-  );
-}
-
-AdminPanel.propTypes = {
-  classes: PropTypes.object.isRequired,
-} as any;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -160,8 +96,71 @@ const styles = (theme: Theme) =>
   });
 
 interface IStateProps {
-  t: IAdminpanelStrings;
+    t: IAdminpanelStrings;
+};
+
+interface IProps extends IStateProps, WithStyles<typeof styles>{
+  auth: Auth;
+};
+
+function AdminPanel(props: IProps) {
+  const { classes, auth, t } = props;
+  const { isAuthenticated } = auth;
+
+  if (!isAuthenticated()) return <Redirect to='/' />;
+
+  return (
+    <div className={classes.root}>
+      <AppBar className={classes.appBar} position="static">
+        <Toolbar>
+          <Typography className={classes.title} variant="h6" color="inherit" noWrap>
+            {t.transcriberAdmin}
+          </Typography>
+          <div className={classes.grow} />
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder={t.search}
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+            />
+          </div>
+          <Avatar className={classes.avatar} />
+        </Toolbar>
+      </AppBar>
+      <Grid className={classes.grid}
+        container
+        direction='row'
+        justify='center'
+        alignItems='flex-start' >
+        <Link to='/organization' className={classes.link}>
+          <MediaCard type={t.organizations} explain={t.addManageOrganizations} graphic={organizationSvg} />
+        </Link>
+        <Link to='/user' className={classes.link}>
+          <MediaCard type={t.users} explain={t.addManageUsers} graphic={usersSvg} />
+        </Link>
+        <Link to='/project' className={classes.link}>
+          <MediaCard type={t.projects} explain={t.addManageProjects} graphic={projectSvg} />
+        </Link>
+        <Link to='/admin' className={classes.link}>
+          <MediaCard type={t.media} explain={t.addManageAudioFiles} graphic={mediaSvg} />
+        </Link>
+        <Link to='/admin' className={classes.link}>
+          <MediaCard type={t.books} explain={t.addManageBooks} graphic={bookSvg} />
+        </Link>
+      </Grid>
+    </div>
+  );
 }
+
+AdminPanel.propTypes = {
+  classes: PropTypes.object.isRequired,
+} as any;
+
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "adminpanel"})
 });

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import Project from './model/project';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState } from './model/state'
-import { IProjectTableStrings } from './model/localizeModel';
+import { IState, Project, IProjectTableStrings } from './model';
 import localStrings from './selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, Record, TransformBuilder, RemoveRecordOperation } from '@orbit/data';
+import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -28,6 +26,47 @@ import { Grid,
   Toolbar } from '@devexpress/dx-react-grid-material-ui';
 import Confirm from './AlertDialog';
 import Auth from './auth/Auth';
+
+const styles = (theme: Theme) => createStyles({
+  root: {
+    width: '100%',
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  appBar: theme.mixins.gutters({
+    background: '#FFE599',
+    color: 'black'
+  }),
+  paper: theme.mixins.gutters({
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: theme.spacing.unit * 3,
+    width: '80%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignContent: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '100%',
+    },
+  }),
+  grow: {
+    flexGrow: 1,
+  },
+  dialogHeader: theme.mixins.gutters({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  }),
+  editIcon: {
+    fontSize: 16,
+  },
+  link: {},
+  deleteIcon: {},
+  button: {},
+  icon: {},
+});
 
 interface Row {
   type: string;
@@ -53,12 +92,10 @@ export function ProjectTable(props: IProps) {
     { name: 'language', title: 'Language' },
     { name: 'delete', title: 'Delete' },
   ]);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(Array<Row>());
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [project, setProject] = useGlobal('project');
-
-  if (!isAuthenticated()) return <Redirect to='/' />;
 
   const handleDelete = (e: any) => { setDeleteItem(e.currentTarget.id) };
   const handleDeleteConfirmed = () => {
@@ -94,6 +131,8 @@ export function ProjectTable(props: IProps) {
       delete: o.id,
     })))
   }, [projects]);
+
+  if (!isAuthenticated()) return <Redirect to='/' />;
 
   const LinkCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
     <Table.Cell {...restProps} style={{...style}} value >
@@ -135,7 +174,9 @@ export function ProjectTable(props: IProps) {
     return <Table.Cell {...props} />
   };
 
-  return view === "" ? (
+  if (view !== '') return <Redirect to={view} />;
+
+  return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
         <MuiToolbar>
@@ -190,51 +231,8 @@ export function ProjectTable(props: IProps) {
           />
         : <></>}
     </div>
-  ) : (
-    <Redirect to={view} />
   );
-}
-
-const styles = (theme: Theme) => createStyles({
-  root: {
-    width: '100%',
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  appBar: theme.mixins.gutters({
-    background: '#FFE599',
-    color: 'black'
-  }),
-  paper: theme.mixins.gutters({
-    paddingTop: 16,
-    paddingBottom: 16,
-    marginTop: theme.spacing.unit * 3,
-    width: '80%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignContent: 'center',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
-  }),
-  grow: {
-    flexGrow: 1,
-  },
-  dialogHeader: theme.mixins.gutters({
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center'
-  }),
-  editIcon: {
-    fontSize: 16,
-  },
-  link: {},
-  deleteIcon: {},
-  button: {},
-  icon: {},
-});
+};
 
 interface IStateProps {
   t: IProjectTableStrings;

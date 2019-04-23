@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Project from './model/project';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { IState } from './model/state'
-import { IProjectstatusStrings } from './model/localizeModel';
+import { IState, Project, IProjectstatusStrings } from './model';
 import localStrings from './selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record } from '@orbit/data';
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { createStyles, withStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -38,19 +34,135 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Chart from './Chart';
 import ProjectSettings from './ProjectSettings';
-import { CSSProperties } from 'jss/css';
 import Auth from './auth/Auth';
 
 const drawerWidth = 240;
 
-interface IProps extends IRecordProps {
-  classes: CSSProperties;
+const styles = (theme: Theme) => createStyles({
+  root: {
+    display: 'flex',
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  appBar: {
+    background: '#FFE599',
+    color: 'black',
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 36,
+  },
+  hide: {
+    display: 'none',
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit,
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 9,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 10,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: 120,
+      '&:focus': {
+        width: 200,
+      },
+    },
+  },
+  avatar: {},
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  },
+  drawerOpen: {
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerClose: {
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: theme.spacing.unit * 7 + 1,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing.unit * 9 + 1,
+    },
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+  },
+  dialogHeader: {},
+});
+
+interface IStateProps {
+  t: IProjectstatusStrings;
+};
+
+interface IRecordProps {
+  projects: Array<Project>;
+};
+
+interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
   theme: Theme;
   history: any;
   auth: Auth;
-}
+};
 
-export function ProjectStatus(props: any): JSX.Element {
+export function ProjectStatus(props: IProps) {
   const { classes, history, theme, projects, auth, t } = props;
   const { isAuthenticated } = auth;
   const [open, setOpen] = useState(true);
@@ -73,7 +185,9 @@ export function ProjectStatus(props: any): JSX.Element {
     ? <ProjectSettings {...props} />
     : <Chart {...props} />;
 
-  return view ===''? (
+  if (view !== '') return <Redirect to={view} />;
+
+  return (
     <div className={classes.root}>
       <AppBar
         position="fixed"
@@ -161,146 +275,19 @@ export function ProjectStatus(props: any): JSX.Element {
         {contentJsx}
       </main>
     </div>
-  ): <Redirect to={view} />;
+  );
 };
 
-
-ProjectStatus.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-const styles = (theme: Theme) => createStyles({
-  root: {
-    display: 'flex',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  appBar: {
-    background: '#FFE599',
-    color: 'black',
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 36,
-  },
-  hide: {
-    display: 'none',
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 120,
-      '&:focus': {
-        width: 200,
-      },
-    },
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-  },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerClose: {
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: theme.spacing.unit * 7 + 1,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9 + 1,
-    },
-  },
-  toolbar: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-  },
-});
-
-
-interface IStateProps {
-  t: IProjectstatusStrings;
-}
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "projectstatus"})
 });
 
-const mapDispatchToProps = (dispatch: any) => ({
-    ...bindActionCreators({
-    }, dispatch),
-});
-
-interface IRecordProps {
-  projects: () => Array<Record>;
-}
-
 const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
-}
+};
 
 export default withStyles(styles, { withTheme: true })(
   withData(mapRecordsToProps)(
-      connect(mapStateToProps, mapDispatchToProps)(ProjectStatus) as any
+      connect(mapStateToProps)(ProjectStatus) as any
       ) as any
   ) as any;

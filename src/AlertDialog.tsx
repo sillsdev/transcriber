@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IState } from './model/state'
-import { IAlertStrings } from './model/localizeModel';
+import { IState, IAlertStrings } from './model';
 import localStrings from './selector/localize';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -11,6 +10,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+const styles = (theme: Theme) => createStyles({ });
+
+interface IStateProps {
+  t: IAlertStrings;
+}
 interface IProps extends IStateProps, WithStyles<typeof styles>{
   title: string;
   text: string;
@@ -63,11 +67,6 @@ function AlertDialog(props: IProps) {
   );
 }
 
-const styles = (theme: Theme) => createStyles({ });
-
-interface IStateProps {
-  t: IAlertStrings;
-}
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "alert"})
 });

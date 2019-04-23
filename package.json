@@ -18,9 +18,9 @@
     "@orbit/store": "^0.15.25",
     "@types/classnames": "^2.2.7",
     "@types/jest": "24.0.11",
-    "@types/node": "11.12.0",
-    "@types/react": "16.8.10",
-    "@types/react-dom": "16.8.3",
+    "@types/node": "11.13.7",
+    "@types/react": "16.8.14",
+    "@types/react-dom": "16.8.4",
     "@types/react-redux": "^7.0.6",
     "auth0-js": "^9.10.2",
     "axios": "^0.18.0",
@@ -31,13 +31,13 @@
     "react-orbitjs": "^0.1.11",
     "react-redux": "^6.0.1",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8",
+    "react-scripts": "3.0.0",
     "reactn": "^1.0.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "rimraf": "^2.6.3",
-    "typescript": "3.3.4000"
+    "typescript": "3.4.4"
   },
   "scripts": {
     "clean": "rimraf build converage",

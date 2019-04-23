@@ -1,6 +1,6 @@
 import TableRelationship from './relationsihp';
 
-interface Project {
+export interface Project {
     type: string;
     id: string;
     keys?: {

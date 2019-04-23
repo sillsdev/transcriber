@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState } from './model/state'
-import { ICreateorgStrings } from './model/localizeModel';
+import { IState, ICreateorgStrings } from './model';
 import localStrings from './selector/localize';
 import { Theme,
     withStyles,
@@ -15,70 +14,6 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
-interface IProps extends IStateProps, WithStyles<typeof styles>{ };
-
-export function CreateOrg(props: IProps) {
-    const { classes, t } = props;
-    const [findOrganization, setFindOrganization] = useState('');
-    const [organizationName, setOrganizationName] = useState('');
-    const [view, setView] = useState('');
-
-    const handleFindOrganizationChange = (e: any) => { setFindOrganization(e.target.value) };
-    const handleOrganizationNameChange = (e: any) => { setOrganizationName(e.target.value) };
-    const handleCancel = () => { setView('/access') };
-    const handleContinue = () => { setView('/admin') };
-
-    return view === ''? (
-        <div className={classes.root}>
-            <AppBar className={classes.appBar} position="static">
-                <Toolbar>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        {t.silTranscriberAdmin}
-              </Typography>
-                </Toolbar>
-            </AppBar>
-            <div className={classes.container}>
-                <Paper className={classes.paper}>
-                    <h2 className={classes.dialogHeader}>
-                        {t.createOrganization}
-                    </h2>
-                    <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel>{t.findExistingOrganization}</InputLabel>
-                        <Input
-                            value={findOrganization}
-                            onChange={handleFindOrganizationChange}
-                            id="find-organization"
-                        />
-                    </FormControl>
-                    <FormControl required={true} fullWidth={true} className={classes.field}>
-                        <InputLabel>{t.organizationName}</InputLabel>
-                        <Input
-                            value={organizationName}
-                            onChange={handleOrganizationNameChange}
-                            id="organization-name"
-                        />
-                    </FormControl>
-                    <div className={classes.actions}>
-                        <Button
-                            onClick={handleCancel}
-                            variant="raised"
-                            className={classes.button}>
-                            {t.cancel}
-                        </Button>
-                        <Button
-                            onClick={handleContinue}
-                            variant="raised"
-                            color="primary"
-                            className={classes.button}>
-                            {t.continue}
-                        </Button>
-                    </div>
-                </Paper>
-            </div>
-        </div>
-    ): <Redirect to={view}/>;
-}
 
 const styles = (theme: Theme) => ({
     root: {
@@ -130,12 +65,79 @@ const styles = (theme: Theme) => ({
 
 interface IStateProps {
     t: ICreateorgStrings;
-  }
-  const mapStateToProps = (state: IState): IStateProps => ({
+};
+
+interface IProps extends IStateProps, WithStyles<typeof styles>{ };
+
+export function CreateOrg(props: IProps) {
+    const { classes, t } = props;
+    const [findOrganization, setFindOrganization] = useState('');
+    const [organizationName, setOrganizationName] = useState('');
+    const [view, setView] = useState('');
+
+    const handleFindOrganizationChange = (e: any) => { setFindOrganization(e.target.value) };
+    const handleOrganizationNameChange = (e: any) => { setOrganizationName(e.target.value) };
+    const handleCancel = () => { setView('/access') };
+    const handleContinue = () => { setView('/admin') };
+
+    if (view !== '') return <Redirect to={view} />;
+
+    return (
+        <div className={classes.root}>
+            <AppBar className={classes.appBar} position="static">
+                <Toolbar>
+                    <Typography variant="h6" color="inherit" className={classes.grow}>
+                        {t.silTranscriberAdmin}
+              </Typography>
+                </Toolbar>
+            </AppBar>
+            <div className={classes.container}>
+                <Paper className={classes.paper}>
+                    <h2 className={classes.dialogHeader}>
+                        {t.createOrganization}
+                    </h2>
+                    <FormControl required={true} fullWidth={true} className={classes.field}>
+                        <InputLabel>{t.findExistingOrganization}</InputLabel>
+                        <Input
+                            value={findOrganization}
+                            onChange={handleFindOrganizationChange}
+                            id="find-organization"
+                        />
+                    </FormControl>
+                    <FormControl required={true} fullWidth={true} className={classes.field}>
+                        <InputLabel>{t.organizationName}</InputLabel>
+                        <Input
+                            value={organizationName}
+                            onChange={handleOrganizationNameChange}
+                            id="organization-name"
+                        />
+                    </FormControl>
+                    <div className={classes.actions}>
+                        <Button
+                            onClick={handleCancel}
+                            variant="raised"
+                            className={classes.button}>
+                            {t.cancel}
+                        </Button>
+                        <Button
+                            onClick={handleContinue}
+                            variant="raised"
+                            color="primary"
+                            className={classes.button}>
+                            {t.continue}
+                        </Button>
+                    </div>
+                </Paper>
+            </div>
+        </div>
+    );
+}
+
+const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "createorg"})
-  });
-  
-  export default withStyles(styles, { withTheme: true })(
-        connect(mapStateToProps)(CreateOrg) as any
-    ) as any;
+});
+
+export default withStyles(styles, { withTheme: true })(
+    connect(mapStateToProps)(CreateOrg) as any
+) as any;
   

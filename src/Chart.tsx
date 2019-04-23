@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IState } from './model/state'
-import { IChartStrings } from './model/localizeModel';
+import { IState, IChartStrings } from './model';
 import localStrings from './selector/localize';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -15,6 +14,8 @@ import {
 } from '@devexpress/dx-react-chart-material-ui';
 import { ValueScale, Animation } from '@devexpress/dx-react-chart';
 
+const styles = {};
+
 const Point = (props: any) => {
     const { style, ...restProps } = props;
     return (
@@ -25,7 +26,11 @@ const Point = (props: any) => {
     );
 };
 
-export interface IProps extends IStateProps, WithStyles<typeof styles> { };
+interface IStateProps {
+    t: IChartStrings;
+}
+
+interface IProps extends IStateProps, WithStyles<typeof styles> { };
 
 export function Status(props: IProps) {
     const { t } = props;
@@ -71,16 +76,11 @@ export function Status(props: IProps) {
     );
 }
 
-const styles = {};
-
-interface IStateProps {
-    t: IChartStrings;
-  }
-  const mapStateToProps = (state: IState): IStateProps => ({
+const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "chart"})
-  });
-  
-  export default withStyles(styles, { withTheme: true })(
-        connect(mapStateToProps)(Status) as any
-    ) as any;
+});
+
+export default withStyles(styles, { withTheme: true })(
+    connect(mapStateToProps)(Status) as any
+) as any;
   

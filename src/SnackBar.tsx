@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { connect } from 'react-redux';
-import { IState } from './model/state'
-import { ISnackbarStrings } from './model/localizeModel';
+import { IState, ISnackbarStrings } from './model';
 import localStrings from './selector/localize';
-import { createStyles, withStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, withStyles, WithStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
-function SimpleSnackbar(props: any) {
+const styles = (theme: Theme) => createStyles({
+  close: {
+    padding: theme.spacing.unit / 2
+  }
+});
+
+interface IStateProps {
+  t: ISnackbarStrings;
+};
+
+interface IProps extends IStateProps, WithStyles<typeof styles>{
+  message: JSX.Element;
+  reset: () => {};
+};
+
+function SimpleSnackbar(props: IProps) {
   const { classes, message, reset = null, t } = props;
   const [open, setOpen] = useState(true);
 
@@ -61,21 +74,6 @@ function SimpleSnackbar(props: any) {
   
 };
 
-SimpleSnackbar.propTypes = {
-  classes: PropTypes.object.isRequired,
-  message: PropTypes.object.isRequired,
-  reset: PropTypes.func,
-};
-
-const styles = (theme: Theme) => createStyles({
-  close: {
-    padding: theme.spacing.unit / 2
-  }
-});
-
-interface IStateProps {
-  t: ISnackbarStrings;
-}
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "snackbar"})
 });

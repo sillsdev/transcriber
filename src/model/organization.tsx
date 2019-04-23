@@ -1,6 +1,6 @@
 import TableRelationship from './relationsihp';
 
-interface Organization {
+export interface Organization {
     type: string;
     id: string;
     keys?: {

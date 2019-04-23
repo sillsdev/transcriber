@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState } from './model/state'
-import { IAccessStrings } from './model/localizeModel';
+import { IState, IAccessStrings } from './model';
 import localStrings from './selector/localize';
 import * as action from './actions/localizationActions';
 import { Theme, withStyles, Button, WithStyles } from '@material-ui/core';
@@ -11,61 +10,6 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
-interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
-    history: any;
-    auth: any;
-};
-
-export function Access(props: IProps) {
-    const { classes, auth, t } = props;
-    const { fetchLocalization, setLanguage } = props;
-
-
-    useEffect(() => {
-        setLanguage(navigator.language.split('-')[0]);
-        fetchLocalization();
-    }, [])
-
-    return (
-        <div className={classes.root}>
-            <AppBar className={classes.appBar} position="static">
-                <Toolbar>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        {t.silTranscriberAccess}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <div className={classes.container}>
-                <Paper className={classes.paper}>
-                    <h2 className={classes.dialogHeader}>
-                        {t.accessSilTranscriber}
-                    </h2>
-
-                    <div className={classes.actions}>
-                        <Link to='/neworg' className={classes.link}>
-                            <Button
-                                variant="raised"
-                                className={classes.button}>
-                                {t.createAccount}
-                            </Button>
-                        </Link>
-                    </div>
-                    <div className={classes.actions}>
-                            <Button
-                                variant="raised"
-                                color="primary"
-                                className={classes.button}
-                                onClick= {() => auth.login()}
-                            >
-                                {t.accessExistingAccount}
-                            </Button>
-                    </div>
-                </Paper>
-            </div>
-        </div>
-    );
-}
 
 const styles = (theme: Theme) => ({
     root: {
@@ -120,15 +64,72 @@ const styles = (theme: Theme) => ({
 
 interface IStateProps {
     t: IAccessStrings;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-    t: localStrings(state, {layout: "access"}),
-});
+};
 
 interface IDispatchProps {
     fetchLocalization: typeof action.fetchLocalization;
     setLanguage: typeof action.setLanguage;
-}
+};
+
+interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
+    history: any;
+    auth: any;
+};
+
+export function Access(props: IProps) {
+    const { classes, auth, t } = props;
+    const { fetchLocalization, setLanguage } = props;
+
+
+    useEffect(() => {
+        setLanguage(navigator.language.split('-')[0]);
+        fetchLocalization();
+    }, [])
+
+    return (
+        <div className={classes.root}>
+            <AppBar className={classes.appBar} position="static">
+                <Toolbar>
+                    <Typography variant="h6" color="inherit" className={classes.grow}>
+                        {t.silTranscriberAccess}
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <div className={classes.container}>
+                <Paper className={classes.paper}>
+                    <h2 className={classes.dialogHeader}>
+                        {t.accessSilTranscriber}
+                    </h2>
+
+                    <div className={classes.actions}>
+                        <Link to='/neworg' className={classes.link}>
+                            <Button
+                                variant="raised"
+                                className={classes.button}>
+                                {t.createAccount}
+                            </Button>
+                        </Link>
+                    </div>
+                    <div className={classes.actions}>
+                            <Button
+                                variant="raised"
+                                color="primary"
+                                className={classes.button}
+                                onClick= {() => auth.login()}
+                            >
+                                {t.accessExistingAccount}
+                            </Button>
+                    </div>
+                </Paper>
+            </div>
+        </div>
+    );
+};
+
+const mapStateToProps = (state: IState): IStateProps => ({
+    t: localStrings(state, {layout: "access"}),
+});
+
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     ...bindActionCreators({
         fetchLocalization: action.fetchLocalization,
