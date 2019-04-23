@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, IAdminpanelStrings } from '../model';
@@ -156,10 +155,6 @@ function AdminPanel(props: IProps) {
     </div>
   );
 }
-
-AdminPanel.propTypes = {
-  classes: PropTypes.object.isRequired,
-} as any;
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "adminpanel"})

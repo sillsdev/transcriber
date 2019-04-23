@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { IState, IMediacardStrings } from '../model';
 import localStrings from '../selector/localize';
@@ -56,10 +55,6 @@ export function MediaCard(props: IProps) {
     </Card>
   );
 }
-
-MediaCard.propTypes = {
-  classes: PropTypes.object.isRequired,
-} as any;
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "mediacard"})
