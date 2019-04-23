@@ -34,7 +34,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles> { };
 
 export function Status(props: IProps) {
     const { t } = props;
-    const [data, setData] = useState([
+    const [data] = useState([
         { month: 'Jan', tasks: 50, total: 987 },
         { month: 'Feb', tasks: 100, total: 3000 },
         { month: 'March', tasks: 30, total: 1100 },

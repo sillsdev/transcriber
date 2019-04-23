@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { IState, Project, IProjectstatusStrings } from './model';
 import localStrings from './selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, Record } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -166,7 +166,7 @@ export function ProjectStatus(props: IProps) {
   const { classes, history, theme, projects, auth, t } = props;
   const { isAuthenticated } = auth;
   const [open, setOpen] = useState(true);
-  const [project, setProject] = useGlobal('project');
+  const [project] = useGlobal('project');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
   const [view, setView] = useState('');
   const [content, setContent] = useState('chart');

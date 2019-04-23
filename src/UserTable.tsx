@@ -96,7 +96,7 @@ export function UserTable(props: IProps) {
     { name: 'phone', title: 'Phone' },
     { name: 'timezone', title: 'Timezone' },
   ]);
-  const [pageSizes, setPageSizes] = useState([5, 10, 15]);
+  const [pageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState(Array<IUserRow>());
   const [view, setView] = useState('');
 
@@ -120,7 +120,7 @@ export function UserTable(props: IProps) {
       phone: o.attributes.phone,
       timezone: o.attributes.timezone,
     })))
-  }, []);
+  }, [users, t.name, t.email, t.locale, t.phone, t.timezone]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 

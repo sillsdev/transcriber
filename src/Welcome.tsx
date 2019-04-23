@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from './auth/Auth';
 import { Link, Redirect } from 'react-router-dom';
@@ -84,7 +84,6 @@ export function Welcome(props: IProps) {
     const { classes, orbitLoaded, auth, t } = props;
     const { fetchOrbitData, fetchLocalization, setLanguage } = props;
     const { isAuthenticated } = auth;
-    const [view, setView] = useState('');
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
     const [keyMap] = useGlobal('keyMap');
@@ -99,8 +98,6 @@ export function Welcome(props: IProps) {
     if (!orbitLoaded) {
         fetchOrbitData(schema as Schema, dataStore as Store, keyMap as KeyMap, auth);
     };
-
-    if (view != '') return <Redirect to={view} />;
 
     return (
         <div className={classes.root}>

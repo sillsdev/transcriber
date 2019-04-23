@@ -88,13 +88,13 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
 export function ProjectSettings(props: IProps) {
     const { classes, projects, projectTypes, updateStore, t } = props;
     const [project, setProject] = useGlobal('project');
-    const [user, setUser] = useGlobal('user');
-    const [organization, setOrganization] = useGlobal('organization');
+    const [user] = useGlobal('user');
+    const [organization] = useGlobal('organization');
     const currentProject = projects.filter((p: Project) => p.id === project)[0];
     const [name, setName] = useState((currentProject && currentProject.attributes.name) || '');
     const [description, setDescription] = useState((currentProject && currentProject.attributes.description) || '');
     const [projectType, setProjectType] = useState('');
-    const [bcp47, setBcp47] = useState((currentProject && currentProject.attributes.language) || 'und');
+    const [bcp47] = useState((currentProject && currentProject.attributes.language) || 'und');
     const [languageName, setLanguageName] = useState((currentProject && currentProject.attributes.languageName) || bcp47);
     const [defaultFont, setDefaultFont] = useState((currentProject && currentProject.attributes.defaultFont) || '');
     const [defaultFontSize, setDefaultFontSize] = useState((currentProject && currentProject.attributes.defaultFontSize) || 'large');
@@ -189,13 +189,13 @@ export function ProjectSettings(props: IProps) {
 
     useEffect(() => {
       if (projectTypes && projectTypes.length !== 0 && currentProject) {
-        const t = projectTypes.filter((t: ProjectType) => (t.keys && t.keys.remoteId || t.id) === currentProject.attributes.projectTypeId.toString());
+        const t = projectTypes.filter((t: ProjectType) => ((t.keys && t.keys.remoteId) || t.id) === currentProject.attributes.projectTypeId.toString());
         if (t.length !== 0) {
           setProjectType((t[0].keys && t[0].keys.remoteId && t[0].keys.remoteId) || t[0].id);
         }
       }
       
-    }, [currentProject])
+    }, [currentProject, projectTypes])
 
     const safeFonts = [
         { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
@@ -265,7 +265,7 @@ export function ProjectSettings(props: IProps) {
                     required={true}
                   >
                     {projectTypes.map((option: ProjectType) => (
-                      <MenuItem key={option.id} value={option.keys && option.keys.remoteId || option.id}>
+                      <MenuItem key={option.id} value={(option.keys && option.keys.remoteId) || option.id}>
                         {option.attributes.name}
                       </MenuItem>
                     ))}

@@ -85,7 +85,6 @@ export function OrganizationTable(props: IProps) {
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [currentOrganization, setOrganization] = useGlobal('organization');
-  const [entryOrganization, setEntryOrganization] = useState(0);
   const [message, setMessage] = useState('');
 
   const handleSelection = (s: any) => {
@@ -104,15 +103,14 @@ export function OrganizationTable(props: IProps) {
         name: o.attributes.name
       }))
     );
-    setEntryOrganization(currentOrganization);
-  }, []);
+  }, [organizations, t.name]);
 
   useEffect(() => {
     if (view === '/welcome' && currentOrganization === null) {
       alert('Please choose an organization')
       setView('')
     }
-  }, [view]);
+  }, [view, currentOrganization]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 

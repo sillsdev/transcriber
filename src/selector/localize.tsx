@@ -1,4 +1,3 @@
-import { useGlobal } from 'reactn';
 import { createSelector } from 'reselect';
 import { IState } from '../model/state';
 

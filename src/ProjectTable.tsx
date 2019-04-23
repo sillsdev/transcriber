@@ -130,7 +130,7 @@ export function ProjectTable(props: IProps) {
       language: o.attributes.language,
       delete: o.id,
     })))
-  }, [projects]);
+  }, [projects, t.name, t.description, t.language, t.delete]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
