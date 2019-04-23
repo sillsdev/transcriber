@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IState, IChartStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, IChartStrings } from '../model';
+import localStrings from '../selector/localize';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import {

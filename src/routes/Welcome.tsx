@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import Auth from './auth/Auth';
+import Auth from '../auth/Auth';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IWelcomeStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, IWelcomeStrings } from '../model';
+import localStrings from '../selector/localize';
 import { Schema, KeyMap } from '@orbit/data';
 import Store from '@orbit/store';
 import { Theme, withStyles, WithStyles, Button } from '@material-ui/core';
@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import * as action from './actions';
+import * as action from '../actions';
 
 const styles = (theme: Theme) => ({
     root: {

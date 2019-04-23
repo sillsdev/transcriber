@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, User, IUsertableStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, User, IUsertableStrings } from '../model';
+import localStrings from '../selector/localize';
 import AppBar from '@material-ui/core/AppBar';
 import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
@@ -22,7 +22,7 @@ import {
   Table, TableColumnResizing, TableFilterRow,
   TableHeaderRow, TableSelection, Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import Auth from './auth/Auth';
+import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) => createStyles({
   root: {

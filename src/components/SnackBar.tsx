@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from 'react-redux';
-import { IState, ISnackbarStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, ISnackbarStrings } from '../model';
+import localStrings from '../selector/localize';
 import { createStyles, withStyles, WithStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Snackbar from "@material-ui/core/Snackbar";

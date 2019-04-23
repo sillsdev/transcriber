@@ -3,8 +3,8 @@ import { useGlobal } from 'reactn';
 import classNames from 'classnames';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Project, IProjectstatusStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, Project, IProjectstatusStrings } from '../model';
+import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -32,9 +32,9 @@ import MediaIcon from '@material-ui/icons/AudiotrackTwoTone'
 import IntegrationIcon from '@material-ui/icons/UnarchiveTwoTone'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Chart from './Chart';
-import ProjectSettings from './ProjectSettings';
-import Auth from './auth/Auth';
+import Chart from '../components/Chart';
+import ProjectSettings from '../components/ProjectSettings';
+import Auth from '../auth/Auth';
 
 const drawerWidth = 240;
 

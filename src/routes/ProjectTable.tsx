@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Project, IProjectTableStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, Project, IProjectTableStrings } from '../model';
+import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import AppBar from '@material-ui/core/AppBar';
@@ -24,8 +24,8 @@ import { Grid,
   TableColumnResizing,
   TableHeaderRow,
   Toolbar } from '@devexpress/dx-react-grid-material-ui';
-import Confirm from './AlertDialog';
-import Auth from './auth/Auth';
+import Confirm from '../components/AlertDialog';
+import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) => createStyles({
   root: {

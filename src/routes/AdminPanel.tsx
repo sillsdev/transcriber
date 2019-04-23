@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, IAdminpanelStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, IAdminpanelStrings } from '../model';
+import localStrings from '../selector/localize';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
@@ -13,13 +13,13 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Avatar from '@material-ui/core/Avatar';
-import MediaCard from './MediaCard';
-import organizationSvg from './assets/organization.svg';
-import usersSvg from './assets/users.svg';
-import projectSvg from './assets/project.svg';
-import mediaSvg from './assets/media.svg';
-import bookSvg from './assets/book.svg';
-import Auth from './auth/Auth';
+import MediaCard from '../components/MediaCard';
+import organizationSvg from '../assets/organization.svg';
+import usersSvg from '../assets/users.svg';
+import projectSvg from '../assets/project.svg';
+import mediaSvg from '../assets/media.svg';
+import bookSvg from '../assets/book.svg';
+import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) =>
   createStyles({

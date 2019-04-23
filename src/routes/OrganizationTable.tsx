@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Organization, IOrganizationTableStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, Organization, IOrganizationTableStrings } from '../model';
+import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record } from '@orbit/data';
 import AppBar from "@material-ui/core/AppBar";
@@ -24,8 +24,8 @@ import {
   TableSelection,
   Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
-import SnackBar from "./SnackBar";
-import Auth from "./auth/Auth";
+import SnackBar from "../components/SnackBar";
+import Auth from "../auth/Auth";
 
 const styles = (theme: Theme) =>
   createStyles({

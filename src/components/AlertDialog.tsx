@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IState, IAlertStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, IAlertStrings } from '../model';
+import localStrings from '../selector/localize';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';

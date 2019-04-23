@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, ICreateorgStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, ICreateorgStrings } from '../model';
+import localStrings from '../selector/localize';
 import { Theme,
     withStyles,
     WithStyles,

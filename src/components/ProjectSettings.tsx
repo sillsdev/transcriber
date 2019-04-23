@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import ProjectType from './model/projectType';
+import ProjectType from '../model/projectType';
 import { connect } from 'react-redux';
-import { IState, Project, IProjectSettingsStrings } from './model';
-import localStrings from './selector/localize';
+import { IState, Project, IProjectSettingsStrings } from '../model';
+import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import Orbit from '@orbit/core';
