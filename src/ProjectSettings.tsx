@@ -3,7 +3,9 @@ import { useGlobal } from 'reactn';
 import Project from './model/project';
 import ProjectType from './model/projectType';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { IState } from './model/state'
+import { IProjectSettingsStrings } from './model/localizeModel';
+import localStrings from './selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import Orbit from '@orbit/core';
@@ -22,19 +24,13 @@ import blue from '@material-ui/core/colors/blue';
 import yellow from '@material-ui/core/colors/yellow';
 import SnackBar from './SnackBar';
 
-export class ProjectSettingsData extends React.Component<IRecordProps, object> {
-    public render(): JSX.Element {
-        return <ProjectSettings {...this.props} />
-    }
-  }
-
-  interface IProps extends IRecordProps {
-      classes?: any;
-      updateStore?: any
-  }
+interface IProps extends IStateProps, IRecordProps {
+  classes?: any;
+  updateStore?: any
+}
   
 export function ProjectSettings(props: IProps) {
-    const { classes, projects, projectTypes, updateStore } = props;
+    const { classes, projects, projectTypes, updateStore, t } = props;
     const [project, setProject] = useGlobal('project');
     const [user, setUser] = useGlobal('user');
     const [organization, setOrganization] = useGlobal('organization');
@@ -160,13 +156,13 @@ export function ProjectSettings(props: IProps) {
       <div className={classes.container}>
         <div className={classes.paper}>
           <FormControl>
-            <FormLabel className={classes.label}>{"General"}</FormLabel>
+            <FormLabel className={classes.label}>{t.general}</FormLabel>
             <FormGroup className={classes.group}>
               <FormControlLabel
                 control={
                   <TextField
                     id="name"
-                    label={"Name"}
+                    label={t.name}
                     className={classes.textField}
                     value={name}
                     onChange={handleNameChange}
@@ -181,7 +177,7 @@ export function ProjectSettings(props: IProps) {
                 control={
                   <TextField
                     id="description"
-                    label={"Description"}
+                    label={t.description}
                     className={classes.textField}
                     value={description}
                     onChange={handleDescriptionChange}
@@ -198,7 +194,7 @@ export function ProjectSettings(props: IProps) {
                   <TextField
                     id="select-project-type"
                     select
-                    label={"Project Type"}
+                    label={t.projectType}
                     className={classes.textField}
                     value={projectType}
                     onChange={handleTypeChange}
@@ -207,7 +203,7 @@ export function ProjectSettings(props: IProps) {
                         className: classes.menu
                       }
                     }}
-                    helperText={"Please select your project type"}
+                    helperText={t.selectProjectType}
                     margin="normal"
                     variant="filled"
                     required={true}
@@ -222,13 +218,13 @@ export function ProjectSettings(props: IProps) {
                 label=""
               />
             </FormGroup>
-            <FormLabel className={classes.label}>{"Language"}</FormLabel>
+            <FormLabel className={classes.label}>{t.language}</FormLabel>
             <FormGroup className={classes.group}>
               <FormControlLabel
                 control={
                   <TextField
                     id="language-picker"
-                    label="Transcription Language"
+                    label={t.transcriptionLanguage}
                     defaultValue={bcp47}
                     className={classes.textField}
                     margin="normal"
@@ -246,7 +242,7 @@ export function ProjectSettings(props: IProps) {
                 control={
                   <TextField
                     id="language-name"
-                    label={"Preferred Language Name"}
+                    label={t.preferredLanguageName}
                     className={classes.textField}
                     value={languageName}
                     onChange={handleLanguageNameChange}
@@ -257,16 +253,16 @@ export function ProjectSettings(props: IProps) {
                 }
                 label=""
               />
-              <FormLabel className={classes.info}>{"(User interface languages are set in the user profile.)"}</FormLabel>
+              <FormLabel className={classes.info}>{t.uiLanguagInUserProfile}</FormLabel>
             </FormGroup>
-            <FormLabel className={classes.label}>{"Text Editor"}</FormLabel>
+            <FormLabel className={classes.label}>{t.textEditor}</FormLabel>
             <FormGroup>
               <FormControlLabel
                 control={
                   <TextField
                     id="select-default-font"
                     select
-                    label={"Default Font"}
+                    label={t.defaultFont}
                     className={classes.textField}
                     value={defaultFont}
                     onChange={handleDefaultFontChange}
@@ -275,7 +271,7 @@ export function ProjectSettings(props: IProps) {
                         className: classes.menu
                       }
                     }}
-                    helperText={"Please select the preferred default font"}
+                    helperText={t.selectDefaultFont}
                     margin="normal"
                     variant="filled"
                     required={true}
@@ -292,14 +288,14 @@ export function ProjectSettings(props: IProps) {
               <FormControlLabel
                 control={<Button
                     key="missing-font"
-                    aria-label="Need Font"
+                    aria-label={t.needFont}
                     color="secondary"
                     className={classes.moreButton}
                     onClick={handleNeedFont}
                     style={{lineHeight: 1}}
                   >
                     <HelpOutlineIcon className={classes.smallIcon} />
-                    {"Can't find the font you need?"}
+                    {t.addMissingFont}
                   </Button>}
                 label=""
               />
@@ -308,7 +304,7 @@ export function ProjectSettings(props: IProps) {
                   <TextField
                     id="select-default-font-size"
                     select
-                    label={"Default Font Size"}
+                    label={t.defaultFontSize}
                     className={classes.textField}
                     value={defaultFontSize}
                     onChange={handleDefaultFontSizeChange}
@@ -317,7 +313,7 @@ export function ProjectSettings(props: IProps) {
                         className: classes.menu
                       }
                     }}
-                    helperText={"Please select the default font size"}
+                    helperText={t.selectFontSize}
                     margin="normal"
                     variant="filled"
                   >
@@ -339,20 +335,20 @@ export function ProjectSettings(props: IProps) {
                     onChange={handleRtlChange}
                   />
                 }
-                label={"Right to left?"}
+                label={t.rightToLeft}
               />
             </FormGroup>
           </FormControl>
           <div className={classes.actions}>
           <Button
               key="add"
-              aria-label="Add"
+              aria-label={t.add}
               variant="contained"
               color="primary"
               className={classes.button}
               onClick={currentProject === undefined? handleAdd: handleSave}
             >
-              {currentProject === undefined? 'Add': 'Save'}
+              {currentProject === undefined? t.add: t.save}
               <SaveIcon className={classes.icon} />
             </Button>
             </div>
@@ -412,12 +408,13 @@ const styles = (theme: Theme) => ({
     },
     });
 
-const mapStateToProps = () => ({});
-const mapDispatchToProps = (dispatch: any) => ({
-    ...bindActionCreators({
-    }, dispatch),
+interface IStateProps {
+  t: IProjectSettingsStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, {layout: "projectSettings"})
 });
-  
+    
 interface IRecordProps {
     projects: Array<Project>;
     projectTypes: Array<ProjectType>;
@@ -430,7 +427,7 @@ const mapRecordsToProps = {
 
 export default withStyles(styles, { withTheme: true })(
     withData(mapRecordsToProps)(
-        connect(mapStateToProps, mapDispatchToProps)(ProjectSettings) as any
+        connect(mapStateToProps)(ProjectSettings) as any
         ) as any
     ) as any;
       

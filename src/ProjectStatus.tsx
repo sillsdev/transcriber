@@ -70,8 +70,8 @@ export function ProjectStatus(props: any): JSX.Element {
 
   const contentJsx = (content.toLowerCase() === t.settings.toLowerCase() ||
       history.location.search === '?add')
-    ? <ProjectSettings />
-    : <Chart />;
+    ? <ProjectSettings {...props} />
+    : <Chart {...props} />;
 
   return view ===''? (
     <div className={classes.root}>
