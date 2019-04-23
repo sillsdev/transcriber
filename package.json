@@ -25,7 +25,6 @@
     "auth0-js": "^9.10.2",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
-    "query-string": "^6.4.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-localization": "^1.0.13",

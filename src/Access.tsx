@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import queryString from 'query-string';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState } from './model/state'
@@ -24,15 +23,7 @@ export function Access(props: IProps) {
 
 
     useEffect(() => {
-        const qLang = queryString.parse(props.history.location.search).lang;
-        const sLang = localStorage.getItem('lang') || 'en';
-        if (qLang) {
-            setLanguage(qLang.toString());
-            // Set langage in localStorage
-            localStorage.setItem('lang', qLang.toString());
-        } else {
-            setLanguage(sLang);
-        };
+        setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
     }, [])
 

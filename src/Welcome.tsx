@@ -22,24 +22,20 @@ interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
 };
 
 export function Welcome(props: IProps) {
-    const { classes, orbitLoaded, stringsLoaded, auth, t } = props;
+    const { classes, orbitLoaded, auth, t } = props;
     const { fetchOrbitData, fetchLocalization, setLanguage } = props;
     const { isAuthenticated } = auth;
     const [view, setView] = useState('');
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
     const [keyMap] = useGlobal('keyMap');
-    const lang = localStorage.getItem('lang') || 'en';
 
     if (!isAuthenticated()) return <Redirect to="/" />;
 
     useEffect(() => {
+        setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
     }, [])
-
-    useEffect(() => {
-        setLanguage(lang);
-    }, [stringsLoaded])
 
     if (!orbitLoaded) {
         fetchOrbitData(schema as Schema, dataStore as Store, keyMap as KeyMap, auth);
@@ -139,12 +135,10 @@ const styles = (theme: Theme) => ({
 interface IStateProps {
     t: IWelcomeStrings;
     orbitLoaded: boolean;
-    stringsLoaded: boolean;
 };
 const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "welcome"}),
     orbitLoaded: state.orbit.loaded,
-    stringsLoaded: state.strings.loaded,
 });
 
 interface IDispatchProps {
