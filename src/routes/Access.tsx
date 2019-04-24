@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, IAccessStrings } from '../model';
@@ -10,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) => ({
     root: {
@@ -73,7 +73,7 @@ interface IDispatchProps {
 
 interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
     history: any;
-    auth: any;
+    auth: Auth;
 };
 
 export function Access(props: IProps) {
@@ -102,13 +102,13 @@ export function Access(props: IProps) {
                     </h2>
 
                     <div className={classes.actions}>
-                        <Link to='/neworg' className={classes.link}>
-                            <Button
-                                variant="raised"
-                                className={classes.button}>
-                                {t.createAccount}
-                            </Button>
-                        </Link>
+                        <Button
+                            variant="raised"
+                            className={classes.button}
+                            onClick={() => auth.signup()}
+                        >
+                            {t.createAccount}
+                        </Button>
                     </div>
                     <div className={classes.actions}>
                             <Button
