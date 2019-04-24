@@ -36,6 +36,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Chart from '../components/Chart';
 import ProjectSettings from '../components/ProjectSettings';
 import BookTable from '../components/BookTable';
+import SetTable from '../components/SetTable';
 import Auth from '../auth/Auth';
 
 const drawerWidth = 240;
@@ -185,7 +186,12 @@ export function ProjectStatus(props: IProps) {
   const contentJsx = (content.toLowerCase() === t.settings.toLowerCase() ||
       history.location.search === '?add')
     ? <ProjectSettings {...props} /> : (
-      content.toLowerCase() === t.projectPlans.toLowerCase() ? <BookTable {...props} /> : <Chart {...props} />);
+        content.toLowerCase() === t.projectPlans.toLowerCase() ? <BookTable {...props} /> : (
+          content.toLowerCase() === t.sets.toLowerCase() ? <SetTable {...props} /> : (
+            <Chart {...props} />
+          )
+        )
+      );
 
   if (view !== '') return <Redirect to={view} />;
 
