@@ -171,6 +171,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectstatus.books">
+         <segment>
+            <source>Books</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectstatus.projectPlans">
+         <segment>
+            <source>Project Plans</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectstatus.sets">
          <segment>
             <source>Sets</source>
@@ -192,6 +204,12 @@
       <unit id="projectstatus.integrations">
          <segment>
             <source>Integrations</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectstatus.newProject">
+         <segment>
+            <source>New Project</source>
             <target/>
          </segment>
       </unit>
@@ -498,6 +516,48 @@
       <unit id="projectSettings.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="bookTable.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="bookTable.type">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="bookTable.sets">
+         <segment>
+            <source>Sets</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="bookTable.taks">
+         <segment>
+            <source>Tasks</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="bookTable.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="bookTable.silTranscriberAdmin">
+         <segment>
+            <source>SIL Transcriber Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="bookTable.chooseBook">
+         <segment>
+            <source>ChooseBook</source>
             <target/>
          </segment>
       </unit>

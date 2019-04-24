@@ -199,6 +199,20 @@
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="projectstatus.books">
+				<source>Books</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.projectPlans">
+				<source>Project Plans</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="projectstatus.sets">
 				<source>Sets</source>
 				<target/>
@@ -222,6 +236,13 @@
 			</trans-unit>
 			<trans-unit id="projectstatus.integrations">
 				<source>Integrations</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectStatus.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectstatus.newProject">
+				<source>New Project</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
@@ -579,6 +600,55 @@
 			</trans-unit>
 			<trans-unit id="projectSettings.save">
 				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="bookTable.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="bookTable.type">
+				<source>Type</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="bookTable.sets">
+				<source>Sets</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="bookTable.taks">
+				<source>Tasks</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="bookTable.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="bookTable.silTranscriberAdmin">
+				<source>SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="bookTable.chooseBook">
+				<source>Choose a Book</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectSettings.tsx</context>

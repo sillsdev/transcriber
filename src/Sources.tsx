@@ -72,8 +72,6 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('project'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('role'))
-        .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('integration'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('projectintegration'))
@@ -81,6 +79,8 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
     remote.pull(q => q.findRecords('projecttype'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('book'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('booktype'))
         .then(transform => store.sync(transform));
 
     return (backup.pull(q => q.findRecords())

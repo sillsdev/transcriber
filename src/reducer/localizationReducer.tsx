@@ -52,10 +52,13 @@ const initialState = {
 			"listOptions": "List Options",
 			"settings": "Settings",
 			"team": "Team",
+			"books": "Books",
+			"projectPlans": "Project Plans",
 			"sets": "Sets",
 			"tasks": "Tasks",
 			"media": "Media",
 			"integrations": "Integrations",
+			"newProject": "New Project",
 		}
 	}),
 	"snackbar": new LocalizedStrings({
@@ -141,6 +144,17 @@ const initialState = {
 			"save": "Save",
 		}
 	}),
+	"bookTable": new LocalizedStrings({
+		"en": {
+			"name": "Name",
+			"type": "Type",
+			"sets": "Sets",
+			"taks": "Tasks",
+			"delete": "Delete",
+			"silTranscriberAdmin": "SIL Transcriber Admin",
+			"chooseBook": "Choose a Book",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -162,6 +176,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),
 				"chart" : new LocalizedStrings(action.payload.data.chart),
 				"projectSettings" : new LocalizedStrings(action.payload.data.projectSettings),
+				"bookTable" : new LocalizedStrings(action.payload.data.bookTable),
 			};
 		case SET_LANGUAGE:
 			return {

@@ -42,10 +42,13 @@ export interface IProjectstatusStrings extends Localize.LocalizedStringsMethods 
     "listOptions": string;
     "settings": string;
     "team": string;
+    "books": string;
+    "projectPlans": string;
     "sets": string;
     "tasks": string;
     "media": string;
     "integrations": string;
+    "newProject": string;
 };
 
 export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
@@ -123,6 +126,16 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "save": string;
 };
 
+export interface IBookTableStrings extends Localize.LocalizedStringsMethods {
+    "name": string;
+    "type": string;
+    "sets": string;
+    "taks": string;
+    "delete": string;
+    "silTranscriberAdmin": string;
+    "chooseBook": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -139,5 +152,6 @@ export interface ILocalizedStrings {
 	projectTable: IProjectTableStrings;
 	chart: IChartStrings;
 	projectSettings: IProjectSettingsStrings;
+	bookTable: IBookTableStrings;
 	[key: string]: any;
 };

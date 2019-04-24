@@ -25,6 +25,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import SettingsIcon from '@material-ui/icons/SettingsTwoTone';
 import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
+import BookIcon from '@material-ui/icons/Book';
 import SetIcon from '@material-ui/icons/WidgetsTwoTone';
 import TaskIcon from '@material-ui/icons/ListTwoTone';
 import BackIcon from '@material-ui/icons/ArrowBack';
@@ -34,6 +35,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Chart from '../components/Chart';
 import ProjectSettings from '../components/ProjectSettings';
+import BookTable from '../components/BookTable';
 import Auth from '../auth/Auth';
 
 const drawerWidth = 240;
@@ -178,12 +180,12 @@ export function ProjectStatus(props: IProps) {
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
-  const optionList = [t.settings, t.team, t.sets, t.tasks, t.media, t.integrations];
+  const optionList = [t.settings, t.team, t.projectPlans, t.sets, t.tasks, t.media, t.integrations];
 
   const contentJsx = (content.toLowerCase() === t.settings.toLowerCase() ||
       history.location.search === '?add')
-    ? <ProjectSettings {...props} />
-    : <Chart {...props} />;
+    ? <ProjectSettings {...props} /> : (
+      content.toLowerCase() === t.projectPlans.toLowerCase() ? <BookTable {...props} /> : <Chart {...props} />);
 
   if (view !== '') return <Redirect to={view} />;
 
@@ -253,9 +255,11 @@ export function ProjectStatus(props: IProps) {
             <ListItem button key={text} onClick={handleProjectItem}>
               <ListItemIcon>{index === 0 ? <SettingsIcon /> : (
                 index === 1 ? <TeamIcon /> : (
-                  index === 2 ? <SetIcon /> : (
-                    index === 3 ? <TaskIcon /> : (
-                      index === 4 ? <MediaIcon /> : <IntegrationIcon />
+                  index === 2 ? <BookIcon /> : (
+                    index === 3 ? <SetIcon /> : (
+                      index === 4 ? <TaskIcon /> : (
+                        index === 5 ? <MediaIcon /> : <IntegrationIcon />
+                      )
                     )
                   )
                 )
@@ -269,7 +273,7 @@ export function ProjectStatus(props: IProps) {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <h2 className={classes.dialogHeader}>
-          {(currentProject && currentProject.attributes.name) || 'New Project'}
+          {(currentProject && currentProject.attributes.name) || t.newProject}
         </h2>
 
         {contentJsx}
