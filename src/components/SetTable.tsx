@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
 import ProjectType from '../model/projectType';
 import { connect } from 'react-redux';
 import { IState, Project, IProjectSettingsStrings } from '../model';
@@ -8,9 +7,13 @@ import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
+import AddIcon from '@material-ui/icons/Add';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import './SetTable.css';
+import { string } from 'prop-types';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -20,7 +23,26 @@ const styles = (theme: Theme) => ({
   paper: {
       paddingLeft: theme.spacing.unit * 4,
   },
+  actions: theme.mixins.gutters({
+    paddingBottom: 16,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'right'
+  }),
+  button: {
+    margin: theme.spacing.unit
+  },
+  icon: {
+    marginLeft: theme.spacing.unit
+  },
 });
+
+interface IChange {
+  cell: any;
+  row: number;
+  col: number;
+  value: string | null;
+}
 
 interface IStateProps {
   t: IProjectSettingsStrings;
@@ -51,20 +73,75 @@ export function SetTable(props: IProps) {
       [{readOnly: true, value: 4}, {value: "Paradise Lost"}, {value: '3:20-24'}, {value: (<Avatar />)}, {value: 'gen003020.mp3'}]
     ])
 
+    const handleAdd = () => alert('add');
+    const handleSave = () => alert('save');
+
+    const handleValueRender = (cell: any) => cell.value;
+
+    const handleCellsChanged = (changes: Array<IChange>) => {
+      const grid = data.map((row: any) => [...row]);
+      changes.forEach(({cell, row, col, value}: IChange) => {
+        grid[row][col] = {...grid[row][col], value}
+      });
+      setData(grid);
+    };
+
+    const handleContextMenu = (e: MouseEvent, cell: any) => cell.readOnly ? e.preventDefault() : null;
+
+    const handlePaste = (s: string) => {
+        const widths = [60, 80, 120, 400]
+        const blankLines = /\n\t*\n/;
+        const chunks = s.split(blankLines)
+        const lines = chunks.join('\n').trim().split('\n')
+        if (lines[0].split('\t').length === 4) {
+          const grid = lines.map((row:string, i:number) => 
+            row.split('\t').map((val: string, j:number) => {
+              return {
+                value: val,
+                readOnly: (i === 0),
+                width: widths[j],
+                className: ((i === 0 || lines[i].slice(0,1) === '\t')? 'pass': 'set') +
+                  (j < 2? " num": "")
+              }
+            }));
+          setData(grid);
+        }
+      return Array<Array<string>>();
+    }
+
     return (
       <div className={classes.container}>
         <div className={classes.paper}>
+          <div className={classes.actions}>
+            <Button
+              key="add"
+              aria-label={'Add'}
+              variant="contained"
+              className={classes.button}
+              onClick={handleAdd}
+            >
+              {'Add'}
+              <AddIcon className={classes.icon} />
+            </Button>
+            <Button
+              key="save"
+              aria-label={'Save'}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleSave}
+            >
+              {'Save'}
+              <SaveIcon className={classes.icon} />
+            </Button>
+          </div>
+
           <DataSheet
-            data={data as any}
-            valueRenderer={(cell: any) => cell.value}
-            onContextMenu={(e, cell, i, j) => cell.readOnly ? e.preventDefault() : null}
-            onCellsChanged={changes => {
-              const grid = data.map((row: any) => [...row]);
-              changes.forEach(({cell, row, col, value}) => {
-                grid[row][col] = {...grid[row][col], value}
-              });
-              setData(grid);
-            }}
+            data={data as any[][]}
+            valueRenderer={handleValueRender}
+            onContextMenu={handleContextMenu}
+            onCellsChanged={handleCellsChanged}
+            parsePaste={handlePaste}
           />
         </div>
       </div>
