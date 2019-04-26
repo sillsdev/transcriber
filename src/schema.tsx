@@ -74,7 +74,7 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         type: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
-        owner: { type: 'hasOne', model: 'user', inverse: 'projectUsers' },
+        owner: { type: 'hasOne', model: 'user', inverse: 'projects' },
         organization: { type: 'hasOne', model: 'organization', inverse: 'projects' },
         projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
         sets: { type: 'hasMany', model: 'set', inverse: 'project' },
@@ -129,13 +129,12 @@ const schemaDefinition: SchemaSettings =  {
         passage: { type: 'string' },
         position: { type: 'number' },
         taskstate: { type: 'string' },
-        hold: { type: 'number' },
+        hold: { type: 'boolean' },
         title: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },
       },
       relationships: {
-        usertasks: { type: 'hasMany', model: 'usertask', inverse: 'task' },
         media: { type: 'hasMany', model: 'taskmedia', inverse: 'task' },
         sets: { type: 'hasMany', model: 'set', inverse: 'task' },
       },
@@ -175,10 +174,10 @@ const schemaDefinition: SchemaSettings =  {
         dateUpdated: { type: 'date' },
       },
       relationships: {
-        projectUsers: { type: 'hasMany', model: 'project', inverse: 'owner' },
+        ownedOrganizations: { type: 'hasMany', model: 'organization', inverse: 'owner' },
+        projects: { type: 'hasMany', model: 'project', inverse: 'owner' },
         organizationMemberships: { type: 'hasMany', model: 'organization', inverse: 'organizationMemberships' },
-        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
-        ownedOrganizations: { type: 'hasMany', model: 'user', inverse: 'owner' },
+        roles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
       },
     },
     userrole: {
@@ -187,7 +186,7 @@ const schemaDefinition: SchemaSettings =  {
         rolename: { type: 'string' },
       },
       relationships: {
-        user: { type: 'hasOne', model: 'user', inverse: 'userroles' },
+        user: { type: 'hasOne', model: 'user', inverse: 'roles' },
         role: { type: 'hasOne', model: 'role', inverse: 'userroles' },
         organization: { type: 'hasOne', model: 'organization', inverse: 'userroles' },
       },
@@ -203,7 +202,6 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         project: { type: 'hasOne', model: 'project', inverse: 'usertasks' },
-        task: { type: 'hasOne', model: 'task', inverse: 'usertasks' },
         assigned: { type: 'hasOne', model: 'user', inverse: 'assignedTasks' },
       },
     },

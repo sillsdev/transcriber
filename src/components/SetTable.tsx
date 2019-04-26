@@ -106,7 +106,7 @@ export function SetTable(props: IProps) {
               // alert('set added: ' + JSON.stringify(e));
               const setRec = (q: QueryBuilder) => q.findRecord({type: 'set', id: set.id});
               setId = parseInt((keyMap as KeyMap).idToKey('set', 'remoteId', set.id));
-              alert(setId)
+              // alert(setId)
             });
         }
         if (data[i][1].value !== '') {
@@ -114,7 +114,7 @@ export function SetTable(props: IProps) {
             type: 'task',
             attributes: {
               reference: data[i][2].value as string,
-              passage: parseInt(data[i][1].value as string),
+              passage: data[i][1].value as string,
               position: 0,
               taskState: 'Incomplete',
               hold: false,
@@ -130,7 +130,7 @@ export function SetTable(props: IProps) {
               // alert('task added: ' + JSON.stringify(e))
               const taskRec = (q: QueryBuilder) => q.findRecord({type: 'task', id: task.id});
               taskId = parseInt((keyMap as KeyMap).idToKey('task', 'remoteId', task.id));
-              alert(taskId)
+              // alert(taskId)
             });
           if (taskId && setId) {
             let taskSet: TaskSet = {

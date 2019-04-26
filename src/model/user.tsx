@@ -9,9 +9,10 @@ export interface User extends Record {
     timezone: string;
   };
   relationships?: {
-    userroles: RecordRelationship;
-    usertasks: RecordRelationship;
-    userprojects: RecordRelationship;
+    projectUsers: RecordRelationship;
+    organizationMemberships: RecordRelationship;
+    userRoles: RecordRelationship;
+    ownedOrganizations: RecordRelationship;
   };
 };
 
