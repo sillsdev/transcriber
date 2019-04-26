@@ -1,13 +1,13 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface Book extends Record {
+export interface TaskSet extends Record {
     attributes: {
-      name: string;
-      bookTypeId: number;
+      taskId: number;
+      setId: number;
     };
     relationships?: {
-      type: RecordRelationship;
       sets: RecordRelationship;
+      tasks: RecordRelationship;
     };
   };
-export default Book;
+export default TaskSet;

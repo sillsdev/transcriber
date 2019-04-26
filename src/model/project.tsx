@@ -1,11 +1,6 @@
-import TableRelationship from './relationsihp';
+import { Record, RecordRelationship } from '@orbit/data';
 
-export interface Project {
-    type: string;
-    id: string;
-    keys?: {
-      remoteId?: string;
-    };
+export interface Project extends Record {
     attributes: {
       name: string;
       projectTypeId: number;
@@ -24,13 +19,13 @@ export interface Project {
       dateUpdated: string | null;
       dateArchived: string | null;
     };
-    relationships: {
-      type: TableRelationship;
-      owner: TableRelationship;
-      organization: TableRelationship;
-      projectintegrations: TableRelationship;
-      users: TableRelationship;
-      sets: TableRelationship;
+    relationships?: {
+      type: RecordRelationship;
+      owner: RecordRelationship;
+      organization: RecordRelationship;
+      projectintegrations: RecordRelationship;
+      users: RecordRelationship;
+      sets: RecordRelationship;
     };
   };
 export default Project;  

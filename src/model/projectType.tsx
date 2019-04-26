@@ -1,17 +1,12 @@
-import TableRelationship from './relationsihp';
+import { Record, RecordRelationship } from '@orbit/data';
 
-interface ProjectType {
-    type: string;
-    id: string;
-    keys?: {
-      remoteId?: string;
-    };
+interface ProjectType extends Record {
     attributes: {
       name: string;
       description: string | null;
     };
-    relationships: {
-      projects: TableRelationship;
+    relationships?: {
+      projects: RecordRelationship;
     };
   };
 export default ProjectType;  

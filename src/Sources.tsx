@@ -82,6 +82,12 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('booktype'))
         .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('set'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('taskset'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('task'))
+        .then(transform => store.sync(transform));
 
     return (backup.pull(q => q.findRecords())
         .then(transform => store.sync(transform))

@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { IState, Project, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import Orbit from '@orbit/core';
+import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -87,6 +86,8 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   
 export function ProjectSettings(props: IProps) {
     const { classes, projects, projectTypes, updateStore, t } = props;
+    const [schema] = useGlobal('schema');
+    const [keyMap] = useGlobal('keyMap');
     const [project, setProject] = useGlobal('project');
     const [user] = useGlobal('user');
     const [organization] = useGlobal('organization');
@@ -146,16 +147,16 @@ export function ProjectSettings(props: IProps) {
       // }
     };
     const handleAdd = () => {
-      const newId = Orbit.uuid();
-      updateStore((t: TransformBuilder) => t.addRecord({
+      const userId = (keyMap as KeyMap).idToKey('user', 'remoteId', (user as string));
+      const organizationId = (keyMap as KeyMap).idToKey('organization', 'remoteId', (organization as string));
+      let project: Project = {
         type: 'project',
-        id: newId,
         attributes: {
           name: name,
           projectTypeId: parseInt(projectType),
           description: description,
-          ownerId: user || 1,
-          organizationId: organization || 1,
+          ownerId: parseInt(userId) || 1,
+          organizationId: parseInt(organizationId) || 1,
           uilanguagebcp47: null,
           language: bcp47,
           languageName: languageName,
@@ -168,7 +169,9 @@ export function ProjectSettings(props: IProps) {
           dateUpdated: new Date().toISOString(),
           dateArchived: null,
         },
-      }))
+      } as any;
+      (schema as Schema).initializeRecord(project);
+      updateStore((t: TransformBuilder) => t.addRecord(project));
       // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
       //   { type: 'project', id: newId },
       //   'type',
@@ -184,7 +187,7 @@ export function ProjectSettings(props: IProps) {
       //   'organization',
       //   { type: 'organization', id: organization }
       // ))
-      setProject(newId);
+      setProject(project.id);
     };
 
     useEffect(() => {

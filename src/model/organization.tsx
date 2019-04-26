@@ -1,19 +1,14 @@
-import TableRelationship from './relationsihp';
+import { Record, RecordRelationship } from '@orbit/data';
 
-export interface Organization {
-    type: string;
-    id: string;
-    keys?: {
-      remoteId?: string;
-    };
+export interface Organization extends Record {
     attributes: {
       name: string;
       "website-url": string;
       "logo-url": string;
       "public-by-default": string;
     };
-    relationships: {
-      owner: TableRelationship;
+    relationships?: {
+      owner: RecordRelationship;
     };
   }
 

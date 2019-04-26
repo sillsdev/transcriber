@@ -1,17 +1,12 @@
-import TableRelationship from './relationsihp';
+import { Record, RecordRelationship } from '@orbit/data';
 
-export interface BookType {
-    type: string;
-    id: string;
-    keys?: {
-      remoteId?: string;
-    };
+export interface BookType extends Record {
     attributes: {
       name: string;
       description: string;
     };
-    relationships: {
-      books: TableRelationship;
+    relationships?: {
+      books: RecordRelationship;
     };
   };
 export default BookType;

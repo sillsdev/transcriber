@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import ProjectType from '../model/projectType';
+import React, { useState } from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Project, IProjectSettingsStrings } from '../model';
+import { IState, Set, Task, TaskSet, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Schema, KeyMap, Record, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
+import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import './SetTable.css';
-import { string } from 'prop-types';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -49,8 +49,9 @@ interface IStateProps {
 };
 
 interface IRecordProps {
-  projects: Array<Project>;
-  projectTypes: Array<ProjectType>;
+  sets: Array<Set>;
+  tasksets: Array<TaskSet>;
+  tasks: Array<Task>;
 };
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
@@ -58,7 +59,12 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
 };
   
 export function SetTable(props: IProps) {
-    const { classes, t } = props;
+    const { classes, updateStore, t } = props;
+    const [schema] = useGlobal('schema');
+    const [keyMap] = useGlobal('keyMap');
+    const [project] = useGlobal('project');
+    const [book] = useGlobal('book');
+    const [message, setMessage] = useState(<></>);
     const [data, setData] = useState([
       [
         {value: 'Sequence',  readOnly: true, width: 120},
@@ -73,8 +79,74 @@ export function SetTable(props: IProps) {
       [{readOnly: true, value: 4}, {value: "Paradise Lost"}, {value: '3:20-24'}, {value: (<Avatar />)}, {value: 'gen003020.mp3'}]
     ])
 
+    const handleMessageReset = () => { setMessage(<></>) }
     const handleAdd = () => alert('add');
-    const handleSave = () => alert('save');
+    const handleSave = () => {
+      if (project === null) { setMessage(<span>Project not set.</span>); return };
+      const projectId = (keyMap as KeyMap).idToKey('project', 'remoteId', (project as string));
+      if (book === null) { setMessage(<span>Book not set.</span>); return };
+      const bookId = (keyMap as KeyMap).idToKey('book', 'remoteId', (book as string));
+
+      if (data[0].length !== 4) { setMessage(<span>Data should consist of set, passage, breaks, and title (four columns).</span>); return };
+      let set: Set;
+      let setId: number | null = null;
+      for (let i = 1; i < data.length; i += 1) {
+        if (data[i][0].value !== '') {
+          set = {
+            type: 'set',
+            attributes: {
+              name: data[i][3].value as string,
+              projectId: parseInt(projectId),
+              bookId: parseInt(bookId),
+            },
+          } as any;
+          (schema as Schema).initializeRecord(set);
+          updateStore((t: TransformBuilder) => t.addRecord(set)).
+            then((e: any) => {
+              // alert('set added: ' + JSON.stringify(e));
+              const setRec = (q: QueryBuilder) => q.findRecord({type: 'set', id: set.id});
+              setId = parseInt((keyMap as KeyMap).idToKey('set', 'remoteId', set.id));
+              alert(setId)
+            });
+        }
+        if (data[i][1].value !== '') {
+          let task: Task = {
+            type: 'task',
+            attributes: {
+              reference: data[i][2].value as string,
+              passage: parseInt(data[i][1].value as string),
+              position: 0,
+              taskState: 'Incomplete',
+              hold: false,
+              title: data[i][3].value as string,
+              dateCreated: new Date().toISOString(),
+              dateUpdated: new Date().toISOString(),
+            }
+          } as any;
+          (schema as Schema).initializeRecord(task);
+          let taskId: number | null = null;
+          updateStore((t: TransformBuilder) => t.addRecord(task)).
+            then((e: any) => {
+              // alert('task added: ' + JSON.stringify(e))
+              const taskRec = (q: QueryBuilder) => q.findRecord({type: 'task', id: task.id});
+              taskId = parseInt((keyMap as KeyMap).idToKey('task', 'remoteId', task.id));
+              alert(taskId)
+            });
+          if (taskId && setId) {
+            let taskSet: TaskSet = {
+              type: 'taskset',
+              attributes: {
+                taskId: taskId,
+                setId: setId,
+              }
+            } as any;
+            (schema as Schema).initializeRecord(taskSet);
+            updateStore((t: TransformBuilder) => t.addRecord(taskSet)).
+              then((e:any) => alert('taskset added' + JSON.stringify(e)));
+          }
+        }
+      }
+    };
 
     const handleValueRender = (cell: any) => cell.value;
 
@@ -90,9 +162,9 @@ export function SetTable(props: IProps) {
 
     const handlePaste = (s: string) => {
         const widths = [60, 80, 120, 400]
-        const blankLines = /\n\t*\n/;
+        const blankLines = /\r?\n\t*\r?\n/;
         const chunks = s.split(blankLines)
-        const lines = chunks.join('\n').trim().split('\n')
+        const lines = chunks.join('\n').replace(/\r?\n$/,'').split('\n')
         if (lines[0].split('\t').length === 4) {
           const grid = lines.map((row:string, i:number) => 
             row.split('\t').map((val: string, j:number) => {
@@ -144,6 +216,7 @@ export function SetTable(props: IProps) {
             parsePaste={handlePaste}
           />
         </div>
+        <SnackBar {...props} message={message} reset={handleMessageReset} />
       </div>
     );
 }
@@ -153,8 +226,9 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
     
 const mapRecordsToProps = {
-  projects: (q: QueryBuilder) => q.findRecords('project'),
-  projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
+  sets: (q: QueryBuilder) => q.findRecords('set'),
+  tasks: (q: QueryBuilder) => q.findRecords('task'),
+  tasksets: (q: QueryBuilder) => q.findRecords('taskset'),
 }
 
 export default withStyles(styles, { withTheme: true })(

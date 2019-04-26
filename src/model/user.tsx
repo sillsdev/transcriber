@@ -1,8 +1,6 @@
-import TableRelationship from './relationsihp';
+import { Record, RecordRelationship } from '@orbit/data';
 
-export interface User {
-  type: string;
-  id: string;
+export interface User extends Record {
   attributes: {
     name: string;
     email: string;
@@ -10,10 +8,10 @@ export interface User {
     phone: string;
     timezone: string;
   };
-  relationships: {
-    userroles: TableRelationship;
-    usertasks: TableRelationship;
-    userprojects: TableRelationship;
+  relationships?: {
+    userroles: RecordRelationship;
+    usertasks: RecordRelationship;
+    userprojects: RecordRelationship;
   };
 };
 
