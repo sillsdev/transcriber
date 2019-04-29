@@ -3,16 +3,23 @@ import { Record, RecordRelationship } from '@orbit/data';
 export interface User extends Record {
   attributes: {
     name: string;
+    givenName: string;
+    familyName: string;
     email: string;
-    locale: string;
     phone: string;
     timezone: string;
+    locale: string;
+    isLocked: boolean;
+    auth0Id: string;
+    dateCreated: string | null;
+    dateUpdated: string | null;
   };
   relationships?: {
-    projectUsers: RecordRelationship;
-    organizationMemberships: RecordRelationship;
-    userRoles: RecordRelationship;
     ownedOrganizations: RecordRelationship;
+    projects: RecordRelationship;
+    organizationMemberships: RecordRelationship;
+    roles: RecordRelationship;
+    groups: RecordRelationship;
   };
 };
 

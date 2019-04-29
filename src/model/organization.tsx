@@ -3,12 +3,14 @@ import { Record, RecordRelationship } from '@orbit/data';
 export interface Organization extends Record {
     attributes: {
       name: string;
-      "website-url": string;
-      "logo-url": string;
-      "public-by-default": string;
+      websiteUrl: string;
+      logoUrl: string;
+      publicByDefault: string;
     };
     relationships?: {
       owner: RecordRelationship;
+      users: RecordRelationship;
+      groups: RecordRelationship;
     };
   }
 

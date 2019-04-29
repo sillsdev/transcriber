@@ -13,8 +13,7 @@ export interface Task extends Record {
     };
     relationships?: {
       set: RecordRelationship;
-      users: RecordRelationship;
-      medias: RecordRelationship;
+      media: RecordRelationship;
     };
   };
 export default Task;  

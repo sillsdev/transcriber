@@ -1,4 +1,6 @@
 import { KeyMap, Schema, SchemaSettings } from '@orbit/data';
+import { IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { number, string } from 'prop-types';
 
 export const keyMap = new KeyMap();
 
@@ -25,6 +27,17 @@ const schemaDefinition: SchemaSettings =  {
         books: { type: 'hasMany', model: 'book', inverse: 'type' },
       },
     },
+    group: {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        organizationId: { type: 'number' },
+      },
+      relationships: {
+        organization: { type: 'hasOne', model: 'organization', inverse: 'groups' },
+        users: { type: 'hasMany', model: 'user', inverse: 'groups' },
+      },
+    },
     integration: {
       keys: { remoteId: {} },
       attributes: {
@@ -45,10 +58,20 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user', inverse: 'ownedOrganizations' },
-        organizationMemberships: { type: 'hasMany', model: 'user', inverse: 'organizationMemberships' },
-        userids: { type: 'hasMany', model: 'user', inverse: 'organizations' },
         users: { type: 'hasMany', model: 'user', inverse: 'organizations' },
-        projects: { type: 'hasMany', model: 'project', inverse: 'organization' },
+        groups: { type: 'hasMany', model: 'group', inverse: 'organization' },
+      }
+    },
+    organizationmemberships: {
+      keys: { remoteId: {} },
+      attributes: {
+        email: { type: 'string' },
+        userId: { type: 'number' },
+        organizationId: { type: 'number' },
+      },
+      relationships: {
+        user: { type: 'hasOne', model: 'user' },
+        organization: { type: 'hasOne', model: 'organization' },
       }
     },
     project: {
@@ -59,15 +82,15 @@ const schemaDefinition: SchemaSettings =  {
         description: { type: 'string' },
         ownerId: { type: 'number' },
         organizationId: { type: 'number' },
+        groupId: { type: 'number' },
         uilanguagebcp47: { type: 'string' },
         language: { type: 'string' },
         languageName: { type: 'string' },
         defaultFont: { type: 'string' },
         defaultFontSize: { type: 'string' },
-        rtl: { type: 'string' },
+        rtl: { type: 'boolean' },
         allowClaim: { type: 'boolean' },
         isPublic: { type: 'boolean' },
-        // filter keys
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
         dateArchived: { type: 'date' },
@@ -75,10 +98,11 @@ const schemaDefinition: SchemaSettings =  {
       relationships: {
         type: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
         owner: { type: 'hasOne', model: 'user', inverse: 'projects' },
-        organization: { type: 'hasOne', model: 'organization', inverse: 'projects' },
+        organization: { type: 'hasOne', model: 'organization'},
+        group: { type: 'hasOne', model: 'group' },
         projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
-        sets: { type: 'hasMany', model: 'set', inverse: 'project' },
         users: { type: 'hasMany', model: 'usertask', inverse: 'project' },
+        sets: { type: 'hasMany', model: 'set', inverse: 'project' },
       }
     },
     projectintegration: {
@@ -103,23 +127,42 @@ const schemaDefinition: SchemaSettings =  {
         projects: { type: 'hasMany', model: 'project', inverse: 'type' },
       },
     },
+    projectusers: {
+      keys: { remoteId: {} },
+      attributes: {
+        userId: { type: 'number' },
+        projectId: { type: 'number' },
+        roleId: { type: 'number' },
+        font:  { type: 'string' },
+        fontSize: { type: 'string' },
+      },
+      relationships: {
+        user: { type: 'hasOne', model: 'user' },
+        project: { type: 'hasOne', model: 'project' },
+        role: { type: 'hasOne', model: 'role' },
+      },
+    },
     role: {
       keys: { remoteId: {} },
       attributes: {
-        rolename: { type: 'string' },
+        roleName: { type: 'string' },
+        organizationId: { type: 'number' },
       },
       relationships: {
-        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
+        organization: { type: 'hasOne', model: 'organization' },
+        users: { type: 'hasMany', model: 'userrole', inverse: 'role' },
       },
     },
     set: {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
+        bookId: { type: 'number' },
       },
       relationships: {
+        projects: { type: 'hasMany', model: 'project', inverse: 'sets' },
         book: { type: 'hasOne', model: 'book', inverse: 'sets' },
-        project: { type: 'hasOne', model: 'project', inverse: 'sets' },
+        tasks: { type: 'hasMany', model: 'task', inverse: 'sets' },
       },
     },
     task: {
@@ -136,7 +179,18 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         media: { type: 'hasMany', model: 'taskmedia', inverse: 'task' },
-        sets: { type: 'hasMany', model: 'set', inverse: 'task' },
+        sets: { type: 'hasMany', model: 'set', inverse: 'tasks' },
+      },
+    },
+    tasksets: {
+      keys: { remoteId: {} },
+      attributes: {
+        taskId: { type: 'number' },
+        setId: { type: 'number' },
+      },
+      relationships: {
+        task: { type: 'hasOne', model: 'task' },
+        set: { type: 'hasOne', model: 'set' },
       },
     },
     taskmedia: {
@@ -176,14 +230,17 @@ const schemaDefinition: SchemaSettings =  {
       relationships: {
         ownedOrganizations: { type: 'hasMany', model: 'organization', inverse: 'owner' },
         projects: { type: 'hasMany', model: 'project', inverse: 'owner' },
-        organizationMemberships: { type: 'hasMany', model: 'organization', inverse: 'organizationMemberships' },
+        organizationMemberships: { type: 'hasMany', model: 'organization', inverse: 'users' },
         roles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
+        groups: { type: 'hasMany', model: 'group', inverse: 'users' },
       },
     },
     userrole: {
       keys: { remoteId: {} },
       attributes: {
-        rolename: { type: 'string' },
+        userId: { type: 'number' },
+        roleId: { type: 'number' },
+        organizationId: { type: 'number' },
       },
       relationships: {
         user: { type: 'hasOne', model: 'user', inverse: 'roles' },
@@ -201,7 +258,7 @@ const schemaDefinition: SchemaSettings =  {
         dateupdated: { type: 'date' },
       },
       relationships: {
-        project: { type: 'hasOne', model: 'project', inverse: 'usertasks' },
+        project: { type: 'hasOne', model: 'project', inverse: 'users' },
         assigned: { type: 'hasOne', model: 'user', inverse: 'assignedTasks' },
       },
     },

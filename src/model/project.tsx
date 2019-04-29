@@ -7,6 +7,7 @@ export interface Project extends Record {
       description: string | null;
       ownerId: number;
       organizationId: number;
+      groupId: number;
       uilanguagebcp47: string | null;
       language: string;
       languageName: string | null;
