@@ -206,12 +206,12 @@
 			</segment>
 		</unit>
 		<unit id="projectstatus.newProject">
-         <segment>
-            <source>New Project</source>
-         	<target>Nouveau projet</target>
-         </segment>
-      </unit>
-      <unit id="snackbar.undo">
+			<segment>
+				<source>New Project</source>
+				<target>Nouveau projet</target>
+			</segment>
+		</unit>
+		<unit id="snackbar.undo">
 			<segment>
 				<source>UNDO</source>
 				<target>Annuler</target>
@@ -271,10 +271,10 @@
 				<target>Continuer</target>
 			</segment>
 		</unit>
-		<unit id="welcome.silTranscriberAdmin">
+		<unit id="welcome.transcriberAdmin">
 			<segment>
-				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<source>Transcriber Admin</source>
+				<target>Administration du Transcripteur</target>
 			</segment>
 		</unit>
 		<unit id="welcome.thanksSigningUp">
@@ -307,12 +307,6 @@
 				<target>Voulez-vous configurer un projet de transcription?</target>
 			</segment>
 		</unit>
-		<unit id="welcome.transcriberAdmin">
-			<segment>
-				<source>Transcriber Admin</source>
-				<target>Administration du Transcripteur</target>
-			</segment>
-		</unit>
 		<unit id="alert.confirmation">
 			<segment>
 				<source>Confirmation</source>
@@ -337,7 +331,7 @@
 				<target>Oui</target>
 			</segment>
 		</unit>
-		<unit id="organizationTable.silTranscriberAdmin">
+		<unit id="organizationTable.transcriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
 				<target>Administration du Transcripteur SIL</target>
@@ -518,47 +512,47 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-	<unit id="bookTable.name">
-         <segment>
-            <source>Name</source>
-            <target>Nom</target>
-         </segment>
-      </unit>
-      <unit id="bookTable.type">
-         <segment>
-            <source>Type</source>
-         	<target>Type de livre</target>
-         </segment>
-      </unit>
-      <unit id="bookTable.sets">
-         <segment>
-            <source>Sets</source>
-         	<target>Ensembles</target>
-         </segment>
-      </unit>
-      <unit id="bookTable.taks">
-         <segment>
-            <source>Tasks</source>
-         	<target>Taches</target>
-         </segment>
-      </unit>
-      <unit id="bookTable.delete">
-         <segment>
-            <source>Delete</source>
-         	<target>Supprimer</target>
-         </segment>
-      </unit>
-      <unit id="bookTable.silTranscriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-         	<target>Administration du Transcripteur SIL</target>
-         </segment>
-      </unit>
-      <unit id="bookTable.chooseBook">
-         <segment>
-            <source>Choose a Book</source>
-         	<target>Choisissez un livre</target>
-         </segment>
-      </unit>
-   </file>
+		<unit id="bookTable.name">
+			<segment>
+				<source>Name</source>
+				<target>Nom</target>
+			</segment>
+		</unit>
+		<unit id="bookTable.type">
+			<segment>
+				<source>Type</source>
+				<target>Type de livre</target>
+			</segment>
+		</unit>
+		<unit id="bookTable.sets">
+			<segment>
+				<source>Sets</source>
+				<target>Ensembles</target>
+			</segment>
+		</unit>
+		<unit id="bookTable.taks">
+			<segment>
+				<source>Tasks</source>
+				<target>Taches</target>
+			</segment>
+		</unit>
+		<unit id="bookTable.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Supprimer</target>
+			</segment>
+		</unit>
+		<unit id="bookTable.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="bookTable.chooseBook">
+			<segment>
+				<source>Choose a Book</source>
+				<target>Choisissez un livre</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>

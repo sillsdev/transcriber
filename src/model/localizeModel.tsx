@@ -68,13 +68,12 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdmin": string;
+    "transcriberAdmin": string;
     "thanksSigningUp": string;
     "StartTranscribingImmediately": string;
     "transcriberWeb": string;
     "transcriberDesktop": string;
     "ConfigureTranscriptionProject": string;
-    "transcriberAdmin": string;
 };
 
 export interface IAlertStrings extends Localize.LocalizedStringsMethods {
@@ -85,7 +84,7 @@ export interface IAlertStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IOrganizationTableStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdmin": string;
+    "transcriberAdmin": string;
     "chooseOrganization": string;
     "name": string;
 };

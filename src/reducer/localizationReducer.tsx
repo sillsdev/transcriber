@@ -81,13 +81,12 @@ const initialState = {
 	}),
 	"welcome": new LocalizedStrings({
 		"en": {
-			"silTranscriberAdmin": "SIL Transcriber Admin",
+			"transcriberAdmin": "Transcriber Admin",
 			"thanksSigningUp": "Thanks for signing up!",
 			"StartTranscribingImmediately": "Do you want to start transcribing immediately?",
 			"transcriberWeb": "Transcriber Web",
 			"transcriberDesktop": "Transcriber Desktop",
 			"ConfigureTranscriptionProject": "Do you want to configure a transcription project?",
-			"transcriberAdmin": "Transcriber Admin",
 		}
 	}),
 	"alert": new LocalizedStrings({
@@ -100,7 +99,7 @@ const initialState = {
 	}),
 	"organizationTable": new LocalizedStrings({
 		"en": {
-			"silTranscriberAdmin": "SIL Transcriber Admin",
+			"transcriberAdmin": "SIL Transcriber Admin",
 			"chooseOrganization": "Choose Organization",
 			"name": "Name",
 		}

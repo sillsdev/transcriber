@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Organization, IOrganizationTableStrings } from '../model';
+import { IState, Organization, IOrganizationTableStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record } from '@orbit/data';
@@ -64,6 +64,11 @@ const styles = (theme: Theme) =>
 
 interface IStateProps {
   t: IOrganizationTableStrings;
+  user: User;
+};
+
+interface IRecordProps {
+  organizations: Array<Organization>;
 };
 
 interface Row {
@@ -73,9 +78,8 @@ interface Row {
 };
 
 // see: https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/selection/
-interface IProps extends IStateProps, WithStyles<typeof styles>{
+interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   auth: Auth;
-  organizations: any;
 };
 
 export function OrganizationTable(props: IProps) {
@@ -99,9 +103,9 @@ export function OrganizationTable(props: IProps) {
     setRows(
       organizations.map((o: Organization) => ({
         type: o.type,
-        id: (o.keys && o.keys.remoteId) || o.id,
+        id: o.id,
         name: o.attributes.name
-      }))
+      })) as any
     );
   }, [organizations, t.name]);
 
@@ -121,7 +125,7 @@ export function OrganizationTable(props: IProps) {
       <AppBar className={classes.appBar} position="static">
         <MuiToolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {t.silTranscriberAdmin}
+            {t.transcriberAdmin}
           </Typography>
         </MuiToolbar>
       </AppBar>
@@ -150,13 +154,10 @@ export function OrganizationTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: "organizationTable"})
+  t: localStrings(state, {layout: "organizationTable"}),
+  user: state.who.user,
 });
   
-interface IRecordProps {
-  organizations: () => Array<Record>;
-};
-
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization')
 };

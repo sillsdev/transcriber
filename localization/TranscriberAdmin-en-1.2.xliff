@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd"
+	xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 
-	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
+	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en"
+		datatype="plaintext">
 		<body>
 			<trans-unit id="access.silTranscriberAccess">
 				<source>SIL Transcriber Access</source>
@@ -318,8 +321,8 @@
 					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.silTranscriberAdmin">
-				<source>SIL Transcriber Admin</source>
+			<trans-unit id="welcome.transcriberAdmin">
+				<source>Transcriber Admin</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Welcome.tsx</context>
@@ -360,13 +363,6 @@
 					<context context-type="sourcefile">Welcome.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.transcriberAdmin">
-				<source>Transcriber Admin</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">Welcome.tsx</context>
-				</context-group>
-			</trans-unit>
 			<trans-unit id="alert.confirmation">
 				<source>Confirmation</source>
 				<target/>
@@ -395,7 +391,7 @@
 					<context context-type="sourcefile">AlertDialog.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="organizationTable.silTranscriberAdmin">
+			<trans-unit id="organizationTable.transcriberAdmin">
 				<source>SIL Transcriber Admin</source>
 				<target/>
 				<context-group>

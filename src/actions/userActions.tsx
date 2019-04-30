@@ -5,7 +5,9 @@ import Auth from '../auth/Auth';
 
 
 export const fetchAuthUser = (auth: Auth) => (dispatch: any) => {
-    Axios.get(API_CONFIG.host + '/api/users/0',{
+    Axios({
+        method: 'GET',
+        url: API_CONFIG.host + '/api/users/0',
         headers: {
             Authorization: 'Bearer ' + auth.accessToken,
             Accept: 'application/vnd.api+json',
