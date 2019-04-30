@@ -99,7 +99,7 @@ export function Welcome(props: IProps) {
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
-        fetchAuthUser();
+        fetchAuthUser(auth);
     }, [])
 
     if (!isAuthenticated()) return <Redirect to="/" />;

@@ -1,10 +1,16 @@
 import Axios from 'axios';
 import { FETCH_AUTH_USER  } from './types';
 import { API_CONFIG } from '../api-variable';
+import Auth from '../auth/Auth';
 
 
-export const fetchAuthUser = () => (dispatch: any) => {
-    Axios.get(API_CONFIG.host + '/api/users/0')
+export const fetchAuthUser = (auth: Auth) => (dispatch: any) => {
+    Axios.get(API_CONFIG.host + '/api/users/0',{
+        headers: {
+            Authorization: 'Bearer ' + auth.accessToken,
+            Accept: 'application/vnd.api+json',
+        },
+    })
         .then(user => {
             dispatch({
                 payload: user,
