@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Xml;
+using net.sf.saxon.serialize;
+using Newtonsoft.Json;
 using Saxon.Api;
 
 
@@ -18,30 +20,12 @@ namespace updateLocalization
 			CreateEnglishStrings();
 			CreateOtherLangStrings();
 			CombineStrings();
+			CleanUp();
 		}
 
 		private static void CreateEnglish20Xlf()
 		{
-			var xslt = new FileInfo(@"..\..\From12To20.xsl");
-			var input = new FileInfo(@"..\..\TranscriberAdmin-en-1.2.xliff");
-			var output = new FileInfo(@"..\..\TranscriberAdmin-en.xlf");
-
-			// Compile stylesheet
-			var processor = new Processor();
-			var compiler = processor.NewXsltCompiler();
-			var executable = compiler.Compile(new Uri(xslt.FullName));
-			var transformer = executable.Load();
-
-			// Do transformation to a destination
-			var destination = new DomDestination();
-			using (var inputStream = input.OpenRead())
-			{
-				transformer.SetInputStream(inputStream, new Uri(input.DirectoryName));
-				transformer.Run(destination);
-			}
-
-			// Save result to a file
-			destination.XmlDocument.Save(output.FullName);
+			XsltProcess(@"From12To20.xsl", @"TranscriberAdmin-en.xlf");
 		}
 
 		private static void AddMissing12LangFolders()
@@ -67,81 +51,17 @@ namespace updateLocalization
 
 		private static void CreateModel()
 		{
-			var xslt = new FileInfo(@"..\..\ToModel.xsl");
-			var input = new FileInfo(@"..\..\TranscriberAdmin-en-1.2.xliff");
-			var output = new FileInfo(@"..\..\localizeModel.tsx");
-
-			// Compile stylesheet
-			var processor = new Processor();
-			var compiler = processor.NewXsltCompiler();
-			var executable = compiler.Compile(new Uri(xslt.FullName));
-			var transformer = executable.Load();
-
-			// Do transformation to a destination
-			var destination = new DomDestination();
-			using (var inputStream = input.OpenRead())
-			{
-				transformer.SetInputStream(inputStream, new Uri(input.DirectoryName));
-				try
-				{
-					transformer.Run(destination);
-				}
-				catch (DynamicError e)
-				{
-					Console.WriteLine(e.LineNumber);
-				}
-			}
-
-			// Save result to a file
-			destination.XmlDocument.Save(output.FullName);
+			XsltProcess(@"ToModel.xsl", @"localizeModel.tsx");
 		}
 
 		private static void CreateReducer()
 		{
-			var xslt = new FileInfo(@"..\..\ToReducer.xsl");
-			var input = new FileInfo(@"..\..\TranscriberAdmin-en-1.2.xliff");
-			var output = new FileInfo(@"..\..\localizationReducer.tsx");
-
-			// Compile stylesheet
-			var processor = new Processor();
-			var compiler = processor.NewXsltCompiler();
-			var executable = compiler.Compile(new Uri(xslt.FullName));
-			var transformer = executable.Load();
-
-			// Do transformation to a destination
-			var destination = new DomDestination();
-			using (var inputStream = input.OpenRead())
-			{
-				transformer.SetInputStream(inputStream, new Uri(input.DirectoryName));
-				transformer.Run(destination);
-			}
-
-			// Save result to a file
-			destination.XmlDocument.Save(output.FullName);
+			XsltProcess(@"ToReducer.xsl", @"localizationReducer.tsx");
 		}
 
 		private static void CreateEnglishStrings()
 		{
-			var xslt = new FileInfo(@"..\..\MakeStrings-12.xsl");
-			var input = new FileInfo(@"..\..\TranscriberAdmin-en-1.2.xliff");
-			var output = new FileInfo(@"..\..\TranscriberAdmin-en-1.2.xml");
-
-			// Compile stylesheet
-			var processor = new Processor();
-			var compiler = processor.NewXsltCompiler();
-			var executable = compiler.Compile(new Uri(xslt.FullName));
-			var transformer = executable.Load();
-
-			// Do transformation to a destination
-			var destination = new DomDestination();
-			using (var inputStream = input.OpenRead())
-			{
-				transformer.SetInputStream(inputStream, new Uri(input.DirectoryName));
-				transformer.Run(destination);
-			}
-
-			// Save result to a file
-			destination.XmlDocument.Save(output.FullName);
+			XsltProcess(@"MakeStrings-12.xsl", @"TranscriberAdmin-en-1.2.xml");
 		}
 
 		private static void CreateOtherLangStrings()
@@ -150,56 +70,64 @@ namespace updateLocalization
 			{
 				var langTag = Path.GetFileNameWithoutExtension(fileInfo.Name).Substring(17);
 				var langDir = new DirectoryInfo(@"..\..\" + langTag);
-				if (langDir.Exists)
-				{
-					var xslt = new FileInfo(@"..\..\MakeStrings-12.xsl");
-					var input = new FileInfo(@"..\..\" + langTag + @"\TranscriberAdmin-en-1.2.xliff");
-					var output = new FileInfo(@"..\..\TranscriberAdmin-en-1.2-" + langTag + @".xml");
-
-					// Compile stylesheet
-					var processor = new Processor();
-					var compiler = processor.NewXsltCompiler();
-					var executable = compiler.Compile(new Uri(xslt.FullName));
-					var transformer = executable.Load();
-
-					// Do transformation to a destination
-					var destination = new DomDestination();
-					using (var inputStream = input.OpenRead())
-					{
-						transformer.SetInputStream(inputStream, new Uri(input.DirectoryName));
-						transformer.Run(destination);
-					}
-
-					// Save result to a file
-					destination.XmlDocument.Save(output.FullName);
-				}
+				if (!langDir.Exists) continue;
+				XsltProcess(@"MakeStrings-12.xsl", @"TranscriberAdmin-en-1.2-" + langTag + @".xml", langTag + @"\TranscriberAdmin-en-1.2.xliff");
 			}
 		}
 
 		private static void CombineStrings()
 		{
-			var xslt = new FileInfo(@"..\..\CombineStrings-12.xsl");
-			var input = new FileInfo(@"..\..\TranscriberAdmin-en-1.2.xliff");
-			var output = new FileInfo(@"..\..\strings.xml");
-
-			// Compile stylesheet
-			var processor = new Processor();
-			var compiler = processor.NewXsltCompiler();
-			var executable = compiler.Compile(new Uri(xslt.FullName));
-			var transformer = executable.Load();
-
-			// Do transformation to a destination
-			var destination = new DomDestination();
-			using (var inputStream = input.OpenRead())
+			XsltProcess(@"CombineStrings-12.xsl", @"strings.xml");
+			var xmlDoc = new XmlDocument();
+			xmlDoc.Load(@"..\..\strings.xml");
+			var json = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement);
+			using (var sw = new StreamWriter(@"..\..\strings.json"))
 			{
-				transformer.SetInputStream(inputStream, new Uri(input.DirectoryName));
-				transformer.Run(destination);
+				sw.Write(json.Substring(11, json.Length - 12));
 			}
-
-			// Save result to a file
-			destination.XmlDocument.Save(output.FullName);
 		}
 
+		private static void XsltProcess(string xslName, string outName, string inName = "TranscriberAdmin-en-1.2.xliff")
+		{
+			var inputInfo = new FileInfo(@"..\..\" + inName);
+			var xsltInfo = new FileInfo(@"..\..\" + xslName);
+
+			// Create a Processor instance
+			var processor = new Processor();
+
+			// Load the source
+			var input = processor.NewDocumentBuilder().Build(new Uri(inputInfo.FullName));
+
+			// Create a transformer for the stylesheet.
+			var transformer = processor.NewXsltCompiler().Compile(new Uri(xsltInfo.FullName)).Load30();
+
+			// Create a serializer, with output to the standard output stream
+			var serializer = processor.NewSerializer();
+
+			using (var textWriter = new StreamWriter(@"..\..\" + outName))
+			{
+				serializer.SetOutputWriter(textWriter);
+
+				// Transform the source XML and serialize the result document
+				transformer.ApplyTemplates(input, serializer);
+			}
+		}
+
+		private static void CleanUp()
+		{
+			foreach (var fileInfo in new DirectoryInfo(@"..\..").GetFiles("TranscriberAdmin-*.xlf"))
+			{
+				var langTag = Path.GetFileNameWithoutExtension(fileInfo.Name).Substring(17);
+				var langDir = new DirectoryInfo(@"..\..\" + langTag);
+				if (!langDir.Exists) continue;
+				new DirectoryInfo(@"..\..\" + langTag).Delete(true);
+			}
+
+			foreach (var fileInfo in new DirectoryInfo(@"..\..\").GetFiles(@"*.xml"))
+			{
+				new FileInfo(fileInfo.FullName).Delete();
+			}
+		}
 
 	}
 }
