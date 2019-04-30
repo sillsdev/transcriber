@@ -4,15 +4,17 @@ import Auth from '../auth/Auth';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IWelcomeStrings } from '../model';
+import { IState, IWelcomeStrings, User } from '../model';
 import localStrings from '../selector/localize';
-import { Schema, KeyMap } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { Schema, KeyMap, QueryBuilder } from '@orbit/data';
 import Store from '@orbit/store';
 import { Theme, withStyles, WithStyles, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
 import * as action from '../actions';
 
 const styles = (theme: Theme) => ({
@@ -63,16 +65,22 @@ const styles = (theme: Theme) => ({
     button: theme.mixins.gutters({
         marginRight: theme.spacing.unit
     }),
+    avatar: {
+        marginLeft: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+    },
 });
 
 interface IStateProps {
     t: IWelcomeStrings;
     orbitLoaded: boolean;
+    initials: string;
 };
 
 interface IDispatchProps {
     fetchLocalization: typeof action.fetchLocalization;
     setLanguage: typeof action.setLanguage;
+    fetchAuthUser: typeof action.fetchAuthUser;
     fetchOrbitData: typeof action.fetchOrbitData;
 };
 
@@ -81,8 +89,8 @@ interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
 };
 
 export function Welcome(props: IProps) {
-    const { classes, orbitLoaded, auth, t } = props;
-    const { fetchOrbitData, fetchLocalization, setLanguage } = props;
+    const { classes, orbitLoaded, auth, t, initials } = props;
+    const { fetchOrbitData, fetchAuthUser, fetchLocalization, setLanguage } = props;
     const { isAuthenticated } = auth;
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
@@ -91,6 +99,7 @@ export function Welcome(props: IProps) {
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
+        fetchAuthUser();
     }, [])
 
     if (!isAuthenticated()) return <Redirect to="/" />;
@@ -106,6 +115,10 @@ export function Welcome(props: IProps) {
                     <Typography variant="h6" color="inherit" className={classes.grow}>
                         {t.silTranscriberAdmin}
                     </Typography>
+                    <div className={classes.grow} />
+                    <Avatar className={classes.avatar} >
+                        {initials}
+                    </Avatar>
                 </Toolbar>
             </AppBar>
             <div className={classes.container}>
@@ -143,16 +156,19 @@ export function Welcome(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "welcome"}),
     orbitLoaded: state.orbit.loaded,
+    initials: state.who.initials,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     ...bindActionCreators({
         fetchLocalization: action.fetchLocalization,
         setLanguage: action.setLanguage,
+        fetchAuthUser: action.fetchAuthUser,
         fetchOrbitData: action.fetchOrbitData,
     }, dispatch),
 });
   
-export default withStyles(styles, { withTheme: true })(
-    connect(mapStateToProps, mapDispatchToProps)(Welcome) as any
-) as any;
+  export default withStyles(styles, { withTheme: true })(
+        connect(mapStateToProps, mapDispatchToProps)(Welcome) as any
+    ) as any;
+  

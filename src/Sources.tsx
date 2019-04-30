@@ -4,6 +4,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { Schema, KeyMap } from "@orbit/data";
 import Store from "@orbit/store";
 import Auth from './auth/Auth';
+import { API_CONFIG } from './api-variable';
 
 function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Promise<any> {
     const backup = new IndexedDBSource({
@@ -18,8 +19,7 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         keyMap,
         name: 'remote',
         namespace: 'api',
-        // host: ' https://ukepgrpe6l.execute-api.us-east-2.amazonaws.com/qa',
-        host: 'https://9u6wlhwuha.execute-api.us-east-2.amazonaws.com/dev',
+        host: API_CONFIG.host,
         defaultFetchHeaders: {
             "Authorization": "Bearer " + auth.accessToken,
         }
@@ -67,8 +67,6 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
     }));
 
     remote.pull(q => q.findRecords('organization'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('user'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('project'))
         .then(transform => store.sync(transform));
