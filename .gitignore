@@ -11,6 +11,9 @@
 
 # production
 /build
+localization/obj
+localization/bin
+localization/packages
 
 # misc
 .DS_Store
@@ -19,6 +22,7 @@
 .env.test.local
 .env.production.local
 localization/.vscode
+localization/.vs
 
 npm-debug.log*
 yarn-debug.log*
