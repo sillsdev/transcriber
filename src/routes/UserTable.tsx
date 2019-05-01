@@ -3,10 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, User, IUsertableStrings } from '../model';
 import localStrings from '../selector/localize';
-import AppBar from '@material-ui/core/AppBar';
-import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -22,6 +19,7 @@ import {
   Table, TableColumnResizing, TableFilterRow,
   TableHeaderRow, TableSelection, Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
+import TranscriberBar from '../components/TranscriberBar';
 import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) => createStyles({
@@ -35,10 +33,6 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     justifyContent: 'center'
   },
-  appBar: theme.mixins.gutters({
-    background: '#FFE599',
-    color: 'black'
-  }),
   paper: theme.mixins.gutters({
     paddingTop: 16,
     paddingBottom: 16,
@@ -128,13 +122,7 @@ export function UserTable(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <MuiToolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            {t.silTranscriberAdmin}
-          </Typography>
-        </MuiToolbar>
-      </AppBar>
+      <TranscriberBar {...props} close={handleCancel}/>
       <div className={classes.container}>
         <Paper id='user-table' className={classes.paper}>
           <h2 className={classes.dialogHeader}>

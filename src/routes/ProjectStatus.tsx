@@ -7,19 +7,11 @@ import { IState, Project, IProjectstatusStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
-import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
@@ -28,11 +20,11 @@ import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import BookIcon from '@material-ui/icons/Book';
 import SetIcon from '@material-ui/icons/WidgetsTwoTone';
 import TaskIcon from '@material-ui/icons/ListTwoTone';
-import BackIcon from '@material-ui/icons/ArrowBack';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone'
 import IntegrationIcon from '@material-ui/icons/UnarchiveTwoTone'
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import TranscriberBar from '../components/TranscriberBar';
 import Chart from '../components/Chart';
 import ProjectSettings from '../components/ProjectSettings';
 import BookTable from '../components/BookTable';
@@ -44,9 +36,6 @@ const drawerWidth = 240;
 const styles = (theme: Theme) => createStyles({
   root: {
     display: 'flex',
-  },
-  grow: {
-    flexGrow: 1,
   },
   appBar: {
     background: '#FFE599',
@@ -65,55 +54,6 @@ const styles = (theme: Theme) => createStyles({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 36,
-  },
-  hide: {
-    display: 'none',
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 120,
-      '&:focus': {
-        width: 200,
-      },
-    },
-  },
-  avatar: {},
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
@@ -197,45 +137,11 @@ export function ProjectStatus(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar
-        position="fixed"
-        className={classNames(classes.appBar, {
+      <TranscriberBar {...props} appFixed={true}
+        close={handleCancel}
+        appClass={classNames(classes.appBar, {
           [classes.appBarShift]: false,
-        })}
-      >
-        <Toolbar disableGutters={!open}>
-          <IconButton
-            color="inherit"
-            aria-label={t.listOptions}
-            onClick={handleDrawerOpen}
-            className={classNames(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
-          <IconButton >
-            <BackIcon onClick={handleCancel} />
-          </IconButton>
-          <Typography variant="h6" color="inherit" noWrap>
-            {t.silTranscriberAdminProject}
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder={t.search}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-          </div>
-          <Avatar className={classes.avatar} />
-        </Toolbar>
-      </AppBar>
+        })} />
       <Drawer
         variant="permanent"
         className={classNames(classes.drawer, {

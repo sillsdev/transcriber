@@ -6,10 +6,7 @@ import { IState, Organization, IOrganizationTableStrings, User } from '../model'
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record } from '@orbit/data';
-import AppBar from "@material-ui/core/AppBar";
-import MuiToolbar from "@material-ui/core/Toolbar";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import { createStyles, withStyles, WithStyles, Theme } from "@material-ui/core/styles";
 import {
   IntegratedSelection,
@@ -24,6 +21,7 @@ import {
   TableSelection,
   Toolbar
 } from "@devexpress/dx-react-grid-material-ui";
+import TranscriberBar from '../components/TranscriberBar';
 import SnackBar from "../components/SnackBar";
 import Auth from "../auth/Auth";
 
@@ -39,10 +37,6 @@ const styles = (theme: Theme) =>
       display: "flex",
       justifyContent: "center"
     },
-    appBar: theme.mixins.gutters({
-      background: "#FFE599",
-      color: "black"
-    }),
     paper: theme.mixins.gutters({
       paddingTop: 16,
       paddingBottom: 16,
@@ -96,6 +90,7 @@ export function OrganizationTable(props: IProps) {
     setView('/welcome');
   };
   const handleMessageReset = () => { setMessage('') };
+  const handleCancel = () => { setView('/admin') };
 
   useEffect(() => {
     setColumns([{ name: "name", title: t.name }]);
@@ -121,13 +116,7 @@ export function OrganizationTable(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <MuiToolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            {t.transcriberAdmin}
-          </Typography>
-        </MuiToolbar>
-      </AppBar>
+      <TranscriberBar {...props} close={handleCancel} />
       <div className={classes.container}>
         <Paper id="OrganizationTable" className={classes.paper}>
           <h2 className={classes.dialogHeader}>

@@ -11,27 +11,18 @@ import { Schema, KeyMap, QueryBuilder } from '@orbit/data';
 import Store from '@orbit/store';
 import { Theme, withStyles, WithStyles, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
+import TranscriberBar from '../components/TranscriberBar';
 import * as action from '../actions';
 
-const styles = (theme: Theme) => ({
+const styles = (theme: Theme) => ({ 
     root: {
         width: '100%',
-      },
-      grow: {
-        flexGrow: 1,
       },
       container: {
         display: 'flex',
         justifyContent: 'center'
     },
-    appBar: theme.mixins.gutters({
-        background: '#FFE599',
-        color: 'black'
-    }),
     paper: theme.mixins.gutters({
         paddingTop: 16,
         paddingBottom: 16,
@@ -65,10 +56,6 @@ const styles = (theme: Theme) => ({
     button: theme.mixins.gutters({
         marginRight: theme.spacing.unit
     }),
-    avatar: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-    },
 });
 
 interface IStateProps {
@@ -102,8 +89,6 @@ export function Welcome(props: IProps) {
     const [initials, setInitials] = useGlobal('initials');
     const [orgName, setOrgName] = useState('');
     const [view, setView] = useState('');
-
-    const handleOrganizationChange = () => { setView('/organization')}
 
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
@@ -140,22 +125,7 @@ export function Welcome(props: IProps) {
 
     return (
         <div className={classes.root}>
-            <AppBar className={classes.appBar} position="static">
-                <Toolbar>
-                    <Button className={classes.button} onClick={handleOrganizationChange}>
-                        <Typography variant="h6" color="inherit">
-                            {orgName}
-                        </Typography>
-                    </Button>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        {t.transcriberAdmin}
-                    </Typography>
-                    <div className={classes.grow} />
-                    <Avatar className={classes.avatar} >
-                        {initials}
-                    </Avatar>
-                </Toolbar>
-            </AppBar>
+            <TranscriberBar {...props} search={false} />
             <div className={classes.container}>
                 <Paper className={classes.paper}>
                     <Typography variant="h4" className={classes.dialogHeader}>

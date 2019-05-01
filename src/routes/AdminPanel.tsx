@@ -3,15 +3,8 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, IAdminpanelStrings } from '../model';
 import localStrings from '../selector/localize';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import { fade } from '@material-ui/core/styles/colorManipulator';
 import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
-import SearchIcon from '@material-ui/icons/Search';
-import Avatar from '@material-ui/core/Avatar';
 import MediaCard from '../components/MediaCard';
 import organizationSvg from '../assets/organization.svg';
 import usersSvg from '../assets/users.svg';
@@ -19,64 +12,17 @@ import projectSvg from '../assets/project.svg';
 import mediaSvg from '../assets/media.svg';
 import bookSvg from '../assets/book.svg';
 import Auth from '../auth/Auth';
+import TranscriberBar from '../components/TranscriberBar';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
     },
-    grow: {
-      flexGrow: 1,
-    },
-    appBar: theme.mixins.gutters({
-      background: '#FFE599',
-      color: 'black'
-    }),
     title: {
       display: 'none',
       [theme.breakpoints.up('sm')]: {
         display: 'block',
-      },
-    },
-    search: {
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      marginLeft: 0,
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing.unit,
-        width: 'auto',
-      },
-    },
-    searchIcon: {
-      width: theme.spacing.unit * 9,
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    inputRoot: {
-      color: 'inherit',
-      width: '100%',
-    },
-    inputInput: {
-      paddingTop: theme.spacing.unit,
-      paddingRight: theme.spacing.unit,
-      paddingBottom: theme.spacing.unit,
-      paddingLeft: theme.spacing.unit * 10,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: 120,
-        '&:focus': {
-          width: 200,
-        },
       },
     },
     grid: {
@@ -88,10 +34,6 @@ const styles = (theme: Theme) =>
     link: {
       textDecoration: 'none',
     },
-    avatar: {
-      marginLeft: theme.spacing.unit,
-      marginRight: theme.spacing.unit,
-    }
   });
 
 interface IStateProps {
@@ -110,27 +52,7 @@ function AdminPanel(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <Toolbar>
-          <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-            {t.transcriberAdmin}
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder={t.search}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-            />
-          </div>
-          <Avatar className={classes.avatar} />
-        </Toolbar>
-      </AppBar>
+      <TranscriberBar {...props}/>
       <Grid className={classes.grid}
         container
         direction='row'

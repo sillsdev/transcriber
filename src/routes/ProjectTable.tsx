@@ -6,13 +6,9 @@ import { IState, Project, IProjectTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
-import AppBar from '@material-ui/core/AppBar';
-import MuiToolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import BackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -24,6 +20,7 @@ import { Grid,
   TableColumnResizing,
   TableHeaderRow,
   Toolbar } from '@devexpress/dx-react-grid-material-ui';
+import TranscriberBar from '../components/TranscriberBar';
 import Confirm from '../components/AlertDialog';
 import Auth from '../auth/Auth';
 
@@ -35,10 +32,6 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     justifyContent: 'center'
   },
-  appBar: theme.mixins.gutters({
-    background: '#FFE599',
-    color: 'black'
-  }),
   paper: theme.mixins.gutters({
     paddingTop: 16,
     paddingBottom: 16,
@@ -178,16 +171,7 @@ export function ProjectTable(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
-        <MuiToolbar>
-          <IconButton >
-            <BackIcon onClick={handleCancel} />
-          </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            {t.silTranscriberAdmin}
-          </Typography>
-        </MuiToolbar>
-      </AppBar>
+      <TranscriberBar {...props} close={handleCancel}/>
       <div className={classes.container}>
         <Paper id="ProjectTable" className={classes.paper}>
         <div className={classes.dialogHeader}>
