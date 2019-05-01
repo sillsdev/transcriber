@@ -64,7 +64,6 @@ const styles = (theme: Theme) =>
 
 interface IStateProps {
   t: IOrganizationTableStrings;
-  user: User;
 };
 
 interface IRecordProps {
@@ -155,7 +154,6 @@ export function OrganizationTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "organizationTable"}),
-  user: state.who.user,
 });
   
 const mapRecordsToProps = {

@@ -217,7 +217,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="projectstatus.sets">
-				<source>Sets</source>
+				<source>Sections</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
@@ -616,7 +616,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="bookTable.sets">
-				<source>Sets</source>
+				<source>Sections</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectSettings.tsx</context>

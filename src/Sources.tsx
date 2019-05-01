@@ -66,7 +66,11 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         blocking: false
     }));
 
+    remote.pull(q => q.findRecords('currentuser'))
+        .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('organization'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('organizationmembership'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('project'))
         .then(transform => store.sync(transform));
@@ -85,6 +89,16 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
     remote.pull(q => q.findRecords('taskset'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('task'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('userrole'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('usertask'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('group'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('role'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('projectuser'))
         .then(transform => store.sync(transform));
 
     return (backup.pull(q => q.findRecords())

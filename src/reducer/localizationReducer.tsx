@@ -54,7 +54,7 @@ const initialState = {
 			"team": "Team",
 			"books": "Books",
 			"projectPlans": "Project Plans",
-			"sets": "Sets",
+			"sets": "Sections",
 			"tasks": "Tasks",
 			"media": "Media",
 			"integrations": "Integrations",
@@ -147,7 +147,7 @@ const initialState = {
 		"en": {
 			"name": "Name",
 			"type": "Type",
-			"sets": "Sets",
+			"sets": "Sections",
 			"taks": "Tasks",
 			"delete": "Delete",
 			"silTranscriberAdmin": "SIL Transcriber Admin",

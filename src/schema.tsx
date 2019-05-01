@@ -35,8 +35,20 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         organization: { type: 'hasOne', model: 'organization', inverse: 'groups' },
-        users: { type: 'hasMany', model: 'user', inverse: 'groups' },
+        users: { type: 'hasMany', model: 'user' },
       },
+    },
+    groupmembership: {
+      keys: { remoteId: {} },
+      attributes: {
+        email: { type: 'string' },
+        userId: { type: 'number' },
+        groupId: { type: 'number' },
+      },
+      relationships: {
+        user: { type: 'hasOne', model: 'user' },
+        group: { type: 'hasOne', model: 'group' },
+      }
     },
     integration: {
       keys: { remoteId: {} },
@@ -57,12 +69,13 @@ const schemaDefinition: SchemaSettings =  {
         publicByDefault: { type: 'boolean' },
       },
       relationships: {
-        owner: { type: 'hasOne', model: 'user', inverse: 'ownedOrganizations' },
-        users: { type: 'hasMany', model: 'user', inverse: 'organizations' },
+        owner: { type: 'hasOne', model: 'user' },
+        users: { type: 'hasMany', model: 'user' },
         groups: { type: 'hasMany', model: 'group', inverse: 'organization' },
+        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'organization' },
       }
     },
-    organizationmemberships: {
+    organizationmembership: {
       keys: { remoteId: {} },
       attributes: {
         email: { type: 'string' },
@@ -97,7 +110,7 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         type: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
-        owner: { type: 'hasOne', model: 'user', inverse: 'projects' },
+        owner: { type: 'hasOne', model: 'user' },
         organization: { type: 'hasOne', model: 'organization'},
         group: { type: 'hasOne', model: 'group' },
         projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
@@ -127,7 +140,7 @@ const schemaDefinition: SchemaSettings =  {
         projects: { type: 'hasMany', model: 'project', inverse: 'type' },
       },
     },
-    projectusers: {
+    projectuser: {
       keys: { remoteId: {} },
       attributes: {
         userId: { type: 'number' },
@@ -150,7 +163,7 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         organization: { type: 'hasOne', model: 'organization' },
-        users: { type: 'hasMany', model: 'userrole', inverse: 'role' },
+        userroles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
       },
     },
     set: {
@@ -228,11 +241,32 @@ const schemaDefinition: SchemaSettings =  {
         dateUpdated: { type: 'date' },
       },
       relationships: {
-        ownedOrganizations: { type: 'hasMany', model: 'organization', inverse: 'owner' },
-        projects: { type: 'hasMany', model: 'project', inverse: 'owner' },
-        organizationMemberships: { type: 'hasMany', model: 'organization', inverse: 'users' },
-        roles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
-        groups: { type: 'hasMany', model: 'group', inverse: 'users' },
+        projects: { type: 'hasMany', model: 'project' },
+        organizationMemberships: { type: 'hasMany', model: 'organization' },
+        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
+        groupMemberships: { type: 'hasMany', model: 'groupmembership' },
+      },
+    },
+    currentuser: {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        givenName: { type: 'string' },
+        familyName: { type: 'string' },
+        email: { type: 'string' },
+        phone: { type: 'string' },
+        timezone: { type: 'string' },
+        locale: { type: 'string' },
+        isLocked: { type: 'boolean' },
+        auth0Id: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+      },
+      relationships: {
+        projects: { type: 'hasMany', model: 'project' },
+        organizationMemberships: { type: 'hasMany', model: 'organization' },
+        userRoles: { type: 'hasMany', model: 'userrole' },
+        groupMemberships: { type: 'hasMany', model: 'groupmembership' },
       },
     },
     userrole: {
@@ -243,9 +277,9 @@ const schemaDefinition: SchemaSettings =  {
         organizationId: { type: 'number' },
       },
       relationships: {
-        user: { type: 'hasOne', model: 'user', inverse: 'roles' },
+        user: { type: 'hasOne', model: 'user' },
         role: { type: 'hasOne', model: 'role', inverse: 'userroles' },
-        organization: { type: 'hasOne', model: 'organization', inverse: 'userroles' },
+        organization: { type: 'hasOne', model: 'organization', inverse: 'userRoles' },
       },
     },
     usertask: {
@@ -259,7 +293,7 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         project: { type: 'hasOne', model: 'project', inverse: 'users' },
-        assigned: { type: 'hasOne', model: 'user', inverse: 'assignedTasks' },
+        assigned: { type: 'hasOne', model: 'user' },
       },
     },
   }

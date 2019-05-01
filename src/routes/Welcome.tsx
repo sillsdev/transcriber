@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, IWelcomeStrings, User, Organization } from '../model';
 import localStrings from '../selector/localize';
-import { Schema, KeyMap, QueryBuilder, FilterSpecifier } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { Schema, KeyMap, QueryBuilder } from '@orbit/data';
 import Store from '@orbit/store';
 import { Theme, withStyles, WithStyles, Button } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
@@ -15,7 +16,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import * as action from '../actions';
-import { userInfo } from 'os';
 
 const styles = (theme: Theme) => ({
     root: {
@@ -74,29 +74,32 @@ const styles = (theme: Theme) => ({
 interface IStateProps {
     t: IWelcomeStrings;
     orbitLoaded: boolean;
-    initials: string;
-    user: User;
 };
 
 interface IDispatchProps {
     fetchLocalization: typeof action.fetchLocalization;
     setLanguage: typeof action.setLanguage;
-    fetchAuthUser: typeof action.fetchAuthUser;
     fetchOrbitData: typeof action.fetchOrbitData;
 };
 
-interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
+interface IRecordProps {
+    users: Array<User>;
+}
+
+interface IProps extends IStateProps, IRecordProps, IDispatchProps, WithStyles<typeof styles>{
     auth: Auth
 };
 
 export function Welcome(props: IProps) {
-    const { classes, orbitLoaded, auth, t, initials, user } = props;
-    const { fetchOrbitData, fetchAuthUser, fetchLocalization, setLanguage } = props;
+    const { classes, orbitLoaded, auth, t, users } = props;
+    const { fetchOrbitData, fetchLocalization, setLanguage } = props;
     const { isAuthenticated } = auth;
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
     const [keyMap] = useGlobal('keyMap');
+    const [user, setUser] = useGlobal('user');
     const [organization] = useGlobal('organization');
+    const [initials, setInitials] = useGlobal('initials');
     const [orgName, setOrgName] = useState('');
     const [view, setView] = useState('');
 
@@ -105,8 +108,16 @@ export function Welcome(props: IProps) {
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
-        fetchAuthUser(auth);
     }, [])
+
+    useEffect(() => {
+        if (user === null) {
+            if (users.length === 1) {
+                setUser(users[0].id)
+                setInitials(users[0].attributes.name.trim().split(' ').map((s: string) => s.slice(0,1).toLocaleUpperCase()).join(''))
+            }
+        }
+    }, [user, users])
 
     useEffect(() => {
         if (organization !== null) {
@@ -180,20 +191,22 @@ export function Welcome(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "welcome"}),
     orbitLoaded: state.orbit.loaded,
-    initials: state.who.initials,
-    user: state.who.user,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     ...bindActionCreators({
         fetchLocalization: action.fetchLocalization,
         setLanguage: action.setLanguage,
-        fetchAuthUser: action.fetchAuthUser,
         fetchOrbitData: action.fetchOrbitData,
     }, dispatch),
 });
   
-  export default withStyles(styles, { withTheme: true })(
-        connect(mapStateToProps, mapDispatchToProps)(Welcome) as any
-    ) as any;
-  
+const mapRecordsToProps = {
+  users: (q: QueryBuilder) => q.findRecords('user')
+};
+
+export default withStyles(styles, { withTheme: true })(
+  withData(mapRecordsToProps)(
+    connect(mapStateToProps, mapDispatchToProps)(Welcome) as any
+  ) as any
+) as any;
