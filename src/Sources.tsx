@@ -1,12 +1,15 @@
+import { useGlobal } from 'reactn';
 import Coordinator, { RequestStrategy, SyncStrategy } from "@orbit/coordinator";
 import IndexedDBSource from "@orbit/indexeddb";
 import JSONAPISource from '@orbit/jsonapi';
-import { Schema, KeyMap } from "@orbit/data";
+import { Schema, KeyMap, Transform } from "@orbit/data";
 import Store from "@orbit/store";
 import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
 
 function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Promise<any> {
+    const [user, setUser] = useGlobal('user');
+
     const backup = new IndexedDBSource({
         schema,
         keyMap,
@@ -66,8 +69,6 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         blocking: false
     }));
 
-    remote.pull(q => q.findRecords('currentuser'))
-        .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('organization'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('organizationmembership'))
@@ -100,6 +101,11 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('projectuser'))
         .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('currentuser'))
+        .then((transform: Transform[]) => {
+            store.sync(transform);
+            setUser((transform[0].operations[0] as any).record.id)
+        })
 
     return (backup.pull(q => q.findRecords())
         .then(transform => store.sync(transform))
