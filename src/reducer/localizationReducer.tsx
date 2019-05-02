@@ -149,9 +149,9 @@ const initialState = {
 			"type": "Type",
 			"sets": "Sections",
 			"taks": "Tasks",
-			"delete": "Delete",
+			"action": "Action",
 			"silTranscriberAdmin": "SIL Transcriber Admin",
-			"chooseBook": "Choose a Book",
+			"choosePlan": "Choose a Project Plan",
 		}
 	}),
 };

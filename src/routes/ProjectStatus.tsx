@@ -38,8 +38,6 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
   },
   appBar: {
-    // background: '#FFE599',
-    // color: 'black',
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -114,21 +112,24 @@ export function ProjectStatus(props: IProps) {
   const [view, setView] = useState('');
   const [content, setContent] = useState('chart');
 
-  const handleDrawerOpen = () => { setOpen(true) };
   const handleDrawerClose = () => { setOpen(false) };
-  const handleProjectItem = (e: any) => { setContent(e.target.innerText) }
+  const handleProjectItem = (e: any) => { setContent(e.target.innerText) };
   const handleCancel = () => { setView('/project') };
+  const handleSet = (id: string) => { setContent('set') };
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
-  const optionList = [t.settings, t.team, t.projectPlans, t.sets, t.tasks, t.media, t.integrations];
+  const optionList = [t.settings, t.team, t.projectPlans, t.tasks, t.media, t.integrations];
 
+  console.log(history.location.search)
   const contentJsx = (content.toLowerCase() === t.settings.toLowerCase() ||
-      history.location.search === '?add')
-    ? <ProjectSettings {...props} /> : (
-        content.toLowerCase() === t.projectPlans.toLowerCase() ? <BookTable {...props} /> : (
-          content.toLowerCase() === t.sets.toLowerCase() ? <SetTable {...props} /> : (
-            <Chart {...props} />
+        history.location.search === '?add') ?
+      <ProjectSettings {...props} /> : (
+        content.toLowerCase() === t.projectPlans.toLowerCase() ?
+          <BookTable {...props} displaySet={handleSet} /> : (
+            content === 'set' ?
+              <SetTable {...props} /> : (
+                <Chart {...props} />
           )
         )
       );
@@ -167,11 +168,9 @@ export function ProjectStatus(props: IProps) {
             <ListItem button key={text} onClick={handleProjectItem}>
               <ListItemIcon>{index === 0 ? <SettingsIcon /> : (
                 index === 1 ? <TeamIcon /> : (
-                  index === 2 ? <BookIcon /> : (
-                    index === 3 ? <SetIcon /> : (
-                      index === 4 ? <TaskIcon /> : (
-                        index === 5 ? <MediaIcon /> : <IntegrationIcon />
-                      )
+                  index === 2 ? <SetIcon /> : (
+                    index === 3 ? <TaskIcon /> : (
+                      index === 4 ? <MediaIcon /> : <IntegrationIcon />
                     )
                   )
                 )

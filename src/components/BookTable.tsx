@@ -20,6 +20,7 @@ import { Grid,
   TableColumnResizing,
   TableHeaderRow,
   Toolbar } from '@devexpress/dx-react-grid-material-ui';
+import SnackBar from "./SnackBar";
 import Confirm from './AlertDialog';
 import Auth from '../auth/Auth';
 
@@ -55,10 +56,30 @@ const styles = (theme: Theme) => createStyles({
     fontSize: 16,
   },
   link: {},
-  deleteIcon: {},
+  actionIcon: {},
   button: {},
   icon: {},
 });
+
+const getBookType = (bookType: number, bookTypes: Array<BookType>) => {
+  const findId = bookType.toString();
+  const bookTypeRec = bookTypes.filter((t: BookType) => t.id === findId || (t.keys && t.keys.remoteId === findId));
+  return bookTypeRec.length === 1? bookTypeRec[0].attributes.name: ' --';
+};
+
+const getSetCount = (bookType: number) => {return 0};
+
+const getBookRows = (books: Array<Book>, bookTypes: Array<BookType>) =>{
+  return (
+    books.map((o: Book) => ({
+      type: o.type,
+      id: o.id,
+      name: o.attributes.name,
+      bookType: getBookType(o.attributes.bookTypeId, bookTypes),
+      sets: getSetCount(o.attributes.bookTypeId).toString(),
+      delete: o.id,
+    })));
+}
 
 interface Row {
   type: string;
@@ -80,23 +101,32 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   updateStore: any;
+  displaySet: (id: string) => any;
   auth: Auth;
 };
 
 export function BookTable(props: IProps) {
-  const { classes, books, bookTypes, updateStore, auth, t } = props;
+  const { classes, books, bookTypes, updateStore, auth, t, displaySet } = props;
   const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'bookType', title: 'Type' },
     { name: 'sets', title: 'Sets' },
-    { name: 'delete', title: 'Delete' },
+    { name: 'action', title: 'Action' },
   ]);
-  const [rows, setRows] = useState(Array<Row>());
+  const [columnWidth] = useState([
+    { columnName: "name", width: 300 },
+    { columnName: "bookType", width: 100 },
+    { columnName: "sets", width: 100 },
+    { columnName: "action", width: 150 },
+  ]);
+  const [rows, setRows] = useState(getBookRows(books, bookTypes));
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [book, setBook] = useGlobal('book');
+  const [message, setMessage] = useState(<></>);
 
+  const handleMessageReset = () => { setMessage(<></>) };
   const handleDelete = (e: any) => { setDeleteItem(e.currentTarget.id) };
   const handleDeleteConfirmed = () => {
     updateStore((t: TransformBuilder) => t.removeRecord({
@@ -107,37 +137,25 @@ export function BookTable(props: IProps) {
   const handleDeleteRefused = () => { setDeleteItem('') };
   const handleAdd = () => {
     setBook(null);
-    setView('/projectstatus?addBook')
+    setMessage(<span>Add New Book dialog</span>);
+    // setView('/projectstatus?addBook')
   };
-  // const handleCancel = () => { setView('/admin') };
-  const handleEdit = (e:any) => {
-    setBook(books.filter((p: Book) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0].id);
+  const handleEdit = () => { setMessage(<span>Edit Book Dialog</span>) }
+  const handleSelect = (e:any) => {
+    const planId = books.filter((p: Book) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0].id;
+    setBook(planId);
+    displaySet(planId);
   };
-
-  const getBookType = (bookType: number) => {
-    const findId = bookType.toString();
-    const bookTypeRec = bookTypes.filter((t: BookType) => t.id === findId || (t.keys && t.keys.remoteId === findId));
-    return bookTypeRec.length === 1? bookTypeRec[0].attributes.name: ' --';
-  };
-
-  const getSetCount = (bookType: number) => {return 0};
 
   useEffect(() => {
     setColumns([
       { name: 'name', title: t.name },
       { name: 'bookType', title: t.type },
       { name: 'sets', title: t.sets },
-      { name: 'delete', title: t.delete },
+      { name: 'action', title: t.action },
     ])
-    setRows(books.map((o: Book) => ({
-      type: o.type,
-      id: o.id,
-      name: o.attributes.name,
-      bookType: getBookType(o.attributes.bookTypeId),
-      sets: getSetCount(o.attributes.bookTypeId).toString(),
-      delete: o.id,
-    })))
-  }, [books, t.name, t.type, t.sets, t.delete]);
+    setRows(getBookRows(books, bookTypes));
+  }, [books, bookTypes, t.name, t.type, t.sets, t.action]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
@@ -148,7 +166,7 @@ export function BookTable(props: IProps) {
         aria-label={value}
         color="primary"
         className={classes.link}
-        onClick={handleEdit}
+        onClick={handleSelect}
       >
         {value}
         <EditIcon className={classes.editIcon} />
@@ -156,14 +174,24 @@ export function BookTable(props: IProps) {
     </Table.Cell>
   );
 
-  const DeleteCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
+  const ActionCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
     <Table.Cell {...restProps} style={{...style}} value >
       <IconButton
         id={value}
         key={value}
         aria-label={value}
         color="default"
-        className={classes.deleteIcon}
+        className={classes.actionIcon}
+        onClick={handleEdit}
+      >
+        <EditIcon />
+      </IconButton>
+      <IconButton
+        id={value}
+        key={value}
+        aria-label={value}
+        color="default"
+        className={classes.actionIcon}
         onClick={handleDelete}
       >
         <DeleteIcon />
@@ -175,8 +203,9 @@ export function BookTable(props: IProps) {
     const { column } = props;
     if (column.name === 'name') {
       return <LinkCell {...props} />
-    } else if (column.name === 'delete') {
-      return <DeleteCell {...props} />
+    }
+    if (column.name === 'action') {
+      return <ActionCell {...props} />
     }
     return <Table.Cell {...props} />
   };
@@ -189,7 +218,7 @@ export function BookTable(props: IProps) {
         <Paper id="BookTable" className={classes.paper}>
         <div className={classes.dialogHeader}>
         <div className={classes.grow} />
-        <h2>{t.chooseBook}</h2>
+        <h2>{t.choosePlan}</h2>
         <div className={classes.grow} />
           <Fab
             key="add"
@@ -209,12 +238,7 @@ export function BookTable(props: IProps) {
             <Table cellComponent={Cell} />
               <TableColumnResizing
                 minColumnWidth={50}
-                defaultColumnWidths={[
-                  { columnName: "name", width: 300 },
-                  { columnName: "bookType", width: 100 },
-                  { columnName: "sets", width: 100 },
-                  { columnName: "delete", width: 100 }
-                ]}
+                defaultColumnWidths={columnWidth}
               />
             <TableHeaderRow showSortingControls={true} />
             <Toolbar />
@@ -227,6 +251,7 @@ export function BookTable(props: IProps) {
             noResponse={handleDeleteRefused}
           />
         : <></>}
+        <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 };

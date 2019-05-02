@@ -598,56 +598,56 @@
 				<source>Save</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="bookTable.name">
 				<source>Name</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="bookTable.type">
 				<source>Type</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="bookTable.sets">
 				<source>Sections</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="bookTable.taks">
 				<source>Tasks</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.delete">
-				<source>Delete</source>
+			<trans-unit id="bookTable.action">
+				<source>Action</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="bookTable.silTranscriberAdmin">
 				<source>SIL Transcriber Admin</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.chooseBook">
-				<source>Choose a Book</source>
+			<trans-unit id="bookTable.choosePlan">
+				<source>Choose a Project Plan</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">ProjectSettings.tsx</context>
+					<context context-type="sourcefile">BookTable.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

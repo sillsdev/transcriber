@@ -536,10 +536,10 @@
 				<target>Taches</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.delete">
+		<unit id="bookTable.action">
 			<segment>
-				<source>Delete</source>
-				<target>Supprimer</target>
+				<source>Action</source>
+				<target>Action</target>
 			</segment>
 		</unit>
 		<unit id="bookTable.silTranscriberAdmin">
@@ -548,10 +548,10 @@
 				<target>Administration du Transcripteur SIL</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.chooseBook">
+		<unit id="bookTable.choosePlan">
 			<segment>
-				<source>Choose a Book</source>
-				<target>Choisissez un livre</target>
+				<source>Choose a Project Plan</source>
+				<target>Choisissez un plan de projet</target>
 			</segment>
 		</unit>
 	</file>

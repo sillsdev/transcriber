@@ -130,9 +130,9 @@ export interface IBookTableStrings extends Localize.LocalizedStringsMethods {
     "type": string;
     "sets": string;
     "taks": string;
-    "delete": string;
+    "action": string;
     "silTranscriberAdmin": string;
-    "chooseBook": string;
+    "choosePlan": string;
 };
 
 export interface ILocalizedStrings {
