@@ -31,7 +31,6 @@ const styles = (theme: Theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignContent: 'center',
-        background: '#D9EAD3',
         [theme.breakpoints.down('md')]: {
             width: '100%',
         },

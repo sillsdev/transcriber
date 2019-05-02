@@ -27,8 +27,8 @@ const styles = (theme: Theme) => ({
         justifyContent: 'center'
     },
     appBar: theme.mixins.gutters({
-        background: '#FFE599',
-        color: 'black'
+        // background: '#FFE599',
+        // color: 'black'
     }),
     paper: theme.mixins.gutters({
         paddingTop: 16,

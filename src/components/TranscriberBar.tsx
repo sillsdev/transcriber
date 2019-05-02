@@ -23,12 +23,13 @@ const styles = (theme: Theme) => createStyles({
     flexGrow: 1,
   },
   appBar: theme.mixins.gutters({
-    background: '#FFE599',
-    color: 'black'
+    // background: '#FFE599',
+    // color: 'black'
   }),
   menuButton: {
     paddingLeft: theme.spacing.unit,
     paddingRight: theme.spacing.unit,
+    color: theme.palette.primary.contrastText,
   },
   hide: {
     display: 'none',
@@ -81,7 +82,8 @@ const styles = (theme: Theme) => createStyles({
     },
   },
   button: theme.mixins.gutters({
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
+    color: theme.palette.primary.contrastText,
   }),
   avatar: {
       marginLeft: theme.spacing.unit,

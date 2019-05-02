@@ -33,7 +33,7 @@ const styles = (theme: Theme) => ({
     paddingBottom: theme.spacing.unit * 3,
   },
   label: {
-      color: blue[500],
+      // color: theme.palette.primary.dark,
   },
   info: {
       justifyContent: 'right',
@@ -61,13 +61,14 @@ const styles = (theme: Theme) => ({
     marginLeft: theme.spacing.unit
   },
   moreButton: {
+    textDecoration: 'underline',
   },
   smallIcon: {
     marginRight: theme.spacing.unit,
     fontSize: 12,
   },
   link: {
-    color: yellow[500],
+    color: theme.palette.primary.contrastText,
   },
   });
 
@@ -138,13 +139,6 @@ export function ProjectSettings(props: IProps) {
           dateArchived: currentProject.attributes.dateArchived,
         },
       }))
-      // if (projectType !== currentProject.attributes.projectTypeId.toString()) {
-      //   updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-      //     { type: 'project', id: project },
-      //     'type',
-      //     { type: 'projecttype', id: projectType }
-      //   ))
-      // }
     };
     const handleAdd = () => {
       const userId = (keyMap as KeyMap).idToKey('user', 'remoteId', (user as string));
@@ -172,21 +166,6 @@ export function ProjectSettings(props: IProps) {
       } as any;
       (schema as Schema).initializeRecord(project);
       updateStore((t: TransformBuilder) => t.addRecord(project));
-      // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-      //   { type: 'project', id: newId },
-      //   'type',
-      //   { type: 'projecttype', id: projectType }
-      // ))
-      // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-      //   { type: 'project', id: newId },
-      //   'owner',
-      //   { type: 'user', id: user || "1" }
-      // ))
-      // updateStore((t: TransformBuilder) => t.replaceRelatedRecord(
-      //   { type: 'project', id: newId },
-      //   'organization',
-      //   { type: 'organization', id: organization }
-      // ))
       setProject(project.id);
     };
 
@@ -330,7 +309,7 @@ export function ProjectSettings(props: IProps) {
                         className: classes.menu
                       }
                     }}
-                    helperText={t.selectDefaultFont}
+                    helperText={<span><a className={classes.moreButton} onClick={handleNeedFont}>{t.addMissingFont}</a> <HelpOutlineIcon className={classes.smallIcon} /></span>}
                     margin="normal"
                     variant="filled"
                     required={true}
@@ -342,20 +321,6 @@ export function ProjectSettings(props: IProps) {
                     ))}
                   </TextField>
                 }
-                label=""
-              />
-              <FormControlLabel
-                control={<Button
-                    key="missing-font"
-                    aria-label={t.needFont}
-                    color="secondary"
-                    className={classes.moreButton}
-                    onClick={handleNeedFont}
-                    style={{lineHeight: 1}}
-                  >
-                    <HelpOutlineIcon className={classes.smallIcon} />
-                    {t.addMissingFont}
-                  </Button>}
                 label=""
               />
               <FormControlLabel

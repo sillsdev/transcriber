@@ -31,10 +31,10 @@ const handleAuthentication = (props: any) => {
 }
 
 const theme = createMuiTheme({
-  palette: {
-    primary: blue,
-    secondary: yellow,
-  },
+  // palette: {
+  //   primary: blue,
+  //   secondary: yellow,
+  // },
 });
 
 const dataStore = new Store({ schema, keyMap });

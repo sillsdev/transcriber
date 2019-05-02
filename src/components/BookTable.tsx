@@ -5,11 +5,7 @@ import { connect } from 'react-redux';
 import { IState, Book, BookType, IBookTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
-// import AppBar from '@material-ui/core/AppBar';
-// import MuiToolbar from '@material-ui/core/Toolbar';
-// import BackIcon from '@material-ui/icons/ArrowBack';
-// import Typography from '@material-ui/core/Typography';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
@@ -35,10 +31,6 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     justifyContent: 'center'
   },
-  appBar: theme.mixins.gutters({
-    background: '#FFE599',
-    color: 'black'
-  }),
   paper: theme.mixins.gutters({
     paddingTop: 16,
     paddingBottom: 16,
@@ -193,16 +185,6 @@ export function BookTable(props: IProps) {
 
   return (
     <div className={classes.root}>
-      {/* <AppBar className={classes.appBar} position="static">
-        <MuiToolbar>
-          <IconButton >
-            <BackIcon onClick={handleCancel} />
-          </IconButton>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            {t.silTranscriberAdmin}
-          </Typography>
-        </MuiToolbar>
-      </AppBar> */}
       <div className={classes.container}>
         <Paper id="BookTable" className={classes.paper}>
         <div className={classes.dialogHeader}>

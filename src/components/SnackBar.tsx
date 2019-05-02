@@ -54,7 +54,7 @@ function SimpleSnackbar(props: IProps) {
       action={[
         <Button
           key="undo"
-          color="secondary"
+          color="inherit"
           size="small"
           onClick={handleClose}
         >
