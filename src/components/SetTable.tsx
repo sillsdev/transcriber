@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IState, Set, Task, TaskSet, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { Schema, KeyMap, Record, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -188,7 +188,8 @@ export function SetTable(props: IProps) {
             <Button
               key="add"
               aria-label={'Add'}
-              variant="contained"
+              variant="outlined"
+              color="primary"
               className={classes.button}
               onClick={handleAdd}
             >
