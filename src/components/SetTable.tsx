@@ -165,7 +165,9 @@ export function SetTable(props: IProps) {
         const blankLines = /\r?\n\t*\r?\n/;
         const chunks = s.split(blankLines)
         const lines = chunks.join('\n').replace(/\r?\n$/,'').split('\n')
-        if (lines[0].split('\t').length === 4) {
+        // test: > 2 lines, first starts with a letter, 4 columns, second starts with a number
+        if (lines.length > 1 && !lines[0].match(/^[0-9]/) && lines[0].split('\t').length === 4 &&
+            lines[0].split('\t')[0].length > 2 && lines[1].match(/^[0-9]/)) {
           const grid = lines.map((row:string, i:number) => 
             row.split('\t').map((val: string, j:number) => {
               return {
@@ -177,8 +179,9 @@ export function SetTable(props: IProps) {
               }
             }));
           setData(grid);
+          return Array<Array<string>>();
         }
-      return Array<Array<string>>();
+      return lines.map(s => s.split('\t'));
     }
 
     return (
