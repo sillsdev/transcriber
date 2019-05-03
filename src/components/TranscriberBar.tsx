@@ -123,6 +123,7 @@ function TranscriberBar(props: IProps) {
    }
   };
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     setNoClose(close === null);
     if (search != null) {
@@ -132,10 +133,10 @@ function TranscriberBar(props: IProps) {
 
   useEffect(() => {
     if (organization !== null) {
-        (dataStore as Store).query(q => q.findRecord({type: 'organization', id: organization as string})).
-            then((organizationRec: Organization) => {
-                setOrgName(organizationRec.attributes.name);
-            })
+        (dataStore as Store).query(q => q.findRecord({type: 'organization', id: organization as string}))
+          .then((organizationRec: Organization) => {
+            setOrgName(organizationRec.attributes.name);
+        })
     }
   }, [organization])
 

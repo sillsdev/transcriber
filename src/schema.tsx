@@ -1,6 +1,4 @@
 import { KeyMap, Schema, SchemaSettings } from '@orbit/data';
-import { IntegratedFiltering } from '@devexpress/dx-react-grid';
-import { number, string } from 'prop-types';
 
 export const keyMap = new KeyMap();
 
@@ -159,11 +157,9 @@ const schemaDefinition: SchemaSettings =  {
       keys: { remoteId: {} },
       attributes: {
         roleName: { type: 'string' },
-        organizationId: { type: 'number' },
       },
       relationships: {
-        organization: { type: 'hasOne', model: 'organization' },
-        userroles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
+        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
       },
     },
     set: {
@@ -175,7 +171,7 @@ const schemaDefinition: SchemaSettings =  {
       relationships: {
         projects: { type: 'hasMany', model: 'project', inverse: 'sets' },
         book: { type: 'hasOne', model: 'book', inverse: 'sets' },
-        tasks: { type: 'hasMany', model: 'task', inverse: 'sets' },
+        tasks: { type: 'hasMany', model: 'taskset', inverse: 'set' },
       },
     },
     task: {
@@ -192,7 +188,7 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         media: { type: 'hasMany', model: 'taskmedia', inverse: 'task' },
-        sets: { type: 'hasMany', model: 'set', inverse: 'tasks' },
+        sets: { type: 'hasMany', model: 'taskset', inverse: 'task' },
       },
     },
     tasksets: {
@@ -202,8 +198,8 @@ const schemaDefinition: SchemaSettings =  {
         setId: { type: 'number' },
       },
       relationships: {
-        task: { type: 'hasOne', model: 'task' },
-        set: { type: 'hasOne', model: 'set' },
+        task: { type: 'hasOne', model: 'task', inverse: 'sets' },
+        set: { type: 'hasOne', model: 'set', inverse: 'tasks' },
       },
     },
     taskmedia: {
@@ -278,13 +274,15 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         user: { type: 'hasOne', model: 'user' },
-        role: { type: 'hasOne', model: 'role', inverse: 'userroles' },
+        role: { type: 'hasOne', model: 'role', inverse: 'userRoles' },
         organization: { type: 'hasOne', model: 'organization', inverse: 'userRoles' },
       },
     },
     usertask: {
       keys: { remoteId: {} },
       attributes: {
+        userId: { type: 'number' },
+        projectId: { type: 'number' },
         activityname: { type: 'string' },
         taskstate: { type: 'string' },
         comment: { type: 'string' },

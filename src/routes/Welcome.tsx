@@ -85,10 +85,11 @@ export function Welcome(props: IProps) {
     const [keyMap] = useGlobal('keyMap');
     const [user, setUser] = useGlobal('user');
     const [organization] = useGlobal('organization');
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const [initials, setInitials] = useGlobal('initials');
     const [orgName, setOrgName] = useState('');
-    const [view, setView] = useState('');
 
+    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
@@ -105,8 +106,8 @@ export function Welcome(props: IProps) {
 
     useEffect(() => {
         if (organization !== null) {
-            (dataStore as Store).query(q => q.findRecord({type: 'organization', id: organization as string})).
-                then((organizationRec: Organization) => {
+            (dataStore as Store).query(q => q.findRecord({type: 'organization', id: organization as string}))
+                .then((organizationRec: Organization) => {
                     setOrgName(organizationRec.attributes.name);
                 })
         }
@@ -117,8 +118,6 @@ export function Welcome(props: IProps) {
     if (!orbitLoaded) {
         fetchOrbitData(schema as Schema, dataStore as Store, keyMap as KeyMap, auth);
     };
-
-    if (view !== '') return <Redirect to={view} />;
 
     if (organization === null) return <Redirect to="/organization" />;
 

@@ -80,7 +80,7 @@ export function Access(props: IProps) {
     const { classes, auth, t } = props;
     const { fetchLocalization, setLanguage } = props;
 
-
+    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
@@ -103,7 +103,7 @@ export function Access(props: IProps) {
 
                     <div className={classes.actions}>
                         <Button
-                            variant="raised"
+                            variant="contained"
                             className={classes.button}
                             onClick={() => auth.signup()}
                         >
@@ -112,7 +112,7 @@ export function Access(props: IProps) {
                     </div>
                     <div className={classes.actions}>
                             <Button
-                                variant="raised"
+                                variant="contained"
                                 color="primary"
                                 className={classes.button}
                                 onClick= {() => auth.login()}

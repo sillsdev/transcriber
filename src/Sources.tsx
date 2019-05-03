@@ -8,7 +8,8 @@ import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
 
 function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Promise<any> {
-    const [user, setUser] = useGlobal('user');
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    const [_user, setUser] = useGlobal('user');
 
     const backup = new IndexedDBSource({
         schema,

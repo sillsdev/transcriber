@@ -115,13 +115,13 @@ export function CreateOrg(props: IProps) {
                     <div className={classes.actions}>
                         <Button
                             onClick={handleCancel}
-                            variant="raised"
+                            variant="contained"
                             className={classes.button}>
                             {t.cancel}
                         </Button>
                         <Button
                             onClick={handleContinue}
-                            variant="raised"
+                            variant="contained"
                             color="primary"
                             className={classes.button}>
                             {t.continue}

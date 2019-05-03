@@ -17,8 +17,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
-import blue from '@material-ui/core/colors/blue';
-import yellow from '@material-ui/core/colors/yellow';
 import SnackBar from './SnackBar';
 
 const styles = (theme: Theme) => ({
@@ -309,7 +307,7 @@ export function ProjectSettings(props: IProps) {
                         className: classes.menu
                       }
                     }}
-                    helperText={<span><a className={classes.moreButton} onClick={handleNeedFont}>{t.addMissingFont}</a> <HelpOutlineIcon className={classes.smallIcon} /></span>}
+                    helperText={<span><button className={classes.moreButton} onClick={handleNeedFont}>{t.addMissingFont}</button> <HelpOutlineIcon className={classes.smallIcon} /></span>}
                     margin="normal"
                     variant="filled"
                     required={true}

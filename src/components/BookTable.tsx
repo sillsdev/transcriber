@@ -121,9 +121,10 @@ export function BookTable(props: IProps) {
     { columnName: "action", width: 150 },
   ]);
   const [rows, setRows] = useState(getBookRows(books, bookTypes));
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
-  const [book, setBook] = useGlobal('book');
+  const [_book, setBook] = useGlobal('book');
   const [message, setMessage] = useState(<></>);
 
   const handleMessageReset = () => { setMessage(<></>) };

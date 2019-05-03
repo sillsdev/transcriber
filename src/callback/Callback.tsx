@@ -3,6 +3,7 @@ import loading from './loading.svg';
 
 class Callback extends Component {
   render() {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const style = {
       position: 'absolute',
       display: 'flex',

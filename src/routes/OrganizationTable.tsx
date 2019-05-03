@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Organization, IOrganizationTableStrings, User } from '../model';
+import { IState, Organization, IOrganizationTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, Record } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import Paper from "@material-ui/core/Paper";
 import { createStyles, withStyles, WithStyles, Theme } from "@material-ui/core/styles";
 import {

@@ -88,6 +88,7 @@ export function ProjectTable(props: IProps) {
   const [rows, setRows] = useState(Array<Row>());
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [project, setProject] = useGlobal('project');
 
   const handleDelete = (e: any) => { setDeleteItem(e.currentTarget.id) };

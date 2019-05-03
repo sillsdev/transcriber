@@ -4,9 +4,7 @@ import { setGlobal } from 'reactn';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from './store';
-import blue from '@material-ui/core/colors/blue';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
-import { yellow } from '@material-ui/core/colors';
 import Access from './routes/Access';
 import Welcome from './routes/Welcome';
 import AdminPanel from './routes/AdminPanel';
@@ -30,12 +28,7 @@ const handleAuthentication = (props: any) => {
   }
 }
 
-const theme = createMuiTheme({
-  // palette: {
-  //   primary: blue,
-  //   secondary: yellow,
-  // },
-});
+const theme = createMuiTheme({});
 
 const dataStore = new Store({ schema, keyMap });
 

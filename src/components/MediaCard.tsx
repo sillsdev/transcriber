@@ -34,7 +34,6 @@ export interface IProps extends IStateProps, WithStyles<typeof styles> {
 
 export function MediaCard(props: IProps) {
   const { classes, type, explain, graphic, t } = props;
-  console.log(graphic)
   return (
     <Card className={classes.card}>
       <CardActionArea>

@@ -17,7 +17,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import SettingsIcon from '@material-ui/icons/SettingsTwoTone';
 import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
-import BookIcon from '@material-ui/icons/Book';
 import SetIcon from '@material-ui/icons/WidgetsTwoTone';
 import TaskIcon from '@material-ui/icons/ListTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone'
@@ -121,7 +120,6 @@ export function ProjectStatus(props: IProps) {
 
   const optionList = [t.settings, t.team, t.projectPlans, t.tasks, t.media, t.integrations];
 
-  console.log(history.location.search)
   const contentJsx = (content.toLowerCase() === t.settings.toLowerCase() ||
         history.location.search === '?add') ?
       <ProjectSettings {...props} /> : (

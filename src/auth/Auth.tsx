@@ -45,7 +45,6 @@ export default class Auth {
         this.setSession(authResult);
       } else if (err) {
         history.replace('/welcome');
-        console.log(err);
         alert(`Error: ${err.error}. Check the console for further details.`);
       }
     });
@@ -79,7 +78,6 @@ export default class Auth {
          this.setSession(authResult);
        } else if (err) {
          this.logout();
-         console.log(err);
          alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
        }
     });
