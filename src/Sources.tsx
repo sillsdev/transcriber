@@ -24,8 +24,10 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         name: 'remote',
         namespace: 'api',
         host: API_CONFIG.host,
-        defaultFetchHeaders: {
-            "Authorization": "Bearer " + auth.accessToken,
+        defaultFetchSettings: {
+            headers:{
+                "Authorization": "Bearer " + auth.accessToken,
+            }
         }
     })
     remote.serializer.resourceKey = () => { return 'remoteId' };
