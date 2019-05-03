@@ -8,7 +8,7 @@ import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
 
 function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Promise<any> {
-    /* eslint-disable @typescript-eslint/no-unused-vars */
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [_user, setUser] = useGlobal('user');
 
     const backup = new IndexedDBSource({
@@ -72,6 +72,11 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         blocking: false
     }));
 
+    remote.pull(q => q.findRecords('currentuser'))
+        .then((transform: Transform[]) => {
+            store.sync(transform);
+            setUser((transform[0].operations[0] as any).record.id)
+        });
     remote.pull(q => q.findRecords('organization'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('organizationmembership'))
@@ -104,87 +109,10 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('projectuser'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('currentuser'))
-        .then((transform: Transform[]) => {
-            store.sync(transform);
-            setUser((transform[0].operations[0] as any).record.id)
-        })
 
     return (backup.pull(q => q.findRecords())
         .then(transform => store.sync(transform))
         .then(() => coordinator.activate()));
-    // await remote
-    //     .pull(q => q.findRecords('book'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('booktype'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('organization'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('project'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('projecttype'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('role'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('set'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('task'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('taskmedia'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('user'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('userrole'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
-    // await remote
-    //     .pull(q => q.findRecords('usertask'))
-    //     .then(transform => {
-    //         store.sync(transform);
-    //         backup.sync(transform);
-    //     })
 
 };
 

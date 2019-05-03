@@ -88,11 +88,12 @@ export function Welcome(props: IProps) {
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const [initials, setInitials] = useGlobal('initials');
     const [orgName, setOrgName] = useState('');
+    /* eslint-enable @typescript-eslint/no-unused-vars */
 
-    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [])
 
     useEffect(() => {
@@ -102,6 +103,7 @@ export function Welcome(props: IProps) {
                 setInitials(users[0].attributes.name.trim().split(' ').map((s: string) => s.slice(0,1).toLocaleUpperCase()).join(''))
             }
         }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [user, users])
 
     useEffect(() => {
@@ -111,6 +113,7 @@ export function Welcome(props: IProps) {
                     setOrgName(organizationRec.attributes.name);
                 })
         }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [organization])
 
     if (!isAuthenticated()) return <Redirect to="/" />;

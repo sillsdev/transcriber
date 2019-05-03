@@ -80,10 +80,10 @@ export function Access(props: IProps) {
     const { classes, auth, t } = props;
     const { fetchLocalization, setLanguage } = props;
 
-    /* eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
         setLanguage(navigator.language.split('-')[0]);
         fetchLocalization();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [])
 
     return (

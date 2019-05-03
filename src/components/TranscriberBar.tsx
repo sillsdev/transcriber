@@ -123,12 +123,12 @@ function TranscriberBar(props: IProps) {
    }
   };
 
-  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     setNoClose(close === null);
     if (search != null) {
       setNoSearch(!search);
     }
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {
@@ -138,6 +138,7 @@ function TranscriberBar(props: IProps) {
             setOrgName(organizationRec.attributes.name);
         })
     }
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organization])
 
   if (view !== '') return <Redirect to={view} />;
@@ -146,10 +147,11 @@ function TranscriberBar(props: IProps) {
     <AppBar className={appClass} position={appFixed? "fixed": "static"}>
     <Toolbar>
       <IconButton
+        onClick={handleClose}
         className={classNames(classes.menuButton, {
           [classes.hide]: noClose,
         })}>
-        <BackIcon onClick={handleClose} />
+        <BackIcon />
       </IconButton>
       <Button className={classes.button} onClick={handleOrganizationChange}>
         <Typography variant="h6" color="inherit">
