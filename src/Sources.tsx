@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import Coordinator, { RequestStrategy, SyncStrategy } from "@orbit/coordinator";
 import IndexedDBSource from "@orbit/indexeddb";
@@ -10,6 +11,20 @@ import { API_CONFIG } from './api-variable';
 function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Promise<any> {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [_user, setUser] = useGlobal('user');
+    /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+    const [_initials, setInitials] = useGlobal('initials');
+
+    const isAvailable = () => {
+        return (
+            Axios({
+                    method: 'GET',
+                    url: API_CONFIG.host + '/api/roles?filter[role-name]=' + Math.floor((1 + Math.random()) * 0x10000),
+                    headers: {
+                        Authorization: 'Bearer ' + auth.accessToken,
+                        Accept: 'application/vnd.api+json',
+                    },
+                }));
+    };
 
     const backup = new IndexedDBSource({
         schema,
@@ -17,7 +32,9 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         name: "backup",
         namespace: "transcriber"
     });
-	
+
+    // isAvailable().then(() => backup.reset())
+
     const remote = new JSONAPISource({
         schema,
         keyMap,
@@ -75,7 +92,9 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
     remote.pull(q => q.findRecords('currentuser'))
         .then((transform: Transform[]) => {
             store.sync(transform);
-            setUser((transform[0].operations[0] as any).record.id)
+            const user = (transform[0].operations[0] as any).record;
+            setUser(user.id)
+            setInitials(user.attributes.name.trim().split(' ').map((s: string) => s.slice(0,1).toLocaleUpperCase()).join(''))
         });
     remote.pull(q => q.findRecords('organization'))
         .then(transform => store.sync(transform));
