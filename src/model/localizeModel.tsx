@@ -19,8 +19,8 @@ export interface IAdminpanelStrings extends Localize.LocalizedStringsMethods {
     "addManageProjects": string;
     "media": string;
     "addManageAudioFiles": string;
-    "books": string;
-    "addManageBooks": string;
+    "plans": string;
+    "addManagePlans": string;
 };
 
 export interface ICreateorgStrings extends Localize.LocalizedStringsMethods {
@@ -42,10 +42,10 @@ export interface IProjectstatusStrings extends Localize.LocalizedStringsMethods 
     "listOptions": string;
     "settings": string;
     "team": string;
-    "books": string;
+    "plans": string;
     "projectPlans": string;
-    "sets": string;
-    "tasks": string;
+    "sections": string;
+    "passages": string;
     "media": string;
     "integrations": string;
     "newProject": string;
@@ -99,7 +99,7 @@ export interface IProjectTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IChartStrings extends Localize.LocalizedStringsMethods {
-    "tasksCompleted": string;
+    "passagesCompleted": string;
     "totalTransactions": string;
 };
 
@@ -125,10 +125,10 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "save": string;
 };
 
-export interface IBookTableStrings extends Localize.LocalizedStringsMethods {
+export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "name": string;
     "type": string;
-    "sets": string;
+    "sections": string;
     "taks": string;
     "action": string;
     "silTranscriberAdmin": string;
@@ -151,6 +151,6 @@ export interface ILocalizedStrings {
 	projectTable: IProjectTableStrings;
 	chart: IChartStrings;
 	projectSettings: IProjectSettingsStrings;
-	bookTable: IBookTableStrings;
+	planTable: IPlanTableStrings;
 	[key: string]: any;
 };

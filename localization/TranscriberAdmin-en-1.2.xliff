@@ -104,15 +104,15 @@
 					<context context-type="sourcefile">AdminPanel.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="adminpanel.books">
-				<source>Books</source>
+			<trans-unit id="adminpanel.plans">
+				<source>Plans</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AdminPanel.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="adminpanel.addManageBooks">
-				<source>Add or manage books</source>
+			<trans-unit id="adminpanel.addManagePlans">
+				<source>Add or manage plans</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AdminPanel.tsx</context>
@@ -202,8 +202,8 @@
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="projectstatus.books">
-				<source>Books</source>
+			<trans-unit id="projectstatus.plans">
+				<source>Plans</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
@@ -216,15 +216,15 @@
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="projectstatus.sets">
+			<trans-unit id="projectstatus.sections">
 				<source>Sections</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="projectstatus.tasks">
-				<source>Tasks</source>
+			<trans-unit id="projectstatus.passages">
+				<source>Passages</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ProjectStatus.tsx</context>
@@ -454,8 +454,8 @@
 					<context context-type="sourcefile">ProjectTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="chart.tasksCompleted">
-				<source>Tasks Completed</source>
+			<trans-unit id="chart.passagesCompleted">
+				<source>Passages Completed</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Chart.tsx</context>
@@ -598,56 +598,56 @@
 				<source>Save</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.name">
+			<trans-unit id="planTable.name">
 				<source>Name</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.type">
+			<trans-unit id="planTable.type">
 				<source>Type</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.sets">
+			<trans-unit id="planTable.sections">
 				<source>Sections</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.taks">
-				<source>Tasks</source>
+			<trans-unit id="planTable.taks">
+				<source>Passages</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.action">
+			<trans-unit id="planTable.action">
 				<source>Action</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.silTranscriberAdmin">
+			<trans-unit id="planTable.silTranscriberAdmin">
 				<source>SIL Transcriber Admin</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="bookTable.choosePlan">
+			<trans-unit id="planTable.choosePlan">
 				<source>Choose a Project Plan</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">BookTable.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

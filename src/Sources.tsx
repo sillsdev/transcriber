@@ -7,24 +7,13 @@ import { Schema, KeyMap, Transform } from "@orbit/data";
 import Store from "@orbit/store";
 import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
+import Online from './components/OnLineStatus';
 
 function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Promise<any> {
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [_user, setUser] = useGlobal('user');
     /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
     const [_initials, setInitials] = useGlobal('initials');
-
-    const isAvailable = () => {
-        return (
-            Axios({
-                    method: 'GET',
-                    url: API_CONFIG.host + '/api/roles?filter[role-name]=' + Math.floor((1 + Math.random()) * 0x10000),
-                    headers: {
-                        Authorization: 'Bearer ' + auth.accessToken,
-                        Accept: 'application/vnd.api+json',
-                    },
-                }));
-    };
 
     const backup = new IndexedDBSource({
         schema,
@@ -33,7 +22,7 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         namespace: "transcriber"
     });
 
-    // isAvailable().then(() => backup.reset())
+    if (Online()) {backup.reset()}
 
     const remote = new JSONAPISource({
         schema,
@@ -108,25 +97,29 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('projecttype'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('book'))
+    remote.pull(q => q.findRecords('plan'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('booktype'))
+    remote.pull(q => q.findRecords('plantype'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('set'))
+    remote.pull(q => q.findRecords('section'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('taskset'))
+    remote.pull(q => q.findRecords('passagesection'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('task'))
+    remote.pull(q => q.findRecords('passage'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('userrole'))
         .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('usertask'))
+    remote.pull(q => q.findRecords('userpassage'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('group'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('groupmembership'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('role'))
         .then(transform => store.sync(transform));
     remote.pull(q => q.findRecords('projectuser'))
+        .then(transform => store.sync(transform));
+    remote.pull(q => q.findRecords('mediafile'))
         .then(transform => store.sync(transform));
 
     return (backup.pull(q => q.findRecords())

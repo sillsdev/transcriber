@@ -26,8 +26,8 @@ const initialState = {
 			"addManageProjects": "Add or manage projects",
 			"media": "Media",
 			"addManageAudioFiles": "Add or manage audio files",
-			"books": "Books",
-			"addManageBooks": "Add or manage books",
+			"plans": "Plans",
+			"addManagePlans": "Add or manage plans",
 		}
 	}),
 	"createorg": new LocalizedStrings({
@@ -52,10 +52,10 @@ const initialState = {
 			"listOptions": "List Options",
 			"settings": "Settings",
 			"team": "Team",
-			"books": "Books",
+			"plans": "Plans",
 			"projectPlans": "Project Plans",
-			"sets": "Sections",
-			"tasks": "Tasks",
+			"sections": "Sections",
+			"passages": "Passages",
 			"media": "Media",
 			"integrations": "Integrations",
 			"newProject": "New Project",
@@ -116,7 +116,7 @@ const initialState = {
 	}),
 	"chart": new LocalizedStrings({
 		"en": {
-			"tasksCompleted": "Tasks Completed",
+			"passagesCompleted": "Passages Completed",
 			"totalTransactions": "Total Transactions",
 		}
 	}),
@@ -143,12 +143,12 @@ const initialState = {
 			"save": "Save",
 		}
 	}),
-	"bookTable": new LocalizedStrings({
+	"planTable": new LocalizedStrings({
 		"en": {
 			"name": "Name",
 			"type": "Type",
-			"sets": "Sections",
-			"taks": "Tasks",
+			"sections": "Sections",
+			"taks": "Passages",
 			"action": "Action",
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
@@ -175,7 +175,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),
 				"chart" : new LocalizedStrings(action.payload.data.chart),
 				"projectSettings" : new LocalizedStrings(action.payload.data.projectSettings),
-				"bookTable" : new LocalizedStrings(action.payload.data.bookTable),
+				"planTable" : new LocalizedStrings(action.payload.data.planTable),
 			};
 		case SET_LANGUAGE:
 			return {

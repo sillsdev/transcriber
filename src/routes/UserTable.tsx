@@ -3,8 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, User, IUsertableStrings } from '../model';
 import localStrings from '../selector/localize';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+import { Paper, Button, Typography } from '@material-ui/core';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
@@ -125,9 +124,9 @@ export function UserTable(props: IProps) {
       <TranscriberBar {...props} close={handleCancel}/>
       <div className={classes.container}>
         <Paper id='user-table' className={classes.paper}>
-          <h2 className={classes.dialogHeader}>
+          <Typography variant='h5' className={classes.dialogHeader}>
             {t.chooseUser}
-          </h2>
+          </Typography>
           <Grid
             rows={rows}
             columns={columns}

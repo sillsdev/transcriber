@@ -6,13 +6,10 @@ import { IState, Project, IProjectTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
-import Paper from '@material-ui/core/Paper';
-import Fab from '@material-ui/core/Fab';
-import Button from '@material-ui/core/Button';
+import { Paper, Fab, Button, IconButton, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import IconButton from '@material-ui/core/IconButton';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
 import { Grid,
@@ -177,7 +174,9 @@ export function ProjectTable(props: IProps) {
         <Paper id="ProjectTable" className={classes.paper}>
         <div className={classes.dialogHeader}>
         <div className={classes.grow} />
-        <h2>{t.chooseProject}</h2>
+        <Typography variant='h5'>
+          {t.chooseProject}
+        </Typography>
         <div className={classes.grow} />
           <Fab
             key="add"

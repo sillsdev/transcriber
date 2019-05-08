@@ -34,7 +34,7 @@
 		<unit id="adminpanel.search">
 			<segment>
 				<source>Search…</source>
-				<target>Chercher</target>
+				<target>Chercher…</target>
 			</segment>
 		</unit>
 		<unit id="adminpanel.organizations">
@@ -85,15 +85,15 @@
 				<target>Ajouter ou gérer des fichiers audio</target>
 			</segment>
 		</unit>
-		<unit id="adminpanel.books">
+		<unit id="adminpanel.plans">
 			<segment>
-				<source>Books</source>
-				<target>Publications</target>
+				<source>Plans</source>
+				<target>Programmes</target>
 			</segment>
 		</unit>
-		<unit id="adminpanel.addManageBooks">
+		<unit id="adminpanel.addManagePlans">
 			<segment>
-				<source>Add or manage books</source>
+				<source>Add or manage programmes</source>
 				<target>Ajouter ou gérer des publications</target>
 			</segment>
 		</unit>
@@ -105,7 +105,7 @@
 		</unit>
 		<unit id="createorg.createOrganization">
 			<segment>
-				<source>Create organization</source>
+				<source>Create Organization</source>
 				<target>Créer une organisation</target>
 			</segment>
 		</unit>
@@ -153,7 +153,7 @@
 		</unit>
 		<unit id="projectstatus.listOptions">
 			<segment>
-				<source>Open drawer</source>
+				<source>List Options</source>
 				<target>Énumérer des options</target>
 			</segment>
 		</unit>
@@ -169,10 +169,10 @@
 				<target>Equipes</target>
 			</segment>
 		</unit>
-		<unit id="projectstatus.books">
+		<unit id="projectstatus.plans">
 			<segment>
-				<source>Books</source>
-				<target>Livres</target>
+				<source>Plans</source>
+				<target>Programmes</target>
 			</segment>
 		</unit>
 		<unit id="projectstatus.projectPlans">
@@ -181,16 +181,16 @@
 				<target>Plans de projet</target>
 			</segment>
 		</unit>
-		<unit id="projectstatus.sets">
+		<unit id="projectstatus.sections">
 			<segment>
-				<source>Sets</source>
+				<source>Sections</source>
 				<target>Ensembles</target>
 			</segment>
 		</unit>
-		<unit id="projectstatus.tasks">
+		<unit id="projectstatus.passages">
 			<segment>
-				<source>Tasks</source>
-				<target>Taches</target>
+				<source>Passages</source>
+				<target>Passages</target>
 			</segment>
 		</unit>
 		<unit id="projectstatus.media">
@@ -385,10 +385,10 @@
 				<target>Supprimer</target>
 			</segment>
 		</unit>
-		<unit id="chart.tasksCompleted">
+		<unit id="chart.passagesCompleted">
 			<segment>
-				<source>Tasks Completed</source>
-				<target>Tâches achevées</target>
+				<source>Passages Completed</source>
+				<target>Passages achevées</target>
 			</segment>
 		</unit>
 		<unit id="chart.totalTransactions">
@@ -512,43 +512,43 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.name">
+		<unit id="planTable.name">
 			<segment>
 				<source>Name</source>
 				<target>Nom</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.type">
+		<unit id="planTable.type">
 			<segment>
 				<source>Type</source>
-				<target>Type de livre</target>
+				<target>Type de programme</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.sets">
+		<unit id="planTable.sections">
 			<segment>
-				<source>Sets</source>
+				<source>Sections</source>
 				<target>Ensembles</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.taks">
+		<unit id="planTable.taks">
 			<segment>
-				<source>Tasks</source>
-				<target>Taches</target>
+				<source>Passages</source>
+				<target>Passages</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.action">
+		<unit id="planTable.action">
 			<segment>
 				<source>Action</source>
 				<target>Action</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.silTranscriberAdmin">
+		<unit id="planTable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
 				<target>Administration du Transcripteur SIL</target>
 			</segment>
 		</unit>
-		<unit id="bookTable.choosePlan">
+		<unit id="planTable.choosePlan">
 			<segment>
 				<source>Choose a Project Plan</source>
 				<target>Choisissez un plan de projet</target>

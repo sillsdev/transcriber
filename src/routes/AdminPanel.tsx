@@ -71,7 +71,7 @@ function AdminPanel(props: IProps) {
           <MediaCard type={t.media} explain={t.addManageAudioFiles} graphic={mediaSvg} />
         </Link>
         <Link to='/admin' className={classes.link}>
-          <MediaCard type={t.books} explain={t.addManageBooks} graphic={bookSvg} />
+          <MediaCard type={t.plans} explain={t.addManagePlans} graphic={bookSvg} />
         </Link>
       </Grid>
     </div>

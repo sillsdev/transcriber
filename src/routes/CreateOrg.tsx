@@ -93,9 +93,9 @@ export function CreateOrg(props: IProps) {
             </AppBar>
             <div className={classes.container}>
                 <Paper className={classes.paper}>
-                    <h2 className={classes.dialogHeader}>
+                    <Typography variant='h5' className={classes.dialogHeader}>
                         {t.createOrganization}
-                    </h2>
+                    </Typography>
                     <FormControl required={true} fullWidth={true} className={classes.field}>
                         <InputLabel>{t.findExistingOrganization}</InputLabel>
                         <Input

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Book, BookType, IBookTableStrings } from '../model';
+import { IState, Plan, PlanType, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import Paper from '@material-ui/core/Paper';
+import { QueryBuilder, TransformBuilder, Record } from '@orbit/data';
+import Store from '@orbit/store';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
@@ -23,6 +23,7 @@ import { Grid,
 import SnackBar from "./SnackBar";
 import Confirm from './AlertDialog';
 import Auth from '../auth/Auth';
+import { Typography } from '@material-ui/core';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -33,16 +34,9 @@ const styles = (theme: Theme) => createStyles({
     justifyContent: 'center'
   },
   paper: theme.mixins.gutters({
-    paddingTop: 16,
-    paddingBottom: 16,
-    marginTop: theme.spacing.unit * 3,
-    width: '80%',
     display: 'flex',
     flexDirection: 'column',
     alignContent: 'center',
-    [theme.breakpoints.down('md')]: {
-      width: '100%',
-    },
   }),
   grow: {
     flexGrow: 1,
@@ -61,23 +55,15 @@ const styles = (theme: Theme) => createStyles({
   icon: {},
 });
 
-const getBookType = (bookType: number, bookTypes: Array<BookType>) => {
-  const findId = bookType.toString();
-  const bookTypeRec = bookTypes.filter((t: BookType) => t.id === findId || (t.keys && t.keys.remoteId === findId));
-  return bookTypeRec.length === 1? bookTypeRec[0].attributes.name: ' --';
-};
-
-const getSetCount = (bookType: number) => {return 0};
-
-const getBookRows = (books: Array<Book>, bookTypes: Array<BookType>) =>{
+const getPlanRows = (plans: Array<Plan>, typeColumn: Array<string>, countColumn: Array<number>) =>{
   return (
-    books.map((o: Book) => ({
-      type: o.type,
-      id: o.id,
-      name: o.attributes.name,
-      bookType: getBookType(o.attributes.bookTypeId, bookTypes),
-      sets: getSetCount(o.attributes.bookTypeId).toString(),
-      delete: o.id,
+    plans.map((p, i) => ({
+      type: p.type,
+      id: p.id,
+      name: p.attributes.name,
+      planType: typeColumn[i],
+      sets: (countColumn[i] || '-').toString(),
+      delete: p.id,
     })));
 }
 
@@ -85,79 +71,108 @@ interface Row {
   type: string;
   id: string;
   name: string;
-  bookType: string;
+  planType: string;
   sets: string;
   delete: string;
 };
 
 interface IStateProps {
-  t: IBookTableStrings;
+  t: IPlanTableStrings;
 };
 
 interface IRecordProps {
-  books: Array<Book>;
-  bookTypes: Array<BookType>;
+  plans: Array<Plan>;
+  planTypes: Array<PlanType>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   updateStore: any;
-  displaySet: (id: string) => any;
+  displaySet: (id: string, type: string) => any;
   auth: Auth;
 };
 
-export function BookTable(props: IProps) {
-  const { classes, books, bookTypes, updateStore, auth, t, displaySet } = props;
+export function PlanTable(props: IProps) {
+  const { classes, plans, planTypes, updateStore, auth, t, displaySet } = props;
   const { isAuthenticated } = auth;
+  const [dataStore] = useGlobal('dataStore');
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
-    { name: 'bookType', title: 'Type' },
+    { name: 'planType', title: 'Type' },
     { name: 'sets', title: 'Sets' },
     { name: 'action', title: 'Action' },
   ]);
   const [columnWidth] = useState([
     { columnName: "name", width: 300 },
-    { columnName: "bookType", width: 100 },
+    { columnName: "planType", width: 100 },
     { columnName: "sets", width: 100 },
     { columnName: "action", width: 150 },
   ]);
-  const [rows, setRows] = useState(getBookRows(books, bookTypes));
+  const [typeColumn, setTypeColumn] = useState(Array<string>());
+  const [countColumn, setCountColumn] = useState(Array<number>());
+  const [rows, setRows] = useState(getPlanRows(plans, typeColumn, countColumn));
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_book, setBook] = useGlobal('book');
+  const [_plan, setPlan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
 
   const handleMessageReset = () => { setMessage(<></>) };
   const handleDelete = (e: any) => { setDeleteItem(e.currentTarget.id) };
   const handleDeleteConfirmed = () => {
     updateStore((t: TransformBuilder) => t.removeRecord({
-      type: 'book',
+      type: 'plan',
       id: deleteItem,
     }))
   };
   const handleDeleteRefused = () => { setDeleteItem('') };
   const handleAdd = () => {
-    setBook(null);
-    setMessage(<span>Add New Book dialog</span>);
-    // setView('/projectstatus?addBook')
+    setPlan(null);
+    setMessage(<span>Add New Plan dialog</span>);
+    // setView('/projectstatus?addPlan')
   };
-  const handleEdit = () => { setMessage(<span>Edit Book Dialog</span>) }
+  const handleEdit = () => { setMessage(<span>Edit Plan Dialog</span>) }
   const handleSelect = (e:any) => {
-    const planId = books.filter((p: Book) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0].id;
-    setBook(planId);
-    displaySet(planId);
+    const plan = plans.filter((p: Plan) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0];
+    const planId = plan.id;
+    setPlan(planId);
+    const setDisplayType = async (p: Plan) => {
+      let planType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'plan', id: p.id}, 'plantype')) as PlanType;
+      displaySet(planId, planType.attributes.name.toLowerCase() || 'default');
+    }
+    setDisplayType(plan);
   };
+
+  useEffect(() => {
+    plans.map((p, i) => {
+      const getTypeColumn = async (p: Plan, i: number) => {
+        let planType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'plan', id: p.id}, 'plantype')) as PlanType;
+        if (planType != null) {
+          typeColumn[i] = planType.attributes.name;
+          setTypeColumn(typeColumn);
+        }
+      };
+      getTypeColumn(p, i);
+      const getCountColumn = async(p: Plan, i: number) => {
+        let sections = await (dataStore as Store).query(q => q.findRelatedRecords({type: 'plan', id: p.id}, 'sections'));
+        if (sections != null) {
+          countColumn[i] = sections.length;
+          setCountColumn(countColumn);
+        }
+      };
+      getCountColumn(p, i);
+    });
+  }, []);
 
   useEffect(() => {
     setColumns([
       { name: 'name', title: t.name },
-      { name: 'bookType', title: t.type },
-      { name: 'sets', title: t.sets },
+      { name: 'planType', title: t.type },
+      { name: 'sets', title: t.sections },
       { name: 'action', title: t.action },
-    ])
-    setRows(getBookRows(books, bookTypes));
-  }, [books, bookTypes, t.name, t.type, t.sets, t.action]);
+    ]);
+    setRows(getPlanRows(plans, typeColumn, countColumn));
+  }, [plans]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
@@ -214,38 +229,40 @@ export function BookTable(props: IProps) {
 
   if (view !== '') return <Redirect to={view} />;
 
-  return (
+return (
     <div className={classes.root}>
       <div className={classes.container}>
-        <Paper id="BookTable" className={classes.paper}>
-        <div className={classes.dialogHeader}>
-        <div className={classes.grow} />
-        <h2>{t.choosePlan}</h2>
-        <div className={classes.grow} />
-          <Fab
-            key="add"
-            aria-label="Add"
-            color="primary"
-            className={classes.button}
-            onClick={handleAdd}
-          >
-            <AddIcon className={classes.icon} />
-          </Fab>
-        </div>
-        <Grid rows={rows} columns={columns}>
-          <SortingState
-            defaultSorting={[{ columnName: "name", direction: "asc" }]}
-          />
-            <IntegratedSorting />
-            <Table cellComponent={Cell} />
-              <TableColumnResizing
-                minColumnWidth={50}
-                defaultColumnWidths={columnWidth}
-              />
-            <TableHeaderRow showSortingControls={true} />
+        <div className={classes.paper}>
+          <div className={classes.dialogHeader}>
+          <div className={classes.grow} />
+          <Typography variant='h5'>
+            {t.choosePlan}
+          </Typography>
+          <div className={classes.grow} />
+            <Fab
+              key="add"
+              aria-label="Add"
+              color="primary"
+              className={classes.button}
+              onClick={handleAdd}
+            >
+              <AddIcon className={classes.icon} />
+            </Fab>
+          </div>
+          <Grid rows={rows} columns={columns}>
+            <SortingState
+              defaultSorting={[{ columnName: "name", direction: "asc" }]}
+            />
+              <IntegratedSorting />
+              <Table cellComponent={Cell} />
+                <TableColumnResizing
+                  minColumnWidth={50}
+                  defaultColumnWidths={columnWidth}
+                />
+              <TableHeaderRow showSortingControls={true} />
             <Toolbar />
           </Grid>
-        </Paper>
+        </div>
       </div>
       {deleteItem !== ''
         ? <Confirm
@@ -259,16 +276,16 @@ export function BookTable(props: IProps) {
 };
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: "bookTable"})
+  t: localStrings(state, {layout: "planTable"})
 });
 
 const mapRecordsToProps = {
-  books: (q: QueryBuilder) => q.findRecords('book'),
-  bookTypes: (q: QueryBuilder) => q.findRecords('booktype'),
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
+  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
 }
 
 export default withStyles(styles, { withTheme: true })(
     withData(mapRecordsToProps)(
-        connect(mapStateToProps)(BookTable) as any
+        connect(mapStateToProps)(PlanTable) as any
         ) as any
     ) as any;

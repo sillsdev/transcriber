@@ -6,11 +6,11 @@ export * from './integration';
 export * from './project';
 export * from './projectType';
 export * from './projectUsers'
-export * from './book';
-export * from './bookType';
-export * from './set';
-export * from './task';
-export * from './taskSet';
+export * from './plan';
+export * from './planType';
+export * from './section';
+export * from './passage';
+export * from './passageSection';
 export * from './user';
 export * from './role';
 export * from './state';

@@ -56,7 +56,7 @@ export function Status(props: IProps) {
                 <ValueAxis scaleName="total" position="right" showGrid={false} showLine showTicks />
 
                 <BarSeries
-                    name={t.tasksCompleted}
+                    name={t.passagesCompleted}
                     valueField="tasks"
                     argumentField="month"
                     scaleName="tasks"

@@ -4,32 +4,12 @@ export const keyMap = new KeyMap();
 
 const schemaDefinition: SchemaSettings =  {
   models: {
-    book: {
-      keys: { remoteId: {} },
-      attributes: {
-        name: { type: 'string' },
-        bookTypeId: { type: 'number' },
-      },
-      relationships: {
-        type: { type: 'hasOne', model: 'booktype', inverse: 'books' },
-        sets: { type: 'hasMany', model: 'set', inverse: 'book' },
-      },
-    },
-    booktype: {
-      keys: { remoteId: {} },
-      attributes: {
-        name: { type: 'string' },
-        description: { type: 'string' },
-      },
-      relationships: {
-        books: { type: 'hasMany', model: 'book', inverse: 'type' },
-      },
-    },
     group: {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
-        organizationId: { type: 'number' },
+        abbreviation: { type: 'string' },
+        ownerId: { type: 'number' },
       },
       relationships: {
         organization: { type: 'hasOne', model: 'organization', inverse: 'groups' },
@@ -39,7 +19,6 @@ const schemaDefinition: SchemaSettings =  {
     groupmembership: {
       keys: { remoteId: {} },
       attributes: {
-        email: { type: 'string' },
         userId: { type: 'number' },
         groupId: { type: 'number' },
       },
@@ -65,6 +44,7 @@ const schemaDefinition: SchemaSettings =  {
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
+        // ownerId: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },
@@ -76,7 +56,6 @@ const schemaDefinition: SchemaSettings =  {
     organizationmembership: {
       keys: { remoteId: {} },
       attributes: {
-        email: { type: 'string' },
         userId: { type: 'number' },
         organizationId: { type: 'number' },
       },
@@ -84,6 +63,29 @@ const schemaDefinition: SchemaSettings =  {
         user: { type: 'hasOne', model: 'user' },
         organization: { type: 'hasOne', model: 'organization' },
       }
+    },
+    plan: {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        projectId: { type: 'number' },
+        planTypeId: { type: 'number' },
+      },
+      relationships: {
+        project: { type: 'hasOne', model: 'project', inverse: 'plans'},
+        plantype: { type: 'hasOne', model: 'plantype', inverse: 'plans' },
+        sections: { type: 'hasMany', model: 'section', inverse: 'plan' },
+      },
+    },
+    plantype: {
+      keys: { remoteId: {} },
+      attributes: {
+        name: { type: 'string' },
+        description: { type: 'string' },
+      },
+      relationships: {
+        plans: { type: 'hasMany', model: 'plan', inverse: 'plantype' },
+      },
     },
     project: {
       keys: { remoteId: {} },
@@ -107,13 +109,14 @@ const schemaDefinition: SchemaSettings =  {
         dateArchived: { type: 'date' },
       },
       relationships: {
-        type: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
+        projecttype: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
         owner: { type: 'hasOne', model: 'user', inverse: 'projects' },
         organization: { type: 'hasOne', model: 'organization'},
         group: { type: 'hasOne', model: 'group' },
         projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
-        users: { type: 'hasMany', model: 'usertask', inverse: 'project' },
-        sets: { type: 'hasMany', model: 'set', inverse: 'project' },
+        users: { type: 'hasMany', model: 'userpassage', inverse: 'project' },
+        // sections: { type: 'hasMany', model: 'section', inverse: 'project' },
+        plans: { type: 'hasMany', model: 'plan', inverse: 'project' },
       }
     },
     projectintegration: {
@@ -135,7 +138,7 @@ const schemaDefinition: SchemaSettings =  {
         description: { type: 'string' },
       },
       relationships: {
-        projects: { type: 'hasMany', model: 'project', inverse: 'type' },
+        projects: { type: 'hasMany', model: 'project', inverse: 'projecttype' },
       },
     },
     projectuser: {
@@ -162,49 +165,53 @@ const schemaDefinition: SchemaSettings =  {
         userRoles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
       },
     },
-    set: {
+    section: {
       keys: { remoteId: {} },
       attributes: {
+        sequencenum: { type: 'number' },
         name: { type: 'string' },
-        bookId: { type: 'number' },
+        state: { type: 'string' },
+        planId: { type: 'number' },
       },
       relationships: {
-        projects: { type: 'hasMany', model: 'project', inverse: 'sets' },
-        book: { type: 'hasOne', model: 'book', inverse: 'sets' },
-        tasks: { type: 'hasMany', model: 'taskset', inverse: 'set' },
+        // projects: { type: 'hasMany', model: 'project', inverse: 'sections' },
+        plan: { type: 'hasOne', model: 'plan', inverse: 'sections' },
+        passages: { type: 'hasMany', model: 'passagesection', inverse: 'section' },
       },
     },
-    task: {
+    passage: {
       keys: { remoteId: {} },
       attributes: {
+        sequenceNum: { type: 'number' },
+        book: { type: 'string' },
         reference: { type: 'string' },
-        passage: { type: 'string' },
         position: { type: 'number' },
-        taskstate: { type: 'string' },
+        state: { type: 'string' },
         hold: { type: 'boolean' },
         title: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },
       },
       relationships: {
-        media: { type: 'hasMany', model: 'taskmedia', inverse: 'task' },
-        sets: { type: 'hasMany', model: 'taskset', inverse: 'task' },
+        media: { type: 'hasMany', model: 'passagemedia', inverse: 'passage' },
+        sections: { type: 'hasMany', model: 'passagesection', inverse: 'passage' },
       },
     },
-    tasksets: {
+    passagesections: {
       keys: { remoteId: {} },
       attributes: {
-        taskId: { type: 'number' },
-        setId: { type: 'number' },
+        passageId: { type: 'number' },
+        sectionId: { type: 'number' },
       },
       relationships: {
-        task: { type: 'hasOne', model: 'task', inverse: 'sets' },
-        set: { type: 'hasOne', model: 'set', inverse: 'tasks' },
+        passage: { type: 'hasOne', model: 'passage', inverse: 'sections' },
+        section: { type: 'hasOne', model: 'section', inverse: 'passages' },
       },
     },
-    taskmedia: {
+    mediafile: {
       keys: { remoteId: {} },
       attributes: {
+        passageid: { type: 'number' },
         versionnumber: { type: 'number' },
         artifacttype: { type: 'string' },
         eafurl: { type: 'string' },
@@ -218,7 +225,7 @@ const schemaDefinition: SchemaSettings =  {
         dateupdated: { type: 'date' },
       },
       relationships: {
-        task: { type: 'hasOne', model: 'taskmedia', inverse: 'media' },
+        passage: { type: 'hasOne', model: 'passagemedia', inverse: 'media' },
       },
     },
     user: {
@@ -227,12 +234,21 @@ const schemaDefinition: SchemaSettings =  {
         name: { type: 'string' },
         givenName: { type: 'string' },
         familyName: { type: 'string' },
+        avatarUrl: { type: 'string' },
         email: { type: 'string' },
         phone: { type: 'string' },
         timezone: { type: 'string' },
         locale: { type: 'string' },
         isLocked: { type: 'boolean' },
-        auth0Id: { type: 'string' },
+        externalId: { type: 'string' },
+        identityToken: { type: 'string' },
+        uiLanguageBcp47: { type: 'string' },
+        timerCountUp: { type: 'boolean' },
+        playBackSpeed: { type: 'number' },
+        progressBarTypeId: { type: 'number' },
+        hotKeys: { type: 'string' },
+        profileVisibilit: { type: 'number'},
+        emailNotification: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
       },
@@ -249,12 +265,22 @@ const schemaDefinition: SchemaSettings =  {
         name: { type: 'string' },
         givenName: { type: 'string' },
         familyName: { type: 'string' },
+        avatarUrl: { type: 'string' },
         email: { type: 'string' },
         phone: { type: 'string' },
         timezone: { type: 'string' },
         locale: { type: 'string' },
         isLocked: { type: 'boolean' },
-        auth0Id: { type: 'string' },
+        auth0: { type: 'string' },
+        // externalId: { type: 'string' },
+        // identityToken: { type: 'string' },
+        // uiLanguageBcp47: { type: 'string' },
+        // timerCountUp: { type: 'boolean' },
+        // playBackSpeed: { type: 'number' },
+        // progressBarTypeId: { type: 'number' },
+        // hotKeys: { type: 'string' },
+        // profileVisibilit: { type: 'number'},
+        // emailNotification: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
       },
@@ -278,14 +304,11 @@ const schemaDefinition: SchemaSettings =  {
         organization: { type: 'hasOne', model: 'organization', inverse: 'userRoles' },
       },
     },
-    usertask: {
+    userpassage: {
       keys: { remoteId: {} },
       attributes: {
-        userid: { type: 'number' },
-        taskid: { type: 'number' },
-        projectid: { type: 'number' },
-        activityname: { type: 'string' },
-        taskstate: { type: 'string' },
+        activityName: { type: 'string' },
+        state: { type: 'string' },
         comment: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },

@@ -1,12 +1,12 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface BookType extends Record {
+export interface PlanType extends Record {
     attributes: {
       name: string;
       description: string;
     };
     relationships?: {
-      books: RecordRelationship;
+      plans: RecordRelationship;
     };
   };
-export default BookType;
+export default PlanType;

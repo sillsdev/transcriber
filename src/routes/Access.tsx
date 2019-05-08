@@ -97,9 +97,9 @@ export function Access(props: IProps) {
             </AppBar>
             <div className={classes.container}>
                 <Paper className={classes.paper}>
-                    <h2 className={classes.dialogHeader}>
+                    <Typography variant='h5' className={classes.dialogHeader}>
                         {t.accessSilTranscriber}
-                    </h2>
+                    </Typography>
 
                     <div className={classes.actions}>
                         <Button

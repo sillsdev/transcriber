@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { IState, Project, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
+import Store from '@orbit/store';
 import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -87,6 +88,7 @@ export function ProjectSettings(props: IProps) {
     const { classes, projects, projectTypes, updateStore, t } = props;
     const [schema] = useGlobal('schema');
     const [keyMap] = useGlobal('keyMap');
+    const [dataStore] = useGlobal('dataStore');
     const [project, setProject] = useGlobal('project');
     const [user] = useGlobal('user');
     const [organization] = useGlobal('organization');
@@ -168,14 +170,12 @@ export function ProjectSettings(props: IProps) {
     };
 
     useEffect(() => {
-      if (projectTypes && projectTypes.length !== 0 && currentProject) {
-        const t = projectTypes.filter((t: ProjectType) => ((t.keys && t.keys.remoteId) || t.id) === currentProject.attributes.projectTypeId.toString());
-        if (t.length !== 0) {
-          setProjectType((t[0].keys && t[0].keys.remoteId && t[0].keys.remoteId) || t[0].id);
-        }
+      const setDisplayType = async (p: Project) => {
+        let projectType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'project', id: p.id}, 'projecttype')) as ProjectType;
+        setProjectType(projectType.keys && projectType.keys.remoteId || projectType.id);
       }
-      
-    }, [currentProject, projectTypes])
+      setDisplayType(currentProject);
+    }, [])
 
     const safeFonts = [
         { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },

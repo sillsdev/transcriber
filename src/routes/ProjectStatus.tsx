@@ -8,13 +8,9 @@ import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
+import { Drawer, List, ListItem, Divider, IconButton, Typography } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
 import SettingsIcon from '@material-ui/icons/SettingsTwoTone';
 import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import SetIcon from '@material-ui/icons/WidgetsTwoTone';
@@ -26,8 +22,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import TranscriberBar from '../components/TranscriberBar';
 import Chart from '../components/Chart';
 import ProjectSettings from '../components/ProjectSettings';
-import BookTable from '../components/BookTable';
+import BookTable from '../components/PlanTable';
 import SetTable from '../components/SetTable';
+import ScriptureTable from '../components/ScriptureTable';
 import Auth from '../auth/Auth';
 
 const drawerWidth = 240;
@@ -114,20 +111,23 @@ export function ProjectStatus(props: IProps) {
   const handleDrawerClose = () => { setOpen(false) };
   const handleProjectItem = (e: any) => { setContent(e.target.innerText) };
   const handleCancel = () => { setView('/project') };
-  const handleSet = (id: string) => { setContent('set') };
+  const handleSet = (id: string, type: string) => { setContent(type) };
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
-  const optionList = [t.settings, t.team, t.projectPlans, t.tasks, t.media, t.integrations];
+  const optionList = [t.settings, t.team, t.projectPlans, t.passages, t.media, t.integrations];
 
   const contentJsx = (content.toLowerCase() === t.settings.toLowerCase() ||
         history.location.search === '?add') ?
       <ProjectSettings {...props} /> : (
         content.toLowerCase() === t.projectPlans.toLowerCase() ?
           <BookTable {...props} displaySet={handleSet} /> : (
-            content === 'set' ?
-              <SetTable {...props} /> : (
-                <Chart {...props} />
+            content === 'scripture' ?
+              <ScriptureTable {...props} /> : (
+                content === 'textbook' ?
+                  <SetTable {...props} />: (
+                    <Chart {...props} />
+                  )
           )
         )
       );
@@ -181,9 +181,9 @@ export function ProjectStatus(props: IProps) {
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        <h2 className={classes.dialogHeader}>
+        <Typography variant='h4' className={classes.dialogHeader}>
           {(currentProject && currentProject.attributes.name) || t.newProject}
-        </h2>
+        </Typography>
 
         {contentJsx}
       </main>

@@ -6,7 +6,7 @@ import { IState, Organization, IOrganizationTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import Paper from "@material-ui/core/Paper";
+import {Paper, Typography } from "@material-ui/core";
 import { createStyles, withStyles, WithStyles, Theme } from "@material-ui/core/styles";
 import {
   IntegratedSelection,
@@ -119,9 +119,9 @@ export function OrganizationTable(props: IProps) {
       <TranscriberBar {...props} close={handleCancel} />
       <div className={classes.container}>
         <Paper id="OrganizationTable" className={classes.paper}>
-          <h2 className={classes.dialogHeader}>
+          <Typography variant='h5' className={classes.dialogHeader}>
             {t.chooseOrganization}
-          </h2>
+          </Typography>
           <Grid rows={rows} columns={columns}>
             <SortingState
               defaultSorting={[{ columnName: "name", direction: "asc" }]}

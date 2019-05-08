@@ -101,7 +101,6 @@ export function SetTable(props: IProps) {
             },
           } as any;
           (schema as Schema).initializeRecord(set);
-          console.log(set)
           updateStore((t: TransformBuilder) => t.addRecord(set)).
             then((e: any) => {
               // alert('set added: ' + JSON.stringify(e));
