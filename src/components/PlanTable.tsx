@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { IState, Plan, PlanType, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder, Record } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import Store from '@orbit/store';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
@@ -82,7 +82,6 @@ interface IStateProps {
 
 interface IRecordProps {
   plans: Array<Plan>;
-  planTypes: Array<PlanType>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
@@ -92,7 +91,7 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
 };
 
 export function PlanTable(props: IProps) {
-  const { classes, plans, planTypes, updateStore, auth, t, displaySet } = props;
+  const { classes, plans, updateStore, auth, t, displaySet } = props;
   const { isAuthenticated } = auth;
   const [dataStore] = useGlobal('dataStore');
   const [columns, setColumns] = useState([
@@ -144,24 +143,25 @@ export function PlanTable(props: IProps) {
   };
 
   useEffect(() => {
-    plans.map((p, i) => {
-      const getTypeColumn = async (p: Plan, i: number) => {
-        let planType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'plan', id: p.id}, 'plantype')) as PlanType;
-        if (planType != null) {
-          typeColumn[i] = planType.attributes.name;
-          setTypeColumn(typeColumn);
-        }
-      };
-      getTypeColumn(p, i);
-      const getCountColumn = async(p: Plan, i: number) => {
-        let sections = await (dataStore as Store).query(q => q.findRelatedRecords({type: 'plan', id: p.id}, 'sections'));
-        if (sections != null) {
-          countColumn[i] = sections.length;
-          setCountColumn(countColumn);
-        }
-      };
-      getCountColumn(p, i);
-    });
+    const getTypeColumn = async (p: Plan, i: number) => {
+      let planType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'plan', id: p.id}, 'plantype')) as PlanType;
+      if (planType != null) {
+        typeColumn[i] = planType.attributes.name;
+      }
+    };
+    const getCountColumn = async(p: Plan, i: number) => {
+      let sections = await (dataStore as Store).query(q => q.findRelatedRecords({type: 'plan', id: p.id}, 'sections'));
+      if (sections != null) {
+        countColumn[i] = sections.length;
+      }
+    };
+    for (let i = 0; i < plans.length; i += 1) {
+      getTypeColumn(plans[i], i);
+      getCountColumn(plans[i], i);
+    }
+    setTypeColumn(typeColumn);
+    setCountColumn(countColumn);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -172,6 +172,7 @@ export function PlanTable(props: IProps) {
       { name: 'action', title: t.action },
     ]);
     setRows(getPlanRows(plans, typeColumn, countColumn));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plans]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
@@ -281,7 +282,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
-  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
 }
 
 export default withStyles(styles, { withTheme: true })(

@@ -154,6 +154,29 @@ const initialState = {
 			"choosePlan": "Choose a Project Plan",
 		}
 	}),
+	"planSheet": new LocalizedStrings({
+		"en": {
+			"action": "Action",
+			"delete": "Delete",
+			"move": "Move",
+			"copy": "Copy",
+			"assignMedia": "Assign Media",
+			"assignPassage": "Assign Passage",
+			"addSection": "Add Section",
+			"addPassage": "Add Passage",
+			"save": "Save",
+		}
+	}),
+	"scriptureTable": new LocalizedStrings({
+		"en": {
+			"section": "Section",
+			"title": "Title",
+			"passage": "Passage",
+			"book": "Book",
+			"reference": "Reference",
+			"description": "Description",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -176,6 +199,8 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"chart" : new LocalizedStrings(action.payload.data.chart),
 				"projectSettings" : new LocalizedStrings(action.payload.data.projectSettings),
 				"planTable" : new LocalizedStrings(action.payload.data.planTable),
+				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
+				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 			};
 		case SET_LANGUAGE:
 			return {

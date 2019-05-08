@@ -1,4 +1,3 @@
-import Axios from 'axios';
 import { useGlobal } from 'reactn';
 import Coordinator, { RequestStrategy, SyncStrategy } from "@orbit/coordinator";
 import IndexedDBSource from "@orbit/indexeddb";

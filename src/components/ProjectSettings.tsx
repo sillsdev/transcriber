@@ -172,9 +172,10 @@ export function ProjectSettings(props: IProps) {
     useEffect(() => {
       const setDisplayType = async (p: Project) => {
         let projectType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'project', id: p.id}, 'projecttype')) as ProjectType;
-        setProjectType(projectType.keys && projectType.keys.remoteId || projectType.id);
+        setProjectType((projectType.keys && projectType.keys.remoteId) || projectType.id);
       }
       setDisplayType(currentProject);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const safeFonts = [

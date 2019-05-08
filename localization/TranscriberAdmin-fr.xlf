@@ -554,5 +554,95 @@
 				<target>Choisissez un plan de projet</target>
 			</segment>
 		</unit>
+		<unit id="planSheet.action">
+			<segment>
+				<source>Action</source>
+				<target>Action</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Supprimer</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.move">
+			<segment>
+				<source>Move</source>
+				<target>Déplacer</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.copy">
+			<segment>
+				<source>Copy</source>
+				<target>Copier</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.assignMedia">
+			<segment>
+				<source>Assign Media</source>
+				<target>Assigner un média</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.assignPassage">
+			<segment>
+				<source>Assign Passage</source>
+				<target>Attribuer un passage</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.addSection">
+			<segment>
+				<source>Add Section</source>
+				<target>Ajouter une section</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.addPassage">
+			<segment>
+				<source>Add Passage</source>
+				<target>Ajouter un passage</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.save">
+			<segment>
+				<source>Save</source>
+				<target>Sauvegarder</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTable.section">
+			<segment>
+				<source>Section</source>
+				<target>Ensemble</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTable.title">
+			<segment>
+				<source>Title</source>
+				<target>Titre</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTable.passage">
+			<segment>
+				<source>Passage</source>
+				<target>Passage</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTable.book">
+			<segment>
+				<source>Book</source>
+				<target>Livre</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTable.reference">
+			<segment>
+				<source>Reference</source>
+				<target>Référence</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTable.description">
+			<segment>
+				<source>Description du passage</source>
+				<target/>
+			</segment>
+		</unit>
 	</file>
 </xliff>

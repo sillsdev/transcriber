@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IState, Set, Task, TaskSet, IProjectSettingsStrings } from '../model';
+import { IState, Set, Task, TaskSet, IPlanSheetStrings, IScriptureTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -29,7 +29,8 @@ const styles = (theme: Theme) => ({
 });
 
 interface IStateProps {
-  t: IProjectSettingsStrings;
+  t: IScriptureTableStrings;
+  s: IPlanSheetStrings;
 };
 
 interface IRecordProps {
@@ -42,16 +43,18 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
 };
   
 export function ScriptureTable(props: IProps) {
-    const { classes, t } = props;
+    const { classes, t, s } = props;
     const [message, setMessage] = useState(<></>);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [columns, setColumns] = useState([
-      {value: 'Section',  readOnly: true, width: 80},
-      {value: 'Title',  readOnly: true, width: 280},
-      {value: 'Passage', readOnly: true, width: 80},
-      {value: 'Book', readOnly: true, width: 100},
-      {value: 'Reference', readOnly: true, width: 180},
-      {value: 'Description', readOnly: true, width: 280},
-    ])
+      {value: t.section,  readOnly: true, width: 80},
+      {value: t.title,  readOnly: true, width: 280},
+      {value: t.passage, readOnly: true, width: 80},
+      {value: t.book, readOnly: true, width: 100},
+      {value: t.reference, readOnly: true, width: 180},
+      {value: t.description, readOnly: true, width: 280},
+    ]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [data, setData] = useState([
       [1,"Luke wrote this book about Jesus for Theophilus",'','LUK',"Section 1:1–4",''],
       ['','',1,'LUK',"1:1-4",''],
@@ -75,7 +78,7 @@ export function ScriptureTable(props: IProps) {
       ['','',3,'LUK',"1:65-66",''],
       [7,"Zechariah prophesied and praised God",'','LUK',"Section 1:67–80",''],
       ['','',1,'LUK',"1:67-80",''],
-    ])
+    ]);
 
     const handleMessageReset = () => { setMessage(<></>) }
 
@@ -84,6 +87,7 @@ export function ScriptureTable(props: IProps) {
         <PlanTable
           columns={columns}
           rowData={data as any[][]}
+          t={s}
         />
         <SnackBar {...props} message={message} reset={handleMessageReset} />
       </div>
@@ -91,7 +95,8 @@ export function ScriptureTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: "projectSettings"})
+  t: localStrings(state, {layout: "scriptureTable"}),
+  s: localStrings(state, {layout: "planSheet"})
 });
     
 const mapRecordsToProps = {

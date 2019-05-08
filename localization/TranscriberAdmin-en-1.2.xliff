@@ -1,10 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd"
-	xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 
-	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en"
-		datatype="plaintext">
+	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
 		<body>
 			<trans-unit id="access.silTranscriberAccess">
 				<source>SIL Transcriber Access</source>
@@ -648,6 +645,111 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.move">
+				<source>Move</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.copy">
+				<source>Copy</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.assignMedia">
+				<source>Assign Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.assignPassage">
+				<source>Assign Passage</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.addSection">
+				<source>Add Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.addPassage">
+				<source>Add Passage</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.section">
+				<source>Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.title">
+				<source>Title</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.passage">
+				<source>Passage</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.book">
+				<source>Book</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.reference">
+				<source>Reference</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.description">
+				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

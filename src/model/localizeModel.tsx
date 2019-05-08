@@ -135,6 +135,27 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "choosePlan": string;
 };
 
+export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
+    "delete": string;
+    "move": string;
+    "copy": string;
+    "assignMedia": string;
+    "assignPassage": string;
+    "addSection": string;
+    "addPassage": string;
+    "save": string;
+};
+
+export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
+    "section": string;
+    "title": string;
+    "passage": string;
+    "book": string;
+    "reference": string;
+    "description": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -152,5 +173,7 @@ export interface ILocalizedStrings {
 	chart: IChartStrings;
 	projectSettings: IProjectSettingsStrings;
 	planTable: IPlanTableStrings;
+	planSheet: IPlanSheetStrings;
+	scriptureTable: IScriptureTableStrings;
 	[key: string]: any;
 };

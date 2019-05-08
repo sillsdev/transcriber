@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IProjectSettingsStrings } from '../model';
+import { IPlanSheetStrings } from '../model';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -56,7 +56,7 @@ interface IChange {
 }
 
 interface IStateProps {
-  t: IProjectSettingsStrings;
+  t: IPlanSheetStrings;
 };
 
 interface IProps extends IStateProps, WithStyles<typeof styles>{
@@ -75,7 +75,8 @@ export function PlanSheet(props: IProps) {
       let headers: Array<ICell> = [{value:'', readOnly: true}];
       columns.map(c => headers.push({...c, readOnly: true}));
       let rows: Array<Array<ICell>> = [headers];
-      rowData.map((r, i) => {
+      for (let i = 0; i < rowData.length; i += 1) {
+        const r = rowData[i];
         const isSection = /^[0-9]+$/.test(r[0]);
         let oneRow: Array<ICell> = [{
           value: <CheckBox checked={check[i+1]} onChange={handleCheck(i+1)}/>,
@@ -86,12 +87,13 @@ export function PlanSheet(props: IProps) {
           className: (isNumber(r1)?'num': 'pass') + (isSection? ' set': '')
         }));
         rows.push(oneRow);
-      });
+      };
       setData(rows);
       for (let i=0; i < rows.length; i += 1) {
         check[i] = false;
       }
       setCheck(check);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleMessageReset = () => { setMessage(<></>) }
@@ -133,14 +135,14 @@ export function PlanSheet(props: IProps) {
           <div className={classes.actions}>
           <Button
               key="action"
-              aria-owns={actionItem != ''? 'action-menu': undefined}
-              aria-label={'Action'}
+              aria-owns={actionItem !== ''? 'action-menu': undefined}
+              aria-label={t.action}
               variant="outlined"
               color="primary"
               className={classes.button}
               onClick={handleMenu}
             >
-              {'Action'}
+              {t.action}
               <DropDownIcon className={classes.icon} />
             </Button>
             <Menu
@@ -149,43 +151,43 @@ export function PlanSheet(props: IProps) {
               open={Boolean(actionItem)}
               onClose={handleMenuClose('Close')}
             >
-              <MenuItem onClick={handleMenuClose('Delete')}>{'Delete'}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Move')}>{'Move'}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Copy')}>{'Copy'}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Assign Media')}>{'Assign Media'}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Assign Passage')}>{'Assign Passage'}</MenuItem>
+              <MenuItem onClick={handleMenuClose('Delete')}>{t.delete}</MenuItem>
+              <MenuItem onClick={handleMenuClose('Move')}>{t.move}</MenuItem>
+              <MenuItem onClick={handleMenuClose('Copy')}>{t.copy}</MenuItem>
+              <MenuItem onClick={handleMenuClose('Assign Media')}>{t.assignMedia}</MenuItem>
+              <MenuItem onClick={handleMenuClose('Assign Passage')}>{t.assignPassage}</MenuItem>
             </Menu>
             <Button
               key="addSection"
-              aria-label={'Add Section'}
+              aria-label={t.addSection}
               variant="outlined"
               color="primary"
               className={classes.button}
               onClick={handleAddSection}
             >
-              {'Add Section'}
+              {t.addSection}
               <AddIcon className={classes.icon} />
             </Button>
             <Button
               key="addPassage"
-              aria-label={'Add Passage'}
+              aria-label={t.addPassage}
               variant="outlined"
               color="primary"
               className={classes.button}
               onClick={handleAddPassage}
             >
-              {'Add Passage'}
+              {t.addPassage}
               <AddIcon className={classes.icon} />
             </Button>
             <Button
               key="save"
-              aria-label={'Save'}
+              aria-label={t.save}
               variant="contained"
               color="primary"
               className={classes.button}
               onClick={handleSave}
             >
-              {'Save'}
+              {t.save}
               <SaveIcon className={classes.icon} />
             </Button>
           </div>
