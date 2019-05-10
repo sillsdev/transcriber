@@ -20,6 +20,7 @@ npm run build
 ## Running Locally
 
 ```
+git checkout local
 npm start
 
 ```
@@ -27,5 +28,6 @@ npm start
 ## Deployment
 
 ```
+npm run build
 npm run deploy
-
+```

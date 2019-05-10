@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Set, Task, TaskSet, IProjectSettingsStrings } from '../model';
+import { IState, Section, Passage, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -49,9 +49,8 @@ interface IStateProps {
 };
 
 interface IRecordProps {
-  sets: Array<Set>;
-  tasksets: Array<TaskSet>;
-  tasks: Array<Task>;
+  Sections: Array<Section>;
+  tasks: Array<Passage>;
 };
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
@@ -63,7 +62,7 @@ export function SetTable(props: IProps) {
     const [schema] = useGlobal('schema');
     const [keyMap] = useGlobal('keyMap');
     const [project] = useGlobal('project');
-    const [book] = useGlobal('book');
+    const [book] = useGlobal('plan');
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState([
       [
@@ -82,36 +81,36 @@ export function SetTable(props: IProps) {
     const handleMessageReset = () => { setMessage(<></>) }
     const handleAdd = () => alert('add');
     const handleSave = () => {
-      if (project === null) { setMessage(<span>Project not set.</span>); return };
+      if (project === null) { setMessage(<span>Project not section.</span>); return };
       const projectId = (keyMap as KeyMap).idToKey('project', 'remoteId', (project as string));
-      if (book === null) { setMessage(<span>Book not set.</span>); return };
+      if (book === null) { setMessage(<span>Book not section.</span>); return };
       const bookId = (keyMap as KeyMap).idToKey('book', 'remoteId', (book as string));
 
-      if (data[0].length !== 4) { setMessage(<span>Data should consist of set, passage, breaks, and title (four columns).</span>); return };
-      let set: Set;
+      if (data[0].length !== 4) { setMessage(<span>Data should consist of section, passage, breaks, and title (four columns).</span>); return };
+      let section: Section;
       let setId: number | null = null;
       for (let i = 1; i < data.length; i += 1) {
         if (data[i][0].value !== '') {
-          set = {
-            type: 'set',
+          section = {
+            type: 'section',
             attributes: {
               name: data[i][3].value as string,
               projectId: parseInt(projectId),
               bookId: parseInt(bookId),
             },
           } as any;
-          (schema as Schema).initializeRecord(set);
-          updateStore((t: TransformBuilder) => t.addRecord(set)).
+          (schema as Schema).initializeRecord(section);
+          updateStore((t: TransformBuilder) => t.addRecord(section)).
             then((e: any) => {
-              // alert('set added: ' + JSON.stringify(e));
-              const setRec = (q: QueryBuilder) => q.findRecord({type: 'set', id: set.id});
-              setId = parseInt((keyMap as KeyMap).idToKey('set', 'remoteId', set.id));
+              // alert('section added: ' + JSON.stringify(e));
+              const setRec = (q: QueryBuilder) => q.findRecord({type: 'section', id: section.id});
+              setId = parseInt((keyMap as KeyMap).idToKey('section', 'remoteId', section.id));
               // alert(setId)
             });
         }
         if (data[i][1].value !== '') {
-          let task: Task = {
-            type: 'task',
+          let passage: Passage = {
+            type: 'passage',
             attributes: {
               reference: data[i][2].value as string,
               passage: data[i][1].value as string,
@@ -123,17 +122,17 @@ export function SetTable(props: IProps) {
               dateUpdated: new Date().toISOString(),
             }
           } as any;
-          (schema as Schema).initializeRecord(task);
+          (schema as Schema).initializeRecord(passage);
           let taskId: number | null = null;
-          updateStore((t: TransformBuilder) => t.addRecord(task)).
+          updateStore((t: TransformBuilder) => t.addRecord(passage)).
             then((e: any) => {
-              // alert('task added: ' + JSON.stringify(e))
-              const taskRec = (q: QueryBuilder) => q.findRecord({type: 'task', id: task.id});
-              taskId = parseInt((keyMap as KeyMap).idToKey('task', 'remoteId', task.id));
+              // alert('passage added: ' + JSON.stringify(e))
+              const taskRec = (q: QueryBuilder) => q.findRecord({type: 'passage', id: passage.id});
+              taskId = parseInt((keyMap as KeyMap).idToKey('passage', 'remoteId', passage.id));
               // alert(taskId)
             });
           if (taskId && setId) {
-            let taskSet: TaskSet = {
+            let taskSet = {
               type: 'taskset',
               attributes: {
                 taskId: taskId,
@@ -174,7 +173,7 @@ export function SetTable(props: IProps) {
                 value: val,
                 readOnly: (i === 0),
                 width: widths[j],
-                className: ((i === 0 || lines[i].slice(0,1) === '\t')? 'pass': 'set') +
+                className: ((i === 0 || lines[i].slice(0,1) === '\t')? 'pass': 'section') +
                   (j < 2? " num": "")
               }
             }));
@@ -230,8 +229,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
     
 const mapRecordsToProps = {
-  sets: (q: QueryBuilder) => q.findRecords('set'),
-  tasks: (q: QueryBuilder) => q.findRecords('task'),
+  sets: (q: QueryBuilder) => q.findRecords('section'),
+  tasks: (q: QueryBuilder) => q.findRecords('passage'),
   tasksets: (q: QueryBuilder) => q.findRecords('taskset'),
 }
 

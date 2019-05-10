@@ -35,7 +35,7 @@ const dataStore = new Store({ schema, keyMap });
 setGlobal({
   organization: null,
   project: null,
-  book: null,
+  plan: null,
   user: null,
   initials: null,
   lang: 'en',

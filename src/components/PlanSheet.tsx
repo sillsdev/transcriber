@@ -62,10 +62,11 @@ interface IStateProps {
 interface IProps extends IStateProps, WithStyles<typeof styles>{
   columns: Array<ICell>;
   rowData: Array<Array<string>>;
+  save: (r: string[][]) => void;
 };
   
 export function PlanSheet(props: IProps) {
-    const { classes, columns, rowData, t } = props;
+    const { classes, columns, rowData, t, save } = props;
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
     const [actionItem, setActionItem] = useState(null);
@@ -103,7 +104,13 @@ export function PlanSheet(props: IProps) {
     };
     const handleAddSection = () => setMessage(<span>Add Section</span>);
     const handleAddPassage = () => setMessage(<span>Add Passage</span>);
-    const handleSave = () => setMessage(<span>Save</span>);
+    const handleSave = () => {
+      setMessage(<span>Saving</span>);
+      if (save != null) {
+        const rows = data.filter((r, i) => i > 0).map(r => r.filter((r,i) => i > 0).map(c => c.value));
+        save(rows)
+      }
+    }
     const handleValueRender = (cell: ICell) => cell.value;
     const handleMenu = (e:any) => setActionItem(e.currentTarget);
     const handleMenuClose = (value: string) => (e: any) => {

@@ -1,14 +1,16 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface Set extends Record {
+export interface Section extends Record {
     attributes: {
+      sequencenum: number;
       name: string;
-      bookId: number;
+      state: string;
+      planId: number;
     };
     relationships?: {
-      project: RecordRelationship;
-      book: RecordRelationship;
+      // project: RecordRelationship;
+      plan: RecordRelationship;
       tasks: RecordRelationship;
     };
   };
-export default Set;
+export default Section;

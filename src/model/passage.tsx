@@ -1,6 +1,6 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface Task extends Record {
+export interface Passage extends Record {
     attributes: {
       reference: string;
       passage: number;
@@ -16,4 +16,4 @@ export interface Task extends Record {
       media: RecordRelationship;
     };
   };
-export default Task;  
+export default Passage;

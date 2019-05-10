@@ -182,7 +182,7 @@ const schemaDefinition: SchemaSettings =  {
     passage: {
       keys: { remoteId: {} },
       attributes: {
-        sequenceNum: { type: 'number' },
+        sequencenum: { type: 'number' },
         book: { type: 'string' },
         reference: { type: 'string' },
         position: { type: 'number' },
@@ -197,7 +197,7 @@ const schemaDefinition: SchemaSettings =  {
         sections: { type: 'hasMany', model: 'passagesection', inverse: 'passage' },
       },
     },
-    passagesections: {
+    passagesection: {
       keys: { remoteId: {} },
       attributes: {
         passageId: { type: 'number' },

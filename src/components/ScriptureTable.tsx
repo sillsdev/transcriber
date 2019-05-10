@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Set, Task, TaskSet, IPlanSheetStrings, IScriptureTableStrings } from '../model';
+import { IState, Plan, Section, Passage, IPlanSheetStrings, IScriptureTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import Store from '@orbit/store';
+import { Schema } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import SnackBar from './SnackBar';
-import PlanTable from './PlanSheet';
+import PlanSheet from './PlanSheet';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -33,17 +35,15 @@ interface IStateProps {
   s: IPlanSheetStrings;
 };
 
-interface IRecordProps {
-  sets: Array<Set>;
-  tasksets: Array<TaskSet>;
-  tasks: Array<Task>;
-};
-
-interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
+interface IProps extends IStateProps, WithStyles<typeof styles>{
 };
   
 export function ScriptureTable(props: IProps) {
     const { classes, t, s } = props;
+    const [plan] = useGlobal('plan');
+    const [project] = useGlobal('project');
+    const [dataStore] = useGlobal('dataStore');
+    const [schema] = useGlobal('schema');
     const [message, setMessage] = useState(<></>);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [columns, setColumns] = useState([
@@ -81,12 +81,98 @@ export function ScriptureTable(props: IProps) {
     ]);
 
     const handleMessageReset = () => { setMessage(<></>) }
+    const handleSave = (rows: string[][]) => {
+      const addPassage = async (p: Passage, sId: string) => {
+        (schema as Schema).initializeRecord(p);
+        // const result =
+          await (dataStore as Store).update(t => [
+            t.addRecord(p),
+            // t.addToRelatedRecords(
+            //   { type: 'passage', id: p.id },
+            //   'sections',
+            //   { type: 'section', id: sId }
+            // )
+          ]);
+        // console.log(result)
+        // return result;
+      }
+      const doPassages = (i: number, sId: string) => {
+        do {
+          const passageRow = rows[i];
+          if (/^[0-9]+$/.test(passageRow[2])) {
+            const passage = {
+              type: 'passage',
+              attributes: {
+                sequencenum: passageRow[2],
+                book: passageRow[3],
+                reference: passageRow[4],
+                title: passageRow[5],
+                position: 0,
+                hold: false,
+                state: 1,
+              },
+            } as any;
+            addPassage(passage, sId);
+          }
+          i += 1;
+        } while (i < rows.length && rows[i][0] === '');
+      }
+      const addSection = async (i: number, s: Section, planId: string, projectId: string) => {
+        (schema as Schema).initializeRecord(s);
+        await (dataStore as Store).update(t => [
+          t.addRecord(s),
+          t.replaceRelatedRecord(
+            {type: 'section', id: s.id},
+            'plan',
+            {type: 'plan', id: planId}
+          ),
+        ]);
+        return s;
+      }
+      for (let i=0; i < rows.length; i += 1) {
+        if (/^[0-9]+$/.test(rows[i][0])) {
+          const sectionRow = rows[i];
+          const section = {
+            type: 'section',
+            attributes: {
+              sequencenum: parseInt(sectionRow[0]),
+              name: sectionRow[1],
+            },
+          } as any;
+          addSection(i, section, plan as string, project as string)
+            .then(s => doPassages(i, s.id))
+            .catch(e => alert(i.toString() + ':' + JSON.stringify(e) + ':' + JSON.stringify(section)));
+        }
+      }
+    }
+
+    useEffect(() => {
+      const getSections = async (p: Plan) => {
+        let sections = await (dataStore as Store).query(q => q.findRelatedRecords({type: 'plan', id: p}, 'sections'))
+        if (sections != null) {
+          for (let i = 0; i < sections.length; i += 1) {
+            let s = sections[i];
+            const getPassages = async (s: Section) => {
+              // const sectionId = (keyMap as KeyMap).idToKey('section', 'remoteId', (s.id as string));
+              // let passages = await (dataStore as Store).query(q =>
+              //   q.findRecords('passage').filter({relation: 'sections', record: {type: 'section', id: sectionId}}))
+              // if (passages != null) {
+              //   console.log(passages)
+              // }
+            }
+            getPassages(s);
+          }
+        }
+      }
+      getSections(plan as Plan);
+    }, [])
 
     return (
       <div className={classes.container}>
-        <PlanTable
+        <PlanSheet
           columns={columns}
           rowData={data as any[][]}
+          save={handleSave}
           t={s}
         />
         <SnackBar {...props} message={message} reset={handleMessageReset} />
@@ -100,9 +186,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
     
 const mapRecordsToProps = {
-  sets: (q: QueryBuilder) => q.findRecords('set'),
-  tasks: (q: QueryBuilder) => q.findRecords('task'),
-  tasksets: (q: QueryBuilder) => q.findRecords('taskset'),
 }
 
 export default withStyles(styles, { withTheme: true })(

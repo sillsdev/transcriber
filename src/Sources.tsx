@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import Coordinator, { RequestStrategy, SyncStrategy } from "@orbit/coordinator";
+import Coordinator, { RequestStrategy, SyncStrategy, LogLevel, EventLoggingStrategy } from "@orbit/coordinator";
 import IndexedDBSource from "@orbit/indexeddb";
 import JSONAPISource from '@orbit/jsonapi';
 import { Schema, KeyMap, Transform } from "@orbit/data";
@@ -77,7 +77,15 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         blocking: false
     }));
 
-    remote.pull(q => q.findRecords('currentuser'))
+    coordinator.addStrategy(new EventLoggingStrategy());
+
+    remote.pull(q => q.findRecords('currentuser'), {
+        sources: {
+            remote: {
+                timeout: 100000,
+            }
+        }
+    })
         .then((transform: Transform[]) => {
             store.sync(transform);
             const user = (transform[0].operations[0] as any).record;
@@ -123,7 +131,10 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
 
     return (backup.pull(q => q.findRecords())
         .then(transform => store.sync(transform))
-        .then(() => coordinator.activate()));
+        .then(() => coordinator.activate({ logLevel: LogLevel.Warnings })
+            .then(() => {
+                console.log('Coordinator will log errors')
+            })));
 
 };
 

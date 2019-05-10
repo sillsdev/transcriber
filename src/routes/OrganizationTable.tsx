@@ -24,6 +24,7 @@ import {
 import TranscriberBar from '../components/TranscriberBar';
 import SnackBar from "../components/SnackBar";
 import Auth from "../auth/Auth";
+import { isArray } from "util";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -77,6 +78,7 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
 
 export function OrganizationTable(props: IProps) {
   const { classes, organizations, auth, t } = props;
+  const [user] = useGlobal('user');
   const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([{ name: "name", title: "Name" }]);
   const [rows, setRows] = useState([]);
@@ -93,15 +95,28 @@ export function OrganizationTable(props: IProps) {
   const handleCancel = () => { setView('/admin') };
 
   useEffect(() => {
+    // since find related records doesn't work...
+    const orgs = organizations.filter(o =>
+      o.relationships &&
+      o.relationships.users &&
+      o.relationships.users.data &&
+      (isArray(o.relationships.users.data)?
+      o.relationships.users.data.filter(u => u.id === user):
+      o.relationships.users.data.id === user))
+    if (orgs.length === 1) {
+      setOrganization(organizations[0].id)
+      setView('/welcome')
+    }
     setColumns([{ name: "name", title: t.name }]);
     setRows(
-      organizations.map((o: Organization) => ({
+      orgs.map((o: Organization) => ({
         type: o.type,
         id: o.id,
         name: o.attributes.name
       })) as any
     );
-  }, [organizations, t.name]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [organizations, user]);
 
   useEffect(() => {
     if (view === '/welcome' && currentOrganization === null) {
@@ -146,7 +161,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
   
 const mapRecordsToProps = {
-  organizations: (q: QueryBuilder) => q.findRecords('organization')
+  organizations: (q: QueryBuilder) => q.findRecords('organization'),
 };
 
 export default withStyles(styles, { withTheme: true })(
