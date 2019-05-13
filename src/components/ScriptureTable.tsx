@@ -49,7 +49,8 @@ export function ScriptureTable(props: IProps) {
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
     const [message, setMessage] = useState(<></>);
-    const [recordId, setRecordId] = useState(Array<RecordIdentity>());
+    const [sectionId, setSectionId] = useState(Array<RecordIdentity>());
+    const [passageId, setPassageId] = useState(Array<ISequencedRecordIdentity>());
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [columns, setColumns] = useState([
       {value: t.section,  readOnly: true, width: 80},
@@ -85,55 +86,81 @@ export function ScriptureTable(props: IProps) {
       // [7,"Zechariah prophesied and praised God",'','LUK',"Section 1:67–80",''],
       // ['','',1,'LUK',"1:67-80",''],]
     );
+    const [inData, setInData] = useState(Array<Array<any>>());
 
     const handleMessageReset = () => { setMessage(<></>) }
     const handleSave = (rows: string[][]) => {
-      const addPassage = async (p: Passage, sId: string) => {
+      const addPassage = async (i: number, sId: string) => {
+        const passageRow = rows[i];
+        const p = {
+          type: 'passage',
+          attributes: {
+            sequencenum: passageRow[2],
+            book: passageRow[3],
+            reference: passageRow[4],
+            title: passageRow[5],
+            position: 0,
+            hold: false,
+            state: 1,
+          },
+        } as any;
         (schema as Schema).initializeRecord(p);
         const passageSection = {
           type: 'passagesection'
         } as any;
         (schema as Schema).initializeRecord(passageSection);
-        const result =
-          await (dataStore as Store).update(t => [
-            t.addRecord(p),
-            t.addRecord(passageSection),
-            t.replaceRelatedRecord(
-              {type: 'passagesection', id: passageSection.id},
-              'section',
-              {type: 'section', id: sId},
-            ),
-            t.replaceRelatedRecord(
-              {type: 'passagesection', id: passageSection.id},
-              'passage',
-              {type: 'passage', id: p.id},
-            ),
-          ]);
-        console.log(result)
-        // return result;
+        await (dataStore as Store).update(t => [
+          t.addRecord(p),
+          t.addRecord(passageSection),
+          t.replaceRelatedRecord(
+            {type: 'passagesection', id: passageSection.id},
+            'section',
+            {type: 'section', id: sId},
+          ),
+          t.replaceRelatedRecord(
+            {type: 'passagesection', id: passageSection.id},
+            'passage',
+            {type: 'passage', id: p.id},
+          ),
+        ]);
+      }
+      const changePassage = async (i: number) => {
+        const passageRow = rows[i];
+        const inpRow = inData[i];
+        if (passageRow[2] !== inpRow[2] ||
+          passageRow[3] !== inpRow[3] ||
+          passageRow[4] !== inpRow[4] ||
+          passageRow[5] !== inpRow[5]) {
+            let passage = await (dataStore as Store).query(q => q.findRecord(passageId[i])) as Passage;
+            passage.attributes.sequencenum = parseInt(passageRow[2]);
+            passage.attributes.book = passageRow[3];
+            passage.attributes.reference = passageRow[4];
+            passage.attributes.title = passageRow[5];
+            await (dataStore as Store).update(t => t.replaceRecord(passage))
+          }
       }
       const doPassages = (i: number, sId: string) => {
         do {
           const passageRow = rows[i];
           if (/^[0-9]+$/.test(passageRow[2])) {
-            const passage = {
-              type: 'passage',
-              attributes: {
-                sequencenum: passageRow[2],
-                book: passageRow[3],
-                reference: passageRow[4],
-                title: passageRow[5],
-                position: 0,
-                hold: false,
-                state: 1,
-              },
-            } as any;
-            addPassage(passage, sId);
+            if (!passageId[i]) {
+              addPassage(i, sId);
+            } else {
+              changePassage(i)
+            }
           }
           i += 1;
         } while (i < rows.length && rows[i][0] === '');
       }
-      const addSection = async (i: number, s: Section, planId: string, projectId: string) => {
+      const addSection = async (i: number, planId: string, projectId: string) => {
+        const sectionRow = rows[i];
+        const s = {
+          type: 'section',
+          attributes: {
+            sequencenum: parseInt(sectionRow[0]),
+            name: sectionRow[1],
+          },
+        } as any;
         (schema as Schema).initializeRecord(s);
         await (dataStore as Store).update(t => [
           t.addRecord(s),
@@ -145,26 +172,35 @@ export function ScriptureTable(props: IProps) {
         ]);
         return s;
       }
+      const changeSection = async (i: number) => {
+        const sectionRow = rows[i];
+        const inpRow = inData[i];
+        if (sectionRow[0] !== inpRow[0] ||
+          sectionRow[1] !== inpRow[1]) {
+            let section = await (dataStore as Store).query(q => q.findRecord(sectionId[i])) as Section;
+            section.attributes.sequencenum = parseInt(sectionRow[0]);
+            section.attributes.name = sectionRow[1];
+            await (dataStore as Store).update(t => t.replaceRecord(section));
+        }
+        return sectionId[i];
+      }
       for (let i=0; i < rows.length; i += 1) {
         if (/^[0-9]+$/.test(rows[i][0])) {
-          const sectionRow = rows[i];
-          const section = {
-            type: 'section',
-            attributes: {
-              sequencenum: parseInt(sectionRow[0]),
-              name: sectionRow[1],
-            },
-          } as any;
-          addSection(i, section, plan as string, project as string)
+          if (!sectionId[i] || !sectionId[i].id) {
+            addSection(i, plan as string, project as string)
             .then(s => doPassages(i, s.id))
-            .catch(e => alert(i.toString() + ':' + JSON.stringify(e) + ':' + JSON.stringify(section)));
+          } else {
+            changeSection(i)
+            .then(s => doPassages(i, s.id))
+          }
         }
       }
     }
 
     useEffect(() => {
       let initData = Array<Array<any>>();
-      let recordIds = Array<RecordIdentity>();
+      let sectionIds = Array<RecordIdentity>();
+      let passageIds = Array<ISequencedRecordIdentity>();
       const getPassage = async (pId: string, list: (string|number)[][], ids:Array<ISequencedRecordIdentity>) => {
         let passage = await (dataStore as Store).query(q =>
           q.findRecord({type: 'passage', id: pId})) as Passage;
@@ -199,8 +235,9 @@ export function ScriptureTable(props: IProps) {
           passages = passages.sort((i,j) => { return (parseInt(i[2].toString()) - parseInt(j[2].toString())); });
           ids = ids.sort((i,j) => { return i.sequencenum - j.sequencenum; })
           for (let j=0; j < passageSections.length; j += 1) {
+            while (passageIds.length < initData.length) {passageIds.push({type:'', id:'', sequencenum: 0})}
+            passageIds[initData.length] = ids[j];
             initData.push(passages[j])
-            recordIds.push(ids[j])
           }
         }
       }
@@ -212,6 +249,8 @@ export function ScriptureTable(props: IProps) {
         if (sections != null) {
           for (let i = 0; i < sections.length; i += 1) {
             let s = sections[i] as Section;
+            while (sectionIds.length < initData.length) { sectionIds.push({type:'',id:''})}
+            sectionIds[initData.length] = {type:'section', id: s.id};
             initData.push([
               s.attributes.sequencenum,
               s.attributes.name,
@@ -220,11 +259,12 @@ export function ScriptureTable(props: IProps) {
               '',
               '',
             ]);
-            recordIds.push({type:'section', id: s.id});
             await getPassageSection(s);
           }
           setData(initData);
-          console.log(recordIds)
+          setInData(initData);
+          setSectionId(sectionIds);
+          setPassageId(passageIds);
         }
       }
       getSections(plan as string);
