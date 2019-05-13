@@ -24,7 +24,6 @@ import {
 import TranscriberBar from '../components/TranscriberBar';
 import SnackBar from "../components/SnackBar";
 import Auth from "../auth/Auth";
-import { isArray } from "util";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -100,7 +99,7 @@ export function OrganizationTable(props: IProps) {
       o.relationships &&
       o.relationships.users &&
       o.relationships.users.data &&
-      (isArray(o.relationships.users.data)?
+      (Array.isArray(o.relationships.users.data)?
       o.relationships.users.data.filter(u => u.id === user):
       o.relationships.users.data.id === user))
     if (orgs.length === 1) {
