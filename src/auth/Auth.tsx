@@ -1,6 +1,7 @@
 import history from '../history';
 import auth0 from 'auth0-js';
 import { AUTH_CONFIG } from './auth0-variables';
+import { API_CONFIG } from '../api-variable';
 
 export default class Auth {
   accessToken: any;
@@ -103,6 +104,7 @@ export default class Auth {
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
+    if (API_CONFIG.offline) { return true }
     let expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;
   }

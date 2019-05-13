@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, IAccessStrings } from '../model';
@@ -85,6 +86,8 @@ export function Access(props: IProps) {
         fetchLocalization();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [])
+
+    if (auth.isAuthenticated()) return <Redirect to='/welcome' />;
 
     return (
         <div className={classes.root}>

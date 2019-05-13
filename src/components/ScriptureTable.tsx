@@ -84,16 +84,26 @@ export function ScriptureTable(props: IProps) {
     const handleSave = (rows: string[][]) => {
       const addPassage = async (p: Passage, sId: string) => {
         (schema as Schema).initializeRecord(p);
-        // const result =
+        const passageSection = {
+          type: 'passagesection'
+        } as any;
+        (schema as Schema).initializeRecord(passageSection);
+        const result =
           await (dataStore as Store).update(t => [
             t.addRecord(p),
-            // t.addToRelatedRecords(
-            //   { type: 'passage', id: p.id },
-            //   'sections',
-            //   { type: 'section', id: sId }
-            // )
+            t.addRecord(passageSection),
+            t.replaceRelatedRecord(
+              {type: 'passagesection', id: passageSection.id},
+              'section',
+              {type: 'section', id: sId},
+            ),
+            t.replaceRelatedRecord(
+              {type: 'passagesection', id: passageSection.id},
+              'passage',
+              {type: 'passage', id: p.id},
+            ),
           ]);
-        // console.log(result)
+        console.log(result)
         // return result;
       }
       const doPassages = (i: number, sId: string) => {

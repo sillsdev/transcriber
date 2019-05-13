@@ -21,24 +21,8 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         namespace: "transcriber"
     });
 
-    if (Online()) {backup.reset()}
-
-    const remote = new JSONAPISource({
-        schema,
-        keyMap,
-        name: 'remote',
-        namespace: 'api',
-        host: API_CONFIG.host,
-        defaultFetchSettings: {
-            headers:{
-                "Authorization": "Bearer " + auth.accessToken,
-            }
-        }
-    })
-    remote.serializer.resourceKey = () => { return 'remoteId' };
-
     const coordinator = new Coordinator({
-        sources: [store, backup, remote]
+        sources: [store, backup]
     });
 
     // Update indexedDb when store updated
@@ -48,86 +32,106 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
         blocking: true
     }));
 
-    // Query the remote server whenever the store is queried
-    coordinator.addStrategy(new RequestStrategy({
-        source: 'store',
-        on: 'beforeQuery',
-
-        target: 'remote',
-        action: 'pull',
-
-        blocking: false
-    }));
-
-    // Update the remote server whenever the store is updated
-    coordinator.addStrategy(new RequestStrategy({
-        source: 'store',
-        on: 'beforeUpdate',
-
-        target: 'remote',
-        action: 'push',
-
-        blocking: false
-    }));
-
-    // Sync all changes received from the remote server to the store
-    coordinator.addStrategy(new SyncStrategy({
-        source: 'remote',
-        target: 'store',
-        blocking: false
-    }));
-
     coordinator.addStrategy(new EventLoggingStrategy());
 
-    remote.pull(q => q.findRecords('currentuser'), {
-        sources: {
-            remote: {
-                timeout: 100000,
+    if (!API_CONFIG.offline) {
+        if (Online()) {backup.reset()}
+
+        const remote = new JSONAPISource({
+            schema,
+            keyMap,
+            name: 'remote',
+            namespace: 'api',
+            host: API_CONFIG.host,
+            defaultFetchSettings: {
+                headers:{
+                    "Authorization": "Bearer " + auth.accessToken,
+                }
             }
-        }
-    })
-        .then((transform: Transform[]) => {
-            store.sync(transform);
-            const user = (transform[0].operations[0] as any).record;
-            setUser(user.id)
-            setInitials(user.attributes.name.trim().split(' ').map((s: string) => s.slice(0,1).toLocaleUpperCase()).join(''))
-        });
-    remote.pull(q => q.findRecords('organization'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('organizationmembership'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('project'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('integration'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('projectintegration'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('projecttype'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('plan'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('plantype'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('section'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('passagesection'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('passage'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('userrole'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('userpassage'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('group'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('groupmembership'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('role'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('projectuser'))
-        .then(transform => store.sync(transform));
-    remote.pull(q => q.findRecords('mediafile'))
-        .then(transform => store.sync(transform));
+        })
+        remote.serializer.resourceKey = () => { return 'remoteId' };
+
+        coordinator.addSource(remote);
+
+        // Query the remote server whenever the store is queried
+        coordinator.addStrategy(new RequestStrategy({
+            source: 'store',
+            on: 'beforeQuery',
+
+            target: 'remote',
+            action: 'pull',
+
+            blocking: false
+        }));
+
+        // Update the remote server whenever the store is updated
+        coordinator.addStrategy(new RequestStrategy({
+            source: 'store',
+            on: 'beforeUpdate',
+
+            target: 'remote',
+            action: 'push',
+
+            blocking: false
+        }));
+
+        // Sync all changes received from the remote server to the store
+        coordinator.addStrategy(new SyncStrategy({
+            source: 'remote',
+            target: 'store',
+            blocking: false
+        }));
+        
+        remote.pull(q => q.findRecords('currentuser'), {
+            sources: {
+                remote: {
+                    timeout: 100000,
+                }
+            }
+        })
+            .then((transform: Transform[]) => {
+                store.sync(transform);
+                const user = (transform[0].operations[0] as any).record;
+                setUser(user.id)
+                setInitials(user.attributes.name.trim().split(' ').map((s: string) => s.slice(0,1).toLocaleUpperCase()).join(''))
+            });
+        remote.pull(q => q.findRecords('organization'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('organizationmembership'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('project'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('integration'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('projectintegration'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('projecttype'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('plan'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('plantype'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('section'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('passagesection'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('passage'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('userrole'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('userpassage'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('group'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('groupmembership'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('role'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('projectuser'))
+            .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('mediafile'))
+            .then(transform => store.sync(transform));
+    }
 
     return (backup.pull(q => q.findRecords())
         .then(transform => store.sync(transform))
