@@ -63,10 +63,11 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
   columns: Array<ICell>;
   rowData: Array<Array<string>>;
   save: (r: string[][]) => void;
+  action: (what: string, where: boolean[]) => void;
 };
   
 export function PlanSheet(props: IProps) {
-    const { classes, columns, rowData, t, save } = props;
+    const { classes, columns, rowData, t, save, action } = props;
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
     const [actionItem, setActionItem] = useState(null);
@@ -75,6 +76,7 @@ export function PlanSheet(props: IProps) {
     useEffect(() => {
       let headers: Array<ICell> = [{value:'', readOnly: true}];
       columns.map(c => headers.push({...c, readOnly: true}));
+      checkReset(rowData.length);
       let rows: Array<Array<ICell>> = [headers];
       for (let i = 0; i < rowData.length; i += 1) {
         const r = rowData[i];
@@ -90,14 +92,17 @@ export function PlanSheet(props: IProps) {
         rows.push(oneRow);
       };
       setData(rows);
-      for (let i=0; i < rows.length; i += 1) {
-        check[i] = false;
-      }
-      setCheck(check);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rowData])
 
     const handleMessageReset = () => { setMessage(<></>) }
+    const checkReset = (n: number) => {
+      setCheck(Array<boolean>());
+      for (let i=0; i < n; i += 1) {
+        check[i] = false;
+      }
+      setCheck(check);
+    }
     const handleCheck = (row: number) => (e: any) => {
       check[row] = e.target.checked;
       setCheck(check);
@@ -113,9 +118,14 @@ export function PlanSheet(props: IProps) {
     }
     const handleValueRender = (cell: ICell) => cell.value;
     const handleMenu = (e:any) => setActionItem(e.currentTarget);
-    const handleMenuClose = (value: string) => (e: any) => {
-      alert(JSON.stringify(check))
-      setMessage(<span>{value}</span>);
+    const handleAction = (what: string, localWhat: string) => (e: any) => {
+      if (localWhat) {
+        setMessage(<span>{localWhat}...</span>);
+      }
+      if (action != null) {
+        const checks = check.filter((c,i) => i > 0)
+        action(what, checks);
+      }
       setActionItem(null)
     };
 
@@ -156,13 +166,13 @@ export function PlanSheet(props: IProps) {
               id='action-menu'
               anchorEl={actionItem}
               open={Boolean(actionItem)}
-              onClose={handleMenuClose('Close')}
+              onClose={handleAction('Close', '')}
             >
-              <MenuItem onClick={handleMenuClose('Delete')}>{t.delete}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Move')}>{t.move}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Copy')}>{t.copy}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Assign Media')}>{t.assignMedia}</MenuItem>
-              <MenuItem onClick={handleMenuClose('Assign Passage')}>{t.assignPassage}</MenuItem>
+              <MenuItem onClick={handleAction('Delete', t.delete)}>{t.delete}</MenuItem>
+              <MenuItem onClick={handleAction('Move', t.move)}>{t.move}</MenuItem>
+              <MenuItem onClick={handleAction('Copy', t.copy)}>{t.copy}</MenuItem>
+              <MenuItem onClick={handleAction('Assign Media', t.assignMedia)}>{t.assignMedia}</MenuItem>
+              <MenuItem onClick={handleAction('Assign Passage', t.assignPassage)}>{t.assignPassage}</MenuItem>
             </Menu>
             <Button
               key="addSection"

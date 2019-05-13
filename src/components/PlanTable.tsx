@@ -137,7 +137,9 @@ export function PlanTable(props: IProps) {
     setPlan(planId);
     const setDisplayType = async (p: Plan) => {
       let planType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'plan', id: p.id}, 'plantype')) as PlanType;
-      displaySet(planId, planType.attributes.name.toLowerCase() || 'default');
+      if (planType !== null) {
+        displaySet(planId, planType.attributes.name.toLowerCase() || 'default');
+      }
     }
     setDisplayType(plan);
   };
