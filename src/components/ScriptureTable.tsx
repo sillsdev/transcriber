@@ -5,7 +5,7 @@ import { IState, PassageSection, Section, Passage, IPlanSheetStrings, IScripture
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
-import { Schema } from '@orbit/data';
+import { Schema, RecordIdentity } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
@@ -30,6 +30,10 @@ const styles = (theme: Theme) => ({
   },
 });
 
+interface ISequencedRecordIdentity extends RecordIdentity {
+  sequencenum: number;
+}
+
 interface IStateProps {
   t: IScriptureTableStrings;
   s: IPlanSheetStrings;
@@ -45,6 +49,7 @@ export function ScriptureTable(props: IProps) {
     const [dataStore] = useGlobal('dataStore');
     const [schema] = useGlobal('schema');
     const [message, setMessage] = useState(<></>);
+    const [recordId, setRecordId] = useState(Array<RecordIdentity>());
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [columns, setColumns] = useState([
       {value: t.section,  readOnly: true, width: 80},
@@ -159,7 +164,8 @@ export function ScriptureTable(props: IProps) {
 
     useEffect(() => {
       let initData = Array<Array<any>>();
-      const getPassage = async (pId: string, list: (string|number)[][]) => {
+      let recordIds = Array<RecordIdentity>();
+      const getPassage = async (pId: string, list: (string|number)[][], ids:Array<ISequencedRecordIdentity>) => {
         let passage = await (dataStore as Store).query(q =>
           q.findRecord({type: 'passage', id: pId})) as Passage;
         if (passage != null) {
@@ -171,6 +177,7 @@ export function ScriptureTable(props: IProps) {
             passage.attributes.reference,
             passage.attributes.title,
           ])
+          ids.push({type: 'passage', id: passage.id, sequencenum: passage.attributes.sequencenum})
         }
       }
       const getPassageSection = async (s: Section) => {
@@ -179,6 +186,7 @@ export function ScriptureTable(props: IProps) {
             .filter({relation: 'section', record: {'type': 'section', id: s.id}}))
         if (passageSections != null) {
           let passages = Array<Array<string | number>>();
+          let ids = Array<ISequencedRecordIdentity>();
           for (let j=0; j < passageSections.length; j += 1) {
             let ps = passageSections[j] as PassageSection;
             await getPassage((ps.relationships &&
@@ -186,11 +194,13 @@ export function ScriptureTable(props: IProps) {
                 ps.relationships.passage.data &&
                   (!Array.isArray(ps.relationships.passage.data)?
                     ps.relationships.passage.data.id: null)) || '',
-              passages)
+              passages, ids)
           }
           passages = passages.sort((i,j) => { return (parseInt(i[2].toString()) - parseInt(j[2].toString())); });
+          ids = ids.sort((i,j) => { return i.sequencenum - j.sequencenum; })
           for (let j=0; j < passageSections.length; j += 1) {
             initData.push(passages[j])
+            recordIds.push(ids[j])
           }
         }
       }
@@ -210,9 +220,11 @@ export function ScriptureTable(props: IProps) {
               '',
               '',
             ]);
+            recordIds.push({type:'section', id: s.id});
             await getPassageSection(s);
           }
           setData(initData);
+          console.log(recordIds)
         }
       }
       getSections(plan as string);
