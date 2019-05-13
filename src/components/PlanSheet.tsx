@@ -95,7 +95,7 @@ export function PlanSheet(props: IProps) {
       }
       setCheck(check);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [rowData])
 
     const handleMessageReset = () => { setMessage(<></>) }
     const handleCheck = (row: number) => (e: any) => {

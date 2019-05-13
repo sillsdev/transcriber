@@ -1,13 +1,13 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface TaskSet extends Record {
+export interface PassageSection extends Record {
     attributes: {
-      taskId: number;
-      setId: number;
+      passageId: number;
+      sectionId: number;
     };
     relationships?: {
-      sets: RecordRelationship;
-      tasks: RecordRelationship;
+      section: RecordRelationship;
+      passage: RecordRelationship;
     };
   };
-export default TaskSet;
+export default PassageSection;

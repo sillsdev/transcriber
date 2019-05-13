@@ -1,7 +1,7 @@
 import React, { useState, useEffect  } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Plan, Section, Passage, IPlanSheetStrings, IScriptureTableStrings } from '../model';
+import { IState, PassageSection, Section, Passage, IPlanSheetStrings, IScriptureTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
@@ -55,30 +55,31 @@ export function ScriptureTable(props: IProps) {
       {value: t.description, readOnly: true, width: 280},
     ]);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [data, setData] = useState([
-      [1,"Luke wrote this book about Jesus for Theophilus",'','LUK',"Section 1:1–4",''],
-      ['','',1,'LUK',"1:1-4",''],
-      [2,"An angel said that John the Baptizer would be born",'','LUK',"Section 1:5–25",''],
-      ['','',1,'LUK',"1:5-7",''],
-      ['','',2,'LUK',"1:8-10",''],
-      ['','',3,'LUK',"1:11-17",''],
-      ['','',4,'LUK',"1:18-20",''],
-      ['','',5,'LUK',"1:21-25",''],
-      [3,"An angel told Mary that Jesus would be born",'','LUK',"Section 1:26–38",''],
-      ['','',1,'LUK',"1:26-28",''],
-      ['','',2,'LUK',"1:29-34",''],
-      ['','',3,'LUK',"1:35-38",''],
-      [4,"Mary visited Elizabeth",'','LUK',"Section 1:39–45",''],
-      ['','',1,'LUK',"1:39-45",''],
-      [5,"Mary praised God",'','LUK',"Section 1:46–56",''],
-      ['','',1,'LUK',"1:46-56",''],
-      [6,"John the Baptizer was born and received his name",'','LUK',"Section 1:57–66",''],
-      ['','',1,'LUK',"1:57-58",''],
-      ['','',2,'LUK',"1:59-64",''],
-      ['','',3,'LUK',"1:65-66",''],
-      [7,"Zechariah prophesied and praised God",'','LUK',"Section 1:67–80",''],
-      ['','',1,'LUK',"1:67-80",''],
-    ]);
+    const [data, setData] = useState(
+      Array<Array<any>>()
+      // [[1,"Luke wrote this book about Jesus for Theophilus",'','LUK',"Section 1:1–4",''],
+      // ['','',1,'LUK',"1:1-4",''],
+      // [2,"An angel said that John the Baptizer would be born",'','LUK',"Section 1:5–25",''],
+      // ['','',1,'LUK',"1:5-7",''],
+      // ['','',2,'LUK',"1:8-10",''],
+      // ['','',3,'LUK',"1:11-17",''],
+      // ['','',4,'LUK',"1:18-20",''],
+      // ['','',5,'LUK',"1:21-25",''],
+      // [3,"An angel told Mary that Jesus would be born",'','LUK',"Section 1:26–38",''],
+      // ['','',1,'LUK',"1:26-28",''],
+      // ['','',2,'LUK',"1:29-34",''],
+      // ['','',3,'LUK',"1:35-38",''],
+      // [4,"Mary visited Elizabeth",'','LUK',"Section 1:39–45",''],
+      // ['','',1,'LUK',"1:39-45",''],
+      // [5,"Mary praised God",'','LUK',"Section 1:46–56",''],
+      // ['','',1,'LUK',"1:46-56",''],
+      // [6,"John the Baptizer was born and received his name",'','LUK',"Section 1:57–66",''],
+      // ['','',1,'LUK',"1:57-58",''],
+      // ['','',2,'LUK',"1:59-64",''],
+      // ['','',3,'LUK',"1:65-66",''],
+      // [7,"Zechariah prophesied and praised God",'','LUK',"Section 1:67–80",''],
+      // ['','',1,'LUK',"1:67-80",''],]
+    );
 
     const handleMessageReset = () => { setMessage(<></>) }
     const handleSave = (rows: string[][]) => {
@@ -157,25 +158,65 @@ export function ScriptureTable(props: IProps) {
     }
 
     useEffect(() => {
-      const getSections = async (p: Plan) => {
-        let sections = await (dataStore as Store).query(q => q.findRelatedRecords({type: 'plan', id: p}, 'sections'))
-        if (sections != null) {
-          for (let i = 0; i < sections.length; i += 1) {
-            let s = sections[i];
-            const getPassages = async (s: Section) => {
-              // const sectionId = (keyMap as KeyMap).idToKey('section', 'remoteId', (s.id as string));
-              // let passages = await (dataStore as Store).query(q =>
-              //   q.findRecords('passage').filter({relation: 'sections', record: {type: 'section', id: sectionId}}))
-              // if (passages != null) {
-              //   console.log(passages)
-              // }
-            }
-            getPassages(s);
+      let initData = Array<Array<any>>();
+      const getPassage = async (pId: string, list: (string|number)[][]) => {
+        let passage = await (dataStore as Store).query(q =>
+          q.findRecord({type: 'passage', id: pId})) as Passage;
+        if (passage != null) {
+          list.push([
+            '',
+            '',
+            passage.attributes.sequencenum,
+            passage.attributes.book,
+            passage.attributes.reference,
+            passage.attributes.title,
+          ])
+        }
+      }
+      const getPassageSection = async (s: Section) => {
+        let passageSections = await (dataStore as Store).query( q =>
+          q.findRecords('passagesection')
+            .filter({relation: 'section', record: {'type': 'section', id: s.id}}))
+        if (passageSections != null) {
+          let passages = Array<Array<string | number>>();
+          for (let j=0; j < passageSections.length; j += 1) {
+            let ps = passageSections[j] as PassageSection;
+            await getPassage((ps.relationships &&
+              ps.relationships.passage &&
+                ps.relationships.passage.data &&
+                  (!Array.isArray(ps.relationships.passage.data)?
+                    ps.relationships.passage.data.id: null)) || '',
+              passages)
+          }
+          passages = passages.sort((i,j) => { return (parseInt(i[2].toString()) - parseInt(j[2].toString())); });
+          for (let j=0; j < passageSections.length; j += 1) {
+            initData.push(passages[j])
           }
         }
       }
-      getSections(plan as Plan);
-    }, [])
+      const getSections = async (p: string) => {
+        let sections = await (dataStore as Store).query(q =>
+          q.findRecords('section')
+            .filter({relation: 'plan', record: {type: 'plan', id: p}})
+            .sort('sequencenum'));
+        if (sections != null) {
+          for (let i = 0; i < sections.length; i += 1) {
+            let s = sections[i] as Section;
+            initData.push([
+              s.attributes.sequencenum,
+              s.attributes.name,
+              '',
+              '',
+              '',
+              '',
+            ]);
+            await getPassageSection(s);
+          }
+          setData(initData);
+        }
+      }
+      getSections(plan as string);
+    },[])
 
     return (
       <div className={classes.container}>

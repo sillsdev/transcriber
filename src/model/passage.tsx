@@ -2,10 +2,11 @@ import { Record, RecordRelationship } from '@orbit/data';
 
 export interface Passage extends Record {
     attributes: {
+      sequencenum: number;
+      book: string;
       reference: string;
-      passage: number;
       position: number;
-      taskState: string;
+      state: string;
       hold: boolean;
       title: string;
       dateCreated: string | null;
