@@ -277,11 +277,12 @@ export function ScriptureTable(props: IProps) {
       }
       const getSections = async (p: string) => {
         let sections = await (dataStore as Store).query(q =>
-          q.findRelatedRecords({type:'plan', id: p}, 'sections'));
+          q.findRelatedRecords({type:'plan', id: p}, 'sections')) as Array<Section>;
           // query filter doesn't work with JsonApi since id not translated
           // q.findRecords('section')
           //   .filter({relation: 'plan', record: {type: 'plan', id: p}})
           //   .sort('sequencenum'));
+        sections = sections.sort((i,j) => i.attributes.sequencenum - j.attributes.sequencenum);
         if (sections != null) {
           for (let i = 0; i < sections.length; i += 1) {
             let s = sections[i] as Section;
