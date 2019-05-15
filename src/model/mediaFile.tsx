@@ -1,8 +1,8 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface TaskMedia extends Record {
+export interface MediaFiles extends Record {
     attributes: {
-      taskId: number;
+      passageId: number;
       versionNumber: number;
       artifactType: string;
       eafUrl: string;
@@ -19,4 +19,4 @@ export interface TaskMedia extends Record {
       task: RecordRelationship;
     };
   };
-export default TaskMedia;  
+export default MediaFiles;  

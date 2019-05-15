@@ -89,7 +89,7 @@ export function ScriptureTable(props: IProps) {
     const [inData, setInData] = useState(Array<Array<any>>());
 
     const handleMessageReset = () => { setMessage(<></>) }
-    const handleAction = (what: string, where: boolean[]) => {
+    const handleAction = (what: string, where: number[]) => {
       if (where.filter(Boolean).length === 0) {
         setMessage(<span>Please select row(s) for {what}.</span>)
       } else {
@@ -97,17 +97,16 @@ export function ScriptureTable(props: IProps) {
           const deleteRow = async (id: RecordIdentity) => {
             await (dataStore as Store).update(t => t.removeRecord(id))
           }
-          for (let i=0; i < data.length; i += 1) {
-            if (where[i]) {
-              if (sectionId[i] && sectionId[i].id) {
-                deleteRow(sectionId[i])
-              }
-              if (passageId[i] && passageId[i].id) {
-                deleteRow(passageId[i])
-              }
+          for (let j=0; j < where.length; j += 1) {
+            const i = where[j];
+            if (sectionId[i] && sectionId[i].id) {
+              deleteRow(sectionId[i])
+            }
+            if (passageId[i] && passageId[i].id) {
+              deleteRow(passageId[i])
             }
           }
-          setData(data.filter((r,i) => !where[i]));
+          setData(data.filter((r,i) => !where.includes(i)));
         }
       }
     }
@@ -162,6 +161,7 @@ export function ScriptureTable(props: IProps) {
             passage.attributes.book = passageRow[3];
             passage.attributes.reference = passageRow[4];
             passage.attributes.title = passageRow[5];
+            delete passage.relationships;
             await (dataStore as Store).update(t => t.replaceRecord(passage))
           }
       }
@@ -207,6 +207,7 @@ export function ScriptureTable(props: IProps) {
               q.findRecord(sectionId[i])) as Section;
             section.attributes.sequencenum = parseInt(sectionRow[0]);
             section.attributes.name = sectionRow[1];
+            delete section.relationships;
             await (dataStore as Store).update(t => t.replaceRecord(section));
         }
         return sectionId[i];
@@ -307,7 +308,6 @@ export function ScriptureTable(props: IProps) {
           setInData(initData);
           setSectionId(sectionIds);
           setPassageId(passageIds);
-          console.log('loaded')
         });
     },[])
 

@@ -61,9 +61,9 @@ interface IStateProps {
 
 interface IProps extends IStateProps, WithStyles<typeof styles>{
   columns: Array<ICell>;
-  rowData: Array<Array<string>>;
+  rowData: Array<Array<string|number>>;
   save: (r: string[][]) => void;
-  action: (what: string, where: boolean[]) => void;
+  action: (what: string, where: number[]) => void;
 };
   
 export function PlanSheet(props: IProps) {
@@ -71,41 +71,23 @@ export function PlanSheet(props: IProps) {
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
     const [actionItem, setActionItem] = useState(null);
-    const [check, setCheck] = useState(Array<boolean>());
-
-    useEffect(() => {
-      let headers: Array<ICell> = [{value:'', readOnly: true}];
-      columns.map(c => headers.push({...c, readOnly: true}));
-      checkReset(rowData.length);
-      let rows: Array<Array<ICell>> = [headers];
-      for (let i = 0; i < rowData.length; i += 1) {
-        const r = rowData[i];
-        const isSection = /^[0-9]+$/.test(r[0]);
-        let oneRow: Array<ICell> = [{
-          value: <CheckBox checked={check[i+1]} onChange={handleCheck(i+1)}/>,
-          className: (isSection? 'set': 'pass'),
-        }]
-        r.map(r1 => oneRow.push({
-          value: r1,
-          className: (isNumber(r1)?'num': 'pass') + (isSection? ' set': '')
-        }));
-        rows.push(oneRow);
-      };
-      setData(rows);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rowData])
+    const [check, setCheck] = useState(Array<number>());
 
     const handleMessageReset = () => { setMessage(<></>) }
-    const checkReset = (n: number) => {
-      setCheck(Array<boolean>());
-      for (let i=0; i < n; i += 1) {
-        check[i] = false;
-      }
-      setCheck(check);
-    }
     const handleCheck = (row: number) => (e: any) => {
-      check[row] = e.target.checked;
-      setCheck(check);
+      if (e.target.checked) {
+        check.push(row);
+        if (/^[0-9]+$/.test(rowData[row][0].toString())) {
+          do {
+            row += 1;
+            if (/^[0-9]+$/.test(rowData[row][0].toString())) { break };
+            check.push(row);
+          } while (true);
+        }
+        setCheck([...check]);
+      } else {
+        setCheck(check.filter(i => i !== row));
+      }
     };
     const handleAddSection = () => setMessage(<span>Add Section</span>);
     const handleAddPassage = () => setMessage(<span>Add Passage</span>);
@@ -123,8 +105,8 @@ export function PlanSheet(props: IProps) {
         setMessage(<span>{localWhat}...</span>);
       }
       if (action != null) {
-        const checks = check.filter((c,i) => i > 0)
-        action(what, checks);
+        action(what, check);
+        setCheck(Array<number>());
       }
       setActionItem(null)
     };
@@ -145,6 +127,27 @@ export function PlanSheet(props: IProps) {
       const lines = chunks.join('\n').replace(/\r?\n$/,'').split('\n')
       return lines.map(s => s.split('\t'));
     }
+
+    useEffect(() => {
+      setData(
+        [[{value:'', readOnly: true} as ICell].concat(
+          columns.map(c => {return {...c, readOnly: true}}))].concat(
+            rowData.map((r,i) => {
+              const isSection = /^[0-9]+$/.test(r[0].toString());
+              return (
+                [{
+                  value: <CheckBox checked={check.includes(i)} onChange={handleCheck(i)}/>,
+                  className: (isSection? 'set': 'pass'),
+                } as ICell].concat(
+                r.map(e => {return {
+                  value: e,
+                  className: (isNumber(e)?'num': 'pass') + (isSection? ' set': ''),
+                }})
+              )
+            )})
+          ));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rowData, check])
 
     return (
       <div className={classes.container}>
