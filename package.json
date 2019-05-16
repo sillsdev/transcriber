@@ -16,12 +16,6 @@
     "@orbit/indexeddb": "^0.15.25",
     "@orbit/jsonapi": "^0.15.25",
     "@orbit/store": "^0.15.25",
-    "@types/classnames": "^2.2.7",
-    "@types/jest": "24.0.11",
-    "@types/node": "11.13.7",
-    "@types/react": "16.8.14",
-    "@types/react-dom": "16.8.4",
-    "@types/react-redux": "^7.0.6",
     "auth0-js": "^9.10.2",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
@@ -59,6 +53,15 @@
   ],
   "devDependencies": {
     "@types/auth0-js": "^9.10.1",
-    "@types/react-router-dom": "^4.3.1"
+    "@types/classnames": "^2.2.7",
+    "@types/jest": "24.0.11",
+    "@types/node": "11.13.7",
+    "@types/react": "16.8.14",
+    "@types/react-dom": "16.8.4",
+    "@types/react-redux": "^7.0.6",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/react-test-renderer": "^16.8.1",
+    "jest-dom": "^3.2.2",
+    "react-testing-library": "^7.0.0"
   }
 }

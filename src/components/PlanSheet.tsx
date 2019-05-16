@@ -44,10 +44,6 @@ interface ICell {
   className?: string;
 };
 
-interface ICheck {
-  [key: number]: any;
-}
-
 interface IChange {
   cell: any;
   row: number;
