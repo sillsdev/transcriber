@@ -1,6 +1,6 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { setGlobal, useGlobal } from 'reactn';
+import { setGlobal } from 'reactn';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from '../store';
@@ -68,7 +68,41 @@ const addOneSection = async () => {
     ));
     // let sections = await (dataStore as Store).query(q => q.findRecords('section'))
     // console.log(sections)
-}
+    return section.id;
+};
+
+const addPassageToSection = async (sectionId: string) => {
+    const passage = {
+        type: 'passage',
+        attributes: {
+            sequencenum: 1,
+            book: 'GEN',
+            reference: '1:1-20',
+            position: 0,
+            state: '1',
+            hold: false,
+            title: 'Seven Days'
+        }
+    } as any;
+    (schema as Schema).initializeRecord(passage);
+    await (dataStore as Store).update(t => t.addRecord(passage));
+    const passageSection = {
+        type: 'passagesection',
+    } as any;
+    (schema as Schema).initializeRecord(passageSection);
+    await (dataStore as Store).update(t => t.addRecord(passageSection));
+    await (dataStore as Store).update(t => t.replaceRelatedRecord(
+        {type: 'passagesection', id: passageSection.id},
+        'section',
+        {type: 'section', id: sectionId}
+    ));
+    await (dataStore as Store).update(t => t.replaceRelatedRecord(
+        {type: 'passagesection', id: passageSection.id},
+        'passage',
+        {type: 'passage', id: passage.id}
+    ));
+    return passage.id;
+};
 
 afterEach(cleanup);
 
@@ -88,3 +122,14 @@ test('ScriptureTable renders on section line', async () => {
     );
     expect(getByText(/^Creation$/i)).toHaveTextContent('Creation');
 });
+
+test('ScriptureTable renders a section with a passage', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    expect(getByText(/^Seven Days$/i)).toHaveTextContent('Seven Days');
+})
