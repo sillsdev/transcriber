@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`can render ScriptureTable 1`] = `
+exports[`can render ScriptureTable snapshot 1`] = `
 <div
   class="WithData-Connect-ScriptureTable---container-1"
 >
