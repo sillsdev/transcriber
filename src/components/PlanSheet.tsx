@@ -80,7 +80,8 @@ export function PlanSheet(props: IProps) {
         if (/^[0-9]+$/.test(rowData[row][0].toString())) {
           do {
             row += 1;
-            if (/^[0-9]+$/.test(rowData[row][0].toString())) { break };
+            if (row === rowData.length ||
+              /^[0-9]+$/.test(rowData[row][0].toString())) { break };
             check.push(row);
           } while (true);
         }
