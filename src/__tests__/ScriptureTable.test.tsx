@@ -116,20 +116,57 @@ test('can render ScriptureTable snapshot', async () => {
 
 test('ScriptureTable renders on section line', async () => {
     await addOneSection();
-    const { getByText } = render(tree);
+    const { getByText, container } = render(tree);
     const TestScriptureTable = await waitForElement(() =>
         getByText(/^Creation$/i),
     );
     expect(getByText(/^Creation$/i)).toHaveTextContent('Creation');
+    const body = container.querySelector('tbody');
+    expect(body).not.toBeFalsy
+    expect(body && body.children.length).toBe(2);
 });
 
 test('ScriptureTable renders a section with a passage', async () => {
     const sectionId = await addOneSection();
     await addPassageToSection(sectionId);
 
-    const { getByText } = render(tree);
+    const { getByText, container } = render(tree);
     const TestScriptureTable = await waitForElement(() =>
         getByText(/^Creation$/i),
     );
     expect(getByText(/^Seven Days$/i)).toHaveTextContent('Seven Days');
-})
+    const body = container.querySelector('tbody');
+    expect(body).not.toBeFalsy
+    expect(body && body.children.length).toBe(3);
+});
+
+test('ScriptureTable AddPassage button adds a row', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    fireEvent.click(getByText(/Add Passage/i));
+    const body = container.querySelector('tbody');
+    expect(body).not.toBeFalsy
+    expect(body && body.children.length).toBe(4);
+    // sequence number column should be 2
+    expect(body && body.children[3].children[3].textContent).toBe('2');
+});
+
+test('ScriptureTable AddPassage button adds first row', async () => {
+    await addOneSection();
+
+    const { getByText, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    fireEvent.click(getByText(/Add Passage/i));
+    const body = container.querySelector('tbody');
+    expect(body).not.toBeFalsy
+    expect(body && body.children.length).toBe(3);
+    // sequence number column should be 1
+    expect(body && body.children[2].children[3].textContent).toBe('1');
+});

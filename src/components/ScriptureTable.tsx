@@ -89,6 +89,12 @@ export function ScriptureTable(props: IProps) {
     const [inData, setInData] = useState(Array<Array<any>>());
 
     const handleMessageReset = () => { setMessage(<></>) }
+    const addPassage = () => {
+      const lastRow = data.length - 1;
+      const sequencenum = (data[lastRow][2] || 0) + 1;
+      const book = data[lastRow][3] || ''
+      setData([...data.concat( [['', '', sequencenum, book, '', '']] )]);
+    }
     const handleAction = (what: string, where: number[]) => {
       if (where.filter(Boolean).length === 0) {
         setMessage(<span>Please select row(s) for {what}.</span>)
@@ -318,6 +324,7 @@ export function ScriptureTable(props: IProps) {
           rowData={data as any[][]}
           save={handleSave}
           action={handleAction}
+          addPassage={addPassage}
           t={s}
         />
         <SnackBar {...props} message={message} reset={handleMessageReset} />

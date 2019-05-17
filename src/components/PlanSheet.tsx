@@ -60,10 +60,11 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
   rowData: Array<Array<string|number>>;
   save: (r: string[][]) => void;
   action: (what: string, where: number[]) => void;
+  addPassage: () => void;
 };
   
 export function PlanSheet(props: IProps) {
-    const { classes, columns, rowData, t, save, action } = props;
+    const { classes, columns, rowData, t, save, action, addPassage } = props;
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
     const [actionItem, setActionItem] = useState(null);
@@ -87,7 +88,11 @@ export function PlanSheet(props: IProps) {
       }
     };
     const handleAddSection = () => setMessage(<span>Add Section</span>);
-    const handleAddPassage = () => setMessage(<span>Add Passage</span>);
+    const handleAddPassage = () => {
+      if (addPassage != null) {
+        addPassage();
+      }
+    }
     const handleSave = () => {
       setMessage(<span>Saving</span>);
       if (save != null) {
