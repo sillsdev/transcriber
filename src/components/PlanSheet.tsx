@@ -73,6 +73,7 @@ export function PlanSheet(props: IProps) {
     const [actionMenuItem, setActionMenuItem] = useState(null);
     const [check, setCheck] = useState(Array<number>());
     const [confirmAction, setConfirmAction] = useState('');
+    const [dirty, setDirty] = useState(false);
 
     const handleMessageReset = () => { setMessage(<></>) }
     const handleCheck = (row: number) => (e: any) => {
@@ -92,12 +93,16 @@ export function PlanSheet(props: IProps) {
       }
     };
     const handleAddSection = () => {
-      if (addSection != null) {
+      if (dirty) {
+        setMessage(<span>Save before adding section</span>)
+      } else if (addSection != null) {
         addSection();
       }
     }
     const handleAddPassage = () => {
-      if (addPassage != null) {
+      if (dirty) {
+        setMessage(<span>Save before adding passage</span>)
+      } else if (addPassage != null) {
         addPassage();
       }
     }
@@ -136,6 +141,7 @@ export function PlanSheet(props: IProps) {
         grid[row][col] = {...grid[row][col], value}
       });
       setData(grid);
+      setDirty(true);
     };
 
     const handleContextMenu = (e: MouseEvent, cell: any) => cell.readOnly ? e.preventDefault() : null;
