@@ -101,25 +101,24 @@ export function ScriptureTable(props: IProps) {
       setData([...data.concat( [['', '', sequencenum, book, '', '']] )]);
     }
     const handleAction = (what: string, where: number[]) => {
-      if (where.filter(Boolean).length === 0) {
-        setMessage(<span>Please select row(s) for {what}.</span>)
-      } else {
-        if (what === 'Delete') {
-          const deleteRow = async (id: RecordIdentity) => {
-            await (dataStore as Store).update(t => t.removeRecord(id))
-          }
-          for (let j=0; j < where.length; j += 1) {
-            const i = where[j];
-            if (sectionId[i] && sectionId[i].id) {
-              deleteRow(sectionId[i])
-            }
-            if (passageId[i] && passageId[i].id) {
-              deleteRow(passageId[i])
-            }
-          }
-          setData(data.filter((r,i) => !where.includes(i)));
+      if (what === 'Delete') {
+        const deleteRow = async (id: RecordIdentity) => {
+          await (dataStore as Store).update(t => t.removeRecord(id))
         }
+        for (let j=0; j < where.length; j += 1) {
+          const i = where[j];
+          if (sectionId[i] && sectionId[i].id) {
+            deleteRow(sectionId[i])
+          }
+          if (passageId[i] && passageId[i].id) {
+            deleteRow(passageId[i])
+          }
+        }
+        setData(data.filter((r,i) => !where.includes(i)));
+        return true;
       }
+      setMessage(<span>{what}...</span>)
+      return false;
     }
     const handleSave = (rows: string[][]) => {
       const addPassage = async (i: number, sId: string) => {

@@ -12,7 +12,6 @@ import history from '../history';
 import { render, fireEvent, cleanup, waitForElement } from 'react-testing-library';
 import 'jest-dom/extend-expect';
 import ScriptureTable from '../components/ScriptureTable';
-import { brotliDecompress } from 'zlib';
 
 const theme = createMuiTheme({});
   
@@ -214,4 +213,116 @@ test('ScriptureTable AddSection button adds first section', async () => {
     expect(body && body.children.length).toBe(2);
     // sequence number column should be 1
     expect(body && body.childNodes[1].childNodes[1].textContent).toBe('1');
+});
+
+test('ScriptureTable Delete action with nothing selected', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    fireEvent.click(getByText(/Action/i));
+    const TestScriptureTableActionMenu = await waitForElement(() =>
+        getByText(/Delete/i),
+    );
+    fireEvent.click(getByText(/Delete/i))
+    const TestScriptureTableCopyAction = await waitForElement(() =>
+        getByText(/Please select row/i),
+    );
+    expect(true);
+});
+
+test('ScriptureTable Select passage row', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText, getAllByTestId, getByTestId } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    const box = getAllByTestId('check')[1]
+    fireEvent.click(box.querySelector('input') as HTMLElement)
+    const TestScriptureTableChecked = await waitForElement(() =>
+        getByTestId('checked'),
+    );
+    expect(true);
+});
+
+test('ScriptureTable Delete passage row gives confirmation', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText, getAllByTestId, getByTestId } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    const box = getAllByTestId('check')[1]
+    fireEvent.click(box.querySelector('input') as HTMLElement)
+    const TestScriptureTableChecked = await waitForElement(() =>
+        getByTestId('checked'),
+    );
+    fireEvent.click(getByText(/Action/i));
+    const TestScriptureTableActionMenu = await waitForElement(() =>
+        getByText(/Delete/i),
+    );
+    fireEvent.click(getByText(/Delete/i))
+    const TestScriptureTableCopyAction = await waitForElement(() =>
+        getByText(/Confirmation/i),
+    );
+    expect(true);
+});
+
+test('ScriptureTable Delete passage row', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText, getAllByTestId, getByTestId, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    const box = getAllByTestId('check')[1]
+    fireEvent.click(box.querySelector('input') as HTMLElement)
+    const TestScriptureTableChecked = await waitForElement(() =>
+        getByTestId('checked'),
+    );
+    fireEvent.click(getByText(/Action/i));
+    const TestScriptureTableActionMenu = await waitForElement(() =>
+        getByText(/Delete/i),
+    );
+    fireEvent.click(getByText(/Delete/i));
+    const TestScriptureTableCopyAction = await waitForElement(() =>
+        getByText(/Confirmation/i),
+    );
+    fireEvent.click(getByText(/Yes/i));
+    const body = container.querySelector('tbody');
+    expect(body && body.children.length).toBe(2);
+});
+
+test('ScriptureTable Delete section rows', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText, getAllByTestId, getByTestId, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    const box = getAllByTestId('check')[0]
+    fireEvent.click(box.querySelector('input') as HTMLElement)
+    const TestScriptureTableChecked = await waitForElement(() =>
+        getAllByTestId('checked'),
+    );
+    expect(getAllByTestId('checked').length).toBe(2);
+    fireEvent.click(getByText(/Action/i));
+    const TestScriptureTableActionMenu = await waitForElement(() =>
+        getByText(/Delete/i),
+    );
+    fireEvent.click(getByText(/Delete/i));
+    const TestScriptureTableCopyAction = await waitForElement(() =>
+        getByText(/Confirmation/i),
+    );
+    fireEvent.click(getByText(/Yes/i));
+    const body = container.querySelector('tbody');
+    expect(body && body.children.length).toBe(1); // just the header
 });

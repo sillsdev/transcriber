@@ -10,6 +10,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckBox from '@material-ui/core/Checkbox';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
+import Confirm from './AlertDialog';
 import 'react-datasheet/lib/react-datasheet.css';
 import './PlanSheet.css';
 import { isNumber } from 'util';
@@ -59,7 +60,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
   columns: Array<ICell>;
   rowData: Array<Array<string|number>>;
   save: (r: string[][]) => void;
-  action: (what: string, where: number[]) => void;
+  action: (what: string, where: number[]) => boolean;
   addPassage: () => void;
   addSection: () => void;
 };
@@ -69,8 +70,9 @@ export function PlanSheet(props: IProps) {
         save, action, addPassage, addSection } = props;
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
-    const [actionItem, setActionItem] = useState(null);
+    const [actionMenuItem, setActionMenuItem] = useState(null);
     const [check, setCheck] = useState(Array<number>());
+    const [confirmAction, setConfirmAction] = useState('');
 
     const handleMessageReset = () => { setMessage(<></>) }
     const handleCheck = (row: number) => (e: any) => {
@@ -107,16 +109,25 @@ export function PlanSheet(props: IProps) {
       }
     }
     const handleValueRender = (cell: ICell) => cell.value;
-    const handleMenu = (e:any) => setActionItem(e.currentTarget);
-    const handleAction = (what: string, localWhat: string) => (e: any) => {
-      if (localWhat) {
-        setMessage(<span>{localWhat}...</span>);
+    const handleMenu = (e:any) => setActionMenuItem(e.currentTarget);
+    const handleConfirmAction = (what: string) => (e:any) => {
+      setActionMenuItem(null)
+      if (check.length === 0) {
+        setMessage(<span>Please select row(s) to {what}.</span>)
+      } else if (!/Close/i.test(what)) {
+        setConfirmAction(what);
       }
+    };
+    const handleActionConfirmed = () => {
       if (action != null) {
-        action(what, check);
-        setCheck(Array<number>());
+        if (action(confirmAction, check)) {
+          setCheck(Array<number>());
+        }
       }
-      setActionItem(null)
+      setConfirmAction('');
+    };
+    const handleActionRefused = () => {
+      setConfirmAction('');
     };
 
     const handleCellsChanged = (changes: Array<IChange>) => {
@@ -144,7 +155,8 @@ export function PlanSheet(props: IProps) {
               const isSection = /^[0-9]+$/.test(r[0].toString());
               return (
                 [{
-                  value: <CheckBox checked={check.includes(i)} onChange={handleCheck(i)}/>,
+                  value: <CheckBox data-testid={check.includes(i)? 'checked': 'check'}
+                    checked={check.includes(i)} onChange={handleCheck(i)}/>,
                   className: (isSection? 'set': 'pass'),
                 } as ICell].concat(
                 r.map(e => {return {
@@ -163,7 +175,7 @@ export function PlanSheet(props: IProps) {
           <div className={classes.actions}>
           <Button
               key="action"
-              aria-owns={actionItem !== ''? 'action-menu': undefined}
+              aria-owns={actionMenuItem !== ''? 'action-menu': undefined}
               aria-label={t.action}
               variant="outlined"
               color="primary"
@@ -175,15 +187,15 @@ export function PlanSheet(props: IProps) {
             </Button>
             <Menu
               id='action-menu'
-              anchorEl={actionItem}
-              open={Boolean(actionItem)}
-              onClose={handleAction('Close', '')}
+              anchorEl={actionMenuItem}
+              open={Boolean(actionMenuItem)}
+              onClose={handleConfirmAction('Close')}
             >
-              <MenuItem onClick={handleAction('Delete', t.delete)}>{t.delete}</MenuItem>
-              <MenuItem onClick={handleAction('Move', t.move)}>{t.move}</MenuItem>
-              <MenuItem onClick={handleAction('Copy', t.copy)}>{t.copy}</MenuItem>
-              <MenuItem onClick={handleAction('Assign Media', t.assignMedia)}>{t.assignMedia}</MenuItem>
-              <MenuItem onClick={handleAction('Assign Passage', t.assignPassage)}>{t.assignPassage}</MenuItem>
+              <MenuItem onClick={handleConfirmAction('Delete')}>{t.delete}</MenuItem>
+              <MenuItem onClick={handleConfirmAction('Move')}>{t.move}</MenuItem>
+              <MenuItem onClick={handleConfirmAction('Copy')}>{t.copy}</MenuItem>
+              <MenuItem onClick={handleConfirmAction('Assign Media')}>{t.assignMedia}</MenuItem>
+              <MenuItem onClick={handleConfirmAction('Assign Passage')}>{t.assignPassage}</MenuItem>
             </Menu>
             <Button
               key="addSection"
@@ -228,6 +240,13 @@ export function PlanSheet(props: IProps) {
             parsePaste={handlePaste}
           />
         </div>
+        {confirmAction !== ''
+        ? <Confirm
+            text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
+            yesResponse={handleActionConfirmed}
+            noResponse={handleActionRefused}
+          />
+        : <></>}        
         <SnackBar {...props} message={message} reset={handleMessageReset} />
       </div>
     );
