@@ -12,6 +12,7 @@ import history from '../history';
 import { render, fireEvent, cleanup, waitForElement } from 'react-testing-library';
 import 'jest-dom/extend-expect';
 import ScriptureTable from '../components/ScriptureTable';
+import { brotliDecompress } from 'zlib';
 
 const theme = createMuiTheme({});
   
@@ -169,4 +170,48 @@ test('ScriptureTable AddPassage button adds first row', async () => {
     expect(body && body.children.length).toBe(3);
     // sequence number column should be 1
     expect(body && body.children[2].children[3].textContent).toBe('1');
+});
+
+test('ScriptureTable AddSection button adds a row with the next section number', async () => {
+    const sectionId = await addOneSection();
+    await addPassageToSection(sectionId);
+
+    const { getByText, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    fireEvent.click(getByText(/Add Section/i));
+    const body = container.querySelector('tbody');
+    expect(body).not.toBeFalsy
+    expect(body && body.children.length).toBe(4);
+    // sequence number column should be 2
+    expect(body && body.children[3].children[1].textContent).toBe('2');
+});
+
+test('ScriptureTable AddSection button adds second section when no passages in previous section', async () => {
+    await addOneSection();
+
+    const { getByText, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Creation$/i),
+    );
+    fireEvent.click(getByText(/Add Section/i));
+    const body = container.querySelector('tbody');
+    expect(body).not.toBeFalsy
+    expect(body && body.children.length).toBe(3);
+    // sequence number column should be 2
+    expect(body && body.children[2].children[1].textContent).toBe('2');
+});
+
+test('ScriptureTable AddSection button adds first section', async () => {
+    const { getByText, container } = render(tree);
+    const TestScriptureTable = await waitForElement(() =>
+        getByText(/^Section$/i),
+    );
+    fireEvent.click(getByText(/Add Section/i));
+    const body = container.querySelector('tbody');
+    expect(body).not.toBeFalsy
+    expect(body && body.children.length).toBe(2);
+    // sequence number column should be 1
+    expect(body && body.childNodes[1].childNodes[1].textContent).toBe('1');
 });

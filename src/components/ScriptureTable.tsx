@@ -89,6 +89,11 @@ export function ScriptureTable(props: IProps) {
     const [inData, setInData] = useState(Array<Array<any>>());
 
     const handleMessageReset = () => { setMessage(<></>) }
+    const addSection = () => {
+      const sequenceNums = data.map(r => r[0] || 0) as number[];
+      const sequencenum = (Math.max(...sequenceNums, 0)) + 1;
+      setData([...data.concat( [[sequencenum, '', '', '', '', '']] )]);
+    }
     const addPassage = () => {
       const lastRow = data.length - 1;
       const sequencenum = (data[lastRow][2] || 0) + 1;
@@ -324,6 +329,7 @@ export function ScriptureTable(props: IProps) {
           rowData={data as any[][]}
           save={handleSave}
           action={handleAction}
+          addSection={addSection}
           addPassage={addPassage}
           t={s}
         />
