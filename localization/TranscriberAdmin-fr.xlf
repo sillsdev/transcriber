@@ -644,5 +644,29 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="planTabs.sectionsPassages">
+			<segment>
+				<source>Sections &amp; Passages</source>
+				<target>Sections et passages</target>
+			</segment>
+		</unit>
+		<unit id="planTabs.media">
+			<segment>
+				<source>Media</source>
+				<target>Fichiers médias</target>
+			</segment>
+		</unit>
+		<unit id="planTabs.assignments">
+			<segment>
+				<source>Assignments</source>
+				<target>Affectations</target>
+			</segment>
+		</unit>
+		<unit id="planTabs.transcriptions">
+			<segment>
+				<source>Transcriptions</source>
+				<target>Transcriptions</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

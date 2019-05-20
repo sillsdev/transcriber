@@ -24,7 +24,7 @@ import Chart from '../components/Chart';
 import ProjectSettings from '../components/ProjectSettings';
 import BookTable from '../components/PlanTable';
 import SetTable from '../components/SetTable';
-import ScriptureTable from '../components/ScriptureTable';
+import PlanTabs from '../components/PlanTabs';
 import Auth from '../auth/Auth';
 
 const drawerWidth = 240;
@@ -123,7 +123,7 @@ export function ProjectStatus(props: IProps) {
         content.toLowerCase() === t.projectPlans.toLowerCase() ?
           <BookTable {...props} displaySet={handleSet} /> : (
             content === 'scripture' ?
-              <ScriptureTable {...props} /> : (
+              <PlanTabs {...props} /> : (
                 content === 'textbook' ?
                   <SetTable {...props} />: (
                     <Chart {...props} />

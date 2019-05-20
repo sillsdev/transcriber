@@ -752,6 +752,34 @@
 					<context context-type="sourcefile">ScriptureTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="planTabs.sectionsPassages">
+				<source>Sections &#x26; Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planTabs.media">
+				<source>Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planTabs.assignments">
+				<source>Assignments</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planTabs.transcriptions">
+				<source>Transcriptions</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTabs.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 

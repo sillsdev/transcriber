@@ -156,6 +156,13 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "description": string;
 };
 
+export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
+    "sectionsPassages": string;
+    "media": string;
+    "assignments": string;
+    "transcriptions": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -175,5 +182,6 @@ export interface ILocalizedStrings {
 	planTable: IPlanTableStrings;
 	planSheet: IPlanSheetStrings;
 	scriptureTable: IScriptureTableStrings;
+	planTabs: IPlanTabsStrings;
 	[key: string]: any;
 };
