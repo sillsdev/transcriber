@@ -9,10 +9,9 @@ const schemaDefinition: SchemaSettings =  {
       attributes: {
         name: { type: 'string' },
         abbreviation: { type: 'string' },
-        ownerId: { type: 'number' },
       },
       relationships: {
-        organization: { type: 'hasOne', model: 'organization', inverse: 'groups' },
+        owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
         users: { type: 'hasMany', model: 'groupmembership', inverse: 'group' },
       },
     },

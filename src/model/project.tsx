@@ -21,12 +21,13 @@ export interface Project extends Record {
       dateArchived: string | null;
     };
     relationships?: {
-      type: RecordRelationship;
+      projecttype: RecordRelationship;
       owner: RecordRelationship;
       organization: RecordRelationship;
+      group: RecordRelationship;
       projectintegrations: RecordRelationship;
       users: RecordRelationship;
-      sets: RecordRelationship;
+      plans: RecordRelationship;
     };
   };
 export default Project;  

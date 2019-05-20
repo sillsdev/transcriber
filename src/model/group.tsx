@@ -3,10 +3,10 @@ import { Record, RecordRelationship } from '@orbit/data';
 export interface Group extends Record {
     attributes: {
       name: string;
-      organizationId: number;
+      abbreviation: string;
     };
     relationships?: {
-      organization: RecordRelationship;
+      owner: RecordRelationship;
       users: RecordRelationship;
     };
   };

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Project, IProjectTableStrings } from '../model';
+import { IState, Project, Group, IProjectTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { Paper, Fab, Button, IconButton, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -20,6 +20,7 @@ import { Grid,
 import TranscriberBar from '../components/TranscriberBar';
 import Confirm from '../components/AlertDialog';
 import Auth from '../auth/Auth';
+import Related from '../related';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -67,15 +68,21 @@ interface Row {
   delete: string;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{
+interface IRecordProps {
+  projects: Array<Project>;
+  groups: Array<Group>;
+}
+
+interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   projects: any;
   updateStore: any;
   auth: Auth;
 };
 
 export function ProjectTable(props: IProps) {
-  const { classes, projects, updateStore, auth, t } = props;
+  const { classes, projects, groups, updateStore, auth, t } = props;
   const { isAuthenticated } = auth;
+  const [organization] = useGlobal('organization');
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'description', title: 'Description' },
@@ -107,13 +114,19 @@ export function ProjectTable(props: IProps) {
   };
 
   useEffect(() => {
+    const orgProjects = projects.filter((p: Project) => {
+      const groupId = Related(p, 'group');
+      const group = groups.filter(g => g.id === groupId);
+      const g = group.length === 1? group[0]: false;
+      return Related(g, 'owner') === organization;
+    })
     setColumns([
       { name: 'name', title: t.name },
       { name: 'description', title: t.description },
       { name: 'language', title: t.language },
       { name: 'delete', title: t.delete },
     ])
-    setRows(projects.map((o: Project) => ({
+    setRows(orgProjects.map((o: Project) => ({
       type: o.type,
       id: o.id,
       name: o.attributes.name,
@@ -121,7 +134,8 @@ export function ProjectTable(props: IProps) {
       language: o.attributes.language,
       delete: o.id,
     })))
-  }, [projects, t.name, t.description, t.language, t.delete]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
@@ -225,12 +239,9 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "projectTable"})
 });
 
-interface IRecordProps {
-    projects: () => Array<Record>;
-}
-
 const mapRecordsToProps = {
     projects: (q: QueryBuilder) => q.findRecords('project'),
+    groups: (q: QueryBuilder) => q.findRecords('group'),
 }
 
 export default withStyles(styles, { withTheme: true })(

@@ -1,0 +1,431 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can render ProjectTable snapshot 1`] = `
+<div
+  class="WithData-Connect-ProjectTable---root-1"
+>
+  <header
+    class="MuiPaper-root-32 MuiPaper-elevation4-38 MuiAppBar-root-23 MuiAppBar-positionStatic-27 MuiAppBar-colorPrimary-30 Connect-TranscriberBar--appBar-12"
+  >
+    <div
+      class="MuiToolbar-root-59 MuiToolbar-regular-61 MuiToolbar-gutters-60"
+    >
+      <button
+        class="MuiButtonBase-root-69 MuiIconButton-root-63 Connect-TranscriberBar--menuButton-13"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiIconButton-label-68"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root-72"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root-245"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root-69 MuiButton-root-81 MuiButton-text-83 MuiButton-flat-86 Connect-TranscriberBar--button-20 WithData-Connect-ProjectTable---button-9"
+        tabindex="0"
+        type="button"
+      >
+        <span
+          class="MuiButton-label-82"
+        >
+          <h6
+            class="MuiTypography-root-107 MuiTypography-h6-124 MuiTypography-colorInherit-136"
+          />
+        </span>
+        <span
+          class="MuiTouchRipple-root-245"
+        />
+      </button>
+      <h6
+        class="MuiTypography-root-107 MuiTypography-h6-124 MuiTypography-colorInherit-136 Connect-TranscriberBar--grow-11 WithData-Connect-ProjectTable---grow-4"
+      >
+        Transcriber Admin
+      </h6>
+      <div
+        class="Connect-TranscriberBar--grow-11 WithData-Connect-ProjectTable---grow-4"
+      />
+      <div
+        class="Connect-TranscriberBar--search-16"
+      >
+        <div
+          class="Connect-TranscriberBar--searchIcon-17"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root-72"
+            focusable="false"
+            role="presentation"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+            />
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+          </svg>
+        </div>
+        <div
+          class="MuiInputBase-root-143 Connect-TranscriberBar--inputRoot-18"
+        >
+          <input
+            class="MuiInputBase-input-153 Connect-TranscriberBar--inputInput-19"
+            placeholder="Search…"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="MuiAvatar-root-160 MuiAvatar-colorDefault-161 Connect-TranscriberBar--avatar-21"
+      />
+    </div>
+  </header>
+  <div
+    class="WithData-Connect-ProjectTable---container-2"
+  >
+    <div
+      class="MuiPaper-root-32 MuiPaper-elevation2-36 MuiPaper-rounded-33 WithData-Connect-ProjectTable---paper-3"
+      id="ProjectTable"
+    >
+      <div
+        class="WithData-Connect-ProjectTable---dialogHeader-5"
+      >
+        <div
+          class="WithData-Connect-ProjectTable---grow-4"
+        />
+        <h5
+          class="MuiTypography-root-107 MuiTypography-h5-123"
+        >
+          Choose Project
+        </h5>
+        <div
+          class="WithData-Connect-ProjectTable---grow-4"
+        />
+        <button
+          aria-label="Add"
+          class="MuiButtonBase-root-69 MuiFab-root-163 MuiFab-primary-165 WithData-Connect-ProjectTable---button-9"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiFab-label-164"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root-72 WithData-Connect-ProjectTable---icon-10"
+              focusable="false"
+              role="presentation"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+              />
+              <path
+                d="M0 0h24v24H0z"
+                fill="none"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root-245"
+          />
+        </button>
+      </div>
+      <div
+        class="RootBase-root-173"
+      >
+        <div
+          class="MuiToolbar-root-59 MuiToolbar-regular-61 MuiToolbar-gutters-60 Toolbar-toolbar-174"
+        >
+          <div
+            style="flex: 0 0 0px; margin-left: auto;"
+          />
+        </div>
+        <div
+          class="TableContainer-root-175"
+        >
+          <table
+            class="MuiTable-root-180 Table-table-176"
+            style="min-width: 800px;"
+          >
+            <colgroup>
+              <col
+                style="width: 200px;"
+              />
+              <col
+                style="width: 400px;"
+              />
+              <col
+                style="width: 100px;"
+              />
+              <col
+                style="width: 100px;"
+              />
+              <col />
+            </colgroup>
+            <thead
+              class="MuiTableHead-root-181"
+            >
+              <tr
+                class="MuiTableRow-root-182 MuiTableRow-head-185"
+              >
+                <th
+                  class="MuiTableCell-root-199 MuiTableCell-head-200 TableHeaderCell-cell-188 TableHeaderCell-cellNoWrap-198"
+                  colspan="1"
+                  scope="col"
+                >
+                  <div
+                    class="TableHeaderCell-container-197"
+                  >
+                    <div
+                      class="Content-content-211"
+                    >
+                      <div
+                        class="SortLabel-root-214"
+                      >
+                        <span
+                          class="MuiButtonBase-root-69 MuiTableSortLabel-root-227 SortLabel-sortLabelRoot-216 MuiTableSortLabel-active-228 SortLabel-sortLabelActive-218"
+                          role="button"
+                          tabindex="0"
+                          title="Sort"
+                        >
+                          <span
+                            class="Title-title-232"
+                          >
+                            Name
+                          </span>
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root-72 MuiTableSortLabel-icon-229 MuiTableSortLabel-iconDirectionAsc-231"
+                            focusable="false"
+                            role="presentation"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ResizingControl-resizeHandle-233 TableHeaderCell-resizeHandle-189"
+                  >
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleFirstLine-235"
+                    />
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleSecondLine-236"
+                    />
+                  </div>
+                </th>
+                <th
+                  class="MuiTableCell-root-199 MuiTableCell-head-200 TableHeaderCell-cell-188 TableHeaderCell-cellNoWrap-198"
+                  colspan="1"
+                  scope="col"
+                >
+                  <div
+                    class="TableHeaderCell-container-197"
+                  >
+                    <div
+                      class="Content-content-211"
+                    >
+                      <div
+                        class="SortLabel-root-214"
+                      >
+                        <span
+                          class="MuiButtonBase-root-69 MuiTableSortLabel-root-227 SortLabel-sortLabelRoot-216"
+                          role="button"
+                          tabindex="0"
+                          title="Sort"
+                        >
+                          <span
+                            class="Title-title-232"
+                          >
+                            Description
+                          </span>
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root-72 MuiTableSortLabel-icon-229 MuiTableSortLabel-iconDirectionDesc-230"
+                            focusable="false"
+                            role="presentation"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ResizingControl-resizeHandle-233 TableHeaderCell-resizeHandle-189"
+                  >
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleFirstLine-235"
+                    />
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleSecondLine-236"
+                    />
+                  </div>
+                </th>
+                <th
+                  class="MuiTableCell-root-199 MuiTableCell-head-200 TableHeaderCell-cell-188 TableHeaderCell-cellNoWrap-198"
+                  colspan="1"
+                  scope="col"
+                >
+                  <div
+                    class="TableHeaderCell-container-197"
+                  >
+                    <div
+                      class="Content-content-211"
+                    >
+                      <div
+                        class="SortLabel-root-214"
+                      >
+                        <span
+                          class="MuiButtonBase-root-69 MuiTableSortLabel-root-227 SortLabel-sortLabelRoot-216"
+                          role="button"
+                          tabindex="0"
+                          title="Sort"
+                        >
+                          <span
+                            class="Title-title-232"
+                          >
+                            Language
+                          </span>
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root-72 MuiTableSortLabel-icon-229 MuiTableSortLabel-iconDirectionDesc-230"
+                            focusable="false"
+                            role="presentation"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ResizingControl-resizeHandle-233 TableHeaderCell-resizeHandle-189"
+                  >
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleFirstLine-235"
+                    />
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleSecondLine-236"
+                    />
+                  </div>
+                </th>
+                <th
+                  class="MuiTableCell-root-199 MuiTableCell-head-200 TableHeaderCell-cell-188 TableHeaderCell-cellNoWrap-198"
+                  colspan="1"
+                  scope="col"
+                >
+                  <div
+                    class="TableHeaderCell-container-197"
+                  >
+                    <div
+                      class="Content-content-211"
+                    >
+                      <div
+                        class="SortLabel-root-214"
+                      >
+                        <span
+                          class="MuiButtonBase-root-69 MuiTableSortLabel-root-227 SortLabel-sortLabelRoot-216"
+                          role="button"
+                          tabindex="0"
+                          title="Sort"
+                        >
+                          <span
+                            class="Title-title-232"
+                          >
+                            Delete
+                          </span>
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root-72 MuiTableSortLabel-icon-229 MuiTableSortLabel-iconDirectionDesc-230"
+                            focusable="false"
+                            role="presentation"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="ResizingControl-resizeHandle-233 TableHeaderCell-resizeHandle-189"
+                  >
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleFirstLine-235"
+                    />
+                    <div
+                      class="TableHeaderCell-resizeHandleLine-190 ResizingControl-resizeHandleLine-234 ResizingControl-resizeHandleSecondLine-236"
+                    />
+                  </div>
+                </th>
+                <th
+                  class="MuiTableCell-root-199 MuiTableCell-head-200 TableStubCell-cell-239"
+                  colspan="1"
+                  scope="col"
+                />
+              </tr>
+            </thead>
+            <tbody
+              class="MuiTableBody-root-241"
+            >
+              <tr
+                class="MuiTableRow-root-182"
+              >
+                <td
+                  class="MuiTableCell-root-199 MuiTableCell-body-201 TableNoDataCell-cell-242"
+                  colspan="5"
+                >
+                  <div
+                    class="TableNoDataCell-textContainer-243"
+                  >
+                    <big
+                      class="TableNoDataCell-text-244"
+                    >
+                      No data
+                    </big>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
