@@ -185,6 +185,19 @@ const initialState = {
 			"transcriptions": "Transcriptions",
 		}
 	}),
+	"planAdd": new LocalizedStrings({
+		"en": {
+			"name": "Name",
+			"addPlan": "Add a Plan",
+			"newPlanTask": "Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)",
+			"planType": "Type",
+			"selectPlanType": "Select plan type.",
+			"cancel": "Cancel",
+			"add": "Add",
+			"save": "Save",
+			"newPlan": "New Plan",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -210,6 +223,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),
+				"planAdd" : new LocalizedStrings(action.payload.data.planAdd),
 			};
 		case SET_LANGUAGE:
 			return {

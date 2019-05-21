@@ -670,5 +670,59 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planAdd.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.addPlan">
+         <segment>
+            <source>Add a Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.newPlanTask">
+         <segment>
+            <source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.planType">
+         <segment>
+            <source>Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.selectPlanType">
+         <segment>
+            <source>Select plan type.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.newPlan">
+         <segment>
+            <source>New Plan</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

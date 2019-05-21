@@ -2,28 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { IState, Plan, PlanType, IPlanTableStrings } from '../model';
+import { IState, Plan, PlanType, Section, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
 import Store from '@orbit/store';
-import Fab from '@material-ui/core/Fab';
-import Button from '@material-ui/core/Button';
+import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
+import { Fab, Button, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
 import { Grid,
   Table,
   TableColumnResizing,
   TableHeaderRow,
   Toolbar } from '@devexpress/dx-react-grid-material-ui';
+import PlanAdd from './PlanAdd';
 import SnackBar from "./SnackBar";
 import Confirm from './AlertDialog';
 import Auth from '../auth/Auth';
-import { Typography } from '@material-ui/core';
+import Related from '../utils/related';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -55,26 +55,12 @@ const styles = (theme: Theme) => createStyles({
   icon: {},
 });
 
-const getPlanRows = (plans: Array<Plan>, typeColumn: Array<string>, countColumn: Array<number>) =>{
-  return (
-    plans.map((p, i) => ({
-      type: p.type,
-      id: p.id,
-      name: p.attributes.name,
-      planType: typeColumn[i],
-      sets: (countColumn[i] || '-').toString(),
-      delete: p.id,
-    })));
-}
-
-interface Row {
-  type: string;
-  id: string;
+interface ICell {
   name: string;
   planType: string;
-  sets: string;
-  delete: string;
-};
+  sections: string;
+  action: string;
+}
 
 interface IStateProps {
   t: IPlanTableStrings;
@@ -82,38 +68,41 @@ interface IStateProps {
 
 interface IRecordProps {
   plans: Array<Plan>;
+  planTypes: Array<PlanType>;
+  sections: Array<Section>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   updateStore: any;
-  displaySet: (id: string, type: string) => any;
+  displaySet: (type: string) => any;
   auth: Auth;
 };
 
 export function PlanTable(props: IProps) {
-  const { classes, plans, updateStore, auth, t, displaySet } = props;
+  const { classes, plans, planTypes, sections, updateStore, auth, t, displaySet } = props;
   const { isAuthenticated } = auth;
   const [dataStore] = useGlobal('dataStore');
-  const [columns, setColumns] = useState([
-    { name: 'name', title: 'Name' },
-    { name: 'planType', title: 'Type' },
-    { name: 'sets', title: 'Sets' },
-    { name: 'action', title: 'Action' },
+  const [schema] = useGlobal('schema');
+  const [columns] = useState([
+    { name: 'name', title: t.name },
+    { name: 'planType', title: t.type },
+    { name: 'sections', title: t.sections },
+    { name: 'action', title: t.action },
   ]);
   const [columnWidth] = useState([
     { columnName: "name", width: 300 },
     { columnName: "planType", width: 100 },
-    { columnName: "sets", width: 100 },
+    { columnName: "sections", width: 100 },
     { columnName: "action", width: 150 },
   ]);
-  const [typeColumn, setTypeColumn] = useState(Array<string>());
-  const [countColumn, setCountColumn] = useState(Array<number>());
-  const [rows, setRows] = useState(getPlanRows(plans, typeColumn, countColumn));
+  const [rows, setRows] = useState(Array<ICell>());
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_plan, setPlan] = useGlobal('plan');
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogData, setDialogData] = useState(null as Plan|null)
   const [message, setMessage] = useState(<></>);
 
   const handleMessageReset = () => { setMessage(<></>) };
@@ -126,54 +115,57 @@ export function PlanTable(props: IProps) {
   };
   const handleDeleteRefused = () => { setDeleteItem('') };
   const handleAdd = () => {
-    setPlan(null);
-    setMessage(<span>Add New Plan dialog</span>);
-    // setView('/projectstatus?addPlan')
+    setDialogData(null);
+    setDialogVisible(true);
   };
-  const handleEdit = () => { setMessage(<span>Edit Plan Dialog</span>) }
-  const handleSelect = (e:any) => {
-    const plan = plans.filter((p: Plan) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0];
-    const planId = plan.id;
+  const handleAddMethod = async (plan: any) => {
+    setDialogVisible(false);
+    (schema as Schema).initializeRecord(plan)
+    await (dataStore as Store).update(t => t.addRecord(plan))
+    await (dataStore as Store).update(t => t.replaceRelatedRecord(
+      {type: 'plan', id: plan.id},
+      'plantype',
+      {type: 'plantype', id: plan.attributes.planType}
+    ));
+  }
+  const handleAddCancel = () => {
+    setDialogVisible(false);
+  }
+  const handleEdit = (planId: string) => (e:any) => {
+    const planRec = plans.filter(p => p.id === planId)
+    setDialogData((planRec && planRec.length === 1)? planRec[0]: null)
+    setDialogVisible(true)
+  }
+  const handleEditMethod = async (plan: any) => {
+    setDialogVisible(false);
+    delete plan.relationships;
+    await (dataStore as Store).update(t => t.replaceRecord(plan))
+    await (dataStore as Store).update(t => t.replaceRelatedRecord(
+      {type: 'plan', id: plan.id},
+      'plantype',
+      {type: 'plantype', id: plan.attributes.planType}
+    ));
+  }
+  const handleSelect = (planId:string, type:string) => (e:any) => {
     setPlan(planId);
-    const setDisplayType = async (p: Plan) => {
-      let planType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'plan', id: p.id}, 'plantype')) as PlanType;
-      if (planType !== null) {
-        displaySet(planId, planType.attributes.name.toLowerCase() || 'default');
-      }
-    }
-    setDisplayType(plan);
+    displaySet(type.toLocaleLowerCase());
   };
+  const getType = (p: Plan) => {
+    const typeId = Related(p, 'plantype');
+    const typeRec = planTypes.filter(pt => pt.id === typeId);
+    return typeRec && typeRec.length === 1? typeRec[0].attributes.name: '--';
+  }
+  const sectionCount = (p: Plan) => {
+    return sections.filter(s => Related(s, 'plan') === p.id).length.toString();
+  }
 
   useEffect(() => {
-    const getTypeColumn = async (p: Plan, i: number) => {
-      let planType = await (dataStore as Store).query(q => q.findRelatedRecord({type: 'plan', id: p.id}, 'plantype')) as PlanType;
-      if (planType != null) {
-        typeColumn[i] = planType.attributes.name;
-      }
-    };
-    const getCountColumn = async(p: Plan, i: number) => {
-      let sections = await (dataStore as Store).query(q => q.findRelatedRecords({type: 'plan', id: p.id}, 'sections'));
-      if (sections != null) {
-        countColumn[i] = sections.length;
-      }
-    };
-    for (let i = 0; i < plans.length; i += 1) {
-      getTypeColumn(plans[i], i);
-      getCountColumn(plans[i], i);
-    }
-    setTypeColumn(typeColumn);
-    setCountColumn(countColumn);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    setColumns([
-      { name: 'name', title: t.name },
-      { name: 'planType', title: t.type },
-      { name: 'sets', title: t.sections },
-      { name: 'action', title: t.action },
-    ]);
-    setRows(getPlanRows(plans, typeColumn, countColumn));
+    setRows(plans.map((p: Plan) => { return {
+      name: p.attributes.name,
+      planType: getType(p),
+      sections: sectionCount(p),
+      action: p.id
+    } as ICell }))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plans]);
 
@@ -186,7 +178,7 @@ export function PlanTable(props: IProps) {
         aria-label={value}
         color="primary"
         className={classes.link}
-        onClick={handleSelect}
+        onClick={handleSelect(restProps.row.action, restProps.row.planType)}
       >
         {value}
         <EditIcon className={classes.editIcon} />
@@ -202,7 +194,7 @@ export function PlanTable(props: IProps) {
         aria-label={value}
         color="default"
         className={classes.actionIcon}
-        onClick={handleEdit}
+        onClick={handleEdit(restProps.row.action)}
       >
         <EditIcon />
       </IconButton>
@@ -267,6 +259,12 @@ return (
           </Grid>
         </div>
       </div>
+      <PlanAdd
+        visible={dialogVisible}
+        planIn={dialogData}
+        addMethod={handleAddMethod}
+        editMethod={handleEditMethod}
+        cancelMethod={handleAddCancel} />
       {deleteItem !== ''
         ? <Confirm
             yesResponse={handleDeleteConfirmed}
@@ -284,6 +282,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
+  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
 }
 
 export default withStyles(styles, { withTheme: true })(

@@ -780,6 +780,69 @@
 					<context context-type="sourcefile">PlanTabs.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="planAdd.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.addPlan">
+				<source>Add a Plan</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.newPlanTask">
+				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.planType">
+				<source>Type</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.selectPlanType">
+				<source>Select plan type.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.newPlan">
+				<source>New Plan</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 

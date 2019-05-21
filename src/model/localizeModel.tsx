@@ -163,6 +163,18 @@ export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
     "transcriptions": string;
 };
 
+export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
+    "name": string;
+    "addPlan": string;
+    "newPlanTask": string;
+    "planType": string;
+    "selectPlanType": string;
+    "cancel": string;
+    "add": string;
+    "save": string;
+    "newPlan": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -183,5 +195,6 @@ export interface ILocalizedStrings {
 	planSheet: IPlanSheetStrings;
 	scriptureTable: IScriptureTableStrings;
 	planTabs: IPlanTabsStrings;
+	planAdd: IPlanAddStrings;
 	[key: string]: any;
 };

@@ -668,5 +668,62 @@
 				<target>Transcriptions</target>
 			</segment>
 		</unit>
+		<unit id="planAdd.name">
+			<segment>
+				<source>Name</source>
+				<target>Nom</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.addPlan">
+			<segment>
+				<source>Add a Plan</source>
+				<target>Nouveau programme</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.newPlanTask">
+			<segment>
+				<source>Enter information for a new plan. (It could be a book of the Bible to be
+					transcribed, a story, a lexionary, etc.)</source>
+				<target>Saisissez les informations d'un nouveau programme. (Il peut s'agir d'un
+					livre de la Bible à transcrire, d'une histoire, d'un ordre de service,
+					etc.</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.planType">
+			<segment>
+				<source>Type</source>
+				<target>Type de programme</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.selectPlanType">
+			<segment>
+				<source>Select plan type.</source>
+				<target>Veuillez sélectionner votre type de programme</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.add">
+			<segment>
+				<source>Add</source>
+				<target>Ajouter</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.save">
+			<segment>
+				<source>Save</source>
+				<target>Sauvegarder</target>
+			</segment>
+		</unit>
+		<unit id="planAdd.newPlan">
+			<segment>
+				<source>Nouveau programme</source>
+				<target/>
+			</segment>
+		</unit>
 	</file>
 </xliff>

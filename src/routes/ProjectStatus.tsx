@@ -111,7 +111,7 @@ export function ProjectStatus(props: IProps) {
   const handleDrawerClose = () => { setOpen(false) };
   const handleProjectItem = (e: any) => { setContent(e.target.innerText) };
   const handleCancel = () => { setView('/project') };
-  const handleSet = (id: string, type: string) => { setContent(type) };
+  const handleSet = (type: string) => { setContent(type) };
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
