@@ -24,6 +24,7 @@ import {
 import TranscriberBar from '../components/TranscriberBar';
 import SnackBar from "../components/SnackBar";
 import Auth from "../auth/Auth";
+import hasRelated from '../utils/hasRelated';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -95,13 +96,7 @@ export function OrganizationTable(props: IProps) {
 
   useEffect(() => {
     // since find related records doesn't work...
-    const orgs = organizations.filter(o =>
-      o.relationships &&
-      o.relationships.users &&
-      o.relationships.users.data &&
-      (Array.isArray(o.relationships.users.data)?
-      o.relationships.users.data.filter(u => u.id === user):
-      o.relationships.users.data.id === user))
+    const orgs = organizations.filter(o => hasRelated(o, 'users', user as string))
     if (orgs.length === 1) {
       setOrganization(organizations[0].id)
       setView('/welcome')

@@ -9,6 +9,7 @@ import { Schema, RecordIdentity } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
+import Related from '../utils/related';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -259,23 +260,13 @@ export function ScriptureTable(props: IProps) {
         let passageSections = await (dataStore as Store).query( q =>
           q.findRecords('passagesection')) as Array<PassageSection>;
         // query filter doesn't work with JsonApi since id not translated
-        passageSections = passageSections.filter(ps => 
-          ps.relationships &&
-          ps.relationships.section &&
-          ps.relationships.section.data &&
-          !Array.isArray(ps.relationships.section.data)?
-            ps.relationships.section.data.id === s.id: false);
+        passageSections = passageSections.filter(ps => Related(ps, 'section') === s.id)
         if (passageSections != null) {
           let passages = Array<Array<string | number>>();
           let ids = Array<ISequencedRecordIdentity>();
           for (let j=0; j < passageSections.length; j += 1) {
             let ps = passageSections[j] as PassageSection;
-            await getPassage((ps.relationships &&
-              ps.relationships.passage &&
-                ps.relationships.passage.data &&
-                  (!Array.isArray(ps.relationships.passage.data)?
-                    ps.relationships.passage.data.id: null)) || '',
-              passages, ids)
+            await getPassage(Related(ps, 'passage'), passages, ids)
           }
           passages = passages.sort((i,j) => { return (parseInt(i[2].toString()) - parseInt(j[2].toString())); });
           ids = ids.sort((i,j) => { return i.sequencenum - j.sequencenum; })

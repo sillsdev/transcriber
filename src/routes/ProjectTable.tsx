@@ -20,7 +20,7 @@ import { Grid,
 import TranscriberBar from '../components/TranscriberBar';
 import Confirm from '../components/AlertDialog';
 import Auth from '../auth/Auth';
-import Related from '../related';
+import Related from '../utils/related';
 
 const styles = (theme: Theme) => createStyles({
   root: {
