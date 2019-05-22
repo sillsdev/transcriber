@@ -15,15 +15,23 @@ npm run build
 ## Running Locally
 
 ```
-git checkout local
 npm start
 ```
 
 Createing a file called: .env.development.local with the contents:
 ```
 REACT_APP_OFFLINE=true
+REACT_APP_CALLBACK=http://localhost:3000/callback
 ```
 allows the program to run offline with the content that was downloaded to your browser the last time you were online.
+
+## Debugging
+
+After using
+```
+npm start
+```
+from code you can use the debugger if you set the .vscode/launch.json configurations.url to http://localhost:3000
 
 ## Deployment
 
