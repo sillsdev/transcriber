@@ -3,6 +3,7 @@ import { Record, RecordRelationship } from '@orbit/data';
 export interface MediaFiles extends Record {
     attributes: {
       passageId: number;
+      planId: number;
       versionNumber: number;
       artifactType: string;
       eafUrl: string;
@@ -12,11 +13,13 @@ export interface MediaFiles extends Record {
       audioQuality: string;
       textQuality: string;
       transcription: string;
+      originalFile: string;
+      filesize: number;
       dateCreated: string | null;
       dateUpdated: string | null;
     };
     relationships?: {
-      task: RecordRelationship;
+      passage: RecordRelationship;
     };
   };
 export default MediaFiles;  

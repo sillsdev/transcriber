@@ -74,6 +74,7 @@ const schemaDefinition: SchemaSettings =  {
         project: { type: 'hasOne', model: 'project', inverse: 'plans'},
         plantype: { type: 'hasOne', model: 'plantype', inverse: 'plans' },
         sections: { type: 'hasMany', model: 'section', inverse: 'plan' },
+        mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'plan' },
       },
     },
     plantype: {
@@ -211,6 +212,7 @@ const schemaDefinition: SchemaSettings =  {
       keys: { remoteId: {} },
       attributes: {
         passageId: { type: 'number' },
+        planId: { type: 'number' },
         versionNumber: { type: 'number' },
         artifactType: { type: 'string' },
         eafUrl: { type: 'string' },
@@ -220,10 +222,13 @@ const schemaDefinition: SchemaSettings =  {
         audioQuality: { type: 'string' },
         textQuality: { type: 'string' },
         transcription: { type: 'string' },
+        originalFile: { type: 'string' },
+        filesize: { type: 'number' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
       },
       relationships: {
+        plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
       },
     },
