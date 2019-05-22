@@ -22,7 +22,6 @@ import { Grid,
 import PlanAdd from './PlanAdd';
 import SnackBar from "./SnackBar";
 import Confirm from './AlertDialog';
-import Auth from '../auth/Auth';
 import Related from '../utils/related';
 
 const styles = (theme: Theme) => createStyles({
@@ -75,12 +74,10 @@ interface IRecordProps {
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
   updateStore: any;
   displaySet: (type: string) => any;
-  auth: Auth;
 };
 
 export function PlanTable(props: IProps) {
-  const { classes, plans, planTypes, sections, updateStore, auth, t, displaySet } = props;
-  const { isAuthenticated } = auth;
+  const { classes, plans, planTypes, sections, updateStore, t, displaySet } = props;
   const [dataStore] = useGlobal('dataStore');
   const [schema] = useGlobal('schema');
   const [project] = useGlobal('project');
@@ -176,8 +173,6 @@ export function PlanTable(props: IProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plans]);
 
-  if (!isAuthenticated()) return <Redirect to='/' />;
-
   const LinkCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
     <Table.Cell {...restProps} style={{...style}} value >
       <Button
@@ -244,6 +239,7 @@ return (
             <Fab
               key="add"
               aria-label="Add"
+              data-testid="addButton"
               color="primary"
               className={classes.button}
               onClick={handleAdd}

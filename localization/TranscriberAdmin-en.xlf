@@ -724,5 +724,17 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planAdd.selectAPlanType">
+         <segment>
+            <source>Please select a plan type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.editPlan">
+         <segment>
+            <source>Edit Plan details</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

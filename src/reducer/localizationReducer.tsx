@@ -196,6 +196,8 @@ const initialState = {
 			"add": "Add",
 			"save": "Save",
 			"newPlan": "New Plan",
+			"selectAPlanType": "Please select a plan type",
+			"editPlan": "Edit Plan details",
 		}
 	}),
 };

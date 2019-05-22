@@ -173,6 +173,8 @@ export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "save": string;
     "newPlan": string;
+    "selectAPlanType": string;
+    "editPlan": string;
 };
 
 export interface ILocalizedStrings {

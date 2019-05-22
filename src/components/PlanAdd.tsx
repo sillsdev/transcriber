@@ -42,7 +42,7 @@ function  PlanAdd(props: IProps) {
 
     const handleAddOrSave = () => {
       if (planType === '') {
-        setMessage(<span>Please select a plan type</span>)
+        setMessage(<span>{t.selectAPlanType}</span>)
         return;
       }
       if (!planIn || name !== planIn.attributes.name || planType !== Related(planIn, 'plantype')) {
@@ -98,7 +98,7 @@ function  PlanAdd(props: IProps) {
           onClose={handleCancel}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">{t.addPlan}</DialogTitle>
+          <DialogTitle id="form-dialog-title">{planIn? t.editPlan: t.addPlan}</DialogTitle>
           <DialogContent>
             <DialogContentText>
               {t.newPlanTask}

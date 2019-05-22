@@ -843,6 +843,20 @@
 					<context context-type="sourcefile">PlanAdd.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="planAdd.selectAPlanType">
+				<source>Please select a plan type</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planAdd.editPlan">
+				<source>Edit Plan details</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanAdd.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 
