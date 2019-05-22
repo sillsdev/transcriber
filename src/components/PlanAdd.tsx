@@ -36,7 +36,7 @@ function  PlanAdd(props: IProps) {
     const { planTypes, classes, t, visible,
       addMethod, editMethod, cancelMethod, planIn } = props;
     const [open, setOpen] = useState(visible);
-    const [name, setName] = useState(planIn && planIn.attributes.name || t.newPlan);
+    const [name, setName] = useState((planIn && planIn.attributes.name) || t.newPlan);
     const [planType, setPlanType] = useState('');
     const [message, setMessage] = useState(<></>);
 
@@ -84,6 +84,7 @@ function  PlanAdd(props: IProps) {
     useEffect(() => {
       setName(planIn? planIn.attributes.name: t.newPlan)
       setPlanType(planIn? Related(planIn, 'plantype'): '')
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [planIn])
 
     useEffect(() => {

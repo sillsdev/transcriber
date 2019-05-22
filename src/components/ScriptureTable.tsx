@@ -310,6 +310,7 @@ export function ScriptureTable(props: IProps) {
           setSectionId(sectionIds);
           setPassageId(passageIds);
         });
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
     },[])
 
     return (

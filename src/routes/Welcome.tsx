@@ -125,7 +125,7 @@ export function Welcome(props: IProps) {
     if (organization === null) return <Redirect to="/organization" />;
 
     return <Redirect to="/admin" />;
-
+    /* eslint-disable no-unreachable */
     return (
         <div className={classes.root}>
             <TranscriberBar {...props} search={false} />
