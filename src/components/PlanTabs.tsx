@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import ScriptureTable from '../components/ScriptureTable'
+import MediaTable from '../components/MediaTable';
 
 interface IContainerProps {
     children: any;
@@ -67,7 +68,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             </Tabs>
         </AppBar>
         {tab === 0 && <TabContainer><ScriptureTable {...props} /></TabContainer>}
-        {tab === 1 && <TabContainer>{t.media}</TabContainer>}
+        {tab === 1 && <TabContainer><MediaTable {...props} /></TabContainer>}
         {tab === 2 && <TabContainer>{t.assignments}</TabContainer>}
         {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
         </div>
