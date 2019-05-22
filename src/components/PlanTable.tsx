@@ -83,6 +83,7 @@ export function PlanTable(props: IProps) {
   const { isAuthenticated } = auth;
   const [dataStore] = useGlobal('dataStore');
   const [schema] = useGlobal('schema');
+  const [project] = useGlobal('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
     { name: 'planType', title: t.type },
@@ -127,6 +128,11 @@ export function PlanTable(props: IProps) {
       'plantype',
       {type: 'plantype', id: plan.attributes.planType}
     ));
+    await (dataStore as Store).update(t => t.replaceRelatedRecord(
+      {type: 'plan', id: plan.id},
+      'project',
+      {type: 'project', id: project}
+    ));
   }
   const handleAddCancel = () => {
     setDialogVisible(false);
@@ -160,7 +166,8 @@ export function PlanTable(props: IProps) {
   }
 
   useEffect(() => {
-    setRows(plans.map((p: Plan) => { return {
+    const projectPlans = plans.filter(p => Related(p, 'project') === project)
+    setRows(projectPlans.map((p: Plan) => { return {
       name: p.attributes.name,
       planType: getType(p),
       sections: sectionCount(p),
