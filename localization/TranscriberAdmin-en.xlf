@@ -736,5 +736,89 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.download">
+         <segment>
+            <source>Download</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.changeVersion">
+         <segment>
+            <source>Change Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.assignPassage">
+         <segment>
+            <source>Assign Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.uploadMedia">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.fileName">
+         <segment>
+            <source>File Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.sectionId">
+         <segment>
+            <source>Section Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.sectionName">
+         <segment>
+            <source>Section Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.book">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.reference">
+         <segment>
+            <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.duration">
+         <segment>
+            <source>Duration</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.size">
+         <segment>
+            <source>Size</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.version">
+         <segment>
+            <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

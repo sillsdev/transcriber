@@ -737,5 +737,89 @@
 				<target>Modifier les détails du programme</target>
 			</segment>
 		</unit>
+		<unit id="mediaTab.action">
+			<segment>
+				<source>Action</source>
+				<target>Action</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Effacer</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.download">
+			<segment>
+				<source>Download</source>
+				<target>Télécharger</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.changeVersion">
+			<segment>
+				<source>Change Version</source>
+				<target>Modifier la version</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.assignPassage">
+			<segment>
+				<source>Assign Passage</source>
+				<target>Assigner un passage</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.uploadMedia">
+			<segment>
+				<source>Upload Media</source>
+				<target>Charger le fichier audio</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.fileName">
+			<segment>
+				<source>File Name</source>
+				<target>Nom du fichier</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.sectionId">
+			<segment>
+				<source>Section Id</source>
+				<target>Section Id</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.sectionName">
+			<segment>
+				<source>Section Name</source>
+				<target>Nom de la section</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.book">
+			<segment>
+				<source>Book</source>
+				<target>Livre</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.reference">
+			<segment>
+				<source>Reference</source>
+				<target>Référence</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.duration">
+			<segment>
+				<source>Duration</source>
+				<target>Durée</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.size">
+			<segment>
+				<source>Size</source>
+				<target>Taille de fichier</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.version">
+			<segment>
+				<source>Version</source>
+				<target>Version</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

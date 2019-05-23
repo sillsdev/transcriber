@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IState, IPlanTabsStrings } from '../model';
+import { IState, IPlanTabsStrings, IMediaTabStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,7 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import ScriptureTable from '../components/ScriptureTable'
-import MediaTable from '../components/MediaTable';
+import MediaTab from '../components/MediaTab';
 
 interface IContainerProps {
     children: any;
@@ -33,6 +33,7 @@ const styles = (theme: Theme) => ({
 
 interface IStateProps {
     t: IPlanTabsStrings;
+    m: IMediaTabStrings;
 }
 
 interface IProps extends IStateProps, WithStyles<typeof styles>{
@@ -40,7 +41,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
 };
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
-    const { classes, t, changeTab } = props;
+    const { classes, t, m, changeTab } = props;
     const [tab, setTab] = useState(0);
 
   const handleChange = (event: any, value: number) => {
@@ -68,7 +69,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             </Tabs>
         </AppBar>
         {tab === 0 && <TabContainer><ScriptureTable {...props} /></TabContainer>}
-        {tab === 1 && <TabContainer><MediaTable {...props} /></TabContainer>}
+        {tab === 1 && <TabContainer><MediaTab {...props} rowData={[]} t={m} /></TabContainer>}
         {tab === 2 && <TabContainer>{t.assignments}</TabContainer>}
         {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
         </div>
@@ -77,6 +78,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 
 const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "planTabs"}),
+    m: localStrings(state, {layout: "mediaTab"}),
   });
       
 export default withStyles(styles, { withTheme: true })(

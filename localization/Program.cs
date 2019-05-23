@@ -1,7 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using net.sf.saxon.serialize;
 using Newtonsoft.Json;
 using Saxon.Api;
 
@@ -21,6 +21,7 @@ namespace updateLocalization
 			CreateOtherLangStrings();
 			CombineStrings();
 			CleanUp();
+			FollowUp();
 		}
 
 		private static void CreateEnglish20Xlf()
@@ -127,6 +128,22 @@ namespace updateLocalization
 			{
 				new FileInfo(fileInfo.FullName).Delete();
 			}
+		}
+
+		private static void FollowUp()
+		{
+			var followUpInfo = new FileInfo(@"..\..\UpdateLocalizationFollowUp.bat");
+			if (!followUpInfo.Exists) return;
+			var comSpec = Environment.GetEnvironmentVariable("ComSpec");
+			var process = new Process
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					FileName = comSpec,
+					Arguments = "/c " + followUpInfo.FullName
+				}
+			};
+			process.Start();
 		}
 
 	}

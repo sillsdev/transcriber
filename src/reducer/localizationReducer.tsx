@@ -200,6 +200,24 @@ const initialState = {
 			"editPlan": "Edit Plan details",
 		}
 	}),
+	"mediaTab": new LocalizedStrings({
+		"en": {
+			"action": "Action",
+			"delete": "Delete",
+			"download": "Download",
+			"changeVersion": "Change Version",
+			"assignPassage": "Assign Passage",
+			"uploadMedia": "Upload Media",
+			"fileName": "File Name",
+			"sectionId": "Section Id",
+			"sectionName": "Section Name",
+			"book": "Book",
+			"reference": "Reference",
+			"duration": "Duration",
+			"size": "Size",
+			"version": "Version",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -226,6 +244,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),
 				"planAdd" : new LocalizedStrings(action.payload.data.planAdd),
+				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 			};
 		case SET_LANGUAGE:
 			return {

@@ -857,6 +857,104 @@
 					<context context-type="sourcefile">PlanAdd.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="mediaTab.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.download">
+				<source>Download</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.changeVersion">
+				<source>Change Version</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.assignPassage">
+				<source>Assign Passage</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.uploadMedia">
+				<source>Upload Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.fileName">
+				<source>File Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.sectionId">
+				<source>Section Id</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.sectionName">
+				<source>Section Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.book">
+				<source>Book</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.reference">
+				<source>Reference</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.duration">
+				<source>Duration</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.size">
+				<source>Size</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.version">
+				<source>Version</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 

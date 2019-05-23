@@ -177,6 +177,23 @@ export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
     "editPlan": string;
 };
 
+export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
+    "delete": string;
+    "download": string;
+    "changeVersion": string;
+    "assignPassage": string;
+    "uploadMedia": string;
+    "fileName": string;
+    "sectionId": string;
+    "sectionName": string;
+    "book": string;
+    "reference": string;
+    "duration": string;
+    "size": string;
+    "version": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -198,5 +215,6 @@ export interface ILocalizedStrings {
 	scriptureTable: IScriptureTableStrings;
 	planTabs: IPlanTabsStrings;
 	planAdd: IPlanAddStrings;
+	mediaTab: IMediaTabStrings;
 	[key: string]: any;
 };
