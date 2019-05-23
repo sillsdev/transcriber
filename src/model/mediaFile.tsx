@@ -1,6 +1,6 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface MediaFiles extends Record {
+export interface MediaFile extends Record {
     attributes: {
       passageId: number;
       planId: number;
@@ -22,4 +22,4 @@ export interface MediaFiles extends Record {
       passage: RecordRelationship;
     };
   };
-export default MediaFiles;  
+export default MediaFile;

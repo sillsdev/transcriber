@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@material-ui/core';
 import {
   createStyles, withStyles, WithStyles, Theme
@@ -109,46 +109,16 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> =
 );
 
 interface IProps {
-  columnDefs: Array<Column>;
+  columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
   sizeCols?: Array<string>;
-  rowData: Array<any>;
+  rows: Array<any>;
+  sorting?: Array<Sorting>;
   select?: (checks: Array<number>) => void
 };
   
 export default function ShapingTable(props: IProps) {
-    const { columnDefs, columnWidths, sizeCols, rowData, select } = props
-    const [columns] = useState(columnDefs)
-      // [
-      //   { name: 'fileName', title: 'File Name' },
-      //   { name: 'sectionId', title: 'Section Id' },
-      //   { name: 'sectionName', title: 'Section Name' },
-      //   { name: 'book', title: 'Book' },
-      //   { name: 'reference', title: 'Ref' },
-      //   { name: 'duration', title: 'Duration' },
-      //   { name: 'size', title: 'Size' },
-      //   { name: 'version', title: 'Version' },
-      // ]);
-    const [columnWidth] = useState(columnWidths);
-      // [
-      //   { columnName: "fileName", width: 200 },
-      //   { columnName: "sectionId", width: 100 },
-      //   { columnName: "sectionName", width: 150 },
-      //   { columnName: "book", width: 100 },
-      //   { columnName: "reference", width: 100 },
-      //   { columnName: "duration", width: 100 },
-      //   { columnName: "size", width: 100 },
-      //   { columnName: "version", width: 100 },
-      // ]);
-    const [sizeColumns] = useState(sizeCols? sizeCols: Array<string>());
-          // ['size']);
-    // const [pageSizes, setPageSizes] = useState([5, 10, 15]);
-    const [rows] = useState(rowData);
-      // [
-      //   {fileName: 'GEN-001-001025.mp3', sectionId: '1', sectionName: 'Creation Story', book: 'Genesis', reference: '1:1-25a', duration: '30 seconds', size: 250, version: '1' },
-      //   {fileName: 'GEN-001-002631.mp3', sectionId: '', sectionName: '', book: '', reference: '', duration: '45 seconds', size: 445, version: '1' },
-      // ]);
-    const [sorting] = useState(Array<Sorting>());
+    const { columns, columnWidths, sizeCols, rows, sorting, select } = props
 
     const handleSelect = (checks: Array<string|number>) => {
       if (select) {
@@ -165,7 +135,7 @@ export default function ShapingTable(props: IProps) {
             // defaultFilters={[{ columnName: 'sectionId', operation: 'equal', value: '' }]}
           />
           <SortingState
-            defaultSorting={sorting}
+            defaultSorting={sorting? sorting: Array<Sorting>()}
           />
 
           <SelectionState onSelectionChange={handleSelect} />
@@ -182,14 +152,14 @@ export default function ShapingTable(props: IProps) {
           {/* <IntegratedPaging /> */}
           <IntegratedSelection />
 
-          <SizeTypeProvider for={sizeColumns} />
+          <SizeTypeProvider for={sizeCols? sizeCols: Array<string>()} />
 
           <DragDropProvider />
 
           <Table />
           <TableColumnResizing
                   minColumnWidth={50}
-                  defaultColumnWidths={columnWidth}
+                  defaultColumnWidths={columnWidths}
                 />
           <TableSelection showSelectAll={true} />
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
 import { setGlobal } from 'reactn';
-import { Plan, PlanType, Section } from '../model';
+import { Section } from '../model';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from '../store';

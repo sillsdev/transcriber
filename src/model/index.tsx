@@ -3,6 +3,7 @@ export * from './organization';
 export * from './organizationMembership';
 export * from './group';
 export * from './integration';
+export * from './mediaFile';
 export * from './project';
 export * from './projectType';
 export * from './projectUsers'

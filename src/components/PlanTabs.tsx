@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { IState, IPlanTabsStrings, IMediaTabStrings } from '../model';
+import { IState, IPlanTabsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -33,7 +33,6 @@ const styles = (theme: Theme) => ({
 
 interface IStateProps {
     t: IPlanTabsStrings;
-    m: IMediaTabStrings;
 }
 
 interface IProps extends IStateProps, WithStyles<typeof styles>{
@@ -41,7 +40,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
 };
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
-    const { classes, t, m, changeTab } = props;
+    const { classes, t, changeTab } = props;
     const [tab, setTab] = useState(0);
 
   const handleChange = (event: any, value: number) => {
@@ -69,7 +68,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             </Tabs>
         </AppBar>
         {tab === 0 && <TabContainer><ScriptureTable {...props} /></TabContainer>}
-        {tab === 1 && <TabContainer><MediaTab {...props} rowData={[]} t={m} /></TabContainer>}
+        {tab === 1 && <TabContainer><MediaTab {...props} /></TabContainer>}
         {tab === 2 && <TabContainer>{t.assignments}</TabContainer>}
         {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
         </div>
@@ -78,7 +77,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 
 const mapStateToProps = (state: IState): IStateProps => ({
     t: localStrings(state, {layout: "planTabs"}),
-    m: localStrings(state, {layout: "mediaTab"}),
   });
       
 export default withStyles(styles, { withTheme: true })(
