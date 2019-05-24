@@ -191,9 +191,9 @@ export function PlanTable(props: IProps) {
   const ActionCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
     <Table.Cell {...restProps} style={{...style}} value >
       <IconButton
-        id={value}
-        key={value}
-        aria-label={value}
+        id={'edit-' + value}
+        key={'edit-' + value}
+        aria-label={'edit-' + value}
         color="default"
         className={classes.actionIcon}
         onClick={handleEdit(restProps.row.action)}
@@ -201,9 +201,9 @@ export function PlanTable(props: IProps) {
         <EditIcon />
       </IconButton>
       <IconButton
-        id={value}
-        key={value}
-        aria-label={value}
+        id={'del-' + value}
+        key={'del-' + value}
+        aria-label={'del-' + value}
         color="default"
         className={classes.actionIcon}
         onClick={handleDelete}
