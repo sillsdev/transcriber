@@ -74,6 +74,7 @@ exports[`can render MediaTab snapshot 1`] = `
       <button
         class="MuiButtonBase-root-32 MuiIconButton-root-48"
         tabindex="0"
+        title="Show/Hide filter rows"
         type="button"
       >
         <span
@@ -349,7 +350,7 @@ exports[`can render MediaTab snapshot 1`] = `
                         <span
                           class="Title-title-126"
                         >
-                          Duration
+                          Length (s)
                         </span>
                         <svg
                           aria-hidden="true"
@@ -400,7 +401,7 @@ exports[`can render MediaTab snapshot 1`] = `
                         <span
                           class="Title-title-126"
                         >
-                          Size
+                          Size (KB)
                         </span>
                         <svg
                           aria-hidden="true"

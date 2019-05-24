@@ -60,6 +60,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
   columns: Array<ICell>;
   rowData: Array<Array<string|number>>;
   save: (r: string[][]) => void;
+  paste: (r: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
   addPassage: () => void;
   addSection: () => void;
@@ -67,7 +68,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
   
 export function PlanSheet(props: IProps) {
     const { classes, columns, rowData, t,
-        save, action, addPassage, addSection } = props;
+        save, action, addPassage, addSection, paste } = props;
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
     const [actionMenuItem, setActionMenuItem] = useState(null);
@@ -140,8 +141,10 @@ export function PlanSheet(props: IProps) {
       changes.forEach(({cell, row, col, value}: IChange) => {
         grid[row][col] = {...grid[row][col], value}
       });
-      setData(grid);
-      setDirty(true);
+      if (changes.length > 0) {
+        setData(grid);
+        setDirty(true);
+      }
     };
 
     const handleContextMenu = (e: MouseEvent, cell: any) => cell.readOnly ? e.preventDefault() : null;
@@ -150,6 +153,7 @@ export function PlanSheet(props: IProps) {
       const blankLines = /\r?\n\t*\r?\n/;
       const chunks = s.split(blankLines)
       const lines = chunks.join('\n').replace(/\r?\n$/,'').split('\n')
+      if (paste) return paste(lines.map(s => s.split('\t')));
       return lines.map(s => s.split('\t'));
     }
 

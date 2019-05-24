@@ -121,6 +121,21 @@ export function ScriptureTable(props: IProps) {
       setMessage(<span>{what}...</span>)
       return false;
     }
+    const validTable = (rows: string[][]) => {
+      if (rows.length === 0) return false;
+      if (rows[0].length !== 6) return false;
+      if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[0])).length > 0) return false;
+      if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[2])).length > 0) return false;
+      return true;
+    }
+    const handlePaste = (rows: string[][]) => {
+      if (validTable(rows)) {
+        const startRow = (/^[0-9]*$/.test(rows[0][0]))? 0: 1;
+        setData(data.concat(rows.filter((r,i) => i >= startRow)));
+        return Array<Array<string>>();
+      }
+      return rows;
+    }
     const handleSave = (rows: string[][]) => {
       const addPassage = async (i: number, sId: string) => {
         const passageRow = rows[i];
@@ -322,6 +337,7 @@ export function ScriptureTable(props: IProps) {
           action={handleAction}
           addSection={addSection}
           addPassage={addPassage}
+          paste={handlePaste}
           t={s}
         />
         <SnackBar {...props} message={message} reset={handleMessageReset} />
