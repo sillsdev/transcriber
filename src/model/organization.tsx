@@ -11,6 +11,7 @@ export interface Organization extends Record {
       owner: RecordRelationship;
       users: RecordRelationship;
       groups: RecordRelationship;
+      userRoles: RecordRelationship;
     };
   }
 

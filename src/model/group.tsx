@@ -7,7 +7,8 @@ export interface Group extends Record {
     };
     relationships?: {
       owner: RecordRelationship;
-      users: RecordRelationship;
+      projects: RecordRelationship;
+      groupMemberships: RecordRelationship;
     };
   };
 export default Group;
