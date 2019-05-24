@@ -216,6 +216,7 @@ const initialState = {
 			"duration": "Duration",
 			"size": "Size",
 			"version": "Version",
+			"section": "Section",
 		}
 	}),
 };

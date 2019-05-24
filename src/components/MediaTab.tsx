@@ -7,11 +7,11 @@ import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem'
+import { Button, Menu, MenuItem, IconButton } from '@material-ui/core'
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
+import FilterIcon from '@material-ui/icons/FilterList';
+import SelectAllIcon from '@material-ui/icons/SelectAll';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
@@ -42,14 +42,24 @@ const styles = (theme: Theme) => ({
 
 interface IRow {
   fileName: string;
-  sectionId: string;
-  sectionName: string;
-  book: string;
+  section: string;
   reference: string;
   duration: string;
   size: number;
   version: string;
 };
+
+const getSection = (section: Section[]) => {
+  const sectionId = (section.length > 0 && section[0].attributes.sequencenum)? section[0].attributes.sequencenum.toString(): '';
+  const sectionName = section.length > 0? section[0].attributes.name: '';
+  return sectionId + " " + sectionName;
+}
+
+const getReference = (passage: Passage[]) => {
+  const book = passage.length > 0? passage[0].attributes.book: '';
+  const reference = passage.length > 0? passage[0].attributes.reference: '';
+  return book + " " + reference;
+}
 
 const getMedia = (plan: string, mediaFiles: Array<MediaFile>, passages: Array<Passage>, passageSections: Array<PassageSection>, sections: Array<Section>) => {
   const media = mediaFiles.filter(f => related(f, 'plan') === plan);
@@ -60,11 +70,9 @@ const getMedia = (plan: string, mediaFiles: Array<MediaFile>, passages: Array<Pa
     const sectionId = passageSection.length > 0? related(passageSection[0], 'section'): '';
     const section = sections.filter(s => s.id === sectionId);
     return {
-      fileName: f.attributes.audioUrl,
-      sectionId: (section.length > 0 && section[0].attributes.sequencenum)? section[0].attributes.sequencenum.toString(): '',
-      sectionName: section.length > 0? section[0].attributes.name: '',
-      book: passage.length > 0? passage[0].attributes.book: '',
-      reference: passage.length > 0? passage[0].attributes.reference: '',
+      fileName: f.attributes.originalFile,
+      section: getSection(section),
+      reference: getReference(passage),
       duration: f.attributes.duration? f.attributes.duration.toString(): '',
       size: f.attributes.filesize,
       version: f.attributes.versionNumber? f.attributes.versionNumber.toString(): '',
@@ -105,25 +113,22 @@ export function MediaTab(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs=[
     { name: 'fileName', title: t.fileName },
-    { name: 'sectionId', title: t.sectionId },
-    { name: 'sectionName', title: t.sectionName },
-    { name: 'book', title: t.book },
+    { name: 'section', title: t.section },
     { name: 'reference', title: t.reference },
     { name: 'duration', title: t.duration },
     { name: 'size', title: t.size },
     { name: 'version', title: t.version },
   ];
   const columnWidths=[
-    { columnName: "fileName", width: 200 },
-    { columnName: "sectionId", width: 100 },
-    { columnName: "sectionName", width: 150 },
-    { columnName: "book", width: 100 },
-    { columnName: "reference", width: 100 },
+    { columnName: "fileName", width: 150 },
+    { columnName: "section", width: 200 },
+    { columnName: "reference", width: 150 },
     { columnName: "duration", width: 100 },
     { columnName: "size", width: 100 },
     { columnName: "version", width: 100 },
   ];
   const sizeCols= ['size'];
+  const [filter, setFilter] = useState(false);
 
   const handleMessageReset = () => { setMessage(<></>) }
   const handleUpload = () => {
@@ -154,6 +159,7 @@ export function MediaTab(props: IProps) {
   const handleCheck = (checks: Array<number>) => {
     setCheck(checks);
   };
+  const handleFilter = () => setFilter(!filter);
 
   useEffect(() => {
     setData(
@@ -199,6 +205,9 @@ export function MediaTab(props: IProps) {
             {t.uploadMedia}
             <AddIcon className={classes.icon} />
           </Button>
+          <IconButton onClick={handleFilter}>
+            {filter? <SelectAllIcon/>: <FilterIcon/>}
+          </IconButton>
         </div>
         <ShapingTable
           columns={columnDefs}
@@ -206,6 +215,7 @@ export function MediaTab(props: IProps) {
           sizeCols={sizeCols}
           rows={data}
           select={handleCheck}
+          shaping={filter}
         />
       </div>
       {confirmAction !== ''

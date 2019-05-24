@@ -47,7 +47,7 @@ const addMediaFile = async () => {
     const mediaFile = {
         type: 'mediafile',
         attributes: {
-            audioUrl: 'PAT-LUK-001-001004v01.mp3',
+            originalFile: 'PAT-LUK-001-001004v01.mp3',
         },
     } as any;
     (schema as Schema).initializeRecord(mediaFile)

@@ -114,17 +114,19 @@ interface IProps {
   sizeCols?: Array<string>;
   rows: Array<any>;
   sorting?: Array<Sorting>;
+  shaping?: boolean;
   select?: (checks: Array<number>) => void
 };
   
 export default function ShapingTable(props: IProps) {
-    const { columns, columnWidths, sizeCols, rows, sorting, select } = props
+    const { columns, columnWidths, sizeCols, rows, sorting, select, shaping } = props
 
     const handleSelect = (checks: Array<string|number>) => {
       if (select) {
         select(checks.map(c => typeof c === 'string'? parseInt(c): c))
       }
     }
+    const noRow = () => <></>
 
     return (
         <Grid
@@ -141,6 +143,7 @@ export default function ShapingTable(props: IProps) {
           <SelectionState onSelectionChange={handleSelect} />
 
           <GroupingState
+            columnGroupingEnabled={shaping !== null? shaping: true}
             // defaultGrouping={[{ columnName: 'product' }]}
             // defaultExpandedGroups={['Piano']}
           />
@@ -163,13 +166,31 @@ export default function ShapingTable(props: IProps) {
                 />
           <TableSelection showSelectAll={true} />
 
-          <TableHeaderRow showSortingControls={true} />
-          <TableFilterRow showFilterSelector={true} />
+          <TableHeaderRow
+            showSortingControls={true}
+          />
+          {(shaping !== null && !shaping)?
+            <TableFilterRow
+              showFilterSelector={true}
+              rowComponent={noRow}
+            />:
+            <TableFilterRow
+              showFilterSelector={true}
+            />}
           {/* <PagingPanel pageSizes={pageSizes} /> */}
 
           <TableGroupRow />
-          <Toolbar />
-          <GroupingPanel showSortingControls={true} />
+          {(shaping !== null && !shaping)?
+            <Toolbar rootComponent={noRow} />:
+            <Toolbar />}
+          {(shaping !== null && !shaping)?
+            <GroupingPanel
+              showSortingControls={true}
+              emptyMessageComponent={noRow}
+            />:
+            <GroupingPanel
+              showSortingControls={true}
+            />}
         </Grid>
     );
 };

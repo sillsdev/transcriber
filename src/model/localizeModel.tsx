@@ -192,6 +192,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "duration": string;
     "size": string;
     "version": string;
+    "section": string;
 };
 
 export interface ILocalizedStrings {

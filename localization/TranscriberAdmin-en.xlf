@@ -820,5 +820,11 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>
