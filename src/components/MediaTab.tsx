@@ -127,7 +127,13 @@ export function MediaTab(props: IProps) {
     { columnName: "size", width: 100 },
     { columnName: "version", width: 100 },
   ];
-  const sizeCols= ['size'];
+  const numCompare = (a:number, b:number) => {return a-b};
+  const columnSorting=[
+    { columnName: 'duration', compare: numCompare},
+    { columnName: 'size', compare:numCompare},
+    { columnName: 'version', compare:numCompare},
+  ];
+  const numCols= ['duration','size','version'];
   const [filter, setFilter] = useState(false);
 
   const handleMessageReset = () => { setMessage(<></>) }
@@ -205,14 +211,15 @@ export function MediaTab(props: IProps) {
             {t.uploadMedia}
             <AddIcon className={classes.icon} />
           </Button>
-          <IconButton onClick={handleFilter}>
+          <IconButton onClick={handleFilter} title={"Show/Hide filter rows"}>
             {filter? <SelectAllIcon/>: <FilterIcon/>}
           </IconButton>
         </div>
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
-          sizeCols={sizeCols}
+          columnSorting={columnSorting}
+          numCols={numCols}
           rows={data}
           select={handleCheck}
           shaping={filter}

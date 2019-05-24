@@ -94,8 +94,8 @@ const SizeEditor = withStyles(styles)(
 
 const SizeFormatter = withStyles(styles)(
   ({ value, classes } : SizeFormatterProps) =>
-    // <i className={classes.size} style={{ color: getColor(value) }}>{value}kb</i>
-    <i className={classes.size}>{value}kb</i>
+    // <i className={classes.size} style={{ color: getColor(value) }}>{value}</i>
+    <i className={classes.size}>{value}</i>
 );
 
 const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> =
@@ -111,7 +111,8 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> =
 interface IProps {
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
-  sizeCols?: Array<string>;
+  columnSorting?: Array<IntegratedSorting.ColumnExtension>;
+  numCols?: Array<string>;
   rows: Array<any>;
   sorting?: Array<Sorting>;
   shaping?: boolean;
@@ -119,7 +120,7 @@ interface IProps {
 };
   
 export default function ShapingTable(props: IProps) {
-    const { columns, columnWidths, sizeCols, rows, sorting, select, shaping } = props
+    const { columns, columnWidths, columnSorting, numCols, rows, sorting, select, shaping } = props
 
     const handleSelect = (checks: Array<string|number>) => {
       if (select) {
@@ -151,11 +152,11 @@ export default function ShapingTable(props: IProps) {
 
           <IntegratedGrouping />
           <IntegratedFiltering />
-          <IntegratedSorting />
+          <IntegratedSorting columnExtensions={columnSorting? columnSorting: undefined} />
           {/* <IntegratedPaging /> */}
           <IntegratedSelection />
 
-          <SizeTypeProvider for={sizeCols? sizeCols: Array<string>()} />
+          <SizeTypeProvider for={numCols? numCols: Array<string>()} />
 
           <DragDropProvider />
 

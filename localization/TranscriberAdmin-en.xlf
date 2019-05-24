@@ -804,13 +804,13 @@
       </unit>
       <unit id="mediaTab.duration">
          <segment>
-            <source>Duration</source>
+            <source>Length (s)</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.size">
          <segment>
-            <source>Size</source>
+            <source>Size (KB)</source>
             <target/>
          </segment>
       </unit>

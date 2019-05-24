@@ -805,14 +805,14 @@
 		</unit>
 		<unit id="mediaTab.duration">
 			<segment>
-				<source>Duration</source>
-				<target>Durée</target>
+				<source>Length (s)</source>
+				<target>Durée (s)</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.size">
 			<segment>
-				<source>Size</source>
-				<target>Taille de fichier</target>
+				<source>Size (KB)</source>
+				<target>Taille de fichier (KO)</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.version">

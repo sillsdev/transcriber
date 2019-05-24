@@ -109,7 +109,9 @@ export function ProjectTable(props: IProps) {
   };
   const handleCancel = () => { setView('/admin') };
   const handleEdit = (e:any) => {
-    setProject(projects.filter((p: Project) => p.attributes.name.toLowerCase() === e.target.innerText.toLowerCase())[0].id);
+    setProject(projects.filter((p: Project) =>
+      (p.attributes && p.attributes.name && p.attributes.name.toLowerCase()) ===
+        e.target.innerText.toLowerCase())[0].id);
     setView('/projectstatus')
   };
 

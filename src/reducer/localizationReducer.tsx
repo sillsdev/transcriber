@@ -213,8 +213,8 @@ const initialState = {
 			"sectionName": "Section Name",
 			"book": "Book",
 			"reference": "Reference",
-			"duration": "Duration",
-			"size": "Size",
+			"duration": "Length (s)",
+			"size": "Size (KB)",
 			"version": "Version",
 			"section": "Section",
 		}

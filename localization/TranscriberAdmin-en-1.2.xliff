@@ -935,14 +935,14 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="mediaTab.duration">
-				<source>Duration</source>
+				<source>Length (s)</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="mediaTab.size">
-				<source>Size</source>
+				<source>Size (KB)</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>
