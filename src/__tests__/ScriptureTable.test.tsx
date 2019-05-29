@@ -66,8 +66,6 @@ const addOneSection = async () => {
         'plan',
         {type: 'plan', id: plan.id}
     ));
-    // let sections = await (dataStore as Store).query(q => q.findRecords('section'))
-    // console.log(sections)
     return section.id;
 };
 

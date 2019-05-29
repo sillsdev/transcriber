@@ -82,9 +82,6 @@ const addOrgGroupAndProject = async (orgName: string, projName: string) => {
         'group',
         {type: 'group', id: group.id}
     ));
-    // const orgs = await (dataStore as Store).query(q => q.findRecords('organization'))
-    // console.log(orgs)
-    // return project.id;
 };
 
 afterEach(cleanup);
@@ -101,11 +98,7 @@ test('displays project of selected organization', async () => {
     await addOrgGroupAndProject('SIL', 'Genesis');
 
     const groups = await (dataStore as Store).query(q => q.findRecords('group'))
-    // console.log(groups)
-    // console.log(Related(groups[0], 'owner'))
     const projects = await (dataStore as Store).query(q => q.findRecords('project'))
-    // console.log(projects)
-    // console.log(Related(projects[0], 'group'))
 
     const { getByText, container } = render(tree({projects, groups}));
     const TestTable = await waitForElement(() =>
@@ -125,11 +118,7 @@ test('displays only projects of selected organization', async () => {
     await addOrgGroupAndProject('FCBH', 'Luke');
 
     const groups = await (dataStore as Store).query(q => q.findRecords('group'))
-    // console.log(groups)
-    // console.log(Related(groups[0], 'owner'))
     const projects = await (dataStore as Store).query(q => q.findRecords('project'))
-    // console.log(projects)
-    // console.log(Related(projects[0], 'group'))
 
     const { getByText, container } = render(tree({projects, groups}));
     const TestTable = await waitForElement(() =>

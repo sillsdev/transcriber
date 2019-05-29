@@ -35,7 +35,7 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
             host: API_CONFIG.host,
             defaultFetchSettings: {
                 headers:{
-                    "Authorization": "Bearer " + auth.accessToken,
+                    Authorization: "Bearer " + auth.accessToken,
                 }
             }
         })

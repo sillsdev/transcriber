@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, MediaFile, Passage, PassageSection,
+import * as actions from '../actions';
+import { IState, IUploadFile, MediaFile, Passage, PassageSection,
   Section, IMediaTabStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { KeyMap, QueryBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, IconButton } from '@material-ui/core'
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
+import MediaUpload from './MediaUpload';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import related from '../utils/related';
+import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -83,7 +87,15 @@ const getMedia = (plan: string, mediaFiles: Array<MediaFile>, passages: Array<Pa
 
 interface IStateProps {
   t: IMediaTabStrings;
+  uploadList: Array<IUploadFile>;
+  loaded: boolean;
+  currentlyLoading: number;
 };
+
+interface IDispatchProps {
+  uploadFiles: typeof actions.uploadFiles;
+  nextUpload: typeof actions.nextUpload;
+}
 
 interface IRecordProps {
   mediaFiles: Array<MediaFile>;
@@ -92,16 +104,17 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
+interface IProps extends IStateProps, IDispatchProps, IRecordProps, WithStyles<typeof styles>{
   action?: (what: string, where: number[]) => boolean;
-  upload?: () => void;
+  auth: Auth;
 };
   
 export function MediaTab(props: IProps) {
-  const { classes, t,
-    action, upload,
-    mediaFiles, passages, passageSections, sections } = props;
+  const { classes, t, uploadList, loaded, currentlyLoading,
+    action, uploadFiles, nextUpload,
+    mediaFiles, passages, passageSections, sections, auth } = props;
   const [plan] = useGlobal('plan');
+  const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
     // [
@@ -135,13 +148,16 @@ export function MediaTab(props: IProps) {
   ];
   const numCols= ['duration','size','version'];
   const [filter, setFilter] = useState(false);
+  const [uploadVisible, setUploadVisible] = useState(false);
+
 
   const handleMessageReset = () => { setMessage(<></>) }
-  const handleUpload = () => {
-    if (upload != null) {
-      upload();
-    }
+  const handleUpload = () => { setUploadVisible(true) }
+  const uploadMedia = (files: Array<IUploadFile>) => {
+    uploadFiles(files);
+    setUploadVisible(false);
   }
+  const uploadCancel = () => { setUploadVisible(false) }
   const handleMenu = (e:any) => setActionMenuItem(e.currentTarget);
   const handleConfirmAction = (what: string) => (e:any) => {
     setActionMenuItem(null)
@@ -172,6 +188,19 @@ export function MediaTab(props: IProps) {
       getMedia(plan as string, mediaFiles, passages, passageSections, sections)
     );
   }, [plan, mediaFiles, passages, passageSections, sections])
+
+  useEffect(() => {
+    if (loaded || currentlyLoading < 0) {
+      if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
+        const planId = parseInt((keyMap as KeyMap).idToKey('plan', 'remoteId', (plan as string)));
+        const mediaFile = {
+            PlanId: planId,
+          } as any;
+        nextUpload(JSON.stringify(mediaFile), uploadList, currentlyLoading + 1, auth)
+      }
+    }
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [uploadList, loaded, currentlyLoading, plan, auth])
 
   return (
     <div className={classes.container}>
@@ -225,6 +254,11 @@ export function MediaTab(props: IProps) {
           shaping={filter}
         />
       </div>
+      <MediaUpload
+        visible={uploadVisible}
+        uploadMethod={uploadMedia}
+        cancelMethod={uploadCancel}
+      />
       {confirmAction !== ''
       ? <Confirm
           text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
@@ -238,7 +272,17 @@ export function MediaTab(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: "mediaTab"})
+  t: localStrings(state, {layout: "mediaTab"}),
+  uploadList: state.upload.files,
+  currentlyLoading: state.upload.current,
+  loaded: state.upload.loaded,
+});
+
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators({
+    uploadFiles: actions.uploadFiles,
+    nextUpload: actions.nextUpload,
+  }, dispatch),
 });
 
 const mapRecordsToProps = {
@@ -250,7 +294,7 @@ const mapRecordsToProps = {
 
 export default withStyles(styles, { withTheme: true })(
     withData(mapRecordsToProps)(
-        connect(mapStateToProps)(MediaTab) as any
+        connect(mapStateToProps, mapDispatchToProps)(MediaTab) as any
         ) as any
     ) as any;
       
