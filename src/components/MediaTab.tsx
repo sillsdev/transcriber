@@ -20,6 +20,8 @@ import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
+import moment from 'moment';
+import 'moment/locale/fr';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -51,6 +53,7 @@ interface IRow {
   duration: string;
   size: number;
   version: string;
+  date: string;
 };
 
 const getSection = (section: Section[]) => {
@@ -84,6 +87,11 @@ const getMedia = (plan: string, mediaFiles: Array<MediaFile>, passages: Array<Pa
     const passageSection = passageSections.filter(ps => related(ps, 'passage') === passageId);
     const sectionId = passageSection.length > 0? related(passageSection[0], 'section'): '';
     const section = sections.filter(s => s.id === sectionId);
+    const updated = f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
+    const date = updated? updated.format('YYYY-MM-DD'): ''
+    const displayDate = updated? updated.locale(navigator.language.split('-')[0]).format('L'):'';
+    const displayTime = updated? updated.locale(navigator.language.split('-')[0]).format('LT'):'';
+    const today = moment().format('YYYY-MM-DD')
     return {
       fileName: f.attributes.originalFile,
       section: getSection(section),
@@ -91,6 +99,7 @@ const getMedia = (plan: string, mediaFiles: Array<MediaFile>, passages: Array<Pa
       duration: f.attributes.duration? f.attributes.duration.toString(): '',
       size: f.attributes.filesize,
       version: f.attributes.versionNumber? f.attributes.versionNumber.toString(): '',
+      date: date === today? displayTime: displayDate,
     } as IRow
   });
   return(rowData as Array<IRow>);
@@ -142,20 +151,31 @@ export function MediaTab(props: IProps) {
     { name: 'duration', title: t.duration },
     { name: 'size', title: t.size },
     { name: 'version', title: t.version },
+    { name: 'date', title: t.date }
   ];
   const columnWidths=[
     { columnName: "fileName", width: 150 },
-    { columnName: "section", width: 200 },
+    { columnName: "section", width: 150 },
     { columnName: "reference", width: 150 },
     { columnName: "duration", width: 100 },
     { columnName: "size", width: 100 },
     { columnName: "version", width: 100 },
+    { columnName: "date", width: 100 }
   ];
   const numCompare = (a:number, b:number) => {return a-b};
+  const dateCompare = (a:string, b:string) => {
+    const aDate = moment(a).isValid()? moment(a): moment(a, 'LT');
+    const bDate = moment(b).isValid()? moment(b): moment(b, 'LT');
+    const aIso = aDate.toISOString();
+    const bIso = bDate.toISOString();
+    return aIso > bIso? 1:
+      aIso < bIso? -1: 0
+  }
   const columnSorting=[
-    { columnName: 'duration', compare: numCompare},
-    { columnName: 'size', compare:numCompare},
-    { columnName: 'version', compare:numCompare},
+    { columnName: 'duration', compare: numCompare },
+    { columnName: 'size',     compare: numCompare },
+    { columnName: 'version',  compare: numCompare },
+    { columnName: 'date',     compare: dateCompare },
   ];
   const numCols= ['duration','size','version'];
   const [filter, setFilter] = useState(false);

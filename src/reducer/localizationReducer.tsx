@@ -217,6 +217,7 @@ const initialState = {
 			"size": "Size (KB)",
 			"version": "Version",
 			"section": "Section",
+			"date": "Date",
 		}
 	}),
 };

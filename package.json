@@ -63,6 +63,7 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/react-test-renderer": "^16.8.1",
     "jest-dom": "^3.2.2",
+    "moment": "^2.24.0",
     "react-testing-library": "^7.0.0"
   }
 }

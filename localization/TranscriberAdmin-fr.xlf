@@ -827,5 +827,11 @@
 				<target>Section</target>
 			</segment>
 		</unit>
+		<unit id="mediaTab.date">
+			<segment>
+				<source>Date</source>
+				<target>Date</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>
