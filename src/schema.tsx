@@ -19,12 +19,13 @@ const schemaDefinition: SchemaSettings =  {
     groupmembership: {
       keys: { remoteId: {} },
       attributes: {
-        userId: { type: 'number' },
-        groupId: { type: 'number' },
+        font: { type: 'string' },
+        fontSize: { type: 'string' },
       },
       relationships: {
         user: { type: 'hasOne', model: 'user', inverse: 'groupMemberships' },
         group: { type: 'hasOne', model: 'group', inverse: 'groupMemberships' },
+        role: { type: 'hasOne', model: 'role' },
       }
     },
     integration: {
@@ -140,21 +141,6 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         projects: { type: 'hasMany', model: 'project', inverse: 'projecttype' },
-      },
-    },
-    projectuser: {
-      keys: { remoteId: {} },
-      attributes: {
-        userId: { type: 'number' },
-        projectId: { type: 'number' },
-        roleId: { type: 'number' },
-        font:  { type: 'string' },
-        fontSize: { type: 'string' },
-      },
-      relationships: {
-        user: { type: 'hasOne', model: 'user' },
-        project: { type: 'hasOne', model: 'project' },
-        role: { type: 'hasOne', model: 'role' },
       },
     },
     role: {

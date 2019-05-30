@@ -2,11 +2,11 @@ export * from './localizeModel';
 export * from './organization';
 export * from './organizationMembership';
 export * from './group';
+export * from './groupMembership'
 export * from './integration';
 export * from './mediaFile';
 export * from './project';
 export * from './projectType';
-export * from './projectUsers'
 export * from './plan';
 export * from './planType';
 export * from './section';
