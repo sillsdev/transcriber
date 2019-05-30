@@ -9,7 +9,7 @@ import Store from '@orbit/store';
 import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
 import history from '../history';
-import { render, cleanup, waitForElement } from 'react-testing-library';
+import { render, cleanup, waitForElement } from '@testing-library/react';
 import 'jest-dom/extend-expect';
 import ProjectTable from '../routes/ProjectTable';
 import Auth from '../auth/Auth';

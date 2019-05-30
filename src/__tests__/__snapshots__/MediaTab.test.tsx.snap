@@ -38,7 +38,7 @@ exports[`can render MediaTab snapshot 1`] = `
           </svg>
         </span>
         <span
-          class="MuiTouchRipple-root-140"
+          class="MuiTouchRipple-root-156"
         />
       </button>
       <button
@@ -68,7 +68,7 @@ exports[`can render MediaTab snapshot 1`] = `
           </svg>
         </span>
         <span
-          class="MuiTouchRipple-root-140"
+          class="MuiTouchRipple-root-156"
         />
       </button>
       <button
@@ -97,7 +97,7 @@ exports[`can render MediaTab snapshot 1`] = `
           </svg>
         </span>
         <span
-          class="MuiTouchRipple-root-140"
+          class="MuiTouchRipple-root-156"
         />
       </button>
     </div>
@@ -109,7 +109,7 @@ exports[`can render MediaTab snapshot 1`] = `
       >
         <table
           class="MuiTable-root-60 Table-table-56"
-          style="min-width: 858px;"
+          style="min-width: 908px;"
         >
           <colgroup>
             <col
@@ -119,10 +119,13 @@ exports[`can render MediaTab snapshot 1`] = `
               style="width: 150px;"
             />
             <col
-              style="width: 200px;"
+              style="width: 150px;"
             />
             <col
               style="width: 150px;"
+            />
+            <col
+              style="width: 100px;"
             />
             <col
               style="width: 100px;"
@@ -481,6 +484,57 @@ exports[`can render MediaTab snapshot 1`] = `
                 </div>
               </th>
               <th
+                class="MuiTableCell-root-71 MuiTableCell-head-72 TableHeaderCell-cell-94 TableHeaderCell-cellNoUserSelect-98 TableHeaderCell-cellDraggable-99 TableHeaderCell-cellNoWrap-104"
+                colspan="1"
+                scope="col"
+              >
+                <div
+                  class="TableHeaderCell-container-103"
+                >
+                  <div
+                    class="Content-content-105"
+                  >
+                    <div
+                      class="SortLabel-root-108"
+                    >
+                      <span
+                        class="MuiButtonBase-root-32 MuiTableSortLabel-root-121 SortLabel-sortLabelRoot-110"
+                        role="button"
+                        tabindex="0"
+                        title="Sort"
+                      >
+                        <span
+                          class="Title-title-126"
+                        >
+                          Date
+                        </span>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root-35 MuiTableSortLabel-icon-123 MuiTableSortLabel-iconDirectionDesc-124"
+                          focusable="false"
+                          role="presentation"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="ResizingControl-resizeHandle-127 TableHeaderCell-resizeHandle-95"
+                >
+                  <div
+                    class="TableHeaderCell-resizeHandleLine-96 ResizingControl-resizeHandleLine-128 ResizingControl-resizeHandleFirstLine-129"
+                  />
+                  <div
+                    class="TableHeaderCell-resizeHandleLine-96 ResizingControl-resizeHandleLine-128 ResizingControl-resizeHandleSecondLine-130"
+                  />
+                </div>
+              </th>
+              <th
                 class="MuiTableCell-root-71 MuiTableCell-head-72 TableStubCell-cell-133"
                 colspan="1"
                 scope="col"
@@ -495,7 +549,7 @@ exports[`can render MediaTab snapshot 1`] = `
             >
               <td
                 class="MuiTableCell-root-71 MuiTableCell-body-73 TableNoDataCell-cell-136"
-                colspan="8"
+                colspan="9"
               >
                 <div
                   class="TableNoDataCell-textContainer-137"
@@ -513,5 +567,6 @@ exports[`can render MediaTab snapshot 1`] = `
       </div>
     </div>
   </div>
+  <div />
 </div>
 `;

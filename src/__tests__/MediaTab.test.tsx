@@ -10,7 +10,7 @@ import Store from '@orbit/store';
 import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
 import history from '../history';
-import { render, fireEvent, cleanup, waitForElement } from 'react-testing-library';
+import { render, fireEvent, cleanup, waitForElement } from '@testing-library/react';
 import 'jest-dom/extend-expect';
 import MediaTab from '../components/MediaTab';
 

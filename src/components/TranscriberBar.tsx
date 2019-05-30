@@ -177,7 +177,7 @@ function TranscriberBar(props: IProps) {
         />
       </div>
       <Avatar className={classes.avatar}>
-          {initials}
+          {initials as string}
       </Avatar>
     </Toolbar>
   </AppBar>

@@ -5,8 +5,9 @@ import localStrings from '../selector/localize';
 import { withStyles, WithStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {Button, Dialog, DialogActions, DialogContent,
     DialogContentText, DialogTitle } from '@material-ui/core';
-import FileDrop from 'react-file-drop';
 import SnackBar from './SnackBar';
+const FileDrop = (process.env.NODE_ENV !== 'test')? 
+  require('react-file-drop').default: <></>;
 
 const styles = (theme: Theme) => createStyles({
   label: {
@@ -71,6 +72,41 @@ function  MediaUpload(props: IProps) {
         setOpen(visible)
     }, [visible])
 
+    const dropTarget = process.env.NODE_ENV !== 'test'?
+      <FileDrop onDrop={handleDrop}>
+        <label
+          id="file"
+          className={classes.label}
+          htmlFor='upload'
+          onChange={handleNameChange}
+        >{name ===''? 'Select file(s)': name}</label>
+        <input
+          id='upload'
+          style={{display: 'none'}}
+          type='file'
+          accept='audio/mpeg, audio/wav'
+          multiple={true}
+          onChange={handleNameChange}
+        />
+      </FileDrop>:
+      <div>
+        <label
+          id="file"
+          className={classes.label}
+          htmlFor='upload'
+          onChange={handleNameChange}
+        >{name ===''? 'Select file(s)': name}</label>
+        <input
+          id='upload'
+          style={{display: 'none'}}
+          type='file'
+          accept='audio/mpeg, audio/wav'
+          multiple={true}
+          onChange={handleNameChange}
+        />
+      </div>
+
+
     return (
       <div>
         <Dialog
@@ -84,22 +120,7 @@ function  MediaUpload(props: IProps) {
               {'Choose .mp3 or .wav file(s) or drop files from your file explorer.'}
             </DialogContentText>
             <div className={classes.drop}>
-              <FileDrop onDrop={handleDrop}>
-                <label
-                  id="file"
-                  className={classes.label}
-                  htmlFor='upload'
-                  onChange={handleNameChange}
-                >{name ===''? 'Select file(s)': name}</label>
-                <input
-                  id='upload'
-                  style={{display: 'none'}}
-                  type='file'
-                  accept='audio/mpeg, audio/wav'
-                  multiple={true}
-                  onChange={handleNameChange}
-                />
-              </FileDrop>
+              {dropTarget}
             </div>
           </DialogContent>
           <DialogActions>
