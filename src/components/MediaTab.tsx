@@ -65,8 +65,19 @@ const getReference = (passage: Passage[]) => {
   return book + " " + reference;
 }
 
+interface ILatest {
+  [name: string]: number;
+}
+
 const getMedia = (plan: string, mediaFiles: Array<MediaFile>, passages: Array<Passage>, passageSections: Array<PassageSection>, sections: Array<Section>) => {
-  const media = mediaFiles.filter(f => related(f, 'plan') === plan);
+  const latest: ILatest = {};
+  mediaFiles.forEach(f => {
+    const name = f.attributes.originalFile;
+    latest[name] = latest[name]? Math.max(latest[name], f.attributes.versionNumber):
+      f.attributes.versionNumber;
+  })
+  const media = mediaFiles.filter(f => related(f, 'plan') === plan &&
+    latest[f.attributes.originalFile] === f.attributes.versionNumber);
   const rowData = media.map(f => {
     const passageId = related(f, 'passage');
     const passage = passages.filter(p => p.id === passageId);
