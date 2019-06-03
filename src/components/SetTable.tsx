@@ -27,7 +27,7 @@ const styles = (theme: Theme) => ({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'right'
+    justifyContent: 'flex-end'
   }),
   button: {
     margin: theme.spacing(1),

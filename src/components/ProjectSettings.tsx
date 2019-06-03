@@ -35,7 +35,7 @@ const styles = (theme: Theme) => ({
       // color: theme.palette.primary.dark,
   },
   info: {
-      justifyContent: 'right',
+      justifyContent: 'flex-end',
   },
   textField: {
     marginLeft: theme.spacing(1),
@@ -51,7 +51,7 @@ const styles = (theme: Theme) => ({
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'right'
+      justifyContent: 'flex-end'
     }),
   button: {
     margin: theme.spacing(1),

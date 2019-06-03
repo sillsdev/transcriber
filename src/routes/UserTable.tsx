@@ -53,7 +53,7 @@ const styles = (theme: Theme) => createStyles({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'right'
+    justifyContent: 'flex-end'
   }),
   button: {
     marginRight: theme.spacing(1),
