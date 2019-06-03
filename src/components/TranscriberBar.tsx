@@ -27,8 +27,8 @@ const styles = (theme: Theme) => createStyles({
     // color: 'black'
   }),
   menuButton: {
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     color: theme.palette.primary.contrastText,
   },
   hide: {
@@ -50,12 +50,12 @@ const styles = (theme: Theme) => createStyles({
     marginLeft: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
+      marginLeft: theme.spacing(1),
       width: 'auto',
     },
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
+    width: theme.spacing(9),
     height: '100%',
     position: 'absolute',
     pointerEvents: 'none',
@@ -68,10 +68,10 @@ const styles = (theme: Theme) => createStyles({
     width: '100%',
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
+    paddingTop: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(10),
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('sm')]: {
@@ -82,15 +82,15 @@ const styles = (theme: Theme) => createStyles({
     },
   },
   button: theme.mixins.gutters({
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     color: theme.palette.primary.contrastText,
   }),
   avatar: {
-      marginLeft: theme.spacing.unit,
-      marginRight: theme.spacing.unit,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
   },
   close: {
-    padding: theme.spacing.unit / 2
+    padding: theme.spacing(0.5),
   },
 });
 

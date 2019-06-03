@@ -10,7 +10,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme: Theme) => createStyles({
   close: {
-    padding: theme.spacing.unit / 2
+    padding: theme.spacing(0.5),
   }
 });
 

@@ -41,7 +41,7 @@ const styles = (theme: Theme) =>
     paper: theme.mixins.gutters({
       paddingTop: 16,
       paddingBottom: 16,
-      marginTop: theme.spacing.unit * 3,
+      marginTop: theme.spacing(3),
       width: "30%",
       display: "flex",
       flexDirection: "column",
@@ -84,14 +84,14 @@ export function OrganizationTable(props: IProps) {
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
   const [currentOrganization, setOrganization] = useGlobal('organization');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(<></>);
 
   const handleSelection = (s: any) => {
     const selectedRow: Row = rows[s[0]];
     setOrganization(selectedRow.id)
     setView('/welcome');
   };
-  const handleMessageReset = () => { setMessage('') };
+  const handleMessageReset = () => { setMessage(<></>) };
   const handleCancel = () => { setView('/admin') };
 
   useEffect(() => {
@@ -118,6 +118,10 @@ export function OrganizationTable(props: IProps) {
       setView('')
     }
   }, [view, currentOrganization]);
+
+  useEffect(() => {
+    setMessage(<span>Loading data...</span>)
+  }, [])
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 

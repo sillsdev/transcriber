@@ -24,10 +24,10 @@ const styles = (theme: Theme) => ({
     justifyContent: 'right'
   }),
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1),
   },
 });
 

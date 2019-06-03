@@ -26,7 +26,7 @@ const styles = (theme: Theme) => ({
     paper: theme.mixins.gutters({
         paddingTop: 16,
         paddingBottom: 16,
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing(3),
         width: '30%',
         display: 'flex',
         flexDirection: 'column',
@@ -43,17 +43,17 @@ const styles = (theme: Theme) => ({
     actions: theme.mixins.gutters({
         paddingTop: 16,
         paddingBottom: 16,
-        marginTop: theme.spacing.unit * 3,
+        marginTop: theme.spacing(3),
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center'
     }),
     text: theme.mixins.gutters({
-        paddingTop: theme.spacing.unit * 2,
+        paddingTop: theme.spacing(2),
         textAlign: 'center',
     }),
     button: theme.mixins.gutters({
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing(1),
     }),
 });
 

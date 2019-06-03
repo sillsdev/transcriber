@@ -35,7 +35,7 @@ const styles = (theme: Theme) => createStyles({
     display: 'flex',
     flexGrow: 1,
     justifyContent: 'end',
-    marginRight: theme.spacing.unit * 5,
+    marginRight: theme.spacing(5),
     fontWeight: theme.typography.fontWeightMedium,
   },
   numericInput: {

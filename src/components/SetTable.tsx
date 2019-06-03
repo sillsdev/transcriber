@@ -18,10 +18,10 @@ import './SetTable.css';
 const styles = (theme: Theme) => ({
   container: {
       display: 'flex',
-      margin: theme.spacing.unit * 4,
+      margin: theme.spacing(4),
   },
   paper: {
-      paddingLeft: theme.spacing.unit * 4,
+      paddingLeft: theme.spacing(4),
   },
   actions: theme.mixins.gutters({
     paddingBottom: 16,
@@ -30,10 +30,10 @@ const styles = (theme: Theme) => ({
     justifyContent: 'right'
   }),
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1),
   },
 });
 

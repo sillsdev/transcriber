@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
       },
     },
     grid: {
-      paddingTop: theme.spacing.unit * 4,
+      paddingTop: theme.spacing(4),
       children: {
         spacing: '32px'
       }

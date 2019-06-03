@@ -18,9 +18,9 @@ import { isNumber } from 'util';
 const styles = (theme: Theme) => ({
   container: {
       display: 'flex',
-      marginLeft: theme.spacing.unit * 4,
-      marginRight: theme.spacing.unit * 4,
-      marginBottom: theme.spacing.unit * 4,
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginBottom: theme.spacing(4),
   },
   paper: {
   },
@@ -31,10 +31,10 @@ const styles = (theme: Theme) => ({
     justifyContent: 'right'
   }),
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1),
   },
 });
 

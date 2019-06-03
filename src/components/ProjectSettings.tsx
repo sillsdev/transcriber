@@ -23,13 +23,13 @@ import SnackBar from './SnackBar';
 const styles = (theme: Theme) => ({
   container: {
       display: 'flex',
-      margin: theme.spacing.unit * 4,
+      margin: theme.spacing(4),
   },
   paper: {
-      paddingLeft: theme.spacing.unit * 4,
+      paddingLeft: theme.spacing(4),
   },
   group: {
-    paddingBottom: theme.spacing.unit * 3,
+    paddingBottom: theme.spacing(3),
   },
   label: {
       // color: theme.palette.primary.dark,
@@ -38,8 +38,8 @@ const styles = (theme: Theme) => ({
       justifyContent: 'right',
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
   },
   dense: {
     marginTop: 16,
@@ -54,16 +54,16 @@ const styles = (theme: Theme) => ({
       justifyContent: 'right'
     }),
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1),
   },
   moreButton: {
     textDecoration: 'underline',
   },
   smallIcon: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     fontSize: 12,
   },
   link: {

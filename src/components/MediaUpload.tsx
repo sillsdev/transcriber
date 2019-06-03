@@ -17,14 +17,14 @@ const styles = (theme: Theme) => createStyles({
     height: '28px',
     backgroundColor: theme.palette.grey[500],
     border: 'none',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
   },
   drop: {
     borderWidth: '1px',
     borderStyle: 'dashed',
     borderColor: theme.palette.secondary.light,
-    padding: theme.spacing.unit,
-    margin: theme.spacing.unit,
+    padding: theme.spacing(1),
+    margin: theme.spacing(1),
   }
 });
 

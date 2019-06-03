@@ -33,7 +33,7 @@ const styles = (theme: Theme) => createStyles({
   paper: theme.mixins.gutters({
     paddingTop: 16,
     paddingBottom: 16,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     width: '80%',
     display: 'flex',
     flexDirection: 'column',
@@ -109,9 +109,10 @@ export function ProjectTable(props: IProps) {
   };
   const handleCancel = () => { setView('/admin') };
   const handleEdit = (e:any) => {
-    setProject(projects.filter((p: Project) =>
-      (p.attributes && p.attributes.name && p.attributes.name.toLowerCase()) ===
-        e.target.innerText.toLowerCase())[0].id);
+    if (projects && projects.length > 0)
+      setProject(projects.filter((p: Project) =>
+        (p.attributes && p.attributes.name && p.attributes.name.toLowerCase()) ===
+          e.target.innerText.trim().toLowerCase())[0].id);
     setView('/projectstatus')
   };
 
@@ -137,7 +138,7 @@ export function ProjectTable(props: IProps) {
       delete: o.id,
     })))
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [projects, organization]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 

@@ -27,9 +27,9 @@ import 'moment/locale/fr';
 const styles = (theme: Theme) => ({
   container: {
       display: 'flex',
-      marginLeft: theme.spacing.unit * 4,
-      marginRight: theme.spacing.unit * 4,
-      marginBottom: theme.spacing.unit * 4,
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginBottom: theme.spacing(4),
   },
   paper: {
   },
@@ -40,10 +40,10 @@ const styles = (theme: Theme) => ({
     justifyContent: 'right'
   }),
   button: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1),
   },
 });
 
@@ -245,6 +245,7 @@ export function MediaTab(props: IProps) {
   useEffect(() => {
     if (loaded)
       (dataStore as Store).query(q => q.findRecords('mediafile'))
+  /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [loaded])
 
   return (

@@ -4,7 +4,6 @@ import { setGlobal } from 'reactn';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from './store';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 import Access from './routes/Access';
 import Welcome from './routes/Welcome';
 import AdminPanel from './routes/AdminPanel';
@@ -28,8 +27,6 @@ const handleAuthentication = (props: any) => {
   }
 }
 
-const theme = createMuiTheme({});
-
 const dataStore = new Store({ schema, keyMap });
 
 setGlobal({
@@ -49,7 +46,6 @@ function App() {
     <DataProvider dataStore={dataStore}>
       <Provider store={store}>
         <Router history={history}>
-          <MuiThemeProvider theme={theme}>
             <Route path='/' exact={true} render={(props) => <Access auth={auth} {...props} />} />
             <Route path='/welcome' render={(props) => <Welcome auth={auth} {...props} />} />
             <Route path='/admin' render={(props) => <AdminPanel auth={auth} {...props} />} />
@@ -62,7 +58,6 @@ function App() {
               handleAuthentication(props);
               return <Callback {...props} /> 
             }}/>
-          </MuiThemeProvider>
         </Router>
       </Provider>
     </DataProvider>

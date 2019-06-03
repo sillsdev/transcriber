@@ -35,7 +35,7 @@ const styles = (theme: Theme) => createStyles({
   paper: theme.mixins.gutters({
     paddingTop: 16,
     paddingBottom: 16,
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     width: '80%',
     display: 'flex',
     flexDirection: 'column',
@@ -56,7 +56,7 @@ const styles = (theme: Theme) => createStyles({
     justifyContent: 'right'
   }),
   button: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1),
   },
 });
 
