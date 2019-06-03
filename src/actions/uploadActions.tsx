@@ -3,14 +3,14 @@ import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
 import { UPLOAD_LIST, UPLOAD_ITEM_PENDING, UPLOAD_ITEM_SUCCEEDED, UPLOAD_ITEM_FAILED } from './types';
 
-export const uploadFiles = (files: Array<any>) => (dispatch: any) => {
+export const uploadFiles = (files: FileList) => (dispatch: any) => {
     dispatch({
         payload: files,
         type: UPLOAD_LIST
     });
 }
 
-export const nextUpload = (record: string, files: Array<any>, n: number, auth: Auth) => (dispatch: any) => {
+export const nextUpload = (record: string, files: FileList, n: number, auth: Auth) => (dispatch: any) => {
     const data = new FormData();
     data.append('jsonString', record);
     data.append('file', files[n])

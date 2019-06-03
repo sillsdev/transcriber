@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
-import { IState, IUploadFile, MediaFile, Passage, PassageSection,
+import { IState, MediaFile, Passage, PassageSection,
   Section, IMediaTabStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -107,7 +107,7 @@ const getMedia = (plan: string, mediaFiles: Array<MediaFile>, passages: Array<Pa
 
 interface IStateProps {
   t: IMediaTabStrings;
-  uploadList: Array<IUploadFile>;
+  uploadList: FileList;
   loaded: boolean;
   currentlyLoading: number;
 };
@@ -184,7 +184,7 @@ export function MediaTab(props: IProps) {
 
   const handleMessageReset = () => { setMessage(<></>) }
   const handleUpload = () => { setUploadVisible(true) }
-  const uploadMedia = (files: Array<IUploadFile>) => {
+  const uploadMedia = (files: FileList) => {
     uploadFiles(files);
     setUploadVisible(false);
   }

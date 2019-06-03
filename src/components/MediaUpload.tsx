@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { IState, IUploadFile, IPlanAddStrings } from '../model';
+import { IState, IPlanAddStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withStyles, WithStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {Button, Dialog, DialogActions, DialogContent,
@@ -34,7 +34,7 @@ interface IStateProps {
 
 interface IProps extends IStateProps, WithStyles<typeof styles>{
     visible: boolean;
-    uploadMethod?: (files: Array<IUploadFile>) => void;
+    uploadMethod?: (files: FileList) => void;
     cancelMethod?: () => void;
 };
 
@@ -43,7 +43,7 @@ function  MediaUpload(props: IProps) {
       uploadMethod, cancelMethod } = props;
     const [open, setOpen] = useState(visible);
     const [name, setName] = useState('');
-    const [files, setFiles] = useState([])
+    const [files, setFiles] = useState();
     const [message, setMessage] = useState(<></>);
 
     const handleAddOrSave = () => {
@@ -58,12 +58,15 @@ function  MediaUpload(props: IProps) {
       }
       setOpen(false)
     }
-    const handleNameChange = (e:any) => {
-      setName(e.target.files.length === 1? e.target.files[0].name: e.target.files.length.toString() + " files selected")
-      setFiles(e.target.files);
+    const handleNameChange = (e: React.FormEvent<HTMLInputElement|HTMLLabelElement>) => {
+      const inputEl = (e.target as HTMLInputElement);
+      if (inputEl && inputEl.files) {
+        setName(inputEl.files.length === 1? inputEl.files[0].name: inputEl.files.length.toString() + " files selected")
+        setFiles(inputEl.files);
+      }
     };
     const handleMessageReset = () => { setMessage(<></>) };
-    const handleDrop = (files: any) => {
+    const handleDrop = (files: FileList) => {
       setName(files.length === 1? files[0].name: files.length.toString() + " files selected")
       setFiles(files);
     }
