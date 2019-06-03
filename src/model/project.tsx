@@ -3,6 +3,7 @@ import { Record, RecordRelationship } from '@orbit/data';
 export interface Project extends Record {
     attributes: {
       name: string;
+      slug: string;
       projectTypeId: number;
       description: string | null;
       ownerId: number;

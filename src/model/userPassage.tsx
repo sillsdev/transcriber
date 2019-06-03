@@ -5,7 +5,6 @@ export interface UserTasks extends Record {
     userId: number;
     projectId: number;
     activityName: string;
-    taskState: string;
     comment: string;
     dateCreated: string | null;
     dateUpdated: string | null;

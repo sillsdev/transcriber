@@ -142,6 +142,8 @@ function Sources(schema: Schema, store: Store, keyMap: KeyMap, auth: Auth): Prom
             .then(transform => store.sync(transform));
         remote.pull(q => q.findRecords('mediafile'))
             .then(transform => store.sync(transform));
+        remote.pull(q => q.findRecords('activitystate'))
+            .then(transform => store.sync(transform));
     }
 
     return (backup.pull(q => q.findRecords())

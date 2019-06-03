@@ -4,6 +4,15 @@ export const keyMap = new KeyMap();
 
 const schemaDefinition: SchemaSettings =  {
   models: {
+    activitystate: {
+      keys: { remoteId: {} },
+      attributes: {
+        state: { type: 'string' },
+        sequencenum: { type: 'number' },
+      },
+      relationships: {
+      },
+    },
     group: {
       keys: { remoteId: {} },
       attributes: {
@@ -42,6 +51,7 @@ const schemaDefinition: SchemaSettings =  {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
+        slug: { type: 'string' },
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
@@ -69,6 +79,7 @@ const schemaDefinition: SchemaSettings =  {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
+        slug: { type: 'string' },
         projectId: { type: 'number' },
         planTypeId: { type: 'number' },
       },
@@ -93,6 +104,7 @@ const schemaDefinition: SchemaSettings =  {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
+        slug: { type: 'string' },
         projectTypeId: { type: 'number' },
         description: { type: 'string' },
         ownerId: { type: 'number' },
@@ -299,7 +311,6 @@ const schemaDefinition: SchemaSettings =  {
       keys: { remoteId: {} },
       attributes: {
         activityName: { type: 'string' },
-        state: { type: 'string' },
         comment: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },
