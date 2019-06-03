@@ -32,6 +32,10 @@ const styles = (theme: Theme) => createStyles({
     alignContent: 'center',
   }),
   size: {
+    display: 'flex',
+    flexGrow: 1,
+    justifyContent: 'end',
+    marginRight: theme.spacing.unit * 5,
     fontWeight: theme.typography.fontWeightMedium,
   },
   numericInput: {
