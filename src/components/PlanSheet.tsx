@@ -59,6 +59,7 @@ interface IStateProps {
 interface IProps extends IStateProps, WithStyles<typeof styles>{
   columns: Array<ICell>;
   rowData: Array<Array<string|number>>;
+  updateData: (r: string[][]) => void;
   save: (r: string[][]) => void;
   paste: (r: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
@@ -68,13 +69,12 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
   
 export function PlanSheet(props: IProps) {
     const { classes, columns, rowData, t,
-        save, action, addPassage, addSection, paste } = props;
+        updateData, save, action, addPassage, addSection, paste } = props;
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
     const [actionMenuItem, setActionMenuItem] = useState(null);
     const [check, setCheck] = useState(Array<number>());
     const [confirmAction, setConfirmAction] = useState('');
-    const [dirty, setDirty] = useState(false);
 
     const handleMessageReset = () => { setMessage(<></>) }
     const handleCheck = (row: number) => (e: any) => {
@@ -94,24 +94,18 @@ export function PlanSheet(props: IProps) {
       }
     };
     const handleAddSection = () => {
-      if (dirty) {
-        setMessage(<span>Save before adding section</span>)
-      } else if (addSection != null) {
-        addSection();
-      }
+      addSection();
     }
     const handleAddPassage = () => {
-      if (dirty) {
-        setMessage(<span>Save before adding passage</span>)
-      } else if (addPassage != null) {
-        addPassage();
-      }
+      addPassage();
+    }
+    const justData = (data: Array<Array<ICell>>) => {
+      return data.filter((r, i) => i > 0).map(r => r.filter((r,i) => i > 0).map(c => c.value));
     }
     const handleSave = () => {
       setMessage(<span>Saving</span>);
       if (save != null) {
-        const rows = data.filter((r, i) => i > 0).map(r => r.filter((r,i) => i > 0).map(c => c.value));
-        save(rows)
+        save(justData(data));
       }
     }
     const handleValueRender = (cell: ICell) => cell.value;
@@ -143,7 +137,7 @@ export function PlanSheet(props: IProps) {
       });
       if (changes.length > 0) {
         setData(grid);
-        setDirty(true);
+        updateData(justData(grid));
       }
     };
 
