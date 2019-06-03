@@ -7,6 +7,7 @@ import { IState, MediaFile, Passage, PassageSection,
   Section, IMediaTabStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
+import Store from '@orbit/store';
 import { KeyMap, QueryBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, IconButton } from '@material-ui/core'
@@ -134,6 +135,7 @@ export function MediaTab(props: IProps) {
     action, uploadFiles, nextUpload,
     mediaFiles, passages, passageSections, sections, auth } = props;
   const [plan] = useGlobal('plan');
+  const [dataStore] = useGlobal('dataStore');
   const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -185,6 +187,10 @@ export function MediaTab(props: IProps) {
   const handleMessageReset = () => { setMessage(<></>) }
   const handleUpload = () => { setUploadVisible(true) }
   const uploadMedia = (files: FileList) => {
+    if (!files) {
+      setMessage(<span>Please select files to be uploaded.</span>)
+      return
+    }
     uploadFiles(files);
     setUploadVisible(false);
   }
@@ -226,12 +232,20 @@ export function MediaTab(props: IProps) {
         const planId = parseInt((keyMap as KeyMap).idToKey('plan', 'remoteId', (plan as string)));
         const mediaFile = {
             PlanId: planId,
-          } as any;
-        nextUpload(JSON.stringify(mediaFile), uploadList, currentlyLoading + 1, auth)
+            originalFile: uploadList[currentlyLoading + 1].name,
+            filesize: Math.round(uploadList[currentlyLoading + 1].size / 1024 + .5),
+            contentType: uploadList[currentlyLoading + 1].type,
+        } as any;
+        nextUpload(mediaFile, uploadList, currentlyLoading + 1, auth)
       }
     }
   /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [uploadList, loaded, currentlyLoading, plan, auth])
+
+  useEffect(() => {
+    if (loaded)
+      (dataStore as Store).query(q => q.findRecords('mediafile'))
+  }, [loaded])
 
   return (
     <div className={classes.container}>

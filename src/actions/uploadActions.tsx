@@ -1,7 +1,8 @@
 import Axios from 'axios';
+import { MediaFile } from '../model';
 import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
-import { UPLOAD_LIST, UPLOAD_ITEM_PENDING, UPLOAD_ITEM_SUCCEEDED, UPLOAD_ITEM_FAILED } from './types';
+import { UPLOAD_LIST, UPLOAD_ITEM_PENDING, UPLOAD_ITEM_CREATED, UPLOAD_ITEM_SUCCEEDED, UPLOAD_ITEM_FAILED } from './types';
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
     dispatch({
@@ -10,22 +11,35 @@ export const uploadFiles = (files: FileList) => (dispatch: any) => {
     });
 }
 
-export const nextUpload = (record: string, files: FileList, n: number, auth: Auth) => (dispatch: any) => {
-    const data = new FormData();
-    data.append('jsonString', record);
-    data.append('file', files[n])
+export const nextUpload = (record: MediaFile, files: FileList, n: number, auth: Auth) => (dispatch: any) => {
     dispatch({ payload: n, type: UPLOAD_ITEM_PENDING })
-    Axios.post(API_CONFIG.host + '/api/mediafiles/file', data, {
+    Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
         headers: {
             Authorization: 'Bearer ' + auth.accessToken,
         }
     })
-        .then(() => {
-            // console.log("upload " + files[n].name + " succeeded.")
-            dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED })
+        .then((response) => {
+            console.log("upload item created" + files[n].name + " succeeded.")
+            console.log(response);
+            dispatch({ payload: n, type: UPLOAD_ITEM_CREATED })
+            const xhr = new XMLHttpRequest()
+            xhr.open('PUT', response.data.audioUrl, true);
+            xhr.send(files[n].slice());
+            xhr.onload = () => {
+                if (xhr.status < 300) {
+                    console.log("upload item " + files[n].name + " succeeded.");
+                    console.log(JSON.stringify(xhr.response));
+                    dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
+                } else {
+                    console.log("upload " + files[n].name + " failed.");
+                    console.log(JSON.stringify(xhr.response));
+                    dispatch({ payload: n, type: UPLOAD_ITEM_FAILED });
+                }
+            }
         })
-        .then(() => {
-            // console.log("upload " + files[n].name + " failed.")
+        .catch((err) => {
+            console.log("upload " + files[n].name + " failed.")
+            console.log(err)
             dispatch({ payload: n, type: UPLOAD_ITEM_FAILED })
         })
 }

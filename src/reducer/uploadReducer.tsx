@@ -32,6 +32,10 @@ export default function (state = initialState, action: any) {
                 loaded: true,
                 current: action.payload,
             }
+        case UPLOAD_ITEM_FAILED:
+            return {
+                ...state
+            }
         default:
             return {...state};
     };
