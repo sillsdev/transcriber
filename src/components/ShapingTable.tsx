@@ -34,7 +34,7 @@ const styles = (theme: Theme) => createStyles({
   size: {
     display: 'flex',
     flexGrow: 1,
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
     marginRight: theme.spacing(5),
     fontWeight: theme.typography.fontWeightMedium,
   },
