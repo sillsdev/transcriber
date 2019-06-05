@@ -321,6 +321,7 @@ export function SingleReactSelect(props: IProps) {
           classes={classes}
           styles={selectStyles}
           inputId="react-select-single"
+          autoFocus
           TextFieldProps={{
             label,
             InputLabelProps: {
@@ -366,6 +367,7 @@ export function MultiReactSelect(props: IProps) {
             classes={classes}
             styles={selectStyles}
             inputId="react-select-multiple"
+            autoFocus
             TextFieldProps={{
               label,
               InputLabelProps: {
