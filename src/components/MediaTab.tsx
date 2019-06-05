@@ -116,6 +116,7 @@ interface IStateProps {
 interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
+  uploadComplete: typeof actions.uploadComplete;
 }
 
 interface IRecordProps {
@@ -132,7 +133,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps, WithStyles<t
   
 export function MediaTab(props: IProps) {
   const { classes, t, uploadList, loaded, currentlyLoading,
-    action, uploadFiles, nextUpload,
+    action, uploadFiles, nextUpload, uploadComplete,
     mediaFiles, passages, passageSections, sections, auth } = props;
   const [plan] = useGlobal('plan');
   const [dataStore] = useGlobal('dataStore');
@@ -227,7 +228,10 @@ export function MediaTab(props: IProps) {
   }, [plan, mediaFiles, passages, passageSections, sections])
 
   useEffect(() => {
-    if (loaded || currentlyLoading < 0) {
+    if (loaded && currentlyLoading + 1 === uploadList.length) {
+      setMessage(<span>Upload complete.</span>)
+      uploadComplete();
+    } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
         const planId = parseInt((keyMap as KeyMap).idToKey('plan', 'remoteId', (plan as string)));
         const mediaFile = {
@@ -328,6 +332,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators({
     uploadFiles: actions.uploadFiles,
     nextUpload: actions.nextUpload,
+    uploadComplete: actions.uploadComplete,
   }, dispatch),
 });
 

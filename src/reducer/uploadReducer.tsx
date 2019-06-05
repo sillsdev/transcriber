@@ -2,7 +2,8 @@ import {
     UPLOAD_LIST,
     UPLOAD_ITEM_PENDING,
     UPLOAD_ITEM_SUCCEEDED,
-    UPLOAD_ITEM_FAILED
+    UPLOAD_ITEM_FAILED,
+    UPLOAD_COMPLETE,
 } from '../actions/types';
 
 const initialState = {
@@ -35,6 +36,11 @@ export default function (state = initialState, action: any) {
         case UPLOAD_ITEM_FAILED:
             return {
                 ...state
+            }
+        case UPLOAD_COMPLETE:
+            return {
+                ...state,
+                loaded: false,
             }
         default:
             return {...state};

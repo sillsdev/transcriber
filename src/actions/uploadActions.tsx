@@ -2,7 +2,12 @@ import Axios from 'axios';
 import { MediaFile } from '../model';
 import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
-import { UPLOAD_LIST, UPLOAD_ITEM_PENDING, UPLOAD_ITEM_CREATED, UPLOAD_ITEM_SUCCEEDED, UPLOAD_ITEM_FAILED } from './types';
+import { UPLOAD_LIST,
+    UPLOAD_ITEM_PENDING,
+    UPLOAD_ITEM_CREATED,
+    UPLOAD_ITEM_SUCCEEDED,
+    UPLOAD_ITEM_FAILED,
+    UPLOAD_COMPLETE } from './types';
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
     dispatch({
@@ -28,7 +33,7 @@ export const nextUpload = (record: MediaFile, files: FileList, n: number, auth: 
             xhr.onload = () => {
                 if (xhr.status < 300) {
                     console.log("upload item " + files[n].name + " succeeded.");
-                    console.log(JSON.stringify(xhr.response));
+                    // console.log(JSON.stringify(xhr.response));
                     dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
                 } else {
                     console.log("upload " + files[n].name + " failed.");
@@ -43,3 +48,5 @@ export const nextUpload = (record: MediaFile, files: FileList, n: number, auth: 
             dispatch({ payload: n, type: UPLOAD_ITEM_FAILED })
         })
 }
+
+export const uploadComplete = () => {return { type: UPLOAD_COMPLETE } };
