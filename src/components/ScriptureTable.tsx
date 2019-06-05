@@ -68,7 +68,7 @@ export function ScriptureTable(props: IProps) {
       {value: t.section,  readOnly: true, width: 80},
       {value: t.title,  readOnly: true, width: 280},
       {value: t.passage, readOnly: true, width: 80},
-      {value: t.book, readOnly: true, width: 100},
+      {value: t.book, readOnly: true, width: 170},
       {value: t.reference, readOnly: true, width: 180},
       {value: t.description, readOnly: true, width: 280},
     ]);
