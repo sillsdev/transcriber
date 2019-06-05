@@ -1,8 +1,12 @@
 import React, { useState, useEffect  } from 'react';
 import { useGlobal } from 'reactn';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, PassageSection, Section, Passage, IPlanSheetStrings, IScriptureTableStrings } from '../model';
+import { IState, PassageSection, Section, Passage, IPlanSheetStrings,
+  IScriptureTableStrings, BookNameMap } from '../model';
+import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
+import * as actions from '../actions';
 import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
 import { Schema, RecordIdentity } from '@orbit/data';
@@ -38,13 +42,20 @@ interface ISequencedRecordIdentity extends RecordIdentity {
 interface IStateProps {
   t: IScriptureTableStrings;
   s: IPlanSheetStrings;
+  lang: string;
+  bookSuggestions: OptionType[];
+  bookMap: BookNameMap;
 };
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{
+interface IDispatchProps {
+  fetchBooks: typeof actions.fetchBooks;
+}
+
+interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
 };
   
 export function ScriptureTable(props: IProps) {
-    const { classes, t, s } = props;
+    const { classes, t, s, lang, bookSuggestions, bookMap, fetchBooks } = props;
     const [plan] = useGlobal('plan');
     const [project] = useGlobal('project');
     const [dataStore] = useGlobal('dataStore');
@@ -255,6 +266,7 @@ export function ScriptureTable(props: IProps) {
     }
 
     useEffect(() => {
+      fetchBooks(lang);
       let initData = Array<Array<any>>();
       let sectionIds = Array<RecordIdentity>();
       let passageIds = Array<ISequencedRecordIdentity>();
@@ -336,6 +348,8 @@ export function ScriptureTable(props: IProps) {
         <PlanSheet
           columns={columns}
           rowData={data as any[][]}
+          bookMap={bookMap}
+          bookSuggestions={bookSuggestions}
           save={handleSave}
           action={handleAction}
           addSection={addSection}
@@ -351,15 +365,24 @@ export function ScriptureTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, {layout: "scriptureTable"}),
-  s: localStrings(state, {layout: "planSheet"})
+  s: localStrings(state, {layout: "planSheet"}),
+  lang: state.strings.lang,
+  bookSuggestions: state.books.suggestions,
+  bookMap: state.books.map,
 });
-    
+
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators({
+    fetchBooks: actions.fetchBooks,
+  }, dispatch),
+});
+
 const mapRecordsToProps = {
 }
 
 export default withStyles(styles, { withTheme: true })(
   withData(mapRecordsToProps)(
-    connect(mapStateToProps)(ScriptureTable) as any
+    connect(mapStateToProps, mapDispatchToProps)(ScriptureTable) as any
   ) as any
 ) as any;
       

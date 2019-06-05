@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { IPlanSheetStrings } from '../model';
+import { IPlanSheetStrings, BookNameMap } from '../model';
+import { OptionType } from './ReactSelect';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem'
+import { Button, Menu, MenuItem } from '@material-ui/core'
+import CheckBox from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
-import CheckBox from '@material-ui/core/Checkbox';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
+import BookSelect from './ReactSelect';
 import 'react-datasheet/lib/react-datasheet.css';
 import './PlanSheet.css';
 import { isNumber } from 'util';
@@ -59,6 +59,8 @@ interface IStateProps {
 interface IProps extends IStateProps, WithStyles<typeof styles>{
   columns: Array<ICell>;
   rowData: Array<Array<string|number>>;
+  bookSuggestions: OptionType[];
+  bookMap: BookNameMap;
   updateData: (r: string[][]) => void;
   save: (r: string[][]) => void;
   paste: (r: string[][]) => string[][];
@@ -68,7 +70,7 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
 };
   
 export function PlanSheet(props: IProps) {
-    const { classes, columns, rowData, t,
+    const { classes, columns, rowData, t, bookSuggestions, bookMap,
         updateData, save, action, addPassage, addSection, paste } = props;
     const [message, setMessage] = useState(<></>);
     const [data, setData] = useState(Array<Array<ICell>>());
@@ -108,7 +110,7 @@ export function PlanSheet(props: IProps) {
         save(justData(data));
       }
     }
-    const handleValueRender = (cell: ICell) => cell.value;
+    const handleValueRender = (cell: ICell) => cell.className === 'book'? bookMap[cell.value]: cell.value
     const handleMenu = (e:any) => setActionMenuItem(e.currentTarget);
     const handleConfirmAction = (what: string) => (e:any) => {
       setActionMenuItem(null)
@@ -131,12 +133,12 @@ export function PlanSheet(props: IProps) {
     };
 
     const handleCellsChanged = (changes: Array<IChange>) => {
-      const grid = data.map((row: any) => [...row]);
+      const grid = data.map((row: Array<ICell>) => [...row]);
       changes.forEach(({cell, row, col, value}: IChange) => {
         grid[row][col] = {...grid[row][col], value}
       });
       if (changes.length > 0) {
-        setData(grid);
+        // setData(grid);
         updateData(justData(grid));
       }
     };
@@ -151,6 +153,8 @@ export function PlanSheet(props: IProps) {
       return lines.map(s => s.split('\t'));
     }
 
+    const bookEditor = (props: any) => (<BookSelect suggestions={bookSuggestions} {...props} />);
+
     useEffect(() => {
       setData(
         [[{value:'', readOnly: true} as ICell].concat(
@@ -163,15 +167,19 @@ export function PlanSheet(props: IProps) {
                     checked={check.includes(i)} onChange={handleCheck(i)}/>,
                   className: (isSection? 'set': 'pass'),
                 } as ICell].concat(
-                r.map(e => {return {
+                r.map((e, j) => {return (j !== 3 || isSection)?{
                   value: e,
                   className: (isNumber(e)?'num': 'pass') + (isSection? ' set': ''),
+                }:{
+                  value: e,
+                  className: 'book',
+                  dataEditor: bookEditor,
                 }})
               )
             )})
           ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rowData, check])
+    }, [rowData, check, bookSuggestions])
 
     return (
       <div className={classes.container}>
@@ -239,6 +247,7 @@ export function PlanSheet(props: IProps) {
           <DataSheet
             data={data as any[][]}
             valueRenderer={handleValueRender}
+            // dataRenderer={handleDataRender}
             onContextMenu={handleContextMenu}
             onCellsChanged={handleCellsChanged}
             parsePaste={handlePaste}
