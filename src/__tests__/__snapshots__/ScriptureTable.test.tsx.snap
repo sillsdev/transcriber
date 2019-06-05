@@ -2,7 +2,7 @@
 
 exports[`can render ScriptureTable snapshot 1`] = `
 <div
-  class="WithData-Connect-ScriptureTable---container-1"
+  class="WithData(Connect(ScriptureTable))-container-1"
 >
   <div
     class="PlanSheet-container-6"
@@ -16,17 +16,17 @@ exports[`can render ScriptureTable snapshot 1`] = `
         <button
           aria-label="Action"
           aria-owns="action-menu"
-          class="MuiButtonBase-root-37 MuiButton-root-11 MuiButton-outlined-19 MuiButton-outlinedPrimary-20 PlanSheet-button-9"
+          class="MuiButtonBase-root MuiButton-root PlanSheet-button-9 MuiButton-outlined MuiButton-outlinedPrimary"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-label-12"
+            class="MuiButton-label"
           >
             Action
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root-40 PlanSheet-icon-10"
+              class="MuiSvgIcon-root PlanSheet-icon-10"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
@@ -41,22 +41,22 @@ exports[`can render ScriptureTable snapshot 1`] = `
             </svg>
           </span>
           <span
-            class="MuiTouchRipple-root-54"
+            class="MuiTouchRipple-root"
           />
         </button>
         <button
           aria-label="Add Section"
-          class="MuiButtonBase-root-37 MuiButton-root-11 MuiButton-outlined-19 MuiButton-outlinedPrimary-20 PlanSheet-button-9"
+          class="MuiButtonBase-root MuiButton-root PlanSheet-button-9 MuiButton-outlined MuiButton-outlinedPrimary"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-label-12"
+            class="MuiButton-label"
           >
             Add Section
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root-40 PlanSheet-icon-10"
+              class="MuiSvgIcon-root PlanSheet-icon-10"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
@@ -71,22 +71,22 @@ exports[`can render ScriptureTable snapshot 1`] = `
             </svg>
           </span>
           <span
-            class="MuiTouchRipple-root-54"
+            class="MuiTouchRipple-root"
           />
         </button>
         <button
           aria-label="Add Passage"
-          class="MuiButtonBase-root-37 MuiButton-root-11 MuiButton-outlined-19 MuiButton-outlinedPrimary-20 PlanSheet-button-9"
+          class="MuiButtonBase-root MuiButton-root PlanSheet-button-9 MuiButton-outlined MuiButton-outlinedPrimary"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-label-12"
+            class="MuiButton-label"
           >
             Add Passage
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root-40 PlanSheet-icon-10"
+              class="MuiSvgIcon-root PlanSheet-icon-10"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
@@ -101,22 +101,22 @@ exports[`can render ScriptureTable snapshot 1`] = `
             </svg>
           </span>
           <span
-            class="MuiTouchRipple-root-54"
+            class="MuiTouchRipple-root"
           />
         </button>
         <button
           aria-label="Save"
-          class="MuiButtonBase-root-37 MuiButton-root-11 MuiButton-contained-22 MuiButton-containedPrimary-23 MuiButton-raised-25 MuiButton-raisedPrimary-26 PlanSheet-button-9"
+          class="MuiButtonBase-root MuiButton-root PlanSheet-button-9 MuiButton-contained MuiButton-containedPrimary"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-label-12"
+            class="MuiButton-label"
           >
             Save
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root-40 PlanSheet-icon-10"
+              class="MuiSvgIcon-root PlanSheet-icon-10"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
@@ -131,7 +131,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
             </svg>
           </span>
           <span
-            class="MuiTouchRipple-root-54"
+            class="MuiTouchRipple-root"
           />
         </button>
       </div>
@@ -183,7 +183,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
               </td>
               <td
                 class="cell read-only"
-                style="width: 100px;"
+                style="width: 170px;"
               >
                 <span
                   class="value-viewer"

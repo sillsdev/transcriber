@@ -2,41 +2,41 @@
 
 exports[`can render PlanTable snapshot 1`] = `
 <div
-  class="WithData-Connect-PlanTable---root-1"
+  class="WithData(Connect(PlanTable))-root-1"
 >
   <div
-    class="WithData-Connect-PlanTable---container-2"
+    class="WithData(Connect(PlanTable))-container-2"
   >
     <div
-      class="WithData-Connect-PlanTable---paper-3"
+      class="WithData(Connect(PlanTable))-paper-3"
     >
       <div
-        class="WithData-Connect-PlanTable---dialogHeader-5"
+        class="WithData(Connect(PlanTable))-dialogHeader-5"
       >
         <div
-          class="WithData-Connect-PlanTable---grow-4"
+          class="WithData(Connect(PlanTable))-grow-4"
         />
         <h5
-          class="MuiTypography-root-11 MuiTypography-h5-27"
+          class="MuiTypography-root MuiTypography-h5"
         >
           Choose a Project Plan
         </h5>
         <div
-          class="WithData-Connect-PlanTable---grow-4"
+          class="WithData(Connect(PlanTable))-grow-4"
         />
         <button
           aria-label="Add"
-          class="MuiButtonBase-root-57 MuiFab-root-47 MuiFab-primary-49 WithData-Connect-PlanTable---button-9"
+          class="MuiButtonBase-root MuiFab-root WithData(Connect(PlanTable))-button-9 MuiFab-primary"
           data-testid="addButton"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiFab-label-48"
+            class="MuiFab-label"
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root-60 WithData-Connect-PlanTable---icon-10"
+              class="MuiSvgIcon-root WithData(Connect(PlanTable))-icon-10"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"
@@ -51,25 +51,25 @@ exports[`can render PlanTable snapshot 1`] = `
             </svg>
           </span>
           <span
-            class="MuiTouchRipple-root-163"
+            class="MuiTouchRipple-root"
           />
         </button>
       </div>
       <div
-        class="RootBase-root-69"
+        class="RootBase-root-63"
       >
         <div
-          class="MuiToolbar-root-71 MuiToolbar-regular-73 MuiToolbar-gutters-72 Toolbar-toolbar-70"
+          class="MuiToolbar-root MuiToolbar-regular Toolbar-toolbar-64 MuiToolbar-gutters"
         >
           <div
             style="flex: 0 0 0px; margin-left: auto;"
           />
         </div>
         <div
-          class="TableContainer-root-75"
+          class="TableContainer-root-69"
         >
           <table
-            class="MuiTable-root-80 Table-table-76"
+            class="MuiTable-root Table-table-70"
             style="min-width: 650px;"
           >
             <colgroup>
@@ -88,39 +88,40 @@ exports[`can render PlanTable snapshot 1`] = `
               <col />
             </colgroup>
             <thead
-              class="MuiTableHead-root-81"
+              class="MuiTableHead-root"
             >
               <tr
-                class="MuiTableRow-root-82 MuiTableRow-head-85"
+                class="MuiTableRow-root MuiTableRow-head"
               >
                 <th
-                  class="MuiTableCell-root-99 MuiTableCell-head-100 TableHeaderCell-cell-88 TableHeaderCell-cellNoWrap-98"
+                  class="MuiTableCell-root TableHeaderCell-cell-82 TableHeaderCell-cellNoWrap-92 MuiTableCell-head"
                   colspan="1"
                   scope="col"
                 >
                   <div
-                    class="TableHeaderCell-container-97"
+                    class="TableHeaderCell-container-91"
                   >
                     <div
-                      class="Content-content-111"
+                      class="Content-content-104"
                     >
                       <div
-                        class="SortLabel-root-114"
+                        class="SortLabel-root-107"
                       >
                         <span
-                          class="MuiButtonBase-root-57 MuiTableSortLabel-root-127 SortLabel-sortLabelRoot-116 MuiTableSortLabel-active-128 SortLabel-sortLabelActive-118"
+                          aria-disabled="false"
+                          class="MuiButtonBase-root MuiTableSortLabel-root SortLabel-sortLabelRoot-109 MuiTableSortLabel-active SortLabel-sortLabelActive-111"
                           role="button"
                           tabindex="0"
                           title="Sort"
                         >
                           <span
-                            class="Title-title-132"
+                            class="Title-title-125"
                           >
                             Name
                           </span>
                           <svg
                             aria-hidden="true"
-                            class="MuiSvgIcon-root-60 MuiTableSortLabel-icon-129 MuiTableSortLabel-iconDirectionAsc-131"
+                            class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionAsc"
                             focusable="false"
                             role="presentation"
                             viewBox="0 0 24 24"
@@ -134,44 +135,45 @@ exports[`can render PlanTable snapshot 1`] = `
                     </div>
                   </div>
                   <div
-                    class="ResizingControl-resizeHandle-133 TableHeaderCell-resizeHandle-89"
+                    class="ResizingControl-resizeHandle-126 TableHeaderCell-resizeHandle-83"
                   >
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleFirstLine-135"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleFirstLine-128"
                     />
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleSecondLine-136"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleSecondLine-129"
                     />
                   </div>
                 </th>
                 <th
-                  class="MuiTableCell-root-99 MuiTableCell-head-100 TableHeaderCell-cell-88 TableHeaderCell-cellNoWrap-98"
+                  class="MuiTableCell-root TableHeaderCell-cell-82 TableHeaderCell-cellNoWrap-92 MuiTableCell-head"
                   colspan="1"
                   scope="col"
                 >
                   <div
-                    class="TableHeaderCell-container-97"
+                    class="TableHeaderCell-container-91"
                   >
                     <div
-                      class="Content-content-111"
+                      class="Content-content-104"
                     >
                       <div
-                        class="SortLabel-root-114"
+                        class="SortLabel-root-107"
                       >
                         <span
-                          class="MuiButtonBase-root-57 MuiTableSortLabel-root-127 SortLabel-sortLabelRoot-116"
+                          aria-disabled="false"
+                          class="MuiButtonBase-root MuiTableSortLabel-root SortLabel-sortLabelRoot-109"
                           role="button"
                           tabindex="0"
                           title="Sort"
                         >
                           <span
-                            class="Title-title-132"
+                            class="Title-title-125"
                           >
                             Type
                           </span>
                           <svg
                             aria-hidden="true"
-                            class="MuiSvgIcon-root-60 MuiTableSortLabel-icon-129 MuiTableSortLabel-iconDirectionDesc-130"
+                            class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionDesc"
                             focusable="false"
                             role="presentation"
                             viewBox="0 0 24 24"
@@ -185,44 +187,45 @@ exports[`can render PlanTable snapshot 1`] = `
                     </div>
                   </div>
                   <div
-                    class="ResizingControl-resizeHandle-133 TableHeaderCell-resizeHandle-89"
+                    class="ResizingControl-resizeHandle-126 TableHeaderCell-resizeHandle-83"
                   >
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleFirstLine-135"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleFirstLine-128"
                     />
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleSecondLine-136"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleSecondLine-129"
                     />
                   </div>
                 </th>
                 <th
-                  class="MuiTableCell-root-99 MuiTableCell-head-100 TableHeaderCell-cell-88 TableHeaderCell-cellNoWrap-98"
+                  class="MuiTableCell-root TableHeaderCell-cell-82 TableHeaderCell-cellNoWrap-92 MuiTableCell-head"
                   colspan="1"
                   scope="col"
                 >
                   <div
-                    class="TableHeaderCell-container-97"
+                    class="TableHeaderCell-container-91"
                   >
                     <div
-                      class="Content-content-111"
+                      class="Content-content-104"
                     >
                       <div
-                        class="SortLabel-root-114"
+                        class="SortLabel-root-107"
                       >
                         <span
-                          class="MuiButtonBase-root-57 MuiTableSortLabel-root-127 SortLabel-sortLabelRoot-116"
+                          aria-disabled="false"
+                          class="MuiButtonBase-root MuiTableSortLabel-root SortLabel-sortLabelRoot-109"
                           role="button"
                           tabindex="0"
                           title="Sort"
                         >
                           <span
-                            class="Title-title-132"
+                            class="Title-title-125"
                           >
                             Sections
                           </span>
                           <svg
                             aria-hidden="true"
-                            class="MuiSvgIcon-root-60 MuiTableSortLabel-icon-129 MuiTableSortLabel-iconDirectionDesc-130"
+                            class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionDesc"
                             focusable="false"
                             role="presentation"
                             viewBox="0 0 24 24"
@@ -236,44 +239,45 @@ exports[`can render PlanTable snapshot 1`] = `
                     </div>
                   </div>
                   <div
-                    class="ResizingControl-resizeHandle-133 TableHeaderCell-resizeHandle-89"
+                    class="ResizingControl-resizeHandle-126 TableHeaderCell-resizeHandle-83"
                   >
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleFirstLine-135"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleFirstLine-128"
                     />
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleSecondLine-136"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleSecondLine-129"
                     />
                   </div>
                 </th>
                 <th
-                  class="MuiTableCell-root-99 MuiTableCell-head-100 TableHeaderCell-cell-88 TableHeaderCell-cellNoWrap-98"
+                  class="MuiTableCell-root TableHeaderCell-cell-82 TableHeaderCell-cellNoWrap-92 MuiTableCell-head"
                   colspan="1"
                   scope="col"
                 >
                   <div
-                    class="TableHeaderCell-container-97"
+                    class="TableHeaderCell-container-91"
                   >
                     <div
-                      class="Content-content-111"
+                      class="Content-content-104"
                     >
                       <div
-                        class="SortLabel-root-114"
+                        class="SortLabel-root-107"
                       >
                         <span
-                          class="MuiButtonBase-root-57 MuiTableSortLabel-root-127 SortLabel-sortLabelRoot-116"
+                          aria-disabled="false"
+                          class="MuiButtonBase-root MuiTableSortLabel-root SortLabel-sortLabelRoot-109"
                           role="button"
                           tabindex="0"
                           title="Sort"
                         >
                           <span
-                            class="Title-title-132"
+                            class="Title-title-125"
                           >
                             Action
                           </span>
                           <svg
                             aria-hidden="true"
-                            class="MuiSvgIcon-root-60 MuiTableSortLabel-icon-129 MuiTableSortLabel-iconDirectionDesc-130"
+                            class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionDesc"
                             focusable="false"
                             role="presentation"
                             viewBox="0 0 24 24"
@@ -287,38 +291,38 @@ exports[`can render PlanTable snapshot 1`] = `
                     </div>
                   </div>
                   <div
-                    class="ResizingControl-resizeHandle-133 TableHeaderCell-resizeHandle-89"
+                    class="ResizingControl-resizeHandle-126 TableHeaderCell-resizeHandle-83"
                   >
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleFirstLine-135"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleFirstLine-128"
                     />
                     <div
-                      class="TableHeaderCell-resizeHandleLine-90 ResizingControl-resizeHandleLine-134 ResizingControl-resizeHandleSecondLine-136"
+                      class="TableHeaderCell-resizeHandleLine-84 ResizingControl-resizeHandleLine-127 ResizingControl-resizeHandleSecondLine-129"
                     />
                   </div>
                 </th>
                 <th
-                  class="MuiTableCell-root-99 MuiTableCell-head-100 TableStubCell-cell-139"
+                  class="MuiTableCell-root TableStubCell-cell-132 MuiTableCell-head"
                   colspan="1"
                   scope="col"
                 />
               </tr>
             </thead>
             <tbody
-              class="MuiTableBody-root-141"
+              class="MuiTableBody-root"
             >
               <tr
-                class="MuiTableRow-root-82"
+                class="MuiTableRow-root"
               >
                 <td
-                  class="MuiTableCell-root-99 MuiTableCell-body-101 TableNoDataCell-cell-142"
+                  class="MuiTableCell-root TableNoDataCell-cell-135 MuiTableCell-body"
                   colspan="5"
                 >
                   <div
-                    class="TableNoDataCell-textContainer-143"
+                    class="TableNoDataCell-textContainer-136"
                   >
                     <big
-                      class="TableNoDataCell-text-144"
+                      class="TableNoDataCell-text-137"
                     >
                       No data
                     </big>
