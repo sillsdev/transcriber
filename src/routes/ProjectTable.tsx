@@ -12,11 +12,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { createStyles, withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
-import { Grid,
+import {
+  Grid,
   Table,
   TableColumnResizing,
   TableHeaderRow,
-  Toolbar } from '@devexpress/dx-react-grid-material-ui';
+  Toolbar
+} from '@devexpress/dx-react-grid-material-ui';
 import TranscriberBar from '../components/TranscriberBar';
 import Confirm from '../components/AlertDialog';
 import Auth from '../auth/Auth';
@@ -73,7 +75,7 @@ interface IRecordProps {
   groups: Array<Group>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles>{
+interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
   projects: any;
   updateStore: any;
   auth: Auth;
@@ -108,11 +110,11 @@ export function ProjectTable(props: IProps) {
     setView('/projectstatus?add')
   };
   const handleCancel = () => { setView('/admin') };
-  const handleEdit = (e:any) => {
+  const handleEdit = (e: any) => {
     if (projects && projects.length > 0)
       setProject(projects.filter((p: Project) =>
         (p.attributes && p.attributes.name && p.attributes.name.toLowerCase()) ===
-          e.target.innerText.trim().toLowerCase())[0].id);
+        e.currentTarget.innerText.trim().toLowerCase())[0].id);
     setView('/projectstatus')
   };
 
@@ -120,7 +122,7 @@ export function ProjectTable(props: IProps) {
     const orgProjects = projects.filter((p: Project) => {
       const groupId = Related(p, 'group');
       const group = groups.filter(g => g.id === groupId);
-      const g = group.length === 1? group[0]: false;
+      const g = group.length === 1 ? group[0] : false;
       return Related(g, 'owner') === organization;
     })
     setColumns([
@@ -137,13 +139,13 @@ export function ProjectTable(props: IProps) {
       language: o.attributes.language,
       delete: o.id,
     })))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projects, organization]);
 
   if (!isAuthenticated()) return <Redirect to='/' />;
 
-  const LinkCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
-    <Table.Cell {...restProps} style={{...style}} value >
+  const LinkCell = ({ value, style, ...restProps }: { value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any }) => (
+    <Table.Cell {...restProps} style={{ ...style }} value >
       <Button
         key={value}
         aria-label={value}
@@ -157,8 +159,8 @@ export function ProjectTable(props: IProps) {
     </Table.Cell>
   );
 
-  const DeleteCell = ({ value, style, ...restProps }: {value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any}) => (
-    <Table.Cell {...restProps} style={{...style}} value >
+  const DeleteCell = ({ value, style, ...restProps }: { value: string, style: object, row: any, column: any, tableRow: any, tableColumn: any }) => (
+    <Table.Cell {...restProps} style={{ ...style }} value >
       <IconButton
         id={value}
         key={value}
@@ -186,40 +188,40 @@ export function ProjectTable(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <TranscriberBar {...props} close={handleCancel}/>
+      <TranscriberBar {...props} close={handleCancel} />
       <div className={classes.container}>
         <Paper id="ProjectTable" className={classes.paper}>
-        <div className={classes.dialogHeader}>
-        <div className={classes.grow} />
-        <Typography variant='h5'>
-          {t.chooseProject}
-        </Typography>
-        <div className={classes.grow} />
-          <Fab
-            key="add"
-            aria-label="Add"
-            color="primary"
-            className={classes.button}
-            onClick={handleAdd}
-          >
-            <AddIcon className={classes.icon} />
-          </Fab>
-        </div>
-        <Grid rows={rows} columns={columns}>
-          <SortingState
-            defaultSorting={[{ columnName: "name", direction: "asc" }]}
-          />
+          <div className={classes.dialogHeader}>
+            <div className={classes.grow} />
+            <Typography variant='h5'>
+              {t.chooseProject}
+            </Typography>
+            <div className={classes.grow} />
+            <Fab
+              key="add"
+              aria-label="Add"
+              color="primary"
+              className={classes.button}
+              onClick={handleAdd}
+            >
+              <AddIcon className={classes.icon} />
+            </Fab>
+          </div>
+          <Grid rows={rows} columns={columns}>
+            <SortingState
+              defaultSorting={[{ columnName: "name", direction: "asc" }]}
+            />
             <IntegratedSorting />
             <Table cellComponent={Cell} />
-              <TableColumnResizing
-                minColumnWidth={50}
-                defaultColumnWidths={[
-                  { columnName: "name", width: 200 },
-                  { columnName: "description", width: 400 },
-                  { columnName: "language", width: 100 },
-                  { columnName: "delete", width: 100 }
-                ]}
-              />
+            <TableColumnResizing
+              minColumnWidth={50}
+              defaultColumnWidths={[
+                { columnName: "name", width: 200 },
+                { columnName: "description", width: 400 },
+                { columnName: "language", width: 100 },
+                { columnName: "delete", width: 100 }
+              ]}
+            />
             <TableHeaderRow showSortingControls={true} />
             <Toolbar />
           </Grid>
@@ -227,9 +229,9 @@ export function ProjectTable(props: IProps) {
       </div>
       {deleteItem !== ''
         ? <Confirm
-            yesResponse={handleDeleteConfirmed}
-            noResponse={handleDeleteRefused}
-          />
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
+        />
         : <></>}
     </div>
   );
@@ -239,16 +241,16 @@ interface IStateProps {
   t: IProjectTableStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: "projectTable"})
+  t: localStrings(state, { layout: "projectTable" })
 });
 
 const mapRecordsToProps = {
-    projects: (q: QueryBuilder) => q.findRecords('project'),
-    groups: (q: QueryBuilder) => q.findRecords('group'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
 }
 
 export default withStyles(styles, { withTheme: true })(
-    withData(mapRecordsToProps)(
-        connect(mapStateToProps)(ProjectTable) as any
-        ) as any
-    ) as any;
+  withData(mapRecordsToProps)(
+    connect(mapStateToProps)(ProjectTable) as any
+  ) as any
+) as any;

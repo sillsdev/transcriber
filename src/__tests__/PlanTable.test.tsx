@@ -5,7 +5,7 @@ import { Section } from '../model';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from '../store';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core';
 import Store from '@orbit/store';
 import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
@@ -13,6 +13,7 @@ import history from '../history';
 import { render, fireEvent, cleanup, waitForElement } from '@testing-library/react';
 import 'jest-dom/extend-expect';
 import PlanTable from '../components/PlanTable';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({});
   

@@ -2,7 +2,7 @@ import { KeyMap, Schema, SchemaSettings } from '@orbit/data';
 
 export const keyMap = new KeyMap();
 
-const schemaDefinition: SchemaSettings =  {
+const schemaDefinition: SchemaSettings = {
   models: {
     activitystate: {
       keys: { remoteId: {} },
@@ -59,9 +59,9 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },
-        users: { type: 'hasMany', model: 'user'},
-        groups: { type: 'hasMany', model: 'group', inverse: 'owner'},
-        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'organization'},
+        users: { type: 'hasMany', model: 'user' },
+        groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
+        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'organization' },
       }
     },
     organizationmembership: {
@@ -81,10 +81,10 @@ const schemaDefinition: SchemaSettings =  {
         name: { type: 'string' },
         slug: { type: 'string' },
         projectId: { type: 'number' },
-        planTypeId: { type: 'number' },
+        plantypeId: { type: 'number' },
       },
       relationships: {
-        project: { type: 'hasOne', model: 'project', inverse: 'plans'},
+        project: { type: 'hasOne', model: 'project', inverse: 'plans' },
         plantype: { type: 'hasOne', model: 'plantype', inverse: 'plans' },
         sections: { type: 'hasMany', model: 'section', inverse: 'plan' },
         mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'plan' },
@@ -125,7 +125,7 @@ const schemaDefinition: SchemaSettings =  {
       relationships: {
         projecttype: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
         owner: { type: 'hasOne', model: 'user', inverse: 'projects' },
-        organization: { type: 'hasOne', model: 'organization'},
+        organization: { type: 'hasOne', model: 'organization' },
         group: { type: 'hasOne', model: 'group', inverse: 'projects' },
         projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
         users: { type: 'hasMany', model: 'userpassage', inverse: 'project' },
@@ -250,7 +250,7 @@ const schemaDefinition: SchemaSettings =  {
         playBackSpeed: { type: 'number' },
         progressBarTypeId: { type: 'number' },
         hotKeys: { type: 'string' },
-        profileVisibilit: { type: 'number'},
+        profileVisibilit: { type: 'number' },
         emailNotification: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
