@@ -9,7 +9,7 @@ import {
   Passage,
   PassageSection,
   Section,
-  IMediaTabStrings
+  IMediaTabStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -29,27 +29,28 @@ import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
+import remoteId from '../utils/remoteId';
 
 const styles = (theme: Theme) => ({
   container: {
     display: 'flex',
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(4),
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(4),
   },
   paper: {},
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }),
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing(1)
-  }
+    marginLeft: theme.spacing(1),
+  },
 });
 
 interface IRow {
@@ -128,7 +129,7 @@ const getMedia = (
       version: f.attributes.versionNumber
         ? f.attributes.versionNumber.toString()
         : '',
-      date: date === today ? displayTime : displayDate
+      date: date === today ? displayTime : displayDate,
     } as IRow;
   });
   return rowData as Array<IRow>;
@@ -178,9 +179,9 @@ export function MediaTab(props: IProps) {
     passages,
     passageSections,
     sections,
-    auth
+    auth,
   } = props;
-  const [plan] = useGlobal('plan');
+  const [plan] = useGlobal<string>('plan');
   const [dataStore] = useGlobal('dataStore');
   const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
@@ -199,7 +200,7 @@ export function MediaTab(props: IProps) {
     { name: 'duration', title: t.duration },
     { name: 'size', title: t.size },
     { name: 'version', title: t.version },
-    { name: 'date', title: t.date }
+    { name: 'date', title: t.date },
   ];
   const columnWidths = [
     { columnName: 'fileName', width: 150 },
@@ -208,7 +209,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'duration', width: 100 },
     { columnName: 'size', width: 100 },
     { columnName: 'version', width: 100 },
-    { columnName: 'date', width: 100 }
+    { columnName: 'date', width: 100 },
   ];
   const numCompare = (a: number, b: number) => {
     return a - b;
@@ -224,7 +225,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'duration', compare: numCompare },
     { columnName: 'size', compare: numCompare },
     { columnName: 'version', compare: numCompare },
-    { columnName: 'date', compare: dateCompare }
+    { columnName: 'date', compare: dateCompare },
   ];
   const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
@@ -284,16 +285,14 @@ export function MediaTab(props: IProps) {
       uploadComplete();
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
-        const planId = parseInt(
-          (keyMap as KeyMap).idToKey('plan', 'remoteId', plan as string)
-        );
+        const planId = remoteId('plan', plan);
         const mediaFile = {
           PlanId: planId,
           originalFile: uploadList[currentlyLoading + 1].name,
           filesize: Math.round(
             uploadList[currentlyLoading + 1].size / 1024 + 0.5
           ),
-          contentType: uploadList[currentlyLoading + 1].type
+          contentType: uploadList[currentlyLoading + 1].type,
         } as any;
         nextUpload(mediaFile, uploadList, currentlyLoading + 1, auth);
       }
@@ -389,7 +388,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
   uploadList: state.upload.files,
   currentlyLoading: state.upload.current,
-  loaded: state.upload.loaded
+  loaded: state.upload.loaded,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -397,17 +396,17 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete
+      uploadComplete: actions.uploadComplete,
     },
     dispatch
-  )
+  ),
 });
 
 const mapRecordsToProps = {
   mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
-  sections: (q: QueryBuilder) => q.findRecords('section')
+  sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

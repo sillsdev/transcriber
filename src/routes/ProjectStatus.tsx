@@ -11,7 +11,7 @@ import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
 import {
   Drawer,
@@ -19,7 +19,7 @@ import {
   ListItem,
   Divider,
   IconButton,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
@@ -44,58 +44,58 @@ const drawerWidth = 240;
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      display: 'flex'
+      display: 'flex',
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      })
+        duration: theme.transitions.duration.leavingScreen,
+      }),
     },
     appBarShift: {
       marginLeft: drawerWidth,
       width: `calc(100% - ${drawerWidth}px)`,
       transition: theme.transitions.create(['width', 'margin'], {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen
-      })
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
     },
     drawerOpen: {
       width: drawerWidth,
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen
-      })
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     },
     drawerClose: {
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
+        duration: theme.transitions.duration.leavingScreen,
       }),
       overflowX: 'hidden',
       width: theme.spacing(7) + 1,
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9) + 1
-      }
+        width: theme.spacing(9) + 1,
+      },
     },
     toolbar: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-end',
       padding: '0 8px',
-      ...theme.mixins.toolbar
+      ...theme.mixins.toolbar,
     },
     content: {
       flexGrow: 1,
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
     },
-    dialogHeader: {}
+    dialogHeader: {},
   });
 
 interface IStateProps {
@@ -142,7 +142,7 @@ export function ProjectStatus(props: IProps) {
     t.projectPlans,
     t.passages,
     t.media,
-    t.integrations
+    t.integrations,
   ];
 
   const contentJsx =
@@ -156,6 +156,7 @@ export function ProjectStatus(props: IProps) {
     ) : content === 'textbook' ? (
       <SetTable {...props} />
     ) : (
+      //default
       <Chart {...props} />
     );
 
@@ -168,20 +169,20 @@ export function ProjectStatus(props: IProps) {
         appFixed={true}
         close={handleCancel}
         appClass={classNames(classes.appBar, {
-          [classes.appBarShift]: false
+          [classes.appBarShift]: false,
         })}
       />
       <Drawer
         variant="permanent"
         className={classNames(classes.drawer, {
           [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open
+          [classes.drawerClose]: !open,
         })}
         classes={{
           paper: classNames({
             [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open
-          })
+            [classes.drawerClose]: !open,
+          }),
         }}
         open={open}
       >
@@ -231,11 +232,11 @@ export function ProjectStatus(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'projectstatus' })
+  t: localStrings(state, { layout: 'projectstatus' }),
 });
 
 const mapRecordsToProps = {
-  projects: (q: QueryBuilder) => q.findRecords('project')
+  projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

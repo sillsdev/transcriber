@@ -1,66 +1,67 @@
-import React, {useState, useEffect} from 'react';
-import {useGlobal} from 'reactn';
-import {Redirect} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {IState, Plan, PlanType, Section, IPlanTableStrings} from '../model';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { IState, Plan, PlanType, Section, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
-import {withData} from 'react-orbitjs';
-import {Schema, QueryBuilder, TransformBuilder, KeyMap} from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { Schema, QueryBuilder, TransformBuilder, KeyMap } from '@orbit/data';
 import Store from '@orbit/store';
 import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
-import {Fab, Button, Typography} from '@material-ui/core';
+import { Fab, Button, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import {IntegratedSorting, SortingState} from '@devexpress/dx-react-grid';
+import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
 import {
   Grid,
   Table,
   TableColumnResizing,
   TableHeaderRow,
-  Toolbar
+  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import Related from '../utils/related';
-import {keyMap} from '../schema';
+import { keyMap } from '../schema';
+import remoteId from '../utils/remoteId';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     container: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     paper: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'column',
-      alignContent: 'center'
+      alignContent: 'center',
     }),
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center'
+      justifyContent: 'center',
     }),
     editIcon: {
-      fontSize: 16
+      fontSize: 16,
     },
     link: {},
     actionIcon: {},
     button: {},
-    icon: {}
+    icon: {},
   });
 
 interface ICell {
@@ -93,22 +94,22 @@ export function PlanTable(props: IProps) {
     sections,
     updateStore,
     t,
-    displaySet
+    displaySet,
   } = props;
   const [dataStore] = useGlobal('dataStore');
   const [schema] = useGlobal('schema');
-  const [project] = useGlobal('project');
+  const [project] = useGlobal<string>('project');
   const [columns] = useState([
-    {name: 'name', title: t.name},
-    {name: 'planType', title: t.type},
-    {name: 'sections', title: t.sections},
-    {name: 'action', title: t.action}
+    { name: 'name', title: t.name },
+    { name: 'planType', title: t.type },
+    { name: 'sections', title: t.sections },
+    { name: 'action', title: t.action },
   ]);
   const [columnWidth] = useState([
-    {columnName: 'name', width: 300},
-    {columnName: 'planType', width: 100},
-    {columnName: 'sections', width: 100},
-    {columnName: 'action', width: 150}
+    { columnName: 'name', width: 300 },
+    { columnName: 'planType', width: 100 },
+    { columnName: 'sections', width: 100 },
+    { columnName: 'action', width: 150 },
   ]);
   const [rows, setRows] = useState(Array<ICell>());
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -130,7 +131,7 @@ export function PlanTable(props: IProps) {
     updateStore((t: TransformBuilder) =>
       t.removeRecord({
         type: 'plan',
-        id: deleteItem
+        id: deleteItem,
       })
     );
   };
@@ -143,36 +144,26 @@ export function PlanTable(props: IProps) {
   };
   const handleAddMethod = async (name: string, planType: string) => {
     setDialogVisible(false);
-    const planTypeId = (keyMap as KeyMap).idToKey(
-      'plantype',
-      'remoteId',
-      planType
-    );
-    const projectId = (keyMap as KeyMap).idToKey(
-      'project',
-      'remoteId',
-      project as string
-    );
     let plan: Plan = {
       type: 'plan',
       attributes: {
         name: name,
-        plantypeId: parseInt(planTypeId),
-        projectId: parseInt(projectId)
-      }
+        plantypeId: remoteId('plantype', planType),
+        projectId: remoteId('project', project),
+      },
     } as any;
     (schema as Schema).initializeRecord(plan);
     await (dataStore as Store).update(t => t.addRecord(plan));
     await (dataStore as Store).update(t =>
-      t.replaceRelatedRecord({type: 'plan', id: plan.id}, 'plantype', {
+      t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
-        id: planType
+        id: planType,
       })
     );
     await (dataStore as Store).update(t =>
-      t.replaceRelatedRecord({type: 'plan', id: plan.id}, 'project', {
+      t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'project', {
         type: 'project',
-        id: project
+        id: project,
       })
     );
   };
@@ -189,9 +180,9 @@ export function PlanTable(props: IProps) {
     delete plan.relationships;
     await (dataStore as Store).update(t => t.replaceRecord(plan));
     await (dataStore as Store).update(t =>
-      t.replaceRelatedRecord({type: 'plan', id: plan.id}, 'plantype', {
+      t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
-        id: plan.attributes.planType
+        id: plan.attributes.planType,
       })
     );
   };
@@ -216,7 +207,7 @@ export function PlanTable(props: IProps) {
           name: p.attributes.name,
           planType: getType(p),
           sections: sectionCount(p),
-          action: p.id
+          action: p.id,
         } as ICell;
       })
     );
@@ -235,7 +226,7 @@ export function PlanTable(props: IProps) {
     tableRow: any;
     tableColumn: any;
   }) => (
-    <Table.Cell {...restProps} style={{...style}} value>
+    <Table.Cell {...restProps} style={{ ...style }} value>
       <Button
         key={value}
         aria-label={value}
@@ -261,7 +252,7 @@ export function PlanTable(props: IProps) {
     tableRow: any;
     tableColumn: any;
   }) => (
-    <Table.Cell {...restProps} style={{...style}} value>
+    <Table.Cell {...restProps} style={{ ...style }} value>
       <IconButton
         id={'edit-' + value}
         key={'edit-' + value}
@@ -286,7 +277,7 @@ export function PlanTable(props: IProps) {
   );
 
   const Cell = (props: any) => {
-    const {column} = props;
+    const { column } = props;
     if (column.name === 'name') {
       return <LinkCell {...props} />;
     }
@@ -319,7 +310,7 @@ export function PlanTable(props: IProps) {
           </div>
           <Grid rows={rows} columns={columns}>
             <SortingState
-              defaultSorting={[{columnName: 'name', direction: 'asc'}]}
+              defaultSorting={[{ columnName: 'name', direction: 'asc' }]}
             />
             <IntegratedSorting />
             <Table cellComponent={Cell} />
@@ -353,15 +344,15 @@ export function PlanTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: 'planTable'})
+  t: localStrings(state, { layout: 'planTable' }),
 });
 
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
-  sections: (q: QueryBuilder) => q.findRecords('section')
+  sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withStyles(styles, {withTheme: true})(withData(
+export default withStyles(styles, { withTheme: true })(withData(
   mapRecordsToProps
 )(connect(mapStateToProps)(PlanTable) as any) as any) as any;

@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {useGlobal} from 'reactn';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import ProjectType from '../model/projectType';
-import {connect} from 'react-redux';
-import {IState, Project, IProjectSettingsStrings} from '../model';
+import { connect } from 'react-redux';
+import { IState, Project, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
-import {withData} from 'react-orbitjs';
+import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
-import {Schema, KeyMap, QueryBuilder, TransformBuilder} from '@orbit/data';
-import {withStyles, WithStyles, Theme} from '@material-ui/core/styles';
+import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
@@ -19,56 +19,57 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SnackBar from './SnackBar';
+import remoteId from '../utils/remoteId';
 
 const styles = (theme: Theme) => ({
   container: {
     display: 'flex',
-    margin: theme.spacing(4)
+    margin: theme.spacing(4),
   },
   paper: {
-    paddingLeft: theme.spacing(4)
+    paddingLeft: theme.spacing(4),
   },
   group: {
-    paddingBottom: theme.spacing(3)
+    paddingBottom: theme.spacing(3),
   },
   label: {
     // color: theme.palette.primary.dark,
   },
   info: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   dense: {
-    marginTop: 16
+    marginTop: 16,
   },
   menu: {
-    width: 200
+    width: 200,
   },
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }),
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
   },
   moreButton: {
-    textDecoration: 'underline'
+    textDecoration: 'underline',
   },
   smallIcon: {
     marginRight: theme.spacing(1),
-    fontSize: 12
+    fontSize: 12,
   },
   link: {
-    color: theme.palette.primary.contrastText
-  }
+    color: theme.palette.primary.contrastText,
+  },
 });
 
 interface IStateProps {
@@ -85,13 +86,13 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
 }
 
 export function ProjectSettings(props: IProps) {
-  const {classes, projects, projectTypes, updateStore, t} = props;
+  const { classes, projects, projectTypes, updateStore, t } = props;
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
   const [dataStore] = useGlobal('dataStore');
   const [project, setProject] = useGlobal('project');
-  const [user] = useGlobal('user');
-  const [organization] = useGlobal('organization');
+  const [user] = useGlobal<string>('user');
+  const [organization] = useGlobal<string>('organization');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
   const [name, setName] = useState(
     (currentProject && currentProject.attributes.name) || ''
@@ -179,31 +180,23 @@ export function ProjectSettings(props: IProps) {
           isPublic: currentProject.attributes.isPublic,
           dateCreated: currentProject.attributes.dateCreated,
           dateUpdated: new Date().toISOString(),
-          dateArchived: currentProject.attributes.dateArchived
-        }
+          dateArchived: currentProject.attributes.dateArchived,
+        },
       })
     );
   };
   const handleAdd = () => {
-    const userId = (keyMap as KeyMap).idToKey(
-      'user',
-      'remoteId',
-      user as string
-    );
-    const organizationId = (keyMap as KeyMap).idToKey(
-      'organization',
-      'remoteId',
-      organization as string
-    );
+    const userId = remoteId('user', user);
+    const organizationId = remoteId('organization', organization);
     let project: Project = {
       type: 'project',
       attributes: {
         name: name,
         projectTypeId: parseInt(projectType),
         description: description,
-        ownerId: parseInt(userId) || 1,
-        organizationId: parseInt(organizationId) || 1,
-        groupId: parseInt(organizationId) || 1, // TODO: TEMP UNTIL GROUP ADDED TO FORM
+        ownerId: userId || 1,
+        organizationId: organizationId || 1,
+        groupId: organizationId || 1, //TEMP UNTIL GROUP ADDED TO FORM
         uilanguagebcp47: null,
         language: bcp47,
         languageName: languageName,
@@ -214,8 +207,8 @@ export function ProjectSettings(props: IProps) {
         isPublic: true,
         dateCreated: new Date().toISOString(),
         dateUpdated: new Date().toISOString(),
-        dateArchived: null
-      }
+        dateArchived: null,
+      },
     } as any;
     (schema as Schema).initializeRecord(project);
     updateStore((t: TransformBuilder) => t.addRecord(project));
@@ -225,7 +218,7 @@ export function ProjectSettings(props: IProps) {
   useEffect(() => {
     const setDisplayType = async (p: Project) => {
       let projectType = (await (dataStore as Store).query(q =>
-        q.findRelatedRecord({type: 'project', id: p.id}, 'projecttype')
+        q.findRelatedRecord({ type: 'project', id: p.id }, 'projecttype')
       )) as ProjectType;
       setProjectType(
         (projectType.keys && projectType.keys.remoteId) || projectType.id
@@ -238,10 +231,10 @@ export function ProjectSettings(props: IProps) {
   }, []);
 
   const safeFonts = [
-    {value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false},
-    {value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false},
-    {value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true},
-    {value: 'SimSun', label: 'SimSun (Chinese)', rtl: false}
+    { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
+    { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
+    { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
+    { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
   ];
 
   const fontSizes = [
@@ -251,7 +244,7 @@ export function ProjectSettings(props: IProps) {
     'medium',
     'large',
     'x-large',
-    'xx-large'
+    'xx-large',
   ];
 
   return (
@@ -284,7 +277,7 @@ export function ProjectSettings(props: IProps) {
                   value={description}
                   onChange={handleDescriptionChange}
                   margin="normal"
-                  style={{width: 400}}
+                  style={{ width: 400 }}
                   variant="filled"
                   required={false}
                 />
@@ -302,8 +295,8 @@ export function ProjectSettings(props: IProps) {
                   onChange={handleTypeChange}
                   SelectProps={{
                     MenuProps: {
-                      className: classes.menu
-                    }
+                      className: classes.menu,
+                    },
                   }}
                   helperText={t.selectProjectType}
                   margin="normal"
@@ -335,7 +328,7 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   onClick={handleBcp47Change}
                   InputProps={{
-                    readOnly: true
+                    readOnly: true,
                   }}
                   variant="filled"
                   required={true}
@@ -375,8 +368,8 @@ export function ProjectSettings(props: IProps) {
                   onChange={handleDefaultFontChange}
                   SelectProps={{
                     MenuProps: {
-                      className: classes.menu
-                    }
+                      className: classes.menu,
+                    },
                   }}
                   helperText={
                     <span>
@@ -413,8 +406,8 @@ export function ProjectSettings(props: IProps) {
                   onChange={handleDefaultFontSizeChange}
                   SelectProps={{
                     MenuProps: {
-                      className: classes.menu
-                    }
+                      className: classes.menu,
+                    },
                   }}
                   helperText={t.selectFontSize}
                   margin="normal"
@@ -462,14 +455,14 @@ export function ProjectSettings(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: 'projectSettings'})
+  t: localStrings(state, { layout: 'projectSettings' }),
 });
 
 const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
-  projectTypes: (q: QueryBuilder) => q.findRecords('projecttype')
+  projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
 };
 
-export default withStyles(styles, {withTheme: true})(withData(
+export default withStyles(styles, { withTheme: true })(withData(
   mapRecordsToProps
 )(connect(mapStateToProps)(ProjectSettings) as any) as any) as any;

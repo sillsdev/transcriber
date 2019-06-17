@@ -13,10 +13,11 @@ import {
   render,
   fireEvent,
   cleanup,
-  waitForElement
+  waitForElement,
 } from '@testing-library/react';
 import 'jest-dom/extend-expect';
 import ScriptureTable from '../components/ScriptureTable';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({});
 
@@ -31,7 +32,7 @@ const globals = {
   lang: 'en',
   dataStore: dataStore,
   schema: schema,
-  keyMap: keyMap
+  keyMap: keyMap,
 };
 setGlobal(globals);
 
@@ -39,7 +40,9 @@ const tree = (
   <DataProvider dataStore={dataStore}>
     <Provider store={store}>
       <Router history={history}>
-        <ScriptureTable />
+        <MuiThemeProvider theme={theme}>
+          <ScriptureTable />
+        </MuiThemeProvider>
       </Router>
     </Provider>
   </DataProvider>
@@ -49,8 +52,8 @@ const addOneSection = async () => {
   const plan = {
     type: 'plan',
     attributes: {
-      name: 'Genesis'
-    }
+      name: 'Genesis',
+    },
   } as any;
   (schema as Schema).initializeRecord(plan);
   setGlobal({ ...globals, plan: plan.id });
@@ -59,15 +62,15 @@ const addOneSection = async () => {
     type: 'section',
     attributes: {
       sequencenum: 1,
-      name: 'Creation'
-    }
+      name: 'Creation',
+    },
   } as any;
   (schema as Schema).initializeRecord(section);
   await (dataStore as Store).update(t => t.addRecord(section));
   await (dataStore as Store).update(t =>
     t.replaceRelatedRecord({ type: 'section', id: section.id }, 'plan', {
       type: 'plan',
-      id: plan.id
+      id: plan.id,
     })
   );
   return section.id;
@@ -81,15 +84,15 @@ const addPassageToSection = async (sectionId: string) => {
       book: 'GEN',
       reference: '1:1-20',
       position: 0,
-      state: '1',
+      state: 'Not assigned',
       hold: false,
-      title: 'Seven Days'
-    }
+      title: 'Seven Days',
+    },
   } as any;
   (schema as Schema).initializeRecord(passage);
   await (dataStore as Store).update(t => t.addRecord(passage));
   const passageSection = {
-    type: 'passagesection'
+    type: 'passagesection',
   } as any;
   (schema as Schema).initializeRecord(passageSection);
   await (dataStore as Store).update(t => t.addRecord(passageSection));

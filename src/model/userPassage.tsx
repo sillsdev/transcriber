@@ -1,20 +1,19 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface UserTasks extends Record {
+export interface UserPassages extends Record {
   attributes: {
     userId: number;
-    projectId: number;
-    activityName: string;
+    passageId: number;
+    roleId: number;
     comment: string;
     dateCreated: string | null;
     dateUpdated: string | null;
   };
   relationships?: {
     user: RecordRelationship;
-    task: RecordRelationship;
-    project: RecordRelationship;
-    tasks: RecordRelationship;
+    passage: RecordRelationship;
+    role: RecordRelationship;
   };
 }
 
-export default UserTasks;
+export default UserPassages;

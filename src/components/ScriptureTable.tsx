@@ -9,7 +9,7 @@ import {
   Passage,
   IPlanSheetStrings,
   IScriptureTableStrings,
-  BookNameMap
+  BookNameMap,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
@@ -24,21 +24,21 @@ import Related from '../utils/related';
 
 const styles = (theme: Theme) => ({
   container: {
-    display: 'flex'
+    display: 'flex',
   },
   paper: {},
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }),
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing(1)
-  }
+    marginLeft: theme.spacing(1),
+  },
 });
 
 interface ISequencedRecordIdentity extends RecordIdentity {
@@ -64,8 +64,8 @@ interface IProps
 
 export function ScriptureTable(props: IProps) {
   const { classes, t, s, lang, bookSuggestions, bookMap, fetchBooks } = props;
-  const [plan] = useGlobal('plan');
-  const [project] = useGlobal('project');
+  const [plan] = useGlobal<string>('plan');
+  const [project] = useGlobal<string>('project');
   const [dataStore] = useGlobal('dataStore');
   const [schema] = useGlobal('schema');
   const [message, setMessage] = useState(<></>);
@@ -78,7 +78,7 @@ export function ScriptureTable(props: IProps) {
     { value: t.passage, readOnly: true, width: 80 },
     { value: t.book, readOnly: true, width: 170 },
     { value: t.reference, readOnly: true, width: 180 },
-    { value: t.description, readOnly: true, width: 280 }
+    { value: t.description, readOnly: true, width: 280 },
   ]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [data, setData] = useState(
@@ -174,16 +174,16 @@ export function ScriptureTable(props: IProps) {
           title: passageRow[5],
           position: 0,
           hold: false,
-          state: 1
-        }
+          state: 'Not assigned',
+        },
       } as any;
       (schema as Schema).initializeRecord(p);
       const passageSection = {
         type: 'passagesection',
         attributes: {
           sectionId: 0,
-          passageId: 0
-        }
+          passageId: 0,
+        },
       } as any;
       await (dataStore as Store).update(t => [
         t.addRecord(p),
@@ -197,7 +197,7 @@ export function ScriptureTable(props: IProps) {
           { type: 'passagesection', id: passageSection.id },
           'passage',
           { type: 'passage', id: p.id }
-        )
+        ),
       ]);
     };
     const changePassage = async (i: number) => {
@@ -239,16 +239,16 @@ export function ScriptureTable(props: IProps) {
         type: 'section',
         attributes: {
           sequencenum: parseInt(sectionRow[0]),
-          name: sectionRow[1]
-        }
+          name: sectionRow[1],
+        },
       } as any;
       (schema as Schema).initializeRecord(s);
       await (dataStore as Store).update(t => [
         t.addRecord(s),
         t.replaceRelatedRecord({ type: 'section', id: s.id }, 'plan', {
           type: 'plan',
-          id: planId
-        })
+          id: planId,
+        }),
       ]);
       return s;
     };
@@ -300,12 +300,12 @@ export function ScriptureTable(props: IProps) {
           passage.attributes.sequencenum,
           passage.attributes.book,
           passage.attributes.reference,
-          passage.attributes.title
+          passage.attributes.title,
         ]);
         ids.push({
           type: 'passage',
           id: passage.id,
-          sequencenum: passage.attributes.sequencenum
+          sequencenum: passage.attributes.sequencenum,
         });
       }
     };
@@ -364,7 +364,7 @@ export function ScriptureTable(props: IProps) {
             '',
             '',
             '',
-            ''
+            '',
           ]);
           await getPassageSection(s);
         }
@@ -404,16 +404,16 @@ const mapStateToProps = (state: IState): IStateProps => ({
   s: localStrings(state, { layout: 'planSheet' }),
   lang: state.strings.lang,
   bookSuggestions: state.books.suggestions,
-  bookMap: state.books.map
+  bookMap: state.books.map,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
-      fetchBooks: actions.fetchBooks
+      fetchBooks: actions.fetchBooks,
     },
     dispatch
-  )
+  ),
 });
 
 const mapRecordsToProps = {};

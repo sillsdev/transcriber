@@ -752,6 +752,48 @@
 					<context context-type="sourcefile">ScriptureTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="assignmentTable.section">
+				<source>Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.title">
+				<source>Title</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.passage">
+				<source>Passage</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.book">
+				<source>Book</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.reference">
+				<source>Reference</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.description">
+				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="planTabs.sectionsPassages">
 				<source>Sections &#x26; Passages</source>
 				<target/>

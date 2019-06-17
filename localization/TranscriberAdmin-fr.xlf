@@ -608,7 +608,44 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-		<unit id="scriptureTable.section">
+		<unit id="assignmentTable.section">
+			<segment>
+				<source>Section</source>
+				<target>Ensemble</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.title">
+			<segment>
+				<source>Title</source>
+				<target>Titre</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.passage">
+			<segment>
+				<source>Passage</source>
+				<target>Passage</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.book">
+			<segment>
+				<source>Book</source>
+				<target>Livre</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.reference">
+			<segment>
+				<source>Reference</source>
+				<target>Référence</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.description">
+			<segment>
+				<source>Description du passage</source>
+				<target/>
+			</segment>
+		</unit>
+		
+				<unit id="scriptureTable.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>

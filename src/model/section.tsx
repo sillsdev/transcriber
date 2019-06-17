@@ -10,7 +10,7 @@ export interface Section extends Record {
   relationships?: {
     // project: RecordRelationship;
     plan: RecordRelationship;
-    tasks: RecordRelationship;
+    passages: RecordRelationship;
   };
 }
 export default Section;

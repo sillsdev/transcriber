@@ -9,6 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import ScriptureTable from '../components/ScriptureTable';
 import MediaTab from '../components/MediaTab';
+import AssignmentTable from './AssignmentTable';
 
 interface IContainerProps {
   children: any;
@@ -27,8 +28,8 @@ const styles = (theme: Theme) => ({
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.palette.background.paper,
-    flexDirection: 'column'
-  })
+    flexDirection: 'column',
+  }),
 });
 
 interface IStateProps {
@@ -77,14 +78,18 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           <MediaTab {...props} />
         </TabContainer>
       )}
-      {tab === 2 && <TabContainer>{t.assignments}</TabContainer>}
+      {tab === 2 && (
+        <TabContainer>
+          <AssignmentTable {...props} />
+        </TabContainer>
+      )}
       {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
     </div>
   );
 };
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planTabs' })
+  t: localStrings(state, { layout: 'planTabs' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
