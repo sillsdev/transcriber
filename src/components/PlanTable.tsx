@@ -11,7 +11,7 @@ import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
 import { Fab, Button, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -24,7 +24,7 @@ import {
   Table,
   TableColumnResizing,
   TableHeaderRow,
-  Toolbar
+  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
@@ -34,32 +34,32 @@ import Related from '../utils/related';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     container: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     paper: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'column',
-      alignContent: 'center'
+      alignContent: 'center',
     }),
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center'
+      justifyContent: 'center',
     }),
     editIcon: {
-      fontSize: 16
+      fontSize: 16,
     },
     link: {},
     actionIcon: {},
     button: {},
-    icon: {}
+    icon: {},
   });
 
 interface ICell {
@@ -92,7 +92,7 @@ export function PlanTable(props: IProps) {
     sections,
     updateStore,
     t,
-    displaySet
+    displaySet,
   } = props;
   const [dataStore] = useGlobal('dataStore');
   const [schema] = useGlobal('schema');
@@ -101,13 +101,13 @@ export function PlanTable(props: IProps) {
     { name: 'name', title: t.name },
     { name: 'planType', title: t.type },
     { name: 'sections', title: t.sections },
-    { name: 'action', title: t.action }
+    { name: 'action', title: t.action },
   ]);
   const [columnWidth] = useState([
     { columnName: 'name', width: 300 },
     { columnName: 'planType', width: 100 },
     { columnName: 'sections', width: 100 },
-    { columnName: 'action', width: 150 }
+    { columnName: 'action', width: 150 },
   ]);
   const [rows, setRows] = useState(Array<ICell>());
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -129,7 +129,7 @@ export function PlanTable(props: IProps) {
     updateStore((t: TransformBuilder) =>
       t.removeRecord({
         type: 'plan',
-        id: deleteItem
+        id: deleteItem,
       })
     );
   };
@@ -147,13 +147,13 @@ export function PlanTable(props: IProps) {
     await (dataStore as Store).update(t =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
-        id: plan.attributes.planType
+        id: plan.attributes.planType,
       })
     );
     await (dataStore as Store).update(t =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'project', {
         type: 'project',
-        id: project
+        id: project,
       })
     );
   };
@@ -172,7 +172,7 @@ export function PlanTable(props: IProps) {
     await (dataStore as Store).update(t =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
-        id: plan.attributes.planType
+        id: plan.attributes.planType,
       })
     );
   };
@@ -197,7 +197,7 @@ export function PlanTable(props: IProps) {
           name: p.attributes.name,
           planType: getType(p),
           sections: sectionCount(p),
-          action: p.id
+          action: p.id,
         } as ICell;
       })
     );
@@ -334,13 +334,13 @@ export function PlanTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planTable' })
+  t: localStrings(state, { layout: 'planTable' }),
 });
 
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
-  sections: (q: QueryBuilder) => q.findRecords('section')
+  sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

@@ -23,52 +23,52 @@ import SnackBar from './SnackBar';
 const styles = (theme: Theme) => ({
   container: {
     display: 'flex',
-    margin: theme.spacing(4)
+    margin: theme.spacing(4),
   },
   paper: {
-    paddingLeft: theme.spacing(4)
+    paddingLeft: theme.spacing(4),
   },
   group: {
-    paddingBottom: theme.spacing(3)
+    paddingBottom: theme.spacing(3),
   },
   label: {
     // color: theme.palette.primary.dark,
   },
   info: {
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   textField: {
     marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1)
+    marginRight: theme.spacing(1),
   },
   dense: {
-    marginTop: 16
+    marginTop: 16,
   },
   menu: {
-    width: 200
+    width: 200,
   },
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }),
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
   },
   moreButton: {
-    textDecoration: 'underline'
+    textDecoration: 'underline',
   },
   smallIcon: {
     marginRight: theme.spacing(1),
-    fontSize: 12
+    fontSize: 12,
   },
   link: {
-    color: theme.palette.primary.contrastText
-  }
+    color: theme.palette.primary.contrastText,
+  },
 });
 
 interface IStateProps {
@@ -179,8 +179,8 @@ export function ProjectSettings(props: IProps) {
           isPublic: currentProject.attributes.isPublic,
           dateCreated: currentProject.attributes.dateCreated,
           dateUpdated: new Date().toISOString(),
-          dateArchived: currentProject.attributes.dateArchived
-        }
+          dateArchived: currentProject.attributes.dateArchived,
+        },
       })
     );
   };
@@ -213,8 +213,8 @@ export function ProjectSettings(props: IProps) {
         isPublic: true,
         dateCreated: new Date().toISOString(),
         dateUpdated: new Date().toISOString(),
-        dateArchived: null
-      }
+        dateArchived: null,
+      },
     } as any;
     (schema as Schema).initializeRecord(project);
     updateStore((t: TransformBuilder) => t.addRecord(project));
@@ -238,7 +238,7 @@ export function ProjectSettings(props: IProps) {
     { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
     { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
     { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
-    { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false }
+    { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
   ];
 
   const fontSizes = [
@@ -248,7 +248,7 @@ export function ProjectSettings(props: IProps) {
     'medium',
     'large',
     'x-large',
-    'xx-large'
+    'xx-large',
   ];
 
   return (
@@ -299,8 +299,8 @@ export function ProjectSettings(props: IProps) {
                   onChange={handleTypeChange}
                   SelectProps={{
                     MenuProps: {
-                      className: classes.menu
-                    }
+                      className: classes.menu,
+                    },
                   }}
                   helperText={t.selectProjectType}
                   margin="normal"
@@ -332,7 +332,7 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   onClick={handleBcp47Change}
                   InputProps={{
-                    readOnly: true
+                    readOnly: true,
                   }}
                   variant="filled"
                   required={true}
@@ -372,8 +372,8 @@ export function ProjectSettings(props: IProps) {
                   onChange={handleDefaultFontChange}
                   SelectProps={{
                     MenuProps: {
-                      className: classes.menu
-                    }
+                      className: classes.menu,
+                    },
                   }}
                   helperText={
                     <span>
@@ -410,8 +410,8 @@ export function ProjectSettings(props: IProps) {
                   onChange={handleDefaultFontSizeChange}
                   SelectProps={{
                     MenuProps: {
-                      className: classes.menu
-                    }
+                      className: classes.menu,
+                    },
                   }}
                   helperText={t.selectFontSize}
                   margin="normal"
@@ -459,12 +459,12 @@ export function ProjectSettings(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'projectSettings' })
+  t: localStrings(state, { layout: 'projectSettings' }),
 });
 
 const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
-  projectTypes: (q: QueryBuilder) => q.findRecords('projecttype')
+  projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

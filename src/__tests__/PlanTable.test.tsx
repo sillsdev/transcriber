@@ -14,7 +14,7 @@ import {
   render,
   fireEvent,
   cleanup,
-  waitForElement
+  waitForElement,
 } from '@testing-library/react';
 import 'jest-dom/extend-expect';
 import PlanTable from '../components/PlanTable';
@@ -32,7 +32,7 @@ const globals = {
   lang: 'en',
   dataStore: dataStore,
   schema: schema,
-  keyMap: keyMap
+  keyMap: keyMap,
 };
 setGlobal(globals);
 
@@ -50,8 +50,8 @@ const addProjects = async () => {
   const project1 = {
     type: 'project',
     attributes: {
-      name: 'Fulfulde'
-    }
+      name: 'Fulfulde',
+    },
   } as any;
   (schema as Schema).initializeRecord(project1);
   setGlobal({ ...globals, project: project1.id });
@@ -59,8 +59,8 @@ const addProjects = async () => {
   const project2 = {
     type: 'project',
     attributes: {
-      name: 'Ewondo'
-    }
+      name: 'Ewondo',
+    },
   } as any;
   (schema as Schema).initializeRecord(project2);
   await (dataStore as Store).update(t => t.addRecord(project2));
@@ -71,29 +71,29 @@ const addPlan = async (project1: string) => {
   const planType = {
     type: 'plantype',
     attributes: {
-      name: 'Scripture'
-    }
+      name: 'Scripture',
+    },
   } as any;
   (schema as Schema).initializeRecord(planType);
   await (dataStore as Store).update(t => t.addRecord(planType));
   const plan = {
     type: 'plan',
     attributes: {
-      name: 'Genesis'
-    }
+      name: 'Genesis',
+    },
   } as any;
   (schema as Schema).initializeRecord(plan);
   await (dataStore as Store).update(t => t.addRecord(plan));
   await (dataStore as Store).update(t =>
     t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
       type: 'plantype',
-      id: planType.id
+      id: planType.id,
     })
   );
   await (dataStore as Store).update(t =>
     t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'project', {
       type: 'project',
-      id: project1
+      id: project1,
     })
   );
   return plan.id;

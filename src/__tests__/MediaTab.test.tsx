@@ -9,11 +9,7 @@ import Store from '@orbit/store';
 import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
 import history from '../history';
-import {
-  render,
-  cleanup,
-  waitForElement
-} from '@testing-library/react';
+import { render, cleanup, waitForElement } from '@testing-library/react';
 import 'jest-dom/extend-expect';
 import MediaTab from '../components/MediaTab';
 
@@ -30,7 +26,7 @@ const globals = {
   lang: 'en',
   dataStore: dataStore,
   schema: schema,
-  keyMap: keyMap
+  keyMap: keyMap,
 };
 setGlobal(globals);
 
@@ -48,8 +44,8 @@ const addMediaFile = async () => {
   const mediaFile = {
     type: 'mediafile',
     attributes: {
-      originalFile: 'PAT-LUK-001-001004v01.mp3'
-    }
+      originalFile: 'PAT-LUK-001-001004v01.mp3',
+    },
   } as any;
   (schema as Schema).initializeRecord(mediaFile);
   await (dataStore as Store).update(t => t.addRecord(mediaFile));
@@ -66,27 +62,27 @@ const addPassageAndSection = async (mediaFileId: string) => {
       position: 0,
       state: 'initial',
       hold: false,
-      title: 'Introduction'
-    }
+      title: 'Introduction',
+    },
   } as any;
   (schema as Schema).initializeRecord(passage);
   await (dataStore as Store).update(t => t.addRecord(passage));
   await (dataStore as Store).update(t =>
     t.replaceRelatedRecord({ type: 'mediafile', id: mediaFileId }, 'passage', {
       type: 'passage',
-      id: passage.id
+      id: passage.id,
     })
   );
   const section = {
     type: 'section',
     attributes: {
-      name: 'Jesus is coming'
-    }
+      name: 'Jesus is coming',
+    },
   } as any;
   (schema as Schema).initializeRecord(section);
   await (dataStore as Store).update(t => t.addRecord(section));
   const passageSection = {
-    type: 'passagesection'
+    type: 'passagesection',
   } as any;
   (schema as Schema).initializeRecord(passageSection);
   await (dataStore as Store).update(t => t.addRecord(passageSection));

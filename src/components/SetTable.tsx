@@ -18,23 +18,23 @@ import './SetTable.css';
 const styles = (theme: Theme) => ({
   container: {
     display: 'flex',
-    margin: theme.spacing(4)
+    margin: theme.spacing(4),
   },
   paper: {
-    paddingLeft: theme.spacing(4)
+    paddingLeft: theme.spacing(4),
   },
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }),
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing(1)
-  }
+    marginLeft: theme.spacing(1),
+  },
 });
 
 interface IChange {
@@ -70,36 +70,36 @@ export function SetTable(props: IProps) {
       { value: 'Title', readOnly: true, width: 180 },
       { value: 'Reference', readOnly: true, width: 120 },
       { value: 'Assignments', readOnly: true, width: 120 },
-      { value: 'Media', readOnly: true, width: 180 }
+      { value: 'Media', readOnly: true, width: 180 },
     ],
     [
       { readOnly: true, value: 1 },
       { value: 'Creation Story' },
       { value: '1:1-2:4' },
       { value: <Avatar /> },
-      { value: 'gen001001.mp3' }
+      { value: 'gen001001.mp3' },
     ],
     [
       { readOnly: true, value: 2 },
       { value: 'Eden' },
       { value: '2:5-25' },
       { value: <Avatar /> },
-      { value: 'gen002005.mpe' }
+      { value: 'gen002005.mpe' },
     ],
     [
       { readOnly: true, value: 3 },
       { value: 'First Sin' },
       { value: '3:1-19' },
       { value: <Avatar /> },
-      { value: 'gen003001.mp3' }
+      { value: 'gen003001.mp3' },
     ],
     [
       { readOnly: true, value: 4 },
       { value: 'Paradise Lost' },
       { value: '3:20-24' },
       { value: <Avatar /> },
-      { value: 'gen003020.mp3' }
-    ]
+      { value: 'gen003020.mp3' },
+    ],
   ]);
 
   const handleMessageReset = () => {
@@ -144,8 +144,8 @@ export function SetTable(props: IProps) {
           attributes: {
             name: data[i][3].value as string,
             projectId: parseInt(projectId),
-            bookId: parseInt(bookId)
-          }
+            bookId: parseInt(bookId),
+          },
         } as any;
         (schema as Schema).initializeRecord(section);
         updateStore((t: TransformBuilder) => t.addRecord(section)).then(
@@ -171,8 +171,8 @@ export function SetTable(props: IProps) {
             hold: false,
             title: data[i][3].value as string,
             dateCreated: new Date().toISOString(),
-            dateUpdated: new Date().toISOString()
-          }
+            dateUpdated: new Date().toISOString(),
+          },
         } as any;
         (schema as Schema).initializeRecord(passage);
         let taskId: number | null = null;
@@ -192,8 +192,8 @@ export function SetTable(props: IProps) {
             type: 'taskset',
             attributes: {
               taskId: taskId,
-              setId: setId
-            }
+              setId: setId,
+            },
           } as any;
           (schema as Schema).initializeRecord(taskSet);
           updateStore((t: TransformBuilder) => t.addRecord(taskSet)).then(
@@ -241,7 +241,7 @@ export function SetTable(props: IProps) {
             width: widths[j],
             className:
               (i === 0 || lines[i].slice(0, 1) === '\t' ? 'pass' : 'section') +
-              (j < 2 ? ' num' : '')
+              (j < 2 ? ' num' : ''),
           };
         })
       );
@@ -293,13 +293,13 @@ export function SetTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'projectSettings' })
+  t: localStrings(state, { layout: 'projectSettings' }),
 });
 
 const mapRecordsToProps = {
   sets: (q: QueryBuilder) => q.findRecords('section'),
   tasks: (q: QueryBuilder) => q.findRecords('passage'),
-  tasksets: (q: QueryBuilder) => q.findRecords('taskset')
+  tasksets: (q: QueryBuilder) => q.findRecords('taskset'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

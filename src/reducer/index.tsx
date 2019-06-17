@@ -8,5 +8,5 @@ export default combineReducers({
   strings: localizationReducer,
   books: bookReducer,
   orbit: orbitReducer,
-  upload: uploadReducer
+  upload: uploadReducer,
 });

@@ -5,7 +5,7 @@ export const fetchLocalization = () => (dispatch: any) => {
   Axios.get('/localization/strings.json').then(strings => {
     dispatch({
       payload: strings,
-      type: FETCH_LOCALIZATION
+      type: FETCH_LOCALIZATION,
     });
   });
 };
@@ -13,7 +13,7 @@ export const fetchLocalization = () => (dispatch: any) => {
 export const setLanguage = (lang: string) => {
   return {
     payload: lang,
-    type: SET_LANGUAGE
+    type: SET_LANGUAGE,
   };
 };
 
@@ -22,7 +22,7 @@ export const fetchBooks = (lang: string) => (dispatch: any) => {
   Axios.get('/localization/' + bookFileName).then(strings => {
     dispatch({
       payload: strings,
-      type: FETCH_BOOKS
+      type: FETCH_BOOKS,
     });
   });
 };

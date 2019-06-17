@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -6,8 +6,13 @@ import { IState, Organization, IAdminpanelStrings } from '../model';
 import localStrings from '../selector/localize';
 import Store from '@orbit/store';
 import classNames from 'classnames';
-import { createStyles, withStyles, WithStyles, Theme } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import {
+  createStyles,
+  withStyles,
+  WithStyles,
+  Theme,
+} from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import BackIcon from '@material-ui/icons/ArrowBack';
@@ -21,7 +26,7 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 const styles = (theme: Theme) =>
   createStyles({
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     appBar: theme.mixins.gutters({
       // background: '#FFE599',
@@ -30,30 +35,30 @@ const styles = (theme: Theme) =>
     menuButton: {
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
-      color: theme.palette.primary.contrastText
+      color: theme.palette.primary.contrastText,
     },
     hide: {
-      display: 'none'
+      display: 'none',
     },
     title: {
       display: 'none',
       [theme.breakpoints.up('sm')]: {
-        display: 'block'
-      }
+        display: 'block',
+      },
     },
     search: {
       position: 'relative',
       borderRadius: theme.shape.borderRadius,
       backgroundColor: fade(theme.palette.common.white, 0.15),
       '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25)
+        backgroundColor: fade(theme.palette.common.white, 0.25),
       },
       marginLeft: 0,
       width: '100%',
       [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(1),
-        width: 'auto'
-      }
+        width: 'auto',
+      },
     },
     searchIcon: {
       width: theme.spacing(9),
@@ -62,11 +67,11 @@ const styles = (theme: Theme) =>
       pointerEvents: 'none',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     inputRoot: {
       color: 'inherit',
-      width: '100%'
+      width: '100%',
     },
     inputInput: {
       paddingTop: theme.spacing(1),
@@ -78,37 +83,37 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         width: 120,
         '&:focus': {
-          width: 200
-        }
-      }
+          width: 200,
+        },
+      },
     },
     button: theme.mixins.gutters({
       marginRight: theme.spacing(1),
-      color: theme.palette.primary.contrastText
+      color: theme.palette.primary.contrastText,
     }),
     avatar: {
       marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     close: {
-      padding: theme.spacing(0.5)
-    }
+      padding: theme.spacing(0.5),
+    },
   });
 
 interface IStateProps {
   t: IAdminpanelStrings;
-};
+}
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{
+interface IProps extends IStateProps, WithStyles<typeof styles> {
   close: () => {};
-  search: boolean
+  search: boolean;
   appClass: any;
   appFixed: boolean;
-};
+}
 
 function TranscriberBar(props: IProps) {
   const { classes, close = null, search = null, t } = props;
-  const { appClass=classes.appBar, appFixed=false } = props;
+  const { appClass = classes.appBar, appFixed = false } = props;
   const [initials] = useGlobal('initials');
   const [dataStore] = useGlobal('dataStore');
   const [organization] = useGlobal('organization');
@@ -117,11 +122,13 @@ function TranscriberBar(props: IProps) {
   const [orgName, setOrgName] = useState('');
   const [view, setView] = useState('');
 
-  const handleOrganizationChange = () => { setView('/organization')}
+  const handleOrganizationChange = () => {
+    setView('/organization');
+  };
   const handleClose = () => {
     if (close !== null) {
       close();
-   }
+    }
   };
 
   useEffect(() => {
@@ -129,67 +136,70 @@ function TranscriberBar(props: IProps) {
     if (search != null) {
       setNoSearch(!search);
     }
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {
     if (organization !== null) {
-        (dataStore as Store).query(q => q.findRecord({type: 'organization', id: organization as string}))
-          .then((organizationRec: Organization) => {
-            setOrgName(organizationRec.attributes.name);
-        })
+      (dataStore as Store)
+        .query(q =>
+          q.findRecord({ type: 'organization', id: organization as string })
+        )
+        .then((organizationRec: Organization) => {
+          setOrgName(organizationRec.attributes.name);
+        });
     }
-  /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization])
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [organization]);
 
   if (view !== '') return <Redirect to={view} />;
 
   return (
-    <AppBar className={appClass} position={appFixed? "fixed": "static"}>
-    <Toolbar>
-      <IconButton
-        onClick={handleClose}
-        className={classNames(classes.menuButton, {
-          [classes.hide]: noClose,
-        })}>
-        <BackIcon />
-      </IconButton>
-      <Button className={classes.button} onClick={handleOrganizationChange}>
-        <Typography variant="h6" color="inherit">
+    <AppBar className={appClass} position={appFixed ? 'fixed' : 'static'}>
+      <Toolbar>
+        <IconButton
+          onClick={handleClose}
+          className={classNames(classes.menuButton, {
+            [classes.hide]: noClose,
+          })}
+        >
+          <BackIcon />
+        </IconButton>
+        <Button className={classes.button} onClick={handleOrganizationChange}>
+          <Typography variant="h6" color="inherit">
             {orgName}
-        </Typography>
-      </Button>
-      <Typography variant="h6" color="inherit" className={classes.grow}>
+          </Typography>
+        </Button>
+        <Typography variant="h6" color="inherit" className={classes.grow}>
           {t.transcriberAdmin}
-      </Typography>
-      <div className={classes.grow} />
-      <div className={classNames(classes.search, {
-          [classes.hide]: noSearch,
-        })}>
-        <div className={classes.searchIcon}>
-          <SearchIcon />
+        </Typography>
+        <div className={classes.grow} />
+        <div
+          className={classNames(classes.search, {
+            [classes.hide]: noSearch,
+          })}
+        >
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder={t.search}
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+          />
         </div>
-        <InputBase
-          placeholder={t.search}
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-        />
-      </div>
-      <Avatar className={classes.avatar}>
-          {initials as string}
-      </Avatar>
-    </Toolbar>
-  </AppBar>
-)
-
-};
+        <Avatar className={classes.avatar}>{initials as string}</Avatar>
+      </Toolbar>
+    </AppBar>
+  );
+}
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: "adminpanel"})
+  t: localStrings(state, { layout: 'adminpanel' }),
 });
 
-export default withStyles(styles, { withTheme: true })(
-      connect(mapStateToProps)(TranscriberBar) as any
-  ) as any;
+export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
+  TranscriberBar
+) as any) as any;

@@ -6,7 +6,7 @@ import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -16,8 +16,8 @@ import CloseIcon from '@material-ui/icons/Close';
 const styles = (theme: Theme) =>
   createStyles({
     close: {
-      padding: theme.spacing(0.5)
-    }
+      padding: theme.spacing(0.5),
+    },
   });
 
 interface IStateProps {
@@ -52,13 +52,13 @@ function SimpleSnackbar(props: IProps) {
     <Snackbar
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'left'
+        horizontal: 'left',
       }}
       open={open}
       autoHideDuration={6000}
       onClose={handleClose}
       ContentProps={{
-        'aria-describedby': 'message-id'
+        'aria-describedby': 'message-id',
       }}
       message={<span id="message-id">{message}</span>}
       action={[
@@ -73,7 +73,7 @@ function SimpleSnackbar(props: IProps) {
           onClick={handleClose}
         >
           <CloseIcon />
-        </IconButton>
+        </IconButton>,
       ]}
     />
   ) : (
@@ -82,7 +82,7 @@ function SimpleSnackbar(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'snackbar' })
+  t: localStrings(state, { layout: 'snackbar' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(

@@ -11,20 +11,20 @@ import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
 import {
   IntegratedSelection,
   IntegratedSorting,
   SelectionState,
-  SortingState
+  SortingState,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
   Table,
   TableHeaderRow,
   TableSelection,
-  Toolbar
+  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import TranscriberBar from '../components/TranscriberBar';
 import SnackBar from '../components/SnackBar';
@@ -34,14 +34,14 @@ import hasRelated from '../utils/hasRelated';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     container: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     paper: theme.mixins.gutters({
       paddingTop: 16,
@@ -52,14 +52,14 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       alignContent: 'center',
       [theme.breakpoints.down('md')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     }),
     dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center'
-    })
+      justifyContent: 'center',
+    }),
   });
 
 interface IStateProps {
@@ -116,7 +116,7 @@ export function OrganizationTable(props: IProps) {
     setRows(orgs.map((o: Organization) => ({
       type: o.type,
       id: o.id,
-      name: o.attributes.name
+      name: o.attributes.name,
     })) as any);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizations, user]);
@@ -167,11 +167,11 @@ export function OrganizationTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'organizationTable' })
+  t: localStrings(state, { layout: 'organizationTable' }),
 });
 
 const mapRecordsToProps = {
-  organizations: (q: QueryBuilder) => q.findRecords('organization')
+  organizations: (q: QueryBuilder) => q.findRecords('organization'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

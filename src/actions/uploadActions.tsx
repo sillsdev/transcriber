@@ -8,13 +8,13 @@ import {
   UPLOAD_ITEM_CREATED,
   UPLOAD_ITEM_SUCCEEDED,
   UPLOAD_ITEM_FAILED,
-  UPLOAD_COMPLETE
+  UPLOAD_COMPLETE,
 } from './types';
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
   dispatch({
     payload: files,
-    type: UPLOAD_LIST
+    type: UPLOAD_LIST,
   });
 };
 
@@ -27,8 +27,8 @@ export const nextUpload = (
   dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
   Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
     headers: {
-      Authorization: 'Bearer ' + auth.accessToken
-    }
+      Authorization: 'Bearer ' + auth.accessToken,
+    },
   })
     .then(response => {
       console.log('upload item created' + files[n].name + ' succeeded.');

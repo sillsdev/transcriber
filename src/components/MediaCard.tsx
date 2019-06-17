@@ -15,11 +15,11 @@ const styles = {
     maxWidth: 150,
     marginLeft: 8,
     marginRight: 8,
-    marginBottom: 16
+    marginBottom: 16,
   },
   media: {
-    height: 150
-  }
+    height: 150,
+  },
 };
 
 interface IStateProps {
@@ -61,7 +61,7 @@ export function MediaCard(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediacard' })
+  t: localStrings(state, { layout: 'mediacard' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(

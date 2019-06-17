@@ -13,15 +13,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  MenuItem
+  MenuItem,
 } from '@material-ui/core';
 import SnackBar from '../components/SnackBar';
 import Related from '../utils/related';
 
 const styles = {
   menu: {
-    width: 200
-  }
+    width: 200,
+  },
 };
 
 interface IStateProps {
@@ -49,7 +49,7 @@ function PlanAdd(props: IProps) {
     addMethod,
     editMethod,
     cancelMethod,
-    planIn
+    planIn,
   } = props;
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState(
@@ -73,8 +73,8 @@ function PlanAdd(props: IProps) {
           type: 'plan',
           attributes: {
             name,
-            planType
-          }
+            planType,
+          },
         };
         if (addMethod) {
           addMethod(plan);
@@ -84,8 +84,8 @@ function PlanAdd(props: IProps) {
           ...planIn,
           attributes: {
             name,
-            planType
-          }
+            planType,
+          },
         };
         if (editMethod) {
           editMethod(plan);
@@ -150,8 +150,8 @@ function PlanAdd(props: IProps) {
             onChange={handleTypeChange}
             SelectProps={{
               MenuProps: {
-                className: classes.menu
-              }
+                className: classes.menu,
+              },
             }}
             helperText={t.selectPlanType}
             margin="normal"
@@ -180,11 +180,11 @@ function PlanAdd(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planAdd' })
+  t: localStrings(state, { layout: 'planAdd' }),
 });
 
 const mapRecordsToProps = {
-  planTypes: (q: QueryBuilder) => q.findRecords('plantype')
+  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

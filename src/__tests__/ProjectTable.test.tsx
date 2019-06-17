@@ -29,7 +29,7 @@ const globals = {
   lang: 'en',
   dataStore: dataStore,
   schema: schema,
-  keyMap: keyMap
+  keyMap: keyMap,
 };
 setGlobal(globals);
 
@@ -47,8 +47,8 @@ const addOrgGroupAndProject = async (orgName: string, projName: string) => {
   const organization = {
     type: 'organization',
     attributes: {
-      name: orgName
-    }
+      name: orgName,
+    },
   } as any;
   (schema as Schema).initializeRecord(organization);
   setGlobal({ ...globals, organization: organization.id });
@@ -56,29 +56,29 @@ const addOrgGroupAndProject = async (orgName: string, projName: string) => {
   const group = {
     type: 'group',
     attributes: {
-      name: 'Africa'
-    }
+      name: 'Africa',
+    },
   } as any;
   (schema as Schema).initializeRecord(group);
   await (dataStore as Store).update(t => t.addRecord(group));
   await (dataStore as Store).update(t =>
     t.replaceRelatedRecord({ type: 'group', id: group.id }, 'owner', {
       type: 'organization',
-      id: organization.id
+      id: organization.id,
     })
   );
   const project = {
     type: 'project',
     attributes: {
-      name: projName
-    }
+      name: projName,
+    },
   } as any;
   (schema as Schema).initializeRecord(project);
   await (dataStore as Store).update(t => t.addRecord(project));
   await (dataStore as Store).update(t =>
     t.replaceRelatedRecord({ type: 'project', id: project.id }, 'group', {
       type: 'group',
-      id: group.id
+      id: group.id,
     })
   );
 };

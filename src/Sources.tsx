@@ -4,7 +4,7 @@ import Coordinator, {
   RequestStrategy,
   SyncStrategy,
   LogLevel,
-  EventLoggingStrategy
+  EventLoggingStrategy,
 } from '@orbit/coordinator';
 import IndexedDBSource from '@orbit/indexeddb';
 import JSONAPISource from '@orbit/jsonapi';
@@ -29,7 +29,7 @@ function Sources(
     schema,
     keyMap,
     name: 'backup',
-    namespace: 'transcriber'
+    namespace: 'transcriber',
   });
 
   if (Online() && !API_CONFIG.offline) {
@@ -47,9 +47,9 @@ function Sources(
       host: API_CONFIG.host,
       defaultFetchSettings: {
         headers: {
-          Authorization: 'Bearer ' + auth.accessToken
-        }
-      }
+          Authorization: 'Bearer ' + auth.accessToken,
+        },
+      },
     });
     remote.serializer.resourceKey = () => {
       return 'remoteId';
@@ -69,7 +69,7 @@ function Sources(
     new SyncStrategy({
       source: 'store',
       target: 'backup',
-      blocking: true
+      blocking: true,
     })
   );
 
@@ -83,7 +83,7 @@ function Sources(
         target: 'remote',
         action: 'pull',
 
-        blocking: false
+        blocking: false,
       })
     );
 
@@ -96,7 +96,7 @@ function Sources(
         target: 'remote',
         action: 'push',
 
-        blocking: false
+        blocking: false,
       })
     );
 
@@ -105,7 +105,7 @@ function Sources(
       new SyncStrategy({
         source: 'remote',
         target: 'store',
-        blocking: false
+        blocking: false,
       })
     );
   }
@@ -128,9 +128,9 @@ function Sources(
       .pull(q => q.findRecords('currentuser'), {
         sources: {
           remote: {
-            timeout: 100000
-          }
-        }
+            timeout: 100000,
+          },
+        },
       })
       .then((transform: Transform[]) => {
         store.sync(transform);

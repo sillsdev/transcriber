@@ -8,7 +8,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from '@material-ui/core/styles';
 import MediaCard from '../components/MediaCard';
 import organizationSvg from '../assets/organization.svg';
@@ -22,23 +22,23 @@ import TranscriberBar from '../components/TranscriberBar';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     title: {
       display: 'none',
       [theme.breakpoints.up('sm')]: {
-        display: 'block'
-      }
+        display: 'block',
+      },
     },
     grid: {
       paddingTop: theme.spacing(4),
       children: {
-        spacing: '32px'
-      }
+        spacing: '32px',
+      },
     },
     link: {
-      textDecoration: 'none'
-    }
+      textDecoration: 'none',
+    },
   });
 
 interface IStateProps {
@@ -106,7 +106,7 @@ function AdminPanel(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'adminpanel' })
+  t: localStrings(state, { layout: 'adminpanel' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(

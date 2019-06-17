@@ -14,7 +14,7 @@ export default class Auth {
     redirectUri: AUTH_CONFIG.callbackUrl,
     responseType: 'token id_token',
     scope: 'openid email',
-    audience: 'https://transcriber_api'
+    audience: 'https://transcriber_api',
   });
 
   constructor() {
@@ -29,14 +29,14 @@ export default class Auth {
 
   login() {
     this.auth0.authorize({
-      language: navigator.language.split('-')[0]
+      language: navigator.language.split('-')[0],
     });
   }
 
   signup() {
     this.auth0.authorize({
       mode: 'signUp',
-      language: navigator.language.split('-')[0]
+      language: navigator.language.split('-')[0],
     });
   }
 
@@ -96,7 +96,7 @@ export default class Auth {
     localStorage.removeItem('isLoggedIn');
 
     this.auth0.logout({
-      returnTo: window.location.origin
+      returnTo: window.location.origin,
     });
 
     // navigate to the home route

@@ -6,7 +6,7 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
 } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -79,7 +79,7 @@ function AlertDialog(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'alert' })
+  t: localStrings(state, { layout: 'alert' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(

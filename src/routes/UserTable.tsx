@@ -10,7 +10,7 @@ import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
 import {
   FilteringState,
@@ -20,7 +20,7 @@ import {
   IntegratedSorting,
   PagingState,
   SelectionState,
-  SortingState
+  SortingState,
 } from '@devexpress/dx-react-grid';
 import {
   DragDropProvider,
@@ -31,7 +31,7 @@ import {
   TableFilterRow,
   TableHeaderRow,
   TableSelection,
-  Toolbar
+  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import TranscriberBar from '../components/TranscriberBar';
 import Auth from '../auth/Auth';
@@ -39,14 +39,14 @@ import Auth from '../auth/Auth';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     container: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     paper: theme.mixins.gutters({
       paddingTop: 16,
@@ -57,23 +57,23 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       alignContent: 'center',
       [theme.breakpoints.down('md')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     }),
     dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center'
+      justifyContent: 'center',
     }),
     actions: theme.mixins.gutters({
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'flex-end'
+      justifyContent: 'flex-end',
     }),
     button: {
-      marginRight: theme.spacing(1)
-    }
+      marginRight: theme.spacing(1),
+    },
   });
 
 interface IStateProps {
@@ -103,7 +103,7 @@ export function UserTable(props: IProps) {
     { name: 'email', title: 'Email' },
     { name: 'locale', title: 'Locale' },
     { name: 'phone', title: 'Phone' },
-    { name: 'timezone', title: 'Timezone' }
+    { name: 'timezone', title: 'Timezone' },
   ]);
   const [pageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState(Array<IUserRow>());
@@ -122,7 +122,7 @@ export function UserTable(props: IProps) {
       { name: 'email', title: t.email },
       { name: 'locale', title: t.locale },
       { name: 'phone', title: t.phone },
-      { name: 'timezone', title: t.timezone }
+      { name: 'timezone', title: t.timezone },
     ]);
     setRows(
       users.map((o: User) => ({
@@ -132,7 +132,7 @@ export function UserTable(props: IProps) {
         email: o.attributes.email,
         locale: o.attributes.locale,
         phone: o.attributes.phone,
-        timezone: o.attributes.timezone
+        timezone: o.attributes.timezone,
       }))
     );
   }, [users, t.name, t.email, t.locale, t.phone, t.timezone]);
@@ -175,7 +175,7 @@ export function UserTable(props: IProps) {
                 { columnName: 'email', width: 200 },
                 { columnName: 'locale', width: 100 },
                 { columnName: 'phone', width: 100 },
-                { columnName: 'timezone', width: 100 }
+                { columnName: 'timezone', width: 100 },
               ]}
             />
 
@@ -209,11 +209,11 @@ export function UserTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'usertable' })
+  t: localStrings(state, { layout: 'usertable' }),
 });
 
 const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user')
+  users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

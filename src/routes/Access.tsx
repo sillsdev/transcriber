@@ -14,14 +14,14 @@ import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   container: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   appBar: theme.mixins.gutters({
     // background: '#FFE599',
@@ -36,16 +36,16 @@ const styles = (theme: Theme) => ({
     flexDirection: 'column',
     alignContent: 'center',
     [theme.breakpoints.down('md')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   }),
   field: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   dialogHeader: theme.mixins.gutters({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   actions: theme.mixins.gutters({
     paddingTop: 16,
@@ -53,14 +53,14 @@ const styles = (theme: Theme) => ({
     marginTop: theme.spacing(3),
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   link: {
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
   button: {
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 });
 
 interface IStateProps {
@@ -133,17 +133,17 @@ export function Access(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'access' })
+  t: localStrings(state, { layout: 'access' }),
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchLocalization: action.fetchLocalization,
-      setLanguage: action.setLanguage
+      setLanguage: action.setLanguage,
     },
     dispatch
-  )
+  ),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(

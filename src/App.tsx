@@ -38,7 +38,7 @@ setGlobal({
   lang: 'en',
   dataStore: dataStore,
   schema: schema,
-  keyMap: keyMap
+  keyMap: keyMap,
 });
 
 function App() {

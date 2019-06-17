@@ -27,8 +27,8 @@ const styles = (theme: Theme) => ({
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.palette.background.paper,
-    flexDirection: 'column'
-  })
+    flexDirection: 'column',
+  }),
 });
 
 interface IStateProps {
@@ -84,7 +84,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 };
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planTabs' })
+  t: localStrings(state, { layout: 'planTabs' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
