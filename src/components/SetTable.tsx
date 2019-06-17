@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IState, Section, Passage, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -14,6 +14,7 @@ import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import 'react-datasheet/lib/react-datasheet.css';
 import './SetTable.css';
+import remoteId from '../utils/remoteId';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -50,7 +51,7 @@ interface IStateProps {
 
 interface IRecordProps {
   Sections: Array<Section>;
-  tasks: Array<Passage>;
+  passages: Array<Passage>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
@@ -60,9 +61,8 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
 export function SetTable(props: IProps) {
   const { classes, updateStore, t } = props;
   const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
-  const [project] = useGlobal('project');
-  const [book] = useGlobal('plan');
+  const [project] = useGlobal<string>('project');
+  const [plan] = useGlobal<string>('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState([
     [
@@ -108,23 +108,13 @@ export function SetTable(props: IProps) {
   const handleAdd = () => alert('add');
   const handleSave = () => {
     if (project === null) {
-      setMessage(<span>Project not section.</span>);
+      setMessage(<span>Project not set.</span>);
       return;
     }
-    const projectId = (keyMap as KeyMap).idToKey(
-      'project',
-      'remoteId',
-      project as string
-    );
-    if (book === null) {
-      setMessage(<span>Book not section.</span>);
+    if (plan === null) {
+      setMessage(<span>Plan not set.</span>);
       return;
     }
-    const bookId = (keyMap as KeyMap).idToKey(
-      'book',
-      'remoteId',
-      book as string
-    );
 
     if (data[0].length !== 4) {
       setMessage(
@@ -136,28 +126,20 @@ export function SetTable(props: IProps) {
       return;
     }
     let section: Section;
-    let setId: number | null = null;
+    let sectionId: number | null = null;
     for (let i = 1; i < data.length; i += 1) {
       if (data[i][0].value !== '') {
         section = {
           type: 'section',
           attributes: {
             name: data[i][3].value as string,
-            projectId: parseInt(projectId),
-            bookId: parseInt(bookId),
+            projectId: remoteId('project', project),
+            planId: remoteId('plan', plan),
           },
         } as any;
         (schema as Schema).initializeRecord(section);
         updateStore((t: TransformBuilder) => t.addRecord(section)).then(
-          (e: any) => {
-            // alert('section added: ' + JSON.stringify(e));
-            const setRec = (q: QueryBuilder) =>
-              q.findRecord({ type: 'section', id: section.id });
-            setId = parseInt(
-              (keyMap as KeyMap).idToKey('section', 'remoteId', section.id)
-            );
-            // alert(setId)
-          }
+          (sectionId = remoteId('section', section.id))
         );
       }
       if (data[i][1].value !== '') {
@@ -167,7 +149,7 @@ export function SetTable(props: IProps) {
             reference: data[i][2].value as string,
             passage: data[i][1].value as string,
             position: 0,
-            taskState: 'Incomplete',
+            state: 'Not assigned',
             hold: false,
             title: data[i][3].value as string,
             dateCreated: new Date().toISOString(),
@@ -175,30 +157,27 @@ export function SetTable(props: IProps) {
           },
         } as any;
         (schema as Schema).initializeRecord(passage);
-        let taskId: number | null = null;
+        let passageId: number | null = null;
         updateStore((t: TransformBuilder) => t.addRecord(passage)).then(
           (e: any) => {
             // alert('passage added: ' + JSON.stringify(e))
-            const taskRec = (q: QueryBuilder) =>
-              q.findRecord({ type: 'passage', id: passage.id });
-            taskId = parseInt(
-              (keyMap as KeyMap).idToKey('passage', 'remoteId', passage.id)
-            );
+            //const taskRec = (q: QueryBuilder) => q.findRecord({type: 'passage', id: passage.id});
+            passageId = remoteId('passage', passage.id);
             // alert(taskId)
           }
         );
-        if (taskId && setId) {
-          let taskSet = {
-            type: 'taskset',
+        if (passageId && sectionId) {
+          let passageSection = {
+            type: 'passagesection',
             attributes: {
-              taskId: taskId,
-              setId: setId,
+              passageId: passageId,
+              sectionId: sectionId,
             },
           } as any;
-          (schema as Schema).initializeRecord(taskSet);
-          updateStore((t: TransformBuilder) => t.addRecord(taskSet)).then(
-            (e: any) => alert('taskset added' + JSON.stringify(e))
-          );
+          (schema as Schema).initializeRecord(passageSection);
+          updateStore((t: TransformBuilder) =>
+            t.addRecord(passageSection)
+          ).then((e: any) => alert('passagesection added' + JSON.stringify(e)));
         }
       }
     }
@@ -297,9 +276,9 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 const mapRecordsToProps = {
-  sets: (q: QueryBuilder) => q.findRecords('section'),
-  tasks: (q: QueryBuilder) => q.findRecords('passage'),
-  tasksets: (q: QueryBuilder) => q.findRecords('taskset'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
+  passages: (q: QueryBuilder) => q.findRecords('passage'),
+  userpassages: (q: QueryBuilder) => q.findRecords('userpassage'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

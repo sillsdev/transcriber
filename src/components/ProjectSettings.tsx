@@ -6,7 +6,7 @@ import { IState, Project, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
-import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -19,6 +19,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SnackBar from './SnackBar';
+import remoteId from '../utils/remoteId';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -87,11 +88,10 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
 export function ProjectSettings(props: IProps) {
   const { classes, projects, projectTypes, updateStore, t } = props;
   const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
   const [dataStore] = useGlobal('dataStore');
   const [project, setProject] = useGlobal('project');
-  const [user] = useGlobal('user');
-  const [organization] = useGlobal('organization');
+  const [user] = useGlobal<string>('user');
+  const [organization] = useGlobal<string>('organization');
   const currentProject = projects.filter((p: Project) => p.id === project)[0];
   const [name, setName] = useState(
     (currentProject && currentProject.attributes.name) || ''
@@ -185,24 +185,17 @@ export function ProjectSettings(props: IProps) {
     );
   };
   const handleAdd = () => {
-    const userId = (keyMap as KeyMap).idToKey(
-      'user',
-      'remoteId',
-      user as string
-    );
-    const organizationId = (keyMap as KeyMap).idToKey(
-      'organization',
-      'remoteId',
-      organization as string
-    );
+    const userId = remoteId('user', user);
+    const organizationId = remoteId('organization', organization);
     let project: Project = {
       type: 'project',
       attributes: {
         name: name,
         projectTypeId: parseInt(projectType),
         description: description,
-        ownerId: parseInt(userId) || 1,
-        organizationId: parseInt(organizationId) || 1,
+        ownerId: userId || 1,
+        organizationId: organizationId || 1,
+        groupId: organizationId || 1, //TEMP UNTIL GROUP ADDED TO FORM
         uilanguagebcp47: null,
         language: bcp47,
         languageName: languageName,
@@ -230,7 +223,9 @@ export function ProjectSettings(props: IProps) {
         (projectType.keys && projectType.keys.remoteId) || projectType.id
       );
     };
-    setDisplayType(currentProject);
+    if (currentProject) {
+      setDisplayType(currentProject);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

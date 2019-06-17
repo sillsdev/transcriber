@@ -4,6 +4,8 @@ export interface Plan extends Record {
   attributes: {
     name: string;
     slug: string;
+    plantypeId: number;
+    projectId: number;
   };
   relationships?: {
     project: RecordRelationship;

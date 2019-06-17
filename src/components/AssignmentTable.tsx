@@ -2,16 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  IState,
-  PassageSection,
-  Section,
-  Passage,
-  IPlanSheetStrings,
-  IScriptureTableStrings,
-  BookNameMap,
-  BookName,
-} from '../model';
+import { IState, PassageSection, Section, Passage, IPlanSheetStrings, IAssignmentTableStrings, BookNameMap } from '../model';
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
 import * as actions from '../actions';
@@ -47,34 +38,21 @@ interface ISequencedRecordIdentity extends RecordIdentity {
 }
 
 interface IStateProps {
-  t: IScriptureTableStrings;
+  t: IAssignmentTableStrings;
   s: IPlanSheetStrings;
   lang: string;
   bookSuggestions: OptionType[];
   bookMap: BookNameMap;
-  allBookData: BookName[];
 }
 
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    WithStyles<typeof styles> {}
+interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles> {}
 
-export function ScriptureTable(props: IProps) {
-  const {
-    classes,
-    t,
-    s,
-    lang,
-    bookSuggestions,
-    bookMap,
-    allBookData,
-    fetchBooks,
-  } = props;
+export function AssignmentTable(props: IProps) {
+  const { classes, t, s, lang, bookSuggestions, bookMap, fetchBooks } = props;
   const [plan] = useGlobal<string>('plan');
   const [project] = useGlobal<string>('project');
   const [dataStore] = useGlobal('dataStore');
@@ -83,40 +61,9 @@ export function ScriptureTable(props: IProps) {
   const [sectionId, setSectionId] = useState(Array<RecordIdentity>());
   const [passageId, setPassageId] = useState(Array<ISequencedRecordIdentity>());
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [columns, setColumns] = useState([
-    { value: t.section, readOnly: true, width: 80 },
-    { value: t.title, readOnly: true, width: 280 },
-    { value: t.passage, readOnly: true, width: 80 },
-    { value: t.book, readOnly: true, width: 170 },
-    { value: t.reference, readOnly: true, width: 180 },
-    { value: t.description, readOnly: true, width: 280 },
-  ]);
+  const [columns, setColumns] = useState([{ value: t.section, readOnly: true, width: 80 }, { value: t.title, readOnly: true, width: 280 }, { value: t.passage, readOnly: true, width: 80 }, { value: t.book, readOnly: true, width: 170 }, { value: t.reference, readOnly: true, width: 180 }, { value: t.description, readOnly: true, width: 280 }]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(
-    Array<Array<any>>()
-    // [[1,"Luke wrote this book about Jesus for Theophilus",'','LUK',"Section 1:1–4",''],
-    // ['','',1,'LUK',"1:1-4",''],
-    // [2,"An angel said that John the Baptizer would be born",'','LUK',"Section 1:5–25",''],
-    // ['','',1,'LUK',"1:5-7",''],
-    // ['','',2,'LUK',"1:8-10",''],
-    // ['','',3,'LUK',"1:11-17",''],
-    // ['','',4,'LUK',"1:18-20",''],
-    // ['','',5,'LUK',"1:21-25",''],
-    // [3,"An angel told Mary that Jesus would be born",'','LUK',"Section 1:26–38",''],
-    // ['','',1,'LUK',"1:26-28",''],
-    // ['','',2,'LUK',"1:29-34",''],
-    // ['','',3,'LUK',"1:35-38",''],
-    // [4,"Mary visited Elizabeth",'','LUK',"Section 1:39–45",''],
-    // ['','',1,'LUK',"1:39-45",''],
-    // [5,"Mary praised God",'','LUK',"Section 1:46–56",''],
-    // ['','',1,'LUK',"1:46-56",''],
-    // [6,"John the Baptizer was born and received his name",'','LUK',"Section 1:57–66",''],
-    // ['','',1,'LUK',"1:57-58",''],
-    // ['','',2,'LUK',"1:59-64",''],
-    // ['','',3,'LUK',"1:65-66",''],
-    // [7,"Zechariah prophesied and praised God",'','LUK',"Section 1:67–80",''],
-    // ['','',1,'LUK',"1:67-80",''],]
-  );
+  const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
 
   const handleMessageReset = () => {
@@ -156,35 +103,14 @@ export function ScriptureTable(props: IProps) {
   const validTable = (rows: string[][]) => {
     if (rows.length === 0) return false;
     if (rows[0].length !== 6) return false;
-    if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[0])).length > 0)
-      return false;
-    if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[2])).length > 0)
-      return false;
+    if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[0])).length > 0) return false;
+    if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[2])).length > 0) return false;
     return true;
-  };
-  const lookupBook = (c: string): string => {
-    const s = c.toLocaleUpperCase();
-    if (!bookMap[s]) {
-      const proposed = allBookData.filter(
-        d =>
-          d.short.toLocaleUpperCase() === s ||
-          d.long.toLocaleUpperCase() === s ||
-          d.abbr.toLocaleUpperCase() === s
-      );
-      if (proposed.length >= 1) return proposed[0].code;
-    }
-    return s;
   };
   const handlePaste = (rows: string[][]) => {
     if (validTable(rows)) {
       const startRow = /^[0-9]*$/.test(rows[0][0]) ? 0 : 1;
-      setData([
-        ...data.concat(
-          rows
-            .filter((r, i) => i >= startRow)
-            .map(r => r.map((c, j) => (j !== 3 ? c : lookupBook(c))))
-        ),
-      ]);
+      setData(data.concat(rows.filter((r, i) => i >= startRow)));
       return Array<Array<string>>();
     }
     return rows;
@@ -215,33 +141,13 @@ export function ScriptureTable(props: IProps) {
           passageId: 0,
         },
       } as any;
-      await (dataStore as Store).update(t => [
-        t.addRecord(p),
-        t.addRecord(passageSection),
-        t.replaceRelatedRecord(
-          { type: 'passagesection', id: passageSection.id },
-          'section',
-          { type: 'section', id: sId }
-        ),
-        t.replaceRelatedRecord(
-          { type: 'passagesection', id: passageSection.id },
-          'passage',
-          { type: 'passage', id: p.id }
-        ),
-      ]);
+      await (dataStore as Store).update(t => [t.addRecord(p), t.addRecord(passageSection), t.replaceRelatedRecord({ type: 'passagesection', id: passageSection.id }, 'section', { type: 'section', id: sId }), t.replaceRelatedRecord({ type: 'passagesection', id: passageSection.id }, 'passage', { type: 'passage', id: p.id })]);
     };
     const changePassage = async (i: number) => {
       const passageRow = rows[i];
       const inpRow = inData[i];
-      if (
-        passageRow[2] !== inpRow[2] ||
-        passageRow[3] !== inpRow[3] ||
-        passageRow[4] !== inpRow[4] ||
-        passageRow[5] !== inpRow[5]
-      ) {
-        let passage = (await (dataStore as Store).query(q =>
-          q.findRecord(passageId[i])
-        )) as Passage;
+      if (passageRow[2] !== inpRow[2] || passageRow[3] !== inpRow[3] || passageRow[4] !== inpRow[4] || passageRow[5] !== inpRow[5]) {
+        let passage = (await (dataStore as Store).query(q => q.findRecord(passageId[i]))) as Passage;
         passage.attributes.sequencenum = parseInt(passageRow[2]);
         passage.attributes.book = passageRow[3];
         passage.attributes.reference = passageRow[4];
@@ -273,22 +179,14 @@ export function ScriptureTable(props: IProps) {
         },
       } as any;
       (schema as Schema).initializeRecord(s);
-      await (dataStore as Store).update(t => [
-        t.addRecord(s),
-        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'plan', {
-          type: 'plan',
-          id: planId,
-        }),
-      ]);
+      await (dataStore as Store).update(t => [t.addRecord(s), t.replaceRelatedRecord({ type: 'section', id: s.id }, 'plan', { type: 'plan', id: planId })]);
       return s;
     };
     const changeSection = async (i: number) => {
       const sectionRow = rows[i];
       const inpRow = inData[i];
       if (sectionRow[0] !== inpRow[0] || sectionRow[1] !== inpRow[1]) {
-        let section = (await (dataStore as Store).query(q =>
-          q.findRecord(sectionId[i])
-        )) as Section;
+        let section = (await (dataStore as Store).query(q => q.findRecord(sectionId[i]))) as Section;
         section.attributes.sequencenum = parseInt(sectionRow[0]);
         section.attributes.name = sectionRow[1];
         delete section.relationships;
@@ -299,9 +197,7 @@ export function ScriptureTable(props: IProps) {
     for (let i = 0; i < rows.length; i += 1) {
       if (/^[0-9]+$/.test(rows[i][0])) {
         if (!sectionId[i] || !sectionId[i].id) {
-          addSection(i, plan as string, project as string).then(s =>
-            doPassages(i, s.id)
-          );
+          addSection(i, plan as string, project as string).then(s => doPassages(i, s.id));
         } else {
           changeSection(i).then(s => doPassages(i, s.id));
         }
@@ -314,39 +210,18 @@ export function ScriptureTable(props: IProps) {
     let initData = Array<Array<any>>();
     let sectionIds = Array<RecordIdentity>();
     let passageIds = Array<ISequencedRecordIdentity>();
-    const getPassage = async (
-      pId: string,
-      list: (string | number)[][],
-      ids: Array<ISequencedRecordIdentity>
-    ) => {
-      let passage = (await (dataStore as Store).query(q =>
-        q.findRecord({ type: 'passage', id: pId })
-      )) as Passage;
+    const getPassage = async (pId: string, list: (string | number)[][], ids: Array<ISequencedRecordIdentity>) => {
+      let passage = (await (dataStore as Store).query(q => q.findRecord({ type: 'passage', id: pId }))) as Passage;
       if (passage != null) {
         if (!passage.attributes) return;
-        list.push([
-          '',
-          '',
-          passage.attributes.sequencenum,
-          passage.attributes.book,
-          passage.attributes.reference,
-          passage.attributes.title,
-        ]);
-        ids.push({
-          type: 'passage',
-          id: passage.id,
-          sequencenum: passage.attributes.sequencenum,
-        });
+        list.push(['', '', passage.attributes.sequencenum, passage.attributes.book, passage.attributes.reference, passage.attributes.title]);
+        ids.push({ type: 'passage', id: passage.id, sequencenum: passage.attributes.sequencenum });
       }
     };
     const getPassageSection = async (s: Section) => {
-      let passageSections = (await (dataStore as Store).query(q =>
-        q.findRecords('passagesection')
-      )) as Array<PassageSection>;
+      let passageSections = (await (dataStore as Store).query(q => q.findRecords('passagesection'))) as Array<PassageSection>;
       // query filter doesn't work with JsonApi since id not translated
-      passageSections = passageSections.filter(
-        ps => Related(ps, 'section') === s.id
-      );
+      passageSections = passageSections.filter(ps => Related(ps, 'section') === s.id);
       if (passageSections != null) {
         let passages = Array<Array<string | number>>();
         let ids = Array<ISequencedRecordIdentity>();
@@ -370,16 +245,12 @@ export function ScriptureTable(props: IProps) {
       }
     };
     const getSections = async (p: string) => {
-      let sections = (await (dataStore as Store).query(q =>
-        q.findRelatedRecords({ type: 'plan', id: p }, 'sections')
-      )) as Array<Section>;
+      let sections = (await (dataStore as Store).query(q => q.findRelatedRecords({ type: 'plan', id: p }, 'sections'))) as Array<Section>;
       // query filter doesn't work with JsonApi since id not translated
       // q.findRecords('section')
       //   .filter({relation: 'plan', record: {type: 'plan', id: p}})
       //   .sort('sequencenum'));
-      sections = sections.sort(
-        (i, j) => i.attributes.sequencenum - j.attributes.sequencenum
-      );
+      sections = sections.sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
       if (sections != null) {
         for (let i = 0; i < sections.length; i += 1) {
           let s = sections[i] as Section;
@@ -388,14 +259,7 @@ export function ScriptureTable(props: IProps) {
             sectionIds.push({ type: '', id: '' });
           }
           sectionIds[initData.length] = { type: 'section', id: s.id };
-          initData.push([
-            s.attributes.sequencenum,
-            s.attributes.name,
-            '',
-            '',
-            '',
-            '',
-          ]);
+          initData.push([s.attributes.sequencenum, s.attributes.name, '', '', '', '']);
           await getPassageSection(s);
         }
       }
@@ -411,31 +275,18 @@ export function ScriptureTable(props: IProps) {
 
   return (
     <div className={classes.container}>
-      <PlanSheet
-        columns={columns}
-        rowData={data as any[][]}
-        bookMap={bookMap}
-        bookSuggestions={bookSuggestions}
-        save={handleSave}
-        action={handleAction}
-        addSection={addSection}
-        addPassage={addPassage}
-        updateData={updateData}
-        paste={handlePaste}
-        t={s}
-      />
+      <PlanSheet columns={columns} rowData={data as any[][]} bookMap={bookMap} bookSuggestions={bookSuggestions} save={handleSave} action={handleAction} addSection={addSection} addPassage={addPassage} updateData={updateData} paste={handlePaste} t={s} />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'scriptureTable' }),
+  t: localStrings(state, { layout: 'assignmentTable' }),
   s: localStrings(state, { layout: 'planSheet' }),
   lang: state.strings.lang,
   bookSuggestions: state.books.suggestions,
   bookMap: state.books.map,
-  allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -449,9 +300,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {};
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(
+export default withStyles(styles, { withTheme: true })(withData(mapRecordsToProps)(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ScriptureTable) as any) as any) as any;
+)(AssignmentTable) as any) as any) as any;

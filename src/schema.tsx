@@ -364,14 +364,14 @@ const schemaDefinition: SchemaSettings = {
     userpassage: {
       keys: { remoteId: {} },
       attributes: {
-        activityName: { type: 'string' },
         comment: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },
       },
       relationships: {
-        project: { type: 'hasOne', model: 'project', inverse: 'users' },
-        assigned: { type: 'hasOne', model: 'user' },
+        role: { type: 'hasOne', model: 'role' },
+        user: { type: 'hasOne', model: 'user' },
+        passage: { type: 'hasOne', model: 'passage' },
       },
     },
   },

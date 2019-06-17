@@ -30,6 +30,7 @@ import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import Related from '../utils/related';
+import remoteId from '../utils/remoteId';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -96,7 +97,7 @@ export function PlanTable(props: IProps) {
   } = props;
   const [dataStore] = useGlobal('dataStore');
   const [schema] = useGlobal('schema');
-  const [project] = useGlobal('project');
+  const [project] = useGlobal<string>('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
     { name: 'planType', title: t.type },
@@ -140,14 +141,22 @@ export function PlanTable(props: IProps) {
     setDialogData(null);
     setDialogVisible(true);
   };
-  const handleAddMethod = async (plan: any) => {
+  const handleAddMethod = async (name: string, planType: string) => {
     setDialogVisible(false);
+    let plan: Plan = {
+      type: 'plan',
+      attributes: {
+        name: name,
+        plantypeId: remoteId('plantype', planType),
+        projectId: remoteId('project', project),
+      },
+    } as any;
     (schema as Schema).initializeRecord(plan);
     await (dataStore as Store).update(t => t.addRecord(plan));
     await (dataStore as Store).update(t =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
-        id: plan.attributes.planType,
+        id: planType,
       })
     );
     await (dataStore as Store).update(t =>

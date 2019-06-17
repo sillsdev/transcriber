@@ -75,9 +75,6 @@
     "jest-dom": "^3.2.2"
   },
   "prettier": {
-    "trailingComma": "es5",
-    "semi": true,
-    "tabWidth": 2,
-    "singleQuote": true
+    "trailingComma": "es5"
   }
 }

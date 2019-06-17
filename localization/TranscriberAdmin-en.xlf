@@ -646,6 +646,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignmentTable.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.title">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.passage">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.book">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.reference">
+         <segment>
+            <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTabs.sectionsPassages">
          <segment>
             <source>Sections &amp; Passages</source>

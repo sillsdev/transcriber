@@ -35,7 +35,7 @@ interface IRecordProps {
 interface IProps extends IRecordProps, IStateProps, WithStyles<typeof styles> {
   planIn: Plan | null;
   visible: boolean;
-  addMethod?: (planRec: any) => void;
+  addMethod?: (planName: string, planType: string) => void;
   editMethod?: (planRec: any) => void;
   cancelMethod?: () => void;
 }
@@ -69,15 +69,8 @@ function PlanAdd(props: IProps) {
       planType !== Related(planIn, 'plantype')
     ) {
       if (!planIn) {
-        const plan = {
-          type: 'plan',
-          attributes: {
-            name,
-            planType,
-          },
-        };
         if (addMethod) {
-          addMethod(plan);
+          addMethod(name, planType);
         }
       } else {
         let plan = {
@@ -87,6 +80,9 @@ function PlanAdd(props: IProps) {
             planType,
           },
         };
+        if (editMethod) {
+          editMethod(plan);
+        }
         if (editMethod) {
           editMethod(plan);
         }

@@ -81,7 +81,7 @@ const addPassageToSection = async (sectionId: string) => {
       book: 'GEN',
       reference: '1:1-20',
       position: 0,
-      state: '1',
+      state: 'Not assigned',
       hold: false,
       title: 'Seven Days',
     },
