@@ -15,6 +15,6 @@ export interface UserTasks extends Record {
     project: RecordRelationship;
     tasks: RecordRelationship;
   };
-};
+}
 
-export default UserTasks;  
+export default UserTasks;

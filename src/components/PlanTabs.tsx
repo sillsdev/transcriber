@@ -7,11 +7,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import ScriptureTable from '../components/ScriptureTable'
+import ScriptureTable from '../components/ScriptureTable';
 import MediaTab from '../components/MediaTab';
 
 interface IContainerProps {
-    children: any;
+  children: any;
 }
 
 function TabContainer(props: IContainerProps) {
@@ -27,59 +27,66 @@ const styles = (theme: Theme) => ({
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.palette.background.paper,
-    flexDirection: "column",
-  }),
+    flexDirection: 'column'
+  })
 });
 
 interface IStateProps {
-    t: IPlanTabsStrings;
+  t: IPlanTabsStrings;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{
-    changeTab?: (v: number) => void;
-};
+interface IProps extends IStateProps, WithStyles<typeof styles> {
+  changeTab?: (v: number) => void;
+}
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
-    const { classes, t, changeTab } = props;
-    const [tab, setTab] = useState(0);
+  const { classes, t, changeTab } = props;
+  const [tab, setTab] = useState(0);
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
     if (changeTab) {
-        changeTab(value);
+      changeTab(value);
     }
   };
 
-    return (
-        <div className={classes.root}>
-        <AppBar position="static" color="default">
-            <Tabs
-            value={tab}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="auto"
-            >
-            <Tab label={t.sectionsPassages} />
-            <Tab label={t.media} />
-            <Tab label={t.assignments} />
-            <Tab label={t.transcriptions} />
-            </Tabs>
-        </AppBar>
-        {tab === 0 && <TabContainer><ScriptureTable {...props} /></TabContainer>}
-        {tab === 1 && <TabContainer><MediaTab {...props} /></TabContainer>}
-        {tab === 2 && <TabContainer>{t.assignments}</TabContainer>}
-        {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
-        </div>
-    );
-}
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={tab}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          <Tab label={t.sectionsPassages} />
+          <Tab label={t.media} />
+          <Tab label={t.assignments} />
+          <Tab label={t.transcriptions} />
+        </Tabs>
+      </AppBar>
+      {tab === 0 && (
+        <TabContainer>
+          <ScriptureTable {...props} />
+        </TabContainer>
+      )}
+      {tab === 1 && (
+        <TabContainer>
+          <MediaTab {...props} />
+        </TabContainer>
+      )}
+      {tab === 2 && <TabContainer>{t.assignments}</TabContainer>}
+      {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
+    </div>
+  );
+};
 
 const mapStateToProps = (state: IState): IStateProps => ({
-    t: localStrings(state, {layout: "planTabs"}),
-  });
-      
-export default withStyles(styles, { withTheme: true })(
-    connect(mapStateToProps)(ScrollableTabsButtonAuto) as any
-) as any;
-  
+  t: localStrings(state, { layout: 'planTabs' })
+});
+
+export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
+  ScrollableTabsButtonAuto
+) as any) as any;

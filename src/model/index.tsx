@@ -2,7 +2,7 @@ export * from './localizeModel';
 export * from './organization';
 export * from './organizationMembership';
 export * from './group';
-export * from './groupMembership'
+export * from './groupMembership';
 export * from './integration';
 export * from './mediaFile';
 export * from './project';

@@ -6,21 +6,27 @@ import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { withStyles, WithStyles } from '@material-ui/core/styles';
 import {
-  Button, TextField, Dialog, DialogActions, DialogContent,
-  DialogContentText, DialogTitle, MenuItem
-} from '@material-ui/core'
+  Button,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  MenuItem
+} from '@material-ui/core';
 import SnackBar from '../components/SnackBar';
 import Related from '../utils/related';
 
 const styles = {
   menu: {
-    width: 200,
+    width: 200
   }
 };
 
 interface IStateProps {
   t: IPlanAddStrings;
-};
+}
 
 interface IRecordProps {
   planTypes: Array<PlanType>;
@@ -29,16 +35,26 @@ interface IRecordProps {
 interface IProps extends IRecordProps, IStateProps, WithStyles<typeof styles> {
   planIn: Plan | null;
   visible: boolean;
-  addMethod?: (name: string, plantype: string) => void;
+  addMethod?: (planName: string, planType: string) => void;
   editMethod?: (planRec: any) => void;
   cancelMethod?: () => void;
-};
+}
 
 function PlanAdd(props: IProps) {
-  const { planTypes, classes, t, visible,
-    addMethod, editMethod, cancelMethod, planIn } = props;
+  const {
+    planTypes,
+    classes,
+    t,
+    visible,
+    addMethod,
+    editMethod,
+    cancelMethod,
+    planIn
+  } = props;
   const [open, setOpen] = useState(visible);
-  const [name, setName] = useState((planIn && planIn.attributes.name) || t.newPlan);
+  const [name, setName] = useState(
+    (planIn && planIn.attributes.name) || t.newPlan
+  );
   const [planType, setPlanType] = useState('');
   const [message, setMessage] = useState(<></>);
 
@@ -57,8 +73,11 @@ function PlanAdd(props: IProps) {
           ...planIn,
           attributes: {
             name,
-            planType,
+            planType
           }
+        };
+        if (editMethod) {
+          editMethod(plan);
         }
         if (editMethod) {
           editMethod(plan);
@@ -66,7 +85,7 @@ function PlanAdd(props: IProps) {
       }
     }
     setOpen(false);
-  }
+  };
   const handleCancel = () => {
     if (cancelMethod) {
       cancelMethod();

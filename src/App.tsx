@@ -25,7 +25,7 @@ const handleAuthentication = (props: any) => {
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
   }
-}
+};
 
 const dataStore = new Store({ schema, keyMap });
 
@@ -38,7 +38,7 @@ setGlobal({
   lang: 'en',
   dataStore: dataStore,
   schema: schema,
-  keyMap: keyMap,
+  keyMap: keyMap
 });
 
 function App() {
@@ -46,18 +46,46 @@ function App() {
     <DataProvider dataStore={dataStore}>
       <Provider store={store}>
         <Router history={history}>
-            <Route path='/' exact={true} render={(props) => <Access auth={auth} {...props} />} />
-            <Route path='/welcome' render={(props) => <Welcome auth={auth} {...props} />} />
-            <Route path='/admin' render={(props) => <AdminPanel auth={auth} {...props} />} />
-            <Route path='/neworg' render={(props) => <CreateOrg auth={auth} {...props} />} />
-            <Route path='/organization' render={(props) => <OrganizationTable auth={auth} {...props} />} />
-            <Route path='/project' render={(props) => <ProjectTable auth={auth} {...props} />} />
-            <Route path='/projectstatus' render={(props) => <ProjectStatus auth={auth} {...props} />} />
-            <Route path='/user' render={(props) => <UserTable auth={auth} {...props} />} />
-            <Route path="/callback" render={(props) => {
+          <Route
+            path="/"
+            exact={true}
+            render={props => <Access auth={auth} {...props} />}
+          />
+          <Route
+            path="/welcome"
+            render={props => <Welcome auth={auth} {...props} />}
+          />
+          <Route
+            path="/admin"
+            render={props => <AdminPanel auth={auth} {...props} />}
+          />
+          <Route
+            path="/neworg"
+            render={props => <CreateOrg auth={auth} {...props} />}
+          />
+          <Route
+            path="/organization"
+            render={props => <OrganizationTable auth={auth} {...props} />}
+          />
+          <Route
+            path="/project"
+            render={props => <ProjectTable auth={auth} {...props} />}
+          />
+          <Route
+            path="/projectstatus"
+            render={props => <ProjectStatus auth={auth} {...props} />}
+          />
+          <Route
+            path="/user"
+            render={props => <UserTable auth={auth} {...props} />}
+          />
+          <Route
+            path="/callback"
+            render={props => {
               handleAuthentication(props);
-              return <Callback {...props} /> 
-            }}/>
+              return <Callback {...props} />;
+            }}
+          />
         </Router>
       </Provider>
     </DataProvider>

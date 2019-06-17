@@ -1,12 +1,12 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
 interface ProjectType extends Record {
-    attributes: {
-      name: string;
-      description: string | null;
-    };
-    relationships?: {
-      projects: RecordRelationship;
-    };
+  attributes: {
+    name: string;
+    description: string | null;
   };
-export default ProjectType;  
+  relationships?: {
+    projects: RecordRelationship;
+  };
+}
+export default ProjectType;

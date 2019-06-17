@@ -14,7 +14,7 @@ export default class Auth {
     redirectUri: AUTH_CONFIG.callbackUrl,
     responseType: 'token id_token',
     scope: 'openid email',
-    audience: "https://transcriber_api"
+    audience: 'https://transcriber_api'
   });
 
   constructor() {
@@ -29,15 +29,15 @@ export default class Auth {
 
   login() {
     this.auth0.authorize({
-      language: navigator.language.split('-')[0],
+      language: navigator.language.split('-')[0]
     });
   }
 
   signup() {
     this.auth0.authorize({
       mode: 'signUp',
-      language: navigator.language.split('-')[0],
-    })
+      language: navigator.language.split('-')[0]
+    });
   }
 
   handleAuthentication() {
@@ -64,7 +64,7 @@ export default class Auth {
     localStorage.setItem('isLoggedIn', 'true');
 
     // Set the time that the access token will expire at
-    let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+    let expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
@@ -75,12 +75,14 @@ export default class Auth {
 
   renewSession() {
     this.auth0.checkSession({}, (err, authResult) => {
-       if (authResult && authResult.accessToken && authResult.idToken) {
-         this.setSession(authResult);
-       } else if (err) {
-         this.logout();
-         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-       }
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        this.setSession(authResult);
+      } else if (err) {
+        this.logout();
+        alert(
+          `Could not get a new token (${err.error}: ${err.error_description}).`
+        );
+      }
     });
   }
 
@@ -104,7 +106,9 @@ export default class Auth {
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    if (API_CONFIG.offline) { return true }
+    if (API_CONFIG.offline) {
+      return true;
+    }
     let expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;
   }

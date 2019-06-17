@@ -15,21 +15,21 @@ const styles = {
     maxWidth: 150,
     marginLeft: 8,
     marginRight: 8,
-    marginBottom: 16,
+    marginBottom: 16
   },
   media: {
-    height: 150,
-  },
+    height: 150
+  }
 };
 
 interface IStateProps {
   t: IMediacardStrings;
-};
+}
 
 export interface IProps extends IStateProps, WithStyles<typeof styles> {
-    type: string;
-    explain?: string;
-    graphic?: string;
+  type: string;
+  explain?: string;
+  graphic?: string;
 }
 
 export function MediaCard(props: IProps) {
@@ -39,14 +39,19 @@ export function MediaCard(props: IProps) {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image={graphic != null? graphic: logo}
+          image={graphic != null ? graphic : logo}
           title={t.section}
         />
         <CardContent>
-          <Typography gutterBottom variant={type.length > 8? "h6": "h5"} component="h2" style={{textDecoration: 'none'}}>
+          <Typography
+            gutterBottom
+            variant={type.length > 8 ? 'h6' : 'h5'}
+            component="h2"
+            style={{ textDecoration: 'none' }}
+          >
             {type}
           </Typography>
-          <Typography component="p" style={{textDecoration: 'none'}}>
+          <Typography component="p" style={{ textDecoration: 'none' }}>
             {explain}
           </Typography>
         </CardContent>
@@ -56,9 +61,9 @@ export function MediaCard(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: "mediacard"})
+  t: localStrings(state, { layout: 'mediacard' })
 });
 
-export default withStyles(styles, { withTheme: true })(
-      connect(mapStateToProps)(MediaCard) as any
-  ) as any;
+export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
+  MediaCard
+) as any) as any;
