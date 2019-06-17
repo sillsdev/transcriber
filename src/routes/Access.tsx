@@ -13,133 +13,140 @@ import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
 
 const styles = (theme: Theme) => ({
-    root: {
-        width: '100%',
-      },
-    grow: {
-        flexGrow: 1,
-    },
-    container: {
-        display: 'flex',
-        justifyContent: 'center'
-    },
-    appBar: theme.mixins.gutters({
-        // background: '#FFE599',
-        // color: 'black'
-    }),
-    paper: theme.mixins.gutters({
-        paddingTop: 16,
-        paddingBottom: 16,
-        marginTop: theme.spacing(3),
-        width: '30%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignContent: 'center',
-        [theme.breakpoints.down('md')]: {
-            width: '100%',
-        },
-    }),
-    field: {
-        marginTop: theme.spacing(3),
-    },
-    dialogHeader: theme.mixins.gutters({
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center'
-    }),
-    actions: theme.mixins.gutters({
-        paddingTop: 16,
-        paddingBottom: 16,
-        marginTop: theme.spacing(3),
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center'
-    }),
-    link: {
-        textDecoration: 'none',
-    },
-    button: {
-        marginRight: theme.spacing(1)
-    },
+  root: {
+    width: '100%'
+  },
+  grow: {
+    flexGrow: 1
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  appBar: theme.mixins.gutters({
+    // background: '#FFE599',
+    // color: 'black'
+  }),
+  paper: theme.mixins.gutters({
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: theme.spacing(3),
+    width: '30%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignContent: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '100%'
+    }
+  }),
+  field: {
+    marginTop: theme.spacing(3)
+  },
+  dialogHeader: theme.mixins.gutters({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  }),
+  actions: theme.mixins.gutters({
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
+  }),
+  link: {
+    textDecoration: 'none'
+  },
+  button: {
+    marginRight: theme.spacing(1)
+  }
 });
 
 interface IStateProps {
-    t: IAccessStrings;
-};
+  t: IAccessStrings;
+}
 
 interface IDispatchProps {
-    fetchLocalization: typeof action.fetchLocalization;
-    setLanguage: typeof action.setLanguage;
-};
+  fetchLocalization: typeof action.fetchLocalization;
+  setLanguage: typeof action.setLanguage;
+}
 
-interface IProps extends IStateProps, IDispatchProps, WithStyles<typeof styles>{
-    history: any;
-    auth: Auth;
-};
+interface IProps
+  extends IStateProps,
+    IDispatchProps,
+    WithStyles<typeof styles> {
+  history: any;
+  auth: Auth;
+}
 
 export function Access(props: IProps) {
-    const { classes, auth, t } = props;
-    const { fetchLocalization, setLanguage } = props;
+  const { classes, auth, t } = props;
+  const { fetchLocalization, setLanguage } = props;
 
-    useEffect(() => {
-        setLanguage(navigator.language.split('-')[0]);
-        fetchLocalization();
+  useEffect(() => {
+    setLanguage(navigator.language.split('-')[0]);
+    fetchLocalization();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [])
+  }, []);
 
-    if (auth.isAuthenticated()) return <Redirect to='/welcome' />;
+  if (auth.isAuthenticated()) return <Redirect to="/welcome" />;
 
-    return (
-        <div className={classes.root}>
-            <AppBar className={classes.appBar} position="static">
-                <Toolbar>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        {t.silTranscriberAccess}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <div className={classes.container}>
-                <Paper className={classes.paper}>
-                    <Typography variant='h5' className={classes.dialogHeader}>
-                        {t.accessSilTranscriber}
-                    </Typography>
+  return (
+    <div className={classes.root}>
+      <AppBar className={classes.appBar} position="static">
+        <Toolbar>
+          <Typography variant="h6" color="inherit" className={classes.grow}>
+            {t.silTranscriberAccess}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <div className={classes.container}>
+        <Paper className={classes.paper}>
+          <Typography variant="h5" className={classes.dialogHeader}>
+            {t.accessSilTranscriber}
+          </Typography>
 
-                    <div className={classes.actions}>
-                        <Button
-                            variant="contained"
-                            className={classes.button}
-                            onClick={() => auth.signup()}
-                        >
-                            {t.createAccount}
-                        </Button>
-                    </div>
-                    <div className={classes.actions}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.button}
-                                onClick= {() => auth.login()}
-                            >
-                                {t.accessExistingAccount}
-                            </Button>
-                    </div>
-                </Paper>
-            </div>
-        </div>
-    );
-};
+          <div className={classes.actions}>
+            <Button
+              variant="contained"
+              className={classes.button}
+              onClick={() => auth.signup()}
+            >
+              {t.createAccount}
+            </Button>
+          </div>
+          <div className={classes.actions}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => auth.login()}
+            >
+              {t.accessExistingAccount}
+            </Button>
+          </div>
+        </Paper>
+      </div>
+    </div>
+  );
+}
 
 const mapStateToProps = (state: IState): IStateProps => ({
-    t: localStrings(state, {layout: "access"}),
+  t: localStrings(state, { layout: 'access' })
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-    ...bindActionCreators({
-        fetchLocalization: action.fetchLocalization,
-        setLanguage: action.setLanguage,
-    }, dispatch),
+  ...bindActionCreators(
+    {
+      fetchLocalization: action.fetchLocalization,
+      setLanguage: action.setLanguage
+    },
+    dispatch
+  )
 });
 
-export default withStyles(styles, { withTheme: true })(
-        connect(mapStateToProps, mapDispatchToProps)(Access) as any
-    ) as any;
+export default withStyles(styles, { withTheme: true })(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Access) as any) as any;

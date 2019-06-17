@@ -10,7 +10,12 @@ import { OptionProps } from 'react-select/lib/components/Option';
 import { PlaceholderProps } from 'react-select/lib/components/Placeholder';
 import { SingleValueProps } from 'react-select/lib/components/SingleValue';
 import { ValueType } from 'react-select/lib/types';
-import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
+import {
+  createStyles,
+  makeStyles,
+  useTheme,
+  Theme
+} from '@material-ui/core/styles';
 import { Typography, NoSsr, Paper, Chip, MenuItem } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TextField, { BaseTextFieldProps } from '@material-ui/core/TextField';
@@ -65,52 +70,54 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      height: 250,
+      height: 250
     },
     input: {
       display: 'flex',
       padding: 0,
-      height: 'auto',
+      height: 'auto'
     },
     valueContainer: {
       display: 'flex',
       flexWrap: 'wrap',
       flex: 1,
       alignItems: 'center',
-      overflow: 'hidden',
+      overflow: 'hidden'
     },
     chip: {
-      margin: theme.spacing(0.5, 0.25),
+      margin: theme.spacing(0.5, 0.25)
     },
     chipFocused: {
       backgroundColor: emphasize(
-        theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
-        0.08,
-      ),
+        theme.palette.type === 'light'
+          ? theme.palette.grey[300]
+          : theme.palette.grey[700],
+        0.08
+      )
     },
     noOptionsMessage: {
-      padding: theme.spacing(1, 2),
+      padding: theme.spacing(1, 2)
     },
     singleValue: {
-      fontSize: 16,
+      fontSize: 16
     },
     placeholder: {
       position: 'absolute',
       left: 2,
       bottom: 6,
-      fontSize: 16,
+      fontSize: 16
     },
     paper: {
       position: 'absolute',
       zIndex: 1,
       marginTop: theme.spacing(1),
       left: 0,
-      right: 0,
+      right: 0
     },
     divider: {
-      height: theme.spacing(2),
-    },
-  }),
+      height: theme.spacing(2)
+    }
+  })
 );
 
 function NoOptionsMessage(props: NoticeProps<OptionType>) {
@@ -128,17 +135,18 @@ function NoOptionsMessage(props: NoticeProps<OptionType>) {
 NoOptionsMessage.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired,
+  selectProps: PropTypes.object.isRequired
 } as any;
 
-type InputComponentProps = Pick<BaseTextFieldProps, 'inputRef'> & HTMLAttributes<HTMLDivElement>;
+type InputComponentProps = Pick<BaseTextFieldProps, 'inputRef'> &
+  HTMLAttributes<HTMLDivElement>;
 
 function inputComponent({ inputRef, ...props }: InputComponentProps) {
   return <div ref={inputRef} {...props} />;
 }
 
 inputComponent.propTypes = {
-  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
+  inputRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object])
 } as any;
 
 function Control(props: ControlProps<OptionType>) {
@@ -146,7 +154,7 @@ function Control(props: ControlProps<OptionType>) {
     children,
     innerProps,
     innerRef,
-    selectProps: { classes, TextFieldProps },
+    selectProps: { classes, TextFieldProps }
   } = props;
 
   return (
@@ -158,8 +166,8 @@ function Control(props: ControlProps<OptionType>) {
           className: classes.input,
           ref: innerRef,
           children,
-          ...innerProps,
-        },
+          ...innerProps
+        }
       }}
       {...TextFieldProps}
     />
@@ -170,7 +178,7 @@ Control.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
   innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
-  selectProps: PropTypes.object.isRequired,
+  selectProps: PropTypes.object.isRequired
 } as any;
 
 function Option(props: OptionProps<OptionType>) {
@@ -180,7 +188,7 @@ function Option(props: OptionProps<OptionType>) {
       selected={props.isFocused}
       component="div"
       style={{
-        fontWeight: props.isSelected ? 500 : 400,
+        fontWeight: props.isSelected ? 500 : 400
       }}
       {...props.innerProps}
     >
@@ -194,7 +202,7 @@ Option.propTypes = {
   innerProps: PropTypes.object,
   innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   isFocused: PropTypes.bool,
-  isSelected: PropTypes.bool,
+  isSelected: PropTypes.bool
 } as any;
 
 function Placeholder(props: PlaceholderProps<OptionType>) {
@@ -212,12 +220,15 @@ function Placeholder(props: PlaceholderProps<OptionType>) {
 Placeholder.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired,
+  selectProps: PropTypes.object.isRequired
 } as any;
 
 function SingleValue(props: SingleValueProps<OptionType>) {
   return (
-    <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
+    <Typography
+      className={props.selectProps.classes.singleValue}
+      {...props.innerProps}
+    >
       {props.children}
     </Typography>
   );
@@ -226,16 +237,20 @@ function SingleValue(props: SingleValueProps<OptionType>) {
 SingleValue.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
-  selectProps: PropTypes.object.isRequired,
+  selectProps: PropTypes.object.isRequired
 } as any;
 
 function ValueContainer(props: ValueContainerProps<OptionType>) {
-  return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
+  return (
+    <div className={props.selectProps.classes.valueContainer}>
+      {props.children}
+    </div>
+  );
 }
 
 ValueContainer.propTypes = {
   children: PropTypes.node,
-  selectProps: PropTypes.object.isRequired,
+  selectProps: PropTypes.object.isRequired
 } as any;
 
 function MultiValue(props: MultiValueProps<OptionType>) {
@@ -244,7 +259,7 @@ function MultiValue(props: MultiValueProps<OptionType>) {
       tabIndex={-1}
       label={props.children}
       className={clsx(props.selectProps.classes.chip, {
-        [props.selectProps.classes.chipFocused]: props.isFocused,
+        [props.selectProps.classes.chipFocused]: props.isFocused
       })}
       onDelete={props.removeProps.onClick}
       deleteIcon={<CancelIcon {...props.removeProps} />}
@@ -256,12 +271,16 @@ MultiValue.propTypes = {
   children: PropTypes.node,
   isFocused: PropTypes.bool,
   removeProps: PropTypes.object.isRequired,
-  selectProps: PropTypes.object.isRequired,
+  selectProps: PropTypes.object.isRequired
 } as any;
 
 function Menu(props: MenuProps<OptionType>) {
   return (
-    <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
+    <Paper
+      square
+      className={props.selectProps.classes.paper}
+      {...props.innerProps}
+    >
       {props.children}
     </Paper>
   );
@@ -270,7 +289,7 @@ function Menu(props: MenuProps<OptionType>) {
 Menu.propTypes = {
   children: PropTypes.node,
   innerProps: PropTypes.object,
-  selectProps: PropTypes.object,
+  selectProps: PropTypes.object
 } as any;
 
 const components = {
@@ -281,14 +300,14 @@ const components = {
   Option,
   Placeholder,
   SingleValue,
-  ValueContainer,
+  ValueContainer
 };
 
 interface IProps {
-    suggestions: OptionType[];
-    label?: string;
-    placeholder?: string;
-    onCommit?: (newValue: string) => void
+  suggestions: OptionType[];
+  label?: string;
+  placeholder?: string;
+  onCommit?: (newValue: string) => void;
 }
 
 export function SingleReactSelect(props: IProps) {
@@ -309,9 +328,9 @@ export function SingleReactSelect(props: IProps) {
       ...base,
       color: theme.palette.text.primary,
       '& input': {
-        font: 'inherit',
-      },
-    }),
+        font: 'inherit'
+      }
+    })
   };
 
   return (
@@ -326,9 +345,9 @@ export function SingleReactSelect(props: IProps) {
             label,
             InputLabelProps: {
               htmlFor: 'react-select-single',
-              shrink: true,
+              shrink: true
             },
-            placeholder,
+            placeholder
           }}
           options={suggestions}
           components={components}
@@ -341,50 +360,50 @@ export function SingleReactSelect(props: IProps) {
 }
 
 export function MultiReactSelect(props: IProps) {
-    const { suggestions, label, placeholder } = props;
-    const classes = useStyles();
-    const theme = useTheme();
-    const [multi, setMulti] = React.useState<ValueType<OptionType>>(null);
-  
-    function handleChangeMulti(value: ValueType<OptionType>) {
-      setMulti(value);
-    }
-  
-    const selectStyles = {
-      input: (base: CSSProperties) => ({
-        ...base,
-        color: theme.palette.text.primary,
-        '& input': {
-          font: 'inherit',
-        },
-      }),
-    };
-  
-    return (
-      <div className={classes.root}>
-        <NoSsr>
-          <Select
-            classes={classes}
-            styles={selectStyles}
-            inputId="react-select-multiple"
-            autoFocus
-            TextFieldProps={{
-              label,
-              InputLabelProps: {
-                htmlFor: 'react-select-multiple',
-                shrink: true,
-              },
-              placeholder,
-            }}
-            options={suggestions}
-            components={components}
-            value={multi}
-            onChange={handleChangeMulti}
-            isMulti
-          />
-        </NoSsr>
-      </div>
-    );
+  const { suggestions, label, placeholder } = props;
+  const classes = useStyles();
+  const theme = useTheme();
+  const [multi, setMulti] = React.useState<ValueType<OptionType>>(null);
+
+  function handleChangeMulti(value: ValueType<OptionType>) {
+    setMulti(value);
   }
-  
-  export default SingleReactSelect;
+
+  const selectStyles = {
+    input: (base: CSSProperties) => ({
+      ...base,
+      color: theme.palette.text.primary,
+      '& input': {
+        font: 'inherit'
+      }
+    })
+  };
+
+  return (
+    <div className={classes.root}>
+      <NoSsr>
+        <Select
+          classes={classes}
+          styles={selectStyles}
+          inputId="react-select-multiple"
+          autoFocus
+          TextFieldProps={{
+            label,
+            InputLabelProps: {
+              htmlFor: 'react-select-multiple',
+              shrink: true
+            },
+            placeholder
+          }}
+          options={suggestions}
+          components={components}
+          value={multi}
+          onChange={handleChangeMulti}
+          isMulti
+        />
+      </NoSsr>
+    </div>
+  );
+}
+
+export default SingleReactSelect;

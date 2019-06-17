@@ -21,7 +21,7 @@ export interface User extends Record {
     roles: RecordRelationship;
     groups: RecordRelationship;
   };
-};
+}
 
 export interface CurrentUser extends Record {
   attributes: {
@@ -44,6 +44,6 @@ export interface CurrentUser extends Record {
     roles: RecordRelationship;
     groups: RecordRelationship;
   };
-};
+}
 
-export default User;  
+export default User;

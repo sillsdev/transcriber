@@ -1,0 +1,45 @@
+root = true
+
+; applies to all files
+[*]
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 80
+
+; applies only to specified files
+[*.{css,scss,less,js,ts,tsx,yml}]
+tab_width = 2
+indent_size = 2
+continuation_indent_size = 2
+
+[*.{css,scss,less,js,ts,tsx}]
+quote_type = single
+
+; applies only to JSON files
+[*.json]
+tab_width = 4
+indent_size = 2
+continuation_indent_size = 8
+
+; applies only to Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+; applies only to PHP files
+[*.php]
+tab_width = 4
+indent_size = 4
+continuation_indent_size = 4
+
+[*.{cshtml,html,xml}]
+tab_width = 4
+indent_size = 4
+continuation_indent_size = 8
+
+[*.cs]
+tab_width = 4
+indent_size = 4
+continuation_indent_size = 4

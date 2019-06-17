@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core'
+import { Button, Menu, MenuItem } from '@material-ui/core';
 import CheckBox from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -17,13 +17,12 @@ import { isNumber } from 'util';
 
 const styles = (theme: Theme) => ({
   container: {
-      display: 'flex',
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginBottom: theme.spacing(4),
+    display: 'flex',
+    marginLeft: theme.spacing(4),
+    marginRight: theme.spacing(4),
+    marginBottom: theme.spacing(4)
   },
-  paper: {
-  },
+  paper: {},
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
@@ -31,11 +30,11 @@ const styles = (theme: Theme) => ({
     justifyContent: 'flex-end'
   }),
   button: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(1)
   },
   icon: {
-    marginLeft: theme.spacing(1),
-  },
+    marginLeft: theme.spacing(1)
+  }
 });
 
 interface ICell {
@@ -43,7 +42,7 @@ interface ICell {
   readOnly?: boolean;
   width?: number;
   className?: string;
-};
+}
 
 interface IChange {
   cell: any;
@@ -54,11 +53,11 @@ interface IChange {
 
 interface IStateProps {
   t: IPlanSheetStrings;
-};
+}
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{
+interface IProps extends IStateProps, WithStyles<typeof styles> {
   columns: Array<ICell>;
-  rowData: Array<Array<string|number>>;
+  rowData: Array<Array<string | number>>;
   bookSuggestions: OptionType[];
   bookMap: BookNameMap;
   updateData: (r: string[][]) => void;
@@ -67,203 +66,254 @@ interface IProps extends IStateProps, WithStyles<typeof styles>{
   action: (what: string, where: number[]) => boolean;
   addPassage: () => void;
   addSection: () => void;
-};
-  
+}
+
 export function PlanSheet(props: IProps) {
-    const { classes, columns, rowData, t, bookSuggestions, bookMap,
-        updateData, save, action, addPassage, addSection, paste } = props;
-    const [message, setMessage] = useState(<></>);
-    const [data, setData] = useState(Array<Array<ICell>>());
-    const [actionMenuItem, setActionMenuItem] = useState(null);
-    const [check, setCheck] = useState(Array<number>());
-    const [confirmAction, setConfirmAction] = useState('');
+  const {
+    classes,
+    columns,
+    rowData,
+    t,
+    bookSuggestions,
+    bookMap,
+    updateData,
+    save,
+    action,
+    addPassage,
+    addSection,
+    paste
+  } = props;
+  const [message, setMessage] = useState(<></>);
+  const [data, setData] = useState(Array<Array<ICell>>());
+  const [actionMenuItem, setActionMenuItem] = useState(null);
+  const [check, setCheck] = useState(Array<number>());
+  const [confirmAction, setConfirmAction] = useState('');
 
-    const handleMessageReset = () => { setMessage(<></>) }
-    const handleCheck = (row: number) => (e: any) => {
-      if (e.target.checked) {
-        check.push(row);
-        if (/^[0-9]+$/.test(rowData[row][0].toString())) {
-          do {
-            row += 1;
-            if (row === rowData.length ||
-              /^[0-9]+$/.test(rowData[row][0].toString())) { break };
-            check.push(row);
-          } while (true);
-        }
-        setCheck([...check]);
-      } else {
-        setCheck(check.filter(i => i !== row));
+  const handleMessageReset = () => {
+    setMessage(<></>);
+  };
+  const handleCheck = (row: number) => (e: any) => {
+    if (e.target.checked) {
+      check.push(row);
+      if (/^[0-9]+$/.test(rowData[row][0].toString())) {
+        do {
+          row += 1;
+          if (
+            row === rowData.length ||
+            /^[0-9]+$/.test(rowData[row][0].toString())
+          ) {
+            break;
+          }
+          check.push(row);
+        } while (true);
       }
-    };
-    const handleAddSection = () => {
-      addSection();
+      setCheck([...check]);
+    } else {
+      setCheck(check.filter(i => i !== row));
     }
-    const handleAddPassage = () => {
-      addPassage();
+  };
+  const handleAddSection = () => {
+    addSection();
+  };
+  const handleAddPassage = () => {
+    addPassage();
+  };
+  const justData = (data: Array<Array<ICell>>) => {
+    return data
+      .filter((r, i) => i > 0)
+      .map(r => r.filter((r, i) => i > 0).map(c => c.value));
+  };
+  const handleSave = () => {
+    setMessage(<span>Saving</span>);
+    if (save != null) {
+      save(justData(data));
     }
-    const justData = (data: Array<Array<ICell>>) => {
-      return data.filter((r, i) => i > 0).map(r => r.filter((r,i) => i > 0).map(c => c.value));
+  };
+  const handleValueRender = (cell: ICell) =>
+    cell.className === 'book' ? bookMap[cell.value] : cell.value;
+  const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
+  const handleConfirmAction = (what: string) => (e: any) => {
+    setActionMenuItem(null);
+    if (check.length === 0) {
+      setMessage(<span>Please select row(s) to {what}.</span>);
+    } else if (!/Close/i.test(what)) {
+      setConfirmAction(what);
     }
-    const handleSave = () => {
-      setMessage(<span>Saving</span>);
-      if (save != null) {
-        save(justData(data));
+  };
+  const handleActionConfirmed = () => {
+    if (action != null) {
+      if (action(confirmAction, check)) {
+        setCheck(Array<number>());
       }
     }
-    const handleValueRender = (cell: ICell) => cell.className === 'book'? bookMap[cell.value]: cell.value
-    const handleMenu = (e:any) => setActionMenuItem(e.currentTarget);
-    const handleConfirmAction = (what: string) => (e:any) => {
-      setActionMenuItem(null)
-      if (check.length === 0) {
-        setMessage(<span>Please select row(s) to {what}.</span>)
-      } else if (!/Close/i.test(what)) {
-        setConfirmAction(what);
-      }
-    };
-    const handleActionConfirmed = () => {
-      if (action != null) {
-        if (action(confirmAction, check)) {
-          setCheck(Array<number>());
-        }
-      }
-      setConfirmAction('');
-    };
-    const handleActionRefused = () => {
-      setConfirmAction('');
-    };
+    setConfirmAction('');
+  };
+  const handleActionRefused = () => {
+    setConfirmAction('');
+  };
 
-    const handleCellsChanged = (changes: Array<IChange>) => {
-      const grid = data.map((row: Array<ICell>) => [...row]);
-      changes.forEach(({cell, row, col, value}: IChange) => {
-        grid[row][col] = {...grid[row][col], value}
-      });
-      if (changes.length > 0) {
-        // setData(grid);
-        updateData(justData(grid));
-      }
-    };
-
-    const handleContextMenu = (e: MouseEvent, cell: any) => cell.readOnly ? e.preventDefault() : null;
-
-    const handlePaste = (s: string) => {
-      const blankLines = /\r?\n\t*\r?\n/;
-      const chunks = s.split(blankLines)
-      const lines = chunks.join('\n').replace(/\r?\n$/,'').split('\n')
-      if (paste) return paste(lines.map(s => s.split('\t')));
-      return lines.map(s => s.split('\t'));
+  const handleCellsChanged = (changes: Array<IChange>) => {
+    const grid = data.map((row: Array<ICell>) => [...row]);
+    changes.forEach(({ cell, row, col, value }: IChange) => {
+      grid[row][col] = { ...grid[row][col], value };
+    });
+    if (changes.length > 0) {
+      // setData(grid);
+      updateData(justData(grid));
     }
+  };
 
-    const bookEditor = (props: any) => (<BookSelect suggestions={bookSuggestions} {...props} />);
+  const handleContextMenu = (e: MouseEvent, cell: any) =>
+    cell.readOnly ? e.preventDefault() : null;
 
-    useEffect(() => {
-      setData(
-        [[{value:'', readOnly: true} as ICell].concat(
-          columns.map(c => {return {...c, readOnly: true}}))].concat(
-            rowData.map((r,i) => {
-              const isSection = /^[0-9]+$/.test(r[0].toString());
-              return (
-                [{
-                  value: <CheckBox data-testid={check.includes(i)? 'checked': 'check'}
-                    checked={check.includes(i)} onChange={handleCheck(i)}/>,
-                  className: (isSection? 'set': 'pass'),
-                } as ICell].concat(
-                r.map((e, j) => {return (j !== 3 || isSection)?{
-                  value: e,
-                  className: (isNumber(e)?'num': 'pass') + (isSection? ' set': ''),
-                }:{
-                  value: e,
-                  className: 'book',
-                  dataEditor: bookEditor,
-                }})
-              )
-            )})
-          ));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [rowData, check, bookSuggestions])
+  const handlePaste = (s: string) => {
+    const blankLines = /\r?\n\t*\r?\n/;
+    const chunks = s.split(blankLines);
+    const lines = chunks
+      .join('\n')
+      .replace(/\r?\n$/, '')
+      .split('\n');
+    if (paste) return paste(lines.map(s => s.split('\t')));
+    return lines.map(s => s.split('\t'));
+  };
 
-    return (
-      <div className={classes.container}>
-        <div className={classes.paper}>
-          <div className={classes.actions}>
-          <Button
-              key="action"
-              aria-owns={actionMenuItem !== ''? 'action-menu': undefined}
-              aria-label={t.action}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleMenu}
-            >
-              {t.action}
-              <DropDownIcon className={classes.icon} />
-            </Button>
-            <Menu
-              id='action-menu'
-              anchorEl={actionMenuItem}
-              open={Boolean(actionMenuItem)}
-              onClose={handleConfirmAction('Close')}
-            >
-              <MenuItem onClick={handleConfirmAction('Delete')}>{t.delete}</MenuItem>
-              <MenuItem onClick={handleConfirmAction('Move')}>{t.move}</MenuItem>
-              <MenuItem onClick={handleConfirmAction('Copy')}>{t.copy}</MenuItem>
-              <MenuItem onClick={handleConfirmAction('Assign Media')}>{t.assignMedia}</MenuItem>
-              <MenuItem onClick={handleConfirmAction('Assign Passage')}>{t.assignPassage}</MenuItem>
-            </Menu>
-            <Button
-              key="addSection"
-              aria-label={t.addSection}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleAddSection}
-            >
-              {t.addSection}
-              <AddIcon className={classes.icon} />
-            </Button>
-            <Button
-              key="addPassage"
-              aria-label={t.addPassage}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleAddPassage}
-            >
-              {t.addPassage}
-              <AddIcon className={classes.icon} />
-            </Button>
-            <Button
-              key="save"
-              aria-label={t.save}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleSave}
-            >
-              {t.save}
-              <SaveIcon className={classes.icon} />
-            </Button>
-          </div>
+  const bookEditor = (props: any) => (
+    <BookSelect suggestions={bookSuggestions} {...props} />
+  );
 
-          <DataSheet
-            data={data as any[][]}
-            valueRenderer={handleValueRender}
-            // dataRenderer={handleDataRender}
-            onContextMenu={handleContextMenu}
-            onCellsChanged={handleCellsChanged}
-            parsePaste={handlePaste}
-          />
-        </div>
-        {confirmAction !== ''
-        ? <Confirm
-            text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
-            yesResponse={handleActionConfirmed}
-            noResponse={handleActionRefused}
-          />
-        : <></>}        
-        <SnackBar {...props} message={message} reset={handleMessageReset} />
-      </div>
+  useEffect(() => {
+    setData(
+      [
+        [{ value: '', readOnly: true } as ICell].concat(
+          columns.map(c => {
+            return { ...c, readOnly: true };
+          })
+        )
+      ].concat(
+        rowData.map((r, i) => {
+          const isSection = /^[0-9]+$/.test(r[0].toString());
+          return [
+            {
+              value: (
+                <CheckBox
+                  data-testid={check.includes(i) ? 'checked' : 'check'}
+                  checked={check.includes(i)}
+                  onChange={handleCheck(i)}
+                />
+              ),
+              className: isSection ? 'set' : 'pass'
+            } as ICell
+          ].concat(
+            r.map((e, j) => {
+              return j !== 3 || isSection
+                ? {
+                    value: e,
+                    className:
+                      (isNumber(e) ? 'num' : 'pass') + (isSection ? ' set' : '')
+                  }
+                : {
+                    value: e,
+                    className: 'book',
+                    dataEditor: bookEditor
+                  };
+            })
+          );
+        })
+      )
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowData, check, bookSuggestions]);
+
+  return (
+    <div className={classes.container}>
+      <div className={classes.paper}>
+        <div className={classes.actions}>
+          <Button
+            key="action"
+            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+            aria-label={t.action}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleMenu}
+          >
+            {t.action}
+            <DropDownIcon className={classes.icon} />
+          </Button>
+          <Menu
+            id="action-menu"
+            anchorEl={actionMenuItem}
+            open={Boolean(actionMenuItem)}
+            onClose={handleConfirmAction('Close')}
+          >
+            <MenuItem onClick={handleConfirmAction('Delete')}>
+              {t.delete}
+            </MenuItem>
+            <MenuItem onClick={handleConfirmAction('Move')}>{t.move}</MenuItem>
+            <MenuItem onClick={handleConfirmAction('Copy')}>{t.copy}</MenuItem>
+            <MenuItem onClick={handleConfirmAction('Assign Media')}>
+              {t.assignMedia}
+            </MenuItem>
+            <MenuItem onClick={handleConfirmAction('Assign Passage')}>
+              {t.assignPassage}
+            </MenuItem>
+          </Menu>
+          <Button
+            key="addSection"
+            aria-label={t.addSection}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleAddSection}
+          >
+            {t.addSection}
+            <AddIcon className={classes.icon} />
+          </Button>
+          <Button
+            key="addPassage"
+            aria-label={t.addPassage}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleAddPassage}
+          >
+            {t.addPassage}
+            <AddIcon className={classes.icon} />
+          </Button>
+          <Button
+            key="save"
+            aria-label={t.save}
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={handleSave}
+          >
+            {t.save}
+            <SaveIcon className={classes.icon} />
+          </Button>
+        </div>
+
+        <DataSheet
+          data={data as any[][]}
+          valueRenderer={handleValueRender}
+          // dataRenderer={handleDataRender}
+          onContextMenu={handleContextMenu}
+          onCellsChanged={handleCellsChanged}
+          parsePaste={handlePaste}
+        />
+      </div>
+      {confirmAction !== '' ? (
+        <Confirm
+          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
+          yesResponse={handleActionConfirmed}
+          noResponse={handleActionRefused}
+        />
+      ) : (
+        <></>
+      )}
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
+    </div>
+  );
 }
 
 export default withStyles(styles, { withTheme: true })(PlanSheet) as any;
-      
