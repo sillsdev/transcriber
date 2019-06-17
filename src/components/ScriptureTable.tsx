@@ -10,6 +10,7 @@ import {
   IPlanSheetStrings,
   IScriptureTableStrings,
   BookNameMap,
+  BookName,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
@@ -51,6 +52,7 @@ interface IStateProps {
   lang: string;
   bookSuggestions: OptionType[];
   bookMap: BookNameMap;
+  allBookData: BookName[];
 }
 
 interface IDispatchProps {
@@ -63,7 +65,16 @@ interface IProps
     WithStyles<typeof styles> {}
 
 export function ScriptureTable(props: IProps) {
-  const { classes, t, s, lang, bookSuggestions, bookMap, fetchBooks } = props;
+  const {
+    classes,
+    t,
+    s,
+    lang,
+    bookSuggestions,
+    bookMap,
+    allBookData,
+    fetchBooks,
+  } = props;
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
   const [dataStore] = useGlobal('dataStore');
@@ -151,10 +162,29 @@ export function ScriptureTable(props: IProps) {
       return false;
     return true;
   };
+  const lookupBook = (c: string): string => {
+    const s = c.toLocaleUpperCase();
+    if (!bookMap[s]) {
+      const proposed = allBookData.filter(
+        d =>
+          d.short.toLocaleUpperCase() === s ||
+          d.long.toLocaleUpperCase() === s ||
+          d.abbr.toLocaleUpperCase() === s
+      );
+      if (proposed.length >= 1) return proposed[0].code;
+    }
+    return s;
+  };
   const handlePaste = (rows: string[][]) => {
     if (validTable(rows)) {
       const startRow = /^[0-9]*$/.test(rows[0][0]) ? 0 : 1;
-      setData(data.concat(rows.filter((r, i) => i >= startRow)));
+      setData([
+        ...data.concat(
+          rows
+            .filter((r, i) => i >= startRow)
+            .map(r => r.map((c, j) => (j !== 3 ? c : lookupBook(c))))
+        ),
+      ]);
       return Array<Array<string>>();
     }
     return rows;
@@ -405,6 +435,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   lang: state.strings.lang,
   bookSuggestions: state.books.suggestions,
   bookMap: state.books.map,
+  allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

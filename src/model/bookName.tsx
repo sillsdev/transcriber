@@ -15,4 +15,5 @@ export interface IBookNameData {
   loaded: boolean;
   suggestions: OptionType[];
   map: BookNameMap;
+  bookData: BookName[];
 }

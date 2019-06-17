@@ -5,6 +5,7 @@ import { BookName, IBookNameData, BookNameMap } from '../model';
 const initialState = {
   loaded: false,
   suggestions: Array<OptionType>(),
+  bookData: Array<BookName>(),
   map: {},
 };
 
@@ -30,6 +31,7 @@ export default function(state = initialState, action: any): IBookNameData {
             return { value: b.code, label: b.short };
           }),
         map: makeMap(action.payload.data),
+        bookData: action.payload.data,
       };
     default:
       return state;
