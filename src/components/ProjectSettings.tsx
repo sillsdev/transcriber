@@ -6,7 +6,7 @@ import { IState, Project, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
-import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -88,7 +88,6 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
 export function ProjectSettings(props: IProps) {
   const { classes, projects, projectTypes, updateStore, t } = props;
   const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
   const [dataStore] = useGlobal('dataStore');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal<string>('user');

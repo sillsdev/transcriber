@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {useGlobal} from 'reactn';
-import {Redirect} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {IState, Project, Group, IProjectTableStrings} from '../model';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { IState, Project, Group, IProjectTableStrings } from '../model';
 import localStrings from '../selector/localize';
-import {withData} from 'react-orbitjs';
-import {QueryBuilder, TransformBuilder} from '@orbit/data';
-import {Paper, Fab, Button, IconButton, Typography} from '@material-ui/core';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Paper, Fab, Button, IconButton, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -14,15 +14,15 @@ import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
-import {IntegratedSorting, SortingState} from '@devexpress/dx-react-grid';
+import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
 import {
   Grid,
   Table,
   TableColumnResizing,
   TableHeaderRow,
-  Toolbar
+  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import TranscriberBar from '../components/TranscriberBar';
 import Confirm from '../components/AlertDialog';
@@ -32,11 +32,11 @@ import Related from '../utils/related';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     container: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     paper: theme.mixins.gutters({
       paddingTop: 16,
@@ -47,24 +47,24 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       alignContent: 'center',
       [theme.breakpoints.down('md')]: {
-        width: '100%'
-      }
+        width: '100%',
+      },
     }),
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center'
+      justifyContent: 'center',
     }),
     editIcon: {
-      fontSize: 16
+      fontSize: 16,
     },
     link: {},
     deleteIcon: {},
     button: {},
-    icon: {}
+    icon: {},
   });
 
 interface Row {
@@ -88,14 +88,14 @@ interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
 }
 
 export function ProjectTable(props: IProps) {
-  const {classes, projects, groups, updateStore, auth, t} = props;
-  const {isAuthenticated} = auth;
+  const { classes, projects, groups, updateStore, auth, t } = props;
+  const { isAuthenticated } = auth;
   const [organization] = useGlobal('organization');
   const [columns, setColumns] = useState([
-    {name: 'name', title: 'Name'},
-    {name: 'description', title: 'Description'},
-    {name: 'language', title: 'Language'},
-    {name: 'delete', title: 'Delete'}
+    { name: 'name', title: 'Name' },
+    { name: 'description', title: 'Description' },
+    { name: 'language', title: 'Language' },
+    { name: 'delete', title: 'Delete' },
   ]);
   const [rows, setRows] = useState(Array<Row>());
   const [view, setView] = useState('');
@@ -110,7 +110,7 @@ export function ProjectTable(props: IProps) {
     updateStore((t: TransformBuilder) =>
       t.removeRecord({
         type: 'project',
-        id: deleteItem
+        id: deleteItem,
       })
     );
   };
@@ -146,10 +146,10 @@ export function ProjectTable(props: IProps) {
       return Related(g, 'owner') === organization;
     });
     setColumns([
-      {name: 'name', title: t.name},
-      {name: 'description', title: t.description},
-      {name: 'language', title: t.language},
-      {name: 'delete', title: t.delete}
+      { name: 'name', title: t.name },
+      { name: 'description', title: t.description },
+      { name: 'language', title: t.language },
+      { name: 'delete', title: t.delete },
     ]);
     setRows(
       orgProjects.map((o: Project) => ({
@@ -158,7 +158,7 @@ export function ProjectTable(props: IProps) {
         name: o.attributes.name,
         description: o.attributes.description,
         language: o.attributes.language,
-        delete: o.id
+        delete: o.id,
       }))
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,7 +178,7 @@ export function ProjectTable(props: IProps) {
     tableRow: any;
     tableColumn: any;
   }) => (
-    <Table.Cell {...restProps} style={{...style}} value>
+    <Table.Cell {...restProps} style={{ ...style }} value>
       <Button
         key={value}
         aria-label={value}
@@ -204,7 +204,7 @@ export function ProjectTable(props: IProps) {
     tableRow: any;
     tableColumn: any;
   }) => (
-    <Table.Cell {...restProps} style={{...style}} value>
+    <Table.Cell {...restProps} style={{ ...style }} value>
       <IconButton
         id={value}
         key={value}
@@ -219,7 +219,7 @@ export function ProjectTable(props: IProps) {
   );
 
   const Cell = (props: any) => {
-    const {column} = props;
+    const { column } = props;
     if (column.name === 'name') {
       return <LinkCell {...props} />;
     } else if (column.name === 'delete') {
@@ -251,17 +251,17 @@ export function ProjectTable(props: IProps) {
           </div>
           <Grid rows={rows} columns={columns}>
             <SortingState
-              defaultSorting={[{columnName: 'name', direction: 'asc'}]}
+              defaultSorting={[{ columnName: 'name', direction: 'asc' }]}
             />
             <IntegratedSorting />
             <Table cellComponent={Cell} />
             <TableColumnResizing
               minColumnWidth={50}
               defaultColumnWidths={[
-                {columnName: 'name', width: 200},
-                {columnName: 'description', width: 400},
-                {columnName: 'language', width: 100},
-                {columnName: 'delete', width: 100}
+                { columnName: 'name', width: 200 },
+                { columnName: 'description', width: 400 },
+                { columnName: 'language', width: 100 },
+                { columnName: 'delete', width: 100 },
               ]}
             />
             <TableHeaderRow showSortingControls={true} />
@@ -285,14 +285,14 @@ interface IStateProps {
   t: IProjectTableStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, {layout: 'projectTable'})
+  t: localStrings(state, { layout: 'projectTable' }),
 });
 
 const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
-  groups: (q: QueryBuilder) => q.findRecords('group')
+  groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
-export default withStyles(styles, {withTheme: true})(withData(
+export default withStyles(styles, { withTheme: true })(withData(
   mapRecordsToProps
 )(connect(mapStateToProps)(ProjectTable) as any) as any) as any;

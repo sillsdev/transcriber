@@ -6,7 +6,7 @@ import {
   withStyles,
   WithStyles,
   Theme,
-  createStyles
+  createStyles,
 } from '@material-ui/core/styles';
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 const FileDrop =
@@ -29,15 +29,15 @@ const styles = (theme: Theme) =>
       height: '28px',
       backgroundColor: theme.palette.grey[500],
       border: 'none',
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
     },
     drop: {
       borderWidth: '1px',
       borderStyle: 'dashed',
       borderColor: theme.palette.secondary.light,
       padding: theme.spacing(1),
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   });
 
 interface IStateProps {
@@ -170,7 +170,7 @@ function MediaUpload(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planAdd' })
+  t: localStrings(state, { layout: 'planAdd' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(

@@ -20,21 +20,21 @@ const styles = (theme: Theme) => ({
     display: 'flex',
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(4),
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(4),
   },
   paper: {},
   actions: theme.mixins.gutters({
     paddingBottom: 16,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   }),
   button: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
   },
   icon: {
-    marginLeft: theme.spacing(1)
-  }
+    marginLeft: theme.spacing(1),
+  },
 });
 
 interface ICell {
@@ -81,7 +81,7 @@ export function PlanSheet(props: IProps) {
     action,
     addPassage,
     addSection,
-    paste
+    paste,
   } = props;
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<Array<ICell>>());
@@ -188,7 +188,7 @@ export function PlanSheet(props: IProps) {
           columns.map(c => {
             return { ...c, readOnly: true };
           })
-        )
+        ),
       ].concat(
         rowData.map((r, i) => {
           const isSection = /^[0-9]+$/.test(r[0].toString());
@@ -201,20 +201,21 @@ export function PlanSheet(props: IProps) {
                   onChange={handleCheck(i)}
                 />
               ),
-              className: isSection ? 'set' : 'pass'
-            } as ICell
+              className: isSection ? 'set' : 'pass',
+            } as ICell,
           ].concat(
             r.map((e, j) => {
               return j !== 3 || isSection
                 ? {
                     value: e,
                     className:
-                      (isNumber(e) ? 'num' : 'pass') + (isSection ? ' set' : '')
+                      (isNumber(e) ? 'num' : 'pass') +
+                      (isSection ? ' set' : ''),
                   }
                 : {
                     value: e,
                     className: 'book',
-                    dataEditor: bookEditor
+                    dataEditor: bookEditor,
                   };
             })
           );

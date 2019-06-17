@@ -4,7 +4,7 @@ import {
   createStyles,
   withStyles,
   WithStyles,
-  Theme
+  Theme,
 } from '@material-ui/core/styles';
 import {
   Column,
@@ -21,7 +21,7 @@ import {
   SortingState,
   Sorting,
   DataTypeProvider,
-  DataTypeProviderProps
+  DataTypeProviderProps,
 } from '@devexpress/dx-react-grid';
 import {
   DragDropProvider,
@@ -34,33 +34,33 @@ import {
   TableHeaderRow,
   TableColumnResizing,
   TableSelection,
-  Toolbar
+  Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '100%'
+      width: '100%',
     },
     container: {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     paper: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'column',
-      alignContent: 'center'
+      alignContent: 'center',
     }),
     size: {
       display: 'flex',
       flexGrow: 1,
       justifyContent: 'flex-end',
       marginRight: theme.spacing(5),
-      fontWeight: theme.typography.fontWeightMedium
+      fontWeight: theme.typography.fontWeightMedium,
     },
     numericInput: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   });
 
 type SizeFormatterProps = DataTypeProvider.ValueFormatterProps &
@@ -74,7 +74,7 @@ const availableFilterOperations: string[] = [
   'greaterThan',
   'greaterThanOrEqual',
   'lessThan',
-  'lessThanOrEqual'
+  'lessThanOrEqual',
 ];
 
 const getInputValue = (value?: string): string =>
@@ -107,13 +107,13 @@ const SizeEditor = withStyles(styles)(
       <Input
         type="number"
         classes={{
-          input: classes.numericInput
+          input: classes.numericInput,
         }}
         fullWidth={true}
         value={getInputValue(value)}
         inputProps={{
           min: 0,
-          placeholder: 'Filter...'
+          placeholder: 'Filter...',
         }}
         onChange={handleChange}
       />
@@ -159,7 +159,7 @@ export default function ShapingTable(props: IProps) {
     rows,
     sorting,
     select,
-    shaping
+    shaping,
   } = props;
 
   const handleSelect = (checks: Array<string | number>) => {

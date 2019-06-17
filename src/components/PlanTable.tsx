@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { IState, Plan, PlanType, Section, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { Schema, QueryBuilder, TransformBuilder, KeyMap } from '@orbit/data';
+import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
 import Store from '@orbit/store';
 import {
   createStyles,
@@ -30,7 +30,6 @@ import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import Related from '../utils/related';
-import { keyMap } from '../schema';
 import remoteId from '../utils/remoteId';
 
 const styles = (theme: Theme) =>

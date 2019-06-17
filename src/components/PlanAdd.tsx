@@ -13,15 +13,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  MenuItem
+  MenuItem,
 } from '@material-ui/core';
 import SnackBar from '../components/SnackBar';
 import Related from '../utils/related';
 
 const styles = {
   menu: {
-    width: 200
-  }
+    width: 200,
+  },
 };
 
 interface IStateProps {
@@ -49,7 +49,7 @@ function PlanAdd(props: IProps) {
     addMethod,
     editMethod,
     cancelMethod,
-    planIn
+    planIn,
   } = props;
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState(
@@ -60,10 +60,14 @@ function PlanAdd(props: IProps) {
 
   const handleAddOrSave = () => {
     if (planType === '') {
-      setMessage(<span>{t.selectAPlanType}</span>)
+      setMessage(<span>{t.selectAPlanType}</span>);
       return;
     }
-    if (!planIn || name !== planIn.attributes.name || planType !== Related(planIn, 'plantype')) {
+    if (
+      !planIn ||
+      name !== planIn.attributes.name ||
+      planType !== Related(planIn, 'plantype')
+    ) {
       if (!planIn) {
         if (addMethod) {
           addMethod(name, planType);
@@ -73,8 +77,8 @@ function PlanAdd(props: IProps) {
           ...planIn,
           attributes: {
             name,
-            planType
-          }
+            planType,
+          },
         };
         if (editMethod) {
           editMethod(plan);
@@ -90,21 +94,27 @@ function PlanAdd(props: IProps) {
     if (cancelMethod) {
       cancelMethod();
     }
-    setOpen(false)
-  }
-  const handleNameChange = (e: any) => { setName(e.target.value) };
-  const handleTypeChange = (e: any) => { setPlanType(e.target.value) };
-  const handleMessageReset = () => { setMessage(<></>) };
+    setOpen(false);
+  };
+  const handleNameChange = (e: any) => {
+    setName(e.target.value);
+  };
+  const handleTypeChange = (e: any) => {
+    setPlanType(e.target.value);
+  };
+  const handleMessageReset = () => {
+    setMessage(<></>);
+  };
 
   useEffect(() => {
-    setName(planIn ? planIn.attributes.name : t.newPlan)
-    setPlanType(planIn ? Related(planIn, 'plantype') : '')
+    setName(planIn ? planIn.attributes.name : t.newPlan);
+    setPlanType(planIn ? Related(planIn, 'plantype') : '');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [planIn])
+  }, [planIn]);
 
   useEffect(() => {
-    setOpen(visible)
-  }, [visible])
+    setOpen(visible);
+  }, [visible]);
 
   return (
     <div>
@@ -113,11 +123,11 @@ function PlanAdd(props: IProps) {
         onClose={handleCancel}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">{planIn ? t.editPlan : t.addPlan}</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          {planIn ? t.editPlan : t.addPlan}
+        </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {t.newPlanTask}
-          </DialogContentText>
+          <DialogContentText>{t.newPlanTask}</DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -136,8 +146,8 @@ function PlanAdd(props: IProps) {
             onChange={handleTypeChange}
             SelectProps={{
               MenuProps: {
-                className: classes.menu
-              }
+                className: classes.menu,
+              },
             }}
             helperText={t.selectPlanType}
             margin="normal"
@@ -166,15 +176,13 @@ function PlanAdd(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: "planAdd" })
+  t: localStrings(state, { layout: 'planAdd' }),
 });
 
 const mapRecordsToProps = {
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
-}
+};
 
-export default withStyles(styles, { withTheme: true })(
-  withData(mapRecordsToProps)(
-    connect(mapStateToProps)(PlanAdd) as any
-  ) as any
-) as any;
+export default withStyles(styles, { withTheme: true })(withData(
+  mapRecordsToProps
+)(connect(mapStateToProps)(PlanAdd) as any) as any) as any;

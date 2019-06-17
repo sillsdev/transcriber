@@ -1,4 +1,4 @@
-import {Record, RecordRelationship} from '@orbit/data';
+import { Record, RecordRelationship } from '@orbit/data';
 
 export interface Plan extends Record {
   attributes: {

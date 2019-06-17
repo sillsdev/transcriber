@@ -14,7 +14,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
-import { KeyMap, QueryBuilder } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, IconButton } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -183,7 +183,6 @@ export function MediaTab(props: IProps) {
   } = props;
   const [plan] = useGlobal<string>('plan');
   const [dataStore] = useGlobal('dataStore');
-  const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [

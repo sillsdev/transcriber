@@ -17,11 +17,11 @@ import * as action from '../actions';
 
 const styles = (theme: Theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   container: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   paper: theme.mixins.gutters({
     paddingTop: 16,
@@ -32,13 +32,13 @@ const styles = (theme: Theme) => ({
     flexDirection: 'column',
     alignContent: 'center',
     [theme.breakpoints.down('md')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   }),
   dialogHeader: theme.mixins.gutters({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   actions: theme.mixins.gutters({
     paddingTop: 16,
@@ -46,15 +46,15 @@ const styles = (theme: Theme) => ({
     marginTop: theme.spacing(3),
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   text: theme.mixins.gutters({
     paddingTop: theme.spacing(2),
-    textAlign: 'center'
+    textAlign: 'center',
   }),
   button: theme.mixins.gutters({
-    marginRight: theme.spacing(1)
-  })
+    marginRight: theme.spacing(1),
+  }),
 });
 
 interface IStateProps {
@@ -183,7 +183,7 @@ export function Welcome(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'welcome' }),
-  orbitLoaded: state.orbit.loaded
+  orbitLoaded: state.orbit.loaded,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -191,14 +191,14 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
-      fetchOrbitData: action.fetchOrbitData
+      fetchOrbitData: action.fetchOrbitData,
     },
     dispatch
-  )
+  ),
 });
 
 const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user')
+  users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
 export default withStyles(styles, { withTheme: true })(withData(

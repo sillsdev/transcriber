@@ -36,7 +36,8 @@ export interface IMediacardStrings extends Localize.LocalizedStringsMethods {
   section: string;
 }
 
-export interface IProjectstatusStrings extends Localize.LocalizedStringsMethods {
+export interface IProjectstatusStrings
+  extends Localize.LocalizedStringsMethods {
   silTranscriberAdminProject: string;
   search: string;
   listOptions: string;
@@ -83,7 +84,8 @@ export interface IAlertStrings extends Localize.LocalizedStringsMethods {
   yes: string;
 }
 
-export interface IOrganizationTableStrings extends Localize.LocalizedStringsMethods {
+export interface IOrganizationTableStrings
+  extends Localize.LocalizedStringsMethods {
   transcriberAdmin: string;
   chooseOrganization: string;
   name: string;
@@ -103,7 +105,8 @@ export interface IChartStrings extends Localize.LocalizedStringsMethods {
   totalTransactions: string;
 }
 
-export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethods {
+export interface IProjectSettingsStrings
+  extends Localize.LocalizedStringsMethods {
   general: string;
   name: string;
   description: string;
@@ -147,7 +150,8 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
   save: string;
 }
 
-export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
+export interface IScriptureTableStrings
+  extends Localize.LocalizedStringsMethods {
   section: string;
   title: string;
   passage: string;
@@ -155,7 +159,8 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
   reference: string;
   description: string;
 }
-export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
+export interface IAssignmentTableStrings
+  extends Localize.LocalizedStringsMethods {
   section: string;
   title: string;
   passage: string;

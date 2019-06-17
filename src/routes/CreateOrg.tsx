@@ -10,7 +10,7 @@ import {
   FormControl,
   InputLabel,
   Input,
-  Button
+  Button,
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
@@ -19,14 +19,14 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = (theme: Theme) => ({
   root: {
-    width: '100%'
+    width: '100%',
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   container: {
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   appBar: theme.mixins.gutters({
     // background: '#FFE599',
@@ -41,16 +41,16 @@ const styles = (theme: Theme) => ({
     flexDirection: 'column',
     alignContent: 'center',
     [theme.breakpoints.down('md')]: {
-      width: '100%'
-    }
+      width: '100%',
+    },
   }),
   field: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   dialogHeader: theme.mixins.gutters({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   actions: theme.mixins.gutters({
     paddingTop: 16,
@@ -58,11 +58,11 @@ const styles = (theme: Theme) => ({
     marginTop: theme.spacing(3),
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
   }),
   button: {
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 });
 
 interface IStateProps {
@@ -154,7 +154,7 @@ export function CreateOrg(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'createorg' })
+  t: localStrings(state, { layout: 'createorg' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(

@@ -83,10 +83,12 @@ const initialState = {
     en: {
       transcriberAdmin: 'Transcriber Admin',
       thanksSigningUp: 'Thanks for signing up!',
-      StartTranscribingImmediately: 'Do you want to start transcribing immediately?',
+      StartTranscribingImmediately:
+        'Do you want to start transcribing immediately?',
       transcriberWeb: 'Transcriber Web',
       transcriberDesktop: 'Transcriber Desktop',
-      ConfigureTranscriptionProject: 'Do you want to configure a transcription project?',
+      ConfigureTranscriptionProject:
+        'Do you want to configure a transcription project?',
     },
   }),
   alert: new LocalizedStrings({
@@ -130,7 +132,8 @@ const initialState = {
       language: 'Language',
       transcriptionLanguage: 'Transcription Language',
       preferredLanguageName: 'Preferred Language Name',
-      uiLanguagInUserProfile: '(User interface languages are set in the user profile.)',
+      uiLanguagInUserProfile:
+        '(User interface languages are set in the user profile.)',
       textEditor: 'Text Editor',
       defaultFont: 'Default Font',
       selectDefaultFont: 'Please select the preferred default font',
@@ -199,7 +202,8 @@ const initialState = {
     en: {
       name: 'Name',
       addPlan: 'Add a Plan',
-      newPlanTask: 'Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)',
+      newPlanTask:
+        'Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)',
       planType: 'Type',
       selectPlanType: 'Select plan type.',
       cancel: 'Cancel',
@@ -247,14 +251,22 @@ export default function(state = initialState, action: any): ILocalizedStrings {
         usertable: new LocalizedStrings(action.payload.data.usertable),
         welcome: new LocalizedStrings(action.payload.data.welcome),
         alert: new LocalizedStrings(action.payload.data.alert),
-        organizationTable: new LocalizedStrings(action.payload.data.organizationTable),
+        organizationTable: new LocalizedStrings(
+          action.payload.data.organizationTable
+        ),
         projectTable: new LocalizedStrings(action.payload.data.projectTable),
         chart: new LocalizedStrings(action.payload.data.chart),
-        projectSettings: new LocalizedStrings(action.payload.data.projectSettings),
+        projectSettings: new LocalizedStrings(
+          action.payload.data.projectSettings
+        ),
         planTable: new LocalizedStrings(action.payload.data.planTable),
         planSheet: new LocalizedStrings(action.payload.data.planSheet),
-        scriptureTable: new LocalizedStrings(action.payload.data.scriptureTable),
-        assignmentTable: new LocalizedStrings(action.payload.data.assignmentTable),
+        scriptureTable: new LocalizedStrings(
+          action.payload.data.scriptureTable
+        ),
+        assignmentTable: new LocalizedStrings(
+          action.payload.data.assignmentTable
+        ),
         planTabs: new LocalizedStrings(action.payload.data.planTabs),
         planAdd: new LocalizedStrings(action.payload.data.planAdd),
         mediaTab: new LocalizedStrings(action.payload.data.mediaTab),

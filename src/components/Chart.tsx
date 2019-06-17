@@ -10,7 +10,7 @@ import {
   ValueAxis,
   BarSeries,
   SplineSeries,
-  Legend
+  Legend,
 } from '@devexpress/dx-react-chart-material-ui';
 import { ValueScale, Animation } from '@devexpress/dx-react-chart';
 
@@ -40,7 +40,7 @@ export function Status(props: IProps) {
     { month: 'March', tasks: 30, total: 1100 },
     { month: 'April', tasks: 107, total: 7100 },
     { month: 'May', tasks: 95, total: 4300 },
-    { month: 'June', tasks: 150, total: 7500 }
+    { month: 'June', tasks: 150, total: 7500 },
   ]);
 
   return (
@@ -81,7 +81,7 @@ export function Status(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'chart' })
+  t: localStrings(state, { layout: 'chart' }),
 });
 
 export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
