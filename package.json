@@ -41,10 +41,11 @@
   "scripts": {
     "clean": "rimraf build converage",
     "start": "react-scripts start",
-    "build": "rimraf build && react-scripts build",
+    "build": "npm run stamp && rimraf build && react-scripts build",
     "test": "react-scripts test",
     "deploy": "aws s3 rm s3://sil-transcriber-poc --recursive && aws s3 cp --recursive ./build s3://sil-transcriber-poc",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "stamp": "powershell ./writeDate.ps1"
   },
   "eslintConfig": {
     "extends": "react-app"
