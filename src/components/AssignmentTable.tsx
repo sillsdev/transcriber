@@ -88,6 +88,7 @@ function passageCompare(a: Passage, b: Passage) {
 }
 
 const getAssignments = (
+  addit: boolean,
   plan: string,
   userPassages: Array<UserPassage>,
   passages: Array<Passage>,
@@ -118,38 +119,50 @@ const getAssignments = (
     const sectionps = passageSections
       .filter(ps => ps.attributes.sectionId === remoteId('section', section.id))
       .sort(passageSectionCompare);
-    sectionps.forEach(function(ps) {
+    sectionps.forEach(function(ps, psindex) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
-      rowData.push({
-        section: '',
-        sectionstate: '',
-        passage: getReference(passage),
-        passagestate: passage[0].attributes.state,
-        user: '',
-        role: '',
-      } as IRow);
+      if (psindex === 0) {
+        //add my data to the last row
+        rowData[rowData.length - 1].passage = getReference(passage);
+        rowData[rowData.length - 1].passagestate = passage[0].attributes.state;
+      } else {
+        rowData.push({
+          section: addit ? rowData[rowData.length - 1].section : '',
+          sectionstate: addit ? rowData[rowData.length - 1].sectionstate : '',
+          passage: getReference(passage),
+          passagestate: passage[0].attributes.state,
+          user: '',
+          role: '',
+        } as IRow);
+      }
       //const userPassages: UserPassage[] = related(passage, 'users');
       console.log(remoteId('passage', passage[0].id));
       const passageups = userPassages.filter(
         up => up.attributes.passageId === remoteId('passage', passage[0].id)
       );
       console.log(passageups.length);
-      passageups.forEach(function(up) {
+      passageups.forEach(function(up, upindex) {
         const userId = related(up, 'user');
         const user = users.filter(u => u.id === userId);
         const username = user.length > 0 ? user[0].attributes.name : '';
         const roleId = related(up, 'role');
         const role = roles.filter(r => r.id === roleId);
         const rolename = role.length > 0 ? role[0].attributes.roleName : '';
-        rowData.push({
-          section: '',
-          sectionstate: '',
-          passage: '',
-          passagestate: '',
-          user: username,
-          role: rolename,
-        } as IRow);
+        if (upindex === 0) {
+          //add my data to the last row
+          rowData[rowData.length - 1].user = username;
+          rowData[rowData.length - 1].role = rolename;
+        } else {
+          rowData.push({
+            section: addit ? rowData[rowData.length - 1].section : '',
+            sectionstate: addit ? rowData[rowData.length - 1].sectionstate : '',
+            passage: addit ? rowData[rowData.length - 1].passage : '',
+            passagestate: addit ? rowData[rowData.length - 1].passagestate : '',
+            user: username,
+            role: rolename,
+          } as IRow);
+        }
       });
     });
   });
@@ -167,6 +180,7 @@ interface IDispatchProps {
 }
 
 interface IRecordProps {
+  addit: boolean;
   userPassages: Array<UserPassage>;
   passages: Array<Passage>;
   passageSections: Array<PassageSection>;
@@ -189,6 +203,7 @@ export function AssignmentTable(props: IProps) {
     classes,
     t,
     action,
+    addit,
     passages,
     passageSections,
     sections,
@@ -255,6 +270,7 @@ export function AssignmentTable(props: IProps) {
   useEffect(() => {
     setData(
       getAssignments(
+        addit,
         plan as string,
         userPassages,
         passages,
