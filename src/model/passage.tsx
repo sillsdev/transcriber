@@ -1,4 +1,8 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import {
+  Record,
+  RecordRelationship,
+  RecordHasManyRelationship,
+} from '@orbit/data';
 
 export interface Passage extends Record {
   attributes: {
@@ -13,7 +17,8 @@ export interface Passage extends Record {
     dateUpdated: string | null;
   };
   relationships?: {
-    set: RecordRelationship;
+    sections: RecordHasManyRelationship;
+    users: RecordHasManyRelationship;
     media: RecordRelationship;
   };
 }

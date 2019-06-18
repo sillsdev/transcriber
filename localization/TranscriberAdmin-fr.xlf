@@ -608,16 +608,22 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.section">
+      <unit id="assignmentTable.title">
+         <segment>
+            <source>Assignments</source>
+            <target/>
+         </segment>
+      </unit>
+	<unit id="assignmentTable.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.title">
+		<unit id="assignmentTable.sectionstate">
 			<segment>
-				<source>Title</source>
-				<target>Titre</target>
+				<source>State</source>
+				<target>État</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.passage">
@@ -626,25 +632,42 @@
 				<target>Passage</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.book">
+		<unit id="assignmentTable.passagestate">
 			<segment>
-				<source>Book</source>
-				<target>Livre</target>
+				<source>State</source>
+				<target>État</target>
+			</segment>
+			</unit>
+      <unit id="assignmentTable.user">
+			<segment>
+				<source>User</source>
+				<target>Utilisatrice</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.reference">
+		<unit id="assignmentTable.role">
 			<segment>
-				<source>Reference</source>
-				<target>Référence</target>
+				<source>Role</source>
+				<target>Rôle</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.description">
+		<unit id="assignmentTable.action">
 			<segment>
-				<source>Description du passage</source>
-				<target/>
+				<source>Action</source>
+				<target>Action</target>
 			</segment>
 		</unit>
-
+		<unit id="assignmentTable.assignPassage">
+			<segment>
+				<source>Assign Passage</source>
+				<target>Assigner un passage</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.delete">
+         <segment>
+            <source>Remove Assignment</source>
+            <target>Supprimer un affectation</target>
+         </segment>
+      </unit>
 		<unit id="scriptureTable.section">
 			<segment>
 				<source>Section</source>

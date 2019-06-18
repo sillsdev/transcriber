@@ -132,7 +132,7 @@ export function ProjectTable(props: IProps) {
             (p.attributes &&
               p.attributes.name &&
               p.attributes.name.toLowerCase()) ===
-            e.target.innerText.trim().toLowerCase()
+            e.currentTarget.innerText.trim().toLowerCase()
         )[0].id
       );
     setView('/projectstatus');

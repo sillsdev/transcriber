@@ -1,6 +1,6 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface UserPassages extends Record {
+export interface UserPassage extends Record {
   attributes: {
     userId: number;
     passageId: number;
@@ -16,4 +16,4 @@ export interface UserPassages extends Record {
   };
 }
 
-export default UserPassages;
+export default UserPassage;

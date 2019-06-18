@@ -233,6 +233,11 @@ const schemaDefinition: SchemaSettings = {
           model: 'passagesection',
           inverse: 'passage',
         },
+        users: {
+          type: 'hasMany',
+          model: 'userpassage',
+          inverse: 'passage',
+        },
       },
     },
     passagesection: {
@@ -307,6 +312,11 @@ const schemaDefinition: SchemaSettings = {
           inverse: 'user',
         },
         userRoles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
+        passages: {
+          type: 'hasMany',
+          model: 'userpassage',
+          inverse: 'users',
+        },
       },
     },
     currentuser: {
@@ -364,6 +374,9 @@ const schemaDefinition: SchemaSettings = {
     userpassage: {
       keys: { remoteId: {} },
       attributes: {
+        userId: { type: 'number' },
+        passageId: { type: 'number' },
+        roleId: { type: 'number' },
         comment: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },

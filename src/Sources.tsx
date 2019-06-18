@@ -138,6 +138,9 @@ function Sources(
         userSetup(user);
       });
     remote
+      .pull(q => q.findRecords('user'))
+      .then(transform => store.sync(transform));
+    remote
       .pull(q => q.findRecords('organization'))
       .then(transform => store.sync(transform));
     remote

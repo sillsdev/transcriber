@@ -646,15 +646,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignmentTable.title">
+         <segment>
+            <source>Assignments</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignmentTable.section">
          <segment>
             <source>Section</source>
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.title">
+      <unit id="assignmentTable.sectionstate">
          <segment>
-            <source>Title</source>
+            <source>State</source>
             <target/>
          </segment>
       </unit>
@@ -664,21 +670,39 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.book">
+      <unit id="assignmentTable.passagestate">
          <segment>
-            <source>Book</source>
+            <source>State</source>
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.reference">
+      <unit id="assignmentTable.user">
          <segment>
-            <source>Reference</source>
+            <source>User</source>
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.description">
+      <unit id="assignmentTable.role">
          <segment>
-            <source>Description</source>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignPassage">
+         <segment>
+            <source>Assign Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.delete">
+         <segment>
+            <source>Remove Assignment</source>
             <target/>
          </segment>
       </unit>
