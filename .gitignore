@@ -23,6 +23,7 @@ localization/packages
 .env.production.local
 localization/.vscode
 localization/.vs
+buildDate.json
 
 npm-debug.log*
 yarn-debug.log*

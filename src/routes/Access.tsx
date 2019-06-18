@@ -11,6 +11,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
+const version = require('../../package.json').version;
+const buildDate = require('../buildDate.json').date;
 
 const styles = (theme: Theme) => ({
   root: {
@@ -24,9 +26,14 @@ const styles = (theme: Theme) => ({
     justifyContent: 'center',
   },
   appBar: theme.mixins.gutters({
+    display: 'flex',
+    flexDirection: 'row',
     // background: '#FFE599',
     // color: 'black'
   }),
+  version: {
+    alignSelf: 'center',
+  },
   paper: theme.mixins.gutters({
     paddingTop: 16,
     paddingBottom: 16,
@@ -100,6 +107,12 @@ export function Access(props: IProps) {
             {t.silTranscriberAccess}
           </Typography>
         </Toolbar>
+        <div className={classes.grow}>{'\u00A0'}</div>
+        <div className={classes.version}>{version}</div>
+        <div className={classes.version}>
+          {'\u00A0'}
+          {buildDate}
+        </div>
       </AppBar>
       <div className={classes.container}>
         <Paper className={classes.paper}>
