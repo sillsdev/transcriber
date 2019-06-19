@@ -78,7 +78,7 @@ const getReference = (passage: Passage[]) => {
 };
 
 interface ILatest {
-  [name: string]: number;
+  [planName: string]: number;
 }
 
 const getMedia = (
@@ -90,7 +90,7 @@ const getMedia = (
 ) => {
   const latest: ILatest = {};
   mediaFiles.forEach(f => {
-    const name = f.attributes.originalFile;
+    const name = f.attributes.planId + f.attributes.originalFile;
     latest[name] = latest[name]
       ? Math.max(latest[name], f.attributes.versionNumber)
       : f.attributes.versionNumber;
@@ -98,7 +98,8 @@ const getMedia = (
   const media = mediaFiles.filter(
     f =>
       related(f, 'plan') === plan &&
-      latest[f.attributes.originalFile] === f.attributes.versionNumber
+      latest[f.attributes.planId + f.attributes.originalFile] ===
+        f.attributes.versionNumber
   );
   const rowData = media.map(f => {
     const passageId = related(f, 'passage');
