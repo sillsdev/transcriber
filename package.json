@@ -17,6 +17,7 @@
     "@orbit/jsonapi": "^0.15.25",
     "@orbit/store": "^0.15.25",
     "auth0-js": "^9.10.2",
+    "aws-amplify": "^1.1.29",
     "axios": "^0.18.0",
     "classnames": "^2.2.6",
     "moment": "^2.24.0",
@@ -41,9 +42,10 @@
   "scripts": {
     "clean": "rimraf build converage",
     "start": "react-scripts start",
-    "build": "npm run stamp && rimraf build && react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
-    "deploy": "aws s3 rm s3://sil-transcriber-poc --recursive && aws s3 cp --recursive ./build s3://sil-transcriber-poc",
+    "deploy": "npm run stamp && amplify publish",
+    "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
     "eject": "react-scripts eject",
     "stamp": "powershell ./writeDate.ps1"
   },
