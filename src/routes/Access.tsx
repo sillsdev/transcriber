@@ -108,9 +108,9 @@ export function Access(props: IProps) {
           </Typography>
         </Toolbar>
         <div className={classes.grow}>{'\u00A0'}</div>
-        <div className={classes.version}>{version}</div>
         <div className={classes.version}>
-          {'\u00A0'}
+          {version}
+          <br />
           {buildDate}
         </div>
       </AppBar>
