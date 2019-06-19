@@ -58,14 +58,16 @@ interface IStateProps {
 interface IProps extends IStateProps, WithStyles<typeof styles> {
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
+  bookCol: number;
   bookSuggestions: OptionType[];
   bookMap: BookNameMap;
-  updateData: (r: string[][]) => void;
-  save: (r: string[][]) => void;
-  paste: (r: string[][]) => string[][];
+  updateData: (rows: string[][]) => void;
+  save: (rows: string[][]) => void;
+  paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
   addPassage: () => void;
   addSection: () => void;
+  lookupBook: (book: string) => string;
 }
 
 export function PlanSheet(props: IProps) {
@@ -74,8 +76,10 @@ export function PlanSheet(props: IProps) {
     columns,
     rowData,
     t,
+    bookCol,
     bookSuggestions,
     bookMap,
+    lookupBook,
     updateData,
     save,
     action,
@@ -109,7 +113,7 @@ export function PlanSheet(props: IProps) {
       }
       setCheck([...check]);
     } else {
-      setCheck(check.filter(i => i !== row));
+      setCheck(check.filter(listIndex => listIndex !== row));
     }
   };
   const handleAddSection = () => {
@@ -120,8 +124,10 @@ export function PlanSheet(props: IProps) {
   };
   const justData = (data: Array<Array<ICell>>) => {
     return data
-      .filter((r, i) => i > 0)
-      .map(r => r.filter((r, i) => i > 0).map(c => c.value));
+      .filter((row, rowIndex) => rowIndex > 0)
+      .map(row =>
+        row.filter((row, rowIndex) => rowIndex > 0).map(col => col.value)
+      );
   };
   const handleSave = () => {
     setMessage(<span>Saving</span>);
@@ -159,22 +165,30 @@ export function PlanSheet(props: IProps) {
     });
     if (changes.length > 0) {
       // setData(grid);
-      updateData(justData(grid));
+      updateData(
+        justData(grid).map(row =>
+          row.map((cell, cellIndex) =>
+            cellIndex !== bookCol && lookupBook !== null
+              ? cell
+              : lookupBook(cell)
+          )
+        )
+      );
     }
   };
 
   const handleContextMenu = (e: MouseEvent, cell: any) =>
     cell.readOnly ? e.preventDefault() : null;
 
-  const handlePaste = (s: string) => {
+  const handlePaste = (clipBoard: string) => {
     const blankLines = /\r?\n\t*\r?\n/;
-    const chunks = s.split(blankLines);
+    const chunks = clipBoard.split(blankLines);
     const lines = chunks
       .join('\n')
       .replace(/\r?\n$/, '')
       .split('\n');
-    if (paste) return paste(lines.map(s => s.split('\t')));
-    return lines.map(s => s.split('\t'));
+    if (paste) return paste(lines.map(clipBoard => clipBoard.split('\t')));
+    return lines.map(clipBoard => clipBoard.split('\t'));
   };
 
   const bookEditor = (props: any) => (
@@ -185,27 +199,27 @@ export function PlanSheet(props: IProps) {
     setData(
       [
         [{ value: '', readOnly: true } as ICell].concat(
-          columns.map(c => {
-            return { ...c, readOnly: true };
+          columns.map(col => {
+            return { ...col, readOnly: true };
           })
         ),
       ].concat(
-        rowData.map((r, i) => {
-          const isSection = /^[0-9]+$/.test(r[0].toString());
+        rowData.map((row, rowIndex) => {
+          const isSection = /^[0-9]+$/.test(row[0].toString());
           return [
             {
               value: (
                 <CheckBox
-                  data-testid={check.includes(i) ? 'checked' : 'check'}
-                  checked={check.includes(i)}
-                  onChange={handleCheck(i)}
+                  data-testid={check.includes(rowIndex) ? 'checked' : 'check'}
+                  checked={check.includes(rowIndex)}
+                  onChange={handleCheck(rowIndex)}
                 />
               ),
               className: isSection ? 'set' : 'pass',
             } as ICell,
           ].concat(
-            r.map((e, j) => {
-              return j !== 3 || isSection
+            row.map((e, cellIndex) => {
+              return cellIndex !== bookCol || isSection
                 ? {
                     value: e,
                     className:

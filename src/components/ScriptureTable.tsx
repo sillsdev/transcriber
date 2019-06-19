@@ -119,18 +119,20 @@ export function ScriptureTable(props: IProps) {
   );
   const [inData, setInData] = useState(Array<Array<any>>());
 
+  const BookCol = 3;
+
   const handleMessageReset = () => {
     setMessage(<></>);
   };
   const addSection = () => {
-    const sequenceNums = data.map(r => r[0] || 0) as number[];
+    const sequenceNums = data.map(row => row[0] || 0) as number[];
     const sequencenum = Math.max(...sequenceNums, 0) + 1;
     setData([...data.concat([[sequencenum, '', '', '', '', '']])]);
   };
   const addPassage = () => {
     const lastRow = data.length - 1;
     const sequencenum = (data[lastRow][2] || 0) + 1;
-    const book = data[lastRow][3] || '';
+    const book = data[lastRow][BookCol] || '';
     setData([...data.concat([['', '', sequencenum, book, '', '']])]);
   };
   const handleAction = (what: string, where: number[]) => {
@@ -138,16 +140,20 @@ export function ScriptureTable(props: IProps) {
       const deleteRow = async (id: RecordIdentity) => {
         await (dataStore as Store).update(t => t.removeRecord(id));
       };
-      for (let j = 0; j < where.length; j += 1) {
-        const i = where[j];
-        if (sectionId[i] && sectionId[i].id) {
-          deleteRow(sectionId[i]);
+      for (
+        let rowListIndex = 0;
+        rowListIndex < where.length;
+        rowListIndex += 1
+      ) {
+        const rowIndex = where[rowListIndex];
+        if (sectionId[rowIndex] && sectionId[rowIndex].id) {
+          deleteRow(sectionId[rowIndex]);
         }
-        if (passageId[i] && passageId[i].id) {
-          deleteRow(passageId[i]);
+        if (passageId[rowIndex] && passageId[rowIndex].id) {
+          deleteRow(passageId[rowIndex]);
         }
       }
-      setData(data.filter((r, i) => !where.includes(i)));
+      setData(data.filter((row, rowIndex) => !where.includes(rowIndex)));
       return true;
     }
     setMessage(<span>{what}...</span>);
@@ -156,24 +162,30 @@ export function ScriptureTable(props: IProps) {
   const validTable = (rows: string[][]) => {
     if (rows.length === 0) return false;
     if (rows[0].length !== 6) return false;
-    if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[0])).length > 0)
+    if (
+      rows.filter((row, rowIndex) => rowIndex > 0 && !/^[0-9]*$/.test(row[0]))
+        .length > 0
+    )
       return false;
-    if (rows.filter((r, i) => i > 0 && !/^[0-9]*$/.test(r[2])).length > 0)
+    if (
+      rows.filter((row, rowIndex) => rowIndex > 0 && !/^[0-9]*$/.test(row[2]))
+        .length > 0
+    )
       return false;
     return true;
   };
-  const lookupBook = (c: string): string => {
-    const s = c.toLocaleUpperCase();
-    if (!bookMap[s]) {
+  const lookupBook = (userBookDes: string): string => {
+    const userBookDesUc = userBookDes.toLocaleUpperCase();
+    if (userBookDesUc !== '' && !bookMap[userBookDesUc]) {
       const proposed = allBookData.filter(
-        d =>
-          d.short.toLocaleUpperCase() === s ||
-          d.long.toLocaleUpperCase() === s ||
-          d.abbr.toLocaleUpperCase() === s
+        bookName =>
+          bookName.short.toLocaleUpperCase() === userBookDesUc ||
+          bookName.long.toLocaleUpperCase() === userBookDesUc ||
+          bookName.abbr.toLocaleUpperCase() === userBookDesUc
       );
       if (proposed.length >= 1) return proposed[0].code;
     }
-    return s;
+    return userBookDesUc;
   };
   const handlePaste = (rows: string[][]) => {
     if (validTable(rows)) {
@@ -181,8 +193,12 @@ export function ScriptureTable(props: IProps) {
       setData([
         ...data.concat(
           rows
-            .filter((r, i) => i >= startRow)
-            .map(r => r.map((c, j) => (j !== 3 ? c : lookupBook(c))))
+            .filter((row, rowIndex) => rowIndex >= startRow)
+            .map(row =>
+              row.map((col, colIndex) =>
+                colIndex !== BookCol ? col : lookupBook(col)
+              )
+            )
         ),
       ]);
       return Array<Array<string>>();
@@ -193,13 +209,13 @@ export function ScriptureTable(props: IProps) {
     setData(rows);
   };
   const handleSave = (rows: string[][]) => {
-    const addPassage = async (i: number, sId: string) => {
-      const passageRow = rows[i];
+    const addPassage = async (rowIndex: number, secId: string) => {
+      const passageRow = rows[rowIndex];
       const p = {
         type: 'passage',
         attributes: {
           sequencenum: passageRow[2],
-          book: passageRow[3],
+          book: passageRow[BookCol],
           reference: passageRow[4],
           title: passageRow[5],
           position: 0,
@@ -221,7 +237,7 @@ export function ScriptureTable(props: IProps) {
         t.replaceRelatedRecord(
           { type: 'passagesection', id: passageSection.id },
           'section',
-          { type: 'section', id: sId }
+          { type: 'section', id: secId }
         ),
         t.replaceRelatedRecord(
           { type: 'passagesection', id: passageSection.id },
@@ -230,9 +246,9 @@ export function ScriptureTable(props: IProps) {
         ),
       ]);
     };
-    const changePassage = async (i: number) => {
-      const passageRow = rows[i];
-      const inpRow = inData[i];
+    const changePassage = async (rowIndex: number) => {
+      const passageRow = rows[rowIndex];
+      const inpRow = inData[rowIndex];
       if (
         passageRow[2] !== inpRow[2] ||
         passageRow[3] !== inpRow[3] ||
@@ -240,70 +256,74 @@ export function ScriptureTable(props: IProps) {
         passageRow[5] !== inpRow[5]
       ) {
         let passage = (await (dataStore as Store).query(q =>
-          q.findRecord(passageId[i])
+          q.findRecord(passageId[rowIndex])
         )) as Passage;
         passage.attributes.sequencenum = parseInt(passageRow[2]);
-        passage.attributes.book = passageRow[3];
+        passage.attributes.book = passageRow[BookCol];
         passage.attributes.reference = passageRow[4];
         passage.attributes.title = passageRow[5];
         delete passage.relationships;
         await (dataStore as Store).update(t => t.replaceRecord(passage));
       }
     };
-    const doPassages = (i: number, sId: string) => {
+    const doPassages = (rowIndex: number, secId: string) => {
       do {
-        const passageRow = rows[i];
+        const passageRow = rows[rowIndex];
         if (/^[0-9]+$/.test(passageRow[2])) {
-          if (!passageId[i]) {
-            addPassage(i, sId);
+          if (!passageId[rowIndex]) {
+            addPassage(rowIndex, secId);
           } else {
-            changePassage(i);
+            changePassage(rowIndex);
           }
         }
-        i += 1;
-      } while (i < rows.length && rows[i][0] === '');
+        rowIndex += 1;
+      } while (rowIndex < rows.length && rows[rowIndex][0] === '');
     };
-    const addSection = async (i: number, planId: string, projectId: string) => {
-      const sectionRow = rows[i];
-      const s = {
+    const addSection = async (
+      rowIndex: number,
+      planId: string,
+      projectId: string
+    ) => {
+      const sectionRow = rows[rowIndex];
+      const sec = {
         type: 'section',
         attributes: {
           sequencenum: parseInt(sectionRow[0]),
           name: sectionRow[1],
         },
       } as any;
-      (schema as Schema).initializeRecord(s);
+      (schema as Schema).initializeRecord(sec);
       await (dataStore as Store).update(t => [
-        t.addRecord(s),
-        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'plan', {
+        t.addRecord(sec),
+        t.replaceRelatedRecord({ type: 'section', id: sec.id }, 'plan', {
           type: 'plan',
           id: planId,
         }),
       ]);
-      return s;
+      return sec;
     };
-    const changeSection = async (i: number) => {
-      const sectionRow = rows[i];
-      const inpRow = inData[i];
+    const changeSection = async (rowIndex: number) => {
+      const sectionRow = rows[rowIndex];
+      const inpRow = inData[rowIndex];
       if (sectionRow[0] !== inpRow[0] || sectionRow[1] !== inpRow[1]) {
         let section = (await (dataStore as Store).query(q =>
-          q.findRecord(sectionId[i])
+          q.findRecord(sectionId[rowIndex])
         )) as Section;
         section.attributes.sequencenum = parseInt(sectionRow[0]);
         section.attributes.name = sectionRow[1];
         delete section.relationships;
         await (dataStore as Store).update(t => t.replaceRecord(section));
       }
-      return sectionId[i];
+      return sectionId[rowIndex];
     };
-    for (let i = 0; i < rows.length; i += 1) {
-      if (/^[0-9]+$/.test(rows[i][0])) {
-        if (!sectionId[i] || !sectionId[i].id) {
-          addSection(i, plan as string, project as string).then(s =>
-            doPassages(i, s.id)
+    for (let rowIndex = 0; rowIndex < rows.length; rowIndex += 1) {
+      if (/^[0-9]+$/.test(rows[rowIndex][0])) {
+        if (!sectionId[rowIndex] || !sectionId[rowIndex].id) {
+          addSection(rowIndex, plan as string, project as string).then(sec =>
+            doPassages(rowIndex, sec.id)
           );
         } else {
-          changeSection(i).then(s => doPassages(i, s.id));
+          changeSection(rowIndex).then(sec => doPassages(rowIndex, sec.id));
         }
       }
     }
@@ -339,19 +359,23 @@ export function ScriptureTable(props: IProps) {
         });
       }
     };
-    const getPassageSection = async (s: Section) => {
+    const getPassageSection = async (sec: Section) => {
       let passageSections = (await (dataStore as Store).query(q =>
         q.findRecords('passagesection')
       )) as Array<PassageSection>;
       // query filter doesn't work with JsonApi since id not translated
       passageSections = passageSections.filter(
-        ps => Related(ps, 'section') === s.id
+        ps => Related(ps, 'section') === sec.id
       );
       if (passageSections != null) {
         let passages = Array<Array<string | number>>();
         let ids = Array<ISequencedRecordIdentity>();
-        for (let j = 0; j < passageSections.length; j += 1) {
-          let ps = passageSections[j] as PassageSection;
+        for (
+          let psgIndex = 0;
+          psgIndex < passageSections.length;
+          psgIndex += 1
+        ) {
+          let ps = passageSections[psgIndex] as PassageSection;
           await getPassage(Related(ps, 'passage'), passages, ids);
         }
         passages = passages.sort((i, j) => {
@@ -360,12 +384,12 @@ export function ScriptureTable(props: IProps) {
         ids = ids.sort((i, j) => {
           return i.sequencenum - j.sequencenum;
         });
-        for (let j = 0; j < passages.length; j += 1) {
+        for (let psgIndex = 0; psgIndex < passages.length; psgIndex += 1) {
           while (passageIds.length < initData.length) {
             passageIds.push({ type: '', id: '', sequencenum: 0 });
           }
-          passageIds[initData.length] = ids[j];
-          initData.push(passages[j]);
+          passageIds[initData.length] = ids[psgIndex];
+          initData.push(passages[psgIndex]);
         }
       }
     };
@@ -381,22 +405,22 @@ export function ScriptureTable(props: IProps) {
         (i, j) => i.attributes.sequencenum - j.attributes.sequencenum
       );
       if (sections != null) {
-        for (let i = 0; i < sections.length; i += 1) {
-          let s = sections[i] as Section;
-          if (!s.attributes) continue;
+        for (let secIndex = 0; secIndex < sections.length; secIndex += 1) {
+          let sec = sections[secIndex] as Section;
+          if (!sec.attributes) continue;
           while (sectionIds.length < initData.length) {
             sectionIds.push({ type: '', id: '' });
           }
-          sectionIds[initData.length] = { type: 'section', id: s.id };
+          sectionIds[initData.length] = { type: 'section', id: sec.id };
           initData.push([
-            s.attributes.sequencenum,
-            s.attributes.name,
+            sec.attributes.sequencenum,
+            sec.attributes.name,
             '',
             '',
             '',
             '',
           ]);
-          await getPassageSection(s);
+          await getPassageSection(sec);
         }
       }
     };
@@ -414,6 +438,7 @@ export function ScriptureTable(props: IProps) {
       <PlanSheet
         columns={columns}
         rowData={data as any[][]}
+        bookCol={BookCol}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
         save={handleSave}
@@ -422,6 +447,7 @@ export function ScriptureTable(props: IProps) {
         addPassage={addPassage}
         updateData={updateData}
         paste={handlePaste}
+        lookupBook={lookupBook}
         t={s}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
