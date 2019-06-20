@@ -180,7 +180,6 @@ interface IDispatchProps {
 }
 
 interface IRecordProps {
-  addit: boolean;
   userPassages: Array<UserPassage>;
   passages: Array<Passage>;
   passageSections: Array<PassageSection>;
@@ -194,6 +193,7 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithStyles<typeof styles> {
+  addit: boolean;
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
 }
@@ -280,7 +280,16 @@ export function AssignmentTable(props: IProps) {
         roles
       )
     );
-  }, [plan, userPassages, passages, passageSections, sections, users, roles]);
+  }, [
+    addit,
+    plan,
+    userPassages,
+    passages,
+    passageSections,
+    sections,
+    users,
+    roles,
+  ]);
 
   return (
     <div className={classes.container}>
@@ -339,7 +348,7 @@ export function AssignmentTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaTab' }),
+  t: localStrings(state, { layout: 'assignmentTable' }),
 });
 
 const mapRecordsToProps = {

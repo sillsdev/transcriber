@@ -50,9 +50,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       changeTab(value);
     }
   };
-  function BuildLabel(s: string, n: number) {
-    return s + n;
-  }
   return (
     <div className={classes.root}>
       <AppBar position="static" color="default">
