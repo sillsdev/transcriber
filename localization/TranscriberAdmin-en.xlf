@@ -706,6 +706,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignmentTable.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTabs.sectionsPassages">
          <segment>
             <source>Sections &amp; Passages</source>
@@ -889,6 +895,12 @@
       <unit id="mediaTab.date">
          <segment>
             <source>Date</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.filter">
+         <segment>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>

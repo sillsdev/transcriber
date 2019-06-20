@@ -608,13 +608,13 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-      <unit id="assignmentTable.title">
-         <segment>
-            <source>Assignments</source>
-            <target/>
-         </segment>
-      </unit>
-	<unit id="assignmentTable.section">
+		<unit id="assignmentTable.title">
+			<segment>
+				<source>Assignments</source>
+				<target/>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>
@@ -637,8 +637,8 @@
 				<source>State</source>
 				<target>État</target>
 			</segment>
-			</unit>
-      <unit id="assignmentTable.user">
+		</unit>
+		<unit id="assignmentTable.user">
 			<segment>
 				<source>User</source>
 				<target>Utilisatrice</target>
@@ -663,11 +663,11 @@
 			</segment>
 		</unit>
 		<unit id="assignmentTable.delete">
-         <segment>
-            <source>Remove Assignment</source>
-            <target>Supprimer un affectation</target>
-         </segment>
-      </unit>
+			<segment>
+				<source>Remove Assignment</source>
+				<target>Supprimer un affectation</target>
+			</segment>
+		</unit>
 		<unit id="scriptureTable.section">
 			<segment>
 				<source>Section</source>
@@ -702,6 +702,12 @@
 			<segment>
 				<source>Description du passage</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.filter">
+			<segment>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="planTabs.sectionsPassages">
@@ -891,6 +897,12 @@
 			<segment>
 				<source>Date</source>
 				<target>Date</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.filter">
+			<segment>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 	</file>

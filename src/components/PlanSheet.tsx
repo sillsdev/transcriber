@@ -29,6 +29,9 @@ const styles = (theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   }),
+  grow: {
+    flexGrow: 1,
+  },
   button: {
     margin: theme.spacing(1),
   },
@@ -295,6 +298,7 @@ export function PlanSheet(props: IProps) {
             {t.addPassage}
             <AddIcon className={classes.icon} />
           </Button>
+          <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="save"
             aria-label={t.save}

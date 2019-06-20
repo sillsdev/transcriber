@@ -822,6 +822,13 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="assignmentTable.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="planTabs.sectionsPassages">
 				<source>Sections &#x26; Passages</source>
 				<target/>
@@ -1034,6 +1041,13 @@
 			</trans-unit>
 			<trans-unit id="mediaTab.date">
 				<source>Date</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.filter">
+				<source>Filter</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>

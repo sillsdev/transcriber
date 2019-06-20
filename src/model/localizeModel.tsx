@@ -167,6 +167,7 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "action": string;
     "assignPassage": string;
     "delete": string;
+    "filter": string;
 };
 
 export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
@@ -207,6 +208,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "version": string;
     "section": string;
     "date": string;
+    "filter": string;
 };
 
 export interface ILocalizedStrings {

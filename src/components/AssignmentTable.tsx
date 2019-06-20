@@ -15,7 +15,7 @@ import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem, IconButton } from '@material-ui/core';
+import { Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
@@ -41,6 +41,9 @@ const styles = (theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   }),
+  grow: {
+    flexGrow: 1,
+  },
   button: {
     margin: theme.spacing(1),
   },
@@ -320,9 +323,23 @@ export function AssignmentTable(props: IProps) {
               {t.delete}
             </MenuItem>{' '}
           </Menu>
-          <IconButton onClick={handleFilter} title={'Show/Hide filter rows'}>
-            {filter ? <SelectAllIcon /> : <FilterIcon />}
-          </IconButton>
+          <div className={classes.grow}>{'\u00A0'}</div>
+          <Button
+            key="filter"
+            aria-label={t.filter}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleFilter}
+            title={'Show/Hide filter rows'}
+          >
+            {t.filter}
+            {filter ? (
+              <SelectAllIcon className={classes.icon} />
+            ) : (
+              <FilterIcon className={classes.icon} />
+            )}
+          </Button>
         </div>
         <ShapingTable
           columns={columnDefs}

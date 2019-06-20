@@ -189,6 +189,7 @@ const initialState = {
 			"action": "Action",
 			"assignPassage": "Assign Passage",
 			"delete": "Remove Assignment",
+			"filter": "Filter",
 		}
 	}),
 	"planTabs": new LocalizedStrings({
@@ -232,6 +233,7 @@ const initialState = {
 			"version": "Version",
 			"section": "Section",
 			"date": "Date",
+			"filter": "Filter",
 		}
 	}),
 };
