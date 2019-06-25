@@ -140,8 +140,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "move": string;
     "copy": string;
-    "assignMedia": string;
-    "assignPassage": string;
+    "attachMedia": string;
     "addSection": string;
     "addPassage": string;
     "save": string;
@@ -165,7 +164,7 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "user": string;
     "role": string;
     "action": string;
-    "assignPassage": string;
+    "attachPassage": string;
     "delete": string;
     "filter": string;
 };
@@ -196,7 +195,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "download": string;
     "changeVersion": string;
-    "assignPassage": string;
+    "attachPassage": string;
     "uploadMedia": string;
     "fileName": string;
     "sectionId": string;
@@ -209,6 +208,15 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "section": string;
     "date": string;
     "filter": string;
+};
+
+export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
+    "attachAvailableMedia": string;
+    "attachMediaToPassages": string;
+    "choosePassage": string;
+    "availableMedia": string;
+    "attachments": string;
+    "close": string;
 };
 
 export interface ILocalizedStrings {
@@ -234,5 +242,6 @@ export interface ILocalizedStrings {
 	planTabs: IPlanTabsStrings;
 	planAdd: IPlanAddStrings;
 	mediaTab: IMediaTabStrings;
+	passageMedia: IPassageMediaStrings;
 	[key: string]: any;
 };

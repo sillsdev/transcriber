@@ -9,6 +9,7 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
+import PassageMedia from './PassageMedia';
 import Confirm from './AlertDialog';
 import BookSelect from './ReactSelect';
 import 'react-datasheet/lib/react-datasheet.css';
@@ -95,6 +96,7 @@ export function PlanSheet(props: IProps) {
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
+  const [passageMediaVisible, setPassageMediaVisible] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -159,6 +161,10 @@ export function PlanSheet(props: IProps) {
   };
   const handleActionRefused = () => {
     setConfirmAction('');
+  };
+  const handlePassageMedia = (status: boolean) => (e: any) => {
+    setActionMenuItem(null);
+    setPassageMediaVisible(status);
   };
 
   const handleCellsChanged = (changes: Array<IChange>) => {
@@ -269,11 +275,8 @@ export function PlanSheet(props: IProps) {
             </MenuItem>
             <MenuItem onClick={handleConfirmAction('Move')}>{t.move}</MenuItem>
             <MenuItem onClick={handleConfirmAction('Copy')}>{t.copy}</MenuItem>
-            <MenuItem onClick={handleConfirmAction('Assign Media')}>
-              {t.assignMedia}
-            </MenuItem>
-            <MenuItem onClick={handleConfirmAction('Assign Passage')}>
-              {t.assignPassage}
+            <MenuItem onClick={handlePassageMedia(true)}>
+              {t.attachMedia}
             </MenuItem>
           </Menu>
           <Button
@@ -321,6 +324,10 @@ export function PlanSheet(props: IProps) {
           parsePaste={handlePaste}
         />
       </div>
+      <PassageMedia
+        visible={passageMediaVisible}
+        closeMethod={handlePassageMedia(false)}
+      />
       {confirmAction !== '' ? (
         <Confirm
           text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}

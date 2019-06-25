@@ -675,15 +675,8 @@
 					<context context-type="sourcefile">PlanSheet.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="planSheet.assignMedia">
-				<source>Assign Media</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">PlanSheet.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="planSheet.assignPassage">
-				<source>Assign Passage</source>
+			<trans-unit id="planSheet.attachMedia">
+				<source>Attach Media</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -808,8 +801,8 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="assignmentTable.assignPassage">
-				<source>Assign Passage</source>
+			<trans-unit id="assignmentTable.attachPassage">
+				<source>Attach Passage</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
@@ -962,8 +955,8 @@
 					<context context-type="sourcefile">MediaTab.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="mediaTab.assignPassage">
-				<source>Assign Passage</source>
+			<trans-unit id="mediaTab.attachPassage">
+				<source>Attach Passage</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>
@@ -1051,6 +1044,48 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.attachAvailableMedia">
+				<source>Attach available media files to passages (with no current media).</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.attachMediaToPassages">
+				<source>Attach Media to Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.choosePassage">
+				<source>Choose Your Passage ({0} without attachments)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.availableMedia">
+				<source>Available Media ({0})</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.attachments">
+				<source>Attachments ({0}) Select if you want to detach the media from the passage.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.close">
+				<source>Close</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

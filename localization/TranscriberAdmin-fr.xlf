@@ -578,16 +578,10 @@
 				<target>Copier</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.assignMedia">
+		<unit id="planSheet.attachMedia">
 			<segment>
-				<source>Assign Media</source>
-				<target>Assigner un média</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.assignPassage">
-			<segment>
-				<source>Assign Passage</source>
-				<target>Attribuer un passage</target>
+				<source>Attach Media</source>
+				<target>Attacher un média</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.addSection">
@@ -656,10 +650,10 @@
 				<target>Action</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.assignPassage">
+		<unit id="assignmentTable.attachPassage">
 			<segment>
-				<source>Assign Passage</source>
-				<target>Assigner un passage</target>
+				<source>Attach Passage</source>
+				<target>Attacher un passage</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.delete">
@@ -827,10 +821,10 @@
 				<target>Modifier la version</target>
 			</segment>
 		</unit>
-		<unit id="mediaTab.assignPassage">
+		<unit id="mediaTab.attachPassage">
 			<segment>
-				<source>Assign Passage</source>
-				<target>Assigner un passage</target>
+				<source>Attach Passage</source>
+				<target>Attacher un passage</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.uploadMedia">
@@ -903,6 +897,42 @@
 			<segment>
 				<source>Filter</source>
 				<target>Filtre</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.attachAvailableMedia">
+			<segment>
+				<source>Attach available media files to passages (with no current media).</source>
+				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne contiennent aucun média actuel).</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.attachMediaToPassages">
+			<segment>
+				<source>Attach Media to Passages</source>
+				<target>Attacher les médias aux passages</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.choosePassage">
+			<segment>
+				<source>Choose Your Passage ({0} without attachments)</source>
+				<target>Choisissez votre passage ({0} sans pièces jointes)</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.availableMedia">
+			<segment>
+				<source>Available Media ({0})</source>
+				<target>Médias disponibles ({0})</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.attachments">
+			<segment>
+				<source>Attachments ({0}) Select if you want to detach the media from the passage.</source>
+				<target>Pièces jointes ({0})Pièces jointes ({0}) Sélectionnez si vous souhaitez détacher le fichier multimédia du passage.</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.close">
+			<segment>
+				<source>Close</source>
+				<target>Fermer</target>
 			</segment>
 		</unit>
 	</file>

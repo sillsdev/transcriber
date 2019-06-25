@@ -580,15 +580,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.assignMedia">
+      <unit id="planSheet.attachMedia">
          <segment>
-            <source>Assign Media</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.assignPassage">
-         <segment>
-            <source>Assign Passage</source>
+            <source>Attach Media</source>
             <target/>
          </segment>
       </unit>
@@ -694,9 +688,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.assignPassage">
+      <unit id="assignmentTable.attachPassage">
          <segment>
-            <source>Assign Passage</source>
+            <source>Attach Passage</source>
             <target/>
          </segment>
       </unit>
@@ -826,9 +820,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.assignPassage">
+      <unit id="mediaTab.attachPassage">
          <segment>
-            <source>Assign Passage</source>
+            <source>Attach Passage</source>
             <target/>
          </segment>
       </unit>
@@ -901,6 +895,42 @@
       <unit id="mediaTab.filter">
          <segment>
             <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.attachAvailableMedia">
+         <segment>
+            <source>Attach available media files to passages (with no current media).</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.attachMediaToPassages">
+         <segment>
+            <source>Attach Media to Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.choosePassage">
+         <segment>
+            <source>Choose Your Passage ({0} without attachments)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.availableMedia">
+         <segment>
+            <source>Available Media ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.attachments">
+         <segment>
+            <source>Attachments ({0}) Select if you want to detach the media from the passage.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.close">
+         <segment>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>

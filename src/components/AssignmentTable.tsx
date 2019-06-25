@@ -316,9 +316,6 @@ export function AssignmentTable(props: IProps) {
             open={Boolean(actionMenuItem)}
             onClose={handleConfirmAction('Close')}
           >
-            <MenuItem onClick={handleConfirmAction('Assign Passage')}>
-              {t.assignPassage}
-            </MenuItem>
             <MenuItem onClick={handleConfirmAction('Remove Assignment')}>
               {t.delete}
             </MenuItem>{' '}

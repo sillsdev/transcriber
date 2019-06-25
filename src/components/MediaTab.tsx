@@ -22,6 +22,7 @@ import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import MediaUpload from './MediaUpload';
+import PassageMedia from './PassageMedia';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
@@ -106,10 +107,10 @@ const getMedia = (
   );
   const rowData = media.map(f => {
     const passageId = related(f, 'passage');
-    const passage = passages.filter(p => p.id === passageId);
-    const passageSection = passageSections.filter(
-      ps => related(ps, 'passage') === passageId
-    );
+    const passage = passageId ? passages.filter(p => p.id === passageId) : [];
+    const passageSection = passageId
+      ? passageSections.filter(ps => related(ps, 'passage') === passageId)
+      : [];
     const sectionId =
       passageSection.length > 0 ? related(passageSection[0], 'section') : '';
     const section = sections.filter(s => s.id === sectionId);
@@ -233,6 +234,7 @@ export function MediaTab(props: IProps) {
   const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [passageMediaVisible, setPassageMediaVisible] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -270,6 +272,10 @@ export function MediaTab(props: IProps) {
   };
   const handleActionRefused = () => {
     setConfirmAction('');
+  };
+  const handlePassageMedia = (status: boolean) => (e: any) => {
+    setActionMenuItem(null);
+    setPassageMediaVisible(status);
   };
   const handleCheck = (checks: Array<number>) => {
     setCheck(checks);
@@ -341,8 +347,8 @@ export function MediaTab(props: IProps) {
             <MenuItem onClick={handleConfirmAction('Change Version')}>
               {t.changeVersion}
             </MenuItem>
-            <MenuItem onClick={handleConfirmAction('Assign Passage')}>
-              {t.assignPassage}
+            <MenuItem onClick={handlePassageMedia(true)}>
+              {t.attachPassage}
             </MenuItem>
           </Menu>
           <Button
@@ -388,6 +394,10 @@ export function MediaTab(props: IProps) {
         visible={uploadVisible}
         uploadMethod={uploadMedia}
         cancelMethod={uploadCancel}
+      />
+      <PassageMedia
+        visible={passageMediaVisible}
+        closeMethod={handlePassageMedia(false)}
       />
       {confirmAction !== '' ? (
         <Confirm

@@ -160,8 +160,7 @@ const initialState = {
 			"delete": "Delete",
 			"move": "Move",
 			"copy": "Copy",
-			"assignMedia": "Assign Media",
-			"assignPassage": "Assign Passage",
+			"attachMedia": "Attach Media",
 			"addSection": "Add Section",
 			"addPassage": "Add Passage",
 			"save": "Save",
@@ -187,7 +186,7 @@ const initialState = {
 			"user": "User",
 			"role": "Role",
 			"action": "Action",
-			"assignPassage": "Assign Passage",
+			"attachPassage": "Attach Passage",
 			"delete": "Remove Assignment",
 			"filter": "Filter",
 		}
@@ -221,7 +220,7 @@ const initialState = {
 			"delete": "Delete",
 			"download": "Download",
 			"changeVersion": "Change Version",
-			"assignPassage": "Assign Passage",
+			"attachPassage": "Attach Passage",
 			"uploadMedia": "Upload Media",
 			"fileName": "File Name",
 			"sectionId": "Section Id",
@@ -234,6 +233,16 @@ const initialState = {
 			"section": "Section",
 			"date": "Date",
 			"filter": "Filter",
+		}
+	}),
+	"passageMedia": new LocalizedStrings({
+		"en": {
+			"attachAvailableMedia": "Attach available media files to passages (with no current media).",
+			"attachMediaToPassages": "Attach Media to Passages",
+			"choosePassage": "Choose Your Passage ({0} without attachments)",
+			"availableMedia": "Available Media ({0})",
+			"attachments": "Attachments ({0}) Select if you want to detach the media from the passage.",
+			"close": "Close",
 		}
 	}),
 };
@@ -264,6 +273,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),
 				"planAdd" : new LocalizedStrings(action.payload.data.planAdd),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
+				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 			};
 		case SET_LANGUAGE:
 			return {
