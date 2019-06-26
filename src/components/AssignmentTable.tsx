@@ -21,11 +21,12 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
-import ShapingTable from './ShapingTable';
+import TreeGrid from './TreeGrid';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
 import remoteId from '../utils/remoteId';
 import UserPassage from '../model/userPassage';
+import './AssignmentTable.css';
 
 const styles = (theme: Theme) => ({
   container: {
@@ -53,26 +54,34 @@ const styles = (theme: Theme) => ({
 });
 
 interface IRow {
-  section: string;
-  sectionstate: string;
-  passage: string;
-  passagestate: string;
-  user: string;
-  role: string;
+  id: string;
+  name: string;
+  state: string;
+  transcriber: string;
+  reviewer: string;
+  passages: string;
+  parentId: string;
 }
+//const getChildRows = (row: any, rootRows: any[]) =>
+//  row ? row.items : rootRows;
+const getChildRows = (row: any, rootRows: any[]) => {
+  const childRows = rootRows.filter(r => r.parentId === (row ? row.id : ''));
+  return childRows.length ? childRows : null;
+};
 
+/* build the section name = sequence + name */
 const getSection = (section: Section) => {
   const sectionId = section.attributes.sequencenum
-    ? section.attributes.sequencenum.toString()
+    ? section.attributes.sequencenum.toString().padStart(3, ' ')
     : '';
   const sectionName = section.attributes.name;
   return sectionId + ' ' + sectionName;
 };
-
+/* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage[]) => {
   if (passage.length === 0) return '';
   return (
-    passage[0].attributes.sequencenum +
+    passage[0].attributes.sequencenum.toString().padStart(3, ' ') +
     ' ' +
     passage[0].attributes.book +
     ' ' +
@@ -91,7 +100,6 @@ function passageCompare(a: Passage, b: Passage) {
 }
 
 const getAssignments = (
-  addit: boolean,
   plan: string,
   userPassages: Array<UserPassage>,
   passages: Array<Passage>,
@@ -105,19 +113,23 @@ const getAssignments = (
     const pb = passages.filter(p => p.id === related(b, 'passage'));
     return passageCompare(pa[0], pb[0]);
   }
+  var sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
     .filter(s => s.attributes.planId === remoteId('plan', plan))
     .sort(sectionCompare);
+
   plansections.forEach(function(section) {
-    rowData.push({
-      section: getSection(section),
-      sectionstate: section.attributes.state,
-      passage: '',
-      passagestate: '',
-      user: '',
-      role: '',
-    } as IRow);
+    sectionRow = {
+      id: section.id,
+      name: getSection(section),
+      state: section.attributes.state,
+      reviewer: '',
+      transcriber: '',
+      passages: '0', //alternatively we could format in the tree to now show on passage rows
+      parentId: '',
+    };
+    rowData.push(sectionRow);
     //const passageSections: PassageSection[] = related(section, 'passages');
     const sectionps = passageSections
       .filter(ps => ps.attributes.sectionId === remoteId('section', section.id))
@@ -125,26 +137,22 @@ const getAssignments = (
     sectionps.forEach(function(ps, psindex) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
-      if (psindex === 0) {
-        //add my data to the last row
-        rowData[rowData.length - 1].passage = getReference(passage);
-        rowData[rowData.length - 1].passagestate = passage[0].attributes.state;
-      } else {
-        rowData.push({
-          section: addit ? rowData[rowData.length - 1].section : '',
-          sectionstate: addit ? rowData[rowData.length - 1].sectionstate : '',
-          passage: getReference(passage),
-          passagestate: passage[0].attributes.state,
-          user: '',
-          role: '',
-        } as IRow);
-      }
-      //const userPassages: UserPassage[] = related(passage, 'users');
-      console.log(remoteId('passage', passage[0].id));
+      //add this passage to the section passage count
+      sectionRow.passages = (parseInt(sectionRow.passages) + 1).toString();
+      //rowData[rowData.length - 1].items.push({
+      rowData.push({
+        id: passageId,
+        name: getReference(passage),
+        state: passage[0].attributes.state,
+        reviewer: '',
+        transcriber: '',
+        passages: '',
+        parentId: section.id,
+      } as IRow);
+
       const passageups = userPassages.filter(
         up => up.attributes.passageId === remoteId('passage', passage[0].id)
       );
-      console.log(passageups.length);
       passageups.forEach(function(up, upindex) {
         const userId = related(up, 'user');
         const user = users.filter(u => u.id === userId);
@@ -152,19 +160,13 @@ const getAssignments = (
         const roleId = related(up, 'role');
         const role = roles.filter(r => r.id === roleId);
         const rolename = role.length > 0 ? role[0].attributes.roleName : '';
-        if (upindex === 0) {
-          //add my data to the last row
-          rowData[rowData.length - 1].user = username;
-          rowData[rowData.length - 1].role = rolename;
+        if (rolename === 'Reviewer') {
+          //add my data to the last row and the section row
+          rowData[rowData.length - 1].reviewer = username;
+          sectionRow.reviewer = username;
         } else {
-          rowData.push({
-            section: addit ? rowData[rowData.length - 1].section : '',
-            sectionstate: addit ? rowData[rowData.length - 1].sectionstate : '',
-            passage: addit ? rowData[rowData.length - 1].passage : '',
-            passagestate: addit ? rowData[rowData.length - 1].passagestate : '',
-            user: username,
-            role: rolename,
-          } as IRow);
+          rowData[rowData.length - 1].transcriber = username;
+          sectionRow.transcriber = username;
         }
       });
     });
@@ -175,7 +177,7 @@ const getAssignments = (
 interface IStateProps {
   t: IAssignmentTableStrings;
 }
-
+//TODO:
 interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
@@ -196,7 +198,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithStyles<typeof styles> {
-  addit: boolean;
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
 }
@@ -206,7 +207,6 @@ export function AssignmentTable(props: IProps) {
     classes,
     t,
     action,
-    addit,
     passages,
     passageSections,
     sections,
@@ -221,24 +221,22 @@ export function AssignmentTable(props: IProps) {
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
-    { name: 'section', title: t.section },
-    { name: 'sectionstate', title: t.sectionstate },
-    { name: 'passage', title: t.passage },
-    { name: 'passagestate', title: t.passagestate },
-    { name: 'user', title: t.user },
-    { name: 'role', title: t.role },
+    { name: 'name', title: t.section },
+    { name: 'state', title: t.sectionstate },
+    { name: 'passages', title: t.passages },
+    { name: 'transcriber', title: t.transcriber },
+    { name: 'reviewer', title: t.reviewer },
   ];
   const columnWidths = [
-    { columnName: 'section', width: 180 },
-    { columnName: 'sectionstate', width: 120 },
-    { columnName: 'passage', width: 150 },
-    { columnName: 'passagestate', width: 120 },
-    { columnName: 'user', width: 100 },
-    { columnName: 'role', width: 100 },
+    { columnName: 'name', width: 300 },
+    { columnName: 'state', width: 150 },
+    { columnName: 'passages', width: 100 },
+    { columnName: 'transcriber', width: 200 },
+    { columnName: 'reviewer', width: 200 },
   ];
 
-  const numCols: string[] = [];
   const [filter, setFilter] = useState(false);
+  const [group, setGroup] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -269,11 +267,11 @@ export function AssignmentTable(props: IProps) {
   };
 
   const handleFilter = () => setFilter(!filter);
+  const handleGroup = () => setGroup(!group);
 
   useEffect(() => {
     setData(
       getAssignments(
-        addit,
         plan as string,
         userPassages,
         passages,
@@ -283,19 +281,10 @@ export function AssignmentTable(props: IProps) {
         roles
       )
     );
-  }, [
-    addit,
-    plan,
-    userPassages,
-    passages,
-    passageSections,
-    sections,
-    users,
-    roles,
-  ]);
+  }, [plan, userPassages, passages, passageSections, sections, users, roles]);
 
   return (
-    <div className={classes.container}>
+    <div id="AssignmentTable" className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
           <Button
@@ -316,8 +305,8 @@ export function AssignmentTable(props: IProps) {
             open={Boolean(actionMenuItem)}
             onClose={handleConfirmAction('Close')}
           >
-            <MenuItem onClick={handleConfirmAction('Assign Passage')}>
-              {t.assignPassage}
+            <MenuItem onClick={handleConfirmAction('Assign Section')}>
+              {t.assignSection}
             </MenuItem>
             <MenuItem onClick={handleConfirmAction('Remove Assignment')}>
               {t.delete}
@@ -340,15 +329,43 @@ export function AssignmentTable(props: IProps) {
               <FilterIcon className={classes.icon} />
             )}
           </Button>
+          <Button
+            key="group"
+            aria-label={t.group}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleGroup}
+            title={'Show/Hide group panel'}
+          >
+            {t.group}
+            {group ? (
+              <SelectAllIcon className={classes.icon} />
+            ) : (
+              <FilterIcon className={classes.icon} />
+            )}
+          </Button>
         </div>
-        <ShapingTable
+        <TreeGrid
           columns={columnDefs}
           columnWidths={columnWidths}
-          numCols={numCols}
           rows={data}
+          getChildRows={getChildRows}
+          pageSizes={[5, 10, 20]}
+          tableColumnExtensions={[
+            { columnName: 'passages', align: 'right' },
+            { columnName: 'name', wordWrapEnabled: true },
+          ]}
+          groupingStateColumnExtensions={[
+            { columnName: 'name', groupingEnabled: false },
+            { columnName: 'passages', groupingEnabled: false },
+          ]}
+          sorting={[{ columnName: 'name', direction: 'asc' }]}
+          treeColumn={'name'}
+          showfilters={filter}
+          showgroups={group}
           select={handleCheck}
-          shaping={filter}
-        />
+        />{' '}
       </div>
       {confirmAction !== '' ? (
         <Confirm

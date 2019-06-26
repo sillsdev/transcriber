@@ -160,14 +160,17 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "title": string;
     "section": string;
     "sectionstate": string;
-    "passage": string;
+    "passages": string;
     "passagestate": string;
     "user": string;
     "role": string;
     "action": string;
-    "assignPassage": string;
+    "assignSection": string;
     "delete": string;
     "filter": string;
+    "group": string;
+    "transcriber": string;
+    "reviewer": string;
 };
 
 export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {

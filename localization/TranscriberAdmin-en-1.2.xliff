@@ -773,8 +773,8 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="assignmentTable.passage">
-				<source>Passage</source>
+			<trans-unit id="assignmentTable.passages">
+				<source>Passages</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
@@ -808,8 +808,8 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="assignmentTable.assignPassage">
-				<source>Assign Passage</source>
+			<trans-unit id="assignmentTable.assignSection">
+				<source>Assign Section</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
@@ -824,6 +824,27 @@
 			</trans-unit>
 			<trans-unit id="assignmentTable.filter">
 				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>			
+			<trans-unit id="assignmentTable.group">
+				<source>Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>			
+			<trans-unit id="assignmentTable.transcriber">
+				<source>Transcriber</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.reviewer">
+				<source>Reviewer</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
