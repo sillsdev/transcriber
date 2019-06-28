@@ -65,7 +65,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           <Tab label={t.media} />
           <Tab label={t.assignments} />
           <Tab label={t.transcriptions} />
-          <Tab label={t.assignments} />
         </Tabs>
       </AppBar>
       {tab === 0 && (
@@ -80,15 +79,10 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       )}
       {tab === 2 && (
         <TabContainer>
-          <AssignmentTable addit={false} {...props} />
+          <AssignmentTable {...props} />
         </TabContainer>
       )}
       {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
-      {tab === 4 && (
-        <TabContainer>
-          <AssignmentTable addit={true} {...props} />
-        </TabContainer>
-      )}
     </div>
   );
 };

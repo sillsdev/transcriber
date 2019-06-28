@@ -658,9 +658,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.passage">
+      <unit id="assignmentTable.passages">
          <segment>
-            <source>Passage</source>
+            <source>Passages</source>
             <target/>
          </segment>
       </unit>
@@ -688,9 +688,10 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.attachPassage">
+      <unit id="assignmentTable.assignSection">
          <segment>
-            <source>Attach Passage</source>
+            <source>Assign Section</source>
+
             <target/>
          </segment>
       </unit>
@@ -703,6 +704,24 @@
       <unit id="assignmentTable.filter">
          <segment>
             <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.reviewer">
+         <segment>
+            <source>Reviewer</source>
             <target/>
          </segment>
       </unit>
