@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -9,38 +8,36 @@ import {
   Passage,
   IPlanSheetStrings,
   IScriptureTableStrings,
-  BookNameMap,
-  BookName,
 } from '../model';
-import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
-import * as actions from '../actions';
 import { withData } from 'react-orbitjs';
 import Store from '@orbit/store';
 import { Schema, RecordIdentity } from '@orbit/data';
-import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
 import Related from '../utils/related';
 
-const styles = (theme: Theme) => ({
-  container: {
-    display: 'flex',
-  },
-  paper: {},
-  actions: theme.mixins.gutters({
-    paddingBottom: 16,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }),
-  button: {
-    margin: theme.spacing(1),
-  },
-  icon: {
-    marginLeft: theme.spacing(1),
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+    },
+    paper: {},
+    actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    }),
+    button: {
+      margin: theme.spacing(1),
+    },
+    icon: {
+      marginLeft: theme.spacing(1),
+    },
+  })
+);
 
 interface ISequencedRecordIdentity extends RecordIdentity {
   sequencenum: number;
@@ -49,32 +46,13 @@ interface ISequencedRecordIdentity extends RecordIdentity {
 interface IStateProps {
   t: IScriptureTableStrings;
   s: IPlanSheetStrings;
-  lang: string;
-  bookSuggestions: OptionType[];
-  bookMap: BookNameMap;
-  allBookData: BookName[];
 }
 
-interface IDispatchProps {
-  fetchBooks: typeof actions.fetchBooks;
-}
+interface IProps extends IStateProps {}
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    WithStyles<typeof styles> {}
-
-export function ScriptureTable(props: IProps) {
-  const {
-    classes,
-    t,
-    s,
-    lang,
-    bookSuggestions,
-    bookMap,
-    allBookData,
-    fetchBooks,
-  } = props;
+export function OtherTable(props: IProps) {
+  const { t, s } = props;
+  const classes = useStyles();
   const [plan] = useGlobal<string>('plan');
   const [project] = useGlobal<string>('project');
   const [dataStore] = useGlobal('dataStore');
@@ -87,7 +65,6 @@ export function ScriptureTable(props: IProps) {
     { value: t.section, readOnly: true, width: 80 },
     { value: t.title, readOnly: true, width: 280 },
     { value: t.passage, readOnly: true, width: 80 },
-    { value: t.book, readOnly: true, width: 170 },
     { value: t.reference, readOnly: true, width: 180 },
     { value: t.description, readOnly: true, width: 280 },
   ]);
@@ -119,8 +96,6 @@ export function ScriptureTable(props: IProps) {
   );
   const [inData, setInData] = useState(Array<Array<any>>());
 
-  const BookCol = 3;
-
   const handleMessageReset = () => {
     setMessage(<></>);
   };
@@ -132,8 +107,7 @@ export function ScriptureTable(props: IProps) {
   const addPassage = () => {
     const lastRow = data.length - 1;
     const sequencenum = (data[lastRow][2] || 0) + 1;
-    const book = data[lastRow][BookCol] || '';
-    setData([...data.concat([['', '', sequencenum, book, '', '']])]);
+    setData([...data.concat([['', '', sequencenum, '', '']])]);
   };
   const handleAction = (what: string, where: number[]) => {
     if (what === 'Delete') {
@@ -174,32 +148,11 @@ export function ScriptureTable(props: IProps) {
       return false;
     return true;
   };
-  const lookupBook = (userBookDes: string): string => {
-    const userBookDesUc = userBookDes.toLocaleUpperCase();
-    if (userBookDesUc !== '' && !bookMap[userBookDesUc]) {
-      const proposed = allBookData.filter(
-        bookName =>
-          bookName.short.toLocaleUpperCase() === userBookDesUc ||
-          bookName.long.toLocaleUpperCase() === userBookDesUc ||
-          bookName.abbr.toLocaleUpperCase() === userBookDesUc
-      );
-      if (proposed.length >= 1) return proposed[0].code;
-    }
-    return userBookDesUc;
-  };
   const handlePaste = (rows: string[][]) => {
     if (validTable(rows)) {
       const startRow = /^[0-9]*$/.test(rows[0][0]) ? 0 : 1;
       setData([
-        ...data.concat(
-          rows
-            .filter((row, rowIndex) => rowIndex >= startRow)
-            .map(row =>
-              row.map((col, colIndex) =>
-                colIndex !== BookCol ? col : lookupBook(col)
-              )
-            )
-        ),
+        ...data.concat(rows.filter((row, rowIndex) => rowIndex >= startRow)),
       ]);
       return Array<Array<string>>();
     }
@@ -215,7 +168,6 @@ export function ScriptureTable(props: IProps) {
         type: 'passage',
         attributes: {
           sequencenum: passageRow[2],
-          book: passageRow[BookCol],
           reference: passageRow[4],
           title: passageRow[5],
           position: 0,
@@ -259,7 +211,6 @@ export function ScriptureTable(props: IProps) {
           q.findRecord(passageId[rowIndex])
         )) as Passage;
         passage.attributes.sequencenum = parseInt(passageRow[2]);
-        passage.attributes.book = passageRow[BookCol];
         passage.attributes.reference = passageRow[4];
         passage.attributes.title = passageRow[5];
         delete passage.relationships;
@@ -330,7 +281,6 @@ export function ScriptureTable(props: IProps) {
   };
 
   useEffect(() => {
-    fetchBooks(lang);
     let initData = Array<Array<any>>();
     let sectionIds = Array<RecordIdentity>();
     let passageIds = Array<ISequencedRecordIdentity>();
@@ -348,7 +298,6 @@ export function ScriptureTable(props: IProps) {
           '',
           '',
           passage.attributes.sequencenum,
-          passage.attributes.book,
           passage.attributes.reference,
           passage.attributes.title,
         ]);
@@ -438,16 +387,13 @@ export function ScriptureTable(props: IProps) {
       <PlanSheet
         columns={columns}
         rowData={data as any[][]}
-        bookCol={BookCol}
-        bookMap={bookMap}
-        bookSuggestions={bookSuggestions}
+        bookCol={-1}
         save={handleSave}
         action={handleAction}
         addSection={addSection}
         addPassage={addPassage}
         updateData={updateData}
         paste={handlePaste}
-        lookupBook={lookupBook}
         t={s}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
@@ -458,26 +404,10 @@ export function ScriptureTable(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'scriptureTable' }),
   s: localStrings(state, { layout: 'planSheet' }),
-  lang: state.strings.lang,
-  bookSuggestions: state.books.suggestions,
-  bookMap: state.books.map,
-  allBookData: state.books.bookData,
-});
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-    },
-    dispatch
-  ),
 });
 
 const mapRecordsToProps = {};
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ScriptureTable) as any) as any) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  OtherTable
+) as any) as any;

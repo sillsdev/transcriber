@@ -222,6 +222,19 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
     "close": string;
 };
 
+export interface IMainStrings extends Localize.LocalizedStringsMethods {
+    "silTranscriberAdmin": string;
+    "search": string;
+    "organization": string;
+    "usersAndGroups": string;
+    "passages": string;
+    "media": string;
+    "plans": string;
+    "team": string;
+    "settings": string;
+    "integrations": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -246,5 +259,6 @@ export interface ILocalizedStrings {
 	planAdd: IPlanAddStrings;
 	mediaTab: IMediaTabStrings;
 	passageMedia: IPassageMediaStrings;
+	main: IMainStrings;
 	[key: string]: any;
 };

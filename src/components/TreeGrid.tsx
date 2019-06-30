@@ -16,8 +16,6 @@ import {
   IntegratedSorting,
   IntegratedSelection,
   IntegratedGrouping,
-  SummaryState,
-  IntegratedSummary,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -28,12 +26,9 @@ import {
   PagingPanel,
   TableColumnResizing,
   Toolbar,
-  TableColumnVisibility,
   GroupingPanel,
   TableGroupRow,
   DragDropProvider,
-  TableSelection,
-  TableSummaryRow,
 } from '@devexpress/dx-react-grid-material-ui';
 
 interface IProps {

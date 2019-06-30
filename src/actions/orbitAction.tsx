@@ -8,9 +8,18 @@ export const fetchOrbitData = (
   schema: Schema,
   dataStore: Store,
   keyMap: KeyMap,
-  auth: Auth
+  auth: Auth,
+  setUser: (id: string) => void,
+  setInitials: (value: string) => void,
+  setCompleted: (value: number) => void
 ) => (dispatch: any) => {
-  Sources(schema, dataStore, keyMap, auth).then(
-    dispatch({ type: FETCH_ORBIT_DATA })
-  );
+  Sources(
+    schema,
+    dataStore,
+    keyMap,
+    auth,
+    setUser,
+    setInitials,
+    setCompleted
+  ).then(dispatch({ type: FETCH_ORBIT_DATA }));
 };

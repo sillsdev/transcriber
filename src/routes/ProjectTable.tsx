@@ -122,7 +122,7 @@ export function ProjectTable(props: IProps) {
     setView('/projectstatus?add');
   };
   const handleCancel = () => {
-    setView('/admin');
+    setView('/main');
   };
   const handleEdit = (e: any) => {
     if (projects && projects.length > 0)

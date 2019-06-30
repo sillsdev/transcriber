@@ -1,4 +1,3 @@
-import { useGlobal } from 'reactn';
 import { User } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -12,19 +11,17 @@ import { Schema, KeyMap, Transform } from '@orbit/data';
 import Store from '@orbit/store';
 import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
-import Online from './components/OnLineStatus';
+import { Online } from './utils';
 
 function Sources(
   schema: Schema,
   store: Store,
   keyMap: KeyMap,
-  auth: Auth
+  auth: Auth,
+  setUser: (id: string) => void,
+  setInitials: (value: string) => void,
+  setCompleted: (valud: number) => void
 ): Promise<any> {
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_user, setUser] = useGlobal('user');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_initials, setInitials] = useGlobal('initials');
-
   const backup = new IndexedDBSource({
     schema,
     keyMap,
@@ -139,61 +136,80 @@ function Sources(
       });
     remote
       .pull(q => q.findRecords('user'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(5));
     remote
       .pull(q => q.findRecords('organization'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(10));
     remote
       .pull(q => q.findRecords('organizationmembership'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(15));
     remote
       .pull(q => q.findRecords('project'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(20));
     remote
       .pull(q => q.findRecords('integration'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(25));
     remote
       .pull(q => q.findRecords('projectintegration'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(30));
     remote
       .pull(q => q.findRecords('projecttype'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(35));
     remote
       .pull(q => q.findRecords('plan'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(40));
     remote
       .pull(q => q.findRecords('plantype'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(45));
     remote
       .pull(q => q.findRecords('section'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(50));
     remote
       .pull(q => q.findRecords('passagesection'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(55));
     remote
       .pull(q => q.findRecords('passage'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(60));
     remote
       .pull(q => q.findRecords('userrole'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(65));
     remote
       .pull(q => q.findRecords('userpassage'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(70));
     remote
       .pull(q => q.findRecords('group'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(75));
     remote
       .pull(q => q.findRecords('groupmembership'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(80));
     remote
       .pull(q => q.findRecords('role'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(85));
     remote
       .pull(q => q.findRecords('mediafile'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(90));
     remote
       .pull(q => q.findRecords('activitystate'))
-      .then(transform => store.sync(transform));
+      .then(transform => store.sync(transform))
+      .then(() => setCompleted(95));
   }
 
   return backup
@@ -209,8 +225,11 @@ function Sources(
               u = u.filter(u1 => u1.attributes && u1.attributes.name);
               if (u.length === 1) {
                 userSetup(u[0]);
+                setCompleted(100);
               }
             });
+        } else {
+          setCompleted(100);
         }
       })
     );

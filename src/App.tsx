@@ -5,13 +5,11 @@ import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from './store';
 import Access from './routes/Access';
-import Welcome from './routes/Welcome';
-import AdminPanel from './routes/AdminPanel';
-import CreateOrg from './routes/CreateOrg';
 import OrganizationTable from './routes/OrganizationTable';
 import ProjectTable from './routes/ProjectTable';
 import UserTable from './routes/UserTable';
-import ProjectStatus from './routes/ProjectStatus';
+import Drawer from './routes/drawer';
+import Loading from './routes/Loading';
 import Store from '@orbit/store';
 import { schema, keyMap } from './schema';
 import Callback from './callback/Callback';
@@ -33,6 +31,7 @@ setGlobal({
   organization: null,
   project: null,
   plan: null,
+  tab: null,
   user: null,
   initials: null,
   lang: 'en',
@@ -52,18 +51,6 @@ function App() {
             render={props => <Access auth={auth} {...props} />}
           />
           <Route
-            path="/welcome"
-            render={props => <Welcome auth={auth} {...props} />}
-          />
-          <Route
-            path="/admin"
-            render={props => <AdminPanel auth={auth} {...props} />}
-          />
-          <Route
-            path="/neworg"
-            render={props => <CreateOrg auth={auth} {...props} />}
-          />
-          <Route
             path="/organization"
             render={props => <OrganizationTable auth={auth} {...props} />}
           />
@@ -72,12 +59,16 @@ function App() {
             render={props => <ProjectTable auth={auth} {...props} />}
           />
           <Route
-            path="/projectstatus"
-            render={props => <ProjectStatus auth={auth} {...props} />}
-          />
-          <Route
             path="/user"
             render={props => <UserTable auth={auth} {...props} />}
+          />
+          <Route
+            path="/loading"
+            render={props => <Loading auth={auth} {...props} />}
+          />
+          <Route
+            path="/main"
+            render={props => <Drawer auth={auth} {...props} />}
           />
           <Route
             path="/callback"

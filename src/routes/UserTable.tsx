@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, User, IUsertableStrings } from '../model';
 import localStrings from '../selector/localize';
-import { Paper, Button, Typography } from '@material-ui/core';
+import { Paper, Typography } from '@material-ui/core';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   FilteringState,
   IntegratedFiltering,
@@ -36,7 +32,7 @@ import {
 import TranscriberBar from '../components/TranscriberBar';
 import Auth from '../auth/Auth';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
@@ -60,24 +56,24 @@ const styles = (theme: Theme) =>
         width: '100%',
       },
     }),
+    fullPaper: theme.mixins.gutters({
+      padding: 0,
+      margin: 0,
+    }),
     dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
     }),
-    actions: theme.mixins.gutters({
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    }),
-    button: {
-      marginRight: theme.spacing(1),
-    },
-  });
+  })
+);
 
 interface IStateProps {
   t: IUsertableStrings;
+}
+
+interface IRecordProps {
+  users: Array<User>;
 }
 
 interface IUserRow {
@@ -90,14 +86,16 @@ interface IUserRow {
   timezone: string;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles> {
-  users: Array<User>;
+interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
+  noToolbar?: boolean;
 }
 
 export function UserTable(props: IProps) {
-  const { classes, users, auth, t } = props;
+  const { users, auth, t, noToolbar } = props;
+  const classes = useStyles();
   const { isAuthenticated } = auth;
+
   const [columns, setColumns] = useState([
     { name: 'name', title: 'Name' },
     { name: 'email', title: 'Email' },
@@ -110,10 +108,7 @@ export function UserTable(props: IProps) {
   const [view, setView] = useState('');
 
   const handleCancel = () => {
-    setView('/admin');
-  };
-  const handleContinue = () => {
-    setView('/admin');
+    setView('/main');
   };
 
   useEffect(() => {
@@ -124,17 +119,21 @@ export function UserTable(props: IProps) {
       { name: 'phone', title: t.phone },
       { name: 'timezone', title: t.timezone },
     ]);
-    setRows(
-      users.map((o: User) => ({
-        type: o.type,
-        id: o.id,
-        name: o.attributes.name,
-        email: o.attributes.email,
-        locale: o.attributes.locale,
-        phone: o.attributes.phone,
-        timezone: o.attributes.timezone,
-      }))
-    );
+    if (users && users !== undefined) {
+      setRows(
+        users
+          .filter(u => u.attributes)
+          .map((o: User) => ({
+            type: o.type,
+            id: o.id,
+            name: o.attributes.name,
+            email: o.attributes.email ? o.attributes.email : '',
+            locale: o.attributes.locale ? o.attributes.locale : '',
+            phone: o.attributes.phone ? o.attributes.phone : '',
+            timezone: o.attributes.timezone ? o.attributes.timezone : '',
+          }))
+      );
+    }
   }, [users, t.name, t.email, t.locale, t.phone, t.timezone]);
 
   if (!isAuthenticated()) return <Redirect to="/" />;
@@ -143,9 +142,14 @@ export function UserTable(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <TranscriberBar {...props} close={handleCancel} />
+      {!noToolbar ? <TranscriberBar {...props} close={handleCancel} /> : ''}
       <div className={classes.container}>
-        <Paper id="user-table" className={classes.paper}>
+        <Paper
+          id="user-table"
+          className={clsx(classes.paper, {
+            [classes.fullPaper]: noToolbar,
+          })}
+        >
           <Typography variant="h5" className={classes.dialogHeader}>
             {t.chooseUser}
           </Typography>
@@ -185,23 +189,6 @@ export function UserTable(props: IProps) {
 
             <Toolbar />
           </Grid>
-          <div className={classes.actions}>
-            <Button
-              onClick={handleCancel}
-              variant="contained"
-              className={classes.button}
-            >
-              {t.cancel}
-            </Button>
-            <Button
-              onClick={handleContinue}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              {t.continue}
-            </Button>
-          </div>
         </Paper>
       </div>
     </div>
@@ -216,6 +203,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(mapStateToProps)(UserTable) as any) as any) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  UserTable
+) as any) as any;

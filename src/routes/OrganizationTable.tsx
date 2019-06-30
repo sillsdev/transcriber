@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -55,6 +56,10 @@ const styles = (theme: Theme) =>
         width: '100%',
       },
     }),
+    fullPaper: {
+      padding: 0,
+      margin: 0,
+    },
     dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
@@ -79,28 +84,29 @@ interface Row {
 // see: https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/selection/
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
   auth: Auth;
+  noToolbar?: boolean;
 }
 
 export function OrganizationTable(props: IProps) {
-  const { classes, organizations, auth, t } = props;
+  const { classes, organizations, auth, t, noToolbar } = props;
   const [user] = useGlobal('user');
   const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([{ name: 'name', title: 'Name' }]);
   const [rows, setRows] = useState([]);
   const [view, setView] = useState('');
-  const [currentOrganization, setOrganization] = useGlobal('organization');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_Organization, setOrganization] = useGlobal('organization');
   const [message, setMessage] = useState(<></>);
 
   const handleSelection = (s: any) => {
     const selectedRow: Row = rows[s[0]];
     setOrganization(selectedRow.id);
-    setView('/welcome');
   };
   const handleMessageReset = () => {
     setMessage(<></>);
   };
   const handleCancel = () => {
-    setView('/admin');
+    setView('/main');
   };
 
   useEffect(() => {
@@ -108,10 +114,6 @@ export function OrganizationTable(props: IProps) {
     const orgs = organizations.filter(o =>
       hasRelated(o, 'users', user as string)
     );
-    if (orgs.length === 1) {
-      setOrganization(organizations[0].id);
-      setView('/welcome');
-    }
     setColumns([{ name: 'name', title: t.name }]);
     setRows(orgs.map((o: Organization) => ({
       type: o.type,
@@ -121,26 +123,20 @@ export function OrganizationTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [organizations, user]);
 
-  useEffect(() => {
-    if (view === '/welcome' && currentOrganization === null) {
-      alert('Please choose an organization');
-      setView('');
-    }
-  }, [view, currentOrganization]);
-
-  useEffect(() => {
-    setMessage(<span>Loading data...</span>);
-  }, []);
-
   if (!isAuthenticated()) return <Redirect to="/" />;
 
   if (view !== '') return <Redirect to={view} />;
 
   return (
     <div className={classes.root}>
-      <TranscriberBar {...props} close={handleCancel} />
+      {!noToolbar ? <TranscriberBar {...props} close={handleCancel} /> : ''}
       <div className={classes.container}>
-        <Paper id="OrganizationTable" className={classes.paper}>
+        <Paper
+          id="OrganizationTable"
+          className={clsx(classes.paper, {
+            [classes.fullPaper]: noToolbar,
+          })}
+        >
           <Typography variant="h5" className={classes.dialogHeader}>
             {t.chooseOrganization}
           </Typography>

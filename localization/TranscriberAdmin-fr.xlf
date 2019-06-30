@@ -920,7 +920,8 @@
 		<unit id="passageMedia.attachAvailableMedia">
 			<segment>
 				<source>Attach available media files to passages (with no current media).</source>
-				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne contiennent aucun média actuel).</target>
+				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne
+					contiennent aucun média actuel).</target>
 			</segment>
 		</unit>
 		<unit id="passageMedia.attachMediaToPassages">
@@ -943,14 +944,76 @@
 		</unit>
 		<unit id="passageMedia.attachments">
 			<segment>
-				<source>Attachments ({0}) Select if you want to detach the media from the passage.</source>
-				<target>Pièces jointes ({0})Pièces jointes ({0}) Sélectionnez si vous souhaitez détacher le fichier multimédia du passage.</target>
+				<source>Attachments ({0}) Select if you want to detach the media from the
+					passage.</source>
+				<target>Pièces jointes ({0})Pièces jointes ({0}) Sélectionnez si vous souhaitez
+					détacher le fichier multimédia du passage.</target>
 			</segment>
 		</unit>
 		<unit id="passageMedia.close">
 			<segment>
 				<source>Close</source>
 				<target>Fermer</target>
+			</segment>
+		</unit>
+		<unit id="main.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du Transcripteur SIL</target>
+			</segment>
+		</unit>
+		<unit id="main.search">
+			<segment>
+				<source>Search…</source>
+				<target>Chercher…</target>
+			</segment>
+		</unit>
+		<unit id="main.organization">
+			<segment>
+				<source>Organization</source>
+				<target>Organisation</target>
+			</segment>
+		</unit>
+		<unit id="main.usersAndGroups">
+			<segment>
+				<source>Users and Groups</source>
+				<target>Utilisatrices et Groupes</target>
+			</segment>
+		</unit>
+		<unit id="main.passages">
+			<segment>
+				<source>Passages</source>
+				<target>Passages</target>
+			</segment>
+		</unit>
+		<unit id="main.media">
+			<segment>
+				<source>Media</source>
+				<target>Fichiers audio</target>
+			</segment>
+		</unit>
+		<unit id="main.plans">
+			<segment>
+				<source>Plans</source>
+				<target>Programmes</target>
+			</segment>
+		</unit>
+		<unit id="main.team">
+			<segment>
+				<source>Team</source>
+				<target>Equipes</target>
+			</segment>
+		</unit>
+		<unit id="main.settings">
+			<segment>
+				<source>Settings</source>
+				<target>Paramètres</target>
+			</segment>
+		</unit>
+		<unit id="main.integrations">
+			<segment>
+				<source>Integrations</source>
+				<target>Intégrations</target>
 			</segment>
 		</unit>
 	</file>

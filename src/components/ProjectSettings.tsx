@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import ProjectType from '../model/projectType';
 import { connect } from 'react-redux';
@@ -25,6 +26,9 @@ const styles = (theme: Theme) => ({
   container: {
     display: 'flex',
     margin: theme.spacing(4),
+  },
+  fullContainer: {
+    margin: 0,
   },
   paper: {
     paddingLeft: theme.spacing(4),
@@ -83,38 +87,48 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
   updateStore?: any;
+  noMargin?: boolean;
 }
 
 export function ProjectSettings(props: IProps) {
-  const { classes, projects, projectTypes, updateStore, t } = props;
+  const { classes, projects, projectTypes, updateStore, t, noMargin } = props;
   const [schema] = useGlobal('schema');
   const [dataStore] = useGlobal('dataStore');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal<string>('user');
   const [organization] = useGlobal<string>('organization');
-  const currentProject = projects.filter((p: Project) => p.id === project)[0];
-  const [name, setName] = useState(
-    (currentProject && currentProject.attributes.name) || ''
-  );
-  const [description, setDescription] = useState(
-    (currentProject && currentProject.attributes.description) || ''
-  );
+  const [currentProject, setCurrentProject] = useState<Project>({
+    type: 'project',
+    id: '',
+    attributes: {
+      name: '',
+      slug: '',
+      projectTypeId: 0,
+      groupId: 0,
+      description: '',
+      ownerId: 0,
+      organizationId: 0,
+      uilanguagebcp47: '',
+      language: '',
+      languageName: '',
+      defaultFont: '',
+      defaultFontSize: '',
+      rtl: false,
+      allowClaim: true,
+      isPublic: true,
+      dateCreated: '',
+      dateUpdated: '',
+      dateArchived: '',
+    },
+  });
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [projectType, setProjectType] = useState('');
-  const [bcp47] = useState(
-    (currentProject && currentProject.attributes.language) || 'und'
-  );
-  const [languageName, setLanguageName] = useState(
-    (currentProject && currentProject.attributes.languageName) || bcp47
-  );
-  const [defaultFont, setDefaultFont] = useState(
-    (currentProject && currentProject.attributes.defaultFont) || ''
-  );
-  const [defaultFontSize, setDefaultFontSize] = useState(
-    (currentProject && currentProject.attributes.defaultFontSize) || 'large'
-  );
-  const [rtl, setRtl] = useState(
-    (currentProject && currentProject.attributes.rtl) || false
-  );
+  const [bcp47, setBcp47] = useState('und');
+  const [languageName, setLanguageName] = useState(bcp47);
+  const [defaultFont, setDefaultFont] = useState('');
+  const [defaultFontSize, setDefaultFontSize] = useState('large');
+  const [rtl, setRtl] = useState(false);
   const [message, setMessage] = useState(<></>);
 
   const handleNameChange = (e: any) => {
@@ -215,19 +229,37 @@ export function ProjectSettings(props: IProps) {
   };
 
   useEffect(() => {
+    const curProj = projects.filter((p: Project) => p.id === project);
+    if (curProj.length === 1) {
+      setCurrentProject(curProj[0]);
+      const attr = curProj[0].attributes;
+      setName(attr.name);
+      setDescription(attr.description ? attr.description : '');
+      setBcp47(attr.language);
+      setLanguageName(attr.languageName ? attr.languageName : bcp47);
+      setDefaultFont(attr.defaultFont ? attr.defaultFont : '');
+      setDefaultFontSize(attr.defaultFontSize ? attr.defaultFontSize : 'large');
+      setRtl(attr.rtl);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [project, projects]);
+
+  useEffect(() => {
     const setDisplayType = async (p: Project) => {
       let projectType = (await (dataStore as Store).query(q =>
         q.findRelatedRecord({ type: 'project', id: p.id }, 'projecttype')
       )) as ProjectType;
-      setProjectType(
-        (projectType.keys && projectType.keys.remoteId) || projectType.id
-      );
+      if (projectType !== null) {
+        setProjectType(
+          (projectType.keys && projectType.keys.remoteId) || projectType.id
+        );
+      }
     };
     if (currentProject) {
       setDisplayType(currentProject);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [project]);
 
   const safeFonts = [
     { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
@@ -247,7 +279,11 @@ export function ProjectSettings(props: IProps) {
   ];
 
   return (
-    <div className={classes.container}>
+    <div
+      className={clsx(classes.container, {
+        [classes.fullContainer]: noMargin,
+      })}
+    >
       <div className={classes.paper}>
         <FormControl>
           <FormLabel className={classes.label}>{t.general}</FormLabel>

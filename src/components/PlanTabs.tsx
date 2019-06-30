@@ -1,15 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IPlanTabsStrings } from '../model';
+import { IState, IPlanTabsStrings, Plan } from '../model';
 import localStrings from '../selector/localize';
-import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder } from '@orbit/data';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
 import ScriptureTable from '../components/ScriptureTable';
+import OtherTable from '../components/OtherTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
+import { slug } from '../utils';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: theme.mixins.gutters({
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.palette.background.paper,
+      flexDirection: 'column',
+    }),
+  })
+);
 
 interface IContainerProps {
   children: any;
@@ -23,26 +36,27 @@ function TabContainer(props: IContainerProps) {
   );
 }
 
-const styles = (theme: Theme) => ({
-  root: theme.mixins.gutters({
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-    flexDirection: 'column',
-  }),
-});
-
 interface IStateProps {
   t: IPlanTabsStrings;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles> {
+interface IRecordProps {
+  plans: Array<Plan>;
+}
+
+interface IProps extends IStateProps, IRecordProps {
+  bookCol: number;
   changeTab?: (v: number) => void;
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const { classes, t, changeTab } = props;
+  const { t, changeTab, plans, bookCol } = props;
+  const [plan] = useGlobal<string>('plan');
+  const [planName, setPlanName] = useState('');
+  const classes = useStyles();
   const [tab, setTab] = useState(0);
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_tabName, setTabName] = useGlobal('tab');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -50,8 +64,29 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       changeTab(value);
     }
   };
+
+  useEffect(() => {
+    const tabNames = [
+      slug(t.sectionsPassages),
+      slug(t.media),
+      slug(t.assignments),
+      slug(t.transcriptions),
+      slug(t.assignments),
+    ];
+    setTabName(tabNames[tab]);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [tab]);
+
+  useEffect(() => {
+    const curPlan = plans.filter(p => p.id === plan);
+    if (curPlan.length > 0) {
+      setPlanName(curPlan[0].attributes.name);
+    }
+  }, [plan, plans]);
+
   return (
     <div className={classes.root}>
+      <Typography variant="h4">{planName}</Typography>
       <AppBar position="static" color="default">
         <Tabs
           value={tab}
@@ -69,7 +104,11 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       </AppBar>
       {tab === 0 && (
         <TabContainer>
-          <ScriptureTable {...props} />
+          {bookCol !== -1 ? (
+            <ScriptureTable {...props} />
+          ) : (
+            <OtherTable {...props} />
+          )}
         </TabContainer>
       )}
       {tab === 1 && (
@@ -91,6 +130,10 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planTabs' }),
 });
 
-export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
+const mapRecordsToProps = {
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
+};
+
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
   ScrollableTabsButtonAuto
 ) as any) as any;

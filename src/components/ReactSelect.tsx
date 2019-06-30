@@ -1,4 +1,4 @@
-import React, { CSSProperties, HTMLAttributes } from 'react';
+import React, { CSSProperties, HTMLAttributes, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Select from 'react-select';
@@ -71,6 +71,11 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       height: 250,
+    },
+    noExtraRoot: {
+      flexGrow: 0,
+      height: 'inherit',
+      paddingBottom: theme.spacing(1),
     },
     input: {
       display: 'flex',
@@ -307,14 +312,29 @@ interface IProps {
   suggestions: OptionType[];
   label?: string;
   placeholder?: string;
+  current?: number;
+  rightSize?: boolean;
   onCommit?: (newValue: string) => void;
 }
 
 export function SingleReactSelect(props: IProps) {
-  const { suggestions, label, placeholder, onCommit } = props;
+  const {
+    suggestions,
+    label,
+    placeholder,
+    current,
+    onCommit,
+    rightSize,
+  } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [single, setSingle] = React.useState<ValueType<OptionType>>(null);
+
+  useEffect(() => {
+    if (current !== undefined && current >= 0 && suggestions.length > current) {
+      setSingle(suggestions[current]);
+    }
+  }, [suggestions, current]);
 
   function handleChangeSingle(value: ValueType<OptionType>) {
     setSingle(value);
@@ -334,7 +354,11 @@ export function SingleReactSelect(props: IProps) {
   };
 
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.root, {
+        [classes.noExtraRoot]: rightSize,
+      })}
+    >
       <NoSsr>
         <Select
           classes={classes}

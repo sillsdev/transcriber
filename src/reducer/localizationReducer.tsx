@@ -248,6 +248,20 @@ const initialState = {
 			"close": "Close",
 		}
 	}),
+	"main": new LocalizedStrings({
+		"en": {
+			"silTranscriberAdmin": "SIL Transcriber Admin",
+			"search": "Search…",
+			"organization": "Organization",
+			"usersAndGroups": "Users and Groups",
+			"passages": "Passages",
+			"media": "Media",
+			"plans": "Plans",
+			"team": "Team",
+			"settings": "Settings",
+			"integrations": "Integrations",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -277,6 +291,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"planAdd" : new LocalizedStrings(action.payload.data.planAdd),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
+				"main" : new LocalizedStrings(action.payload.data.main),
 			};
 		case SET_LANGUAGE:
 			return {

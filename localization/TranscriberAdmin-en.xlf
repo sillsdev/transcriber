@@ -691,7 +691,6 @@
       <unit id="assignmentTable.assignSection">
          <segment>
             <source>Assign Section</source>
-
             <target/>
          </segment>
       </unit>
@@ -950,6 +949,66 @@
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.silTranscriberAdmin">
+         <segment>
+            <source>SIL Transcriber Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.search">
+         <segment>
+            <source>Search…</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.organization">
+         <segment>
+            <source>Organization</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.usersAndGroups">
+         <segment>
+            <source>Users and Groups</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.passages">
+         <segment>
+            <source>Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.media">
+         <segment>
+            <source>Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.plans">
+         <segment>
+            <source>Plans</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.settings">
+         <segment>
+            <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.integrations">
+         <segment>
+            <source>Integrations</source>
             <target/>
          </segment>
       </unit>

@@ -97,7 +97,7 @@ export function Access(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  if (auth.isAuthenticated()) return <Redirect to="/welcome" />;
+  if (auth.isAuthenticated()) return <Redirect to="/loading" />;
 
   return (
     <div className={classes.root}>

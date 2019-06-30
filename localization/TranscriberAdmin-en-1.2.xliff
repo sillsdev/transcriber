@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd"
+	xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 
-	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
+	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en"
+		datatype="plaintext">
 		<body>
 			<trans-unit id="access.silTranscriberAccess">
 				<source>SIL Transcriber Access</source>
@@ -1107,6 +1110,76 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.silTranscriberAdmin">
+				<source>SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.search">
+				<source>Search…</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.organization">
+				<source>Organization</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.usersAndGroups">
+				<source>Users and Groups</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.passages">
+				<source>Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.media">
+				<source>Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.plans">
+				<source>Plans</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.team">
+				<source>Team</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.settings">
+				<source>Settings</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.integrations">
+				<source>Integrations</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

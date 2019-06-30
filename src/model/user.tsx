@@ -6,13 +6,13 @@ export interface User extends Record {
     givenName: string;
     familyName: string;
     email: string;
-    phone: string;
-    timezone: string;
-    locale: string;
+    phone: string | null;
+    timezone: string | null;
+    locale: string | null;
     isLocked: boolean;
-    auth0Id: string;
     dateCreated: string | null;
     dateUpdated: string | null;
+    lastModifiedBy: string | null;
   };
   relationships?: {
     ownedOrganizations: RecordRelationship;
@@ -29,13 +29,13 @@ export interface CurrentUser extends Record {
     givenName: string;
     familyName: string;
     email: string;
-    phone: string;
-    timezone: string;
-    locale: string;
+    phone: string | null;
+    timezone: string | null;
+    locale: string | null;
     isLocked: boolean;
-    auth0Id: string;
     dateCreated: string | null;
     dateUpdated: string | null;
+    lastModifiedBy: string | null;
   };
   relationships?: {
     ownedOrganizations: RecordRelationship;

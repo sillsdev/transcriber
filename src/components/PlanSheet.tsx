@@ -63,15 +63,15 @@ interface IProps extends IStateProps, WithStyles<typeof styles> {
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
   bookCol: number;
-  bookSuggestions: OptionType[];
-  bookMap: BookNameMap;
+  bookSuggestions?: OptionType[];
+  bookMap?: BookNameMap;
   updateData: (rows: string[][]) => void;
   save: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
   addPassage: () => void;
   addSection: () => void;
-  lookupBook: (book: string) => string;
+  lookupBook?: (book: string) => string;
 }
 
 export function PlanSheet(props: IProps) {
@@ -141,7 +141,7 @@ export function PlanSheet(props: IProps) {
     }
   };
   const handleValueRender = (cell: ICell) =>
-    cell.className === 'book' ? bookMap[cell.value] : cell.value;
+    cell.className === 'book' && bookMap ? bookMap[cell.value] : cell.value;
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
   const handleConfirmAction = (what: string) => (e: any) => {
     setActionMenuItem(null);
@@ -179,7 +179,7 @@ export function PlanSheet(props: IProps) {
           row.map((cell, cellIndex) =>
             cellIndex !== bookCol && lookupBook !== null
               ? cell
-              : lookupBook(cell)
+              : lookupBook && lookupBook(cell)
           )
         )
       );
@@ -246,7 +246,7 @@ export function PlanSheet(props: IProps) {
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, check, bookSuggestions]);
+  }, [rowData, check, bookCol]);
 
   return (
     <div className={classes.container}>
