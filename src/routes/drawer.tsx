@@ -43,8 +43,8 @@ import BackIcon from '@material-ui/icons/ArrowBack';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, slug } from '../utils';
-import OrganizationTable from '../routes/OrganizationTable';
-import UserTable from '../routes/UserTable';
+import OrganizationTable from '../components/OrganizationTable';
+import UserTable from '../components/UserTable';
 import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
 import ProjectSettings from '../components/ProjectSettings';
@@ -374,12 +374,8 @@ export function ResponsiveDrawer(props: IProps) {
   if (!orbitLoaded) return <Redirect to="/loading" />;
 
   let components: componentType = {};
-  components[slug(t.organization)] = (
-    <OrganizationTable {...props} noToolbar={true} />
-  );
-  components[slug(t.usersAndGroups)] = (
-    <UserTable {...props} noToolbar={true} />
-  );
+  components[slug(t.organization)] = <OrganizationTable {...props} />;
+  components[slug(t.usersAndGroups)] = <UserTable {...props} />;
   components[slug(t.passages)] = 'passages';
   components[slug(t.media)] = <MediaTab {...props} />;
   components[slug(t.plans)] = (
@@ -421,7 +417,7 @@ export function ResponsiveDrawer(props: IProps) {
           <Avatar>{initials}</Avatar>
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="Mailbox folders">
+      <nav className={classes.drawer} aria-label="Project folders">
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer

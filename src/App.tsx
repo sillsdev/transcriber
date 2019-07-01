@@ -5,9 +5,6 @@ import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from './store';
 import Access from './routes/Access';
-import OrganizationTable from './routes/OrganizationTable';
-import ProjectTable from './routes/ProjectTable';
-import UserTable from './routes/UserTable';
 import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Store from '@orbit/store';
@@ -49,18 +46,6 @@ function App() {
             path="/"
             exact={true}
             render={props => <Access auth={auth} {...props} />}
-          />
-          <Route
-            path="/organization"
-            render={props => <OrganizationTable auth={auth} {...props} />}
-          />
-          <Route
-            path="/project"
-            render={props => <ProjectTable auth={auth} {...props} />}
-          />
-          <Route
-            path="/user"
-            render={props => <UserTable auth={auth} {...props} />}
           />
           <Route
             path="/loading"

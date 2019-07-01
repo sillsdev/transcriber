@@ -27,8 +27,7 @@ import {
   TableSelection,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import TranscriberBar from '../components/TranscriberBar';
-import SnackBar from '../components/SnackBar';
+import SnackBar from './SnackBar';
 import Auth from '../auth/Auth';
 import hasRelated from '../utils/hasRelated';
 
@@ -84,16 +83,14 @@ interface Row {
 // see: https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/selection/
 interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
   auth: Auth;
-  noToolbar?: boolean;
 }
 
 export function OrganizationTable(props: IProps) {
-  const { classes, organizations, auth, t, noToolbar } = props;
+  const { classes, organizations, auth, t } = props;
   const [user] = useGlobal('user');
   const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([{ name: 'name', title: 'Name' }]);
   const [rows, setRows] = useState([]);
-  const [view, setView] = useState('');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_Organization, setOrganization] = useGlobal('organization');
   const [message, setMessage] = useState(<></>);
@@ -104,9 +101,6 @@ export function OrganizationTable(props: IProps) {
   };
   const handleMessageReset = () => {
     setMessage(<></>);
-  };
-  const handleCancel = () => {
-    setView('/main');
   };
 
   useEffect(() => {
@@ -125,16 +119,13 @@ export function OrganizationTable(props: IProps) {
 
   if (!isAuthenticated()) return <Redirect to="/" />;
 
-  if (view !== '') return <Redirect to={view} />;
-
   return (
     <div className={classes.root}>
-      {!noToolbar ? <TranscriberBar {...props} close={handleCancel} /> : ''}
       <div className={classes.container}>
         <Paper
           id="OrganizationTable"
           className={clsx(classes.paper, {
-            [classes.fullPaper]: noToolbar,
+            [classes.fullPaper]: true,
           })}
         >
           <Typography variant="h5" className={classes.dialogHeader}>

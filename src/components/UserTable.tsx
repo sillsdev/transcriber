@@ -29,7 +29,6 @@ import {
   TableSelection,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
-import TranscriberBar from '../components/TranscriberBar';
 import Auth from '../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -88,11 +87,10 @@ interface IUserRow {
 
 interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
-  noToolbar?: boolean;
 }
 
 export function UserTable(props: IProps) {
-  const { users, auth, t, noToolbar } = props;
+  const { users, auth, t } = props;
   const classes = useStyles();
   const { isAuthenticated } = auth;
 
@@ -105,11 +103,6 @@ export function UserTable(props: IProps) {
   ]);
   const [pageSizes] = useState([5, 10, 15]);
   const [rows, setRows] = useState(Array<IUserRow>());
-  const [view, setView] = useState('');
-
-  const handleCancel = () => {
-    setView('/main');
-  };
 
   useEffect(() => {
     setColumns([
@@ -138,16 +131,13 @@ export function UserTable(props: IProps) {
 
   if (!isAuthenticated()) return <Redirect to="/" />;
 
-  if (view !== '') return <Redirect to={view} />;
-
   return (
     <div className={classes.root}>
-      {!noToolbar ? <TranscriberBar {...props} close={handleCancel} /> : ''}
       <div className={classes.container}>
         <Paper
           id="user-table"
           className={clsx(classes.paper, {
-            [classes.fullPaper]: noToolbar,
+            [classes.fullPaper]: true,
           })}
         >
           <Typography variant="h5" className={classes.dialogHeader}>

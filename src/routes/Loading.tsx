@@ -4,13 +4,19 @@ import Auth from '../auth/Auth';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, User } from '../model';
+import { IState, User, IMainStrings } from '../model';
+import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { Schema, KeyMap, QueryBuilder } from '@orbit/data';
 import Store from '@orbit/store';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Paper, LinearProgress } from '@material-ui/core';
-import TranscriberBar from '../components/TranscriberBar';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Paper,
+  LinearProgress,
+} from '@material-ui/core';
 import * as action from '../actions';
 import logo from './transcriber9.png';
 
@@ -23,10 +29,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
     },
+    appBar: {
+      width: '100%',
+    },
     paper: theme.mixins.gutters({
       paddingTop: 16,
       paddingBottom: 16,
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(10),
       width: '30%',
       display: 'flex',
       flexDirection: 'column',
@@ -35,10 +44,16 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '100%',
       },
     }),
+    icon: {
+      alignSelf: 'center',
+      width: '256px',
+      height: '256px',
+    },
   })
 );
 
 interface IStateProps {
+  t: IMainStrings;
   orbitLoaded: boolean;
 }
 
@@ -57,7 +72,7 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
 }
 
 export function Loading(props: IProps) {
-  const { orbitLoaded, auth } = props;
+  const { orbitLoaded, auth, t } = props;
   const classes = useStyles();
   const { fetchOrbitData, fetchLocalization, setLanguage } = props;
   const { isAuthenticated } = auth;
@@ -88,15 +103,21 @@ export function Loading(props: IProps) {
   if (!isAuthenticated()) return <Redirect to="/" />;
 
   if (orbitLoaded && completed === 95) {
-    return <Redirect to="/main" />;
+    // return <Redirect to="/main" />;
   }
 
   return (
     <div className={classes.root}>
-      <TranscriberBar {...props} search={false} />
+      <AppBar position="fixed" className={classes.appBar}>
+        <Toolbar>
+          <Typography variant="h6" noWrap>
+            {t.silTranscriberAdmin}
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <div className={classes.container}>
         <Paper className={classes.paper}>
-          <img src={logo} alt="logo" />
+          <img src={logo} className={classes.icon} alt="logo" />
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
@@ -105,6 +126,7 @@ export function Loading(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'main' }),
   orbitLoaded: state.orbit.loaded,
 });
 
