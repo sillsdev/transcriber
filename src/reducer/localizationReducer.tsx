@@ -14,53 +14,6 @@ const initialState = {
 			"accessExistingAccount": "Access with existing Account",
 		}
 	}),
-	"adminpanel": new LocalizedStrings({
-		"en": {
-			"transcriberAdmin": "Transcriber Admin",
-			"search": "Search…",
-			"organizations": "Organizations",
-			"addManageOrganizations": "Add or manage organizations",
-			"users": "Users",
-			"addManageUsers": "Add or manage users",
-			"projects": "Projects",
-			"addManageProjects": "Add or manage projects",
-			"media": "Media",
-			"addManageAudioFiles": "Add or manage audio files",
-			"plans": "Plans",
-			"addManagePlans": "Add or manage plans",
-		}
-	}),
-	"createorg": new LocalizedStrings({
-		"en": {
-			"silTranscriberAdmin": "SIL Transcriber Admin",
-			"createOrganization": "Create Organization",
-			"findExistingOrganization": "Find an existing Organization",
-			"organizationName": "Organization Name",
-			"cancel": "Cancel",
-			"continue": "Continue",
-		}
-	}),
-	"mediacard": new LocalizedStrings({
-		"en": {
-			"section": "Section",
-		}
-	}),
-	"projectstatus": new LocalizedStrings({
-		"en": {
-			"silTranscriberAdminProject": "SIL Transcriber Admin - Project",
-			"search": "Search…",
-			"listOptions": "List Options",
-			"settings": "Settings",
-			"team": "Team",
-			"plans": "Plans",
-			"projectPlans": "Project Plans",
-			"sections": "Sections",
-			"passages": "Passages",
-			"media": "Media",
-			"integrations": "Integrations",
-			"newProject": "New Project",
-		}
-	}),
 	"snackbar": new LocalizedStrings({
 		"en": {
 			"undo": "UNDO",
@@ -77,16 +30,6 @@ const initialState = {
 			"timezone": "Timezone",
 			"cancel": "Cancel",
 			"continue": "Continue",
-		}
-	}),
-	"welcome": new LocalizedStrings({
-		"en": {
-			"transcriberAdmin": "Transcriber Admin",
-			"thanksSigningUp": "Thanks for signing up!",
-			"StartTranscribingImmediately": "Do you want to start transcribing immediately?",
-			"transcriberWeb": "Transcriber Web",
-			"transcriberDesktop": "Transcriber Desktop",
-			"ConfigureTranscriptionProject": "Do you want to configure a transcription project?",
 		}
 	}),
 	"alert": new LocalizedStrings({
@@ -271,13 +214,8 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				...state,
 				"loaded": true,
 				"access" : new LocalizedStrings(action.payload.data.access),
-				"adminpanel" : new LocalizedStrings(action.payload.data.adminpanel),
-				"createorg" : new LocalizedStrings(action.payload.data.createorg),
-				"mediacard" : new LocalizedStrings(action.payload.data.mediacard),
-				"projectstatus" : new LocalizedStrings(action.payload.data.projectstatus),
 				"snackbar" : new LocalizedStrings(action.payload.data.snackbar),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
-				"welcome" : new LocalizedStrings(action.payload.data.welcome),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"organizationTable" : new LocalizedStrings(action.payload.data.organizationTable),
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),

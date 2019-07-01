@@ -8,49 +8,6 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessExistingAccount": string;
 };
 
-export interface IAdminpanelStrings extends Localize.LocalizedStringsMethods {
-    "transcriberAdmin": string;
-    "search": string;
-    "organizations": string;
-    "addManageOrganizations": string;
-    "users": string;
-    "addManageUsers": string;
-    "projects": string;
-    "addManageProjects": string;
-    "media": string;
-    "addManageAudioFiles": string;
-    "plans": string;
-    "addManagePlans": string;
-};
-
-export interface ICreateorgStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdmin": string;
-    "createOrganization": string;
-    "findExistingOrganization": string;
-    "organizationName": string;
-    "cancel": string;
-    "continue": string;
-};
-
-export interface IMediacardStrings extends Localize.LocalizedStringsMethods {
-    "section": string;
-};
-
-export interface IProjectstatusStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdminProject": string;
-    "search": string;
-    "listOptions": string;
-    "settings": string;
-    "team": string;
-    "plans": string;
-    "projectPlans": string;
-    "sections": string;
-    "passages": string;
-    "media": string;
-    "integrations": string;
-    "newProject": string;
-};
-
 export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
     "undo": string;
 };
@@ -65,15 +22,6 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "timezone": string;
     "cancel": string;
     "continue": string;
-};
-
-export interface IWelcomeStrings extends Localize.LocalizedStringsMethods {
-    "transcriberAdmin": string;
-    "thanksSigningUp": string;
-    "StartTranscribingImmediately": string;
-    "transcriberWeb": string;
-    "transcriberDesktop": string;
-    "ConfigureTranscriptionProject": string;
 };
 
 export interface IAlertStrings extends Localize.LocalizedStringsMethods {
@@ -239,13 +187,8 @@ export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
 	access: IAccessStrings;
-	adminpanel: IAdminpanelStrings;
-	createorg: ICreateorgStrings;
-	mediacard: IMediacardStrings;
-	projectstatus: IProjectstatusStrings;
 	snackbar: ISnackbarStrings;
 	usertable: IUsertableStrings;
-	welcome: IWelcomeStrings;
 	alert: IAlertStrings;
 	organizationTable: IOrganizationTableStrings;
 	projectTable: IProjectTableStrings;
