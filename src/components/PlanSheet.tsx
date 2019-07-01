@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
-import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import CheckBox from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
@@ -16,30 +16,32 @@ import 'react-datasheet/lib/react-datasheet.css';
 import './PlanSheet.css';
 import { isNumber } from 'util';
 
-const styles = (theme: Theme) => ({
-  container: {
-    display: 'flex',
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-  paper: {},
-  actions: theme.mixins.gutters({
-    paddingBottom: 16,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }),
-  grow: {
-    flexGrow: 1,
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-  icon: {
-    marginLeft: theme.spacing(1),
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginBottom: theme.spacing(4),
+    },
+    paper: {},
+    actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    }),
+    grow: {
+      flexGrow: 1,
+    },
+    button: {
+      margin: theme.spacing(1),
+    },
+    icon: {
+      marginLeft: theme.spacing(1),
+    },
+  })
+);
 
 interface ICell {
   value: any;
@@ -59,7 +61,7 @@ interface IStateProps {
   t: IPlanSheetStrings;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles> {
+interface IProps extends IStateProps {
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
   bookCol: number;
@@ -76,7 +78,6 @@ interface IProps extends IStateProps, WithStyles<typeof styles> {
 
 export function PlanSheet(props: IProps) {
   const {
-    classes,
     columns,
     rowData,
     t,
@@ -91,6 +92,7 @@ export function PlanSheet(props: IProps) {
     addSection,
     paste,
   } = props;
+  const classes = useStyles();
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<Array<ICell>>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
@@ -342,4 +344,4 @@ export function PlanSheet(props: IProps) {
   );
 }
 
-export default withStyles(styles, { withTheme: true })(PlanSheet) as any;
+export default PlanSheet;

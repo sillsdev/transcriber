@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import store from '../store';
 import { createMuiTheme } from '@material-ui/core';
 import Store from '@orbit/store';
-import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
 import history from '../history';
 import {
@@ -52,9 +51,9 @@ const addOneSection = async () => {
       name: 'Genesis',
     },
   } as any;
-  (schema as Schema).initializeRecord(plan);
+  schema.initializeRecord(plan);
   setGlobal({ ...globals, plan: plan.id });
-  await (dataStore as Store).update(t => t.addRecord(plan));
+  await dataStore.update(t => t.addRecord(plan));
   const section = {
     type: 'section',
     attributes: {
@@ -62,9 +61,9 @@ const addOneSection = async () => {
       name: 'Creation',
     },
   } as any;
-  (schema as Schema).initializeRecord(section);
-  await (dataStore as Store).update(t => t.addRecord(section));
-  await (dataStore as Store).update(t =>
+  schema.initializeRecord(section);
+  await dataStore.update(t => t.addRecord(section));
+  await dataStore.update(t =>
     t.replaceRelatedRecord({ type: 'section', id: section.id }, 'plan', {
       type: 'plan',
       id: plan.id,
@@ -86,21 +85,21 @@ const addPassageToSection = async (sectionId: string) => {
       title: 'Seven Days',
     },
   } as any;
-  (schema as Schema).initializeRecord(passage);
-  await (dataStore as Store).update(t => t.addRecord(passage));
+  schema.initializeRecord(passage);
+  await dataStore.update(t => t.addRecord(passage));
   const passageSection = {
     type: 'passagesection',
   } as any;
-  (schema as Schema).initializeRecord(passageSection);
-  await (dataStore as Store).update(t => t.addRecord(passageSection));
-  await (dataStore as Store).update(t =>
+  schema.initializeRecord(passageSection);
+  await dataStore.update(t => t.addRecord(passageSection));
+  await dataStore.update(t =>
     t.replaceRelatedRecord(
       { type: 'passagesection', id: passageSection.id },
       'section',
       { type: 'section', id: sectionId }
     )
   );
-  await (dataStore as Store).update(t =>
+  await dataStore.update(t =>
     t.replaceRelatedRecord(
       { type: 'passagesection', id: passageSection.id },
       'passage',

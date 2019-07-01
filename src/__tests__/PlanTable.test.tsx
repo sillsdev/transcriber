@@ -7,7 +7,6 @@ import { Provider } from 'react-redux';
 import store from '../store';
 import { createMuiTheme } from '@material-ui/core';
 import Store from '@orbit/store';
-import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
 import history from '../history';
 import {
@@ -53,7 +52,7 @@ const addProjects = async () => {
       name: 'Fulfulde',
     },
   } as any;
-  (schema as Schema).initializeRecord(project1);
+  schema.initializeRecord(project1);
   setGlobal({ ...globals, project: project1.id });
   await (dataStore as Store).update(t => t.addRecord(project1));
   const project2 = {
@@ -62,7 +61,7 @@ const addProjects = async () => {
       name: 'Ewondo',
     },
   } as any;
-  (schema as Schema).initializeRecord(project2);
+  schema.initializeRecord(project2);
   await (dataStore as Store).update(t => t.addRecord(project2));
   return [project1.id, project2.id];
 };
@@ -74,7 +73,7 @@ const addPlan = async (project1: string) => {
       name: 'Scripture',
     },
   } as any;
-  (schema as Schema).initializeRecord(planType);
+  schema.initializeRecord(planType);
   await (dataStore as Store).update(t => t.addRecord(planType));
   const plan = {
     type: 'plan',
@@ -82,7 +81,7 @@ const addPlan = async (project1: string) => {
       name: 'Genesis',
     },
   } as any;
-  (schema as Schema).initializeRecord(plan);
+  schema.initializeRecord(plan);
   await (dataStore as Store).update(t => t.addRecord(plan));
   await (dataStore as Store).update(t =>
     t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {

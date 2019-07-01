@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { IState, IPlanAddStrings } from '../model';
 import localStrings from '../selector/localize';
-import {
-  withStyles,
-  WithStyles,
-  Theme,
-  createStyles,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
   Dialog,
@@ -20,7 +15,7 @@ import SnackBar from './SnackBar';
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('react-file-drop').default : <></>;
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     label: {
       display: 'flex',
@@ -38,20 +33,22 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(1),
       margin: theme.spacing(1),
     },
-  });
+  })
+);
 
 interface IStateProps {
   t: IPlanAddStrings;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles> {
+interface IProps extends IStateProps {
   visible: boolean;
   uploadMethod?: (files: FileList) => void;
   cancelMethod?: () => void;
 }
 
 function MediaUpload(props: IProps) {
-  const { classes, t, visible, uploadMethod, cancelMethod } = props;
+  const { t, visible, uploadMethod, cancelMethod } = props;
+  const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
   const [files, setFiles] = useState();
@@ -173,6 +170,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planAdd' }),
 });
 
-export default withStyles(styles, { withTheme: true })(connect(mapStateToProps)(
-  MediaUpload
-) as any) as any;
+export default connect(mapStateToProps)(MediaUpload) as any;

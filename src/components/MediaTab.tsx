@@ -12,10 +12,9 @@ import {
   IMediaTabStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import Store from '@orbit/store';
+import { withData, WithDataProps } from 'react-orbitjs';
 import { KeyMap, QueryBuilder } from '@orbit/data';
-import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
@@ -31,30 +30,32 @@ import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
 
-const styles = (theme: Theme) => ({
-  container: {
-    display: 'flex',
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-  paper: {},
-  actions: theme.mixins.gutters({
-    paddingBottom: 16,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }),
-  grow: {
-    flexGrow: 1,
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-  icon: {
-    marginLeft: theme.spacing(1),
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginBottom: theme.spacing(4),
+    },
+    paper: {},
+    actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    }),
+    grow: {
+      flexGrow: 1,
+    },
+    button: {
+      margin: theme.spacing(1),
+    },
+    icon: {
+      marginLeft: theme.spacing(1),
+    },
+  })
+);
 
 interface IRow {
   fileName: string;
@@ -163,14 +164,13 @@ interface IProps
   extends IStateProps,
     IDispatchProps,
     IRecordProps,
-    WithStyles<typeof styles> {
+    WithDataProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
 }
 
 export function MediaTab(props: IProps) {
   const {
-    classes,
     t,
     uploadList,
     loaded,
@@ -183,11 +183,12 @@ export function MediaTab(props: IProps) {
     passages,
     passageSections,
     sections,
+    queryStore,
     auth,
   } = props;
+  const classes = useStyles();
   const [plan] = useGlobal('plan');
-  const [dataStore] = useGlobal('dataStore');
-  const [keyMap] = useGlobal('keyMap');
+  const [keyMap] = useGlobal<KeyMap>('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
@@ -295,7 +296,7 @@ export function MediaTab(props: IProps) {
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
         const planId = parseInt(
-          (keyMap as KeyMap).idToKey('plan', 'remoteId', plan as string)
+          keyMap.idToKey('plan', 'remoteId', plan as string)
         );
         const mediaFile = {
           PlanId: planId,
@@ -312,7 +313,7 @@ export function MediaTab(props: IProps) {
   }, [uploadList, loaded, currentlyLoading, plan, auth]);
 
   useEffect(() => {
-    if (loaded) (dataStore as Store).query(q => q.findRecords('mediafile'));
+    if (loaded) queryStore(q => q.findRecords('mediafile'));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [loaded]);
 
@@ -438,9 +439,7 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(
+export default withData(mapRecordsToProps)(connect(
   mapStateToProps,
   mapDispatchToProps
-)(MediaTab) as any) as any) as any;
+)(MediaTab) as any) as any;

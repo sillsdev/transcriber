@@ -76,9 +76,9 @@ export function Loading(props: IProps) {
   const classes = useStyles();
   const { fetchOrbitData, fetchLocalization, setLanguage } = props;
   const { isAuthenticated } = auth;
-  const [dataStore] = useGlobal('dataStore');
-  const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
+  const [dataStore] = useGlobal<Store>('dataStore');
+  const [schema] = useGlobal<Schema>('schema');
+  const [keyMap] = useGlobal<KeyMap>('keyMap');
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const [_user, setUser] = useGlobal('user');
   const [_initials, setInitials] = useGlobal('initials');
@@ -89,9 +89,9 @@ export function Loading(props: IProps) {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
     fetchOrbitData(
-      schema as Schema,
-      dataStore as Store,
-      keyMap as KeyMap,
+      schema,
+      dataStore,
+      keyMap,
       auth,
       setUser,
       setInitials,

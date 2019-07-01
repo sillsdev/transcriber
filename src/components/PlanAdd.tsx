@@ -4,7 +4,7 @@ import { IState, Plan, PlanType, IPlanAddStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { withStyles, WithStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
   TextField,
@@ -18,11 +18,13 @@ import {
 import SnackBar from '../components/SnackBar';
 import Related from '../utils/related';
 
-const styles = {
-  menu: {
-    width: 200,
-  },
-};
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    menu: {
+      width: 200,
+    },
+  })
+);
 
 interface IStateProps {
   t: IPlanAddStrings;
@@ -32,7 +34,7 @@ interface IRecordProps {
   planTypes: Array<PlanType>;
 }
 
-interface IProps extends IRecordProps, IStateProps, WithStyles<typeof styles> {
+interface IProps extends IRecordProps, IStateProps {
   planIn: Plan | null;
   visible: boolean;
   addMethod?: (planName: string, planType: string) => void;
@@ -43,7 +45,6 @@ interface IProps extends IRecordProps, IStateProps, WithStyles<typeof styles> {
 function PlanAdd(props: IProps) {
   const {
     planTypes,
-    classes,
     t,
     visible,
     addMethod,
@@ -51,6 +52,7 @@ function PlanAdd(props: IProps) {
     cancelMethod,
     planIn,
   } = props;
+  const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState(
     (planIn && planIn.attributes.name) || t.newPlan
@@ -183,6 +185,6 @@ const mapRecordsToProps = {
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
 };
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(mapStateToProps)(PlanAdd) as any) as any) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  PlanAdd
+) as any) as any;

@@ -229,7 +229,7 @@ function Sources(
               }
             });
         } else {
-          setCompleted(100);
+          setCompleted(80); // This happens before the others and shouldn't show complete
         }
       })
     );

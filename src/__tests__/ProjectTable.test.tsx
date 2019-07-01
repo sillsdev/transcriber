@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import store from '../store';
 import { createMuiTheme } from '@material-ui/core';
 import Store from '@orbit/store';
-import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
 import history from '../history';
 import { render, cleanup, waitForElement } from '@testing-library/react';
@@ -50,18 +49,18 @@ const addOrgGroupAndProject = async (orgName: string, projName: string) => {
       name: orgName,
     },
   } as any;
-  (schema as Schema).initializeRecord(organization);
+  schema.initializeRecord(organization);
   setGlobal({ ...globals, organization: organization.id });
-  await (dataStore as Store).update(t => t.addRecord(organization));
+  await dataStore.update(t => t.addRecord(organization));
   const group = {
     type: 'group',
     attributes: {
       name: 'Africa',
     },
   } as any;
-  (schema as Schema).initializeRecord(group);
-  await (dataStore as Store).update(t => t.addRecord(group));
-  await (dataStore as Store).update(t =>
+  schema.initializeRecord(group);
+  await dataStore.update(t => t.addRecord(group));
+  await dataStore.update(t =>
     t.replaceRelatedRecord({ type: 'group', id: group.id }, 'owner', {
       type: 'organization',
       id: organization.id,
@@ -73,9 +72,9 @@ const addOrgGroupAndProject = async (orgName: string, projName: string) => {
       name: projName,
     },
   } as any;
-  (schema as Schema).initializeRecord(project);
-  await (dataStore as Store).update(t => t.addRecord(project));
-  await (dataStore as Store).update(t =>
+  schema.initializeRecord(project);
+  await dataStore.update(t => t.addRecord(project));
+  await dataStore.update(t =>
     t.replaceRelatedRecord({ type: 'project', id: project.id }, 'group', {
       type: 'group',
       id: group.id,
@@ -94,10 +93,8 @@ test('can render ProjectTable snapshot', async () => {
 test('displays project of selected organization', async () => {
   await addOrgGroupAndProject('SIL', 'Genesis');
 
-  const groups = await (dataStore as Store).query(q => q.findRecords('group'));
-  const projects = await (dataStore as Store).query(q =>
-    q.findRecords('project')
-  );
+  const groups = await dataStore.query(q => q.findRecords('group'));
+  const projects = await dataStore.query(q => q.findRecords('project'));
 
   const { getByText, container } = render(tree({ projects, groups }));
   const TestTable = await waitForElement(() => getByText(/^Genesis$/i));
@@ -115,10 +112,8 @@ test('displays only projects of selected organization', async () => {
   await addOrgGroupAndProject('SIL', 'Genesis');
   await addOrgGroupAndProject('FCBH', 'Luke');
 
-  const groups = await (dataStore as Store).query(q => q.findRecords('group'));
-  const projects = await (dataStore as Store).query(q =>
-    q.findRecords('project')
-  );
+  const groups = await dataStore.query(q => q.findRecords('group'));
+  const projects = await dataStore.query(q => q.findRecords('project'));
 
   const { getByText, container } = render(tree({ projects, groups }));
   const TestTable = await waitForElement(() => getByText(/^Luke$/i));

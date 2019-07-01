@@ -2,19 +2,19 @@
 
 exports[`can render PlanTable snapshot 1`] = `
 <div
-  class="WithData(Connect(PlanTable))-root-1"
+  class="makeStyles-root-1"
 >
   <div
-    class="WithData(Connect(PlanTable))-container-2"
+    class="makeStyles-container-2"
   >
     <div
-      class="WithData(Connect(PlanTable))-paper-3"
+      class="makeStyles-paper-3"
     >
       <div
-        class="WithData(Connect(PlanTable))-dialogHeader-5"
+        class="makeStyles-dialogHeader-5"
       >
         <div
-          class="WithData(Connect(PlanTable))-grow-4"
+          class="makeStyles-grow-4"
         />
         <h5
           class="MuiTypography-root MuiTypography-h5"
@@ -22,11 +22,11 @@ exports[`can render PlanTable snapshot 1`] = `
           Choose a Project Plan
         </h5>
         <div
-          class="WithData(Connect(PlanTable))-grow-4"
+          class="makeStyles-grow-4"
         />
         <button
           aria-label="Add"
-          class="MuiButtonBase-root MuiFab-root WithData(Connect(PlanTable))-button-9 MuiFab-primary"
+          class="MuiButtonBase-root MuiFab-root makeStyles-button-9 MuiFab-primary"
           data-testid="addButton"
           tabindex="0"
           type="button"
@@ -36,7 +36,7 @@ exports[`can render PlanTable snapshot 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root WithData(Connect(PlanTable))-icon-10"
+              class="MuiSvgIcon-root makeStyles-icon-10"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"

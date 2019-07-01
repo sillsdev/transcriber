@@ -2,16 +2,16 @@
 
 exports[`can render ProjectTable snapshot 1`] = `
 <div
-  class="WithData(Connect(ProjectTable))-root-1"
+  class="makeStyles-root-1"
 >
   <header
-    class="MuiPaper-root MuiPaper-elevation4 MuiAppBar-root MuiAppBar-positionStatic Connect(TranscriberBar)-appBar-12 MuiAppBar-colorPrimary"
+    class="MuiPaper-root MuiPaper-elevation4 MuiAppBar-root MuiAppBar-positionStatic makeStyles-appBar-12 MuiAppBar-colorPrimary"
   >
     <div
       class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"
     >
       <button
-        class="MuiButtonBase-root MuiIconButton-root Connect(TranscriberBar)-menuButton-13"
+        class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-13"
         tabindex="0"
         type="button"
       >
@@ -39,7 +39,7 @@ exports[`can render ProjectTable snapshot 1`] = `
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root Connect(TranscriberBar)-button-20 WithData(Connect(ProjectTable))-button-9 MuiButton-text"
+        class="MuiButtonBase-root MuiButton-root makeStyles-button-20 MuiButton-text"
         tabindex="0"
         type="button"
       >
@@ -55,18 +55,18 @@ exports[`can render ProjectTable snapshot 1`] = `
         />
       </button>
       <h6
-        class="MuiTypography-root Connect(TranscriberBar)-grow-11 WithData(Connect(ProjectTable))-grow-4 MuiTypography-h6 MuiTypography-colorInherit"
+        class="MuiTypography-root makeStyles-grow-11 MuiTypography-h6 MuiTypography-colorInherit"
       >
         Transcriber Admin
       </h6>
       <div
-        class="Connect(TranscriberBar)-grow-11 WithData(Connect(ProjectTable))-grow-4"
+        class="makeStyles-grow-11"
       />
       <div
-        class="Connect(TranscriberBar)-search-16"
+        class="makeStyles-search-16"
       >
         <div
-          class="Connect(TranscriberBar)-searchIcon-17"
+          class="makeStyles-searchIcon-17"
         >
           <svg
             aria-hidden="true"
@@ -85,10 +85,10 @@ exports[`can render ProjectTable snapshot 1`] = `
           </svg>
         </div>
         <div
-          class="MuiInputBase-root Connect(TranscriberBar)-inputRoot-18"
+          class="MuiInputBase-root makeStyles-inputRoot-18"
         >
           <input
-            class="MuiInputBase-input Connect(TranscriberBar)-inputInput-19"
+            class="MuiInputBase-input makeStyles-inputInput-19"
             placeholder="Search…"
             type="text"
             value=""
@@ -96,22 +96,22 @@ exports[`can render ProjectTable snapshot 1`] = `
         </div>
       </div>
       <div
-        class="MuiAvatar-root Connect(TranscriberBar)-avatar-21 MuiAvatar-colorDefault"
+        class="MuiAvatar-root makeStyles-avatar-21 MuiAvatar-colorDefault"
       />
     </div>
   </header>
   <div
-    class="WithData(Connect(ProjectTable))-container-2"
+    class="makeStyles-container-2"
   >
     <div
-      class="MuiPaper-root MuiPaper-elevation1 WithData(Connect(ProjectTable))-paper-3 MuiPaper-rounded"
+      class="MuiPaper-root MuiPaper-elevation1 makeStyles-paper-3 MuiPaper-rounded"
       id="ProjectTable"
     >
       <div
-        class="WithData(Connect(ProjectTable))-dialogHeader-5"
+        class="makeStyles-dialogHeader-5"
       >
         <div
-          class="WithData(Connect(ProjectTable))-grow-4"
+          class="makeStyles-grow-4"
         />
         <h5
           class="MuiTypography-root MuiTypography-h5"
@@ -119,11 +119,11 @@ exports[`can render ProjectTable snapshot 1`] = `
           Choose Project
         </h5>
         <div
-          class="WithData(Connect(ProjectTable))-grow-4"
+          class="makeStyles-grow-4"
         />
         <button
           aria-label="Add"
-          class="MuiButtonBase-root MuiFab-root WithData(Connect(ProjectTable))-button-9 MuiFab-primary"
+          class="MuiButtonBase-root MuiFab-root makeStyles-button-9 MuiFab-primary"
           tabindex="0"
           type="button"
         >
@@ -132,7 +132,7 @@ exports[`can render ProjectTable snapshot 1`] = `
           >
             <svg
               aria-hidden="true"
-              class="MuiSvgIcon-root WithData(Connect(ProjectTable))-icon-10"
+              class="MuiSvgIcon-root makeStyles-icon-10"
               focusable="false"
               role="presentation"
               viewBox="0 0 24 24"

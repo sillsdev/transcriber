@@ -6,7 +6,6 @@ import { Provider } from 'react-redux';
 import store from '../store';
 import { createMuiTheme } from '@material-ui/core';
 import Store from '@orbit/store';
-import { Schema } from '@orbit/data';
 import { schema, keyMap } from '../schema';
 import history from '../history';
 import { render, cleanup, waitForElement } from '@testing-library/react';
@@ -47,8 +46,8 @@ const addMediaFile = async () => {
       originalFile: 'PAT-LUK-001-001004v01.mp3',
     },
   } as any;
-  (schema as Schema).initializeRecord(mediaFile);
-  await (dataStore as Store).update(t => t.addRecord(mediaFile));
+  schema.initializeRecord(mediaFile);
+  await dataStore.update(t => t.addRecord(mediaFile));
   return mediaFile.id as string;
 };
 
@@ -65,9 +64,9 @@ const addPassageAndSection = async (mediaFileId: string) => {
       title: 'Introduction',
     },
   } as any;
-  (schema as Schema).initializeRecord(passage);
-  await (dataStore as Store).update(t => t.addRecord(passage));
-  await (dataStore as Store).update(t =>
+  schema.initializeRecord(passage);
+  await dataStore.update(t => t.addRecord(passage));
+  await dataStore.update(t =>
     t.replaceRelatedRecord({ type: 'mediafile', id: mediaFileId }, 'passage', {
       type: 'passage',
       id: passage.id,
@@ -79,21 +78,21 @@ const addPassageAndSection = async (mediaFileId: string) => {
       name: 'Jesus is coming',
     },
   } as any;
-  (schema as Schema).initializeRecord(section);
-  await (dataStore as Store).update(t => t.addRecord(section));
+  schema.initializeRecord(section);
+  await dataStore.update(t => t.addRecord(section));
   const passageSection = {
     type: 'passagesection',
   } as any;
-  (schema as Schema).initializeRecord(passageSection);
-  await (dataStore as Store).update(t => t.addRecord(passageSection));
-  await (dataStore as Store).update(t =>
+  schema.initializeRecord(passageSection);
+  await dataStore.update(t => t.addRecord(passageSection));
+  await dataStore.update(t =>
     t.replaceRelatedRecord(
       { type: 'passagesection', id: passageSection.id },
       'passage',
       { type: 'passage', id: passage.id }
     )
   );
-  await (dataStore as Store).update(t =>
+  await dataStore.update(t =>
     t.replaceRelatedRecord(
       { type: 'passagesection', id: passageSection.id },
       'section',

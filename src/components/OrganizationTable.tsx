@@ -8,12 +8,7 @@ import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { Paper, Typography } from '@material-ui/core';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   IntegratedSelection,
   IntegratedSorting,
@@ -31,7 +26,7 @@ import SnackBar from './SnackBar';
 import Auth from '../auth/Auth';
 import hasRelated from '../utils/hasRelated';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
@@ -64,7 +59,8 @@ const styles = (theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'center',
     }),
-  });
+  })
+);
 
 interface IStateProps {
   t: IOrganizationTableStrings;
@@ -81,12 +77,13 @@ interface Row {
 }
 
 // see: https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/selection/
-interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
+interface IProps extends IStateProps, IRecordProps {
   auth: Auth;
 }
 
 export function OrganizationTable(props: IProps) {
-  const { classes, organizations, auth, t } = props;
+  const { organizations, auth, t } = props;
+  const classes = useStyles();
   const [user] = useGlobal('user');
   const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([{ name: 'name', title: 'Name' }]);
@@ -161,6 +158,6 @@ const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
 };
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(mapStateToProps)(OrganizationTable) as any) as any) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  OrganizationTable
+) as any) as any;

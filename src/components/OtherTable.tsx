@@ -10,7 +10,7 @@ import {
   IScriptureTableStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData, WithDataProps } from 'react-orbitjs';
 import Store from '@orbit/store';
 import { Schema, RecordIdentity } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -48,15 +48,15 @@ interface IStateProps {
   s: IPlanSheetStrings;
 }
 
-interface IProps extends IStateProps {}
+interface IProps extends IStateProps, WithDataProps {}
 
 export function OtherTable(props: IProps) {
-  const { t, s } = props;
+  const { t, s, updateStore, queryStore } = props;
   const classes = useStyles();
   const [plan] = useGlobal<string>('plan');
   const [project] = useGlobal<string>('project');
-  const [dataStore] = useGlobal('dataStore');
-  const [schema] = useGlobal('schema');
+  const [dataStore] = useGlobal<Store>('dataStore');
+  const [schema] = useGlobal<Schema>('schema');
   const [message, setMessage] = useState(<></>);
   const [sectionId, setSectionId] = useState(Array<RecordIdentity>());
   const [passageId, setPassageId] = useState(Array<ISequencedRecordIdentity>());
@@ -112,7 +112,7 @@ export function OtherTable(props: IProps) {
   const handleAction = (what: string, where: number[]) => {
     if (what === 'Delete') {
       const deleteRow = async (id: RecordIdentity) => {
-        await (dataStore as Store).update(t => t.removeRecord(id));
+        await updateStore(t => t.removeRecord(id));
       };
       for (
         let rowListIndex = 0;
@@ -175,7 +175,7 @@ export function OtherTable(props: IProps) {
           state: 'Not assigned',
         },
       } as any;
-      (schema as Schema).initializeRecord(p);
+      schema.initializeRecord(p);
       const passageSection = {
         type: 'passagesection',
         attributes: {
@@ -183,7 +183,7 @@ export function OtherTable(props: IProps) {
           passageId: 0,
         },
       } as any;
-      await (dataStore as Store).update(t => [
+      await dataStore.update(t => [
         t.addRecord(p),
         t.addRecord(passageSection),
         t.replaceRelatedRecord(
@@ -207,14 +207,14 @@ export function OtherTable(props: IProps) {
         passageRow[4] !== inpRow[4] ||
         passageRow[5] !== inpRow[5]
       ) {
-        let passage = (await (dataStore as Store).query(q =>
+        let passage = (await queryStore(q =>
           q.findRecord(passageId[rowIndex])
         )) as Passage;
         passage.attributes.sequencenum = parseInt(passageRow[2]);
         passage.attributes.reference = passageRow[4];
         passage.attributes.title = passageRow[5];
         delete passage.relationships;
-        await (dataStore as Store).update(t => t.replaceRecord(passage));
+        await updateStore(t => t.replaceRecord(passage));
       }
     };
     const doPassages = (rowIndex: number, secId: string) => {
@@ -243,8 +243,8 @@ export function OtherTable(props: IProps) {
           name: sectionRow[1],
         },
       } as any;
-      (schema as Schema).initializeRecord(sec);
-      await (dataStore as Store).update(t => [
+      schema.initializeRecord(sec);
+      await dataStore.update(t => [
         t.addRecord(sec),
         t.replaceRelatedRecord({ type: 'section', id: sec.id }, 'plan', {
           type: 'plan',
@@ -257,13 +257,13 @@ export function OtherTable(props: IProps) {
       const sectionRow = rows[rowIndex];
       const inpRow = inData[rowIndex];
       if (sectionRow[0] !== inpRow[0] || sectionRow[1] !== inpRow[1]) {
-        let section = (await (dataStore as Store).query(q =>
+        let section = (await queryStore(q =>
           q.findRecord(sectionId[rowIndex])
         )) as Section;
         section.attributes.sequencenum = parseInt(sectionRow[0]);
         section.attributes.name = sectionRow[1];
         delete section.relationships;
-        await (dataStore as Store).update(t => t.replaceRecord(section));
+        await updateStore(t => t.replaceRecord(section));
       }
       return sectionId[rowIndex];
     };
@@ -289,7 +289,7 @@ export function OtherTable(props: IProps) {
       list: (string | number)[][],
       ids: Array<ISequencedRecordIdentity>
     ) => {
-      let passage = (await (dataStore as Store).query(q =>
+      let passage = (await queryStore(q =>
         q.findRecord({ type: 'passage', id: pId })
       )) as Passage;
       if (passage != null) {
@@ -309,7 +309,7 @@ export function OtherTable(props: IProps) {
       }
     };
     const getPassageSection = async (sec: Section) => {
-      let passageSections = (await (dataStore as Store).query(q =>
+      let passageSections = (await queryStore(q =>
         q.findRecords('passagesection')
       )) as Array<PassageSection>;
       // query filter doesn't work with JsonApi since id not translated
@@ -343,7 +343,7 @@ export function OtherTable(props: IProps) {
       }
     };
     const getSections = async (p: string) => {
-      let sections = (await (dataStore as Store).query(q =>
+      let sections = (await queryStore(q =>
         q.findRelatedRecords({ type: 'plan', id: p }, 'sections')
       )) as Array<Section>;
       // query filter doesn't work with JsonApi since id not translated

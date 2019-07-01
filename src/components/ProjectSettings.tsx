@@ -5,10 +5,9 @@ import ProjectType from '../model/projectType';
 import { connect } from 'react-redux';
 import { IState, Project, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import Store from '@orbit/store';
+import { withData, WithDataProps } from 'react-orbitjs';
 import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
-import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
@@ -22,59 +21,61 @@ import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SnackBar from './SnackBar';
 import remoteId from '../utils/remoteId';
 
-const styles = (theme: Theme) => ({
-  container: {
-    display: 'flex',
-    margin: theme.spacing(4),
-  },
-  fullContainer: {
-    margin: 0,
-  },
-  paper: {
-    paddingLeft: theme.spacing(4),
-  },
-  group: {
-    paddingBottom: theme.spacing(3),
-  },
-  label: {
-    // color: theme.palette.primary.dark,
-  },
-  info: {
-    justifyContent: 'flex-end',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  dense: {
-    marginTop: 16,
-  },
-  menu: {
-    width: 200,
-  },
-  actions: theme.mixins.gutters({
-    paddingBottom: 16,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }),
-  button: {
-    margin: theme.spacing(1),
-  },
-  icon: {
-    marginLeft: theme.spacing(1),
-  },
-  moreButton: {
-    textDecoration: 'underline',
-  },
-  smallIcon: {
-    marginRight: theme.spacing(1),
-    fontSize: 12,
-  },
-  link: {
-    color: theme.palette.primary.contrastText,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+      margin: theme.spacing(4),
+    },
+    fullContainer: {
+      margin: 0,
+    },
+    paper: {
+      paddingLeft: theme.spacing(4),
+    },
+    group: {
+      paddingBottom: theme.spacing(3),
+    },
+    label: {
+      // color: theme.palette.primary.dark,
+    },
+    info: {
+      justifyContent: 'flex-end',
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
+    dense: {
+      marginTop: 16,
+    },
+    menu: {
+      width: 200,
+    },
+    actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    }),
+    button: {
+      margin: theme.spacing(1),
+    },
+    icon: {
+      marginLeft: theme.spacing(1),
+    },
+    moreButton: {
+      textDecoration: 'underline',
+    },
+    smallIcon: {
+      marginRight: theme.spacing(1),
+      fontSize: 12,
+    },
+    link: {
+      color: theme.palette.primary.contrastText,
+    },
+  })
+);
 
 interface IStateProps {
   t: IProjectSettingsStrings;
@@ -85,15 +86,21 @@ interface IRecordProps {
   projectTypes: Array<ProjectType>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
-  updateStore?: any;
+interface IProps extends IStateProps, IRecordProps, WithDataProps {
   noMargin?: boolean;
 }
 
 export function ProjectSettings(props: IProps) {
-  const { classes, projects, projectTypes, updateStore, t, noMargin } = props;
-  const [schema] = useGlobal('schema');
-  const [dataStore] = useGlobal('dataStore');
+  const {
+    projects,
+    projectTypes,
+    updateStore,
+    queryStore,
+    t,
+    noMargin,
+  } = props;
+  const classes = useStyles();
+  const [schema] = useGlobal<Schema>('schema');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal<string>('user');
   const [organization] = useGlobal<string>('organization');
@@ -223,7 +230,7 @@ export function ProjectSettings(props: IProps) {
         dateArchived: null,
       },
     } as any;
-    (schema as Schema).initializeRecord(project);
+    schema.initializeRecord(project);
     updateStore((t: TransformBuilder) => t.addRecord(project));
     setProject(project.id);
   };
@@ -246,7 +253,7 @@ export function ProjectSettings(props: IProps) {
 
   useEffect(() => {
     const setDisplayType = async (p: Project) => {
-      let projectType = (await (dataStore as Store).query(q =>
+      let projectType = (await queryStore(q =>
         q.findRelatedRecord({ type: 'project', id: p.id }, 'projecttype')
       )) as ProjectType;
       if (projectType !== null) {
@@ -498,6 +505,6 @@ const mapRecordsToProps = {
   projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
 };
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(mapStateToProps)(ProjectSettings) as any) as any) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  ProjectSettings
+) as any) as any;

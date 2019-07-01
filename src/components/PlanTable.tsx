@@ -4,15 +4,9 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, Plan, PlanType, Section, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData, WithDataProps } from 'react-orbitjs';
 import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
-import Store from '@orbit/store';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Fab, Button, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -32,7 +26,7 @@ import Confirm from './AlertDialog';
 import Related from '../utils/related';
 import remoteId from '../utils/remoteId';
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
@@ -61,7 +55,8 @@ const styles = (theme: Theme) =>
     actionIcon: {},
     button: {},
     icon: {},
-  });
+  })
+);
 
 interface ICell {
   name: string;
@@ -80,23 +75,14 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithStyles<typeof styles> {
-  updateStore: any;
+interface IProps extends IStateProps, IRecordProps, WithDataProps {
   displaySet: (type: string) => any;
 }
 
 export function PlanTable(props: IProps) {
-  const {
-    classes,
-    plans,
-    planTypes,
-    sections,
-    updateStore,
-    t,
-    displaySet,
-  } = props;
-  const [dataStore] = useGlobal('dataStore');
-  const [schema] = useGlobal('schema');
+  const { plans, planTypes, sections, updateStore, t, displaySet } = props;
+  const classes = useStyles();
+  const [schema] = useGlobal<Schema>('schema');
   const [project] = useGlobal<string>('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
@@ -151,15 +137,15 @@ export function PlanTable(props: IProps) {
         projectId: remoteId('project', project),
       },
     } as any;
-    (schema as Schema).initializeRecord(plan);
-    await (dataStore as Store).update(t => t.addRecord(plan));
-    await (dataStore as Store).update(t =>
+    schema.initializeRecord(plan);
+    await updateStore(t => t.addRecord(plan));
+    await updateStore(t =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
         id: planType,
       })
     );
-    await (dataStore as Store).update(t =>
+    await updateStore(t =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'project', {
         type: 'project',
         id: project,
@@ -177,8 +163,8 @@ export function PlanTable(props: IProps) {
   const handleEditMethod = async (plan: any) => {
     setDialogVisible(false);
     delete plan.relationships;
-    await (dataStore as Store).update(t => t.replaceRecord(plan));
-    await (dataStore as Store).update(t =>
+    await updateStore(t => t.replaceRecord(plan));
+    await updateStore(t =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
         id: plan.attributes.planType,
@@ -352,6 +338,6 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(mapStateToProps)(PlanTable) as any) as any) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  PlanTable
+) as any) as any;

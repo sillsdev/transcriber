@@ -14,7 +14,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -28,30 +28,32 @@ import remoteId from '../utils/remoteId';
 import UserPassage from '../model/userPassage';
 import './AssignmentTable.css';
 
-const styles = (theme: Theme) => ({
-  container: {
-    display: 'flex',
-    marginLeft: theme.spacing(4),
-    marginRight: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-  },
-  paper: {},
-  actions: theme.mixins.gutters({
-    paddingBottom: 16,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-  }),
-  grow: {
-    flexGrow: 1,
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-  icon: {
-    marginLeft: theme.spacing(1),
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      display: 'flex',
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginBottom: theme.spacing(4),
+    },
+    paper: {},
+    actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    }),
+    grow: {
+      flexGrow: 1,
+    },
+    button: {
+      margin: theme.spacing(1),
+    },
+    icon: {
+      marginLeft: theme.spacing(1),
+    },
+  })
+);
 
 interface IRow {
   id: string;
@@ -193,18 +195,13 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithStyles<typeof styles> {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
 }
 
 export function AssignmentTable(props: IProps) {
   const {
-    classes,
     t,
     action,
     passages,
@@ -214,6 +211,7 @@ export function AssignmentTable(props: IProps) {
     users,
     roles,
   } = props;
+  const classes = useStyles();
   const [plan] = useGlobal<string>('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -308,7 +306,6 @@ export function AssignmentTable(props: IProps) {
             <MenuItem onClick={handleConfirmAction('Assign Section')}>
               {t.assignSection}
             </MenuItem>
-
             <MenuItem onClick={handleConfirmAction('Remove Assignment')}>
               {t.delete}
             </MenuItem>{' '}
@@ -395,6 +392,6 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withStyles(styles, { withTheme: true })(withData(
-  mapRecordsToProps
-)(connect(mapStateToProps)(AssignmentTable) as any) as any) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  AssignmentTable
+) as any) as any;
