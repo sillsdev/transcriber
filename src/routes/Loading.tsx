@@ -103,7 +103,7 @@ export function Loading(props: IProps) {
   if (!isAuthenticated()) return <Redirect to="/" />;
 
   if (orbitLoaded && completed === 95) {
-    // return <Redirect to="/main" />;
+    return <Redirect to="/main" />;
   }
 
   return (
