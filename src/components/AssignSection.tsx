@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, Section, IAssignSectionStrings, User } from '../model';
 import localStrings from '../selector/localize';
@@ -11,7 +10,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Grid,
   List,
@@ -38,7 +36,6 @@ import {
 } from '../utils/section';
 import { userAvatar, userInitials } from '../utils/user';
 import { remoteId } from '../utils';
-import { userInfo } from 'os';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,7 +67,6 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 function AssignSection(props: IProps) {
   const { users, sections, t, visible, closeMethod, updateStore } = props;
   const classes = useStyles();
-  const [plan] = useGlobal('plan');
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
@@ -179,7 +175,6 @@ function AssignSection(props: IProps) {
       );
     });
   const sectionList = sections.map((p, index) => {
-    const labelId = 'section-' + p.attributes.name;
     return (
       <TableRow key={index}>
         <TableCell component="th" scope="row">

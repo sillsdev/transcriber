@@ -111,7 +111,6 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "passagestate": string;
     "user": string;
     "role": string;
-    "action": string;
     "assignSection": string;
     "delete": string;
     "filter": string;

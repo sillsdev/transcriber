@@ -128,7 +128,6 @@ const initialState = {
 			"passagestate": "State",
 			"user": "User",
 			"role": "Role",
-			"action": "Action",
 			"assignSection": "Assign Section",
 			"delete": "Remove Assignment",
 			"filter": "Filter",

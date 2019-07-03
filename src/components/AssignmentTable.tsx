@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import * as actions from '../actions';
 import {
   IState,
   Passage,
@@ -15,8 +14,7 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { Button } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import SnackBar from './SnackBar';
@@ -180,7 +178,6 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 export function AssignmentTable(props: IProps) {
   const {
     t,
-    action,
     passages,
     passageSections,
     sections,

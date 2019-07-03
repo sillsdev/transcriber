@@ -460,12 +460,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.action">
-         <segment>
-            <source>Action</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="assignmentTable.assignSection">
          <segment>
             <source>Assign Section</source>
