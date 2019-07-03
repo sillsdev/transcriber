@@ -12,7 +12,7 @@ import {
   Role,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
@@ -27,6 +27,14 @@ import Auth from '../auth/Auth';
 import remoteId from '../utils/remoteId';
 import UserPassage from '../model/userPassage';
 import './AssignmentTable.css';
+import AssignSection from './AssignSection';
+import {
+  sectionNumber,
+  sectionReviewerName,
+  sectionTranscriberName,
+  updatableSection,
+} from '../utils/section';
+import { passageNumber } from '../utils/passage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,6 +56,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       margin: theme.spacing(1),
+      variant: 'outlined',
+      color: 'primary',
     },
     icon: {
       marginLeft: theme.spacing(1),
@@ -64,8 +74,6 @@ interface IRow {
   passages: string;
   parentId: string;
 }
-//const getChildRows = (row: any, rootRows: any[]) =>
-//  row ? row.items : rootRows;
 const getChildRows = (row: any, rootRows: any[]) => {
   const childRows = rootRows.filter(r => r.parentId === (row ? row.id : ''));
   return childRows.length ? childRows : null;
@@ -73,17 +81,14 @@ const getChildRows = (row: any, rootRows: any[]) => {
 
 /* build the section name = sequence + name */
 const getSection = (section: Section) => {
-  const sectionId = section.attributes.sequencenum
-    ? section.attributes.sequencenum.toString().padStart(3, ' ')
-    : '';
-  const sectionName = section.attributes.name;
-  return sectionId + ' ' + sectionName;
+  return sectionNumber(section) + ' ' + section.attributes.name;
 };
+
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage[]) => {
   if (passage.length === 0) return '';
   return (
-    passage[0].attributes.sequencenum.toString().padStart(3, ' ') +
+    passageNumber(passage[0]) +
     ' ' +
     passage[0].attributes.book +
     ' ' +
@@ -126,9 +131,9 @@ const getAssignments = (
       id: section.id,
       name: getSection(section),
       state: section.attributes.state,
-      reviewer: '',
-      transcriber: '',
-      passages: '0', //alternatively we could format in the tree to now show on passage rows
+      reviewer: sectionReviewerName(section, users),
+      transcriber: sectionTranscriberName(section, users),
+      passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
       parentId: '',
     };
     rowData.push(sectionRow);
@@ -136,12 +141,10 @@ const getAssignments = (
     const sectionps = passageSections
       .filter(ps => ps.attributes.sectionId === remoteId('section', section.id))
       .sort(passageSectionCompare);
+    sectionRow.passages = sectionps.length.toString();
     sectionps.forEach(function(ps, psindex) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
-      //add this passage to the section passage count
-      sectionRow.passages = (parseInt(sectionRow.passages) + 1).toString();
-      //rowData[rowData.length - 1].items.push({
       rowData.push({
         id: passageId,
         name: getReference(passage),
@@ -151,26 +154,6 @@ const getAssignments = (
         passages: '',
         parentId: section.id,
       } as IRow);
-
-      const passageups = userPassages.filter(
-        up => up.attributes.passageId === remoteId('passage', passage[0].id)
-      );
-      passageups.forEach(function(up, upindex) {
-        const userId = related(up, 'user');
-        const user = users.filter(u => u.id === userId);
-        const username = user.length > 0 ? user[0].attributes.name : '';
-        const roleId = related(up, 'role');
-        const role = roles.filter(r => r.id === roleId);
-        const rolename = role.length > 0 ? role[0].attributes.roleName : '';
-        if (rolename === 'Reviewer') {
-          //add my data to the last row and the section row
-          rowData[rowData.length - 1].reviewer = username;
-          sectionRow.reviewer = username;
-        } else {
-          rowData[rowData.length - 1].transcriber = username;
-          sectionRow.transcriber = username;
-        }
-      });
     });
   });
   return rowData as Array<IRow>;
@@ -178,12 +161,6 @@ const getAssignments = (
 
 interface IStateProps {
   t: IAssignmentTableStrings;
-}
-//TODO:
-interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
 }
 
 interface IRecordProps {
@@ -195,7 +172,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+interface IProps extends IStateProps, IRecordProps, WithDataProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
 }
@@ -210,14 +187,15 @@ export function AssignmentTable(props: IProps) {
     userPassages,
     users,
     roles,
+    updateStore,
   } = props;
   const classes = useStyles();
   const [plan] = useGlobal<string>('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
-  const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
+
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -235,31 +213,57 @@ export function AssignmentTable(props: IProps) {
 
   const [filter, setFilter] = useState(false);
   const [group, setGroup] = useState(false);
+  const [assignSectionVisible, setAssignSectionVisible] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
   };
 
-  const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
-  const handleConfirmAction = (what: string) => (e: any) => {
-    setActionMenuItem(null);
+  const handleAssignSection = (status: boolean) => (e: any) => {
     if (check.length === 0) {
-      setMessage(<span>Please select row(s) to {what}.</span>);
-    } else if (!/Close/i.test(what)) {
-      setConfirmAction(what);
+      setMessage(<span>Please select row(s) to assign.</span>);
+    } else {
+      setAssignSectionVisible(status);
     }
   };
-  const handleActionConfirmed = () => {
-    if (action != null) {
-      if (action(confirmAction, check)) {
-        setCheck(Array<number>());
-      }
-    }
-    setConfirmAction('');
+  const handleRemoveAssignments = (e: any) => {
+    setConfirmAction(t.delete + '? (' + check.length + ')');
   };
-  const handleActionRefused = () => {
-    setConfirmAction('');
+  const getSelectedSections = () => {
+    var selected = Array<Section>();
+    var one: any;
+    check.forEach(c => {
+      one = sections.find(function(s) {
+        return c <= data.length ? s.id === data[c].id : undefined;
+      });
+      if (one !== undefined) selected.push(one);
+    });
+    //setSelectedSections(selected);
+    return selected;
   };
+
+  const handleRemoveAssignmentsConfirmed = () => {
+    setConfirmAction('');
+    let sections = getSelectedSections();
+    sections.forEach(async s => {
+      let changes = { transcriberId: null, reviewerId: null };
+      await updateStore(t => t.replaceRecord(updatableSection(s, changes)));
+      await updateStore(t =>
+        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'transcriber', {
+          type: 'user',
+          id: null,
+        })
+      );
+      await updateStore(t =>
+        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'reviewer', {
+          type: 'user',
+          id: null,
+        })
+      );
+    });
+  };
+  const handleRemoveAssignmentsRefused = () => setConfirmAction('');
+
   const handleCheck = (checks: Array<number>) => {
     setCheck(checks);
   };
@@ -286,30 +290,28 @@ export function AssignmentTable(props: IProps) {
       <div className={classes.paper}>
         <div className={classes.actions}>
           <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
+            key="assign"
+            aria-label={t.assignSection}
             variant="outlined"
             color="primary"
             className={classes.button}
-            onClick={handleMenu}
+            onClick={handleAssignSection(true)}
+            title={t.assignSection}
           >
-            {t.action}
-            <DropDownIcon className={classes.icon} />
+            {t.assignSection}
           </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
+          <Button
+            key="remove"
+            aria-label={t.delete}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleRemoveAssignments}
+            title={t.delete}
           >
-            <MenuItem onClick={handleConfirmAction('Assign Section')}>
-              {t.assignSection}
-            </MenuItem>
-            <MenuItem onClick={handleConfirmAction('Remove Assignment')}>
-              {t.delete}
-            </MenuItem>{' '}
-          </Menu>
+            {t.delete}
+          </Button>
+
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
@@ -365,11 +367,17 @@ export function AssignmentTable(props: IProps) {
           select={handleCheck}
         />{' '}
       </div>
+      <AssignSection
+        sections={getSelectedSections()}
+        visible={assignSectionVisible}
+        closeMethod={handleAssignSection(false)}
+      />
       {confirmAction !== '' ? (
         <Confirm
-          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
-          yesResponse={handleActionConfirmed}
-          noResponse={handleActionRefused}
+          title={t.delete}
+          text={confirmAction}
+          yesResponse={handleRemoveAssignmentsConfirmed}
+          noResponse={handleRemoveAssignmentsRefused}
         />
       ) : (
         <></>

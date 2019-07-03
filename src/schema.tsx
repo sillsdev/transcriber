@@ -202,6 +202,8 @@ const schemaDefinition: SchemaSettings = {
         name: { type: 'string' },
         state: { type: 'string' },
         planId: { type: 'number' },
+        reviewerId: { type: 'number' },
+        transcriberId: { type: 'number' },
       },
       relationships: {
         // projects: { type: 'hasMany', model: 'project', inverse: 'sections' },
@@ -211,6 +213,8 @@ const schemaDefinition: SchemaSettings = {
           model: 'passagesection',
           inverse: 'section',
         },
+        reviewer: { type: 'hasOne', model: 'user' },
+        transcriber: { type: 'hasOne', model: 'user' },
       },
     },
     passage: {

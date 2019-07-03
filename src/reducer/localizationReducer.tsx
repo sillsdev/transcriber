@@ -137,6 +137,18 @@ const initialState = {
 			"reviewer": "Reviewer",
 		}
 	}),
+	"assignSection": new LocalizedStrings({
+		"en": {
+			"title": "Assign sections to Users",
+			"sections": "Sections",
+			"users": "Users",
+			"reviewer": "Reviewer",
+			"transcriber": "Transcriber",
+			"role": "Role",
+			"assignAs": "Assign As",
+			"close": "Close",
+		}
+	}),
 	"planTabs": new LocalizedStrings({
 		"en": {
 			"sectionsPassages": "Sections & Passages",
@@ -229,6 +241,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
+				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),
 				"planAdd" : new LocalizedStrings(action.payload.data.planAdd),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),

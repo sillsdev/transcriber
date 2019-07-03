@@ -85,9 +85,6 @@ function PlanAdd(props: IProps) {
         if (editMethod) {
           editMethod(plan);
         }
-        if (editMethod) {
-          editMethod(plan);
-        }
       }
     }
     setOpen(false);

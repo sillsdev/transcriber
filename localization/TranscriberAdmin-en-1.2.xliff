@@ -538,13 +538,6 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="assignmentTable.action">
-				<source>Action</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">assignmentTable.tsx</context>
-				</context-group>
-			</trans-unit>
 			<trans-unit id="assignmentTable.assignSection">
 				<source>Assign Section</source>
 				<target/>
@@ -587,6 +580,62 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="assignSection.title">
+				<source>Assign sections to Users</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.sections">
+				<source>Sections</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.users">
+				<source>Users</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>			
+			<trans-unit id="assignSection.reviewer">
+				<source>Reviewer</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>			
+			<trans-unit id="assignSection.transcriber">
+				<source>Transcriber</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>				
+			<trans-unit id="assignSection.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>			
+			<trans-unit id="assignSection.assignAs">
+				<source>Assign As</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>			
+			<trans-unit id="assignSection.close">
+				<source>Close</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>			
 			<trans-unit id="planTabs.sectionsPassages">
 				<source>Sections &#x26; Passages</source>
 				<target/>

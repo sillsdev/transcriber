@@ -120,6 +120,17 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "reviewer": string;
 };
 
+export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
+    "sections": string;
+    "users": string;
+    "reviewer": string;
+    "transcriber": string;
+    "role": string;
+    "assignAs": string;
+    "close": string;
+};
+
 export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
     "sectionsPassages": string;
     "media": string;
@@ -202,6 +213,7 @@ export interface ILocalizedStrings {
 	planSheet: IPlanSheetStrings;
 	scriptureTable: IScriptureTableStrings;
 	assignmentTable: IAssignmentTableStrings;
+	assignSection: IAssignSectionStrings;
 	planTabs: IPlanTabsStrings;
 	planAdd: IPlanAddStrings;
 	mediaTab: IMediaTabStrings;

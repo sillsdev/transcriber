@@ -9,6 +9,7 @@ export interface User extends Record {
     phone: string | null;
     timezone: string | null;
     locale: string | null;
+    avatarUrl: string | null;
     isLocked: boolean;
     dateCreated: string | null;
     dateUpdated: string | null;
