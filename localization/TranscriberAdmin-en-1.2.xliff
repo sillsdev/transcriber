@@ -565,14 +565,14 @@
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
-			</trans-unit>			
+			</trans-unit>
 			<trans-unit id="assignmentTable.group">
 				<source>Group</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
-			</trans-unit>			
+			</trans-unit>
 			<trans-unit id="assignmentTable.transcriber">
 				<source>Transcriber</source>
 				<target/>
@@ -918,6 +918,13 @@
 			</trans-unit>
 			<trans-unit id="main.integrations">
 				<source>Integrations</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.project">
+				<source>Project</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">drawer.tsx</context>

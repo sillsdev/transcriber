@@ -88,46 +88,54 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
   noMargin?: boolean;
+  add?: boolean;
+  finishAdd?: () => void;
 }
 
 export function ProjectSettings(props: IProps) {
   const {
+    add,
     projects,
     projectTypes,
     updateStore,
     queryStore,
     t,
     noMargin,
+    finishAdd,
   } = props;
   const classes = useStyles();
   const [schema] = useGlobal<Schema>('schema');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal<string>('user');
   const [organization] = useGlobal<string>('organization');
-  const [currentProject, setCurrentProject] = useState<Project>({
-    type: 'project',
-    id: '',
-    attributes: {
-      name: '',
-      slug: '',
-      projectTypeId: 0,
-      groupId: 0,
-      description: '',
-      ownerId: 0,
-      organizationId: 0,
-      uilanguagebcp47: '',
-      language: '',
-      languageName: '',
-      defaultFont: '',
-      defaultFontSize: '',
-      rtl: false,
-      allowClaim: true,
-      isPublic: true,
-      dateCreated: '',
-      dateUpdated: '',
-      dateArchived: '',
-    },
-  });
+  const [currentProject, setCurrentProject] = useState<Project | undefined>(
+    add
+      ? undefined
+      : {
+          type: 'project',
+          id: '',
+          attributes: {
+            name: '',
+            slug: '',
+            projectTypeId: 0,
+            groupId: 0,
+            description: '',
+            ownerId: 0,
+            organizationId: 0,
+            uilanguagebcp47: '',
+            language: '',
+            languageName: '',
+            defaultFont: '',
+            defaultFontSize: '',
+            rtl: false,
+            allowClaim: true,
+            isPublic: true,
+            dateCreated: '',
+            dateUpdated: '',
+            dateArchived: '',
+          },
+        }
+  );
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [projectType, setProjectType] = useState('');
@@ -188,19 +196,26 @@ export function ProjectSettings(props: IProps) {
           name: name,
           projectTypeId: parseInt(projectType),
           description: description,
-          ownerId: currentProject.attributes.ownerId,
-          organizationId: currentProject.attributes.organizationId,
-          uilanguagebcp47: currentProject.attributes.uilanguagebcp47,
+          ownerId: currentProject ? currentProject.attributes.ownerId : 0,
+          organizationId: currentProject
+            ? currentProject.attributes.organizationId
+            : 0,
+          uilanguagebcp47: currentProject
+            ? currentProject.attributes.uilanguagebcp47
+            : 'en',
           language: bcp47,
           languageName: languageName,
           defaultFont: defaultFont,
           defaultFontSize: defaultFontSize,
           rtl: rtl,
-          allowClaim: currentProject.attributes.allowClaim,
-          isPublic: currentProject.attributes.isPublic,
-          dateCreated: currentProject.attributes.dateCreated,
+          allowClaim: currentProject
+            ? currentProject.attributes.allowClaim
+            : true,
+          isPublic: currentProject ? currentProject.attributes.isPublic : true,
+          dateCreated: currentProject
+            ? currentProject.attributes.dateCreated
+            : null,
           dateUpdated: new Date().toISOString(),
-          dateArchived: currentProject.attributes.dateArchived,
         },
       })
     );
@@ -226,13 +241,15 @@ export function ProjectSettings(props: IProps) {
         allowClaim: true,
         isPublic: true,
         dateCreated: new Date().toISOString(),
-        dateUpdated: new Date().toISOString(),
-        dateArchived: null,
+        dateUpdated: null,
       },
     } as any;
     schema.initializeRecord(project);
     updateStore((t: TransformBuilder) => t.addRecord(project));
     setProject(project.id);
+    if (finishAdd) {
+      finishAdd();
+    }
   };
 
   useEffect(() => {

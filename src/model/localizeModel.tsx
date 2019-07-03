@@ -181,6 +181,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "team": string;
     "settings": string;
     "integrations": string;
+    "project": string;
 };
 
 export interface ILocalizedStrings {

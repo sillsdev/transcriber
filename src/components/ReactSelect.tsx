@@ -312,7 +312,7 @@ interface IProps {
   suggestions: OptionType[];
   label?: string;
   placeholder?: string;
-  current?: number;
+  current?: number | null;
   rightSize?: boolean;
   onCommit?: (newValue: string) => void;
 }
@@ -331,8 +331,15 @@ export function SingleReactSelect(props: IProps) {
   const [single, setSingle] = React.useState<ValueType<OptionType>>(null);
 
   useEffect(() => {
-    if (current !== undefined && current >= 0 && suggestions.length > current) {
+    if (
+      current != null &&
+      current !== undefined &&
+      current >= 0 &&
+      suggestions.length > current
+    ) {
       setSingle(suggestions[current]);
+    } else if (current === null) {
+      setSingle(null);
     }
   }, [suggestions, current]);
 

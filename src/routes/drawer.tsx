@@ -40,6 +40,7 @@ import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
 import MenuIcon from '@material-ui/icons/Menu';
 import BackIcon from '@material-ui/icons/ArrowBack';
+import AddIcon from '@material-ui/icons/Add';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, slug } from '../utils';
@@ -70,6 +71,11 @@ const useStyles = makeStyles((theme: Theme) =>
         flexShrink: 0,
       },
     },
+    header: {
+      display: 'flex',
+      flexDirection: 'row',
+      paddingRight: theme.spacing(1.5),
+    },
     appBar: {
       marginLeft: drawerWidth,
       [theme.breakpoints.up('sm')]: {
@@ -99,8 +105,8 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       height: '64px',
     },
-    language: {
-      height: '64px',
+    project: {
+      height: '100px',
       marginTop: '10px',
       marginRight: '10px',
       marginLeft: '10px',
@@ -160,13 +166,14 @@ export function ResponsiveDrawer(props: IProps) {
   const [orgAvatar, setOrgAvatar] = useState<string>('');
   const [project, setProject] = useGlobal<string>('project');
   const [projOptions, setProjOptions] = useState(Array<OptionType>());
-  const [curProj, setCurProj] = useState(0);
+  const [curProj, setCurProj] = useState<number | null>(0);
   const [plan] = useGlobal<string>('plan');
   const [tab] = useGlobal<string>('tab');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [noBack] = useState(false);
   const [choice, setChoice] = useState('');
   const [content, setContent] = useState('');
+  const [addProject, setAddProject] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -175,6 +182,7 @@ export function ResponsiveDrawer(props: IProps) {
   const handleBack = () => {};
 
   const handleChoice = (choice: string) => () => {
+    setAddProject(false);
     setChoice(slug(choice));
     setContent(slug(choice));
   };
@@ -193,6 +201,17 @@ export function ResponsiveDrawer(props: IProps) {
     } else {
       setContent('other-plan');
     }
+  };
+
+  const handleAddProject = () => {
+    setAddProject(true);
+    setProject('');
+    setContent(slug(t.settings));
+  };
+
+  const handleFinishAdd = () => {
+    setAddProject(false);
+    setChoice(slug(t.settings));
   };
 
   // useEffect(() => {
@@ -254,14 +273,16 @@ export function ResponsiveDrawer(props: IProps) {
     setProjOptions(projOpts);
     const projKeys = projOpts.map(o => o.value);
     const newCurProj = projKeys.indexOf(project);
-    if (newCurProj === -1) {
+    if (addProject || projKeys.length < 1) {
+      setCurProj(null);
+    } else if (newCurProj === -1) {
       setCurProj(0);
       setProject(projKeys[0]);
     } else {
       setCurProj(newCurProj);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projects, project, organization]);
+  }, [projects, project, organization, addProject]);
 
   useEffect(() => {
     const orgId = keyMap.idToKey('organization', 'remoteId', organization);
@@ -328,7 +349,14 @@ export function ResponsiveDrawer(props: IProps) {
         ))}
       </List>
       <Divider />
-      <div className={classes.language}>
+      <div className={classes.project}>
+        <div className={classes.header}>
+          <Typography variant="h6">{t.project}</Typography>
+          <div className={classes.grow}>{'\u00A0'}</div>
+          <IconButton size="small" onClick={handleAddProject}>
+            <AddIcon />
+          </IconButton>
+        </div>
         <div className={classes.contained}>
           <div className={classes.select}>
             <ReactSelect
@@ -384,7 +412,14 @@ export function ResponsiveDrawer(props: IProps) {
   components['scripture-plan'] = <PlanTabs {...props} />;
   components['other-plan'] = <PlanTabs {...props} bookCol={-1} />;
   components[slug(t.team)] = 'team';
-  components[slug(t.settings)] = <ProjectSettings {...props} noMargin={true} />;
+  components[slug(t.settings)] = (
+    <ProjectSettings
+      {...props}
+      noMargin={true}
+      add={addProject}
+      finishAdd={handleFinishAdd}
+    />
+  );
   components[slug(t.integrations)] = 'integrations';
   components[''] = <Chart {...props} />;
 

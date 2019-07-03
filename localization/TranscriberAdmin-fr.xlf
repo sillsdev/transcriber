@@ -795,5 +795,11 @@
 				<target>Intégrations</target>
 			</segment>
 		</unit>
+		<unit id="main.project">
+			<segment>
+				<source>Project</source>
+				<target>Project</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

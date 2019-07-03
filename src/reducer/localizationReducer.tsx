@@ -203,6 +203,7 @@ const initialState = {
 			"team": "Team",
 			"settings": "Settings",
 			"integrations": "Integrations",
+			"project": "Project",
 		}
 	}),
 };
