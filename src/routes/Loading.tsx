@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '256px',
       height: '256px',
     },
+    message: {
+      alignSelf: 'center',
+    },
   })
 );
 
@@ -118,6 +121,9 @@ export function Loading(props: IProps) {
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <img src={logo} className={classes.icon} alt="logo" />
+          <Typography variant="h6" className={classes.message}>
+            {t.loadingTranscriber}
+          </Typography>
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>

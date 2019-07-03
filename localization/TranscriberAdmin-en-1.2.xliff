@@ -930,6 +930,13 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.loadingTranscriber">
+				<source>Loading SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 

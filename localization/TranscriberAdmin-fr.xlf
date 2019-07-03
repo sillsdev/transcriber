@@ -801,5 +801,11 @@
 				<target>Project</target>
 			</segment>
 		</unit>
+		<unit id="main.loadingTranscriber">
+			<segment>
+				<source>Loading SIL Transcriber Admin</source>
+				<target>Chargement de SIL Transcriber Admin</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>

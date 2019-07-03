@@ -204,6 +204,7 @@ const initialState = {
 			"settings": "Settings",
 			"integrations": "Integrations",
 			"project": "Project",
+			"loadingTranscriber": "Loading SIL Transcriber Admin",
 		}
 	}),
 };
