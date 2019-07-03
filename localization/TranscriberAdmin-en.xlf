@@ -502,6 +502,54 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignSection.title">
+         <segment>
+            <source>Assign sections to Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.sections">
+         <segment>
+            <source>Sections</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.users">
+         <segment>
+            <source>Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.reviewer">
+         <segment>
+            <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.assignAs">
+         <segment>
+            <source>Assign As</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTabs.sectionsPassages">
          <segment>
             <source>Sections &amp; Passages</source>
