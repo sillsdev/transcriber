@@ -802,5 +802,17 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.projectSummary">
+         <segment>
+            <source>Project Summary</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.addProject">
+         <segment>
+            <source>Add Project</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

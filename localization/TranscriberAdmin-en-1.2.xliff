@@ -937,6 +937,20 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.projectSummary">
+				<source>Project Summary</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.addProject">
+				<source>Add Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 

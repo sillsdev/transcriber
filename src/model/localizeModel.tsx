@@ -183,6 +183,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "integrations": string;
     "project": string;
     "loadingTranscriber": string;
+    "projectSummary": string;
+    "addProject": string;
 };
 
 export interface ILocalizedStrings {

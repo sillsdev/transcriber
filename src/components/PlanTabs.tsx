@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IPlanTabsStrings, Plan } from '../model';
+import { IState, IPlanTabsStrings } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
 import ScriptureTable from '../components/ScriptureTable';
@@ -40,19 +38,13 @@ interface IStateProps {
   t: IPlanTabsStrings;
 }
 
-interface IRecordProps {
-  plans: Array<Plan>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps extends IStateProps {
   bookCol: number;
   changeTab?: (v: number) => void;
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const { t, changeTab, plans, bookCol } = props;
-  const [plan] = useGlobal<string>('plan');
-  const [planName, setPlanName] = useState('');
+  const { t, changeTab, bookCol } = props;
   const classes = useStyles();
   const [tab, setTab] = useState(0);
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -77,16 +69,8 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [tab]);
 
-  useEffect(() => {
-    const curPlan = plans.filter(p => p.id === plan);
-    if (curPlan.length > 0) {
-      setPlanName(curPlan[0].attributes.name);
-    }
-  }, [plan, plans]);
-
   return (
     <div className={classes.root}>
-      <Typography variant="h4">{planName}</Typography>
       <AppBar position="static" color="default">
         <Tabs
           value={tab}
@@ -130,10 +114,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planTabs' }),
 });
 
-const mapRecordsToProps = {
-  plans: (q: QueryBuilder) => q.findRecords('plan'),
-};
-
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  ScrollableTabsButtonAuto
-) as any) as any;
+export default connect(mapStateToProps)(ScrollableTabsButtonAuto) as any;

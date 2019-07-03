@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
-import clsx from 'clsx';
 // import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, IMainStrings, Organization, Project } from '../model';
+import { IState, IMainStrings, Organization, Project, Plan } from '../model';
 // import * as actions from '../actions';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -39,7 +38,6 @@ import PassageIcon from '@material-ui/icons/ListTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
 import MenuIcon from '@material-ui/icons/Menu';
-import BackIcon from '@material-ui/icons/ArrowBack';
 import AddIcon from '@material-ui/icons/Add';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
@@ -51,6 +49,7 @@ import PlanTabs from '../components/PlanTabs';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import Chart from '../components/Chart';
+import logo from './transcriber10.png';
 
 const drawerWidth = 240;
 
@@ -124,6 +123,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.grey[200],
       height: '64px',
     },
+    logo: {
+      paddingRight: theme.spacing(2),
+    },
   })
 );
 
@@ -141,6 +143,7 @@ interface IDispatchProps {}
 interface IRecordProps {
   organizations: Array<Organization>;
   projects: Array<Project>;
+  plans: Array<Plan>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
@@ -155,7 +158,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 }
 
 export function ResponsiveDrawer(props: IProps) {
-  const { t, history, organizations, projects, orbitLoaded } = props;
+  const { t, history, organizations, projects, plans, orbitLoaded } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal<KeyMap>('keyMap');
@@ -170,21 +173,21 @@ export function ResponsiveDrawer(props: IProps) {
   const [plan] = useGlobal<string>('plan');
   const [tab] = useGlobal<string>('tab');
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [noBack] = useState(false);
   const [choice, setChoice] = useState('');
   const [content, setContent] = useState('');
   const [addProject, setAddProject] = useState(false);
+  const [title, setTitle] = useState(t.silTranscriberAdmin);
+  const [planName, setPlanName] = useState('');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleBack = () => {};
-
   const handleChoice = (choice: string) => () => {
     setAddProject(false);
     setChoice(slug(choice));
     setContent(slug(choice));
+    setTitle(choice);
   };
 
   const handleCommitOrg = (value: string) => {
@@ -194,6 +197,9 @@ export function ResponsiveDrawer(props: IProps) {
   const handleCommitProj = (value: string) => {
     setAddProject(false);
     setProject(value);
+    setContent('');
+    setChoice('');
+    setTitle(t.projectSummary);
   };
 
   const handlePlanType = (value: string) => {
@@ -208,6 +214,7 @@ export function ResponsiveDrawer(props: IProps) {
     setAddProject(true);
     setProject('');
     setContent(slug(t.settings));
+    setTitle(t.addProject);
   };
 
   const handleFinishAdd = () => {
@@ -279,17 +286,26 @@ export function ResponsiveDrawer(props: IProps) {
     } else if (newCurProj === -1) {
       setCurProj(0);
       setProject(projKeys[0]);
+      setTitle(t.projectSummary);
     } else {
       setCurProj(newCurProj);
+      setTitle(t.projectSummary);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projects, project, organization, addProject]);
 
   useEffect(() => {
+    const curPlan = plans.filter(p => p.id === plan);
+    if (curPlan.length > 0) {
+      setPlanName(curPlan[0].attributes.name);
+    }
+  }, [plan, plans]);
+
+  useEffect(() => {
     const orgId = keyMap.idToKey('organization', 'remoteId', organization);
     const projId = keyMap.idToKey('project', 'remoteId', project);
     if (orgId !== undefined && projId !== undefined) {
-      if (choice !== slug(t.plans)) {
+      if (choice !== slug(t.plans) || !plan) {
         history.push('/main/' + orgId + '/' + slug(choice) + '/' + projId);
       } else {
         const planId = keyMap.idToKey('plan', 'remoteId', plan);
@@ -305,6 +321,7 @@ export function ResponsiveDrawer(props: IProps) {
             '/' +
             tab
         );
+        setTitle(planName);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -448,16 +465,9 @@ export function ResponsiveDrawer(props: IProps) {
           >
             <MenuIcon />
           </IconButton>
-          <IconButton
-            onClick={handleBack}
-            className={clsx(classes.backButton, {
-              [classes.hide]: noBack,
-            })}
-          >
-            <BackIcon />
-          </IconButton>
+          <img src={logo} className={classes.logo} alt="logo" />
           <Typography variant="h6" noWrap>
-            {t.silTranscriberAdmin}
+            {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
           <Avatar>{initials}</Avatar>
@@ -509,6 +519,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
 };
 
 export default withData(mapRecordsToProps)(connect(mapStateToProps)(

@@ -807,5 +807,17 @@
 				<target>Chargement de SIL Transcriber Admin</target>
 			</segment>
 		</unit>
+		<unit id="main.projectSummary">
+			<segment>
+				<source>Project Summary</source>
+				<target>Résumé du projet</target>
+			</segment>
+		</unit>
+		<unit id="main.addProject">
+			<segment>
+				<source>Add Project</source>
+				<target>Ajouter un projet</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>
