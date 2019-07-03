@@ -28,7 +28,7 @@ setGlobal({
   organization: null,
   project: null,
   plan: null,
-  tab: null,
+  tab: 0,
   user: null,
   initials: null,
   lang: 'en',
@@ -37,35 +37,59 @@ setGlobal({
   keyMap: keyMap,
 });
 
-function App() {
-  return (
-    <DataProvider dataStore={dataStore}>
-      <Provider store={store}>
-        <Router history={history}>
-          <Route
-            path="/"
-            exact={true}
-            render={props => <Access auth={auth} {...props} />}
-          />
-          <Route
-            path="/loading"
-            render={props => <Loading auth={auth} {...props} />}
-          />
-          <Route
-            path="/main"
-            render={props => <Drawer auth={auth} {...props} />}
-          />
-          <Route
-            path="/callback"
-            render={props => {
-              handleAuthentication(props);
-              return <Callback {...props} />;
-            }}
-          />
-        </Router>
-      </Provider>
-    </DataProvider>
-  );
+interface IProps {
+  history?: {
+    location: {
+      pathname: string;
+    };
+  };
+}
+
+export class App extends React.Component<IProps, any> {
+  public constructor(props: IProps) {
+    super(props);
+  }
+
+  // async componentDidMount() {
+  //   if (history.location && history.location.pathname === '/callback') return;
+  //   try {
+  //     await auth.renewSession();
+  //     this.forceUpdate();
+  //   } catch (err) {
+  //     if (err.error !== 'login_required') console.log(err.error);
+  //   }
+  // }
+
+  public render() {
+    return (
+      <DataProvider dataStore={dataStore}>
+        <Provider store={store}>
+          <Router history={history}>
+            <Route
+              path="/"
+              exact={true}
+              render={props => <Access auth={auth} {...props} />}
+            />
+            <Route
+              path="/loading"
+              render={props => <Loading auth={auth} {...props} />}
+            />
+            <Route
+              path="/main"
+              render={props => <Drawer auth={auth} {...props} />}
+            />
+            <Route
+              path="/callback"
+              render={props => {
+                handleAuthentication(props);
+                return <Callback {...props} />;
+              }}
+            />
+          </Router>
+        </Provider>
+      </DataProvider>
+    );
+  }
 }
 
 export default App;

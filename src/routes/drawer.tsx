@@ -149,6 +149,7 @@ interface IRecordProps {
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
   history: {
+    action: string;
     location: {
       hash: string;
       pathname: string;
@@ -170,8 +171,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [project, setProject] = useGlobal<string>('project');
   const [projOptions, setProjOptions] = useState(Array<OptionType>());
   const [curProj, setCurProj] = useState<number | null>(0);
-  const [plan] = useGlobal<string>('plan');
-  const [tab] = useGlobal<string>('tab');
+  const [plan, setPlan] = useGlobal<string>('plan');
+  const [tab, setTab] = useGlobal<number>('tab');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [choice, setChoice] = useState('');
   const [content, setContent] = useState('');
@@ -221,30 +222,6 @@ export function ResponsiveDrawer(props: IProps) {
     setAddProject(false);
     setChoice(slug(t.settings));
   };
-
-  // useEffect(() => {
-  //   localStorage.setItem('url', history.location.pathname);
-  //   const parts = history.location.hash.split('#');
-  //   const base = 0;
-  //   const orgId = keyMap.keyToId('organization', 'remoteId', parts[base + 1]);
-  //   if (parts.length > base + 1 && organization !== orgId) {
-  //     setGlobal({ ...globals, organization: orgId });
-  //   }
-  //   if (parts.length > base + 2) {
-  //     setChoice(slug(parts[base + 2]));
-  //   }
-  //   if (parts.length > base + 3) {
-  //     const id = keyMap.keyToId('project', 'remoteId', parts[base + 3]);
-  //     setGlobal({ ...globals, project: id });
-  //   }
-  //   if (parts.length > base + 4) {
-  //     const id = keyMap.keyToId('plan', 'remoteId', parts[base + 4]);
-  //     setGlobal({ ...globals, plan: id });
-  //   }
-  //   if (parts.length > base + 5) {
-  //     setGlobal({ ...globals, tab: slug(parts[base + 5]) });
-  //   }
-  // }, [history, globals, keyMap]);
 
   useEffect(() => {
     const orgOpts = organizations
@@ -313,19 +290,56 @@ export function ResponsiveDrawer(props: IProps) {
           '/main/' +
             orgId +
             '/' +
-            slug(choice) +
+            slug(content) +
             '/' +
             projId +
             '/' +
             planId +
             '/' +
-            tab
+            tab.toString()
         );
         setTitle(planName);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, organization, choice, plan, tab]);
+
+  // When the user uses the back button or directly naviagets to a page
+  if (history.action === 'POP') {
+    localStorage.setItem('url', history.location.pathname);
+  }
+
+  // reset location based on deep link (saved url)
+  const url = localStorage.getItem('url');
+  if (orbitLoaded && url) {
+    const parts = url.split('/');
+    const base = 1;
+    const orgId = keyMap.keyToId('organization', 'remoteId', parts[base + 1]);
+    if (parts.length > base + 1 && organization !== orgId) {
+      setOrganization(orgId);
+    }
+    if (parts.length > base + 2 && content !== parts[base + 2]) {
+      const value = slug(parts[base + 2]);
+      const urlChoice =
+        ['scripture-plan', 'other-plan'].indexOf(value) !== -1
+          ? slug(t.plans)
+          : value;
+      setChoice(urlChoice);
+      setContent(value);
+    }
+    const projId = keyMap.keyToId('project', 'remoteId', parts[base + 3]);
+    if (parts.length > base + 3 && project !== projId) {
+      setProject(projId);
+    }
+    const planId = keyMap.keyToId('plan', 'remoteId', parts[base + 4]);
+    if (parts.length > base + 4 && plan !== planId) {
+      setPlan(planId);
+    }
+    if (parts.length > base + 5 && tab.toString() !== parts[base + 5]) {
+      setTab(parseInt(parts[base + 5]));
+    }
+    localStorage.removeItem('url');
+  }
 
   const transcriberIcons = [
     <PassageIcon />,

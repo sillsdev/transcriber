@@ -41,13 +41,15 @@ export default class Auth {
   }
 
   handleAuthentication() {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+    return new Promise((resolve, reject) => {
+      this.auth0.parseHash((err, authResult) => {
+        if (err) return reject(err);
+        if (!authResult || !authResult.idTokenPayload) {
+          reject(err);
+        }
         this.setSession(authResult);
-      } else if (err) {
-        history.replace('/loading');
-        alert(`Error: ${err.error}. Check the console for further details.`);
-      }
+        resolve();
+      });
     });
   }
 
@@ -74,15 +76,12 @@ export default class Auth {
   }
 
   renewSession() {
-    this.auth0.checkSession({}, (err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+    return new Promise((resolve, reject) => {
+      this.auth0.checkSession({}, (err, authResult) => {
+        if (err) return reject(err);
         this.setSession(authResult);
-      } else if (err) {
-        this.logout();
-        alert(
-          `Could not get a new token (${err.error}: ${err.error_description}).`
-        );
-      }
+        resolve();
+      });
     });
   }
 

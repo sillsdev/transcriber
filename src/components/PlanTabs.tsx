@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IPlanTabsStrings } from '../model';
@@ -9,7 +9,6 @@ import ScriptureTable from '../components/ScriptureTable';
 import OtherTable from '../components/OtherTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
-import { slug } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,9 +45,7 @@ interface IProps extends IStateProps {
 const ScrollableTabsButtonAuto = (props: IProps) => {
   const { t, changeTab, bookCol } = props;
   const classes = useStyles();
-  const [tab, setTab] = useState(0);
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_tabName, setTabName] = useGlobal('tab');
+  const [tab, setTab] = useGlobal<number>('tab');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -56,18 +53,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       changeTab(value);
     }
   };
-
-  useEffect(() => {
-    const tabNames = [
-      slug(t.sectionsPassages),
-      slug(t.media),
-      slug(t.assignments),
-      slug(t.transcriptions),
-      slug(t.assignments),
-    ];
-    setTabName(tabNames[tab]);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [tab]);
 
   return (
     <div className={classes.root}>
