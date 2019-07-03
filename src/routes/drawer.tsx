@@ -192,6 +192,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleCommitProj = (value: string) => {
+    setAddProject(false);
     setProject(value);
   };
 
@@ -357,45 +358,55 @@ export function ResponsiveDrawer(props: IProps) {
             <AddIcon />
           </IconButton>
         </div>
-        <div className={classes.contained}>
-          <div className={classes.select}>
-            <ReactSelect
-              suggestions={projOptions}
-              current={curProj}
-              onCommit={handleCommitProj}
-            />
+        {projOptions.length > 0 ? (
+          <div className={classes.contained}>
+            <div className={classes.select}>
+              <ReactSelect
+                suggestions={projOptions}
+                current={curProj}
+                onCommit={handleCommitProj}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          ''
+        )}
       </div>
-      <List>
-        {[t.passages, t.media, t.plans, t.team].map((text, index) => (
-          <ListItem
-            button
-            key={text}
-            selected={slug(text) === choice}
-            onClick={handleChoice(text)}
-          >
-            <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {[t.settings, t.integrations].map((text, index) => (
-          <ListItem
-            button
-            key={text}
-            selected={slug(text) === choice}
-            onClick={handleChoice(text)}
-          >
-            <ListItemIcon>
-              {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      {curProj !== null ? (
+        <div>
+          <List>
+            {[t.passages, t.media, t.plans, t.team].map((text, index) => (
+              <ListItem
+                button
+                key={text}
+                selected={slug(text) === choice}
+                onClick={handleChoice(text)}
+              >
+                <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {[t.settings, t.integrations].map((text, index) => (
+              <ListItem
+                button
+                key={text}
+                selected={slug(text) === choice}
+                onClick={handleChoice(text)}
+              >
+                <ListItemIcon>
+                  {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      ) : (
+        ''
+      )}
     </div>
   );
 
