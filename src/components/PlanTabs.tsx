@@ -9,6 +9,7 @@ import ScriptureTable from '../components/ScriptureTable';
 import OtherTable from '../components/OtherTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
+import TranscriptionTab from './TranscriptionTab';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,7 +91,11 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           <AssignmentTable {...props} />
         </TabContainer>
       )}
-      {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
+      {tab === 3 && (
+        <TabContainer>
+          <TranscriptionTab {...props} />
+        </TabContainer>
+      )}
     </div>
   );
 };

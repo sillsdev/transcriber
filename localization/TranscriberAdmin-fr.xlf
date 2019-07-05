@@ -226,8 +226,7 @@
 		<unit id="projectSettings.uiLanguagInUserProfile">
 			<segment>
 				<source>(User interface languages are set in the user profile.)</source>
-				<target>(Les langues de l'interface utilisateur sont définies dans le profil
-					utilisateur.)</target>
+				<target>(Les langues de l'interface utilisateur sont définies dans le profil utilisateur.)</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.textEditor">
@@ -386,12 +385,6 @@
 				<target>Affectations</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.section">
-			<segment>
-				<source>Section</source>
-				<target>Ensemble</target>
-			</segment>
-		</unit>
 		<unit id="assignmentTable.sectionstate">
 			<segment>
 				<source>State</source>
@@ -510,7 +503,7 @@
 		<unit id="assignSection.sections">
 			<segment>
 				<source>Sections</source>
-			<target>Ensembles</target>
+				<target>Ensembles</target>
 			</segment>
 		</unit>
 		<unit id="assignSection.users">
@@ -549,7 +542,7 @@
 				<target>Fermer</target>
 			</segment>
 		</unit>
-	  		<unit id="planTabs.sectionsPassages">
+		<unit id="planTabs.sectionsPassages">
 			<segment>
 				<source>Sections &amp; Passages</source>
 				<target>Sections et passages</target>
@@ -587,11 +580,8 @@
 		</unit>
 		<unit id="planAdd.newPlanTask">
 			<segment>
-				<source>Enter information for a new plan. (It could be a book of the Bible to be
-					transcribed, a story, a lexionary, etc.)</source>
-				<target>Saisissez les informations d'un nouveau programme. (Il peut s'agir d'un
-					livre de la Bible à transcrire, d'une histoire, d'un ordre de service,
-					etc.</target>
+				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)</source>
+				<target>Saisissez les informations d'un nouveau programme. (Il peut s'agir d'un livre de la Bible à transcrire, d'une histoire, d'un ordre de service, etc.</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.planType">
@@ -747,8 +737,7 @@
 		<unit id="passageMedia.attachAvailableMedia">
 			<segment>
 				<source>Attach available media files to passages (with no current media).</source>
-				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne
-					contiennent aucun média actuel).</target>
+				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne contiennent aucun média actuel).</target>
 			</segment>
 		</unit>
 		<unit id="passageMedia.attachMediaToPassages">
@@ -771,10 +760,8 @@
 		</unit>
 		<unit id="passageMedia.attachments">
 			<segment>
-				<source>Attachments ({0}) Select if you want to detach the media from the
-					passage.</source>
-				<target>Pièces jointes ({0})Pièces jointes ({0}) Sélectionnez si vous souhaitez
-					détacher le fichier multimédia du passage.</target>
+				<source>Attachments ({0}) Select if you want to detach the media from the passage.</source>
+				<target>Pièces jointes ({0})Pièces jointes ({0}) Sélectionnez si vous souhaitez détacher le fichier multimédia du passage.</target>
 			</segment>
 		</unit>
 		<unit id="passageMedia.close">
@@ -867,5 +854,67 @@
 				<target>Ajouter un projet</target>
 			</segment>
 		</unit>
-	</file>
+
+		<unit id="transcriptionTab.section">
+			<segment>
+				<source>Section</source>
+				<target>Ensemble</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.sectionstate">
+			<segment>
+				<source>State</source>
+				<target>État</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.passages">
+			<segment>
+				<source>Passages</source>
+				<target>Passages</target>
+			</segment>
+		</unit>
+
+		<unit id="transcriptionTab.filter">
+			<segment>
+				<source>Filter</source>
+				<target>Filtre</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.group">
+			<segment>
+				<source>Group</source>
+				<target>Groupe</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.transcriber">
+			<segment>
+				<source>Transcriber</source>
+				<target>Transcripteur</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.reviewer">
+			<segment>
+				<source>Reviewer</source>
+				<target>Réviseur</target>
+			</segment>
+		</unit>
+	<unit id="transcriptionShow.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target>Transcription</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.transcriptionDisplay">
+         <segment>
+            <source>This display allows you to review the transcription that is stored.</source>
+         	<target>Cet affichage vous permet de consulter la transcription qui est stockée.</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.close">
+         <segment>
+            <source>Close</source>
+         	<target>Fermer</target>
+         </segment>
+      </unit>
+   </file>
 </xliff>

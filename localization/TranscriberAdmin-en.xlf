@@ -856,5 +856,65 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.sectionstate">
+         <segment>
+            <source>State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.passages">
+         <segment>
+            <source>Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.reviewer">
+         <segment>
+            <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.transcriptionDisplay">
+         <segment>
+            <source>This display allows you to review the transcription that is stored.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

@@ -36,6 +36,7 @@ interface IProps {
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
+  cellComponent?: any;
   sorting?: Array<Sorting>;
   pageSizes: Array<number>;
   tableColumnExtensions: Table.ColumnExtension[];
@@ -43,6 +44,7 @@ interface IProps {
   treeColumn: string;
   showfilters?: boolean;
   showgroups?: boolean;
+  showSelection?: boolean;
   select?: (checks: Array<number>) => void;
   getChildRows: (row: any, rootRows: any[]) => any[] | null;
 }
@@ -56,10 +58,12 @@ export default function TreeGrid(props: IProps) {
     pageSizes,
     tableColumnExtensions,
     groupingStateColumnExtensions,
+    cellComponent,
     sorting,
     treeColumn,
     showfilters,
     showgroups,
+    showSelection,
     select,
   } = props;
   const handleSelect = (checks: Array<string | number>) => {
@@ -96,7 +100,24 @@ export default function TreeGrid(props: IProps) {
         ) : (
           <TableFilterRow showFilterSelector={true} />
         )}
-        <TableTreeColumn for={treeColumn} showSelectionControls showSelectAll />
+        {showSelection !== false && cellComponent ? (
+          <TableTreeColumn
+            for={treeColumn}
+            showSelectionControls
+            showSelectAll
+            cellComponent={cellComponent}
+          />
+        ) : showSelection !== false && !cellComponent ? (
+          <TableTreeColumn
+            for={treeColumn}
+            showSelectionControls
+            showSelectAll
+          />
+        ) : showSelection === false && cellComponent ? (
+          <TableTreeColumn for={treeColumn} cellComponent={cellComponent} />
+        ) : (
+          <TableTreeColumn for={treeColumn} />
+        )}
         <PagingPanel pageSizes={pageSizes} />
         {showgroups !== null && showgroups ? <Toolbar /> : <></>}
         {showgroups !== null && showgroups ? <TableGroupRow /> : <></>}
