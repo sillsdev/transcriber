@@ -1,10 +1,4 @@
 /* hide the passage row selectors */
-#AssignmentTable
-  tr
-  > td
-  > div
-  > span:nth-child(3)
-  > span.MuiIconButton-label
-  > svg.MuiSvgIcon-root {
+#AssignmentTable tr > td > div > span.MuiButtonBase-root:nth-child(3) {
   visibility: hidden;
 }
