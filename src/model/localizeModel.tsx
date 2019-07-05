@@ -197,6 +197,22 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "addProject": string;
 };
 
+export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
+    "section": string;
+    "sectionstate": string;
+    "passages": string;
+    "filter": string;
+    "group": string;
+    "transcriber": string;
+    "reviewer": string;
+};
+
+export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {
+    "transcription": string;
+    "transcriptionDisplay": string;
+    "close": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -218,5 +234,7 @@ export interface ILocalizedStrings {
 	mediaTab: IMediaTabStrings;
 	passageMedia: IPassageMediaStrings;
 	main: IMainStrings;
+	transcriptionTab: ITranscriptionTabStrings;
+	transcriptionShow: ITranscriptionShowStrings;
 	[key: string]: any;
 };

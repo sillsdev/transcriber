@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, User, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
+import { API_CONFIG } from '../api-variable';
 import { withData } from 'react-orbitjs';
 import { Schema, KeyMap, QueryBuilder } from '@orbit/data';
 import Store from '@orbit/store';
@@ -105,7 +106,7 @@ export function Loading(props: IProps) {
 
   if (!isAuthenticated()) return <Redirect to="/" />;
 
-  if (orbitLoaded && completed === 95) {
+  if (orbitLoaded && (completed === 95 || API_CONFIG.offline)) {
     return <Redirect to="/main" />;
   }
 

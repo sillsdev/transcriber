@@ -600,42 +600,42 @@
 				<context-group>
 					<context context-type="sourcefile">AssignSection.tsx</context>
 				</context-group>
-			</trans-unit>			
+			</trans-unit>
 			<trans-unit id="assignSection.reviewer">
 				<source>Reviewer</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AssignSection.tsx</context>
 				</context-group>
-			</trans-unit>			
+			</trans-unit>
 			<trans-unit id="assignSection.transcriber">
 				<source>Transcriber</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AssignSection.tsx</context>
 				</context-group>
-			</trans-unit>				
+			</trans-unit>
 			<trans-unit id="assignSection.role">
 				<source>Role</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AssignSection.tsx</context>
 				</context-group>
-			</trans-unit>			
+			</trans-unit>
 			<trans-unit id="assignSection.assignAs">
 				<source>Assign As</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AssignSection.tsx</context>
 				</context-group>
-			</trans-unit>			
+			</trans-unit>
 			<trans-unit id="assignSection.close">
 				<source>Close</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AssignSection.tsx</context>
 				</context-group>
-			</trans-unit>			
+			</trans-unit>
 			<trans-unit id="planTabs.sectionsPassages">
 				<source>Sections &#x26; Passages</source>
 				<target/>
@@ -1000,7 +1000,76 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="transcriptionTab.section">
+				<source>Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.sectionstate">
+				<source>State</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.passages">
+				<source>Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.group">
+				<source>Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.transcriber">
+				<source>Transcriber</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.reviewer">
+				<source>Reviewer</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionShow.transcription">
+				<source>Transcription</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionShow.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionShow.transcriptionDisplay">
+				<source>This display allows you to review the transcription that is stored.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionShow.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionShow.close">
+				<source>Close</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionShow.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
-
 </xliff>

@@ -220,6 +220,24 @@ const initialState = {
 			"addProject": "Add Project",
 		}
 	}),
+	"transcriptionTab": new LocalizedStrings({
+		"en": {
+			"section": "Section",
+			"sectionstate": "State",
+			"passages": "Passages",
+			"filter": "Filter",
+			"group": "Group",
+			"transcriber": "Transcriber",
+			"reviewer": "Reviewer",
+		}
+	}),
+	"transcriptionShow": new LocalizedStrings({
+		"en": {
+			"transcription": "Transcription",
+			"transcriptionDisplay": "This display allows you to review the transcription that is stored.",
+			"close": "Close",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -246,6 +264,8 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"main" : new LocalizedStrings(action.payload.data.main),
+				"transcriptionTab" : new LocalizedStrings(action.payload.data.transcriptionTab),
+				"transcriptionShow" : new LocalizedStrings(action.payload.data.transcriptionShow),
 			};
 		case SET_LANGUAGE:
 			return {
