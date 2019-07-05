@@ -6,8 +6,8 @@ import { IState, IAccessStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../actions/localizationActions';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
+// import { Button } from '@material-ui/core';
+// import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -95,6 +95,7 @@ export function Access(props: IProps) {
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
+    auth.login();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -115,7 +116,7 @@ export function Access(props: IProps) {
           {buildDate}
         </div>
       </AppBar>
-      <div className={classes.container}>
+      {/* <div className={classes.container}>
         <Paper className={classes.paper}>
           <Typography variant="h5" className={classes.dialogHeader}>
             {t.accessSilTranscriber}
@@ -141,7 +142,7 @@ export function Access(props: IProps) {
             </Button>
           </div>
         </Paper>
-      </div>
+      </div> */}
     </div>
   );
 }

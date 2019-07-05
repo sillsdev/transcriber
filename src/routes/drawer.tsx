@@ -50,6 +50,8 @@ import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import Chart from '../components/Chart';
 import logo from './transcriber10.png';
+const version = require('../../package.json').version;
+const buildDate = require('../buildDate.json').date;
 
 const drawerWidth = 240;
 
@@ -126,6 +128,14 @@ const useStyles = makeStyles((theme: Theme) =>
     logo: {
       paddingRight: theme.spacing(2),
     },
+    foot: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    version: {
+      paddingTop: theme.spacing(2),
+      alignSelf: 'center',
+    },
   })
 );
 
@@ -178,7 +188,6 @@ export function ResponsiveDrawer(props: IProps) {
   const [content, setContent] = useState('');
   const [addProject, setAddProject] = useState(false);
   const [title, setTitle] = useState(t.silTranscriberAdmin);
-  const [planName, setPlanName] = useState('');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -274,7 +283,7 @@ export function ResponsiveDrawer(props: IProps) {
   useEffect(() => {
     const curPlan = plans.filter(p => p.id === plan);
     if (curPlan.length > 0) {
-      setPlanName(curPlan[0].attributes.name);
+      setTitle(curPlan[0].attributes.name);
     }
   }, [plan, plans]);
 
@@ -284,6 +293,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (orgId !== undefined && projId !== undefined) {
       if (choice !== slug(t.plans) || !plan) {
         history.push('/main/' + orgId + '/' + slug(choice) + '/' + projId);
+        setPlan('');
       } else {
         const planId = keyMap.idToKey('plan', 'remoteId', plan);
         history.push(
@@ -298,7 +308,6 @@ export function ResponsiveDrawer(props: IProps) {
             '/' +
             tab.toString()
         );
-        setTitle(planName);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -438,6 +447,13 @@ export function ResponsiveDrawer(props: IProps) {
       ) : (
         ''
       )}
+      <div className={classes.foot}>
+        <div className={classes.version}>
+          {version}
+          <br />
+          {buildDate}
+        </div>
+      </div>
     </div>
   );
 
