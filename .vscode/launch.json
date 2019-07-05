@@ -11,14 +11,16 @@
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}",
       "preLaunchTask": "Background NPM",
-      "postDebugTask": "end serve"
+      "postDebugTask": "end serve",
+      "runtimeArgs": ["--disable-web-security"]
     },
     {
       "type": "chrome",
       "request": "launch",
       "name": "Debug after start",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      "runtimeArgs": ["--disable-web-security"]
     }
   ]
 }
