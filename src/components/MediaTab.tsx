@@ -348,9 +348,6 @@ export function MediaTab(props: IProps) {
             <MenuItem onClick={handleConfirmAction('Change Version')}>
               {t.changeVersion}
             </MenuItem>
-            <MenuItem onClick={handlePassageMedia(true)}>
-              {t.attachPassage}
-            </MenuItem>
           </Menu>
           <Button
             key="upload"
@@ -361,6 +358,17 @@ export function MediaTab(props: IProps) {
             onClick={handleUpload}
           >
             {t.uploadMedia}
+            <AddIcon className={classes.icon} />
+          </Button>
+          <Button
+            key="Attach"
+            aria-label={t.attachPassage}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handlePassageMedia(true)}
+          >
+            {t.attachPassage}
             <AddIcon className={classes.icon} />
           </Button>
           <div className={classes.grow}>{'\u00A0'}</div>
