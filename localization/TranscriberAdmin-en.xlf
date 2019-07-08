@@ -856,6 +856,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.logout">
+         <segment>
+            <source>Logout</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>

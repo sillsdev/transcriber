@@ -195,6 +195,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "loadingTranscriber": string;
     "projectSummary": string;
     "addProject": string;
+    "logout": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {

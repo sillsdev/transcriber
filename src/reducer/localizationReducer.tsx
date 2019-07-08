@@ -218,6 +218,7 @@ const initialState = {
 			"loadingTranscriber": "Loading SIL Transcriber Admin",
 			"projectSummary": "Project Summary",
 			"addProject": "Add Project",
+			"logout": "Logout",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({

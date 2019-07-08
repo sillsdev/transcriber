@@ -854,7 +854,12 @@
 				<target>Ajouter un projet</target>
 			</segment>
 		</unit>
-
+		<unit id="main.logout">
+			<segment>
+				<source>Logout</source>
+				<target>Déconnexion</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>

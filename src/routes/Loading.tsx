@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, User, IMainStrings } from '../model';
@@ -13,6 +13,7 @@ import Store from '@orbit/store';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   AppBar,
+  Button,
   Toolbar,
   Typography,
   Paper,
@@ -30,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'center',
     },
+    grow: {
+      flexGrow: 1,
+    },
     appBar: {
       width: '100%',
     },
@@ -45,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '100%',
       },
     }),
+    button: {},
     icon: {
       alignSelf: 'center',
       width: '256px',
@@ -117,6 +122,12 @@ export function Loading(props: IProps) {
           <Typography variant="h6" noWrap>
             {t.silTranscriberAdmin}
           </Typography>
+          <div className={classes.grow}>{'\u00A0'}</div>
+          <Link to="/logout">
+            <Button variant="contained" className={classes.button}>
+              {t.logout}
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
       <div className={classes.container}>

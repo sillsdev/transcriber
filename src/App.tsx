@@ -5,6 +5,7 @@ import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import store from './store';
 import Access from './routes/Access';
+import Logout from './routes/Logout';
 import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Store from '@orbit/store';
@@ -69,6 +70,11 @@ export class App extends React.Component<IProps, any> {
               path="/"
               exact={true}
               render={props => <Access auth={auth} {...props} />}
+            />
+            <Route
+              path="/logout"
+              exact={true}
+              render={props => <Logout auth={auth} {...props} />}
             />
             <Route
               path="/loading"
