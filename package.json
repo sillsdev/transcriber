@@ -47,7 +47,7 @@
     "deploy": "npm run stamp && amplify publish",
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
     "eject": "react-scripts eject",
-    "stamp": "powershell ./writeDate.ps1"
+    "stamp": "node writeDate.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -75,7 +75,8 @@
     "@types/react-redux": "^7.0.6",
     "@types/react-router-dom": "^4.3.1",
     "@types/react-select": "^2.0.19",
-    "jest-dom": "^3.2.2"
+    "jest-dom": "^3.2.2",
+    "write": "^1.0.3"
   },
   "prettier": {
     "trailingComma": "es5"
