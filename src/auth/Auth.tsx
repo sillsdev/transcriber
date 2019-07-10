@@ -42,7 +42,8 @@ export default class Auth {
 
   handleAuthentication() {
     return new Promise((resolve, reject) => {
-      this.auth0.parseHash((err, authResult) => {
+      const nonce = 'test';
+      this.auth0.parseHash({ nonce: nonce, state: 'tAdInit' }, (err, authResult) => {
         if (err) return reject(err);
         if (!authResult || !authResult.idTokenPayload) {
           reject(err);
@@ -93,6 +94,7 @@ export default class Auth {
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('nonce');
 
     this.auth0.logout({
       returnTo: window.location.origin,

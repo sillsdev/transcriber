@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -6,12 +6,14 @@ import { IState, IAccessStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../actions/localizationActions';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-// import { Button } from '@material-ui/core';
-// import Paper from '@material-ui/core/Paper';
+import { Button } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
+import { randomString } from '../utils';
+import { AUTH_CONFIG } from '../auth/auth0-variables';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -91,15 +93,22 @@ export function Access(props: IProps) {
   const { auth, t } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
+  const nonce = 'test'
+  const accessRef = useRef<any>(null);
 
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
-    auth.login();
+    accessRef.current.click();
+    // auth.login();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   if (auth.isAuthenticated()) return <Redirect to="/loading" />;
+
+  const callback = AUTH_CONFIG.callbackUrl
+    .replace('/callback', '')
+    .replace('https://', '');
 
   return (
     <div className={classes.root}>
@@ -116,7 +125,7 @@ export function Access(props: IProps) {
           {buildDate}
         </div>
       </AppBar>
-      {/* <div className={classes.container}>
+      <div className={classes.container}>
         <Paper className={classes.paper}>
           <Typography variant="h5" className={classes.dialogHeader}>
             {t.accessSilTranscriber}
@@ -132,17 +141,31 @@ export function Access(props: IProps) {
             </Button>
           </div>
           <div className={classes.actions}>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={() => auth.login()}
+            <a
+              ref={accessRef}
+              href={
+                AUTH_CONFIG.loginApp +
+                '/?clientid=' +
+                AUTH_CONFIG.clientId +
+                '&callback=' +
+                callback +
+                '&nonce=' +
+                nonce +
+                '&state=tAdInit'
+              }
             >
-              {t.accessExistingAccount}
-            </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                // onClick={() => auth.login()}
+              >
+                {t.accessExistingAccount}
+              </Button>
+            </a>
           </div>
         </Paper>
-      </div> */}
+      </div>
     </div>
   );
 }

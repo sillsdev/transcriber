@@ -4,4 +4,5 @@ export const AUTH_CONFIG = {
   callbackUrl:
     process.env.REACT_APP_CALLBACK ||
     'https://admin-dev.siltranscriber.org/callback',
+  loginApp: 'https://login-dev.siltranscriber.org',
 };
