@@ -34,7 +34,7 @@ import {
   sectionNumber,
   updatableSection,
 } from '../utils/section';
-import { userAvatar, userInitials } from '../utils/user';
+import { userAvatar, makeAbbr } from '../utils';
 import { remoteId } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -143,7 +143,11 @@ function AssignSection(props: IProps) {
             />
           </ListItemIcon>
           <ListItemAvatar>
-            <Avatar alt={userInitials(m)} src={userAvatar(m)} />
+            {userAvatar(m) ? (
+              <Avatar alt={m.attributes.name} src={userAvatar(m)} />
+            ) : (
+              <Avatar>{makeAbbr(m.attributes.name)}</Avatar>
+            )}
           </ListItemAvatar>
           <ListItemText id={labelId} primary={m.attributes.name} />
         </ListItem>
@@ -168,7 +172,11 @@ function AssignSection(props: IProps) {
             />
           </ListItemIcon>
           <ListItemAvatar>
-            <Avatar alt={userInitials(m)} src={userAvatar(m)} />
+            {userAvatar(m) ? (
+              <Avatar alt={m.attributes.name} src={userAvatar(m)} />
+            ) : (
+              <Avatar>{makeAbbr(m.attributes.name)}</Avatar>
+            )}
           </ListItemAvatar>
           <ListItemText id={labelId} primary={m.attributes.name} />
         </ListItem>

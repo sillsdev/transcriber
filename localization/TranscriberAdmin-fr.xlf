@@ -289,7 +289,19 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-		<unit id="planTable.addPlan">
+		<unit id="projectSettings.group">
+         <segment>
+            <source>Group</source>
+            <target>Groupe</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.selectProjectGroup">
+         <segment>
+			<source>Select project group. Each project relates to a single group. Group members can work on the project.</source>
+			<target>Sélectionnez le groupe de projet. Chaque projet concerne un seul groupe. Les membres du groupe peuvent travailler sur le projet.</target>
+         </segment>
+      </unit>
+      <unit id="planTable.addPlan">
          <segment>
             <source>Add Plan</source>
             <target>Ajouter un programme</target>

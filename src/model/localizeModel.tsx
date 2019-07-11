@@ -71,6 +71,8 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "rightToLeft": string;
     "add": string;
     "save": string;
+    "group": string;
+    "selectProjectGroup": string;
 };
 
 export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {

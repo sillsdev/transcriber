@@ -3,23 +3,26 @@ import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import ProjectType from '../model/projectType';
 import { connect } from 'react-redux';
-import { IState, Project, IProjectSettingsStrings } from '../model';
+import { IState, Project, Group, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Switch from '@material-ui/core/Switch';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Button from '@material-ui/core/Button';
+import {
+  TextField,
+  MenuItem,
+  Switch,
+  FormLabel,
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Button,
+} from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SnackBar from './SnackBar';
 import remoteId from '../utils/remoteId';
+import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -84,6 +87,7 @@ interface IStateProps {
 interface IRecordProps {
   projects: Array<Project>;
   projectTypes: Array<ProjectType>;
+  groups: Array<Group>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
@@ -97,14 +101,15 @@ export function ProjectSettings(props: IProps) {
     add,
     projects,
     projectTypes,
+    groups,
     updateStore,
-    queryStore,
     t,
     noMargin,
     finishAdd,
   } = props;
   const classes = useStyles();
   const [schema] = useGlobal<Schema>('schema');
+  const [keyMap] = useGlobal<KeyMap>('keyMap');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal<string>('user');
   const [organization] = useGlobal<string>('organization');
@@ -144,6 +149,7 @@ export function ProjectSettings(props: IProps) {
   const [defaultFont, setDefaultFont] = useState('');
   const [defaultFontSize, setDefaultFontSize] = useState('large');
   const [rtl, setRtl] = useState(false);
+  const [projectGroup, setProjectGroup] = useState('');
   const [message, setMessage] = useState(<></>);
 
   const handleNameChange = (e: any) => {
@@ -154,6 +160,9 @@ export function ProjectSettings(props: IProps) {
   };
   const handleTypeChange = (e: any) => {
     setProjectType(e.target.value);
+  };
+  const handleGroupChange = (e: any) => {
+    setProjectGroup(e.target.value);
   };
   const handleBcp47Change = (e: any) => {
     alert('Language Picker');
@@ -188,13 +197,20 @@ export function ProjectSettings(props: IProps) {
     setMessage(<></>);
   };
   const handleSave = () => {
+    const projectTypeId = keyMap.idToKey(
+      'projecttype',
+      'remoteId',
+      projectType
+    );
+    const groupId = keyMap.idToKey('group', 'remoteId', projectGroup);
     updateStore((t: TransformBuilder) =>
       t.replaceRecord({
         type: 'project',
         id: project,
         attributes: {
           name: name,
-          projectTypeId: parseInt(projectType),
+          projectTypeId: parseInt(projectTypeId),
+          groupId: parseInt(groupId),
           description: description,
           ownerId: currentProject ? currentProject.attributes.ownerId : 0,
           organizationId: currentProject
@@ -219,19 +235,45 @@ export function ProjectSettings(props: IProps) {
         },
       })
     );
+    if (projectType) {
+      updateStore((t: TransformBuilder) =>
+        t.replaceRelatedRecord(
+          { type: 'project', id: project },
+          'projecttype',
+          {
+            type: 'projecttype',
+            id: projectType,
+          }
+        )
+      );
+    }
+    if (projectGroup) {
+      updateStore((t: TransformBuilder) =>
+        t.replaceRelatedRecord({ type: 'project', id: project }, 'group', {
+          type: 'group',
+          id: projectGroup,
+        })
+      );
+    }
   };
   const handleAdd = () => {
     const userId = remoteId('user', user);
     const organizationId = remoteId('organization', organization);
+    const projectTypeId = keyMap.idToKey(
+      'projecttype',
+      'remoteId',
+      projectType
+    );
+    const groupId = keyMap.idToKey('group', 'remoteId', projectGroup);
     let project: Project = {
       type: 'project',
       attributes: {
         name: name,
-        projectTypeId: parseInt(projectType),
+        projectTypeId: parseInt(projectTypeId),
+        groupId: parseInt(groupId),
         description: description,
         ownerId: userId || 1,
         organizationId: organizationId || 1,
-        groupId: organizationId || 1, //TEMP UNTIL GROUP ADDED TO FORM
         uilanguagebcp47: null,
         language: bcp47,
         languageName: languageName,
@@ -246,6 +288,26 @@ export function ProjectSettings(props: IProps) {
     } as any;
     schema.initializeRecord(project);
     updateStore((t: TransformBuilder) => t.addRecord(project));
+    if (projectType) {
+      updateStore((t: TransformBuilder) =>
+        t.replaceRelatedRecord(
+          { type: 'project', id: project.id },
+          'projecttype',
+          {
+            type: 'projecttype',
+            id: projectType,
+          }
+        )
+      );
+    }
+    if (projectGroup) {
+      updateStore((t: TransformBuilder) =>
+        t.replaceRelatedRecord({ type: 'project', id: project.id }, 'group', {
+          type: 'group',
+          id: projectGroup,
+        })
+      );
+    }
     setProject(project.id);
     if (finishAdd) {
       finishAdd();
@@ -264,26 +326,11 @@ export function ProjectSettings(props: IProps) {
       setDefaultFont(attr.defaultFont ? attr.defaultFont : '');
       setDefaultFontSize(attr.defaultFontSize ? attr.defaultFontSize : 'large');
       setRtl(attr.rtl);
+      setProjectType(related(curProj[0], 'projecttype'));
+      setProjectGroup(related(curProj[0], 'group'));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, projects]);
-
-  useEffect(() => {
-    const setDisplayType = async (p: Project) => {
-      let projectType = (await queryStore(q =>
-        q.findRelatedRecord({ type: 'project', id: p.id }, 'projecttype')
-      )) as ProjectType;
-      if (projectType !== null) {
-        setProjectType(
-          (projectType.keys && projectType.keys.remoteId) || projectType.id
-        );
-      }
-    };
-    if (currentProject) {
-      setDisplayType(currentProject);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [project]);
 
   const safeFonts = [
     { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
@@ -363,13 +410,43 @@ export function ProjectSettings(props: IProps) {
                   required={true}
                 >
                   {projectTypes.map((option: ProjectType) => (
-                    <MenuItem
-                      key={option.id}
-                      value={(option.keys && option.keys.remoteId) || option.id}
-                    >
+                    <MenuItem key={option.id} value={option.id}>
                       {option.attributes.name}
                     </MenuItem>
                   ))}
+                </TextField>
+              }
+              label=""
+            />
+            <FormControlLabel
+              control={
+                <TextField
+                  id="select-group"
+                  select
+                  label={t.group}
+                  className={classes.textField}
+                  value={projectGroup}
+                  onChange={handleGroupChange}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  helperText={t.selectProjectGroup}
+                  margin="normal"
+                  variant="filled"
+                  required={true}
+                >
+                  {groups
+                    .filter(g => related(g, 'owner') === organization)
+                    .sort((i, j) =>
+                      i.attributes.name < j.attributes.name ? -1 : 1
+                    )
+                    .map((option: Group) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.attributes.name}
+                      </MenuItem>
+                    ))}
                 </TextField>
               }
               label=""
@@ -520,6 +597,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
   projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
 export default withData(mapRecordsToProps)(connect(mapStateToProps)(

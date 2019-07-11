@@ -84,6 +84,8 @@ const initialState = {
 			"rightToLeft": "Right to left?",
 			"add": "Add",
 			"save": "Save",
+			"group": "Group",
+			"selectProjectGroup": "Select project group. Each project relates to a single group. Group members can work on the project.",
 		}
 	}),
 	"planTable": new LocalizedStrings({
