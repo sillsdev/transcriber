@@ -74,6 +74,7 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
 };
 
 export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
+    "addPlan": string;
     "name": string;
     "type": string;
     "sections": string;
@@ -214,6 +215,47 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
     "close": string;
 };
 
+export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
+    "users": string;
+    "groups": string;
+};
+
+export interface IGroupTableStrings extends Localize.LocalizedStringsMethods {
+    "name": string;
+    "abbr": string;
+    "owner": string;
+    "projects": string;
+    "members": string;
+    "filter": string;
+    "action": string;
+    "delete": string;
+    "addGroup": string;
+};
+
+export interface IGroupAddStrings extends Localize.LocalizedStringsMethods {
+    "newGroup": string;
+    "cancel": string;
+    "add": string;
+    "save": string;
+    "editGroup": string;
+    "addGroup": string;
+    "newGroupTask": string;
+    "name": string;
+    "abbr": string;
+};
+
+export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods {
+    "name": string;
+    "abbreviation": string;
+    "save": string;
+    "projects": string;
+    "members": string;
+    "addGroupMember": string;
+    "addMemberInstruction": string;
+    "cancel": string;
+    "add": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -237,5 +279,9 @@ export interface ILocalizedStrings {
 	main: IMainStrings;
 	transcriptionTab: ITranscriptionTabStrings;
 	transcriptionShow: ITranscriptionShowStrings;
+	groupTabs: IGroupTabsStrings;
+	groupTable: IGroupTableStrings;
+	groupAdd: IGroupAddStrings;
+	groupSettings: IGroupSettingsStrings;
 	[key: string]: any;
 };

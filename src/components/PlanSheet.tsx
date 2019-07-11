@@ -147,10 +147,12 @@ export function PlanSheet(props: IProps) {
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
   const handleConfirmAction = (what: string) => (e: any) => {
     setActionMenuItem(null);
-    if (check.length === 0) {
-      setMessage(<span>Please select row(s) to {what}.</span>);
-    } else if (!/Close/i.test(what)) {
-      setConfirmAction(what);
+    if (!/Close/i.test(what)) {
+      if (check.length === 0) {
+        setMessage(<span>Please select row(s) to {what}.</span>);
+      } else {
+        setConfirmAction(what);
+      }
     }
   };
   const handleActionConfirmed = () => {
@@ -255,6 +257,28 @@ export function PlanSheet(props: IProps) {
       <div className={classes.paper}>
         <div className={classes.actions}>
           <Button
+            key="addSection"
+            aria-label={t.addSection}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleAddSection}
+          >
+            {t.addSection}
+            <AddIcon className={classes.icon} />
+          </Button>
+          <Button
+            key="addPassage"
+            aria-label={t.addPassage}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleAddPassage}
+          >
+            {t.addPassage}
+            <AddIcon className={classes.icon} />
+          </Button>
+          <Button
             key="action"
             aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
             aria-label={t.action}
@@ -281,28 +305,6 @@ export function PlanSheet(props: IProps) {
               {t.attachMedia}
             </MenuItem>
           </Menu>
-          <Button
-            key="addSection"
-            aria-label={t.addSection}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAddSection}
-          >
-            {t.addSection}
-            <AddIcon className={classes.icon} />
-          </Button>
-          <Button
-            key="addPassage"
-            aria-label={t.addPassage}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAddPassage}
-          >
-            {t.addPassage}
-            <AddIcon className={classes.icon} />
-          </Button>
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="save"

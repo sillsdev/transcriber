@@ -257,10 +257,12 @@ export function MediaTab(props: IProps) {
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
   const handleConfirmAction = (what: string) => (e: any) => {
     setActionMenuItem(null);
-    if (check.length === 0) {
-      setMessage(<span>Please select row(s) to {what}.</span>);
-    } else if (!/Close/i.test(what)) {
-      setConfirmAction(what);
+    if (!/Close/i.test(what)) {
+      if (check.length === 0) {
+        setMessage(<span>Please select row(s) to {what}.</span>);
+      } else {
+        setConfirmAction(what);
+      }
     }
   };
   const handleActionConfirmed = () => {
@@ -322,6 +324,28 @@ export function MediaTab(props: IProps) {
       <div className={classes.paper}>
         <div className={classes.actions}>
           <Button
+            key="upload"
+            aria-label={t.uploadMedia}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleUpload}
+          >
+            {t.uploadMedia}
+            <AddIcon className={classes.icon} />
+          </Button>
+          <Button
+            key="Attach"
+            aria-label={t.attachPassage}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handlePassageMedia(true)}
+          >
+            {t.attachPassage}
+            <AddIcon className={classes.icon} />
+          </Button>
+          <Button
             key="action"
             aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
             aria-label={t.action}
@@ -349,28 +373,6 @@ export function MediaTab(props: IProps) {
               {t.changeVersion}
             </MenuItem>
           </Menu>
-          <Button
-            key="upload"
-            aria-label={t.uploadMedia}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleUpload}
-          >
-            {t.uploadMedia}
-            <AddIcon className={classes.icon} />
-          </Button>
-          <Button
-            key="Attach"
-            aria-label={t.attachPassage}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handlePassageMedia(true)}
-          >
-            {t.attachPassage}
-            <AddIcon className={classes.icon} />
-          </Button>
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"

@@ -3,7 +3,14 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 // import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, IMainStrings, Organization, Project, Plan } from '../model';
+import {
+  IState,
+  IMainStrings,
+  Organization,
+  Project,
+  Plan,
+  Group,
+} from '../model';
 // import * as actions from '../actions';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -43,11 +50,12 @@ import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, slug } from '../utils';
 import OrganizationTable from '../components/OrganizationTable';
-import UserTable from '../components/UserTable';
+import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
+import GroupSettings from '../components/GroupSettings';
 import Chart from '../components/Chart';
 import logo from './transcriber10.png';
 const version = require('../../package.json').version;
@@ -154,6 +162,7 @@ interface IRecordProps {
   organizations: Array<Organization>;
   projects: Array<Project>;
   plans: Array<Plan>;
+  groups: Array<Group>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
@@ -169,12 +178,21 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 }
 
 export function ResponsiveDrawer(props: IProps) {
-  const { t, history, organizations, projects, plans, orbitLoaded } = props;
+  const {
+    t,
+    history,
+    organizations,
+    projects,
+    plans,
+    groups,
+    orbitLoaded,
+  } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal<KeyMap>('keyMap');
   const [initials] = useGlobal<string>('initials');
   const [organization, setOrganization] = useGlobal<string>('organization');
+  const [group, setGroup] = useGlobal<string>('group');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
   const [curOrg, setCurOrg] = useState(0);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
@@ -198,6 +216,9 @@ export function ResponsiveDrawer(props: IProps) {
     setChoice(slug(choice));
     setContent(slug(choice));
     setTitle(choice);
+    if (choice === t.usersAndGroups && tab > 1) {
+      setTab(0);
+    }
   };
 
   const handleCommitOrg = (value: string) => {
@@ -288,12 +309,40 @@ export function ResponsiveDrawer(props: IProps) {
   }, [plan, plans]);
 
   useEffect(() => {
+    const curGroup = groups.filter(g => g.id === group);
+    if (curGroup.length > 0) {
+      setTitle(curGroup[0].attributes.name);
+      setContent('group');
+    } else if (content === 'group') {
+      setTitle(t.usersAndGroups);
+      setContent(slug(t.usersAndGroups));
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [group, groups]);
+
+  useEffect(() => {
     const orgId = keyMap.idToKey('organization', 'remoteId', organization);
     const projId = keyMap.idToKey('project', 'remoteId', project);
     if (orgId !== undefined && projId !== undefined) {
-      if (choice !== slug(t.plans) || !plan) {
+      if (choice === slug(t.usersAndGroups)) {
+        const groupId = keyMap.idToKey('group', 'remoteId', group);
+        const groupPart = groupId ? '/' + groupId : '';
+        history.push(
+          '/main/' +
+            orgId +
+            '/' +
+            slug(choice) +
+            '/' +
+            projId +
+            '/' +
+            tab.toString() +
+            groupPart
+        );
+        setPlan('');
+      } else if (choice !== slug(t.plans) || !plan) {
         history.push('/main/' + orgId + '/' + slug(choice) + '/' + projId);
         setPlan('');
+        setTab(0);
       } else {
         const planId = keyMap.idToKey('plan', 'remoteId', plan);
         history.push(
@@ -311,7 +360,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, organization, choice, plan, tab]);
+  }, [project, organization, choice, plan, group, tab]);
 
   // When the user uses the back button or directly naviagets to a page
   if (history.action === 'POP') {
@@ -327,9 +376,10 @@ export function ResponsiveDrawer(props: IProps) {
     if (parts.length > base + 1 && organization !== orgId) {
       setOrganization(orgId);
     }
+    let urlChoice = '';
     if (parts.length > base + 2 && content !== parts[base + 2]) {
       const value = slug(parts[base + 2]);
-      const urlChoice =
+      urlChoice =
         ['scripture-plan', 'other-plan'].indexOf(value) !== -1
           ? slug(t.plans)
           : value;
@@ -340,12 +390,22 @@ export function ResponsiveDrawer(props: IProps) {
     if (parts.length > base + 3 && project !== projId) {
       setProject(projId);
     }
-    const planId = keyMap.keyToId('plan', 'remoteId', parts[base + 4]);
-    if (parts.length > base + 4 && plan !== planId) {
-      setPlan(planId);
-    }
-    if (parts.length > base + 5 && tab.toString() !== parts[base + 5]) {
-      setTab(parseInt(parts[base + 5]));
+    if (urlChoice === slug(t.plans)) {
+      const planId = keyMap.keyToId('plan', 'remoteId', parts[base + 4]);
+      if (parts.length > base + 4 && plan !== planId) {
+        setPlan(planId);
+      }
+      if (parts.length > base + 5 && tab.toString() !== parts[base + 5]) {
+        setTab(parseInt(parts[base + 5]));
+      }
+    } else if (urlChoice === slug(t.usersAndGroups)) {
+      if (parts.length > base + 4 && tab.toString() !== parts[base + 4]) {
+        setTab(parseInt(parts[base + 4]));
+      }
+      const groupId = keyMap.keyToId('group', 'remoteId', parts[base + 5]);
+      if (parts.length > base + 5 && group !== groupId) {
+        setGroup(groupId);
+      }
     }
     localStorage.removeItem('url');
   }
@@ -461,7 +521,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   let components: componentType = {};
   components[slug(t.organization)] = <OrganizationTable {...props} />;
-  components[slug(t.usersAndGroups)] = <UserTable {...props} />;
+  components[slug(t.usersAndGroups)] = <GroupTabs {...props} />;
   components[slug(t.passages)] = 'passages';
   components[slug(t.media)] = <MediaTab {...props} />;
   components[slug(t.plans)] = (
@@ -479,6 +539,7 @@ export function ResponsiveDrawer(props: IProps) {
     />
   );
   components[slug(t.integrations)] = 'integrations';
+  components['group'] = <GroupSettings {...props} />;
   components[''] = <Chart {...props} />;
 
   return (
@@ -550,6 +611,7 @@ const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
 export default withData(mapRecordsToProps)(connect(mapStateToProps)(

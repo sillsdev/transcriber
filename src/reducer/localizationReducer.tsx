@@ -88,6 +88,7 @@ const initialState = {
 	}),
 	"planTable": new LocalizedStrings({
 		"en": {
+			"addPlan": "Add Plan",
 			"name": "Name",
 			"type": "Type",
 			"sections": "Sections",
@@ -239,6 +240,51 @@ const initialState = {
 			"close": "Close",
 		}
 	}),
+	"groupTabs": new LocalizedStrings({
+		"en": {
+			"users": "Users",
+			"groups": "Groups",
+		}
+	}),
+	"groupTable": new LocalizedStrings({
+		"en": {
+			"name": "Name",
+			"abbr": "Abbreviation",
+			"owner": "Owner",
+			"projects": "Projects",
+			"members": "Members",
+			"filter": "Filter",
+			"action": "Action",
+			"delete": "Delete",
+			"addGroup": "Add Group",
+		}
+	}),
+	"groupAdd": new LocalizedStrings({
+		"en": {
+			"newGroup": "New Group",
+			"cancel": "Cancel",
+			"add": "Add",
+			"save": "Save",
+			"editGroup": "Edit Group",
+			"addGroup": "Add Group",
+			"newGroupTask": "Enter (or edit) basic group information.",
+			"name": "Name",
+			"abbr": "Abbreviation",
+		}
+	}),
+	"groupSettings": new LocalizedStrings({
+		"en": {
+			"name": "Name",
+			"abbreviation": "Abbreviation",
+			"save": "Save",
+			"projects": "Projects",
+			"members": "Members",
+			"addGroupMember": "Add Group Member",
+			"addMemberInstruction": "Enter the name of a person in the organization to be included in the group.",
+			"cancel": "Cancel",
+			"add": "Add",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -267,6 +313,10 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"main" : new LocalizedStrings(action.payload.data.main),
 				"transcriptionTab" : new LocalizedStrings(action.payload.data.transcriptionTab),
 				"transcriptionShow" : new LocalizedStrings(action.payload.data.transcriptionShow),
+				"groupTabs" : new LocalizedStrings(action.payload.data.groupTabs),
+				"groupTable" : new LocalizedStrings(action.payload.data.groupTable),
+				"groupAdd" : new LocalizedStrings(action.payload.data.groupAdd),
+				"groupSettings" : new LocalizedStrings(action.payload.data.groupSettings),
 			};
 		case SET_LANGUAGE:
 			return {

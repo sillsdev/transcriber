@@ -7,7 +7,7 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Fab, Button, Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -55,6 +55,9 @@ const useStyles = makeStyles((theme: Theme) =>
     actionIcon: {},
     button: {},
     icon: {},
+    buttonIcon: {
+      marginLeft: theme.spacing(1),
+    },
   })
 );
 
@@ -279,19 +282,20 @@ export function PlanTable(props: IProps) {
       <div className={classes.container}>
         <div className={classes.paper}>
           <div className={classes.dialogHeader}>
-            <div className={classes.grow} />
-            <Typography variant="h5">{t.choosePlan}</Typography>
-            <div className={classes.grow} />
-            <Fab
+            <Button
               key="add"
-              aria-label="Add"
-              data-testid="addButton"
+              aria-label={t.addPlan}
+              variant="outlined"
               color="primary"
               className={classes.button}
               onClick={handleAdd}
             >
-              <AddIcon className={classes.icon} />
-            </Fab>
+              {t.addPlan}
+              <AddIcon className={classes.buttonIcon} />
+            </Button>
+            <div className={classes.grow} />
+            <Typography variant="h5">{t.choosePlan}</Typography>
+            <div className={classes.grow} />
           </div>
           <Grid rows={rows} columns={columns}>
             <SortingState

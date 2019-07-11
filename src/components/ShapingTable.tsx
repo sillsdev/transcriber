@@ -143,6 +143,7 @@ interface IProps {
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
+  dataCell?: any;
   numCols?: Array<string>;
   rows: Array<any>;
   sorting?: Array<Sorting>;
@@ -155,6 +156,7 @@ export default function ShapingTable(props: IProps) {
     columns,
     columnWidths,
     columnSorting,
+    dataCell,
     numCols,
     rows,
     sorting,
@@ -197,7 +199,7 @@ export default function ShapingTable(props: IProps) {
 
       <DragDropProvider />
 
-      <Table />
+      {dataCell ? <Table cellComponent={dataCell} /> : <Table />}
       <TableColumnResizing
         minColumnWidth={50}
         defaultColumnWidths={columnWidths}

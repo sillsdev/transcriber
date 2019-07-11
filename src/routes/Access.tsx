@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -12,8 +12,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
-import { randomString } from '../utils';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
+import { API_CONFIG } from '../api-variable';
+import { Online } from '../utils';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -93,13 +94,15 @@ export function Access(props: IProps) {
   const { auth, t } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
-  const nonce = 'test'
+  const nonce = 'test';
   const accessRef = useRef<any>(null);
 
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
-    accessRef.current.click();
+    if (Online() && !API_CONFIG.offline) {
+      accessRef.current.click();
+    }
     // auth.login();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);

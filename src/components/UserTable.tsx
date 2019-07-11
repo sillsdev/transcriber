@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, User, IUsertableStrings } from '../model';
 import localStrings from '../selector/localize';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -140,9 +140,9 @@ export function UserTable(props: IProps) {
             [classes.fullPaper]: true,
           })}
         >
-          <Typography variant="h5" className={classes.dialogHeader}>
+          {/* <Typography variant="h5" className={classes.dialogHeader}>
             {t.chooseUser}
-          </Typography>
+          </Typography> */}
           <Grid rows={rows} columns={columns}>
             <FilteringState />
             <SortingState

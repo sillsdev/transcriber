@@ -289,7 +289,13 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-		<unit id="planTable.name">
+		<unit id="planTable.addPlan">
+         <segment>
+            <source>Add Plan</source>
+            <target>Ajouter un programme</target>
+         </segment>
+      </unit>
+      <unit id="planTable.name">
 			<segment>
 				<source>Name</source>
 				<target>Nom</target>
@@ -919,6 +925,180 @@
          <segment>
             <source>Close</source>
          	<target>Fermer</target>
+         </segment>
+      </unit>
+		<unit id="groupTabs.users">
+			<segment>
+				<source>Users</source>
+				<target>Utilisateurs</target>
+			</segment>
+		</unit>
+		<unit id="groupTabs.groups">
+			<segment>
+				<source>Groups</source>
+				<target>Groupes</target>
+			</segment>
+		</unit>
+		<unit id="groupTable.name">
+         <segment>
+			<source>Name</source>
+			<target>Nom</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.abbr">
+         <segment>
+			<source>Abbreviation</source>
+			<target>Abréviation</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.owner">
+         <segment>
+			<source>Owner</source>
+			<target>Propriétaire</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.projects">
+         <segment>
+			<source>Projects</source>
+			<target>Projects</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.members">
+         <segment>
+			<source>Members</source>
+			<target>Membres</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.filter">
+         <segment>
+			<source>Filter</source>
+			<target>Filtre</target>
+         </segment>
+      </unit>
+		<unit id="groupTable.action">
+         <segment>
+            <source>Action</source>
+            <target>Action</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.delete">
+         <segment>
+            <source>Delete</source>
+         	<target>Supprimer</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.addGroup">
+         <segment>
+            <source>Add Group</source>
+            <target>Ajouter un groupe</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.newGroup">
+         <segment>
+			<source>New Group</source>
+			<target>Nouveau groupe</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.cancel">
+         <segment>
+            <source>Cancel</source>
+			<target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.add">
+         <segment>
+            <source>Add</source>
+			<target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.save">
+         <segment>
+            <source>Save</source>
+			<target>Enregistrer</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.editGroup">
+         <segment>
+            <source>Edit Group</source>
+			<target>Modifier groupe</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.addGroup">
+         <segment>
+            <source>Add Group</source>
+			<target>Ajouter groupe</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.newGroupTask">
+         <segment>
+            <source>Enter (or edit) basic group information.</source>
+			<target>Saisissez (ou modifiez) les informations de base du groupe.</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.name">
+         <segment>
+            <source>Group Name</source>
+			<target>Nom du group</target>
+         </segment>
+      </unit>
+      <unit id="groupAdd.abbr">
+         <segment>
+            <source>Abbreviation</source>
+			<target>Abréviation</target>
+         </segment>
+      </unit>
+   <unit id="groupSettings.name">
+         <segment>
+            <source>Name</source>
+            <target>Nom</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.abbreviation">
+         <segment>
+            <source>Abbreviation</source>
+         	<target>Abréviation</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.save">
+         <segment>
+            <source>Save</source>
+         	<target>Enregistrer</target>
+         </segment>
+      </unit>
+   <unit id="groupSettings.projects">
+         <segment>
+            <source>Projects</source>
+            <target>Projects</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.members">
+         <segment>
+            <source>Members</source>
+            <target>Membres</target>
+         </segment>
+      </unit>
+   <unit id="groupSettings.addGroupMember">
+         <segment>
+			<source>Add Group Member</source>
+			<target>Ajouter un membre du groupe</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.addMemberInstruction">
+         <segment>
+			<source>Enter the name of a person in the organization to be included in the group.</source>
+			<target>Saisissez le nom d'une personne de l'organisation à inclure dans le groupe.</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.cancel">
+         <segment>
+			<source>Cancel</source>
+			<target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.add">
+         <segment>
+			<source>Add</source>
+			<target>Ajouter</target>
          </segment>
       </unit>
    </file>

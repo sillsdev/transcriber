@@ -11,7 +11,7 @@ import { Schema, KeyMap, Transform } from '@orbit/data';
 import Store from '@orbit/store';
 import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
-import { Online } from './utils';
+import { Online, makeAbbr } from './utils';
 
 function Sources(
   schema: Schema,
@@ -111,13 +111,7 @@ function Sources(
 
   const userSetup = (user: User) => {
     setUser(user.id);
-    setInitials(
-      user.attributes.name
-        .trim()
-        .split(' ')
-        .map((s: string) => s.slice(0, 1).toLocaleUpperCase())
-        .join('')
-    );
+    setInitials(makeAbbr(user.attributes.name));
   };
 
   if (!API_CONFIG.offline) {
