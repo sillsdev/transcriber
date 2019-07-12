@@ -56,7 +56,7 @@ import PlanTabs from '../components/PlanTabs';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
-import Chart from '../components/Chart';
+import Visualize from '../components/Visualize';
 import logo from './transcriber10.png';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -540,7 +540,7 @@ export function ResponsiveDrawer(props: IProps) {
   );
   components[slug(t.integrations)] = 'integrations';
   components['group'] = <GroupSettings {...props} />;
-  components[''] = <Chart {...props} />;
+  components[''] = <Visualize {...props} />;
 
   return (
     <div className={classes.root}>

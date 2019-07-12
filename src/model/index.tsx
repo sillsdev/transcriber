@@ -15,4 +15,5 @@ export * from './passageSection';
 export * from './user';
 export * from './role';
 export * from './bookName';
+export * from './userPassage';
 export * from './state';
