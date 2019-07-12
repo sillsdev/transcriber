@@ -91,7 +91,7 @@ export function Visualize(props: IProps) {
         );
         selPassages.forEach(pa => {
           const selUserPassages = userPassages.filter(
-            up => related(up, 'passage') === pa.id
+            up => related(up, 'passage') === related(pa, 'passage')
           );
           selUserPassages.forEach(up => {
             const planName = pl.attributes.name;
@@ -110,7 +110,9 @@ export function Visualize(props: IProps) {
                   ? personTot[personKey] + 1
                   : 1;
               }
-              const selPassage = passages.filter(p => p.id === pa.id);
+              const selPassage = passages.filter(
+                p => p.id === related(pa, 'passage')
+              );
               if (selPassage.length > 0) {
                 const stateName = selPassage[0].attributes.state;
                 const statusKey = stateName + ':' + planName + ':' + roleName;
