@@ -280,11 +280,14 @@ const initialState = {
 			"abbreviation": "Abbreviation",
 			"save": "Save",
 			"projects": "Projects",
-			"members": "Members",
+			"reviewers": "Reviewers",
+			"transcribers": "Transcribers",
 			"addGroupMember": "Add Group Member",
 			"addMemberInstruction": "Enter the name of a person in the organization to be included in the group.",
 			"cancel": "Cancel",
 			"add": "Add",
+			"delete": "Delete",
+			"allReviewersCanTranscribe": "All Reviewers are allowed to transcribe.",
 		}
 	}),
 };

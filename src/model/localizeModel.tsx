@@ -251,11 +251,14 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "abbreviation": string;
     "save": string;
     "projects": string;
-    "members": string;
+    "reviewers": string;
+    "transcribers": string;
     "addGroupMember": string;
     "addMemberInstruction": string;
     "cancel": string;
     "add": string;
+    "delete": string;
+    "allReviewersCanTranscribe": string;
 };
 
 export interface ILocalizedStrings {

@@ -1083,13 +1083,19 @@
             <target>Projects</target>
          </segment>
       </unit>
-      <unit id="groupSettings.members">
+      <unit id="groupSettings.reviewers">
          <segment>
-            <source>Members</source>
-            <target>Membres</target>
+			<source>Reviewers</source>
+			<target>Réviseur</target>
          </segment>
       </unit>
-   <unit id="groupSettings.addGroupMember">
+	<unit id="groupSettings.transcribers">
+         <segment>
+			<source>Transcribers</source>
+			<target>Transcripteur</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.addGroupMember">
          <segment>
 			<source>Add Group Member</source>
 			<target>Ajouter un membre du groupe</target>
@@ -1113,5 +1119,17 @@
 			<target>Ajouter</target>
          </segment>
       </unit>
+	<unit id="groupSettings.delete">
+		<segment>
+			<source>Delete</source>
+			<target>Supprimer</target>
+		</segment>
+	</unit>
+	<unit id="groupSettings.allReviewersCanTranscribe">
+		<segment>
+			<source>All Reviewers are allowed to transcribe.</source>
+			<target>Tous les réviseurs sont autorisés à transcrire.</target>
+		</segment>
+	</unit>
    </file>
 </xliff>

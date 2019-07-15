@@ -8,6 +8,7 @@ import {
   Project,
   User,
   OrganizationMembership,
+  Role,
   IGroupSettingsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -33,12 +34,14 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Grid,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import SnackBar from './SnackBar';
+import Confirm from './AlertDialog';
 import { related, makeAbbr } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -50,6 +53,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     paper: {
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
       paddingLeft: theme.spacing(4),
     },
     group: {
@@ -84,6 +90,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface IDeleteItem {
+  id: string;
+  name: string;
+}
+
 interface IStateProps {
   t: IGroupSettingsStrings;
 }
@@ -94,6 +105,7 @@ interface IRecordProps {
   projects: Array<Project>;
   users: Array<User>;
   orgMemberships: Array<OrganizationMembership>;
+  roles: Array<Role>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {}
@@ -105,6 +117,7 @@ export function GroupSettings(props: IProps) {
     projects,
     users,
     orgMemberships,
+    roles,
     updateStore,
     t,
   } = props;
@@ -117,8 +130,10 @@ export function GroupSettings(props: IProps) {
   const [message, setMessage] = useState(<></>);
   const [secondary] = useState(false);
   const [open, setOpen] = useState(false);
+  const [role, setRole] = useState('');
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
+  const [confirmItem, setConfirmItem] = useState<IDeleteItem | null>(null);
 
   const handleNameChange = (e: any) => {
     setName(e.target.value);
@@ -142,7 +157,11 @@ export function GroupSettings(props: IProps) {
     );
     setGroup(null);
   };
-  const handleRemoveMember = (userId: string) => () => {
+  const handleRemoveMember = (user: IDeleteItem) => () => {
+    setConfirmItem(user);
+  };
+  const handleDeleteConfirmed = () => {
+    const userId = confirmItem ? confirmItem.id : '';
     const ids = groupMemberships
       .filter(
         gm => related(gm, 'group') === group && related(gm, 'user') === userId
@@ -151,10 +170,17 @@ export function GroupSettings(props: IProps) {
     if (ids.length > 0) {
       updateStore(t => t.removeRecord({ type: 'groupmembership', id: ids[0] }));
     }
+    setConfirmItem(null);
   };
+  const handleDeleteRefused = () => setConfirmItem(null);
 
   const showDialog = (visible: boolean) => () => {
     setOpen(visible);
+  };
+
+  const handleAdd = (role: string) => () => {
+    setRole(role);
+    setOpen(true);
   };
 
   const handleCommit = (value: string) => {
@@ -182,6 +208,21 @@ export function GroupSettings(props: IProps) {
         { type: 'group', id: group }
       )
     );
+    const roleRec = roles.filter(
+      r => r.attributes.roleName.toLowerCase() === role
+    );
+    if (roleRec.length > 0) {
+      updateStore((t: TransformBuilder) =>
+        t.replaceRelatedRecord(
+          { type: 'groupmembership', id: groupMemberRec.id },
+          'role',
+          { type: 'role', id: roleRec[0].id }
+        )
+      );
+    }
+    if (role === 'reviewer') {
+      setMessage(<span>{t.allReviewersCanTranscribe}</span>);
+    }
   };
 
   useEffect(() => {
@@ -228,37 +269,52 @@ export function GroupSettings(props: IProps) {
       </ListItem>
     ));
 
-  const memberIds = groupMemberships
+  const transcriberId = roles
+    .filter(r => r.attributes.roleName.toLowerCase() === 'transcriber')
+    .map(r => r.id);
+  const reviewerIds = groupMemberships
+    .filter(
+      gm =>
+        related(gm, 'group') === group &&
+        related(gm, 'role') !== transcriberId[0]
+    )
+    .map(gm => related(gm, 'user'));
+
+  const transcriberIds = groupMemberships
     .filter(gm => related(gm, 'group') === group)
     .map(gm => related(gm, 'user'));
 
-  const memberItems = users
-    .filter(u => u.attributes && memberIds.indexOf(u.id) !== -1)
-    .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-    .map(u => (
-      <ListItem>
-        <ListItemAvatar>
-          {u.attributes.avatarUrl ? (
-            <Avatar alt={u.attributes.name} src={u.attributes.avatarUrl} />
-          ) : (
-            <Avatar>{makeAbbr(u.attributes.name)}</Avatar>
-          )}
-        </ListItemAvatar>
-        <ListItemText
-          primary={u.attributes.name}
-          secondary={secondary ? u.attributes.email : null}
-        />
-        <ListItemSecondaryAction>
-          <IconButton
-            edge="end"
-            aria-label="Delete"
-            onClick={handleRemoveMember(u.id)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
-    ));
+  const getPersonItems = (ids: Array<string>) =>
+    users
+      .filter(u => u.attributes && ids.indexOf(u.id) !== -1)
+      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+      .map(u => (
+        <ListItem>
+          <ListItemAvatar>
+            {u.attributes.avatarUrl ? (
+              <Avatar alt={u.attributes.name} src={u.attributes.avatarUrl} />
+            ) : (
+              <Avatar>{makeAbbr(u.attributes.name)}</Avatar>
+            )}
+          </ListItemAvatar>
+          <ListItemText
+            primary={u.attributes.name}
+            secondary={secondary ? u.attributes.email : null}
+          />
+          <ListItemSecondaryAction>
+            <IconButton
+              edge="end"
+              aria-label="Delete"
+              onClick={handleRemoveMember({
+                id: u.id,
+                name: u.attributes.name,
+              })}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      ));
 
   return (
     <div className={classes.container}>
@@ -301,20 +357,39 @@ export function GroupSettings(props: IProps) {
           <FormGroup className={classes.group}>
             <List dense={true}>{projectItems}</List>
           </FormGroup>
-          <FormLabel className={classes.label}>
-            {t.members} <div className={classes.grow}>{'\u00A0'}</div>
-            <IconButton
-              size="small"
-              className={classes.addButton}
-              onClick={showDialog(true)}
-            >
-              <AddIcon />
-            </IconButton>
-          </FormLabel>
-          <FormGroup className={classes.group}>
-            <List dense={true}>{memberItems}</List>
-          </FormGroup>
         </FormControl>
+        <Grid container spacing={8}>
+          <Grid item xs={12} md={6}>
+            <FormGroup className={classes.group}>
+              <FormLabel className={classes.label}>
+                {t.reviewers} <div className={classes.grow}>{'\u00A0'}</div>
+                <IconButton
+                  size="small"
+                  className={classes.addButton}
+                  onClick={handleAdd('reviewer')}
+                >
+                  <AddIcon />
+                </IconButton>
+              </FormLabel>
+              <List dense={true}>{getPersonItems(reviewerIds)}</List>
+            </FormGroup>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <FormGroup className={classes.group}>
+              <FormLabel className={classes.label}>
+                {t.transcribers} <div className={classes.grow}>{'\u00A0'}</div>
+                <IconButton
+                  size="small"
+                  className={classes.addButton}
+                  onClick={handleAdd('transcriber')}
+                >
+                  <AddIcon />
+                </IconButton>
+              </FormLabel>
+              <List dense={true}>{getPersonItems(transcriberIds)}</List>
+            </FormGroup>
+          </Grid>
+        </Grid>
         <div className={classes.actions}>
           <Button
             key="save"
@@ -340,14 +415,28 @@ export function GroupSettings(props: IProps) {
           <ReactSelect suggestions={orgPeople} onCommit={handleCommit} />
         </DialogContent>
         <DialogActions>
-          <Button onClick={showDialog(false)} color="primary">
+          <Button
+            variant="outlined"
+            onClick={showDialog(false)}
+            color="primary"
+          >
             {t.cancel}
           </Button>
-          <Button onClick={handleAddMember} color="primary">
+          <Button variant="outlined" onClick={handleAddMember} color="primary">
             {t.add}
           </Button>
         </DialogActions>
       </Dialog>
+      {confirmItem !== null ? (
+        <Confirm
+          title={t.delete}
+          text={confirmItem.name}
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
+        />
+      ) : (
+        <></>
+      )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
@@ -363,6 +452,7 @@ const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
   users: (q: QueryBuilder) => q.findRecords('user'),
   orgMemberships: (q: QueryBuilder) => q.findRecords('organizationmembership'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
 export default withData(mapRecordsToProps)(connect(mapStateToProps)(

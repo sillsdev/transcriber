@@ -1266,8 +1266,15 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="groupSettings.members">
-				<source>Members</source>
+			<trans-unit id="groupSettings.reviewers">
+				<source>Reviewers</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.transcribers">
+				<source>Transcribers</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>
@@ -1296,6 +1303,20 @@
 			</trans-unit>
 			<trans-unit id="groupSettings.add">
 				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.allReviewersCanTranscribe">
+				<source>All Reviewers are allowed to transcribe.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>

@@ -1084,9 +1084,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.members">
+      <unit id="groupSettings.reviewers">
          <segment>
-            <source>Members</source>
+            <source>Reviewers</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.transcribers">
+         <segment>
+            <source>Transcribers</source>
             <target/>
          </segment>
       </unit>
@@ -1111,6 +1117,18 @@
       <unit id="groupSettings.add">
          <segment>
             <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.allReviewersCanTranscribe">
+         <segment>
+            <source>All Reviewers are allowed to transcribe.</source>
             <target/>
          </segment>
       </unit>
