@@ -15,6 +15,7 @@ import BookSelect from './ReactSelect';
 import 'react-datasheet/lib/react-datasheet.css';
 import './PlanSheet.css';
 import { isNumber } from 'util';
+import SheetText from './SheetText';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
     }),
+    text: {},
     grow: {
       flexGrow: 1,
     },
@@ -208,6 +210,13 @@ export function PlanSheet(props: IProps) {
     <BookSelect suggestions={bookSuggestions} {...props} />
   );
 
+  const textEditor = (props: any) => (
+    <SheetText {...props} initValue={props.value} />
+  );
+
+  const isNum = (value: string | number) =>
+    isNumber(value) || /^[0-9]$/.test(value);
+
   useEffect(() => {
     setData(
       [
@@ -235,9 +244,9 @@ export function PlanSheet(props: IProps) {
               return cellIndex !== bookCol || isSection
                 ? {
                     value: e,
+                    dataEditor: textEditor,
                     className:
-                      (isNumber(e) ? 'num' : 'pass') +
-                      (isSection ? ' set' : ''),
+                      (isNum(e) ? 'num' : 'pass') + (isSection ? ' set' : ''),
                   }
                 : {
                     value: e,
