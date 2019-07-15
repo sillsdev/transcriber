@@ -1132,5 +1132,11 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.noProjects">
+         <segment>
+            <source>There are no projects that use this group.</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

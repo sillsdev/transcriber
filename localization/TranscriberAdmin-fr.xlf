@@ -1131,5 +1131,11 @@
 			<target>Tous les réviseurs sont autorisés à transcrire.</target>
 		</segment>
 	</unit>
+   <unit id="groupSettings.noProjects">
+         <segment>
+            <source>There are no projects that use this group.</source>
+         	<target>Aucun projet n'utilise ce groupe.</target>
+         </segment>
+      </unit>
    </file>
 </xliff>

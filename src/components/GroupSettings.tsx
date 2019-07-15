@@ -269,6 +269,8 @@ export function GroupSettings(props: IProps) {
       </ListItem>
     ));
 
+  const projectsRendered = projectItems.length ? projectItems : t.noProjects;
+
   const transcriberId = roles
     .filter(r => r.attributes.roleName.toLowerCase() === 'transcriber')
     .map(r => r.id);
@@ -355,7 +357,7 @@ export function GroupSettings(props: IProps) {
           </FormGroup>
           <FormLabel className={classes.label}>{t.projects}</FormLabel>
           <FormGroup className={classes.group}>
-            <List dense={true}>{projectItems}</List>
+            <List dense={true}>{projectsRendered}</List>
           </FormGroup>
         </FormControl>
         <Grid container spacing={8}>

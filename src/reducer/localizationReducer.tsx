@@ -288,6 +288,7 @@ const initialState = {
 			"add": "Add",
 			"delete": "Delete",
 			"allReviewersCanTranscribe": "All Reviewers are allowed to transcribe.",
+			"noProjects": "There are no projects that use this group.",
 		}
 	}),
 };
