@@ -41,7 +41,6 @@ import GroupIcon from '@material-ui/icons/Group';
 import SettingsIcon from '@material-ui/icons/SettingsTwoTone';
 import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
-import PassageIcon from '@material-ui/icons/ListTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -223,6 +222,9 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleCommitOrg = (value: string) => {
     setOrganization(value);
+    setAddProject(false);
+    setChoice('');
+    setContent('');
   };
 
   const handleCommitProj = (value: string) => {
@@ -288,15 +290,21 @@ export function ResponsiveDrawer(props: IProps) {
     setProjOptions(projOpts);
     const projKeys = projOpts.map(o => o.value);
     const newCurProj = projKeys.indexOf(project);
-    if (addProject || projKeys.length < 1) {
+    if (addProject) {
       setCurProj(null);
+    } else if (projKeys.length < 1) {
+      setCurProj(null);
+      setContent('none');
+      setTitle(t.silTranscriberAdmin);
     } else if (newCurProj === -1) {
       setCurProj(0);
       setProject(projKeys[0]);
       setTitle(t.projectSummary);
+      setContent('');
     } else {
       setCurProj(newCurProj);
       setTitle(t.projectSummary);
+      setContent('');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projects, project, organization, addProject]);
@@ -410,12 +418,7 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
   }
 
-  const transcriberIcons = [
-    <PassageIcon />,
-    <MediaIcon />,
-    <PlanIcon />,
-    <TeamIcon />,
-  ];
+  const transcriberIcons = [<PlanIcon />, <TeamIcon />, <MediaIcon />];
 
   const drawer = (
     <div>
@@ -475,7 +478,7 @@ export function ResponsiveDrawer(props: IProps) {
       {curProj !== null ? (
         <div>
           <List>
-            {[t.passages, t.media, t.plans, t.team].map((text, index) => (
+            {[t.plans, t.team, t.media].map((text, index) => (
               <ListItem
                 button
                 key={text}
@@ -522,7 +525,6 @@ export function ResponsiveDrawer(props: IProps) {
   let components: componentType = {};
   components[slug(t.organization)] = <OrganizationTable {...props} />;
   components[slug(t.usersAndGroups)] = <GroupTabs {...props} />;
-  components[slug(t.passages)] = 'passages';
   components[slug(t.media)] = <MediaTab {...props} />;
   components[slug(t.plans)] = (
     <PlanTable {...props} displaySet={handlePlanType} />
@@ -541,6 +543,7 @@ export function ResponsiveDrawer(props: IProps) {
   components[slug(t.integrations)] = 'integrations';
   components['group'] = <GroupSettings {...props} />;
   components[''] = <Visualize {...props} />;
+  components['none'] = <></>;
 
   return (
     <div className={classes.root}>
