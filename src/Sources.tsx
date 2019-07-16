@@ -11,7 +11,7 @@ import { Schema, KeyMap, Transform } from '@orbit/data';
 import Store from '@orbit/store';
 import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
-import { Online, makeAbbr } from './utils';
+import { Online } from './utils';
 
 function Sources(
   schema: Schema,
@@ -19,7 +19,6 @@ function Sources(
   keyMap: KeyMap,
   auth: Auth,
   setUser: (id: string) => void,
-  setInitials: (value: string) => void,
   setCompleted: (valud: number) => void
 ): Promise<any> {
   const backup = new IndexedDBSource({
@@ -109,11 +108,6 @@ function Sources(
 
   coordinator.addStrategy(new EventLoggingStrategy());
 
-  const userSetup = (user: User) => {
-    setUser(user.id);
-    setInitials(makeAbbr(user.attributes.name));
-  };
-
   if (!API_CONFIG.offline) {
     remote
       .pull(q => q.findRecords('currentuser'), {
@@ -126,7 +120,7 @@ function Sources(
       .then((transform: Transform[]) => {
         store.sync(transform);
         const user = (transform[0].operations[0] as any).record;
-        userSetup(user);
+        setUser(user.id);
       });
     remote
       .pull(q => q.findRecords('user'))
@@ -218,7 +212,7 @@ function Sources(
             .then((u: Array<User>) => {
               u = u.filter(u1 => u1.attributes && u1.attributes.name);
               if (u.length === 1) {
-                userSetup(u[0]);
+                setUser(u[0].id);
                 setCompleted(100);
               }
             });

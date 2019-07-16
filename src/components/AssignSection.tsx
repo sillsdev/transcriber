@@ -28,7 +28,6 @@ import {
   Paper,
   Radio,
   ListItemAvatar,
-  Avatar,
   Table,
   TableHead,
   TableRow,
@@ -37,13 +36,13 @@ import {
 } from '@material-ui/core';
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import SnackBar from './SnackBar';
+import UserAvatar from './UserAvatar';
 import {
   sectionTranscriberName,
   sectionReviewerName,
   sectionNumber,
   updatableSection,
 } from '../utils/section';
-import { userAvatar, makeAbbr } from '../utils';
 import { remoteId, related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -178,11 +177,7 @@ function AssignSection(props: IProps) {
             />
           </ListItemIcon>
           <ListItemAvatar>
-            {userAvatar(m) ? (
-              <Avatar alt={m.attributes.name} src={userAvatar(m)} />
-            ) : (
-              <Avatar>{makeAbbr(m.attributes.name)}</Avatar>
-            )}
+            <UserAvatar {...props} userRec={m} />
           </ListItemAvatar>
           <ListItemText id={labelId} primary={m.attributes.name} />
         </ListItem>
@@ -215,11 +210,7 @@ function AssignSection(props: IProps) {
             />
           </ListItemIcon>
           <ListItemAvatar>
-            {userAvatar(m) ? (
-              <Avatar alt={m.attributes.name} src={userAvatar(m)} />
-            ) : (
-              <Avatar>{makeAbbr(m.attributes.name)}</Avatar>
-            )}
+            <UserAvatar {...props} userRec={m} />
           </ListItemAvatar>
           <ListItemText id={labelId} primary={m.attributes.name} />
         </ListItem>

@@ -26,7 +26,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
-  Avatar,
   ListItemText,
   IconButton,
   Dialog,
@@ -40,9 +39,10 @@ import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
+import UserAvatar from '../components/UserAvatar';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
-import { related, makeAbbr } from '../utils';
+import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -293,11 +293,7 @@ export function GroupSettings(props: IProps) {
       .map(u => (
         <ListItem>
           <ListItemAvatar>
-            {u.attributes.avatarUrl ? (
-              <Avatar alt={u.attributes.name} src={u.attributes.avatarUrl} />
-            ) : (
-              <Avatar>{makeAbbr(u.attributes.name)}</Avatar>
-            )}
+            <UserAvatar {...props} userRec={u} />
           </ListItemAvatar>
           <ListItemText
             primary={u.attributes.name}

@@ -26,7 +26,6 @@ const globals = {
   project: null,
   plan: null,
   user: null,
-  initials: null,
   lang: 'en',
   dataStore: dataStore,
   schema: schema,

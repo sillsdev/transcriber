@@ -90,22 +90,13 @@ export function Loading(props: IProps) {
   const [keyMap] = useGlobal<KeyMap>('keyMap');
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const [_user, setUser] = useGlobal('user');
-  const [_initials, setInitials] = useGlobal('initials');
   /* eslint-enable @typescript-eslint/no-unused-vars */
   const [completed, setCompleted] = useState(0);
 
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
-    fetchOrbitData(
-      schema,
-      dataStore,
-      keyMap,
-      auth,
-      setUser,
-      setInitials,
-      setCompleted
-    );
+    fetchOrbitData(schema, dataStore, keyMap, auth, setUser, setCompleted);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 

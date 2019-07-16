@@ -48,6 +48,7 @@ import AddIcon from '@material-ui/icons/Add';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, slug } from '../utils';
+import UserMenu from '../components/UserMenu';
 import OrganizationTable from '../components/OrganizationTable';
 import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
@@ -56,6 +57,7 @@ import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
 import Visualize from '../components/Visualize';
+import Confirm from '../components/AlertDialog';
 import logo from './transcriber10.png';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -189,7 +191,6 @@ export function ResponsiveDrawer(props: IProps) {
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal<KeyMap>('keyMap');
-  const [initials] = useGlobal<string>('initials');
   const [organization, setOrganization] = useGlobal<string>('organization');
   const [group, setGroup] = useGlobal<string>('group');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
@@ -205,6 +206,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [content, setContent] = useState('');
   const [addProject, setAddProject] = useState(false);
   const [title, setTitle] = useState(t.silTranscriberAdmin);
+  const [confirmAction, setConfirmAction] = useState('');
+  const [view, setView] = useState('');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -253,6 +256,19 @@ export function ResponsiveDrawer(props: IProps) {
   const handleFinishAdd = () => {
     setAddProject(false);
     setChoice(slug(t.settings));
+  };
+
+  const handleConfirmAction = (what: string) => {
+    if (!/Close/i.test(what)) {
+      setConfirmAction(what);
+    }
+  };
+  const handleActionConfirmed = () => {
+    setView(confirmAction);
+    setConfirmAction('');
+  };
+  const handleActionRefused = () => {
+    setConfirmAction('');
   };
 
   useEffect(() => {
@@ -369,6 +385,8 @@ export function ResponsiveDrawer(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, organization, choice, plan, group, tab]);
+
+  if (view === 'Logout') return <Redirect to="/logout" />;
 
   // When the user uses the back button or directly naviagets to a page
   if (history.action === 'POP') {
@@ -564,7 +582,7 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <Avatar>{initials}</Avatar>
+          <UserMenu action={handleConfirmAction} />
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="Project folders">
@@ -598,6 +616,15 @@ export function ResponsiveDrawer(props: IProps) {
         </Hidden>
       </nav>
       <main className={classes.content}>{components[content]}</main>
+      {confirmAction !== '' ? (
+        <Confirm
+          text={confirmAction + '? Are you sure?'}
+          yesResponse={handleActionConfirmed}
+          noResponse={handleActionRefused}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
