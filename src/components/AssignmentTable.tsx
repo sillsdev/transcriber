@@ -106,12 +106,10 @@ function passageCompare(a: Passage, b: Passage) {
 
 const getAssignments = (
   plan: string,
-  userPassages: Array<UserPassage>,
   passages: Array<Passage>,
   passageSections: Array<PassageSection>,
   sections: Array<Section>,
-  users: Array<User>,
-  roles: Array<Role>
+  users: Array<User>
 ) => {
   function passageSectionCompare(a: PassageSection, b: PassageSection) {
     const pa = passages.filter(p => p.id === related(a, 'passage'));
@@ -140,7 +138,7 @@ const getAssignments = (
       .filter(ps => ps.attributes.sectionId === remoteId('section', section.id))
       .sort(passageSectionCompare);
     sectionRow.passages = sectionps.length.toString();
-    sectionps.forEach(function(ps, psindex) {
+    sectionps.forEach(function(ps) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
       rowData.push({
@@ -269,17 +267,7 @@ export function AssignmentTable(props: IProps) {
   const handleGroup = () => setGroup(!group);
 
   useEffect(() => {
-    setData(
-      getAssignments(
-        plan as string,
-        userPassages,
-        passages,
-        passageSections,
-        sections,
-        users,
-        roles
-      )
-    );
+    setData(getAssignments(plan, passages, passageSections, sections, users));
   }, [plan, userPassages, passages, passageSections, sections, users, roles]);
 
   return (

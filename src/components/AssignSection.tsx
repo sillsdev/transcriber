@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Section, IAssignSectionStrings, User } from '../model';
+import {
+  IState,
+  Section,
+  IAssignSectionStrings,
+  User,
+  Project,
+  GroupMembership,
+  Role,
+} from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -35,7 +44,7 @@ import {
   updatableSection,
 } from '../utils/section';
 import { userAvatar, makeAbbr } from '../utils';
-import { remoteId } from '../utils';
+import { remoteId, related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,6 +65,9 @@ interface IStateProps {
 
 interface IRecordProps {
   users: Array<User>;
+  projects: Array<Project>;
+  groupMemberships: Array<GroupMembership>;
+  roles: Array<Role>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
@@ -65,8 +77,19 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 function AssignSection(props: IProps) {
-  const { users, sections, t, visible, closeMethod, updateStore } = props;
+  const {
+    users,
+    projects,
+    groupMemberships,
+    roles,
+    sections,
+    t,
+    visible,
+    closeMethod,
+    updateStore,
+  } = props;
   const classes = useStyles();
+  const [project] = useGlobal<string>('project');
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
@@ -124,8 +147,20 @@ function AssignSection(props: IProps) {
     setOpen(visible);
   }, [visible]);
 
+  const projectRec = projects.filter(p => p.id === project);
+  const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
+  const transcriberRoleId = roles
+    .filter(r => r.attributes.roleName.toLowerCase() === 'transcriber')
+    .map(r => r.id);
+  const transcriberIds =
+    transcriberRoleId.length > 0
+      ? groupMemberships
+          .filter(gm => related(gm, 'group') === groupId)
+          .map(gm => related(gm, 'user'))
+      : [];
+
   const transcriberUserList = users
-    .filter(u => u.attributes)
+    .filter(u => u.attributes && transcriberIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -153,8 +188,16 @@ function AssignSection(props: IProps) {
         </ListItem>
       );
     });
+
+  const reviewerIds = groupMemberships
+    .filter(
+      gm =>
+        related(gm, 'group') === groupId &&
+        related(gm, 'role') !== transcriberRoleId[0]
+    )
+    .map(gm => related(gm, 'user'));
   const reviewerUserList = users
-    .filter(u => u.attributes)
+    .filter(u => u.attributes && reviewerIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -228,16 +271,16 @@ function AssignSection(props: IProps) {
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
-                  <ListItem key="head">{t.transcriber}</ListItem>
-                  {transcriberUserList}
+                  <ListItem key="head">{t.reviewer}</ListItem>
+                  {reviewerUserList}
                 </List>
               </Paper>
             </Grid>
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
-                  <ListItem key="head">{t.reviewer}</ListItem>
-                  {reviewerUserList}
+                  <ListItem key="head">{t.transcriber}</ListItem>
+                  {transcriberUserList}
                 </List>
               </Paper>
             </Grid>
@@ -260,6 +303,9 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
+  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
 export default withData(mapRecordsToProps)(connect(mapStateToProps)(
