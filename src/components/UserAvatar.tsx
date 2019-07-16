@@ -21,8 +21,9 @@ export function UserAvatar(props: IProps) {
   const { userRec, users } = props;
   const [user] = useGlobal<string>('user');
 
-  const curUserRec =
-    userRec === null ? users.filter(u => u.id === user && u.attributes) : [];
+  const curUserRec = userRec
+    ? []
+    : users.filter(u => u.id === user && u.attributes);
   const curUser = userRec
     ? userRec
     : curUserRec.length > 0
