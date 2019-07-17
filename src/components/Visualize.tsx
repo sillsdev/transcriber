@@ -127,14 +127,21 @@ export function Visualize(props: IProps) {
     });
     setRows(
       selPlans
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map(pl => {
+        .filter(pl => {
           const reviewKey = pl.id + ':reviewer';
           const transKey = pl.id + ':transcriber';
+          const reviewTot = rowTot.hasOwnProperty(reviewKey)
+            ? rowTot[reviewKey]
+            : 0;
+          const transTot = rowTot.hasOwnProperty(transKey)
+            ? rowTot[transKey]
+            : 0;
+          return reviewTot + transTot > 0;
+        })
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .map(pl => {
           return {
             plan: pl.attributes.name,
-            review: rowTot.hasOwnProperty(reviewKey) ? rowTot[reviewKey] : 0,
-            transcribe: rowTot.hasOwnProperty(transKey) ? rowTot[transKey] : 0,
           };
         })
     );

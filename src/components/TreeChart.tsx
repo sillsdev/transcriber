@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@material-ui/core/Paper';
-import { RowDetailState, DataTypeProvider } from '@devexpress/dx-react-grid';
+import { RowDetailState } from '@devexpress/dx-react-grid';
 import { scaleBand } from '@devexpress/dx-chart-core';
 import { ArgumentScale, Stack } from '@devexpress/dx-react-chart';
 import {
@@ -13,12 +13,11 @@ import {
 import {
   Grid,
   Table,
-  TableBandHeader,
   TableHeaderRow,
   TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
-// import { personCount, statusCount, planCount } from './chart-data';
+import './TreeChart.css';
 
 const detailContainerStyles = (theme: Theme) =>
   createStyles({
@@ -55,9 +54,9 @@ const AxisLabel = ({ text, ...restProps }: any) => (
   <ValueAxis.Label {...restProps} text={valueFormatter({ value: text })} />
 );
 
-const CurrencyTypeProvider = (props: any) => (
-  <DataTypeProvider {...props} formatterComponent={valueFormatter} />
-);
+// const CurrencyTypeProvider = (props: any) => (
+//   <DataTypeProvider {...props} formatterComponent={valueFormatter} />
+// );
 
 const LegendRootBase = ({ classes, ...restProps }: any) => (
   <Legend.Root {...restProps} className={classes.root} />
@@ -159,8 +158,6 @@ const gridDetailContainer: any = (data1: any, data2: any) =>
 
 export interface IPlanRow {
   plan: string;
-  review: number;
-  transcribe: number;
 }
 
 export interface ITargetWork {
@@ -175,18 +172,7 @@ export interface IWork {
 }
 
 const initialState = {
-  columns: [
-    { name: 'plan', title: 'Plan' },
-    { name: 'review', title: 'Review' },
-    { name: 'transcribe', title: 'Transcribe' },
-  ],
-  columnBands: [
-    {
-      title: 'Task',
-      children: [{ columnName: 'review' }, { columnName: 'transcribe' }],
-    },
-  ],
-  formatCols: ['review', 'transcribe'],
+  columns: [{ name: 'plan', title: 'Plan' }],
 };
 
 interface IProps {
@@ -207,22 +193,20 @@ export default class TreeChart extends React.PureComponent<
     this.state = initialState;
   }
 
-  render() {
-    const { columns, columnBands, formatCols } = this.state;
+  public render() {
+    const { columns } = this.state;
     const { rows, data1, data2 } = this.props;
 
     return (
-      <Paper>
+      <Paper id="TreeChart">
         <Grid rows={rows} columns={columns}>
-          <CurrencyTypeProvider for={formatCols} />
           {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
-          <RowDetailState defaultExpandedRowIds={[]} />
+          <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
           <Table />
           <TableHeaderRow />
           <TableRowDetail
             contentComponent={gridDetailContainer(data1, data2)}
           />
-          <TableBandHeader columnBands={columnBands} />
         </Grid>
       </Paper>
     );
