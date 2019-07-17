@@ -21,7 +21,7 @@ npm start
 Createing a file called: .env.development.local with the contents:
 ```
 REACT_APP_OFFLINE=true
-REACT_APP_CALLBACK=http://localhost:3000/callback
+REACT_APP_CALLBACK=localhost:3000/callback
 ```
 allows the program to run offline with the content that was downloaded to your browser the last time you were online.
 
