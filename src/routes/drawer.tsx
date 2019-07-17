@@ -279,7 +279,9 @@ export function ResponsiveDrawer(props: IProps) {
     } else if (organizations.length > 0) {
       setCurOrg(0);
       setOrganization(organizations[0].id);
-      setOrgAvatar(organizations[0].attributes.logoUrl);
+      setOrgAvatar(
+        organizations[0].attributes ? organizations[0].attributes.logoUrl : ''
+      );
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organizations, organization]);
@@ -319,14 +321,14 @@ export function ResponsiveDrawer(props: IProps) {
   useEffect(() => {
     const curPlan = plans.filter(p => p.id === plan);
     if (curPlan.length > 0) {
-      setTitle(curPlan[0].attributes.name);
+      setTitle(curPlan[0].attributes ? curPlan[0].attributes.name : '');
     }
   }, [plan, plans]);
 
   useEffect(() => {
     const curGroup = groups.filter(g => g.id === group);
     if (curGroup.length > 0) {
-      setTitle(curGroup[0].attributes.name);
+      setTitle(curGroup[0].attributes ? curGroup[0].attributes.name : '');
       setContent('group');
     } else if (content === 'group') {
       setTitle(t.usersAndGroups);

@@ -1,3 +1,4 @@
+import { Base64 } from 'js-base64';
 import { User } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -28,7 +29,18 @@ function Sources(
     namespace: 'transcriber',
   });
 
-  if (Online() && !API_CONFIG.offline) {
+  const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
+  const tokData = JSON.parse(
+    tokenPart.length > 1 ? Base64.decode(tokenPart[1]) : '{"sub":""}'
+  );
+  const userToken = localStorage.getItem('user-token');
+
+  if (
+    Online() &&
+    !API_CONFIG.offline &&
+    auth.accessToken &&
+    userToken !== tokData.sub
+  ) {
     backup.reset();
   }
 
@@ -108,7 +120,7 @@ function Sources(
 
   coordinator.addStrategy(new EventLoggingStrategy());
 
-  if (!API_CONFIG.offline) {
+  if (!API_CONFIG.offline && userToken !== tokData.sub) {
     remote
       .pull(q => q.findRecords('currentuser'), {
         sources: {
@@ -121,6 +133,7 @@ function Sources(
         store.sync(transform);
         const user = (transform[0].operations[0] as any).record;
         setUser(user.id);
+        localStorage.setItem('user-id', user.id);
       });
     remote
       .pull(q => q.findRecords('user'))
@@ -196,7 +209,12 @@ function Sources(
       .then(() => setCompleted(90));
     remote
       .pull(q => q.findRecords('activitystate'))
-      .then(transform => store.sync(transform))
+      .then(transform => {
+        store.sync(transform);
+        if (tokData.sub !== '') {
+          localStorage.setItem('user-token', tokData.sub);
+        }
+      })
       .then(() => setCompleted(95));
   }
 
@@ -216,6 +234,9 @@ function Sources(
                 setCompleted(100);
               }
             });
+        } else if (userToken === tokData.sub) {
+          setUser(localStorage.getItem('user-id') as string);
+          setCompleted(95);
         } else {
           setCompleted(80); // This happens before the others and shouldn't show complete
         }

@@ -97,14 +97,18 @@ export function Visualize(props: IProps) {
             const planName = pl.attributes.name;
             const role = roles.filter(r => r.id === related(up, 'role'));
             if (role.length > 0) {
-              const roleName = role[0].attributes.roleName.toLowerCase();
+              const roleName = role[0].attributes
+                ? role[0].attributes.roleName.toLowerCase()
+                : '';
               const rowKey = pl.id + ':' + roleName;
               rowTot[rowKey] = rowTot.hasOwnProperty(rowKey)
                 ? rowTot[rowKey] + 1
                 : 1;
               const userRec = users.filter(u => u.id === related(up, 'user'));
               if (userRec.length > 0) {
-                const userName = userRec[0].attributes.name;
+                const userName = userRec[0].attributes
+                  ? userRec[0].attributes.name
+                  : '';
                 const personKey = userName + ':' + planName + ':' + roleName;
                 personTot[personKey] = personTot.hasOwnProperty(personKey)
                   ? personTot[personKey] + 1
@@ -114,7 +118,9 @@ export function Visualize(props: IProps) {
                 p => p.id === related(pa, 'passage')
               );
               if (selPassage.length > 0) {
-                const stateName = selPassage[0].attributes.state;
+                const stateName = selPassage[0].attributes
+                  ? selPassage[0].attributes.state
+                  : '';
                 const statusKey = stateName + ':' + planName + ':' + roleName;
                 statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
                   ? statusTot[statusKey] + 1
