@@ -874,16 +874,10 @@
 		</unit>
 		<unit id="main.logout">
 			<segment>
-				<source>Log out</source>
+				<source>Log Out</source>
 				<target>Déconnexion</target>
 			</segment>
 		</unit>
-		<unit id="main.logoutAreYouSure">
-         <segment>
-            <source>Are you sure you want to log out?</source>
-         	<target>Vous êtes sûr de vouloir vous déconnecter ?</target>
-         </segment>
-      </unit>
       <unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>
