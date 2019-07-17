@@ -1022,7 +1022,14 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="main.logout">
-				<source>Logout</source>
+				<source>Log out</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Loading.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.logoutAreYouSure">
+				<source>Are you sure you want to log out?</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Loading.tsx</context>

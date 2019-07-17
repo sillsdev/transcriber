@@ -876,7 +876,13 @@
       </unit>
       <unit id="main.logout">
          <segment>
-            <source>Logout</source>
+            <source>Log out</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.logoutAreYouSure">
+         <segment>
+            <source>Are you sure you want to log out?</source>
             <target/>
          </segment>
       </unit>

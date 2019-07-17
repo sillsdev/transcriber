@@ -618,7 +618,7 @@ export function ResponsiveDrawer(props: IProps) {
       <main className={classes.content}>{components[content]}</main>
       {confirmAction !== '' ? (
         <Confirm
-          text={confirmAction + '? Are you sure?'}
+          text={t.logoutAreYouSure}
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />
