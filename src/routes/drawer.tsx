@@ -179,6 +179,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 
 export function ResponsiveDrawer(props: IProps) {
   const {
+    auth,
     t,
     history,
     organizations,
@@ -212,6 +213,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleChoice = (choice: string) => () => {
+    localStorage.removeItem('url');
     setAddProject(false);
     setChoice(slug(choice));
     setContent(slug(choice));
@@ -222,6 +224,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleCommitOrg = (value: string) => {
+    localStorage.removeItem('url');
     setOrganization(value);
     setAddProject(false);
     setChoice('');
@@ -229,6 +232,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleCommitProj = (value: string) => {
+    localStorage.removeItem('url');
     setAddProject(false);
     setProject(value);
     setContent('');
@@ -245,6 +249,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleAddProject = () => {
+    localStorage.removeItem('url');
     setAddProject(true);
     setProject('');
     setContent(slug(t.settings));
@@ -257,6 +262,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleUserMenuAction = (what: string) => {
+    localStorage.removeItem('url');
     if (!/Close/i.test(what)) {
       setView(what);
     }
@@ -386,6 +392,8 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.setItem('url', history.location.pathname);
   }
 
+  if (!auth.isAuthenticated() || !orbitLoaded) return <Redirect to="/" />;
+
   // reset location based on deep link (saved url)
   const url = localStorage.getItem('url');
   if (orbitLoaded && url) {
@@ -426,7 +434,6 @@ export function ResponsiveDrawer(props: IProps) {
         setGroup(groupId);
       }
     }
-    localStorage.removeItem('url');
   }
 
   const transcriberIcons = [<PlanIcon />, <TeamIcon />, <MediaIcon />];

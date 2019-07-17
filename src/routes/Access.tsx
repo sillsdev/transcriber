@@ -100,8 +100,19 @@ export function Access(props: IProps) {
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
-    if (Online() && !API_CONFIG.offline) {
-      accessRef.current.click();
+    const localAuth = localStorage.getItem('trAdminAuthResult');
+    if (localAuth) {
+      try {
+        auth.setSession(JSON.parse(localAuth));
+      } catch (error) {
+        localStorage.removeItem('trAdminAuthResult');
+      }
+    }
+    if (!auth.isAuthenticated()) {
+      localStorage.removeItem('trAdminAuthResult');
+      if (Online() && !API_CONFIG.offline) {
+        accessRef.current.click();
+      }
     }
     // auth.login();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

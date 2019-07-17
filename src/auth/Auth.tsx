@@ -68,6 +68,7 @@ export default class Auth {
   setSession(authResult: any) {
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('trAdminAuthResult', JSON.stringify(authResult));
 
     // Set the time that the access token will expire at
     let expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
@@ -97,6 +98,7 @@ export default class Auth {
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('trAdminAuthResult');
     localStorage.removeItem('nonce');
     localStorage.removeItem('user-token');
     localStorage.removeItem('user-id');

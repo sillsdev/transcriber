@@ -149,7 +149,9 @@ function AssignSection(props: IProps) {
   const projectRec = projects.filter(p => p.id === project);
   const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
   const transcriberRoleId = roles
-    .filter(r => r.attributes.roleName.toLowerCase() === 'transcriber')
+    .filter(
+      r => r.attributes && r.attributes.roleName.toLowerCase() === 'transcriber'
+    )
     .map(r => r.id);
   const transcriberIds =
     transcriberRoleId.length > 0
