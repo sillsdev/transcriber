@@ -14,7 +14,7 @@ import {
 // import * as actions from '../actions';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { KeyMap, QueryBuilder } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import {
   AppBar,
   Avatar,
@@ -190,17 +190,17 @@ export function ResponsiveDrawer(props: IProps) {
   } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [keyMap] = useGlobal<KeyMap>('keyMap');
-  const [organization, setOrganization] = useGlobal<string>('organization');
-  const [group, setGroup] = useGlobal<string>('group');
+  const [keyMap] = useGlobal('keyMap');
+  const [organization, setOrganization] = useGlobal('organization');
+  const [group, setGroup] = useGlobal('group');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
   const [curOrg, setCurOrg] = useState(0);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
-  const [project, setProject] = useGlobal<string>('project');
+  const [project, setProject] = useGlobal('project');
   const [projOptions, setProjOptions] = useState(Array<OptionType>());
   const [curProj, setCurProj] = useState<number | null>(0);
-  const [plan, setPlan] = useGlobal<string>('plan');
-  const [tab, setTab] = useGlobal<number>('tab');
+  const [plan, setPlan] = useGlobal('plan');
+  const [tab, setTab] = useGlobal('tab');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [choice, setChoice] = useState('');
   const [content, setContent] = useState('');

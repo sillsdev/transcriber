@@ -11,7 +11,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { Schema, QueryBuilder, RecordIdentity } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -119,10 +119,10 @@ interface IProps
 export function GroupTable(props: IProps) {
   const { t, groups, projects, groupMemberships, updateStore } = props;
   const classes = useStyles();
-  const [organization] = useGlobal<string>('organization');
+  const [organization] = useGlobal('organization');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_group, setGroup] = useGlobal<string>('group');
-  const [schema] = useGlobal<Schema>('schema');
+  const [_group, setGroup] = useGlobal('group');
+  const [schema] = useGlobal('schema');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [

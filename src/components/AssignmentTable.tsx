@@ -185,7 +185,7 @@ export function AssignmentTable(props: IProps) {
     updateStore,
   } = props;
   const classes = useStyles();
-  const [plan] = useGlobal<string>('plan');
+  const [plan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());

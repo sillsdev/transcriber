@@ -46,7 +46,7 @@ interface IProps extends IStateProps {
 const ScrollableTabsButtonAuto = (props: IProps) => {
   const { t, changeTab, bookCol } = props;
   const classes = useStyles();
-  const [tab, setTab] = useGlobal<number>('tab');
+  const [tab, setTab] = useGlobal('tab');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);

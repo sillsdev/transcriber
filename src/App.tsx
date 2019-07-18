@@ -26,12 +26,12 @@ const handleAuthentication = (props: any) => {
 const dataStore = new Store({ schema, keyMap });
 
 setGlobal({
-  organization: null,
-  project: null,
-  plan: null,
+  organization: '',
+  project: '',
+  plan: '',
   tab: 0,
-  group: null,
-  user: null,
+  group: '',
+  user: '',
   lang: 'en',
   dataStore: dataStore,
   schema: schema,

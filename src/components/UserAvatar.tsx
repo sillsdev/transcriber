@@ -19,7 +19,7 @@ interface IProps extends IStateProps, IRecordProps {
 
 export function UserAvatar(props: IProps) {
   const { userRec, users } = props;
-  const [user] = useGlobal<string>('user');
+  const [user] = useGlobal('user');
 
   const curUserRec = userRec
     ? []

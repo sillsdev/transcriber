@@ -2,14 +2,14 @@ import React, { CSSProperties, HTMLAttributes, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Select from 'react-select';
-import { ValueContainerProps } from 'react-select/lib/components/containers';
-import { ControlProps } from 'react-select/lib/components/Control';
-import { MenuProps, NoticeProps } from 'react-select/lib/components/Menu';
-import { MultiValueProps } from 'react-select/lib/components/MultiValue';
-import { OptionProps } from 'react-select/lib/components/Option';
-import { PlaceholderProps } from 'react-select/lib/components/Placeholder';
-import { SingleValueProps } from 'react-select/lib/components/SingleValue';
-import { ValueType } from 'react-select/lib/types';
+import { ValueContainerProps } from 'react-select/src/components/containers';
+import { ControlProps } from 'react-select/src/components/Control';
+import { MenuProps, NoticeProps } from 'react-select/src/components/Menu';
+import { MultiValueProps } from 'react-select/src/components/MultiValue';
+import { OptionProps } from 'react-select/src/components/Option';
+import { PlaceholderProps } from 'react-select/src/components/Placeholder';
+import { SingleValueProps } from 'react-select/src/components/SingleValue';
+import { ValueType } from 'react-select/src/types';
 import {
   createStyles,
   makeStyles,
@@ -25,46 +25,6 @@ export interface OptionType {
   label: string;
   value: string;
 }
-
-// const suggestions: OptionType[] = [
-//   { label: 'Afghanistan' },
-//   { label: 'Aland Islands' },
-//   { label: 'Albania' },
-//   { label: 'Algeria' },
-//   { label: 'American Samoa' },
-//   { label: 'Andorra' },
-//   { label: 'Angola' },
-//   { label: 'Anguilla' },
-//   { label: 'Antarctica' },
-//   { label: 'Antigua and Barbuda' },
-//   { label: 'Argentina' },
-//   { label: 'Armenia' },
-//   { label: 'Aruba' },
-//   { label: 'Australia' },
-//   { label: 'Austria' },
-//   { label: 'Azerbaijan' },
-//   { label: 'Bahamas' },
-//   { label: 'Bahrain' },
-//   { label: 'Bangladesh' },
-//   { label: 'Barbados' },
-//   { label: 'Belarus' },
-//   { label: 'Belgium' },
-//   { label: 'Belize' },
-//   { label: 'Benin' },
-//   { label: 'Bermuda' },
-//   { label: 'Bhutan' },
-//   { label: 'Bolivia, Plurinational State of' },
-//   { label: 'Bonaire, Sint Eustatius and Saba' },
-//   { label: 'Bosnia and Herzegovina' },
-//   { label: 'Botswana' },
-//   { label: 'Bouvet Island' },
-//   { label: 'Brazil' },
-//   { label: 'British Indian Ocean Territory' },
-//   { label: 'Brunei Darussalam' },
-// ].map(suggestion => ({
-//   value: suggestion.label,
-//   label: suggestion.label,
-// }));
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

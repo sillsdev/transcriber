@@ -8,8 +8,7 @@ import { IState, User, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
 import { withData } from 'react-orbitjs';
-import { Schema, KeyMap, QueryBuilder } from '@orbit/data';
-import Store from '@orbit/store';
+import { QueryBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -85,9 +84,9 @@ export function Loading(props: IProps) {
   const classes = useStyles();
   const { fetchOrbitData, fetchLocalization, setLanguage } = props;
   const { isAuthenticated } = auth;
-  const [dataStore] = useGlobal<Store>('dataStore');
-  const [schema] = useGlobal<Schema>('schema');
-  const [keyMap] = useGlobal<KeyMap>('keyMap');
+  const [dataStore] = useGlobal('dataStore');
+  const [schema] = useGlobal('schema');
+  const [keyMap] = useGlobal('keyMap');
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const [_user, setUser] = useGlobal('user');
   /* eslint-enable @typescript-eslint/no-unused-vars */

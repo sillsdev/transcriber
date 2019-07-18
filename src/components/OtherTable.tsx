@@ -11,8 +11,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import Store from '@orbit/store';
-import { Schema, RecordIdentity } from '@orbit/data';
+import { TransformBuilder, RecordIdentity } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
@@ -53,10 +52,10 @@ interface IProps extends IStateProps, WithDataProps {}
 export function OtherTable(props: IProps) {
   const { t, s, updateStore, queryStore } = props;
   const classes = useStyles();
-  const [plan] = useGlobal<string>('plan');
-  const [project] = useGlobal<string>('project');
-  const [dataStore] = useGlobal<Store>('dataStore');
-  const [schema] = useGlobal<Schema>('schema');
+  const [plan] = useGlobal('plan');
+  const [project] = useGlobal('project');
+  const [dataStore] = useGlobal('dataStore');
+  const [schema] = useGlobal('schema');
   const [message, setMessage] = useState(<></>);
   const [sectionId, setSectionId] = useState(Array<RecordIdentity>());
   const [passageId, setPassageId] = useState(Array<ISequencedRecordIdentity>());
@@ -183,7 +182,7 @@ export function OtherTable(props: IProps) {
           passageId: 0,
         },
       } as any;
-      await dataStore.update(t => [
+      await dataStore.update((t: TransformBuilder) => [
         t.addRecord(p),
         t.addRecord(passageSection),
         t.replaceRelatedRecord(
@@ -244,7 +243,7 @@ export function OtherTable(props: IProps) {
         },
       } as any;
       schema.initializeRecord(sec);
-      await dataStore.update(t => [
+      await dataStore.update((t: TransformBuilder) => [
         t.addRecord(sec),
         t.replaceRelatedRecord({ type: 'section', id: sec.id }, 'plan', {
           type: 'plan',

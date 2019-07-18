@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { IState, Project, Group, IProjectSettingsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { Schema, KeyMap, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   TextField,
@@ -108,11 +108,11 @@ export function ProjectSettings(props: IProps) {
     finishAdd,
   } = props;
   const classes = useStyles();
-  const [schema] = useGlobal<Schema>('schema');
-  const [keyMap] = useGlobal<KeyMap>('keyMap');
+  const [schema] = useGlobal('schema');
+  const [keyMap] = useGlobal('keyMap');
   const [project, setProject] = useGlobal('project');
-  const [user] = useGlobal<string>('user');
-  const [organization] = useGlobal<string>('organization');
+  const [user] = useGlobal('user');
+  const [organization] = useGlobal('organization');
   const [currentProject, setCurrentProject] = useState<Project | undefined>(
     add
       ? undefined

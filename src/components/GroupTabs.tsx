@@ -42,7 +42,7 @@ interface IProps extends IStateProps {
 const GroupTabs = (props: IProps) => {
   const { t, changeTab } = props;
   const classes = useStyles();
-  const [tab, setTab] = useGlobal<number>('tab');
+  const [tab, setTab] = useGlobal('tab');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);

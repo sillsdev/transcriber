@@ -13,7 +13,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   TextField,
@@ -122,9 +122,9 @@ export function GroupSettings(props: IProps) {
     t,
   } = props;
   const classes = useStyles();
-  const [group, setGroup] = useGlobal<string | null>('group');
-  const [organization] = useGlobal<string>('organization');
-  const [schema] = useGlobal<Schema>('schema');
+  const [group, setGroup] = useGlobal('group');
+  const [organization] = useGlobal('organization');
+  const [schema] = useGlobal('schema');
   const [name, setName] = useState('');
   const [abbreviation, setAbbreviation] = useState('');
   const [message, setMessage] = useState(<></>);
@@ -155,7 +155,7 @@ export function GroupSettings(props: IProps) {
         },
       } as Group)
     );
-    setGroup(null);
+    setGroup('');
   };
   const handleRemoveMember = (user: IDeleteItem) => () => {
     setConfirmItem(user);

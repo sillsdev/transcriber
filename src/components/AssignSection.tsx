@@ -88,7 +88,7 @@ function AssignSection(props: IProps) {
     updateStore,
   } = props;
   const classes = useStyles();
-  const [project] = useGlobal<string>('project');
+  const [project] = useGlobal('project');
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');

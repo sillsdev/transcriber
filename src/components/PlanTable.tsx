@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { IState, Plan, PlanType, Section, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -85,8 +85,8 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 export function PlanTable(props: IProps) {
   const { plans, planTypes, sections, updateStore, t, displaySet } = props;
   const classes = useStyles();
-  const [schema] = useGlobal<Schema>('schema');
-  const [project] = useGlobal<string>('project');
+  const [schema] = useGlobal('schema');
+  const [project] = useGlobal('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
     { name: 'planType', title: t.type },

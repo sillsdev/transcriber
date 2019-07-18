@@ -44,7 +44,7 @@ export function Visualize(props: IProps) {
     passages,
     users,
   } = props;
-  const [project] = useGlobal<string>('project');
+  const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
   const [data2, setData2] = useState<Array<IWork>>([]);

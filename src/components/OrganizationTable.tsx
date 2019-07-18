@@ -72,7 +72,7 @@ interface IRecordProps {
 
 interface Row {
   type: string;
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -87,13 +87,13 @@ export function OrganizationTable(props: IProps) {
   const [user] = useGlobal('user');
   const { isAuthenticated } = auth;
   const [columns, setColumns] = useState([{ name: 'name', title: 'Name' }]);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState<Array<Row>>([]);
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_Organization, setOrganization] = useGlobal('organization');
   const [message, setMessage] = useState(<></>);
 
-  const handleSelection = (s: any) => {
-    const selectedRow: Row = rows[s[0]];
+  const handleSelection = (s: Array<string | number>) => {
+    const selectedRow: Row = rows[s[0] as number];
     setOrganization(selectedRow.id);
   };
   const handleMessageReset = () => {
