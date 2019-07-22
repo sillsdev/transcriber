@@ -40,6 +40,7 @@ export default function(state = initialState, action: any) {
     case UPLOAD_COMPLETE:
       return {
         ...state,
+        current: 0,
         loaded: false,
       };
     default:
