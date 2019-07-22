@@ -26,6 +26,7 @@ import ShapingTable from './ShapingTable';
 import GroupAdd from '../components/GroupAdd';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
+import { remoteId } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -167,6 +168,7 @@ export function GroupTable(props: IProps) {
       attributes: {
         name: name,
         abbreviation: abbr,
+        ownerId: remoteId('organization', organization),
       },
     } as any;
     schema.initializeRecord(group);
