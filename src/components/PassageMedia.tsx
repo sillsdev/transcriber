@@ -193,12 +193,19 @@ function PassageMedia(props: IProps) {
 
   const selectedPassages = passages
     .filter(p => selectedPassageIds.indexOf(p.id) !== -1)
-    .sort((i, j) => (i.attributes.reference < j.attributes.reference ? -1 : 1));
+    .sort((i, j) =>
+      (i.attributes ? i.attributes.reference : '') <
+      (j.attributes ? j.attributes.reference : '')
+        ? -1
+        : 1
+    );
 
   const passageList = selectedPassages
     .filter(p => attachedPassageIds.indexOf(p.id) === -1)
     .map((p, index) => {
-      const labelId = 'passage-' + p.attributes.reference.replace(':', '-');
+      const labelId =
+        'passage-' +
+        (p.attributes ? p.attributes.reference.replace(':', '-') : '');
       return (
         <ListItem
           key={index}
@@ -216,7 +223,11 @@ function PassageMedia(props: IProps) {
           </ListItemIcon>
           <ListItemText
             id={labelId}
-            primary={p.attributes.book + ' ' + p.attributes.reference}
+            primary={
+              p.attributes
+                ? p.attributes.book + ' ' + p.attributes.reference
+                : ''
+            }
           />
         </ListItem>
       );
