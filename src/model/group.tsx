@@ -4,6 +4,7 @@ export interface Group extends Record {
   attributes: {
     name: string;
     abbreviation: string;
+    ownerId: number;
   };
   relationships?: {
     owner: RecordRelationship;
