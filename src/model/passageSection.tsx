@@ -1,10 +1,7 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
 export interface PassageSection extends Record {
-  attributes: {
-    passageId: number;
-    sectionId: number;
-  };
+  attributes: {};
   relationships?: {
     section: RecordRelationship;
     passage: RecordRelationship;

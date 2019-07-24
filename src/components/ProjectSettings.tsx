@@ -21,7 +21,6 @@ import {
 import SaveIcon from '@material-ui/icons/Save';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SnackBar from './SnackBar';
-import remoteId from '../utils/remoteId';
 import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -97,19 +96,10 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function ProjectSettings(props: IProps) {
-  const {
-    add,
-    projects,
-    projectTypes,
-    groups,
-    updateStore,
-    t,
-    noMargin,
-    finishAdd,
-  } = props;
+  const { add, projects, projectTypes, groups, t, noMargin, finishAdd } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
+  const [dataStore] = useGlobal('dataStore');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
@@ -122,11 +112,7 @@ export function ProjectSettings(props: IProps) {
           attributes: {
             name: '',
             slug: '',
-            projectTypeId: 0,
-            groupId: 0,
             description: '',
-            ownerId: 0,
-            organizationId: 0,
             uilanguagebcp47: '',
             language: '',
             languageName: '',
@@ -197,25 +183,13 @@ export function ProjectSettings(props: IProps) {
     setMessage(<></>);
   };
   const handleSave = () => {
-    const projectTypeId = keyMap.idToKey(
-      'projecttype',
-      'remoteId',
-      projectType
-    );
-    const groupId = keyMap.idToKey('group', 'remoteId', projectGroup);
-    updateStore((t: TransformBuilder) =>
+    dataStore.update((t: TransformBuilder) => [
       t.replaceRecord({
         type: 'project',
         id: project,
         attributes: {
           name: name,
-          projectTypeId: parseInt(projectTypeId),
-          groupId: parseInt(groupId),
           description: description,
-          ownerId: currentProject ? currentProject.attributes.ownerId : 0,
-          organizationId: currentProject
-            ? currentProject.attributes.organizationId
-            : 0,
           uilanguagebcp47: currentProject
             ? currentProject.attributes.uilanguagebcp47
             : 'en',
@@ -228,52 +202,25 @@ export function ProjectSettings(props: IProps) {
             ? currentProject.attributes.allowClaim
             : true,
           isPublic: currentProject ? currentProject.attributes.isPublic : true,
-          dateCreated: currentProject
-            ? currentProject.attributes.dateCreated
-            : null,
-          dateUpdated: new Date().toISOString(),
         },
-      })
-    );
-    if (projectType) {
-      updateStore((t: TransformBuilder) =>
-        t.replaceRelatedRecord(
-          { type: 'project', id: project },
-          'projecttype',
-          {
-            type: 'projecttype',
-            id: projectType,
-          }
-        )
-      );
-    }
-    if (projectGroup) {
-      updateStore((t: TransformBuilder) =>
-        t.replaceRelatedRecord({ type: 'project', id: project }, 'group', {
-          type: 'group',
-          id: projectGroup,
-        })
-      );
-    }
+      }),
+      t.replaceRelatedRecord({ type: 'project', id: project }, 'projecttype', {
+        type: 'projecttype',
+        id: projectType,
+      }),
+      t.replaceRelatedRecord({ type: 'project', id: project }, 'group', {
+        type: 'group',
+        id: projectGroup,
+      }),
+      //we aren't allowing them to change owner or oraganization currently
+    ]);
   };
   const handleAdd = () => {
-    const userId = remoteId('user', user);
-    const organizationId = remoteId('organization', organization);
-    const projectTypeId = keyMap.idToKey(
-      'projecttype',
-      'remoteId',
-      projectType
-    );
-    const groupId = keyMap.idToKey('group', 'remoteId', projectGroup);
     let project: Project = {
       type: 'project',
       attributes: {
         name: name,
-        projectTypeId: parseInt(projectTypeId),
-        groupId: parseInt(groupId),
         description: description,
-        ownerId: userId || 1,
-        organizationId: organizationId || 1,
         uilanguagebcp47: null,
         language: bcp47,
         languageName: languageName,
@@ -287,27 +234,33 @@ export function ProjectSettings(props: IProps) {
       },
     } as any;
     schema.initializeRecord(project);
-    updateStore((t: TransformBuilder) => t.addRecord(project));
-    if (projectType) {
-      updateStore((t: TransformBuilder) =>
-        t.replaceRelatedRecord(
-          { type: 'project', id: project.id },
-          'projecttype',
-          {
-            type: 'projecttype',
-            id: projectType,
-          }
-        )
-      );
-    }
-    if (projectGroup) {
-      updateStore((t: TransformBuilder) =>
-        t.replaceRelatedRecord({ type: 'project', id: project.id }, 'group', {
-          type: 'group',
-          id: projectGroup,
-        })
-      );
-    }
+    dataStore.update((t: TransformBuilder) => [
+      t.addRecord(project),
+      t.replaceRelatedRecord(
+        { type: 'project', id: project.id },
+        'projecttype',
+        {
+          type: 'projecttype',
+          id: projectType,
+        }
+      ),
+      t.replaceRelatedRecord({ type: 'project', id: project.id }, 'group', {
+        type: 'group',
+        id: projectGroup,
+      }),
+      t.replaceRelatedRecord(
+        { type: 'project', id: project.id },
+        'organization',
+        {
+          type: 'organization',
+          id: organization,
+        }
+      ),
+      t.replaceRelatedRecord({ type: 'project', id: project.id }, 'owner', {
+        type: 'user',
+        id: user,
+      }),
+    ]);
     setProject(project.id);
     if (finishAdd) {
       finishAdd();

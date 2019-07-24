@@ -41,9 +41,8 @@ import {
   sectionTranscriberName,
   sectionReviewerName,
   sectionNumber,
-  updatableSection,
 } from '../utils/section';
-import { remoteId, related } from '../utils';
+import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,22 +104,6 @@ function AssignSection(props: IProps) {
   };
 
   const assign = async (section: Section, userId: string, role: string) => {
-    /* OPTION 1 - WORKS but you can't tell in the patch what changed.  Is
-         the extra code worth the debugging gain???
-    role === 'transcriber'
-      ? (section.attributes.transcriberId = remoteId('user', userId))
-      : (section.attributes.reviewerId = remoteId('user', userId));
-
-    await updateStore(t => t.replaceRecord(section));
-    */
-    /* OPTION 2 - create the changes in a new section */
-    let changes =
-      role === 'transcriber'
-        ? { transcriberId: remoteId('user', userId) }
-        : { reviewerId: remoteId('user', userId) };
-
-    await updateStore(t => t.replaceRecord(updatableSection(section, changes)));
-
     await updateStore(t =>
       t.replaceRelatedRecord({ type: 'section', id: section.id }, role, {
         type: 'user',

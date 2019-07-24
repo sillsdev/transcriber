@@ -121,6 +121,7 @@ export function GroupSettings(props: IProps) {
     updateStore,
     t,
   } = props;
+  const [dataStore] = useGlobal('dataStore');
   const classes = useStyles();
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
@@ -187,39 +188,38 @@ export function GroupSettings(props: IProps) {
     setCurrentPerson(value);
   };
 
-  const handleAddMember = () => {
+  const handleAddMember = async () => {
     setOpen(false);
+    const roleRec = roles.filter(
+      r => r.attributes.roleName.toLowerCase() === role
+    );
+    if (roleRec.length === 0) {
+      //error
+      setMessage(<span>'Invalid Role. User not added.'</span>);
+      return;
+    }
     const groupMemberRec: GroupMembership = {
       type: 'groupmembership',
     } as any;
     schema.initializeRecord(groupMemberRec);
-    updateStore(t => t.addRecord(groupMemberRec));
-    updateStore(t =>
+    await dataStore.update((t: TransformBuilder) => [
+      t.addRecord(groupMemberRec),
       t.replaceRelatedRecord(
         { type: 'groupmembership', id: groupMemberRec.id },
         'user',
-        { type: 'user', id: currentPerson }
-      )
-    );
-    updateStore(t =>
+        { type: 'user', id: currentPerson ? currentPerson : '' }
+      ),
       t.replaceRelatedRecord(
         { type: 'groupmembership', id: groupMemberRec.id },
         'group',
         { type: 'group', id: group }
-      )
-    );
-    const roleRec = roles.filter(
-      r => r.attributes.roleName.toLowerCase() === role
-    );
-    if (roleRec.length > 0) {
-      updateStore((t: TransformBuilder) =>
-        t.replaceRelatedRecord(
-          { type: 'groupmembership', id: groupMemberRec.id },
-          'role',
-          { type: 'role', id: roleRec[0].id }
-        )
-      );
-    }
+      ),
+      t.replaceRelatedRecord(
+        { type: 'groupmembership', id: groupMemberRec.id },
+        'role',
+        { type: 'role', id: roleRec[0].id }
+      ),
+    ]);
     if (role === 'reviewer') {
       setMessage(<span>{t.allReviewersCanTranscribe}</span>);
     }

@@ -31,6 +31,7 @@ import {
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import SnackBar from './SnackBar';
 import related from '../utils/related';
+import { passageRefCompare } from '../utils/passage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -193,12 +194,7 @@ function PassageMedia(props: IProps) {
 
   const selectedPassages = passages
     .filter(p => selectedPassageIds.indexOf(p.id) !== -1)
-    .sort((i, j) =>
-      (i.attributes ? i.attributes.reference : '') <
-      (j.attributes ? j.attributes.reference : '')
-        ? -1
-        : 1
-    );
+    .sort(passageRefCompare);
 
   const passageList = selectedPassages
     .filter(p => attachedPassageIds.indexOf(p.id) === -1)

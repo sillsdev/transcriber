@@ -29,6 +29,7 @@ import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
+import { remoteId } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,7 +96,7 @@ const getMedia = (
 ) => {
   const latest: ILatest = {};
   mediaFiles.forEach(f => {
-    const name = f.attributes.planId + f.attributes.originalFile;
+    const name = related(f, 'plan') + f.attributes.originalFile;
     latest[name] = latest[name]
       ? Math.max(latest[name], f.attributes.versionNumber)
       : f.attributes.versionNumber;
@@ -103,7 +104,7 @@ const getMedia = (
   const media = mediaFiles.filter(
     f =>
       related(f, 'plan') === plan &&
-      latest[f.attributes.planId + f.attributes.originalFile] ===
+      latest[related(f, 'plan') + f.attributes.originalFile] ===
         f.attributes.versionNumber
   );
   const rowData = media.map(f => {
@@ -188,7 +189,6 @@ export function MediaTab(props: IProps) {
   } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
-  const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
@@ -300,11 +300,9 @@ export function MediaTab(props: IProps) {
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
-        const planId = parseInt(
-          keyMap.idToKey('plan', 'remoteId', plan as string)
-        );
+        const planId = remoteId('plan', plan as string);
         const mediaFile = {
-          PlanId: planId,
+          planId: planId,
           originalFile: uploadList[currentlyLoading + 1].name,
           contentType: uploadList[currentlyLoading + 1].type,
         } as any;

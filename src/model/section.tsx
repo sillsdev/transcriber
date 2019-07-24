@@ -5,9 +5,6 @@ export interface Section extends Record {
     sequencenum: number;
     name: string;
     state: string;
-    planId: number;
-    transcriberId: number; //userid
-    reviewerId: number; //userid
   };
   relationships?: {
     // project: RecordRelationship;
