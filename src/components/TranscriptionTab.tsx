@@ -24,14 +24,14 @@ import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import remoteId from '../utils/remoteId';
 import UserPassage from '../model/userPassage';
 import {
   sectionNumber,
   sectionReviewerName,
   sectionTranscriberName,
+  sectionCompare,
 } from '../utils/section';
-import { passageNumber } from '../utils/passage';
+import { passageNumber, passageCompare } from '../utils/passage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -97,16 +97,6 @@ const getReference = (passage: Passage[]) => {
   );
 };
 
-const numCompare = (a: number, b: number) => {
-  return a - b;
-};
-function sectionCompare(a: Section, b: Section) {
-  return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
-}
-function passageCompare(a: Passage, b: Passage) {
-  return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
-}
-
 const getAssignments = (
   plan: string,
   passages: Array<Passage>,
@@ -122,7 +112,7 @@ const getAssignments = (
   var sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
-    .filter(s => s.attributes.planId === remoteId('plan', plan))
+    .filter(s => related(s, 'plan') === plan)
     .sort(sectionCompare);
 
   plansections.forEach(function(section) {
@@ -138,10 +128,10 @@ const getAssignments = (
     rowData.push(sectionRow);
     //const passageSections: PassageSection[] = related(section, 'passages');
     const sectionps = passageSections
-      .filter(ps => ps.attributes.sectionId === remoteId('section', section.id))
+      .filter(ps => related(ps, 'section') === section.id)
       .sort(passageSectionCompare);
     sectionRow.passages = sectionps.length.toString();
-    sectionps.forEach(function(ps, psindex) {
+    sectionps.forEach(function(ps: PassageSection, psindex: number) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
       rowData.push({

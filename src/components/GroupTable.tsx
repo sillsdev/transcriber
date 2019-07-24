@@ -11,7 +11,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
+import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -26,7 +26,6 @@ import ShapingTable from './ShapingTable';
 import GroupAdd from '../components/GroupAdd';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import { remoteId } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -121,6 +120,7 @@ export function GroupTable(props: IProps) {
   const { t, groups, projects, groupMemberships, updateStore } = props;
   const classes = useStyles();
   const [organization] = useGlobal('organization');
+  const [dataStore] = useGlobal('dataStore');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_group, setGroup] = useGlobal('group');
   const [schema] = useGlobal('schema');
@@ -168,18 +168,19 @@ export function GroupTable(props: IProps) {
       attributes: {
         name: name,
         abbreviation: abbr,
-        ownerId: remoteId('organization', organization),
       },
     } as any;
     schema.initializeRecord(group);
-    await updateStore(t => t.addRecord(group));
-    await updateStore(t =>
+
+    await dataStore.update((t: TransformBuilder) => [
+      t.addRecord(group),
       t.replaceRelatedRecord({ type: 'group', id: group.id }, 'owner', {
         type: 'organization',
         id: organization,
-      })
-    );
+      }),
+    ]);
   };
+
   const handleAddCancel = () => {
     setDialogVisible(false);
   };

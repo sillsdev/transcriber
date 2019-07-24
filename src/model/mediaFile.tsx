@@ -2,8 +2,7 @@ import { Record, RecordRelationship } from '@orbit/data';
 
 export interface MediaFile extends Record {
   attributes: {
-    passageId: number;
-    planId: number;
+    planId: number; //allow this because we use axios to create a mediafile
     versionNumber: number;
     artifactType: string;
     eafUrl: string;
@@ -20,6 +19,7 @@ export interface MediaFile extends Record {
   };
   relationships?: {
     passage: RecordRelationship;
+    plan: RecordRelationship;
   };
 }
 export default MediaFile;

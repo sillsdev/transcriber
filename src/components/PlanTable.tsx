@@ -24,7 +24,6 @@ import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import Related from '../utils/related';
-import remoteId from '../utils/remoteId';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,6 +85,7 @@ export function PlanTable(props: IProps) {
   const { plans, planTypes, sections, updateStore, t, displaySet } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
+  const [dataStore] = useGlobal('dataStore');
   const [project] = useGlobal('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
@@ -136,24 +136,20 @@ export function PlanTable(props: IProps) {
       type: 'plan',
       attributes: {
         name: name,
-        plantypeId: remoteId('plantype', planType),
-        projectId: remoteId('project', project),
       },
     } as any;
     schema.initializeRecord(plan);
-    await updateStore(t => t.addRecord(plan));
-    await updateStore(t =>
+    await dataStore.update((t: TransformBuilder) => [
+      t.addRecord(plan),
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
         id: planType,
-      })
-    );
-    await updateStore(t =>
+      }),
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'project', {
         type: 'project',
         id: project,
-      })
-    );
+      }),
+    ]);
   };
   const handleAddCancel = () => {
     setDialogVisible(false);

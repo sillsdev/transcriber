@@ -12,7 +12,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -22,7 +22,6 @@ import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import remoteId from '../utils/remoteId';
 import UserPassage from '../model/userPassage';
 import './AssignmentTable.css';
 import AssignSection from './AssignSection';
@@ -30,9 +29,9 @@ import {
   sectionNumber,
   sectionReviewerName,
   sectionTranscriberName,
-  updatableSection,
+  sectionCompare,
 } from '../utils/section';
-import { passageNumber } from '../utils/passage';
+import { passageNumber, passageCompare } from '../utils/passage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -85,6 +84,7 @@ const getSection = (section: Section) => {
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage[]) => {
   if (passage.length === 0) return '';
+  if (!passage[0].attributes) return '';
   return (
     passageNumber(passage[0]) +
     ' ' +
@@ -93,16 +93,6 @@ const getReference = (passage: Passage[]) => {
     passage[0].attributes.reference
   );
 };
-
-const numCompare = (a: number, b: number) => {
-  return a - b;
-};
-function sectionCompare(a: Section, b: Section) {
-  return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
-}
-function passageCompare(a: Passage, b: Passage) {
-  return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
-}
 
 const getAssignments = (
   plan: string,
@@ -119,7 +109,7 @@ const getAssignments = (
   var sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
-    .filter(s => s.attributes.planId === remoteId('plan', plan))
+    .filter(s => related(s, 'plan') === plan)
     .sort(sectionCompare);
 
   plansections.forEach(function(section) {
@@ -135,16 +125,16 @@ const getAssignments = (
     rowData.push(sectionRow);
     //const passageSections: PassageSection[] = related(section, 'passages');
     const sectionps = passageSections
-      .filter(ps => ps.attributes.sectionId === remoteId('section', section.id))
+      .filter(ps => related(ps, 'section') === section.id)
       .sort(passageSectionCompare);
     sectionRow.passages = sectionps.length.toString();
-    sectionps.forEach(function(ps) {
+    sectionps.forEach(function(ps: PassageSection) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
       rowData.push({
         id: passageId,
         name: getReference(passage),
-        state: passage[0].attributes.state,
+        state: passage[0].attributes ? passage[0].attributes.state : '',
         reviewer: '',
         transcriber: '',
         passages: '',
@@ -182,8 +172,8 @@ export function AssignmentTable(props: IProps) {
     userPassages,
     users,
     roles,
-    updateStore,
   } = props;
+  const [dataStore] = useGlobal('dataStore');
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
@@ -241,20 +231,16 @@ export function AssignmentTable(props: IProps) {
     setConfirmAction('');
     let sections = getSelectedSections();
     sections.forEach(async s => {
-      let changes = { transcriberId: null, reviewerId: null };
-      await updateStore(t => t.replaceRecord(updatableSection(s, changes)));
-      await updateStore(t =>
+      await dataStore.update((t: TransformBuilder) => [
         t.replaceRelatedRecord({ type: 'section', id: s.id }, 'transcriber', {
           type: 'user',
-          id: null,
-        })
-      );
-      await updateStore(t =>
+          id: '',
+        }),
         t.replaceRelatedRecord({ type: 'section', id: s.id }, 'reviewer', {
           type: 'user',
-          id: null,
-        })
-      );
+          id: '',
+        }),
+      ]);
     });
   };
   const handleRemoveAssignmentsRefused = () => setConfirmAction('');

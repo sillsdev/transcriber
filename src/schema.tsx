@@ -17,7 +17,6 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         abbreviation: { type: 'string' },
-        ownerId: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
@@ -63,7 +62,6 @@ const schemaDefinition: SchemaSettings = {
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
-        // ownerId: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },
@@ -78,10 +76,7 @@ const schemaDefinition: SchemaSettings = {
     },
     organizationmembership: {
       keys: { remoteId: {} },
-      attributes: {
-        userId: { type: 'number' },
-        organizationId: { type: 'number' },
-      },
+      attributes: {},
       relationships: {
         user: {
           type: 'hasOne',
@@ -96,8 +91,6 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         slug: { type: 'string' },
-        projectId: { type: 'number' },
-        planTypeId: { type: 'number' },
       },
       relationships: {
         project: { type: 'hasOne', model: 'project', inverse: 'plans' },
@@ -121,11 +114,7 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         slug: { type: 'string' },
-        projectTypeId: { type: 'number' },
         description: { type: 'string' },
-        ownerId: { type: 'number' },
-        organizationId: { type: 'number' },
-        groupId: { type: 'number' },
         uilanguagebcp47: { type: 'string' },
         language: { type: 'string' },
         languageName: { type: 'string' },
@@ -160,8 +149,6 @@ const schemaDefinition: SchemaSettings = {
     projectintegration: {
       keys: { remoteId: {} },
       attributes: {
-        projectId: { type: 'number' },
-        integrationId: { type: 'number' },
         settings: { type: 'string' },
       },
       relationships: {
@@ -202,9 +189,6 @@ const schemaDefinition: SchemaSettings = {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
         state: { type: 'string' },
-        planId: { type: 'number' },
-        reviewerId: { type: 'number' },
-        transcriberId: { type: 'number' },
       },
       relationships: {
         // projects: { type: 'hasMany', model: 'project', inverse: 'sections' },
@@ -247,10 +231,7 @@ const schemaDefinition: SchemaSettings = {
     },
     passagesection: {
       keys: { remoteId: {} },
-      attributes: {
-        passageId: { type: 'number' },
-        sectionId: { type: 'number' },
-      },
+      attributes: {},
       relationships: {
         passage: { type: 'hasOne', model: 'passage', inverse: 'sections' },
         section: { type: 'hasOne', model: 'section', inverse: 'passages' },
@@ -259,8 +240,6 @@ const schemaDefinition: SchemaSettings = {
     mediafile: {
       keys: { remoteId: {} },
       attributes: {
-        passageId: { type: 'number' },
-        planId: { type: 'number' },
         versionNumber: { type: 'number' },
         artifactType: { type: 'string' },
         eafUrl: { type: 'string' },
@@ -361,11 +340,7 @@ const schemaDefinition: SchemaSettings = {
     },
     userrole: {
       keys: { remoteId: {} },
-      attributes: {
-        userId: { type: 'number' },
-        roleId: { type: 'number' },
-        organizationId: { type: 'number' },
-      },
+      attributes: {},
       relationships: {
         user: { type: 'hasOne', model: 'user', inverse: 'userRoles' },
         role: { type: 'hasOne', model: 'role', inverse: 'userRoles' },
@@ -379,9 +354,6 @@ const schemaDefinition: SchemaSettings = {
     userpassage: {
       keys: { remoteId: {} },
       attributes: {
-        userId: { type: 'number' },
-        passageId: { type: 'number' },
-        roleId: { type: 'number' },
         comment: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },
