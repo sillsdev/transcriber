@@ -294,7 +294,10 @@ export function MediaTab(props: IProps) {
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
       setMessage(<span>Upload complete.</span>);
-      uploadComplete();
+      // wait to do this to give time for duration calc
+      setTimeout(() => {
+        uploadComplete();
+      }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
         const planId = remoteId('plan', plan as string);
@@ -310,7 +313,21 @@ export function MediaTab(props: IProps) {
   }, [uploadList, loaded, currentlyLoading, plan, auth]);
 
   useEffect(() => {
-    if (loaded) queryStore(q => q.findRecords('mediafile'));
+    if (
+      loaded /* new item done */ ||
+      currentlyLoading === 0 /* all are done */
+    ) {
+      //console.log(
+      //  'Requery mediafiles ' + currentlyLoading + ' Loaded: ' + loaded
+      //);
+      queryStore(q => q.findRecords('mediafile'), {
+        sources: {
+          remote: {
+            timeout: 100000,
+          },
+        },
+      });
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [loaded]);
 

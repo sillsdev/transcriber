@@ -58,36 +58,38 @@ function MediaUpload(props: IProps) {
     if (uploadMethod) {
       uploadMethod(files);
     }
+    setName('');
     setOpen(false);
   };
   const handleCancel = () => {
     if (cancelMethod) {
+      setFiles(null);
+      setName('');
       cancelMethod();
     }
     setOpen(false);
   };
+  const fileName = (files: FileList) => {
+    return files.length === 1
+      ? files[0].name
+      : files.length.toString() + ' files selected';
+  };
+
   const handleNameChange = (
     e: React.FormEvent<HTMLInputElement | HTMLLabelElement>
   ) => {
     const inputEl = e.target as HTMLInputElement;
     if (inputEl && inputEl.files) {
-      setName(
-        inputEl.files.length === 1
-          ? inputEl.files[0].name
-          : inputEl.files.length.toString() + ' files selected'
-      );
+      setName(fileName(inputEl.files));
       setFiles(inputEl.files);
     }
   };
   const handleMessageReset = () => {
     setMessage(<></>);
   };
+
   const handleDrop = (files: FileList) => {
-    setName(
-      files.length === 1
-        ? files[0].name
-        : files.length.toString() + ' files selected'
-    );
+    setName(fileName(files));
     setFiles(files);
   };
 

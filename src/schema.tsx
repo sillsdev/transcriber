@@ -17,6 +17,7 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         abbreviation: { type: 'string' },
+        ownerId: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
