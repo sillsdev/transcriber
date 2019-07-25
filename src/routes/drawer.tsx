@@ -393,18 +393,20 @@ export function ResponsiveDrawer(props: IProps) {
         setTab(0);
       } else {
         const planId = remoteIdStr('plan', plan);
-        history.push(
-          '/main/' +
-            orgId +
-            '/' +
-            slug(content) +
-            '/' +
-            projId +
-            '/' +
-            planId +
-            '/' +
-            tab.toString()
-        );
+        if (planId) {
+          history.push(
+            '/main/' +
+              orgId +
+              '/' +
+              slug(content) +
+              '/' +
+              projId +
+              '/' +
+              planId +
+              '/' +
+              tab.toString()
+          );
+        }
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

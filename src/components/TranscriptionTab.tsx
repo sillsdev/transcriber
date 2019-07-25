@@ -88,13 +88,17 @@ const getSection = (section: Section) => {
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage[]) => {
   if (passage.length === 0) return '';
-  return (
-    passageNumber(passage[0]) +
+  const book =
     ' ' +
-    passage[0].attributes.book +
+    (passage[0].attributes && passage[0].attributes.book
+      ? passage[0].attributes.book
+      : '');
+  const ref =
     ' ' +
-    passage[0].attributes.reference
-  );
+    (passage[0].attributes && passage[0].attributes.reference
+      ? passage[0].attributes.reference
+      : '');
+  return passageNumber(passage[0]) + book + ref;
 };
 
 const getAssignments = (
@@ -134,10 +138,16 @@ const getAssignments = (
     sectionps.forEach(function(ps: PassageSection, psindex: number) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
+      const state =
+        passage.length > 0 &&
+        passage[0].attributes &&
+        passage[0].attributes.state
+          ? passage[0].attributes.state
+          : '';
       rowData.push({
         id: passageId,
         name: getReference(passage),
-        state: passage[0].attributes.state,
+        state: state,
         reviewer: '',
         transcriber: '',
         passages: '',
