@@ -120,6 +120,7 @@ interface IProps
 export function GroupTable(props: IProps) {
   const { t, groups, projects, groupMemberships, updateStore } = props;
   const classes = useStyles();
+  const [keyMap] = useGlobal('keyMap');
   const [organization] = useGlobal('organization');
   const [dataStore] = useGlobal('dataStore');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -169,7 +170,7 @@ export function GroupTable(props: IProps) {
       attributes: {
         name: name,
         abbreviation: abbr,
-        ownerId: remoteId('organization', organization),
+        ownerId: remoteId('organization', organization, keyMap),
       },
     } as any;
     schema.initializeRecord(group);

@@ -188,6 +188,7 @@ export function MediaTab(props: IProps) {
     auth,
   } = props;
   const classes = useStyles();
+  const [keyMap] = useGlobal('keyMap');
   const [plan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -300,7 +301,7 @@ export function MediaTab(props: IProps) {
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
-        const planId = remoteId('plan', plan as string);
+        const planId = remoteId('plan', plan, keyMap);
         const mediaFile = {
           planId: planId,
           originalFile: uploadList[currentlyLoading + 1].name,

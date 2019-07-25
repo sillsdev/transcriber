@@ -191,6 +191,7 @@ export function ResponsiveDrawer(props: IProps) {
   } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const [keyMap] = useGlobal('keyMap');
   const [organization, setOrganization] = useGlobal('organization');
   const [group, setGroup] = useGlobal('group');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
@@ -369,11 +370,11 @@ export function ResponsiveDrawer(props: IProps) {
   }, [group, groups]);
 
   useEffect(() => {
-    const orgId = remoteIdStr('organization', organization);
-    const projId = remoteIdStr('project', project);
+    const orgId = remoteIdStr('organization', organization, keyMap);
+    const projId = remoteIdStr('project', project, keyMap);
     if (orgId !== undefined && projId !== undefined) {
       if (choice === slug(t.usersAndGroups)) {
-        const groupId = remoteIdStr('group', group);
+        const groupId = remoteIdStr('group', group, keyMap);
         const groupPart = groupId ? '/' + groupId : '';
         history.push(
           '/main/' +
@@ -392,7 +393,7 @@ export function ResponsiveDrawer(props: IProps) {
         setPlan('');
         setTab(0);
       } else {
-        const planId = remoteIdStr('plan', plan);
+        const planId = remoteIdStr('plan', plan, keyMap);
         if (planId) {
           history.push(
             '/main/' +
@@ -426,7 +427,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (orbitLoaded && url) {
     const parts = url.split('/');
     const base = 1;
-    const orgId = remoteIdStr('organization', parts[base + 1]);
+    const orgId = remoteIdStr('organization', parts[base + 1], keyMap);
     if (parts.length > base + 1 && organization !== orgId) {
       setOrganization(orgId);
     }
@@ -440,12 +441,12 @@ export function ResponsiveDrawer(props: IProps) {
       setChoice(urlChoice);
       setContent(value);
     }
-    const projId = remoteIdStr('project', parts[base + 3]);
+    const projId = remoteIdStr('project', parts[base + 3], keyMap);
     if (parts.length > base + 3 && project !== projId) {
       setProject(projId);
     }
     if (urlChoice === slug(t.plans)) {
-      const planId = remoteIdStr('plan', parts[base + 4]);
+      const planId = remoteIdStr('plan', parts[base + 4], keyMap);
       if (parts.length > base + 4 && plan !== planId) {
         setPlan(planId);
       }
@@ -456,7 +457,7 @@ export function ResponsiveDrawer(props: IProps) {
       if (parts.length > base + 4 && tab.toString() !== parts[base + 4]) {
         setTab(parseInt(parts[base + 4]));
       }
-      const groupId = remoteIdStr('group', parts[base + 5]);
+      const groupId = remoteIdStr('group', parts[base + 5], keyMap);
       if (parts.length > base + 5 && group !== groupId) {
         setGroup(groupId);
       }
