@@ -47,7 +47,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
-import { related, slug, remoteIdStr } from '../utils';
+import { related, slug, remoteId, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
 import OrganizationTable from '../components/OrganizationTable';
 import GroupTabs from '../components/GroupTabs';
@@ -370,11 +370,11 @@ export function ResponsiveDrawer(props: IProps) {
   }, [group, groups]);
 
   useEffect(() => {
-    const orgId = remoteIdStr('organization', organization, keyMap);
-    const projId = remoteIdStr('project', project, keyMap);
+    const orgId = remoteId('organization', organization, keyMap);
+    const projId = remoteId('project', project, keyMap);
     if (orgId !== undefined && projId !== undefined) {
       if (choice === slug(t.usersAndGroups)) {
-        const groupId = remoteIdStr('group', group, keyMap);
+        const groupId = remoteId('group', group, keyMap);
         const groupPart = groupId ? '/' + groupId : '';
         history.push(
           '/main/' +
@@ -393,21 +393,19 @@ export function ResponsiveDrawer(props: IProps) {
         setPlan('');
         setTab(0);
       } else {
-        const planId = remoteIdStr('plan', plan, keyMap);
-        if (planId) {
-          history.push(
-            '/main/' +
-              orgId +
-              '/' +
-              slug(content) +
-              '/' +
-              projId +
-              '/' +
-              planId +
-              '/' +
-              tab.toString()
-          );
-        }
+        const planId = remoteId('plan', plan, keyMap);
+        history.push(
+          '/main/' +
+            orgId +
+            '/' +
+            slug(content) +
+            '/' +
+            projId +
+            '/' +
+            planId +
+            '/' +
+            tab.toString()
+        );
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -427,7 +425,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (orbitLoaded && url) {
     const parts = url.split('/');
     const base = 1;
-    const orgId = remoteIdStr('organization', parts[base + 1], keyMap);
+    const orgId = remoteIdGuid('organization', parts[base + 1], keyMap);
     if (parts.length > base + 1 && organization !== orgId) {
       setOrganization(orgId);
     }
@@ -441,12 +439,12 @@ export function ResponsiveDrawer(props: IProps) {
       setChoice(urlChoice);
       setContent(value);
     }
-    const projId = remoteIdStr('project', parts[base + 3], keyMap);
+    const projId = remoteIdGuid('project', parts[base + 3], keyMap);
     if (parts.length > base + 3 && project !== projId) {
       setProject(projId);
     }
     if (urlChoice === slug(t.plans)) {
-      const planId = remoteIdStr('plan', parts[base + 4], keyMap);
+      const planId = remoteIdGuid('plan', parts[base + 4], keyMap);
       if (parts.length > base + 4 && plan !== planId) {
         setPlan(planId);
       }
@@ -457,7 +455,7 @@ export function ResponsiveDrawer(props: IProps) {
       if (parts.length > base + 4 && tab.toString() !== parts[base + 4]) {
         setTab(parseInt(parts[base + 4]));
       }
-      const groupId = remoteIdStr('group', parts[base + 5], keyMap);
+      const groupId = remoteIdGuid('group', parts[base + 5], keyMap);
       if (parts.length > base + 5 && group !== groupId) {
         setGroup(groupId);
       }

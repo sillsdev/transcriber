@@ -29,7 +29,7 @@ import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
-import { remoteId } from '../utils';
+import { remoteIdNum } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -301,7 +301,7 @@ export function MediaTab(props: IProps) {
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
-        const planId = remoteId('plan', plan, keyMap);
+        const planId = remoteIdNum('plan', plan, keyMap);
         const mediaFile = {
           planId: planId,
           originalFile: uploadList[currentlyLoading + 1].name,
