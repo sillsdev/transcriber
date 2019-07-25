@@ -182,6 +182,7 @@ const initialState = {
 			"changeVersion": "Change Version",
 			"attachPassage": "Attach Passage",
 			"uploadMedia": "Upload Media",
+			"planName": "Plan",
 			"fileName": "File Name",
 			"sectionId": "Section Id",
 			"sectionName": "Section Name",

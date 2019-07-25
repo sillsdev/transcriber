@@ -688,6 +688,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.planName">
+         <segment>
+            <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.fileName">
          <segment>
             <source>File Name</source>

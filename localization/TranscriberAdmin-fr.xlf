@@ -686,6 +686,12 @@
 				<target>Charger le fichier audio</target>
 			</segment>
 		</unit>
+	    <unit id="mediaTab.planName">
+         <segment>
+            <source>Plan</source>
+            <target>Programme</target>
+         </segment>
+      	</unit>
 		<unit id="mediaTab.fileName">
 			<segment>
 				<source>File Name</source>

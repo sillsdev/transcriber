@@ -161,6 +161,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "changeVersion": string;
     "attachPassage": string;
     "uploadMedia": string;
+    "planName": string;
     "fileName": string;
     "sectionId": string;
     "sectionName": string;

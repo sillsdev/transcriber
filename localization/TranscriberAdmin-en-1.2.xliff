@@ -804,6 +804,13 @@
 					<context context-type="sourcefile">MediaTab.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="mediaTab.planName">
+				<source>Plan</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="mediaTab.fileName">
 				<source>File Name</source>
 				<target/>

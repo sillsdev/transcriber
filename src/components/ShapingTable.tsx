@@ -22,6 +22,7 @@ import {
   Sorting,
   DataTypeProvider,
   DataTypeProviderProps,
+  TableColumnVisibility,
 } from '@devexpress/dx-react-grid';
 import {
   DragDropProvider,
@@ -143,6 +144,7 @@ interface IProps {
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
+  defaultHiddenColumnNames?: Array<string>;
   dataCell?: any;
   numCols?: Array<string>;
   rows: Array<any>;
@@ -156,6 +158,7 @@ export default function ShapingTable(props: IProps) {
     columns,
     columnWidths,
     columnSorting,
+    defaultHiddenColumnNames,
     dataCell,
     numCols,
     rows,
@@ -170,7 +173,7 @@ export default function ShapingTable(props: IProps) {
     }
   };
   const noRow = () => <></>;
-
+  const noCols = () => <span>No Columns Showing</span>;
   return (
     <Grid rows={rows} columns={columns}>
       <FilteringState
@@ -200,6 +203,10 @@ export default function ShapingTable(props: IProps) {
       <DragDropProvider />
 
       {dataCell ? <Table cellComponent={dataCell} /> : <Table />}
+      <TableColumnVisibility
+        defaultHiddenColumnNames={defaultHiddenColumnNames}
+        emptyMessageComponent={noCols}
+      />
       <TableColumnResizing
         minColumnWidth={50}
         defaultColumnWidths={columnWidths}

@@ -1,13 +1,12 @@
 import { Passage } from '../model';
+import { numCompare } from './sort';
 
 export function passageNumber(passage: Passage) {
   return passage.attributes && passage.attributes.sequencenum
     ? passage.attributes.sequencenum.toString().padStart(3, ' ')
     : '';
 }
-const numCompare = (a: number, b: number) => {
-  return a - b;
-};
+
 export function passageCompare(a: Passage, b: Passage) {
   return numCompare(
     a.attributes ? a.attributes.sequencenum : 0,
