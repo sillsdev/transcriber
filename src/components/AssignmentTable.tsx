@@ -78,20 +78,28 @@ const getChildRows = (row: any, rootRows: any[]) => {
 
 /* build the section name = sequence + name */
 const getSection = (section: Section) => {
-  return sectionNumber(section) + ' ' + section.attributes.name;
+  const name =
+    section && section.attributes && section.attributes.name
+      ? section.attributes.name
+      : '';
+  return sectionNumber(section) + ' ' + name;
 };
 
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage[]) => {
   if (passage.length === 0) return '';
   if (!passage[0].attributes) return '';
-  return (
-    passageNumber(passage[0]) +
+  const book =
     ' ' +
-    passage[0].attributes.book +
+    (passage[0].attributes && passage[0].attributes.book
+      ? passage[0].attributes.book
+      : '');
+  const reference =
     ' ' +
-    passage[0].attributes.reference
-  );
+    (passage[0].attributes && passage[0].attributes.reference
+      ? passage[0].attributes.reference
+      : '');
+  return passageNumber(passage[0]) + book + reference;
 };
 
 const getAssignments = (
@@ -109,14 +117,18 @@ const getAssignments = (
   var sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
-    .filter(s => related(s, 'plan') === plan)
+    .filter(s => related(s, 'plan') === plan && s.attributes)
     .sort(sectionCompare);
 
   plansections.forEach(function(section) {
+    const state =
+      section && section.attributes && section.attributes.state
+        ? section.attributes.state
+        : '';
     sectionRow = {
       id: section.id,
       name: getSection(section),
-      state: section.attributes.state,
+      state: state,
       reviewer: sectionReviewerName(section, users),
       transcriber: sectionTranscriberName(section, users),
       passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
@@ -131,10 +143,11 @@ const getAssignments = (
     sectionps.forEach(function(ps: PassageSection) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
+      const state = passage[0].attributes ? passage[0].attributes.state : '';
       rowData.push({
         id: passageId,
         name: getReference(passage),
-        state: passage[0].attributes ? passage[0].attributes.state : '',
+        state: state,
         reviewer: '',
         transcriber: '',
         passages: '',
