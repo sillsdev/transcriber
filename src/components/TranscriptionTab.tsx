@@ -82,7 +82,11 @@ const getChildRows = (row: any, rootRows: any[]) => {
 
 /* build the section name = sequence + name */
 const getSection = (section: Section) => {
-  return sectionNumber(section) + ' ' + section.attributes.name;
+  const name =
+    section && section.attributes && section.attributes.name
+      ? section.attributes.name
+      : '';
+  return sectionNumber(section) + ' ' + name;
 };
 
 /* build the passage name = sequence + book + reference */
@@ -120,10 +124,14 @@ const getAssignments = (
     .sort(sectionCompare);
 
   plansections.forEach(function(section) {
+    const state =
+      section && section.attributes && section.attributes.state
+        ? section.attributes.state
+        : '';
     sectionRow = {
       id: section.id,
       name: getSection(section),
-      state: section.attributes.state,
+      state: state,
       reviewer: sectionReviewerName(section, users),
       transcriber: sectionTranscriberName(section, users),
       passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
