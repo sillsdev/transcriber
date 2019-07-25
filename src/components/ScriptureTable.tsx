@@ -406,9 +406,9 @@ export function ScriptureTable(props: IProps) {
       // q.findRecords('section')
       //   .filter({relation: 'plan', record: {type: 'plan', id: p}})
       //   .sort('sequencenum'));
-      sections = sections.sort(
-        (i, j) => i.attributes.sequencenum - j.attributes.sequencenum
-      );
+      sections = sections
+        .filter(s => s.attributes)
+        .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
       if (sections != null) {
         for (let secIndex = 0; secIndex < sections.length; secIndex += 1) {
           let sec = sections[secIndex] as Section;
