@@ -120,7 +120,7 @@ const getAssignments = (
   var sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
-    .filter(s => related(s, 'plan') === plan)
+    .filter(s => related(s, 'plan') === plan && s.attributes)
     .sort(sectionCompare);
 
   plansections.forEach(function(section) {
