@@ -665,7 +665,7 @@ export function ResponsiveDrawer(props: IProps) {
       {alertOpen ? (
         <Confirm
           title={t.planUnsaved}
-          text={t.looseData}
+          text={t.loseData}
           yesResponse={handleUnsaveConfirmed}
           noResponse={handleUnsaveRefused}
         />
