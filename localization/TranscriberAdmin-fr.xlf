@@ -878,6 +878,18 @@
 				<target>Déconnexion</target>
 			</segment>
 		</unit>
+      <unit id="main.planUnsaved">
+         <segment>
+			<source>Plan Unsaved</source>
+			<target>Programme Non Sauvegardé</target>
+         </segment>
+      </unit>
+      <unit id="main.loseData">
+         <segment>
+			<source>Do you want to leave this page and lose your changes?</source>
+			<target>Voulez-vous quitter cette page et perdre vos modifications ?</target>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>

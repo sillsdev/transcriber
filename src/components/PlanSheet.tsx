@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -76,6 +76,7 @@ interface IProps extends IStateProps {
   addPassage: () => void;
   addSection: () => void;
   lookupBook?: (book: string) => string;
+  setChanged?: (v: boolean) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -93,6 +94,7 @@ export function PlanSheet(props: IProps) {
     addPassage,
     addSection,
     paste,
+    setChanged,
   } = props;
   const classes = useStyles();
   const [message, setMessage] = useState(<></>);
@@ -101,6 +103,9 @@ export function PlanSheet(props: IProps) {
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const [passageMediaVisible, setPassageMediaVisible] = useState(false);
+  const suggestionRef = useRef<Array<OptionType>>();
+  const listRef = useRef<Array<string>>();
+  const blurRef = useRef<() => void>();
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -206,13 +211,40 @@ export function PlanSheet(props: IProps) {
     return lines.map(clipBoard => clipBoard.split('\t'));
   };
 
-  const bookEditor = (props: any) => (
-    <BookSelect suggestions={bookSuggestions} {...props} />
-  );
+  const handleUp = () => {
+    if (blurRef.current) {
+      blurRef.current();
+      blurRef.current = undefined;
+    }
+  };
 
-  const textEditor = (props: any) => (
-    <SheetText {...props} initValue={props.value} />
-  );
+  const cellRender = (props: any) => <td {...props} onMouseUp={handleUp} />;
+
+  const bookEditor = (props: any) => {
+    if (setChanged) setChanged(true);
+    return (
+      <BookSelect
+        suggestions={suggestionRef.current ? suggestionRef.current : []}
+        {...props}
+        current={(listRef.current ? listRef.current : []).indexOf(props.value)}
+      />
+    );
+  };
+
+  const handleSetCommit = (method: () => void) => {
+    blurRef.current = method;
+  };
+
+  const textEditor = (props: any) => {
+    if (setChanged) setChanged(true);
+    return (
+      <SheetText
+        {...props}
+        initValue={props.value}
+        setCommit={handleSetCommit}
+      />
+    );
+  };
 
   const isNum = (value: string | number) =>
     isNumber(value) || /^[0-9]$/.test(value);
@@ -261,6 +293,11 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, check, bookCol]);
 
+  useEffect(() => {
+    suggestionRef.current = bookSuggestions;
+    listRef.current = bookSuggestions ? bookSuggestions.map(v => v.label) : [];
+  }, [bookSuggestions]);
+
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -308,8 +345,6 @@ export function PlanSheet(props: IProps) {
             <MenuItem onClick={handleConfirmAction('Delete')}>
               {t.delete}
             </MenuItem>
-            <MenuItem onClick={handleConfirmAction('Move')}>{t.move}</MenuItem>
-            <MenuItem onClick={handleConfirmAction('Copy')}>{t.copy}</MenuItem>
             <MenuItem onClick={handlePassageMedia(true)}>
               {t.attachMedia}
             </MenuItem>
@@ -335,6 +370,7 @@ export function PlanSheet(props: IProps) {
           onContextMenu={handleContextMenu}
           onCellsChanged={handleCellsChanged}
           parsePaste={handlePaste}
+          cellRenderer={cellRender}
         />
       </div>
       <PassageMedia

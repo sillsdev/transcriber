@@ -199,6 +199,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projectSummary": string;
     "addProject": string;
     "logout": string;
+    "planUnsaved": string;
+    "loseData": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {

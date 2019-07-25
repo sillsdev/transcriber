@@ -274,7 +274,7 @@ interface IProps {
   placeholder?: string;
   current?: number | null;
   rightSize?: boolean;
-  onCommit?: (newValue: string) => void;
+  onCommit?: (newValue: string, callback: () => void) => void;
 }
 
 export function SingleReactSelect(props: IProps) {
@@ -304,9 +304,10 @@ export function SingleReactSelect(props: IProps) {
   }, [suggestions, current]);
 
   function handleChangeSingle(value: ValueType<OptionType>) {
-    setSingle(value);
     if (onCommit && value) {
-      onCommit((value as OptionType).value);
+      onCommit((value as OptionType).value, () => setSingle(value));
+    } else {
+      setSingle(value);
     }
   }
 

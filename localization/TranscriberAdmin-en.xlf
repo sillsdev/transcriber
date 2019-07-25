@@ -880,6 +880,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.planUnsaved">
+         <segment>
+            <source>Plan Unsaved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.loseData">
+         <segment>
+            <source>Do you want to leave this page and lose your changes?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>

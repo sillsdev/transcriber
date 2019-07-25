@@ -41,10 +41,13 @@ interface IStateProps {
 interface IProps extends IStateProps {
   bookCol: number;
   changeTab?: (v: number) => void;
+  setChanged?: (v: boolean) => void;
+  checkSaved: (method: () => void) => void;
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  const { t, changeTab, bookCol } = props;
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const { t, changeTab, bookCol, setChanged, checkSaved } = props;
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
 
@@ -60,7 +63,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       <AppBar position="static" color="default">
         <Tabs
           value={tab}
-          onChange={handleChange}
+          onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}
           indicatorColor="primary"
           textColor="primary"
           variant="scrollable"

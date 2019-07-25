@@ -60,7 +60,9 @@ interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
 }
 
-interface IProps extends IStateProps, IDispatchProps, WithDataProps {}
+interface IProps extends IStateProps, IDispatchProps, WithDataProps {
+  setChanged?: (v: boolean) => void;
+}
 
 export function ScriptureTable(props: IProps) {
   const {
@@ -73,6 +75,7 @@ export function ScriptureTable(props: IProps) {
     fetchBooks,
     updateStore,
     queryStore,
+    setChanged,
   } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
@@ -188,6 +191,7 @@ export function ScriptureTable(props: IProps) {
     return userBookDesUc;
   };
   const handlePaste = (rows: string[][]) => {
+    if (setChanged) setChanged(true);
     if (validTable(rows)) {
       const startRow = /^[0-9]*$/.test(rows[0][0]) ? 0 : 1;
       setData([
@@ -327,6 +331,7 @@ export function ScriptureTable(props: IProps) {
         }
       }
     }
+    if (setChanged) setChanged(false);
   };
 
   useEffect(() => {
@@ -448,6 +453,7 @@ export function ScriptureTable(props: IProps) {
         updateData={updateData}
         paste={handlePaste}
         lookupBook={lookupBook}
+        setChanged={setChanged}
         t={s}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />

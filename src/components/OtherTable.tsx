@@ -47,10 +47,12 @@ interface IStateProps {
   s: IPlanSheetStrings;
 }
 
-interface IProps extends IStateProps, WithDataProps {}
+interface IProps extends IStateProps, WithDataProps {
+  setChanged?: (v: boolean) => void;
+}
 
 export function OtherTable(props: IProps) {
-  const { t, s, updateStore, queryStore } = props;
+  const { t, s, updateStore, queryStore, setChanged } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
@@ -148,6 +150,7 @@ export function OtherTable(props: IProps) {
     return true;
   };
   const handlePaste = (rows: string[][]) => {
+    if (setChanged) setChanged(true);
     if (validTable(rows)) {
       const startRow = /^[0-9]*$/.test(rows[0][0]) ? 0 : 1;
       setData([
@@ -277,6 +280,7 @@ export function OtherTable(props: IProps) {
         }
       }
     }
+    if (setChanged) setChanged(false);
   };
 
   useEffect(() => {
@@ -393,6 +397,7 @@ export function OtherTable(props: IProps) {
         addPassage={addPassage}
         updateData={updateData}
         paste={handlePaste}
+        setChanged={setChanged}
         t={s}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />

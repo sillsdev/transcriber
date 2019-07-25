@@ -1028,6 +1028,20 @@
 					<context context-type="sourcefile">Loading.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.planUnsaved">
+				<source>Plan Unsaved</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.loseData">
+				<source>Do you want to leave this page and lose your changes?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="transcriptionTab.section">
 				<source>Section</source>
 				<target/>

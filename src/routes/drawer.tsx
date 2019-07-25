@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 // import { bindActionCreators } from 'redux';
@@ -57,6 +57,7 @@ import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
 import Visualize from '../components/Visualize';
+import Confirm from '../components/AlertDialog';
 import logo from './transcriber10.png';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -206,12 +207,15 @@ export function ResponsiveDrawer(props: IProps) {
   const [addProject, setAddProject] = useState(false);
   const [title, setTitle] = useState(t.silTranscriberAdmin);
   const [view, setView] = useState('');
+  const [changed, setChanged] = useState(false);
+  const saveConfirm = useRef<() => any>();
+  const [alertOpen, setAlertOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const handleChoice = (choice: string) => () => {
+  const handleChoice = (choice: string) => {
     localStorage.removeItem('url');
     setAddProject(false);
     setChoice(slug(choice));
@@ -265,6 +269,28 @@ export function ResponsiveDrawer(props: IProps) {
     if (!/Close/i.test(what)) {
       setView(what);
     }
+  };
+
+  const checkSaved = (method: () => any) => () => {
+    checkSaved2(method);
+  };
+  const checkSaved2 = (method: () => any) => {
+    if (changed) {
+      saveConfirm.current = method;
+      setAlertOpen(true);
+    } else {
+      method();
+    }
+  };
+  const handleUnsaveConfirmed = () => {
+    if (saveConfirm.current) saveConfirm.current();
+    saveConfirm.current = undefined;
+    setAlertOpen(false);
+    setChanged(false);
+  };
+  const handleUnsaveRefused = () => {
+    saveConfirm.current = undefined;
+    setAlertOpen(false);
   };
 
   useEffect(() => {
@@ -448,7 +474,12 @@ export function ResponsiveDrawer(props: IProps) {
             <ReactSelect
               suggestions={orgOptions}
               current={curOrg}
-              onCommit={handleCommitOrg}
+              onCommit={(v: string, callback: () => void) =>
+                checkSaved2(() => {
+                  handleCommitOrg(v);
+                  callback();
+                })
+              }
             />
           </div>
         </div>
@@ -460,7 +491,7 @@ export function ResponsiveDrawer(props: IProps) {
             button
             key={text}
             selected={slug(text) === choice}
-            onClick={handleChoice(text)}
+            onClick={checkSaved(() => handleChoice(text))}
           >
             <ListItemIcon>
               {index % 2 === 0 ? <OrganizationIcon /> : <GroupIcon />}
@@ -484,7 +515,12 @@ export function ResponsiveDrawer(props: IProps) {
               <ReactSelect
                 suggestions={projOptions}
                 current={curProj}
-                onCommit={handleCommitProj}
+                onCommit={(v: string, callback: () => void) =>
+                  checkSaved2(() => {
+                    handleCommitProj(v);
+                    callback();
+                  })
+                }
               />
             </div>
           </div>
@@ -500,7 +536,7 @@ export function ResponsiveDrawer(props: IProps) {
                 button
                 key={text}
                 selected={slug(text) === choice}
-                onClick={handleChoice(text)}
+                onClick={checkSaved(() => handleChoice(text))}
               >
                 <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
                 <ListItemText primary={text} />
@@ -514,7 +550,7 @@ export function ResponsiveDrawer(props: IProps) {
                 button
                 key={text}
                 selected={slug(text) === choice}
-                onClick={handleChoice(text)}
+                onClick={checkSaved(() => handleChoice(text))}
               >
                 <ListItemIcon>
                   {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
@@ -546,8 +582,17 @@ export function ResponsiveDrawer(props: IProps) {
   components[slug(t.plans)] = (
     <PlanTable {...props} displaySet={handlePlanType} />
   );
-  components['scripture-plan'] = <PlanTabs {...props} />;
-  components['other-plan'] = <PlanTabs {...props} bookCol={-1} />;
+  components['scripture-plan'] = (
+    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSaved2} />
+  );
+  components['other-plan'] = (
+    <PlanTabs
+      {...props}
+      bookCol={-1}
+      setChanged={setChanged}
+      checkSaved={checkSaved2}
+    />
+  );
   components[slug(t.team)] = 'team';
   components[slug(t.settings)] = (
     <ProjectSettings
@@ -581,7 +626,9 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <UserMenu action={handleUserMenuAction} />
+          <UserMenu
+            action={(v: string) => checkSaved2(() => handleUserMenuAction(v))}
+          />
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="Project folders">
@@ -615,6 +662,16 @@ export function ResponsiveDrawer(props: IProps) {
         </Hidden>
       </nav>
       <main className={classes.content}>{components[content]}</main>
+      {alertOpen ? (
+        <Confirm
+          title={t.planUnsaved}
+          text={t.looseData}
+          yesResponse={handleUnsaveConfirmed}
+          noResponse={handleUnsaveRefused}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
