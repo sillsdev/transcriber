@@ -1166,6 +1166,11 @@
 				<target>Aucune colonne visible</target>
 			</segment>
 	</unit>	    
-
+    <unit id="treeChart.noData">
+         <segment>
+			<source>No Transcription Data Yet</source>
+			<target>Pas encore de données de transcription</target>
+         </segment>
+      </unit>
    </file>
 </xliff>

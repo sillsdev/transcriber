@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { IState, ITreeChartStrings } from '../model';
 import Paper from '@material-ui/core/Paper';
 import { RowDetailState } from '@devexpress/dx-react-grid';
 import { scaleBand } from '@devexpress/dx-chart-core';
@@ -18,6 +19,9 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
 import './TreeChart.css';
+import { Typography } from '@material-ui/core';
+import localStrings from '../selector/localize';
+import { connect } from 'react-redux';
 
 const detailContainerStyles = (theme: Theme) =>
   createStyles({
@@ -156,6 +160,26 @@ const gridDetailContainer: any = (data1: any, data2: any) =>
     gridDetailContainerBase(data1, data2)
   );
 
+interface IStateProps {
+  t: ITreeChartStrings;
+}
+
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'treeChart' }),
+});
+
+const NoDataCell = connect(mapStateToProps)(
+  ({ value, style, t, ...restProps }: any) => {
+    return (
+      <Table.Cell {...restProps} style={{ ...style }} value>
+        <Typography variant="h6" align="center">
+          {t.noData}
+        </Typography>
+      </Table.Cell>
+    );
+  }
+) as any;
+
 export interface IPlanRow {
   plan: string;
 }
@@ -202,7 +226,7 @@ export default class TreeChart extends React.PureComponent<
         <Grid rows={rows} columns={columns}>
           {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
           <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
-          <Table />
+          <Table noDataCellComponent={NoDataCell} />
           <TableHeaderRow />
           <TableRowDetail
             contentComponent={gridDetailContainer(data1, data2)}

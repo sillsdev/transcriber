@@ -273,6 +273,10 @@ export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
     "NoColumns": string;
 };
 
+export interface ITreeChartStrings extends Localize.LocalizedStringsMethods {
+    "noData": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -301,5 +305,6 @@ export interface ILocalizedStrings {
 	groupAdd: IGroupAddStrings;
 	groupSettings: IGroupSettingsStrings;
 	shapingTable: IShapingTableStrings;
+	treeChart: ITreeChartStrings;
 	[key: string]: any;
 };

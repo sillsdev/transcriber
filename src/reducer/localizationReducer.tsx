@@ -303,6 +303,11 @@ const initialState = {
 			"NoColumns": "No columns visible",
 		}
 	}),
+	"treeChart": new LocalizedStrings({
+		"en": {
+			"noData": "No Transcription Data Yet",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -336,6 +341,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"groupAdd" : new LocalizedStrings(action.payload.data.groupAdd),
 				"groupSettings" : new LocalizedStrings(action.payload.data.groupSettings),
 				"shapingTable" : new LocalizedStrings(action.payload.data.shapingTable),
+				"treeChart" : new LocalizedStrings(action.payload.data.treeChart),
 			};
 		case SET_LANGUAGE:
 			return {

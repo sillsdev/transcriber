@@ -1186,5 +1186,11 @@
             <target/>
          </segment>
       </unit>
+      <unit id="treeChart.noData">
+         <segment>
+            <source>No Transcription Data Yet</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

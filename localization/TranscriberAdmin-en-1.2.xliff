@@ -1385,6 +1385,13 @@
 					<context context-type="sourcefile">shapingTable.tsx</context>
 				</context-group>
 			</trans-unit>		
+			<trans-unit id="treeChart.noData">
+				<source>No Transcription Data Yet</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">treeChart.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
