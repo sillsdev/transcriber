@@ -137,9 +137,6 @@ const initialState = {
 			"group": "Group",
 			"transcriber": "Transcriber",
 			"reviewer": "Reviewer",
-			"group": "Group",
-			"transcriber": "Transcriber",
-			"reviewer": "Reviewer",
 		}
 	}),
 	"assignSection": new LocalizedStrings({

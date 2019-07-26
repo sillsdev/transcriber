@@ -120,9 +120,6 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "group": string;
     "transcriber": string;
     "reviewer": string;
-    "group": string;
-    "transcriber": string;
-    "reviewer": string;
 };
 
 export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {

@@ -594,27 +594,7 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="assignmentTable.reviewer">
-				<source>Reviewer</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">assignmentTable.tsx</context>
-				</context-group>
-			</trans-unit>			
-			<trans-unit id="assignmentTable.group">
-				<source>Group</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">assignmentTable.tsx</context>
-				</context-group>
-			</trans-unit>			
-			<trans-unit id="assignmentTable.transcriber">
-				<source>Transcriber</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">assignmentTable.tsx</context>
-				</context-group>
-			</trans-unit>
+
 			<trans-unit id="assignmentTable.reviewer">
 				<source>Reviewer</source>
 				<target/>
