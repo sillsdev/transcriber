@@ -28,6 +28,7 @@ import ShapingTable from './ShapingTable';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
+import 'moment/locale/fr';
 import { remoteIdNum } from '../utils';
 import { useGlobal } from 'reactn';
 import { keyMap } from '../schema';
@@ -338,7 +339,7 @@ export function MediaTab(props: IProps) {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
       // wait to do this to give time for duration calc
       setTimeout(() => {
-        setMessage(<span>Upload complete.</span>);
+        setMessage(<span>{t.uploadComplete}</span>);
         uploadComplete();
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {

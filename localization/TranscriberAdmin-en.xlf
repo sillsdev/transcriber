@@ -688,6 +688,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.uploadComplete">
+         <segment>
+            <source>Upload complete.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.planName">
          <segment>
             <source>Plan</source>
@@ -1153,6 +1159,12 @@
       <unit id="groupSettings.noProjects">
          <segment>
             <source>There are no projects that use this group.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.NoColumns">
+         <segment>
+            <source>No columns visible</source>
             <target/>
          </segment>
       </unit>

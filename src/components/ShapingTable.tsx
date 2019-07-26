@@ -37,6 +37,9 @@ import {
   TableSelection,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
+import { IState, IShapingTableStrings } from '../model';
+import localStrings from '../selector/localize';
+import { connect } from 'react-redux';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -139,8 +142,10 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
     {...props}
   />
 );
-
-interface IProps {
+interface IStateProps {
+  t: IShapingTableStrings;
+}
+interface IProps extends IStateProps {
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
@@ -153,8 +158,9 @@ interface IProps {
   select?: (checks: Array<number>) => void;
 }
 
-export default function ShapingTable(props: IProps) {
+export function ShapingTable(props: IProps) {
   const {
+    t,
     columns,
     columnWidths,
     columnSorting,
@@ -173,7 +179,7 @@ export default function ShapingTable(props: IProps) {
     }
   };
   const noRow = () => <></>;
-  const noCols = () => <span>No Columns Showing</span>;
+  const noCols = () => <span>t.NoColumns</span>;
   return (
     <Grid rows={rows} columns={columns}>
       <FilteringState
@@ -238,3 +244,8 @@ export default function ShapingTable(props: IProps) {
     </Grid>
   );
 }
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'shapingTable' }),
+});
+
+export default (connect(mapStateToProps)(ShapingTable) as any) as any;

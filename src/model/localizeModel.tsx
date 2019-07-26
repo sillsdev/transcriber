@@ -161,6 +161,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "changeVersion": string;
     "attachPassage": string;
     "uploadMedia": string;
+    "uploadComplete": string;
     "planName": string;
     "fileName": string;
     "sectionId": string;
@@ -265,6 +266,10 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "noProjects": string;
 };
 
+export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
+    "NoColumns": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -292,5 +297,6 @@ export interface ILocalizedStrings {
 	groupTable: IGroupTableStrings;
 	groupAdd: IGroupAddStrings;
 	groupSettings: IGroupSettingsStrings;
+	shapingTable: IShapingTableStrings;
 	[key: string]: any;
 };
