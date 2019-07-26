@@ -295,7 +295,6 @@ export function AssignmentTable(props: IProps) {
           >
             {t.delete}
           </Button>
-
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
