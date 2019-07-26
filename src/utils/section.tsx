@@ -1,5 +1,6 @@
 import { Section, User } from '../model';
 import { related } from '.';
+import { numCompare } from './sort';
 
 export function sectionReviewer(s: Section, users: Array<User>) {
   var user = users.filter(u => u.id === related(s, 'reviewer'));
@@ -30,9 +31,7 @@ export function updatableSection(sectionIn: Section, updatedattributes: any) {
   delete section.relationships;
   return section;
 }
-const numCompare = (a: number, b: number) => {
-  return a - b;
-};
+
 export function sectionCompare(a: Section, b: Section) {
   return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
 }

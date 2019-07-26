@@ -41,6 +41,7 @@ export default function(state = initialState, action: any) {
       return {
         ...state,
         current: 0,
+        files: [],
         loaded: false,
       };
     default:

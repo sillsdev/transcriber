@@ -27,6 +27,7 @@ import GroupAdd from '../components/GroupAdd';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
 import { remoteIdNum } from '../utils';
+import { numCompare } from '../utils/sort';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -147,9 +148,7 @@ export function GroupTable(props: IProps) {
     { columnName: 'projects', width: 100 },
     { columnName: 'members', width: 100 },
   ];
-  const numCompare = (a: number, b: number) => {
-    return a - b;
-  };
+
   const columnSorting = [
     { columnName: 'projects', compare: numCompare },
     { columnName: 'members', compare: numCompare },

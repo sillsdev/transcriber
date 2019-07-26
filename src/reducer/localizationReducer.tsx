@@ -182,6 +182,8 @@ const initialState = {
 			"changeVersion": "Change Version",
 			"attachPassage": "Attach Passage",
 			"uploadMedia": "Upload Media",
+			"uploadComplete": "Upload complete.",
+			"planName": "Plan",
 			"fileName": "File Name",
 			"sectionId": "Section Id",
 			"sectionName": "Section Name",
@@ -293,6 +295,11 @@ const initialState = {
 			"noProjects": "There are no projects that use this group.",
 		}
 	}),
+	"shapingTable": new LocalizedStrings({
+		"en": {
+			"NoColumns": "No columns visible",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -325,6 +332,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"groupTable" : new LocalizedStrings(action.payload.data.groupTable),
 				"groupAdd" : new LocalizedStrings(action.payload.data.groupAdd),
 				"groupSettings" : new LocalizedStrings(action.payload.data.groupSettings),
+				"shapingTable" : new LocalizedStrings(action.payload.data.shapingTable),
 			};
 		case SET_LANGUAGE:
 			return {

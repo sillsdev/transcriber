@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
@@ -10,6 +9,7 @@ import {
   PassageSection,
   Section,
   IMediaTabStrings,
+  Plan,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
@@ -30,6 +30,9 @@ import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
 import { remoteIdNum } from '../utils';
+import { useGlobal } from 'reactn';
+import { keyMap } from '../schema';
+import { dateCompare, numCompare } from '../utils/sort';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,6 +62,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IRow {
+  planid: string;
+  id: string;
+  planName: string;
   fileName: string;
   section: string;
   reference: string;
@@ -67,7 +73,6 @@ interface IRow {
   version: string;
   date: string;
 }
-
 const getSection = (section: Section[]) => {
   const sectionId =
     section.length > 0 && section[0].attributes.sequencenum
@@ -88,7 +93,7 @@ interface ILatest {
 }
 
 const getMedia = (
-  plan: string,
+  projectplans: Array<Plan>,
   mediaFiles: Array<MediaFile>,
   passages: Array<Passage>,
   passageSections: Array<PassageSection>,
@@ -101,12 +106,17 @@ const getMedia = (
       ? Math.max(latest[name], f.attributes.versionNumber)
       : f.attributes.versionNumber;
   });
-  const media = mediaFiles.filter(
-    f =>
-      related(f, 'plan') === plan &&
-      latest[related(f, 'plan') + f.attributes.originalFile] ===
-        f.attributes.versionNumber
-  );
+  var media: MediaFile[];
+  if (projectplans && projectplans.length > 0) {
+    //all plans in current project
+    media = mediaFiles.filter(
+      f =>
+        projectplans.filter(p => p.id === related(f, 'plan')).length > 0 &&
+        latest[related(f, 'plan') + f.attributes.originalFile] ===
+          f.attributes.versionNumber
+    );
+  } else media = [];
+
   const rowData = media.map(f => {
     const passageId = related(f, 'passage');
     const passage = passageId ? passages.filter(p => p.id === passageId) : [];
@@ -127,6 +137,10 @@ const getMedia = (
       : '';
     const today = moment().format('YYYY-MM-DD');
     return {
+      planid: related(f, 'plan'),
+      planName: projectplans.filter(p => p.id === related(f, 'plan'))[0]
+        .attributes.name,
+      id: f.id,
       fileName: f.attributes.originalFile,
       section: getSection(section),
       reference: getReference(passage),
@@ -168,6 +182,7 @@ interface IProps
     WithDataProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
+  projectplans: Plan[];
 }
 
 export function MediaTab(props: IProps) {
@@ -185,11 +200,12 @@ export function MediaTab(props: IProps) {
     passageSections,
     sections,
     queryStore,
+    updateStore,
     auth,
+    projectplans,
   } = props;
   const classes = useStyles();
-  const [keyMap] = useGlobal('keyMap');
-  const [plan] = useGlobal('plan');
+  const [plan, setPlan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
@@ -200,6 +216,7 @@ export function MediaTab(props: IProps) {
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
+    { name: 'planName', title: t.planName },
     { name: 'fileName', title: t.fileName },
     { name: 'section', title: t.section },
     { name: 'reference', title: t.reference },
@@ -209,6 +226,7 @@ export function MediaTab(props: IProps) {
     { name: 'date', title: t.date },
   ];
   const columnWidths = [
+    { columnName: 'planName', width: 150 },
     { columnName: 'fileName', width: 150 },
     { columnName: 'section', width: 150 },
     { columnName: 'reference', width: 150 },
@@ -217,22 +235,15 @@ export function MediaTab(props: IProps) {
     { columnName: 'version', width: 100 },
     { columnName: 'date', width: 100 },
   ];
-  const numCompare = (a: number, b: number) => {
-    return a - b;
-  };
-  const dateCompare = (a: string, b: string) => {
-    const aDate = moment(a).isValid() ? moment(a) : moment(a, 'LT');
-    const bDate = moment(b).isValid() ? moment(b) : moment(b, 'LT');
-    const aIso = aDate.toISOString();
-    const bIso = bDate.toISOString();
-    return aIso > bIso ? 1 : aIso < bIso ? -1 : 0;
-  };
+  const defaultHiddenColumnNames: string[] = [];
+
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
     { columnName: 'size', compare: numCompare },
     { columnName: 'version', compare: numCompare },
     { columnName: 'date', compare: dateCompare },
   ];
+
   const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -272,6 +283,25 @@ export function MediaTab(props: IProps) {
         setCheck(Array<number>());
       }
     }
+    if (confirmAction === 'Delete') {
+      check.forEach(i => {
+        var versions = mediaFiles.filter(
+          f =>
+            related(f, 'plan') === data[i].planid &&
+            f.attributes.originalFile === data[i].fileName
+        );
+        versions.forEach(v => {
+          //console.log('Delete media ' + v.id);
+          updateStore(t =>
+            t.removeRecord({
+              type: 'mediafile',
+              id: v.id,
+            })
+          );
+        });
+      });
+      setCheck(Array<number>());
+    }
     setConfirmAction('');
   };
   const handleActionRefused = () => {
@@ -287,16 +317,30 @@ export function MediaTab(props: IProps) {
   const handleFilter = () => setFilter(!filter);
 
   useEffect(() => {
+    if (projectplans.length > 1) {
+      if (defaultHiddenColumnNames.length > 0)
+        //assume planName is only one
+        defaultHiddenColumnNames.pop();
+    } else if (projectplans.length === 1) {
+      if (plan === '') {
+        setPlan(projectplans[0].id); //set the global plan
+      }
+      defaultHiddenColumnNames.push('planName');
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [projectplans, plan]);
+
+  useEffect(() => {
     setData(
-      getMedia(plan as string, mediaFiles, passages, passageSections, sections)
+      getMedia(projectplans, mediaFiles, passages, passageSections, sections)
     );
-  }, [plan, mediaFiles, passages, passageSections, sections]);
+  }, [projectplans, mediaFiles, passages, passageSections, sections]);
 
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
-      setMessage(<span>Upload complete.</span>);
       // wait to do this to give time for duration calc
       setTimeout(() => {
+        setMessage(<span>{t.uploadComplete}</span>);
         uploadComplete();
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
@@ -311,7 +355,7 @@ export function MediaTab(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [uploadList, loaded, currentlyLoading, plan, auth]);
+  }, [uploadList, loaded, currentlyLoading, projectplans, auth]);
 
   useEffect(() => {
     if (
@@ -336,28 +380,32 @@ export function MediaTab(props: IProps) {
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="upload"
-            aria-label={t.uploadMedia}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleUpload}
-          >
-            {t.uploadMedia}
-            <AddIcon className={classes.icon} />
-          </Button>
-          <Button
-            key="Attach"
-            aria-label={t.attachPassage}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handlePassageMedia(true)}
-          >
-            {t.attachPassage}
-            <AddIcon className={classes.icon} />
-          </Button>
+          {projectplans.length === 1 && (
+            <Button
+              key="upload"
+              aria-label={t.uploadMedia}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleUpload}
+            >
+              {t.uploadMedia}
+              <AddIcon className={classes.icon} />
+            </Button>
+          )}
+          {projectplans.length === 1 && (
+            <Button
+              key="Attach"
+              aria-label={t.attachPassage}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handlePassageMedia(true)}
+            >
+              {t.attachPassage}
+              <AddIcon className={classes.icon} />
+            </Button>
+          )}
           <Button
             key="action"
             aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
@@ -408,10 +456,15 @@ export function MediaTab(props: IProps) {
           columns={columnDefs}
           columnWidths={columnWidths}
           columnSorting={columnSorting}
+          sorting={[
+            { columnName: 'planName', direction: 'asc' },
+            { columnName: 'fileName', direction: 'asc' },
+          ]}
           numCols={numCols}
           rows={data}
           select={handleCheck}
           shaping={filter}
+          defaultHiddenColumnNames={defaultHiddenColumnNames}
         />
       </div>
       <MediaUpload

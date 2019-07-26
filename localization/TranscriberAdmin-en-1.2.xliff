@@ -804,6 +804,20 @@
 					<context context-type="sourcefile">MediaTab.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="mediaTab.uploadComplete">
+				<source>Upload complete.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>	
+			<trans-unit id="mediaTab.planName">
+				<source>Plan</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="mediaTab.fileName">
 				<source>File Name</source>
 				<target/>
@@ -1343,6 +1357,13 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="shapingTable.NoColumns">
+				<source>No columns visible</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">shapingTable.tsx</context>
+				</context-group>
+			</trans-unit>		
 		</body>
 	</file>
 </xliff>

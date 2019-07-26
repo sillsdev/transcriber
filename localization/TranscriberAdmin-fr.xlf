@@ -686,6 +686,18 @@
 				<target>Charger le fichier audio</target>
 			</segment>
 		</unit>
+		<unit id="mediaTab.uploadComplete">
+			<segment>
+				<source>Upload Complete</source>
+				<target>Charger achevées</target>
+			</segment>
+		</unit>	    
+		<unit id="mediaTab.planName">
+         <segment>
+            <source>Plan</source>
+            <target>Programme</target>
+         </segment>
+      	</unit>
 		<unit id="mediaTab.fileName">
 			<segment>
 				<source>File Name</source>
@@ -1149,5 +1161,12 @@
          	<target>Aucun projet n'utilise ce groupe.</target>
          </segment>
       </unit>
+	<unit id="shapingTable.NoColumns">
+			<segment>
+				<source>No columns visible</source>
+				<target>Aucune colonne visible</target>
+			</segment>
+	</unit>	    
+
    </file>
 </xliff>

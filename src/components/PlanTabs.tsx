@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IPlanTabsStrings } from '../model';
+import { IState, IPlanTabsStrings, Plan } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
@@ -10,6 +10,8 @@ import OtherTable from '../components/OtherTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,8 +39,10 @@ function TabContainer(props: IContainerProps) {
 interface IStateProps {
   t: IPlanTabsStrings;
 }
-
-interface IProps extends IStateProps {
+interface IRecordProps {
+  plans: Array<Plan>;
+}
+interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
   changeTab?: (v: number) => void;
   setChanged?: (v: boolean) => void;
@@ -47,9 +51,10 @@ interface IProps extends IStateProps {
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const { t, changeTab, bookCol, setChanged, checkSaved } = props;
+  const { t, changeTab, bookCol, setChanged, checkSaved, plans } = props;
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
+  const [plan] = useGlobal('plan');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -86,7 +91,10 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       )}
       {tab === 1 && (
         <TabContainer>
-          <MediaTab {...props} />
+          <MediaTab
+            {...props}
+            projectplans={plans.filter(p => p.id === plan)}
+          />
         </TabContainer>
       )}
       {tab === 2 && (
@@ -102,9 +110,14 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     </div>
   );
 };
+const mapRecordsToProps = {
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
+};
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planTabs' }),
 });
 
-export default connect(mapStateToProps)(ScrollableTabsButtonAuto) as any;
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  ScrollableTabsButtonAuto
+) as any) as any;

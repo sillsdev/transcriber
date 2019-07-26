@@ -22,6 +22,7 @@ import {
   Sorting,
   DataTypeProvider,
   DataTypeProviderProps,
+  TableColumnVisibility,
 } from '@devexpress/dx-react-grid';
 import {
   DragDropProvider,
@@ -36,6 +37,9 @@ import {
   TableSelection,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
+import { IState, IShapingTableStrings } from '../model';
+import localStrings from '../selector/localize';
+import { connect } from 'react-redux';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -138,11 +142,14 @@ const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
     {...props}
   />
 );
-
-interface IProps {
+interface IStateProps {
+  t: IShapingTableStrings;
+}
+interface IProps extends IStateProps {
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
+  defaultHiddenColumnNames?: Array<string>;
   dataCell?: any;
   numCols?: Array<string>;
   rows: Array<any>;
@@ -151,11 +158,13 @@ interface IProps {
   select?: (checks: Array<number>) => void;
 }
 
-export default function ShapingTable(props: IProps) {
+export function ShapingTable(props: IProps) {
   const {
+    t,
     columns,
     columnWidths,
     columnSorting,
+    defaultHiddenColumnNames,
     dataCell,
     numCols,
     rows,
@@ -170,7 +179,7 @@ export default function ShapingTable(props: IProps) {
     }
   };
   const noRow = () => <></>;
-
+  const noCols = () => <span>{t.NoColumns}</span>;
   return (
     <Grid rows={rows} columns={columns}>
       <FilteringState
@@ -200,6 +209,10 @@ export default function ShapingTable(props: IProps) {
       <DragDropProvider />
 
       {dataCell ? <Table cellComponent={dataCell} /> : <Table />}
+      <TableColumnVisibility
+        defaultHiddenColumnNames={defaultHiddenColumnNames}
+        emptyMessageComponent={noCols}
+      />
       <TableColumnResizing
         minColumnWidth={50}
         defaultColumnWidths={columnWidths}
@@ -231,3 +244,8 @@ export default function ShapingTable(props: IProps) {
     </Grid>
   );
 }
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'shapingTable' }),
+});
+
+export default (connect(mapStateToProps)(ShapingTable) as any) as any;

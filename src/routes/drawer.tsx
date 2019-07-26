@@ -390,7 +390,9 @@ export function ResponsiveDrawer(props: IProps) {
         setPlan('');
       } else if (choice !== slug(t.plans) || !plan) {
         history.push('/main/' + orgId + '/' + slug(choice) + '/' + projId);
-        setPlan('');
+        if (choice !== slug(t.media)) {
+          setPlan('');
+        }
         setTab(0);
       } else {
         const planId = remoteId('plan', plan, keyMap);
@@ -579,7 +581,12 @@ export function ResponsiveDrawer(props: IProps) {
   let components: componentType = {};
   components[slug(t.organization)] = <OrganizationTable {...props} />;
   components[slug(t.usersAndGroups)] = <GroupTabs {...props} />;
-  components[slug(t.media)] = <MediaTab {...props} />;
+  components[slug(t.media)] = (
+    <MediaTab
+      {...props}
+      projectplans={plans.filter(p => related(p, 'project') === project)}
+    />
+  );
   components[slug(t.plans)] = (
     <PlanTable {...props} displaySet={handlePlanType} />
   );
