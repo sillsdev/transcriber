@@ -443,7 +443,6 @@
 			<segment>
 				<source>Assign Section</source>
 				<target>Assigner un ensemble</target>
-
 			</segment>
 		</unit>
 		<unit id="assignmentTable.delete">

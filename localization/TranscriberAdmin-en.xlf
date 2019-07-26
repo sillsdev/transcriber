@@ -514,6 +514,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="assignmentTable.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.reviewer">
+         <segment>
+            <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="assignSection.title">
          <segment>
             <source>Assign sections to Users</source>
