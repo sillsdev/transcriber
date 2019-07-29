@@ -477,7 +477,7 @@ export function ResponsiveDrawer(props: IProps) {
             <ReactSelect
               suggestions={orgOptions}
               current={curOrg}
-              onCommit={(v: string, callback: () => void) =>
+              onCommit={(v: string, e: any, callback: () => void) =>
                 checkSaved2(() => {
                   handleCommitOrg(v);
                   callback();
@@ -518,7 +518,7 @@ export function ResponsiveDrawer(props: IProps) {
               <ReactSelect
                 suggestions={projOptions}
                 current={curProj}
-                onCommit={(v: string, callback: () => void) =>
+                onCommit={(v: string, e: any, callback: () => void) =>
                   checkSaved2(() => {
                     handleCommitProj(v);
                     callback();

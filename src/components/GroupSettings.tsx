@@ -184,8 +184,9 @@ export function GroupSettings(props: IProps) {
     setOpen(true);
   };
 
-  const handleCommit = (value: string) => {
+  const handleCommit = (value: string, e: any, method: () => void) => {
     setCurrentPerson(value);
+    method();
   };
 
   const handleAddMember = async () => {
