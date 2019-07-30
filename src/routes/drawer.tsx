@@ -43,6 +43,7 @@ import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
+import HelpIcon from '@material-ui/icons/Help';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
@@ -59,6 +60,7 @@ import GroupSettings from '../components/GroupSettings';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
 import logo from './transcriber10.png';
+import { API_CONFIG } from '../api-variable';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -80,6 +82,9 @@ const useStyles = makeStyles((theme: Theme) =>
         width: drawerWidth,
         flexShrink: 0,
       },
+    },
+    help: {
+      color: 'white',
     },
     header: {
       display: 'flex',
@@ -634,6 +639,11 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
+          <a href={API_CONFIG.help} target="_blank" rel="noopener noreferrer">
+            <IconButton>
+              <HelpIcon className={classes.help} />
+            </IconButton>
+          </a>
           <UserMenu
             action={(v: string) => checkSaved2(() => handleUserMenuAction(v))}
           />
