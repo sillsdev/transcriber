@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as actions from '../actions';
+import * as actions from '../store';
 import {
   IState,
   MediaFile,

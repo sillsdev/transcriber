@@ -1,8 +1,13 @@
-import { FETCH_BOOKS } from '../actions/types';
-import { OptionType } from '../components/ReactSelect';
-import { BookName, IBookNameData, BookNameMap } from '../model';
+import {
+  FETCH_BOOKS,
+  BookName,
+  IBookNameData,
+  BookNameMap,
+  BookNameMsgs,
+} from './types';
+import { OptionType } from '../../components/ReactSelect';
 
-const initialState = {
+export const bookCleanState = {
   loaded: false,
   suggestions: Array<OptionType>(),
   bookData: Array<BookName>(),
@@ -19,7 +24,10 @@ const makeMap = (books: BookName[]) => {
   return result;
 };
 
-export default function(state = initialState, action: any): IBookNameData {
+export default function(
+  state = bookCleanState,
+  action: BookNameMsgs
+): IBookNameData {
   switch (action.type) {
     case FETCH_BOOKS:
       return {

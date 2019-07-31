@@ -4,15 +4,17 @@ import {
   UPLOAD_ITEM_SUCCEEDED,
   UPLOAD_ITEM_FAILED,
   UPLOAD_COMPLETE,
-} from '../actions/types';
+  UploadMsgs,
+  IUploadState,
+} from './types';
 
-const initialState = {
+export const uploadCleanState = {
   current: 0,
   loaded: false,
-  files: [],
+  files: [] as any,
 };
 
-export default function(state = initialState, action: any) {
+export default function(state = uploadCleanState, action: UploadMsgs): IUploadState {
   switch (action.type) {
     case UPLOAD_LIST:
       return {
@@ -41,7 +43,7 @@ export default function(state = initialState, action: any) {
       return {
         ...state,
         current: 0,
-        files: [],
+        files: [] as any,
         loaded: false,
       };
     default:

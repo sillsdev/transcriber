@@ -18,7 +18,7 @@ import {
   Paper,
   LinearProgress,
 } from '@material-ui/core';
-import * as action from '../actions';
+import * as action from '../store';
 import logo from './transcriber9.png';
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -1,6 +1,6 @@
 {
   "name": "transcriber-admin",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "dependencies": {
     "@devexpress/dx-react-chart": "^2.0.0",
@@ -16,7 +16,6 @@
     "@orbit/indexeddb": "^0.15.25",
     "@orbit/jsonapi": "^0.15.25",
     "@orbit/store": "^0.15.25",
-    "@types/moment": "^2.13.0",
     "auth0-js": "^9.11.2",
     "aws-amplify": "^1.1.29",
     "axios": "^0.19.0",
@@ -35,6 +34,7 @@
     "react-select": "^3.0.4",
     "reactn": "^2.1.4",
     "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "typescript": "3.5.3"
@@ -68,11 +68,11 @@
     "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^8.0.5",
     "@types/auth0-js": "^9.10.2",
-    "@types/jest": "^24.0.15",
+    "@types/jest": "^24.0.16",
     "@types/js-base64": "^2.3.1",
     "@types/node": "12.6.8",
     "@types/react": "16.8.23",
-    "@types/react-dom": "16.8.4",
+    "@types/react-dom": "16.8.5",
     "@types/react-redux": "^7.1.1",
     "@types/react-router-dom": "^4.3.4",
     "@types/react-select": "^3.0.0",

@@ -1,18 +1,20 @@
-import { ILocalizedStrings } from './localizeModel';
-import { IBookNameData } from './bookName';
-import { User } from './user';
+import {
+  ILocalizedStrings,
+  IBookNameData,
+  User,
+  IOrbitState,
+  IUploadState,
+  IContextState,
+} from '.';
 
 export interface IState {
+  context: IContextState;
   strings: ILocalizedStrings;
   books: IBookNameData;
-  orbit: { loaded: boolean };
+  orbit: IOrbitState;
   who: {
     user: User;
     initials: string;
   };
-  upload: {
-    current: number;
-    loaded: boolean;
-    files: FileList;
-  };
+  upload: IUploadState;
 }

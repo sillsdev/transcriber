@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, IAccessStrings } from '../model';
 import localStrings from '../selector/localize';
-import * as action from '../actions/localizationActions';
+import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 // import { Button } from '@material-ui/core';
 // import Paper from '@material-ui/core/Paper';

@@ -1,7 +1,7 @@
 import Axios from 'axios';
-import { MediaFile } from '../model';
-import { API_CONFIG } from '../api-variable';
-import Auth from '../auth/Auth';
+import { API_CONFIG } from '../../api-variable';
+import Auth from '../../auth/Auth';
+import { MediaFile } from '../../model';
 import {
   UPLOAD_LIST,
   UPLOAD_ITEM_PENDING,

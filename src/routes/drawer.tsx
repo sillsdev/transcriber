@@ -11,7 +11,7 @@ import {
   Plan,
   Group,
 } from '../model';
-// import * as actions from '../actions';
+// import * as actions from '../store';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
