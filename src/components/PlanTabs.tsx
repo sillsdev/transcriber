@@ -6,7 +6,6 @@ import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
 import ScriptureTable from '../components/ScriptureTable';
-import OtherTable from '../components/OtherTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
@@ -83,9 +82,9 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       {tab === 0 && (
         <TabContainer>
           {bookCol !== -1 ? (
-            <ScriptureTable {...props} />
+            <ScriptureTable {...props} showBook={true} />
           ) : (
-            <OtherTable {...props} />
+            <ScriptureTable {...props} showBook={false} />
           )}
         </TabContainer>
       )}

@@ -31,7 +31,6 @@ import moment from 'moment';
 import 'moment/locale/fr';
 import { remoteIdNum } from '../utils';
 import { useGlobal } from 'reactn';
-import { keyMap } from '../schema';
 import { dateCompare, numCompare } from '../utils/sort';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -206,6 +205,7 @@ export function MediaTab(props: IProps) {
   } = props;
   const classes = useStyles();
   const [plan, setPlan] = useGlobal('plan');
+  const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
