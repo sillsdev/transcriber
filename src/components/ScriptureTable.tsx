@@ -116,7 +116,6 @@ export function ScriptureTable(props: IProps) {
     // ['','',2,'LUK',"1:8-10",''],
   );
   const [inData, setInData] = useState(Array<Array<any>>());
-
   const cols = {
     SectionSeq: 0,
     SectionnName: 1,
@@ -124,7 +123,6 @@ export function ScriptureTable(props: IProps) {
     Book: 3,
     Reference: 4,
     Title: 5,
-    Id: 6,
   };
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -156,9 +154,9 @@ export function ScriptureTable(props: IProps) {
   const addPassage = () => {
     const lastRow = data.length - 1; //FUTURE TODO? pass in section row?
     const sequencenum = (data[lastRow][cols.PassageSeq] || 0) + 1;
-    const book = data[lastRow][cols.Book] || '';
     var newRow;
     if (showBook) {
+      const book = data[lastRow][cols.Book] || '';
       newRow = ['', '', sequencenum, book, '', ''];
     } else {
       newRow = ['', '', sequencenum, '', ''];
@@ -270,7 +268,7 @@ export function ScriptureTable(props: IProps) {
         type: 'passage',
         attributes: {
           sequencenum: passageRow[cols.PassageSeq],
-          book: passageRow[cols.Book],
+          book: showBook ? passageRow[cols.Book] : '',
           reference: passageRow[cols.Reference],
           title: passageRow[cols.Title],
           position: 0,
@@ -305,23 +303,25 @@ export function ScriptureTable(props: IProps) {
     const updatePassage = async (rowIndex: number) => {
       const passageRow = rows[rowIndex];
       const inpRow = inData[rowIndex];
-      if (
-        passageRow[cols.PassageSeq] !== inpRow[cols.PassageSeq] ||
-        passageRow[cols.Book] !== inpRow[cols.Book] ||
-        passageRow[cols.Reference] !== inpRow[cols.Reference] ||
-        passageRow[cols.Title] !== inpRow[cols.Title]
-      ) {
+      var changed = false;
+      for (var i = 0; i < inpRow.length; i++) {
+        if (inpRow[i] != passageRow[i]) {
+          changed = true;
+          break;
+        }
+      }
+      if (changed) {
         let passage = (await queryStore(q =>
           q.findRecord(rowId[rowIndex])
         )) as Passage;
         passage.attributes.sequencenum = parseInt(passageRow[cols.PassageSeq]);
-        passage.attributes.book = passageRow[cols.Book];
+        if (showBook) passage.attributes.book = passageRow[cols.Book];
         passage.attributes.reference = passageRow[cols.Reference];
         passage.attributes.title = passageRow[cols.Title];
         delete passage.relationships;
         await updateStore(t => t.replaceRecord(passage));
         inpRow[cols.PassageSeq] = passage.attributes.sequencenum;
-        inpRow[cols.Book] = passage.attributes.book;
+        if (showBook) inpRow[cols.Book] = passage.attributes.book;
         inpRow[cols.Reference] = passage.attributes.reference;
         inpRow[cols.Title] = passage.attributes.title;
         await setInData(
@@ -408,7 +408,14 @@ export function ScriptureTable(props: IProps) {
       }
       return rowId[rowIndex];
     };
-
+    const cols = {
+      SectionSeq: 0,
+      SectionnName: 1,
+      PassageSeq: 2,
+      Book: showBook ? 3 : -1,
+      Reference: showBook ? 4 : 3,
+      Title: showBook ? 5 : 4,
+    };
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex += 1) {
       if (isSectionRow(rowId[rowIndex])) {
         if (!rowId[rowIndex].id) {
@@ -430,6 +437,12 @@ export function ScriptureTable(props: IProps) {
 
   useEffect(() => {
     if (showBook) fetchBooks(lang);
+    else {
+      /* reset column indices */
+      cols.Book = -1;
+      cols.Reference -= 1;
+      cols.Title -= 1;
+    }
     let initData = Array<Array<any>>();
     let rowIds = Array<ISequencedRecordIdentity>();
     const getPassage = async (
@@ -440,14 +453,26 @@ export function ScriptureTable(props: IProps) {
       let passage = passages.find(p => p.id === pId);
       if (passage != null) {
         if (!passage.attributes) return;
-        list.push([
-          '',
-          '',
-          passage.attributes.sequencenum,
-          passage.attributes.book,
-          passage.attributes.reference,
-          passage.attributes.title,
-        ]);
+        var newRow;
+        if (showBook) {
+          newRow = [
+            '',
+            '',
+            passage.attributes.sequencenum,
+            passage.attributes.book,
+            passage.attributes.reference,
+            passage.attributes.title,
+          ];
+        } else {
+          newRow = [
+            '',
+            '',
+            passage.attributes.sequencenum,
+            passage.attributes.reference,
+            passage.attributes.title,
+          ];
+        }
+        list.push(newRow);
         ids.push({
           type: 'passage',
           id: passage.id,
@@ -499,14 +524,26 @@ export function ScriptureTable(props: IProps) {
             id: sec.id,
             sequencenum: sec.attributes.sequencenum,
           });
-          initData.push([
-            sec.attributes.sequencenum,
-            sec.attributes.name,
-            '',
-            '',
-            '',
-            '',
-          ]);
+          var newRow;
+          if (showBook) {
+            newRow = [
+              sec.attributes.sequencenum,
+              sec.attributes.name,
+              '',
+              '',
+              '',
+              '',
+            ];
+          } else {
+            newRow = [
+              sec.attributes.sequencenum,
+              sec.attributes.name,
+              '',
+              '',
+              '',
+            ];
+          }
+          initData.push(newRow);
           await getPassageSection(sec);
         }
       }
