@@ -305,7 +305,7 @@ export function ScriptureTable(props: IProps) {
       const inpRow = inData[rowIndex];
       var changed = false;
       for (var i = 0; i < inpRow.length; i++) {
-        if (inpRow[i] != passageRow[i]) {
+        if (inpRow[i] !== passageRow[i]) {
           changed = true;
           break;
         }
