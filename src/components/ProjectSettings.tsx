@@ -19,9 +19,9 @@ import {
   Button,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import SnackBar from './SnackBar';
 import { related } from '../utils';
+import LanguagePicker from './LanguagePicker';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -150,34 +150,15 @@ export function ProjectSettings(props: IProps) {
   const handleGroupChange = (e: any) => {
     setProjectGroup(e.target.value);
   };
-  const handleBcp47Change = (e: any) => {
-    alert('Language Picker');
-  };
-  const handleLanguageNameChange = (e: any) => {
-    setLanguageName(e.target.value);
-  };
-  const handleDefaultFontChange = (e: any) => {
-    setDefaultFont(e.target.value);
-    setRtl(safeFonts.filter(option => option.value === e.target.value)[0].rtl);
-  };
+  // const handleDefaultFontChange = (e: any) => {
+  //   setDefaultFont(e.target.value);
+  //   setRtl(safeFonts.filter(option => option.value === e.target.value)[0].rtl);
+  // };
   const handleDefaultFontSizeChange = (e: any) => {
     setDefaultFontSize(e.target.value);
   };
   const handleRtlChange = () => {
     setRtl(!rtl);
-  };
-  const handleNeedFont = () => {
-    setMessage(
-      <span>
-        <a
-          className={classes.link}
-          href="https://community.scripture.software.sil.org/c/transcriber"
-        >
-          Contact developers
-        </a>{' '}
-        to request font
-      </span>
-    );
   };
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -285,12 +266,12 @@ export function ProjectSettings(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, projects]);
 
-  const safeFonts = [
-    { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
-    { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
-    { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
-    { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
-  ];
+  // const safeFonts = [
+  //   { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
+  //   { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
+  //   { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
+  //   { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
+  // ];
 
   const fontSizes = [
     'xx-small',
@@ -407,82 +388,10 @@ export function ProjectSettings(props: IProps) {
           </FormGroup>
           <FormLabel className={classes.label}>{t.language}</FormLabel>
           <FormGroup className={classes.group}>
-            <FormControlLabel
-              control={
-                <TextField
-                  id="language-picker"
-                  label={t.transcriptionLanguage}
-                  defaultValue={bcp47}
-                  className={classes.textField}
-                  margin="normal"
-                  onClick={handleBcp47Change}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  variant="filled"
-                  required={true}
-                />
-              }
-              label=""
-            />
-            <FormControlLabel
-              control={
-                <TextField
-                  id="language-name"
-                  label={t.preferredLanguageName}
-                  className={classes.textField}
-                  value={languageName}
-                  onChange={handleLanguageNameChange}
-                  margin="normal"
-                  variant="filled"
-                  required={true}
-                />
-              }
-              label=""
-            />
-            <FormLabel className={classes.info}>
-              {t.uiLanguagInUserProfile}
-            </FormLabel>
-          </FormGroup>
-          <FormLabel className={classes.label}>{t.textEditor}</FormLabel>
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <TextField
-                  id="select-default-font"
-                  select
-                  label={t.defaultFont}
-                  className={classes.textField}
-                  value={defaultFont}
-                  onChange={handleDefaultFontChange}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  helperText={
-                    <span>
-                      <button
-                        className={classes.moreButton}
-                        onClick={handleNeedFont}
-                      >
-                        {t.addMissingFont}
-                      </button>{' '}
-                      <HelpOutlineIcon className={classes.smallIcon} />
-                    </span>
-                  }
-                  margin="normal"
-                  variant="filled"
-                  required={true}
-                >
-                  {safeFonts.map(option => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              }
-              label=""
+            <LanguagePicker
+              setCode={setBcp47}
+              setName={setLanguageName}
+              setFont={setDefaultFont}
             />
             <FormControlLabel
               control={

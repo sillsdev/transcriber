@@ -67,8 +67,10 @@ interface IStateProps {
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
+  fetchLangTags: typeof action.fetchLangTags;
   setLanguage: typeof action.setLanguage;
   fetchOrbitData: typeof action.fetchOrbitData;
+  fetchScriptFonts: typeof action.fetchScriptFonts;
 }
 
 interface IRecordProps {
@@ -82,7 +84,13 @@ interface IProps extends IStateProps, IRecordProps, IDispatchProps {
 export function Loading(props: IProps) {
   const { orbitLoaded, auth, t } = props;
   const classes = useStyles();
-  const { fetchOrbitData, fetchLocalization, setLanguage } = props;
+  const {
+    fetchOrbitData,
+    fetchLocalization,
+    fetchLangTags,
+    fetchScriptFonts,
+    setLanguage,
+  } = props;
   const { isAuthenticated } = auth;
   const [dataStore] = useGlobal('dataStore');
   const [schema] = useGlobal('schema');
@@ -95,6 +103,8 @@ export function Loading(props: IProps) {
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
+    fetchLangTags();
+    fetchScriptFonts();
     fetchOrbitData(schema, dataStore, keyMap, auth, setUser, setCompleted);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -144,6 +154,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
       fetchOrbitData: action.fetchOrbitData,
+      fetchLangTags: action.fetchLangTags,
+      fetchScriptFonts: action.fetchScriptFonts,
     },
     dispatch
   ),

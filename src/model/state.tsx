@@ -5,6 +5,7 @@ import {
   IOrbitState,
   IUploadState,
   IContextState,
+  ILangTagData,
 } from '.';
 
 export interface IState {
@@ -17,4 +18,5 @@ export interface IState {
     initials: string;
   };
   upload: IUploadState;
+  langTag: ILangTagData;
 }

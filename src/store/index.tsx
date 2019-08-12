@@ -4,6 +4,7 @@ import localizationReducer from './localization/reducers';
 import orbitReducer from './orbit/reducers';
 import uploadReducer from './upload/reducers';
 import contextReducer from './context/reducer';
+import langTagsReducer from './langPicker/reducers';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
 // import { systemReducer } from "./system/reducers";
@@ -15,6 +16,7 @@ const appReducer = combineReducers({
   books: bookReducer,
   orbit: orbitReducer,
   upload: uploadReducer,
+  langTag: langTagsReducer,
 });
 
 export type AppState = ReturnType<typeof appReducer>;
@@ -34,3 +36,4 @@ export * from './book/actions';
 export * from './localization/actions';
 export * from './orbit/actions';
 export * from './upload/actions';
+export * from './langPicker/actions';

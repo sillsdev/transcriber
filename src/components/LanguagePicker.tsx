@@ -1,0 +1,368 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { IState } from '../model';
+import {
+  LangTagMap,
+  LangTag,
+  ScriptList,
+  FontMap,
+} from '../store/langPicker/types';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  TextField,
+  Typography,
+  MenuItem,
+} from '@material-ui/core';
+import { woBadChar } from '../store/langPicker/reducers';
+import LanguageChoice from './LanguageChoice';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    check: {
+      justifyContent: 'flex-end',
+    },
+    label: {
+      flexDirection: 'row-reverse',
+    },
+    label2: {
+      flexDirection: 'row-reverse',
+      marginRight: 0,
+    },
+    textField: {
+      width: 100,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
+    fontField: {
+      width: 300,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
+    menu: {
+      width: 200,
+    },
+  })
+);
+
+interface StateProps {
+  exact: LangTagMap;
+  partial: LangTagMap;
+  scripts: ScriptList;
+  noSubtag: LangTagMap;
+  langTags: LangTag[];
+  fontMap: FontMap;
+}
+
+interface DispatchProps {}
+
+interface IProps extends StateProps, DispatchProps {
+  setCode?: (code: string) => void;
+  setName?: (name: string) => void;
+  setFont?: (font: string) => void;
+  // local stat props go here
+}
+
+export const LanguagePicker = (props: IProps) => {
+  const { exact, partial, noSubtag, langTags, scripts, fontMap } = props;
+  const { setCode, setName, setFont } = props;
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [secondary, setSecondary] = React.useState(true);
+  const [subtag, setSubtag] = React.useState(false);
+  const [response, setResponse] = React.useState('');
+  const [tag, setTag] = React.useState<LangTag>();
+  const [scriptField, setScriptField] = React.useState(<></>);
+  const [fontField, setFontField] = React.useState(<></>);
+  const [defaultFont, setDefaultFont] = React.useState('');
+  const [fontOpts, setFontOpts] = React.useState(Array<string>());
+
+  const handleClickOpen = () => {
+    setResponse('');
+    setTag(undefined);
+    setOpen(true);
+  };
+  const handleCancel = () => {
+    setResponse('');
+    setOpen(false);
+  };
+
+  const displayTag = (tag: LangTag) => {
+    if (tag && tag.name) {
+      setResponse(tag.name + ' (' + tag.tag + ')');
+      if (setCode) setCode(tag.tag);
+      if (setName) setName(tag.name);
+    }
+  };
+
+  const handleSelect = () => {
+    if (tag) {
+      displayTag(tag);
+    } else {
+      setResponse('');
+    }
+    setOpen(false);
+  };
+
+  const handleChange = (e: any) => {
+    setResponse(e.target.value);
+  };
+
+  const addFontInfo = (e: any) => {
+    setDefaultFont(e.target.value);
+    if (setFont) setFont(e.target.value);
+  };
+
+  const selectFont = (tag: LangTag) => {
+    let code = tag.script + '-' + tag.region;
+    if (!fontMap.hasOwnProperty(code)) {
+      code = tag.script;
+    }
+    if (!fontMap.hasOwnProperty(code)) return;
+    if (fontMap[code].length === 1) {
+      setDefaultFont(fontMap[code][0]);
+      if (setFont) setFont(fontMap[code][0]);
+    } else {
+      const fonts = fontMap[code];
+      setDefaultFont(fonts[0]);
+      if (setFont) setFont(fonts[0]);
+      setFontOpts(fonts);
+    }
+  };
+
+  React.useEffect(() => {
+    if (fontOpts.length > 0) {
+      setFontField(
+        <FormControlLabel
+          control={
+            <TextField
+              id="select-font"
+              autoFocus
+              select
+              className={classes.fontField}
+              label={'Font'}
+              value={defaultFont}
+              onChange={addFontInfo}
+              SelectProps={{
+                MenuProps: {
+                  className: classes.menu,
+                },
+              }}
+              helperText={''}
+              margin="normal"
+              variant="filled"
+              required={true}
+            >
+              {fontOpts.map(s => (
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
+              ))}
+            </TextField>
+          }
+          label=""
+        />
+      );
+    } else {
+      setFontField(<></>);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [defaultFont, fontOpts, classes]);
+
+  const handleScriptChange = (tag: LangTag) => (e: any) => {
+    const val = e.target.value;
+    if (tag.script !== val) {
+      const lgTag = tag.tag.split('-')[0];
+      const newTag = langTags.filter(
+        t => t.tag.split('-')[0] === lgTag && t.script === val
+      );
+      if (newTag.length > 0) {
+        setTag(newTag[0]);
+      }
+      displayTag(newTag[0]);
+    }
+    setScriptField(<></>);
+    selectFont(tag);
+  };
+
+  const handleChoose = (tag: LangTag) => {
+    setTag(tag);
+    displayTag(tag);
+    const tagParts = tag.tag.split('-');
+    const lgTag = tagParts[0];
+    if (scripts[lgTag].length !== 1) {
+      if (tagParts.length > 1 && tagParts[1].length === 4) {
+        selectFont(tag);
+        return;
+      }
+      const defaultScript = scripts[lgTag][0];
+      setScriptField(
+        <FormControlLabel
+          control={
+            <TextField
+              id="select-script"
+              autoFocus
+              select
+              className={classes.textField}
+              label={'Script'}
+              value={defaultScript}
+              onChange={handleScriptChange(tag)}
+              SelectProps={{
+                MenuProps: {
+                  className: classes.menu,
+                },
+              }}
+              helperText={''}
+              margin="normal"
+              variant="filled"
+              required={true}
+            >
+              {scripts[lgTag].map(s => (
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
+              ))}
+            </TextField>
+          }
+          label=""
+        />
+      );
+    } else {
+      selectFont(tag);
+    }
+  };
+
+  const optList = () => {
+    if (!tag) {
+      const token = woBadChar(response).toLocaleLowerCase();
+      if (exact.hasOwnProperty(token)) {
+        return (
+          <LanguageChoice
+            list={exact[token]}
+            secondary={secondary}
+            choose={handleChoose}
+            subtag={subtag}
+          />
+        );
+      }
+      if (subtag && partial.hasOwnProperty(token.slice(0, 3))) {
+        return (
+          <LanguageChoice
+            list={partial[token.slice(0, 3)]}
+            secondary={secondary}
+            choose={handleChoose}
+          />
+        );
+      }
+      if (!subtag && noSubtag.hasOwnProperty(token.slice(0, 3))) {
+        return (
+          <LanguageChoice
+            list={noSubtag[token.slice(0, 3)]}
+            secondary={secondary}
+            choose={handleChoose}
+          />
+        );
+      }
+    }
+    return <></>;
+  };
+
+  return (
+    <div>
+      <TextField
+        variant="filled"
+        margin="dense"
+        id="lang-bcp47"
+        label="Language"
+        value={response}
+        onClick={handleClickOpen}
+        onKeyDown={handleClickOpen}
+      />
+      <Dialog
+        open={open}
+        onClose={handleCancel}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle id="form-dialog-title">
+          <Typography>Select a Language</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            <Typography>Languages can be selected by name, code.</Typography>
+          </DialogContentText>
+          <FormGroup row className={classes.check}>
+            <FormControlLabel
+              className={classes.label}
+              control={
+                <Checkbox
+                  checked={subtag}
+                  onChange={event => setSubtag(event.target.checked)}
+                  value="secondary"
+                />
+              }
+              label="Subtags"
+            />
+            <FormControlLabel
+              className={classes.label2}
+              control={
+                <Checkbox
+                  checked={secondary}
+                  onChange={event => setSecondary(event.target.checked)}
+                  value="secondary"
+                />
+              }
+              label="Details"
+            />
+          </FormGroup>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="language"
+            label="Language"
+            fullWidth
+            value={response}
+            onChange={handleChange}
+          />
+          {optList()}
+          {scriptField}
+          {fontField}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancel} color="primary">
+            <Typography>Cancel</Typography>
+          </Button>
+          <Button onClick={handleSelect} color="primary">
+            <Typography>Select</Typography>
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+};
+
+const mapStateToProps = (state: IState): StateProps => ({
+  exact: state.langTag.exact,
+  partial: state.langTag.partial,
+  scripts: state.langTag.scripts,
+  noSubtag: state.langTag.noSubtag,
+  langTags: state.langTag.langTags,
+  fontMap: state.langTag.fontMap,
+});
+
+const mapDispatchToProps = (dispatch: any): DispatchProps => ({
+  ...bindActionCreators({}, dispatch),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LanguagePicker);
