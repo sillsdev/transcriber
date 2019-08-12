@@ -3,6 +3,6 @@ export const AUTH_CONFIG = {
   clientId: '5wk1VBHB5tlEOeTcIV3xrEJ5ol9cNlTT',
   callbackUrl:
     process.env.REACT_APP_CALLBACK ||
-    'https://admin-dev.siltranscriber.org/callback',
-  loginApp: 'https://login-dev.siltranscriber.org',
+    'https://admin-qa.siltranscriber.org/callback',
+  loginApp: 'https://login-qa.siltranscriber.org',
 };

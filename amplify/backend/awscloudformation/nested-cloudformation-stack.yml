@@ -81,10 +81,10 @@
 		"hostingS3AndCloudFront": {
 			"Type": "AWS::CloudFormation::Stack",
 			"Properties": {
-				"TemplateURL": "https://s3.amazonaws.com/webtranscriberadmin-dev-20190619102702-deployment/amplify-cfn-templates/hosting/template.json",
+				"TemplateURL": "https://s3.amazonaws.com/webtranscriberadmin-qa-20190812152051-deployment/amplify-cfn-templates/hosting/template.json",
 				"Parameters": {
-					"bucketName": "admin-dev.siltranscriber.org",
-					"env": "dev"
+					"bucketName": "admin-qa.siltranscriber.org",
+					"env": "qa"
 				}
 			}
 		}
