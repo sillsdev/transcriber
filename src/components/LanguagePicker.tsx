@@ -25,6 +25,7 @@ import {
 } from '@material-ui/core';
 import { woBadChar } from '../store/langPicker/reducers';
 import LanguageChoice from './LanguageChoice';
+import './LanguagePicker.css';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -288,6 +289,7 @@ export const LanguagePicker = (props: IProps) => {
         onKeyDown={handleClickOpen}
       />
       <Dialog
+        id="LanguagePicker"
         open={open}
         onClose={handleCancel}
         aria-labelledby="form-dialog-title"

@@ -11,17 +11,18 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   TextField,
   MenuItem,
-  Switch,
   FormLabel,
   FormControl,
   FormGroup,
   FormControlLabel,
   Button,
+  Checkbox,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from './SnackBar';
 import { related } from '../utils';
 import LanguagePicker from './LanguagePicker';
+import FontSize from './FontSize';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -154,8 +155,8 @@ export function ProjectSettings(props: IProps) {
   //   setDefaultFont(e.target.value);
   //   setRtl(safeFonts.filter(option => option.value === e.target.value)[0].rtl);
   // };
-  const handleDefaultFontSizeChange = (e: any) => {
-    setDefaultFontSize(e.target.value);
+  const handleSize = (v: string) => {
+    setDefaultFontSize(v);
   };
   const handleRtlChange = () => {
     setRtl(!rtl);
@@ -273,16 +274,6 @@ export function ProjectSettings(props: IProps) {
   //   { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
   // ];
 
-  const fontSizes = [
-    'xx-small',
-    'x-small',
-    'small',
-    'medium',
-    'large',
-    'x-large',
-    'xx-large',
-  ];
-
   return (
     <div
       className={clsx(classes.container, {
@@ -394,38 +385,18 @@ export function ProjectSettings(props: IProps) {
               setFont={setDefaultFont}
             />
             <FormControlLabel
+              className={classes.textField}
               control={
-                <TextField
-                  id="select-default-font-size"
-                  select
-                  label={t.defaultFontSize}
-                  className={classes.textField}
-                  value={defaultFontSize}
-                  onChange={handleDefaultFontSizeChange}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  helperText={t.selectFontSize}
-                  margin="normal"
-                  variant="filled"
-                >
-                  {fontSizes.map((v, i) => (
-                    <MenuItem key={i} value={v}>
-                      {v}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                <FontSize label={t.defaultFontSize} setSize={handleSize} />
               }
               label=""
             />
             <FormControlLabel
+              className={classes.textField}
               control={
-                <Switch
-                  id="switch-rtl"
+                <Checkbox
+                  id="checkbox-rtl"
                   checked={rtl}
-                  color="secondary"
                   onChange={handleRtlChange}
                 />
               }
