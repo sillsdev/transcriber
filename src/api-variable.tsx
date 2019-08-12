@@ -4,5 +4,5 @@ export const API_CONFIG = {
   //host: 'https://localhost:44370',
   offline:
     process.env.REACT_APP_OFFLINE === 'true' || process.env.NODE_ENV === 'test',
-  help: 'https://help-siltranscriber.s3.us-east-2.amazonaws.com/index.htm',
+  help: 'https://help.siltranscriber.org',
 };
