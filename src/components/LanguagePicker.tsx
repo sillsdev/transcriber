@@ -7,6 +7,7 @@ import {
   LangTag,
   ScriptList,
   FontMap,
+  IRanked,
 } from '../store/langPicker/types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
@@ -96,6 +97,7 @@ export const LanguagePicker = (props: IProps) => {
   const [fontField, setFontField] = React.useState(<></>);
   const [defaultFont, setDefaultFont] = React.useState('');
   const [fontOpts, setFontOpts] = React.useState(Array<string>());
+  const langEl = React.useRef<any>();
 
   const handleClickOpen = () => {
     if (exact.hasOwnProperty(value)) {
@@ -113,10 +115,10 @@ export const LanguagePicker = (props: IProps) => {
   const handleClear = () => {
     setFontOpts([]);
     setScriptField(<></>);
-    setFontField(<></>);
     setResponse('');
     setTag(undefined);
     setDefaultFont('');
+    if (langEl.current) langEl.current.click();
   };
   const handleCancel = () => {
     setResponse('');
@@ -205,6 +207,10 @@ export const LanguagePicker = (props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [defaultFont, fontOpts, classes]);
 
+  React.useEffect(() => {
+    if (response === '') handleClear();
+  }, [response]);
+
   const handleScriptChange = (tag: LangTag) => (e: any) => {
     const val = e.target.value;
     if (tag.script !== val) {
@@ -268,34 +274,43 @@ export const LanguagePicker = (props: IProps) => {
     }
   };
 
+  const mergeList = (list: IRanked[], adds: IRanked[]) => {
+    let result = list.filter(
+      e => adds.filter(f => e.index === f.index).length > 0
+    );
+    result = result.concat(
+      list.filter(e => adds.filter(f => e.index === f.index).length === 0)
+    );
+    return result.concat(
+      adds.filter(e => list.filter(f => e.index === f.index).length === 0)
+    );
+  };
+
   const optList = () => {
     if (!tag) {
-      const token = woBadChar(response).toLocaleLowerCase();
-      if (exact.hasOwnProperty(token)) {
+      let list = Array<IRanked>();
+      response.split(' ').forEach(w => {
+        const token = woBadChar(w).toLocaleLowerCase();
+        if (exact.hasOwnProperty(token)) {
+          list = mergeList(list, exact[token]);
+        }
+      });
+      response.split(' ').forEach(w => {
+        const token = woBadChar(w).toLocaleLowerCase();
+        if (subtag && partial.hasOwnProperty(token.slice(0, 3))) {
+          list = mergeList(list, partial[token.slice(0, 3)]);
+        }
+        if (!subtag && noSubtag.hasOwnProperty(token.slice(0, 3))) {
+          list = mergeList(list, noSubtag[token.slice(0, 3)]);
+        }
+      });
+      if (list.length > 0) {
         return (
           <LanguageChoice
-            list={exact[token]}
+            list={list}
             secondary={secondary}
             choose={handleChoose}
             subtag={subtag}
-          />
-        );
-      }
-      if (subtag && partial.hasOwnProperty(token.slice(0, 3))) {
-        return (
-          <LanguageChoice
-            list={partial[token.slice(0, 3)]}
-            secondary={secondary}
-            choose={handleChoose}
-          />
-        );
-      }
-      if (!subtag && noSubtag.hasOwnProperty(token.slice(0, 3))) {
-        return (
-          <LanguageChoice
-            list={noSubtag[token.slice(0, 3)]}
-            secondary={secondary}
-            choose={handleChoose}
           />
         );
       }
@@ -370,6 +385,7 @@ export const LanguagePicker = (props: IProps) => {
             value={response}
             onChange={handleChange}
             InputProps={{
+              ref: langEl,
               endAdornment: (
                 <InputAdornment
                   position="end"
