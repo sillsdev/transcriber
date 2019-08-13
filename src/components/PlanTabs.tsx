@@ -82,9 +82,29 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       {tab === 0 && (
         <TabContainer>
           {bookCol !== -1 ? (
-            <ScriptureTable {...props} showBook={true} />
+            <ScriptureTable
+              {...props}
+              cols={{
+                SectionSeq: 0,
+                SectionnName: 1,
+                PassageSeq: 2,
+                Book: 3,
+                Reference: 4,
+                Title: 5,
+              }}
+            />
           ) : (
-            <ScriptureTable {...props} showBook={false} />
+            <ScriptureTable
+              {...props}
+              cols={{
+                SectionSeq: 0,
+                SectionnName: 1,
+                PassageSeq: 2,
+                Book: -1,
+                Reference: 3,
+                Title: 4,
+              }}
+            />
           )}
         </TabContainer>
       )}
