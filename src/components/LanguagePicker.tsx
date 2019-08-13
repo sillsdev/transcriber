@@ -67,6 +67,9 @@ interface StateProps {
 interface DispatchProps {}
 
 interface IProps extends StateProps, DispatchProps {
+  value: string;
+  name: string;
+  font: string;
   setCode?: (code: string) => void;
   setName?: (name: string) => void;
   setFont?: (font: string) => void;
@@ -75,7 +78,7 @@ interface IProps extends StateProps, DispatchProps {
 
 export const LanguagePicker = (props: IProps) => {
   const { exact, partial, noSubtag, langTags, scripts, fontMap } = props;
-  const { setCode, setName, setFont } = props;
+  const { value, name, font, setCode, setName, setFont } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [secondary, setSecondary] = React.useState(true);
@@ -88,8 +91,20 @@ export const LanguagePicker = (props: IProps) => {
   const [fontOpts, setFontOpts] = React.useState(Array<string>());
 
   const handleClickOpen = () => {
-    setResponse('');
-    setTag(undefined);
+    if (exact.hasOwnProperty(value)) {
+      setResponse(name + ' (' + value + ')');
+      const langTag = langTags[exact[value][0].index];
+      setTag(langTag);
+      selectFont(langTag);
+      setDefaultFont(font);
+      setScriptField(<></>);
+    } else {
+      setResponse('');
+      setTag(undefined);
+      setDefaultFont('');
+      setScriptField(<></>);
+      setFontField(<></>);
+    }
     setOpen(true);
   };
   const handleCancel = () => {
@@ -284,7 +299,7 @@ export const LanguagePicker = (props: IProps) => {
         margin="dense"
         id="lang-bcp47"
         label="Language"
-        value={response}
+        value={name + ' (' + value + ')'}
         onClick={handleClickOpen}
         onKeyDown={handleClickOpen}
       />

@@ -380,6 +380,9 @@ export function ProjectSettings(props: IProps) {
           <FormLabel className={classes.label}>{t.language}</FormLabel>
           <FormGroup className={classes.group}>
             <LanguagePicker
+              value={bcp47}
+              name={languageName}
+              font={defaultFont}
               setCode={setBcp47}
               setName={setLanguageName}
               setFont={setDefaultFont}
