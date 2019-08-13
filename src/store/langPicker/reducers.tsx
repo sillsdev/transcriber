@@ -98,11 +98,6 @@ const mapMerge = (
   });
 };
 
-// const save = (map: type.LangTagMap) => {
-//   var keys = Object.keys(map).sort();
-//   console.log(keys);
-// };
-
 const makeMap = (langTags: type.LangTag[], full: boolean, subtag: boolean) => {
   let partial: type.LangTagMap = {};
   langTags.forEach((lt: type.LangTag, i: number) => {
@@ -205,6 +200,18 @@ export default function langTagsReducer(
 ): type.ILangTagData {
   switch (action.type) {
     case type.FETCH_LANGTAGS:
+      if (Array.isArray(action.payload.data)) {
+        action.payload.data.push({
+          full: 'qaa',
+          iso639_3: 'qaa',
+          localname: 'Unknown',
+          name: 'Unknown',
+          regionname: 'anywhere',
+          script: 'Latn',
+          sldr: false,
+          tag: 'qaa',
+        });
+      }
       return {
         ...state,
         loaded: true,

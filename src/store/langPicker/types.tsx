@@ -1,22 +1,22 @@
 // Describing the shape of the book names's slice of state
 export interface LangTag {
   full: string;
-  iana: string;
-  iso639_3: string;
-  localname: string;
+  iana?: string;
+  iso639_3?: string;
+  localname?: string;
   name: string;
-  names: Array<string>;
-  nophonvars: boolean;
-  region: string;
-  regionname: string;
-  regions: Array<string>;
+  names?: Array<string>;
+  nophonvars?: boolean;
+  region?: string;
+  regionname?: string;
+  regions?: Array<string>;
   script: string;
   sldr: boolean;
   tag: string;
-  tags: Array<string>;
-  variants: Array<string>;
-  defaultFont: string;
-  fonts: string[];
+  tags?: Array<string>;
+  variants?: Array<string>;
+  defaultFont?: string;
+  fonts?: string[];
 }
 
 export interface IRanked {
@@ -47,8 +47,8 @@ export interface ILangTagData {
 }
 
 // Describing the different ACTION NAMES available
-export const FETCH_LANGTAGS = "FETCH_LANGTAGS";
-export const FETCH_SCRIPTFONTS = "FETCH_SCRIPTFONTS";
+export const FETCH_LANGTAGS = 'FETCH_LANGTAGS';
+export const FETCH_SCRIPTFONTS = 'FETCH_SCRIPTFONTS';
 
 interface FetchLangTags {
   type: typeof FETCH_LANGTAGS;
