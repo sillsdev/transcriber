@@ -299,7 +299,17 @@ export const LanguagePicker = (props: IProps) => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <Typography>Languages can be selected by name, code.</Typography>
+            <Typography>
+              Type the language name or{' '}
+              <a
+                href="https://www.w3.org/International/questions/qa-choosing-language-tags"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                code
+              </a>
+              . Languages can also be found by country.
+            </Typography>
           </DialogContentText>
           <FormGroup row className={classes.check}>
             <FormControlLabel
