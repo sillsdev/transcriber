@@ -22,10 +22,14 @@ import {
   TextField,
   Typography,
   MenuItem,
+  InputAdornment,
+  IconButton,
 } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
 import { woBadChar } from '../store/langPicker/reducers';
 import LanguageChoice from './LanguageChoice';
 import './LanguagePicker.css';
+import clsx from 'clsx';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,6 +55,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     menu: {
       width: 200,
+    },
+    hide: {
+      display: 'none',
     },
   })
 );
@@ -99,13 +106,17 @@ export const LanguagePicker = (props: IProps) => {
       setDefaultFont(font);
       setScriptField(<></>);
     } else {
-      setResponse('');
-      setTag(undefined);
-      setDefaultFont('');
-      setScriptField(<></>);
-      setFontField(<></>);
+      handleClear();
     }
     setOpen(true);
+  };
+  const handleClear = () => {
+    setFontOpts([]);
+    setScriptField(<></>);
+    setFontField(<></>);
+    setResponse('');
+    setTag(undefined);
+    setDefaultFont('');
   };
   const handleCancel = () => {
     setResponse('');
@@ -358,6 +369,22 @@ export const LanguagePicker = (props: IProps) => {
             fullWidth
             value={response}
             onChange={handleChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  className={clsx({ [classes.hide]: response === '' })}
+                >
+                  <IconButton
+                    edge="end"
+                    aria-label="clear language"
+                    onClick={handleClear}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
           {optList()}
           {scriptField}
