@@ -1,43 +1,56 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: 300,
-  },
-  margin: {
-    height: theme.spacing(3),
-  },
-}));
+const useStyles = makeStyles(theme =>
+  createStyles({
+    root: {
+      width: 300,
+    },
+    margin: {
+      height: theme.spacing(3),
+    },
+  })
+);
+
+const fontSizes = [
+  'xx-small',
+  'x-small',
+  'small',
+  'medium',
+  'large',
+  'x-large',
+  'xx-large',
+];
 
 interface IProps {
   label?: string;
+  value?: string;
+  font?: string;
   setSize?: (size: string) => void;
 }
 
 export default function DiscreteSlider(props: IProps) {
-  const { label, setSize } = props;
+  const { label, value, font, setSize } = props;
+  const [position, setPosition] = React.useState(
+    value ? fontSizes.indexOf(value) : 4
+  );
+  const [fontName, setFontNamne] = React.useState(font ? font : 'Charis SIL');
   const classes = useStyles();
-
-  const fontSizes = [
-    'xx-small',
-    'x-small',
-    'small',
-    'medium',
-    'large',
-    'x-large',
-    'xx-large',
-  ];
 
   const valuetext = (value: number) => {
     return fontSizes[value];
   };
 
-  const handleSlide = (e: any) => {
-    if (setSize) setSize(fontSizes[parseInt(e.target.value)]);
+  const handleSlide = (e: any, v: any) => {
+    setPosition(v);
+    if (setSize) setSize(valuetext(v));
   };
+
+  React.useEffect(() => {
+    if (font) setFontNamne(font);
+  }, [font]);
 
   return (
     <div className={classes.root}>
@@ -45,17 +58,20 @@ export default function DiscreteSlider(props: IProps) {
         {label}
       </Typography>
       <Slider
-        defaultValue={4}
+        defaultValue={position}
         getAriaValueText={valuetext}
-        valueLabelFormat={valuetext}
         aria-labelledby="discrete-slider"
-        valueLabelDisplay="auto"
+        valueLabelDisplay="off"
         step={1}
         marks
         min={0}
         max={6}
         onChange={handleSlide}
       />
+      <br />
+      <span style={{ fontSize: valuetext(position), fontFamily: fontName }}>
+        A
+      </span>
     </div>
   );
 }

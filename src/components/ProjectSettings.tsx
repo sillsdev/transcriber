@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    languageField: {
+      marginLeft: 0,
+    },
     dense: {
       marginTop: 16,
     },
@@ -138,6 +141,7 @@ export function ProjectSettings(props: IProps) {
   const [rtl, setRtl] = useState(false);
   const [projectGroup, setProjectGroup] = useState('');
   const [message, setMessage] = useState(<></>);
+  const langEl = React.useRef<any>();
 
   const handleNameChange = (e: any) => {
     setName(e.target.value);
@@ -379,18 +383,49 @@ export function ProjectSettings(props: IProps) {
           </FormGroup>
           <FormLabel className={classes.label}>{t.language}</FormLabel>
           <FormGroup className={classes.group}>
-            <LanguagePicker
-              value={bcp47}
-              name={languageName}
-              font={defaultFont}
-              setCode={setBcp47}
-              setName={setLanguageName}
-              setFont={setDefaultFont}
+            <FormControlLabel
+              ref={langEl}
+              className={classes.languageField}
+              control={
+                <LanguagePicker
+                  value={bcp47}
+                  name={languageName}
+                  font={defaultFont}
+                  setCode={setBcp47}
+                  setName={setLanguageName}
+                  setFont={setDefaultFont}
+                />
+              }
+              label=""
+            />
+            <FormControlLabel
+              control={
+                <TextField
+                  id="default-font"
+                  label={t.defaultFont}
+                  className={classes.textField}
+                  value={defaultFont}
+                  onClick={() => langEl.current.click()}
+                  onKeyDown={(e: any) => {
+                    if (e.keyCode !== 9) langEl.current.click();
+                  }}
+                  margin="normal"
+                  style={{ width: 400 }}
+                  variant="filled"
+                  required={false}
+                />
+              }
+              label=""
             />
             <FormControlLabel
               className={classes.textField}
               control={
-                <FontSize label={t.defaultFontSize} setSize={handleSize} />
+                <FontSize
+                  label={t.defaultFontSize}
+                  value={defaultFontSize}
+                  font={defaultFont}
+                  setSize={handleSize}
+                />
               }
               label=""
             />
@@ -414,6 +449,14 @@ export function ProjectSettings(props: IProps) {
             variant="contained"
             color="primary"
             className={classes.button}
+            disabled={
+              name === '' ||
+              projectType === '' ||
+              projectGroup === '' ||
+              bcp47 === '' ||
+              bcp47 === 'und' ||
+              defaultFont === ''
+            }
             onClick={currentProject === undefined ? handleAdd : handleSave}
           >
             {currentProject === undefined ? t.add : t.save}

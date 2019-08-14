@@ -99,7 +99,8 @@ export const LanguagePicker = (props: IProps) => {
   const [fontOpts, setFontOpts] = React.useState(Array<string>());
   const langEl = React.useRef<any>();
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (e: any) => {
+    if (e.keyCode && e.keyCode === 9) return;
     if (exact.hasOwnProperty(value)) {
       setResponse(name + ' (' + value + ')');
       const langTag = langTags[exact[value][0].index];
@@ -325,6 +326,7 @@ export const LanguagePicker = (props: IProps) => {
         margin="dense"
         id="lang-bcp47"
         label="Language"
+        required={true}
         value={name + ' (' + value + ')'}
         onClick={handleClickOpen}
         onKeyDown={handleClickOpen}
