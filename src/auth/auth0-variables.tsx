@@ -1,6 +1,6 @@
 export const AUTH_CONFIG = {
-  domain: 'sil-transcriber-dev.auth0.com',
-  clientId: '5wk1VBHB5tlEOeTcIV3xrEJ5ol9cNlTT',
+  domain: 'languagetechnology.auth0.com',
+  clientId: 'dfrC2w73KLoPv7u0yyl30cIJlirzOR3w',
   callbackUrl:
     process.env.REACT_APP_CALLBACK ||
     'https://admin-qa.siltranscriber.org/callback',
