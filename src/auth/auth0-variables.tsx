@@ -1,8 +1,12 @@
 export const AUTH_CONFIG = {
-  domain: 'languagetechnology.auth0.com',
-  clientId: 'dfrC2w73KLoPv7u0yyl30cIJlirzOR3w',
-  callbackUrl:
-    process.env.REACT_APP_CALLBACK ||
-    'https://admin-qa.siltranscriber.org/callback',
-  loginApp: 'https://login-qa.siltranscriber.org',
+  domain: process.env.REACT_APP_DOMAIN ? process.env.REACT_APP_DOMAIN : '',
+  clientId: process.env.REACT_APP_CLIENTID
+    ? process.env.REACT_APP_CLIENTID
+    : '',
+  callbackUrl: process.env.REACT_APP_CALLBACK
+    ? process.env.REACT_APP_CALLBACK
+    : '',
+  loginApp: process.env.REACT_APP_LOGINAPP
+    ? process.env.REACT_APP_LOGINAPP
+    : '',
 };

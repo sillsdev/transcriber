@@ -18,7 +18,11 @@ localization/packages
 # misc
 .DS_Store
 .env.local
+.env.qa.local
+.env.dev.local
 .env.development.local
+.env.dev.development.local
+.env.qa.development.local
 .env.test.local
 .env.production.local
 localization/.vscode
