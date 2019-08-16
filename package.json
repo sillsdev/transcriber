@@ -49,7 +49,9 @@
     "deploy": "npm run stamp && amplify publish",
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
     "eject": "react-scripts eject",
-    "stamp": "node writeDate.js"
+    "stamp": "node writeDate.js",
+    "dev": "amplify env checkout dev && node changeEnv.js dev",
+    "qa": "amplify env checkout qa && node changeEnv.js qa"
   },
   "eslintConfig": {
     "extends": "react-app"

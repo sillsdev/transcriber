@@ -1,16 +1,4 @@
 {
-    "dev": {
-        "awscloudformation": {
-            "AuthRoleName": "webtranscriberadmin-dev-20190619102702-authRole",
-            "UnauthRoleArn": "arn:aws:iam::525698739954:role/webtranscriberadmin-dev-20190619102702-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::525698739954:role/webtranscriberadmin-dev-20190619102702-authRole",
-            "Region": "us-east-2",
-            "DeploymentBucketName": "webtranscriberadmin-dev-20190619102702-deployment",
-            "UnauthRoleName": "webtranscriberadmin-dev-20190619102702-unauthRole",
-            "StackName": "webtranscriberadmin-dev-20190619102702",
-            "StackId": "arn:aws:cloudformation:us-east-2:525698739954:stack/webtranscriberadmin-dev-20190619102702/b06caf50-92a6-11e9-94ed-0aedd1bf2484"
-        }
-    },
     "providers": {
         "awscloudformation": {
             "AuthRoleName": "webtranscriberadmin-dev-20190619102702-authRole",
@@ -51,6 +39,18 @@
             "UnauthRoleName": "webtranscriberadmin-qa-20190812152051-unauthRole",
             "StackName": "webtranscriberadmin-qa-20190812152051",
             "StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-qa-20190812152051/adc80660-bd3e-11e9-aeb8-0adb15c4df9c"
+        }
+    },
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "webtranscriberadmin-dev-20190815162123-authRole",
+            "UnauthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-dev-20190815162123-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-dev-20190815162123-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "webtranscriberadmin-dev-20190815162123-deployment",
+            "UnauthRoleName": "webtranscriberadmin-dev-20190815162123-unauthRole",
+            "StackName": "webtranscriberadmin-dev-20190815162123",
+            "StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-dev-20190815162123/a20b7da0-bfa2-11e9-b884-0e6c2daa9b2c"
         }
     }
 }
