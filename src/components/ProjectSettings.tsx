@@ -80,6 +80,15 @@ const useStyles = makeStyles((theme: Theme) =>
     link: {
       color: theme.palette.primary.contrastText,
     },
+    sameLine: {
+      display: 'flex',
+    },
+    sameCol: {
+      flexDirection: 'column',
+    },
+    previewCol: {
+      marginTop: theme.spacing(2),
+    },
   })
 );
 
@@ -383,63 +392,78 @@ export function ProjectSettings(props: IProps) {
           </FormGroup>
           <FormLabel className={classes.label}>{t.language}</FormLabel>
           <FormGroup className={classes.group}>
-            <FormControlLabel
-              ref={langEl}
-              className={classes.languageField}
-              control={
-                <LanguagePicker
-                  value={bcp47}
-                  name={languageName}
-                  font={defaultFont}
-                  setCode={setBcp47}
-                  setName={setLanguageName}
-                  setFont={setDefaultFont}
+            <div className={classes.sameLine}>
+              <FormControlLabel
+                ref={langEl}
+                className={classes.languageField}
+                control={
+                  <LanguagePicker
+                    value={bcp47}
+                    name={languageName}
+                    font={defaultFont}
+                    setCode={setBcp47}
+                    setName={setLanguageName}
+                    setFont={setDefaultFont}
+                  />
+                }
+                label=""
+              />
+              <FormControlLabel
+                className={classes.textField}
+                control={
+                  <Checkbox
+                    id="checkbox-rtl"
+                    checked={rtl}
+                    onChange={handleRtlChange}
+                  />
+                }
+                label={t.rightToLeft}
+              />
+            </div>
+            <div className={classes.sameLine}>
+              <div className={classes.sameCol}>
+                <FormControlLabel
+                  control={
+                    <TextField
+                      id="default-font"
+                      label={t.defaultFont}
+                      className={classes.textField}
+                      value={defaultFont}
+                      onClick={() => langEl.current.click()}
+                      onKeyDown={(e: any) => {
+                        if (e.keyCode !== 9) langEl.current.click();
+                      }}
+                      margin="normal"
+                      style={{ width: 400 }}
+                      variant="filled"
+                      required={false}
+                    />
+                  }
+                  label=""
                 />
-              }
-              label=""
-            />
-            <FormControlLabel
-              control={
-                <TextField
-                  id="default-font"
-                  label={t.defaultFont}
+                <br />
+                <FormControlLabel
                   className={classes.textField}
-                  value={defaultFont}
-                  onClick={() => langEl.current.click()}
-                  onKeyDown={(e: any) => {
-                    if (e.keyCode !== 9) langEl.current.click();
-                  }}
-                  margin="normal"
-                  style={{ width: 400 }}
-                  variant="filled"
-                  required={false}
+                  control={
+                    <FontSize
+                      label={t.defaultFontSize}
+                      value={defaultFontSize}
+                      font={defaultFont}
+                      setSize={handleSize}
+                    />
+                  }
+                  label=""
                 />
-              }
-              label=""
-            />
-            <FormControlLabel
-              className={classes.textField}
-              control={
-                <FontSize
-                  label={t.defaultFontSize}
-                  value={defaultFontSize}
-                  font={defaultFont}
-                  setSize={handleSize}
-                />
-              }
-              label=""
-            />
-            <FormControlLabel
-              className={classes.textField}
-              control={
-                <Checkbox
-                  id="checkbox-rtl"
-                  checked={rtl}
-                  onChange={handleRtlChange}
-                />
-              }
-              label={t.rightToLeft}
-            />
+              </div>
+              <div className={classes.previewCol}>
+                <FormLabel className={classes.label}>{'Preview'}</FormLabel>
+                <div
+                  style={{ fontSize: defaultFontSize, fontFamily: defaultFont }}
+                >
+                  The quick, brown fox jumped over the lazy dog.
+                </div>
+              </div>
+            </div>
           </FormGroup>
         </FormControl>
         <div className={classes.actions}>

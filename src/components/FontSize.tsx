@@ -11,6 +11,14 @@ const useStyles = makeStyles(theme =>
     margin: {
       height: theme.spacing(3),
     },
+    sameRow: {
+      display: 'flex',
+    },
+    letter: {
+      alignSelf: 'center',
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+    },
   })
 );
 
@@ -57,21 +65,36 @@ export default function DiscreteSlider(props: IProps) {
       <Typography id="font-size-slider" gutterBottom>
         {label}
       </Typography>
-      <Slider
-        defaultValue={position}
-        getAriaValueText={valuetext}
-        aria-labelledby="discrete-slider"
-        valueLabelDisplay="off"
-        step={1}
-        marks
-        min={0}
-        max={6}
-        onChange={handleSlide}
-      />
-      <br />
+      <div className={classes.sameRow}>
+        <div
+          className={classes.letter}
+          style={{ fontSize: fontSizes[1], fontFamily: fontName }}
+        >
+          A
+        </div>
+        <Slider
+          className={classes.letter}
+          defaultValue={position}
+          getAriaValueText={valuetext}
+          aria-labelledby="discrete-slider"
+          valueLabelDisplay="off"
+          step={1}
+          marks
+          min={0}
+          max={6}
+          onChange={handleSlide}
+        />
+        <div
+          className={classes.letter}
+          style={{ fontSize: fontSizes[5], fontFamily: fontName }}
+        >
+          A
+        </div>
+      </div>
+      {/* <br />
       <span style={{ fontSize: valuetext(position), fontFamily: fontName }}>
         A
-      </span>
+      </span> */}
     </div>
   );
 }
