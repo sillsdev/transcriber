@@ -39,6 +39,15 @@ const addToMap = (
     if (!map.hasOwnProperty(token)) {
       map[token] = [{ index, rank }];
     }
+    if (token.indexOf(' ') !== -1) {
+      token.split(' ').forEach(t => {
+        const key = woBadChar(t);
+        if (!map.hasOwnProperty(key)) {
+          map[key] = [{ index, rank }];
+        }
+        rank = rankBase * 10;
+      });
+    }
     return;
   }
   tag = woBadChar(tag);

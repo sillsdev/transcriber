@@ -1,17 +1,17 @@
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { AppState } from "../store";
-import { LangTag } from "../store/langPicker/types";
-import { IRanked } from "../store/langPicker/types";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { AppState } from '../store';
+import { LangTag } from '../store/langPicker/types';
+import { IRanked } from '../store/langPicker/types';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   List,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +60,7 @@ export function LanguageChoice(props: IProps) {
     return (
       <>
         <Typography>A Language of {tag.regionname}</Typography>
-        <Typography>{tag.names ? tag.names.join(", ") : ""}</Typography>
+        <Typography>{tag.names ? tag.names.join(', ') : ''}</Typography>
       </>
     );
   };
@@ -68,7 +68,10 @@ export function LanguageChoice(props: IProps) {
   const langElems = (list: IRanked[], langTags: LangTag[]) => {
     return list.map(r => {
       const tag = langTags[r.index];
-      if (!subtag && tag.tag.indexOf("-") !== -1) return <></>;
+      const tagParts = tag.tag.split('-');
+      if (!subtag && tagParts.length > 1) {
+        if (tagParts[1].length !== 4 || tagParts.length > 2) return <></>;
+      }
       return (
         <ListItem
           button

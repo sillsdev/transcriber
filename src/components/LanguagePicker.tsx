@@ -101,9 +101,10 @@ export const LanguagePicker = (props: IProps) => {
 
   const handleClickOpen = (e: any) => {
     if (e.keyCode && e.keyCode === 9) return;
-    if (exact.hasOwnProperty(value)) {
+    const key = value.toLocaleLowerCase();
+    if (exact.hasOwnProperty(key)) {
       setResponse(name + ' (' + value + ')');
-      const langTag = langTags[exact[value][0].index];
+      const langTag = langTags[exact[key][0].index];
       setTag(langTag);
       selectFont(langTag);
       setDefaultFont(font);
@@ -327,6 +328,7 @@ export const LanguagePicker = (props: IProps) => {
         id="lang-bcp47"
         label="Language"
         required={true}
+        style={{ width: 300 }}
         value={name + ' (' + value + ')'}
         onClick={handleClickOpen}
         onKeyDown={handleClickOpen}
