@@ -7,6 +7,7 @@ export const langTagsCleanState = {
   noSubtag: {},
   exact: {},
   fontMap: {},
+  scriptNames: {},
 } as type.ILangTagData;
 
 const badChar = " (),.:/!?_'`0123456789";
@@ -203,6 +204,19 @@ const makeFontMap = (data: string) => {
   return fontMap;
 };
 
+const getNames = (data: string) => {
+  let names: type.ScriptName = {};
+  data.split('\n').forEach((line: string, i: number) => {
+    if (i !== 0) {
+      const fields = line.split('\t');
+      const code = fields[0].trim();
+      const name = fields[2].trim();
+      if (name !== '') names[code] = name;
+    }
+  });
+  return names;
+};
+
 export default function langTagsReducer(
   state = langTagsCleanState,
   action: type.LangTagMsgs
@@ -234,6 +248,7 @@ export default function langTagsReducer(
       return {
         ...state,
         fontMap: makeFontMap(action.payload.data),
+        scriptNames: getNames(action.payload.data),
       };
     default:
       return state;

@@ -8,6 +8,7 @@ import {
   ScriptList,
   FontMap,
   IRanked,
+  ScriptName,
 } from '../store/langPicker/types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
@@ -70,6 +71,7 @@ interface StateProps {
   noSubtag: LangTagMap;
   langTags: LangTag[];
   fontMap: FontMap;
+  scriptName: ScriptName;
 }
 
 interface DispatchProps {}
@@ -85,7 +87,15 @@ interface IProps extends StateProps, DispatchProps {
 }
 
 export const LanguagePicker = (props: IProps) => {
-  const { exact, partial, noSubtag, langTags, scripts, fontMap } = props;
+  const {
+    exact,
+    partial,
+    noSubtag,
+    langTags,
+    scripts,
+    fontMap,
+    scriptName,
+  } = props;
   const { value, name, font, setCode, setName, setFont } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -213,6 +223,12 @@ export const LanguagePicker = (props: IProps) => {
     if (response === '') handleClear();
   }, [response]);
 
+  React.useEffect(() => {
+    // If we are changing the query...
+    if (tag === undefined && langEl.current) langEl.current.click();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [scriptField]);
+
   const handleScriptChange = (tag: LangTag) => (e: any) => {
     const val = e.target.value;
     if (tag.script !== val) {
@@ -229,9 +245,7 @@ export const LanguagePicker = (props: IProps) => {
     selectFont(tag);
   };
 
-  const handleChoose = (tag: LangTag) => {
-    setTag(tag);
-    displayTag(tag);
+  const selectScript = (tag: LangTag) => {
     const tagParts = tag.tag.split('-');
     const lgTag = tagParts[0];
     if (scripts[lgTag].length !== 1) {
@@ -263,7 +277,7 @@ export const LanguagePicker = (props: IProps) => {
             >
               {scripts[lgTag].map(s => (
                 <MenuItem key={s} value={s}>
-                  {s}
+                  {scriptName[s] + ' - ' + s}
                 </MenuItem>
               ))}
             </TextField>
@@ -274,6 +288,17 @@ export const LanguagePicker = (props: IProps) => {
     } else {
       selectFont(tag);
     }
+  };
+
+  const handleLanguageClick = () => {
+    if (tag) selectScript(tag);
+    setTag(undefined);
+  };
+
+  const handleChoose = (tag: LangTag) => {
+    setTag(tag);
+    displayTag(tag);
+    selectScript(tag);
   };
 
   const mergeList = (list: IRanked[], adds: IRanked[]) => {
@@ -388,6 +413,7 @@ export const LanguagePicker = (props: IProps) => {
             fullWidth
             value={response}
             onChange={handleChange}
+            onClick={handleLanguageClick}
             InputProps={{
               ref: langEl,
               endAdornment: (
@@ -430,6 +456,7 @@ const mapStateToProps = (state: IState): StateProps => ({
   noSubtag: state.langTag.noSubtag,
   langTags: state.langTag.langTags,
   fontMap: state.langTag.fontMap,
+  scriptName: state.langTag.scriptNames,
 });
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({

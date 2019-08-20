@@ -32,6 +32,10 @@ export interface ScriptList {
   [code: string]: string[];
 }
 
+export interface ScriptName {
+  [code: string]: string;
+}
+
 export interface FontMap {
   [code: string]: string[];
 }
@@ -43,6 +47,7 @@ export interface ILangTagData {
   exact: LangTagMap;
   scripts: ScriptList;
   fontMap: FontMap;
+  scriptNames: ScriptName;
   langTags: LangTag[];
 }
 
