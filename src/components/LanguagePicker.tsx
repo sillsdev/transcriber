@@ -381,7 +381,7 @@ export const LanguagePicker = (props: IProps) => {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
-          <Typography>{t.select}</Typography>
+          <Typography>{t.selectLanguage}</Typography>
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -454,14 +454,14 @@ export const LanguagePicker = (props: IProps) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} color="primary">
-            <Typography>Cancel</Typography>
+            <Typography>{t.cancel}</Typography>
           </Button>
           <Button
             onClick={handleSelect}
             color="primary"
             disabled={tag === undefined}
           >
-            <Typography>Select</Typography>
+            <Typography>{t.select}</Typography>
           </Button>
         </DialogActions>
       </Dialog>

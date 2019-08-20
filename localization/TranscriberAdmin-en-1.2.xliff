@@ -1400,7 +1400,7 @@
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="languagePicker.select">
+			<trans-unit id="languagePicker.selectLanguage">
 				<source>Select a Language</source>
 				<target/>
 				<context-group>
@@ -1444,6 +1444,20 @@
 			</trans-unit>
 			<trans-unit id="languagePicker.inScript">
 				<source> in the $1 script</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.select">
+				<source>Select</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.cancel">
+				<source>Cancel</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">LanguagePicker.tsx</context>

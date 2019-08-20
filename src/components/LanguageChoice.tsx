@@ -7,6 +7,7 @@ import { LangTag, ScriptName } from '../store/langPicker/types';
 import { IRanked } from '../store/langPicker/types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { debounce } from 'lodash';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,6 +17,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     demo: {
       backgroundColor: theme.palette.background.paper,
+    },
+    list: {
+      overflowY: 'scroll',
     },
     title: {
       margin: theme.spacing(4, 0, 2),
@@ -48,6 +52,7 @@ export function LanguageChoice(props: IProps) {
   const { t, list, langTags, scriptName, secondary, choose, subtag } = props;
   const classes = useStyles();
   const [dense] = React.useState(true);
+  const [height, setHeight] = React.useState(window.innerHeight);
 
   const handleChoose = (tag: LangTag) => () => {
     choose(tag);
@@ -58,6 +63,16 @@ export function LanguageChoice(props: IProps) {
       choose(tag);
     }
   };
+
+  React.useEffect(() => {
+    const handleResize = debounce(() => setHeight(window.innerWidth), 100);
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const scriptDetail = (tag: LangTag) => {
     const tagParts = tag.tag.split('-');
@@ -110,7 +125,13 @@ export function LanguageChoice(props: IProps) {
   return (
     <div className={classes.root}>
       <div className={classes.demo}>
-        <List dense={dense}>{langElems(list, langTags)}</List>
+        <List
+          dense={dense}
+          className={classes.list}
+          style={{ maxHeight: height - 450 }}
+        >
+          {langElems(list, langTags)}
+        </List>
       </div>
     </div>
   );

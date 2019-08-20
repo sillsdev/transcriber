@@ -279,13 +279,15 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
     "font": string;
     "script": string;
     "language": string;
-    "select": string;
+    "selectLanguage": string;
     "instructions": string;
     "code": string;
     "subtags": string;
     "details": string;
     "languageOf": string;
     "inScript": string;
+    "select": string;
+    "cancel": string;
 };
 
 export interface ILocalizedStrings {

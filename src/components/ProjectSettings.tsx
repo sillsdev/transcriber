@@ -279,13 +279,6 @@ export function ProjectSettings(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, projects]);
 
-  // const safeFonts = [
-  //   { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
-  //   { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
-  //   { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
-  //   { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
-  // ];
-
   return (
     <div
       className={clsx(classes.container, {
@@ -455,7 +448,7 @@ export function ProjectSettings(props: IProps) {
                 />
               </div>
               <div className={classes.previewCol}>
-                <FormLabel className={classes.label}>{'Preview'}</FormLabel>
+                <FormLabel className={classes.label}>{t.preview}</FormLabel>
                 <div
                   style={{ fontSize: defaultFontSize, fontFamily: defaultFont }}
                 >

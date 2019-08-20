@@ -311,13 +311,15 @@ const initialState = {
 			"font": "Font",
 			"script": "Script",
 			"language": "Language",
-			"select": "Select a Language",
+			"selectLanguage": "Select a Language",
 			"instructions": "Type the language name or {1}. Languages can also be found by country.",
 			"code": "code",
 			"subtags": "Subtags",
 			"details": "Details",
 			"languageOf": "A Language of $1$2.",
 			"inScript": " in the $1 script",
+			"select": "Select",
+			"cancel": "Cancel",
 		}
 	}),
 };

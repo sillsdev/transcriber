@@ -1196,7 +1196,7 @@
          	<target>Langage</target>
          </segment>
       </unit>
-      <unit id="languagePicker.select">
+      <unit id="languagePicker.selectLanguage">
          <segment>
             <source>Select a Language</source>
          	<target>Sélectionnez une langue</target>
@@ -1236,6 +1236,18 @@
          <segment>
             <source> in the $1 script</source>
          	<target> dans le script $1</target>
+         </segment>
+      </unit>
+   <unit id="languagePicker.select">
+         <segment>
+            <source>Select</source>
+         	<target>Sélectionner</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.cancel">
+         <segment>
+            <source>Cancel</source>
+         	<target>Annuler</target>
          </segment>
       </unit>
    </file>
