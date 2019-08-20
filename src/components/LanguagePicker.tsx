@@ -250,6 +250,7 @@ export const LanguagePicker = (props: IProps) => {
     const lgTag = tagParts[0];
     if (scripts[lgTag].length !== 1) {
       if (tagParts.length > 1 && tagParts[1].length === 4) {
+        setScriptField(<></>);
         selectFont(tag);
         return;
       }
@@ -286,6 +287,7 @@ export const LanguagePicker = (props: IProps) => {
         />
       );
     } else {
+      setScriptField(<></>);
       selectFont(tag);
     }
   };
@@ -440,7 +442,11 @@ export const LanguagePicker = (props: IProps) => {
           <Button onClick={handleCancel} color="primary">
             <Typography>Cancel</Typography>
           </Button>
-          <Button onClick={handleSelect} color="primary">
+          <Button
+            onClick={handleSelect}
+            color="primary"
+            disabled={tag === undefined}
+          >
             <Typography>Select</Typography>
           </Button>
         </DialogActions>

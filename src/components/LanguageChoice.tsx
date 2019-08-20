@@ -2,16 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { AppState } from '../store';
-import { LangTag } from '../store/langPicker/types';
+import { LangTag, ScriptName } from '../store/langPicker/types';
 import { IRanked } from '../store/langPicker/types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import {
-  List,
-  ListItem,
-  ListItemSecondaryAction,
-  ListItemText,
-  Typography,
-} from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,11 +19,18 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       margin: theme.spacing(4, 0, 2),
     },
+    firstLine: {
+      display: 'flex',
+    },
+    grow: {
+      flexGrow: 1,
+    },
   })
 );
 
 interface StateProps {
   langTags: LangTag[];
+  scriptName: ScriptName;
 }
 
 interface DispatchProps {}
@@ -42,7 +43,7 @@ interface IProps extends StateProps, DispatchProps {
 }
 
 export function LanguageChoice(props: IProps) {
-  const { list, langTags, secondary, choose, subtag } = props;
+  const { list, langTags, scriptName, secondary, choose, subtag } = props;
   const classes = useStyles();
   const [dense] = React.useState(true);
 
@@ -56,10 +57,20 @@ export function LanguageChoice(props: IProps) {
     }
   };
 
+  const scriptDetail = (tag: LangTag) => {
+    const tagParts = tag.tag.split('-');
+    return tagParts.length > 1 && tagParts[1].length === 4
+      ? '\u00A0in the\u00A0' + scriptName[tagParts[1]] + '\u00A0script'
+      : '';
+  };
+
   const detail = (tag: LangTag) => {
     return (
       <>
-        <Typography>A Language of {tag.regionname}</Typography>
+        <Typography>
+          A Language of {tag.regionname}
+          {scriptDetail(tag)}.
+        </Typography>
         <Typography>{tag.names ? tag.names.join(', ') : ''}</Typography>
       </>
     );
@@ -79,12 +90,15 @@ export function LanguageChoice(props: IProps) {
           onKeyDown={handleKeydown(tag)}
         >
           <ListItemText
-            primary={<Typography>{tag.name}</Typography>}
+            primary={
+              <div className={classes.firstLine}>
+                <Typography>{tag.name}</Typography>
+                <div className={classes.grow}>{'\u00A0'}</div>
+                <Typography>{tag.tag}</Typography>
+              </div>
+            }
             secondary={secondary ? detail(tag) : null}
           />
-          <ListItemSecondaryAction>
-            <Typography>{tag.tag}</Typography>
-          </ListItemSecondaryAction>
         </ListItem>
       );
     });
@@ -101,6 +115,7 @@ export function LanguageChoice(props: IProps) {
 
 const mapStateToProps = (state: AppState): StateProps => ({
   langTags: state.langTag.langTags,
+  scriptName: state.langTag.scriptNames,
 });
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
