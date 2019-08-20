@@ -376,7 +376,7 @@ export const LanguagePicker = (props: IProps) => {
         <DialogContent>
           <DialogContentText>
             <Typography>
-              {reactStringReplace(t.instructions, /\$(\d+)/g, () => (
+              {reactStringReplace(t.instructions, /\{(\d+)\}/g, () => (
                 <a
                   href="https://www.w3.org/International/questions/qa-choosing-language-tags"
                   target="_blank"
