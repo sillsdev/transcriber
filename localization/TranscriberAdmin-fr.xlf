@@ -295,6 +295,12 @@
             <target>Groupe</target>
          </segment>
       </unit>
+      <unit id="projectSettings.preview">
+         <segment>
+            <source>Preview</source>
+         	<target>Aperçu</target>
+         </segment>
+      </unit>
       <unit id="projectSettings.selectProjectGroup">
          <segment>
 			<source>Select project group. Each project relates to a single group. Group members can work on the project.</source>
@@ -1170,6 +1176,66 @@
          <segment>
 			<source>No Transcription Data Yet</source>
 			<target>Pas encore de données de transcription</target>
+         </segment>
+      </unit>
+   <unit id="languagePicker.font">
+         <segment>
+            <source>Font</source>
+            <target>Police</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.script">
+         <segment>
+            <source>Script</source>
+            <target>Script</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.language">
+         <segment>
+            <source>Language</source>
+         	<target>Langage</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.select">
+         <segment>
+            <source>Select a Language</source>
+         	<target>Sélectionnez une langue</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.instructions">
+         <segment>
+            <source>Type the language name or $1. Languages can also be found by country.</source>
+         	<target>Tapez le nom de la langue ou $1. les langues peuvent également être trouvées par pays.</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.code">
+         <segment>
+            <source>code</source>
+            <target>code</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.subtags">
+         <segment>
+            <source>Subtags</source>
+         	<target>Sous-étiquettes</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.details">
+         <segment>
+            <source>Details</source>
+         	<target>précisions</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+         	<target>Une langue de $1$2</target>
+         </segment>
+      </unit>
+      <unit id="languagePicker.inScript">
+         <segment>
+            <source> in the $1 script</source>
+         	<target> dans le script $1</target>
          </segment>
       </unit>
    </file>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { AppState } from '../store';
+import { IState, ILanguagePickerStrings } from '../model';
+import localStrings from '../selector/localize';
 import { LangTag, ScriptName } from '../store/langPicker/types';
 import { IRanked } from '../store/langPicker/types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface StateProps {
+  t: ILanguagePickerStrings;
   langTags: LangTag[];
   scriptName: ScriptName;
 }
@@ -43,7 +45,7 @@ interface IProps extends StateProps, DispatchProps {
 }
 
 export function LanguageChoice(props: IProps) {
-  const { list, langTags, scriptName, secondary, choose, subtag } = props;
+  const { t, list, langTags, scriptName, secondary, choose, subtag } = props;
   const classes = useStyles();
   const [dense] = React.useState(true);
 
@@ -60,7 +62,7 @@ export function LanguageChoice(props: IProps) {
   const scriptDetail = (tag: LangTag) => {
     const tagParts = tag.tag.split('-');
     return tagParts.length > 1 && tagParts[1].length === 4
-      ? '\u00A0in the\u00A0' + scriptName[tagParts[1]] + '\u00A0script'
+      ? t.inScript.replace('$1', scriptName[tagParts[1]])
       : '';
   };
 
@@ -68,8 +70,9 @@ export function LanguageChoice(props: IProps) {
     return (
       <>
         <Typography>
-          A Language of {tag.regionname}
-          {scriptDetail(tag)}.
+          {t.languageOf
+            .replace('$1', tag.regionname ? tag.regionname : '')
+            .replace('$2', scriptDetail(tag))}
         </Typography>
         <Typography>{tag.names ? tag.names.join(', ') : ''}</Typography>
       </>
@@ -113,7 +116,8 @@ export function LanguageChoice(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: AppState): StateProps => ({
+const mapStateToProps = (state: IState): StateProps => ({
+  t: localStrings(state, { layout: 'languagePicker' }),
   langTags: state.langTag.langTags,
   scriptName: state.langTag.scriptNames,
 });

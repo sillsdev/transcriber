@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'flex-end',
     }),
     button: {
       margin: theme.spacing(1),

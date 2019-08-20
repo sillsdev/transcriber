@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState } from '../model';
+import { IState, ILanguagePickerStrings } from '../model';
+import localStrings from '../selector/localize';
 import {
   LangTagMap,
   LangTag,
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface StateProps {
+  t: ILanguagePickerStrings;
   exact: LangTagMap;
   partial: LangTagMap;
   scripts: ScriptList;
@@ -88,6 +90,7 @@ interface IProps extends StateProps, DispatchProps {
 
 export const LanguagePicker = (props: IProps) => {
   const {
+    t,
     exact,
     partial,
     noSubtag,
@@ -190,7 +193,7 @@ export const LanguagePicker = (props: IProps) => {
               autoFocus
               select
               className={classes.fontField}
-              label={'Font'}
+              label={t.font}
               value={defaultFont}
               onChange={addFontInfo}
               SelectProps={{
@@ -263,7 +266,7 @@ export const LanguagePicker = (props: IProps) => {
               autoFocus
               select
               className={classes.textField}
-              label={'Script'}
+              label={t.script}
               value={defaultScript}
               onChange={handleScriptChange(tag)}
               SelectProps={{
@@ -347,13 +350,14 @@ export const LanguagePicker = (props: IProps) => {
     return <></>;
   };
 
+  const reactStringReplace = require('react-string-replace');
   return (
     <div>
       <TextField
         variant="filled"
         margin="dense"
         id="lang-bcp47"
-        label="Language"
+        label={t.language}
         required={true}
         style={{ width: 300 }}
         value={name + ' (' + value + ')'}
@@ -367,20 +371,20 @@ export const LanguagePicker = (props: IProps) => {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">
-          <Typography>Select a Language</Typography>
+          <Typography>{t.select}</Typography>
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             <Typography>
-              Type the language name or{' '}
-              <a
-                href="https://www.w3.org/International/questions/qa-choosing-language-tags"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                code
-              </a>
-              . Languages can also be found by country.
+              {reactStringReplace(t.instructions, /\$(\d+)/g, () => (
+                <a
+                  href="https://www.w3.org/International/questions/qa-choosing-language-tags"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t.code}
+                </a>
+              ))}
             </Typography>
           </DialogContentText>
           <FormGroup row className={classes.check}>
@@ -393,7 +397,7 @@ export const LanguagePicker = (props: IProps) => {
                   value="secondary"
                 />
               }
-              label="Subtags"
+              label={t.subtags}
             />
             <FormControlLabel
               className={classes.label2}
@@ -404,14 +408,14 @@ export const LanguagePicker = (props: IProps) => {
                   value="secondary"
                 />
               }
-              label="Details"
+              label={t.details}
             />
           </FormGroup>
           <TextField
             autoFocus
             margin="dense"
             id="language"
-            label="Language"
+            label={t.language}
             fullWidth
             value={response}
             onChange={handleChange}
@@ -456,6 +460,7 @@ export const LanguagePicker = (props: IProps) => {
 };
 
 const mapStateToProps = (state: IState): StateProps => ({
+  t: localStrings(state, { layout: 'languagePicker' }),
   exact: state.langTag.exact,
   partial: state.langTag.partial,
   scripts: state.langTag.scripts,
