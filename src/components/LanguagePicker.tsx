@@ -166,13 +166,23 @@ export const LanguagePicker = (props: IProps) => {
     if (setFont) setFont(e.target.value);
   };
 
+  const safeFonts = [
+    { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
+    { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
+    { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
+    { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
+  ];
+
   const selectFont = (tag: LangTag) => {
     let code = tag.script + '-' + tag.region;
     if (!fontMap.hasOwnProperty(code)) {
       code = tag.script;
     }
-    if (!fontMap.hasOwnProperty(code)) return;
-    if (fontMap[code].length === 1) {
+    if (!fontMap.hasOwnProperty(code)) {
+      setDefaultFont(safeFonts[0].value);
+      if (setFont) setFont(safeFonts[0].value);
+      setFontOpts(safeFonts.map(f => f.value));
+    } else if (fontMap[code].length === 1) {
       setDefaultFont(fontMap[code][0]);
       if (setFont) setFont(fontMap[code][0]);
     } else {
