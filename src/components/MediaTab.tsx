@@ -13,7 +13,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -199,12 +199,12 @@ export function MediaTab(props: IProps) {
     passageSections,
     sections,
     queryStore,
-    updateStore,
     auth,
     projectplans,
   } = props;
   const classes = useStyles();
   const [plan, setPlan] = useGlobal('plan');
+  const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -292,7 +292,7 @@ export function MediaTab(props: IProps) {
         );
         versions.forEach(v => {
           //console.log('Delete media ' + v.id);
-          updateStore(t =>
+          memory.update((t: TransformBuilder) =>
             t.removeRecord({
               type: 'mediafile',
               id: v.id,
@@ -365,13 +365,7 @@ export function MediaTab(props: IProps) {
       //console.log(
       //  'Requery mediafiles ' + currentlyLoading + ' Loaded: ' + loaded
       //);
-      queryStore(q => q.findRecords('mediafile'), {
-        sources: {
-          remote: {
-            timeout: 100000,
-          },
-        },
-      });
+      queryStore(q => q.findRecords('mediafile'));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [loaded]);

@@ -10,8 +10,8 @@ import {
   IPassageMediaStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -58,7 +58,7 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps extends IStateProps, IRecordProps {
   visible: boolean;
   closeMethod?: () => void;
 }
@@ -72,10 +72,10 @@ function PassageMedia(props: IProps) {
     t,
     visible,
     closeMethod,
-    updateStore,
   } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
+  const [memory] = useGlobal('memory');
   const [open, setOpen] = useState(visible);
   const [selectedPassage, setSelectedPassage] = useState('');
   const [selectedMedia, setSelectedMedia] = useState('');
@@ -91,7 +91,7 @@ function PassageMedia(props: IProps) {
     setMessage(<></>);
   };
   const attach = async (passage: string, mediaFile: string) => {
-    await updateStore(t =>
+    await memory.update((t: TransformBuilder) =>
       t.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
         type: 'passage',
         id: passage,
@@ -99,7 +99,7 @@ function PassageMedia(props: IProps) {
     );
   };
   const detach = async (mediaFile: string) => {
-    await updateStore(t =>
+    await memory.update((t: TransformBuilder) =>
       t.replaceRelatedRecord(
         { type: 'mediafile', id: mediaFile },
         'passage',

@@ -51,7 +51,7 @@ const schemaDefinition: SchemaSettings = {
         projectIntegrations: {
           type: 'hasMany',
           model: 'projectintegration',
-          inverse: 'project',
+          inverse: 'integration',
         },
       },
     },
@@ -126,7 +126,6 @@ const schemaDefinition: SchemaSettings = {
         isPublic: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
-        dateArchived: { type: 'date' },
       },
       relationships: {
         projecttype: {
@@ -288,7 +287,7 @@ const schemaDefinition: SchemaSettings = {
         projects: { type: 'hasMany', model: 'project', inverse: 'owner' },
         organizationMemberships: {
           type: 'hasMany',
-          model: 'organizationMembership',
+          model: 'organizationmembership',
           inverse: 'user',
         },
         groupMemberships: {
@@ -333,7 +332,7 @@ const schemaDefinition: SchemaSettings = {
         projects: { type: 'hasMany', model: 'project' },
         organizationMemberships: {
           type: 'hasMany',
-          model: 'organizationMembership',
+          model: 'organizationmembership',
         },
         userRoles: { type: 'hasMany', model: 'userrole' },
         groupMemberships: { type: 'hasMany', model: 'groupmembership' },

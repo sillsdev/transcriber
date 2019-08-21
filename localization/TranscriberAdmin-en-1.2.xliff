@@ -349,6 +349,13 @@
 					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="projectSettings.preview">
+				<source>Preview</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="projectSettings.selectProjectGroup">
 				<source>Select project group. Each project relates to a single group. Group members can work on the project.</source>
 				<target/>
@@ -1370,6 +1377,90 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">treeChart.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.font">
+				<source>Font</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.script">
+				<source>Script</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.language">
+				<source>Language</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.selectLanguage">
+				<source>Select a Language</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.instructions">
+				<source>Type the language name or {1}. Languages can also be found by country.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.code">
+				<source>code</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.subtags">
+				<source>Subtags</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.details">
+				<source>Details</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.languageOf">
+				<source>A Language of $1$2.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.inScript">
+				<source> in the $1 script</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.select">
+				<source>Select</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

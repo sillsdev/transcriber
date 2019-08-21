@@ -4,11 +4,9 @@ import Auth from '../auth/Auth';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, User, IMainStrings } from '../model';
+import { IState, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
-import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -67,24 +65,28 @@ interface IStateProps {
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
+  fetchLangTags: typeof action.fetchLangTags;
   setLanguage: typeof action.setLanguage;
   fetchOrbitData: typeof action.fetchOrbitData;
+  fetchScriptFonts: typeof action.fetchScriptFonts;
 }
 
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IStateProps, IRecordProps, IDispatchProps {
+interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
 }
 
 export function Loading(props: IProps) {
   const { orbitLoaded, auth, t } = props;
   const classes = useStyles();
-  const { fetchOrbitData, fetchLocalization, setLanguage } = props;
+  const {
+    fetchOrbitData,
+    fetchLocalization,
+    fetchLangTags,
+    fetchScriptFonts,
+    setLanguage,
+  } = props;
   const { isAuthenticated } = auth;
-  const [dataStore] = useGlobal('dataStore');
+  const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
   /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -95,13 +97,15 @@ export function Loading(props: IProps) {
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
-    fetchOrbitData(schema, dataStore, keyMap, auth, setUser, setCompleted);
+    fetchLangTags();
+    fetchScriptFonts();
+    fetchOrbitData(schema, memory, keyMap, auth, setUser, setCompleted);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   if (!isAuthenticated()) return <Redirect to="/" />;
 
-  if (orbitLoaded && (completed === 95 || API_CONFIG.offline)) {
+  if (orbitLoaded && (completed === 100 || API_CONFIG.offline)) {
     return <Redirect to="/main" />;
   }
 
@@ -144,16 +148,14 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
       fetchOrbitData: action.fetchOrbitData,
+      fetchLangTags: action.fetchLangTags,
+      fetchScriptFonts: action.fetchScriptFonts,
     },
     dispatch
   ),
 });
 
-const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
-};
-
-export default withData(mapRecordsToProps)(connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Loading) as any) as any;
+)(Loading) as any;

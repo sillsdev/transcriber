@@ -1,8 +1,8 @@
 cd ..\..
 copy strings.json ..\public\localization
 del strings.json
-copy localizationReducer.tsx ..\src\reducer
+copy localizationReducer.tsx ..\src\store\localization\reducers.tsx
 del localizationReducer.tsx
-copy localizeModel.tsx ..\src\model
+copy localizeModel.tsx ..\src\store\localization\model.tsx
 del localizeModel.tsx
 pause
