@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, Plan, PlanType, Section, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Typography } from '@material-ui/core';
@@ -77,15 +77,15 @@ interface IRecordProps {
   sections: Array<Section>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps extends IStateProps, IRecordProps {
   displaySet: (type: string) => any;
 }
 
 export function PlanTable(props: IProps) {
-  const { plans, planTypes, sections, updateStore, t, displaySet } = props;
+  const { plans, planTypes, sections, t, displaySet } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
-  const [dataStore] = useGlobal('dataStore');
+  const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
@@ -116,7 +116,7 @@ export function PlanTable(props: IProps) {
     setDeleteItem(e.currentTarget.id);
   };
   const handleDeleteConfirmed = () => {
-    updateStore((t: TransformBuilder) =>
+    memory.update((t: TransformBuilder) =>
       t.removeRecord({
         type: 'plan',
         id: deleteItem,
@@ -139,7 +139,7 @@ export function PlanTable(props: IProps) {
       },
     } as any;
     schema.initializeRecord(plan);
-    await dataStore.update((t: TransformBuilder) => [
+    await memory.update((t: TransformBuilder) => [
       t.addRecord(plan),
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
@@ -162,8 +162,8 @@ export function PlanTable(props: IProps) {
   const handleEditMethod = async (plan: any) => {
     setDialogVisible(false);
     delete plan.relationships;
-    await updateStore(t => t.replaceRecord(plan));
-    await updateStore(t =>
+    await memory.update((t: TransformBuilder) => t.replaceRecord(plan));
+    await memory.update((t: TransformBuilder) =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
         id: plan.attributes.planType,

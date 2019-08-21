@@ -111,7 +111,7 @@ export function ProjectSettings(props: IProps) {
   const { add, projects, projectTypes, groups, t, noMargin, finishAdd } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
-  const [dataStore] = useGlobal('dataStore');
+  const [memory] = useGlobal('memory');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
@@ -177,7 +177,7 @@ export function ProjectSettings(props: IProps) {
     setMessage(<></>);
   };
   const handleSave = () => {
-    dataStore.update((t: TransformBuilder) => [
+    memory.update((t: TransformBuilder) => [
       t.replaceRecord({
         type: 'project',
         id: project,
@@ -228,7 +228,7 @@ export function ProjectSettings(props: IProps) {
       },
     } as any;
     schema.initializeRecord(project);
-    dataStore.update((t: TransformBuilder) => [
+    memory.update((t: TransformBuilder) => [
       t.addRecord(project),
       t.replaceRelatedRecord(
         { type: 'project', id: project.id },

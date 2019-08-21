@@ -186,7 +186,7 @@ export function AssignmentTable(props: IProps) {
     users,
     roles,
   } = props;
-  const [dataStore] = useGlobal('dataStore');
+  const [memory] = useGlobal('memory');
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
@@ -244,7 +244,7 @@ export function AssignmentTable(props: IProps) {
     setConfirmAction('');
     let sections = getSelectedSections();
     sections.forEach(async s => {
-      await dataStore.update((t: TransformBuilder) => [
+      await memory.update((t: TransformBuilder) => [
         t.replaceRelatedRecord({ type: 'section', id: s.id }, 'transcriber', {
           type: 'user',
           id: '',

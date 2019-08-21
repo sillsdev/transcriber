@@ -7,21 +7,29 @@ import Coordinator, {
   EventLoggingStrategy,
 } from '@orbit/coordinator';
 import IndexedDBSource from '@orbit/indexeddb';
+import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
 import { Schema, KeyMap, Transform } from '@orbit/data';
-import Store from '@orbit/store';
+import { Bucket } from '@orbit/core';
+import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
-import { Online } from './utils';
+import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 
-function Sources(
+// import { Online } from './utils';
+
+const Sources = async (
   schema: Schema,
-  store: Store,
+  memory: Memory,
   keyMap: KeyMap,
   auth: Auth,
   setUser: (id: string) => void,
   setCompleted: (valud: number) => void
-): Promise<any> {
+) => {
+  const bucket: Bucket = new IndexedDBBucket({
+    namespace: 'transcriber-bucket',
+  }) as any;
+
   const backup = new IndexedDBSource({
     schema,
     keyMap,
@@ -35,14 +43,9 @@ function Sources(
   );
   const userToken = localStorage.getItem('user-token');
 
-  if (
-    Online() &&
-    !API_CONFIG.offline &&
-    auth.accessToken &&
-    userToken !== tokData.sub
-  ) {
-    backup.reset();
-  }
+  await backup
+    .pull(q => q.findRecords())
+    .then(transform => memory.sync(transform));
 
   let remote: JSONAPISource = {} as JSONAPISource;
 
@@ -50,42 +53,48 @@ function Sources(
     remote = new JSONAPISource({
       schema,
       keyMap,
+      bucket,
       name: 'remote',
       namespace: 'api',
       host: API_CONFIG.host,
+      SerializerClass: JSONAPISerializerCustom,
       defaultFetchSettings: {
         headers: {
           Authorization: 'Bearer ' + auth.accessToken,
         },
+        timeout: 100000,
       },
     });
-    remote.serializer.resourceKey = () => {
+    remote.requestProcessor.serializer.resourceKey = () => {
       return 'remoteId';
     };
   }
 
   const coordinator = new Coordinator();
-  coordinator.addSource(store);
-  coordinator.addSource(backup);
+  await coordinator.addSource(memory);
+  await coordinator.addSource(backup);
 
   if (!API_CONFIG.offline) {
-    coordinator.addSource(remote);
+    await coordinator.addSource(remote);
   }
 
-  // Update indexedDb when store updated
-  coordinator.addStrategy(
+  // Update indexedDb when memory updated
+  // TODO: error if we can't read and write the indexedDB
+  await coordinator.addStrategy(
     new SyncStrategy({
-      source: 'store',
+      source: 'memory',
       target: 'backup',
       blocking: true,
     })
   );
 
   if (!API_CONFIG.offline) {
-    // Query the remote server whenever the store is queried
-    coordinator.addStrategy(
+    // Query the remote server whenever the memory is queried
+    await coordinator.addStrategy(
       new RequestStrategy({
-        source: 'store',
+        name: 'remote-request',
+
+        source: 'memory',
         on: 'beforeQuery',
 
         target: 'remote',
@@ -95,10 +104,12 @@ function Sources(
       })
     );
 
-    // Update the remote server whenever the store is updated
-    coordinator.addStrategy(
+    // Update the remote server whenever the memory is updated
+    await coordinator.addStrategy(
       new RequestStrategy({
-        source: 'store',
+        name: 'remote-update',
+
+        source: 'memory',
         on: 'beforeUpdate',
 
         target: 'remote',
@@ -108,109 +119,122 @@ function Sources(
       })
     );
 
-    // Sync all changes received from the remote server to the store
-    coordinator.addStrategy(
+    // Sync all changes received from the remote server to the memory
+    await coordinator.addStrategy(
       new SyncStrategy({
+        name: 'remote-sync',
+
         source: 'remote',
-        target: 'store',
-        blocking: false,
+        target: 'memory',
+
+        blocking: true,
       })
     );
   }
 
-  coordinator.addStrategy(new EventLoggingStrategy());
+  await coordinator.addStrategy(new EventLoggingStrategy());
+
+  await coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
+    console.log('Coordinator will log warnings');
+    if (API_CONFIG.offline) {
+      memory
+        .query(q => q.findRecords('user'))
+        .then((u: Array<User>) => {
+          u = u.filter(u1 => u1.attributes && u1.attributes.name);
+          if (u.length === 1) {
+            setUser(u[0].id);
+          }
+        });
+    } else if (userToken === tokData.sub) {
+      setUser(localStorage.getItem('user-id') as string);
+    }
+  });
 
   if (!API_CONFIG.offline && userToken !== tokData.sub) {
-    remote
-      .pull(q => q.findRecords('currentuser'), {
-        sources: {
-          remote: {
-            timeout: 100000,
-          },
-        },
-      })
+    await remote
+      .pull(q => q.findRecords('currentuser'))
       .then((transform: Transform[]) => {
-        store.sync(transform);
+        memory.sync(transform);
         const user = (transform[0].operations[0] as any).record;
         setUser(user.id);
         localStorage.setItem('user-id', user.id);
       });
-    remote
+    await remote
       .pull(q => q.findRecords('user'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(5));
-    remote
+    await remote
       .pull(q => q.findRecords('organization'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(10));
-    remote
+    await remote
       .pull(q => q.findRecords('organizationmembership'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(15));
-    remote
+    await remote
       .pull(q => q.findRecords('project'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(20));
-    remote
+    await remote
       .pull(q => q.findRecords('integration'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(25));
-    remote
+    await remote
       .pull(q => q.findRecords('projectintegration'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(30));
-    remote
+    await remote
       .pull(q => q.findRecords('projecttype'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(35));
-    remote
+    await remote
       .pull(q => q.findRecords('plan'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(40));
-    remote
+    await remote
       .pull(q => q.findRecords('plantype'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(45));
-    remote
+    await remote
       .pull(q => q.findRecords('section'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(50));
-    remote
+    await remote
       .pull(q => q.findRecords('passagesection'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(55));
-    remote
+    await remote
       .pull(q => q.findRecords('passage'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(60));
-    remote
+    await remote
       .pull(q => q.findRecords('userrole'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(65));
-    remote
+    await remote
       .pull(q => q.findRecords('userpassage'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(70));
-    remote
+    await remote
       .pull(q => q.findRecords('group'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(75));
-    remote
+    await remote
       .pull(q => q.findRecords('groupmembership'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(80));
-    remote
+    await remote
       .pull(q => q.findRecords('role'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(85));
-    remote
+    await remote
       .pull(q => q.findRecords('mediafile'))
-      .then(transform => store.sync(transform))
+      .then(transform => memory.sync(transform))
       .then(() => setCompleted(90));
-    remote
+    await remote
       .pull(q => q.findRecords('activitystate'))
       .then(transform => {
-        store.sync(transform);
+        memory.sync(transform);
         if (tokData.sub !== '') {
           localStorage.setItem('user-token', tokData.sub);
         }
@@ -218,30 +242,7 @@ function Sources(
       .then(() => setCompleted(95));
   }
 
-  return backup
-    .pull(q => q.findRecords())
-    .then(transform => store.sync(transform))
-    .then(() =>
-      coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
-        console.log('Coordinator will log warnings');
-        if (API_CONFIG.offline) {
-          store
-            .query(q => q.findRecords('user'))
-            .then((u: Array<User>) => {
-              u = u.filter(u1 => u1.attributes && u1.attributes.name);
-              if (u.length === 1) {
-                setUser(u[0].id);
-                setCompleted(100);
-              }
-            });
-        } else if (userToken === tokData.sub) {
-          setUser(localStorage.getItem('user-id') as string);
-          setCompleted(95);
-        } else {
-          setCompleted(80); // This happens before the others and shouldn't show complete
-        }
-      })
-    );
-}
+  setCompleted(100);
+};
 
 export default Sources;

@@ -10,7 +10,7 @@ import {
   IGroupTableStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem } from '@material-ui/core';
@@ -110,20 +110,16 @@ interface IRecordProps {
   groupMemberships: Array<GroupMembership>;
 }
 
-interface IProps
-  extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
 }
 
 export function GroupTable(props: IProps) {
-  const { t, groups, projects, groupMemberships, updateStore } = props;
+  const { t, groups, projects, groupMemberships } = props;
   const classes = useStyles();
   const [keyMap] = useGlobal('keyMap');
   const [organization] = useGlobal('organization');
-  const [dataStore] = useGlobal('dataStore');
+  const [memory] = useGlobal('memory');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_group, setGroup] = useGlobal('group');
   const [schema] = useGlobal('schema');
@@ -174,7 +170,7 @@ export function GroupTable(props: IProps) {
     } as any;
     schema.initializeRecord(group);
 
-    await dataStore.update((t: TransformBuilder) => [
+    await memory.update((t: TransformBuilder) => [
       t.addRecord(group),
       t.replaceRelatedRecord({ type: 'group', id: group.id }, 'owner', {
         type: 'organization',
@@ -189,8 +185,8 @@ export function GroupTable(props: IProps) {
   const handleEditMethod = async (group: any) => {
     setDialogVisible(false);
     delete group.relationships;
-    await updateStore(t => t.replaceRecord(group));
-    await updateStore(t =>
+    await memory.update((t: TransformBuilder) => t.replaceRecord(group));
+    await memory.update((t: TransformBuilder) =>
       t.replaceRelatedRecord({ type: 'group', id: group.id }, 'owner', {
         type: 'organization',
         id: organization,
@@ -219,7 +215,7 @@ export function GroupTable(props: IProps) {
     if (confirmAction === 'Delete') {
       setCheck(Array<number>());
       check.forEach(i => {
-        updateStore(t => t.removeRecord(data[i].id));
+        memory.update((t: TransformBuilder) => t.removeRecord(data[i].id));
       });
     }
     setConfirmAction('');

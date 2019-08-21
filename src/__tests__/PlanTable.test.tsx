@@ -4,9 +4,9 @@ import { setGlobal } from 'reactn';
 import { Section } from '../model';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
-import store from '../store';
+import configureStore from '../store';
 import { createMuiTheme } from '@material-ui/core';
-import Store from '@orbit/store';
+import Memory from '@orbit/memory';
 import { schema, keyMap } from '../schema';
 import history from '../history';
 import {
@@ -15,12 +15,14 @@ import {
   cleanup,
   waitForElement,
 } from '@testing-library/react';
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import PlanTable from '../components/PlanTable';
 
 const theme = createMuiTheme({});
 
-const dataStore = new Store({ schema, keyMap });
+const store = configureStore();
+
+const memory = new Memory({ schema, keyMap });
 
 const globals = {
   organization: null,
@@ -28,14 +30,14 @@ const globals = {
   plan: null,
   user: null,
   lang: 'en',
-  dataStore: dataStore,
+  memory: memory,
   schema: schema,
   keyMap: keyMap,
 };
 setGlobal(globals);
 
 const tree = (props?: any) => (
-  <DataProvider dataStore={dataStore}>
+  <DataProvider dataStore={memory}>
     <Provider store={store}>
       <Router history={history}>
         <PlanTable {...props} />
@@ -53,7 +55,7 @@ const addProjects = async () => {
   } as any;
   schema.initializeRecord(project1);
   setGlobal({ ...globals, project: project1.id });
-  await (dataStore as Store).update(t => t.addRecord(project1));
+  await (memory as Memory).update(t => t.addRecord(project1));
   const project2 = {
     type: 'project',
     attributes: {
@@ -61,7 +63,7 @@ const addProjects = async () => {
     },
   } as any;
   schema.initializeRecord(project2);
-  await (dataStore as Store).update(t => t.addRecord(project2));
+  await (memory as Memory).update(t => t.addRecord(project2));
   return [project1.id, project2.id];
 };
 
@@ -73,7 +75,7 @@ const addPlan = async (project1: string) => {
     },
   } as any;
   schema.initializeRecord(planType);
-  await (dataStore as Store).update(t => t.addRecord(planType));
+  await (memory as Memory).update(t => t.addRecord(planType));
   const plan = {
     type: 'plan',
     attributes: {
@@ -81,14 +83,14 @@ const addPlan = async (project1: string) => {
     },
   } as any;
   schema.initializeRecord(plan);
-  await (dataStore as Store).update(t => t.addRecord(plan));
-  await (dataStore as Store).update(t =>
+  await (memory as Memory).update(t => t.addRecord(plan));
+  await (memory as Memory).update(t =>
     t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
       type: 'plantype',
       id: planType.id,
     })
   );
-  await (dataStore as Store).update(t =>
+  await (memory as Memory).update(t =>
     t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'project', {
       type: 'project',
       id: project1,
@@ -101,7 +103,7 @@ afterEach(cleanup);
 
 test('can render PlanTable snapshot', async () => {
   const { getByText, container } = render(tree());
-  const TestPlanTable = await waitForElement(() => getByText(/^Sections$/i));
+  await waitForElement(() => getByText(/^Sections$/i));
   expect(container.firstChild).toMatchSnapshot();
 });
 
@@ -109,13 +111,13 @@ test('PlanTable displays plans in project name and type', async () => {
   const [project1, project2] = await addProjects();
   await addPlan(project1);
 
-  const projects = await (dataStore as Store).query(q =>
+  const projects = await (memory as Memory).query(q =>
     q.findRecords('project')
   );
-  const plans = await (dataStore as Store).query(q => q.findRecords('plan'));
+  const plans = await (memory as Memory).query(q => q.findRecords('plan'));
   const sections = Array<Section>();
   const { getByText, container } = render(tree({ projects, plans, sections }));
-  const TestPlanTable = await waitForElement(() => getByText(/^Genesis$/i));
+  await waitForElement(() => getByText(/^Genesis$/i));
   const tbody = container.querySelector('tbody');
   const button = tbody && tbody.querySelector('button');
 
@@ -128,14 +130,14 @@ test('PlanTable does not display plan of another project', async () => {
   const [project1, project2] = await addProjects();
   await addPlan(project1);
 
-  const projects = await (dataStore as Store).query(q =>
+  const projects = await (memory as Memory).query(q =>
     q.findRecords('project')
   );
-  const plans = await (dataStore as Store).query(q => q.findRecords('plan'));
+  const plans = await (memory as Memory).query(q => q.findRecords('plan'));
   const sections = Array<Section>();
   setGlobal({ ...globals, project: project2 });
   const { getByText } = render(tree({ projects, plans, sections }));
-  const TestPlanTable = await waitForElement(() => getByText(/^No Data$/i));
+  await waitForElement(() => getByText(/^No Data$/i));
 
   expect(getByText(/^No Data$/i)).toBeTruthy;
 });
@@ -144,19 +146,17 @@ test('Clicking Add FAB on PlanTable displays dialogue', async () => {
   const [project1, project2] = await addProjects();
   await addPlan(project1);
 
-  const projects = await (dataStore as Store).query(q =>
+  const projects = await (memory as Memory).query(q =>
     q.findRecords('project')
   );
-  const plans = await (dataStore as Store).query(q => q.findRecords('plan'));
+  const plans = await (memory as Memory).query(q => q.findRecords('plan'));
   const sections = Array<Section>();
   const { getByText, getByTestId } = render(
     tree({ projects, plans, sections })
   );
-  const TestPlanTable = await waitForElement(() => getByText(/^Genesis$/i));
-  fireEvent.click(getByTestId('addButton'));
-  const TestDialogLaunch = await waitForElement(() =>
-    getByText(/^Add a Plan$/i)
-  );
+  await waitForElement(() => getByText(/^Genesis$/i));
+  fireEvent.click(getByText('Add Plan'));
+  await waitForElement(() => getByText(/^Add a Plan$/i));
 
   expect(getByText(/^Add a Plan$/i)).toHaveTextContent('Add a Plan');
 });

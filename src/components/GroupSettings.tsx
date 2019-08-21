@@ -12,7 +12,7 @@ import {
   IGroupSettingsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -108,7 +108,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {}
+interface IProps extends IStateProps, IRecordProps {}
 
 export function GroupSettings(props: IProps) {
   const {
@@ -118,10 +118,10 @@ export function GroupSettings(props: IProps) {
     users,
     orgMemberships,
     roles,
-    updateStore,
+
     t,
   } = props;
-  const [dataStore] = useGlobal('dataStore');
+  const [memory] = useGlobal('memory');
   const classes = useStyles();
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
@@ -146,7 +146,7 @@ export function GroupSettings(props: IProps) {
     setMessage(<></>);
   };
   const handleSave = () => {
-    updateStore((t: TransformBuilder) =>
+    memory.update((t: TransformBuilder) =>
       t.replaceRecord({
         type: 'group',
         id: group,
@@ -169,7 +169,9 @@ export function GroupSettings(props: IProps) {
       )
       .map(gm => gm.id);
     if (ids.length > 0) {
-      updateStore(t => t.removeRecord({ type: 'groupmembership', id: ids[0] }));
+      memory.update((t: TransformBuilder) =>
+        t.removeRecord({ type: 'groupmembership', id: ids[0] })
+      );
     }
     setConfirmItem(null);
   };
@@ -203,7 +205,7 @@ export function GroupSettings(props: IProps) {
       type: 'groupmembership',
     } as any;
     schema.initializeRecord(groupMemberRec);
-    await dataStore.update((t: TransformBuilder) => [
+    await memory.update((t: TransformBuilder) => [
       t.addRecord(groupMemberRec),
       t.replaceRelatedRecord(
         { type: 'groupmembership', id: groupMemberRec.id },

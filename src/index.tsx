@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { Router } from 'react-router-dom';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
-import Store from '@orbit/store';
+import Memory from '@orbit/memory';
 import { schema, keyMap } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
@@ -16,7 +16,7 @@ import history from './history';
 const store = configureStore();
 
 // Orbit store
-const dataStore = new Store({ schema, keyMap });
+const memory = new Memory({ schema, keyMap });
 
 setGlobal({
   organization: '',
@@ -26,13 +26,13 @@ setGlobal({
   group: '',
   user: '',
   lang: 'en',
-  dataStore: dataStore,
+  memory: memory,
   schema: schema,
   keyMap: keyMap,
 });
 
 const Root = () => (
-  <DataProvider dataStore={dataStore}>
+  <DataProvider dataStore={memory}>
     <Provider store={store as any}>
       <Router history={history}>
         <App />

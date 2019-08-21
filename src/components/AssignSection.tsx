@@ -11,8 +11,8 @@ import {
   Role,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -68,7 +68,7 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps extends IStateProps, IRecordProps {
   sections: Array<Section>;
   visible: boolean;
   closeMethod?: () => void;
@@ -84,10 +84,10 @@ function AssignSection(props: IProps) {
     t,
     visible,
     closeMethod,
-    updateStore,
   } = props;
   const classes = useStyles();
   const [project] = useGlobal('project');
+  const [memory] = useGlobal('memory');
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
@@ -104,7 +104,7 @@ function AssignSection(props: IProps) {
   };
 
   const assign = async (section: Section, userId: string, role: string) => {
-    await updateStore(t =>
+    await memory.update((t: TransformBuilder) =>
       t.replaceRelatedRecord({ type: 'section', id: section.id }, role, {
         type: 'user',
         id: userId,

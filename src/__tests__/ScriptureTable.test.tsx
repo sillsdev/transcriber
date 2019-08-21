@@ -3,9 +3,9 @@ import { Router } from 'react-router-dom';
 import { setGlobal } from 'reactn';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
-import store from '../store';
+import configureStore from '../store';
 import { createMuiTheme } from '@material-ui/core';
-import Store from '@orbit/store';
+import Memory from '@orbit/memory';
 import { schema, keyMap } from '../schema';
 import history from '../history';
 import {
@@ -14,12 +14,14 @@ import {
   cleanup,
   waitForElement,
 } from '@testing-library/react';
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import ScriptureTable from '../components/ScriptureTable';
 
 const theme = createMuiTheme({});
 
-const dataStore = new Store({ schema, keyMap });
+const store = configureStore();
+
+const memory = new Memory({ schema, keyMap });
 
 const globals = {
   organization: null,
@@ -27,17 +29,26 @@ const globals = {
   plan: null,
   user: null,
   lang: 'en',
-  dataStore: dataStore,
+  memory: memory,
   schema: schema,
   keyMap: keyMap,
 };
 setGlobal(globals);
 
 const tree = (
-  <DataProvider dataStore={dataStore}>
+  <DataProvider dataStore={memory}>
     <Provider store={store}>
       <Router history={history}>
-        <ScriptureTable />
+        <ScriptureTable
+          cols={{
+            SectionSeq: 0,
+            SectionnName: 1,
+            PassageSeq: 2,
+            Book: 3,
+            Reference: 4,
+            Title: 5,
+          }}
+        />
       </Router>
     </Provider>
   </DataProvider>
@@ -52,7 +63,7 @@ const addOneSection = async () => {
   } as any;
   schema.initializeRecord(plan);
   setGlobal({ ...globals, plan: plan.id });
-  await dataStore.update(t => t.addRecord(plan));
+  await memory.update(t => t.addRecord(plan));
   const section = {
     type: 'section',
     attributes: {
@@ -61,8 +72,8 @@ const addOneSection = async () => {
     },
   } as any;
   schema.initializeRecord(section);
-  await dataStore.update(t => t.addRecord(section));
-  await dataStore.update(t =>
+  await memory.update(t => t.addRecord(section));
+  await memory.update(t =>
     t.replaceRelatedRecord({ type: 'section', id: section.id }, 'plan', {
       type: 'plan',
       id: plan.id,
@@ -85,20 +96,20 @@ const addPassageToSection = async (sectionId: string) => {
     },
   } as any;
   schema.initializeRecord(passage);
-  await dataStore.update(t => t.addRecord(passage));
+  await memory.update(t => t.addRecord(passage));
   const passageSection = {
     type: 'passagesection',
   } as any;
   schema.initializeRecord(passageSection);
-  await dataStore.update(t => t.addRecord(passageSection));
-  await dataStore.update(t =>
+  await memory.update(t => t.addRecord(passageSection));
+  await memory.update(t =>
     t.replaceRelatedRecord(
       { type: 'passagesection', id: passageSection.id },
       'section',
       { type: 'section', id: sectionId }
     )
   );
-  await dataStore.update(t =>
+  await memory.update(t =>
     t.replaceRelatedRecord(
       { type: 'passagesection', id: passageSection.id },
       'passage',
@@ -112,18 +123,14 @@ afterEach(cleanup);
 
 test('can render ScriptureTable snapshot', async () => {
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Section$/i)
-  );
+  await waitForElement(() => getByText(/^Section$/i));
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('ScriptureTable renders on section line', async () => {
   await addOneSection();
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   expect(getByText(/^Creation$/i)).toHaveTextContent('Creation');
   const body = container.querySelector('tbody');
   expect(body).not.toBeFalsy;
@@ -135,9 +142,7 @@ test('ScriptureTable renders a section with a passage', async () => {
   await addPassageToSection(sectionId);
 
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   expect(getByText(/^Seven Days$/i)).toHaveTextContent('Seven Days');
   const body = container.querySelector('tbody');
   expect(body).not.toBeFalsy;
@@ -149,9 +154,7 @@ test('ScriptureTable AddPassage button adds a row', async () => {
   await addPassageToSection(sectionId);
 
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   fireEvent.click(getByText(/Add Passage/i));
   const body = container.querySelector('tbody');
   expect(body).not.toBeFalsy;
@@ -164,9 +167,7 @@ test('ScriptureTable AddPassage button adds first row', async () => {
   await addOneSection();
 
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   fireEvent.click(getByText(/Add Passage/i));
   const body = container.querySelector('tbody');
   expect(body).not.toBeFalsy;
@@ -180,9 +181,7 @@ test('ScriptureTable AddSection button adds a row with the next section number',
   await addPassageToSection(sectionId);
 
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   fireEvent.click(getByText(/Add Section/i));
   const body = container.querySelector('tbody');
   expect(body).not.toBeFalsy;
@@ -195,9 +194,7 @@ test('ScriptureTable AddSection button adds second section when no passages in p
   await addOneSection();
 
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   fireEvent.click(getByText(/Add Section/i));
   const body = container.querySelector('tbody');
   expect(body).not.toBeFalsy;
@@ -208,13 +205,13 @@ test('ScriptureTable AddSection button adds second section when no passages in p
 
 test('ScriptureTable AddSection button adds first section', async () => {
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Section$/i)
-  );
-  fireEvent.click(getByText(/Add Section/i));
+  await waitForElement(() => getByText(/^Section$/i));
   const body = container.querySelector('tbody');
+  let count = body && body.children.length;
+  count = count ? count : 0;
+  fireEvent.click(getByText(/Add Section/i));
   expect(body).not.toBeFalsy;
-  expect(body && body.children.length).toBe(2);
+  expect(body && body.children.length).toBe(count + 1);
   // sequence number column should be 1
   expect(body && body.childNodes[1].childNodes[1].textContent).toBe('1');
 });
@@ -224,17 +221,11 @@ test('ScriptureTable Delete action with nothing selected', async () => {
   await addPassageToSection(sectionId);
 
   const { getByText, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   fireEvent.click(getByText(/Action/i));
-  const TestScriptureTableActionMenu = await waitForElement(() =>
-    getByText(/Delete/i)
-  );
+  await waitForElement(() => getByText(/Delete/i));
   fireEvent.click(getByText(/Delete/i));
-  const TestScriptureTableCopyAction = await waitForElement(() =>
-    getByText(/Please select row/i)
-  );
+  await waitForElement(() => getByText(/Please select row/i));
   expect(true);
 });
 
@@ -243,14 +234,10 @@ test('ScriptureTable Select passage row', async () => {
   await addPassageToSection(sectionId);
 
   const { getByText, getAllByTestId, getByTestId } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   const box = getAllByTestId('check')[1];
   fireEvent.click(box.querySelector('input') as HTMLElement);
-  const TestScriptureTableChecked = await waitForElement(() =>
-    getByTestId('checked')
-  );
+  await waitForElement(() => getByTestId('checked'));
   expect(true);
 });
 
@@ -259,22 +246,14 @@ test('ScriptureTable Delete passage row gives confirmation', async () => {
   await addPassageToSection(sectionId);
 
   const { getByText, getAllByTestId, getByTestId } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   const box = getAllByTestId('check')[1];
   fireEvent.click(box.querySelector('input') as HTMLElement);
-  const TestScriptureTableChecked = await waitForElement(() =>
-    getByTestId('checked')
-  );
+  await waitForElement(() => getByTestId('checked'));
   fireEvent.click(getByText(/Action/i));
-  const TestScriptureTableActionMenu = await waitForElement(() =>
-    getByText(/Delete/i)
-  );
+  await waitForElement(() => getByText(/Delete/i));
   fireEvent.click(getByText(/Delete/i));
-  const TestScriptureTableCopyAction = await waitForElement(() =>
-    getByText(/Confirmation/i)
-  );
+  await waitForElement(() => getByText(/Confirmation/i));
   expect(true);
 });
 
@@ -283,22 +262,14 @@ test('ScriptureTable Delete passage row', async () => {
   await addPassageToSection(sectionId);
 
   const { getByText, getAllByTestId, getByTestId, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   const box = getAllByTestId('check')[1];
   fireEvent.click(box.querySelector('input') as HTMLElement);
-  const TestScriptureTableChecked = await waitForElement(() =>
-    getByTestId('checked')
-  );
+  await waitForElement(() => getByTestId('checked'));
   fireEvent.click(getByText(/Action/i));
-  const TestScriptureTableActionMenu = await waitForElement(() =>
-    getByText(/Delete/i)
-  );
+  await waitForElement(() => getByText(/Delete/i));
   fireEvent.click(getByText(/Delete/i));
-  const TestScriptureTableCopyAction = await waitForElement(() =>
-    getByText(/Confirmation/i)
-  );
+  await waitForElement(() => getByText(/Confirmation/i));
   fireEvent.click(getByText(/Yes/i));
   const body = container.querySelector('tbody');
   expect(body && body.children.length).toBe(2);
@@ -309,23 +280,15 @@ test('ScriptureTable Delete section rows', async () => {
   await addPassageToSection(sectionId);
 
   const { getByText, getAllByTestId, getByTestId, container } = render(tree);
-  const TestScriptureTable = await waitForElement(() =>
-    getByText(/^Creation$/i)
-  );
+  await waitForElement(() => getByText(/^Creation$/i));
   const box = getAllByTestId('check')[0];
   fireEvent.click(box.querySelector('input') as HTMLElement);
-  const TestScriptureTableChecked = await waitForElement(() =>
-    getAllByTestId('checked')
-  );
+  await waitForElement(() => getAllByTestId('checked'));
   expect(getAllByTestId('checked').length).toBe(2);
   fireEvent.click(getByText(/Action/i));
-  const TestScriptureTableActionMenu = await waitForElement(() =>
-    getByText(/Delete/i)
-  );
+  await waitForElement(() => getByText(/Delete/i));
   fireEvent.click(getByText(/Delete/i));
-  const TestScriptureTableCopyAction = await waitForElement(() =>
-    getByText(/Confirmation/i)
-  );
+  await waitForElement(() => getByText(/Confirmation/i));
   fireEvent.click(getByText(/Yes/i));
   const body = container.querySelector('tbody');
   expect(body && body.children.length).toBe(1); // just the header

@@ -91,7 +91,6 @@ export function ScriptureTable(props: IProps) {
     bookMap,
     allBookData,
     fetchBooks,
-    updateStore,
     queryStore,
     setChanged,
     passageSections,
@@ -101,7 +100,7 @@ export function ScriptureTable(props: IProps) {
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
-  const [dataStore] = useGlobal('dataStore');
+  const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [message, setMessage] = useState(<></>);
   const [rowId, setRowId] = useState(Array<ISequencedRecordIdentity>());
@@ -182,12 +181,14 @@ export function ScriptureTable(props: IProps) {
             .filter(ps => related(ps, 'passage') === id.id)
             .map(ps => ps.id);
           ids.forEach(ps => {
-            updateStore(t =>
+            memory.update((t: TransformBuilder) =>
               t.removeRecord({ type: 'passagesection', id: ps })
             );
           });
         }
-        updateStore(t => t.removeRecord({ type: id.type, id: id.id }));
+        memory.update((t: TransformBuilder) =>
+          t.removeRecord({ type: id.type, id: id.id })
+        );
       };
       for (
         let rowListIndex = 0;
@@ -312,8 +313,8 @@ export function ScriptureTable(props: IProps) {
           passageId: 0,
         },
       } as any;
-      await dataStore.update((t: TransformBuilder) => [t.addRecord(p)]);
-      await dataStore.update((t: TransformBuilder) => [
+      await memory.update((t: TransformBuilder) => [t.addRecord(p)]);
+      await memory.update((t: TransformBuilder) => [
         t.addRecord(passageSection),
         t.replaceRelatedRecord(
           { type: 'passagesection', id: passageSection.id },
@@ -347,7 +348,7 @@ export function ScriptureTable(props: IProps) {
         passage.attributes.reference = passageRow[cols.Reference];
         passage.attributes.title = passageRow[cols.Title];
         delete passage.relationships;
-        await updateStore(t => t.replaceRecord(passage));
+        await memory.update((t: TransformBuilder) => t.replaceRecord(passage));
         inpRow[cols.PassageSeq] = passage.attributes.sequencenum;
         if (showBook(cols)) inpRow[cols.Book] = passage.attributes.book;
         inpRow[cols.Reference] = passage.attributes.reference;
@@ -400,7 +401,7 @@ export function ScriptureTable(props: IProps) {
         },
       } as any;
       schema.initializeRecord(sec);
-      await dataStore.update((t: TransformBuilder) => [
+      await memory.update((t: TransformBuilder) => [
         t.addRecord(sec),
         t.replaceRelatedRecord({ type: 'section', id: sec.id }, 'plan', {
           type: 'plan',
@@ -423,7 +424,7 @@ export function ScriptureTable(props: IProps) {
         section.attributes.sequencenum = parseInt(sectionRow[cols.SectionSeq]);
         section.attributes.name = sectionRow[cols.SectionnName];
         delete section.relationships;
-        await updateStore(t => t.replaceRecord(section));
+        await memory.update((t: TransformBuilder) => t.replaceRecord(section));
         //update inData
         inpRow[cols.SectionSeq] = section.attributes.sequencenum;
         inpRow[cols.SectionnName] = section.attributes.name;

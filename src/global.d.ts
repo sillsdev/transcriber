@@ -6,11 +6,11 @@ declare module 'reactn/default' {
     organization: string;
     project: string;
     plan: string;
-    tab: number,
+    tab: number;
     group: string;
     user: string;
     lang: string;
-    dataStore: Store;
+    memory: Store;
     schema: Schema;
     keyMap: KeyMap;
   }
