@@ -48,7 +48,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
-import { related, slug, remoteId, remoteIdGuid } from '../utils';
+import { related, hasRelated, slug, remoteId, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
 import OrganizationTable from '../components/OrganizationTable';
 import GroupTabs from '../components/GroupTabs';
@@ -197,6 +197,7 @@ export function ResponsiveDrawer(props: IProps) {
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal('keyMap');
+  const [user] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
   const [group, setGroup] = useGlobal('group');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
@@ -301,6 +302,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   useEffect(() => {
     const orgOpts = organizations
+      .filter(o => hasRelated(o, 'users', user) && o.attributes)
       .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
       .map((o: Organization) => {
         return {
@@ -309,7 +311,10 @@ export function ResponsiveDrawer(props: IProps) {
         };
       });
     setOrgOptions(orgOpts);
-    const curOrg = organizations.map(o => o.id).indexOf(organization);
+    const curOrg = organizations
+      .filter(o => hasRelated(o, 'users', user) && o.attributes)
+      .map(o => o.id)
+      .indexOf(organization);
     if (curOrg !== -1) {
       setCurOrg(curOrg);
       setOrgAvatar(organizations[curOrg].attributes.logoUrl);
@@ -321,7 +326,7 @@ export function ResponsiveDrawer(props: IProps) {
       );
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organizations, organization]);
+  }, [organizations, organization, user]);
 
   useEffect(() => {
     const projOpts = projects

@@ -102,9 +102,7 @@ export function OrganizationTable(props: IProps) {
 
   useEffect(() => {
     // since find related records doesn't work...
-    const orgs = organizations.filter(o =>
-      hasRelated(o, 'users', user as string)
-    );
+    const orgs = organizations.filter(o => hasRelated(o, 'users', user));
     setColumns([{ name: 'name', title: t.name }]);
     setRows(orgs.map((o: Organization) => ({
       type: o.type,
