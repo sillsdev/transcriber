@@ -141,7 +141,9 @@ export function ProjectSettings(props: IProps) {
   );
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [projectType, setProjectType] = useState('');
+  const [projectType, setProjectType] = useState(
+    projectTypes && projectTypes.length > 0 ? projectTypes[0].id : ''
+  );
   const [bcp47, setBcp47] = useState('und');
   const [languageName, setLanguageName] = useState(bcp47);
   const [defaultFont, setDefaultFont] = useState('');
@@ -156,9 +158,6 @@ export function ProjectSettings(props: IProps) {
   };
   const handleDescriptionChange = (e: any) => {
     setDescription(e.target.value);
-  };
-  const handleTypeChange = (e: any) => {
-    setProjectType(e.target.value);
   };
   const handleGroupChange = (e: any) => {
     setProjectGroup(e.target.value);
@@ -317,34 +316,6 @@ export function ProjectSettings(props: IProps) {
                   variant="filled"
                   required={false}
                 />
-              }
-              label=""
-            />
-            <FormControlLabel
-              control={
-                <TextField
-                  id="select-project-type"
-                  select
-                  label={t.projectType}
-                  className={classes.textField}
-                  value={projectType}
-                  onChange={handleTypeChange}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  helperText={t.selectProjectType}
-                  margin="normal"
-                  variant="filled"
-                  required={true}
-                >
-                  {projectTypes.map((option: ProjectType) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {option.attributes.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
               }
               label=""
             />
