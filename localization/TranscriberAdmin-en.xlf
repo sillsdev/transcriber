@@ -606,7 +606,7 @@
       </unit>
       <unit id="planAdd.newPlanTask">
          <segment>
-            <source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)</source>
+            <source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
             <target/>
          </segment>
       </unit>
@@ -654,7 +654,7 @@
       </unit>
       <unit id="planAdd.editPlan">
          <segment>
-            <source>Edit Plan details</source>
+            <source>Edit Plan Details</source>
             <target/>
          </segment>
       </unit>

@@ -708,7 +708,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planAdd.newPlanTask">
-				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)</source>
+				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanAdd.tsx</context>
@@ -764,7 +764,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planAdd.editPlan">
-				<source>Edit Plan details</source>
+				<source>Edit Plan Details</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanAdd.tsx</context>
