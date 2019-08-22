@@ -112,6 +112,7 @@ function GroupAdd(props: IProps) {
             label={t.name}
             value={name}
             onChange={handleNameChange}
+            required
             fullWidth
           />
           <TextField
@@ -129,7 +130,12 @@ function GroupAdd(props: IProps) {
           <Button onClick={handleCancel} variant="outlined" color="primary">
             {t.cancel}
           </Button>
-          <Button onClick={handleAddOrSave} variant="contained" color="primary">
+          <Button
+            onClick={handleAddOrSave}
+            variant="contained"
+            color="primary"
+            disabled={name === '' || name === t.newGroup}
+          >
             {!groupIn ? t.add : t.save}
           </Button>
         </DialogActions>
