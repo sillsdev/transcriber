@@ -135,6 +135,7 @@ function PlanAdd(props: IProps) {
             label={t.name}
             value={name}
             onChange={handleNameChange}
+            required
             fullWidth
           />
           <TextField
@@ -151,7 +152,7 @@ function PlanAdd(props: IProps) {
             helperText={t.selectPlanType}
             margin="normal"
             variant="filled"
-            required={true}
+            required
           >
             {planTypes.map((option: PlanType) => (
               <MenuItem key={option.id} value={option.id}>
@@ -164,7 +165,12 @@ function PlanAdd(props: IProps) {
           <Button onClick={handleCancel} variant="outlined" color="primary">
             {t.cancel}
           </Button>
-          <Button onClick={handleAddOrSave} variant="contained" color="primary">
+          <Button
+            onClick={handleAddOrSave}
+            variant="contained"
+            color="primary"
+            disabled={name === '' || planType === ''}
+          >
             {!planIn ? t.add : t.save}
           </Button>
         </DialogActions>

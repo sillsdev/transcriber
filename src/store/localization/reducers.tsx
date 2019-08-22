@@ -164,7 +164,7 @@ const initialState = {
 		"en": {
 			"name": "Name",
 			"addPlan": "Add a Plan",
-			"newPlanTask": "Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)",
+			"newPlanTask": "Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)",
 			"planType": "Type",
 			"selectPlanType": "Select plan type.",
 			"cancel": "Cancel",
@@ -172,7 +172,7 @@ const initialState = {
 			"save": "Save",
 			"newPlan": "New Plan",
 			"selectAPlanType": "Please select a plan type",
-			"editPlan": "Edit Plan details",
+			"editPlan": "Edit Plan Details",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
