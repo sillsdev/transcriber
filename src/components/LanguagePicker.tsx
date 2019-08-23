@@ -115,7 +115,7 @@ export const LanguagePicker = (props: IProps) => {
   const handleClickOpen = (e: any) => {
     if (e.keyCode && e.keyCode === 9) return;
     const key = value.toLocaleLowerCase();
-    if (exact.hasOwnProperty(key)) {
+    if (exact.hasOwnProperty(key) && key !== 'und') {
       setResponse(name + ' (' + value + ')');
       const langTag = langTags[exact[key][0].index];
       setTag(langTag);
@@ -174,6 +174,7 @@ export const LanguagePicker = (props: IProps) => {
   ];
 
   const selectFont = (tag: LangTag) => {
+    if (tag.tag === 'und') return;
     let code = tag.script + '-' + tag.region;
     if (!fontMap.hasOwnProperty(code)) {
       code = tag.script;
@@ -370,7 +371,7 @@ export const LanguagePicker = (props: IProps) => {
         label={t.language}
         required={true}
         style={{ width: 300 }}
-        value={name + ' (' + value + ')'}
+        value={value !== 'und' ? name + ' (' + value + ')' : ''}
         onClick={handleClickOpen}
         onKeyDown={handleClickOpen}
       />

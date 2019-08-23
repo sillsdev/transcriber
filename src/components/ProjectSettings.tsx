@@ -115,33 +115,10 @@ export function ProjectSettings(props: IProps) {
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  const [currentProject, setCurrentProject] = useState<Project | undefined>(
-    add
-      ? undefined
-      : {
-          type: 'project',
-          id: '',
-          attributes: {
-            name: '',
-            slug: '',
-            description: '',
-            uilanguagebcp47: '',
-            language: '',
-            languageName: '',
-            defaultFont: '',
-            defaultFontSize: '',
-            rtl: false,
-            allowClaim: true,
-            isPublic: true,
-            dateCreated: '',
-            dateUpdated: '',
-            dateArchived: '',
-          },
-        }
-  );
+  const [currentProject, setCurrentProject] = useState<Project | undefined>();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [projectType, setProjectType] = useState(
+  const [projectType] = useState(
     projectTypes && projectTypes.length > 0 ? projectTypes[0].id : ''
   );
   const [bcp47, setBcp47] = useState('und');
@@ -203,7 +180,7 @@ export function ProjectSettings(props: IProps) {
       }),
       t.replaceRelatedRecord({ type: 'project', id: project }, 'group', {
         type: 'group',
-        id: projectGroup,
+        id: projectGroup ? projectGroup : '',
       }),
       //we aren't allowing them to change owner or oraganization currently
     ]);
@@ -239,7 +216,7 @@ export function ProjectSettings(props: IProps) {
       ),
       t.replaceRelatedRecord({ type: 'project', id: project.id }, 'group', {
         type: 'group',
-        id: projectGroup,
+        id: projectGroup ? projectGroup : '',
       }),
       t.replaceRelatedRecord(
         { type: 'project', id: project.id },
@@ -261,22 +238,49 @@ export function ProjectSettings(props: IProps) {
   };
 
   useEffect(() => {
-    const curProj = projects.filter((p: Project) => p.id === project);
-    if (curProj.length === 1) {
-      setCurrentProject(curProj[0]);
-      const attr = curProj[0].attributes;
-      setName(attr.name);
-      setDescription(attr.description ? attr.description : '');
-      setBcp47(attr.language);
-      setLanguageName(attr.languageName ? attr.languageName : bcp47);
-      setDefaultFont(attr.defaultFont ? attr.defaultFont : '');
-      setDefaultFontSize(attr.defaultFontSize ? attr.defaultFontSize : 'large');
-      setRtl(attr.rtl);
-      setProjectType(related(curProj[0], 'projecttype'));
-      setProjectGroup(related(curProj[0], 'group'));
+    let proj: Project = {
+      type: 'project',
+      id: '',
+      attributes: {
+        name: '',
+        slug: '',
+        description: '',
+        uilanguagebcp47: '',
+        language: 'und',
+        languageName: '',
+        defaultFont: '',
+        defaultFontSize: '',
+        rtl: false,
+        allowClaim: true,
+        isPublic: true,
+        dateCreated: '',
+        dateUpdated: '',
+        dateArchived: '',
+      },
+    };
+    if (add) {
+      setCurrentProject(undefined);
+      setProjectGroup('');
+    } else {
+      const curProj = projects.filter((p: Project) => p.id === project);
+      if (curProj.length === 1) {
+        proj = curProj[0];
+        setProjectGroup(related(proj, 'group'));
+      } else {
+        setProjectGroup('');
+      }
+      setCurrentProject(proj);
     }
+    const attr = proj.attributes;
+    setName(attr.name);
+    setDescription(attr.description ? attr.description : '');
+    setBcp47(attr.language);
+    setLanguageName(attr.languageName ? attr.languageName : bcp47);
+    setDefaultFont(attr.defaultFont ? attr.defaultFont : '');
+    setDefaultFontSize(attr.defaultFontSize ? attr.defaultFontSize : 'large');
+    setRtl(attr.rtl);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, projects]);
+  }, [add, project, projects]);
 
   return (
     <div
