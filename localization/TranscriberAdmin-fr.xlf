@@ -283,7 +283,31 @@
 				<target>Ajouter</target>
 			</segment>
 		</unit>
-		<unit id="projectSettings.save">
+		<unit id="projectSettings.dangerZone">
+         <segment>
+            <source>Danger Zone</source>
+         	<target>Zone de danger</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.deleteProject">
+         <segment>
+            <source>Delete this Project</source>
+         	<target>Supprimer ce projet</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.deleteExplained">
+         <segment>
+            <source>All plans, sections, passages, and media files will be removed.</source>
+         	<target>Tous les plans, sections, passages et fichiers médias seront supprimés.</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.delete">
+         <segment>
+            <source>DELETE</source>
+         	<target>SUPPRIMER</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.save">
 			<segment>
 				<source>Save</source>
 				<target>Sauvegarder</target>

@@ -335,6 +335,34 @@
 					<context context-type="sourcefile">ProjectSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="projectSettings.dangerZone">
+				<source>Danger Zone</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.deleteProject">
+				<source>Delete this Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.deleteExplained">
+				<source>All plans, sections, passages, and media files will be removed.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.delete">
+				<source>DELETE</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="projectSettings.save">
 				<source>Save</source>
 				<target/>

@@ -70,6 +70,10 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "selectFontSize": string;
     "rightToLeft": string;
     "add": string;
+    "dangerZone": string;
+    "deleteProject": string;
+    "deleteExplained": string;
+    "delete": string;
     "save": string;
     "group": string;
     "preview": string;
