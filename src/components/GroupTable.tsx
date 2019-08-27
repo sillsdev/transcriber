@@ -120,8 +120,7 @@ export function GroupTable(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_group, setGroup] = useGlobal('group');
+  const [group, setGroup] = useGlobal('group');
   const [schema] = useGlobal('schema');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -226,6 +225,12 @@ export function GroupTable(props: IProps) {
   const handleSelect = (id: RecordIdentity) => () => {
     setGroup(id.id);
   };
+
+  useEffect(() => {
+    localStorage.removeItem('url');
+    if (group !== '') setGroup('');
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   useEffect(() => {
     setData(getMedia(organization, groups, projects, groupMemberships));

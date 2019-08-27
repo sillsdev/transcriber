@@ -228,8 +228,11 @@ export function ResponsiveDrawer(props: IProps) {
     setChoice(slug(choice));
     setContent(slug(choice));
     setTitle(choice);
-    if (choice === t.usersAndGroups && tab > 1) {
-      setTab(0);
+    if (choice === t.usersAndGroups) {
+      if (tab > 1) {
+        setTab(0);
+      }
+      setGroup('');
     }
   };
 
@@ -348,6 +351,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   useEffect(() => {
     const projKeys = projOptions.map(o => o.value);
+    if (projKeys.length === 0) return;
     const cur = projKeys.indexOf(project);
     if (addProject) {
       setCurProj(null);
@@ -377,7 +381,7 @@ export function ResponsiveDrawer(props: IProps) {
   }, [plan, plans]);
 
   useEffect(() => {
-    if (!groups || group.length === 0) return;
+    if (!groups || groups.length === 0) return;
     const curGroup = groups.filter(g => g.id === group);
     if (curGroup.length > 0) {
       const attr = curGroup[0].attributes;
@@ -613,14 +617,14 @@ export function ResponsiveDrawer(props: IProps) {
     <PlanTable {...props} displaySet={handlePlanType} />
   );
   components['scripture-plan'] = (
-    <PlanTabs {...props} setChanged={setChanged} checkSavedEv={checkSavedFn} />
+    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
   );
   components['other-plan'] = (
     <PlanTabs
       {...props}
       bookCol={-1}
       setChanged={setChanged}
-      checkSavedEv={checkSavedFn}
+      checkSaved={checkSavedFn}
     />
   );
   components[slug(t.team)] = 'team';
