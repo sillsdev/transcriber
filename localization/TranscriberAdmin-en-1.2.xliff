@@ -1435,15 +1435,15 @@
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="languagePicker.instructions">
-				<source>Type the language name or {1}. Languages can also be found by country.</source>
+			<trans-unit id="languagePicker.findALanguage">
+				<source>Find a language by name, code, or country</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="languagePicker.code">
-				<source>code</source>
+			<trans-unit id="languagePicker.codeExplained">
+				<source>Code Explained</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">LanguagePicker.tsx</context>

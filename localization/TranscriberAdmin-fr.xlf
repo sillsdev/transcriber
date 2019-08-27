@@ -1226,16 +1226,16 @@
          	<target>Sélectionnez une langue</target>
          </segment>
       </unit>
-      <unit id="languagePicker.instructions">
+      <unit id="languagePicker.findALanguage">
          <segment>
-            <source>Type the language name or $1. Languages can also be found by country.</source>
-         	<target>Tapez le nom de la langue ou $1. les langues peuvent également être trouvées par pays.</target>
+            <source>Find a language by name, code, or country</source>
+         	<target>Ttrouvez le nom de la langue, d'un code, ou d'un pays.</target>
          </segment>
       </unit>
-      <unit id="languagePicker.code">
+      <unit id="languagePicker.codeExplained">
          <segment>
-            <source>code</source>
-            <target>code</target>
+            <source>Code Explained</source>
+            <target>Code Expliquer</target>
          </segment>
       </unit>
       <unit id="languagePicker.subtags">
