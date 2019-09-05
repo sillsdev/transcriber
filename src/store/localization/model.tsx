@@ -269,6 +269,8 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "delete": string;
     "allReviewersCanTranscribe": string;
     "noProjects": string;
+    "assignedSections": string;
+    "projectPlans": string;
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {

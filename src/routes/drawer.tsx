@@ -242,6 +242,7 @@ export function ResponsiveDrawer(props: IProps) {
     setAddProject(false);
     setChoice('');
     setContent('');
+    setGroup('');
   };
 
   const handleCommitProj = (value: string) => {
@@ -250,6 +251,7 @@ export function ResponsiveDrawer(props: IProps) {
     setProject(value);
     setContent('');
     setChoice('');
+    setGroup('');
     setTitle(t.projectSummary);
   };
 
@@ -627,7 +629,7 @@ export function ResponsiveDrawer(props: IProps) {
       checkSaved={checkSavedFn}
     />
   );
-  components[slug(t.team)] = 'team';
+  components[slug(t.team)] = <GroupSettings {...props} userDetail={true} />;
   components[slug(t.settings)] = (
     <ProjectSettings
       {...props}

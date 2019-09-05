@@ -1192,6 +1192,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.assignedSections">
+         <segment>
+            <source>  Assigned Sections: </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.projectPlans">
+         <segment>
+            <source>Project Plans</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shapingTable.NoColumns">
          <segment>
             <source>No columns visible</source>

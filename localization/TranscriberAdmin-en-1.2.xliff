@@ -1393,6 +1393,20 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="groupSettings.assignedSections">
+				<source>&#xA0;&#xA0;Assigned Sections:&#xA0;</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.projectPlans">
+				<source>Project Plans</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="shapingTable.NoColumns">
 				<source>No columns visible</source>
 				<target/>

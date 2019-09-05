@@ -298,6 +298,8 @@ const initialState = {
 			"delete": "Delete",
 			"allReviewersCanTranscribe": "All Reviewers are allowed to transcribe.",
 			"noProjects": "There are no projects that use this group.",
+			"assignedSections": "  Assigned Sections: ",
+			"projectPlans": "Project Plans",
 		}
 	}),
 	"shapingTable": new LocalizedStrings({

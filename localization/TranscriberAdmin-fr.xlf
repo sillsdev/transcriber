@@ -513,8 +513,8 @@
 		</unit>
 		<unit id="scriptureTable.description">
 			<segment>
-				<source>Description du passage</source>
-				<target/>
+				<source>Description</source>
+				<target>Description du passage</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.filter">
@@ -663,8 +663,8 @@
 		</unit>
 		<unit id="planAdd.newPlan">
 			<segment>
-				<source>Nouveau programme</source>
-				<target/>
+				<source>New Plan</source>
+				<target>Nouveau programme</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.selectAPlanType">
@@ -1190,7 +1190,19 @@
          	<target>Aucun projet n'utilise ce groupe.</target>
          </segment>
       </unit>
-	<unit id="shapingTable.NoColumns">
+	<unit id="groupSettings.assignedSections">
+         <segment>
+            <source>  Assigned Sections: </source>
+         	<target>  Sections assignées : </target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.projectPlans">
+         <segment>
+            <source>Project Plans</source>
+            <target>Programme du project</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.NoColumns">
 			<segment>
 				<source>No columns visible</source>
 				<target>Aucune colonne visible</target>
