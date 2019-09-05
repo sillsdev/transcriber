@@ -200,17 +200,17 @@ export function ResponsiveDrawer(props: IProps) {
   const [user] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
   const [group, setGroup] = useGlobal('group');
+  const [project, setProject] = useGlobal('project');
+  const [plan, setPlan] = useGlobal('plan');
+  const [tab, setTab] = useGlobal('tab');
+  const [choice, setChoice] = useState('');
+  const [content, setContent] = useState('');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
   const [curOrg, setCurOrg] = useState(0);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
-  const [project, setProject] = useGlobal('project');
   const [projOptions, setProjOptions] = useState(Array<OptionType>());
   const [curProj, setCurProj] = useState<number | null>(0);
-  const [plan, setPlan] = useGlobal('plan');
-  const [tab, setTab] = useGlobal('tab');
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [choice, setChoice] = useState('');
-  const [content, setContent] = useState('');
   const [addProject, setAddProject] = useState(false);
   const [title, setTitle] = useState(t.silTranscriberAdmin);
   const [view, setView] = useState('');
@@ -228,8 +228,11 @@ export function ResponsiveDrawer(props: IProps) {
     setChoice(slug(choice));
     setContent(slug(choice));
     setTitle(choice);
-    if (choice === t.usersAndGroups && tab > 1) {
-      setTab(0);
+    if (choice === t.usersAndGroups) {
+      if (tab > 1) {
+        setTab(0);
+      }
+      setGroup('');
     }
   };
 
@@ -239,6 +242,7 @@ export function ResponsiveDrawer(props: IProps) {
     setAddProject(false);
     setChoice('');
     setContent('');
+    setGroup('');
   };
 
   const handleCommitProj = (value: string) => {
@@ -247,6 +251,7 @@ export function ResponsiveDrawer(props: IProps) {
     setProject(value);
     setContent('');
     setChoice('');
+    setGroup('');
     setTitle(t.projectSummary);
   };
 
@@ -278,10 +283,10 @@ export function ResponsiveDrawer(props: IProps) {
     }
   };
 
-  const checkSaved = (method: () => any) => () => {
-    checkSaved2(method);
+  const checkSavedEv = (method: () => any) => () => {
+    checkSavedFn(method);
   };
-  const checkSaved2 = (method: () => any) => {
+  const checkSavedFn = (method: () => any) => {
     if (changed) {
       saveConfirm.current = method;
       setAlertOpen(true);
@@ -311,26 +316,30 @@ export function ResponsiveDrawer(props: IProps) {
         };
       });
     setOrgOptions(orgOpts);
-    const curOrg = organizations
-      .filter(o => hasRelated(o, 'users', user) && o.attributes)
-      .map(o => o.id)
-      .indexOf(organization);
-    if (curOrg !== -1) {
-      setCurOrg(curOrg);
-      setOrgAvatar(organizations[curOrg].attributes.logoUrl);
-    } else if (organizations.length > 0) {
-      setCurOrg(0);
-      setOrganization(organizations[0].id);
-      setOrgAvatar(
-        organizations[0].attributes ? organizations[0].attributes.logoUrl : ''
-      );
-    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organizations, organization, user]);
 
   useEffect(() => {
+    if (orgOptions.length === 0) return;
+    const cur = orgOptions.map(oo => oo.value).indexOf(organization);
+    if (cur !== -1) {
+      setCurOrg(cur);
+      const attr = organizations[cur].attributes;
+      setOrgAvatar(attr ? attr.logoUrl : '');
+    } else {
+      setCurOrg(0);
+      const orgId = orgOptions[0].value;
+      setOrganization(orgId);
+      const logoIdx = organizations.map(o => o.id).indexOf(orgId);
+      const attr = organizations[logoIdx].attributes;
+      setOrgAvatar(attr ? attr.logoUrl : '');
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [orgOptions, organization]);
+
+  useEffect(() => {
     const projOpts = projects
-      .filter(p => related(p, 'organization') === organization)
+      .filter(p => related(p, 'organization') === organization && p.attributes)
       .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
       .map(p => {
         return {
@@ -339,38 +348,46 @@ export function ResponsiveDrawer(props: IProps) {
         };
       });
     setProjOptions(projOpts);
-    const projKeys = projOpts.map(o => o.value);
-    const newCurProj = projKeys.indexOf(project);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [projects, organization]);
+
+  useEffect(() => {
+    const projKeys = projOptions.map(o => o.value);
+    if (projKeys.length === 0) return;
+    const cur = projKeys.indexOf(project);
     if (addProject) {
       setCurProj(null);
-    } else if (projKeys.length < 1) {
+    } else if (projKeys.length === 0) {
       setCurProj(null);
       setContent('none');
       setTitle(t.silTranscriberAdmin);
-    } else if (newCurProj === -1) {
+    } else if (cur === -1) {
       setCurProj(0);
       setProject(projKeys[0]);
       setTitle(t.projectSummary);
       setContent('');
     } else {
-      setCurProj(newCurProj);
+      setCurProj(cur);
       setTitle(t.projectSummary);
       setContent('');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projects, project, organization, addProject]);
+  }, [projOptions, project, addProject]);
 
   useEffect(() => {
     const curPlan = plans.filter(p => p.id === plan);
     if (curPlan.length > 0) {
-      setTitle(curPlan[0].attributes ? curPlan[0].attributes.name : '');
+      const attr = curPlan[0].attributes;
+      setTitle(attr ? attr.name : '');
     }
   }, [plan, plans]);
 
   useEffect(() => {
+    if (!groups || groups.length === 0) return;
     const curGroup = groups.filter(g => g.id === group);
     if (curGroup.length > 0) {
-      setTitle(curGroup[0].attributes ? curGroup[0].attributes.name : '');
+      const attr = curGroup[0].attributes;
+      setTitle(attr ? attr.name : '');
       setContent('group');
     } else if (content === 'group') {
       setTitle(t.usersAndGroups);
@@ -380,6 +397,7 @@ export function ResponsiveDrawer(props: IProps) {
   }, [group, groups]);
 
   useEffect(() => {
+    if (!organization || !project || !choice) return;
     const orgId = remoteId('organization', organization, keyMap);
     const projId = remoteId('project', project, keyMap);
     if (orgId !== undefined && projId !== undefined) {
@@ -421,7 +439,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, organization, choice, plan, group, tab]);
+  }, [project, organization, choice, content, plan, group, tab]);
 
   if (view === 'Logout') return <Redirect to="/logout" />;
 
@@ -488,7 +506,7 @@ export function ResponsiveDrawer(props: IProps) {
               suggestions={orgOptions}
               current={curOrg}
               onCommit={(v: string, e: any, callback: () => void) =>
-                checkSaved2(() => {
+                checkSavedFn(() => {
                   handleCommitOrg(v);
                   callback();
                 })
@@ -504,7 +522,7 @@ export function ResponsiveDrawer(props: IProps) {
             button
             key={text}
             selected={slug(text) === choice}
-            onClick={checkSaved(() => handleChoice(text))}
+            onClick={checkSavedEv(() => handleChoice(text))}
           >
             <ListItemIcon>
               {index % 2 === 0 ? <OrganizationIcon /> : <GroupIcon />}
@@ -529,7 +547,7 @@ export function ResponsiveDrawer(props: IProps) {
                 suggestions={projOptions}
                 current={curProj}
                 onCommit={(v: string, e: any, callback: () => void) =>
-                  checkSaved2(() => {
+                  checkSavedFn(() => {
                     handleCommitProj(v);
                     callback();
                   })
@@ -549,7 +567,7 @@ export function ResponsiveDrawer(props: IProps) {
                 button
                 key={text}
                 selected={slug(text) === choice}
-                onClick={checkSaved(() => handleChoice(text))}
+                onClick={checkSavedEv(() => handleChoice(text))}
               >
                 <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
                 <ListItemText primary={text} />
@@ -563,7 +581,7 @@ export function ResponsiveDrawer(props: IProps) {
                 button
                 key={text}
                 selected={slug(text) === choice}
-                onClick={checkSaved(() => handleChoice(text))}
+                onClick={checkSavedEv(() => handleChoice(text))}
               >
                 <ListItemIcon>
                   {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
@@ -601,17 +619,17 @@ export function ResponsiveDrawer(props: IProps) {
     <PlanTable {...props} displaySet={handlePlanType} />
   );
   components['scripture-plan'] = (
-    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSaved2} />
+    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
   );
   components['other-plan'] = (
     <PlanTabs
       {...props}
       bookCol={-1}
       setChanged={setChanged}
-      checkSaved={checkSaved2}
+      checkSaved={checkSavedFn}
     />
   );
-  components[slug(t.team)] = 'team';
+  components[slug(t.team)] = <GroupSettings {...props} userDetail={true} />;
   components[slug(t.settings)] = (
     <ProjectSettings
       {...props}
@@ -650,7 +668,7 @@ export function ResponsiveDrawer(props: IProps) {
             </IconButton>
           </a>
           <UserMenu
-            action={(v: string) => checkSaved2(() => handleUserMenuAction(v))}
+            action={(v: string) => checkSavedFn(() => handleUserMenuAction(v))}
           />
         </Toolbar>
       </AppBar>

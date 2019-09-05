@@ -70,6 +70,10 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "selectFontSize": string;
     "rightToLeft": string;
     "add": string;
+    "dangerZone": string;
+    "deleteProject": string;
+    "deleteExplained": string;
+    "delete": string;
     "save": string;
     "group": string;
     "preview": string;
@@ -265,6 +269,8 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "delete": string;
     "allReviewersCanTranscribe": string;
     "noProjects": string;
+    "assignedSections": string;
+    "projectPlans": string;
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
@@ -280,8 +286,8 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
     "script": string;
     "language": string;
     "selectLanguage": string;
-    "instructions": string;
-    "code": string;
+    "findALanguage": string;
+    "codeExplained": string;
     "subtags": string;
     "details": string;
     "languageOf": string;

@@ -283,7 +283,31 @@
 				<target>Ajouter</target>
 			</segment>
 		</unit>
-		<unit id="projectSettings.save">
+		<unit id="projectSettings.dangerZone">
+         <segment>
+            <source>Danger Zone</source>
+         	<target>Zone de danger</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.deleteProject">
+         <segment>
+            <source>Delete this Project</source>
+         	<target>Supprimer ce projet</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.deleteExplained">
+         <segment>
+            <source>All plans, sections, passages, and media files will be removed.</source>
+         	<target>Tous les plans, sections, passages et fichiers médias seront supprimés.</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.delete">
+         <segment>
+            <source>DELETE</source>
+         	<target>SUPPRIMER</target>
+         </segment>
+      </unit>
+      <unit id="projectSettings.save">
 			<segment>
 				<source>Save</source>
 				<target>Sauvegarder</target>
@@ -489,8 +513,8 @@
 		</unit>
 		<unit id="scriptureTable.description">
 			<segment>
-				<source>Description du passage</source>
-				<target/>
+				<source>Description</source>
+				<target>Description du passage</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.filter">
@@ -639,8 +663,8 @@
 		</unit>
 		<unit id="planAdd.newPlan">
 			<segment>
-				<source>Nouveau programme</source>
-				<target/>
+				<source>New Plan</source>
+				<target>Nouveau programme</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.selectAPlanType">
@@ -1166,7 +1190,19 @@
          	<target>Aucun projet n'utilise ce groupe.</target>
          </segment>
       </unit>
-	<unit id="shapingTable.NoColumns">
+	<unit id="groupSettings.assignedSections">
+         <segment>
+            <source>  Assigned Sections: </source>
+         	<target>  Sections assignées : </target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.projectPlans">
+         <segment>
+            <source>Project Plans</source>
+            <target>Programme du project</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.NoColumns">
 			<segment>
 				<source>No columns visible</source>
 				<target>Aucune colonne visible</target>
@@ -1202,16 +1238,16 @@
          	<target>Sélectionnez une langue</target>
          </segment>
       </unit>
-      <unit id="languagePicker.instructions">
+      <unit id="languagePicker.findALanguage">
          <segment>
-            <source>Type the language name or $1. Languages can also be found by country.</source>
-         	<target>Tapez le nom de la langue ou $1. les langues peuvent également être trouvées par pays.</target>
+            <source>Find a language by name, code, or country</source>
+         	<target>Ttrouvez le nom de la langue, d'un code, ou d'un pays.</target>
          </segment>
       </unit>
-      <unit id="languagePicker.code">
+      <unit id="languagePicker.codeExplained">
          <segment>
-            <source>code</source>
-            <target>code</target>
+            <source>Code Explained</source>
+            <target>Code Expliquer</target>
          </segment>
       </unit>
       <unit id="languagePicker.subtags">

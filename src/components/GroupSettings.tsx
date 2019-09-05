@@ -9,6 +9,8 @@ import {
   User,
   OrganizationMembership,
   Role,
+  Section,
+  Plan,
   IGroupSettingsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -34,6 +36,7 @@ import {
   DialogContentText,
   DialogActions,
   Grid,
+  Typography,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
@@ -87,6 +90,13 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       marginLeft: theme.spacing(1),
     },
+    detail: {
+      paddingTop: 0,
+      marginTop: 0,
+    },
+    avatar: {
+      alignSelf: 'start',
+    },
   })
 );
 
@@ -106,9 +116,13 @@ interface IRecordProps {
   users: Array<User>;
   orgMemberships: Array<OrganizationMembership>;
   roles: Array<Role>;
+  sections: Section[];
+  plans: Plan[];
 }
 
-interface IProps extends IStateProps, IRecordProps {}
+interface IProps extends IStateProps, IRecordProps {
+  userDetail: boolean;
+}
 
 export function GroupSettings(props: IProps) {
   const {
@@ -118,20 +132,23 @@ export function GroupSettings(props: IProps) {
     users,
     orgMemberships,
     roles,
-
+    sections,
+    plans,
+    userDetail,
     t,
   } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
+  const [project] = useGlobal('project');
   const [schema] = useGlobal('schema');
   const [name, setName] = useState('');
   const [abbreviation, setAbbreviation] = useState('');
   const [message, setMessage] = useState(<></>);
-  const [secondary] = useState(false);
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState('');
+  const [detail, setDetail] = useState(userDetail);
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
   const [confirmItem, setConfirmItem] = useState<IDeleteItem | null>(null);
@@ -147,7 +164,7 @@ export function GroupSettings(props: IProps) {
   };
   const handleSave = () => {
     memory.update((t: TransformBuilder) =>
-      t.replaceRecord({
+      t.updateRecord({
         type: 'group',
         id: group,
         attributes: {
@@ -229,6 +246,15 @@ export function GroupSettings(props: IProps) {
   };
 
   useEffect(() => {
+    if (group === '' && userDetail) {
+      const curProj = projects.filter(p => p.id === project);
+      if (curProj.length === 1) setGroup(related(curProj[0], 'group'));
+      setDetail(true);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [group]);
+
+  useEffect(() => {
     const curGroup = groups.filter((p: Group) => p.id === group);
     if (curGroup.length === 1) {
       const attr = curGroup[0].attributes;
@@ -267,7 +293,7 @@ export function GroupSettings(props: IProps) {
       <ListItem>
         <ListItemText
           primary={p.attributes.name}
-          secondary={secondary ? p.attributes.languageName : null}
+          secondary={detail ? p.attributes.languageName : null}
         />
       </ListItem>
     ));
@@ -289,18 +315,81 @@ export function GroupSettings(props: IProps) {
     .filter(gm => related(gm, 'group') === group)
     .map(gm => related(gm, 'user'));
 
-  const getPersonItems = (ids: Array<string>) =>
+  interface IPlanData {
+    [plan: string]: string[];
+  }
+
+  const getPlan = (sec: Section) => {
+    const plan = plans.filter(p => p.id === related(sec, 'plan'));
+    if (plan.length < 1 || !plan[0].attributes) return undefined;
+    if (related(plan[0], 'project') !== project) return undefined;
+    return plan[0].attributes.name;
+  };
+
+  const involvement = (user: string, rev: boolean) => {
+    let planData: IPlanData = {};
+    sections
+      .filter(
+        s =>
+          (rev && related(s, 'reviewer') === user) ||
+          (!rev && related(s, 'transcriber') === user)
+      )
+      .forEach(s => {
+        const planName = getPlan(s);
+        if (planName) {
+          if (planData.hasOwnProperty(planName)) {
+            if (!planData[planName].includes(s.id)) {
+              planData[planName].push(s.id);
+            }
+          } else {
+            planData[planName] = [s.id];
+          }
+        }
+      });
+    return Object.keys(planData)
+      .sort((i, j) => (i < j ? -1 : 1))
+      .map(p => {
+        return (
+          <ListItem className={classes.detail}>
+            <ListItemText
+              primary={
+                <>
+                  <Typography>- {p}</Typography>
+                  <Typography>
+                    {t.assignedSections}
+                    {planData[p].length}
+                  </Typography>
+                </>
+              }
+            />
+          </ListItem>
+        );
+      });
+  };
+
+  const getDetail = (user: string, rev: boolean) => {
+    const userInvolvement = involvement(user, rev);
+    if (userInvolvement && userInvolvement.length > 0)
+      return (
+        <>
+          <Typography>{t.projectPlans}</Typography>
+          <List className={classes.detail}>{userInvolvement}</List>
+        </>
+      );
+  };
+
+  const getPersonItems = (ids: Array<string>, rev: boolean) =>
     users
       .filter(u => u.attributes && ids.indexOf(u.id) !== -1)
       .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
       .map(u => (
         <ListItem>
-          <ListItemAvatar>
+          <ListItemAvatar className={classes.avatar}>
             <UserAvatar {...props} userRec={u} />
           </ListItemAvatar>
           <ListItemText
             primary={u.attributes.name}
-            secondary={secondary ? u.attributes.email : null}
+            secondary={detail ? getDetail(u.id, rev) : null}
           />
           <ListItemSecondaryAction>
             <IconButton
@@ -320,45 +409,47 @@ export function GroupSettings(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        <FormControl>
-          <FormGroup className={classes.group}>
-            <FormControlLabel
-              control={
-                <TextField
-                  id="name"
-                  label={t.name}
-                  className={classes.textField}
-                  value={name}
-                  onChange={handleNameChange}
-                  margin="normal"
-                  style={{ width: 400 }}
-                  variant="filled"
-                  required={true}
-                />
-              }
-              label=""
-            />
-            <FormControlLabel
-              control={
-                <TextField
-                  id="abbreviation"
-                  label={t.abbreviation}
-                  className={classes.textField}
-                  value={abbreviation}
-                  onChange={handleDescriptionChange}
-                  margin="normal"
-                  variant="filled"
-                  required={false}
-                />
-              }
-              label=""
-            />
-          </FormGroup>
-          <FormLabel className={classes.label}>{t.projects}</FormLabel>
-          <FormGroup className={classes.group}>
-            <List dense={true}>{projectsRendered}</List>
-          </FormGroup>
-        </FormControl>
+        {!detail && (
+          <FormControl>
+            <FormGroup className={classes.group}>
+              <FormControlLabel
+                control={
+                  <TextField
+                    id="name"
+                    label={t.name}
+                    className={classes.textField}
+                    value={name}
+                    onChange={handleNameChange}
+                    margin="normal"
+                    style={{ width: 400 }}
+                    variant="filled"
+                    required={true}
+                  />
+                }
+                label=""
+              />
+              <FormControlLabel
+                control={
+                  <TextField
+                    id="abbreviation"
+                    label={t.abbreviation}
+                    className={classes.textField}
+                    value={abbreviation}
+                    onChange={handleDescriptionChange}
+                    margin="normal"
+                    variant="filled"
+                    required={false}
+                  />
+                }
+                label=""
+              />
+            </FormGroup>
+            <FormLabel className={classes.label}>{t.projects}</FormLabel>
+            <FormGroup className={classes.group}>
+              <List dense={true}>{projectsRendered}</List>
+            </FormGroup>
+          </FormControl>
+        )}
         <Grid container spacing={8}>
           <Grid item xs={12} md={6}>
             <FormGroup className={classes.group}>
@@ -372,7 +463,7 @@ export function GroupSettings(props: IProps) {
                   <AddIcon />
                 </IconButton>
               </FormLabel>
-              <List dense={true}>{getPersonItems(reviewerIds)}</List>
+              <List dense={true}>{getPersonItems(reviewerIds, true)}</List>
             </FormGroup>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -387,23 +478,25 @@ export function GroupSettings(props: IProps) {
                   <AddIcon />
                 </IconButton>
               </FormLabel>
-              <List dense={true}>{getPersonItems(transcriberIds)}</List>
+              <List dense={true}>{getPersonItems(transcriberIds, false)}</List>
             </FormGroup>
           </Grid>
         </Grid>
-        <div className={classes.actions}>
-          <Button
-            key="save"
-            aria-label={t.save}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSave}
-          >
-            {t.save}
-            <SaveIcon className={classes.icon} />
-          </Button>
-        </div>
+        {!detail && (
+          <div className={classes.actions}>
+            <Button
+              key="save"
+              aria-label={t.save}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleSave}
+            >
+              {t.save}
+              <SaveIcon className={classes.icon} />
+            </Button>
+          </div>
+        )}
       </div>
       <Dialog
         open={open}
@@ -454,6 +547,8 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
   orgMemberships: (q: QueryBuilder) => q.findRecords('organizationmembership'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
 };
 
 export default withData(mapRecordsToProps)(connect(mapStateToProps)(

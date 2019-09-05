@@ -348,7 +348,7 @@ export function ScriptureTable(props: IProps) {
         passage.attributes.reference = passageRow[cols.Reference];
         passage.attributes.title = passageRow[cols.Title];
         delete passage.relationships;
-        await memory.update((t: TransformBuilder) => t.replaceRecord(passage));
+        await memory.update((t: TransformBuilder) => t.updateRecord(passage));
         inpRow[cols.PassageSeq] = passage.attributes.sequencenum;
         if (showBook(cols)) inpRow[cols.Book] = passage.attributes.book;
         inpRow[cols.Reference] = passage.attributes.reference;
@@ -424,7 +424,7 @@ export function ScriptureTable(props: IProps) {
         section.attributes.sequencenum = parseInt(sectionRow[cols.SectionSeq]);
         section.attributes.name = sectionRow[cols.SectionnName];
         delete section.relationships;
-        await memory.update((t: TransformBuilder) => t.replaceRecord(section));
+        await memory.update((t: TransformBuilder) => t.updateRecord(section));
         //update inData
         inpRow[cols.SectionSeq] = section.attributes.sequencenum;
         inpRow[cols.SectionnName] = section.attributes.name;

@@ -335,6 +335,34 @@
 					<context context-type="sourcefile">ProjectSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="projectSettings.dangerZone">
+				<source>Danger Zone</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.deleteProject">
+				<source>Delete this Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.deleteExplained">
+				<source>All plans, sections, passages, and media files will be removed.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.delete">
+				<source>DELETE</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="projectSettings.save">
 				<source>Save</source>
 				<target/>
@@ -1365,6 +1393,20 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="groupSettings.assignedSections">
+				<source>&#xA0;&#xA0;Assigned Sections:&#xA0;</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.projectPlans">
+				<source>Project Plans</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="shapingTable.NoColumns">
 				<source>No columns visible</source>
 				<target/>
@@ -1407,15 +1449,15 @@
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="languagePicker.instructions">
-				<source>Type the language name or {1}. Languages can also be found by country.</source>
+			<trans-unit id="languagePicker.findALanguage">
+				<source>Find a language by name, code, or country</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="languagePicker.code">
-				<source>code</source>
+			<trans-unit id="languagePicker.codeExplained">
+				<source>Code Explained</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">LanguagePicker.tsx</context>

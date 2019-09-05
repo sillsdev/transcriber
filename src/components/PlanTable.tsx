@@ -162,7 +162,7 @@ export function PlanTable(props: IProps) {
   const handleEditMethod = async (plan: any) => {
     setDialogVisible(false);
     delete plan.relationships;
-    await memory.update((t: TransformBuilder) => t.replaceRecord(plan));
+    await memory.update((t: TransformBuilder) => t.updateRecord(plan));
     await memory.update((t: TransformBuilder) =>
       t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
         type: 'plantype',
