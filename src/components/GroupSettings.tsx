@@ -164,7 +164,7 @@ export function GroupSettings(props: IProps) {
   };
   const handleSave = () => {
     memory.update((t: TransformBuilder) =>
-      t.replaceRecord({
+      t.updateRecord({
         type: 'group',
         id: group,
         attributes: {
@@ -246,7 +246,7 @@ export function GroupSettings(props: IProps) {
   };
 
   useEffect(() => {
-    if (group === '') {
+    if (group === '' && userDetail) {
       const curProj = projects.filter(p => p.id === project);
       if (curProj.length === 1) setGroup(related(curProj[0], 'group'));
       setDetail(true);

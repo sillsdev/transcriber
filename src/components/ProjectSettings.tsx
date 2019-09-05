@@ -172,7 +172,7 @@ export function ProjectSettings(props: IProps) {
   };
   const handleSave = () => {
     memory.update((t: TransformBuilder) => [
-      t.replaceRecord({
+      t.updateRecord({
         type: 'project',
         id: project,
         attributes: {

@@ -184,7 +184,7 @@ export function GroupTable(props: IProps) {
   const handleEditMethod = async (group: any) => {
     setDialogVisible(false);
     delete group.relationships;
-    await memory.update((t: TransformBuilder) => t.replaceRecord(group));
+    await memory.update((t: TransformBuilder) => t.updateRecord(group));
     await memory.update((t: TransformBuilder) =>
       t.replaceRelatedRecord({ type: 'group', id: group.id }, 'owner', {
         type: 'organization',
