@@ -21,6 +21,7 @@ import {
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from './SnackBar';
+import Confirm from './AlertDialog';
 import { related } from '../utils';
 import LanguagePicker from './LanguagePicker';
 import FontSize from './FontSize';
@@ -145,6 +146,7 @@ export function ProjectSettings(props: IProps) {
   const [defaultFontSize, setDefaultFontSize] = useState('large');
   const [rtl, setRtl] = useState(false);
   const [projectGroup, setProjectGroup] = useState('');
+  const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
   const langEl = React.useRef<any>();
 
@@ -256,10 +258,15 @@ export function ProjectSettings(props: IProps) {
   };
 
   const handleDelete = (p: Project | undefined) => () => {
-    if (p !== undefined)
-      memory.update((t: TransformBuilder) =>
-        t.removeRecord({ type: 'project', id: p.id })
-      );
+    if (p !== undefined) setDeleteItem(p.id);
+  };
+  const handleDeleteConfirmed = () => {
+    memory.update((t: TransformBuilder) =>
+      t.removeRecord({ type: 'project', id: deleteItem })
+    );
+  };
+  const handleDeleteRefused = () => {
+    setDeleteItem('');
   };
 
   useEffect(() => {
@@ -509,6 +516,14 @@ export function ProjectSettings(props: IProps) {
           </div>
         </FormGroup>
       </div>
+      {deleteItem !== '' ? (
+        <Confirm
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
+        />
+      ) : (
+        <></>
+      )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
