@@ -14,6 +14,7 @@ export * from './passageSection';
 export * from './user';
 export * from './role';
 export * from './userPassage';
+export * from './activityState';
 export * from './state';
 export * from '../store/book/types';
 export * from '../store/localization/types';

@@ -1286,5 +1286,65 @@
          	<target>Annuler</target>
          </segment>
       </unit>
-   </file>
+   <unit id="activityState.noMedia">
+         <segment>
+            <source>No Media</source>
+         	<target>Non Média</target>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribeReady">
+         <segment>
+            <source>Ready For Transcription</source>
+         	<target>Prêt pour la transcription</target>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribing">
+         <segment>
+            <source>Transcribing</source>
+         	<target>Transcrire</target>
+         </segment>
+      </unit>
+		<unit id="activityState.needsNewRecording">
+			<segment>
+				<source>Recording Problem</source>
+				<target>Problème d'enregistrement</target>
+			</segment>
+		</unit>
+		<unit id="activityState.transcribed">
+         <segment>
+            <source>Transcribed</source>
+         	<target>Transcrit</target>
+         </segment>
+      </unit>
+      <unit id="activityState.reviewing">
+         <segment>
+            <source>Reviewing</source>
+         	<target>Contrôler</target>
+         </segment>
+      </unit>
+		<unit id="activityState.needsNewTranscription">
+			<segment>
+				<source>Needs Changes</source>
+				<target>Besoin de changement</target>
+			</segment>
+		</unit>
+		<unit id="activityState.approved">
+         <segment>
+            <source>Approved (not synced)</source>
+         	<target>Approuvé (non synchronisé)</target>
+         </segment>
+      </unit>
+		<unit id="activityState.synced">
+			<segment>
+				<source>Synced</source>
+				<target>Synchronisé</target>
+			</segment>
+		</unit>
+		<unit id="activityState.done">
+			<segment>
+				<source>Done</source>
+				<target>Achevé</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>

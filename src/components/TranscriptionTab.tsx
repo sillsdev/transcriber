@@ -8,6 +8,7 @@ import {
   Section,
   User,
   IAssignmentTableStrings,
+  IActivityStateStrings,
   Role,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -110,7 +111,8 @@ const getAssignments = (
   passages: Array<Passage>,
   passageSections: Array<PassageSection>,
   sections: Array<Section>,
-  users: Array<User>
+  users: Array<User>,
+  activityState: IActivityStateStrings
 ) => {
   function passageSectionCompare(a: PassageSection, b: PassageSection) {
     const pa = passages.filter(p => p.id === related(a, 'passage'));
@@ -124,14 +126,10 @@ const getAssignments = (
     .sort(sectionCompare);
 
   plansections.forEach(function(section) {
-    const state =
-      section && section.attributes && section.attributes.state
-        ? section.attributes.state
-        : '';
     sectionRow = {
       id: section.id,
       name: getSection(section),
-      state: state,
+      state: '',
       reviewer: sectionReviewerName(section, users),
       transcriber: sectionTranscriberName(section, users),
       passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
@@ -150,7 +148,7 @@ const getAssignments = (
         passage.length > 0 &&
         passage[0].attributes &&
         passage[0].attributes.state
-          ? passage[0].attributes.state
+          ? activityState.getString(passage[0].attributes.state)
           : '';
       rowData.push({
         id: passageId,
@@ -168,6 +166,7 @@ const getAssignments = (
 
 interface IStateProps {
   t: IAssignmentTableStrings;
+  activityState: IActivityStateStrings;
 }
 
 interface IRecordProps {
@@ -186,6 +185,7 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 
 export function TranscriptionTab(props: IProps) {
   const {
+    activityState,
     t,
     passages,
     passageSections,
@@ -234,9 +234,25 @@ export function TranscriptionTab(props: IProps) {
 
   useEffect(() => {
     setData(
-      getAssignments(plan as string, passages, passageSections, sections, users)
+      getAssignments(
+        plan as string,
+        passages,
+        passageSections,
+        sections,
+        users,
+        activityState
+      )
     );
-  }, [plan, userPassages, passages, passageSections, sections, users, roles]);
+  }, [
+    plan,
+    userPassages,
+    passages,
+    passageSections,
+    sections,
+    users,
+    roles,
+    activityState,
+  ]);
 
   const LinkCell = ({ value, style, ...restProps }: any) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
@@ -342,6 +358,7 @@ export function TranscriptionTab(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
+  activityState: localStrings(state, { layout: 'activityState' }),
 });
 
 const mapRecordsToProps = {

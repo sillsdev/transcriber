@@ -1505,6 +1505,76 @@
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="activityState.noMedia">
+				<source>No Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.transcribeReady">
+				<source>Ready For Transcription</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.transcribing">
+				<source>Transcribing</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.needsNewRecording">
+				<source>Recording Problem</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.transcribed">
+				<source>Transcribed</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.reviewing">
+				<source>Reviewing</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.needsNewTranscription">
+				<source>Needs Changes</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.approved">
+				<source>Approved (not synced)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.synced">
+				<source>Synced</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.done">
+				<source>Done</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

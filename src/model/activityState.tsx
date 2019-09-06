@@ -1,10 +1,10 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { Record } from '@orbit/data';
 
-export interface Group extends Record {
+export interface ActivityState extends Record {
   attributes: {
     state: string;
     sequencenum: string;
   };
   relationships?: {};
 }
-export default Group;
+export default ActivityState;

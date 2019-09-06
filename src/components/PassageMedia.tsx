@@ -91,21 +91,27 @@ function PassageMedia(props: IProps) {
     setMessage(<></>);
   };
   const attach = async (passage: string, mediaFile: string) => {
-    await memory.update((t: TransformBuilder) =>
+    await memory.update((t: TransformBuilder) => [
       t.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
         type: 'passage',
         id: passage,
-      })
-    );
+      }),
+      t.replaceAttribute(
+        { type: 'passage', id: passage },
+        'state',
+        'transcribeReady'
+      ),
+    ]);
   };
-  const detach = async (mediaFile: string) => {
-    await memory.update((t: TransformBuilder) =>
+  const detach = async (passage: string, mediaFile: string) => {
+    await memory.update((t: TransformBuilder) => [
       t.replaceRelatedRecord(
         { type: 'mediafile', id: mediaFile },
         'passage',
         null
-      )
-    );
+      ),
+      t.replaceAttribute({ type: 'passage', id: passage }, 'state', 'noMedia'),
+    ]);
   };
   const handleSelectPassage = (id: string) => () => {
     if (selectedMedia !== '') {
@@ -125,8 +131,8 @@ function PassageMedia(props: IProps) {
       setSelectedMedia(id);
     }
   };
-  const handleDeselectMedia = (mediaFile: string) => () => {
-    detach(mediaFile);
+  const handleDeselectMedia = (passage: string, mediaFile: string) => () => {
+    detach(passage, mediaFile);
   };
 
   useEffect(() => {
@@ -253,7 +259,7 @@ function PassageMedia(props: IProps) {
         key={index}
         role="listitem"
         button
-        onClick={handleDeselectMedia(m.id)}
+        onClick={handleDeselectMedia(passage.id, m.id)}
       >
         <ListItemIcon>
           <Radio

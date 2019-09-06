@@ -328,6 +328,20 @@ const initialState = {
 			"cancel": "Cancel",
 		}
 	}),
+	"activityState": new LocalizedStrings({
+		"en": {
+			"noMedia": "No Media",
+			"transcribeReady": "Ready For Transcription",
+			"transcribing": "Transcribing",
+			"needsNewRecording": "Recording Problem",
+			"transcribed": "Transcribed",
+			"reviewing": "Reviewing",
+			"needsNewTranscription": "Needs Changes",
+			"approved": "Approved (not synced)",
+			"synced": "Synced",
+			"done": "Done",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -363,6 +377,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"shapingTable" : new LocalizedStrings(action.payload.data.shapingTable),
 				"treeChart" : new LocalizedStrings(action.payload.data.treeChart),
 				"languagePicker" : new LocalizedStrings(action.payload.data.languagePicker),
+				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 			};
 		case SET_LANGUAGE:
 			return {

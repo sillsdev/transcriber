@@ -1288,5 +1288,65 @@
             <target/>
          </segment>
       </unit>
+      <unit id="activityState.noMedia">
+         <segment>
+            <source>No Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribeReady">
+         <segment>
+            <source>Ready For Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribing">
+         <segment>
+            <source>Transcribing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.needsNewRecording">
+         <segment>
+            <source>Recording Problem</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribed">
+         <segment>
+            <source>Transcribed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.reviewing">
+         <segment>
+            <source>Reviewing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.needsNewTranscription">
+         <segment>
+            <source>Needs Changes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.approved">
+         <segment>
+            <source>Approved (not synced)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.synced">
+         <segment>
+            <source>Synced</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.done">
+         <segment>
+            <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

@@ -8,6 +8,7 @@ import {
   Section,
   User,
   IAssignmentTableStrings,
+  IActivityStateStrings,
   Role,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -107,7 +108,8 @@ const getAssignments = (
   passages: Array<Passage>,
   passageSections: Array<PassageSection>,
   sections: Array<Section>,
-  users: Array<User>
+  users: Array<User>,
+  activityState: IActivityStateStrings
 ) => {
   function passageSectionCompare(a: PassageSection, b: PassageSection) {
     const pa = passages.filter(p => p.id === related(a, 'passage'));
@@ -121,14 +123,10 @@ const getAssignments = (
     .sort(sectionCompare);
 
   plansections.forEach(function(section) {
-    const state =
-      section && section.attributes && section.attributes.state
-        ? section.attributes.state
-        : '';
     sectionRow = {
       id: section.id,
       name: getSection(section),
-      state: state,
+      state: '',
       reviewer: sectionReviewerName(section, users),
       transcriber: sectionTranscriberName(section, users),
       passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
@@ -143,7 +141,9 @@ const getAssignments = (
     sectionps.forEach(function(ps: PassageSection) {
       const passageId = related(ps, 'passage');
       const passage = passages.filter(p => p.id === passageId);
-      const state = passage[0].attributes ? passage[0].attributes.state : '';
+      const state = passage[0].attributes
+        ? activityState.getString(passage[0].attributes.state)
+        : '';
       rowData.push({
         id: passageId,
         name: getReference(passage),
@@ -159,6 +159,7 @@ const getAssignments = (
 };
 
 interface IStateProps {
+  activityState: IActivityStateStrings;
   t: IAssignmentTableStrings;
 }
 
@@ -178,6 +179,7 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 
 export function AssignmentTable(props: IProps) {
   const {
+    activityState,
     t,
     passages,
     passageSections,
@@ -266,8 +268,26 @@ export function AssignmentTable(props: IProps) {
   const handleGroup = () => setGroup(!group);
 
   useEffect(() => {
-    setData(getAssignments(plan, passages, passageSections, sections, users));
-  }, [plan, userPassages, passages, passageSections, sections, users, roles]);
+    setData(
+      getAssignments(
+        plan,
+        passages,
+        passageSections,
+        sections,
+        users,
+        activityState
+      )
+    );
+  }, [
+    plan,
+    userPassages,
+    passages,
+    passageSections,
+    sections,
+    users,
+    roles,
+    activityState,
+  ]);
 
   return (
     <div id="AssignmentTable" className={classes.container}>
@@ -372,6 +392,7 @@ export function AssignmentTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'assignmentTable' }),
+  activityState: localStrings(state, { layout: 'activityState' }),
 });
 
 const mapRecordsToProps = {

@@ -296,6 +296,19 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
     "cancel": string;
 };
 
+export interface IActivityStateStrings extends Localize.LocalizedStringsMethods {
+    "noMedia": string;
+    "transcribeReady": string;
+    "transcribing": string;
+    "needsNewRecording": string;
+    "transcribed": string;
+    "reviewing": string;
+    "needsNewTranscription": string;
+    "approved": string;
+    "synced": string;
+    "done": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -326,5 +339,6 @@ export interface ILocalizedStrings {
 	shapingTable: IShapingTableStrings;
 	treeChart: ITreeChartStrings;
 	languagePicker: ILanguagePickerStrings;
+	activityState: IActivityStateStrings;
 	[key: string]: any;
 };
