@@ -36,6 +36,7 @@ export const nextUpload = (
       dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', response.data.audioUrl, true);
+      xhr.setRequestHeader('Content-Type', response.data.contentType);
       xhr.send(files[n].slice());
       xhr.onload = () => {
         if (xhr.status < 300) {

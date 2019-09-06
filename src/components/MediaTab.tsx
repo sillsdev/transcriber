@@ -20,6 +20,7 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { Table } from '@devexpress/dx-react-grid-material-ui';
 import MediaUpload from './MediaUpload';
 import PassageMedia from './PassageMedia';
 import SnackBar from './SnackBar';
@@ -29,9 +30,10 @@ import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
-import { remoteIdNum } from '../utils';
+import { remoteIdNum, remoteId } from '../utils';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare } from '../utils/sort';
+import { API_CONFIG } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       marginLeft: theme.spacing(1),
     },
+    link: {},
   })
 );
 
@@ -227,7 +230,7 @@ export function MediaTab(props: IProps) {
   ];
   const columnWidths = [
     { columnName: 'planName', width: 150 },
-    { columnName: 'fileName', width: 150 },
+    { columnName: 'fileName', width: 220 },
     { columnName: 'section', width: 150 },
     { columnName: 'reference', width: 150 },
     { columnName: 'duration', width: 100 },
@@ -370,6 +373,35 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [loaded]);
 
+  const LinkCell = ({ value, style, ...restProps }: any) => (
+    <Table.Cell {...restProps} style={{ ...style }} value>
+      <div
+        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+      >
+        <a
+          href={
+            API_CONFIG.host +
+            '/api/mediafiles/' +
+            remoteId('mediafile', restProps.row.id, keyMap) +
+            '/file'
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {value}
+        </a>
+      </div>
+    </Table.Cell>
+  );
+
+  const Cell = (props: any) => {
+    const { column, row } = props;
+    if (column.name === 'fileName' && row.parentId !== '') {
+      return <LinkCell {...props} />;
+    }
+    return <Table.Cell {...props} />;
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -421,9 +453,6 @@ export function MediaTab(props: IProps) {
             <MenuItem onClick={handleConfirmAction('Delete')}>
               {t.delete}
             </MenuItem>
-            <MenuItem onClick={handleConfirmAction('Download')}>
-              {t.download}
-            </MenuItem>
             <MenuItem onClick={handleConfirmAction('Change Version')}>
               {t.changeVersion}
             </MenuItem>
@@ -450,6 +479,7 @@ export function MediaTab(props: IProps) {
           columns={columnDefs}
           columnWidths={columnWidths}
           columnSorting={columnSorting}
+          dataCell={Cell}
           sorting={[
             { columnName: 'planName', direction: 'asc' },
             { columnName: 'fileName', direction: 'asc' },
