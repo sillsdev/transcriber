@@ -302,7 +302,7 @@ export function ScriptureTable(props: IProps) {
           title: passageRow[cols.Title],
           position: 0,
           hold: false,
-          state: 'Not assigned',
+          state: 'noMedia',
         },
       } as any;
       schema.initializeRecord(p);
