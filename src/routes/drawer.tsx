@@ -330,9 +330,11 @@ export function ResponsiveDrawer(props: IProps) {
       setCurOrg(0);
       const orgId = orgOptions[0].value;
       setOrganization(orgId);
-      const logoIdx = organizations.map(o => o.id).indexOf(orgId);
-      const attr = organizations[logoIdx].attributes;
-      setOrgAvatar(attr ? attr.logoUrl : '');
+      const org = organizations.filter(o => o.id === orgId);
+      if (org.length > 0) {
+        const attr = org[0].attributes;
+        setOrgAvatar(attr ? attr.logoUrl : '');
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orgOptions, organization]);
