@@ -6,3 +6,4 @@ export * from './online';
 export * from './randomString';
 export * from './makeAbbr';
 export * from './user';
+export * from './validateEmail';

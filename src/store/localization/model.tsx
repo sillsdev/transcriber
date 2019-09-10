@@ -22,6 +22,11 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "timezone": string;
     "cancel": string;
     "continue": string;
+    "role": string;
+    "invite": string;
+    "action": string;
+    "delete": string;
+    "filter": string;
 };
 
 export interface IAlertStrings extends Localize.LocalizedStringsMethods {
@@ -309,6 +314,19 @@ export interface IActivityStateStrings extends Localize.LocalizedStringsMethods 
     "done": string;
 };
 
+export interface IInviteStrings extends Localize.LocalizedStringsMethods {
+    "editInvite": string;
+    "addInvite": string;
+    "newInviteTask": string;
+    "email": string;
+    "role": string;
+    "selectRole": string;
+    "cancel": string;
+    "add": string;
+    "save": string;
+    "invalidEmail": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -340,5 +358,6 @@ export interface ILocalizedStrings {
 	treeChart: ITreeChartStrings;
 	languagePicker: ILanguagePickerStrings;
 	activityState: IActivityStateStrings;
+	invite: IInviteStrings;
 	[key: string]: any;
 };

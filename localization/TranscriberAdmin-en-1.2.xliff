@@ -104,6 +104,41 @@
 					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="usertable.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.invite">
+				<source>Invite</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="usertable.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="alert.confirmation">
 				<source>Confirmation</source>
 				<target/>
@@ -1573,6 +1608,76 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.editInvite">
+				<source>Edit Invite</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.addInvite">
+				<source>Invite User</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.newInviteTask">
+				<source>Enter the email address of the user to invite.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.email">
+				<source>Email</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.selectRole">
+				<source>Select Organizational Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.invalidEmail">
+				<source>Invalid email address</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

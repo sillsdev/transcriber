@@ -30,6 +30,11 @@ const initialState = {
 			"timezone": "Timezone",
 			"cancel": "Cancel",
 			"continue": "Continue",
+			"role": "Role",
+			"invite": "Invite",
+			"action": "Action",
+			"delete": "Delete",
+			"filter": "Filter",
 		}
 	}),
 	"alert": new LocalizedStrings({
@@ -342,6 +347,20 @@ const initialState = {
 			"done": "Done",
 		}
 	}),
+	"invite": new LocalizedStrings({
+		"en": {
+			"editInvite": "Edit Invite",
+			"addInvite": "Invite User",
+			"newInviteTask": "Enter the email address of the user to invite.",
+			"email": "Email",
+			"role": "Role",
+			"selectRole": "Select Organizational Role",
+			"cancel": "Cancel",
+			"add": "Add",
+			"save": "Save",
+			"invalidEmail": "Invalid email address",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -378,6 +397,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"treeChart" : new LocalizedStrings(action.payload.data.treeChart),
 				"languagePicker" : new LocalizedStrings(action.payload.data.languagePicker),
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
+				"invite" : new LocalizedStrings(action.payload.data.invite),
 			};
 		case SET_LANGUAGE:
 			return {

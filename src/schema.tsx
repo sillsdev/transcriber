@@ -55,6 +55,26 @@ const schemaDefinition: SchemaSettings = {
         },
       },
     },
+    invitation: {
+      keys: { remoteId: {} },
+      attributes: {
+        email: { type: 'string' },
+        accepted: { type: 'boolean' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastUpdatedBy: { type: 'number' },
+      },
+      relationships: {
+        organization: {
+          type: 'hasOne',
+          model: 'organization',
+        },
+        role: {
+          type: 'hasOne',
+          model: 'role',
+        },
+      },
+    },
     organization: {
       keys: { remoteId: {} },
       attributes: {
@@ -68,11 +88,6 @@ const schemaDefinition: SchemaSettings = {
         owner: { type: 'hasOne', model: 'user' },
         users: { type: 'hasMany', model: 'user' },
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
-        userRoles: {
-          type: 'hasMany',
-          model: 'userrole',
-          inverse: 'organization',
-        },
       },
     },
     organizationmembership: {
@@ -85,6 +100,7 @@ const schemaDefinition: SchemaSettings = {
           inverse: 'organizationMemberships',
         },
         organization: { type: 'hasOne', model: 'organization' },
+        role: { type: 'hasOne', model: 'role' },
       },
     },
     plan: {
@@ -177,10 +193,12 @@ const schemaDefinition: SchemaSettings = {
     role: {
       keys: { remoteId: {} },
       attributes: {
+        orgRole: { type: 'boolean' },
+        groupRole: { type: 'boolean' },
         roleName: { type: 'string' },
       },
       relationships: {
-        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
+        userRoles: { type: 'hasMany', model: 'organizationalmembership' },
       },
     },
     section: {
@@ -295,7 +313,6 @@ const schemaDefinition: SchemaSettings = {
           model: 'groupmembership',
           inverse: 'user',
         },
-        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
         passages: {
           type: 'hasMany',
           model: 'userpassage',
@@ -334,21 +351,7 @@ const schemaDefinition: SchemaSettings = {
           type: 'hasMany',
           model: 'organizationmembership',
         },
-        userRoles: { type: 'hasMany', model: 'userrole' },
         groupMemberships: { type: 'hasMany', model: 'groupmembership' },
-      },
-    },
-    userrole: {
-      keys: { remoteId: {} },
-      attributes: {},
-      relationships: {
-        user: { type: 'hasOne', model: 'user', inverse: 'userRoles' },
-        role: { type: 'hasOne', model: 'role', inverse: 'userRoles' },
-        organization: {
-          type: 'hasOne',
-          model: 'organization',
-          inverse: 'userRoles',
-        },
       },
     },
     userpassage: {

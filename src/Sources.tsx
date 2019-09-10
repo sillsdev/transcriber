@@ -180,35 +180,35 @@ const Sources = async (
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(25));
     await remote
-      .pull(q => q.findRecords('projectintegration'))
+      .pull(q => q.findRecords('invitation'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(30));
     await remote
-      .pull(q => q.findRecords('projecttype'))
+      .pull(q => q.findRecords('projectintegration'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(35));
     await remote
-      .pull(q => q.findRecords('plan'))
+      .pull(q => q.findRecords('projecttype'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(40));
     await remote
-      .pull(q => q.findRecords('plantype'))
+      .pull(q => q.findRecords('plan'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(45));
     await remote
-      .pull(q => q.findRecords('section'))
+      .pull(q => q.findRecords('plantype'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(50));
     await remote
-      .pull(q => q.findRecords('passagesection'))
+      .pull(q => q.findRecords('section'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(55));
     await remote
-      .pull(q => q.findRecords('passage'))
+      .pull(q => q.findRecords('passagesection'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(60));
     await remote
-      .pull(q => q.findRecords('userrole'))
+      .pull(q => q.findRecords('passage'))
       .then(transform => memory.sync(transform))
       .then(() => setCompleted(65));
     await remote

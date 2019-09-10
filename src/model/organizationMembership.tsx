@@ -6,6 +6,7 @@ export interface OrganizationMembership extends Record {
   };
   relationships?: {
     user: RecordRelationship;
+    role: RecordRelationship;
     organiztion: RecordRelationship;
   };
 }

@@ -88,6 +88,36 @@
             <target/>
          </segment>
       </unit>
+      <unit id="usertable.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.invite">
+         <segment>
+            <source>Invite</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="alert.confirmation">
          <segment>
             <source>Confirmation</source>
@@ -1345,6 +1375,66 @@
       <unit id="activityState.done">
          <segment>
             <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.editInvite">
+         <segment>
+            <source>Edit Invite</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.addInvite">
+         <segment>
+            <source>Invite User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.newInviteTask">
+         <segment>
+            <source>Enter the email address of the user to invite.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.email">
+         <segment>
+            <source>Email</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.selectRole">
+         <segment>
+            <source>Select Organizational Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.invalidEmail">
+         <segment>
+            <source>Invalid email address</source>
             <target/>
          </segment>
       </unit>

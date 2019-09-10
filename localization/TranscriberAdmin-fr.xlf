@@ -85,7 +85,37 @@
 				<target>Continuer</target>
 			</segment>
 		</unit>
-		<unit id="alert.confirmation">
+		<unit id="usertable.role">
+         <segment>
+            <source>Role</source>
+         	<target>Rôle</target>
+         </segment>
+      </unit>
+      <unit id="usertable.invite">
+         <segment>
+            <source>Invite</source>
+         	<target>Inviter</target>
+         </segment>
+      </unit>
+      <unit id="usertable.action">
+         <segment>
+            <source>Action</source>
+         	<target>Action</target>
+         </segment>
+      </unit>
+      <unit id="usertable.delete">
+         <segment>
+            <source>Delete</source>
+         	<target>Supprimer</target>
+         </segment>
+      </unit>
+      <unit id="usertable.filter">
+         <segment>
+            <source>Filter</source>
+         	<target>Filtre</target>
+         </segment>
+      </unit>
+      <unit id="alert.confirmation">
 			<segment>
 				<source>Confirmation</source>
 				<target>Confirmation</target>
@@ -1346,5 +1376,65 @@
 				<target>Achevé</target>
 			</segment>
 		</unit>
-	</file>
+	<unit id="invite.editInvite">
+         <segment>
+            <source>Edit Invite</source>
+         	<target>Modifier l'invitation</target>
+         </segment>
+      </unit>
+      <unit id="invite.addInvite">
+         <segment>
+            <source>Invite User</source>
+         	<target>Inviter un utilisateur</target>
+         </segment>
+      </unit>
+      <unit id="invite.newInviteTask">
+         <segment>
+            <source>Enter the email address of the user to invite.</source>
+         	<target>Entrez le adresse électronique de l'utilisateur à inviter.</target>
+         </segment>
+      </unit>
+      <unit id="invite.email">
+         <segment>
+            <source>Email</source>
+         	<target>Courriel</target>
+         </segment>
+      </unit>
+      <unit id="invite.role">
+         <segment>
+            <source>Role</source>
+         	<target>Rôle</target>
+         </segment>
+      </unit>
+      <unit id="invite.selectRole">
+         <segment>
+            <source>Select Organizational Role</source>
+         	<target>Sélectionner le rôle organisationnel</target>
+         </segment>
+      </unit>
+      <unit id="invite.cancel">
+         <segment>
+            <source>Cancel</source>
+         	<target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="invite.add">
+         <segment>
+            <source>Add</source>
+         	<target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="invite.save">
+         <segment>
+            <source>Save</source>
+         	<target>Enregistrer</target>
+         </segment>
+      </unit>
+   <unit id="invite.invalidEmail">
+         <segment>
+            <source>Invalid email address</source>
+         	<target>Adresse électronique invalide</target>
+         </segment>
+      </unit>
+   </file>
 </xliff>

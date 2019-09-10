@@ -1,198 +1,335 @@
 import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
-import { Redirect } from 'react-router-dom';
+import { useGlobal } from 'reactn';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, User, IUsertableStrings } from '../model';
+import {
+  IState,
+  User,
+  Role,
+  Invitation,
+  OrganizationMembership,
+  IUsertableStrings,
+} from '../model';
 import localStrings from '../selector/localize';
-import { Paper } from '@material-ui/core';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  FilteringState,
-  IntegratedFiltering,
-  IntegratedPaging,
-  IntegratedSelection,
-  IntegratedSorting,
-  PagingState,
-  SelectionState,
-  SortingState,
-} from '@devexpress/dx-react-grid';
-import {
-  DragDropProvider,
-  Grid,
-  PagingPanel,
-  Table,
-  TableColumnResizing,
-  TableFilterRow,
-  TableHeaderRow,
-  TableSelection,
-  Toolbar,
-} from '@devexpress/dx-react-grid-material-ui';
+import { Button, Menu, MenuItem } from '@material-ui/core';
+import DropDownIcon from '@material-ui/icons/ArrowDropDown';
+import AddIcon from '@material-ui/icons/Add';
+import FilterIcon from '@material-ui/icons/FilterList';
+import SelectAllIcon from '@material-ui/icons/SelectAll';
+import Invite from './Invite';
+import SnackBar from './SnackBar';
+import Confirm from './AlertDialog';
+import ShapingTable from './ShapingTable';
 import Auth from '../auth/Auth';
+import { related, remoteIdNum } from '../utils';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      width: '100%',
+    container: {
+      display: 'flex',
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
+      marginBottom: theme.spacing(4),
     },
+    paper: {},
+    actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+    }),
     grow: {
       flexGrow: 1,
     },
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
+    button: {
+      margin: theme.spacing(1),
     },
-    paper: theme.mixins.gutters({
-      paddingTop: 16,
-      paddingBottom: 16,
-      marginTop: theme.spacing(3),
-      width: '80%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-      [theme.breakpoints.down('md')]: {
-        width: '100%',
-      },
-    }),
-    fullPaper: theme.mixins.gutters({
-      padding: 0,
-      margin: 0,
-    }),
-    dialogHeader: theme.mixins.gutters({
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-    }),
+    buttonIcon: {
+      marginLeft: theme.spacing(1),
+    },
+    editIcon: {
+      fontSize: 16,
+    },
+    addIcon: {},
+    link: {},
   })
 );
 
-interface IStateProps {
-  t: IUsertableStrings;
-}
-
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IUserRow {
+interface IRow {
   type: string;
-  id: string;
   name: string;
   email: string;
   locale: string;
   phone: string;
   timezone: string;
+  role: string;
+  id: RecordIdentity;
 }
 
-interface IProps extends IStateProps, IRecordProps {
+const getMedia = (
+  organization: string,
+  users: Array<User>,
+  roles: Array<Role>,
+  organizationMemberships: Array<OrganizationMembership>
+) => {
+  const members = organizationMemberships.filter(
+    om => related(om, 'organization') === organization
+  );
+  const rowData: IRow[] = [];
+  members.forEach(m => {
+    const user = users.filter(u => u.id === related(m, 'user'));
+    const role = roles.filter(r => r.id === related(m, 'role'));
+    if (user.length === 1) {
+      const u = user[0];
+      rowData.push({
+        name: u.attributes.name,
+        email: u.attributes.email ? u.attributes.email : '',
+        locale: u.attributes.locale ? u.attributes.locale : '',
+        phone: u.attributes.phone ? u.attributes.phone : '',
+        timezone: u.attributes.timezone ? u.attributes.timezone : '',
+        role: role.length === 1 ? role[0].attributes.roleName : '',
+        id: { type: 'user', id: u.id },
+      } as IRow);
+    }
+  });
+  return rowData;
+};
+
+interface IStateProps {
+  t: IUsertableStrings;
+  uploadList: FileList;
+  loaded: boolean;
+  currentlyLoading: number;
+}
+
+interface IDispatchProps {}
+
+interface IRecordProps {
+  users: Array<User>;
+  roles: Array<Role>;
+  organizationMemberships: Array<OrganizationMembership>;
+}
+
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
 }
 
 export function UserTable(props: IProps) {
-  const { users, auth, t } = props;
+  const { t, users, roles, organizationMemberships } = props;
   const classes = useStyles();
-  const { isAuthenticated } = auth;
+  const [organization] = useGlobal('organization');
+  const [memory] = useGlobal('memory');
+  const [schema] = useGlobal('schema');
+  const [keyMap] = useGlobal('keyMap');
+  const [user] = useGlobal('user');
+  const [message, setMessage] = useState(<></>);
+  const [data, setData] = useState(Array<IRow>());
+  const [actionMenuItem, setActionMenuItem] = useState(null);
+  const [check, setCheck] = useState(Array<number>());
+  const [confirmAction, setConfirmAction] = useState('');
+  const columnDefs = [
+    { name: 'name', title: t.name },
+    { name: 'email', title: t.email },
+    { name: 'locale', title: t.locale },
+    { name: 'phone', title: t.phone },
+    { name: 'timezone', title: t.timezone },
+    { name: 'role', title: t.role },
+  ];
+  const columnWidths = [
+    { columnName: 'name', width: 200 },
+    { columnName: 'email', width: 200 },
+    { columnName: 'locale', width: 100 },
+    { columnName: 'phone', width: 100 },
+    { columnName: 'timezone', width: 100 },
+    { columnName: 'role', width: 100 },
+  ];
+  const [filter, setFilter] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [dialogData, setDialogData] = useState(null as Invitation | null);
 
-  const [columns, setColumns] = useState([
-    { name: 'name', title: 'Name' },
-    { name: 'email', title: 'Email' },
-    { name: 'locale', title: 'Locale' },
-    { name: 'phone', title: 'Phone' },
-    { name: 'timezone', title: 'Timezone' },
-  ]);
-  const [pageSizes] = useState([5, 10, 15]);
-  const [rows, setRows] = useState(Array<IUserRow>());
+  const handleAdd = () => {
+    setDialogData(null);
+    setDialogVisible(true);
+  };
+  const handleAddMethod = async (email: string, role: string) => {
+    setDialogVisible(false);
+    let invitation: Invitation = {
+      type: 'invitation',
+      attributes: {
+        email: email,
+        accepted: false,
+        dateCreated: moment().format(),
+        dateUpdated: null,
+        lastUpdatedBy: remoteIdNum('user', user, keyMap),
+      },
+    } as any;
+    schema.initializeRecord(invitation);
+
+    await memory.update((t: TransformBuilder) => [
+      t.addRecord(invitation),
+      t.replaceRelatedRecord(
+        { type: 'invitation', id: invitation.id },
+        'organization',
+        {
+          type: 'organization',
+          id: organization,
+        }
+      ),
+      t.replaceRelatedRecord(
+        { type: 'invitation', id: invitation.id },
+        'role',
+        {
+          type: 'role',
+          id: role,
+        }
+      ),
+    ]);
+  };
+
+  const handleAddCancel = () => {
+    setDialogVisible(false);
+  };
+  const handleMessageReset = () => {
+    setMessage(<></>);
+  };
+  const handleCheck = (checks: Array<number>) => {
+    setCheck(checks);
+  };
+  const handleFilter = () => setFilter(!filter);
+  const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
+  const handleConfirmAction = (what: string) => (e: any) => {
+    setActionMenuItem(null);
+    if (!/Close/i.test(what)) {
+      if (check.length === 0) {
+        setMessage(<span>Please select row(s) to {what}.</span>);
+      } else {
+        setConfirmAction(what);
+      }
+    }
+  };
+  const handleActionConfirmed = () => {
+    if (confirmAction === 'Delete') {
+      setCheck(Array<number>());
+      check.forEach(i => {
+        memory.update((t: TransformBuilder) => t.removeRecord(data[i].id));
+      });
+    }
+    setConfirmAction('');
+  };
+  const handleActionRefused = () => {
+    setConfirmAction('');
+  };
 
   useEffect(() => {
-    setColumns([
-      { name: 'name', title: t.name },
-      { name: 'email', title: t.email },
-      { name: 'locale', title: t.locale },
-      { name: 'phone', title: t.phone },
-      { name: 'timezone', title: t.timezone },
-    ]);
-    if (users && users !== undefined) {
-      setRows(
-        users
-          .filter(u => u.attributes)
-          .map((o: User) => ({
-            type: o.type,
-            id: o.id,
-            name: o.attributes.name,
-            email: o.attributes.email ? o.attributes.email : '',
-            locale: o.attributes.locale ? o.attributes.locale : '',
-            phone: o.attributes.phone ? o.attributes.phone : '',
-            timezone: o.attributes.timezone ? o.attributes.timezone : '',
-          }))
-      );
-    }
-  }, [users, t.name, t.email, t.locale, t.phone, t.timezone]);
-
-  if (!isAuthenticated()) return <Redirect to="/" />;
+    setData(getMedia(organization, users, roles, organizationMemberships));
+  }, [organization, users, roles, organizationMemberships, confirmAction]);
 
   return (
-    <div className={classes.root}>
-      <div className={classes.container}>
-        <Paper
-          id="user-table"
-          className={clsx(classes.paper, {
-            [classes.fullPaper]: true,
-          })}
-        >
-          {/* <Typography variant="h5" className={classes.dialogHeader}>
-            {t.chooseUser}
-          </Typography> */}
-          <Grid rows={rows} columns={columns}>
-            <FilteringState />
-            <SortingState
-              defaultSorting={[{ columnName: 'name', direction: 'asc' }]}
-            />
-
-            <SelectionState />
-
-            <PagingState />
-
-            <IntegratedFiltering />
-            <IntegratedSorting />
-            <IntegratedPaging />
-            <IntegratedSelection />
-
-            <DragDropProvider />
-
-            <Table />
-            <TableSelection showSelectAll={true} />
-            <TableColumnResizing
-              minColumnWidth={50}
-              defaultColumnWidths={[
-                { columnName: 'name', width: 200 },
-                { columnName: 'email', width: 200 },
-                { columnName: 'locale', width: 100 },
-                { columnName: 'phone', width: 100 },
-                { columnName: 'timezone', width: 100 },
-              ]}
-            />
-
-            <TableHeaderRow showSortingControls={true} />
-            <TableFilterRow showFilterSelector={true} />
-            <PagingPanel pageSizes={pageSizes} />
-
-            <Toolbar />
-          </Grid>
-        </Paper>
+    <div className={classes.container}>
+      <div className={classes.paper}>
+        <div className={classes.actions}>
+          <Button
+            key="add"
+            aria-label={t.invite}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleAdd}
+          >
+            {t.invite}
+            <AddIcon className={classes.buttonIcon} />
+          </Button>
+          <Button
+            key="action"
+            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+            aria-label={t.action}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleMenu}
+          >
+            {t.action}
+            <DropDownIcon className={classes.buttonIcon} />
+          </Button>
+          <Menu
+            id="action-menu"
+            anchorEl={actionMenuItem}
+            open={Boolean(actionMenuItem)}
+            onClose={handleConfirmAction('Close')}
+          >
+            <MenuItem onClick={handleConfirmAction('Delete')}>
+              {t.delete}
+            </MenuItem>
+          </Menu>
+          <div className={classes.grow}>{'\u00A0'}</div>
+          <Button
+            key="filter"
+            aria-label={t.filter}
+            variant="outlined"
+            color="primary"
+            className={classes.button}
+            onClick={handleFilter}
+            title={'Show/Hide filter rows'}
+          >
+            {t.filter}
+            {filter ? (
+              <SelectAllIcon className={classes.buttonIcon} />
+            ) : (
+              <FilterIcon className={classes.buttonIcon} />
+            )}
+          </Button>
+        </div>
+        <ShapingTable
+          columns={columnDefs}
+          columnWidths={columnWidths}
+          rows={data}
+          select={handleCheck}
+          shaping={filter}
+        />
       </div>
+      <Invite
+        visible={dialogVisible}
+        planIn={dialogData}
+        addMethod={handleAddMethod}
+        cancelMethod={handleAddCancel}
+      />
+      {confirmAction !== '' ? (
+        <Confirm
+          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
+          yesResponse={handleActionConfirmed}
+          noResponse={handleActionRefused}
+        />
+      ) : (
+        <></>
+      )}
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'usertable' }),
+  uploadList: state.upload.files,
+  currentlyLoading: state.upload.current,
+  loaded: state.upload.loaded,
+});
+
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators({}, dispatch),
 });
 
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
+  organizationMemberships: (q: QueryBuilder) =>
+    q.findRecords('organizationmembership'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  UserTable
-) as any) as any;
+export default withData(mapRecordsToProps)(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserTable) as any) as any;
