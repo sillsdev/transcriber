@@ -324,8 +324,10 @@ export function ResponsiveDrawer(props: IProps) {
     const cur = orgOptions.map(oo => oo.value).indexOf(organization);
     if (cur !== -1) {
       setCurOrg(cur);
-      const attr = organizations[cur].attributes;
-      setOrgAvatar(attr ? attr.logoUrl : '');
+      if (organizations[cur]) {
+        const attr = organizations[cur].attributes;
+        setOrgAvatar(attr ? attr.logoUrl : '');
+      }
     } else {
       setCurOrg(0);
       const orgId = orgOptions[0].value;
