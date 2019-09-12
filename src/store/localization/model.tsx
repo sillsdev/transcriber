@@ -213,6 +213,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "logout": string;
     "planUnsaved": string;
     "loseData": string;
+    "newOrganization": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import Access from './routes/Access';
 import Logout from './routes/Logout';
 import Drawer from './routes/drawer';
@@ -13,6 +13,14 @@ const handleAuthentication = (props: any) => {
   const { location } = props;
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
+  }
+};
+
+const handleNewOrg = (props: any) => {
+  const { location } = props;
+  if (/neworg|error/.test(location.pathname)) {
+    localStorage.setItem('newOrg', location.search);
+    return <Redirect to="/loading" />;
   }
 };
 
@@ -45,6 +53,7 @@ class App extends React.Component {
             return <Callback {...props} />;
           }}
         />
+        <Route path="/neworg" render={props => handleNewOrg(props)} />
       </>
     );
   }

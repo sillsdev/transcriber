@@ -4,6 +4,7 @@ export interface Organization extends Record {
   attributes: {
     name: string;
     slug: string;
+    SilId: number;
     websiteUrl: string;
     logoUrl: string;
     publicByDefault: string;

@@ -961,6 +961,12 @@
 			<target>Voulez-vous quitter cette page et perdre vos modifications ?</target>
          </segment>
       </unit>
+      <unit id="main.newOrganization">
+         <segment>
+            <source>New Organization</source>
+            <target>Nouvelle Organization</target>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>

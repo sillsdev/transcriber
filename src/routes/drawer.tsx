@@ -60,6 +60,7 @@ import GroupSettings from '../components/GroupSettings';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
 import logo from './transcriber10.png';
+import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -217,6 +218,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [changed, setChanged] = useState(false);
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
+  const newOrgRef = useRef<any>();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -238,11 +240,15 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleCommitOrg = (value: string) => {
     localStorage.removeItem('url');
-    setOrganization(value);
-    setAddProject(false);
-    setChoice('');
-    setContent('');
-    setGroup('');
+    if (value === t.newOrganization) {
+      if (newOrgRef.current) newOrgRef.current.click();
+    } else {
+      setOrganization(value);
+      setAddProject(false);
+      setChoice('');
+      setContent('');
+      setGroup('');
+    }
   };
 
   const handleCommitProj = (value: string) => {
@@ -315,7 +321,9 @@ export function ResponsiveDrawer(props: IProps) {
           label: o.attributes.name,
         };
       });
-    setOrgOptions(orgOpts);
+    setOrgOptions(
+      orgOpts.concat({ value: t.newOrganization, label: t.newOrganization })
+    );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organizations, organization, user]);
 
@@ -717,6 +725,19 @@ export function ResponsiveDrawer(props: IProps) {
       ) : (
         <></>
       )}
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+      <a
+        ref={newOrgRef}
+        href={
+          AUTH_CONFIG.newOrgApp +
+          '/?callback=' +
+          AUTH_CONFIG.callbackUrl
+            .replace('https://', '')
+            .replace('/callback', '') +
+          '#access_token=' +
+          auth.accessToken
+        }
+      ></a>
     </div>
   );
 }

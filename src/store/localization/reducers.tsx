@@ -236,6 +236,7 @@ const initialState = {
 			"logout": "Log Out",
 			"planUnsaved": "Plan Unsaved",
 			"loseData": "Do you want to leave this page and lose your changes?",
+			"newOrganization": "New Organization",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({

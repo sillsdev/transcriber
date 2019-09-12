@@ -4,7 +4,8 @@ import Auth from '../auth/Auth';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings } from '../model';
+import { IState, IMainStrings, Organization } from '../model';
+import { TransformBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -18,6 +19,7 @@ import {
 } from '@material-ui/core';
 import * as action from '../store';
 import logo from './transcriber9.png';
+import { parseQuery, IParsedArgs } from '../utils/parseQuery';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,10 +91,39 @@ export function Loading(props: IProps) {
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  const [_user, setUser] = useGlobal('user');
+  const [user, setUser] = useGlobal('user');
   /* eslint-enable @typescript-eslint/no-unused-vars */
   const [completed, setCompleted] = useState(0);
+  const [orgName, setOrgName] = useState(localStorage.getItem('newOrg'));
+
+  const CreateOrg = async (props: IParsedArgs) => {
+    const { orgId, orgName } = props;
+    if (!localStorage.getItem('newOrg')) return;
+    localStorage.removeItem('newOrg');
+
+    let organization: Organization = {
+      type: 'organization',
+      attributes: {
+        name: orgName,
+        SilId: orgId,
+        publicByDefault: true,
+      },
+    } as any;
+    schema.initializeRecord(organization);
+
+    await memory.update((t: TransformBuilder) => [
+      t.addRecord(organization),
+      t.replaceRelatedRecord(
+        { type: 'organization', id: organization.id },
+        'owner',
+        {
+          type: 'user',
+          id: user,
+        }
+      ),
+    ]);
+    setOrgName(null);
+  };
 
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
@@ -103,9 +134,22 @@ export function Loading(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
+  useEffect(() => {
+    if (completed === 100) {
+      if (orgName) {
+        CreateOrg(parseQuery(orgName));
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [completed]);
+
   if (!isAuthenticated()) return <Redirect to="/" />;
 
-  if (orbitLoaded && (completed === 100 || API_CONFIG.offline)) {
+  if (
+    orbitLoaded &&
+    (completed === 100 || API_CONFIG.offline) &&
+    orgName === null
+  ) {
     return <Redirect to="/main" />;
   }
 
