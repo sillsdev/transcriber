@@ -261,6 +261,7 @@ const initialState = {
 		"en": {
 			"users": "Users",
 			"groups": "Groups",
+			"invitations": "Invitations",
 		}
 	}),
 	"groupTable": new LocalizedStrings({
@@ -362,6 +363,17 @@ const initialState = {
 			"invalidEmail": "Invalid email address",
 		}
 	}),
+	"invitationTable": new LocalizedStrings({
+		"en": {
+			"email": "Email",
+			"role": "Role",
+			"accepted": "Accepted",
+			"invite": "Invite",
+			"action": "Action",
+			"delete": "Delete",
+			"filter": "Filter",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -399,6 +411,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"languagePicker" : new LocalizedStrings(action.payload.data.languagePicker),
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 				"invite" : new LocalizedStrings(action.payload.data.invite),
+				"invitationTable" : new LocalizedStrings(action.payload.data.invitationTable),
 			};
 		case SET_LANGUAGE:
 			return {

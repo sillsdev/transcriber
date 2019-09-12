@@ -1218,6 +1218,13 @@
 					<context context-type="sourcefile">GroupTabs.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="groupTabs.invitations">
+				<source>Invitations</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTabs.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="groupTable.name">
 				<source>Name</source>
 				<target/>
@@ -1685,6 +1692,55 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.email">
+				<source>Email</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.accepted">
+				<source>Accepted</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.invite">
+				<source>Invite</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

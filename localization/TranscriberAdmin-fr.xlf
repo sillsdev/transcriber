@@ -1040,7 +1040,13 @@
 				<target>Groupes</target>
 			</segment>
 		</unit>
-		<unit id="groupTable.name">
+		<unit id="groupTabs.invitations">
+         <segment>
+            <source>Invitations</source>
+         	<target>Invitations</target>
+         </segment>
+      </unit>
+      <unit id="groupTable.name">
          <segment>
 			<source>Name</source>
 			<target>Nom</target>
@@ -1440,6 +1446,48 @@
          <segment>
             <source>Invalid email address</source>
          	<target>Adresse électronique invalide</target>
+         </segment>
+      </unit>
+   <unit id="invitationTable.email">
+         <segment>
+            <source>Email</source>
+         	<target>Courriel</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.role">
+         <segment>
+            <source>Role</source>
+         	<target>Rôle</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.accepted">
+         <segment>
+            <source>Accepted</source>
+         	<target>Acceptée</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.invite">
+         <segment>
+         	<source>Invite</source>
+         	<target>Inviter</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.action">
+         <segment>
+            <source>Action</source>
+            <target>Action</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.delete">
+         <segment>
+            <source>Delete</source>
+         	<target>Supprimer</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.filter">
+         <segment>
+            <source>Filter</source>
+            <target>Filtre</target>
          </segment>
       </unit>
    </file>

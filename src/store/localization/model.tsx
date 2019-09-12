@@ -235,6 +235,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
 export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
     "users": string;
     "groups": string;
+    "invitations": string;
 };
 
 export interface IGroupTableStrings extends Localize.LocalizedStringsMethods {
@@ -328,6 +329,16 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "invalidEmail": string;
 };
 
+export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
+    "email": string;
+    "role": string;
+    "accepted": string;
+    "invite": string;
+    "action": string;
+    "delete": string;
+    "filter": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -360,5 +371,6 @@ export interface ILocalizedStrings {
 	languagePicker: ILanguagePickerStrings;
 	activityState: IActivityStateStrings;
 	invite: IInviteStrings;
+	invitationTable: IInvitationTableStrings;
 	[key: string]: any;
 };

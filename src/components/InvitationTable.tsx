@@ -2,14 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {
-  IState,
-  User,
-  Role,
-  Invitation,
-  OrganizationMembership,
-  IUsertableStrings,
-} from '../model';
+import { IState, Role, Invitation, IInvitationTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
@@ -60,63 +53,46 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IRow {
-  type: string;
-  name: string;
   email: string;
-  locale: string;
-  phone: string;
-  timezone: string;
   role: string;
+  accepted: string;
   id: RecordIdentity;
 }
 
 const getMedia = (
   organization: string,
-  users: Array<User>,
   roles: Array<Role>,
-  organizationMemberships: Array<OrganizationMembership>
+  invitations: Array<Invitation>
 ) => {
-  const members = organizationMemberships.filter(
-    om => related(om, 'organization') === organization
+  const invites = invitations.filter(
+    i => related(i, 'organization') === organization
   );
-  const rowData: IRow[] = [];
-  members.forEach(m => {
-    const user = users.filter(u => u.id === related(m, 'user'));
-    const role = roles.filter(r => r.id === related(m, 'role'));
-    if (user.length === 1) {
-      const u = user[0];
-      rowData.push({
-        name: u.attributes.name,
-        email: u.attributes.email ? u.attributes.email : '',
-        locale: u.attributes.locale ? u.attributes.locale : '',
-        phone: u.attributes.phone ? u.attributes.phone : '',
-        timezone: u.attributes.timezone ? u.attributes.timezone : '',
-        role: role.length === 1 ? role[0].attributes.roleName : '',
-        id: { type: 'user', id: u.id },
-      } as IRow);
-    }
+  return invites.map(i => {
+    const role = roles.filter(r => r.id === related(i, 'role'));
+    return {
+      email: i.attributes.email ? i.attributes.email : '',
+      role: role.length === 1 ? role[0].attributes.roleName : '',
+      accepted: i.attributes.accepted ? 'true' : 'false',
+      id: { type: 'invitation', id: i.id },
+    } as IRow;
   });
-  return rowData;
 };
 
 interface IStateProps {
-  t: IUsertableStrings;
+  t: IInvitationTableStrings;
 }
 
 interface IDispatchProps {}
 
 interface IRecordProps {
-  users: Array<User>;
   roles: Array<Role>;
-  organizationMemberships: Array<OrganizationMembership>;
+  invitations: Array<Invitation>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
-export function UserTable(props: IProps) {
-  const { t, users, roles, organizationMemberships } = props;
+export function InvitationTable(props: IProps) {
+  const { t, roles, invitations } = props;
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
@@ -129,20 +105,14 @@ export function UserTable(props: IProps) {
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
-    { name: 'name', title: t.name },
     { name: 'email', title: t.email },
-    { name: 'locale', title: t.locale },
-    { name: 'phone', title: t.phone },
-    { name: 'timezone', title: t.timezone },
     { name: 'role', title: t.role },
+    { name: 'accepted', title: t.accepted },
   ];
   const columnWidths = [
-    { columnName: 'name', width: 200 },
     { columnName: 'email', width: 200 },
-    { columnName: 'locale', width: 100 },
-    { columnName: 'phone', width: 100 },
-    { columnName: 'timezone', width: 100 },
     { columnName: 'role', width: 100 },
+    { columnName: 'accepted', width: 100 },
   ];
   const [filter, setFilter] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -222,8 +192,8 @@ export function UserTable(props: IProps) {
   };
 
   useEffect(() => {
-    setData(getMedia(organization, users, roles, organizationMemberships));
-  }, [organization, users, roles, organizationMemberships, confirmAction]);
+    setData(getMedia(organization, roles, invitations));
+  }, [organization, roles, invitations, confirmAction]);
 
   return (
     <div className={classes.container}>
@@ -309,7 +279,7 @@ export function UserTable(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'usertable' }),
+  t: localStrings(state, { layout: 'invitationTable' }),
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -317,13 +287,11 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 const mapRecordsToProps = {
-  users: (q: QueryBuilder) => q.findRecords('user'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
-  organizationMemberships: (q: QueryBuilder) =>
-    q.findRecords('organizationmembership'),
+  invitations: (q: QueryBuilder) => q.findRecords('invitation'),
 };
 
 export default withData(mapRecordsToProps)(connect(
   mapStateToProps,
   mapDispatchToProps
-)(UserTable) as any) as any;
+)(InvitationTable) as any) as any;

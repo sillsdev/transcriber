@@ -59,6 +59,7 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         email: { type: 'string' },
+        silId: { type: 'numer' },
         accepted: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },

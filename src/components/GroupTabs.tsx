@@ -7,6 +7,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
 import UserTable from '../components/UserTable';
 import GroupTable from '../components/GroupTable';
+import InvitationTable from '../components/InvitationTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,6 +65,7 @@ const GroupTabs = (props: IProps) => {
         >
           <Tab label={t.users} />
           <Tab label={t.groups} />
+          <Tab label={t.invitations} />
         </Tabs>
       </AppBar>
       {tab === 0 && (
@@ -74,6 +76,11 @@ const GroupTabs = (props: IProps) => {
       {tab === 1 && (
         <TabContainer>
           <GroupTable {...props} />
+        </TabContainer>
+      )}
+      {tab === 2 && (
+        <TabContainer>
+          <InvitationTable {...props} />
         </TabContainer>
       )}
     </div>
