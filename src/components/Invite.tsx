@@ -35,8 +35,13 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
+export interface IInviteData {
+  email: string;
+  role: string;
+}
+
 interface IProps extends IRecordProps, IStateProps {
-  inviteIn: Invitation | null;
+  inviteIn: IInviteData | null;
   visible: boolean;
   addMethod?: (groupName: string, role: string) => void;
   editMethod?: (inviteRec: any) => void;
@@ -55,28 +60,22 @@ function Invite(props: IProps) {
   } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
-  const [email, setEmail] = useState(
-    (inviteIn && inviteIn.attributes.email) || ''
-  );
+  const [email, setEmail] = useState('');
   const [emailHelp, setEmailHelp] = useState(<></>);
   const [role, setRole] = useState('');
   const [message, setMessage] = useState(<></>);
 
   const handleAddOrSave = () => {
-    if (!inviteIn || email !== inviteIn.attributes.email) {
+    if (!inviteIn || email !== inviteIn.email) {
       if (!inviteIn) {
         if (addMethod) {
           addMethod(email, role);
         }
+        setEmail('');
+        setRole('');
       } else {
-        let group = {
-          ...inviteIn,
-          attributes: {
-            email,
-          },
-        };
         if (editMethod) {
-          editMethod(group);
+          editMethod({ email: email, role: role });
         }
       }
     }
@@ -99,7 +98,8 @@ function Invite(props: IProps) {
   };
 
   useEffect(() => {
-    setEmail(inviteIn ? inviteIn.attributes.email : '');
+    setEmail(inviteIn ? inviteIn.email : '');
+    setRole(inviteIn ? inviteIn.role : '');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [inviteIn]);
 

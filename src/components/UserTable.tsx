@@ -143,10 +143,8 @@ export function UserTable(props: IProps) {
   ];
   const [filter, setFilter] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [dialogData, setDialogData] = useState(null as Invitation | null);
 
   const handleAdd = () => {
-    setDialogData(null);
     setDialogVisible(true);
   };
   const handleAddMethod = async (email: string, role: string) => {
@@ -287,7 +285,7 @@ export function UserTable(props: IProps) {
       </div>
       <Invite
         visible={dialogVisible}
-        planIn={dialogData}
+        inviteIn={null}
         addMethod={handleAddMethod}
         cancelMethod={handleAddCancel}
       />
