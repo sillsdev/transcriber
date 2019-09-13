@@ -26,6 +26,9 @@ function AlertDialog(props: IProps) {
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
+    if (noResponse !== null) {
+      noResponse();
+    }
     setOpen(false);
   };
   const handleNo = () => {
