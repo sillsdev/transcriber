@@ -85,7 +85,6 @@ export function OrgSettings(props: IProps) {
   >();
   const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
-  const [logo, setLogo] = useState('');
   const [publicByDefault, setPublicByDefault] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
@@ -96,9 +95,6 @@ export function OrgSettings(props: IProps) {
   };
   const handleWebsiteChange = (e: any) => {
     setWebsite(e.target.value);
-  };
-  const handleLogoChange = (e: any) => {
-    setLogo(e.target.value);
   };
   const handlePublicChange = () => {
     setPublicByDefault(!publicByDefault);
@@ -124,7 +120,7 @@ export function OrgSettings(props: IProps) {
           slug: attr ? attr.slug : '',
           silId: attr ? attr.silId : '',
           websiteUrl: website,
-          logoUrl: logo,
+          logoUrl: attr ? attr.logoUrl : '',
           publicByDefault: publicByDefault,
           dateCreated: attr ? attr.dateCreated : null,
           dateUpdaed: moment().format(),
@@ -139,7 +135,7 @@ export function OrgSettings(props: IProps) {
         name: name,
         slug: slug(name),
         websiteUrl: website,
-        logoUrl: logo,
+        logoUrl: '',
         publicByDefault: publicByDefault,
         dateCreated: moment().format(),
         dateUpdated: null,
@@ -200,7 +196,6 @@ export function OrgSettings(props: IProps) {
     const attr = org.attributes;
     setName(attr.name);
     setWebsite(attr.websiteUrl);
-    setLogo(attr.logoUrl);
     setPublicByDefault(attr.publicByDefault);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, organization, organizations]);
@@ -251,22 +246,6 @@ export function OrgSettings(props: IProps) {
                     <LinkIcon />
                   </IconButton>
                 </>
-              }
-              label=""
-            />
-            <FormControlLabel
-              control={
-                <TextField
-                  id="logo"
-                  label={t.logo}
-                  className={classes.textField}
-                  value={logo}
-                  onChange={handleLogoChange}
-                  margin="normal"
-                  style={{ width: 400 }}
-                  variant="filled"
-                  required={false}
-                />
               }
               label=""
             />
