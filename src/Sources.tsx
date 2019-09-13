@@ -47,6 +47,8 @@ const Sources = async (
     await backup
       .pull(q => q.findRecords())
       .then(transform => memory.sync(transform));
+  } else {
+    backup.reset();
   }
 
   let remote: JSONAPISource = {} as JSONAPISource;

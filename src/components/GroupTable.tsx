@@ -176,6 +176,7 @@ export function GroupTable(props: IProps) {
         id: organization,
       }),
     ]);
+    setGroup(group.id);
   };
 
   const handleAddCancel = () => {

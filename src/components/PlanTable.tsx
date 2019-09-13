@@ -150,6 +150,7 @@ export function PlanTable(props: IProps) {
         id: project,
       }),
     ]);
+    handleSelect(plan.id, planType);
   };
   const handleAddCancel = () => {
     setDialogVisible(false);

@@ -207,10 +207,10 @@ export function ResponsiveDrawer(props: IProps) {
   const [choice, setChoice] = useState('');
   const [content, setContent] = useState('');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
-  const [curOrg, setCurOrg] = useState(0);
+  const [curOrg, setCurOrg] = useState<number | null>(null);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
   const [projOptions, setProjOptions] = useState(Array<OptionType>());
-  const [curProj, setCurProj] = useState<number | null>(0);
+  const [curProj, setCurProj] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [addProject, setAddProject] = useState(false);
   const [title, setTitle] = useState(t.silTranscriberAdmin);
@@ -243,6 +243,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (value === t.newOrganization) {
       if (newOrgRef.current) newOrgRef.current.click();
     } else {
+      if (value !== organization) setCurProj(null);
       setOrganization(value);
       setAddProject(false);
       setChoice('');
@@ -279,11 +280,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleFinishAdd = () => {
     setAddProject(false);
-    setChoice(slug(t.settings));
+    setChoice(slug(t.plans));
+    setContent(slug(t.plans));
   };
 
   const handleUserMenuAction = (what: string) => {
-    localStorage.removeItem('url');
+    localStorage.setItem('url', history.location.pathname);
     if (!/Close/i.test(what)) {
       setView(what);
     }
@@ -336,15 +338,6 @@ export function ResponsiveDrawer(props: IProps) {
         const attr = organizations[cur].attributes;
         setOrgAvatar(attr ? attr.logoUrl : '');
       }
-    } else {
-      setCurOrg(0);
-      const orgId = orgOptions[0].value;
-      setOrganization(orgId);
-      const org = organizations.filter(o => o.id === orgId);
-      if (org.length > 0) {
-        const attr = org[0].attributes;
-        setOrgAvatar(attr ? attr.logoUrl : '');
-      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orgOptions, organization]);
@@ -367,21 +360,10 @@ export function ResponsiveDrawer(props: IProps) {
     const projKeys = projOptions.map(o => o.value);
     if (projKeys.length === 0) return;
     const cur = projKeys.indexOf(project);
-    if (addProject) {
+    if (addProject || cur === -1) {
       setCurProj(null);
-    } else if (projKeys.length === 0) {
-      setCurProj(null);
-      setContent('none');
-      setTitle(t.silTranscriberAdmin);
-    } else if (cur === -1) {
-      setCurProj(0);
-      setProject(projKeys[0]);
-      setTitle(t.projectSummary);
-      setContent('');
     } else {
       setCurProj(cur);
-      setTitle(t.projectSummary);
-      setContent('');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projOptions, project, addProject]);
