@@ -453,9 +453,6 @@ export function MediaTab(props: IProps) {
             <MenuItem onClick={handleConfirmAction('Delete')}>
               {t.delete}
             </MenuItem>
-            <MenuItem onClick={handleConfirmAction('Change Version')}>
-              {t.changeVersion}
-            </MenuItem>
           </Menu>
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
