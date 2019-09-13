@@ -45,13 +45,6 @@ const initialState = {
 			"yes": "Yes",
 		}
 	}),
-	"organizationTable": new LocalizedStrings({
-		"en": {
-			"transcriberAdmin": "SIL Transcriber Admin",
-			"chooseOrganization": "Choose Organization",
-			"name": "Name",
-		}
-	}),
 	"projectTable": new LocalizedStrings({
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
@@ -221,7 +214,7 @@ const initialState = {
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"search": "Search…",
-			"organization": "Organization",
+			"organization": "Org Settings",
 			"usersAndGroups": "Users and Groups",
 			"passages": "Passages",
 			"media": "Media",
@@ -374,6 +367,16 @@ const initialState = {
 			"filter": "Filter",
 		}
 	}),
+	"orgSettings": new LocalizedStrings({
+		"en": {
+			"add": "Add",
+			"name": "Name",
+			"website": "Website",
+			"logo": "Logo",
+			"publicByDefault": "Public By Default",
+			"save": "Save",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -386,7 +389,6 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"snackbar" : new LocalizedStrings(action.payload.data.snackbar),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
-				"organizationTable" : new LocalizedStrings(action.payload.data.organizationTable),
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),
 				"chart" : new LocalizedStrings(action.payload.data.chart),
 				"projectSettings" : new LocalizedStrings(action.payload.data.projectSettings),
@@ -412,6 +414,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 				"invite" : new LocalizedStrings(action.payload.data.invite),
 				"invitationTable" : new LocalizedStrings(action.payload.data.invitationTable),
+				"orgSettings" : new LocalizedStrings(action.payload.data.orgSettings),
 			};
 		case SET_LANGUAGE:
 			return {

@@ -4,16 +4,18 @@ export interface Organization extends Record {
   attributes: {
     name: string;
     slug: string;
-    SilId: number;
+    silId: number;
     websiteUrl: string;
     logoUrl: string;
-    publicByDefault: string;
+    publicByDefault: boolean;
+    dateCreated: string | null;
+    dateUpdated: string | null;
+    lastModifiedBy: number;
   };
   relationships?: {
     owner: RecordRelationship;
     users: RecordRelationship;
     groups: RecordRelationship;
-    userRoles: RecordRelationship;
   };
 }
 

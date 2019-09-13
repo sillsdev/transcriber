@@ -85,6 +85,9 @@ const schemaDefinition: SchemaSettings = {
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },

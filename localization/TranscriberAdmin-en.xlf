@@ -142,24 +142,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="organizationTable.transcriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="organizationTable.chooseOrganization">
-         <segment>
-            <source>Choose Organization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="organizationTable.name">
-         <segment>
-            <source>Name</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="projectTable.silTranscriberAdmin">
          <segment>
             <source>SIL Transcriber Admin</source>
@@ -876,7 +858,7 @@
       </unit>
       <unit id="main.organization">
          <segment>
-            <source>Organization</source>
+            <source>Org Settings</source>
             <target/>
          </segment>
       </unit>
@@ -1489,6 +1471,42 @@
       <unit id="invitationTable.filter">
          <segment>
             <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.website">
+         <segment>
+            <source>Website</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.logo">
+         <segment>
+            <source>Logo</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.publicByDefault">
+         <segment>
+            <source>Public By Default</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.save">
+         <segment>
+            <source>Save</source>
             <target/>
          </segment>
       </unit>

@@ -167,27 +167,6 @@
 					<context context-type="sourcefile">AlertDialog.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="organizationTable.transcriberAdmin">
-				<source>SIL Transcriber Admin</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">OrganizationTable.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="organizationTable.chooseOrganization">
-				<source>Choose Organization</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">OrganizationTable.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="organizationTable.name">
-				<source>Name</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">OrganizationTable.tsx</context>
-				</context-group>
-			</trans-unit>
 			<trans-unit id="projectTable.silTranscriberAdmin">
 				<source>SIL Transcriber Admin</source>
 				<target/>
@@ -1023,7 +1002,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="main.organization">
-				<source>Organization</source>
+				<source>Org Settings</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">drawer.tsx</context>
@@ -1741,6 +1720,48 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.website">
+				<source>Website</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.logo">
+				<source>Logo</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.publicByDefault">
+				<source>Public By Default</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

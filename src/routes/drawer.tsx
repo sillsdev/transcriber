@@ -50,7 +50,7 @@ import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, hasRelated, slug, remoteId, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
-import OrganizationTable from '../components/OrganizationTable';
+import OrgSettings from '../components/OrgSettings';
 import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
@@ -529,7 +529,7 @@ export function ResponsiveDrawer(props: IProps) {
       </div>
       <Divider />
       <List>
-        {[t.organization, t.usersAndGroups].map((text, index) => (
+        {[t.usersAndGroups, t.organization].map((text, index) => (
           <ListItem
             button
             key={text}
@@ -537,7 +537,7 @@ export function ResponsiveDrawer(props: IProps) {
             onClick={checkSavedEv(() => handleChoice(text))}
           >
             <ListItemIcon>
-              {index % 2 === 0 ? <OrganizationIcon /> : <GroupIcon />}
+              {index % 2 === 0 ? <GroupIcon /> : <OrganizationIcon />}
             </ListItemIcon>
             <ListItemText primary={text} />
           </ListItem>
@@ -619,7 +619,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (!orbitLoaded) return <Redirect to="/loading" />;
 
   let components: componentType = {};
-  components[slug(t.organization)] = <OrganizationTable {...props} />;
+  components[slug(t.organization)] = <OrgSettings noMargin={true} {...props} />;
   components[slug(t.usersAndGroups)] = <GroupTabs {...props} />;
   components[slug(t.media)] = (
     <MediaTab

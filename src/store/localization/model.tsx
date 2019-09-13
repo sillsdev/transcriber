@@ -36,12 +36,6 @@ export interface IAlertStrings extends Localize.LocalizedStringsMethods {
     "yes": string;
 };
 
-export interface IOrganizationTableStrings extends Localize.LocalizedStringsMethods {
-    "transcriberAdmin": string;
-    "chooseOrganization": string;
-    "name": string;
-};
-
 export interface IProjectTableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "chooseProject": string;
@@ -339,6 +333,15 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
     "filter": string;
 };
 
+export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
+    "add": string;
+    "name": string;
+    "website": string;
+    "logo": string;
+    "publicByDefault": string;
+    "save": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -346,7 +349,6 @@ export interface ILocalizedStrings {
 	snackbar: ISnackbarStrings;
 	usertable: IUsertableStrings;
 	alert: IAlertStrings;
-	organizationTable: IOrganizationTableStrings;
 	projectTable: IProjectTableStrings;
 	chart: IChartStrings;
 	projectSettings: IProjectSettingsStrings;
@@ -372,5 +374,6 @@ export interface ILocalizedStrings {
 	activityState: IActivityStateStrings;
 	invite: IInviteStrings;
 	invitationTable: IInvitationTableStrings;
+	orgSettings: IOrgSettingsStrings;
 	[key: string]: any;
 };

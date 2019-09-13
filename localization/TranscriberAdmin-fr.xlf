@@ -145,24 +145,6 @@
 				<target>Administration du Transcripteur SIL</target>
 			</segment>
 		</unit>
-		<unit id="organizationTable.chooseOrganization">
-			<segment>
-				<source>Choose Organization</source>
-				<target>Choisissez une organisation</target>
-			</segment>
-		</unit>
-		<unit id="organizationTable.name">
-			<segment>
-				<source>Name</source>
-				<target>Nom</target>
-			</segment>
-		</unit>
-		<unit id="projectTable.silTranscriberAdmin">
-			<segment>
-				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
-			</segment>
-		</unit>
 		<unit id="projectTable.chooseProject">
 			<segment>
 				<source>Choose Project</source>
@@ -873,8 +855,8 @@
 		</unit>
 		<unit id="main.organization">
 			<segment>
-				<source>Organization</source>
-				<target>Organisation</target>
+				<source>Org Settings</source>
+				<target>Paramètres organisationnels</target>
 			</segment>
 		</unit>
 		<unit id="main.usersAndGroups">
@@ -1488,6 +1470,42 @@
          <segment>
             <source>Filter</source>
             <target>Filtre</target>
+         </segment>
+      </unit>
+   <unit id="orgSettings.add">
+         <segment>
+            <source>Add</source>
+            <target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="orgSettings.name">
+         <segment>
+            <source>Name</source>
+            <target>Nom</target>
+         </segment>
+      </unit>
+      <unit id="orgSettings.website">
+         <segment>
+            <source>Website</source>
+            <target>Site Web</target>
+         </segment>
+      </unit>
+      <unit id="orgSettings.logo">
+         <segment>
+            <source>Logo</source>
+            <target>Logo</target>
+         </segment>
+      </unit>
+      <unit id="orgSettings.publicByDefault">
+         <segment>
+            <source>Public By Default</source>
+         	<target>public par défaut</target>
+         </segment>
+      </unit>
+      <unit id="orgSettings.save">
+         <segment>
+            <source>Save</source>
+            <target>Enregistrer</target>
          </segment>
       </unit>
    </file>
