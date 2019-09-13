@@ -23,7 +23,6 @@ import Invite from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import Auth from '../auth/Auth';
 import { related, remoteIdNum } from '../utils';
 import moment from 'moment';
 
@@ -111,9 +110,7 @@ interface IRecordProps {
   organizationMemberships: Array<OrganizationMembership>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  auth: Auth;
-}
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function UserTable(props: IProps) {
   const { t, users, roles, organizationMemberships } = props;

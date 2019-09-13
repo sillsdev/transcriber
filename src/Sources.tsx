@@ -26,8 +26,14 @@ const Sources = async (
   setUser: (id: string) => void,
   setCompleted: (valud: number) => void
 ) => {
+  const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
+  const tokData = JSON.parse(
+    tokenPart.length > 1 ? Base64.decode(tokenPart[1]) : '{"sub":""}'
+  );
+  const userToken = localStorage.getItem('user-token');
+
   const bucket: Bucket = new IndexedDBBucket({
-    namespace: 'transcriber-bucket',
+    namespace: 'transcriber-' + tokData.sub.replace('|', '-') + '-bucket',
   }) as any;
 
   const backup = new IndexedDBSource({
@@ -37,15 +43,11 @@ const Sources = async (
     namespace: 'transcriber',
   });
 
-  const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
-  const tokData = JSON.parse(
-    tokenPart.length > 1 ? Base64.decode(tokenPart[1]) : '{"sub":""}'
-  );
-  const userToken = localStorage.getItem('user-token');
-
-  await backup
-    .pull(q => q.findRecords())
-    .then(transform => memory.sync(transform));
+  if (tokData.sub === userToken) {
+    await backup
+      .pull(q => q.findRecords())
+      .then(transform => memory.sync(transform));
+  }
 
   let remote: JSONAPISource = {} as JSONAPISource;
 

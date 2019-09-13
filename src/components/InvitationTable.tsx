@@ -16,7 +16,6 @@ import Invite from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import Auth from '../auth/Auth';
 import { related, remoteIdNum } from '../utils';
 import moment from 'moment';
 
