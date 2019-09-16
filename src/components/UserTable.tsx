@@ -84,15 +84,17 @@ const getMedia = (
     const role = roles.filter(r => r.id === related(m, 'role'));
     if (user.length === 1) {
       const u = user[0];
-      rowData.push({
-        name: u.attributes.name,
-        email: u.attributes.email ? u.attributes.email : '',
-        locale: u.attributes.locale ? u.attributes.locale : '',
-        phone: u.attributes.phone ? u.attributes.phone : '',
-        timezone: u.attributes.timezone ? u.attributes.timezone : '',
-        role: role.length === 1 ? role[0].attributes.roleName : '',
-        id: { type: 'user', id: u.id },
-      } as IRow);
+      if (u.attributes) {
+        rowData.push({
+          name: u.attributes.name,
+          email: u.attributes.email ? u.attributes.email : '',
+          locale: u.attributes.locale ? u.attributes.locale : '',
+          phone: u.attributes.phone ? u.attributes.phone : '',
+          timezone: u.attributes.timezone ? u.attributes.timezone : '',
+          role: role.length === 1 ? role[0].attributes.roleName : '',
+          id: { type: 'user', id: u.id },
+        } as IRow);
+      }
     }
   });
   return rowData;
