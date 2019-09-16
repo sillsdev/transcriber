@@ -999,8 +999,8 @@
       </unit>
       <unit id="main.newOrganization">
          <segment>
-            <source>New Organization</source>
-            <target>Nouvelle Organization</target>
+            <source>Add Organization</source>
+            <target>Ajouter Organization</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.section">

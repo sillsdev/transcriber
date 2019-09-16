@@ -239,7 +239,7 @@ const initialState = {
 			"clearCache": "Clear cache",
 			"planUnsaved": "Plan Unsaved",
 			"loseData": "Do you want to leave this page and lose your changes?",
-			"newOrganization": "New Organization",
+			"newOrganization": "Add Organization",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({

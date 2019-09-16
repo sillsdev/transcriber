@@ -27,8 +27,12 @@ const handleNewOrg = (props: any) => {
   const { location } = props;
   if (/neworg|error/.test(location.pathname)) {
     localStorage.setItem('newOrg', location.search);
-    return <Redirect to="/loading" />;
+    const authData = localStorage.getItem('trAdminAuthResult');
+    if (authData && typeof authData === 'string') {
+      auth.setSession(JSON.parse(authData));
+    }
   }
+  return <Redirect to="/loading" />;
 };
 
 class App extends React.Component {

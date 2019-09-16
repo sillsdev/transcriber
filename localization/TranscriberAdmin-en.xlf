@@ -1008,7 +1008,7 @@
       </unit>
       <unit id="main.newOrganization">
          <segment>
-            <source>New Organization</source>
+            <source>Add Organization</source>
             <target/>
          </segment>
       </unit>

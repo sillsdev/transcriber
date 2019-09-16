@@ -1176,7 +1176,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="main.newOrganization">
-				<source>New Organization</source>
+				<source>Add Organization</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">drawer.tsx</context>
