@@ -6,11 +6,7 @@ import { IState, IAccessStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
@@ -39,26 +35,6 @@ const useStyles = makeStyles((theme: Theme) =>
     version: {
       alignSelf: 'center',
     },
-    paper: theme.mixins.gutters({
-      paddingTop: 16,
-      paddingBottom: 16,
-      marginTop: theme.spacing(3),
-      width: '30%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignContent: 'center',
-      [theme.breakpoints.down('md')]: {
-        width: '100%',
-      },
-    }),
-    field: {
-      marginTop: theme.spacing(3),
-    },
-    dialogHeader: theme.mixins.gutters({
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-    }),
     actions: theme.mixins.gutters({
       paddingTop: 16,
       paddingBottom: 16,
@@ -67,12 +43,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'center',
     }),
-    link: {
-      textDecoration: 'none',
-    },
-    button: {
-      marginRight: theme.spacing(1),
-    },
   })
 );
 
@@ -140,45 +110,22 @@ export function Access(props: IProps) {
         </div>
       </AppBar>
       <div className={classes.container}>
-        <Paper className={classes.paper}>
-          <Typography variant="h5" className={classes.dialogHeader}>
-            {t.accessSilTranscriber}
-          </Typography>
-
-          <div className={classes.actions}>
-            <Button
-              variant="contained"
-              className={classes.button}
-              onClick={() => auth.signup()}
-            >
-              {t.createAccount}
-            </Button>
-          </div>
-          <div className={classes.actions}>
-            <a
-              ref={accessRef}
-              href={
-                AUTH_CONFIG.loginApp +
-                '/?clientid=' +
-                AUTH_CONFIG.clientId +
-                '&callback=' +
-                callback +
-                '&nonce=' +
-                nonce +
-                '&state=tAdInit'
-              }
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                // onClick={() => auth.login()}
-              >
-                {t.accessExistingAccount}
-              </Button>
-            </a>
-          </div>
-        </Paper>
+        <div className={classes.actions}>
+          {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+          <a
+            ref={accessRef}
+            href={
+              AUTH_CONFIG.loginApp +
+              '/?clientid=' +
+              AUTH_CONFIG.clientId +
+              '&callback=' +
+              callback +
+              '&nonce=' +
+              nonce +
+              '&state=tAdInit'
+            }
+          ></a>
+        </div>
       </div>
     </div>
   );
