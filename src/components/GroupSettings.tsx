@@ -215,7 +215,7 @@ export function GroupSettings(props: IProps) {
     );
     if (roleRec.length === 0) {
       //error
-      setMessage(<span>'Invalid Role. User not added.'</span>);
+      setMessage(<span>{t.invalidRole}</span>);
       return;
     }
     const groupMemberRec: GroupMembership = {

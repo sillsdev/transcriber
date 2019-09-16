@@ -205,7 +205,7 @@ export function GroupTable(props: IProps) {
     setActionMenuItem(null);
     if (!/Close/i.test(what)) {
       if (check.length === 0) {
-        setMessage(<span>Please select row(s) to {what}.</span>);
+        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
       } else {
         setConfirmAction(what);
       }

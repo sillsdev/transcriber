@@ -27,6 +27,7 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "delete": string;
     "filter": string;
+    "selectRows": string;
 };
 
 export interface IAlertStrings extends Localize.LocalizedStringsMethods {
@@ -99,6 +100,8 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "addSection": string;
     "addPassage": string;
     "save": string;
+    "saving": string;
+    "selectRows": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -118,12 +121,15 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "passagestate": string;
     "user": string;
     "role": string;
-    "assignSection": string;
+    "assignSec": string;
+    "removeSec": string;
     "delete": string;
     "filter": string;
     "group": string;
     "transcriber": string;
     "reviewer": string;
+    "selectRowsToAssign": string;
+    "selectRowsToRemove": string;
 };
 
 export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {
@@ -178,6 +184,8 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "section": string;
     "date": string;
     "filter": string;
+    "selectFiles": string;
+    "selectRows": string;
 };
 
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
@@ -243,6 +251,7 @@ export interface IGroupTableStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "delete": string;
     "addGroup": string;
+    "selectRows": string;
 };
 
 export interface IGroupAddStrings extends Localize.LocalizedStringsMethods {
@@ -273,6 +282,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "noProjects": string;
     "assignedSections": string;
     "projectPlans": string;
+    "invalidRole": string;
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
@@ -332,6 +342,7 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
     "action": string;
     "delete": string;
     "filter": string;
+    "selectRows": string;
 };
 
 export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {

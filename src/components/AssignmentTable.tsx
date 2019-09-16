@@ -221,13 +221,28 @@ export function AssignmentTable(props: IProps) {
 
   const handleAssignSection = (status: boolean) => (e: any) => {
     if (check.length === 0) {
-      setMessage(<span>Please select row(s) to assign.</span>);
+      setMessage(<span>{t.selectRowsToAssign}</span>);
     } else {
       setAssignSectionVisible(status);
     }
   };
   const handleRemoveAssignments = (e: any) => {
-    setConfirmAction(t.delete + '? (' + check.length + ')');
+    if (check.length === 0) {
+      setMessage(<span>{t.selectRowsToRemove}</span>);
+    } else {
+      let work = false;
+      check.forEach(i => {
+        const row = data[i];
+        if (row.reviewer !== '' || row.transcriber !== '') work = true;
+      });
+      if (!work) {
+        setMessage(
+          <span>Select Row(s) with transcribers or reviewers to remove.</span>
+        );
+      } else {
+        setConfirmAction(t.delete + '? (' + check.length + ')');
+      }
+    }
   };
   const getSelectedSections = () => {
     var selected = Array<Section>();
@@ -295,25 +310,25 @@ export function AssignmentTable(props: IProps) {
         <div className={classes.actions}>
           <Button
             key="assign"
-            aria-label={t.assignSection}
+            aria-label={t.assignSec}
             variant="outlined"
             color="primary"
             className={classes.button}
             onClick={handleAssignSection(true)}
-            title={t.assignSection}
+            title={t.assignSec}
           >
-            {t.assignSection}
+            {t.assignSec}
           </Button>
           <Button
             key="remove"
-            aria-label={t.delete}
+            aria-label={t.removeSec}
             variant="outlined"
             color="primary"
             className={classes.button}
             onClick={handleRemoveAssignments}
-            title={t.delete}
+            title={t.removeSec}
           >
-            {t.delete}
+            {t.removeSec}
           </Button>
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button

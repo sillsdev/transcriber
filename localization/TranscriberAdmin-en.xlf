@@ -118,6 +118,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="usertable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="alert.confirmation">
          <segment>
             <source>Confirmation</source>
@@ -442,6 +448,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.saving">
+         <segment>
+            <source>Saving</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
@@ -520,15 +538,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.assignSection">
+      <unit id="assignmentTable.assignSec">
          <segment>
             <source>Assign Section</source>
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.delete">
+      <unit id="assignmentTable.removeSec">
          <segment>
             <source>Remove Assignment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.delete">
+         <segment>
+            <source>Delete</source>
             <target/>
          </segment>
       </unit>
@@ -553,6 +577,18 @@
       <unit id="assignmentTable.reviewer">
          <segment>
             <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.selectRowsToAssign">
+         <segment>
+            <source>Please select row(s) to assign.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.selectRowsToRemove">
+         <segment>
+            <source>Please select row(s) to remove assignment.</source>
             <target/>
          </segment>
       </unit>
@@ -805,6 +841,18 @@
       <unit id="mediaTab.filter">
          <segment>
             <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.selectFiles">
+         <segment>
+            <source>Please select files to be uploaded.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -1090,6 +1138,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupTable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupAdd.newGroup">
          <segment>
             <source>New Group</source>
@@ -1231,6 +1285,12 @@
       <unit id="groupSettings.projectPlans">
          <segment>
             <source>Project Plans</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.invalidRole">
+         <segment>
+            <source>Invalid Role. User not added.</source>
             <target/>
          </segment>
       </unit>
@@ -1477,6 +1537,12 @@
       <unit id="invitationTable.filter">
          <segment>
             <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>

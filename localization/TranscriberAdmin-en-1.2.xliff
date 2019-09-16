@@ -139,6 +139,13 @@
 					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="usertable.selectRows">
+				<source>Please select row(s) to {0}.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="alert.confirmation">
 				<source>Confirmation</source>
 				<target/>
@@ -517,6 +524,20 @@
 					<context context-type="sourcefile">PlanSheet.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="planSheet.saving">
+				<source>Saving</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.selectRows">
+				<source>Please select row(s) to {0}.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="scriptureTable.section">
 				<source>Section</source>
 				<target/>
@@ -608,15 +629,22 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="assignmentTable.assignSection">
+			<trans-unit id="assignmentTable.assignSec">
 				<source>Assign Section</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="assignmentTable.delete">
+			<trans-unit id="assignmentTable.removeSec">
 				<source>Remove Assignment</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.delete">
+				<source>Delete</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
@@ -643,9 +671,22 @@
 					<context context-type="sourcefile">assignmentTable.tsx</context>
 				</context-group>
 			</trans-unit>
-
 			<trans-unit id="assignmentTable.reviewer">
 				<source>Reviewer</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.selectRowsToAssign">
+				<source>Please select row(s) to assign.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.selectRowsToRemove">
+				<source>Please select row(s) to remove assignment.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">assignmentTable.tsx</context>
@@ -940,6 +981,20 @@
 			</trans-unit>
 			<trans-unit id="mediaTab.filter">
 				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.selectFiles">
+				<source>Please select files to be uploaded.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.selectRows">
+				<source>Please select row(s) to {0}.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>
@@ -1274,6 +1329,13 @@
 					<context context-type="sourcefile">GroupTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="groupTable.selectRows">
+				<source>Please select row(s) to {0}.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="groupAdd.newGroup">
 				<source>New Group</source>
 				<target/>
@@ -1437,6 +1499,13 @@
 			</trans-unit>
 			<trans-unit id="groupSettings.projectPlans">
 				<source>Project Plans</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.invalidRole">
+				<source>Invalid Role. User not added.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>
@@ -1724,6 +1793,13 @@
 			</trans-unit>
 			<trans-unit id="invitationTable.filter">
 				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.selectRows">
+				<source>Please select row(s) to {0}.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">InvitationTable.tsx</context>

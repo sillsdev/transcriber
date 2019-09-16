@@ -260,7 +260,7 @@ export function MediaTab(props: IProps) {
   };
   const uploadMedia = (files: FileList) => {
     if (!files) {
-      setMessage(<span>Please select files to be uploaded.</span>);
+      setMessage(<span>{t.selectFiles}</span>);
       return;
     }
     uploadFiles(files);
@@ -274,7 +274,7 @@ export function MediaTab(props: IProps) {
     setActionMenuItem(null);
     if (!/Close/i.test(what)) {
       if (check.length === 0) {
-        setMessage(<span>Please select row(s) to {what}.</span>);
+        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
       } else {
         setConfirmAction(what);
       }

@@ -35,6 +35,7 @@ const initialState = {
 			"action": "Action",
 			"delete": "Delete",
 			"filter": "Filter",
+			"selectRows": "Please select row(s) to {0}.",
 		}
 	}),
 	"alert": new LocalizedStrings({
@@ -113,6 +114,8 @@ const initialState = {
 			"addSection": "Add Section",
 			"addPassage": "Add Passage",
 			"save": "Save",
+			"saving": "Saving",
+			"selectRows": "Please select row(s) to {0}.",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -134,12 +137,15 @@ const initialState = {
 			"passagestate": "State",
 			"user": "User",
 			"role": "Role",
-			"assignSection": "Assign Section",
-			"delete": "Remove Assignment",
+			"assignSec": "Assign Section",
+			"removeSec": "Remove Assignment",
+			"delete": "Delete",
 			"filter": "Filter",
 			"group": "Group",
 			"transcriber": "Transcriber",
 			"reviewer": "Reviewer",
+			"selectRowsToAssign": "Please select row(s) to assign.",
+			"selectRowsToRemove": "Please select row(s) to remove assignment.",
 		}
 	}),
 	"assignSection": new LocalizedStrings({
@@ -198,6 +204,8 @@ const initialState = {
 			"section": "Section",
 			"date": "Date",
 			"filter": "Filter",
+			"selectFiles": "Please select files to be uploaded.",
+			"selectRows": "Please select row(s) to {0}.",
 		}
 	}),
 	"passageMedia": new LocalizedStrings({
@@ -269,6 +277,7 @@ const initialState = {
 			"action": "Action",
 			"delete": "Delete",
 			"addGroup": "Add Group",
+			"selectRows": "Please select row(s) to {0}.",
 		}
 	}),
 	"groupAdd": new LocalizedStrings({
@@ -301,6 +310,7 @@ const initialState = {
 			"noProjects": "There are no projects that use this group.",
 			"assignedSections": "  Assigned Sections: ",
 			"projectPlans": "Project Plans",
+			"invalidRole": "Invalid Role. User not added.",
 		}
 	}),
 	"shapingTable": new LocalizedStrings({
@@ -366,6 +376,7 @@ const initialState = {
 			"action": "Action",
 			"delete": "Delete",
 			"filter": "Filter",
+			"selectRows": "Please select row(s) to {0}.",
 		}
 	}),
 	"orgSettings": new LocalizedStrings({

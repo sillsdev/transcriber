@@ -115,6 +115,12 @@
          	<target>Filtre</target>
          </segment>
       </unit>
+      <unit id="usertable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+         	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
       <unit id="alert.confirmation">
 			<segment>
 				<source>Confirmation</source>
@@ -487,7 +493,7 @@
 				<target>Assigner un ensemble</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.delete">
+		<unit id="assignmentTable.removeSec">
 			<segment>
 				<source>Remove Assignment</source>
 				<target>Supprimer un affectation</target>
@@ -529,6 +535,18 @@
 				<target>Description du passage</target>
 			</segment>
 		</unit>
+		<unit id="assignmentTable.assignSec">
+         <segment>
+            <source>Assign Section</source>
+         	<target>Affecter une section</target>
+         </segment>
+      </unit>
+		<unit id="assignmentTable.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Effacer</target>
+			</segment>
+		</unit>
 		<unit id="assignmentTable.filter">
 			<segment>
 				<source>Filter</source>
@@ -553,7 +571,19 @@
 				<target>Réviseur</target>
 			</segment>
 		</unit>
-		<unit id="assignSection.title">
+		<unit id="assignmentTable.selectRowsToAssign">
+         <segment>
+            <source>Please select row(s) to assign.</source>
+         	<target>Veuillez sélectionner la (les) rangée(s) à affecter.</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.selectRowsToRemove">
+         <segment>
+            <source>Please select row(s) to remove assignment.</source>
+         	<target>Veuillez sélectionner la (les) ligne(s) à désaffecter.</target>
+         </segment>
+      </unit>
+      <unit id="assignSection.title">
 			<segment>
 				<source>Assign sections to Users</source>
 				<target>Assigner Ensembles aux Utilisatrices</target>
@@ -805,7 +835,19 @@
 				<target>Filtre</target>
 			</segment>
 		</unit>
-		<unit id="passageMedia.attachAvailableMedia">
+		<unit id="mediaTab.selectFiles">
+         <segment>
+            <source>Please select files to be uploaded.</source>
+         	<target>Veuillez sélectionner les fichiers à télécharger.</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+         	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
+      <unit id="passageMedia.attachAvailableMedia">
 			<segment>
 				<source>Attach available media files to passages (with no current media).</source>
 				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne contiennent aucun média actuel).</target>
@@ -1088,6 +1130,12 @@
             <target>Ajouter un groupe</target>
          </segment>
       </unit>
+      <unit id="groupTable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+         	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
       <unit id="groupAdd.newGroup">
          <segment>
 			<source>New Group</source>
@@ -1230,6 +1278,12 @@
          <segment>
             <source>Project Plans</source>
             <target>Programme du project</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.invalidRole">
+         <segment>
+            <source>Invalid Role. User not added.</source>
+         	<target>Rôle invalide. Utilisateur non ajouté.</target>
          </segment>
       </unit>
       <unit id="shapingTable.NoColumns">
@@ -1478,7 +1532,13 @@
             <target>Filtre</target>
          </segment>
       </unit>
-   <unit id="orgSettings.add">
+   <unit id="invitationTable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+         	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
+      <unit id="orgSettings.add">
          <segment>
             <source>Add</source>
             <target>Ajouter</target>
