@@ -906,7 +906,7 @@
       </unit>
       <unit id="main.organization">
          <segment>
-            <source>Org Settings</source>
+            <source>Org Details</source>
             <target/>
          </segment>
       </unit>

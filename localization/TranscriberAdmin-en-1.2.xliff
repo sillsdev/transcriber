@@ -1057,7 +1057,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="main.organization">
-				<source>Org Settings</source>
+				<source>Org Details</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">drawer.tsx</context>

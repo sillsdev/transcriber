@@ -897,8 +897,8 @@
 		</unit>
 		<unit id="main.organization">
 			<segment>
-				<source>Org Settings</source>
-				<target>Paramètres organisationnels</target>
+				<source>org Details</source>
+				<target>Détails de l'organisation</target>
 			</segment>
 		</unit>
 		<unit id="main.usersAndGroups">

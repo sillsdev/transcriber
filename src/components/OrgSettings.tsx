@@ -12,16 +12,11 @@ import {
   FormControl,
   FormGroup,
   FormControlLabel,
-  Button,
-  Checkbox,
   IconButton,
 } from '@material-ui/core';
-import SaveIcon from '@material-ui/icons/Save';
 import LinkIcon from '@material-ui/icons/Link';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
-import { slug } from '../utils';
-import moment from 'moment';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,17 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
     iconButton: {
       padding: 10,
     },
-    actions: theme.mixins.gutters({
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-    }),
-    button: {
-      margin: theme.spacing(1),
-    },
-    icon: {
-      marginLeft: theme.spacing(1),
-    },
   })
 );
 
@@ -74,18 +58,12 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function OrgSettings(props: IProps) {
-  const { add, organizations, t, noMargin, finishAdd } = props;
+  const { add, organizations, t, noMargin } = props;
   const classes = useStyles();
-  const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
-  const [organization, setOrganization] = useGlobal('organization');
-  const [user] = useGlobal('user');
-  const [currentOrganization, setCurrentOrganization] = useState<
-    Organization | undefined
-  >();
+  const [organization] = useGlobal('organization');
   const [name, setName] = useState('');
   const [website, setWebsite] = useState('');
-  const [publicByDefault, setPublicByDefault] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
   const websiteRef = useRef<any>();
@@ -96,9 +74,6 @@ export function OrgSettings(props: IProps) {
   const handleWebsiteChange = (e: any) => {
     setWebsite(e.target.value);
   };
-  const handlePublicChange = () => {
-    setPublicByDefault(!publicByDefault);
-  };
   const handleWebsiteLink = () => {
     if (websiteRef.current) {
       websiteRef.current.click();
@@ -107,58 +82,6 @@ export function OrgSettings(props: IProps) {
   const handleMessageReset = () => () => {
     setMessage(<></>);
   };
-  const handleSave = () => {
-    const attr = currentOrganization
-      ? currentOrganization.attributes
-      : undefined;
-    memory.update((t: TransformBuilder) => [
-      t.updateRecord({
-        type: 'organization',
-        id: organization,
-        attributes: {
-          name: name,
-          slug: attr ? attr.slug : '',
-          silId: attr ? attr.silId : '',
-          websiteUrl: website,
-          logoUrl: attr ? attr.logoUrl : '',
-          publicByDefault: publicByDefault,
-          dateCreated: attr ? attr.dateCreated : null,
-          dateUpdaed: moment().format(),
-        },
-      }),
-    ]);
-  };
-  const handleAdd = () => {
-    let organization: Organization = {
-      type: 'organization',
-      attributes: {
-        name: name,
-        slug: slug(name),
-        websiteUrl: website,
-        logoUrl: '',
-        publicByDefault: publicByDefault,
-        dateCreated: moment().format(),
-        dateUpdated: null,
-      },
-    } as any;
-    schema.initializeRecord(organization);
-    memory.update((t: TransformBuilder) => [
-      t.addRecord(organization),
-      t.replaceRelatedRecord(
-        { type: 'organization', id: organization.id },
-        'owner',
-        { type: 'user', id: user }
-      ),
-    ]);
-    setOrganization(organization.id);
-    if (finishAdd) {
-      finishAdd();
-    }
-  };
-
-  // const handleDelete = (p: Organization | undefined) => () => {
-  //   if (p !== undefined) setDeleteItem(p.id);
-  // };
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({ type: 'organization', id: deleteItem })
@@ -182,21 +105,17 @@ export function OrgSettings(props: IProps) {
         dateUpdated: '',
       },
     } as any;
-    if (add) {
-      setCurrentOrganization(undefined);
-    } else {
+    if (!add) {
       const orgRecords = organizations.filter(
         (o: Organization) => o.id === organization
       );
       if (orgRecords.length > 0) {
         org = orgRecords[0];
-        setCurrentOrganization(org);
       }
     }
     const attr = org.attributes;
     setName(attr.name);
     setWebsite(attr.websiteUrl);
-    setPublicByDefault(attr.publicByDefault);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, organization, organizations]);
 
@@ -220,6 +139,7 @@ export function OrgSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
+                  disabled
                 />
               }
               label=""
@@ -237,6 +157,7 @@ export function OrgSettings(props: IProps) {
                     style={{ width: 400 }}
                     variant="filled"
                     required={false}
+                    disabled
                   />
                   <IconButton
                     color="primary"
@@ -249,33 +170,8 @@ export function OrgSettings(props: IProps) {
               }
               label=""
             />
-            <FormControlLabel
-              className={classes.textField}
-              control={
-                <Checkbox
-                  id="checkbox-publicByDefault"
-                  checked={publicByDefault}
-                  onChange={handlePublicChange}
-                />
-              }
-              label={t.publicByDefault}
-            />
           </FormGroup>
         </FormControl>
-        <div className={classes.actions}>
-          <Button
-            key="save"
-            aria-label={t.save}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            disabled={name === ''}
-            onClick={currentOrganization === undefined ? handleAdd : handleSave}
-          >
-            {currentOrganization === undefined ? t.add : t.save}
-            <SaveIcon className={classes.icon} />
-          </Button>
-        </div>
       </div>
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a

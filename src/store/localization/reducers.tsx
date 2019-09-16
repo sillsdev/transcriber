@@ -222,7 +222,7 @@ const initialState = {
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"search": "Search…",
-			"organization": "Org Settings",
+			"organization": "Org Details",
 			"usersAndGroups": "Users and Groups",
 			"passages": "Passages",
 			"media": "Media",
