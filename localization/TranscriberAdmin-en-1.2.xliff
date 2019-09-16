@@ -1749,6 +1749,13 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="invite.alreadyInvited">
+				<source>Already invited!</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="invitationTable.email">
 				<source>Email</source>
 				<target/>

@@ -365,6 +365,7 @@ const initialState = {
 			"add": "Add",
 			"save": "Save",
 			"invalidEmail": "Invalid email address",
+			"alreadyInvited": "Already invited!",
 		}
 	}),
 	"invitationTable": new LocalizedStrings({

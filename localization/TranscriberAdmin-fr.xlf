@@ -1490,7 +1490,13 @@
          	<target>Adresse électronique invalide</target>
          </segment>
       </unit>
-   <unit id="invitationTable.email">
+		<unit id="invite.alreadyInvited">
+			<segment>
+				<source>Already invited!</source>
+				<target>Déjà invité !</target>
+			</segment>
+		</unit>
+		<unit id="invitationTable.email">
          <segment>
             <source>Email</source>
          	<target>Courriel</target>

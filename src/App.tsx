@@ -6,11 +6,18 @@ import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Callback from './callback/Callback';
 import Auth from './auth/Auth';
+import { parseQuery } from './utils/parseQuery';
 
 const auth = new Auth();
 
 const handleAuthentication = (props: any) => {
   const { location } = props;
+  if (location.search !== '') {
+    const params = parseQuery(location.search);
+    if (params.inviteId && typeof params.inviteId === 'string') {
+      localStorage.setItem('inviteId', params.inviteId);
+    }
+  }
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
   }

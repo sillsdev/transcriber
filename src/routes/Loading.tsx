@@ -4,8 +4,8 @@ import Auth from '../auth/Auth';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings, Organization } from '../model';
-import { TransformBuilder } from '@orbit/data';
+import { IState, IMainStrings, Organization, Invitation } from '../model';
+import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -136,6 +136,22 @@ export function Loading(props: IProps) {
     setOrgName(null);
   };
 
+  const InviteUser = async () => {
+    const inviteId = localStorage.getItem('inviteId');
+    if (!inviteId) return;
+    localStorage.removeItem('inviteId');
+    const invite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('invitation')
+        .filter({ attribute: 'silId', value: parseInt(inviteId) })
+    );
+    if (invite.length > 0) {
+      await memory.update((t: TransformBuilder) =>
+        t.replaceAttribute(invite[0], 'accepted', true)
+      );
+    }
+  };
+
   useEffect(() => {
     setLanguage(navigator.language.split('-')[0]);
     fetchLocalization();
@@ -158,6 +174,7 @@ export function Loading(props: IProps) {
       if (orgName) {
         CreateOrg(parseQuery(orgName));
       }
+      InviteUser();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed]);

@@ -1498,6 +1498,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.alreadyInvited">
+         <segment>
+            <source>Already invited!</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invitationTable.email">
          <segment>
             <source>Email</source>

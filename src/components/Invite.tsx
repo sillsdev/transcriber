@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Role, IInviteStrings } from '../model';
+import { IState, Role, Invitation, IInviteStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -59,6 +60,7 @@ function Invite(props: IProps) {
     inviteIn,
   } = props;
   const classes = useStyles();
+  const [memory] = useGlobal('memory');
   const [open, setOpen] = useState(visible);
   const [email, setEmail] = useState('');
   const [emailHelp, setEmailHelp] = useState(<></>);
@@ -82,6 +84,8 @@ function Invite(props: IProps) {
     setOpen(false);
   };
   const handleCancel = () => {
+    setEmail('');
+    setRole('');
     if (cancelMethod) {
       cancelMethod();
     }
@@ -95,6 +99,12 @@ function Invite(props: IProps) {
   };
   const handleMessageReset = () => {
     setMessage(<></>);
+  };
+  const hasInvite = (email: string) => {
+    const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('invitation').filter({ attribute: 'email', value: email })
+    );
+    return selectInvite.length > 0;
   };
 
   useEffect(() => {
@@ -110,7 +120,11 @@ function Invite(props: IProps) {
   useEffect(() => {
     setEmailHelp(
       email === '' || validateEmail(email) ? (
-        <></>
+        hasInvite(email) ? (
+          <Typography color="secondary">{t.alreadyInvited}</Typography>
+        ) : (
+          <></>
+        )
       ) : (
         <Typography color="secondary">{t.invalidEmail}</Typography>
       )
@@ -178,7 +192,12 @@ function Invite(props: IProps) {
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
-            disabled={email === '' || role === '' || !validateEmail(email)}
+            disabled={
+              email === '' ||
+              role === '' ||
+              !validateEmail(email) ||
+              hasInvite(email)
+            }
           >
             {!inviteIn ? t.add : t.save}
           </Button>
