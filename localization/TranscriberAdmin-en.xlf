@@ -982,6 +982,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.myAccount">
+         <segment>
+            <source>My Account</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.clearCache">
          <segment>
             <source>Clear cache</source>

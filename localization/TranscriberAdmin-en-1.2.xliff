@@ -1144,7 +1144,14 @@
 				<source>Log Out</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">Loading.tsx</context>
+					<context context-type="sourcefile">UserMenu.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.myAccount">
+				<source>My Account</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserMenu.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="main.clearCache">

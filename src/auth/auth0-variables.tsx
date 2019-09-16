@@ -9,6 +9,9 @@ export const AUTH_CONFIG = {
   loginApp: process.env.REACT_APP_LOGINAPP
     ? process.env.REACT_APP_LOGINAPP
     : '',
+  myAccountApp: process.env.REACT_APP_MYACCOUNTAPP
+    ? process.env.REACT_APP_MYACCOUNTAPP
+    : '',
   newOrgApp: process.env.REACT_APP_NEWORGAPP
     ? process.env.REACT_APP_NEWORGAPP
     : '',

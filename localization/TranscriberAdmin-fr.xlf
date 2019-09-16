@@ -973,7 +973,13 @@
 				<target>Déconnexion</target>
 			</segment>
 		</unit>
-      <unit id="main.clearCache">
+		<unit id="main.myAccount">
+			<segment>
+				<source>My Account</source>
+				<target>Mon compte</target>
+			</segment>
+		</unit>
+		<unit id="main.clearCache">
          <segment>
             <source>Clear cache</source>
          	<target>Effacer le cache</target>

@@ -12,7 +12,10 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import ExitIcon from '@material-ui/icons/ExitToApp';
+import AccountIcon from '@material-ui/icons/AccountCircle';
+import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
+import { AUTH_CONFIG } from '../auth/auth0-variables';
 
 const StyledMenu = withStyles({
   paper: {
@@ -92,10 +95,23 @@ export function UserMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={t.logout} />
         </StyledMenuItem>
+        <a
+          href={AUTH_CONFIG.myAccountApp}
+          style={{ textDecoration: 'none' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <StyledMenuItem>
+            <ListItemIcon>
+              <AccountIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.myAccount} />
+          </StyledMenuItem>
+        </a>
         {!shift || (
           <StyledMenuItem onClick={handle('Clear')}>
             <ListItemIcon>
-              <ExitIcon />
+              <ClearIcon />
             </ListItemIcon>
             <ListItemText primary={t.clearCache} />
           </StyledMenuItem>
