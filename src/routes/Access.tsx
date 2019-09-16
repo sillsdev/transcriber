@@ -165,7 +165,7 @@ export function Access(props: IProps) {
                 callback +
                 '&nonce=' +
                 nonce +
-                '&state=tAdInit&screen=login'
+                '&state=tAdInit'
               }
             >
               <Button
