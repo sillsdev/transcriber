@@ -931,6 +931,12 @@
 				<target>Déconnexion</target>
 			</segment>
 		</unit>
+      <unit id="main.clearCache">
+         <segment>
+            <source>Clear cache</source>
+         	<target>Effacer le cache</target>
+         </segment>
+      </unit>
       <unit id="main.planUnsaved">
          <segment>
 			<source>Plan Unsaved</source>

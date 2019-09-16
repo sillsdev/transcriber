@@ -205,6 +205,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projectSummary": string;
     "addProject": string;
     "logout": string;
+    "clearCache": string;
     "planUnsaved": string;
     "loseData": string;
     "newOrganization": string;

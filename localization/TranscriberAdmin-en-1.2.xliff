@@ -1092,6 +1092,13 @@
 					<context context-type="sourcefile">Loading.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.clearCache">
+				<source>Clear cache</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Loading.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="main.planUnsaved">
 				<source>Plan Unsaved</source>
 				<target/>

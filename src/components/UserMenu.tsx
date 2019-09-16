@@ -56,8 +56,10 @@ interface IProps extends IStateProps {
 export function UserMenu(props: IProps) {
   const { action, t } = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [shift, setShift] = React.useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
   };
 
@@ -90,6 +92,14 @@ export function UserMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={t.logout} />
         </StyledMenuItem>
+        {!shift || (
+          <StyledMenuItem onClick={handle('Clear')}>
+            <ListItemIcon>
+              <ExitIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.clearCache} />
+          </StyledMenuItem>
+        )}
       </StyledMenu>
     </div>
   );

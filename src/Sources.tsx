@@ -24,6 +24,7 @@ const Sources = async (
   keyMap: KeyMap,
   auth: Auth,
   setUser: (id: string) => void,
+  setBucket: (bucket: Bucket) => void,
   setCompleted: (valud: number) => void
 ) => {
   const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
@@ -35,6 +36,7 @@ const Sources = async (
   const bucket: Bucket = new IndexedDBBucket({
     namespace: 'transcriber-' + tokData.sub.replace('|', '-') + '-bucket',
   }) as any;
+  setBucket(bucket);
 
   const backup = new IndexedDBSource({
     schema,

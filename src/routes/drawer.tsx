@@ -198,6 +198,7 @@ export function ResponsiveDrawer(props: IProps) {
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal('keyMap');
+  const [bucket] = useGlobal('bucket');
   const [user] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
   const [group, setGroup] = useGlobal('group');
@@ -287,6 +288,9 @@ export function ResponsiveDrawer(props: IProps) {
   const handleUserMenuAction = (what: string) => {
     localStorage.setItem('url', history.location.pathname);
     if (!/Close/i.test(what)) {
+      if (/Clear/i.test(what)) {
+        bucket.setItem('remote-requests', []);
+      }
       setView(what);
     }
   };

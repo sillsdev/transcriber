@@ -934,6 +934,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.clearCache">
+         <segment>
+            <source>Clear cache</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.planUnsaved">
          <segment>
             <source>Plan Unsaved</source>

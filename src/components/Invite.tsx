@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { IState, Invitation, Role, IInviteStrings } from '../model';
+import { IState, Role, IInviteStrings } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';

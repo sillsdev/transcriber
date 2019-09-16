@@ -1,5 +1,6 @@
 import 'reactn';
 import { Store, Schema, KeyMap } from '@orbit/data';
+import { Bucket } from '@orbit/core';
 
 declare module 'reactn/default' {
   export interface State {
@@ -13,5 +14,6 @@ declare module 'reactn/default' {
     memory: Store;
     schema: Schema;
     keyMap: KeyMap;
+    bucket: Bucket;
   }
 }

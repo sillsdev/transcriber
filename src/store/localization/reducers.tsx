@@ -227,6 +227,7 @@ const initialState = {
 			"projectSummary": "Project Summary",
 			"addProject": "Add Project",
 			"logout": "Log Out",
+			"clearCache": "Clear cache",
 			"planUnsaved": "Plan Unsaved",
 			"loseData": "Do you want to leave this page and lose your changes?",
 			"newOrganization": "New Organization",

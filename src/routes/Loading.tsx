@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
-import { Redirect, Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, IMainStrings, Organization } from '../model';
@@ -11,12 +11,12 @@ import { API_CONFIG } from '../api-variable';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   AppBar,
-  Button,
   Toolbar,
   Typography,
   Paper,
   LinearProgress,
 } from '@material-ui/core';
+import UserMenu from '../components/UserMenu';
 import * as action from '../store';
 import logo from './transcriber9.png';
 import { parseQuery, IParsedArgs } from '../utils/parseQuery';
@@ -91,10 +91,21 @@ export function Loading(props: IProps) {
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
+  const [bucket, setBucket] = useGlobal('bucket');
   const [user, setUser] = useGlobal('user');
   /* eslint-enable @typescript-eslint/no-unused-vars */
   const [completed, setCompleted] = useState(0);
   const [orgName, setOrgName] = useState(localStorage.getItem('newOrg'));
+  const [view, setView] = useState('');
+
+  const handleUserMenuAction = (what: string) => {
+    if (!/Close/i.test(what)) {
+      if (/Clear/i.test(what)) {
+        bucket.setItem('remote-requests', []);
+      }
+      setView(what);
+    }
+  };
 
   const CreateOrg = async (props: IParsedArgs) => {
     const { orgId, orgName } = props;
@@ -130,7 +141,15 @@ export function Loading(props: IProps) {
     fetchLocalization();
     fetchLangTags();
     fetchScriptFonts();
-    fetchOrbitData(schema, memory, keyMap, auth, setUser, setCompleted);
+    fetchOrbitData(
+      schema,
+      memory,
+      keyMap,
+      auth,
+      setUser,
+      setBucket,
+      setCompleted
+    );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -144,6 +163,10 @@ export function Loading(props: IProps) {
   }, [completed]);
 
   if (!isAuthenticated()) return <Redirect to="/" />;
+
+  if (/Logout/i.test(view)) {
+    return <Redirect to="/logout" />;
+  }
 
   if (
     orbitLoaded &&
@@ -161,11 +184,7 @@ export function Loading(props: IProps) {
             {t.silTranscriberAdmin}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <Link to="/logout">
-            <Button variant="contained" className={classes.button}>
-              {t.logout}
-            </Button>
-          </Link>
+          <UserMenu action={handleUserMenuAction} />
         </Toolbar>
       </AppBar>
       <div className={classes.container}>
