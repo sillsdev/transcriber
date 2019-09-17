@@ -345,6 +345,7 @@ export function MediaTab(props: IProps) {
       setTimeout(() => {
         setMessage(<span>{t.uploadComplete}</span>);
         uploadComplete();
+        setPassageMediaVisible(true);
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
