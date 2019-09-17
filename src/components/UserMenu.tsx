@@ -16,6 +16,7 @@ import AccountIcon from '@material-ui/icons/AccountCircle';
 import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
+import Auth from '../auth/Auth';
 
 const StyledMenu = withStyles({
   paper: {
@@ -54,10 +55,11 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   action: (what: string) => void;
+  auth: Auth;
 }
 
 export function UserMenu(props: IProps) {
-  const { action, t } = props;
+  const { action, t, auth } = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
 
@@ -90,7 +92,7 @@ export function UserMenu(props: IProps) {
         onClose={handle('Close')}
       >
         <a
-          href={AUTH_CONFIG.myAccountApp}
+          href={AUTH_CONFIG.myAccountApp + '#access_token=' + auth.accessToken}
           style={{ textDecoration: 'none' }}
           target="_blank"
           rel="noopener noreferrer"

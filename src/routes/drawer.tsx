@@ -667,6 +667,7 @@ export function ResponsiveDrawer(props: IProps) {
           </a>
           <UserMenu
             action={(v: string) => checkSavedFn(() => handleUserMenuAction(v))}
+            auth={auth}
           />
         </Toolbar>
       </AppBar>

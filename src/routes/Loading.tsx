@@ -201,7 +201,7 @@ export function Loading(props: IProps) {
             {t.silTranscriberAdmin}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <UserMenu action={handleUserMenuAction} />
+          <UserMenu action={handleUserMenuAction} auth={auth} />
         </Toolbar>
       </AppBar>
       <div className={classes.container}>
