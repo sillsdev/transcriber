@@ -4,6 +4,7 @@ import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from '../../auth/Auth';
 import Sources from '../../Sources';
+import JSONAPISource from '@orbit/jsonapi';
 
 export const fetchOrbitData = (
   schema: Schema,
@@ -12,9 +13,17 @@ export const fetchOrbitData = (
   auth: Auth,
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
+  setRemote: (remote: JSONAPISource) => void,
   setCompleted: (value: number) => void
 ) => (dispatch: any) => {
-  Sources(schema, memory, keyMap, auth, setUser, setBucket, setCompleted).then(
-    dispatch({ type: FETCH_ORBIT_DATA })
-  );
+  Sources(
+    schema,
+    memory,
+    keyMap,
+    auth,
+    setUser,
+    setBucket,
+    setRemote,
+    setCompleted
+  ).then(dispatch({ type: FETCH_ORBIT_DATA }));
 };

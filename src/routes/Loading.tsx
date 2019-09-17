@@ -92,10 +92,14 @@ export function Loading(props: IProps) {
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
   const [bucket, setBucket] = useGlobal('bucket');
+  const [remote, setRemote] = useGlobal('remote');
   const [user, setUser] = useGlobal('user');
-  /* eslint-enable @typescript-eslint/no-unused-vars */
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_organization, setOrganization] = useGlobal('organization');
   const [completed, setCompleted] = useState(0);
-  const [orgName, setOrgName] = useState(localStorage.getItem('newOrg'));
+  const [newOrgParams, setNewOrgParams] = useState(
+    localStorage.getItem('newOrg')
+  );
   const [view, setView] = useState('');
 
   const handleUserMenuAction = (what: string) => {
@@ -122,7 +126,7 @@ export function Loading(props: IProps) {
     } as any;
     schema.initializeRecord(organization);
 
-    await memory.update((t: TransformBuilder) => [
+    await remote.update((t: TransformBuilder) => [
       t.addRecord(organization),
       t.replaceRelatedRecord(
         { type: 'organization', id: organization.id },
@@ -133,7 +137,25 @@ export function Loading(props: IProps) {
         }
       ),
     ]);
-    setOrgName(null);
+    await remote
+      .pull(q => q.findRecords('organization'))
+      .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('organizationmembership'))
+      .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('group'))
+      .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('groupmembership'))
+      .then(transform => memory.sync(transform));
+    const newOrgRec = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('organization')
+        .filter({ attribute: 'name', value: orgName })
+    );
+    setOrganization(newOrgRec.id);
+    setNewOrgParams(null);
   };
 
   const InviteUser = async () => {
@@ -164,6 +186,7 @@ export function Loading(props: IProps) {
       auth,
       setUser,
       setBucket,
+      setRemote,
       setCompleted
     );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -171,8 +194,8 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     if (completed === 100) {
-      if (orgName) {
-        CreateOrg(parseQuery(orgName));
+      if (newOrgParams) {
+        CreateOrg(parseQuery(newOrgParams));
       }
       InviteUser();
     }
@@ -188,7 +211,7 @@ export function Loading(props: IProps) {
   if (
     orbitLoaded &&
     (completed === 100 || API_CONFIG.offline) &&
-    orgName === null
+    newOrgParams === null
   ) {
     return <Redirect to="/main" />;
   }

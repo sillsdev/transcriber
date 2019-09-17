@@ -25,6 +25,7 @@ const Sources = async (
   auth: Auth,
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
+  setRemote: (remote: JSONAPISource) => void,
   setCompleted: (valud: number) => void
 ) => {
   const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
@@ -74,6 +75,7 @@ const Sources = async (
     remote.requestProcessor.serializer.resourceKey = () => {
       return 'remoteId';
     };
+    setRemote(remote);
   }
 
   const coordinator = new Coordinator();
