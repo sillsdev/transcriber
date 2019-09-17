@@ -524,68 +524,11 @@ export function ResponsiveDrawer(props: IProps) {
           </div>
         </div>
       </div>
-      <Divider />
-      <List>
-        {[t.usersAndGroups, t.organization].map((text, index) => (
-          <ListItem
-            button
-            key={text}
-            selected={slug(text) === choice}
-            onClick={checkSavedEv(() => handleChoice(text))}
-          >
-            <ListItemIcon>
-              {index % 2 === 0 ? <GroupIcon /> : <OrganizationIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <div className={classes.project}>
-        <div className={classes.header}>
-          <Typography variant="h6">{t.project}</Typography>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <IconButton size="small" onClick={handleAddProject}>
-            <AddIcon />
-          </IconButton>
-        </div>
-        {projOptions.length > 0 ? (
-          <div className={classes.contained}>
-            <div className={classes.select}>
-              <ReactSelect
-                suggestions={projOptions}
-                current={curProj}
-                onCommit={(v: string, e: any, callback: () => void) =>
-                  checkSavedFn(() => {
-                    handleCommitProj(v);
-                    callback();
-                  })
-                }
-              />
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
-      {curProj !== null ? (
-        <div>
-          <List>
-            {[t.plans, t.team, t.media].map((text, index) => (
-              <ListItem
-                button
-                key={text}
-                selected={slug(text) === choice}
-                onClick={checkSavedEv(() => handleChoice(text))}
-              >
-                <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+      {curOrg === null || (
+        <>
           <Divider />
           <List>
-            {[t.settings, t.integrations].map((text, index) => (
+            {[t.usersAndGroups, t.organization].map((text, index) => (
               <ListItem
                 button
                 key={text}
@@ -593,15 +536,72 @@ export function ResponsiveDrawer(props: IProps) {
                 onClick={checkSavedEv(() => handleChoice(text))}
               >
                 <ListItemIcon>
-                  {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
+                  {index % 2 === 0 ? <GroupIcon /> : <OrganizationIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
           </List>
-        </div>
-      ) : (
-        ''
+          <Divider />
+          <div className={classes.project}>
+            <div className={classes.header}>
+              <Typography variant="h6">{t.project}</Typography>
+              <div className={classes.grow}>{'\u00A0'}</div>
+              <IconButton size="small" onClick={handleAddProject}>
+                <AddIcon />
+              </IconButton>
+            </div>
+            {projOptions.length <= 0 || (
+              <div className={classes.contained}>
+                <div className={classes.select}>
+                  <ReactSelect
+                    suggestions={projOptions}
+                    current={curProj}
+                    onCommit={(v: string, e: any, callback: () => void) =>
+                      checkSavedFn(() => {
+                        handleCommitProj(v);
+                        callback();
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          {curProj === null || (
+            <div>
+              <List>
+                {[t.plans, t.team, t.media].map((text, index) => (
+                  <ListItem
+                    button
+                    key={text}
+                    selected={slug(text) === choice}
+                    onClick={checkSavedEv(() => handleChoice(text))}
+                  >
+                    <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+              <List>
+                {[t.settings, t.integrations].map((text, index) => (
+                  <ListItem
+                    button
+                    key={text}
+                    selected={slug(text) === choice}
+                    onClick={checkSavedEv(() => handleChoice(text))}
+                  >
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
+              </List>
+            </div>
+          )}
+        </>
       )}
       <div className={classes.foot}>
         <div className={classes.version}>
