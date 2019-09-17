@@ -82,6 +82,7 @@ const schemaDefinition: SchemaSettings = {
         name: { type: 'string' },
         slug: { type: 'string' },
         SilId: { type: 'number' },
+        description: { type: 'string' },
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },

@@ -5,8 +5,9 @@ export interface Organization extends Record {
     name: string;
     slug: string;
     silId: number;
-    websiteUrl: string;
-    logoUrl: string;
+    description: string | null;
+    websiteUrl: string | null;
+    logoUrl: string | null;
     publicByDefault: boolean;
     dateCreated: string | null;
     dateUpdated: string | null;

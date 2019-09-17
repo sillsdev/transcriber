@@ -8,13 +8,17 @@ import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
+  Avatar,
   TextField,
   FormControl,
   FormGroup,
   FormControlLabel,
   IconButton,
+  Button,
 } from '@material-ui/core';
 import LinkIcon from '@material-ui/icons/Link';
+import EditIcon from '@material-ui/icons/Edit';
+import OrgIcon from '@material-ui/icons/AccountBalance';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 
@@ -37,8 +41,23 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    avatar: {
+      paddingTop: '10px',
+      paddingLeft: '10px',
+    },
     iconButton: {
       padding: 10,
+    },
+    actions: theme.mixins.gutters({
+      paddingBottom: 16,
+      display: 'flex',
+      flexDirection: 'row',
+    }),
+    button: {
+      margin: theme.spacing(1),
+    },
+    icon: {
+      marginLeft: theme.spacing(1),
     },
   })
 );
@@ -63,6 +82,8 @@ export function OrgSettings(props: IProps) {
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [orgAvatar, setOrgAvatar] = useState('');
   const [website, setWebsite] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
@@ -70,6 +91,9 @@ export function OrgSettings(props: IProps) {
 
   const handleNameChange = (e: any) => {
     setName(e.target.value);
+  };
+  const handleDescriptionChange = (e: any) => {
+    setDescription(e.target.value);
   };
   const handleWebsiteChange = (e: any) => {
     setWebsite(e.target.value);
@@ -97,6 +121,7 @@ export function OrgSettings(props: IProps) {
       id: '',
       attributes: {
         name: '',
+        description: '',
         slug: '',
         websiteUrl: '',
         logoUrl: '',
@@ -115,7 +140,9 @@ export function OrgSettings(props: IProps) {
     }
     const attr = org.attributes;
     setName(attr.name);
-    setWebsite(attr.websiteUrl);
+    setDescription(attr.description ? attr.description : '');
+    setOrgAvatar(attr.logoUrl ? attr.logoUrl : '');
+    setWebsite(attr.websiteUrl ? attr.websiteUrl : '');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, organization, organizations]);
 
@@ -139,6 +166,35 @@ export function OrgSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
+                  disabled
+                />
+              }
+              label=""
+            />
+            <FormControlLabel
+              control={
+                <div className={classes.avatar}>
+                  {orgAvatar && orgAvatar.startsWith('http') ? (
+                    <Avatar src={orgAvatar} />
+                  ) : (
+                    <OrgIcon />
+                  )}
+                </div>
+              }
+              label=""
+            />
+            <FormControlLabel
+              control={
+                <TextField
+                  id="description"
+                  label={t.description}
+                  className={classes.textField}
+                  value={description}
+                  onChange={handleDescriptionChange}
+                  margin="normal"
+                  style={{ width: 400 }}
+                  variant="filled"
+                  required={false}
                   disabled
                 />
               }
@@ -172,6 +228,20 @@ export function OrgSettings(props: IProps) {
             />
           </FormGroup>
         </FormControl>
+        <div className={classes.actions}>
+          <Button
+            key="save"
+            aria-label={t.save}
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            disabled={name === ''}
+            onClick={() => setMessage(<span>{'Not implemented'}</span>)}
+          >
+            {'Edit'}
+            <EditIcon className={classes.icon} />
+          </Button>
+        </div>
       </div>
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a

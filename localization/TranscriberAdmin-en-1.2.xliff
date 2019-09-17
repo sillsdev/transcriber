@@ -1833,6 +1833,13 @@
 					<context context-type="sourcefile">OrgSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="orgSettings.description">
+				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="orgSettings.website">
 				<source>Website</source>
 				<target/>

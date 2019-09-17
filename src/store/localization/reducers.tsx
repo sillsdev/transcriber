@@ -385,6 +385,7 @@ const initialState = {
 		"en": {
 			"add": "Add",
 			"name": "Name",
+			"description": "Description",
 			"website": "Website",
 			"logo": "Logo",
 			"publicByDefault": "Public By Default",

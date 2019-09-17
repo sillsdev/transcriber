@@ -1562,7 +1562,13 @@
             <target>Nom</target>
          </segment>
       </unit>
-      <unit id="orgSettings.website">
+		<unit id="orgSettings.description">
+			<segment>
+				<source>Description</source>
+				<target>Description</target>
+			</segment>
+		</unit>
+		<unit id="orgSettings.website">
          <segment>
             <source>Website</source>
             <target>Site Web</target>

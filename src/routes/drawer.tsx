@@ -130,6 +130,9 @@ const useStyles = makeStyles((theme: Theme) =>
     avatar: {
       paddingTop: '10px',
       paddingLeft: '10px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
     },
     select: {
       height: '64px',
@@ -344,7 +347,7 @@ export function ResponsiveDrawer(props: IProps) {
       setCurOrg(cur);
       if (organizations[cur]) {
         const attr = organizations[cur].attributes;
-        setOrgAvatar(attr ? attr.logoUrl : '');
+        setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -501,7 +504,11 @@ export function ResponsiveDrawer(props: IProps) {
       <div className={classes.toolbar}>
         <div className={classes.organization}>
           <div className={classes.avatar}>
-            <Avatar src={orgAvatar} />
+            {orgAvatar && orgAvatar.startsWith('http') ? (
+              <Avatar src={orgAvatar} />
+            ) : (
+              <OrganizationIcon />
+            )}
           </div>
           <div className={classes.select}>
             <ReactSelect

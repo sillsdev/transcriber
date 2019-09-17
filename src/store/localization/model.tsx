@@ -350,6 +350,7 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
 export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "name": string;
+    "description": string;
     "website": string;
     "logo": string;
     "publicByDefault": string;
