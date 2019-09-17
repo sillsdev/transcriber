@@ -111,6 +111,21 @@ export function Loading(props: IProps) {
     }
   };
 
+  const ReloadOrgTables = async () => {
+    await remote
+      .pull(q => q.findRecords('organization'))
+      .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('organizationmembership'))
+      .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('group'))
+      .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('groupmembership'))
+      .then(transform => memory.sync(transform));
+  };
+
   const CreateOrg = async (props: IParsedArgs) => {
     const { orgId, orgName } = props;
     if (!localStorage.getItem('newOrg')) return;
@@ -137,18 +152,7 @@ export function Loading(props: IProps) {
         }
       ),
     ]);
-    await remote
-      .pull(q => q.findRecords('organization'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('organizationmembership'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('group'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('groupmembership'))
-      .then(transform => memory.sync(transform));
+    await ReloadOrgTables();
     const newOrgRec = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('organization')
@@ -168,9 +172,10 @@ export function Loading(props: IProps) {
         .filter({ attribute: 'silId', value: parseInt(inviteId) })
     );
     if (invite.length > 0) {
-      await memory.update((t: TransformBuilder) =>
+      await remote.update((t: TransformBuilder) =>
         t.replaceAttribute(invite[0], 'accepted', true)
       );
+      await ReloadOrgTables();
     }
   };
 

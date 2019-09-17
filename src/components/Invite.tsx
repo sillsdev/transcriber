@@ -18,7 +18,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
-import { validateEmail } from '../utils';
+import { validateEmail, related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,6 +61,7 @@ function Invite(props: IProps) {
   } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [organization] = useGlobal('organization');
   const [open, setOpen] = useState(visible);
   const [email, setEmail] = useState('');
   const [emailHelp, setEmailHelp] = useState(<></>);
@@ -104,7 +105,10 @@ function Invite(props: IProps) {
     const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('invitation').filter({ attribute: 'email', value: email })
     );
-    return selectInvite.length > 0;
+    const checkOrg = selectInvite.filter(
+      i => related(i, 'organization') === organization
+    );
+    return checkOrg.length > 0;
   };
 
   useEffect(() => {
