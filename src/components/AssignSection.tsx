@@ -207,8 +207,8 @@ function AssignSection(props: IProps) {
         <TableCell component="th" scope="row">
           {sectionNumber(p) + ' ' + p.attributes.name}
         </TableCell>
-        <TableCell align="right">{sectionTranscriberName(p, users)}</TableCell>
         <TableCell align="right">{sectionReviewerName(p, users)} </TableCell>
+        <TableCell align="right">{sectionTranscriberName(p, users)}</TableCell>
       </TableRow>
     );
   });
@@ -236,8 +236,8 @@ function AssignSection(props: IProps) {
                   <TableHead>
                     <TableRow>
                       <TableCell>{t.sections}</TableCell>
-                      <TableCell align="right">{t.transcriber}</TableCell>
                       <TableCell align="right">{t.reviewer}</TableCell>
+                      <TableCell align="right">{t.transcriber}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>{sectionList}</TableBody>
