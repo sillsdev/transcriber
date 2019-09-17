@@ -89,12 +89,6 @@ export function UserMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <StyledMenuItem onClick={handle('Logout')}>
-          <ListItemIcon>
-            <ExitIcon />
-          </ListItemIcon>
-          <ListItemText primary={t.logout} />
-        </StyledMenuItem>
         <a
           href={AUTH_CONFIG.myAccountApp}
           style={{ textDecoration: 'none' }}
@@ -116,6 +110,12 @@ export function UserMenu(props: IProps) {
             <ListItemText primary={t.clearCache} />
           </StyledMenuItem>
         )}
+        <StyledMenuItem onClick={handle('Logout')}>
+          <ListItemIcon>
+            <ExitIcon />
+          </ListItemIcon>
+          <ListItemText primary={t.logout} />
+        </StyledMenuItem>
       </StyledMenu>
     </div>
   );
