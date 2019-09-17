@@ -328,7 +328,11 @@ export function ResponsiveDrawer(props: IProps) {
         };
       });
     setOrgOptions(
-      orgOpts.concat({ value: t.newOrganization, label: t.newOrganization })
+      orgOpts.concat({
+        value: t.newOrganization,
+        label: t.newOrganization + '    \uFF0B',
+        // or \u2795
+      })
     );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organizations, organization, user]);
