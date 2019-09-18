@@ -132,6 +132,9 @@ export function Loading(props: IProps) {
     await remote
       .pull(q => q.findRecords('groupmembership'))
       .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('user'))
+      .then(transform => memory.sync(transform));
   };
 
   const CreateOrg = async (props: IParsedArgs) => {
