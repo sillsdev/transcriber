@@ -153,12 +153,12 @@ export function Loading(props: IProps) {
       ),
     ]);
     await ReloadOrgTables();
-    const newOrgRec = memory.cache.query((q: QueryBuilder) =>
+    const newOrgRec: Organization[] = memory.cache.query((q: QueryBuilder) =>
       q
         .findRecords('organization')
         .filter({ attribute: 'name', value: orgName })
     );
-    setOrganization(newOrgRec.id);
+    setOrganization(newOrgRec[0].id);
     setNewOrgParams(null);
   };
 
