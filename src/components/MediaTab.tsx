@@ -185,6 +185,7 @@ interface IProps
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
   projectplans: Plan[];
+  planColumn?: boolean;
 }
 
 export function MediaTab(props: IProps) {
@@ -204,6 +205,7 @@ export function MediaTab(props: IProps) {
     queryStore,
     auth,
     projectplans,
+    planColumn,
   } = props;
   const classes = useStyles();
   const [plan, setPlan] = useGlobal('plan');
@@ -320,7 +322,7 @@ export function MediaTab(props: IProps) {
   const handleFilter = () => setFilter(!filter);
 
   useEffect(() => {
-    if (projectplans.length > 1) {
+    if (planColumn) {
       if (defaultHiddenColumnNames.length > 0)
         //assume planName is only one
         defaultHiddenColumnNames.pop();
@@ -331,7 +333,7 @@ export function MediaTab(props: IProps) {
       defaultHiddenColumnNames.push('planName');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projectplans, plan]);
+  }, [projectplans, plan, planColumn]);
 
   useEffect(() => {
     setData(
@@ -407,7 +409,7 @@ export function MediaTab(props: IProps) {
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          {projectplans.length === 1 && (
+          {planColumn || (
             <Button
               key="upload"
               aria-label={t.uploadMedia}
@@ -420,7 +422,7 @@ export function MediaTab(props: IProps) {
               <AddIcon className={classes.icon} />
             </Button>
           )}
-          {projectplans.length === 1 && (
+          {planColumn || (
             <Button
               key="Attach"
               aria-label={t.attachPassage}
@@ -498,14 +500,12 @@ export function MediaTab(props: IProps) {
         visible={passageMediaVisible}
         closeMethod={handlePassageMedia(false)}
       />
-      {confirmAction !== '' ? (
+      {confirmAction === '' || (
         <Confirm
           text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />
-      ) : (
-        <></>
       )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>

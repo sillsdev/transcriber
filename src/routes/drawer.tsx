@@ -622,6 +622,7 @@ export function ResponsiveDrawer(props: IProps) {
     <MediaTab
       {...props}
       projectplans={plans.filter(p => related(p, 'project') === project)}
+      planColumn={true}
     />
   );
   components[slug(t.plans)] = (
