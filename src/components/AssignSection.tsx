@@ -230,20 +230,26 @@ function AssignSection(props: IProps) {
             alignItems="flex-start"
             className={classes.gridRoot}
           >
-            <Grid item>
-              <Paper className={classes.paper}>
-                <Table className={classes.grids} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>{t.sections}</TableCell>
-                      <TableCell align="right">{t.reviewer}</TableCell>
-                      <TableCell align="right">{t.transcriber}</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>{sectionList}</TableBody>
-                </Table>
-              </Paper>
-            </Grid>
+            <Paper className={classes.paper}>
+              <Table className={classes.grids} size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t.sections}</TableCell>
+                    <TableCell align="right">{t.reviewer}</TableCell>
+                    <TableCell align="right">{t.transcriber}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>{sectionList}</TableBody>
+              </Table>
+            </Paper>
+          </Grid>
+          <Grid
+            container
+            spacing={2}
+            justify="center"
+            alignItems="flex-start"
+            className={classes.gridRoot}
+          >
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
