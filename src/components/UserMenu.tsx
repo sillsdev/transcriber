@@ -92,7 +92,7 @@ export function UserMenu(props: IProps) {
         onClose={handle('Close')}
       >
         <a
-          href={AUTH_CONFIG.myAccountApp + '#access_token=' + auth.accessToken}
+          href={AUTH_CONFIG.myAccountApp + '/callback#access_token=' + auth.accessToken + '&expires_in=' + auth.expiresAt + '&token_type=Bearer&state=tAdInit&id_token=' + auth.idToken + '&nonce=test' }
           style={{ textDecoration: 'none' }}
           target="_blank"
           rel="noopener noreferrer"
