@@ -351,7 +351,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orgOptions, organization]);
+  }, [orgOptions, organization, curOrg]);
 
   useEffect(() => {
     const projOpts = projects
