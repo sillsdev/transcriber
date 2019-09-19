@@ -1,5 +1,6 @@
 import 'reactn';
-import { Store, Schema, KeyMap } from '@orbit/data';
+import Memory from '@orbit/memory';
+import { Schema, KeyMap } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import JSONAPISource from '@orbit/jsonapi';
 
@@ -12,7 +13,7 @@ declare module 'reactn/default' {
     group: string;
     user: string;
     lang: string;
-    memory: Store;
+    memory: Memory;
     schema: Schema;
     keyMap: KeyMap;
     bucket: Bucket;

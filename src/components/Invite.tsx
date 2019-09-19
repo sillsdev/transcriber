@@ -104,11 +104,11 @@ function Invite(props: IProps) {
   const hasInvite = (email: string) => {
     const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('invitation').filter({ attribute: 'email', value: email })
-    );
-    const checkOrg = selectInvite.filter(
-      i => related(i, 'organization') === organization
-    );
-    return checkOrg.length > 0;
+    ) as any;
+    const checkOrg =
+      selectInvite &&
+      selectInvite.filter(i => related(i, 'organization') === organization);
+    return checkOrg && checkOrg.length > 0;
   };
 
   useEffect(() => {

@@ -4,13 +4,7 @@ import Auth from '../auth/Auth';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  IState,
-  IMainStrings,
-  Organization,
-  Invitation,
-  Project,
-} from '../model';
+import { IState, IMainStrings, Organization, Invitation } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
@@ -26,7 +20,7 @@ import UserMenu from '../components/UserMenu';
 import * as action from '../store';
 import logo from './transcriber9.png';
 import { parseQuery, IParsedArgs } from '../utils/parseQuery';
-import { related, hasRelated } from '../utils';
+import { related, hasRelated, setDefaultProj } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -168,8 +162,9 @@ export function Loading(props: IProps) {
       q
         .findRecords('organization')
         .filter({ attribute: 'name', value: orgName })
-    );
+    ) as any;
     setOrganization(newOrgRec[0].id);
+    setDefaultProj(newOrgRec[0].id, memory, setProject);
     setNewOrgParams(null);
   };
 
@@ -181,37 +176,28 @@ export function Loading(props: IProps) {
       q
         .findRecords('invitation')
         .filter({ attribute: 'silId', value: parseInt(inviteId) })
-    );
+    ) as any;
     if (invite.length > 0) {
       await remote.update((t: TransformBuilder) =>
         t.replaceAttribute(invite[0], 'accepted', true)
       );
       await ReloadOrgTables();
-      setOrganization(related(invite[0], 'organization'));
+      const orgId = related(invite[0], 'organization');
+      setOrganization(orgId);
+      setDefaultProj(orgId, memory, setProject);
     }
   };
 
   const setDefaultOrg = async () => {
-    let orgs: Organization[] = await memory.cache.query((q: QueryBuilder) =>
+    let orgs: Organization[] = (await memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
-    );
+    )) as any;
     orgs = orgs
       .filter(o => hasRelated(o, 'users', user) && o.attributes)
       .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
     if (orgs.length > 0) {
       setOrganization(orgs[0].id);
-    }
-  };
-
-  const setDefaultProj = async () => {
-    let projs: Project[] = await memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('project')
-    );
-    projs = projs
-      .filter(p => related(p, 'organization') === organization && p.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
-    if (projs.length > 0) {
-      setProject(projs[0].id);
+      setDefaultProj(orgs[0].id, memory, setProject);
     }
   };
 
@@ -240,7 +226,7 @@ export function Loading(props: IProps) {
         CreateOrg(parseQuery(newOrgParams));
       }
       InviteUser();
-      setDefaultProj();
+      setDefaultProj(organization, memory, setProject);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed]);

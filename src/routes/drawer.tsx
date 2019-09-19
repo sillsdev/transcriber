@@ -59,6 +59,7 @@ import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
+import { setDefaultProj } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
@@ -201,6 +202,7 @@ export function ResponsiveDrawer(props: IProps) {
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal('keyMap');
+  const [memory] = useGlobal('memory');
   const [bucket] = useGlobal('bucket');
   const [user] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
@@ -249,6 +251,7 @@ export function ResponsiveDrawer(props: IProps) {
     } else {
       if (value !== organization) setCurProj(null);
       setOrganization(value);
+      setDefaultProj(value, memory, setProject);
       setAddProject(false);
       setChoice('');
       setContent('');
