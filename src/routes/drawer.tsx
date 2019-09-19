@@ -375,7 +375,10 @@ export function ResponsiveDrawer(props: IProps) {
 
   useEffect(() => {
     const projKeys = projOptions.map(o => o.value);
-    if (projKeys.length === 0) return;
+    if (projKeys.length === 0) {
+      setCurProj(null);
+      return;
+    }
     const cur = projKeys.indexOf(project);
     if (addProject || cur === -1) {
       setCurProj(null);
