@@ -344,17 +344,20 @@ export function ResponsiveDrawer(props: IProps) {
   }, [organizations, organization, user]);
 
   useEffect(() => {
-    if (orgOptions.length === 0) return;
-    const cur = orgOptions.map(oo => oo.value).indexOf(organization);
-    if (cur !== -1) {
-      setCurOrg(cur);
-      if (organizations[cur]) {
-        const attr = organizations[cur].attributes;
-        setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
-      }
+    if (orgOptions) {
+      const cur = orgOptions.map(oo => oo.value).indexOf(organization);
+      if (cur !== -1) setCurOrg(cur);
+    }
+  }, [orgOptions, organization]);
+
+  useEffect(() => {
+    const orgRec = organizations.filter(o => o.id === organization);
+    if (orgRec.length > 0) {
+      const attr = orgRec[0].attributes;
+      setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orgOptions, organization, curOrg]);
+  }, [organization, curOrg]);
 
   useEffect(() => {
     const projOpts = projects
