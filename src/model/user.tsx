@@ -6,13 +6,14 @@ export interface User extends Record {
     givenName: string;
     familyName: string;
     email: string;
-    phone: string;
-    timezone: string;
-    locale: string;
+    phone: string | null;
+    timezone: string | null;
+    locale: string | null;
+    avatarUrl: string | null;
     isLocked: boolean;
-    auth0Id: string;
     dateCreated: string | null;
     dateUpdated: string | null;
+    lastModifiedBy: string | null;
   };
   relationships?: {
     ownedOrganizations: RecordRelationship;
@@ -21,7 +22,7 @@ export interface User extends Record {
     roles: RecordRelationship;
     groups: RecordRelationship;
   };
-};
+}
 
 export interface CurrentUser extends Record {
   attributes: {
@@ -29,13 +30,13 @@ export interface CurrentUser extends Record {
     givenName: string;
     familyName: string;
     email: string;
-    phone: string;
-    timezone: string;
-    locale: string;
+    phone: string | null;
+    timezone: string | null;
+    locale: string | null;
     isLocked: boolean;
-    auth0Id: string;
     dateCreated: string | null;
     dateUpdated: string | null;
+    lastModifiedBy: string | null;
   };
   relationships?: {
     ownedOrganizations: RecordRelationship;
@@ -44,6 +45,6 @@ export interface CurrentUser extends Record {
     roles: RecordRelationship;
     groups: RecordRelationship;
   };
-};
+}
 
-export default User;  
+export default User;

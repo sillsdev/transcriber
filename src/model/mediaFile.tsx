@@ -1,22 +1,25 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
-export interface MediaFiles extends Record {
-    attributes: {
-      passageId: number;
-      versionNumber: number;
-      artifactType: string;
-      eafUrl: string;
-      audioUrl: string;
-      duration: number;
-      contentType: string;
-      audioQuality: string;
-      textQuality: string;
-      transcription: string;
-      dateCreated: string | null;
-      dateUpdated: string | null;
-    };
-    relationships?: {
-      task: RecordRelationship;
-    };
+export interface MediaFile extends Record {
+  attributes: {
+    planId: number; //allow this because we use axios to create a mediafile
+    versionNumber: number;
+    artifactType: string;
+    eafUrl: string;
+    audioUrl: string;
+    duration: number;
+    contentType: string;
+    audioQuality: string;
+    textQuality: string;
+    transcription: string;
+    originalFile: string;
+    filesize: number;
+    dateCreated: string | null;
+    dateUpdated: string | null;
   };
-export default MediaFiles;  
+  relationships?: {
+    passage: RecordRelationship;
+    plan: RecordRelationship;
+  };
+}
+export default MediaFile;

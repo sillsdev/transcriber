@@ -2,29 +2,44 @@ import { KeyMap, Schema, SchemaSettings } from '@orbit/data';
 
 export const keyMap = new KeyMap();
 
-const schemaDefinition: SchemaSettings =  {
+const schemaDefinition: SchemaSettings = {
   models: {
+    activitystate: {
+      keys: { remoteId: {} },
+      attributes: {
+        state: { type: 'string' },
+        sequencenum: { type: 'number' },
+      },
+      relationships: {},
+    },
     group: {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
         abbreviation: { type: 'string' },
+        ownerId: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
-        users: { type: 'hasMany', model: 'groupmembership', inverse: 'group' },
+        projects: { type: 'hasMany', model: 'project', inverse: 'group' },
+        groupMemberships: {
+          type: 'hasMany',
+          model: 'groupmembership',
+          inverse: 'group',
+        },
       },
     },
     groupmembership: {
       keys: { remoteId: {} },
       attributes: {
-        userId: { type: 'number' },
-        groupId: { type: 'number' },
+        font: { type: 'string' },
+        fontSize: { type: 'string' },
       },
       relationships: {
         user: { type: 'hasOne', model: 'user', inverse: 'groupMemberships' },
-        group: { type: 'hasOne', model: 'group', inverse: 'users' },
-      }
+        group: { type: 'hasOne', model: 'group', inverse: 'groupMemberships' },
+        role: { type: 'hasOne', model: 'role' },
+      },
     },
     integration: {
       keys: { remoteId: {} },
@@ -33,47 +48,78 @@ const schemaDefinition: SchemaSettings =  {
         url: { type: 'string' },
       },
       relationships: {
-        projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
+        projectIntegrations: {
+          type: 'hasMany',
+          model: 'projectintegration',
+          inverse: 'integration',
+        },
+      },
+    },
+    invitation: {
+      keys: { remoteId: {} },
+      attributes: {
+        email: { type: 'string' },
+        silId: { type: 'numer' },
+        accepted: { type: 'boolean' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastUpdatedBy: { type: 'number' },
+      },
+      relationships: {
+        organization: {
+          type: 'hasOne',
+          model: 'organization',
+        },
+        role: {
+          type: 'hasOne',
+          model: 'role',
+        },
       },
     },
     organization: {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
+        slug: { type: 'string' },
+        SilId: { type: 'number' },
+        description: { type: 'string' },
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
-        // ownerId: { type: 'number' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },
-        users: { type: 'hasMany', model: 'users'},
-        groups: { type: 'hasMany', model: 'groupmembership'},
-        userRoles: { type: 'hasMany', model: 'userrole'},
-      }
+        users: { type: 'hasMany', model: 'user' },
+        groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
+      },
     },
     organizationmembership: {
       keys: { remoteId: {} },
-      attributes: {
-        userId: { type: 'number' },
-        organizationId: { type: 'number' },
-      },
+      attributes: {},
       relationships: {
-        user: { type: 'hasOne', model: 'user' },
+        user: {
+          type: 'hasOne',
+          model: 'user',
+          inverse: 'organizationMemberships',
+        },
         organization: { type: 'hasOne', model: 'organization' },
-      }
+        role: { type: 'hasOne', model: 'role' },
+      },
     },
     plan: {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
-        projectId: { type: 'number' },
-        planTypeId: { type: 'number' },
+        slug: { type: 'string' },
       },
       relationships: {
-        project: { type: 'hasOne', model: 'project', inverse: 'plans'},
+        project: { type: 'hasOne', model: 'project', inverse: 'plans' },
         plantype: { type: 'hasOne', model: 'plantype', inverse: 'plans' },
         sections: { type: 'hasMany', model: 'section', inverse: 'plan' },
+        mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'plan' },
       },
     },
     plantype: {
@@ -90,11 +136,8 @@ const schemaDefinition: SchemaSettings =  {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
-        projectTypeId: { type: 'number' },
+        slug: { type: 'string' },
         description: { type: 'string' },
-        ownerId: { type: 'number' },
-        organizationId: { type: 'number' },
-        groupId: { type: 'number' },
         uilanguagebcp47: { type: 'string' },
         language: { type: 'string' },
         languageName: { type: 'string' },
@@ -105,29 +148,42 @@ const schemaDefinition: SchemaSettings =  {
         isPublic: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
-        dateArchived: { type: 'date' },
       },
       relationships: {
-        projecttype: { type: 'hasOne', model: 'projecttype', inverse: 'projects' },
+        projecttype: {
+          type: 'hasOne',
+          model: 'projecttype',
+          inverse: 'projects',
+        },
         owner: { type: 'hasOne', model: 'user', inverse: 'projects' },
-        organization: { type: 'hasOne', model: 'organization'},
-        group: { type: 'hasOne', model: 'group' },
-        projectIntegrations: { type: 'hasMany', model: 'projectintegration', inverse: 'project' },
+        organization: { type: 'hasOne', model: 'organization' },
+        group: { type: 'hasOne', model: 'group', inverse: 'projects' },
+        projectIntegrations: {
+          type: 'hasMany',
+          model: 'projectintegration',
+          inverse: 'project',
+        },
         users: { type: 'hasMany', model: 'userpassage', inverse: 'project' },
         // sections: { type: 'hasMany', model: 'section', inverse: 'project' },
         plans: { type: 'hasMany', model: 'plan', inverse: 'project' },
-      }
+      },
     },
     projectintegration: {
       keys: { remoteId: {} },
       attributes: {
-        projectId: { type: 'number' },
-        integrationId: { type: 'number' },
         settings: { type: 'string' },
       },
       relationships: {
-        integration: { type: 'hasOne', model: 'integration', inverse: 'projectIntegrations' },
-        project: { type: 'hasOne', model: 'project', inverse: 'projectIntegrations' },
+        integration: {
+          type: 'hasOne',
+          model: 'integration',
+          inverse: 'projectIntegrations',
+        },
+        project: {
+          type: 'hasOne',
+          model: 'project',
+          inverse: 'projectIntegrations',
+        },
       },
     },
     projecttype: {
@@ -140,28 +196,15 @@ const schemaDefinition: SchemaSettings =  {
         projects: { type: 'hasMany', model: 'project', inverse: 'projecttype' },
       },
     },
-    projectuser: {
-      keys: { remoteId: {} },
-      attributes: {
-        userId: { type: 'number' },
-        projectId: { type: 'number' },
-        roleId: { type: 'number' },
-        font:  { type: 'string' },
-        fontSize: { type: 'string' },
-      },
-      relationships: {
-        user: { type: 'hasOne', model: 'user' },
-        project: { type: 'hasOne', model: 'project' },
-        role: { type: 'hasOne', model: 'role' },
-      },
-    },
     role: {
       keys: { remoteId: {} },
       attributes: {
+        orgRole: { type: 'boolean' },
+        groupRole: { type: 'boolean' },
         roleName: { type: 'string' },
       },
       relationships: {
-        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'role' },
+        userRoles: { type: 'hasMany', model: 'organizationalmembership' },
       },
     },
     section: {
@@ -170,12 +213,17 @@ const schemaDefinition: SchemaSettings =  {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
         state: { type: 'string' },
-        planId: { type: 'number' },
       },
       relationships: {
         // projects: { type: 'hasMany', model: 'project', inverse: 'sections' },
         plan: { type: 'hasOne', model: 'plan', inverse: 'sections' },
-        passages: { type: 'hasMany', model: 'passagesection', inverse: 'section' },
+        passages: {
+          type: 'hasMany',
+          model: 'passagesection',
+          inverse: 'section',
+        },
+        reviewer: { type: 'hasOne', model: 'user' },
+        transcriber: { type: 'hasOne', model: 'user' },
       },
     },
     passage: {
@@ -193,15 +241,21 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'passage' },
-        sections: { type: 'hasMany', model: 'passagesection', inverse: 'passage' },
+        sections: {
+          type: 'hasMany',
+          model: 'passagesection',
+          inverse: 'passage',
+        },
+        users: {
+          type: 'hasMany',
+          model: 'userpassage',
+          inverse: 'passage',
+        },
       },
     },
     passagesection: {
       keys: { remoteId: {} },
-      attributes: {
-        passageId: { type: 'number' },
-        sectionId: { type: 'number' },
-      },
+      attributes: {},
       relationships: {
         passage: { type: 'hasOne', model: 'passage', inverse: 'sections' },
         section: { type: 'hasOne', model: 'section', inverse: 'passages' },
@@ -210,7 +264,6 @@ const schemaDefinition: SchemaSettings =  {
     mediafile: {
       keys: { remoteId: {} },
       attributes: {
-        passageId: { type: 'number' },
         versionNumber: { type: 'number' },
         artifactType: { type: 'string' },
         eafUrl: { type: 'string' },
@@ -220,10 +273,13 @@ const schemaDefinition: SchemaSettings =  {
         audioQuality: { type: 'string' },
         textQuality: { type: 'string' },
         transcription: { type: 'string' },
+        originalFile: { type: 'string' },
+        filesize: { type: 'number' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
       },
       relationships: {
+        plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
       },
     },
@@ -246,16 +302,28 @@ const schemaDefinition: SchemaSettings =  {
         playBackSpeed: { type: 'number' },
         progressBarTypeId: { type: 'number' },
         hotKeys: { type: 'string' },
-        profileVisibilit: { type: 'number'},
+        profileVisibilit: { type: 'number' },
         emailNotification: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
       },
       relationships: {
         projects: { type: 'hasMany', model: 'project', inverse: 'owner' },
-        organizationMemberships: { type: 'hasMany', model: 'organizationMembership', inverse: 'user' },
-        userRoles: { type: 'hasMany', model: 'userrole', inverse: 'user' },
-        groupMemberships: { type: 'hasMany', model: 'groupmembership', inverse: 'user' },
+        organizationMemberships: {
+          type: 'hasMany',
+          model: 'organizationmembership',
+          inverse: 'user',
+        },
+        groupMemberships: {
+          type: 'hasMany',
+          model: 'groupmembership',
+          inverse: 'user',
+        },
+        passages: {
+          type: 'hasMany',
+          model: 'userpassage',
+          inverse: 'users',
+        },
       },
     },
     currentuser: {
@@ -285,39 +353,27 @@ const schemaDefinition: SchemaSettings =  {
       },
       relationships: {
         projects: { type: 'hasMany', model: 'project' },
-        organizationMemberships: { type: 'hasMany', model: 'organizationMembership' },
-        userRoles: { type: 'hasMany', model: 'userrole' },
+        organizationMemberships: {
+          type: 'hasMany',
+          model: 'organizationmembership',
+        },
         groupMemberships: { type: 'hasMany', model: 'groupmembership' },
-      },
-    },
-    userrole: {
-      keys: { remoteId: {} },
-      attributes: {
-        userId: { type: 'number' },
-        roleId: { type: 'number' },
-        organizationId: { type: 'number' },
-      },
-      relationships: {
-        user: { type: 'hasOne', model: 'user', inverse: 'userRoles' },
-        role: { type: 'hasOne', model: 'role', inverse: 'userRoles' },
-        organization: { type: 'hasOne', model: 'organization', inverse: 'userRoles' },
       },
     },
     userpassage: {
       keys: { remoteId: {} },
       attributes: {
-        activityName: { type: 'string' },
-        state: { type: 'string' },
         comment: { type: 'string' },
         datecreated: { type: 'date' },
         dateupdated: { type: 'date' },
       },
       relationships: {
-        project: { type: 'hasOne', model: 'project', inverse: 'users' },
-        assigned: { type: 'hasOne', model: 'user' },
+        role: { type: 'hasOne', model: 'role' },
+        user: { type: 'hasOne', model: 'user' },
+        passage: { type: 'hasOne', model: 'passage' },
       },
     },
-  }
+  },
 };
 
 export const schema = new Schema(schemaDefinition);

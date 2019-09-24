@@ -14,7 +14,7 @@ export default class Auth {
     redirectUri: AUTH_CONFIG.callbackUrl,
     responseType: 'token id_token',
     scope: 'openid email',
-    audience: "https://transcriber_api"
+    audience: 'https://transcriber_api',
   });
 
   constructor() {
@@ -37,17 +37,23 @@ export default class Auth {
     this.auth0.authorize({
       mode: 'signUp',
       language: navigator.language.split('-')[0],
-    })
+    });
   }
 
   handleAuthentication() {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-      } else if (err) {
-        history.replace('/welcome');
-        alert(`Error: ${err.error}. Check the console for further details.`);
-      }
+    return new Promise((resolve, reject) => {
+      const nonce = 'test';
+      this.auth0.parseHash(
+        { nonce: nonce, state: 'tAdInit' },
+        (err, authResult) => {
+          if (err) return reject(err);
+          if (!authResult || !authResult.idTokenPayload) {
+            reject(err);
+          }
+          this.setSession(authResult);
+          resolve();
+        }
+      );
     });
   }
 
@@ -62,25 +68,25 @@ export default class Auth {
   setSession(authResult: any) {
     // Set isLoggedIn flag in localStorage
     localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('trAdminAuthResult', JSON.stringify(authResult));
 
     // Set the time that the access token will expire at
-    let expiresAt = (authResult.expiresIn * 1000) + new Date().getTime();
+    let expiresAt = authResult.expiresIn * 1000 + new Date().getTime();
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
 
     // navigate to the home route
-    history.replace('/welcome');
+    history.replace('/loading');
   }
 
   renewSession() {
-    this.auth0.checkSession({}, (err, authResult) => {
-       if (authResult && authResult.accessToken && authResult.idToken) {
-         this.setSession(authResult);
-       } else if (err) {
-         this.logout();
-         alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-       }
+    return new Promise((resolve, reject) => {
+      this.auth0.checkSession({}, (err, authResult) => {
+        if (err) return reject(err);
+        this.setSession(authResult);
+        resolve();
+      });
     });
   }
 
@@ -92,19 +98,25 @@ export default class Auth {
 
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('trAdminAuthResult');
+    localStorage.removeItem('nonce');
+    localStorage.removeItem('user-token');
+    localStorage.removeItem('user-id');
 
     this.auth0.logout({
-      returnTo: window.location.origin
+      returnTo: window.location.origin,
     });
 
     // navigate to the home route
-    history.replace('/welcome');
+    history.replace('/loading');
   }
 
   isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    if (API_CONFIG.offline) { return true }
+    if (API_CONFIG.offline) {
+      return true;
+    }
     let expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;
   }

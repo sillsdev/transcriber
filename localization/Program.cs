@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using net.sf.saxon.serialize;
+using net.sf.saxon.tree.wrapper;
 using Newtonsoft.Json;
 using Saxon.Api;
 
@@ -21,6 +23,7 @@ namespace updateLocalization
 			CreateOtherLangStrings();
 			CombineStrings();
 			CleanUp();
+			FollowUp();
 		}
 
 		private static void CreateEnglish20Xlf()
@@ -71,7 +74,9 @@ namespace updateLocalization
 				var langTag = Path.GetFileNameWithoutExtension(fileInfo.Name).Substring(17);
 				var langDir = new DirectoryInfo(@"..\..\" + langTag);
 				if (!langDir.Exists) continue;
-				XsltProcess(@"MakeStrings-12.xsl", @"TranscriberAdmin-en-1.2-" + langTag + @".xml", langTag + @"\TranscriberAdmin-en-1.2.xliff");
+                var devInputInfo = new FileInfo(@"..\..\" + @"TranscriberAdmin-" + langTag + ".xlf");
+                var stylesheetParams = new Dictionary<QName, XdmValue> { {new QName("v2File"), XdmValue.MakeValue(new Uri(devInputInfo.FullName))}};
+				XsltProcess(@"MakeStrings-12.xsl", @"TranscriberAdmin-en-1.2-" + langTag + @".xml", langTag + @"\TranscriberAdmin-en-1.2.xliff", stylesheetParams);
 			}
 		}
 
@@ -87,7 +92,7 @@ namespace updateLocalization
 			}
 		}
 
-		private static void XsltProcess(string xslName, string outName, string inName = "TranscriberAdmin-en-1.2.xliff")
+		private static void XsltProcess(string xslName, string outName, string inName = "TranscriberAdmin-en-1.2.xliff", Dictionary<QName, XdmValue> stylesheetParams = null)
 		{
 			var inputInfo = new FileInfo(@"..\..\" + inName);
 			var xsltInfo = new FileInfo(@"..\..\" + xslName);
@@ -103,6 +108,12 @@ namespace updateLocalization
 
 			// Create a serializer, with output to the standard output stream
 			var serializer = processor.NewSerializer();
+
+            // Parameters
+		    if (stylesheetParams != null)
+		    {
+                transformer.SetStylesheetParameters(stylesheetParams);
+		    }
 
 			using (var textWriter = new StreamWriter(@"..\..\" + outName))
 			{
@@ -127,6 +138,22 @@ namespace updateLocalization
 			{
 				new FileInfo(fileInfo.FullName).Delete();
 			}
+		}
+
+		private static void FollowUp()
+		{
+			var followUpInfo = new FileInfo(@"..\..\UpdateLocalizationFollowUp.bat");
+			if (!followUpInfo.Exists) return;
+			var comSpec = Environment.GetEnvironmentVariable("ComSpec");
+			var process = new Process
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					FileName = comSpec,
+					Arguments = "/c " + followUpInfo.FullName
+				}
+			};
+			process.Start();
 		}
 
 	}

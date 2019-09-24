@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Background NPM",
+      "type": "npm",
+      "script": "start",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "____________"
+        },
+        "background": {
+          "activeOnStart": false,
+          "beginsPattern": "Starting the development server\\.\\.\\.$",
+          "endsPattern": "(Compiled successfully|Compiled with warnings\\.|Failed to compile|To create a production build, use yarn build\\.)"
+        }
+      }
+    },
+    {
+      "label": "end serve",
+      "type": "process",
+      "command": [
+        "${command:workbench.action.tasks.terminate}",
+        "${command:workbench.action.acceptSelectedQuickOpenItem}"
+      ]
+    }
+  ]
+}

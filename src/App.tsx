@@ -1,72 +1,73 @@
 import * as React from 'react';
-import { Router, Route } from 'react-router-dom';
-import { setGlobal } from 'reactn';
-import { DataProvider } from 'react-orbitjs';
-import { Provider } from 'react-redux';
-import store from './store';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
+import { Route, Redirect } from 'react-router-dom';
 import Access from './routes/Access';
-import Welcome from './routes/Welcome';
-import AdminPanel from './routes/AdminPanel';
-import CreateOrg from './routes/CreateOrg';
-import OrganizationTable from './routes/OrganizationTable';
-import ProjectTable from './routes/ProjectTable';
-import UserTable from './routes/UserTable';
-import ProjectStatus from './routes/ProjectStatus';
-import Store from '@orbit/store';
-import { schema, keyMap } from './schema';
+import Logout from './routes/Logout';
+import Drawer from './routes/drawer';
+import Loading from './routes/Loading';
 import Callback from './callback/Callback';
 import Auth from './auth/Auth';
-import history from './history';
+import { parseQuery } from './utils/parseQuery';
 
 const auth = new Auth();
 
 const handleAuthentication = (props: any) => {
   const { location } = props;
+  if (location.search !== '') {
+    const params = parseQuery(location.search);
+    if (params.inviteId && typeof params.inviteId === 'string') {
+      localStorage.setItem('inviteId', params.inviteId);
+    }
+  }
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
   }
-}
+};
 
-const theme = createMuiTheme({});
+const handleNewOrg = (props: any) => {
+  const { location } = props;
+  if (/neworg|error/.test(location.pathname)) {
+    localStorage.setItem('newOrg', location.search);
+    const authData = localStorage.getItem('trAdminAuthResult');
+    if (authData && typeof authData === 'string') {
+      auth.setSession(JSON.parse(authData));
+    }
+  }
+  return <Redirect to="/loading" />;
+};
 
-const dataStore = new Store({ schema, keyMap });
-
-setGlobal({
-  organization: null,
-  project: null,
-  plan: null,
-  user: null,
-  initials: null,
-  lang: 'en',
-  dataStore: dataStore,
-  schema: schema,
-  keyMap: keyMap,
-});
-
-function App() {
-  return (
-    <DataProvider dataStore={dataStore}>
-      <Provider store={store}>
-        <Router history={history}>
-          <MuiThemeProvider theme={theme}>
-            <Route path='/' exact={true} render={(props) => <Access auth={auth} {...props} />} />
-            <Route path='/welcome' render={(props) => <Welcome auth={auth} {...props} />} />
-            <Route path='/admin' render={(props) => <AdminPanel auth={auth} {...props} />} />
-            <Route path='/neworg' render={(props) => <CreateOrg auth={auth} {...props} />} />
-            <Route path='/organization' render={(props) => <OrganizationTable auth={auth} {...props} />} />
-            <Route path='/project' render={(props) => <ProjectTable auth={auth} {...props} />} />
-            <Route path='/projectstatus' render={(props) => <ProjectStatus auth={auth} {...props} />} />
-            <Route path='/user' render={(props) => <UserTable auth={auth} {...props} />} />
-            <Route path="/callback" render={(props) => {
-              handleAuthentication(props);
-              return <Callback {...props} /> 
-            }}/>
-          </MuiThemeProvider>
-        </Router>
-      </Provider>
-    </DataProvider>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <>
+        <Route
+          path="/"
+          exact={true}
+          render={props => <Access auth={auth} {...props} />}
+        />
+        <Route
+          path="/logout"
+          exact={true}
+          render={props => <Logout auth={auth} {...props} />}
+        />
+        <Route
+          path="/loading"
+          render={props => <Loading auth={auth} {...props} />}
+        />
+        <Route
+          path="/main"
+          render={props => <Drawer auth={auth} {...props} />}
+        />
+        <Route
+          path="/callback"
+          render={props => {
+            handleAuthentication(props);
+            return <Callback {...props} />;
+          }}
+        />
+        <Route path="/neworg" render={props => handleNewOrg(props)} />
+      </>
+    );
+  }
 }
 
 export default App;

@@ -28,192 +28,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="adminpanel.transcriberAdmin">
-         <segment>
-            <source>Transcriber Admin</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.search">
-         <segment>
-            <source>Search…</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.organizations">
-         <segment>
-            <source>Organizations</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageOrganizations">
-         <segment>
-            <source>Add or manage organizations</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.users">
-         <segment>
-            <source>Users</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageUsers">
-         <segment>
-            <source>Add or manage users</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.projects">
-         <segment>
-            <source>Projects</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageProjects">
-         <segment>
-            <source>Add or manage projects</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.media">
-         <segment>
-            <source>Media</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManageAudioFiles">
-         <segment>
-            <source>Add or manage audio files</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.plans">
-         <segment>
-            <source>Plans</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="adminpanel.addManagePlans">
-         <segment>
-            <source>Add or manage plans</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="createorg.silTranscriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="createorg.createOrganization">
-         <segment>
-            <source>Create Organization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="createorg.findExistingOrganization">
-         <segment>
-            <source>Find an existing Organization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="createorg.organizationName">
-         <segment>
-            <source>Organization Name</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="createorg.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="createorg.continue">
-         <segment>
-            <source>Continue</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="mediacard.section">
-         <segment>
-            <source>Section</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.silTranscriberAdminProject">
-         <segment>
-            <source>SIL Transcriber Admin - Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.search">
-         <segment>
-            <source>Search…</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.listOptions">
-         <segment>
-            <source>List Options</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.settings">
-         <segment>
-            <source>Settings</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.team">
-         <segment>
-            <source>Team</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.plans">
-         <segment>
-            <source>Plans</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.projectPlans">
-         <segment>
-            <source>Project Plans</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.sections">
-         <segment>
-            <source>Sections</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.passages">
-         <segment>
-            <source>Passages</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.media">
-         <segment>
-            <source>Media</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.integrations">
-         <segment>
-            <source>Integrations</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectstatus.newProject">
-         <segment>
-            <source>New Project</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="snackbar.undo">
          <segment>
             <source>UNDO</source>
@@ -274,39 +88,39 @@
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.transcriberAdmin">
+      <unit id="usertable.role">
          <segment>
-            <source>Transcriber Admin</source>
+            <source>Role</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.thanksSigningUp">
+      <unit id="usertable.invite">
          <segment>
-            <source>Thanks for signing up!</source>
+            <source>Invite</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.StartTranscribingImmediately">
+      <unit id="usertable.action">
          <segment>
-            <source>Do you want to start transcribing immediately?</source>
+            <source>Action</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.transcriberWeb">
+      <unit id="usertable.delete">
          <segment>
-            <source>Transcriber Web</source>
+            <source>Delete</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.transcriberDesktop">
+      <unit id="usertable.filter">
          <segment>
-            <source>Transcriber Desktop</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
-      <unit id="welcome.ConfigureTranscriptionProject">
+      <unit id="usertable.selectRows">
          <segment>
-            <source>Do you want to configure a transcription project?</source>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -331,24 +145,6 @@
       <unit id="alert.yes">
          <segment>
             <source>Yes</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="organizationTable.transcriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="organizationTable.chooseOrganization">
-         <segment>
-            <source>Choose Organization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="organizationTable.name">
-         <segment>
-            <source>Name</source>
             <target/>
          </segment>
       </unit>
@@ -508,9 +304,57 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectSettings.dangerZone">
+         <segment>
+            <source>Danger Zone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.deleteProject">
+         <segment>
+            <source>Delete this Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.deleteExplained">
+         <segment>
+            <source>All plans, sections, passages, and media files will be removed.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.delete">
+         <segment>
+            <source>DELETE</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectSettings.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.preview">
+         <segment>
+            <source>Preview</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.selectProjectGroup">
+         <segment>
+            <source>Select project group. Each project relates to a single group. Group members can work on the project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planTable.addPlan">
+         <segment>
+            <source>Add Plan</source>
             <target/>
          </segment>
       </unit>
@@ -580,15 +424,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.assignMedia">
+      <unit id="planSheet.attachMedia">
          <segment>
-            <source>Assign Media</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.assignPassage">
-         <segment>
-            <source>Assign Passage</source>
+            <source>Attach Media</source>
             <target/>
          </segment>
       </unit>
@@ -607,6 +445,18 @@
       <unit id="planSheet.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.saving">
+         <segment>
+            <source>Saving</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -643,6 +493,150 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.title">
+         <segment>
+            <source>Assignments</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.sectionstate">
+         <segment>
+            <source>State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.passages">
+         <segment>
+            <source>Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.passagestate">
+         <segment>
+            <source>State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.user">
+         <segment>
+            <source>User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec">
+         <segment>
+            <source>Assign Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.removeSec">
+         <segment>
+            <source>Remove Assignment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.reviewer">
+         <segment>
+            <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.selectRowsToAssign">
+         <segment>
+            <source>Please select row(s) to assign.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.selectRowsToRemove">
+         <segment>
+            <source>Please select row(s) to remove assignment.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.title">
+         <segment>
+            <source>Assign sections to Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.sections">
+         <segment>
+            <source>Sections</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.users">
+         <segment>
+            <source>Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.reviewer">
+         <segment>
+            <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.assignAs">
+         <segment>
+            <source>Assign As</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="assignSection.close">
+         <segment>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>
@@ -684,7 +678,7 @@
       </unit>
       <unit id="planAdd.newPlanTask">
          <segment>
-            <source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)</source>
+            <source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
             <target/>
          </segment>
       </unit>
@@ -732,7 +726,877 @@
       </unit>
       <unit id="planAdd.editPlan">
          <segment>
-            <source>Edit Plan details</source>
+            <source>Edit Plan Details</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.download">
+         <segment>
+            <source>Download</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.changeVersion">
+         <segment>
+            <source>Change Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.attachPassage">
+         <segment>
+            <source>Attach Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.uploadMedia">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.uploadComplete">
+         <segment>
+            <source>Upload complete.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.planName">
+         <segment>
+            <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.fileName">
+         <segment>
+            <source>File Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.sectionId">
+         <segment>
+            <source>Section Id</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.sectionName">
+         <segment>
+            <source>Section Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.book">
+         <segment>
+            <source>Book</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.reference">
+         <segment>
+            <source>Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.duration">
+         <segment>
+            <source>Length (s)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.size">
+         <segment>
+            <source>Size (KB)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.version">
+         <segment>
+            <source>Version</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.date">
+         <segment>
+            <source>Date</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.selectFiles">
+         <segment>
+            <source>Please select files to be uploaded.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.attachAvailableMedia">
+         <segment>
+            <source>Attach available media files to passages (with no current media).</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.attachMediaToPassages">
+         <segment>
+            <source>Attach Media to Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.choosePassage">
+         <segment>
+            <source>Choose Your Passage ({0} without attachments)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.availableMedia">
+         <segment>
+            <source>Available Media ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.attachments">
+         <segment>
+            <source>Attachments ({0}) Select if you want to detach the media from the passage.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.silTranscriberAdmin">
+         <segment>
+            <source>SIL Transcriber Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.search">
+         <segment>
+            <source>Search…</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.organization">
+         <segment>
+            <source>Org Details</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.usersAndGroups">
+         <segment>
+            <source>Users and Groups</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.passages">
+         <segment>
+            <source>Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.media">
+         <segment>
+            <source>Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.plans">
+         <segment>
+            <source>Plans</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.settings">
+         <segment>
+            <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.integrations">
+         <segment>
+            <source>Integrations</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.project">
+         <segment>
+            <source>Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.loadingTranscriber">
+         <segment>
+            <source>Loading SIL Transcriber Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.projectSummary">
+         <segment>
+            <source>Project Summary</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.addProject">
+         <segment>
+            <source>Add Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.logout">
+         <segment>
+            <source>Log Out</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.myAccount">
+         <segment>
+            <source>My Account</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.clearCache">
+         <segment>
+            <source>Clear cache</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.planUnsaved">
+         <segment>
+            <source>Plan Unsaved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.loseData">
+         <segment>
+            <source>Do you want to leave this page and lose your changes?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.newOrganization">
+         <segment>
+            <source>Add Organization</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.sectionstate">
+         <segment>
+            <source>State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.passages">
+         <segment>
+            <source>Passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.reviewer">
+         <segment>
+            <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.transcriptionDisplay">
+         <segment>
+            <source>This display allows you to review the transcription that is stored.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTabs.users">
+         <segment>
+            <source>Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTabs.groups">
+         <segment>
+            <source>Groups</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTabs.invitations">
+         <segment>
+            <source>Invitations</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.abbr">
+         <segment>
+            <source>Abbreviation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.owner">
+         <segment>
+            <source>Owner</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.projects">
+         <segment>
+            <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.members">
+         <segment>
+            <source>Members</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.addGroup">
+         <segment>
+            <source>Add Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupTable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.newGroup">
+         <segment>
+            <source>New Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.editGroup">
+         <segment>
+            <source>Edit Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.addGroup">
+         <segment>
+            <source>Add Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.newGroupTask">
+         <segment>
+            <source>Enter (or edit) basic group information.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupAdd.abbr">
+         <segment>
+            <source>Abbreviation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.abbreviation">
+         <segment>
+            <source>Abbreviation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.projects">
+         <segment>
+            <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.reviewers">
+         <segment>
+            <source>Reviewers</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.transcribers">
+         <segment>
+            <source>Transcribers</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.addGroupMember">
+         <segment>
+            <source>Add Group Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.addMemberInstruction">
+         <segment>
+            <source>Enter the name of a person in the organization to be included in the group.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.allReviewersCanTranscribe">
+         <segment>
+            <source>All Reviewers are allowed to transcribe.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.noProjects">
+         <segment>
+            <source>There are no projects that use this group.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.assignedSections">
+         <segment>
+            <source>  Assigned Sections: </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.projectPlans">
+         <segment>
+            <source>Project Plans</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.invalidRole">
+         <segment>
+            <source>Invalid Role. User not added.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.NoColumns">
+         <segment>
+            <source>No columns visible</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="treeChart.noData">
+         <segment>
+            <source>No Transcription Data Yet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.font">
+         <segment>
+            <source>Font</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.script">
+         <segment>
+            <source>Script</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.selectLanguage">
+         <segment>
+            <source>Select a Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.findALanguage">
+         <segment>
+            <source>Find a language by name, code, or country</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.codeExplained">
+         <segment>
+            <source>Code Explained</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.subtags">
+         <segment>
+            <source>Subtags</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.details">
+         <segment>
+            <source>Details</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.languageOf">
+         <segment>
+            <source>A Language of $1$2.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.inScript">
+         <segment>
+            <source> in the $1 script</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.select">
+         <segment>
+            <source>Select</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="languagePicker.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.noMedia">
+         <segment>
+            <source>No Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribeReady">
+         <segment>
+            <source>Ready For Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribing">
+         <segment>
+            <source>Transcribing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.needsNewRecording">
+         <segment>
+            <source>Recording Problem</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribed">
+         <segment>
+            <source>Transcribed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.reviewing">
+         <segment>
+            <source>Reviewing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.needsNewTranscription">
+         <segment>
+            <source>Needs Changes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.approved">
+         <segment>
+            <source>Approved (not synced)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.synced">
+         <segment>
+            <source>Synced</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.done">
+         <segment>
+            <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.editInvite">
+         <segment>
+            <source>Edit Invite</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.addInvite">
+         <segment>
+            <source>Invite User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.newInviteTask">
+         <segment>
+            <source>Enter the email address of the user to invite.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.email">
+         <segment>
+            <source>Email</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.selectRole">
+         <segment>
+            <source>Select Organizational Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.invalidEmail">
+         <segment>
+            <source>Invalid email address</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.alreadyInvited">
+         <segment>
+            <source>Already invited!</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.email">
+         <segment>
+            <source>Email</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.role">
+         <segment>
+            <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.accepted">
+         <segment>
+            <source>Accepted</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.invite">
+         <segment>
+            <source>Invite</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.name">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.website">
+         <segment>
+            <source>Website</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.logo">
+         <segment>
+            <source>Logo</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.publicByDefault">
+         <segment>
+            <source>Public By Default</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.save">
+         <segment>
+            <source>Save</source>
             <target/>
          </segment>
       </unit>

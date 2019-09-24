@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd"
+	xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
 
-	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
+	<file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en"
+		datatype="plaintext">
 		<body>
 			<trans-unit id="access.silTranscriberAccess">
 				<source>SIL Transcriber Access</source>
@@ -29,223 +32,6 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Access.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.transcriberAdmin">
-				<source>Transcriber Admin</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.search">
-				<source>Search…</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.organizations">
-				<source>Organizations</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.addManageOrganizations">
-				<source>Add or manage organizations</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.users">
-				<source>Users</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.addManageUsers">
-				<source>Add or manage users</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.projects">
-				<source>Projects</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.addManageProjects">
-				<source>Add or manage projects</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.media">
-				<source>Media</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.addManageAudioFiles">
-				<source>Add or manage audio files</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.plans">
-				<source>Plans</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="adminpanel.addManagePlans">
-				<source>Add or manage plans</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">AdminPanel.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="createorg.silTranscriberAdmin">
-				<source>SIL Transcriber Admin</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">CreateOrg.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="createorg.createOrganization">
-				<source>Create Organization</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">CreateOrg.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="createorg.findExistingOrganization">
-				<source>Find an existing Organization</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">CreateOrg.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="createorg.organizationName">
-				<source>Organization Name</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">CreateOrg.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="createorg.cancel">
-				<source>Cancel</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">CreateOrg.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="createorg.continue">
-				<source>Continue</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">CreateOrg.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="mediacard.section">
-				<source>Section</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">MediaCard.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.silTranscriberAdminProject">
-				<source>SIL Transcriber Admin - Project</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.search">
-				<source>Search…</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.listOptions">
-				<source>List Options</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.settings">
-				<source>Settings</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.team">
-				<source>Team</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.plans">
-				<source>Plans</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.projectPlans">
-				<source>Project Plans</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.sections">
-				<source>Sections</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.passages">
-				<source>Passages</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.media">
-				<source>Media</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.integrations">
-				<source>Integrations</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="projectstatus.newProject">
-				<source>New Project</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">ProjectStatus.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="snackbar.undo">
@@ -318,46 +104,46 @@
 					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.transcriberAdmin">
-				<source>Transcriber Admin</source>
+			<trans-unit id="usertable.role">
+				<source>Role</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">Welcome.tsx</context>
+					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.thanksSigningUp">
-				<source>Thanks for signing up!</source>
+			<trans-unit id="usertable.invite">
+				<source>Invite</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">Welcome.tsx</context>
+					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.StartTranscribingImmediately">
-				<source>Do you want to start transcribing immediately?</source>
+			<trans-unit id="usertable.action">
+				<source>Action</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">Welcome.tsx</context>
+					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.transcriberWeb">
-				<source>Transcriber Web</source>
+			<trans-unit id="usertable.delete">
+				<source>Delete</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">Welcome.tsx</context>
+					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.transcriberDesktop">
-				<source>Transcriber Desktop</source>
+			<trans-unit id="usertable.filter">
+				<source>Filter</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">Welcome.tsx</context>
+					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="welcome.ConfigureTranscriptionProject">
-				<source>Do you want to configure a transcription project?</source>
+			<trans-unit id="usertable.selectRows">
+				<source>Please select row(s) to {0}.</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">Welcome.tsx</context>
+					<context context-type="sourcefile">UserTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="alert.confirmation">
@@ -386,27 +172,6 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">AlertDialog.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="organizationTable.transcriberAdmin">
-				<source>SIL Transcriber Admin</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">OrganizationTable.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="organizationTable.chooseOrganization">
-				<source>Choose Organization</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">OrganizationTable.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="organizationTable.name">
-				<source>Name</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">OrganizationTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="projectTable.silTranscriberAdmin">
@@ -591,8 +356,64 @@
 					<context context-type="sourcefile">ProjectSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="projectSettings.dangerZone">
+				<source>Danger Zone</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.deleteProject">
+				<source>Delete this Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.deleteExplained">
+				<source>All plans, sections, passages, and media files will be removed.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.delete">
+				<source>DELETE</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="projectSettings.save">
 				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.group">
+				<source>Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.preview">
+				<source>Preview</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="projectSettings.selectProjectGroup">
+				<source>Select project group. Each project relates to a single group. Group members can work on the project.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planTable.addPlan">
+				<source>Add Plan</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanTable.tsx</context>
@@ -675,15 +496,8 @@
 					<context context-type="sourcefile">PlanSheet.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="planSheet.assignMedia">
-				<source>Assign Media</source>
-				<target/>
-				<context-group>
-					<context context-type="sourcefile">PlanSheet.tsx</context>
-				</context-group>
-			</trans-unit>
-			<trans-unit id="planSheet.assignPassage">
-				<source>Assign Passage</source>
+			<trans-unit id="planSheet.attachMedia">
+				<source>Attach Media</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -705,6 +519,20 @@
 			</trans-unit>
 			<trans-unit id="planSheet.save">
 				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.saving">
+				<source>Saving</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanSheet.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planSheet.selectRows">
+				<source>Please select row(s) to {0}.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -752,6 +580,174 @@
 					<context context-type="sourcefile">ScriptureTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="assignmentTable.title">
+				<source>Assignments</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.section">
+				<source>Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.sectionstate">
+				<source>State</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.passages">
+				<source>Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.passagestate">
+				<source>State</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.user">
+				<source>User</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.assignSec">
+				<source>Assign Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.removeSec">
+				<source>Remove Assignment</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.group">
+				<source>Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.transcriber">
+				<source>Transcriber</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.reviewer">
+				<source>Reviewer</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.selectRowsToAssign">
+				<source>Please select row(s) to assign.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignmentTable.selectRowsToRemove">
+				<source>Please select row(s) to remove assignment.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">assignmentTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.title">
+				<source>Assign sections to Users</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.sections">
+				<source>Sections</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.users">
+				<source>Users</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.reviewer">
+				<source>Reviewer</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.transcriber">
+				<source>Transcriber</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.assignAs">
+				<source>Assign As</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="assignSection.close">
+				<source>Close</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">AssignSection.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="planTabs.sectionsPassages">
 				<source>Sections &#x26; Passages</source>
 				<target/>
@@ -795,7 +791,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planAdd.newPlanTask">
-				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, etc.)</source>
+				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanAdd.tsx</context>
@@ -851,13 +847,1027 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planAdd.editPlan">
-				<source>Edit Plan details</source>
+				<source>Edit Plan Details</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanAdd.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="mediaTab.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.download">
+				<source>Download</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.changeVersion">
+				<source>Change Version</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.attachPassage">
+				<source>Attach Passage</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.uploadMedia">
+				<source>Upload Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.uploadComplete">
+				<source>Upload complete.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>	
+			<trans-unit id="mediaTab.planName">
+				<source>Plan</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.fileName">
+				<source>File Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.sectionId">
+				<source>Section Id</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.sectionName">
+				<source>Section Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.book">
+				<source>Book</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.reference">
+				<source>Reference</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.duration">
+				<source>Length (s)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.size">
+				<source>Size (KB)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.version">
+				<source>Version</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.section">
+				<source>Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.date">
+				<source>Date</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.selectFiles">
+				<source>Please select files to be uploaded.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.selectRows">
+				<source>Please select row(s) to {0}.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.attachAvailableMedia">
+				<source>Attach available media files to passages (with no current media).</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.attachMediaToPassages">
+				<source>Attach Media to Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.choosePassage">
+				<source>Choose Your Passage ({0} without attachments)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.availableMedia">
+				<source>Available Media ({0})</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.attachments">
+				<source>Attachments ({0}) Select if you want to detach the media from the passage.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="passageMedia.close">
+				<source>Close</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.silTranscriberAdmin">
+				<source>SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.search">
+				<source>Search…</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.organization">
+				<source>Org Details</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.usersAndGroups">
+				<source>Users and Groups</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.passages">
+				<source>Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.media">
+				<source>Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.plans">
+				<source>Plans</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.team">
+				<source>Team</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.settings">
+				<source>Settings</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.integrations">
+				<source>Integrations</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.project">
+				<source>Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.loadingTranscriber">
+				<source>Loading SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.projectSummary">
+				<source>Project Summary</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.addProject">
+				<source>Add Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.logout">
+				<source>Log Out</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserMenu.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.myAccount">
+				<source>My Account</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">UserMenu.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.clearCache">
+				<source>Clear cache</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Loading.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.planUnsaved">
+				<source>Plan Unsaved</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.loseData">
+				<source>Do you want to leave this page and lose your changes?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.newOrganization">
+				<source>Add Organization</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.section">
+				<source>Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.sectionstate">
+				<source>State</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.passages">
+				<source>Passages</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.group">
+				<source>Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.transcriber">
+				<source>Transcriber</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionTab.reviewer">
+				<source>Reviewer</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionShow.transcription">
+				<source>Transcription</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionShow.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionShow.transcriptionDisplay">
+				<source>This display allows you to review the transcription that is stored.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionShow.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriptionShow.close">
+				<source>Close</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TranscriptionShow.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTabs.users">
+				<source>Users</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTabs.groups">
+				<source>Groups</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTabs.invitations">
+				<source>Invitations</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.abbr">
+				<source>Abbreviation</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.owner">
+				<source>Owner</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.projects">
+				<source>Projects</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.members">
+				<source>Members</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.addGroup">
+				<source>Add Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupTable.selectRows">
+				<source>Please select row(s) to {0}.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.newGroup">
+				<source>New Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.editGroup">
+				<source>Edit Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.addGroup">
+				<source>Add Group</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.newGroupTask">
+				<source>Enter (or edit) basic group information.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupAdd.abbr">
+				<source>Abbreviation</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupAdd.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.abbreviation">
+				<source>Abbreviation</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.projects">
+				<source>Projects</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.reviewers">
+				<source>Reviewers</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.transcribers">
+				<source>Transcribers</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.addGroupMember">
+				<source>Add Group Member</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.addMemberInstruction">
+				<source>Enter the name of a person in the organization to be included in the group.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.allReviewersCanTranscribe">
+				<source>All Reviewers are allowed to transcribe.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.noProjects">
+				<source>There are no projects that use this group.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.assignedSections">
+				<source>&#xA0;&#xA0;Assigned Sections:&#xA0;</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.projectPlans">
+				<source>Project Plans</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.invalidRole">
+				<source>Invalid Role. User not added.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="shapingTable.NoColumns">
+				<source>No columns visible</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">shapingTable.tsx</context>
+				</context-group>
+			</trans-unit>		
+			<trans-unit id="treeChart.noData">
+				<source>No Transcription Data Yet</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">treeChart.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.font">
+				<source>Font</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.script">
+				<source>Script</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.language">
+				<source>Language</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.selectLanguage">
+				<source>Select a Language</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.findALanguage">
+				<source>Find a language by name, code, or country</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.codeExplained">
+				<source>Code Explained</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.subtags">
+				<source>Subtags</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.details">
+				<source>Details</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.languageOf">
+				<source>A Language of $1$2.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.inScript">
+				<source> in the $1 script</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.select">
+				<source>Select</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="languagePicker.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">LanguagePicker.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.noMedia">
+				<source>No Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.transcribeReady">
+				<source>Ready For Transcription</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.transcribing">
+				<source>Transcribing</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.needsNewRecording">
+				<source>Recording Problem</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.transcribed">
+				<source>Transcribed</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.reviewing">
+				<source>Reviewing</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.needsNewTranscription">
+				<source>Needs Changes</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.approved">
+				<source>Approved (not synced)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.synced">
+				<source>Synced</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="activityState.done">
+				<source>Done</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PassageMedia.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.editInvite">
+				<source>Edit Invite</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.addInvite">
+				<source>Invite User</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.newInviteTask">
+				<source>Enter the email address of the user to invite.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.email">
+				<source>Email</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.selectRole">
+				<source>Select Organizational Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.invalidEmail">
+				<source>Invalid email address</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invite.alreadyInvited">
+				<source>Already invited!</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.email">
+				<source>Email</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.role">
+				<source>Role</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.accepted">
+				<source>Accepted</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.invite">
+				<source>Invite</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.delete">
+				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="invitationTable.selectRows">
+				<source>Please select row(s) to {0}.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.add">
+				<source>Add</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.name">
+				<source>Name</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.description">
+				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.website">
+				<source>Website</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.logo">
+				<source>Logo</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.publicByDefault">
+				<source>Public By Default</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="orgSettings.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
-
 </xliff>

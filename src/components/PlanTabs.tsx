@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IPlanTabsStrings } from '../model';
+import { IState, IPlanTabsStrings, Plan } from '../model';
 import localStrings from '../selector/localize';
-import { withStyles, WithStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import ScriptureTable from '../components/ScriptureTable'
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
+import ScriptureTable from '../components/ScriptureTable';
+import MediaTab from '../components/MediaTab';
+import AssignmentTable from './AssignmentTable';
+import TranscriptionTab from './TranscriptionTab';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: theme.mixins.gutters({
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.palette.background.paper,
+      flexDirection: 'column',
+    }),
+  })
+);
 
 interface IContainerProps {
-    children: any;
+  children: any;
 }
 
 function TabContainer(props: IContainerProps) {
@@ -21,64 +35,108 @@ function TabContainer(props: IContainerProps) {
   );
 }
 
-const styles = (theme: Theme) => ({
-  root: theme.mixins.gutters({
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-    flexDirection: "column",
-  }),
-});
-
 interface IStateProps {
-    t: IPlanTabsStrings;
+  t: IPlanTabsStrings;
+}
+interface IRecordProps {
+  plans: Array<Plan>;
+}
+interface IProps extends IStateProps, IRecordProps {
+  bookCol: number;
+  changeTab?: (v: number) => void;
+  setChanged?: (v: boolean) => void;
+  checkSaved: (method: () => void) => void;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles>{
-    changeTab?: (v: number) => void;
-};
-
 const ScrollableTabsButtonAuto = (props: IProps) => {
-    const { classes, t, changeTab } = props;
-    const [tab, setTab] = useState(0);
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const { t, changeTab, bookCol, setChanged, checkSaved, plans } = props;
+  const classes = useStyles();
+  const [tab, setTab] = useGlobal('tab');
+  const [plan] = useGlobal('plan');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
     if (changeTab) {
-        changeTab(value);
+      changeTab(value);
     }
   };
 
-    return (
-        <div className={classes.root}>
-        <AppBar position="static" color="default">
-            <Tabs
-            value={tab}
-            onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            variant="scrollable"
-            scrollButtons="auto"
-            >
-            <Tab label={t.sectionsPassages} />
-            <Tab label={t.media} />
-            <Tab label={t.assignments} />
-            <Tab label={t.transcriptions} />
-            </Tabs>
-        </AppBar>
-        {tab === 0 && <TabContainer><ScriptureTable {...props} /></TabContainer>}
-        {tab === 1 && <TabContainer>{t.media}</TabContainer>}
-        {tab === 2 && <TabContainer>{t.assignments}</TabContainer>}
-        {tab === 3 && <TabContainer>{t.transcriptions}</TabContainer>}
-        </div>
-    );
-}
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" color="default">
+        <Tabs
+          value={tab}
+          onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          <Tab label={t.sectionsPassages} />
+          <Tab label={t.media} />
+          <Tab label={t.assignments} />
+          <Tab label={t.transcriptions} />
+        </Tabs>
+      </AppBar>
+      {tab === 0 && (
+        <TabContainer>
+          {bookCol !== -1 ? (
+            <ScriptureTable
+              {...props}
+              cols={{
+                SectionSeq: 0,
+                SectionnName: 1,
+                PassageSeq: 2,
+                Book: 3,
+                Reference: 4,
+                Title: 5,
+              }}
+            />
+          ) : (
+            <ScriptureTable
+              {...props}
+              cols={{
+                SectionSeq: 0,
+                SectionnName: 1,
+                PassageSeq: 2,
+                Book: -1,
+                Reference: 3,
+                Title: 4,
+              }}
+            />
+          )}
+        </TabContainer>
+      )}
+      {tab === 1 && (
+        <TabContainer>
+          <MediaTab
+            {...props}
+            projectplans={plans.filter(p => p.id === plan)}
+          />
+        </TabContainer>
+      )}
+      {tab === 2 && (
+        <TabContainer>
+          <AssignmentTable {...props} />
+        </TabContainer>
+      )}
+      {tab === 3 && (
+        <TabContainer>
+          <TranscriptionTab {...props} />
+        </TabContainer>
+      )}
+    </div>
+  );
+};
+const mapRecordsToProps = {
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
+};
 
 const mapStateToProps = (state: IState): IStateProps => ({
-    t: localStrings(state, {layout: "planTabs"}),
-  });
-      
-export default withStyles(styles, { withTheme: true })(
-    connect(mapStateToProps)(ScrollableTabsButtonAuto) as any
-) as any;
-  
+  t: localStrings(state, { layout: 'planTabs' }),
+});
+
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(
+  ScrollableTabsButtonAuto
+) as any) as any;
