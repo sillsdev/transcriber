@@ -57,6 +57,7 @@ import PlanTabs from '../components/PlanTabs';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
+import Integration from '../components/Integration';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
 import { setDefaultProj } from '../utils';
@@ -657,7 +658,7 @@ export function ResponsiveDrawer(props: IProps) {
       finishAdd={handleFinishAdd}
     />
   );
-  components[slug(t.integrations)] = 'integrations';
+  components[slug(t.integrations)] = <Integration {...props} />;
   components['group'] = <GroupSettings {...props} />;
   components[''] = <Visualize {...props} />;
   components['none'] = <></>;
