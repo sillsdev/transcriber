@@ -202,7 +202,9 @@ export function Loading(props: IProps) {
   };
 
   useEffect(() => {
-    setLanguage(navigator.language.split('-')[0]);
+    if (navigator.language.split('-')[0]) {
+      setLanguage(navigator.language.split('-')[0]);
+    }
     fetchLocalization();
     fetchLangTags();
     fetchScriptFonts();

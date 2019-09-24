@@ -68,7 +68,9 @@ export function Access(props: IProps) {
   const accessRef = useRef<any>(null);
 
   useEffect(() => {
-    setLanguage(navigator.language.split('-')[0]);
+    if (navigator.language.split('-')[0]) {
+      setLanguage(navigator.language.split('-')[0]);
+    }
     fetchLocalization();
     const localAuth = localStorage.getItem('trAdminAuthResult');
     if (localAuth) {
