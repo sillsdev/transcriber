@@ -255,13 +255,22 @@ export function ScriptureTable(props: IProps) {
     if (setChanged) setChanged(true);
     if (validTable(rows)) {
       const startRow = /^[0-9]*$/.test(rows[0][cols.SectionSeq]) ? 0 : 1;
+      /* Make it clear which columns can be imported by blanking others */
       setData([
         ...data.concat(
           rows
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map(row =>
               row.map((col, colIndex) =>
-                colIndex !== cols.Book ? col : lookupBook(col)
+                /^[0-9]+$/.test(row[cols.SectionSeq])
+                  ? colIndex < 2
+                    ? col
+                    : ''
+                  : colIndex >= 2
+                  ? colIndex !== cols.Book
+                    ? col
+                    : lookupBook(col)
+                  : ''
               )
             )
         ),
