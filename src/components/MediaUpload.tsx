@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { IState, IPlanAddStrings } from '../model';
+import { IState, IMediaUploadStrings } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       flexGrow: 1,
-      height: '28px',
       backgroundColor: theme.palette.grey[500],
       border: 'none',
       padding: theme.spacing(2),
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IStateProps {
-  t: IPlanAddStrings;
+  t: IMediaUploadStrings;
 }
 
 interface IProps extends IStateProps {
@@ -106,7 +105,7 @@ function MediaUpload(props: IProps) {
           htmlFor="upload"
           onChange={handleNameChange}
         >
-          {name === '' ? 'Select file(s)' : name}
+          {name === '' ? t.dragDrop : name}
         </label>
         <input
           id="upload"
@@ -125,7 +124,7 @@ function MediaUpload(props: IProps) {
           htmlFor="upload"
           onChange={handleNameChange}
         >
-          {name === '' ? 'Select file(s)' : name}
+          {name === '' ? t.dragDrop : name}
         </label>
         <input
           id="upload"
@@ -145,13 +144,9 @@ function MediaUpload(props: IProps) {
         onClose={handleCancel}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">{'Upload Media'}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{t.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {
-              'Choose .mp3 or .wav file(s) or drop files from your file explorer.'
-            }
-          </DialogContentText>
+          <DialogContentText>{t.task}</DialogContentText>
           <div className={classes.drop}>{dropTarget}</div>
         </DialogContent>
         <DialogActions>
@@ -159,7 +154,7 @@ function MediaUpload(props: IProps) {
             {t.cancel}
           </Button>
           <Button onClick={handleAddOrSave} variant="contained" color="primary">
-            {'Upload'}
+            {t.upload}
           </Button>
         </DialogActions>
       </Dialog>
@@ -169,7 +164,7 @@ function MediaUpload(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'planAdd' }),
+  t: localStrings(state, { layout: 'mediaUpload' }),
 });
 
 export default connect(mapStateToProps)(MediaUpload) as any;

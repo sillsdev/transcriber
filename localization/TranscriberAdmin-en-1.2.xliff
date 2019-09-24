@@ -784,14 +784,14 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planAdd.addPlan">
-				<source>Add a Plan</source>
+				<source>Add Plan</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanAdd.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planAdd.newPlanTask">
-				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
+				<source>Type the name of the plan, which could be the name of a book of the Bible, a story, a lectionary and so on.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanAdd.tsx</context>
@@ -805,7 +805,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planAdd.selectPlanType">
-				<source>Select plan type.</source>
+				<source>Choose the plan type.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanAdd.tsx</context>
@@ -1386,7 +1386,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="groupAdd.newGroupTask">
-				<source>Enter (or edit) basic group information.</source>
+				<source>Type the name and abbreviation of the group.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupAdd.tsx</context>
@@ -1456,7 +1456,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="groupSettings.addMemberInstruction">
-				<source>Enter the name of a person in the organization to be included in the group.</source>
+				<source>Select the person you want to add to the group.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>
@@ -1478,6 +1478,13 @@
 			</trans-unit>
 			<trans-unit id="groupSettings.delete">
 				<source>Delete</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.choose">
+				<source>Choose...</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>
@@ -1554,7 +1561,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="languagePicker.selectLanguage">
-				<source>Select a Language</source>
+				<source>Choose Language Details</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
@@ -1603,7 +1610,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="languagePicker.select">
-				<source>Select</source>
+				<source>Save</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">LanguagePicker.tsx</context>
@@ -1866,6 +1873,41 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">OrgSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaUpload.title">
+				<source>Upload Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaUpload.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaUpload.task">
+				<source>You can upload audio files in .mp3 format or in .wav format.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaUpload.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaUpload.dragDrop">
+				<source>Drag and drop files here, or click here to browse for the files.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaUpload.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaUpload.cancel">
+				<source>Cancel</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaUpload.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaUpload.upload">
+				<source>Upload</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaUpload.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

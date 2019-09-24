@@ -672,13 +672,13 @@
       </unit>
       <unit id="planAdd.addPlan">
          <segment>
-            <source>Add a Plan</source>
+            <source>Add Plan</source>
             <target/>
          </segment>
       </unit>
       <unit id="planAdd.newPlanTask">
          <segment>
-            <source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
+            <source>Type the name of the plan, which could be the name of a book of the Bible, a story, a lectionary and so on.</source>
             <target/>
          </segment>
       </unit>
@@ -690,7 +690,7 @@
       </unit>
       <unit id="planAdd.selectPlanType">
          <segment>
-            <source>Select plan type.</source>
+            <source>Choose the plan type.</source>
             <target/>
          </segment>
       </unit>
@@ -1188,7 +1188,7 @@
       </unit>
       <unit id="groupAdd.newGroupTask">
          <segment>
-            <source>Enter (or edit) basic group information.</source>
+            <source>Type the name and abbreviation of the group.</source>
             <target/>
          </segment>
       </unit>
@@ -1248,7 +1248,7 @@
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-            <source>Enter the name of a person in the organization to be included in the group.</source>
+            <source>Select the person you want to add to the group.</source>
             <target/>
          </segment>
       </unit>
@@ -1267,6 +1267,12 @@
       <unit id="groupSettings.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.choose">
+         <segment>
+            <source>Choose...</source>
             <target/>
          </segment>
       </unit>
@@ -1332,7 +1338,7 @@
       </unit>
       <unit id="languagePicker.selectLanguage">
          <segment>
-            <source>Select a Language</source>
+            <source>Choose Language Details</source>
             <target/>
          </segment>
       </unit>
@@ -1374,7 +1380,7 @@
       </unit>
       <unit id="languagePicker.select">
          <segment>
-            <source>Select</source>
+            <source>Save</source>
             <target/>
          </segment>
       </unit>
@@ -1597,6 +1603,36 @@
       <unit id="orgSettings.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.title">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.task">
+         <segment>
+            <source>You can upload audio files in .mp3 format or in .wav format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.dragDrop">
+         <segment>
+            <source>Drag and drop files here, or click here to browse for the files.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.upload">
+         <segment>
+            <source>Upload</source>
             <target/>
          </segment>
       </unit>

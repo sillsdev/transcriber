@@ -279,6 +279,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "cancel": string;
     "add": string;
     "delete": string;
+    "choose": string;
     "allReviewersCanTranscribe": string;
     "noProjects": string;
     "assignedSections": string;
@@ -357,6 +358,14 @@ export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
 };
 
+export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
+    "task": string;
+    "dragDrop": string;
+    "cancel": string;
+    "upload": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -390,5 +399,6 @@ export interface ILocalizedStrings {
 	invite: IInviteStrings;
 	invitationTable: IInvitationTableStrings;
 	orgSettings: IOrgSettingsStrings;
+	mediaUpload: IMediaUploadStrings;
 	[key: string]: any;
 };

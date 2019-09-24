@@ -493,12 +493,6 @@
 				<target>Assigner un ensemble</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.removeSec">
-			<segment>
-				<source>Remove Assignment</source>
-				<target>Supprimer un affectation</target>
-			</segment>
-		</unit>
 		<unit id="scriptureTable.section">
 			<segment>
 				<source>Section</source>
@@ -541,7 +535,13 @@
          	<target>Affecter une section</target>
          </segment>
       </unit>
-		<unit id="assignmentTable.delete">
+		<unit id="assignmentTable.removeSec">
+         <segment>
+            <source>Remove Assignment</source>
+         	<target>Retirer l'assignation</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.delete">
 			<segment>
 				<source>Delete</source>
 				<target>Effacer</target>
@@ -663,14 +663,14 @@
 		</unit>
 		<unit id="planAdd.addPlan">
 			<segment>
-				<source>Add a Plan</source>
+				<source>Add Plan</source>
 				<target>Nouveau programme</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.newPlanTask">
 			<segment>
-				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
-				<target>Saisissez les informations d'un nouveau programme. (Il peut s'agir d'un livre de la Bible à transcrire, d'une histoire, d'un ordre de service, etc.</target>
+				<source>Type the name of the plan, which could be the name of a book of the Bible, a story, a lectionary and so on.</source>
+				<target>Tapez le nom du plan, qui peut être le nom d'un livre de la Bible, d'une histoire, d'un lectionnaire, etc.</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.planType">
@@ -711,8 +711,8 @@
 		</unit>
 		<unit id="planAdd.selectAPlanType">
 			<segment>
-				<source>Please select a plan type</source>
-				<target>Veuillez sélectionner un type de programme</target>
+				<source>Choose the plan type.</source>
+				<target>Sélectionner un type de programme</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.editPlan">
@@ -1180,13 +1180,13 @@
       </unit>
       <unit id="groupAdd.newGroupTask">
          <segment>
-            <source>Enter (or edit) basic group information.</source>
-			<target>Saisissez (ou modifiez) les informations de base du groupe.</target>
+         	<source>Type the name and abbreviation of the group.</source>
+         	<target>Tapez le nom et l'abréviation du groupe.</target>
          </segment>
       </unit>
       <unit id="groupAdd.name">
          <segment>
-            <source>Group Name</source>
+            <source>Name</source>
 			<target>Nom du group</target>
          </segment>
       </unit>
@@ -1240,8 +1240,8 @@
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-			<source>Enter the name of a person in the organization to be included in the group.</source>
-			<target>Saisissez le nom d'une personne de l'organisation à inclure dans le groupe.</target>
+         	<source>Select the person you want to add to the group.</source>
+         	<target>Sélectionner la personne que vous voulez ajouter au groupe.</target>
          </segment>
       </unit>
       <unit id="groupSettings.cancel">
@@ -1262,7 +1262,13 @@
 			<target>Supprimer</target>
 		</segment>
 	</unit>
-	<unit id="groupSettings.allReviewersCanTranscribe">
+		<unit id="groupSettings.choose">
+			<segment>
+				<source>Choose...</source>
+				<target>Choisir....</target>
+			</segment>
+		</unit>
+		<unit id="groupSettings.allReviewersCanTranscribe">
 		<segment>
 			<source>All Reviewers are allowed to transcribe.</source>
 			<target>Tous les réviseurs sont autorisés à transcrire.</target>
@@ -1324,8 +1330,8 @@
       </unit>
       <unit id="languagePicker.selectLanguage">
          <segment>
-            <source>Select a Language</source>
-         	<target>Sélectionnez une langue</target>
+            <source>Choose Language Details</source>
+         	<target>Choisir les détails de la langue</target>
          </segment>
       </unit>
       <unit id="languagePicker.findALanguage">
@@ -1366,8 +1372,8 @@
       </unit>
    <unit id="languagePicker.select">
          <segment>
-            <source>Select</source>
-         	<target>Sélectionner</target>
+            <source>Save</source>
+         	<target>Enregistrer</target>
          </segment>
       </unit>
       <unit id="languagePicker.cancel">
@@ -1590,6 +1596,36 @@
          <segment>
             <source>Save</source>
             <target>Enregistrer</target>
+         </segment>
+      </unit>
+   <unit id="mediaUpload.title">
+         <segment>
+            <source>Upload Media</source>
+         	<target>Télécharger des fichiers audio</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.task">
+         <segment>
+            <source>You can upload audio files in .mp3 format or in .wav format.</source>
+         	<target>Vous pouvez télécharger des fichiers audio au format .mp3 ou .wav.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.dragDrop">
+         <segment>
+            <source>Drag and drop files here, or click here to browse for the files.</source>
+         	<target>Glissez-déposez les fichiers ici, ou cliquez ici pour rechercher les fichiers.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.cancel">
+         <segment>
+            <source>Cancel</source>
+         	<target>annuler</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.upload">
+         <segment>
+            <source>Upload</source>
+         	<target>Télécharger</target>
          </segment>
       </unit>
    </file>

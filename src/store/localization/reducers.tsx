@@ -171,10 +171,10 @@ const initialState = {
 	"planAdd": new LocalizedStrings({
 		"en": {
 			"name": "Name",
-			"addPlan": "Add a Plan",
-			"newPlanTask": "Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)",
+			"addPlan": "Add Plan",
+			"newPlanTask": "Type the name of the plan, which could be the name of a book of the Bible, a story, a lectionary and so on.",
 			"planType": "Type",
-			"selectPlanType": "Select plan type.",
+			"selectPlanType": "Choose the plan type.",
 			"cancel": "Cancel",
 			"add": "Add",
 			"save": "Save",
@@ -289,7 +289,7 @@ const initialState = {
 			"save": "Save",
 			"editGroup": "Edit Group",
 			"addGroup": "Add Group",
-			"newGroupTask": "Enter (or edit) basic group information.",
+			"newGroupTask": "Type the name and abbreviation of the group.",
 			"name": "Name",
 			"abbr": "Abbreviation",
 		}
@@ -303,10 +303,11 @@ const initialState = {
 			"reviewers": "Reviewers",
 			"transcribers": "Transcribers",
 			"addGroupMember": "Add Group Member",
-			"addMemberInstruction": "Enter the name of a person in the organization to be included in the group.",
+			"addMemberInstruction": "Select the person you want to add to the group.",
 			"cancel": "Cancel",
 			"add": "Add",
 			"delete": "Delete",
+			"choose": "Choose...",
 			"allReviewersCanTranscribe": "All Reviewers are allowed to transcribe.",
 			"noProjects": "There are no projects that use this group.",
 			"assignedSections": "  Assigned Sections: ",
@@ -329,14 +330,14 @@ const initialState = {
 			"font": "Font",
 			"script": "Script",
 			"language": "Language",
-			"selectLanguage": "Select a Language",
+			"selectLanguage": "Choose Language Details",
 			"findALanguage": "Find a language by name, code, or country",
 			"codeExplained": "Code Explained",
 			"subtags": "Subtags",
 			"details": "Details",
 			"languageOf": "A Language of $1$2.",
 			"inScript": " in the $1 script",
-			"select": "Select",
+			"select": "Save",
 			"cancel": "Cancel",
 		}
 	}),
@@ -392,6 +393,15 @@ const initialState = {
 			"save": "Save",
 		}
 	}),
+	"mediaUpload": new LocalizedStrings({
+		"en": {
+			"title": "Upload Media",
+			"task": "You can upload audio files in .mp3 format or in .wav format.",
+			"dragDrop": "Drag and drop files here, or click here to browse for the files.",
+			"cancel": "Cancel",
+			"upload": "Upload",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -430,6 +440,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"invite" : new LocalizedStrings(action.payload.data.invite),
 				"invitationTable" : new LocalizedStrings(action.payload.data.invitationTable),
 				"orgSettings" : new LocalizedStrings(action.payload.data.orgSettings),
+				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 			};
 		case SET_LANGUAGE:
 			return {
