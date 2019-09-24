@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -15,10 +15,18 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  IconButton,
+  LinearProgress,
+} from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
+import PlayIcon from '@material-ui/icons/PlayArrow';
+import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import MediaUpload from './MediaUpload';
@@ -33,7 +41,6 @@ import 'moment/locale/fr';
 import { remoteIdNum, remoteId } from '../utils';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare } from '../utils/sort';
-import { API_CONFIG } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,6 +51,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(4),
     },
     paper: {},
+    progress: {
+      width: '100%',
+    },
     actions: theme.mixins.gutters({
       paddingBottom: 16,
       display: 'flex',
@@ -60,6 +70,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
     },
     link: {},
+    playIcon: {
+      fontSize: 16,
+    },
   })
 );
 
@@ -67,6 +80,7 @@ interface IRow {
   planid: string;
   id: string;
   planName: string;
+  playIcon: string;
   fileName: string;
   section: string;
   reference: string;
@@ -99,7 +113,8 @@ const getMedia = (
   mediaFiles: Array<MediaFile>,
   passages: Array<Passage>,
   passageSections: Array<PassageSection>,
-  sections: Array<Section>
+  sections: Array<Section>,
+  playItem: string
 ) => {
   const latest: ILatest = {};
   mediaFiles.forEach(f => {
@@ -143,6 +158,7 @@ const getMedia = (
       planName: projectplans.filter(p => p.id === related(f, 'plan'))[0]
         .attributes.name,
       id: f.id,
+      playIcon: playItem,
       fileName: f.attributes.originalFile,
       section: getSection(section),
       reference: getReference(passage),
@@ -162,12 +178,15 @@ interface IStateProps {
   uploadList: FileList;
   loaded: boolean;
   currentlyLoading: number;
+  hasUrl: boolean;
+  mediaUrl: string;
 }
 
 interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
+  fetchMediaUrl: typeof actions.fetchMediaUrl;
 }
 
 interface IRecordProps {
@@ -206,6 +225,9 @@ export function MediaTab(props: IProps) {
     auth,
     projectplans,
     planColumn,
+    fetchMediaUrl,
+    hasUrl,
+    mediaUrl,
   } = props;
   const classes = useStyles();
   const [plan, setPlan] = useGlobal('plan');
@@ -222,6 +244,7 @@ export function MediaTab(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
     { name: 'planName', title: t.planName },
+    { name: 'playIcon', title: '\u00A0' },
     { name: 'fileName', title: t.fileName },
     { name: 'section', title: t.section },
     { name: 'reference', title: t.reference },
@@ -232,6 +255,7 @@ export function MediaTab(props: IProps) {
   ];
   const columnWidths = [
     { columnName: 'planName', width: 150 },
+    { columnName: 'playIcon', width: 50 },
     { columnName: 'fileName', width: 220 },
     { columnName: 'section', width: 150 },
     { columnName: 'reference', width: 150 },
@@ -252,7 +276,11 @@ export function MediaTab(props: IProps) {
   const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [complete, setComplete] = useState(0);
   const [passageMediaVisible, setPassageMediaVisible] = useState(false);
+  const audioRef = useRef<any>();
+  const [playing, setPlaying] = useState(false);
+  const [playItem, setPlayItem] = useState('');
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -320,6 +348,21 @@ export function MediaTab(props: IProps) {
     setCheck(checks);
   };
   const handleFilter = () => setFilter(!filter);
+  const handleSelect = (id: string) => () => {
+    if (playing) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    }
+    setPlaying(false);
+    if (id !== playItem) {
+      fetchMediaUrl(id, auth);
+      setPlayItem(id);
+    } else {
+      setPlayItem('');
+    }
+  };
 
   useEffect(() => {
     if (planColumn) {
@@ -337,9 +380,16 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     setData(
-      getMedia(projectplans, mediaFiles, passages, passageSections, sections)
+      getMedia(
+        projectplans,
+        mediaFiles,
+        passages,
+        passageSections,
+        sections,
+        playItem
+      )
     );
-  }, [projectplans, mediaFiles, passages, passageSections, sections]);
+  }, [projectplans, mediaFiles, passages, passageSections, sections, playItem]);
 
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
@@ -347,10 +397,14 @@ export function MediaTab(props: IProps) {
       setTimeout(() => {
         setMessage(<span>{t.uploadComplete}</span>);
         uploadComplete();
+        setComplete(0);
         setPassageMediaVisible(true);
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
+        setComplete(
+          Math.min((currentlyLoading * 100) / uploadList.length, 100)
+        );
         const planId = remoteIdNum('plan', plan, keyMap);
         const mediaFile = {
           planId: planId,
@@ -368,39 +422,41 @@ export function MediaTab(props: IProps) {
       loaded /* new item done */ ||
       currentlyLoading === 0 /* all are done */
     ) {
-      //console.log(
-      //  'Requery mediafiles ' + currentlyLoading + ' Loaded: ' + loaded
-      //);
       queryStore(q => q.findRecords('mediafile'));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [loaded]);
 
-  const LinkCell = ({ value, style, ...restProps }: any) => (
+  useEffect(() => {
+    if (hasUrl && audioRef.current && !playing && playItem !== '') {
+      setPlaying(true);
+      audioRef.current.play();
+    }
+  }, [hasUrl, mediaUrl, playing, playItem]);
+
+  const LinkCell = ({ value, style, mediaId, ...restProps }: any) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      <div
-        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+      <IconButton
+        key={'audio-' + mediaId}
+        aria-label={'audio-' + mediaId}
+        color="primary"
+        className={classes.link}
+        onClick={handleSelect(mediaId)}
       >
-        <a
-          href={
-            API_CONFIG.host +
-            '/api/mediafiles/' +
-            remoteId('mediafile', restProps.row.id, keyMap) +
-            '/file'
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {value}
-        </a>
-      </div>
+        {value === mediaId ? (
+          <StopIcon className={classes.playIcon} />
+        ) : (
+          <PlayIcon className={classes.playIcon} />
+        )}
+      </IconButton>
     </Table.Cell>
   );
 
   const Cell = (props: any) => {
     const { column, row } = props;
-    if (column.name === 'fileName' && row.parentId !== '') {
-      return <LinkCell {...props} />;
+    if (column.name === 'playIcon' && row.parentId !== '') {
+      const mediaId = remoteId('mediafile', row.id, keyMap);
+      return <LinkCell {...props} mediaId={mediaId} />;
     }
     return <Table.Cell {...props} />;
   };
@@ -408,6 +464,11 @@ export function MediaTab(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
+        {complete === 0 || (
+          <div className={classes.progress}>
+            <LinearProgress variant="determinate" value={complete} />
+          </div>
+        )}
         <div className={classes.actions}>
           {planColumn || (
             <Button
@@ -507,6 +568,7 @@ export function MediaTab(props: IProps) {
           noResponse={handleActionRefused}
         />
       )}
+      {!hasUrl || <audio ref={audioRef} src={mediaUrl} />}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
@@ -517,6 +579,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
   uploadList: state.upload.files,
   currentlyLoading: state.upload.current,
   loaded: state.upload.loaded,
+  hasUrl: state.media.loaded,
+  mediaUrl: state.media.url,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -525,6 +589,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
+      fetchMediaUrl: actions.fetchMediaUrl,
     },
     dispatch
   ),

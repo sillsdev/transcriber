@@ -6,6 +6,7 @@ import {
   IUploadState,
   IContextState,
   ILangTagData,
+  IMediaState,
 } from '.';
 
 export interface IState {
@@ -19,4 +20,5 @@ export interface IState {
   };
   upload: IUploadState;
   langTag: ILangTagData;
+  media: IMediaState;
 }

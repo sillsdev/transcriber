@@ -18,6 +18,7 @@ import * as actions from '../store';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { LinearProgress } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
 import Related, { related } from '../utils/related';
@@ -26,6 +27,10 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
+      flexDirection: 'column',
+    },
+    progress: {
+      width: '100%',
     },
     paper: {},
     actions: theme.mixins.gutters({
@@ -123,6 +128,8 @@ export function ScriptureTable(props: IProps) {
     // ['','',2,'LUK',"1:8-10",''],
   );
   const [inData, setInData] = useState(Array<Array<any>>());
+  const [complete, setComplete] = useState(0);
+
   const showBook = (cols: ICols) => cols.Book >= 0;
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -438,6 +445,7 @@ export function ScriptureTable(props: IProps) {
       return rowId[rowIndex];
     };
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex += 1) {
+      setComplete(Math.min((rowIndex * 100) / rows.length, 100));
       if (isSectionRow(rowId[rowIndex])) {
         if (!rowId[rowIndex].id) {
           let section = await saveNewSection(
@@ -454,6 +462,7 @@ export function ScriptureTable(props: IProps) {
       }
     }
     if (setChanged) setChanged(false);
+    setComplete(0);
   };
 
   useEffect(() => {
@@ -591,6 +600,11 @@ export function ScriptureTable(props: IProps) {
 
   return (
     <div className={classes.container}>
+      {complete === 0 || (
+        <div className={classes.progress}>
+          <LinearProgress variant="determinate" value={complete} />
+        </div>
+      )}
       <PlanSheet
         columns={columns}
         rowData={data as any[][]}
