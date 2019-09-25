@@ -985,6 +985,24 @@
          	<target>Effacer le cache</target>
          </segment>
       </unit>
+      <unit id="main.helpCenter">
+         <segment>
+            <source>Help Center</source>
+         	<target>Centre d'aide</target>
+         </segment>
+      </unit>
+      <unit id="main.reportIssue">
+         <segment>
+            <source>Report an Issue</source>
+         	<target>Signaler un problème</target>
+         </segment>
+      </unit>
+      <unit id="main.version">
+         <segment>
+            <source>Version: </source>
+         	<target>Version: </target>
+         </segment>
+      </unit>
       <unit id="main.planUnsaved">
          <segment>
 			<source>Plan Unsaved</source>

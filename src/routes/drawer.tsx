@@ -43,13 +43,13 @@ import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
-import HelpIcon from '@material-ui/icons/Help';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, hasRelated, slug, remoteId, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
+import HelpMenu from '../components/HelpMenu';
 import OrgSettings from '../components/OrgSettings';
 import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
@@ -63,9 +63,6 @@ import Confirm from '../components/AlertDialog';
 import { setDefaultProj } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
-import { API_CONFIG } from '../api-variable';
-const version = require('../../package.json').version;
-const buildDate = require('../buildDate.json').date;
 
 const drawerWidth = 240;
 
@@ -85,9 +82,6 @@ const useStyles = makeStyles((theme: Theme) =>
         width: drawerWidth,
         flexShrink: 0,
       },
-    },
-    help: {
-      color: 'white',
     },
     header: {
       display: 'flex',
@@ -147,14 +141,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logo: {
       paddingRight: theme.spacing(2),
-    },
-    foot: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    version: {
-      paddingTop: theme.spacing(2),
-      alignSelf: 'center',
     },
   })
 );
@@ -613,13 +599,6 @@ export function ResponsiveDrawer(props: IProps) {
           )}
         </>
       )}
-      <div className={classes.foot}>
-        <div className={classes.version}>
-          {version}
-          <br />
-          {buildDate}
-        </div>
-      </div>
     </div>
   );
 
@@ -682,11 +661,7 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <a href={API_CONFIG.help} target="_blank" rel="noopener noreferrer">
-            <IconButton>
-              <HelpIcon className={classes.help} />
-            </IconButton>
-          </a>
+          <HelpMenu />
           <UserMenu
             action={(v: string) => checkSavedFn(() => handleUserMenuAction(v))}
             auth={auth}

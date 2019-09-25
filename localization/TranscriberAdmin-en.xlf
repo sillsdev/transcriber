@@ -994,6 +994,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.helpCenter">
+         <segment>
+            <source>Help Center</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.reportIssue">
+         <segment>
+            <source>Report an Issue</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.version">
+         <segment>
+            <source>Version: </source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.planUnsaved">
          <segment>
             <source>Plan Unsaved</source>

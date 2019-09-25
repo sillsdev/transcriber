@@ -1161,6 +1161,27 @@
 					<context context-type="sourcefile">Loading.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.helpCenter">
+				<source>Help Center</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">HelpMenu.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.reportIssue">
+				<source>Report an Issue</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">HelpMenu.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.version">
+				<source>Version: </source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">HelpMenu.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="main.planUnsaved">
 				<source>Plan Unsaved</source>
 				<target/>

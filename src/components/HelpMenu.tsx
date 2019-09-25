@@ -5,18 +5,30 @@ import localStrings from '../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
 import {
-  Button,
+  IconButton,
   Menu,
   MenuItem,
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import ExitIcon from '@material-ui/icons/ExitToApp';
-import AccountIcon from '@material-ui/icons/AccountCircle';
-import ClearIcon from '@material-ui/icons/Clear';
-import UserAvatar from './UserAvatar';
-import { AUTH_CONFIG } from '../auth/auth0-variables';
-import Auth from '../auth/Auth';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import ReportIcon from '@material-ui/icons/Report';
+import HelpIcon from '@material-ui/icons/Help';
+import { API_CONFIG } from '../api-variable';
+const version = require('../../package.json').version;
+const buildDate = require('../buildDate.json').date;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    help: {
+      color: 'white',
+    },
+    version: {
+      paddingTop: theme.spacing(2),
+      alignSelf: 'center',
+    },
+  })
+);
 
 const StyledMenu = withStyles({
   paper: {
@@ -54,36 +66,36 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  action: (what: string) => void;
-  auth: Auth;
+  action?: (what: string) => void;
 }
 
-export function UserMenu(props: IProps) {
-  const { action, t, auth } = props;
+export function HelpMenu(props: IProps) {
+  const { action, t } = props;
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [shift, setShift] = React.useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
   };
 
   const handle = (what: string) => () => {
     setAnchorEl(null);
-    action(what);
+    if (action) {
+      action(what);
+    }
   };
 
   return (
     <div>
-      <Button
+      <IconButton
         aria-controls="customized-menu"
         aria-haspopup="true"
         // variant="contained"
         color="primary"
         onClick={handleClick}
       >
-        <UserAvatar />
-      </Button>
+        <HelpIcon className={classes.help} />
+      </IconButton>
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
@@ -92,40 +104,41 @@ export function UserMenu(props: IProps) {
         onClose={handle('Close')}
       >
         <a
-          href={
-            AUTH_CONFIG.myAccountApp +
-            '/callback#access_token=' +
-            auth.accessToken +
-            '&expires_in=' +
-            auth.expiresAt +
-            '&token_type=Bearer&state=tAdInit&id_token=' +
-            auth.idToken +
-            '&nonce=test'
-          }
+          href={API_CONFIG.help}
           style={{ textDecoration: 'none' }}
           target="_blank"
           rel="noopener noreferrer"
         >
           <StyledMenuItem>
             <ListItemIcon>
-              <AccountIcon />
+              <HelpIcon />
             </ListItemIcon>
-            <ListItemText primary={t.myAccount} />
+            <ListItemText primary={t.helpCenter} />
           </StyledMenuItem>
         </a>
-        {!shift || (
-          <StyledMenuItem onClick={handle('Clear')}>
+        <a
+          href={API_CONFIG.community}
+          style={{ textDecoration: 'none' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <StyledMenuItem>
             <ListItemIcon>
-              <ClearIcon />
+              <ReportIcon />
             </ListItemIcon>
-            <ListItemText primary={t.clearCache} />
+            <ListItemText primary={t.reportIssue} />
           </StyledMenuItem>
-        )}
-        <StyledMenuItem onClick={handle('Logout')}>
-          <ListItemIcon>
-            <ExitIcon />
-          </ListItemIcon>
-          <ListItemText primary={t.logout} />
+        </a>
+        <StyledMenuItem>
+          <ListItemText
+            primary={
+              <div className={classes.version}>
+                {t.version + ' ' + version}
+                <br />
+                {buildDate}
+              </div>
+            }
+          />
         </StyledMenuItem>
       </StyledMenu>
     </div>
@@ -136,4 +149,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
 });
 
-export default connect(mapStateToProps)(UserMenu) as any;
+export default connect(mapStateToProps)(HelpMenu) as any;
