@@ -37,11 +37,12 @@ import {
   DialogActions,
   Grid,
   Typography,
+  MenuItem,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ReactSelect, { OptionType } from '../components/ReactSelect';
+import { OptionType } from '../components/ReactSelect';
 import UserAvatar from '../components/UserAvatar';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
@@ -96,6 +97,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     avatar: {
       alignSelf: 'start',
+    },
+    menu: {
+      width: 200,
     },
   })
 );
@@ -194,18 +198,18 @@ export function GroupSettings(props: IProps) {
   };
   const handleDeleteRefused = () => setConfirmItem(null);
 
-  const showDialog = (visible: boolean) => () => {
-    setOpen(visible);
-  };
-
   const handleAdd = (role: string) => () => {
     setRole(role);
     setOpen(true);
   };
 
-  const handleCommit = (value: string, e: any, method: () => void) => {
-    setCurrentPerson(value);
-    method();
+  const handleCommit = (e: any) => {
+    setCurrentPerson(e.target.value);
+  };
+
+  const handleCancel = () => {
+    setCurrentPerson(null);
+    setOpen(false);
   };
 
   const handleAddMember = async () => {
@@ -500,23 +504,44 @@ export function GroupSettings(props: IProps) {
       </div>
       <Dialog
         open={open}
-        onClose={showDialog(false)}
+        onClose={handleCancel}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">{t.addGroupMember}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.addMemberInstruction}</DialogContentText>
-          <ReactSelect suggestions={orgPeople} onCommit={handleCommit} />
+          <TextField
+            id="choos-group-member"
+            select
+            value={currentPerson}
+            className={classes.menu}
+            onChange={handleCommit}
+            SelectProps={{
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+            margin="normal"
+            variant="filled"
+            required
+          >
+            {orgPeople.map((option: OptionType) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </DialogContent>
         <DialogActions>
-          <Button
-            variant="outlined"
-            onClick={showDialog(false)}
-            color="primary"
-          >
+          <Button variant="outlined" onClick={handleCancel} color="primary">
             {t.cancel}
           </Button>
-          <Button variant="outlined" onClick={handleAddMember} color="primary">
+          <Button
+            variant="outlined"
+            onClick={handleAddMember}
+            color="primary"
+            disabled={!currentPerson}
+          >
             {t.add}
           </Button>
         </DialogActions>
