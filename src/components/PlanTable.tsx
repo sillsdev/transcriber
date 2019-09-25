@@ -12,18 +12,15 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
-import {
-  Grid,
-  Table,
-  TableColumnResizing,
-  TableHeaderRow,
-  Toolbar,
-} from '@devexpress/dx-react-grid-material-ui';
+import FilterIcon from '@material-ui/icons/FilterList';
+import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { Table } from '@devexpress/dx-react-grid-material-ui';
+import ShapingTable from './ShapingTable';
 import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import Related from '../utils/related';
+import { numCompare } from '../utils/sort';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,7 +96,13 @@ export function PlanTable(props: IProps) {
     { columnName: 'sections', width: 100 },
     { columnName: 'action', width: 150 },
   ]);
+  const columnSorting = [{ columnName: 'sections', compare: numCompare }];
+  const sortingEnabled = [{ columnName: 'action', sortingEnabled: false }];
+  const filteringEnabled = [{ columnName: 'action', filteringEnabled: false }];
+
+  const numCols = ['sections'];
   const [rows, setRows] = useState(Array<ICell>());
+  const [filter, setFilter] = useState(false);
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
@@ -171,6 +174,7 @@ export function PlanTable(props: IProps) {
       })
     );
   };
+  const handleFilter = () => setFilter(!filter);
   const handleSelect = (planId: string, type: string) => (e: any) => {
     setPlan(planId);
     displaySet(type.toLocaleLowerCase());
@@ -290,21 +294,36 @@ export function PlanTable(props: IProps) {
               {t.addPlan}
               <AddIcon className={classes.buttonIcon} />
             </Button>
-            <div className={classes.grow} />
+            <div className={classes.grow}>{'\u00A0'}</div>
+            <Button
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleFilter}
+              title={'Show/Hide filter rows'}
+            >
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
+            </Button>
           </div>
-          <Grid rows={rows} columns={columns}>
-            <SortingState
-              defaultSorting={[{ columnName: 'name', direction: 'asc' }]}
-            />
-            <IntegratedSorting />
-            <Table cellComponent={Cell} />
-            <TableColumnResizing
-              minColumnWidth={50}
-              defaultColumnWidths={columnWidth}
-            />
-            <TableHeaderRow showSortingControls={true} />
-            <Toolbar />
-          </Grid>
+          <ShapingTable
+            columns={columns}
+            columnWidths={columnWidth}
+            sortingEnabled={sortingEnabled}
+            filteringEnabled={filteringEnabled}
+            columnSorting={columnSorting}
+            dataCell={Cell}
+            sorting={[{ columnName: 'name', direction: 'asc' }]}
+            numCols={numCols}
+            shaping={filter}
+            rows={rows}
+          />
         </div>
       </div>
       <PlanAdd

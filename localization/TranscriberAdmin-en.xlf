@@ -388,6 +388,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planTable.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTable.silTranscriberAdmin">
          <segment>
             <source>SIL Transcriber Admin</source>

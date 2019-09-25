@@ -149,6 +149,8 @@ interface IProps extends IStateProps {
   columns: Array<Column>;
   columnWidths: Array<TableColumnWidthInfo>;
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
+  sortingEnabled?: Array<SortingState.ColumnExtension>;
+  filteringEnabled?: Array<FilteringState.ColumnExtension>;
   defaultHiddenColumnNames?: Array<string>;
   dataCell?: any;
   numCols?: Array<string>;
@@ -163,7 +165,9 @@ export function ShapingTable(props: IProps) {
     t,
     columns,
     columnWidths,
-    columnSorting,
+    columnSorting /* special sort function for each column as needed */,
+    sortingEnabled /* whether sorting is enabled for each column */,
+    filteringEnabled /* whether filtering is enabled for each column */,
     defaultHiddenColumnNames,
     dataCell,
     numCols,
@@ -183,9 +187,13 @@ export function ShapingTable(props: IProps) {
   return (
     <Grid rows={rows} columns={columns}>
       <FilteringState
-      // defaultFilters={[{ columnName: 'sectionId', operation: 'equal', value: '' }]}
+        columnExtensions={filteringEnabled ? filteringEnabled : []}
+        // defaultFilters={[{ columnName: 'sectionId', operation: 'equal', value: '' }]}
       />
-      <SortingState defaultSorting={sorting ? sorting : Array<Sorting>()} />
+      <SortingState
+        defaultSorting={sorting ? sorting : Array<Sorting>()}
+        columnExtensions={sortingEnabled ? sortingEnabled : []}
+      />
 
       <SelectionState onSelectionChange={handleSelect} />
 
@@ -217,7 +225,7 @@ export function ShapingTable(props: IProps) {
         minColumnWidth={50}
         defaultColumnWidths={columnWidths}
       />
-      <TableSelection showSelectAll={true} />
+      {!select || <TableSelection showSelectAll={true} />}
 
       <TableHeaderRow showSortingControls={true} />
       {shaping !== null && !shaping ? (

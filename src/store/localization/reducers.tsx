@@ -100,6 +100,7 @@ const initialState = {
 			"sections": "Sections",
 			"taks": "Passages",
 			"action": "Action",
+			"filter": "Filter",
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
 		}

@@ -385,6 +385,12 @@
 				<target>Action</target>
 			</segment>
 		</unit>
+		<unit id="planTable.filter">
+			<segment>
+				<source>Filter</source>
+				<target>Filtre</target>
+			</segment>
+		</unit>
 		<unit id="planTable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>

@@ -395,7 +395,7 @@
 				<source>Group</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">PlanTable.tsx</context>
+					<context context-type="sourcefile">ProjectSettings.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="projectSettings.preview">
@@ -449,6 +449,13 @@
 			</trans-unit>
 			<trans-unit id="planTable.action">
 				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="planTable.filter">
+				<source>Filter</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">PlanTable.tsx</context>

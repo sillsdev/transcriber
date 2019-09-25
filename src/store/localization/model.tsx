@@ -87,6 +87,7 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "sections": string;
     "taks": string;
     "action": string;
+    "filter": string;
     "silTranscriberAdmin": string;
     "choosePlan": string;
 };
