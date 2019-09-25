@@ -41,14 +41,12 @@ interface IProps {
 
 export default function DiscreteSlider(props: IProps) {
   const { label, value, font, setSize } = props;
-  const [position, setPosition] = React.useState(
-    value ? fontSizes.indexOf(value) : 4
-  );
+  const [position, setPosition] = React.useState(4);
   const [fontName, setFontNamne] = React.useState(font ? font : 'Charis SIL');
   const classes = useStyles();
 
-  const valuetext = (value: number) => {
-    return fontSizes[value];
+  const valuetext = (pos: number) => {
+    return fontSizes[pos];
   };
 
   const handleSlide = (e: any, v: any) => {
@@ -59,6 +57,13 @@ export default function DiscreteSlider(props: IProps) {
   React.useEffect(() => {
     if (font) setFontNamne(font);
   }, [font]);
+
+  React.useEffect(() => {
+    const pos = fontSizes.indexOf(value ? value : 'large');
+    if (pos !== -1) {
+      setPosition(pos);
+    }
+  }, [value]);
 
   return (
     <div className={classes.root}>
@@ -74,10 +79,9 @@ export default function DiscreteSlider(props: IProps) {
         </div>
         <Slider
           className={classes.letter}
-          defaultValue={position}
           getAriaValueText={valuetext}
-          aria-labelledby="discrete-slider"
           valueLabelDisplay="off"
+          value={position}
           step={1}
           marks
           min={0}
@@ -86,15 +90,14 @@ export default function DiscreteSlider(props: IProps) {
         />
         <div
           className={classes.letter}
-          style={{ fontSize: fontSizes[5], fontFamily: fontName }}
+          style={{
+            fontSize: value ? value : fontSizes[5],
+            fontFamily: fontName,
+          }}
         >
           A
         </div>
       </div>
-      {/* <br />
-      <span style={{ fontSize: valuetext(position), fontFamily: fontName }}>
-        A
-      </span> */}
     </div>
   );
 }

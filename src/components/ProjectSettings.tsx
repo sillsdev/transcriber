@@ -159,10 +159,6 @@ export function ProjectSettings(props: IProps) {
   const handleGroupChange = (e: any) => {
     setProjectGroup(e.target.value);
   };
-  // const handleDefaultFontChange = (e: any) => {
-  //   setDefaultFont(e.target.value);
-  //   setRtl(safeFonts.filter(option => option.value === e.target.value)[0].rtl);
-  // };
   const handleSize = (v: string) => {
     setDefaultFontSize(v);
   };
@@ -457,7 +453,11 @@ export function ProjectSettings(props: IProps) {
               <div className={classes.previewCol}>
                 <FormLabel className={classes.label}>{t.preview}</FormLabel>
                 <div
-                  style={{ fontSize: defaultFontSize, fontFamily: defaultFont }}
+                  style={{
+                    fontSize: defaultFontSize,
+                    fontFamily: defaultFont,
+                    width: 400,
+                  }}
                 >
                   The quick, brown fox jumped over the lazy dog.
                 </div>
