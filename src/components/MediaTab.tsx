@@ -73,6 +73,9 @@ const useStyles = makeStyles((theme: Theme) =>
     playIcon: {
       fontSize: 16,
     },
+    unsupported: {
+      color: theme.palette.secondary.light,
+    },
   })
 );
 
@@ -405,13 +408,24 @@ export function MediaTab(props: IProps) {
         setComplete(
           Math.min((currentlyLoading * 100) / uploadList.length, 100)
         );
-        const planId = remoteIdNum('plan', plan, keyMap);
-        const mediaFile = {
-          planId: planId,
-          originalFile: uploadList[currentlyLoading + 1].name,
-          contentType: uploadList[currentlyLoading + 1].type,
-        } as any;
-        nextUpload(mediaFile, uploadList, currentlyLoading + 1, auth);
+        if (/\.wav$|\.mp3$/.test(uploadList[currentlyLoading + 1].name)) {
+          const planId = remoteIdNum('plan', plan, keyMap);
+          const mediaFile = {
+            planId: planId,
+            originalFile: uploadList[currentlyLoading + 1].name,
+            contentType: uploadList[currentlyLoading + 1].type,
+          } as any;
+          nextUpload(mediaFile, uploadList, currentlyLoading + 1, auth);
+        } else {
+          setMessage(
+            <span className={classes.unsupported}>
+              {t.unsupported.replace(
+                '{0}',
+                uploadList[currentlyLoading + 1].name
+              )}
+            </span>
+          );
+        }
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

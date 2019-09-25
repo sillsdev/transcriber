@@ -853,6 +853,12 @@
          	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
          </segment>
       </unit>
+	  <unit id="mediaTab.unsupported">
+	  	<segment>
+	  		<source>File {0} is an unsupported file type.</source>
+	  		<target>Fichier {0} est un type de fichier non supporté.</target>
+	  	</segment>
+	  </unit>
       <unit id="passageMedia.attachAvailableMedia">
 			<segment>
 				<source>Attach available media files to passages (with no current media).</source>

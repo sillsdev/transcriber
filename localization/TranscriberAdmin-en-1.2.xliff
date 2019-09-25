@@ -1007,6 +1007,13 @@
 					<context context-type="sourcefile">MediaTab.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="mediaTab.unsupported">
+				<source>File {0} is an unsupported file type.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="passageMedia.attachAvailableMedia">
 				<source>Attach available media files to passages (with no current media).</source>
 				<target/>

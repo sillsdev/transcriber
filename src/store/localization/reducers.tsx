@@ -207,6 +207,7 @@ const initialState = {
 			"filter": "Filter",
 			"selectFiles": "Please select files to be uploaded.",
 			"selectRows": "Please select row(s) to {0}.",
+			"unsupported": "File {0} is an unsupported file type.",
 		}
 	}),
 	"passageMedia": new LocalizedStrings({

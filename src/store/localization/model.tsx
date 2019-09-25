@@ -187,6 +187,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "filter": string;
     "selectFiles": string;
     "selectRows": string;
+    "unsupported": string;
 };
 
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {

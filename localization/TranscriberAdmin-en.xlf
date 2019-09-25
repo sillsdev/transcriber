@@ -862,6 +862,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.unsupported">
+         <segment>
+            <source>File {0} is an unsupported file type.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.attachAvailableMedia">
          <segment>
             <source>Attach available media files to passages (with no current media).</source>
