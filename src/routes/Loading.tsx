@@ -18,7 +18,7 @@ import {
 } from '@material-ui/core';
 import UserMenu from '../components/UserMenu';
 import * as action from '../store';
-import logo from './transcriber9.png';
+import logo from './LogoSmallShadow-4x.png';
 import { parseQuery, IParsedArgs } from '../utils/parseQuery';
 import { related, hasRelated, setDefaultProj } from '../utils';
 
