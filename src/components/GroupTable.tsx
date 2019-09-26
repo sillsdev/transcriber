@@ -269,7 +269,7 @@ export function GroupTable(props: IProps) {
           <Button
             key="add"
             aria-label={t.addGroup}
-            variant="outlined"
+            variant="contained"
             color="primary"
             className={classes.button}
             onClick={handleAdd}
