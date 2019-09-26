@@ -153,6 +153,7 @@ interface IProps extends IStateProps {
   filteringEnabled?: Array<FilteringState.ColumnExtension>;
   defaultHiddenColumnNames?: Array<string>;
   dataCell?: any;
+  noDataCell?: any;
   numCols?: Array<string>;
   rows: Array<any>;
   sorting?: Array<Sorting>;
@@ -170,6 +171,7 @@ export function ShapingTable(props: IProps) {
     filteringEnabled /* whether filtering is enabled for each column */,
     defaultHiddenColumnNames,
     dataCell,
+    noDataCell,
     numCols,
     rows,
     sorting,
@@ -216,7 +218,15 @@ export function ShapingTable(props: IProps) {
 
       <DragDropProvider />
 
-      {dataCell ? <Table cellComponent={dataCell} /> : <Table />}
+      {dataCell && noDataCell ? (
+        <Table cellComponent={dataCell} noDataCellComponent={noDataCell} />
+      ) : dataCell && !noDataCell ? (
+        <Table cellComponent={dataCell} />
+      ) : !dataCell && noDataCell ? (
+        <Table noDataCellComponent={noDataCell} />
+      ) : (
+        <Table />
+      )}
       <TableColumnVisibility
         defaultHiddenColumnNames={defaultHiddenColumnNames}
         emptyMessageComponent={noCols}

@@ -499,7 +499,7 @@
 				<target>Assigner un ensemble</target>
 			</segment>
 		</unit>
-		<unit id="scriptureTable.section">
+		<unit id="assignmentTable.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>
@@ -1584,6 +1584,12 @@
          <segment>
             <source>Please select row(s) to {0}.</source>
          	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.noData">
+         <segment>
+            <source>No invitations</source>
+         	<target>Pas d'invitations</target>
          </segment>
       </unit>
       <unit id="orgSettings.add">

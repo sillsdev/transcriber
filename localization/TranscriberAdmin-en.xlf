@@ -1594,6 +1594,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invitationTable.noData">
+         <segment>
+            <source>No invitations</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="orgSettings.add">
          <segment>
             <source>Add</source>

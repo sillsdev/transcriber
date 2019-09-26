@@ -1861,6 +1861,13 @@
 					<context context-type="sourcefile">InvitationTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="invitationTable.noData">
+				<source>No invitations</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">InvitationTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="orgSettings.add">
 				<source>Add</source>
 				<target/>

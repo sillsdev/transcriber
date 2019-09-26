@@ -7,11 +7,12 @@ import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, Menu, MenuItem, Typography } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
@@ -190,6 +191,18 @@ export function InvitationTable(props: IProps) {
     setConfirmAction('');
   };
 
+  const NoDataCell = connect(mapStateToProps)(
+    ({ value, style, t, ...restProps }: any) => {
+      return (
+        <Table.Cell {...restProps} style={{ ...style }} value>
+          <Typography variant="h6" align="center">
+            {t.noData}
+          </Typography>
+        </Table.Cell>
+      );
+    }
+  ) as any;
+
   useEffect(() => {
     setData(getMedia(organization, roles, invitations));
   }, [organization, roles, invitations, confirmAction]);
@@ -252,6 +265,7 @@ export function InvitationTable(props: IProps) {
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
+          noDataCell={NoDataCell}
           rows={data}
           select={handleCheck}
           shaping={filter}

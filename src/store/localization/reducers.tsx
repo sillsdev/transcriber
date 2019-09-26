@@ -385,6 +385,7 @@ const initialState = {
 			"delete": "Delete",
 			"filter": "Filter",
 			"selectRows": "Please select row(s) to {0}.",
+			"noData": "No invitations",
 		}
 	}),
 	"orgSettings": new LocalizedStrings({

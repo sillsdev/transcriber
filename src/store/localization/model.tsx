@@ -351,6 +351,7 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
     "delete": string;
     "filter": string;
     "selectRows": string;
+    "noData": string;
 };
 
 export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
