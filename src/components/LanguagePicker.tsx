@@ -104,6 +104,9 @@ export const LanguagePicker = (props: IProps) => {
   const { value, name, font, setCode, setName, setFont } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [curValue, setCurValue] = React.useState(value);
+  const [curName, setCurName] = React.useState(name);
+  const [curFont, setCurFont] = React.useState(font);
   const [secondary, setSecondary] = React.useState(true);
   const [subtag, setSubtag] = React.useState(false);
   const [response, setResponse] = React.useState('');
@@ -116,13 +119,13 @@ export const LanguagePicker = (props: IProps) => {
 
   const handleClickOpen = (e: any) => {
     if (e.keyCode && e.keyCode === 9) return;
-    const key = value.toLocaleLowerCase();
+    const key = curValue.toLocaleLowerCase();
     if (exact.hasOwnProperty(key) && key !== 'und') {
-      setResponse(name + ' (' + value + ')');
+      setResponse(curName + ' (' + curValue + ')');
       const langTag = langTags[exact[key][0].index];
       setTag(langTag);
       selectFont(langTag);
-      setDefaultFont(font);
+      setDefaultFont(curFont);
       setScriptField(<></>);
     } else {
       handleClear();
@@ -138,19 +141,24 @@ export const LanguagePicker = (props: IProps) => {
     if (langEl.current) langEl.current.click();
   };
   const handleCancel = () => {
-    setResponse('');
+    setCurValue(value);
+    setCurName(name);
+    setCurFont(font);
     setOpen(false);
   };
 
   const displayTag = (tag: LangTag) => {
     if (tag && tag.name) {
       setResponse(tag.name + ' (' + tag.tag + ')');
-      if (setCode) setCode(tag.tag);
-      if (setName) setName(tag.name);
+      setCurValue(tag.tag);
+      setCurName(tag.name);
     }
   };
 
   const handleSelect = () => {
+    if (setCode) setCode(curValue);
+    if (setName) setName(curName);
+    if (setFont) setFont(curFont);
     if (tag) {
       displayTag(tag);
     } else {
@@ -165,7 +173,7 @@ export const LanguagePicker = (props: IProps) => {
 
   const addFontInfo = (e: any) => {
     setDefaultFont(e.target.value);
-    if (setFont) setFont(e.target.value);
+    setCurFont(e.target.value);
   };
 
   const safeFonts = [
@@ -183,15 +191,15 @@ export const LanguagePicker = (props: IProps) => {
     }
     if (!fontMap.hasOwnProperty(code)) {
       setDefaultFont(safeFonts[0].value);
-      if (setFont) setFont(safeFonts[0].value);
+      setCurFont(safeFonts[0].value);
       setFontOpts(safeFonts.map(f => f.value));
     } else if (fontMap[code].length === 1) {
       setDefaultFont(fontMap[code][0]);
-      if (setFont) setFont(fontMap[code][0]);
+      setCurFont(fontMap[code][0]);
     } else {
       const fonts = fontMap[code];
       setDefaultFont(fonts[0]);
-      if (setFont) setFont(fonts[0]);
+      setCurFont(fonts[0]);
       setFontOpts(fonts);
     }
   };
@@ -244,6 +252,13 @@ export const LanguagePicker = (props: IProps) => {
     if (tag === undefined && langEl.current) langEl.current.click();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [scriptField]);
+
+  React.useEffect(() => {
+    setCurValue(value);
+    setCurName(name);
+    setCurFont(font);
+    setResponse(value !== 'und' ? name + ' (' + value + ')' : '');
+  }, [value, name, font]);
 
   const handleScriptChange = (tag: LangTag) => (e: any) => {
     const val = e.target.value;
@@ -443,7 +458,6 @@ export const LanguagePicker = (props: IProps) => {
           {fontField}
         </DialogContent>
         <DialogActions>
-          {/* {reactStringReplace(t.instructions, /\{(\d+)\}/g, () => ( */}
           <a
             href="https://www.w3.org/International/questions/qa-choosing-language-tags"
             target="_blank"
@@ -452,7 +466,6 @@ export const LanguagePicker = (props: IProps) => {
             <Typography>{t.codeExplained}</Typography>
           </a>
           <div className={classes.grow}>{'\u00A0'}</div>
-          {/* ))} */}
           <Button onClick={handleCancel} color="primary">
             <Typography>{t.cancel}</Typography>
           </Button>
