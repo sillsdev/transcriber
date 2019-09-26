@@ -32,16 +32,14 @@ export function UserAvatar(props: IProps) {
 
   return curUser.attributes.avatarUrl ? (
     <Avatar alt={curUser.attributes.name} src={curUser.attributes.avatarUrl} />
-  ) : (
+  ) : curUser.attributes.name !== '' ? (
     <Avatar>{makeAbbr(curUser.attributes.name)}</Avatar>
+  ) : (
+    <></>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({});
-
-// const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-//   ...bindActionCreators({}, dispatch),
-// });
 
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
