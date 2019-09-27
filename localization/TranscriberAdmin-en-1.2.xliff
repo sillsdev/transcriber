@@ -1532,8 +1532,22 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="groupSettings.noProjects">
-				<source>There are no projects that use this group.</source>
+			<trans-unit id="groupSettings.groupExplain">
+				<source>Groups connect organization members to a project.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.case1">
+				<source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.case2">
+				<source>Existing projects can be associated with this group in Settings.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>

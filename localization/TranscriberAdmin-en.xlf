@@ -1312,9 +1312,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.noProjects">
+      <unit id="groupSettings.groupExplain">
          <segment>
-            <source>There are no projects that use this group.</source>
+            <source>Groups connect organization members to a project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.case1">
+         <segment>
+            <source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.case2">
+         <segment>
+            <source>Existing projects can be associated with this group in Settings.</source>
             <target/>
          </segment>
       </unit>

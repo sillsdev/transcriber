@@ -145,7 +145,7 @@
 				<target>Oui</target>
 			</segment>
 		</unit>
-		<unit id="organizationTable.transcriberAdmin">
+		<unit id="projectTable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
 				<target>Administration du Transcripteur SIL</target>
@@ -451,91 +451,97 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.title">
-			<segment>
-				<source>Assignments</source>
-				<target>Affectations</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.sectionstate">
-			<segment>
-				<source>State</source>
-				<target>État</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.passages">
-			<segment>
-				<source>Passages</source>
-				<target>Passages</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.passagestate">
-			<segment>
-				<source>State</source>
-				<target>État</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.user">
-			<segment>
-				<source>User</source>
-				<target>Utilisatrice</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.role">
-			<segment>
-				<source>Role</source>
-				<target>Rôle</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.action">
-			<segment>
-				<source>Action</source>
-				<target>Action</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.assignSection">
-			<segment>
-				<source>Assign Section</source>
-				<target>Assigner un ensemble</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.section">
-			<segment>
-				<source>Section</source>
-				<target>Ensemble</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.title">
-			<segment>
-				<source>Title</source>
-				<target>Titre</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.passage">
-			<segment>
-				<source>Passage</source>
-				<target>Passage</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.book">
-			<segment>
-				<source>Book</source>
-				<target>Livre</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.reference">
-			<segment>
-				<source>Reference</source>
-				<target>Référence</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.description">
-			<segment>
-				<source>Description</source>
-				<target>Description du passage</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.assignSec">
+		<unit id="planSheet.saving">
+         <segment>
+            <source>Saving</source>
+         	<target>Épargner</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+         	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.section">
+         <segment>
+            <source>Section</source>
+            <target>Section</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.title">
+         <segment>
+            <source>Title</source>
+            <target>Titre</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.passage">
+         <segment>
+            <source>Passage</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.book">
+         <segment>
+            <source>Book</source>
+            <target>Livre</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.reference">
+         <segment>
+            <source>Reference</source>
+         	<target>Référence</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.description">
+         <segment>
+            <source>Description</source>
+            <target>Description</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.title">
+         <segment>
+            <source>Assignments</source>
+         	<target>Affectations</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.section">
+         <segment>
+            <source>Section</source>
+            <target>Section</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.sectionstate">
+         <segment>
+            <source>State</source>
+         	<target>État de la section</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.passages">
+         <segment>
+            <source>Passages</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.passagestate">
+         <segment>
+            <source>State</source>
+         	<target>État du passage</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.user">
+         <segment>
+            <source>User</source>
+         	<target>Utilisateur</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.role">
+         <segment>
+            <source>Role</source>
+         	<target>Rôle</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec">
          <segment>
             <source>Assign Section</source>
          	<target>Affecter une section</target>
@@ -717,7 +723,7 @@
 		</unit>
 		<unit id="planAdd.selectAPlanType">
 			<segment>
-				<source>Choose the plan type.</source>
+				<source>Please select a plan type</source>
 				<target>Sélectionner un type de programme</target>
 			</segment>
 		</unit>
@@ -765,7 +771,7 @@
 		</unit>
 		<unit id="mediaTab.uploadComplete">
 			<segment>
-				<source>Upload Complete</source>
+				<source>Upload complete.</source>
 				<target>Charger achevées</target>
 			</segment>
 		</unit>	    
@@ -909,7 +915,7 @@
 		</unit>
 		<unit id="main.organization">
 			<segment>
-				<source>org Details</source>
+				<source>Org Details</source>
 				<target>Détails de l'organisation</target>
 			</segment>
 		</unit>
@@ -1304,13 +1310,25 @@
 			<target>Tous les réviseurs sont autorisés à transcrire.</target>
 		</segment>
 	</unit>
-   <unit id="groupSettings.noProjects">
+	<unit id="groupSettings.groupExplain">
          <segment>
-            <source>There are no projects that use this group.</source>
-         	<target>Aucun projet n'utilise ce groupe.</target>
+            <source>Groups connect organization members to a project.</source>
+         	<target>Les groupes relient les membres de l'organisation à un projet.</target>
          </segment>
       </unit>
-	<unit id="groupSettings.assignedSections">
+      <unit id="groupSettings.case1">
+         <segment>
+         	<source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
+         	<target>Si le projet n'existe pas, cliquez sur le bouton plus dans le volet de navigation pour le créer.</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.case2">
+         <segment>
+         	<source>Existing projects can be associated with this group in Settings.</source>
+         	<target>Les projets existants peuvent être associés à ce groupe dans Paramètres.</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.assignedSections">
          <segment>
             <source>  Assigned Sections: </source>
          	<target>  Sections assignées : </target>

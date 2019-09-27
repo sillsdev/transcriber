@@ -69,6 +69,11 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       // color: theme.palette.primary.dark,
     },
+    noProjects: {
+      width: 400,
+      marginLeft: theme.spacing(3),
+      backgroundColor: theme.palette.grey[200],
+    },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
@@ -302,7 +307,17 @@ export function GroupSettings(props: IProps) {
       </ListItem>
     ));
 
-  const projectsRendered = projectItems.length ? projectItems : t.noProjects;
+  const projectsRendered = projectItems.length ? (
+    projectItems
+  ) : (
+    <div className={classes.noProjects}>
+      <p>{t.groupExplain}</p>
+      <ul>
+        <li>{t.case1}</li>
+        <li>{t.case2}</li>
+      </ul>
+    </div>
+  );
 
   const transcriberId = roles
     .filter(r => r.attributes.roleName.toLowerCase() === 'transcriber')

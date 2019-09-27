@@ -286,7 +286,9 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "delete": string;
     "choose": string;
     "allReviewersCanTranscribe": string;
-    "noProjects": string;
+    "groupExplain": string;
+    "case1": string;
+    "case2": string;
     "assignedSections": string;
     "projectPlans": string;
     "invalidRole": string;
