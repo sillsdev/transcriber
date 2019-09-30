@@ -42,6 +42,8 @@ For development you will want 2 context files: `.env.dev.development.local` and 
 
 The `npm run dev` also expects there to be a `amplify/dev` folder containing `amplify-meta.json` and `parameters.json`. These files are written into the `amplify` folder structure at the appropriate points to make the `npm run deploy` command work. Similary there is a `amplify/qa` folder with the same two files with contents for the qa environment.
 
+We also have `npm run appdev` and `npm run appqa` that allow you to deploy to the `app-dev.siltranscriber.org` and `app-qa.siltranscriber.org` end points. (You may want to get copies of the .env.*.local files from another team member on the project.)
+
 ## Test suite
 
 To execute the tests included with the program, use the standard test suite.

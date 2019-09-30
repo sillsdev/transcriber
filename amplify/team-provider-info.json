@@ -52,5 +52,29 @@
             "StackName": "webtranscriberadmin-dev-20190815162123",
             "StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-dev-20190815162123/a20b7da0-bfa2-11e9-b884-0e6c2daa9b2c"
         }
+    },
+    "appdev": {
+        "awscloudformation": {
+            "AuthRoleName": "webtranscriberadmin-appdev-20190930145637-authRole",
+            "UnauthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-appdev-20190930145637-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-appdev-20190930145637-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "webtranscriberadmin-appdev-20190930145637-deployment",
+            "UnauthRoleName": "webtranscriberadmin-appdev-20190930145637-unauthRole",
+            "StackName": "webtranscriberadmin-appdev-20190930145637",
+            "StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-appdev-20190930145637/69e31f80-e3bc-11e9-996c-0afcd132dcac"
+        }
+    },
+    "appqa": {
+        "awscloudformation": {
+            "AuthRoleName": "webtranscriberadmin-appqa-20190930155359-authRole",
+            "UnauthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-appqa-20190930155359-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-appqa-20190930155359-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "webtranscriberadmin-appqa-20190930155359-deployment",
+            "UnauthRoleName": "webtranscriberadmin-appqa-20190930155359-unauthRole",
+            "StackName": "webtranscriberadmin-appqa-20190930155359",
+            "StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-appqa-20190930155359/6d141a80-e3c4-11e9-9937-0eee31812ac2"
+        }
     }
 }

@@ -50,6 +50,8 @@
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
     "eject": "react-scripts eject",
     "stamp": "node writeDate.js",
+    "appdev": "amplify env checkout appdev && node changeEnv.js appdev",
+    "appqa": "amplify env checkout appqa && node changeEnv.js appqa",
     "dev": "amplify env checkout dev && node changeEnv.js dev",
     "qa": "amplify env checkout qa && node changeEnv.js qa"
   },
