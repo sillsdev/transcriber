@@ -25,6 +25,7 @@ import Confirm from './AlertDialog';
 import { related } from '../utils';
 import LanguagePicker from './LanguagePicker';
 import FontSize from './FontSize';
+import { API_CONFIG } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -331,6 +332,7 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
+                  disabled={API_CONFIG.isApp}
                 />
               }
               label=""
@@ -347,6 +349,7 @@ export function ProjectSettings(props: IProps) {
                   style={{ width: 400 }}
                   variant="filled"
                   required={false}
+                  disabled={API_CONFIG.isApp}
                 />
               }
               label=""
@@ -369,6 +372,7 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
+                  disabled={API_CONFIG.isApp}
                 >
                   {groups
                     .filter(g => related(g, 'owner') === organization)
@@ -399,6 +403,7 @@ export function ProjectSettings(props: IProps) {
                     setCode={setBcp47}
                     setName={setLanguageName}
                     setFont={setDefaultFont}
+                    disabled={API_CONFIG.isApp}
                   />
                 }
                 label=""
@@ -410,6 +415,7 @@ export function ProjectSettings(props: IProps) {
                     id="checkbox-rtl"
                     checked={rtl}
                     onChange={handleRtlChange}
+                    disabled={API_CONFIG.isApp}
                   />
                 }
                 label={t.rightToLeft}
@@ -432,6 +438,7 @@ export function ProjectSettings(props: IProps) {
                       style={{ width: 400 }}
                       variant="filled"
                       required={false}
+                      disabled={API_CONFIG.isApp}
                     />
                   }
                   label=""
@@ -445,6 +452,7 @@ export function ProjectSettings(props: IProps) {
                       value={defaultFontSize}
                       font={defaultFont}
                       setSize={handleSize}
+                      disabled={API_CONFIG.isApp}
                     />
                   }
                   label=""
@@ -465,56 +473,60 @@ export function ProjectSettings(props: IProps) {
             </div>
           </FormGroup>
         </FormControl>
-        <div className={classes.actions}>
-          <Button
-            key="add"
-            aria-label={t.add}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            disabled={
-              name === '' ||
-              projectType === '' ||
-              projectGroup === '' ||
-              bcp47 === '' ||
-              bcp47 === 'und' ||
-              defaultFont === ''
-            }
-            onClick={currentProject === undefined ? handleAdd : handleSave}
-          >
-            {currentProject === undefined ? t.add : t.save}
-            <SaveIcon className={classes.icon} />
-          </Button>
-        </div>
-        <FormLabel className={classes.label}>
-          <Typography variant="h5" className={classes.dangerHeader}>
-            {t.dangerZone}
-          </Typography>
-        </FormLabel>
-        <FormGroup className={classes.dangerGroup}>
-          <div>
+        {API_CONFIG.isApp || (
+          <>
+            <div className={classes.actions}>
+              <Button
+                key="add"
+                aria-label={t.add}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={
+                  name === '' ||
+                  projectType === '' ||
+                  projectGroup === '' ||
+                  bcp47 === '' ||
+                  bcp47 === 'und' ||
+                  defaultFont === ''
+                }
+                onClick={currentProject === undefined ? handleAdd : handleSave}
+              >
+                {currentProject === undefined ? t.add : t.save}
+                <SaveIcon className={classes.icon} />
+              </Button>
+            </div>
             <FormLabel className={classes.label}>
-              <Typography variant="h6">{t.deleteProject}</Typography>
+              <Typography variant="h5" className={classes.dangerHeader}>
+                {t.dangerZone}
+              </Typography>
             </FormLabel>
-            <FormLabel className={classes.label}>
-              <p>{t.deleteExplained}</p>
-            </FormLabel>
-          </div>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <div className={classes.deletePos}>
-            <Button
-              key="delete"
-              color="secondary"
-              aria-label={t.delete}
-              variant="contained"
-              className={classes.button}
-              disabled={currentProject === undefined}
-              onClick={handleDelete(currentProject)}
-            >
-              {t.delete}
-            </Button>
-          </div>
-        </FormGroup>
+            <FormGroup className={classes.dangerGroup}>
+              <div>
+                <FormLabel className={classes.label}>
+                  <Typography variant="h6">{t.deleteProject}</Typography>
+                </FormLabel>
+                <FormLabel className={classes.label}>
+                  <p>{t.deleteExplained}</p>
+                </FormLabel>
+              </div>
+              <div className={classes.grow}>{'\u00A0'}</div>
+              <div className={classes.deletePos}>
+                <Button
+                  key="delete"
+                  color="secondary"
+                  aria-label={t.delete}
+                  variant="contained"
+                  className={classes.button}
+                  disabled={currentProject === undefined}
+                  onClick={handleDelete(currentProject)}
+                >
+                  {t.delete}
+                </Button>
+              </div>
+            </FormGroup>
+          </>
+        )}
       </div>
       {deleteItem !== '' ? (
         <Confirm

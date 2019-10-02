@@ -1063,6 +1063,13 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.silTranscriber">
+				<source>SIL Transcriber</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="main.search">
 				<source>Search…</source>
 				<target/>
@@ -1093,6 +1100,20 @@
 			</trans-unit>
 			<trans-unit id="main.media">
 				<source>Media</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.myTasks">
+				<source>My Tasks</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.allTasks">
+				<source>All Tasks</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">drawer.tsx</context>
@@ -1133,8 +1154,15 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="main.loadingTranscriber">
+			<trans-unit id="main.loadingTranscriberAdmin">
 				<source>Loading SIL Transcriber Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.loadingTranscriber">
+				<source>Loading SIL Transcriber</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">drawer.tsx</context>

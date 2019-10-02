@@ -9,4 +9,7 @@ export const API_CONFIG = {
   community: process.env.REACT_APP_COMMUNITY
     ? process.env.REACT_APP_COMMUNITY
     : '',
+  isApp: process.env.REACT_APP_APPMODE
+    ? process.env.REACT_APP_APPMODE === 'true'
+    : false,
 };

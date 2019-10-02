@@ -37,10 +37,11 @@ interface IProps {
   value?: string;
   font?: string;
   setSize?: (size: string) => void;
+  disabled?: boolean;
 }
 
 export default function DiscreteSlider(props: IProps) {
-  const { label, value, font, setSize } = props;
+  const { label, value, font, setSize, disabled } = props;
   const [position, setPosition] = React.useState(4);
   const [fontName, setFontNamne] = React.useState(font ? font : 'Charis SIL');
   const classes = useStyles();
@@ -87,6 +88,7 @@ export default function DiscreteSlider(props: IProps) {
           min={0}
           max={6}
           onChange={handleSlide}
+          disabled={disabled ? disabled : false}
         />
         <div
           className={classes.letter}

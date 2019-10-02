@@ -87,6 +87,7 @@ interface IProps extends StateProps, DispatchProps {
   setCode?: (code: string) => void;
   setName?: (name: string) => void;
   setFont?: (font: string) => void;
+  disabled?: boolean;
   // local stat props go here
 }
 
@@ -100,6 +101,7 @@ export const LanguagePicker = (props: IProps) => {
     scripts,
     fontMap,
     scriptName,
+    disabled,
   } = props;
   const { value, name, font, setCode, setName, setFont } = props;
   const classes = useStyles();
@@ -416,6 +418,7 @@ export const LanguagePicker = (props: IProps) => {
         value={value !== 'und' ? name + ' (' + value + ')' : ''}
         onClick={handleClickOpen}
         onKeyDown={handleClickOpen}
+        disabled={disabled ? disabled : false}
       />
       <Dialog
         id="LanguagePicker"

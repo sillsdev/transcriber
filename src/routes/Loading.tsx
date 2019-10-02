@@ -252,7 +252,7 @@ export function Loading(props: IProps) {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" noWrap>
-            {t.silTranscriberAdmin}
+            {API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
           <UserMenu action={handleUserMenuAction} auth={auth} />
@@ -262,7 +262,9 @@ export function Loading(props: IProps) {
         <Paper className={classes.paper}>
           <img src={logo} className={classes.icon} alt="logo" />
           <Typography variant="h6" className={classes.message}>
-            {t.loadingTranscriber}
+            {API_CONFIG.isApp
+              ? t.loadingTranscriber
+              : t.loadingTranscriberAdmin}
           </Typography>
           <LinearProgress variant="determinate" value={completed} />
         </Paper>

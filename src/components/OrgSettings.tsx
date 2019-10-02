@@ -21,6 +21,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import OrgIcon from '@material-ui/icons/AccountBalance';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
+import { API_CONFIG } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -228,20 +229,22 @@ export function OrgSettings(props: IProps) {
             />
           </FormGroup>
         </FormControl>
-        <div className={classes.actions}>
-          <Button
-            key="save"
-            aria-label={t.save}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            disabled={name === ''}
-            onClick={() => setMessage(<span>{'Not implemented'}</span>)}
-          >
-            {'Edit'}
-            <EditIcon className={classes.icon} />
-          </Button>
-        </div>
+        {API_CONFIG.isApp || (
+          <div className={classes.actions}>
+            <Button
+              key="save"
+              aria-label={t.save}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              disabled={name === ''}
+              onClick={() => setMessage(<span>{'Not implemented'}</span>)}
+            >
+              {'Edit'}
+              <EditIcon className={classes.icon} />
+            </Button>
+          </div>
+        )}
       </div>
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a

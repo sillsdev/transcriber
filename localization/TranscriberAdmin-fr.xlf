@@ -907,6 +907,12 @@
 				<target>Administration du Transcripteur SIL</target>
 			</segment>
 		</unit>
+		<unit id="main.silTranscriber">
+			<segment>
+				<source>SIL Transcriber</source>
+				<target>Transcripteur SIL</target>
+			</segment>
+		</unit>
 		<unit id="main.search">
 			<segment>
 				<source>Search…</source>
@@ -937,7 +943,19 @@
 				<target>Fichiers audio</target>
 			</segment>
 		</unit>
-		<unit id="main.plans">
+		<unit id="main.myTasks">
+         <segment>
+            <source>My Tasks</source>
+         	<target>Mes Tâches</target>
+         </segment>
+      </unit>
+      <unit id="main.allTasks">
+         <segment>
+            <source>All Tasks</source>
+         	<target>Toutes les tâches</target>
+         </segment>
+      </unit>
+      <unit id="main.plans">
 			<segment>
 				<source>Plans</source>
 				<target>Programmes</target>
@@ -967,10 +985,16 @@
 				<target>Project</target>
 			</segment>
 		</unit>
-		<unit id="main.loadingTranscriber">
+		<unit id="main.loadingTranscriberAdmin">
 			<segment>
 				<source>Loading SIL Transcriber Admin</source>
 				<target>Chargement de SIL Transcriber Admin</target>
+			</segment>
+		</unit>
+		<unit id="main.loadingTranscriber">
+			<segment>
+				<source>Loading SIL Transcriber</source>
+				<target>Chargement de SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="main.projectSummary">

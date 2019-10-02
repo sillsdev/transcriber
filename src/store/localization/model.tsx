@@ -201,16 +201,20 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
 
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
+    "silTranscriber": string;
     "search": string;
     "organization": string;
     "usersAndGroups": string;
     "passages": string;
     "media": string;
+    "myTasks": string;
+    "allTasks": string;
     "plans": string;
     "team": string;
     "settings": string;
     "integrations": string;
     "project": string;
+    "loadingTranscriberAdmin": string;
     "loadingTranscriber": string;
     "projectSummary": string;
     "addProject": string;

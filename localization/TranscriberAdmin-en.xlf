@@ -910,6 +910,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.silTranscriber">
+         <segment>
+            <source>SIL Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.search">
          <segment>
             <source>Search…</source>
@@ -937,6 +943,18 @@
       <unit id="main.media">
          <segment>
             <source>Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.myTasks">
+         <segment>
+            <source>My Tasks</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.allTasks">
+         <segment>
+            <source>All Tasks</source>
             <target/>
          </segment>
       </unit>
@@ -970,9 +988,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.loadingTranscriber">
+      <unit id="main.loadingTranscriberAdmin">
          <segment>
             <source>Loading SIL Transcriber Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.loadingTranscriber">
+         <segment>
+            <source>Loading SIL Transcriber</source>
             <target/>
          </segment>
       </unit>

@@ -45,6 +45,8 @@ import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
+import ListIcon from '@material-ui/icons/List';
+import AllListIcon from '@material-ui/icons/ViewList';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, hasRelated, slug, remoteId, remoteIdGuid } from '../utils';
@@ -63,6 +65,7 @@ import Confirm from '../components/AlertDialog';
 import { setDefaultProj } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
+import { API_CONFIG } from '../api-variable';
 
 const drawerWidth = 240;
 
@@ -206,7 +209,9 @@ export function ResponsiveDrawer(props: IProps) {
   const [curProj, setCurProj] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [addProject, setAddProject] = useState(false);
-  const [title, setTitle] = useState(t.silTranscriberAdmin);
+  const [title, setTitle] = useState(
+    API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin
+  );
   const [view, setView] = useState('');
   const [changed, setChanged] = useState(false);
   const saveConfirm = useRef<() => any>();
@@ -493,7 +498,9 @@ export function ResponsiveDrawer(props: IProps) {
     }
   }
 
-  const transcriberIcons = [<PlanIcon />, <TeamIcon />, <MediaIcon />];
+  const transcriberIcons = API_CONFIG.isApp
+    ? [<ListIcon />, <AllListIcon />]
+    : [<PlanIcon />, <TeamIcon />, <MediaIcon />];
 
   const drawer = (
     <div>
@@ -524,7 +531,10 @@ export function ResponsiveDrawer(props: IProps) {
         <>
           <Divider />
           <List>
-            {[t.usersAndGroups, t.organization].map((text, index) => (
+            {(API_CONFIG.isApp
+              ? [t.organization]
+              : [t.usersAndGroups, t.organization]
+            ).map((text, index) => (
               <ListItem
                 button
                 key={text}
@@ -532,7 +542,11 @@ export function ResponsiveDrawer(props: IProps) {
                 onClick={checkSavedEv(() => handleChoice(text))}
               >
                 <ListItemIcon>
-                  {index % 2 === 0 ? <GroupIcon /> : <OrganizationIcon />}
+                  {index === 0 && API_CONFIG.isApp ? (
+                    <GroupIcon />
+                  ) : (
+                    <OrganizationIcon />
+                  )}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItem>
@@ -542,10 +556,14 @@ export function ResponsiveDrawer(props: IProps) {
           <div className={classes.project}>
             <div className={classes.header}>
               <Typography variant="h6">{t.project}</Typography>
-              <div className={classes.grow}>{'\u00A0'}</div>
-              <IconButton size="small" onClick={handleAddProject}>
-                <AddIcon />
-              </IconButton>
+              {API_CONFIG.isApp || (
+                <>
+                  <div className={classes.grow}>{'\u00A0'}</div>
+                  <IconButton size="small" onClick={handleAddProject}>
+                    <AddIcon />
+                  </IconButton>
+                </>
+              )}
             </div>
             {projOptions.length <= 0 || (
               <div className={classes.contained}>
@@ -567,7 +585,10 @@ export function ResponsiveDrawer(props: IProps) {
           {curProj === null || (
             <div>
               <List>
-                {[t.plans, t.team, t.media].map((text, index) => (
+                {(API_CONFIG.isApp
+                  ? [t.myTasks, t.allTasks]
+                  : [t.plans, t.team, t.media]
+                ).map((text, index) => (
                   <ListItem
                     button
                     key={text}
@@ -639,8 +660,10 @@ export function ResponsiveDrawer(props: IProps) {
   );
   components[slug(t.integrations)] = <Integration {...props} />;
   components['group'] = <GroupSettings {...props} />;
-  components[''] = <Visualize {...props} />;
+  components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
   components['none'] = <></>;
+  components[slug(t.myTasks)] = 'My Tasks';
+  components[slug(t.allTasks)] = 'All Tasks';
 
   return (
     <div className={classes.root}>
