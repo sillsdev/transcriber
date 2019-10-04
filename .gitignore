@@ -30,9 +30,13 @@ yarn-error.log*
 
 #amplify to support cross platform development
 amplify/.config/project-config.json
+# vim
+*.sw*
 
 #amplify
 amplify/.config/local-*
+amplify/mock-data
+amplify/backend/amplify-meta.json
 amplify/backend/awscloudformation
 amplify/*/amplify-meta.json
 amplify/*/hosting/S3AndCloudFront/parameters.json
