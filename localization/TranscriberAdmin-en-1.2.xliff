@@ -1994,6 +1994,76 @@
 					<context context-type="sourcefile">MediaUpload.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="myTask.todo">
+				<source>To Do</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MyTaskTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="myTask.history">
+				<source>History</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MyTaskTabs.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.filter">
+				<source>Filter</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.plan">
+				<source>Plan</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.section">
+				<source>Section</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.passage">
+				<source>Passage</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.state">
+				<source>State</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.assigned">
+				<source>Assigned</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.yes">
+				<source>Yes</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.no">
+				<source>No</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

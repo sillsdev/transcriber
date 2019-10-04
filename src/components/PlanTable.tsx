@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ICell {
+interface IRow {
   name: string;
   planType: string;
   sections: string;
@@ -101,7 +101,7 @@ export function PlanTable(props: IProps) {
   const filteringEnabled = [{ columnName: 'action', filteringEnabled: false }];
 
   const numCols = ['sections'];
-  const [rows, setRows] = useState(Array<ICell>());
+  const [rows, setRows] = useState(Array<IRow>());
   const [filter, setFilter] = useState(false);
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [view, setView] = useState('');
@@ -197,24 +197,22 @@ export function PlanTable(props: IProps) {
           planType: getType(p),
           sections: sectionCount(p),
           action: p.id,
-        } as ICell;
+        } as IRow;
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plans]);
 
-  const LinkCell = ({
-    value,
-    style,
-    ...restProps
-  }: {
+  interface ICell {
     value: string;
-    style: object;
-    row: any;
+    style?: React.CSSProperties;
+    row: IRow;
     column: any;
     tableRow: any;
     tableColumn: any;
-  }) => (
+  }
+
+  const LinkCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <Button
         key={value}
@@ -229,18 +227,7 @@ export function PlanTable(props: IProps) {
     </Table.Cell>
   );
 
-  const ActionCell = ({
-    value,
-    style,
-    ...restProps
-  }: {
-    value: string;
-    style: object;
-    row: any;
-    column: any;
-    tableRow: any;
-    tableColumn: any;
-  }) => (
+  const ActionCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <IconButton
         id={'edit-' + value}
@@ -265,7 +252,7 @@ export function PlanTable(props: IProps) {
     </Table.Cell>
   );
 
-  const Cell = (props: any) => {
+  const Cell = (props: ICell) => {
     const { column } = props;
     if (column.name === 'name') {
       return <LinkCell {...props} />;

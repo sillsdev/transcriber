@@ -414,6 +414,24 @@ const initialState = {
 			"upload": "Upload",
 		}
 	}),
+	"myTask": new LocalizedStrings({
+		"en": {
+			"todo": "To Do",
+			"history": "History",
+		}
+	}),
+	"toDoTable": new LocalizedStrings({
+		"en": {
+			"filter": "Filter",
+			"plan": "Plan",
+			"section": "Section",
+			"passage": "Passage",
+			"state": "State",
+			"assigned": "Assigned",
+			"yes": "Yes",
+			"no": "No",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -453,6 +471,8 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"invitationTable" : new LocalizedStrings(action.payload.data.invitationTable),
 				"orgSettings" : new LocalizedStrings(action.payload.data.orgSettings),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
+				"myTask" : new LocalizedStrings(action.payload.data.myTask),
+				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 			};
 		case SET_LANGUAGE:
 			return {

@@ -8,3 +8,5 @@ export * from './setDefaultProj';
 export * from './makeAbbr';
 export * from './user';
 export * from './validateEmail';
+export * from './section';
+export * from './passage';

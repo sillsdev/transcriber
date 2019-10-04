@@ -19,3 +19,12 @@ export function passageRefCompare(a: Passage, b: Passage) {
     ? -1
     : 1;
 }
+
+/* build the passage name = sequence + book + reference */
+export function passageDescription(passage: Passage) {
+  const attr = passage.attributes;
+  if (!attr) return '';
+  const book = ' ' + (attr.book ? attr.book : '');
+  const reference = ' ' + (attr.reference ? attr.reference : '');
+  return passageNumber(passage) + book + reference;
+}

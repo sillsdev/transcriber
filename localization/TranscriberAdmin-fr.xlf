@@ -1706,5 +1706,65 @@
          	<target>Télécharger</target>
          </segment>
       </unit>
-   </file>
+   <unit id="myTask.todo">
+         <segment>
+            <source>To Do</source>
+         	<target>À faire</target>
+         </segment>
+      </unit>
+      <unit id="myTask.history">
+         <segment>
+            <source>History</source>
+         	<target>Historique</target>
+         </segment>
+      </unit>
+		<unit id="toDoTable.filter">
+			<segment>
+				<source>Filter</source>
+				<target>Filtre</target>
+			</segment>
+		</unit>
+	<unit id="toDoTable.plan">
+         <segment>
+            <source>Plan</source>
+            <target>Programme</target>
+         </segment>
+      </unit>
+      <unit id="toDoTable.section">
+         <segment>
+            <source>Section</source>
+            <target>Section</target>
+         </segment>
+      </unit>
+      <unit id="toDoTable.passage">
+         <segment>
+            <source>Passage</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="toDoTable.state">
+         <segment>
+            <source>State</source>
+         	<target>État</target>
+         </segment>
+      </unit>
+		<unit id="toDoTable.assigned">
+			<segment>
+				<source>Assigned</source>
+				<target>Affecté à</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.yes">
+			<segment>
+				<source>Yes</source>
+				<target>Oui</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.no">
+			<segment>
+				<source>no</source>
+				<target>non</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>

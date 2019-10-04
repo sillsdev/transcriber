@@ -56,6 +56,7 @@ import OrgSettings from '../components/OrgSettings';
 import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
+import MyTaskTabs from '../components/MyTaskTabs';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
@@ -424,6 +425,17 @@ export function ResponsiveDrawer(props: IProps) {
             groupPart
         );
         setPlan('');
+      } else if (choice === slug(t.myTasks)) {
+        history.push(
+          '/main/' +
+            orgId +
+            '/' +
+            slug(content) +
+            '/' +
+            projId +
+            '/' +
+            tab.toString()
+        );
       } else if (choice !== slug(t.plans) || !plan) {
         history.push('/main/' + orgId + '/' + slug(choice) + '/' + projId);
         if (choice !== slug(t.media)) {
@@ -463,13 +475,15 @@ export function ResponsiveDrawer(props: IProps) {
   if (orbitLoaded && url) {
     const parts = url.split('/');
     const base = 1;
-    const orgId = remoteIdGuid('organization', parts[base + 1], keyMap);
-    if (parts.length > base + 1 && organization !== orgId) {
+    const UrlOrgPart = base + 1;
+    const orgId = remoteIdGuid('organization', parts[UrlOrgPart], keyMap);
+    if (parts.length > UrlOrgPart && organization !== orgId) {
       setOrganization(orgId);
     }
     let urlChoice = '';
-    if (parts.length > base + 2 && content !== parts[base + 2]) {
-      const value = slug(parts[base + 2]);
+    const UrlChoicePart = base + 2;
+    if (parts.length > UrlChoicePart && content !== parts[UrlChoicePart]) {
+      const value = slug(parts[UrlChoicePart]);
       urlChoice =
         ['scripture-plan', 'other-plan'].indexOf(value) !== -1
           ? slug(t.plans)
@@ -477,25 +491,44 @@ export function ResponsiveDrawer(props: IProps) {
       setChoice(urlChoice);
       setContent(value);
     }
-    const projId = remoteIdGuid('project', parts[base + 3], keyMap);
-    if (parts.length > base + 3 && project !== projId) {
+    const UrlProjPart = base + 3;
+    const projId = remoteIdGuid('project', parts[UrlProjPart], keyMap);
+    if (parts.length > UrlProjPart && project !== projId) {
       setProject(projId);
     }
     if (urlChoice === slug(t.plans)) {
-      const planId = remoteIdGuid('plan', parts[base + 4], keyMap);
-      if (parts.length > base + 4 && plan !== planId) {
+      const UrlPlanPart = base + 4;
+      const planId = remoteIdGuid('plan', parts[UrlPlanPart], keyMap);
+      if (parts.length > UrlPlanPart && plan !== planId) {
         setPlan(planId);
       }
-      if (parts.length > base + 5 && tab.toString() !== parts[base + 5]) {
-        setTab(parseInt(parts[base + 5]));
+      const UrlPlanTabPart = base + 5;
+      if (
+        parts.length > UrlPlanTabPart &&
+        tab.toString() !== parts[UrlPlanTabPart]
+      ) {
+        setTab(parseInt(parts[UrlPlanTabPart]));
       }
     } else if (urlChoice === slug(t.usersAndGroups)) {
-      if (parts.length > base + 4 && tab.toString() !== parts[base + 4]) {
-        setTab(parseInt(parts[base + 4]));
+      const UrlGroupTabPart = base + 4;
+      if (
+        parts.length > UrlGroupTabPart &&
+        tab.toString() !== parts[UrlGroupTabPart]
+      ) {
+        setTab(parseInt(parts[UrlGroupTabPart]));
       }
-      const groupId = remoteIdGuid('group', parts[base + 5], keyMap);
-      if (parts.length > base + 5 && group !== groupId) {
+      const UrlGroupPart = base + 5;
+      const groupId = remoteIdGuid('group', parts[UrlGroupPart], keyMap);
+      if (parts.length > UrlGroupPart && group !== groupId) {
         setGroup(groupId);
+      }
+    } else if (urlChoice === slug(t.myTasks)) {
+      const UrlTaskTabPart = base + 4;
+      if (
+        parts.length > UrlTaskTabPart &&
+        tab.toString() !== parts[UrlTaskTabPart]
+      ) {
+        setTab(parseInt(parts[UrlTaskTabPart]));
       }
     }
   }
@@ -544,7 +577,7 @@ export function ResponsiveDrawer(props: IProps) {
                 onClick={checkSavedEv(() => handleChoice(text))}
               >
                 <ListItemIcon>
-                  {index === 0 && API_CONFIG.isApp ? (
+                  {index === 0 && !API_CONFIG.isApp ? (
                     <GroupIcon />
                   ) : (
                     <OrganizationIcon />
@@ -664,7 +697,9 @@ export function ResponsiveDrawer(props: IProps) {
   components['group'] = <GroupSettings {...props} />;
   components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
   components['none'] = <></>;
-  components[slug(t.myTasks)] = 'My Tasks';
+  components[slug(t.myTasks)] = (
+    <MyTaskTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
+  );
   components[slug(t.allTasks)] = 'All Tasks';
 
   return (

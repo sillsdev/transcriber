@@ -27,12 +27,12 @@ import UserPassage from '../model/userPassage';
 import './AssignmentTable.css';
 import AssignSection from './AssignSection';
 import {
-  sectionNumber,
+  sectionDescription,
   sectionReviewerName,
   sectionTranscriberName,
   sectionCompare,
-} from '../utils/section';
-import { passageNumber, passageCompare } from '../utils/passage';
+} from '../utils';
+import { passageDescription, passageCompare } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,32 +77,6 @@ const getChildRows = (row: any, rootRows: any[]) => {
   return childRows.length ? childRows : null;
 };
 
-/* build the section name = sequence + name */
-const getSection = (section: Section) => {
-  const name =
-    section && section.attributes && section.attributes.name
-      ? section.attributes.name
-      : '';
-  return sectionNumber(section) + ' ' + name;
-};
-
-/* build the passage name = sequence + book + reference */
-const getReference = (passage: Passage[]) => {
-  if (passage.length === 0) return '';
-  if (!passage[0].attributes) return '';
-  const book =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.book
-      ? passage[0].attributes.book
-      : '');
-  const reference =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.reference
-      ? passage[0].attributes.reference
-      : '');
-  return passageNumber(passage[0]) + book + reference;
-};
-
 const getAssignments = (
   plan: string,
   passages: Array<Passage>,
@@ -125,7 +99,7 @@ const getAssignments = (
   plansections.forEach(function(section) {
     sectionRow = {
       id: section.id,
-      name: getSection(section),
+      name: sectionDescription(section),
       state: '',
       reviewer: sectionReviewerName(section, users),
       transcriber: sectionTranscriberName(section, users),
@@ -146,7 +120,7 @@ const getAssignments = (
         : '';
       rowData.push({
         id: passageId,
-        name: getReference(passage),
+        name: passage.length > 0 ? passageDescription(passage[0]) : '',
         state: state,
         reviewer: '',
         transcriber: '',

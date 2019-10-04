@@ -1708,5 +1708,65 @@
             <target/>
          </segment>
       </unit>
+      <unit id="myTask.todo">
+         <segment>
+            <source>To Do</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="myTask.history">
+         <segment>
+            <source>History</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.plan">
+         <segment>
+            <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.passage">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.state">
+         <segment>
+            <source>State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.assigned">
+         <segment>
+            <source>Assigned</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.yes">
+         <segment>
+            <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.no">
+         <segment>
+            <source>No</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>
