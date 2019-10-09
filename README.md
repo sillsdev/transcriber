@@ -12,7 +12,7 @@ npm install
 npm run stamp # this creates a file with the date to display in the version
 ```
 
-Building the project will determine if all dependencies have been met: 
+Building the project to determine if all dependencies have been met:
 
 ```
 npm run build
@@ -24,7 +24,67 @@ You can use Visual Studio to build `updateLocalization.sln` (in the localization
 
 ## Running Locally
 
-Create a file called `.env.development.local` in the root project directory:
+### Amplify
+
+Install `amplify-cli`:
+
+```
+npm install -g @aws-amplify/cli
+```
+
+The deployment configuration commands (e.g., `npm run dev`) require a configured `amplify` environment. This will require an AWS keyset and two configuration files:
+
+```
+mkdir ~/.aws
+touch ~/.aws/credentials
+touch ~/.aws/config
+```
+
+Add your keyset to the `.aws/credentials` file as follows:
+
+```
+[default]
+aws_access_key_id=AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+[transcriber]
+aws_access_key_id=AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+```
+
+Then, paste the following into `~/.aws/config`:
+
+```
+[default]
+region=us-east-2
+output=json
+
+[transcriber]
+region=us-east-1
+output=json
+```
+
+Initialize Amplify:
+
+```
+amplify init
+```
+
+Follow the prompts as appropriate. If the `~/.aws` folder is configured correctly, you'll eventually be presented with these two options:
+
+```
+? Do you want to use an AWS profile? [Yes]
+? Please choose the profile you want to use [transcriber]
+```
+
+### Configuration
+
+Two files are needed to create `dev` environment configurations:
+
+- `.env.dev.development.local`
+- `.env.dev.local`
+
+Example `.env.dev.development.local`:
 
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
@@ -44,25 +104,30 @@ REACT_APP_APPMODE=true
 REACT_APP_SITE_TITLE=SIL Transcriber Admin
 ```
 
-### Amplify 
-
-Install `amplify-cli`:
+Example `.env.dev.local`:
 
 ```
-npm install -g @aws-amplify/cli
+REACT_APP_DOMAIN= (url of auth0 domain)
+REACT_APP_CLIENTID= (auth0 client id)
+REACT_APP_LOGINAPP= (url of login app)
+REACT_APP_MYACCOUNTAPP= (url of my account app)
+REACT_APP_NEWORGAPP= (url of new org app page)
+REACT_APP_CALLBACK=localhost:3000/callback
+REACT_APP_IDENTITY= (url of identity api - not yet in use)
+REACT_APP_HOST= (url of host api)
+REACT_APP_HELP= (url of help online)
+REACT_APP_COMMUNITY= (url of site for community discussion)
 ```
 
-The `npm run dev` command (see below) expects there to be an `amplify/dev` folder containing `amplify-meta.json` and `parameters.json`. These files are written into the `amplify` folder structure at the appropriate points to make the `npm run deploy` command work. Similary there is a `amplify/qa` folder with the same two files with contents for the qa environment.
+### Generate dev configuration files
 
-### .env 
-
-For development you will need 2 context files: `.env.dev.development.local` and `.env.dev.local` (cf., above). With these files, you will create the environment-appropriate `.env.development.local` and `.env.local` files by executing the following:
+Having created or obtained the `.env.*` files listed above, generate the environment-appropriate `.env.development.local` and `.env.local` files by executing the following:
 
 ```
 npm run dev
 ```
 
-Execute app:
+## Execute app
 
 ```
 npm start
