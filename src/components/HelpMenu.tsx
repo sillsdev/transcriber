@@ -85,6 +85,9 @@ export function HelpMenu(props: IProps) {
     }
   };
 
+  let language = navigator.language.split('-')[0];
+  if (!['fr', 'id'].includes(language)) language = 'en';
+
   return (
     <div>
       <IconButton
@@ -104,7 +107,7 @@ export function HelpMenu(props: IProps) {
         onClose={handle('Close')}
       >
         <a
-          href={API_CONFIG.help}
+          href={API_CONFIG.help + '/' + language}
           style={{ textDecoration: 'none' }}
           target="_blank"
           rel="noopener noreferrer"
