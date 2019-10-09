@@ -60,7 +60,7 @@ import MyTaskTabs from '../components/MyTaskTabs';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
-import Integration from '../components/Integration';
+import IntegrationPanel from '../components/Integration';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
 import { setDefaultProj } from '../utils';
@@ -693,7 +693,7 @@ export function ResponsiveDrawer(props: IProps) {
       finishAdd={handleFinishAdd}
     />
   );
-  components[slug(t.integrations)] = <Integration {...props} />;
+  components[slug(t.integrations)] = <IntegrationPanel {...props} />;
   components['group'] = <GroupSettings {...props} />;
   components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
   components['none'] = <></>;

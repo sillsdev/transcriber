@@ -248,6 +248,13 @@ const Sources = async (
         }
       })
       .then(() => setCompleted(95));
+    await remote
+      .pull(q => q.findRecords('integration'))
+      .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('projectintegration'))
+      .then(transform => memory.sync(transform))
+      .then(() => setCompleted(100));
   }
 
   setCompleted(100);

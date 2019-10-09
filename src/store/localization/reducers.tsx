@@ -432,6 +432,34 @@ const initialState = {
 			"no": "No",
 		}
 	}),
+	"integration": new LocalizedStrings({
+		"en": {
+			"sync": "Sync",
+			"paratextAssociation": "Paratext association",
+			"selectProject": "Select Paratext Project",
+			"noProject": "Select Paratext Project",
+			"queryProject": "Querying projects...",
+			"offline": "Offline",
+			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
+			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please logout and login again.",
+			"questionOnline": "'Are you connected to the Internet?'",
+			"yes": "Yes",
+			"no": "No",
+			"questionProject": "Are you connected to a Paratext Project?",
+			"removeProject": "Remove Project Association",
+			"questionAccount": "Do you have a Paratext Account?",
+			"questionPermission": "Do you have permission to edit the Paratext project text?",
+			"allCriteria": "You must satisfy all four criteria to sync.",
+			"projectError": "Project Query error:",
+			"usernameError": "Username error:",
+			"syncError": "Sync error:",
+			"countError": "Count query error: ",
+			"countReady": "Passages ready to sync: ",
+			"paratext": "Paratext",
+			"render": "Render",
+			"onestory": "One Story",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -473,6 +501,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"myTask" : new LocalizedStrings(action.payload.data.myTask),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
+				"integration" : new LocalizedStrings(action.payload.data.integration),
 			};
 		case SET_LANGUAGE:
 			return {

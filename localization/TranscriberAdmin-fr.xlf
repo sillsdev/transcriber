@@ -1763,8 +1763,152 @@
 		<unit id="toDoTable.no">
 			<segment>
 				<source>no</source>
-				<target>non</target>
+				<target>Non</target>
 			</segment>
 		</unit>
-	</file>
+      <unit id="integration.sync">
+         <segment>
+            <source>Sync</source>
+            <target>Sync</target>
+         </segment>
+      </unit>
+      <unit id="integration.paratextAssociation">
+         <segment>
+            <source>Paratext association</source>
+    		<target>Association paratext</target>
+	     </segment>
+      </unit>
+      <unit id="integration.selectProject">
+         <segment>
+            <source>Select Paratext Project</source>
+    		<target>Sélectionnez le projet Paratext</target>
+	     </segment>
+      </unit>
+      <unit id="integration.noProject">
+         <segment>
+            <source>You are not a member of any Paratext projects.</source>
+    		<target>Vous n'êtes membre d'aucun projet Paratext.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.queryProject">
+         <segment>
+            <source>Querying projects...</source>
+    		<target>Requête de projets ...</target>
+	     </segment>
+      </unit>
+      <unit id="integration.offline">
+         <segment>
+            <source>Offline</source>
+    		<target>Hors ligne</target>
+	     </segment>
+      </unit>
+      <unit id="integration.expiredToken">
+         <segment>
+            <source>Your login has expired and can't be automatically renewed.  Please logout and login again.</source>
+    		<target>Votre identifiant a expiré et ne peut pas être automatiquement renouvelé. Veuillez vous déconnecter et vous reconnecter.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+    		<target>Votre connexion paratext a expiré et ne peut pas être automatiquement renouvelée. Veuillez vous déconnecter et vous reconnecter.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.questionOnline">
+         <segment>
+            <source>Are you connected to the Internet?</source>
+    		<target>Êtes-vous connecté à Internet?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.yes">
+         <segment>
+            <source>Yes</source>
+			<target>Oui</target>
+         </segment>
+      </unit>
+      <unit id="integration.no">
+         <segment>
+            <source>No</source>
+			<target>Non</target>
+	     </segment>
+      </unit>
+   <unit id="integration.questionProject">
+         <segment>
+            <source>Are you connected to a Paratext Project?</source>
+    		<target>Êtes-vous connecté à un projet Paratext?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.removeProject">
+         <segment>
+            <source>Remove Project Association</source>
+    		<target>Supprimer l'association de projet</target>
+	     </segment>
+      </unit>
+      <unit id="integration.questionAccount">
+         <segment>
+            <source>Do you have a Paratext Account?</source>
+    		<target>Avez-vous un compte Paratext?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.questionPermission">
+         <segment>
+            <source>Do you have permission to edit the Paratext project text?</source>
+    		<target>Avez-vous la permission de modifier le texte du projet Paratext?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.allCriteria">
+         <segment>
+            <source>You must satisfy all four criteria to sync.</source>
+    		<target>Vous devez satisfaire aux quatre critères pour la synchronisation.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.projectError">
+         <segment>
+            <source>Project Query error:</source>
+    		<target>Erreur de requête de projet:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.usernameError">
+         <segment>
+            <source>Username error:</source>
+    		<target>Erreur de nom d'utilisateur:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.syncError">
+         <segment>
+            <source>Sync error:</source>
+    		<target>Erreur de synchronisation:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.countError">
+         <segment>
+            <source>Count query error: </source>
+    		<target>Compter l'erreur de requête:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.countReady">
+         <segment>
+            <source>Passages ready to sync: </source>
+    		<target>Passages prêts à être synchronisés:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.paratext">
+         <segment>
+            <source>Paratext</source>
+    		<target>Non</target>
+	     </segment>
+      </unit>
+      <unit id="integration.render">
+         <segment>
+            <source>Render</source>
+    		<target>Rendre</target>
+	     </segment>
+      </unit>
+      <unit id="integration.onestory">
+         <segment>
+            <source>One Story</source>
+    		<target>Une Histoire</target>
+	     </segment>
+      </unit>
+  </file>
 </xliff>

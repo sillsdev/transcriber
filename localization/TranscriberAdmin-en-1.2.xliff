@@ -2064,6 +2064,174 @@
 					<context context-type="sourcefile">ToDoTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="integration.sync">
+				<source>Sync</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.paratextAssociation">
+				<source>Paratext association</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.selectProject">
+				<source>Select Paratext Project</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.noProject">
+				<source>You are not a member of any Paratext projects.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.queryProject">
+				<source>Querying projects...</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.offline">
+				<source>Offline</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.expiredToken">
+				<source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.expiredParatextToken">
+				<source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.questionOnline">
+				<source>Are you connected to the Internet?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.yes">
+				<source>Yes</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+		    <trans-unit id="integration.no">
+				<source>No</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.questionProject">
+				<source>Are you connected to a Paratext Project?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.removeProject">
+				<source>Remove Project Association</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.questionAccount">
+				<source>Do you have a Paratext Account?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.questionPermission">
+				<source>Do you have permission to edit the Paratext project text?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.allCriteria">
+				<source>You must satisfy all four criteria to sync.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.projectError">
+				<source>Project Query error:</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.usernameError">
+				<source>Username error:</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.syncError">
+				<source>Sync error:</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.countError">
+				<source>Count query error: </source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.countReady">
+				<source>Passages ready to sync: </source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.paratext">
+				<source>Paratext</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.render">
+				<source>Render</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.onestory">
+				<source>One Story</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

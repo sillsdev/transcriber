@@ -25,3 +25,4 @@ export * from '../store/upload/types';
 export * from '../store/context/types';
 export * from '../store/langPicker/types';
 export * from '../store/media/types';
+export * from '../store/paratext/types';

@@ -394,6 +394,33 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "no": string;
 };
 
+export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
+    "sync": string;
+    "paratextAssociation": string;
+    "selectProject": string;
+    "noProject": string;
+    "queryProject": string;
+    "offline": string;
+    "expiredToken": string;
+    "expiredParatextToken": string;
+    "questionOnline": string;
+    "yes": string;
+    "no": string;
+    "questionProject": string;
+    "removeProject": string;
+    "questionAccount": string;
+    "questionPermission": string;
+    "allCriteria": string;
+    "projectError": string;
+    "usernameError": string;
+    "syncError": string;
+    "countError": string;
+    "countReady": string;
+    "paratext": string;
+    "render": string;
+    "onestory": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -430,5 +457,6 @@ export interface ILocalizedStrings {
 	mediaUpload: IMediaUploadStrings;
 	myTask: IMyTaskStrings;
 	toDoTable: IToDoTableStrings;
+	integration: IIntegrationStrings;
 	[key: string]: any;
 };

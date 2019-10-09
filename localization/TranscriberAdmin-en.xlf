@@ -1768,5 +1768,149 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.sync">
+         <segment>
+            <source>Sync</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.paratextAssociation">
+         <segment>
+            <source>Paratext association</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.selectProject">
+         <segment>
+            <source>Select Paratext Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.noProject">
+         <segment>
+            <source>You are not a member of any Paratext projects.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.queryProject">
+         <segment>
+            <source>Querying projects...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.offline">
+         <segment>
+            <source>Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionOnline">
+         <segment>
+            <source>Are you connected to the Internet?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.yes">
+         <segment>
+            <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.no">
+         <segment>
+            <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionProject">
+         <segment>
+            <source>Are you connected to a Paratext Project?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.removeProject">
+         <segment>
+            <source>Remove Project Association</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionAccount">
+         <segment>
+            <source>Do you have a Paratext Account?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionPermission">
+         <segment>
+            <source>Do you have permission to edit the Paratext project text?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.allCriteria">
+         <segment>
+            <source>You must satisfy all four criteria to sync.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.projectError">
+         <segment>
+            <source>Project Query error:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.usernameError">
+         <segment>
+            <source>Username error:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.syncError">
+         <segment>
+            <source>Sync error:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.countError">
+         <segment>
+            <source>Count query error: </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.countReady">
+         <segment>
+            <source>Passages ready to sync: </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.paratext">
+         <segment>
+            <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.render">
+         <segment>
+            <source>Render</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.onestory">
+         <segment>
+            <source>One Story</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

@@ -7,6 +7,7 @@ import {
   IContextState,
   ILangTagData,
   IMediaState,
+  IParatextState,
 } from '.';
 
 export interface IState {
@@ -21,4 +22,5 @@ export interface IState {
   upload: IUploadState;
   langTag: ILangTagData;
   media: IMediaState;
+  paratext: IParatextState;
 }
