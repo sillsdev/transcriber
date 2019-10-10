@@ -39,6 +39,7 @@ interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
   changeTab?: (v: number) => void;
   checkSaved: (method: () => void) => void;
+  transcriber: () => void;
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {

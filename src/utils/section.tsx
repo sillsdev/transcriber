@@ -42,5 +42,5 @@ export function sectionDescription(section: Section) {
     section && section.attributes && section.attributes.name
       ? section.attributes.name
       : '';
-  return sectionNumber(section) + ' ' + name;
+  return sectionNumber(section) + '\u00A0\u00A0 ' + name;
 }

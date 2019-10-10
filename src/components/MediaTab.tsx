@@ -91,6 +91,7 @@ interface IRow {
   size: number;
   version: string;
   date: string;
+  parentId?: string;
 }
 const getSection = (section: Section[]) => {
   const sectionId =
@@ -448,14 +449,24 @@ export function MediaTab(props: IProps) {
     }
   }, [hasUrl, mediaUrl, playing, playItem]);
 
-  const LinkCell = ({ value, style, mediaId, ...restProps }: any) => (
+  interface ICell {
+    value: string;
+    style?: React.CSSProperties;
+    mediaId?: string;
+    row: IRow;
+    column: any;
+    tableRow: any;
+    tableColumn: any;
+  }
+
+  const PlayCell = ({ value, style, mediaId, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <IconButton
         key={'audio-' + mediaId}
         aria-label={'audio-' + mediaId}
         color="primary"
         className={classes.link}
-        onClick={handleSelect(mediaId)}
+        onClick={handleSelect(mediaId ? mediaId : '')}
       >
         {value === mediaId ? (
           <StopIcon className={classes.playIcon} />
@@ -466,11 +477,11 @@ export function MediaTab(props: IProps) {
     </Table.Cell>
   );
 
-  const Cell = (props: any) => {
+  const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'playIcon' && row.parentId !== '') {
       const mediaId = remoteId('mediafile', row.id, keyMap);
-      return <LinkCell {...props} mediaId={mediaId} />;
+      return <PlayCell {...props} mediaId={mediaId} />;
     }
     return <Table.Cell {...props} />;
   };

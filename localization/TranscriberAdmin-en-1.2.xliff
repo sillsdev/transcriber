@@ -908,7 +908,7 @@
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>
 				</context-group>
-			</trans-unit>	
+			</trans-unit>
 			<trans-unit id="mediaTab.planName">
 				<source>Plan</source>
 				<target/>
@@ -1608,7 +1608,7 @@
 				<context-group>
 					<context context-type="sourcefile">shapingTable.tsx</context>
 				</context-group>
-			</trans-unit>		
+			</trans-unit>
 			<trans-unit id="treeChart.noData">
 				<source>No Transcription Data Yet</source>
 				<target/>
@@ -2043,6 +2043,34 @@
 					<context context-type="sourcefile">ToDoTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="toDoTable.action">
+				<source>Action</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.transcriber">
+				<source>Transcribe</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.reviewer">
+				<source>Review</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.length">
+				<source>Duration</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="toDoTable.assigned">
 				<source>Assigned</source>
 				<target/>
@@ -2230,6 +2258,83 @@
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.submit">
+				<source>Submit</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.reject">
+				<source>Reject</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.settingsTip">
+				<source>Settings</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.backTip">
+				<source>Skip back (F2)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.aheadTip">
+				<source>Skip ahead (F4)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.playTip">
+				<source>Pause (ESC)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.pauseTip">
+				<source>Play (ESC)</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.rejectTranscriptionTip">
+				<source>Audio recording is unusable</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.rejectReviewTip">
+				<source>Transcription requires changes.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.submitTranscriptionTip">
+				<source>Mark this transcription as complete.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.submitReviewTip">
+				<source>Mark this review as complete.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
 				</context-group>
 			</trans-unit>
 		</body>

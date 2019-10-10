@@ -389,6 +389,10 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "section": string;
     "passage": string;
     "state": string;
+    "action": string;
+    "transcriber": string;
+    "reviewer": string;
+    "length": string;
     "assigned": string;
     "yes": string;
     "no": string;
@@ -419,6 +423,20 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "paratext": string;
     "render": string;
     "onestory": string;
+};
+
+export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
+    "submit": string;
+    "reject": string;
+    "settingsTip": string;
+    "backTip": string;
+    "aheadTip": string;
+    "playTip": string;
+    "pauseTip": string;
+    "rejectTranscriptionTip": string;
+    "rejectReviewTip": string;
+    "submitTranscriptionTip": string;
+    "submitReviewTip": string;
 };
 
 export interface ILocalizedStrings {
@@ -458,5 +476,6 @@ export interface ILocalizedStrings {
 	myTask: IMyTaskStrings;
 	toDoTable: IToDoTableStrings;
 	integration: IIntegrationStrings;
+	transcriber: ITranscriberStrings;
 	[key: string]: any;
 };

@@ -26,5 +26,5 @@ export function passageDescription(passage: Passage) {
   if (!attr) return '';
   const book = ' ' + (attr.book ? attr.book : '');
   const reference = ' ' + (attr.reference ? attr.reference : '');
-  return passageNumber(passage) + book + reference;
+  return passageNumber(passage) + '\u00A0\u00A0' + book + reference;
 }

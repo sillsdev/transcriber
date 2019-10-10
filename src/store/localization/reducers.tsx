@@ -427,6 +427,10 @@ const initialState = {
 			"section": "Section",
 			"passage": "Passage",
 			"state": "State",
+			"action": "Action",
+			"transcriber": "Transcribe",
+			"reviewer": "Review",
+			"length": "Duration",
 			"assigned": "Assigned",
 			"yes": "Yes",
 			"no": "No",
@@ -437,12 +441,12 @@ const initialState = {
 			"sync": "Sync",
 			"paratextAssociation": "Paratext association",
 			"selectProject": "Select Paratext Project",
-			"noProject": "Select Paratext Project",
+			"noProject": "You are not a member of any Paratext projects.",
 			"queryProject": "Querying projects...",
 			"offline": "Offline",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please logout and login again.",
-			"questionOnline": "'Are you connected to the Internet?'",
+			"questionOnline": "Are you connected to the Internet?",
 			"yes": "Yes",
 			"no": "No",
 			"questionProject": "Are you connected to a Paratext Project?",
@@ -458,6 +462,21 @@ const initialState = {
 			"paratext": "Paratext",
 			"render": "Render",
 			"onestory": "One Story",
+		}
+	}),
+	"transcriber": new LocalizedStrings({
+		"en": {
+			"submit": "Submit",
+			"reject": "Reject",
+			"settingsTip": "Settings",
+			"backTip": "Skip back (F2)",
+			"aheadTip": "Skip ahead (F4)",
+			"playTip": "Pause (ESC)",
+			"pauseTip": "Play (ESC)",
+			"rejectTranscriptionTip": "Audio recording is unusable",
+			"rejectReviewTip": "Transcription requires changes.",
+			"submitTranscriptionTip": "Mark this transcription as complete.",
+			"submitReviewTip": "Mark this review as complete.",
 		}
 	}),
 };
@@ -502,6 +521,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"myTask" : new LocalizedStrings(action.payload.data.myTask),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 				"integration" : new LocalizedStrings(action.payload.data.integration),
+				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
 			};
 		case SET_LANGUAGE:
 			return {

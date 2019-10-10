@@ -774,7 +774,7 @@
 				<source>Upload complete.</source>
 				<target>Charger achevées</target>
 			</segment>
-		</unit>	    
+		</unit>
 		<unit id="mediaTab.planName">
          <segment>
             <source>Plan</source>
@@ -1375,7 +1375,7 @@
 				<source>No columns visible</source>
 				<target>Aucune colonne visible</target>
 			</segment>
-	</unit>	    
+	</unit>
     <unit id="treeChart.noData">
          <segment>
 			<source>No Transcription Data Yet</source>
@@ -1748,6 +1748,30 @@
          	<target>État</target>
          </segment>
       </unit>
+		<unit id="toDoTable.action">
+			<segment>
+				<source>Action</source>
+				<target>Action</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.transcriber">
+			<segment>
+				<source>Transcribe</source>
+				<target>Transcrire</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.reviewer">
+			<segment>
+				<source>Review</source>
+				<target>Controler</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.length">
+			<segment>
+				<source>Duration</source>
+				<target>Durée</target>
+			</segment>
+		</unit>
 		<unit id="toDoTable.assigned">
 			<segment>
 				<source>Assigned</source>
@@ -1910,5 +1934,71 @@
     		<target>Une Histoire</target>
 	     </segment>
       </unit>
-  </file>
+		<unit id="transcriber.submit">
+			<segment>
+				<source>Submit</source>
+				<target>Soumettre</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.reject">
+			<segment>
+				<source>Reject</source>
+				<target>Rejeter</target>
+			</segment>
+		</unit>
+	<unit id="transcriber.settingsTip">
+         <segment>
+            <source>Settings</source>
+         	<target>Paramètres</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.backTip">
+         <segment>
+            <source>Skip back (F2)</source>
+         	<target>Saut en arrière (F2)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.aheadTip">
+         <segment>
+            <source>Skip ahead (F4)</source>
+         	<target>Sauter en avant (F4)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.playTip">
+         <segment>
+            <source>Pause (ESC)</source>
+         	<target>Pause (ESC)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pauseTip">
+         <segment>
+            <source>Play (ESC)</source>
+         	<target>Ecouter (ESC)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectTranscriptionTip">
+         <segment>
+            <source>Audio recording is unusable</source>
+         	<target>L'enregistrement audio est inutilisable</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectReviewTip">
+         <segment>
+            <source>Transcription requires changes.</source>
+         	<target>La transcription exige des changements.</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitTranscriptionTip">
+         <segment>
+            <source>Mark this transcription as complete.</source>
+         	<target>Marquez cette transcription comme complète.</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitReviewTip">
+         <segment>
+            <source>Mark this review as complete.</source>
+         	<target>Cochez cette évaluation comme étant complète.</target>
+         </segment>
+      </unit>
+   </file>
 </xliff>

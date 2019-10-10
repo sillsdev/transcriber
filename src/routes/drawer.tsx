@@ -10,6 +10,7 @@ import {
   Project,
   Plan,
   Group,
+  MediaDescription,
 } from '../model';
 // import * as actions from '../store';
 import localStrings from '../selector/localize';
@@ -63,6 +64,7 @@ import GroupSettings from '../components/GroupSettings';
 import IntegrationPanel from '../components/Integration';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
+import Transcriber from '../components/Transcriber';
 import { setDefaultProj } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -215,6 +217,7 @@ export function ResponsiveDrawer(props: IProps) {
   );
   const [view, setView] = useState('');
   const [changed, setChanged] = useState(false);
+  const [mediaDesc, setMediaDesc] = useState<MediaDescription>();
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
   const newOrgRef = useRef<any>();
@@ -698,9 +701,26 @@ export function ResponsiveDrawer(props: IProps) {
   components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
   components['none'] = <></>;
   components[slug(t.myTasks)] = (
-    <MyTaskTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
+    <MyTaskTabs
+      {...props}
+      setChanged={setChanged}
+      checkSaved={checkSavedFn}
+      transcriber={(desc: MediaDescription) => {
+        setMediaDesc(desc);
+        handleChoice('Transcriber');
+      }}
+    />
   );
   components[slug(t.allTasks)] = 'All Tasks';
+  if (mediaDesc) {
+    components['transcriber'] = (
+      <Transcriber
+        {...mediaDesc}
+        auth={auth}
+        done={() => handleChoice(slug(t.myTasks))}
+      />
+    );
+  }
 
   return (
     <div className={classes.root}>

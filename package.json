@@ -29,6 +29,7 @@
     "react-file-drop": "^0.2.8",
     "react-localization": "^1.0.15",
     "react-orbitjs": "^0.1.15",
+    "react-player": "^1.13.0",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.2.0",

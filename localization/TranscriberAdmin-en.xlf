@@ -1750,6 +1750,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="toDoTable.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.transcriber">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.reviewer">
+         <segment>
+            <source>Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.length">
+         <segment>
+            <source>Duration</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="toDoTable.assigned">
          <segment>
             <source>Assigned</source>
@@ -1909,6 +1933,72 @@
       <unit id="integration.onestory">
          <segment>
             <source>One Story</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.submit">
+         <segment>
+            <source>Submit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.reject">
+         <segment>
+            <source>Reject</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.settingsTip">
+         <segment>
+            <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.backTip">
+         <segment>
+            <source>Skip back (F2)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.aheadTip">
+         <segment>
+            <source>Skip ahead (F4)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.playTip">
+         <segment>
+            <source>Pause (ESC)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.pauseTip">
+         <segment>
+            <source>Play (ESC)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectTranscriptionTip">
+         <segment>
+            <source>Audio recording is unusable</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectReviewTip">
+         <segment>
+            <source>Transcription requires changes.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitTranscriptionTip">
+         <segment>
+            <source>Mark this transcription as complete.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitReviewTip">
+         <segment>
+            <source>Mark this review as complete.</source>
             <target/>
          </segment>
       </unit>
