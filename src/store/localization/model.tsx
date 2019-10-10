@@ -403,7 +403,9 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "paratextAssociation": string;
     "selectProject": string;
     "noProject": string;
-    "queryProject": string;
+    "projectsPending": string;
+    "countPending": string;
+    "usernamePending": string;
     "offline": string;
     "expiredToken": string;
     "expiredParatextToken": string;
@@ -417,7 +419,9 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "allCriteria": string;
     "projectError": string;
     "usernameError": string;
+    "syncPending": string;
     "syncError": string;
+    "syncComplete": string;
     "countError": string;
     "countReady": string;
     "paratext": string;

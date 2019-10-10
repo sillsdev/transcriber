@@ -1816,9 +1816,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="integration.queryProject">
+      <unit id="integration.projectsPending">
          <segment>
             <source>Querying projects...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.countPending">
+         <segment>
+            <source>Querying count...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.usernamePending">
+         <segment>
+            <source>Querying username...</source>
             <target/>
          </segment>
       </unit>
@@ -1884,7 +1896,7 @@
       </unit>
       <unit id="integration.allCriteria">
          <segment>
-            <source>You must satisfy all four criteria to sync.</source>
+            <source>You must satisfy all criteria to sync.</source>
             <target/>
          </segment>
       </unit>
@@ -1900,9 +1912,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.syncPending">
+         <segment>
+            <source>Syncing...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.syncError">
          <segment>
             <source>Sync error:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.syncComplete">
+         <segment>
+            <source>Sync Complete!</source>
             <target/>
          </segment>
       </unit>

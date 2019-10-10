@@ -18,9 +18,11 @@ import {
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus } from '../AxiosStatus';
 
-export const getUserName = (auth: Auth) => (dispatch: any) => {
+export const getUserName = (auth: Auth, pendingmsg: string) => (
+  dispatch: any
+) => {
   dispatch({
-    payload: pendingStatus('Querying username...'),
+    payload: pendingStatus(pendingmsg),
     type: USERNAME_PENDING,
   });
   Axios.get(API_CONFIG.host + '/api/paratext/username', {
@@ -41,9 +43,11 @@ export const getUserName = (auth: Auth) => (dispatch: any) => {
       });
     });
 };
-export const getProjects = (auth: Auth) => (dispatch: any) => {
+export const getProjects = (auth: Auth, pendingmsg: string) => (
+  dispatch: any
+) => {
   dispatch({
-    payload: pendingStatus('Querying projects...'),
+    payload: pendingStatus(pendingmsg),
     type: PROJECTS_PENDING,
   });
   Axios.get(API_CONFIG.host + '/api/paratext/projects', {
@@ -75,9 +79,11 @@ export const getProjects = (auth: Auth) => (dispatch: any) => {
       dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
     });
 };
-export const getCount = (auth: Auth, projectId: number) => (dispatch: any) => {
+export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
+  dispatch: any
+) => {
   dispatch({
-    payload: pendingStatus('Querying count...'),
+    payload: pendingStatus(pendingmsg),
     type: COUNT_PENDING,
   });
   var path = API_CONFIG.host + '/api/paratext/project/' + projectId + '/count';
@@ -96,10 +102,15 @@ export const getCount = (auth: Auth, projectId: number) => (dispatch: any) => {
       dispatch({ payload: errStatus(err), type: COUNT_ERROR });
     });
 };
-export const syncProject = (auth: Auth, projectId: number) => (
-  dispatch: any
-) => {
-  dispatch({ payload: pendingStatus('Syncing...'), type: SYNC_PENDING });
+export const resetSync = () => (dispatch: any) => {
+  dispatch({ payload: pendingStatus(''), type: SYNC_PENDING });
+};
+export const syncProject = (
+  auth: Auth,
+  projectId: number,
+  pendingmsg: string
+) => (dispatch: any) => {
+  dispatch({ payload: pendingStatus(pendingmsg), type: SYNC_PENDING });
 
   Axios.post(API_CONFIG.host + '/api/paratext/project/' + projectId, null, {
     headers: {
@@ -109,7 +120,7 @@ export const syncProject = (auth: Auth, projectId: number) => (
     .then(response => {
       console.log(response);
       dispatch({ payload: response.data, type: SYNC_SUCCESS });
-      getCount(auth, projectId);
+      getCount(auth, projectId, '');
     })
     .catch(err => {
       console.log('Sync failed.');

@@ -2120,8 +2120,22 @@
 					<context context-type="sourcefile">integration.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="integration.queryProject">
+			<trans-unit id="integration.projectsPending">
 				<source>Querying projects...</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.countPending">
+				<source>Querying count...</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.usernamePending">
+				<source>Querying username...</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">integration.tsx</context>
@@ -2198,7 +2212,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="integration.allCriteria">
-				<source>You must satisfy all four criteria to sync.</source>
+				<source>You must satisfy all criteria to sync.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">integration.tsx</context>
@@ -2218,8 +2232,21 @@
 					<context context-type="sourcefile">integration.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="integration.syncError">
+			<trans-unit id="integration.syncPending">
+				<source>Syncing...</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>			<trans-unit id="integration.syncError">
 				<source>Sync error:</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">integration.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="integration.syncComplete">
+				<source>Sync Complete!</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">integration.tsx</context>

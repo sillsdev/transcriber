@@ -1814,11 +1814,23 @@
     		<target>Vous n'êtes membre d'aucun projet Paratext.</target>
 	     </segment>
       </unit>
-      <unit id="integration.queryProject">
+      <unit id="integration.projectsPending">
          <segment>
             <source>Querying projects...</source>
-    		<target>Requête de projets ...</target>
-	     </segment>
+            <target>Requête de projets ...</target>
+         </segment>
+      </unit>
+      <unit id="integration.countPending">
+         <segment>
+            <source>Querying count...</source>
+            <target>Requête de nombre ...</target>
+         </segment>
+      </unit>
+      <unit id="integration.usernamePending">
+         <segment>
+            <source>Querying username...</source>
+            <target>Requête le nom d'utilisateur...</target>
+         </segment>
       </unit>
       <unit id="integration.offline">
          <segment>
@@ -1882,8 +1894,8 @@
       </unit>
       <unit id="integration.allCriteria">
          <segment>
-            <source>You must satisfy all four criteria to sync.</source>
-    		<target>Vous devez satisfaire aux quatre critères pour la synchronisation.</target>
+            <source>You must satisfy all criteria to sync.</source>
+    		<target>Vous devez satisfaire aux critères pour la synchronisation.</target>
 	     </segment>
       </unit>
       <unit id="integration.projectError">
@@ -1898,13 +1910,25 @@
     		<target>Erreur de nom d'utilisateur:</target>
 	     </segment>
       </unit>
+	  <unit id="integration.syncPending">
+         <segment>
+            <source>Syncing...</source>
+    		<target>Synchroniser ...</target>
+	    </segment>
+      </unit>
       <unit id="integration.syncError">
          <segment>
             <source>Sync error:</source>
     		<target>Erreur de synchronisation:</target>
 	     </segment>
       </unit>
-      <unit id="integration.countError">
+      <unit id="integration.syncComplete">
+         <segment>
+            <source>Sync Complete!</source>
+            <target>Synchronisation terminée!</target>
+         </segment>
+      </unit>
+	  <unit id="integration.countError">
          <segment>
             <source>Count query error: </source>
     		<target>Compter l'erreur de requête:</target>

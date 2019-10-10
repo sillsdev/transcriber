@@ -59,7 +59,7 @@ export default function(
       return {
         ...state,
         projects: action.payload,
-        projectsStatus: successStatus('Select Paratext Project'),
+        projectsStatus: successStatus(''),
       };
     case type.PROJECTS_ERROR:
       return {

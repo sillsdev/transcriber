@@ -110,6 +110,7 @@ interface IDispatchProps {
   getProjects: typeof actions.getProjects;
   getCount: typeof actions.getCount;
   syncProject: typeof actions.syncProject;
+  resetSync: typeof actions.resetSync;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -135,7 +136,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_projectsStatus,
     paratext_syncStatus,
   } = props;
-  const { getUserName, getCount, getProjects, syncProject } = props;
+  const { getUserName, getCount, getProjects, syncProject, resetSync } = props;
   const { projectintegrations, integrations } = props;
   const classes = useStyles();
 
@@ -150,7 +151,6 @@ export function IntegrationPanel(props: IProps) {
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
-  /* eslint-enable @typescript-eslint/no-unused-vars */
   const [message, setMessage] = React.useState(<></>);
 
   const handleMessageReset = () => () => {
@@ -256,7 +256,7 @@ export function IntegrationPanel(props: IProps) {
     }
   };
   const handleSync = () =>
-    syncProject(auth, remoteIdNum('project', project, keyMap));
+    syncProject(auth, remoteIdNum('project', project, keyMap), t.syncPending);
 
   const handleRemoveIntegration = () => {
     setConfirmItem(t.paratextAssociation);
@@ -282,7 +282,7 @@ export function IntegrationPanel(props: IProps) {
             ? t.selectProject
             : t.noProject
           : translateError(paratext_projectsStatus)
-        : t.queryProject
+        : t.projectsPending
       : t.offline;
   };
   const findConnectedProject = () => {
@@ -303,12 +303,13 @@ export function IntegrationPanel(props: IProps) {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
   useEffect(() => {
-    getCount(auth, remoteIdNum('project', project, keyMap));
+    resetSync();
+    getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
     getParatextIntegration();
     if (!paratext_projectsStatus.complete || paratext_projectsStatus.errStatus)
-      getProjects(auth);
+      getProjects(auth, t.projectsPending);
     if (!paratext_usernameStatus.complete || paratext_usernameStatus.errStatus)
-      getUserName(auth);
+      getUserName(auth, t.usernamePending);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -348,19 +349,24 @@ export function IntegrationPanel(props: IProps) {
       paratext_projectsStatus &&
       paratext_projectsStatus.complete &&
       !paratext_projectsStatus.errStatus
-    )
+    ) {
       findConnectedProject();
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_projects, paratext_projectsStatus]);
 
   useEffect(() => {
-    if (paratext_syncStatus && paratext_syncStatus.errStatus)
-      setMessage(
-        <span>
-          {t.syncError}
-          {translateError(paratext_syncStatus)}
-        </span>
-      );
+    if (paratext_syncStatus)
+      if (paratext_syncStatus.errStatus)
+        setMessage(
+          <span>
+            {t.syncError}
+            {translateError(paratext_syncStatus)}
+          </span>
+        );
+      else if (paratext_syncStatus.statusMsg !== '') {
+        setMessage(<span>{paratext_syncStatus.statusMsg}</span>);
+      }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);
 
@@ -416,7 +422,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.queryProject}
+                primary={t.questionProject}
                 secondary={
                   <>
                     <TextField
@@ -493,7 +499,9 @@ export function IntegrationPanel(props: IProps) {
                   hasParatext
                     ? t.yes + ': ' + paratext_username
                     : online
-                    ? t.no
+                    ? paratext_usernameStatus.complete
+                      ? t.no
+                      : t.usernamePending
                     : t.offline
                 }
               />
@@ -515,13 +523,25 @@ export function IntegrationPanel(props: IProps) {
                 }
               />
             </ListItem>
+            <ListItem key="ready">
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  {paratext_count === 0 || <CheckIcon />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={t.countReady}
+                secondary={
+                  paratext_countStatus.complete
+                    ? paratext_count
+                    : t.countPending
+                }
+              />
+            </ListItem>
           </List>
 
           <FormControl component="fieldset" className={classes.formControl}>
             <FormGroup>
-              <FormLabel component="p">
-                {t.countReady + paratext_count}
-              </FormLabel>
               <FormControlLabel
                 control={
                   <Button
@@ -531,7 +551,11 @@ export function IntegrationPanel(props: IProps) {
                     color="primary"
                     className={classes.button}
                     disabled={
-                      !online || !hasPtProj || !hasParatext || !hasPermission
+                      !online ||
+                      !hasPtProj ||
+                      !hasParatext ||
+                      !hasPermission ||
+                      !paratext_count
                     }
                     onClick={handleSync}
                   >
@@ -598,6 +622,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       getProjects: actions.getProjects,
       getCount: actions.getCount,
       syncProject: actions.syncProject,
+      resetSync: actions.resetSync,
     },
     dispatch
   ),
