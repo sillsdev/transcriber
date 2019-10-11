@@ -98,6 +98,7 @@ export function Transcriber(props: IProps) {
     mediaRemoteId,
     mediaId,
     state,
+    mediafiles,
   } = props;
   const { mediaUrl, fetchMediaUrl, done } = props;
   const classes = useStyles();
@@ -114,6 +115,7 @@ export function Transcriber(props: IProps) {
     state === 'transcrbing' || state === 'transcribeReady'
   );
   const [height, setHeight] = React.useState(window.innerHeight);
+  const [defaultValue, setDefaultValue] = React.useState('');
   const [message, setMessage] = React.useState(<></>);
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
@@ -196,6 +198,14 @@ export function Transcriber(props: IProps) {
   }, []);
 
   React.useEffect(() => {
+    const mediaRec = mediafiles.filter(m => m.id === mediaId);
+    if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
+      const attr = mediaRec[0].attributes;
+      setDefaultValue(attr.transcription);
+    }
+  }, [mediaId, mediafiles]);
+
+  React.useEffect(() => {
     fetchMediaUrl(mediaRemoteId, auth);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediaRemoteId]);
@@ -243,6 +253,7 @@ export function Transcriber(props: IProps) {
           <Grid item xs={12} sm container>
             <Grid ref={transcriptionRef} item xs container direction="column">
               <TextareaAutosize
+                defaultValue={defaultValue}
                 style={{
                   backgroundColor: '#cfe8fc',
                   height: height - 240,
