@@ -230,6 +230,7 @@ const initialState = {
 			"passages": "Passages",
 			"media": "Media",
 			"myTasks": "My Tasks",
+			"todo": "To Do",
 			"allTasks": "All Tasks",
 			"plans": "Plans",
 			"team": "Team",

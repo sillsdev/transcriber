@@ -208,6 +208,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "passages": string;
     "media": string;
     "myTasks": string;
+    "todo": string;
     "allTasks": string;
     "plans": string;
     "team": string;

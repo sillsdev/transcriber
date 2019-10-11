@@ -952,6 +952,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.todo">
+         <segment>
+            <source>To Do</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.allTasks">
          <segment>
             <source>All Tasks</source>

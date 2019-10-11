@@ -57,7 +57,8 @@ import OrgSettings from '../components/OrgSettings';
 import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
-import MyTaskTabs from '../components/MyTaskTabs';
+// import MyTaskTabs from '../components/MyTaskTabs';
+import ToDoTable from '../components/ToDoTable';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
@@ -203,8 +204,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [project, setProject] = useGlobal('project');
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
-  const [choice, setChoice] = useState('');
-  const [content, setContent] = useState('');
+  const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.todo) : '');
+  const [content, setContent] = useState(API_CONFIG.isApp ? slug(t.todo) : '');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
   const [curOrg, setCurOrg] = useState<number | null>(null);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
@@ -249,8 +250,8 @@ export function ResponsiveDrawer(props: IProps) {
       setOrganization(value);
       setDefaultProj(value, memory, setProject);
       setAddProject(false);
-      setChoice('');
-      setContent('');
+      setChoice(API_CONFIG.isApp ? slug(t.todo) : '');
+      setContent(API_CONFIG.isApp ? slug(t.todo) : '');
       setGroup('');
     }
   };
@@ -259,8 +260,8 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     setAddProject(false);
     setProject(value);
-    setContent('');
-    setChoice('');
+    setContent(API_CONFIG.isApp ? slug(t.todo) : '');
+    setChoice(API_CONFIG.isApp ? slug(t.todo) : '');
     setGroup('');
     setTitle(t.projectSummary);
   };
@@ -623,20 +624,19 @@ export function ResponsiveDrawer(props: IProps) {
           {curProj === null || (
             <div>
               <List>
-                {(API_CONFIG.isApp
-                  ? [t.myTasks, t.allTasks]
-                  : [t.plans, t.team, t.media]
-                ).map((text, index) => (
-                  <ListItem
-                    button
-                    key={text}
-                    selected={slug(text) === choice}
-                    onClick={checkSavedEv(() => handleChoice(text))}
-                  >
-                    <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                ))}
+                {(API_CONFIG.isApp ? [t.todo] : [t.plans, t.team, t.media]).map(
+                  (text, index) => (
+                    <ListItem
+                      button
+                      key={text}
+                      selected={slug(text) === choice}
+                      onClick={checkSavedEv(() => handleChoice(text))}
+                    >
+                      <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                  )
+                )}
               </List>
               <Divider />
               <List>
@@ -698,26 +698,36 @@ export function ResponsiveDrawer(props: IProps) {
   );
   components[slug(t.integrations)] = <IntegrationPanel {...props} />;
   components['group'] = <GroupSettings {...props} />;
-  components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
+  // components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
+  components[''] = <Visualize {...props} />;
   components['none'] = <></>;
-  components[slug(t.myTasks)] = (
-    <MyTaskTabs
+  // components[slug(t.myTasks)] = (
+  //   <MyTaskTabs
+  //     {...props}
+  //     setChanged={setChanged}
+  //     checkSaved={checkSavedFn}
+  //     transcriber={(desc: MediaDescription) => {
+  //       setMediaDesc(desc);
+  //       handleChoice('Transcriber');
+  //     }}
+  //   />
+  // );
+  // components[slug(t.allTasks)] = 'All Tasks';
+  components[slug(t.todo)] = (
+    <ToDoTable
       {...props}
-      setChanged={setChanged}
-      checkSaved={checkSavedFn}
       transcriber={(desc: MediaDescription) => {
         setMediaDesc(desc);
         handleChoice('Transcriber');
       }}
     />
   );
-  components[slug(t.allTasks)] = 'All Tasks';
   if (mediaDesc) {
     components['transcriber'] = (
       <Transcriber
         {...mediaDesc}
         auth={auth}
-        done={() => handleChoice(slug(t.myTasks))}
+        done={() => handleChoice(slug(t.todo))}
       />
     );
   }

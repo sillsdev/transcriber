@@ -949,7 +949,13 @@
          	<target>Mes Tâches</target>
          </segment>
       </unit>
-      <unit id="main.allTasks">
+		<unit id="main.todo">
+			<segment>
+				<source>To Do</source>
+				<target>À faire</target>
+			</segment>
+		</unit>
+		<unit id="main.allTasks">
          <segment>
             <source>All Tasks</source>
          	<target>Toutes les tâches</target>
