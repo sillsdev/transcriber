@@ -393,6 +393,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "transcriber": string;
     "reviewer": string;
+    "view": string;
     "length": string;
     "assigned": string;
     "yes": string;
@@ -433,6 +434,8 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
 export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submit": string;
     "reject": string;
+    "save": string;
+    "close": string;
     "settingsTip": string;
     "backTip": string;
     "aheadTip": string;
@@ -442,6 +445,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "rejectReviewTip": string;
     "submitTranscriptionTip": string;
     "submitReviewTip": string;
+    "saveTip": string;
 };
 
 export interface ILocalizedStrings {

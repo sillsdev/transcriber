@@ -98,6 +98,7 @@ export function Transcriber(props: IProps) {
     mediaRemoteId,
     mediaId,
     state,
+    role,
     mediafiles,
   } = props;
   const { mediaUrl, fetchMediaUrl, done } = props;
@@ -176,6 +177,19 @@ export function Transcriber(props: IProps) {
     }
     done();
   };
+  const handleSave = async () => {
+    if (transcriptionRef.current) {
+      await memory.update((t: TransformBuilder) => [
+        t.replaceAttribute(
+          { type: 'mediafile', id: mediaId },
+          'transcription',
+          transcriptionRef.current.firstChild.value
+        ),
+      ]);
+    }
+    done();
+  };
+  const handleClose = () => done();
   const handleKey = (e: any) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
     const ESC = 27;
@@ -300,34 +314,61 @@ export function Transcriber(props: IProps) {
               </Tooltip>
             </Grid>
             <Grid item>
-              <Tooltip
-                title={
-                  transcribing ? t.rejectTranscriptionTip : t.rejectReviewTip
-                }
-              >
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleReject}
-                >
-                  {t.reject}
-                </Button>
-              </Tooltip>
-              <Tooltip
-                title={
-                  transcribing ? t.submitTranscriptionTip : t.submitReviewTip
-                }
-              >
+              {role !== 'view' ? (
+                <>
+                  <Tooltip
+                    title={
+                      transcribing
+                        ? t.rejectTranscriptionTip
+                        : t.rejectReviewTip
+                    }
+                  >
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleReject}
+                    >
+                      {t.reject}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title={t.saveTip}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleSave}
+                    >
+                      {t.save}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip
+                    title={
+                      transcribing
+                        ? t.submitTranscriptionTip
+                        : t.submitReviewTip
+                    }
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleSubmit}
+                    >
+                      {t.submit}
+                    </Button>
+                  </Tooltip>{' '}
+                </>
+              ) : (
                 <Button
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  onClick={handleSubmit}
+                  onClick={handleClose}
                 >
-                  {t.submit}
+                  {t.close}
                 </Button>
-              </Tooltip>
+              )}
             </Grid>
           </Grid>
         </Grid>

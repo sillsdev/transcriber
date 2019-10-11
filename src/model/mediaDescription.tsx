@@ -7,4 +7,5 @@ export interface MediaDescription {
   mediaId: string;
   duration: number;
   state: string;
+  role: string;
 }

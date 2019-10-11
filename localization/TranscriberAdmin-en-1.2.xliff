@@ -2071,6 +2071,13 @@
 					<context context-type="sourcefile">ToDoTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="toDoTable.view">
+				<source>View</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="toDoTable.length">
 				<source>Duration</source>
 				<target/>
@@ -2308,6 +2315,20 @@
 					<context context-type="sourcefile">Transcriber.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="transcriber.save">
+				<source>Save</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.close">
+				<source>Close</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="transcriber.settingsTip">
 				<source>Settings</source>
 				<target/>
@@ -2366,6 +2387,13 @@
 			</trans-unit>
 			<trans-unit id="transcriber.submitReviewTip">
 				<source>Mark this review as complete.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="transcriber.saveTip">
+				<source>Save transcription changes without marking as complete.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Transcriber.tsx</context>

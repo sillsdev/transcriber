@@ -59,6 +59,7 @@ import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
 // import MyTaskTabs from '../components/MyTaskTabs';
 import ToDoTable from '../components/ToDoTable';
+import AllTaskTable from '../components/AllTaskTable';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings';
@@ -218,6 +219,7 @@ export function ResponsiveDrawer(props: IProps) {
   );
   const [view, setView] = useState('');
   const [changed, setChanged] = useState(false);
+  const [exitChoice, setExitChoice] = useState('');
   const [mediaDesc, setMediaDesc] = useState<MediaDescription>();
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
@@ -624,19 +626,20 @@ export function ResponsiveDrawer(props: IProps) {
           {curProj === null || (
             <div>
               <List>
-                {(API_CONFIG.isApp ? [t.todo] : [t.plans, t.team, t.media]).map(
-                  (text, index) => (
-                    <ListItem
-                      button
-                      key={text}
-                      selected={slug(text) === choice}
-                      onClick={checkSavedEv(() => handleChoice(text))}
-                    >
-                      <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  )
-                )}
+                {(API_CONFIG.isApp
+                  ? [t.todo, t.allTasks]
+                  : [t.plans, t.team, t.media]
+                ).map((text, index) => (
+                  <ListItem
+                    button
+                    key={text}
+                    selected={slug(text) === choice}
+                    onClick={checkSavedEv(() => handleChoice(text))}
+                  >
+                    <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                ))}
               </List>
               <Divider />
               <List>
@@ -712,12 +715,22 @@ export function ResponsiveDrawer(props: IProps) {
   //     }}
   //   />
   // );
-  // components[slug(t.allTasks)] = 'All Tasks';
+  components[slug(t.allTasks)] = (
+    <AllTaskTable
+      {...props}
+      transcriber={(desc: MediaDescription) => {
+        setMediaDesc(desc);
+        setExitChoice(t.allTasks);
+        handleChoice('Transcriber');
+      }}
+    />
+  );
   components[slug(t.todo)] = (
     <ToDoTable
       {...props}
       transcriber={(desc: MediaDescription) => {
         setMediaDesc(desc);
+        setExitChoice(t.todo);
         handleChoice('Transcriber');
       }}
     />
@@ -727,7 +740,7 @@ export function ResponsiveDrawer(props: IProps) {
       <Transcriber
         {...mediaDesc}
         auth={auth}
-        done={() => handleChoice(slug(t.todo))}
+        done={() => handleChoice(slug(exitChoice))}
       />
     );
   }

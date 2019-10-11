@@ -431,6 +431,7 @@ const initialState = {
 			"action": "Action",
 			"transcriber": "Transcribe",
 			"reviewer": "Review",
+			"view": "View",
 			"length": "Duration",
 			"assigned": "Assigned",
 			"yes": "Yes",
@@ -473,6 +474,8 @@ const initialState = {
 		"en": {
 			"submit": "Submit",
 			"reject": "Reject",
+			"save": "Save",
+			"close": "Close",
 			"settingsTip": "Settings",
 			"backTip": "Skip back (F2)",
 			"aheadTip": "Skip ahead (F4)",
@@ -482,6 +485,7 @@ const initialState = {
 			"rejectReviewTip": "Transcription requires changes.",
 			"submitTranscriptionTip": "Mark this transcription as complete.",
 			"submitReviewTip": "Mark this review as complete.",
+			"saveTip": "Save transcription changes without marking as complete.",
 		}
 	}),
 };

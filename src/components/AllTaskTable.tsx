@@ -108,7 +108,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   transcriber: (mediaDescription: MediaDescription) => void;
 }
 
-export function ToDoTable(props: IProps) {
+export function AllTaskTable(props: IProps) {
   const {
     auth,
     activityState,
@@ -169,13 +169,15 @@ export function ToDoTable(props: IProps) {
     transcribed: 'reviewing',
   };
   const handleSelect = (mediaDescription: MediaDescription) => (e: any) => {
-    memory.update((t: TransformBuilder) =>
-      t.replaceAttribute(
-        { type: 'passage', id: mediaDescription.passage.id },
-        'state',
-        next[mediaDescription.state]
-      )
-    );
+    if (mediaDescription.role !== 'view') {
+      memory.update((t: TransformBuilder) =>
+        t.replaceAttribute(
+          { type: 'passage', id: mediaDescription.passage.id },
+          'state',
+          next[mediaDescription.state]
+        )
+      );
+    }
     transcriber(mediaDescription);
   };
   const getPlanName = (plan: Plan) => {
@@ -203,7 +205,7 @@ export function ToDoTable(props: IProps) {
     playItem: string
   ) => {
     const readyRecs = passages.filter(
-      p => p.attributes && p.attributes.state === state
+      p => (p.attributes && p.attributes.state === state) || role === 'view'
     );
     readyRecs.forEach(p => {
       const passSecRecs = passageSections.filter(
@@ -226,27 +228,44 @@ export function ToDoTable(props: IProps) {
             if (planRecs.length > 0) {
               if (related(planRecs[0], 'project') === project) {
                 const assignee = related(secRecs[0], role);
-                if (!assignee || assignee === '' || assignee === user) {
-                  const mediaDescription: MediaDescription = {
-                    section: secRecs[0],
-                    passage: p,
-                    mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
-                    mediaId: mediaRec.id,
-                    duration: mediaRec.attributes.duration,
-                    state,
-                    role,
-                  };
-                  rowList.push({
-                    desc: mediaDescription,
-                    play: playItem,
-                    plan: getPlanName(planRecs[0]),
-                    section: <SectionDescription section={secRecs[0]} />,
-                    passage: <PassageDescription passage={p} />,
-                    length: <Duration seconds={mediaRec.attributes.duration} />,
-                    state: activityState.getString(state),
-                    action: t.getString(role),
-                    assigned: assignee === user ? t.yes : t.no,
-                  });
+                if (
+                  !assignee ||
+                  assignee === '' ||
+                  assignee === user ||
+                  role === 'view'
+                ) {
+                  let already: IRow[] = [];
+                  if (role === 'view') {
+                    already = rowList.filter(
+                      r => r.desc.mediaId === mediaRec.id
+                    );
+                  }
+                  if (role !== 'view' || already.length === 0) {
+                    const curState =
+                      role === 'view' ? p.attributes.state : state;
+                    const mediaDescription: MediaDescription = {
+                      section: secRecs[0],
+                      passage: p,
+                      mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
+                      mediaId: mediaRec.id,
+                      duration: mediaRec.attributes.duration,
+                      state: curState,
+                      role,
+                    };
+                    rowList.push({
+                      desc: mediaDescription,
+                      play: playItem,
+                      plan: getPlanName(planRecs[0]),
+                      section: <SectionDescription section={secRecs[0]} />,
+                      passage: <PassageDescription passage={p} />,
+                      length: (
+                        <Duration seconds={mediaRec.attributes.duration} />
+                      ),
+                      state: activityState.getString(curState),
+                      action: t.getString(role),
+                      assigned: assignee === user ? t.yes : t.no,
+                    });
+                  }
                 }
               }
             }
@@ -290,6 +309,7 @@ export function ToDoTable(props: IProps) {
         addTasks('transcribed', 'reviewer', rowList, playItem);
       }
       addTasks('transcribeReady', 'transcriber', rowList, playItem);
+      addTasks('', 'view', rowList, playItem);
     }
     setRows(rowList);
 
@@ -429,4 +449,4 @@ const mapRecordsToProps = {
 export default withData(mapRecordsToProps)(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ToDoTable) as any) as any;
+)(AllTaskTable) as any) as any;

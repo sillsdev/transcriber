@@ -1774,6 +1774,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="toDoTable.view">
+         <segment>
+            <source>View</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="toDoTable.length">
          <segment>
             <source>Duration</source>
@@ -1978,6 +1984,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.settingsTip">
          <segment>
             <source>Settings</source>
@@ -2029,6 +2047,12 @@
       <unit id="transcriber.submitReviewTip">
          <segment>
             <source>Mark this review as complete.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.saveTip">
+         <segment>
+            <source>Save transcription changes without marking as complete.</source>
             <target/>
          </segment>
       </unit>

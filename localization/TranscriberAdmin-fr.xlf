@@ -1772,6 +1772,12 @@
 				<target>Controler</target>
 			</segment>
 		</unit>
+		<unit id="toDoTable.view">
+			<segment>
+				<source>View</source>
+				<target>Voir</target>
+			</segment>
+		</unit>
 		<unit id="toDoTable.length">
 			<segment>
 				<source>Duration</source>
@@ -1976,7 +1982,19 @@
 				<target>Rejeter</target>
 			</segment>
 		</unit>
-	<unit id="transcriber.settingsTip">
+		<unit id="transcriber.save">
+			<segment>
+				<source>Save</source>
+				<target>Sauvegarde</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.close">
+			<segment>
+				<source>Close</source>
+				<target>Fermer</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.settingsTip">
          <segment>
             <source>Settings</source>
          	<target>Paramètres</target>
@@ -2030,5 +2048,11 @@
          	<target>Cochez cette évaluation comme étant complète.</target>
          </segment>
       </unit>
-   </file>
+		<unit id="transcriber.saveTip">
+			<segment>
+				<source>Save transcription changes without marking as complete.</source>
+				<target>Enregistrer les modifications de transcription sans les marquer comme complètes.</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>
