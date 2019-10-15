@@ -448,6 +448,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submitTranscriptionTip": string;
     "submitReviewTip": string;
     "saveTip": string;
+    "saveReviewTip": string;
 };
 
 export interface ILocalizedStrings {

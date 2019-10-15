@@ -351,20 +351,16 @@ export function Transcriber(props: IProps) {
                       {t.reject}
                     </Button>
                   </Tooltip>
-                  {role == 'transcriber' ? (
-                    <Tooltip title={t.saveTip}>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        className={classes.button}
-                        onClick={handleSave}
-                      >
-                        {t.save}
-                      </Button>
-                    </Tooltip>
-                  ) : (
-                    <></>
-                  )}
+                  <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleSave}
+                    >
+                      {t.save}
+                    </Button>
+                  </Tooltip>
                   <Tooltip
                     title={
                       transcribing

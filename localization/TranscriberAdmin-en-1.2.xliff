@@ -2413,6 +2413,13 @@
 					<context context-type="sourcefile">Transcriber.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="transcriber.saveReviewTip">
+				<source>Save position in recording without marking as complete.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Transcriber.tsx</context>
+				</context-group>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
