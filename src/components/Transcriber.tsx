@@ -117,15 +117,24 @@ export function Transcriber(props: IProps) {
   );
   const [height, setHeight] = React.useState(window.innerHeight);
   const [defaultValue, setDefaultValue] = React.useState('');
+  const [defaultPosition, setDefaultPosition] = React.useState(0.0);
   const [message, setMessage] = React.useState(<></>);
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
 
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
+  const handleReady = () => {
+    if (defaultPosition > 0) {
+      playerRef.current.seekTo(defaultPosition);
+      setDefaultPosition(0);
+    }
+  };
   const handleProgress = (ctrl: any) => {
     if (!seeking) {
-      if (totalSeconds === 0) setTotalSeconds(ctrl.loadedSeconds);
+      if (!totalSeconds || totalSeconds < ctrl.loadedSeconds) {
+        setTotalSeconds(ctrl.loadedSeconds);
+      }
       setPlayedSeconds(ctrl.playedSeconds);
     }
   };
@@ -162,30 +171,38 @@ export function Transcriber(props: IProps) {
   };
   const handleSubmit = async () => {
     if (transcriptionRef.current) {
+      var transcription = transcriptionRef.current.firstChild.value;
       await memory.update((t: TransformBuilder) => [
         t.replaceAttribute(
           { type: 'passage', id: passage.id },
           'state',
           next[state]
         ),
-        t.replaceAttribute(
-          { type: 'mediafile', id: mediaId },
-          'transcription',
-          transcriptionRef.current.firstChild.value
-        ),
+        t.updateRecord({
+          type: 'mediafile',
+          id: mediaId,
+          attributes: {
+            transcription: transcription,
+            position: 0,
+          },
+        }),
       ]);
     }
     done();
   };
   const handleSave = async () => {
     if (transcriptionRef.current) {
-      await memory.update((t: TransformBuilder) => [
-        t.replaceAttribute(
-          { type: 'mediafile', id: mediaId },
-          'transcription',
-          transcriptionRef.current.firstChild.value
-        ),
-      ]);
+      var transcription = transcriptionRef.current.firstChild.value;
+      memory.update((t: TransformBuilder) =>
+        t.updateRecord({
+          type: 'mediafile',
+          id: mediaId,
+          attributes: {
+            transcription: transcription,
+            position: playedSeconds,
+          },
+        })
+      );
     }
     done();
   };
@@ -216,6 +233,7 @@ export function Transcriber(props: IProps) {
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
       setDefaultValue(attr.transcription);
+      setDefaultPosition(attr.position);
     }
   }, [mediaId, mediafiles]);
 
@@ -268,6 +286,7 @@ export function Transcriber(props: IProps) {
             <Grid ref={transcriptionRef} item xs container direction="column">
               <TextareaAutosize
                 defaultValue={defaultValue}
+                readOnly={role !== 'transcriber'}
                 style={{
                   backgroundColor: '#cfe8fc',
                   height: height - 240,
@@ -332,16 +351,20 @@ export function Transcriber(props: IProps) {
                       {t.reject}
                     </Button>
                   </Tooltip>
-                  <Tooltip title={t.saveTip}>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleSave}
-                    >
-                      {t.save}
-                    </Button>
-                  </Tooltip>
+                  {role == 'transcriber' ? (
+                    <Tooltip title={t.saveTip}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleSave}
+                      >
+                        {t.save}
+                      </Button>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )}
                   <Tooltip
                     title={
                       transcribing
@@ -382,6 +405,7 @@ export function Transcriber(props: IProps) {
           playbackRate={playSpeed}
           playing={playing}
           onProgress={handleProgress}
+          onReady={handleReady}
         />
       </div>
       <SnackBar {...props} message={message} reset={handleMessageReset} />

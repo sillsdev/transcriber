@@ -232,7 +232,6 @@ const schemaDefinition: SchemaSettings = {
         sequencenum: { type: 'number' },
         book: { type: 'string' },
         reference: { type: 'string' },
-        position: { type: 'number' },
         state: { type: 'string' },
         hold: { type: 'boolean' },
         title: { type: 'string' },
@@ -277,6 +276,7 @@ const schemaDefinition: SchemaSettings = {
         filesize: { type: 'number' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
+        position: { type: 'number' },
       },
       relationships: {
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },

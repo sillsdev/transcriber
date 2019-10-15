@@ -14,6 +14,7 @@ export interface MediaFile extends Record {
     transcription: string;
     originalFile: string;
     filesize: number;
+    position: number;
     dateCreated: string | null;
     dateUpdated: string | null;
   };

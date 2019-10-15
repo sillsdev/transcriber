@@ -9,7 +9,6 @@ export interface Passage extends Record {
     sequencenum: number;
     book: string;
     reference: string;
-    position: number;
     state: string;
     hold: boolean;
     title: string;
@@ -21,5 +20,9 @@ export interface Passage extends Record {
     users: RecordHasManyRelationship;
     media: RecordRelationship;
   };
+  startChapter: number; //calculated
+  endChapter: number; //calculated
+  startVerse: number; //calculated
+  endVerse: number; //calculated
 }
 export default Passage;
