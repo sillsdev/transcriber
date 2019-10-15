@@ -228,6 +228,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "planUnsaved": string;
     "loseData": string;
     "newOrganization": string;
+    "swtchToAdmin": string;
+    "swtchToApp": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {

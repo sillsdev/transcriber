@@ -250,6 +250,8 @@ const initialState = {
 			"planUnsaved": "Plan Unsaved",
 			"loseData": "Do you want to leave this page and lose your changes?",
 			"newOrganization": "Add Organization",
+			"swtchToAdmin": "Switch to Admin",
+			"swtchToApp": "Switch to App",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({

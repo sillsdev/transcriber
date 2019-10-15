@@ -1069,7 +1069,19 @@
             <target>Ajouter Organization</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.section">
+		<unit id="main.switchToAdmin">
+			<segment>
+				<source>Switch to Admin</source>
+				<target>Passer à Admin</target>
+			</segment>
+		</unit>
+		<unit id="main.switchToApp">
+			<segment>
+				<source>Switch to App</source>
+				<target>Passer à App</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>

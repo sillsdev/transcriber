@@ -1252,6 +1252,20 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.swtchToAdmin">
+				<source>Switch to Admin</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.swtchToApp">
+				<source>Switch to App</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="transcriptionTab.section">
 				<source>Section</source>
 				<target/>

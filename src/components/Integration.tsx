@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
@@ -14,7 +14,6 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Typography,
-  FormLabel,
   FormControl,
   FormGroup,
   FormControlLabel,
@@ -381,16 +380,6 @@ export function IntegrationPanel(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [ptProj]);
   const pRef = React.useRef<HTMLDivElement>(null);
-
-  const useFocus = () => {
-    const htmlElRef = useRef<HTMLElement>(null);
-    const setFocus = () => {
-      const currentEl = htmlElRef.current;
-      currentEl && currentEl.focus();
-    };
-    return [setFocus, htmlElRef] as const;
-  };
-  const [projectRef, setProjectFocus] = useFocus();
 
   return (
     <div className={classes.root}>

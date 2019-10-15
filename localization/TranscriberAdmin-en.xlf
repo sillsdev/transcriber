@@ -1072,6 +1072,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.swtchToAdmin">
+         <segment>
+            <source>Switch to Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.swtchToApp">
+         <segment>
+            <source>Switch to App</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>

@@ -48,6 +48,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
 import AllListIcon from '@material-ui/icons/ViewList';
+import SwapAppIcon from '@material-ui/icons/SwapHoriz';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, hasRelated, slug, remoteId, remoteIdGuid } from '../utils';
@@ -764,6 +765,25 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
+          <a
+            href={
+              API_CONFIG.isApp
+                ? AUTH_CONFIG.callbackUrl
+                    .replace('app', 'admin')
+                    .replace('/callback', '')
+                : AUTH_CONFIG.callbackUrl
+                    .replace('admin', 'app')
+                    .replace('/callback', '')
+            }
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={API_CONFIG.isApp ? t.swtchToAdmin : t.swtchToApp}
+          >
+            <IconButton style={{ color: 'white' }}>
+              <SwapAppIcon />
+            </IconButton>
+          </a>
           <HelpMenu />
           <UserMenu
             action={(v: string) => checkSavedFn(() => handleUserMenuAction(v))}
