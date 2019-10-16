@@ -23,7 +23,7 @@ interface IProps {
   section: Section;
 }
 
-const SectionDescription = (props: IProps) => {
+export const SectionDescription = (props: IProps) => {
   const { section } = props;
   const classes = useStyles();
 
@@ -42,4 +42,14 @@ const SectionDescription = (props: IProps) => {
   );
 };
 
-export default SectionDescription;
+export const SectionDescriptionCompare = (a: any, b: any) => {
+  if (
+    a.props.section.attributes.sequencenum ===
+    b.props.section.attributes.sequencenum
+  )
+    return 0;
+  return a.props.section.attributes.sequencenum <
+    b.props.section.attributes.sequencenum
+    ? -1
+    : 1;
+};

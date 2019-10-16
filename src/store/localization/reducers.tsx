@@ -488,6 +488,7 @@ const initialState = {
 			"submitTranscriptionTip": "Mark this transcription as complete.",
 			"submitReviewTip": "Mark this review as complete.",
 			"saveTip": "Save transcription changes without marking as complete.",
+			"saveReviewTip": "Save position in recording without marking as complete.",
 		}
 	}),
 };

@@ -2068,5 +2068,11 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.saveReviewTip">
+         <segment>
+            <source>Save position in recording without marking as complete.</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

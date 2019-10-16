@@ -2066,5 +2066,11 @@
 				<target>Enregistrer les modifications de transcription sans les marquer comme complètes.</target>
 			</segment>
 		</unit>
+		<unit id="transcriber.saveReviewTip">
+         <segment>
+            <source>Save position in recording without marking as complete.</source>
+            <target>Enregistrer la position dans l'enregistrement sans marquer comme complète.</target>
+         </segment>
+      </unit>
 	</file>
 </xliff>
