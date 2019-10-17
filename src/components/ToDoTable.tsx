@@ -28,8 +28,14 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import ShapingTable from './ShapingTable';
-import PassageDescription from './passageDescription';
-import SectionDescription from './sectionDescription';
+import {
+  PassageDescription,
+  PassageDescriptionCompare,
+} from './passageDescription';
+import {
+  SectionDescription,
+  SectionDescriptionCompare,
+} from './sectionDescription';
 import SnackBar from './SnackBar';
 import Duration from './Duration';
 import Auth from '../auth/Auth';
@@ -388,6 +394,10 @@ export function ToDoTable(props: IProps) {
               { columnName: 'plan', direction: 'asc' },
               { columnName: 'section', direction: 'asc' },
               { columnName: 'passage', direction: 'asc' },
+            ]}
+            columnSorting={[
+              { columnName: 'section', compare: SectionDescriptionCompare },
+              { columnName: 'passage', compare: PassageDescriptionCompare },
             ]}
             shaping={filter}
             rows={rows}

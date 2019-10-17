@@ -23,7 +23,7 @@ interface IProps {
   passage: Passage;
 }
 
-const SectionDescription = (props: IProps) => {
+export const PassageDescription = (props: IProps) => {
   const { passage } = props;
   const classes = useStyles();
 
@@ -41,5 +41,15 @@ const SectionDescription = (props: IProps) => {
     </div>
   );
 };
-
-export default SectionDescription;
+export const PassageDescriptionCompare = (a: any, b: any) => {
+  console.log('passageDescriptionCompare');
+  if (
+    a.props.passage.attributes.sequencenum ===
+    b.props.passage.attributes.sequencenum
+  )
+    return 0;
+  return a.props.passage.attributes.sequencenum <
+    b.props.passage.attributes.sequencenum
+    ? -1
+    : 1;
+};
