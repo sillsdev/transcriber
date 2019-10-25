@@ -285,6 +285,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handlePlanType = (value: string) => {
+    localStorage.removeItem('url');
     if (value.toLocaleLowerCase() === 'scripture') {
       setContent('scripture-plan');
     } else {
