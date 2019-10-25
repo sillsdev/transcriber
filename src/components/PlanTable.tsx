@@ -178,7 +178,9 @@ export function PlanTable(props: IProps) {
     );
   };
   const handleFilter = () => setFilter(!filter);
-  const handleSelect = (planId: string, type: string) => (e: any) => {
+  const handleSelectEv = (planId: string, type: string) => (e: any) =>
+    handleSelect(planId, type);
+  const handleSelect = (planId: string, type: string) => {
     setPlan(planId);
     displaySet(type.toLocaleLowerCase());
   };
@@ -239,7 +241,7 @@ export function PlanTable(props: IProps) {
         aria-label={value}
         color="primary"
         className={classes.link}
-        onClick={handleSelect(restProps.row.action, restProps.row.planType)}
+        onClick={handleSelectEv(restProps.row.action, restProps.row.planType)}
       >
         {value}
         {/* <EditIcon className={classes.editIcon} /> */}
