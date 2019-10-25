@@ -475,6 +475,13 @@
 					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="planTable.loadingTable">
+				<source>Loading data</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="planSheet.action">
 				<source>Action</source>
 				<target/>
@@ -582,6 +589,13 @@
 			</trans-unit>
 			<trans-unit id="scriptureTable.description">
 				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.loadingTable">
+				<source>Loading data</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -1009,6 +1023,13 @@
 			</trans-unit>
 			<trans-unit id="mediaTab.unsupported">
 				<source>File {0} is an unsupported file type.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="mediaTab.loadingTable">
+				<source>Loading data</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">MediaTab.tsx</context>
@@ -1630,6 +1651,13 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="groupSettings.loadingTable">
+				<source>Loading data</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="shapingTable.NoColumns">
 				<source>No columns visible</source>
 				<target/>
@@ -2122,6 +2150,13 @@
 			</trans-unit>
 			<trans-unit id="toDoTable.no">
 				<source>No</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.loadingTable">
+				<source>Loading data</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ToDoTable.tsx</context>

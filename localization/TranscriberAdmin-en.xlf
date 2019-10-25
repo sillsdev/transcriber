@@ -406,6 +406,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
@@ -499,6 +505,12 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -865,6 +877,12 @@
       <unit id="mediaTab.unsupported">
          <segment>
             <source>File {0} is an unsupported file type.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -1396,6 +1414,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.loadingTable">
+         <segment>
+            <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shapingTable.NoColumns">
          <segment>
             <source>No columns visible</source>
@@ -1819,6 +1843,12 @@
       <unit id="toDoTable.no">
          <segment>
             <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>

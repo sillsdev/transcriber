@@ -68,10 +68,8 @@ interface IStateProps {
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
-  fetchLangTags: typeof action.fetchLangTags;
   setLanguage: typeof action.setLanguage;
   fetchOrbitData: typeof action.fetchOrbitData;
-  fetchScriptFonts: typeof action.fetchScriptFonts;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -81,13 +79,7 @@ interface IProps extends IStateProps, IDispatchProps {
 export function Loading(props: IProps) {
   const { orbitLoaded, auth, t } = props;
   const classes = useStyles();
-  const {
-    fetchOrbitData,
-    fetchLocalization,
-    fetchLangTags,
-    fetchScriptFonts,
-    setLanguage,
-  } = props;
+  const { fetchOrbitData, fetchLocalization, setLanguage } = props;
   const { isAuthenticated } = auth;
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
@@ -206,8 +198,6 @@ export function Loading(props: IProps) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
-    fetchLangTags();
-    fetchScriptFonts();
     fetchOrbitData(
       schema,
       memory,
@@ -284,8 +274,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
       fetchOrbitData: action.fetchOrbitData,
-      fetchLangTags: action.fetchLangTags,
-      fetchScriptFonts: action.fetchScriptFonts,
     },
     dispatch
   ),

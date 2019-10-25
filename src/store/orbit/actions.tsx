@@ -3,6 +3,7 @@ import {
   ORBIT_ERROR,
   IApiError,
   RESET_ORBIT_ERROR,
+  LOAD_TABLE,
 } from './types';
 import { KeyMap, Schema } from '@orbit/data';
 import { Bucket } from '@orbit/core';
@@ -21,6 +22,13 @@ export const orbitError = (ex: IApiError) => {
 export const resetOrbitError = () => {
   return {
     type: RESET_ORBIT_ERROR,
+  };
+};
+
+export const tableLoaded = (name: string) => {
+  return {
+    type: LOAD_TABLE,
+    payload: name,
   };
 };
 
@@ -43,6 +51,7 @@ export const fetchOrbitData = (
     setBucket,
     setRemote,
     setCompleted,
+    (name: string) => dispatch(tableLoaded(name)),
     (ex: IApiError) => dispatch(orbitError(ex))
   ).then(dispatch({ type: FETCH_ORBIT_DATA }));
 };

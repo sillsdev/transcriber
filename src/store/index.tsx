@@ -4,7 +4,6 @@ import localizationReducer from './localization/reducers';
 import orbitReducer from './orbit/reducers';
 import uploadReducer from './upload/reducers';
 import contextReducer from './context/reducer';
-import langTagsReducer from './langPicker/reducers';
 import mediaReducer from './media/reducers';
 import paratextReducer from './paratext/reducers';
 
@@ -18,7 +17,6 @@ const appReducer = combineReducers({
   books: bookReducer,
   orbit: orbitReducer,
   upload: uploadReducer,
-  langTag: langTagsReducer,
   media: mediaReducer,
   paratext: paratextReducer,
 });
@@ -40,6 +38,5 @@ export * from './book/actions';
 export * from './localization/actions';
 export * from './orbit/actions';
 export * from './upload/actions';
-export * from './langPicker/actions';
 export * from './media/actions';
 export * from './paratext/actions';

@@ -23,7 +23,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { related } from '../utils';
-import LanguagePicker from './LanguagePicker';
+import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
 import { API_CONFIG } from '../api-variable';
 

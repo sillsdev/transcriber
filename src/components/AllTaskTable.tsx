@@ -92,6 +92,7 @@ interface IStateProps {
   t: IToDoTableStrings;
   hasUrl: boolean;
   mediaUrl: string;
+  tableLoad: string[];
 }
 
 interface IDispatchProps {
@@ -131,6 +132,7 @@ export function AllTaskTable(props: IProps) {
     fetchMediaUrl,
     hasUrl,
     mediaUrl,
+    tableLoad,
   } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -164,6 +166,7 @@ export function AllTaskTable(props: IProps) {
   const [message, setMessage] = useState(<></>);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
+  const [loading, setLoading] = useState(false);
   const audioRef = useRef<any>();
 
   const handleMessageReset = () => {
@@ -329,6 +332,25 @@ export function AllTaskTable(props: IProps) {
     }
   }, [hasUrl, mediaUrl, playing, playItem]);
 
+  useEffect(() => {
+    if (
+      tableLoad.length > 0 &&
+      (!tableLoad.includes('mediafile') ||
+        !tableLoad.includes('passage') ||
+        !tableLoad.includes('section') ||
+        !tableLoad.includes('passagesection') ||
+        !tableLoad.includes('role')) &&
+      !loading
+    ) {
+      setMessage(<span>{t.loadingTable}</span>);
+      setLoading(true);
+    } else if (loading) {
+      setMessage(<></>);
+      setLoading(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [tableLoad]);
+
   interface ICell {
     value: string;
     style?: React.CSSProperties;
@@ -435,6 +457,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   activityState: localStrings(state, { layout: 'activityState' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  tableLoad: state.orbit.tableLoad,
 });
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(

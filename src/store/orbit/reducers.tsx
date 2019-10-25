@@ -4,11 +4,13 @@ import {
   IOrbitState,
   ORBIT_ERROR,
   RESET_ORBIT_ERROR,
+  LOAD_TABLE,
 } from './types';
 
 export const orbitCleanState = {
   loaded: false,
   status: 0,
+  tableLoad: [],
 } as IOrbitState;
 
 export default function(
@@ -30,6 +32,13 @@ export default function(
       return {
         ...state,
         status: 0,
+      };
+    case LOAD_TABLE:
+      return {
+        ...state,
+        tableLoad: state.tableLoad.includes(action.payload)
+          ? state.tableLoad
+          : state.tableLoad.map(s => s).concat([action.payload]),
       };
     default:
       return { ...state };

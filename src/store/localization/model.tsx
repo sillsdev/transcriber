@@ -90,6 +90,7 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "filter": string;
     "silTranscriberAdmin": string;
     "choosePlan": string;
+    "loadingTable": string;
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
@@ -112,6 +113,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "book": string;
     "reference": string;
     "description": string;
+    "loadingTable": string;
 };
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
@@ -188,6 +190,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "selectFiles": string;
     "selectRows": string;
     "unsupported": string;
+    "loadingTable": string;
 };
 
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
@@ -300,6 +303,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "assignedSections": string;
     "projectPlans": string;
     "invalidRole": string;
+    "loadingTable": string;
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
@@ -401,6 +405,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "assigned": string;
     "yes": string;
     "no": string;
+    "loadingTable": string;
 };
 
 export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {

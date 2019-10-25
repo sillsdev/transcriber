@@ -184,6 +184,7 @@ interface IStateProps {
   currentlyLoading: number;
   hasUrl: boolean;
   mediaUrl: string;
+  tableLoad: string[];
 }
 
 interface IDispatchProps {
@@ -232,6 +233,7 @@ export function MediaTab(props: IProps) {
     fetchMediaUrl,
     hasUrl,
     mediaUrl,
+    tableLoad,
   } = props;
   const classes = useStyles();
   const [plan, setPlan] = useGlobal('plan');
@@ -285,6 +287,7 @@ export function MediaTab(props: IProps) {
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -449,6 +452,24 @@ export function MediaTab(props: IProps) {
     }
   }, [hasUrl, mediaUrl, playing, playItem]);
 
+  useEffect(() => {
+    if (
+      tableLoad.length > 0 &&
+      (!tableLoad.includes('mediafile') ||
+        !tableLoad.includes('passage') ||
+        !tableLoad.includes('section') ||
+        !tableLoad.includes('passagesection')) &&
+      !loading
+    ) {
+      setMessage(<span>{t.loadingTable}</span>);
+      setLoading(true);
+    } else if (loading) {
+      setMessage(<></>);
+      setLoading(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [tableLoad]);
+
   interface ICell {
     value: string;
     style?: React.CSSProperties;
@@ -606,6 +627,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   loaded: state.upload.loaded,
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  tableLoad: state.orbit.tableLoad,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

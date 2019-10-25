@@ -116,6 +116,7 @@ interface IDeleteItem {
 
 interface IStateProps {
   t: IGroupSettingsStrings;
+  tableLoad: string[];
 }
 
 interface IRecordProps {
@@ -144,6 +145,7 @@ export function GroupSettings(props: IProps) {
     sections,
     plans,
     userDetail,
+    tableLoad,
     t,
   } = props;
   const [memory] = useGlobal('memory');
@@ -161,6 +163,7 @@ export function GroupSettings(props: IProps) {
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
   const [confirmItem, setConfirmItem] = useState<IDeleteItem | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleNameChange = (e: any) => {
     setName(e.target.value);
@@ -294,6 +297,17 @@ export function GroupSettings(props: IProps) {
         })
     );
   }, [orgMemberships, groupMemberships, users, organization, group]);
+
+  useEffect(() => {
+    if (tableLoad.length > 0 && !tableLoad.includes('section') && !loading) {
+      setMessage(<span>{t.loadingTable}</span>);
+      setLoading(true);
+    } else if (loading) {
+      setMessage(<></>);
+      setLoading(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [tableLoad]);
 
   const projectItems = projects
     .filter(p => related(p, 'group') === group)
@@ -578,6 +592,7 @@ export function GroupSettings(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'groupSettings' }),
+  tableLoad: state.orbit.tableLoad,
 });
 
 const mapRecordsToProps = {
