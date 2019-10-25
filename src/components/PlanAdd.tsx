@@ -162,7 +162,7 @@ function PlanAdd(props: IProps) {
           >
             {planTypes.map((option: PlanType) => (
               <MenuItem key={option.id} value={option.id}>
-                {option.attributes.name}
+                {option.attributes && option.attributes.name}
               </MenuItem>
             ))}
           </TextField>

@@ -252,6 +252,7 @@ const initialState = {
 			"newOrganization": "Add Organization",
 			"swtchToAdmin": "Switch to Admin",
 			"swtchToApp": "Switch to App",
+			"crashMessage": "Something went wrong. The developers need to address this issue.",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({

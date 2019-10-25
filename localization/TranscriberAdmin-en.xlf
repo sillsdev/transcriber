@@ -1084,6 +1084,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.crashMessage">
+         <segment>
+            <source>Something went wrong. The developers need to address this issue.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>

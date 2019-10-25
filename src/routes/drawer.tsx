@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -12,7 +12,7 @@ import {
   Group,
   MediaDescription,
 } from '../model';
-// import * as actions from '../store';
+import * as actions from '../store';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -58,7 +58,6 @@ import OrgSettings from '../components/OrgSettings';
 import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
-// import MyTaskTabs from '../components/MyTaskTabs';
 import ToDoTable from '../components/ToDoTable';
 import AllTaskTable from '../components/AllTaskTable';
 import ProjectSettings from '../components/ProjectSettings';
@@ -161,9 +160,12 @@ interface componentType {
 interface IStateProps {
   t: IMainStrings;
   orbitLoaded: boolean;
+  orbitStatus: number;
 }
 
-interface IDispatchProps {}
+interface IDispatchProps {
+  resetOrbitError: typeof actions.resetOrbitError;
+}
 
 interface IRecordProps {
   organizations: Array<Organization>;
@@ -194,6 +196,8 @@ export function ResponsiveDrawer(props: IProps) {
     plans,
     groups,
     orbitLoaded,
+    orbitStatus,
+    resetOrbitError,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -468,6 +472,20 @@ export function ResponsiveDrawer(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, organization, choice, content, plan, group, tab]);
 
+  useEffect(() => {
+    if (orbitStatus === 401)
+      auth
+        .renewSession()
+        .then(() => {
+          resetOrbitError();
+          setView('Loading');
+        })
+        .catch(() => setView('Logout'));
+    if (orbitStatus === 403) setView('Logout');
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [orbitStatus]);
+
+  if (view === 'Loading') return <Redirect to="/loading" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
 
   // When the user uses the back button or directly naviagets to a page
@@ -702,20 +720,8 @@ export function ResponsiveDrawer(props: IProps) {
   );
   components[slug(t.integrations)] = <IntegrationPanel {...props} />;
   components['group'] = <GroupSettings {...props} />;
-  // components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
   components[''] = <Visualize {...props} />;
   components['none'] = <></>;
-  // components[slug(t.myTasks)] = (
-  //   <MyTaskTabs
-  //     {...props}
-  //     setChanged={setChanged}
-  //     checkSaved={checkSavedFn}
-  //     transcriber={(desc: MediaDescription) => {
-  //       setMediaDesc(desc);
-  //       handleChoice('Transcriber');
-  //     }}
-  //   />
-  // );
   components[slug(t.allTasks)] = (
     <AllTaskTable
       {...props}
@@ -851,11 +857,17 @@ export function ResponsiveDrawer(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitLoaded: state.orbit.loaded,
+  orbitStatus: state.orbit.status,
 });
 
-// const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-//   ...bindActionCreators({}, dispatch),
-// });
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      resetOrbitError: actions.resetOrbitError,
+    },
+    dispatch
+  ),
+});
 
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
@@ -864,6 +876,7 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  ResponsiveDrawer
-) as any) as any;
+export default withData(mapRecordsToProps)(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ResponsiveDrawer) as any) as any;

@@ -1266,6 +1266,13 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.crashMessage">
+				<source>Something went wrong. The developers need to address this issue.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="transcriptionTab.section">
 				<source>Section</source>
 				<target/>

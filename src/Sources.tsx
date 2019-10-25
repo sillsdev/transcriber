@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { User } from './model';
+import { User, IApiError } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -9,7 +9,7 @@ import Coordinator, {
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
-import { Schema, KeyMap, Transform } from '@orbit/data';
+import { Schema, KeyMap, Transform, NetworkError } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
@@ -26,7 +26,8 @@ const Sources = async (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
-  setCompleted: (valud: number) => void
+  setCompleted: (valud: number) => void,
+  orbitError: (ex: IApiError) => void
 ) => {
   const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
   const tokData = JSON.parse(
@@ -97,6 +98,23 @@ const Sources = async (
   );
 
   if (!API_CONFIG.offline) {
+    // Trap error querying data (token expired or offline)
+    await coordinator.addStrategy(
+      new RequestStrategy({
+        name: 'remote-pull-fail',
+
+        source: 'remote',
+        on: 'pullFail',
+
+        action(transform: Transform, ex: IApiError) {
+          console.log('***** api pull fail', transform, ex);
+          orbitError(ex);
+        },
+
+        blocking: true,
+      })
+    );
+
     // Query the remote server whenever the memory is queried
     await coordinator.addStrategy(
       new RequestStrategy({
@@ -109,6 +127,49 @@ const Sources = async (
         action: 'pull',
 
         blocking: false,
+      })
+    );
+
+    // Trap error updating data (token expired or offline)
+    // See: https://github.com/orbitjs/todomvc-ember-orbit
+    await coordinator.addStrategy(
+      new RequestStrategy({
+        name: 'remote-push-fail',
+
+        source: 'remote',
+        on: 'pushFail',
+
+        action(transform: Transform, ex: IApiError) {
+          const remote = coordinator.getSource('remote');
+          const memory = coordinator.getSource('memory') as Memory;
+
+          if (ex instanceof NetworkError) {
+            // When network errors are encountered, try again in 3s
+            console.log('NetworkError - will try again soon');
+            setTimeout(() => {
+              remote.requestQueue.retry();
+            }, 3000);
+          } else {
+            // When non-network errors occur, notify the user and
+            // reset state.
+            let label = transform.options && transform.options.label;
+            if (label) {
+              alert(`Unable to complete "${label}"`);
+            } else {
+              alert(`Unable to complete operation`);
+            }
+
+            // Roll back memory to position before transform
+            if (memory.transformLog.contains(transform.id)) {
+              console.log('Rolling back - transform:', transform.id);
+              memory.rollback(transform.id, -1);
+            }
+
+            return remote.requestQueue.skip();
+          }
+        },
+
+        blocking: true,
       })
     );
 

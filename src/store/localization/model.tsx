@@ -230,6 +230,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "newOrganization": string;
     "swtchToAdmin": string;
     "swtchToApp": string;
+    "crashMessage": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
