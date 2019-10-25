@@ -150,6 +150,7 @@ export function GroupSettings(props: IProps) {
   } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
+  const [orgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
   const [project] = useGlobal('project');
@@ -433,7 +434,7 @@ export function GroupSettings(props: IProps) {
             primary={u.attributes.name}
             secondary={detail ? getDetail(u.id, rev) : null}
           />
-          {!detail && (
+          {!detail && orgRole === 'admin' && (
             <ListItemSecondaryAction>
               <IconButton
                 edge="end"
@@ -468,6 +469,7 @@ export function GroupSettings(props: IProps) {
                     style={{ width: 400 }}
                     variant="filled"
                     required={true}
+                    disabled={orgRole !== 'admin'}
                   />
                 }
                 label=""
@@ -483,6 +485,7 @@ export function GroupSettings(props: IProps) {
                     margin="normal"
                     variant="filled"
                     required={false}
+                    disabled={orgRole !== 'admin'}
                   />
                 }
                 label=""
@@ -498,8 +501,8 @@ export function GroupSettings(props: IProps) {
           <Grid item xs={12} md={4}>
             <FormGroup className={classes.group}>
               <FormLabel className={classes.label}>
-                {t.coordinators} <div className={classes.grow}>{'\u00A0'}</div>
-                {!detail && (
+                {t.owners} <div className={classes.grow}>{'\u00A0'}</div>
+                {!detail && orgRole === 'admin' && (
                   <IconButton
                     size="small"
                     className={classes.addButton}
@@ -516,7 +519,7 @@ export function GroupSettings(props: IProps) {
             <FormGroup className={classes.group}>
               <FormLabel className={classes.label}>
                 {t.reviewers} <div className={classes.grow}>{'\u00A0'}</div>
-                {!detail && (
+                {!detail && orgRole === 'admin' && (
                   <IconButton
                     size="small"
                     className={classes.addButton}
@@ -533,7 +536,7 @@ export function GroupSettings(props: IProps) {
             <FormGroup className={classes.group}>
               <FormLabel className={classes.label}>
                 {t.transcribers} <div className={classes.grow}>{'\u00A0'}</div>
-                {!detail && (
+                {!detail && orgRole === 'admin' && (
                   <IconButton
                     size="small"
                     className={classes.addButton}
@@ -547,7 +550,7 @@ export function GroupSettings(props: IProps) {
             </FormGroup>
           </Grid>
         </Grid>
-        {!detail && (
+        {!detail && orgRole === 'admin' && (
           <div className={classes.actions}>
             <Button
               key="save"

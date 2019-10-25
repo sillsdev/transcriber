@@ -164,6 +164,7 @@ export function AssignmentTable(props: IProps) {
   } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -282,28 +283,32 @@ export function AssignmentTable(props: IProps) {
     <div id="AssignmentTable" className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="assign"
-            aria-label={t.assignSec}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAssignSection(true)}
-            title={t.assignSec}
-          >
-            {t.assignSec}
-          </Button>
-          <Button
-            key="remove"
-            aria-label={t.removeSec}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleRemoveAssignments}
-            title={t.removeSec}
-          >
-            {t.removeSec}
-          </Button>
+          {projRole === 'admin' && (
+            <>
+              <Button
+                key="assign"
+                aria-label={t.assignSec}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleAssignSection(true)}
+                title={t.assignSec}
+              >
+                {t.assignSec}
+              </Button>
+              <Button
+                key="remove"
+                aria-label={t.removeSec}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleRemoveAssignments}
+                title={t.removeSec}
+              >
+                {t.removeSec}
+              </Button>
+            </>
+          )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
@@ -343,7 +348,7 @@ export function AssignmentTable(props: IProps) {
           columnWidths={columnWidths}
           rows={data}
           getChildRows={getChildRows}
-          pageSizes={[5, 10, 20]}
+          pageSizes={[]}
           tableColumnExtensions={[
             { columnName: 'passages', align: 'right' },
             { columnName: 'name', wordWrapEnabled: true },

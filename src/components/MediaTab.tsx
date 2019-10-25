@@ -236,6 +236,7 @@ export function MediaTab(props: IProps) {
     tableLoad,
   } = props;
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
@@ -516,54 +517,58 @@ export function MediaTab(props: IProps) {
           </div>
         )}
         <div className={classes.actions}>
-          {planColumn || (
-            <Button
-              key="upload"
-              aria-label={t.uploadMedia}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleUpload}
-            >
-              {t.uploadMedia}
-              <AddIcon className={classes.icon} />
-            </Button>
+          {projRole === 'admin' && (
+            <>
+              {planColumn || (
+                <Button
+                  key="upload"
+                  aria-label={t.uploadMedia}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleUpload}
+                >
+                  {t.uploadMedia}
+                  <AddIcon className={classes.icon} />
+                </Button>
+              )}
+              {planColumn || (
+                <Button
+                  key="Attach"
+                  aria-label={t.attachPassage}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handlePassageMedia(true)}
+                >
+                  {t.attachPassage}
+                  <AddIcon className={classes.icon} />
+                </Button>
+              )}
+              <Button
+                key="action"
+                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                aria-label={t.action}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.action}
+                <DropDownIcon className={classes.icon} />
+              </Button>
+              <Menu
+                id="action-menu"
+                anchorEl={actionMenuItem}
+                open={Boolean(actionMenuItem)}
+                onClose={handleConfirmAction('Close')}
+              >
+                <MenuItem onClick={handleConfirmAction('Delete')}>
+                  {t.delete}
+                </MenuItem>
+              </Menu>
+            </>
           )}
-          {planColumn || (
-            <Button
-              key="Attach"
-              aria-label={t.attachPassage}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handlePassageMedia(true)}
-            >
-              {t.attachPassage}
-              <AddIcon className={classes.icon} />
-            </Button>
-          )}
-          <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleMenu}
-          >
-            {t.action}
-            <DropDownIcon className={classes.icon} />
-          </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
-          >
-            <MenuItem onClick={handleConfirmAction('Delete')}>
-              {t.delete}
-            </MenuItem>
-          </Menu>
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"

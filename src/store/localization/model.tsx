@@ -288,7 +288,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "abbreviation": string;
     "save": string;
     "projects": string;
-    "coordinators": string;
+    "owners": string;
     "reviewers": string;
     "transcribers": string;
     "addGroupMember": string;

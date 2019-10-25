@@ -122,6 +122,7 @@ export function UserTable(props: IProps) {
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
   const [user] = useGlobal('user');
+  const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
@@ -226,39 +227,43 @@ export function UserTable(props: IProps) {
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="add"
-            aria-label={t.invite}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleAdd}
-          >
-            {t.invite}
-            <AddIcon className={classes.buttonIcon} />
-          </Button>
-          <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleMenu}
-          >
-            {t.action}
-            <DropDownIcon className={classes.buttonIcon} />
-          </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
-          >
-            <MenuItem onClick={handleConfirmAction('Delete')}>
-              {t.delete}
-            </MenuItem>
-          </Menu>
+          {orgRole === 'admin' && (
+            <>
+              <Button
+                key="add"
+                aria-label={t.invite}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleAdd}
+              >
+                {t.invite}
+                <AddIcon className={classes.buttonIcon} />
+              </Button>
+              <Button
+                key="action"
+                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                aria-label={t.action}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.action}
+                <DropDownIcon className={classes.buttonIcon} />
+              </Button>
+              <Menu
+                id="action-menu"
+                anchorEl={actionMenuItem}
+                open={Boolean(actionMenuItem)}
+                onClose={handleConfirmAction('Close')}
+              >
+                <MenuItem onClick={handleConfirmAction('Delete')}>
+                  {t.delete}
+                </MenuItem>
+              </Menu>
+            </>
+          )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"

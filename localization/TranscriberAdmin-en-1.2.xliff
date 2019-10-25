@@ -1546,8 +1546,8 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="groupSettings.coordinators">
-				<source>Coordinators</source>
+			<trans-unit id="groupSettings.owners">
+				<source>Owners</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>

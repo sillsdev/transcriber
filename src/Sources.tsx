@@ -236,23 +236,27 @@ const Sources = async (
     await remote
       .pull(q => q.findRecords('organization'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(10));
+      .then(() => setCompleted(14));
     await remote
       .pull(q => q.findRecords('organizationmembership'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(15));
+      .then(() => setCompleted(28));
     await remote
       .pull(q => q.findRecords('group'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(20));
+      .then(() => setCompleted(42));
     await remote
       .pull(q => q.findRecords('groupmembership'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(25));
+      .then(() => setCompleted(56));
     await remote
       .pull(q => q.findRecords('project'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(30));
+      .then(() => setCompleted(70));
+    await remote
+      .pull(q => q.findRecords('role'))
+      .then(transform => memory.sync(transform))
+      .then(() => setCompleted(84));
     await remote
       .pull(q => q.findRecords('plan'))
       .then(transform => {
@@ -279,10 +283,6 @@ const Sources = async (
       .pull(q => q.findRecords('mediafile'))
       .then(transform => memory.sync(transform))
       .then(() => tableLoaded('mediafile'));
-    remote
-      .pull(q => q.findRecords('role'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('role'));
     remote
       .pull(q => q.findRecords('plantype'))
       .then(transform => memory.sync(transform))

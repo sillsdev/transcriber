@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useGlobal } from 'reactn';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -97,6 +98,7 @@ export function PlanSheet(props: IProps) {
     setChanged,
   } = props;
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<Array<ICell>>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
@@ -201,6 +203,7 @@ export function PlanSheet(props: IProps) {
     cell.readOnly ? e.preventDefault() : null;
 
   const handlePaste = (clipBoard: string) => {
+    if (projRole !== 'admin') return Array<Array<string>>();
     const blankLines = /\r?\n\t*\r?\n/;
     const chunks = clipBoard.split(blankLines);
     const lines = chunks
@@ -221,6 +224,7 @@ export function PlanSheet(props: IProps) {
   const cellRender = (props: any) => <td {...props} onMouseUp={handleUp} />;
 
   const bookEditor = (props: any) => {
+    if (projRole !== 'admin') return <></>;
     if (setChanged) setChanged(true);
     return (
       <BookSelect
@@ -236,6 +240,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const textEditor = (props: any) => {
+    if (projRole !== 'admin') return <></>;
     if (setChanged) setChanged(true);
     return (
       <SheetText
@@ -302,65 +307,69 @@ export function PlanSheet(props: IProps) {
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="addSection"
-            aria-label={t.addSection}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAddSection}
-          >
-            {t.addSection}
-            <AddIcon className={classes.icon} />
-          </Button>
-          <Button
-            key="addPassage"
-            aria-label={t.addPassage}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAddPassage}
-          >
-            {t.addPassage}
-            <AddIcon className={classes.icon} />
-          </Button>
-          <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleMenu}
-          >
-            {t.action}
-            <DropDownIcon className={classes.icon} />
-          </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
-          >
-            <MenuItem onClick={handleConfirmAction('Delete')}>
-              {t.delete}
-            </MenuItem>
-            <MenuItem onClick={handlePassageMedia(true)}>
-              {t.attachMedia}
-            </MenuItem>
-          </Menu>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
-            key="save"
-            aria-label={t.save}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSave}
-          >
-            {t.save}
-            <SaveIcon className={classes.icon} />
-          </Button>
+          {projRole === 'admin' && (
+            <>
+              <Button
+                key="addSection"
+                aria-label={t.addSection}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleAddSection}
+              >
+                {t.addSection}
+                <AddIcon className={classes.icon} />
+              </Button>
+              <Button
+                key="addPassage"
+                aria-label={t.addPassage}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleAddPassage}
+              >
+                {t.addPassage}
+                <AddIcon className={classes.icon} />
+              </Button>
+              <Button
+                key="action"
+                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                aria-label={t.action}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.action}
+                <DropDownIcon className={classes.icon} />
+              </Button>
+              <Menu
+                id="action-menu"
+                anchorEl={actionMenuItem}
+                open={Boolean(actionMenuItem)}
+                onClose={handleConfirmAction('Close')}
+              >
+                <MenuItem onClick={handleConfirmAction('Delete')}>
+                  {t.delete}
+                </MenuItem>
+                <MenuItem onClick={handlePassageMedia(true)}>
+                  {t.attachMedia}
+                </MenuItem>
+              </Menu>
+              <div className={classes.grow}>{'\u00A0'}</div>
+              <Button
+                key="save"
+                aria-label={t.save}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleSave}
+              >
+                {t.save}
+                <SaveIcon className={classes.icon} />
+              </Button>
+            </>
+          )}
         </div>
 
         <DataSheet

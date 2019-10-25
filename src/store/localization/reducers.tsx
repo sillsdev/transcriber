@@ -316,7 +316,7 @@ const initialState = {
 			"abbreviation": "Abbreviation",
 			"save": "Save",
 			"projects": "Projects",
-			"coordinators": "Coordinators",
+			"owners": "Owners",
 			"reviewers": "Reviewers",
 			"transcribers": "Transcribers",
 			"addGroupMember": "Add Group Member",

@@ -84,12 +84,13 @@ export function PlanTable(props: IProps) {
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
+  const [projRole] = useGlobal('projRole');
   const [project] = useGlobal('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
     { name: 'planType', title: t.type },
     { name: 'sections', title: t.sections },
-    { name: 'action', title: t.action },
+    { name: 'action', title: projRole === 'admin' ? t.action : '\u00A0' },
   ]);
   const [columnWidth] = useState([
     { columnName: 'name', width: 300 },
@@ -184,7 +185,9 @@ export function PlanTable(props: IProps) {
   const getType = (p: Plan) => {
     const typeId = Related(p, 'plantype');
     const typeRec = planTypes.filter(pt => pt.id === typeId);
-    return typeRec && typeRec.length === 1 ? typeRec[0].attributes.name : '--';
+    return typeRec && typeRec.length === 1 && typeRec[0].attributes
+      ? typeRec[0].attributes.name
+      : '--';
   };
   const sectionCount = (p: Plan) => {
     return sections.filter(s => Related(s, 'plan') === p.id).length.toString();
@@ -239,33 +242,37 @@ export function PlanTable(props: IProps) {
         onClick={handleSelect(restProps.row.action, restProps.row.planType)}
       >
         {value}
-        <EditIcon className={classes.editIcon} />
+        {/* <EditIcon className={classes.editIcon} /> */}
       </Button>
     </Table.Cell>
   );
 
   const ActionCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      <IconButton
-        id={'edit-' + value}
-        key={'edit-' + value}
-        aria-label={'edit-' + value}
-        color="default"
-        className={classes.actionIcon}
-        onClick={handleEdit(restProps.row.action)}
-      >
-        <EditIcon />
-      </IconButton>
-      <IconButton
-        id={'del-' + value}
-        key={'del-' + value}
-        aria-label={'del-' + value}
-        color="default"
-        className={classes.actionIcon}
-        onClick={handleDelete}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {projRole === 'admin' && (
+        <>
+          <IconButton
+            id={'edit-' + value}
+            key={'edit-' + value}
+            aria-label={'edit-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleEdit(restProps.row.action)}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            id={'del-' + value}
+            key={'del-' + value}
+            aria-label={'del-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleDelete}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      )}
     </Table.Cell>
   );
 
@@ -287,17 +294,21 @@ export function PlanTable(props: IProps) {
       <div className={classes.container}>
         <div className={classes.paper}>
           <div className={classes.dialogHeader}>
-            <Button
-              key="add"
-              aria-label={t.addPlan}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleAdd}
-            >
-              {t.addPlan}
-              <AddIcon className={classes.buttonIcon} />
-            </Button>
+            {projRole === 'admin' && (
+              <>
+                <Button
+                  key="add"
+                  aria-label={t.addPlan}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAdd}
+                >
+                  {t.addPlan}
+                  <AddIcon className={classes.buttonIcon} />
+                </Button>
+              </>
+            )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Button
               key="filter"

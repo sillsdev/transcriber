@@ -1324,9 +1324,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.coordinators">
+      <unit id="groupSettings.owners">
          <segment>
-            <source>Coordinators</source>
+            <source>Owners</source>
             <target/>
          </segment>
       </unit>

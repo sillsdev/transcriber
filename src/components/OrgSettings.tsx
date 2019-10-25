@@ -81,6 +81,7 @@ export function OrgSettings(props: IProps) {
   const { add, organizations, t, noMargin } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [orgRole] = useGlobal('orgRole');
   const [organization] = useGlobal('organization');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -229,7 +230,7 @@ export function OrgSettings(props: IProps) {
             />
           </FormGroup>
         </FormControl>
-        {API_CONFIG.isApp || (
+        {!API_CONFIG.isApp && orgRole === 'admin' && (
           <div className={classes.actions}>
             <Button
               key="save"

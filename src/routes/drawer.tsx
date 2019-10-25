@@ -11,11 +11,14 @@ import {
   Plan,
   Group,
   MediaDescription,
+  OrganizationMembership,
+  GroupMembership,
+  Role,
 } from '../model';
 import * as actions from '../store';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, Record } from '@orbit/data';
 import {
   AppBar,
   Avatar,
@@ -169,9 +172,12 @@ interface IDispatchProps {
 
 interface IRecordProps {
   organizations: Array<Organization>;
+  organizationMemberships: Array<OrganizationMembership>;
   projects: Array<Project>;
   plans: Array<Plan>;
   groups: Array<Group>;
+  groupMemberships: Array<GroupMembership>;
+  roles: Array<Role>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
@@ -198,6 +204,9 @@ export function ResponsiveDrawer(props: IProps) {
     orbitLoaded,
     orbitStatus,
     resetOrbitError,
+    organizationMemberships,
+    groupMemberships,
+    roles,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -206,8 +215,10 @@ export function ResponsiveDrawer(props: IProps) {
   const [bucket] = useGlobal('bucket');
   const [user] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
+  const [orgRole, setOrgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [project, setProject] = useGlobal('project');
+  const [projRole, setProjRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.todo) : '');
@@ -326,6 +337,20 @@ export function ResponsiveDrawer(props: IProps) {
     saveConfirm.current = undefined;
     setAlertOpen(false);
   };
+  const getRole = (table: Record[], relate: string, id: string) => {
+    const memberRecs = table.filter(
+      tbl => related(tbl, 'user') === user && related(tbl, relate) === id
+    );
+    if (memberRecs.length === 1) {
+      const roleId = related(memberRecs[0], 'role');
+      const roleRecs = roles.filter(r => r.id === roleId);
+      if (roleRecs.length === 1) {
+        const attr = roleRecs[0].attributes;
+        if (attr) return attr.roleName.toLocaleLowerCase();
+      }
+    }
+    return '';
+  };
 
   useEffect(() => {
     const orgOpts = organizations
@@ -354,6 +379,8 @@ export function ResponsiveDrawer(props: IProps) {
       const cur = orgOptions.map(oo => oo.value).indexOf(organization);
       if (cur !== -1) setCurOrg(cur);
     }
+    setOrgRole(getRole(organizationMemberships, 'organization', organization));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orgOptions, organization]);
 
   useEffect(() => {
@@ -393,6 +420,15 @@ export function ResponsiveDrawer(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projOptions, project, addProject]);
+
+  useEffect(() => {
+    const projRecs = projects.filter(p => p.id === project);
+    if (projRecs.length === 1) {
+      const groupId = related(projRecs[0], 'group');
+      setProjRole(getRole(groupMemberships, 'group', groupId));
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [project]);
 
   useEffect(() => {
     const curPlan = plans.filter(p => p.id === plan);
@@ -616,14 +652,15 @@ export function ResponsiveDrawer(props: IProps) {
           <div className={classes.project}>
             <div className={classes.header}>
               <Typography variant="h6">{t.project}</Typography>
-              {API_CONFIG.isApp || (
-                <>
-                  <div className={classes.grow}>{'\u00A0'}</div>
-                  <IconButton size="small" onClick={handleAddProject}>
-                    <AddIcon />
-                  </IconButton>
-                </>
-              )}
+              {!API_CONFIG.isApp &&
+                (orgRole === 'admin' || projRole === 'admin') && (
+                  <>
+                    <div className={classes.grow}>{'\u00A0'}</div>
+                    <IconButton size="small" onClick={handleAddProject}>
+                      <AddIcon />
+                    </IconButton>
+                  </>
+                )}
             </div>
             {projOptions.length <= 0 || (
               <div className={classes.contained}>
@@ -771,6 +808,13 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography>{'Organization: ' + orgRole}</Typography>
+            <Typography>
+              {'Project: ' + (projRole === 'admin' ? 'owner' : projRole)}
+            </Typography>
+          </div>
+          {'\u00A0'}
           <a
             href={
               API_CONFIG.isApp
@@ -871,9 +915,13 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
+  organizationMemberships: (q: QueryBuilder) =>
+    q.findRecords('organizationmembership'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
+  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
 export default withData(mapRecordsToProps)(connect(

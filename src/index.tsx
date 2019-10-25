@@ -21,7 +21,9 @@ const memory = new Memory({ schema, keyMap });
 
 setGlobal({
   organization: '',
+  orgRole: '',
   project: '',
+  projRole: '',
   plan: '',
   tab: 0,
   group: '',

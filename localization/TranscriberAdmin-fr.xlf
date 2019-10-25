@@ -1322,10 +1322,10 @@
             <target>Projects</target>
          </segment>
       </unit>
-	  <unit id="groupSettings.coordinators">
+	  <unit id="groupSettings.owners">
          <segment>
-			<source>Coordinators</source>
-         	<target>Coordinateurs</target>
+			<source>Owner(s)</source>
+         	<target>Maître(s)</target>
          </segment>
       </unit>
 		<unit id="groupSettings.reviewers">
