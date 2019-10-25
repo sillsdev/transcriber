@@ -222,8 +222,9 @@ export function GroupSettings(props: IProps) {
 
   const handleAddMember = async () => {
     setOpen(false);
+    const fileRole = role === 'coordinator' ? 'admin' : role;
     const roleRec = roles.filter(
-      r => r.attributes.roleName.toLowerCase() === role
+      r => r.attributes.roleName.toLowerCase() === fileRole
     );
     if (roleRec.length === 0) {
       //error
@@ -333,6 +334,14 @@ export function GroupSettings(props: IProps) {
     </div>
   );
 
+  const adminId = roles
+    .filter(r => r.attributes.roleName.toLowerCase() === 'admin')
+    .map(r => r.id);
+  const coordinatorIds = groupMemberships
+    .filter(
+      gm => related(gm, 'group') === group && related(gm, 'role') === adminId[0]
+    )
+    .map(gm => related(gm, 'user'));
   const transcriberId = roles
     .filter(r => r.attributes.roleName.toLowerCase() === 'transcriber')
     .map(r => r.id);
@@ -424,18 +433,20 @@ export function GroupSettings(props: IProps) {
             primary={u.attributes.name}
             secondary={detail ? getDetail(u.id, rev) : null}
           />
-          <ListItemSecondaryAction>
-            <IconButton
-              edge="end"
-              aria-label="Delete"
-              onClick={handleRemoveMember({
-                id: u.id,
-                name: u.attributes.name,
-              })}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
+          {!detail && (
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                aria-label="Delete"
+                onClick={handleRemoveMember({
+                  id: u.id,
+                  name: u.attributes.name,
+                })}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          )}
         </ListItem>
       ));
 
@@ -484,32 +495,53 @@ export function GroupSettings(props: IProps) {
           </FormControl>
         )}
         <Grid container spacing={8}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
+            <FormGroup className={classes.group}>
+              <FormLabel className={classes.label}>
+                {t.coordinators} <div className={classes.grow}>{'\u00A0'}</div>
+                {!detail && (
+                  <IconButton
+                    size="small"
+                    className={classes.addButton}
+                    onClick={handleAdd('coordinator')}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                )}
+              </FormLabel>
+              <List dense={true}>{getPersonItems(coordinatorIds, true)}</List>
+            </FormGroup>
+          </Grid>
+          <Grid item xs={12} md={4}>
             <FormGroup className={classes.group}>
               <FormLabel className={classes.label}>
                 {t.reviewers} <div className={classes.grow}>{'\u00A0'}</div>
-                <IconButton
-                  size="small"
-                  className={classes.addButton}
-                  onClick={handleAdd('reviewer')}
-                >
-                  <AddIcon />
-                </IconButton>
+                {!detail && (
+                  <IconButton
+                    size="small"
+                    className={classes.addButton}
+                    onClick={handleAdd('reviewer')}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                )}
               </FormLabel>
               <List dense={true}>{getPersonItems(reviewerIds, true)}</List>
             </FormGroup>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <FormGroup className={classes.group}>
               <FormLabel className={classes.label}>
                 {t.transcribers} <div className={classes.grow}>{'\u00A0'}</div>
-                <IconButton
-                  size="small"
-                  className={classes.addButton}
-                  onClick={handleAdd('transcriber')}
-                >
-                  <AddIcon />
-                </IconButton>
+                {!detail && (
+                  <IconButton
+                    size="small"
+                    className={classes.addButton}
+                    onClick={handleAdd('transcriber')}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                )}
               </FormLabel>
               <List dense={true}>{getPersonItems(transcriberIds, false)}</List>
             </FormGroup>

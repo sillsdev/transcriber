@@ -1322,13 +1322,19 @@
             <target>Projects</target>
          </segment>
       </unit>
-      <unit id="groupSettings.reviewers">
+	  <unit id="groupSettings.coordinators">
          <segment>
-			<source>Reviewers</source>
-			<target>Réviseur</target>
+			<source>Coordinators</source>
+         	<target>Coordinateurs</target>
          </segment>
       </unit>
-	<unit id="groupSettings.transcribers">
+		<unit id="groupSettings.reviewers">
+			<segment>
+				<source>Reviewers</source>
+				<target>Réviseur</target>
+			</segment>
+		</unit>
+		<unit id="groupSettings.transcribers">
          <segment>
 			<source>Transcribers</source>
 			<target>Transcripteur</target>

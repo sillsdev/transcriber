@@ -479,7 +479,7 @@
 				<source>Loading data</source>
 				<target/>
 				<context-group>
-					<context context-type="sourcefile">GroupSettings.tsx</context>
+					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="planSheet.action">
@@ -1541,6 +1541,13 @@
 			</trans-unit>
 			<trans-unit id="groupSettings.projects">
 				<source>Projects</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.coordinators">
+				<source>Coordinators</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>

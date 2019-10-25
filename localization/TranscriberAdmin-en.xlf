@@ -1324,6 +1324,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.coordinators">
+         <segment>
+            <source>Coordinators</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupSettings.reviewers">
          <segment>
             <source>Reviewers</source>
