@@ -33,6 +33,8 @@ const styles = (theme: Theme) =>
       width: '80%',
       height: '40%',
       textAlign: 'center',
+      display: 'flex',
+      flexDirection: 'column',
     },
   });
 

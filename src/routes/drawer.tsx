@@ -510,15 +510,7 @@ export function ResponsiveDrawer(props: IProps) {
   }, [project, organization, choice, content, plan, group, tab]);
 
   useEffect(() => {
-    if (orbitStatus === 401)
-      auth
-        .renewSession()
-        .then(() => {
-          resetOrbitError();
-          setView('Loading');
-        })
-        .catch(() => setView('Logout'));
-    if (orbitStatus === 403) setView('Logout');
+    if (orbitStatus >= 400 && orbitStatus < 500) setView('Logout');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orbitStatus]);
 
