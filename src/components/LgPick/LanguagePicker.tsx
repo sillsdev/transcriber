@@ -1,16 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { IState, ILanguagePickerStrings } from '../model';
-import localStrings from '../selector/localize';
-import {
-  LangTagMap,
-  LangTag,
-  ScriptList,
-  FontMap,
-  IRanked,
-  ScriptName,
-} from '../store/langPicker/types';
+import { IState, ILanguagePickerStrings } from '../../model';
+import localStrings from '../../selector/localize';
+import { LangTag, IRanked } from './langPicker/types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -28,10 +20,29 @@ import {
   IconButton,
 } from '@material-ui/core';
 import ClearIcon from '@material-ui/icons/Clear';
-import { woBadChar } from '../store/langPicker/reducers';
+import { woBadChar } from './util';
 import LanguageChoice from './LanguageChoice';
 import './LanguagePicker.css';
 import clsx from 'clsx';
+import { hasExact, getExact } from './index/LgExact';
+import { hasPartial, getPartial } from './index/LgPartial';
+import { hasNoSubTag, getNoSubTag } from './index/LgNoSubTag';
+import { getScripts } from './index/LgScripts';
+import { scriptName } from './index/LgScriptName';
+import { fontMap } from './index/LgFontMap';
+import jsonData from './data/langtags.json';
+
+let langTags = jsonData as LangTag[];
+langTags.push({
+  full: 'qaa',
+  iso639_3: 'qaa',
+  localname: 'Unknown',
+  name: 'Unknown',
+  regionname: 'anywhere',
+  script: 'Latn',
+  sldr: false,
+  tag: 'qaa',
+});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,20 +78,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface StateProps {
+interface IStateProps {
   t: ILanguagePickerStrings;
-  exact: LangTagMap;
-  partial: LangTagMap;
-  scripts: ScriptList;
-  noSubtag: LangTagMap;
-  langTags: LangTag[];
-  fontMap: FontMap;
-  scriptName: ScriptName;
 }
 
-interface DispatchProps {}
-
-interface IProps extends StateProps, DispatchProps {
+interface IProps extends IStateProps {
   value: string;
   name: string;
   font: string;
@@ -88,22 +90,11 @@ interface IProps extends StateProps, DispatchProps {
   setName?: (name: string) => void;
   setFont?: (font: string) => void;
   disabled?: boolean;
-  // local stat props go here
 }
 
 export const LanguagePicker = (props: IProps) => {
-  const {
-    t,
-    exact,
-    partial,
-    noSubtag,
-    langTags,
-    scripts,
-    fontMap,
-    scriptName,
-    disabled,
-  } = props;
-  const { value, name, font, setCode, setName, setFont } = props;
+  const { disabled } = props;
+  const { value, name, font, setCode, setName, setFont, t } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [curValue, setCurValue] = React.useState(value);
@@ -122,9 +113,9 @@ export const LanguagePicker = (props: IProps) => {
   const handleClickOpen = (e: any) => {
     if (e.keyCode && e.keyCode === 9) return;
     const key = curValue.toLocaleLowerCase();
-    if (exact.hasOwnProperty(key) && key !== 'und') {
+    if (hasExact(key) && key !== 'und') {
       setResponse(curName + ' (' + curValue + ')');
-      const langTag = langTags[exact[key][0].index];
+      const langTag = langTags[getExact(key)[0].index];
       setTag(langTag);
       selectFont(langTag);
       setDefaultFont(curFont);
@@ -281,13 +272,13 @@ export const LanguagePicker = (props: IProps) => {
   const selectScript = (tag: LangTag) => {
     const tagParts = tag.tag.split('-');
     const lgTag = tagParts[0];
-    if (scripts[lgTag].length !== 1) {
+    if (getScripts(lgTag).length !== 1) {
       if (tagParts.length > 1 && tagParts[1].length === 4) {
         setScriptField(<></>);
         selectFont(tag);
         return;
       }
-      const defaultScript = scripts[lgTag][0];
+      const defaultScript = getScripts(lgTag)[0];
       setScriptField(
         <FormControlLabel
           control={
@@ -309,7 +300,7 @@ export const LanguagePicker = (props: IProps) => {
               variant="filled"
               required={true}
             >
-              {scripts[lgTag].map(s => (
+              {getScripts(lgTag).map(s => (
                 <MenuItem key={s} value={s}>
                   {scriptName[s] + ' - ' + s}
                 </MenuItem>
@@ -353,17 +344,17 @@ export const LanguagePicker = (props: IProps) => {
       let list = Array<IRanked>();
       response.split(' ').forEach(w => {
         const token = woBadChar(w).toLocaleLowerCase();
-        if (exact.hasOwnProperty(token)) {
-          list = mergeList(list, exact[token]);
+        if (hasExact(token)) {
+          list = mergeList(list, getExact(token));
         }
       });
       response.split(' ').forEach(w => {
         const token = woBadChar(w).toLocaleLowerCase();
-        if (subtag && partial.hasOwnProperty(token.slice(0, 3))) {
-          list = mergeList(list, partial[token.slice(0, 3)]);
+        if (subtag && hasPartial(token.slice(0, 3))) {
+          list = mergeList(list, getPartial(token.slice(0, 3)));
         }
-        if (!subtag && noSubtag.hasOwnProperty(token.slice(0, 3))) {
-          list = mergeList(list, noSubtag[token.slice(0, 3)]);
+        if (!subtag && hasNoSubTag(token.slice(0, 3))) {
+          list = mergeList(list, getNoSubTag(token.slice(0, 3)));
         }
       });
       if (list.length > 0) {
@@ -398,6 +389,8 @@ export const LanguagePicker = (props: IProps) => {
               secondary={secondary}
               choose={handleChoose}
               subtag={subtag}
+              langTags={langTags}
+              scriptName={scriptName}
             />
           </>
         );
@@ -407,7 +400,7 @@ export const LanguagePicker = (props: IProps) => {
   };
 
   return (
-    <div>
+    <div id="LangBcp47">
       <TextField
         variant="filled"
         margin="dense"
@@ -485,22 +478,8 @@ export const LanguagePicker = (props: IProps) => {
   );
 };
 
-const mapStateToProps = (state: IState): StateProps => ({
+const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'languagePicker' }),
-  exact: state.langTag.exact,
-  partial: state.langTag.partial,
-  scripts: state.langTag.scripts,
-  noSubtag: state.langTag.noSubtag,
-  langTags: state.langTag.langTags,
-  fontMap: state.langTag.fontMap,
-  scriptName: state.langTag.scriptNames,
 });
 
-const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  ...bindActionCreators({}, dispatch),
-});
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LanguagePicker);
+export default connect(mapStateToProps)(LanguagePicker);

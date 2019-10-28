@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { User } from './model';
+import { User, IApiError } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -9,7 +9,7 @@ import Coordinator, {
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
-import { Schema, KeyMap, Transform } from '@orbit/data';
+import { Schema, KeyMap, Transform, NetworkError } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
@@ -26,7 +26,9 @@ const Sources = async (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
-  setCompleted: (valud: number) => void
+  setCompleted: (valud: number) => void,
+  tableLoaded: (name: string) => void,
+  orbitError: (ex: IApiError) => void
 ) => {
   const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
   const tokData = JSON.parse(
@@ -97,6 +99,23 @@ const Sources = async (
   );
 
   if (!API_CONFIG.offline) {
+    // Trap error querying data (token expired or offline)
+    await coordinator.addStrategy(
+      new RequestStrategy({
+        name: 'remote-pull-fail',
+
+        source: 'remote',
+        on: 'pullFail',
+
+        action(transform: Transform, ex: IApiError) {
+          console.log('***** api pull fail', transform, ex);
+          orbitError(ex);
+        },
+
+        blocking: true,
+      })
+    );
+
     // Query the remote server whenever the memory is queried
     await coordinator.addStrategy(
       new RequestStrategy({
@@ -109,6 +128,49 @@ const Sources = async (
         action: 'pull',
 
         blocking: false,
+      })
+    );
+
+    // Trap error updating data (token expired or offline)
+    // See: https://github.com/orbitjs/todomvc-ember-orbit
+    await coordinator.addStrategy(
+      new RequestStrategy({
+        name: 'remote-push-fail',
+
+        source: 'remote',
+        on: 'pushFail',
+
+        action(transform: Transform, ex: IApiError) {
+          const remote = coordinator.getSource('remote');
+          const memory = coordinator.getSource('memory') as Memory;
+
+          if (ex instanceof NetworkError) {
+            // When network errors are encountered, try again in 3s
+            console.log('NetworkError - will try again soon');
+            setTimeout(() => {
+              remote.requestQueue.retry();
+            }, 3000);
+          } else {
+            // When non-network errors occur, notify the user and
+            // reset state.
+            let label = transform.options && transform.options.label;
+            if (label) {
+              alert(`Unable to complete "${label}"`);
+            } else {
+              alert(`Unable to complete operation`);
+            }
+
+            // Roll back memory to position before transform
+            if (memory.transformLog.contains(transform.id)) {
+              console.log('Rolling back - transform:', transform.id);
+              memory.rollback(transform.id, -1);
+            }
+
+            return remote.requestQueue.skip();
+          }
+        },
+
+        blocking: true,
       })
     );
 
@@ -174,87 +236,81 @@ const Sources = async (
     await remote
       .pull(q => q.findRecords('organization'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(10));
+      .then(() => setCompleted(14));
     await remote
       .pull(q => q.findRecords('organizationmembership'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(15));
-    await remote
-      .pull(q => q.findRecords('project'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(20));
-    await remote
-      .pull(q => q.findRecords('integration'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(25));
-    await remote
-      .pull(q => q.findRecords('invitation'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(30));
-    await remote
-      .pull(q => q.findRecords('projectintegration'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(35));
-    await remote
-      .pull(q => q.findRecords('projecttype'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(40));
-    await remote
-      .pull(q => q.findRecords('plan'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(45));
-    await remote
-      .pull(q => q.findRecords('plantype'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(50));
-    await remote
-      .pull(q => q.findRecords('section'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(55));
-    await remote
-      .pull(q => q.findRecords('passagesection'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(60));
-    await remote
-      .pull(q => q.findRecords('passage'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(65));
-    await remote
-      .pull(q => q.findRecords('userpassage'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(70));
+      .then(() => setCompleted(28));
     await remote
       .pull(q => q.findRecords('group'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(75));
+      .then(() => setCompleted(42));
     await remote
       .pull(q => q.findRecords('groupmembership'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(80));
+      .then(() => setCompleted(56));
+    await remote
+      .pull(q => q.findRecords('project'))
+      .then(transform => memory.sync(transform))
+      .then(() => setCompleted(70));
     await remote
       .pull(q => q.findRecords('role'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(85));
+      .then(() => setCompleted(84));
     await remote
-      .pull(q => q.findRecords('mediafile'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(90));
-    await remote
-      .pull(q => q.findRecords('activitystate'))
+      .pull(q => q.findRecords('plan'))
       .then(transform => {
         memory.sync(transform);
         if (tokData.sub !== '') {
           localStorage.setItem('user-token', tokData.sub);
         }
+        tableLoaded('plan'); // If we are loading, length of tableLoad > 0
       })
-      .then(() => setCompleted(95));
-    await remote
+      .then(() => setCompleted(35));
+    remote
+      .pull(q => q.findRecords('section'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('section'));
+    remote
+      .pull(q => q.findRecords('passagesection'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('passagesection'));
+    remote
+      .pull(q => q.findRecords('passage'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('passage'));
+    remote
+      .pull(q => q.findRecords('mediafile'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('mediafile'));
+    remote
+      .pull(q => q.findRecords('plantype'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('plantype'));
+    remote
       .pull(q => q.findRecords('integration'))
-      .then(transform => memory.sync(transform));
-    await remote
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('integration'));
+    remote
       .pull(q => q.findRecords('projectintegration'))
       .then(transform => memory.sync(transform))
-      .then(() => setCompleted(100));
+      .then(() => tableLoaded('projectintegration'));
+    remote
+      .pull(q => q.findRecords('invitation'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('invitation'));
+    remote
+      .pull(q => q.findRecords('projecttype'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('projecttype'));
+    remote
+      .pull(q => q.findRecords('userpassage'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('userpassage'));
+    remote
+      .pull(q => q.findRecords('activitystate'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('activitystate'));
   }
 
   setCompleted(100);

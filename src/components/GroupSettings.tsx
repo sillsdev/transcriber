@@ -116,6 +116,7 @@ interface IDeleteItem {
 
 interface IStateProps {
   t: IGroupSettingsStrings;
+  tableLoad: string[];
 }
 
 interface IRecordProps {
@@ -144,10 +145,12 @@ export function GroupSettings(props: IProps) {
     sections,
     plans,
     userDetail,
+    tableLoad,
     t,
   } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
+  const [orgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
   const [project] = useGlobal('project');
@@ -161,6 +164,7 @@ export function GroupSettings(props: IProps) {
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
   const [confirmItem, setConfirmItem] = useState<IDeleteItem | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleNameChange = (e: any) => {
     setName(e.target.value);
@@ -219,8 +223,9 @@ export function GroupSettings(props: IProps) {
 
   const handleAddMember = async () => {
     setOpen(false);
+    const fileRole = role === 'coordinator' ? 'admin' : role;
     const roleRec = roles.filter(
-      r => r.attributes.roleName.toLowerCase() === role
+      r => r.attributes.roleName.toLowerCase() === fileRole
     );
     if (roleRec.length === 0) {
       //error
@@ -295,6 +300,17 @@ export function GroupSettings(props: IProps) {
     );
   }, [orgMemberships, groupMemberships, users, organization, group]);
 
+  useEffect(() => {
+    if (tableLoad.length > 0 && !tableLoad.includes('section') && !loading) {
+      setMessage(<span>{t.loadingTable}</span>);
+      setLoading(true);
+    } else if (loading) {
+      setMessage(<></>);
+      setLoading(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [tableLoad]);
+
   const projectItems = projects
     .filter(p => related(p, 'group') === group)
     .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
@@ -319,6 +335,14 @@ export function GroupSettings(props: IProps) {
     </div>
   );
 
+  const adminId = roles
+    .filter(r => r.attributes.roleName.toLowerCase() === 'admin')
+    .map(r => r.id);
+  const coordinatorIds = groupMemberships
+    .filter(
+      gm => related(gm, 'group') === group && related(gm, 'role') === adminId[0]
+    )
+    .map(gm => related(gm, 'user'));
   const transcriberId = roles
     .filter(r => r.attributes.roleName.toLowerCase() === 'transcriber')
     .map(r => r.id);
@@ -410,18 +434,20 @@ export function GroupSettings(props: IProps) {
             primary={u.attributes.name}
             secondary={detail ? getDetail(u.id, rev) : null}
           />
-          <ListItemSecondaryAction>
-            <IconButton
-              edge="end"
-              aria-label="Delete"
-              onClick={handleRemoveMember({
-                id: u.id,
-                name: u.attributes.name,
-              })}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </ListItemSecondaryAction>
+          {!detail && orgRole === 'admin' && (
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                aria-label="Delete"
+                onClick={handleRemoveMember({
+                  id: u.id,
+                  name: u.attributes.name,
+                })}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
+          )}
         </ListItem>
       ));
 
@@ -443,6 +469,7 @@ export function GroupSettings(props: IProps) {
                     style={{ width: 400 }}
                     variant="filled"
                     required={true}
+                    disabled={orgRole !== 'admin'}
                   />
                 }
                 label=""
@@ -458,6 +485,7 @@ export function GroupSettings(props: IProps) {
                     margin="normal"
                     variant="filled"
                     required={false}
+                    disabled={orgRole !== 'admin'}
                   />
                 }
                 label=""
@@ -470,38 +498,59 @@ export function GroupSettings(props: IProps) {
           </FormControl>
         )}
         <Grid container spacing={8}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
+            <FormGroup className={classes.group}>
+              <FormLabel className={classes.label}>
+                {t.owners} <div className={classes.grow}>{'\u00A0'}</div>
+                {!detail && orgRole === 'admin' && (
+                  <IconButton
+                    size="small"
+                    className={classes.addButton}
+                    onClick={handleAdd('coordinator')}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                )}
+              </FormLabel>
+              <List dense={true}>{getPersonItems(coordinatorIds, true)}</List>
+            </FormGroup>
+          </Grid>
+          <Grid item xs={12} md={4}>
             <FormGroup className={classes.group}>
               <FormLabel className={classes.label}>
                 {t.reviewers} <div className={classes.grow}>{'\u00A0'}</div>
-                <IconButton
-                  size="small"
-                  className={classes.addButton}
-                  onClick={handleAdd('reviewer')}
-                >
-                  <AddIcon />
-                </IconButton>
+                {!detail && orgRole === 'admin' && (
+                  <IconButton
+                    size="small"
+                    className={classes.addButton}
+                    onClick={handleAdd('reviewer')}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                )}
               </FormLabel>
               <List dense={true}>{getPersonItems(reviewerIds, true)}</List>
             </FormGroup>
           </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <FormGroup className={classes.group}>
               <FormLabel className={classes.label}>
                 {t.transcribers} <div className={classes.grow}>{'\u00A0'}</div>
-                <IconButton
-                  size="small"
-                  className={classes.addButton}
-                  onClick={handleAdd('transcriber')}
-                >
-                  <AddIcon />
-                </IconButton>
+                {!detail && orgRole === 'admin' && (
+                  <IconButton
+                    size="small"
+                    className={classes.addButton}
+                    onClick={handleAdd('transcriber')}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                )}
               </FormLabel>
               <List dense={true}>{getPersonItems(transcriberIds, false)}</List>
             </FormGroup>
           </Grid>
         </Grid>
-        {!detail && (
+        {!detail && orgRole === 'admin' && (
           <div className={classes.actions}>
             <Button
               key="save"
@@ -578,6 +627,7 @@ export function GroupSettings(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'groupSettings' }),
+  tableLoad: state.orbit.tableLoad,
 });
 
 const mapRecordsToProps = {

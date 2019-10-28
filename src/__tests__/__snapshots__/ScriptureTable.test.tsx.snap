@@ -15,7 +15,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
       >
         <button
           aria-label="Add Section"
-          class="MuiButtonBase-root MuiButton-root makeStyles-button-12 MuiButton-outlined MuiButton-outlinedPrimary"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-button-12"
           tabindex="0"
           type="button"
         >
@@ -41,7 +41,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
         </button>
         <button
           aria-label="Add Passage"
-          class="MuiButtonBase-root MuiButton-root makeStyles-button-12 MuiButton-outlined MuiButton-outlinedPrimary"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-button-12"
           tabindex="0"
           type="button"
         >
@@ -68,7 +68,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
         <button
           aria-label="Action"
           aria-owns="action-menu"
-          class="MuiButtonBase-root MuiButton-root makeStyles-button-12 MuiButton-outlined MuiButton-outlinedPrimary"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary makeStyles-button-12"
           tabindex="0"
           type="button"
         >
@@ -99,7 +99,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
         </div>
         <button
           aria-label="Save"
-          class="MuiButtonBase-root MuiButton-root makeStyles-button-12 MuiButton-contained MuiButton-containedPrimary"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary makeStyles-button-12"
           tabindex="0"
           type="button"
         >

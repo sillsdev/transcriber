@@ -403,6 +403,12 @@
 				<target>Choisissez un plan de projet</target>
 			</segment>
 		</unit>
+		<unit id="planTable.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
 		<unit id="planSheet.action">
 			<segment>
 				<source>Action</source>
@@ -499,7 +505,13 @@
             <target>Description</target>
          </segment>
       </unit>
-      <unit id="assignmentTable.title">
+		<unit id="scriptureTable.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
+		<unit id="assignmentTable.title">
          <segment>
             <source>Assignments</source>
          	<target>Affectations</target>
@@ -865,7 +877,13 @@
 	  		<target>Fichier {0} est un type de fichier non supporté.</target>
 	  	</segment>
 	  </unit>
-      <unit id="passageMedia.attachAvailableMedia">
+		<unit id="mediaTab.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.attachAvailableMedia">
 			<segment>
 				<source>Attach available media files to passages (with no current media).</source>
 				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne contiennent aucun média actuel).</target>
@@ -1079,6 +1097,12 @@
 			<segment>
 				<source>Switch to App</source>
 				<target>Passer à App</target>
+			</segment>
+		</unit>
+		<unit id="main.crashMessage">
+			<segment>
+				<source>Something went wrong. The developers need to address this issue.</source>
+				<target>Quelque chose a mal tourné. Les développeurs doivent se pencher sur cette question.</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.section">
@@ -1298,13 +1322,19 @@
             <target>Projects</target>
          </segment>
       </unit>
-      <unit id="groupSettings.reviewers">
+	  <unit id="groupSettings.owners">
          <segment>
-			<source>Reviewers</source>
-			<target>Réviseur</target>
+			<source>Owner(s)</source>
+         	<target>Maître(s)</target>
          </segment>
       </unit>
-	<unit id="groupSettings.transcribers">
+		<unit id="groupSettings.reviewers">
+			<segment>
+				<source>Reviewers</source>
+				<target>Réviseur</target>
+			</segment>
+		</unit>
+		<unit id="groupSettings.transcribers">
          <segment>
 			<source>Transcribers</source>
 			<target>Transcripteur</target>
@@ -1388,7 +1418,13 @@
          	<target>Rôle invalide. Utilisateur non ajouté.</target>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
+		<unit id="groupSettings.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
+		<unit id="shapingTable.NoColumns">
 			<segment>
 				<source>No columns visible</source>
 				<target>Aucune colonne visible</target>
@@ -1814,7 +1850,13 @@
 				<target>Non</target>
 			</segment>
 		</unit>
-      <unit id="integration.sync">
+		<unit id="toDoTable.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
+		<unit id="integration.sync">
          <segment>
             <source>Sync</source>
             <target>Sync</target>

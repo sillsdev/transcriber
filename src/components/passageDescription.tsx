@@ -42,7 +42,6 @@ export const PassageDescription = (props: IProps) => {
   );
 };
 export const PassageDescriptionCompare = (a: any, b: any) => {
-  console.log('passageDescriptionCompare');
   if (
     a.props.passage.attributes.sequencenum ===
     b.props.passage.attributes.sequencenum

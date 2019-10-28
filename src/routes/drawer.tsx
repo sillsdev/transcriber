@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
-// import { bindActionCreators } from 'redux';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -11,11 +11,14 @@ import {
   Plan,
   Group,
   MediaDescription,
+  OrganizationMembership,
+  GroupMembership,
+  Role,
 } from '../model';
-// import * as actions from '../store';
+import * as actions from '../store';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, Record } from '@orbit/data';
 import {
   AppBar,
   Avatar,
@@ -58,7 +61,6 @@ import OrgSettings from '../components/OrgSettings';
 import GroupTabs from '../components/GroupTabs';
 import PlanTable from '../components/PlanTable';
 import PlanTabs from '../components/PlanTabs';
-// import MyTaskTabs from '../components/MyTaskTabs';
 import ToDoTable from '../components/ToDoTable';
 import AllTaskTable from '../components/AllTaskTable';
 import ProjectSettings from '../components/ProjectSettings';
@@ -161,15 +163,21 @@ interface componentType {
 interface IStateProps {
   t: IMainStrings;
   orbitLoaded: boolean;
+  orbitStatus: number;
 }
 
-interface IDispatchProps {}
+interface IDispatchProps {
+  resetOrbitError: typeof actions.resetOrbitError;
+}
 
 interface IRecordProps {
   organizations: Array<Organization>;
+  organizationMemberships: Array<OrganizationMembership>;
   projects: Array<Project>;
   plans: Array<Plan>;
   groups: Array<Group>;
+  groupMemberships: Array<GroupMembership>;
+  roles: Array<Role>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
@@ -194,6 +202,11 @@ export function ResponsiveDrawer(props: IProps) {
     plans,
     groups,
     orbitLoaded,
+    orbitStatus,
+    resetOrbitError,
+    organizationMemberships,
+    groupMemberships,
+    roles,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -202,8 +215,10 @@ export function ResponsiveDrawer(props: IProps) {
   const [bucket] = useGlobal('bucket');
   const [user] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
+  const [orgRole, setOrgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [project, setProject] = useGlobal('project');
+  const [projRole, setProjRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.todo) : '');
@@ -270,6 +285,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handlePlanType = (value: string) => {
+    localStorage.removeItem('url');
     if (value.toLocaleLowerCase() === 'scripture') {
       setContent('scripture-plan');
     } else {
@@ -322,6 +338,20 @@ export function ResponsiveDrawer(props: IProps) {
     saveConfirm.current = undefined;
     setAlertOpen(false);
   };
+  const getRole = (table: Record[], relate: string, id: string) => {
+    const memberRecs = table.filter(
+      tbl => related(tbl, 'user') === user && related(tbl, relate) === id
+    );
+    if (memberRecs.length === 1) {
+      const roleId = related(memberRecs[0], 'role');
+      const roleRecs = roles.filter(r => r.id === roleId);
+      if (roleRecs.length === 1) {
+        const attr = roleRecs[0].attributes;
+        if (attr) return attr.roleName.toLocaleLowerCase();
+      }
+    }
+    return '';
+  };
 
   useEffect(() => {
     const orgOpts = organizations
@@ -350,6 +380,8 @@ export function ResponsiveDrawer(props: IProps) {
       const cur = orgOptions.map(oo => oo.value).indexOf(organization);
       if (cur !== -1) setCurOrg(cur);
     }
+    setOrgRole(getRole(organizationMemberships, 'organization', organization));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orgOptions, organization]);
 
   useEffect(() => {
@@ -389,6 +421,15 @@ export function ResponsiveDrawer(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projOptions, project, addProject]);
+
+  useEffect(() => {
+    const projRecs = projects.filter(p => p.id === project);
+    if (projRecs.length === 1) {
+      const groupId = related(projRecs[0], 'group');
+      setProjRole(getRole(groupMemberships, 'group', groupId));
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [project]);
 
   useEffect(() => {
     const curPlan = plans.filter(p => p.id === plan);
@@ -468,6 +509,20 @@ export function ResponsiveDrawer(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, organization, choice, content, plan, group, tab]);
 
+  useEffect(() => {
+    if (orbitStatus === 401)
+      auth
+        .renewSession()
+        .then(() => {
+          resetOrbitError();
+          setView('Loading');
+        })
+        .catch(() => setView('Logout'));
+    if (orbitStatus === 403) setView('Logout');
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [orbitStatus]);
+
+  if (view === 'Loading') return <Redirect to="/loading" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
 
   // When the user uses the back button or directly naviagets to a page
@@ -598,14 +653,15 @@ export function ResponsiveDrawer(props: IProps) {
           <div className={classes.project}>
             <div className={classes.header}>
               <Typography variant="h6">{t.project}</Typography>
-              {API_CONFIG.isApp || (
-                <>
-                  <div className={classes.grow}>{'\u00A0'}</div>
-                  <IconButton size="small" onClick={handleAddProject}>
-                    <AddIcon />
-                  </IconButton>
-                </>
-              )}
+              {!API_CONFIG.isApp &&
+                (orgRole === 'admin' || projRole === 'admin') && (
+                  <>
+                    <div className={classes.grow}>{'\u00A0'}</div>
+                    <IconButton size="small" onClick={handleAddProject}>
+                      <AddIcon />
+                    </IconButton>
+                  </>
+                )}
             </div>
             {projOptions.length <= 0 || (
               <div className={classes.contained}>
@@ -702,20 +758,8 @@ export function ResponsiveDrawer(props: IProps) {
   );
   components[slug(t.integrations)] = <IntegrationPanel {...props} />;
   components['group'] = <GroupSettings {...props} />;
-  // components[''] = API_CONFIG.isApp ? 'User Report' : <Visualize {...props} />;
   components[''] = <Visualize {...props} />;
   components['none'] = <></>;
-  // components[slug(t.myTasks)] = (
-  //   <MyTaskTabs
-  //     {...props}
-  //     setChanged={setChanged}
-  //     checkSaved={checkSavedFn}
-  //     transcriber={(desc: MediaDescription) => {
-  //       setMediaDesc(desc);
-  //       handleChoice('Transcriber');
-  //     }}
-  //   />
-  // );
   components[slug(t.allTasks)] = (
     <AllTaskTable
       {...props}
@@ -765,6 +809,13 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography>{'Organization: ' + orgRole}</Typography>
+            <Typography>
+              {'Project: ' + (projRole === 'admin' ? 'owner' : projRole)}
+            </Typography>
+          </div>
+          {'\u00A0'}
           <a
             href={
               API_CONFIG.isApp
@@ -851,19 +902,30 @@ export function ResponsiveDrawer(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitLoaded: state.orbit.loaded,
+  orbitStatus: state.orbit.status,
 });
 
-// const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-//   ...bindActionCreators({}, dispatch),
-// });
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      resetOrbitError: actions.resetOrbitError,
+    },
+    dispatch
+  ),
+});
 
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
+  organizationMemberships: (q: QueryBuilder) =>
+    q.findRecords('organizationmembership'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
+  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  ResponsiveDrawer
-) as any) as any;
+export default withData(mapRecordsToProps)(connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ResponsiveDrawer) as any) as any;

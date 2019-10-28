@@ -156,7 +156,6 @@ test('Clicking Add FAB on PlanTable displays dialogue', async () => {
   );
   await waitForElement(() => getByText(/^Genesis$/i));
   fireEvent.click(getByText('Add Plan'));
-  await waitForElement(() => getByText(/^Add a Plan$/i));
-
-  expect(getByText(/^Add a Plan$/i)).toHaveTextContent('Add a Plan');
+  await waitForElement(() => getByText(/^Type the name/i));
+  expect(getByText('Add')).toBeDisabled();
 });

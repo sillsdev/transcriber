@@ -406,6 +406,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
@@ -499,6 +505,12 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -868,6 +880,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.loadingTable">
+         <segment>
+            <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.attachAvailableMedia">
          <segment>
             <source>Attach available media files to passages (with no current media).</source>
@@ -1081,6 +1099,12 @@
       <unit id="main.swtchToApp">
          <segment>
             <source>Switch to App</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.crashMessage">
+         <segment>
+            <source>Something went wrong. The developers need to address this issue.</source>
             <target/>
          </segment>
       </unit>
@@ -1300,6 +1324,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.owners">
+         <segment>
+            <source>Owners</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupSettings.reviewers">
          <segment>
             <source>Reviewers</source>
@@ -1387,6 +1417,12 @@
       <unit id="groupSettings.invalidRole">
          <segment>
             <source>Invalid Role. User not added.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -1813,6 +1849,12 @@
       <unit id="toDoTable.no">
          <segment>
             <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>

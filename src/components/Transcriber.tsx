@@ -172,21 +172,25 @@ export function Transcriber(props: IProps) {
   const handleSubmit = async () => {
     if (transcriptionRef.current) {
       var transcription = transcriptionRef.current.firstChild.value;
-      await memory.update((t: TransformBuilder) => [
-        t.replaceAttribute(
-          { type: 'passage', id: passage.id },
-          'state',
-          next[state]
-        ),
-        t.updateRecord({
-          type: 'mediafile',
-          id: mediaId,
-          attributes: {
-            transcription: transcription,
-            position: 0,
-          },
-        }),
-      ]);
+      if (next.hasOwnProperty(state)) {
+        await memory.update((t: TransformBuilder) => [
+          t.replaceAttribute(
+            { type: 'passage', id: passage.id },
+            'state',
+            next[state]
+          ),
+          t.updateRecord({
+            type: 'mediafile',
+            id: mediaId,
+            attributes: {
+              transcription: transcription,
+              position: 0,
+            },
+          }),
+        ]);
+      } else {
+        console.log('Unhandled state', state);
+      }
     }
     done();
   };

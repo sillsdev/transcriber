@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import ErrorBoundary from './components/ErrorBoundary';
 import { Router } from 'react-router-dom';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
@@ -20,7 +21,9 @@ const memory = new Memory({ schema, keyMap });
 
 setGlobal({
   organization: '',
+  orgRole: '',
   project: '',
+  projRole: '',
   plan: '',
   tab: 0,
   group: '',
@@ -35,7 +38,9 @@ const Root = () => (
   <DataProvider dataStore={memory}>
     <Provider store={store as any}>
       <Router history={history}>
-        <App />
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
       </Router>
     </Provider>
   </DataProvider>

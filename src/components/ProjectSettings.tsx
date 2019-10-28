@@ -23,7 +23,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { related } from '../utils';
-import LanguagePicker from './LanguagePicker';
+import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
 import { API_CONFIG } from '../api-variable';
 
@@ -132,6 +132,8 @@ export function ProjectSettings(props: IProps) {
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
+  const [orgRole] = useGlobal('orgRole');
+  const [projRole] = useGlobal('projRole');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
@@ -332,7 +334,10 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
-                  disabled={API_CONFIG.isApp}
+                  disabled={
+                    API_CONFIG.isApp ||
+                    (orgRole !== 'admin' && projRole !== 'admin')
+                  }
                 />
               }
               label=""
@@ -349,7 +354,10 @@ export function ProjectSettings(props: IProps) {
                   style={{ width: 400 }}
                   variant="filled"
                   required={false}
-                  disabled={API_CONFIG.isApp}
+                  disabled={
+                    API_CONFIG.isApp ||
+                    (orgRole !== 'admin' && projRole !== 'admin')
+                  }
                 />
               }
               label=""
@@ -372,7 +380,10 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
-                  disabled={API_CONFIG.isApp}
+                  disabled={
+                    API_CONFIG.isApp ||
+                    (orgRole !== 'admin' && projRole !== 'admin')
+                  }
                 >
                   {groups
                     .filter(g => related(g, 'owner') === organization)
@@ -403,7 +414,10 @@ export function ProjectSettings(props: IProps) {
                     setCode={setBcp47}
                     setName={setLanguageName}
                     setFont={setDefaultFont}
-                    disabled={API_CONFIG.isApp}
+                    disabled={
+                      API_CONFIG.isApp ||
+                      (orgRole !== 'admin' && projRole !== 'admin')
+                    }
                   />
                 }
                 label=""
@@ -415,7 +429,10 @@ export function ProjectSettings(props: IProps) {
                     id="checkbox-rtl"
                     checked={rtl}
                     onChange={handleRtlChange}
-                    disabled={API_CONFIG.isApp}
+                    disabled={
+                      API_CONFIG.isApp ||
+                      (orgRole !== 'admin' && projRole !== 'admin')
+                    }
                   />
                 }
                 label={t.rightToLeft}
@@ -438,7 +455,10 @@ export function ProjectSettings(props: IProps) {
                       style={{ width: 400 }}
                       variant="filled"
                       required={false}
-                      disabled={API_CONFIG.isApp}
+                      disabled={
+                        API_CONFIG.isApp ||
+                        (orgRole !== 'admin' && projRole !== 'admin')
+                      }
                     />
                   }
                   label=""
@@ -452,7 +472,10 @@ export function ProjectSettings(props: IProps) {
                       value={defaultFontSize}
                       font={defaultFont}
                       setSize={handleSize}
-                      disabled={API_CONFIG.isApp}
+                      disabled={
+                        API_CONFIG.isApp ||
+                        (orgRole !== 'admin' && projRole !== 'admin')
+                      }
                     />
                   }
                   label=""
@@ -473,7 +496,7 @@ export function ProjectSettings(props: IProps) {
             </div>
           </FormGroup>
         </FormControl>
-        {API_CONFIG.isApp || (
+        {!API_CONFIG.isApp && (orgRole === 'admin' || projRole === 'admin') && (
           <>
             <div className={classes.actions}>
               <Button

@@ -184,6 +184,7 @@ interface IStateProps {
   currentlyLoading: number;
   hasUrl: boolean;
   mediaUrl: string;
+  tableLoad: string[];
 }
 
 interface IDispatchProps {
@@ -232,8 +233,10 @@ export function MediaTab(props: IProps) {
     fetchMediaUrl,
     hasUrl,
     mediaUrl,
+    tableLoad,
   } = props;
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
@@ -285,6 +288,7 @@ export function MediaTab(props: IProps) {
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -449,6 +453,24 @@ export function MediaTab(props: IProps) {
     }
   }, [hasUrl, mediaUrl, playing, playItem]);
 
+  useEffect(() => {
+    if (
+      tableLoad.length > 0 &&
+      (!tableLoad.includes('mediafile') ||
+        !tableLoad.includes('passage') ||
+        !tableLoad.includes('section') ||
+        !tableLoad.includes('passagesection')) &&
+      !loading
+    ) {
+      setMessage(<span>{t.loadingTable}</span>);
+      setLoading(true);
+    } else if (loading) {
+      setMessage(<></>);
+      setLoading(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [tableLoad]);
+
   interface ICell {
     value: string;
     style?: React.CSSProperties;
@@ -495,54 +517,58 @@ export function MediaTab(props: IProps) {
           </div>
         )}
         <div className={classes.actions}>
-          {planColumn || (
-            <Button
-              key="upload"
-              aria-label={t.uploadMedia}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleUpload}
-            >
-              {t.uploadMedia}
-              <AddIcon className={classes.icon} />
-            </Button>
+          {projRole === 'admin' && (
+            <>
+              {planColumn || (
+                <Button
+                  key="upload"
+                  aria-label={t.uploadMedia}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleUpload}
+                >
+                  {t.uploadMedia}
+                  <AddIcon className={classes.icon} />
+                </Button>
+              )}
+              {planColumn || (
+                <Button
+                  key="Attach"
+                  aria-label={t.attachPassage}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handlePassageMedia(true)}
+                >
+                  {t.attachPassage}
+                  <AddIcon className={classes.icon} />
+                </Button>
+              )}
+              <Button
+                key="action"
+                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                aria-label={t.action}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.action}
+                <DropDownIcon className={classes.icon} />
+              </Button>
+              <Menu
+                id="action-menu"
+                anchorEl={actionMenuItem}
+                open={Boolean(actionMenuItem)}
+                onClose={handleConfirmAction('Close')}
+              >
+                <MenuItem onClick={handleConfirmAction('Delete')}>
+                  {t.delete}
+                </MenuItem>
+              </Menu>
+            </>
           )}
-          {planColumn || (
-            <Button
-              key="Attach"
-              aria-label={t.attachPassage}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handlePassageMedia(true)}
-            >
-              {t.attachPassage}
-              <AddIcon className={classes.icon} />
-            </Button>
-          )}
-          <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleMenu}
-          >
-            {t.action}
-            <DropDownIcon className={classes.icon} />
-          </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
-          >
-            <MenuItem onClick={handleConfirmAction('Delete')}>
-              {t.delete}
-            </MenuItem>
-          </Menu>
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
@@ -606,6 +632,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   loaded: state.upload.loaded,
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  tableLoad: state.orbit.tableLoad,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

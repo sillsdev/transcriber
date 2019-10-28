@@ -103,6 +103,7 @@ const initialState = {
 			"filter": "Filter",
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
+			"loadingTable": "Loading data",
 		}
 	}),
 	"planSheet": new LocalizedStrings({
@@ -127,6 +128,7 @@ const initialState = {
 			"book": "Book",
 			"reference": "Reference",
 			"description": "Description",
+			"loadingTable": "Loading data",
 		}
 	}),
 	"assignmentTable": new LocalizedStrings({
@@ -208,6 +210,7 @@ const initialState = {
 			"selectFiles": "Please select files to be uploaded.",
 			"selectRows": "Please select row(s) to {0}.",
 			"unsupported": "File {0} is an unsupported file type.",
+			"loadingTable": "Loading data",
 		}
 	}),
 	"passageMedia": new LocalizedStrings({
@@ -252,6 +255,7 @@ const initialState = {
 			"newOrganization": "Add Organization",
 			"swtchToAdmin": "Switch to Admin",
 			"swtchToApp": "Switch to App",
+			"crashMessage": "Something went wrong. The developers need to address this issue.",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({
@@ -312,6 +316,7 @@ const initialState = {
 			"abbreviation": "Abbreviation",
 			"save": "Save",
 			"projects": "Projects",
+			"owners": "Owners",
 			"reviewers": "Reviewers",
 			"transcribers": "Transcribers",
 			"addGroupMember": "Add Group Member",
@@ -327,6 +332,7 @@ const initialState = {
 			"assignedSections": "  Assigned Sections: ",
 			"projectPlans": "Project Plans",
 			"invalidRole": "Invalid Role. User not added.",
+			"loadingTable": "Loading data",
 		}
 	}),
 	"shapingTable": new LocalizedStrings({
@@ -438,6 +444,7 @@ const initialState = {
 			"assigned": "Assigned",
 			"yes": "Yes",
 			"no": "No",
+			"loadingTable": "Loading data",
 		}
 	}),
 	"integration": new LocalizedStrings({

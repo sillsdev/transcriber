@@ -475,6 +475,13 @@
 					<context context-type="sourcefile">PlanTable.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="planTable.loadingTable">
+				<source>Loading data</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">PlanTable.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="planSheet.action">
 				<source>Action</source>
 				<target/>
@@ -582,6 +589,13 @@
 			</trans-unit>
 			<trans-unit id="scriptureTable.description">
 				<source>Description</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ScriptureTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="scriptureTable.loadingTable">
+				<source>Loading data</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -1014,6 +1028,13 @@
 					<context context-type="sourcefile">MediaTab.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="mediaTab.loadingTable">
+				<source>Loading data</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">MediaTab.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="passageMedia.attachAvailableMedia">
 				<source>Attach available media files to passages (with no current media).</source>
 				<target/>
@@ -1261,6 +1282,13 @@
 			</trans-unit>
 			<trans-unit id="main.swtchToApp">
 				<source>Switch to App</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">drawer.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.crashMessage">
+				<source>Something went wrong. The developers need to address this issue.</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">drawer.tsx</context>
@@ -1518,6 +1546,13 @@
 					<context context-type="sourcefile">GroupSettings.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="groupSettings.owners">
+				<source>Owners</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="groupSettings.reviewers">
 				<source>Reviewers</source>
 				<target/>
@@ -1618,6 +1653,13 @@
 			</trans-unit>
 			<trans-unit id="groupSettings.invalidRole">
 				<source>Invalid Role. User not added.</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">GroupSettings.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="groupSettings.loadingTable">
+				<source>Loading data</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2115,6 +2157,13 @@
 			</trans-unit>
 			<trans-unit id="toDoTable.no">
 				<source>No</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">ToDoTable.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="toDoTable.loadingTable">
+				<source>Loading data</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">ToDoTable.tsx</context>

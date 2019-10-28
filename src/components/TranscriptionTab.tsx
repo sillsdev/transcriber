@@ -326,7 +326,7 @@ export function TranscriptionTab(props: IProps) {
           rows={data}
           getChildRows={getChildRows}
           cellComponent={Cell}
-          pageSizes={[5, 10, 20]}
+          pageSizes={[]}
           tableColumnExtensions={[
             { columnName: 'passages', align: 'right' },
             { columnName: 'name', wordWrapEnabled: true },
