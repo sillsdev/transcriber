@@ -1,0 +1,32 @@
+{
+	"providers": {
+		"awscloudformation": {
+			"AuthRoleName": "webtranscriberadmin-prod-20191028142350-authRole",
+			"UnauthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-prod-20191028142350-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-prod-20191028142350-authRole",
+			"Region": "us-east-1",
+			"DeploymentBucketName": "webtranscriberadmin-prod-20191028142350-deployment",
+			"UnauthRoleName": "webtranscriberadmin-prod-20191028142350-unauthRole",
+			"StackName": "webtranscriberadmin-prod-20191028142350",
+			"StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-prod-20191028142350/79065e70-f9b8-11e9-9861-0a325fb8c980"
+		}
+	},
+	"hosting": {
+		"S3AndCloudFront": {
+			"service": "S3AndCloudFront",
+			"providerPlugin": "awscloudformation",
+			"providerMetadata": {
+				"s3TemplateURL": "https://s3.amazonaws.com/webtranscriberadmin-prod-20191028142350-deployment/amplify-cfn-templates/hosting/template.json",
+				"logicalId": "hostingS3AndCloudFront"
+			},
+			"lastPushTimeStamp": "2019-10-28T19:30:37.884Z",
+			"output": {
+				"S3BucketSecureURL": "https://admin.siltranscriber.org.s3.amazonaws.com",
+				"WebsiteURL": "http://admin.siltranscriber.org.s3-website-us-east-1.amazonaws.com",
+				"Region": "us-east-1",
+				"HostingBucketName": "admin.siltranscriber.org"
+			},
+			"lastPushDirHash": "VoNu3crjGct4iIXt/NtE/9Qnr38="
+		}
+	}
+}

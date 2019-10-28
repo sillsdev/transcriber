@@ -53,8 +53,10 @@
     "stamp": "node writeDate.js",
     "appdev": "amplify env checkout appdev && node changeEnv.js appdev",
     "appqa": "amplify env checkout appqa && node changeEnv.js appqa",
+    "appprod": "amplify env checkout appprod && node changeEnv.js appprod",
     "dev": "amplify env checkout dev && node changeEnv.js dev",
-    "qa": "amplify env checkout qa && node changeEnv.js qa"
+    "qa": "amplify env checkout qa && node changeEnv.js qa",
+    "prod": "amplify env checkout prod && node changeEnv.js prod"
   },
   "eslintConfig": {
     "extends": "react-app"
