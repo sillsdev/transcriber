@@ -6,8 +6,8 @@ const hasBadChar = s => {
   return false;
 };
 const woBadChar = s => {
-  if (!s) return "";
-  let result = "";
+  if (!s) return '';
+  let result = '';
   for (let i = 0; i < s.length; i += 1) {
     if (badChar.indexOf(s[i]) === -1) result += s[i];
   }
@@ -22,8 +22,8 @@ const addToMap = (map, tag, index, rankBase, full) => {
     if (!map.hasOwnProperty(token)) {
       map[token] = [{ index, rank }];
     }
-    if (token.indexOf(" ") !== -1) {
-      token.split(" ").forEach(t => {
+    if (token.indexOf(' ') !== -1) {
+      token.split(' ').forEach(t => {
         const key = woBadChar(t);
         if (!map.hasOwnProperty(key)) {
           map[key] = [{ index, rank }];
@@ -89,11 +89,11 @@ const mapMerge = (current, composite, full) => {
 const makeMap = (langTags, full, subtag) => {
   let partial = {};
   langTags.forEach((lt, i) => {
-    if (subtag || (lt.tag && lt.tag.indexOf("-") === -1)) {
+    if (subtag || (lt.tag && lt.tag.indexOf('-') === -1)) {
       let thisTag = {};
       // Calls to addToMap should be ordered highes to lowest priority
-      if (lt.tag && lt.tag.indexOf("-") !== -1) {
-        addToMap(thisTag, lt.tag.split("-")[0], i, 9, full);
+      if (lt.tag && lt.tag.indexOf('-') !== -1) {
+        addToMap(thisTag, lt.tag.split('-')[0], i, 9, full);
       }
       addToMap(thisTag, lt.tag, i, 9, full);
       addToMap(thisTag, lt.iso639_3, i, 8, full);
@@ -114,7 +114,7 @@ const collectScripts = langTags => {
   let lists = {};
   langTags.forEach(lt => {
     if (lt.tag) {
-      const lgTag = lt.tag.split("-")[0];
+      const lgTag = lt.tag.split('-')[0];
       if (lists.hasOwnProperty(lgTag)) {
         if (!lists[lgTag].includes(lt.script)) lists[lgTag].push(lt.script);
       } else {
@@ -126,18 +126,18 @@ const collectScripts = langTags => {
 };
 
 const addFontToList = (list, s) => {
-  if (s.trim() !== "") list.push(s);
+  if (s.trim() !== '') list.push(s);
 };
 
 const makeFontMap = data => {
   let fontMap = {};
-  data.split("\n").forEach((line, i) => {
+  data.split('\n').forEach((line, i) => {
     if (i !== 0) {
-      const fields = line.split("\t");
+      const fields = line.split('\t');
       const code = fields[0].trim();
       const regions = fields[8]
         .trim()
-        .split(",")
+        .split(',')
         .map(v => v.trim());
       const fonts = [];
       addFontToList(fonts, fields[11]);
@@ -151,22 +151,22 @@ const makeFontMap = data => {
         if (regions.length === 0) {
           if (fontMap.hasOwnProperty(code)) {
             console.log(
-              "Warning: scripts.csv: " +
+              'Warning: scripts.csv: ' +
                 code +
-                " exists twice in table with no region."
+                ' exists twice in table with no region.'
             );
           }
           fontMap[code] = fonts;
         } else {
           regions.forEach(r => {
-            const key = r.trim().length > 0 ? code + "-" + r : code;
+            const key = r.trim().length > 0 ? code + '-' + r : code;
             if (fontMap.hasOwnProperty(key)) {
               console.log(
-                "Warning: scripts.csv: " +
+                'Warning: scripts.csv: ' +
                   code +
-                  " with region " +
+                  ' with region ' +
                   r +
-                  " has multiple font definitions."
+                  ' has multiple font definitions.'
               );
             }
             fontMap[key] = fonts;
@@ -180,24 +180,24 @@ const makeFontMap = data => {
 
 const getNames = data => {
   let names = {};
-  data.split("\n").forEach((line, i) => {
+  data.split('\n').forEach((line, i) => {
     if (i !== 0) {
-      const fields = line.split("\t");
+      const fields = line.split('\t');
       const code = fields[0].trim();
       const name = fields[2].trim();
-      if (name !== "") names[code] = name;
+      if (name !== '') names[code] = name;
     }
   });
   return names;
 };
 
-var fs = require("fs");
-var writeFile = require("write");
-const indexDir = __dirname + "/../index";
+var fs = require('fs');
+var writeFile = require('write');
+const indexDir = __dirname + '/../index';
 if (!fs.existsSync(indexDir)) fs.mkdirSync(indexDir);
 
 const makeFolder = (name, typeName, data) => {
-  var folder = indexDir + "/" + name;
+  var folder = indexDir + '/' + name;
   if (!fs.existsSync(folder)) fs.mkdirSync(folder);
   var firstChar = {};
   var keys = Object.keys(data);
@@ -218,21 +218,21 @@ import { ${typeName} } from '../../langPicker/types';
 
 export const f${firstCode}: ${typeName} =  `;
     writeFile.sync(
-      folder + "/" + firstCode + ".tsx",
-      header + JSON.stringify(letPart, "", 2)
+      folder + '/' + firstCode + '.tsx',
+      header + JSON.stringify(letPart, '', 2)
     );
   });
   let code =
-    "// This file is auto-generated. Modify the script that creates it.\n";
+    '// This file is auto-generated. Modify the script that creates it.\n';
   Object.keys(firstChar).forEach(letter => {
     const firstCode = letter.charCodeAt(0).toString();
     code =
       code +
-      "import { f" +
+      'import { f' +
       firstCode +
       " } from './" +
       name +
-      "/" +
+      '/' +
       firstCode +
       "';\n";
   });
@@ -246,11 +246,11 @@ export const f${firstCode}: ${typeName} =  `;
     const firstCode = letter.charCodeAt(0).toString();
     code =
       code +
-      "    case " +
+      '    case ' +
       firstCode +
-      ": return f" +
+      ': return f' +
       firstCode +
-      ".hasOwnProperty(key);\n";
+      '.hasOwnProperty(key);\n';
   });
   code =
     code +
@@ -265,7 +265,7 @@ export const get${name} = (key: string) => {
   Object.keys(firstChar).forEach(letter => {
     const firstCode = letter.charCodeAt(0).toString();
     code =
-      code + "    case " + firstCode + ": return f" + firstCode + "[key];\n";
+      code + '    case ' + firstCode + ': return f' + firstCode + '[key];\n';
   });
   code =
     code +
@@ -273,41 +273,46 @@ export const get${name} = (key: string) => {
   }
 }
 `;
-  writeFile.sync(indexDir + "/Lg" + name + ".tsx", code);
+  writeFile.sync(indexDir + '/Lg' + name + '.tsx', code);
 };
 
-var json = fs.readFileSync(__dirname + "/../data/langtags.json", "utf8");
+var json = fs.readFileSync(__dirname + '/../data/langtags.json', 'utf8');
 var jsonData = JSON.parse(json);
-console.log("json data:", jsonData.length);
+console.log('json data:', jsonData.length);
 jsonData.push({
-  full: "qaa",
-  iso639_3: "qaa",
-  localname: "Unknown",
-  name: "Unknown",
-  regionname: "anywhere",
-  script: "Latn",
+  full: 'qaa',
+  iso639_3: 'qaa',
+  localname: 'Unknown',
+  name: 'Unknown',
+  regionname: 'anywhere',
+  script: 'Latn',
   sldr: false,
-  tag: "qaa"
+  tag: 'qaa',
 });
-makeFolder("Partial", "LangTagMap", makeMap(jsonData, false, true));
-makeFolder("NoSubTag", "LangTagMap", makeMap(jsonData, false, false));
-makeFolder("Exact", "LangTagMap", makeMap(jsonData, true, true));
-makeFolder("Scripts", "ScriptList", collectScripts(jsonData));
+makeFolder('Partial', 'LangTagMap', makeMap(jsonData, false, true));
+makeFolder('NoSubTag', 'LangTagMap', makeMap(jsonData, false, false));
+makeFolder('Exact', 'LangTagMap', makeMap(jsonData, true, true));
+var scripts = collectScripts(jsonData);
+// These three lines prevent null values from ending up in the lists
+scripts['_globalvar'] = [];
+scripts['_phonvar'] = [];
+scripts['_version'] = [];
+makeFolder('Scripts', 'ScriptList', scripts);
 
-var csvData = fs.readFileSync(__dirname + "/../data/scripts.csv", "utf8");
+var csvData = fs.readFileSync(__dirname + '/../data/scripts.csv', 'utf8');
 const header1 = `// This file is auto-generated. Modify the script that creates it.
 import { FontMap } from '../langPicker/types';
 
 export const fontMap: FontMap =  `;
 writeFile.sync(
-  indexDir + "/LgFontMap.tsx",
-  header1 + JSON.stringify(makeFontMap(csvData), "", 2)
+  indexDir + '/LgFontMap.tsx',
+  header1 + JSON.stringify(makeFontMap(csvData), '', 2)
 );
 const header2 = `// This file is auto-generated. Modify the script that creates it.
 import { ScriptName } from '../langPicker/types';
 
 export const scriptName: ScriptName =  `;
 writeFile.sync(
-  indexDir + "/LgScriptName.tsx",
-  header2 + JSON.stringify(getNames(csvData), "", 2)
+  indexDir + '/LgScriptName.tsx',
+  header2 + JSON.stringify(getNames(csvData), '', 2)
 );
