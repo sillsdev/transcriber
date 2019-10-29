@@ -227,11 +227,17 @@ export function IntegrationPanel(props: IProps) {
     if (projint.length === 0) return '';
     return projint[0].id;
   };
+  const removeProjectFromParatextList = (index: number) => {
+    paratext_projects[index].ProjectIds = paratext_projects[
+      index
+    ].ProjectIds.filter(p => p != remoteIdNum('project', project, keyMap));
+  };
   const handleParatextProjectChange = (e: any) => {
     console.log(e.target.value);
     var index: number = paratext_projects.findIndex(
       p => p.Name === e.target.value
     );
+    if (ptProj >= 0) removeProjectFromParatextList(ptProj);
     setPtProj(index);
     if (index >= 0) {
       const paratextProject: ParatextProject = paratext_projects[index];
@@ -247,10 +253,8 @@ export function IntegrationPanel(props: IProps) {
       } else {
         updateProjectIntegration(projint, JSON.stringify(setting));
       }
-      paratext_projects[index].ProjectId = remoteIdNum(
-        'project',
-        project,
-        keyMap
+      paratext_projects[index].ProjectIds.push(
+        remoteIdNum('project', project, keyMap)
       );
     }
   };
@@ -269,7 +273,7 @@ export function IntegrationPanel(props: IProps) {
       })
     );
     setConfirmItem(null);
-    paratext_projects[ptProj].ProjectId = 0;
+    removeProjectFromParatextList(ptProj);
     setPtProj(-1);
   };
   const handleDeleteRefused = () => setConfirmItem(null);
@@ -286,10 +290,9 @@ export function IntegrationPanel(props: IProps) {
   };
   const findConnectedProject = () => {
     var index = paratext_projects.findIndex(
-      p => p.ProjectId === remoteIdNum('project', project, keyMap)
+      p => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
     );
     setPtProj(index);
-    setHasPtProj(index >= 0);
     if (pRef && pRef.current) pRef.current.focus();
   };
   const translateError = (err: IAxiosStatus): string => {
@@ -370,12 +373,16 @@ export function IntegrationPanel(props: IProps) {
   }, [paratext_syncStatus]);
 
   useEffect(() => {
-    if (ptProj > -1) {
+    if (ptProj >= 0) {
+      setHasPtProj(true);
       setPtPermission(paratext_projects[ptProj].CurrentUserRole);
       setHasPermission(
         paratext_projects[ptProj].IsConnectable &&
           canEditParatextText(paratext_projects[ptProj].CurrentUserRole)
       );
+    } else {
+      setHasPtProj(false);
+      setHasPermission(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [ptProj]);

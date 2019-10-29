@@ -65,7 +65,7 @@ export const getProjects = (auth: Auth, pendingmsg: string) => (
           LanguageName: response.data[ix].LanguageName,
           LanguageTag: response.data[ix].LanguageTag,
           CurrentUserRole: response.data[ix].CurrentUserRole,
-          ProjectId: response.data[ix].ProjectId,
+          ProjectIds: response.data[ix].ProjectIds,
           IsConnected: response.data[ix].IsConnected,
           IsConnectable: response.data[ix].IsConnectable,
         };
