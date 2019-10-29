@@ -223,7 +223,7 @@ export function GroupSettings(props: IProps) {
 
   const handleAddMember = async () => {
     setOpen(false);
-    const fileRole = role === 'coordinator' ? 'admin' : role;
+    const fileRole = role === 'owner' ? 'admin' : role;
     const roleRec = roles.filter(
       r => r.attributes.roleName.toLowerCase() === fileRole
     );
@@ -506,7 +506,7 @@ export function GroupSettings(props: IProps) {
                   <IconButton
                     size="small"
                     className={classes.addButton}
-                    onClick={handleAdd('coordinator')}
+                    onClick={handleAdd('owner')}
                   >
                     <AddIcon />
                   </IconButton>

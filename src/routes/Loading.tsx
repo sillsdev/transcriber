@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
+import jwtDecode from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -70,6 +71,7 @@ interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
   fetchOrbitData: typeof action.fetchOrbitData;
+  setExpireAt: typeof action.setExpireAt;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -77,7 +79,7 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Loading(props: IProps) {
-  const { orbitLoaded, auth, t } = props;
+  const { orbitLoaded, auth, setExpireAt, t } = props;
   const classes = useStyles();
   const { fetchOrbitData, fetchLocalization, setLanguage } = props;
   const { isAuthenticated } = auth;
@@ -208,6 +210,8 @@ export function Loading(props: IProps) {
       setRemote,
       setCompleted
     );
+    const decodedToken: any = jwtDecode(auth.getAccessToken());
+    setExpireAt(decodedToken.exp);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -274,6 +278,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
       fetchOrbitData: action.fetchOrbitData,
+      setExpireAt: action.setExpireAt,
     },
     dispatch
   ),

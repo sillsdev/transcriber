@@ -10,6 +10,7 @@ Clone the app, go to the project directory, and execute:
 ```
 npm install
 npm run stamp # this creates a file with the date to display in the version
+node src\components\LgPick\langPicker\makeIndexes.js # builds language indexes
 ```
 
 Building the project to determine if all dependencies have been met:

@@ -7,6 +7,7 @@ import {
   IContextState,
   IMediaState,
   IParatextState,
+  IAuthState,
 } from '.';
 
 export interface IState {
@@ -21,4 +22,5 @@ export interface IState {
   upload: IUploadState;
   media: IMediaState;
   paratext: IParatextState;
+  auth: IAuthState;
 }

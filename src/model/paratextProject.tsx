@@ -3,7 +3,7 @@ export interface ParatextProject {
   Name: string;
   LanguageTag: string;
   LanguageName: string;
-  ProjectId: number;
+  ProjectIds: number[];
   IsConnected: boolean;
   IsConnectable: boolean;
   CurrentUserRole: string;
