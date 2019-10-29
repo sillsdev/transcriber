@@ -1108,6 +1108,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.sessionExpiring">
+         <segment>
+            <source>Session Expiring</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.sessionExpireTask">
+         <segment>
+            <source>Your session will expire in {0} seconds. Would you like to continue?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.exit">
+         <segment>
+            <source>Exit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.continue">
+         <segment>
+            <source>Continue</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>

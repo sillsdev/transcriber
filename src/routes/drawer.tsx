@@ -203,7 +203,6 @@ export function ResponsiveDrawer(props: IProps) {
     groups,
     orbitLoaded,
     orbitStatus,
-    resetOrbitError,
     organizationMemberships,
     groupMemberships,
     roles,

@@ -1105,7 +1105,31 @@
 				<target>Quelque chose a mal tourné. Les développeurs doivent se pencher sur cette question.</target>
 			</segment>
 		</unit>
-		<unit id="transcriptionTab.section">
+		<unit id="main.sessionExpiring">
+         <segment>
+            <source>Session Expiring</source>
+         	<target>Session expirant</target>
+         </segment>
+      </unit>
+      <unit id="main.sessionExpireTask">
+         <segment>
+            <source>Your session will expire in {0} seconds. Would you like to continue?</source>
+         	<target>Votre session expirera dans {0} secondes. Voulez-vous continuer ?</target>
+         </segment>
+      </unit>
+      <unit id="main.exit">
+         <segment>
+            <source>Exit</source>
+            <target>Sortir</target>
+         </segment>
+      </unit>
+      <unit id="main.continue">
+         <segment>
+            <source>Continue</source>
+            <target>Continuer</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>

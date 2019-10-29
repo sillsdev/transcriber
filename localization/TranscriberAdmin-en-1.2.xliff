@@ -1294,6 +1294,34 @@
 					<context context-type="sourcefile">drawer.tsx</context>
 				</context-group>
 			</trans-unit>
+			<trans-unit id="main.sessionExpiring">
+				<source>Session Expiring</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TokenCheck.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.sessionExpireTask">
+				<source>Your session will expire in {0} seconds. Would you like to continue?</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TokenCheck.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.exit">
+				<source>Exit</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TokenCheck.tsx</context>
+				</context-group>
+			</trans-unit>
+			<trans-unit id="main.continue">
+				<source>Continue</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">TokenCheck.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="transcriptionTab.section">
 				<source>Section</source>
 				<target/>
