@@ -33,9 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginBottom: theme.spacing(4),
     },
     paper: {},
     actions: theme.mixins.gutters({
