@@ -230,7 +230,7 @@ export function IntegrationPanel(props: IProps) {
   const removeProjectFromParatextList = (index: number) => {
     paratext_projects[index].ProjectIds = paratext_projects[
       index
-    ].ProjectIds.filter(p => p != remoteIdNum('project', project, keyMap));
+    ].ProjectIds.filter(p => p !== remoteIdNum('project', project, keyMap));
   };
   const handleParatextProjectChange = (e: any) => {
     console.log(e.target.value);

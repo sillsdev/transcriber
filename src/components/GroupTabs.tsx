@@ -11,26 +11,14 @@ import InvitationTable from '../components/InvitationTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: theme.mixins.gutters({
+    root: {
       flexGrow: 1,
       width: '100%',
       backgroundColor: theme.palette.background.paper,
       flexDirection: 'column',
-    }),
+    },
   })
 );
-
-interface IContainerProps {
-  children: any;
-}
-
-function TabContainer(props: IContainerProps) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
 
 interface IStateProps {
   t: IGroupTabsStrings;
@@ -68,21 +56,9 @@ const GroupTabs = (props: IProps) => {
           <Tab label={t.invitations} />
         </Tabs>
       </AppBar>
-      {tab === 0 && (
-        <TabContainer>
-          <UserTable {...props} />
-        </TabContainer>
-      )}
-      {tab === 1 && (
-        <TabContainer>
-          <GroupTable {...props} />
-        </TabContainer>
-      )}
-      {tab === 2 && (
-        <TabContainer>
-          <InvitationTable {...props} />
-        </TabContainer>
-      )}
+      {tab === 0 && <UserTable {...props} />}
+      {tab === 1 && <GroupTable {...props} />}
+      {tab === 2 && <InvitationTable {...props} />}
     </div>
   );
 };
