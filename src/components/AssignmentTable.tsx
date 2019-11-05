@@ -23,7 +23,6 @@ import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import UserPassage from '../model/userPassage';
 import './AssignmentTable.css';
 import AssignSection from './AssignSection';
 import {
@@ -135,7 +134,6 @@ interface IStateProps {
 }
 
 interface IRecordProps {
-  userPassages: Array<UserPassage>;
   passages: Array<Passage>;
   passageSections: Array<PassageSection>;
   sections: Array<Section>;
@@ -155,7 +153,6 @@ export function AssignmentTable(props: IProps) {
     passages,
     passageSections,
     sections,
-    userPassages,
     users,
     roles,
   } = props;
@@ -265,16 +262,7 @@ export function AssignmentTable(props: IProps) {
         activityState
       )
     );
-  }, [
-    plan,
-    userPassages,
-    passages,
-    passageSections,
-    sections,
-    users,
-    roles,
-    activityState,
-  ]);
+  }, [plan, passages, passageSections, sections, users, roles, activityState]);
 
   return (
     <div id="AssignmentTable" className={classes.container}>
@@ -387,7 +375,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 const mapRecordsToProps = {
-  userPassages: (q: QueryBuilder) => q.findRecords('userpassage'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),

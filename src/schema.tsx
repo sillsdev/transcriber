@@ -163,7 +163,6 @@ const schemaDefinition: SchemaSettings = {
           model: 'projectintegration',
           inverse: 'project',
         },
-        users: { type: 'hasMany', model: 'userpassage', inverse: 'project' },
         // sections: { type: 'hasMany', model: 'section', inverse: 'project' },
         plans: { type: 'hasMany', model: 'plan', inverse: 'project' },
       },
@@ -245,11 +244,6 @@ const schemaDefinition: SchemaSettings = {
           model: 'passagesection',
           inverse: 'passage',
         },
-        users: {
-          type: 'hasMany',
-          model: 'userpassage',
-          inverse: 'passage',
-        },
       },
     },
     passagesection: {
@@ -319,11 +313,6 @@ const schemaDefinition: SchemaSettings = {
           model: 'groupmembership',
           inverse: 'user',
         },
-        passages: {
-          type: 'hasMany',
-          model: 'userpassage',
-          inverse: 'users',
-        },
       },
     },
     currentuser: {
@@ -358,19 +347,6 @@ const schemaDefinition: SchemaSettings = {
           model: 'organizationmembership',
         },
         groupMemberships: { type: 'hasMany', model: 'groupmembership' },
-      },
-    },
-    userpassage: {
-      keys: { remoteId: {} },
-      attributes: {
-        comment: { type: 'string' },
-        datecreated: { type: 'date' },
-        dateupdated: { type: 'date' },
-      },
-      relationships: {
-        role: { type: 'hasOne', model: 'role' },
-        user: { type: 'hasOne', model: 'user' },
-        passage: { type: 'hasOne', model: 'passage' },
       },
     },
   },

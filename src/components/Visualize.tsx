@@ -6,7 +6,6 @@ import {
   Plan,
   Section,
   PassageSection,
-  UserPassage,
   Role,
   Passage,
   User,
@@ -26,7 +25,6 @@ interface IRecordProps {
   plans: Array<Plan>;
   sections: Array<Section>;
   passageSections: Array<PassageSection>;
-  userPassages: Array<UserPassage>;
   roles: Array<Role>;
   passages: Array<Passage>;
   users: Array<User>;
@@ -35,15 +33,7 @@ interface IRecordProps {
 interface IProps extends IStateProps, IRecordProps, WithDataProps {}
 
 export function Visualize(props: IProps) {
-  const {
-    plans,
-    sections,
-    passageSections,
-    userPassages,
-    roles,
-    passages,
-    users,
-  } = props;
+  const { plans, sections, passageSections, roles, passages, users } = props;
   const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
@@ -84,50 +74,57 @@ export function Visualize(props: IProps) {
     let statusTot = {} as ITotal;
     const selPlans = plans.filter(p => related(p, 'project') === project);
     selPlans.forEach(pl => {
+      const planName = pl.attributes.name;
       const selSections = sections.filter(s => related(s, 'plan') === pl.id);
       selSections.forEach(s => {
         const selPassages = passageSections.filter(
           ps => related(ps, 'section') === s.id
         );
+        var roleName = 'transcriber';
+        var rowKey = pl.id + ':' + roleName;
+        rowTot[rowKey] = rowTot.hasOwnProperty(rowKey)
+          ? rowTot[rowKey] + selPassages.length
+          : selPassages.length;
+
+        var userRec = users.filter(u => u.id === related(s, roleName));
+        if (userRec.length > 0) {
+          const userName = userRec[0].attributes
+            ? userRec[0].attributes.name
+            : '';
+          const personKey = userName + ':' + planName + ':' + roleName;
+          personTot[personKey] = personTot.hasOwnProperty(personKey)
+            ? personTot[personKey] + selPassages.length
+            : selPassages.length;
+        }
+
+        roleName = 'reviewer';
+        rowKey = pl.id + ':' + roleName;
+        rowTot[rowKey] = rowTot.hasOwnProperty(rowKey)
+          ? rowTot[rowKey] + selPassages.length
+          : selPassages.length;
+        userRec = users.filter(u => u.id === related(s, roleName));
+        if (userRec.length > 0) {
+          const userName = userRec[0].attributes
+            ? userRec[0].attributes.name
+            : '';
+          const personKey = userName + ':' + planName + ':' + roleName;
+          personTot[personKey] = personTot.hasOwnProperty(personKey)
+            ? personTot[personKey] + selPassages.length
+            : selPassages.length;
+        }
         selPassages.forEach(pa => {
-          const selUserPassages = userPassages.filter(
-            up => related(up, 'passage') === related(pa, 'passage')
+          const selPassage = passages.filter(
+            p => p.id === related(pa, 'passage')
           );
-          selUserPassages.forEach(up => {
-            const planName = pl.attributes.name;
-            const role = roles.filter(r => r.id === related(up, 'role'));
-            if (role.length > 0) {
-              const roleName = role[0].attributes
-                ? role[0].attributes.roleName.toLowerCase()
-                : '';
-              const rowKey = pl.id + ':' + roleName;
-              rowTot[rowKey] = rowTot.hasOwnProperty(rowKey)
-                ? rowTot[rowKey] + 1
-                : 1;
-              const userRec = users.filter(u => u.id === related(up, 'user'));
-              if (userRec.length > 0) {
-                const userName = userRec[0].attributes
-                  ? userRec[0].attributes.name
-                  : '';
-                const personKey = userName + ':' + planName + ':' + roleName;
-                personTot[personKey] = personTot.hasOwnProperty(personKey)
-                  ? personTot[personKey] + 1
-                  : 1;
-              }
-              const selPassage = passages.filter(
-                p => p.id === related(pa, 'passage')
-              );
-              if (selPassage.length > 0) {
-                const stateName = selPassage[0].attributes
-                  ? selPassage[0].attributes.state
-                  : '';
-                const statusKey = stateName + ':' + planName + ':' + roleName;
-                statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
-                  ? statusTot[statusKey] + 1
-                  : 1;
-              }
-            }
-          });
+          if (selPassage.length > 0) {
+            const stateName = selPassage[0].attributes
+              ? selPassage[0].attributes.state
+              : '';
+            const statusKey = stateName + ':' + planName + ':' + roleName;
+            statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
+              ? statusTot[statusKey] + 1
+              : 1;
+          }
         });
       });
     });
@@ -153,16 +150,7 @@ export function Visualize(props: IProps) {
     );
     setData1(getData(personTot));
     setData2(getData(statusTot));
-  }, [
-    project,
-    passageSections,
-    passages,
-    plans,
-    roles,
-    sections,
-    userPassages,
-    users,
-  ]);
+  }, [project, passageSections, passages, plans, roles, sections, users]);
 
   return <TreeChart rows={rows} data1={data1} data2={data2} />;
 }
@@ -173,7 +161,6 @@ const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
-  userPassages: (q: QueryBuilder) => q.findRecords('userpassage'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   users: (q: QueryBuilder) => q.findRecords('user'),

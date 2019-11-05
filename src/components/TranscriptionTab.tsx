@@ -25,7 +25,6 @@ import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import UserPassage from '../model/userPassage';
 import {
   sectionNumber,
   sectionReviewerName,
@@ -167,7 +166,6 @@ interface IStateProps {
 }
 
 interface IRecordProps {
-  userPassages: Array<UserPassage>;
   passages: Array<Passage>;
   passageSections: Array<PassageSection>;
   sections: Array<Section>;
@@ -187,7 +185,6 @@ export function TranscriptionTab(props: IProps) {
     passages,
     passageSections,
     sections,
-    userPassages,
     users,
     roles,
   } = props;
@@ -240,16 +237,7 @@ export function TranscriptionTab(props: IProps) {
         activityState
       )
     );
-  }, [
-    plan,
-    userPassages,
-    passages,
-    passageSections,
-    sections,
-    users,
-    roles,
-    activityState,
-  ]);
+  }, [plan, passages, passageSections, sections, users, roles, activityState]);
 
   const LinkCell = ({ value, style, ...restProps }: any) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
@@ -359,7 +347,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 const mapRecordsToProps = {
-  userPassages: (q: QueryBuilder) => q.findRecords('userpassage'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
