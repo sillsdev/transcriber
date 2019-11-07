@@ -304,10 +304,6 @@ const Sources = async (
       .then(transform => memory.sync(transform))
       .then(() => tableLoaded('projecttype'));
     remote
-      .pull(q => q.findRecords('userpassage'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('userpassage'));
-    remote
       .pull(q => q.findRecords('activitystate'))
       .then(transform => memory.sync(transform))
       .then(() => tableLoaded('activitystate'));

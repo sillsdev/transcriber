@@ -65,7 +65,7 @@ import ToDoTable from '../components/ToDoTable';
 import AllTaskTable from '../components/AllTaskTable';
 import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
-import GroupSettings from '../components/GroupSettings';
+import GroupSettings from '../components/GroupSettings/GroupSettings';
 import IntegrationPanel from '../components/Integration';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';

@@ -10,3 +10,4 @@ export * from './user';
 export * from './validateEmail';
 export * from './section';
 export * from './passage';
+export * from './getRoleId';

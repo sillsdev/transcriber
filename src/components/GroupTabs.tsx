@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IState, IGroupTabsStrings } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
 import UserTable from '../components/UserTable';
 import GroupTable from '../components/GroupTable';
 import InvitationTable from '../components/InvitationTable';

@@ -13,7 +13,7 @@ export default class Auth {
     clientID: AUTH_CONFIG.clientId,
     redirectUri: AUTH_CONFIG.callbackUrl,
     responseType: 'token id_token',
-    scope: 'openid email',
+    scope: 'openid email profile',
     audience: 'https://transcriber_api',
   });
 
@@ -41,19 +41,14 @@ export default class Auth {
   }
 
   handleAuthentication() {
-    return new Promise((resolve, reject) => {
-      const nonce = 'test';
-      this.auth0.parseHash(
-        { nonce: nonce, state: 'tAdInit' },
-        (err, authResult) => {
-          if (err) return reject(err);
-          if (!authResult || !authResult.idTokenPayload) {
-            reject(err);
-          }
-          this.setSession(authResult);
-          resolve();
-        }
-      );
+    this.auth0.parseHash((err, authResult) => {
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        this.setSession(authResult);
+      } else if (err) {
+        history.replace('/');
+        console.log(err);
+        alert(`Error: ${err.error}. Check the console for further details.`);
+      }
     });
   }
 
