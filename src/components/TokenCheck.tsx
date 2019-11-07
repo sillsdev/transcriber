@@ -30,6 +30,13 @@ function TokenCheck(props: IProps) {
   const timer = React.useRef<NodeJS.Timeout>();
 
   React.useEffect(() => {
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      auth.renewSession();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
+
+  React.useEffect(() => {
     if (expireAt) {
       timer.current = setInterval(() => {
         const currentUnix = moment().format('X');
