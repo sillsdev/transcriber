@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IState, IPlanTabsStrings, Plan } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
 import ScriptureTable from '../components/ScriptureTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
