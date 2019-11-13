@@ -401,7 +401,7 @@ const initialState = {
 			"alreadyInvited": "Already invited!",
 			"sil": "SIL International",
 			"transcriber": "SIL Transcriber",
-			"invitation": "You have been invited to join",
+			"invitation": "has invited you to join",
 			"instructions": "Please click the following link to accept the invitation:",
 			"emailsubject": "SIL Transcriber Invitation",
 		}

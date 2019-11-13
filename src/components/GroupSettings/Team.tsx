@@ -10,6 +10,7 @@ import {
   IGroupSettingsStrings,
   IDeleteItem,
   Group,
+  RoleNames,
   Project,
 } from '../../model';
 import localStrings from '../../selector/localize';
@@ -92,7 +93,7 @@ function Team(props: IProps) {
   };
   const handleDeleteRefused = () => setConfirmItem(null);
 
-  const handleUpdate = (id: string, role: string) => {
+  const handleUpdate = (id: string, role: RoleNames) => {
     const ids = getGroups(id);
     const roleId = getRoleId(roles, role);
     if (ids.length > 0 && roleId.length > 0) {
@@ -100,14 +101,18 @@ function Team(props: IProps) {
         t.replaceRelatedRecord(
           { type: 'groupmembership', id: ids[0] },
           'role',
-          { type: 'role', id: roleId[0] }
+          { type: 'role', id: roleId }
         )
       );
     }
   };
 
-  const roleCheck = (userId: string, role: string) => {
-    const groupRoles = ['admin', 'reviewer', 'transcriber'];
+  const roleCheck = (userId: string, role: RoleNames) => {
+    const groupRoles = [
+      RoleNames.Admin,
+      RoleNames.Reviewer,
+      RoleNames.Transcriber,
+    ];
     const roleIndex = groupRoles.indexOf(role);
     const groupRole = groupMemberships
       .filter(
@@ -120,10 +125,10 @@ function Team(props: IProps) {
       .map(r => r.attributes && r.attributes.roleName);
     if (roleName.length === 0) return false; // This should not happen
     const roleKey = roleName[0].toLocaleLowerCase();
-    return groupRoles.indexOf(roleKey) > roleIndex;
+    return groupRoles.indexOf(roleKey as RoleNames) > roleIndex;
   };
 
-  const handleAdd = (role: string) => {
+  const handleAdd = (role: RoleNames) => {
     const allOrgUserIds = orgMemberships
       .filter(om => related(om, 'organization') === organization)
       .map(om => related(om, 'user'));
@@ -160,11 +165,10 @@ function Team(props: IProps) {
   }, [tableLoad]);
 
   useEffect(() => {
-    const groupName = groups
+    const groupAll = groups
       .filter(g => g.id === group && g.attributes)
-      .map(g => g.attributes.name);
-    if (groupName.length > 0)
-      setAllUsers(groupName[0].toLocaleLowerCase() === 'all users');
+      .map(g => g.attributes.allUsers);
+    if (groupAll.length > 0) setAllUsers(groupAll[0]);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [group]);
 
@@ -187,21 +191,25 @@ function Team(props: IProps) {
           {...props}
           title={t.owners}
           people={useOwnerIds(props)}
-          add={() => handleAdd('admin')}
-          del={(id: string, name: string) => handleUpdate(id, 'reviewer')}
+          add={() => handleAdd(RoleNames.Admin)}
+          del={(id: string, name: string) =>
+            handleUpdate(id, RoleNames.Reviewer)
+          }
         />
         <TeamCol
           {...props}
           title={t.reviewers}
           people={useReviewerIds(props)}
-          add={() => handleAdd('reviewer')}
-          del={(id: string, name: string) => handleUpdate(id, 'transcriber')}
+          add={() => handleAdd(RoleNames.Reviewer)}
+          del={(id: string, name: string) =>
+            handleUpdate(id, RoleNames.Transcriber)
+          }
         />
         <TeamCol
           {...props}
           title={t.transcribers}
           people={useTranscriberIds(props)}
-          add={() => handleAdd('transcriber')}
+          add={() => handleAdd(RoleNames.Transcriber)}
           del={handleRemove}
           allUsers={allUsers}
         />

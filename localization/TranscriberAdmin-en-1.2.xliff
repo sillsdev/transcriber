@@ -2001,7 +2001,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="invite.invitation">
-				<source>You have been invited to join</source>
+				<source>has invited you to join</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Invite.tsx</context>
