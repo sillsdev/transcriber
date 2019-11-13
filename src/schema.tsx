@@ -59,6 +59,8 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         email: { type: 'string' },
+        loginLink: { type: 'string' },
+        strings: { type: 'string' },
         silId: { type: 'numer' },
         accepted: { type: 'boolean' },
         dateCreated: { type: 'date' },
@@ -71,6 +73,18 @@ const schemaDefinition: SchemaSettings = {
           model: 'organization',
         },
         role: {
+          type: 'hasOne',
+          model: 'role',
+        },
+        group: {
+          type: 'hasOne',
+          model: 'group',
+        },
+        groupRole: {
+          type: 'hasOne',
+          model: 'role',
+        },
+        allUsersRole: {
           type: 'hasOne',
           model: 'role',
         },

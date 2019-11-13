@@ -19,7 +19,7 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
-import Invite from './Invite';
+import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
@@ -147,39 +147,8 @@ export function UserTable(props: IProps) {
   const handleAdd = () => {
     setDialogVisible(true);
   };
-  const handleAddMethod = async (email: string, role: string) => {
+  const handleAddComplete = async (invite: IInviteData) => {
     setDialogVisible(false);
-    let invitation: Invitation = {
-      type: 'invitation',
-      attributes: {
-        email: email,
-        accepted: false,
-        dateCreated: moment().format(),
-        dateUpdated: null,
-        lastUpdatedBy: remoteIdNum('user', user, keyMap),
-      },
-    } as any;
-    schema.initializeRecord(invitation);
-
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(invitation),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'role',
-        {
-          type: 'role',
-          id: role,
-        }
-      ),
-    ]);
   };
 
   const handleAddCancel = () => {
@@ -290,7 +259,7 @@ export function UserTable(props: IProps) {
       <Invite
         visible={dialogVisible}
         inviteIn={null}
-        addMethod={handleAddMethod}
+        addMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
       {confirmAction !== '' ? (

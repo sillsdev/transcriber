@@ -9,7 +9,7 @@ import { KeyMap, Schema } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from '../../auth/Auth';
-import Sources from '../../Sources';
+import { Sources } from '../../Sources';
 import JSONAPISource from '@orbit/jsonapi';
 
 export const orbitError = (ex: IApiError) => {
@@ -40,7 +40,8 @@ export const fetchOrbitData = (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
-  setCompleted: (value: number) => void
+  setCompleted: (value: number) => void,
+  InviteUser: (remote: JSONAPISource) => Promise<void>
 ) => (dispatch: any) => {
   Sources(
     schema,
@@ -51,6 +52,7 @@ export const fetchOrbitData = (
     setBucket,
     setRemote,
     setCompleted,
+    InviteUser,
     (name: string) => dispatch(tableLoaded(name)),
     (ex: IApiError) => dispatch(orbitError(ex))
   ).then(dispatch({ type: FETCH_ORBIT_DATA }));

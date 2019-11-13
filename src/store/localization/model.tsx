@@ -353,17 +353,31 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "newInviteTask": string;
     "email": string;
     "role": string;
-    "selectRole": string;
+    "organization": string;
+    "selectOrgRole": string;
+    "allusersgroup": string;
+    "groups": string;
+    "group": string;
+    "additionalgroup": string;
+    "groupRole": string;
+    "selectGroupRole": string;
     "cancel": string;
-    "add": string;
+    "send": string;
     "save": string;
     "invalidEmail": string;
     "alreadyInvited": string;
+    "sil": string;
+    "transcriber": string;
+    "invitation": string;
+    "instructions": string;
+    "emailsubject": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
     "email": string;
     "role": string;
+    "allUsers": string;
+    "group": string;
     "accepted": string;
     "invite": string;
     "action": string;

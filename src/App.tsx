@@ -11,8 +11,9 @@ import { parseQuery } from './utils/parseQuery';
 
 const auth = new Auth();
 
-const handleAuthentication = (props: any) => {
+const handleParameters = (props: any) => {
   const { location } = props;
+
   if (location.search !== '') {
     const params = parseQuery(location.search);
     if (params.inviteId && typeof params.inviteId === 'string') {
@@ -44,7 +45,10 @@ class App extends React.Component {
           <Route
             path="/"
             exact={true}
-            render={props => <Access auth={auth} {...props} />}
+            render={props => {
+              handleParameters(props);
+              return <Access auth={auth} {...props} />;
+            }}
           />
           <Route
             path="/logout"
@@ -62,7 +66,7 @@ class App extends React.Component {
           <Route
             path="/callback"
             render={props => {
-              handleAuthentication(props);
+              handleParameters(props);
               return <Callback {...props} />;
             }}
           />

@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, Role, Invitation, IInvitationTableStrings } from '../model';
+import {
+  IState,
+  Role,
+  Invitation,
+  IInvitationTableStrings,
+  Group,
+} from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
@@ -13,7 +19,7 @@ import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import Invite from './Invite';
+import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
@@ -51,7 +57,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IRow {
   email: string;
-  role: string;
+  orgRole: string;
+  allUsersRole: string;
+  group: string;
+  groupRole: string;
   accepted: string;
   id: RecordIdentity;
 }
@@ -59,6 +68,7 @@ interface IRow {
 const getMedia = (
   organization: string,
   roles: Array<Role>,
+  groups: Array<Group>,
   invitations: Array<Invitation>
 ) => {
   const invites = invitations.filter(
@@ -66,9 +76,16 @@ const getMedia = (
   );
   return invites.map(i => {
     const role = roles.filter(r => r.id === related(i, 'role'));
+    const allusersrole = roles.filter(r => r.id === related(i, 'allUsersRole'));
+    const grouprole = roles.filter(r => r.id === related(i, 'groupRole'));
+    const group = groups.filter(r => r.id === related(i, 'group'));
     return {
       email: i.attributes.email ? i.attributes.email : '',
-      role: role.length === 1 ? role[0].attributes.roleName : '',
+      orgRole: role.length === 1 ? role[0].attributes.roleName : 'xx',
+      allUsersRole:
+        allusersrole.length === 1 ? allusersrole[0].attributes.roleName : 'x',
+      group: group.length === 1 ? group[0].attributes.name : '',
+      groupRole: grouprole.length === 1 ? grouprole[0].attributes.roleName : '',
       accepted: i.attributes.accepted ? 'true' : 'false',
       id: { type: 'invitation', id: i.id },
     } as IRow;
@@ -83,13 +100,14 @@ interface IDispatchProps {}
 
 interface IRecordProps {
   roles: Array<Role>;
+  groups: Array<Group>;
   invitations: Array<Invitation>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function InvitationTable(props: IProps) {
-  const { t, roles, invitations } = props;
+  const { t, roles, groups, invitations } = props;
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
@@ -104,12 +122,18 @@ export function InvitationTable(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
     { name: 'email', title: t.email },
-    { name: 'role', title: t.role },
+    { name: 'orgRole', title: t.role },
+    { name: 'allUsersRole', title: t.allUsers },
+    { name: 'group', title: t.group },
+    { name: 'groupRole', title: t.role },
     { name: 'accepted', title: t.accepted },
   ];
   const columnWidths = [
     { columnName: 'email', width: 200 },
-    { columnName: 'role', width: 100 },
+    { columnName: 'orgRole', width: 100 },
+    { columnName: 'allUsersRole', width: 100 },
+    { columnName: 'group', width: 150 },
+    { columnName: 'groupRole', width: 100 },
     { columnName: 'accepted', width: 100 },
   ];
   const [filter, setFilter] = useState(false);
@@ -120,39 +144,8 @@ export function InvitationTable(props: IProps) {
     setDialogData(null);
     setDialogVisible(true);
   };
-  const handleAddMethod = async (email: string, role: string) => {
+  const handleAddComplete = async (invite: IInviteData) => {
     setDialogVisible(false);
-    let invitation: Invitation = {
-      type: 'invitation',
-      attributes: {
-        email: email,
-        accepted: false,
-        dateCreated: moment().format(),
-        dateUpdated: null,
-        lastUpdatedBy: remoteIdNum('user', user, keyMap),
-      },
-    } as any;
-    schema.initializeRecord(invitation);
-
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(invitation),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'role',
-        {
-          type: 'role',
-          id: role,
-        }
-      ),
-    ]);
   };
 
   const handleAddCancel = () => {
@@ -202,8 +195,8 @@ export function InvitationTable(props: IProps) {
   ) as any;
 
   useEffect(() => {
-    setData(getMedia(organization, roles, invitations));
-  }, [organization, roles, invitations, confirmAction]);
+    setData(getMedia(organization, roles, groups, invitations));
+  }, [organization, roles, groups, invitations, confirmAction]);
 
   return (
     <div className={classes.container}>
@@ -275,8 +268,8 @@ export function InvitationTable(props: IProps) {
       </div>
       <Invite
         visible={dialogVisible}
-        planIn={dialogData}
-        addMethod={handleAddMethod}
+        inviteIn={dialogData}
+        addMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
       {confirmAction !== '' ? (
@@ -303,10 +296,10 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
   invitations: (q: QueryBuilder) => q.findRecords('invitation'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(InvitationTable) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(InvitationTable) as any
+) as any;

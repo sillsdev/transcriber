@@ -1618,26 +1618,69 @@
       </unit>
       <unit id="invite.role">
          <segment>
-            <source>Role</source>
-         	<target>Rôle</target>
+            <source>Organization Role</source>
+         	<target>Rôle organisationnel</target>
          </segment>
       </unit>
-      <unit id="invite.selectRole">
+	  <unit id="invite.organization">
+         <segment>
+            <source>Organization</source>
+            <target>Organisation</target>
+         </segment>
+      </unit>
+      <unit id="invite.selectOrgRole">
          <segment>
             <source>Select Organizational Role</source>
          	<target>Sélectionner le rôle organisationnel</target>
          </segment>
       </unit>
+	  <unit id="invite.allusersgroup">
+         <segment>
+            <source>All Users Group</source>
+            <target>Groupe de tous les Utilisateurs</target>
+         </segment>
+      </unit>
+      <unit id="invite.groups">
+         <segment>
+            <source>Groups</source>
+            <target>Groupes</target>
+         </segment>
+      </unit>
+      <unit id="invite.group">
+         <segment>
+            <source>Group</source>
+            <target>Groupe</target>
+         </segment>
+      </unit>
+      <unit id="invite.additionalgroup">
+         <segment>
+            <source>Optional additional Group</source>
+            <target>Groupe supplémentaire facultatif</target>
+         </segment>
+      </unit>
+      <unit id="invite.groupRole">
+         <segment>
+            <source>Group Role</source>
+            <target>Rôle Groupe</target>
+         </segment>
+      </unit>
+      <unit id="invite.selectGroupRole">
+         <segment>
+            <source>Select Group Role</source>
+            <target>Sélectionner le rôle Groupe</target>
+         </segment>
+      </unit>
+   
       <unit id="invite.cancel">
          <segment>
             <source>Cancel</source>
          	<target>Annuler</target>
          </segment>
       </unit>
-      <unit id="invite.add">
+      <unit id="invite.send">
          <segment>
-            <source>Add</source>
-         	<target>Ajouter</target>
+            <source>Send</source>
+         	<target>Envoyer</target>
          </segment>
       </unit>
       <unit id="invite.save">
@@ -1658,6 +1701,36 @@
 				<target>Déjà invité !</target>
 			</segment>
 		</unit>
+      <unit id="invite.sil">
+         <segment>
+            <source>SIL International</source>
+            <target>SIL International</target>
+         </segment>
+      </unit>
+      <unit id="invite.transcriber">
+         <segment>
+            <source>SIL Transcriber</source>
+            <target>SIL Transcriber</target>
+         </segment>
+      </unit>
+      <unit id="invite.invitation">
+         <segment>
+            <source>You have been invited to join</source>
+            <target>Vous avez été invité à rejoindre</target>
+         </segment>
+      </unit>
+      <unit id="invite.instructions">
+         <segment>
+            <source>Please click the following link to accept the invitation:</source>
+            <target>Veuillez cliquer sur le lien suivant pour accepter l'invitation:</target>
+         </segment>
+      </unit>
+      <unit id="invite.emailsubject">
+         <segment>
+            <source>SIL Transcriber Invitation</source>
+            <target>SIL Transcriber Invitation</target>
+         </segment>
+      </unit>
 		<unit id="invitationTable.email">
          <segment>
             <source>Email</source>
@@ -1668,6 +1741,18 @@
          <segment>
             <source>Role</source>
          	<target>Rôle</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.allUsers">
+         <segment>
+            <source>All Users</source>
+            <target>Groupe de tous les Utilisateurs</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.group">
+         <segment>
+            <source>Group</source>
+            <target>Groupe</target>
          </segment>
       </unit>
       <unit id="invitationTable.accepted">
