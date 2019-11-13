@@ -14,6 +14,7 @@ import {
   OrganizationMembership,
   GroupMembership,
   Role,
+  RoleNames,
 } from '../model';
 import * as actions from '../store';
 import localStrings from '../selector/localize';
@@ -756,7 +757,7 @@ export function ResponsiveDrawer(props: IProps) {
       transcriber={(desc: MediaDescription) => {
         setMediaDesc(desc);
         setExitChoice(t.allTasks);
-        handleChoice('Transcriber');
+        handleChoice(RoleNames.Transcriber);
       }}
     />
   );
@@ -766,7 +767,7 @@ export function ResponsiveDrawer(props: IProps) {
       transcriber={(desc: MediaDescription) => {
         setMediaDesc(desc);
         setExitChoice(t.todo);
-        handleChoice('Transcriber');
+        handleChoice(RoleNames.Transcriber);
       }}
     />
   );

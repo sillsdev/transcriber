@@ -16,6 +16,7 @@ import {
   MediaDescription,
   IActivityStateStrings,
   IToDoTableStrings,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -291,11 +292,11 @@ export function ToDoTable(props: IProps) {
   useEffect(() => {
     const rowList: IRow[] = [];
     if (role !== '') {
-      if (role !== 'Transcriber') {
+      if (role !== RoleNames.Transcriber) {
         addTasks('reviewing', 'reviewer', rowList, playItem);
       }
       addTasks('transcribing', 'transcriber', rowList, playItem);
-      if (role !== 'Transcriber') {
+      if (role !== RoleNames.Transcriber) {
         addTasks('transcribed', 'reviewer', rowList, playItem);
       }
       addTasks('transcribeReady', 'transcriber', rowList, playItem);

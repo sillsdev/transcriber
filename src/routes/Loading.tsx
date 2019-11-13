@@ -22,6 +22,7 @@ import * as action from '../store';
 import logo from './LogoSmallShadow-4x.png';
 import { parseQuery, IParsedArgs } from '../utils/parseQuery';
 import { related, hasRelated, setDefaultProj } from '../utils';
+import JSONAPISource from '@orbit/jsonapi';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -123,6 +124,9 @@ export function Loading(props: IProps) {
     await remote
       .pull(q => q.findRecords('user'))
       .then(transform => memory.sync(transform));
+    await remote
+      .pull(q => q.findRecords('project'))
+      .then(transform => memory.sync(transform));
   };
 
   const CreateOrg = async (props: IParsedArgs) => {
@@ -162,36 +166,39 @@ export function Loading(props: IProps) {
     setNewOrgParams(null);
   };
 
-  const InviteUser = async () => {
+  //remote is passed in because it wasn't always available in global
+  const InviteUser = async (newremote: JSONAPISource) => {
     const inviteId = localStorage.getItem('inviteId');
     if (!inviteId) return;
     localStorage.removeItem('inviteId');
-    const invite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
+    const invite: Invitation[] = (await newremote.query((q: QueryBuilder) =>
       q
         .findRecords('invitation')
         .filter({ attribute: 'silId', value: parseInt(inviteId) })
-    ) as any;
+    )) as any;
     if (invite.length > 0) {
-      await remote.update((t: TransformBuilder) =>
+      await newremote.update((t: TransformBuilder) =>
         t.replaceAttribute(invite[0], 'accepted', true)
       );
-      await ReloadOrgTables();
       const orgId = related(invite[0], 'organization');
       setOrganization(orgId);
-      setDefaultProj(orgId, memory, setProject);
     }
   };
 
   const setDefaultOrg = async () => {
-    let orgs: Organization[] = (await memory.cache.query((q: QueryBuilder) =>
+    let orgs: Organization[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
-    )) as any;
-    orgs = orgs
-      .filter(o => hasRelated(o, 'users', user) && o.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
-    if (orgs.length > 0) {
-      setOrganization(orgs[0].id);
-      setDefaultProj(orgs[0].id, memory, setProject);
+    ) as any;
+    if (organization === '') {
+      orgs = orgs
+        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
+      if (orgs.length > 0) {
+        setOrganization(orgs[0].id);
+        setDefaultProj(orgs[0].id, memory, setProject);
+      }
+    } else {
+      setDefaultProj(organization, memory, setProject);
     }
   };
 
@@ -208,7 +215,8 @@ export function Loading(props: IProps) {
       setUser,
       setBucket,
       setRemote,
-      setCompleted
+      setCompleted,
+      InviteUser
     );
     const decodedToken: any = jwtDecode(auth.getAccessToken());
     setExpireAt(decodedToken.exp);
@@ -216,13 +224,11 @@ export function Loading(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (completed === 100) {
-      setDefaultOrg();
+    if (completed >= 70 && organization === '') {
       if (newOrgParams) {
         CreateOrg(parseQuery(newOrgParams));
       }
-      InviteUser();
-      setDefaultProj(organization, memory, setProject);
+      setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed]);

@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Role, Invitation, IInviteStrings } from '../model';
+import {
+  IState,
+  Role,
+  Invitation,
+  IInviteStrings,
+  Group,
+  getRoleId,
+  RoleNames,
+  IsAdmin,
+} from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -16,14 +25,38 @@ import {
   DialogTitle,
   MenuItem,
   Typography,
+  FormControlLabel,
+  Grid,
+  Paper,
+  FormLabel,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import { validateEmail, related } from '../utils';
+import { schema } from '../schema';
+import { AUTH_CONFIG } from '../auth/auth0-variables';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    menu: {
-      width: 200,
+    menu: {},
+    label: {},
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+    textField: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      padding: 5,
+      display: 'flex',
+      flexGrow: 1,
     },
   })
 );
@@ -34,18 +67,22 @@ interface IStateProps {
 
 interface IRecordProps {
   roles: Array<Role>;
+  groups: Array<Group>;
 }
 
 export interface IInviteData {
   email: string;
   role: string;
+  group: string;
+  groupRole: string;
+  allUsersRole: string;
 }
 
 interface IProps extends IRecordProps, IStateProps {
   inviteIn: IInviteData | null;
   visible: boolean;
-  addMethod?: (groupName: string, role: string) => void;
-  editMethod?: (inviteRec: any) => void;
+  addMethodComplete?: (inviteRec: IInviteData) => void;
+  editMethodComplete?: (inviteRec: IInviteData) => void;
   cancelMethod?: () => void;
 }
 
@@ -54,8 +91,9 @@ function Invite(props: IProps) {
     t,
     visible,
     roles,
-    addMethod,
-    editMethod,
+    groups,
+    addMethodComplete,
+    editMethodComplete,
     cancelMethod,
     inviteIn,
   } = props;
@@ -66,27 +104,125 @@ function Invite(props: IProps) {
   const [email, setEmail] = useState('');
   const [emailHelp, setEmailHelp] = useState(<></>);
   const [role, setRole] = useState('');
+  const [group, setGroup] = useState('');
+  const [groupRole, setGroupRole] = useState('');
+  const [allUsersGroup, setAllUsersGroup] = useState('');
+  const [allUsersRole, setAllUsersRole] = useState('');
+  const [groupsAllonly, setGroupsAllonly] = useState();
+  const [groupsNoAll, setGroupsNoAll] = useState();
   const [message, setMessage] = useState(<></>);
+
+  const resetFields = () => {
+    setEmail('');
+    setRole(getRoleId(roles, RoleNames.Member));
+    setGroup('');
+    setGroupRole('');
+    setAllUsersRole(getRoleId(roles, RoleNames.Transcriber));
+  };
+  const handleAdd = async () => {
+    const strings = {
+      SILOrg: t.sil,
+      App: t.transcriber,
+      Invitation: t.invitation,
+      Instructions: t.instructions,
+      Subject: t.emailsubject,
+    };
+    const link =
+      IsAdmin(roles, role) ||
+      IsAdmin(roles, allUsersRole) ||
+      IsAdmin(roles, groupRole)
+        ? AUTH_CONFIG.adminEndpoint
+        : AUTH_CONFIG.appEndpoint;
+    let invitation: Invitation = {
+      type: 'invitation',
+      attributes: {
+        email: email,
+        accepted: false,
+        loginLink: link,
+        strings: JSON.stringify(strings),
+      },
+    } as any;
+    schema.initializeRecord(invitation);
+
+    await memory.update((t: TransformBuilder) => [
+      t.addRecord(invitation),
+      t.replaceRelatedRecord(
+        { type: 'invitation', id: invitation.id },
+        'organization',
+        {
+          type: 'organization',
+          id: organization,
+        }
+      ),
+      t.replaceRelatedRecord(
+        { type: 'invitation', id: invitation.id },
+        'role',
+        {
+          type: 'role',
+          id: role,
+        }
+      ),
+      t.replaceRelatedRecord(
+        { type: 'invitation', id: invitation.id },
+        'allUsersRole',
+        {
+          type: 'role',
+          id: allUsersRole,
+        }
+      ),
+      t.replaceRelatedRecord(
+        { type: 'invitation', id: invitation.id },
+        'group',
+        {
+          type: 'group',
+          id: group,
+        }
+      ),
+      t.replaceRelatedRecord(
+        { type: 'invitation', id: invitation.id },
+        'groupRole',
+        {
+          type: 'role',
+          id: groupRole,
+        }
+      ),
+    ]);
+  };
+  const handleEdit = async () => {
+    /* not implemented */
+  };
 
   const handleAddOrSave = () => {
     if (!inviteIn || email !== inviteIn.email) {
       if (!inviteIn) {
-        if (addMethod) {
-          addMethod(email, role);
+        handleAdd();
+        if (addMethodComplete) {
+          addMethodComplete({
+            email,
+            role,
+            group,
+            groupRole,
+            allUsersRole,
+          });
         }
-        setEmail('');
-        setRole('');
+        resetFields();
       } else {
-        if (editMethod) {
-          editMethod({ email: email, role: role });
+        handleEdit();
+        if (editMethodComplete) {
+          editMethodComplete({
+            email,
+            role,
+            group,
+            groupRole,
+            allUsersRole,
+          });
         }
       }
     }
     setOpen(false);
   };
   const handleCancel = () => {
-    setEmail('');
-    setRole('');
+    resetFields();
     if (cancelMethod) {
       cancelMethod();
     }
@@ -97,6 +233,15 @@ function Invite(props: IProps) {
   };
   const handleRoleChange = (e: any) => {
     setRole(e.target.value);
+  };
+  const handleAllUsersRoleChange = (e: any) => {
+    setAllUsersRole(e.target.value);
+  };
+  const handleGroupChange = (e: any) => {
+    setGroup(e.target.value);
+  };
+  const handleGroupRoleChange = (e: any) => {
+    setGroupRole(e.target.value);
   };
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -112,10 +257,36 @@ function Invite(props: IProps) {
   };
 
   useEffect(() => {
-    setEmail(inviteIn ? inviteIn.email : '');
-    setRole(inviteIn ? inviteIn.role : '');
+    const allusersgroup = groups.filter(
+      g =>
+        g.attributes &&
+        g.attributes.name === 'All Users' &&
+        related(g, 'owner') === organization
+    );
+    setGroupsAllonly(allusersgroup);
+    setAllUsersGroup(allusersgroup.length > 0 ? allusersgroup[0].id : '');
+
+    const noallgroups = groups
+      .filter(
+        g =>
+          g.attributes &&
+          g.attributes.name !== 'All Users' &&
+          related(g, 'owner') === organization
+      )
+      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
+    setGroupsNoAll(noallgroups);
+
+    if (inviteIn) {
+      setEmail(inviteIn.email);
+      setRole(inviteIn.role);
+      setAllUsersRole(inviteIn.allUsersRole);
+      setGroup(inviteIn.group);
+      setGroupRole(inviteIn.groupRole);
+    } else {
+      resetFields();
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [inviteIn]);
+  }, [inviteIn, groups]);
 
   useEffect(() => {
     setOpen(visible);
@@ -147,46 +318,175 @@ function Invite(props: IProps) {
           {inviteIn ? t.editInvite : t.addInvite}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>{t.newInviteTask}</DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            variant="filled"
-            id="email"
-            label={t.email}
-            value={email}
-            onChange={handleEmailChange}
-            helperText={emailHelp}
-            required
-            fullWidth
-          />
-          <TextField
-            id="select-role"
-            select
-            label={t.role}
-            value={role}
-            onChange={handleRoleChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            helperText={t.selectRole}
-            margin="normal"
-            variant="filled"
-            required
-          >
-            {roles
-              .filter(r => r.attributes && r.attributes.orgRole)
-              .sort((i, j) =>
-                i.attributes.roleName < j.attributes.roleName ? -1 : 1
-              )
-              .map((option: Role) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.attributes.roleName}
-                </MenuItem>
-              ))}
-          </TextField>
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <FormLabel>{t.newInviteTask}</FormLabel>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                className={classes.textField}
+                autoFocus
+                margin="dense"
+                variant="filled"
+                id="email"
+                label={t.email}
+                value={email}
+                onChange={handleEmailChange}
+                helperText={emailHelp}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormLabel>{t.organization}</FormLabel>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="select-role"
+                className={classes.textField}
+                select
+                label={t.role}
+                value={role}
+                onChange={handleRoleChange}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                helperText={t.selectOrgRole}
+                margin="normal"
+                variant="filled"
+                required
+              >
+                {roles
+                  .filter(r => r.attributes && r.attributes.orgRole)
+                  .sort((i, j) =>
+                    i.attributes.roleName < j.attributes.roleName ? -1 : 1
+                  )
+                  .map((option: Role) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.attributes.roleName}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <FormLabel>{t.groups}</FormLabel>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                id="select-allgroup"
+                className={classes.textField}
+                select
+                label={t.group}
+                value={allUsersGroup}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                helperText={t.allusersgroup}
+                margin="normal"
+                variant="filled"
+                required
+              >
+                {groupsAllonly
+                  ? groupsAllonly.map((option: Group) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.attributes.name}
+                      </MenuItem>
+                    ))
+                  : ''}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                id="select-allusersrole"
+                className={classes.textField}
+                select
+                label={t.groupRole}
+                value={allUsersRole}
+                onChange={handleAllUsersRoleChange}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                helperText={t.allusersgroup && t.role}
+                margin="normal"
+                variant="filled"
+                required
+              >
+                {roles
+                  .filter(r => r.attributes && r.attributes.groupRole)
+                  .sort((i, j) =>
+                    i.attributes.roleName < j.attributes.roleName ? -1 : 1
+                  )
+                  .map((option: Role) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      {option.attributes.roleName}
+                    </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+            {groupsNoAll && groupsNoAll.length > 0 && (
+              <>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    id="select-group"
+                    className={classes.textField}
+                    select
+                    label={t.group}
+                    value={group}
+                    onChange={handleGroupChange}
+                    SelectProps={{
+                      MenuProps: {
+                        className: classes.menu,
+                      },
+                    }}
+                    helperText={t.additionalgroup}
+                    margin="normal"
+                    variant="filled"
+                  >
+                    {groupsNoAll.map((option: Group) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.attributes.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    id="select-grouprole"
+                    className={classes.textField}
+                    select
+                    label={t.groupRole}
+                    value={groupRole}
+                    onChange={handleGroupRoleChange}
+                    SelectProps={{
+                      MenuProps: {
+                        className: classes.menu,
+                      },
+                    }}
+                    helperText={t.selectGroupRole}
+                    margin="normal"
+                    variant="filled"
+                    disabled={group === ''}
+                  >
+                    {roles
+                      .filter(r => r.attributes && r.attributes.groupRole)
+                      .sort((i, j) =>
+                        i.attributes.roleName < j.attributes.roleName ? -1 : 1
+                      )
+                      .map((option: Role) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.attributes.roleName}
+                        </MenuItem>
+                      ))}
+                  </TextField>
+                </Grid>
+              </>
+            )}
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} variant="outlined" color="primary">
@@ -203,7 +503,7 @@ function Invite(props: IProps) {
               hasInvite(email)
             }
           >
-            {!inviteIn ? t.add : t.save}
+            {!inviteIn ? t.send : t.save}
           </Button>
         </DialogActions>
       </Dialog>
@@ -218,6 +518,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
 export default withData(mapRecordsToProps)(connect(mapStateToProps)(

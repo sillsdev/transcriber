@@ -18,7 +18,7 @@ import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 
 // import { Online } from './utils';
 
-const Sources = async (
+export const Sources = async (
   schema: Schema,
   memory: Memory,
   keyMap: KeyMap,
@@ -27,6 +27,7 @@ const Sources = async (
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
   setCompleted: (valud: number) => void,
+  InviteUser: (remote: JSONAPISource) => Promise<void>,
   tableLoaded: (name: string) => void,
   orbitError: (ex: IApiError) => void
 ) => {
@@ -81,16 +82,16 @@ const Sources = async (
   }
 
   const coordinator = new Coordinator();
-  await coordinator.addSource(memory);
-  await coordinator.addSource(backup);
+  coordinator.addSource(memory);
+  coordinator.addSource(backup);
 
   if (!API_CONFIG.offline) {
-    await coordinator.addSource(remote);
+    coordinator.addSource(remote);
   }
 
   // Update indexedDb when memory updated
   // TODO: error if we can't read and write the indexedDB
-  await coordinator.addStrategy(
+  coordinator.addStrategy(
     new SyncStrategy({
       source: 'memory',
       target: 'backup',
@@ -100,7 +101,7 @@ const Sources = async (
 
   if (!API_CONFIG.offline) {
     // Trap error querying data (token expired or offline)
-    await coordinator.addStrategy(
+    coordinator.addStrategy(
       new RequestStrategy({
         name: 'remote-pull-fail',
 
@@ -117,7 +118,7 @@ const Sources = async (
     );
 
     // Query the remote server whenever the memory is queried
-    await coordinator.addStrategy(
+    coordinator.addStrategy(
       new RequestStrategy({
         name: 'remote-request',
 
@@ -133,7 +134,7 @@ const Sources = async (
 
     // Trap error updating data (token expired or offline)
     // See: https://github.com/orbitjs/todomvc-ember-orbit
-    await coordinator.addStrategy(
+    coordinator.addStrategy(
       new RequestStrategy({
         name: 'remote-push-fail',
 
@@ -175,7 +176,7 @@ const Sources = async (
     );
 
     // Update the remote server whenever the memory is updated
-    await coordinator.addStrategy(
+    coordinator.addStrategy(
       new RequestStrategy({
         name: 'remote-update',
 
@@ -190,7 +191,7 @@ const Sources = async (
     );
 
     // Sync all changes received from the remote server to the memory
-    await coordinator.addStrategy(
+    coordinator.addStrategy(
       new SyncStrategy({
         name: 'remote-sync',
 
@@ -202,9 +203,9 @@ const Sources = async (
     );
   }
 
-  await coordinator.addStrategy(new EventLoggingStrategy());
+  coordinator.addStrategy(new EventLoggingStrategy());
 
-  await coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
+  coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
     console.log('Coordinator will log warnings');
     if (API_CONFIG.offline) {
       memory
@@ -221,6 +222,8 @@ const Sources = async (
   });
 
   if (!API_CONFIG.offline && userToken !== tokData.sub) {
+    await InviteUser(remote);
+
     await remote
       .pull(q => q.findRecords('currentuser'))
       .then((transform: Transform[]) => {
@@ -266,7 +269,7 @@ const Sources = async (
         }
         tableLoaded('plan'); // If we are loading, length of tableLoad > 0
       })
-      .then(() => setCompleted(35));
+      .then(() => setCompleted(95));
     remote
       .pull(q => q.findRecords('section'))
       .then(transform => memory.sync(transform))
