@@ -7,9 +7,8 @@ import {
   Invitation,
   IInviteStrings,
   Group,
-  getRoleId,
   RoleNames,
-  IsAdmin,
+  User,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -28,7 +27,13 @@ import {
   FormLabel,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
-import { validateEmail, related } from '../utils';
+import {
+  validateEmail,
+  related,
+  getRoleId,
+  IsAdmin,
+  getUserById,
+} from '../utils';
 import { schema } from '../schema';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 
@@ -65,6 +70,7 @@ interface IStateProps {
 interface IRecordProps {
   roles: Array<Role>;
   groups: Array<Group>;
+  users: Array<User>;
 }
 
 export interface IInviteData {
@@ -89,6 +95,7 @@ function Invite(props: IProps) {
     visible,
     roles,
     groups,
+    users,
     addMethodComplete,
     editMethodComplete,
     cancelMethod,
@@ -97,6 +104,8 @@ function Invite(props: IProps) {
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
+  const [user] = useGlobal('user');
+  const [currentUser, setcurrentUser] = useState('');
   const [open, setOpen] = useState(visible);
   const [email, setEmail] = useState('');
   const [emailHelp, setEmailHelp] = useState(<></>);
@@ -130,12 +139,14 @@ function Invite(props: IProps) {
       IsAdmin(roles, groupRole)
         ? AUTH_CONFIG.adminEndpoint
         : AUTH_CONFIG.appEndpoint;
+    const invitedBy = currentUser;
     let invitation: Invitation = {
       type: 'invitation',
       attributes: {
         email: email,
         accepted: false,
         loginLink: link,
+        invitedBy: invitedBy,
         strings: JSON.stringify(strings),
       },
     } as any;
@@ -254,10 +265,14 @@ function Invite(props: IProps) {
   };
 
   useEffect(() => {
+    var cur = getUserById(users, user);
+    setcurrentUser(cur.attributes.name + ' (' + cur.attributes.email + ')');
+  }, []);
+  useEffect(() => {
     const allusersgroup = groups.filter(
       g =>
         g.attributes &&
-        g.attributes.name === 'All Users' &&
+        g.attributes.allUsers &&
         related(g, 'owner') === organization
     );
     setGroupsAllonly(allusersgroup);
@@ -267,7 +282,7 @@ function Invite(props: IProps) {
       .filter(
         g =>
           g.attributes &&
-          g.attributes.name !== 'All Users' &&
+          !g.attributes.allUsers &&
           related(g, 'owner') === organization
       )
       .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
@@ -516,6 +531,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
+  users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
 export default withData(mapRecordsToProps)(

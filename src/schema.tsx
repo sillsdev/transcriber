@@ -18,6 +18,7 @@ const schemaDefinition: SchemaSettings = {
         name: { type: 'string' },
         abbreviation: { type: 'string' },
         ownerId: { type: 'number' },
+        allUsers: { type: 'boolean' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
@@ -60,6 +61,7 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         email: { type: 'string' },
         loginLink: { type: 'string' },
+        invitedBy: { type: 'string' },
         strings: { type: 'string' },
         silId: { type: 'numer' },
         accepted: { type: 'boolean' },

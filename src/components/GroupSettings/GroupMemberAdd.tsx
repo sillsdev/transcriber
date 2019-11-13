@@ -6,6 +6,7 @@ import {
   GroupMembership,
   Role,
   IGroupSettingsStrings,
+  RoleNames,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -62,7 +63,8 @@ function GroupMemberAdd(props: IProps) {
 
   const handleAddMember = async () => {
     setOpen(false);
-    const fileRole = role === 'owner' ? 'admin' : role;
+    const fileRole: RoleNames =
+      role === 'owner' ? RoleNames.Admin : (role as RoleNames);
     const roleId = getRoleId(roles, fileRole);
     const groupMemberRec: GroupMembership = {
       type: 'groupmembership',
@@ -83,10 +85,10 @@ function GroupMemberAdd(props: IProps) {
       t.replaceRelatedRecord(
         { type: 'groupmembership', id: groupMemberRec.id },
         'role',
-        { type: 'role', id: roleId[0] }
+        { type: 'role', id: roleId }
       ),
     ]);
-    if (role === 'reviewer') {
+    if (role === RoleNames.Reviewer) {
       setMessage(<span>{t.allReviewersCanTranscribe}</span>);
     }
   };
@@ -148,6 +150,6 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  GroupMemberAdd
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(GroupMemberAdd) as any
+) as any;

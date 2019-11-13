@@ -7,6 +7,7 @@ export interface Invitation extends Record {
     accepted: boolean;
     strings: string;
     loginLink: string;
+    invitedBy: string;
     dateCreated: string;
     dateUpdated: string;
     lastModfiedBy: number;

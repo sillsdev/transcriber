@@ -1715,8 +1715,8 @@
       </unit>
       <unit id="invite.invitation">
          <segment>
-            <source>You have been invited to join</source>
-            <target>Vous avez été invité à rejoindre</target>
+            <source>has invited you to join</source>
+            <target>vous a invité à rejoindre</target>
          </segment>
       </unit>
       <unit id="invite.instructions">
