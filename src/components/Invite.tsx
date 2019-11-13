@@ -267,6 +267,7 @@ function Invite(props: IProps) {
   useEffect(() => {
     var cur = getUserById(users, user);
     setcurrentUser(cur.attributes.name + ' (' + cur.attributes.email + ')');
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
   useEffect(() => {
     const allusersgroup = groups.filter(
