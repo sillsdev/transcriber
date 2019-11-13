@@ -85,7 +85,7 @@ Two files are needed to create `dev` environment configurations:
 - `.env.dev.development.local`
 - `.env.dev.local`
 
-Example `.env.dev.development.local`:
+Example `.env.appdev.development.local`:
 
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
@@ -108,14 +108,13 @@ Example `.env.dev.local`:
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
 REACT_APP_CLIENTID= (auth0 client id)
-REACT_APP_LOGINAPP= (url of login app)
-REACT_APP_MYACCOUNTAPP= (url of my account app)
-REACT_APP_NEWORGAPP= (url of new org app page)
+REACT_APP_ADMIN_ENDPOINT= (url of admin app)
+REACT_APP_APP_ENDPOINT= (url of app)
 REACT_APP_CALLBACK=localhost:3000/callback
-REACT_APP_IDENTITY= (url of identity api - not yet in use)
 REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
 REACT_APP_COMMUNITY= (url of site for community discussion)
+REACT_APP_SITE_TITLE= (title for browser tab)
 ```
 
 ### Generate dev configuration files
