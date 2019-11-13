@@ -8,6 +8,7 @@ import TokenDialog from './TokenDialog';
 import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
+import { API_CONFIG } from '../api-variable';
 
 interface IStateProps {
   expireAt: number | undefined;
@@ -37,7 +38,7 @@ function TokenCheck(props: IProps) {
   }, []);
 
   React.useEffect(() => {
-    if (expireAt) {
+    if (expireAt && !API_CONFIG.offline) {
       timer.current = setInterval(() => {
         const currentUnix = moment().format('X');
         const expires = moment.unix(expireAt).format('X');

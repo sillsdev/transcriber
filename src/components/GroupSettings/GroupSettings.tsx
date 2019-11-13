@@ -112,7 +112,7 @@ export function GroupSettings(props: IProps) {
           </FormGroup>
         </FormControl>
 
-        <Team detail={false} />
+        <Team selectedGroup={group} detail={false} />
         {orgRole === 'admin' && (
           <div className={classes.actions}>
             <Button
@@ -141,6 +141,6 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  GroupSettings
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(GroupSettings) as any
+) as any;

@@ -23,8 +23,7 @@ import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related, remoteIdNum } from '../utils';
-import moment from 'moment';
+import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -111,10 +110,7 @@ export function InvitationTable(props: IProps) {
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
   const [orgRole] = useGlobal('orgRole');
-  const [user] = useGlobal('user');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [actionMenuItem, setActionMenuItem] = useState(null);

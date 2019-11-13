@@ -20,6 +20,7 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   detail: boolean;
+  title: string;
   people: string[];
   add: () => void;
   del: (id: string, name: string) => void;
@@ -27,7 +28,7 @@ interface IProps extends IStateProps {
 }
 
 function TeamCol(props: IProps) {
-  const { detail, people, add, del, allUsers, t } = props;
+  const { detail, people, add, del, allUsers, title } = props;
   const classes = useStyles();
   const [orgRole] = useGlobal('orgRole');
 
@@ -35,7 +36,7 @@ function TeamCol(props: IProps) {
     <Grid item xs={12} md={4}>
       <FormGroup className={classes.group}>
         <FormLabel className={classes.label}>
-          {t.owners} <div className={classes.grow}>{'\u00A0'}</div>
+          {title} <div className={classes.grow}>{'\u00A0'}</div>
           {!detail && orgRole === 'admin' && !allUsers && (
             <IconButton
               size="small"
@@ -47,7 +48,13 @@ function TeamCol(props: IProps) {
           )}
         </FormLabel>
         <List dense={true}>
-          <PersonItems ids={people} rev={true} del={del} allUsers={allUsers} />
+          <PersonItems
+            {...props}
+            ids={people}
+            rev={true}
+            del={del}
+            allUsers={allUsers}
+          />
         </List>
       </FormGroup>
     </Grid>

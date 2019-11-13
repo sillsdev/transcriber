@@ -430,6 +430,9 @@ const initialState = {
 			"logo": "Logo",
 			"publicByDefault": "Public By Default",
 			"save": "Save",
+			"cancel": "Cancel",
+			"deleteOrg": "Delete Organization",
+			"deleteExplained": "Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.",
 		}
 	}),
 	"mediaUpload": new LocalizedStrings({
@@ -516,6 +519,34 @@ const initialState = {
 			"saveReviewTip": "Save position in recording without marking as complete.",
 		}
 	}),
+	"profile": new LocalizedStrings({
+		"en": {
+			"name": "Full Name",
+			"given": "Given Name",
+			"family": "Family Name",
+			"email": "Email",
+			"phone": "Phone",
+			"timezone": "Time zone",
+			"locale": "Locale",
+			"locked": "Locked",
+			"add": "Add",
+			"save": "Save",
+			"deleteUser": "Delete User",
+			"deleteExplained": "Deleting your user will block you from using the program and remove references to your work.",
+			"cancel": "Cancel",
+			"silTranscriberAdmin": "SIL Transcriber Admin",
+			"silTranscriber": "SIL Transcriber",
+			"userProfile": "User profile",
+			"completeProfile": "Complete User Profile",
+		}
+	}),
+	"deleteExpansion": new LocalizedStrings({
+		"en": {
+			"dangerZone": "Danger Zone",
+			"advanced": "Advanced",
+			"delete": "Delete",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -559,6 +590,8 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 				"integration" : new LocalizedStrings(action.payload.data.integration),
 				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
+				"profile" : new LocalizedStrings(action.payload.data.profile),
+				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 			};
 		case SET_LANGUAGE:
 			return {

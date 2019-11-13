@@ -1,0 +1,7 @@
+#SingleSelect .MuiInput-underline:before {
+  border-bottom: none;
+}
+
+#SingleSelect .css-1okebmr-indicatorSeparator {
+  width: 0;
+}

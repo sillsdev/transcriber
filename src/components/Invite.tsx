@@ -21,13 +21,10 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   MenuItem,
   Typography,
-  FormControlLabel,
   Grid,
-  Paper,
   FormLabel,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
@@ -521,6 +518,6 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  Invite
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(Invite) as any
+) as any;

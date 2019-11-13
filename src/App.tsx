@@ -4,6 +4,7 @@ import Access from './routes/Access';
 import Logout from './routes/Logout';
 import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
+import Profile from './routes/Profile';
 import Callback from './callback/Callback';
 import TokenCheck from './components/TokenCheck';
 import Auth from './auth/Auth';
@@ -62,6 +63,10 @@ class App extends React.Component {
           <Route
             path="/main"
             render={props => <Drawer auth={auth} {...props} />}
+          />
+          <Route
+            path="/profile"
+            render={props => <Profile auth={auth} {...props} />}
           />
           <Route
             path="/callback"

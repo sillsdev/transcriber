@@ -10,6 +10,7 @@ import {
   IGroupSettingsStrings,
   IDeleteItem,
   Group,
+  Project,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -31,15 +32,16 @@ interface IStateProps {
 }
 
 interface IRecordProps {
-  users: Array<User>;
-  orgMemberships: Array<OrganizationMembership>;
-  groupMemberships: Array<GroupMembership>;
-  roles: Array<Role>;
-  groups: Array<Group>;
+  users: User[];
+  orgMemberships: OrganizationMembership[];
+  groupMemberships: GroupMembership[];
+  roles: Role[];
+  groups: Group[];
 }
 
 interface IProps extends IStateProps, IRecordProps {
   detail: boolean;
+  selectedGroup?: string;
 }
 
 function Team(props: IProps) {
@@ -52,9 +54,11 @@ function Team(props: IProps) {
     tableLoad,
     t,
     detail,
+    selectedGroup,
   } = props;
   const [memory] = useGlobal('memory');
-  const [group] = useGlobal('group');
+  const [project] = useGlobal('project');
+  const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState('');
@@ -164,23 +168,38 @@ function Team(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [group]);
 
+  useEffect(() => {
+    if (!selectedGroup || selectedGroup === '') {
+      const projRec = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'project', id: project })
+      ) as Project;
+      setGroup(related(projRec, 'group'));
+    } else {
+      setGroup(selectedGroup);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [project, selectedGroup]);
+
   return (
     <>
       <Grid container>
         <TeamCol
           {...props}
+          title={t.owners}
           people={useOwnerIds(props)}
           add={() => handleAdd('admin')}
           del={(id: string, name: string) => handleUpdate(id, 'reviewer')}
         />
         <TeamCol
           {...props}
+          title={t.reviewers}
           people={useReviewerIds(props)}
           add={() => handleAdd('reviewer')}
           del={(id: string, name: string) => handleUpdate(id, 'transcriber')}
         />
         <TeamCol
           {...props}
+          title={t.transcribers}
           people={useTranscriberIds(props)}
           add={() => handleAdd('transcriber')}
           del={handleRemove}
@@ -221,6 +240,6 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  Team
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(Team) as any
+) as any;

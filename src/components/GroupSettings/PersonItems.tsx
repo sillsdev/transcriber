@@ -47,7 +47,7 @@ function PersonItems(props: IProps) {
             </ListItemAvatar>
             <ListItemText
               primary={u.attributes.name}
-              secondary={detail ? Involvement(u.id, rev) : null}
+              secondary={detail ? <Involvement user={u.id} rev={rev} /> : null}
             />
             {!detail && orgRole === 'admin' && !allUsers && (
               <ListItemSecondaryAction>
@@ -72,6 +72,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  PersonItems
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(PersonItems) as any
+) as any;

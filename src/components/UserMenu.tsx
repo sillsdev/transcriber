@@ -15,7 +15,7 @@ import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccountIcon from '@material-ui/icons/AccountCircle';
 import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
-import { AUTH_CONFIG } from '../auth/auth0-variables';
+// import { AUTH_CONFIG } from '../auth/auth0-variables';
 import Auth from '../auth/Auth';
 
 const StyledMenu = withStyles({
@@ -55,11 +55,11 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   action: (what: string) => void;
-  auth: Auth;
+  auth?: Auth;
 }
 
 export function UserMenu(props: IProps) {
-  const { action, t, auth } = props;
+  const { action, t } = props;
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
 
@@ -91,7 +91,7 @@ export function UserMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <a
+        {/* <a
           href={
             AUTH_CONFIG.myAccountApp +
             '/callback#access_token=' +
@@ -105,14 +105,14 @@ export function UserMenu(props: IProps) {
           style={{ textDecoration: 'none' }}
           target="_blank"
           rel="noopener noreferrer"
-        >
-          <StyledMenuItem>
-            <ListItemIcon>
-              <AccountIcon />
-            </ListItemIcon>
-            <ListItemText primary={t.myAccount} />
-          </StyledMenuItem>
-        </a>
+        > */}
+        <StyledMenuItem onClick={handle('Profile')}>
+          <ListItemIcon>
+            <AccountIcon />
+          </ListItemIcon>
+          <ListItemText primary={t.myAccount} />
+        </StyledMenuItem>
+        {/* </a> */}
         {!shift || (
           <StyledMenuItem onClick={handle('Clear')}>
             <ListItemIcon>
