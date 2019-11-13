@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 import UserMenu from '../components/UserMenu';
 import * as action from '../store';
-import logo from './LogoSmallShadow-4x.png';
+import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
 import { parseQuery } from '../utils/parseQuery';
 import {
