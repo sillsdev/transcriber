@@ -6,7 +6,6 @@ import {
   IState,
   User,
   Role,
-  Invitation,
   OrganizationMembership,
   IUsertableStrings,
 } from '../model';
@@ -23,8 +22,7 @@ import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related, remoteIdNum } from '../utils';
-import moment from 'moment';
+import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -116,9 +114,6 @@ export function UserTable(props: IProps) {
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
-  const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -291,7 +286,6 @@ const mapRecordsToProps = {
     q.findRecords('organizationmembership'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserTable) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(UserTable) as any
+) as any;

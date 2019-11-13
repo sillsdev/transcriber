@@ -3,24 +3,29 @@ import { Record, RecordRelationship } from '@orbit/data';
 export interface User extends Record {
   attributes: {
     name: string;
-    givenName: string;
-    familyName: string;
+    givenName: string | null;
+    familyName: string | null;
     email: string;
     phone: string | null;
     timezone: string | null;
     locale: string | null;
-    avatarUrl: string | null;
     isLocked: boolean;
+    auth0Id: string;
+    silUserid: number;
+    identityToken: string | null;
+    uilanguagebcp47: string | null;
+    timercountUp: string | null;
+    playbackSpeed: string | null;
+    progressbarTypeid: string | null;
+    avatarUrl: string | null;
+    hotKeys: string | null;
     dateCreated: string | null;
     dateUpdated: string | null;
     lastModifiedBy: string | null;
   };
   relationships?: {
-    ownedOrganizations: RecordRelationship;
-    projects: RecordRelationship;
     organizationMemberships: RecordRelationship;
-    roles: RecordRelationship;
-    groups: RecordRelationship;
+    groupMemberships: RecordRelationship;
   };
 }
 
@@ -34,16 +39,22 @@ export interface CurrentUser extends Record {
     timezone: string | null;
     locale: string | null;
     isLocked: boolean;
+    auth0Id: string;
+    silUserid: number;
+    identityToken: string | null;
+    uilanguagebcp47: string | null;
+    timercountUp: string | null;
+    playbackSpeed: string | null;
+    progressbarTypeid: string | null;
+    avatarUrl: string | null;
+    hotKeys: string | null;
     dateCreated: string | null;
     dateUpdated: string | null;
     lastModifiedBy: string | null;
   };
   relationships?: {
-    ownedOrganizations: RecordRelationship;
-    projects: RecordRelationship;
     organizationMemberships: RecordRelationship;
-    roles: RecordRelationship;
-    groups: RecordRelationship;
+    groupMemberships: RecordRelationship;
   };
 }
 

@@ -68,6 +68,7 @@ import ProjectSettings from '../components/ProjectSettings';
 import MediaTab from '../components/MediaTab';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import IntegrationPanel from '../components/Integration';
+import Team from '../components/GroupSettings/Team';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
 import Transcriber from '../components/Transcriber';
@@ -175,7 +176,6 @@ interface IRecordProps {
   organizationMemberships: Array<OrganizationMembership>;
   projects: Array<Project>;
   plans: Array<Plan>;
-  groups: Array<Group>;
   groupMemberships: Array<GroupMembership>;
   roles: Array<Role>;
 }
@@ -200,7 +200,6 @@ export function ResponsiveDrawer(props: IProps) {
     organizations,
     projects,
     plans,
-    groups,
     orbitLoaded,
     orbitStatus,
     organizationMemberships,
@@ -229,6 +228,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [curProj, setCurProj] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [addProject, setAddProject] = useState(false);
+  const [addOrg, setAddOrg] = useState(false);
   const [title, setTitle] = useState(
     API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin
   );
@@ -261,7 +261,9 @@ export function ResponsiveDrawer(props: IProps) {
   const handleCommitOrg = (value: string) => {
     localStorage.removeItem('url');
     if (value === t.newOrganization) {
-      if (newOrgRef.current) newOrgRef.current.click();
+      // if (newOrgRef.current) newOrgRef.current.click();
+      setAddOrg(true);
+      setContent(slug(t.organization));
     } else {
       if (value !== organization) setCurProj(null);
       setOrganization(value);
@@ -271,6 +273,10 @@ export function ResponsiveDrawer(props: IProps) {
       setContent(API_CONFIG.isApp ? slug(t.todo) : '');
       setGroup('');
     }
+  };
+
+  const handleFinishOrgAdd = () => {
+    setAddOrg(false);
   };
 
   const handleCommitProj = (value: string) => {
@@ -439,18 +445,17 @@ export function ResponsiveDrawer(props: IProps) {
   }, [plan, plans]);
 
   useEffect(() => {
-    if (!groups || groups.length === 0) return;
-    const curGroup = groups.filter(g => g.id === group);
-    if (curGroup.length > 0) {
-      const attr = curGroup[0].attributes;
+    if (!group || group === '') return;
+    const groupRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'group', id: group })
+    ) as Group;
+    if (groupRec) {
+      const attr = groupRec.attributes;
       setTitle(attr ? attr.name : '');
-      setContent('group');
-    } else if (content === 'group') {
-      setTitle(t.usersAndGroups);
-      setContent(slug(t.usersAndGroups));
+      if (content === slug(t.usersAndGroups)) setContent('group');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [group, groups]);
+  }, [group]);
 
   useEffect(() => {
     if (!organization || !project || !choice) return;
@@ -513,6 +518,7 @@ export function ResponsiveDrawer(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orbitStatus]);
 
+  if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
 
@@ -715,7 +721,14 @@ export function ResponsiveDrawer(props: IProps) {
   if (!orbitLoaded) return <Redirect to="/loading" />;
 
   let components: componentType = {};
-  components[slug(t.organization)] = <OrgSettings noMargin={true} {...props} />;
+  components[slug(t.organization)] = (
+    <OrgSettings
+      noMargin={true}
+      {...props}
+      add={addOrg}
+      finishAdd={handleFinishOrgAdd}
+    />
+  );
   components[slug(t.usersAndGroups)] = <GroupTabs {...props} />;
   components[slug(t.media)] = (
     <MediaTab
@@ -738,7 +751,7 @@ export function ResponsiveDrawer(props: IProps) {
       checkSaved={checkSavedFn}
     />
   );
-  components[slug(t.team)] = <GroupSettings {...props} userDetail={true} />;
+  components[slug(t.team)] = <Team {...props} detail={true} />;
   components[slug(t.settings)] = (
     <ProjectSettings
       {...props}
@@ -911,12 +924,10 @@ const mapRecordsToProps = {
     q.findRecords('organizationmembership'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
-  groups: (q: QueryBuilder) => q.findRecords('group'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ResponsiveDrawer) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(ResponsiveDrawer) as any
+) as any;

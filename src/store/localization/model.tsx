@@ -395,6 +395,9 @@ export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
     "logo": string;
     "publicByDefault": string;
     "save": string;
+    "cancel": string;
+    "deleteOrg": string;
+    "deleteExplained": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
@@ -476,6 +479,32 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "saveReviewTip": string;
 };
 
+export interface IProfileStrings extends Localize.LocalizedStringsMethods {
+    "name": string;
+    "given": string;
+    "family": string;
+    "email": string;
+    "phone": string;
+    "timezone": string;
+    "locale": string;
+    "locked": string;
+    "add": string;
+    "save": string;
+    "deleteUser": string;
+    "deleteExplained": string;
+    "cancel": string;
+    "silTranscriberAdmin": string;
+    "silTranscriber": string;
+    "userProfile": string;
+    "completeProfile": string;
+};
+
+export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {
+    "dangerZone": string;
+    "advanced": string;
+    "delete": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -514,5 +543,7 @@ export interface ILocalizedStrings {
 	toDoTable: IToDoTableStrings;
 	integration: IIntegrationStrings;
 	transcriber: ITranscriberStrings;
+	profile: IProfileStrings;
+	deleteExpansion: IDeleteExpansionStrings;
 	[key: string]: any;
 };

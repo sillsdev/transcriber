@@ -3,6 +3,7 @@
   width: 90%;
 }
 
-#LangBcp47 .MuiFilledInput-root {
+/* This changes the background of the filled component for dark themes
+ #LangBcp47 .MuiFilledInput-root {
   background-color: rgba(255, 255, 255, 0.9);
-}
+} */

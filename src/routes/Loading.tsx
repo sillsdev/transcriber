@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
+import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings, Organization, Invitation } from '../model';
+import { IState, IMainStrings, Organization, Invitation, User } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
@@ -20,9 +21,15 @@ import {
 import UserMenu from '../components/UserMenu';
 import * as action from '../store';
 import logo from './LogoSmallShadow-4x.png';
-import { parseQuery, IParsedArgs } from '../utils/parseQuery';
-import { related, hasRelated, setDefaultProj } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
+import { parseQuery } from '../utils/parseQuery';
+import {
+  related,
+  hasRelated,
+  hasAnyRelated,
+  setDefaultProj,
+  CreateOrg,
+} from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,64 +115,6 @@ export function Loading(props: IProps) {
     }
   };
 
-  const ReloadOrgTables = async () => {
-    await remote
-      .pull(q => q.findRecords('organization'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('organizationmembership'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('group'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('groupmembership'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('user'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('project'))
-      .then(transform => memory.sync(transform));
-  };
-
-  const CreateOrg = async (props: IParsedArgs) => {
-    const { orgId, orgName } = props;
-    if (!localStorage.getItem('newOrg')) return;
-    localStorage.removeItem('newOrg');
-
-    let organization: Organization = {
-      type: 'organization',
-      attributes: {
-        name: orgName,
-        SilId: orgId,
-        publicByDefault: true,
-      },
-    } as any;
-    schema.initializeRecord(organization);
-
-    await remote.update((t: TransformBuilder) => [
-      t.addRecord(organization),
-      t.replaceRelatedRecord(
-        { type: 'organization', id: organization.id },
-        'owner',
-        {
-          type: 'user',
-          id: user,
-        }
-      ),
-    ]);
-    await ReloadOrgTables();
-    const newOrgRec: Organization[] = memory.cache.query((q: QueryBuilder) =>
-      q
-        .findRecords('organization')
-        .filter({ attribute: 'name', value: orgName })
-    ) as any;
-    setOrganization(newOrgRec[0].id);
-    setDefaultProj(newOrgRec[0].id, memory, setProject);
-    setNewOrgParams(null);
-  };
-
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource) => {
     const inviteId = localStorage.getItem('inviteId');
@@ -226,24 +175,74 @@ export function Loading(props: IProps) {
   useEffect(() => {
     if (completed >= 70 && organization === '') {
       if (newOrgParams) {
-        CreateOrg(parseQuery(newOrgParams));
+        if (localStorage.getItem('newOrg')) {
+          localStorage.removeItem('newOrg');
+          const { orgId, orgName } = parseQuery(newOrgParams);
+          let orgRec: Organization = {
+            type: 'organization',
+            attributes: {
+              name: orgName,
+              SilId: orgId,
+              publicByDefault: true,
+            },
+          } as any;
+          CreateOrg({
+            orgRec,
+            user,
+            schema,
+            memory,
+            remote,
+            setOrganization,
+            setProject,
+          });
+        }
+        setNewOrgParams(null);
       }
       setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [completed]);
+  }, [completed, user]);
 
   if (!isAuthenticated()) return <Redirect to="/" />;
 
-  if (/Logout/i.test(view)) {
-    return <Redirect to="/logout" />;
-  }
+  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 
   if (
     orbitLoaded &&
     (completed === 100 || API_CONFIG.offline) &&
     newOrgParams === null
   ) {
+    if (user && user !== '') {
+      const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords([{ type: 'user', id: user }])
+      ) as any;
+      if (userRec.length === 1) {
+        if (!hasAnyRelated(userRec[0], 'groupMemberships')) {
+          const now = moment().format('L LTS');
+          const orgRec: Organization = {
+            type: 'organization',
+            attributes: {
+              name: 'Work begun ' + now,
+              description:
+                'Default organization of ' + userRec[0].attributes.name,
+              publicByDefault: true,
+            },
+          } as any;
+          CreateOrg({
+            orgRec,
+            user,
+            schema,
+            memory,
+            remote,
+            setOrganization,
+            setProject,
+          });
+        }
+        if (!userRec[0].attributes.givenName) {
+          return <Redirect to="/profile" />;
+        }
+      }
+    }
     return <Redirect to="/main" />;
   }
 
@@ -290,7 +289,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Loading) as any;
+export default connect(mapStateToProps, mapDispatchToProps)(Loading) as any;

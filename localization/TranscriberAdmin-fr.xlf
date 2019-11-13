@@ -4,13 +4,13 @@
 		<unit id="access.silTranscriberAccess">
 			<segment>
 				<source>SIL Transcriber Access</source>
-				<target>Accès du Transcripteur SIL</target>
+				<target>Accès du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
 				<source>Access SIL Transcriber</source>
-				<target>Accès au Transcripteur SIL</target>
+				<target>Accès au SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="access.createAccount">
@@ -34,7 +34,7 @@
 		<unit id="usertable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="usertable.chooseUser">
@@ -148,7 +148,7 @@
 		<unit id="projectTable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="projectTable.chooseProject">
@@ -394,7 +394,7 @@
 		<unit id="planTable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="planTable.choosePlan">
@@ -922,13 +922,13 @@
 		<unit id="main.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="main.silTranscriber">
 			<segment>
 				<source>SIL Transcriber</source>
-				<target>Transcripteur SIL</target>
+				<target>SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="main.search">
@@ -1012,7 +1012,7 @@
 		<unit id="main.loadingTranscriberAdmin">
 			<segment>
 				<source>Loading SIL Transcriber Admin</source>
-				<target>Chargement de SIL Transcriber Admin</target>
+				<target>Chargement de SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="main.loadingTranscriber">
@@ -1839,7 +1839,25 @@
             <target>Enregistrer</target>
          </segment>
       </unit>
-   <unit id="mediaUpload.title">
+		<unit id="orgSettings.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="orgSettings.deleteOrg">
+			<segment>
+				<source>Delete Organization</source>
+				<target>Supprimer l'organisation</target>
+			</segment>
+		</unit>
+		<unit id="orgSettings.deleteExplained">
+			<segment>
+				<source>Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.</source>
+				<target>La suppression de cet organisme empêchera tout membre de l'organisme de travailler à l'un ou l'autre des projets ou des plans de cet organisme.</target>
+			</segment>
+		</unit>
+		<unit id="mediaUpload.title">
          <segment>
             <source>Upload Media</source>
          	<target>Télécharger des fichiers audio</target>
@@ -2223,5 +2241,125 @@
             <target>Enregistrer la position dans l'enregistrement sans marquer comme complète.</target>
          </segment>
       </unit>
+	<unit id="profile.name">
+         <segment>
+            <source>Full Name</source>
+         	<target>Nom et prénom</target>
+         </segment>
+      </unit>
+      <unit id="profile.given">
+         <segment>
+            <source>Given Name</source>
+         	<target>Prénom</target>
+         </segment>
+      </unit>
+      <unit id="profile.family">
+         <segment>
+            <source>Family Name</source>
+            <target>Nom</target>
+         </segment>
+      </unit>
+      <unit id="profile.email">
+         <segment>
+            <source>Email</source>
+         	<target>Courriel</target>
+         </segment>
+      </unit>
+      <unit id="profile.phone">
+         <segment>
+            <source>Phone</source>
+         	<target>Numéro de téléphone</target>
+         </segment>
+      </unit>
+      <unit id="profile.timezone">
+         <segment>
+            <source>Time zone</source>
+         	<target>Fuseau horaire</target>
+         </segment>
+      </unit>
+      <unit id="profile.locale">
+         <segment>
+            <source>Locale</source>
+         	<target>Locale</target>
+         </segment>
+      </unit>
+      <unit id="profile.locked">
+         <segment>
+            <source>Locked</source>
+         	<target>Verrouillé</target>
+         </segment>
+      </unit>
+      <unit id="profile.add">
+         <segment>
+            <source>Add</source>
+            <target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="profile.save">
+         <segment>
+            <source>Save</source>
+         	<target>Sauvegarder</target>
+         </segment>
+      </unit>
+      <unit id="profile.deleteUser">
+         <segment>
+            <source>Delete User</source>
+         	<target>Supprimer un utilisateur</target>
+         </segment>
+      </unit>
+      <unit id="profile.deleteExplained">
+         <segment>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
+         	<target>La suppression de votre utilisateur vous empêchera d'utiliser le programme et supprimera les références à votre travail.</target>
+         </segment>
+      </unit>
+		<unit id="profile.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="profile.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du SIL Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="profile.silTranscriber">
+			<segment>
+				<source>SIL Transcriber</source>
+				<target>SIL Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="profile.userProfile">
+			<segment>
+				<source>User Profile</source>
+				<target>Profil de l'utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="profile.completeProfile">
+			<segment>
+				<source>Complete User Profile</source>
+				<target>Remplir le profil de l'utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="deleteExpansion.dangerZone">
+			<segment>
+				<source>Danger Zone</source>
+				<target>Zone de danger</target>
+			</segment>
+		</unit>
+		<unit id="deleteExpansion.advanced">
+			<segment>
+				<source>Advanced</source>
+				<target>Avancé</target>
+			</segment>
+		</unit>
+		<unit id="deleteExpansion.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Supprimer</target>
+			</segment>
+		</unit>
 	</file>
 </xliff>
