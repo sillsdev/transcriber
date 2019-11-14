@@ -167,8 +167,10 @@ export function Loading(props: IProps) {
       setCompleted,
       InviteUser
     );
-    const decodedToken: any = jwtDecode(auth.getAccessToken());
-    setExpireAt(decodedToken.exp);
+    if (!API_CONFIG.offline) {
+      const decodedToken: any = jwtDecode(auth.getAccessToken());
+      setExpireAt(decodedToken.exp);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 

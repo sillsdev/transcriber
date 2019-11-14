@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { User, IApiError } from './model';
+import { IApiError } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -49,7 +49,7 @@ export const Sources = async (
     namespace: 'transcriber',
   });
 
-  if (tokData.sub === userToken) {
+  if (tokData.sub === userToken || API_CONFIG.offline) {
     await backup
       .pull(q => q.findRecords())
       .then(transform => memory.sync(transform));
@@ -207,16 +207,7 @@ export const Sources = async (
 
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
     console.log('Coordinator will log warnings');
-    if (API_CONFIG.offline) {
-      memory
-        .query(q => q.findRecords('user'))
-        .then((u: Array<User>) => {
-          u = u.filter(u1 => u1.attributes && u1.attributes.name);
-          if (u.length === 1) {
-            setUser(u[0].id);
-          }
-        });
-    } else if (userToken === tokData.sub) {
+    if (userToken === tokData.sub || API_CONFIG.offline) {
       setUser(localStorage.getItem('user-id') as string);
     }
   });

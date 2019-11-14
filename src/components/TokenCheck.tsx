@@ -31,8 +31,10 @@ function TokenCheck(props: IProps) {
   const timer = React.useRef<NodeJS.Timeout>();
 
   React.useEffect(() => {
-    if (localStorage.getItem('isLoggedIn') === 'true') {
-      auth.renewSession();
+    if (!API_CONFIG.offline) {
+      if (localStorage.getItem('isLoggedIn') === 'true') {
+        auth.renewSession();
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -105,7 +107,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TokenCheck);
+export default connect(mapStateToProps, mapDispatchToProps)(TokenCheck);
