@@ -256,6 +256,7 @@ const initialState = {
 			"swtchToAdmin": "Switch to Admin",
 			"swtchToApp": "Switch to App",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
+			"reports": "Reports",
 			"sessionExpiring": "Session Expiring",
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",
 			"exit": "Exit",

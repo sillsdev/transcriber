@@ -208,7 +208,7 @@ export function PlanTable(props: IProps) {
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plans]);
+  }, [plans, project]);
 
   useEffect(() => {
     if (
@@ -374,6 +374,6 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  PlanTable
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(PlanTable) as any
+) as any;

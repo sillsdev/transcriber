@@ -234,6 +234,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "swtchToAdmin": string;
     "swtchToApp": string;
     "crashMessage": string;
+    "reports": string;
     "sessionExpiring": string;
     "sessionExpireTask": string;
     "exit": string;

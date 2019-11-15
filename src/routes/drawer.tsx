@@ -48,6 +48,7 @@ import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
+import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
@@ -269,8 +270,8 @@ export function ResponsiveDrawer(props: IProps) {
       setOrganization(value);
       setDefaultProj(value, memory, setProject);
       setAddProject(false);
-      setChoice(API_CONFIG.isApp ? slug(t.todo) : '');
-      setContent(API_CONFIG.isApp ? slug(t.todo) : '');
+      setChoice(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
+      setContent(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
       setGroup('');
     }
   };
@@ -283,8 +284,8 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     setAddProject(false);
     setProject(value);
-    setContent(API_CONFIG.isApp ? slug(t.todo) : '');
-    setChoice(API_CONFIG.isApp ? slug(t.todo) : '');
+    setContent(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
+    setChoice(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
     setGroup('');
     setTitle(t.projectSummary);
   };
@@ -594,7 +595,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const transcriberIcons = API_CONFIG.isApp
     ? [<ListIcon />, <AllListIcon />]
-    : [<PlanIcon />, <TeamIcon />, <MediaIcon />];
+    : [<PlanIcon />, <TeamIcon />, <MediaIcon />, <ReportIcon />];
 
   const drawer = (
     <div>
@@ -682,7 +683,7 @@ export function ResponsiveDrawer(props: IProps) {
               <List>
                 {(API_CONFIG.isApp
                   ? [t.todo, t.allTasks]
-                  : [t.plans, t.team, t.media]
+                  : [t.plans, t.team, t.media, t.reports]
                 ).map((text, index) => (
                   <ListItem
                     button
@@ -762,7 +763,7 @@ export function ResponsiveDrawer(props: IProps) {
   );
   components[slug(t.integrations)] = <IntegrationPanel {...props} />;
   components['group'] = <GroupSettings {...props} />;
-  components[''] = <Visualize {...props} />;
+  components[slug(t.reports)] = <Visualize {...props} />;
   components['none'] = <></>;
   components[slug(t.allTasks)] = (
     <AllTaskTable

@@ -1105,6 +1105,12 @@
 				<target>Quelque chose a mal tourné. Les développeurs doivent se pencher sur cette question.</target>
 			</segment>
 		</unit>
+		<unit id="main.reports">
+			<segment>
+				<source>Reports</source>
+				<target>Rapports</target>
+			</segment>
+		</unit>
 		<unit id="main.sessionExpiring">
          <segment>
             <source>Session Expiring</source>

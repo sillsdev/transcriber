@@ -1293,7 +1293,14 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.sessionExpiring">
+        	<trans-unit id="main.reports">
+        		<source>Reports</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.sessionExpiring">
                 <source>Session Expiring</source>
                 <target/>
                 <context-group>
@@ -1321,7 +1328,7 @@
                     <context context-type="sourcefile">TokenCheck.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriptionTab.section">
+        	<trans-unit id="transcriptionTab.section">
                 <source>Section</source>
                 <target/>
                 <context-group>

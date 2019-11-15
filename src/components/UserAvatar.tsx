@@ -6,6 +6,7 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
+import { API_CONFIG } from '../api-variable';
 
 interface IStateProps {}
 
@@ -30,7 +31,7 @@ export function UserAvatar(props: IProps) {
     ? curUserRec[0]
     : { attributes: { avatarUrl: null, name: '' } };
 
-  return curUser.attributes.avatarUrl ? (
+  return curUser.attributes.avatarUrl && !API_CONFIG.offline ? (
     <Avatar alt={curUser.attributes.name} src={curUser.attributes.avatarUrl} />
   ) : curUser.attributes.name !== '' ? (
     <Avatar>{makeAbbr(curUser.attributes.name)}</Avatar>
@@ -45,6 +46,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  UserAvatar
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(UserAvatar) as any
+) as any;
