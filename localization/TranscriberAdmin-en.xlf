@@ -1108,6 +1108,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.reports">
+         <segment>
+            <source>Reports</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.sessionExpiring">
          <segment>
             <source>Session Expiring</source>
