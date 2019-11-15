@@ -254,7 +254,7 @@ export function UserTable(props: IProps) {
       <Invite
         visible={dialogVisible}
         inviteIn={null}
-        addMethod={handleAddComplete}
+        addCompleteMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
       {confirmAction !== '' ? (

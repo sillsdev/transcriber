@@ -25,6 +25,7 @@ import {
   Typography,
   Grid,
   FormLabel,
+  Checkbox,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import {
@@ -84,8 +85,8 @@ export interface IInviteData {
 interface IProps extends IRecordProps, IStateProps {
   inviteIn: IInviteData | null;
   visible: boolean;
-  addMethodComplete?: (inviteRec: IInviteData) => void;
-  editMethodComplete?: (inviteRec: IInviteData) => void;
+  addCompleteMethod?: (inviteRec: IInviteData) => void;
+  editCompleteMethod?: (inviteRec: IInviteData) => void;
   cancelMethod?: () => void;
 }
 
@@ -96,8 +97,8 @@ function Invite(props: IProps) {
     roles,
     groups,
     users,
-    addMethodComplete,
-    editMethodComplete,
+    addCompleteMethod,
+    editCompleteMethod,
     cancelMethod,
     inviteIn,
   } = props;
@@ -117,6 +118,10 @@ function Invite(props: IProps) {
   const [groupsAllonly, setGroupsAllonly] = useState();
   const [groupsNoAll, setGroupsNoAll] = useState();
   const [message, setMessage] = useState(<></>);
+  const [allowMultiple, setallowMultiple] = useState(false);
+
+  const debugging = (): boolean =>
+    AUTH_CONFIG.callbackUrl === 'http://localhost:3000/callback';
 
   const resetFields = () => {
     setEmail('');
@@ -204,8 +209,8 @@ function Invite(props: IProps) {
     if (!inviteIn || email !== inviteIn.email) {
       if (!inviteIn) {
         handleAdd();
-        if (addMethodComplete) {
-          addMethodComplete({
+        if (addCompleteMethod) {
+          addCompleteMethod({
             email,
             role,
             group,
@@ -216,8 +221,8 @@ function Invite(props: IProps) {
         resetFields();
       } else {
         handleEdit();
-        if (editMethodComplete) {
-          editMethodComplete({
+        if (editCompleteMethod) {
+          editCompleteMethod({
             email,
             role,
             group,
@@ -265,9 +270,16 @@ function Invite(props: IProps) {
   };
 
   useEffect(() => {
-    var cur = getUserById(users, user);
-    setcurrentUser(cur.attributes.name + ' (' + cur.attributes.email + ')');
-  }, []);
+    if (user !== '') {
+      var cur = getUserById(users, user);
+      setcurrentUser(
+        cur && cur.attributes
+          ? cur.attributes.name + ' (' + cur.attributes.email + ')'
+          : '??'
+      );
+    }
+  }, [user, users]);
+
   useEffect(() => {
     const allusersgroup = groups.filter(
       g =>
@@ -501,6 +513,13 @@ function Invite(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
+          {debugging && (
+            <Checkbox
+              checked={allowMultiple}
+              onChange={event => setallowMultiple(event.target.checked)}
+              value="secondary"
+            />
+          )}
           <Button onClick={handleCancel} variant="outlined" color="primary">
             {t.cancel}
           </Button>
@@ -512,7 +531,7 @@ function Invite(props: IProps) {
               email === '' ||
               role === '' ||
               !validateEmail(email) ||
-              hasInvite(email)
+              (hasInvite(email) && !allowMultiple)
             }
           >
             {!inviteIn ? t.send : t.save}

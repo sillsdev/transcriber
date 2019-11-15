@@ -137,6 +137,7 @@ export function InvitationTable(props: IProps) {
   const [dialogData, setDialogData] = useState(null as Invitation | null);
 
   const handleAdd = () => {
+    console.log(dialogVisible);
     setDialogData(null);
     setDialogVisible(true);
   };
@@ -265,7 +266,7 @@ export function InvitationTable(props: IProps) {
       <Invite
         visible={dialogVisible}
         inviteIn={dialogData}
-        addMethod={handleAddComplete}
+        addCompleteMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
       {confirmAction !== '' ? (
