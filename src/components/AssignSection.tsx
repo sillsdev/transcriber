@@ -106,10 +106,14 @@ function AssignSection(props: IProps) {
 
   const assign = async (section: Section, userId: string, role: RoleNames) => {
     await memory.update((t: TransformBuilder) =>
-      t.replaceRelatedRecord({ type: 'section', id: section.id }, role, {
-        type: 'user',
-        id: userId,
-      })
+      t.replaceRelatedRecord(
+        { type: 'section', id: section.id },
+        role.toLowerCase(),
+        {
+          type: 'user',
+          id: userId,
+        }
+      )
     );
   };
 
