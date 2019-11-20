@@ -228,14 +228,14 @@ export function ScriptureTable(props: IProps) {
     if (
       rows.filter(
         (row, rowIndex) =>
-          rowIndex > 0 && !/^[0-9]*$/.test(row[cols.SectionSeq])
+          rowIndex > 0 && !isBlankOrValidNumber(row[cols.SectionSeq])
       ).length > 0
     )
       return false;
     if (
       rows.filter(
         (row, rowIndex) =>
-          rowIndex > 0 && !/^[0-9]*$/.test(row[cols.PassageSeq])
+          rowIndex > 0 && !isBlankOrValidNumber(row[cols.PassageSeq])
       ).length > 0
     )
       return false;
@@ -254,10 +254,41 @@ export function ScriptureTable(props: IProps) {
     }
     return userBookDesUc;
   };
+  const isBlankOrValidNumber = (value: string): boolean => {
+    return /^[0-9]*$/.test(value);
+  };
+  const isValidNumber = (value: string): boolean => {
+    return /^[0-9]+$/.test(value);
+  };
+  const splitSectionPassage = (
+    value: string[],
+    index: number,
+    array: string[][]
+  ): void => {
+    if (
+      isValidNumber(value[cols.SectionSeq]) &&
+      isValidNumber(value[cols.PassageSeq])
+    ) {
+      var cp = [...value];
+      cp[cols.PassageSeq] = '';
+      value[cols.SectionSeq] = '';
+      array.splice(index, 0, cp); //copy the row -- the copy goes in before
+    }
+  };
   const handlePaste = (rows: string[][]) => {
     if (setChanged) setChanged(true);
     if (validTable(rows)) {
-      const startRow = /^[0-9]*$/.test(rows[0][cols.SectionSeq]) ? 0 : 1;
+      const startRow = isBlankOrValidNumber(rows[0][cols.SectionSeq]) ? 0 : 1;
+      while (
+        rows.find(function(value: string[]) {
+          return (
+            isValidNumber(value[cols.SectionSeq]) &&
+            isValidNumber(value[cols.PassageSeq])
+          );
+        }) !== undefined
+      ) {
+        rows.forEach(splitSectionPassage);
+      }
       /* Make it clear which columns can be imported by blanking others */
       setData([
         ...data.concat(
@@ -265,7 +296,7 @@ export function ScriptureTable(props: IProps) {
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map(row =>
               row.map((col, colIndex) =>
-                /^[0-9]+$/.test(row[cols.SectionSeq])
+                isValidNumber(row[cols.SectionSeq])
                   ? colIndex < 2
                     ? col
                     : ''
@@ -294,7 +325,7 @@ export function ScriptureTable(props: IProps) {
           rows
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map(row => {
-              if (/^[0-9]+$/.test(row[cols.SectionSeq])) {
+              if (isValidNumber(row[cols.SectionSeq])) {
                 return newSectionId(parseInt(row[cols.SectionSeq]));
               } else {
                 return newPassageId(parseInt(row[cols.PassageSeq]));
@@ -680,7 +711,6 @@ const mapRecordsToProps = {
   passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ScriptureTable) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(ScriptureTable) as any
+) as any;
