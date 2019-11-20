@@ -1272,15 +1272,15 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.swtchToAdmin">
-                <source>Switch to Admin</source>
+            <trans-unit id="main.switchToAdmin">
+                <source>Open project in Admin</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.swtchToApp">
-                <source>Switch to App</source>
+            <trans-unit id="main.switchToApp">
+                <source>Open project in App</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>

@@ -13,3 +13,4 @@ export * from './passage';
 export * from './role';
 export * from './AddOrganization';
 export * from './CreateOrg';
+export * from './deepLink';

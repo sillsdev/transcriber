@@ -1089,14 +1089,14 @@
       </unit>
 		<unit id="main.switchToAdmin">
 			<segment>
-				<source>Switch to Admin</source>
-				<target>Passer à Admin</target>
+				<source>Open project in Admin</source>
+				<target>Ouvrir le projet dans Admin</target>
 			</segment>
 		</unit>
 		<unit id="main.switchToApp">
 			<segment>
-				<source>Switch to App</source>
-				<target>Passer à App</target>
+				<source>Open project in App</source>
+				<target>Ouvrir le projet dans App</target>
 			</segment>
 		</unit>
 		<unit id="main.crashMessage">

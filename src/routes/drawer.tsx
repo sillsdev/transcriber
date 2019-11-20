@@ -53,10 +53,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
 import AllListIcon from '@material-ui/icons/ViewList';
-import SwapAppIcon from '@material-ui/icons/SwapHoriz';
+import SwapAppIcon from '@material-ui/icons/ExitToApp';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
-import { related, hasRelated, slug, remoteId, remoteIdGuid } from '../utils';
+import { related, hasRelated, slug, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
 import HelpMenu from '../components/HelpMenu';
 import OrgSettings from '../components/OrgSettings';
@@ -73,7 +73,7 @@ import Team from '../components/GroupSettings/Team';
 import Visualize from '../components/Visualize';
 import Confirm from '../components/AlertDialog';
 import Transcriber from '../components/Transcriber';
-import { setDefaultProj } from '../utils';
+import { setDefaultProj, deepLink } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
@@ -290,9 +290,9 @@ export function ResponsiveDrawer(props: IProps) {
     setTitle(t.projectSummary);
   };
 
-  const handlePlanType = (value: string) => {
+  const handlePlanType = (value: string | null) => {
     localStorage.removeItem('url');
-    if (value.toLocaleLowerCase() === 'scripture') {
+    if (!value || value.toLocaleLowerCase() === 'scripture') {
       setContent('scripture-plan');
     } else {
       setContent('other-plan');
@@ -353,7 +353,7 @@ export function ResponsiveDrawer(props: IProps) {
       const roleRecs = roles.filter(r => r.id === roleId);
       if (roleRecs.length === 1) {
         const attr = roleRecs[0].attributes;
-        if (attr) return attr.roleName.toLocaleLowerCase();
+        if (attr && attr.roleName) return attr.roleName.toLocaleLowerCase();
       }
     }
     return '';
@@ -459,58 +459,20 @@ export function ResponsiveDrawer(props: IProps) {
   }, [group]);
 
   useEffect(() => {
-    if (!organization || !project || !choice) return;
-    const orgId = remoteId('organization', organization, keyMap);
-    const projId = remoteId('project', project, keyMap);
-    if (orgId !== undefined && projId !== undefined) {
-      if (choice === slug(t.usersAndGroups)) {
-        const groupId = remoteId('group', group, keyMap);
-        const groupPart = groupId ? '/' + groupId : '';
-        history.push(
-          '/main/' +
-            orgId +
-            '/' +
-            slug(choice) +
-            '/' +
-            projId +
-            '/' +
-            tab.toString() +
-            groupPart
-        );
-        setPlan('');
-      } else if (choice === slug(t.myTasks)) {
-        history.push(
-          '/main/' +
-            orgId +
-            '/' +
-            slug(content) +
-            '/' +
-            projId +
-            '/' +
-            tab.toString()
-        );
-      } else if (choice !== slug(t.plans) || !plan) {
-        history.push('/main/' + orgId + '/' + slug(choice) + '/' + projId);
-        if (choice !== slug(t.media)) {
-          setPlan('');
-        }
-        setTab(0);
-      } else {
-        const planId = remoteId('plan', plan, keyMap);
-        history.push(
-          '/main/' +
-            orgId +
-            '/' +
-            slug(content) +
-            '/' +
-            projId +
-            '/' +
-            planId +
-            '/' +
-            tab.toString()
-        );
-      }
-    }
+    const target = deepLink({
+      organization,
+      project,
+      group,
+      plan,
+      tab,
+      choice,
+      content,
+      keyMap,
+      setPlan,
+      setTab,
+      t,
+    });
+    if (target) history.push(target);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, organization, choice, content, plan, group, tab]);
 
@@ -795,6 +757,31 @@ export function ResponsiveDrawer(props: IProps) {
     );
   }
 
+  let swapTarget = deepLink({
+    organization,
+    project,
+    plan,
+    group,
+    tab,
+    choice,
+    content,
+    keyMap,
+    t,
+  });
+  if (API_CONFIG.isApp && swapTarget) {
+    swapTarget =
+      AUTH_CONFIG.adminEndpoint +
+      swapTarget.replace(slug(t.todo), slug(t.plans));
+  } else if (swapTarget) {
+    const part = swapTarget.split('/');
+    part[3] = slug(t.todo);
+    swapTarget = AUTH_CONFIG.appEndpoint + part.join('/');
+  } else {
+    swapTarget = API_CONFIG.isApp
+      ? AUTH_CONFIG.adminEndpoint
+      : AUTH_CONFIG.appEndpoint;
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -822,19 +809,11 @@ export function ResponsiveDrawer(props: IProps) {
           </div>
           {'\u00A0'}
           <a
-            href={
-              API_CONFIG.isApp
-                ? AUTH_CONFIG.callbackUrl
-                    .replace('app', 'admin')
-                    .replace('/callback', '')
-                : AUTH_CONFIG.callbackUrl
-                    .replace('admin', 'app')
-                    .replace('/callback', '')
-            }
+            href={swapTarget}
             style={{ textDecoration: 'none' }}
             target="_blank"
             rel="noopener noreferrer"
-            title={API_CONFIG.isApp ? t.swtchToAdmin : t.swtchToApp}
+            title={API_CONFIG.isApp ? t.switchToAdmin : t.switchToApp}
           >
             <IconButton style={{ color: 'white' }}>
               <SwapAppIcon />

@@ -1090,15 +1090,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.swtchToAdmin">
+      <unit id="main.switchToAdmin">
          <segment>
-            <source>Switch to Admin</source>
+            <source>Open project in Admin</source>
             <target/>
          </segment>
       </unit>
-      <unit id="main.swtchToApp">
+      <unit id="main.switchToApp">
          <segment>
-            <source>Switch to App</source>
+            <source>Open project in App</source>
             <target/>
          </segment>
       </unit>

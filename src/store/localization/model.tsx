@@ -231,8 +231,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "planUnsaved": string;
     "loseData": string;
     "newOrganization": string;
-    "swtchToAdmin": string;
-    "swtchToApp": string;
+    "switchToAdmin": string;
+    "switchToApp": string;
     "crashMessage": string;
     "reports": string;
     "sessionExpiring": string;
