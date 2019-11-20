@@ -16,7 +16,9 @@
     "esbenp.prettier-vscode",
     "robinbentley.sass-indented",
     "ms-vscode.vscode-typescript-tslint-plugin",
-    "andyyaldoo.vscode-json"
+    "andyyaldoo.vscode-json",
+    "richie5um2.vscode-sort-json",
+    "earshinov.sort-lines-by-selection"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []
