@@ -171,7 +171,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'projecttype',
           inverse: 'projects',
         },
-        // owner: { type: 'hasOne', model: 'user', inverse: 'projects' },
+        owner: { type: 'hasOne', model: 'user' },
         organization: { type: 'hasOne', model: 'organization' },
         group: { type: 'hasOne', model: 'group', inverse: 'projects' },
         projectIntegrations: {
