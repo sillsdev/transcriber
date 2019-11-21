@@ -86,7 +86,7 @@ export function HelpMenu(props: IProps) {
   };
 
   let language = navigator.language.split('-')[0];
-  if (!['fr', 'id'].includes(language)) language = 'en';
+  if (!['fr', 'es'].includes(language)) language = 'en';
 
   return (
     <div>
