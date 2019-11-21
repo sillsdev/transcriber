@@ -411,7 +411,7 @@ export function ResponsiveDrawer(props: IProps) {
       });
     setProjOptions(projOpts);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projects, organization]);
+  }, [projects, organization, addProject]);
 
   useEffect(() => {
     const projKeys = projOptions.map(o => o.value);
@@ -435,7 +435,7 @@ export function ResponsiveDrawer(props: IProps) {
       setProjRole(getRole(groupMemberships, 'group', groupId));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project]);
+  }, [project, addProject]);
 
   useEffect(() => {
     const curPlan = plans.filter(p => p.id === plan);
