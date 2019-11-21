@@ -513,7 +513,7 @@ function Invite(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          {debugging && (
+          {debugging() && (
             <Checkbox
               checked={allowMultiple}
               onChange={event => setallowMultiple(event.target.checked)}
