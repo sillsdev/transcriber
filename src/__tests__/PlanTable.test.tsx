@@ -26,8 +26,12 @@ const memory = new Memory({ schema, keyMap });
 
 const globals = {
   organization: null,
+  orgRole: 'admin',
   project: null,
+  projRole: 'admin',
   plan: null,
+  tab: 0,
+  group: '',
   user: null,
   lang: 'en',
   memory: memory,
