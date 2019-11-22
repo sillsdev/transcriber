@@ -60,17 +60,7 @@ import { related, hasRelated, slug, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
 import HelpMenu from '../components/HelpMenu';
 import OrgSettings from '../components/OrgSettings';
-import GroupTabs from '../components/GroupTabs';
-import PlanTable from '../components/PlanTable';
-import PlanTabs from '../components/PlanTabs';
-import ToDoTable from '../components/ToDoTable';
-import AllTaskTable from '../components/AllTaskTable';
-import ProjectSettings from '../components/ProjectSettings';
-import MediaTab from '../components/MediaTab';
-import GroupSettings from '../components/GroupSettings/GroupSettings';
-import IntegrationPanel from '../components/Integration';
-import Team from '../components/GroupSettings/Team';
-import Visualize from '../components/Visualize';
+import LazyLoad from '../hoc/LazyLoad';
 import Confirm from '../components/AlertDialog';
 import Transcriber from '../components/Transcriber';
 import { setDefaultProj, deepLink } from '../utils';
@@ -692,69 +682,77 @@ export function ResponsiveDrawer(props: IProps) {
       finishAdd={handleFinishOrgAdd}
     />
   );
-  components[slug(t.usersAndGroups)] = <GroupTabs {...props} />;
-  components[slug(t.media)] = (
-    <MediaTab
-      {...props}
-      projectplans={plans.filter(p => related(p, 'project') === project)}
-      planColumn={true}
-    />
+  const GroupTabs = React.lazy(() => import('../components/GroupTabs'));
+  components[slug(t.usersAndGroups)] = LazyLoad({ ...props })(GroupTabs);
+  const MediaTab = React.lazy(() => import('../components/MediaTab'));
+  components[slug(t.media)] = LazyLoad({
+    ...props,
+    projectplans: plans.filter(p => related(p, 'project') === project),
+    planColumn: true,
+  })(MediaTab);
+  const PlanTable = React.lazy(() => import('../components/PlanTable'));
+  components[slug(t.plans)] = LazyLoad({
+    ...props,
+    displaySet: handlePlanType,
+  })(PlanTable);
+  const PlanTabs = React.lazy(() => import('../components/PlanTabs'));
+  components['scripture-plan'] = LazyLoad({
+    ...props,
+    setChanged: setChanged,
+    checkSaved: checkSavedFn,
+  })(PlanTabs);
+  components['other-plan'] = LazyLoad({
+    ...props,
+    bookCol: -1,
+    setChanged: setChanged,
+    checkSaved: checkSavedFn,
+  })(PlanTabs);
+  const Team = React.lazy(() => import('../components/GroupSettings/Team'));
+  components[slug(t.team)] = LazyLoad({ ...props, detail: true })(Team);
+  const ProjectSettings = React.lazy(() =>
+    import('../components/ProjectSettings')
   );
-  components[slug(t.plans)] = (
-    <PlanTable {...props} displaySet={handlePlanType} />
+  components[slug(t.settings)] = LazyLoad({
+    ...props,
+    noMargin: true,
+    add: addProject,
+    finishAdd: handleFinishAdd,
+  })(ProjectSettings);
+  const IntegrationPanel = React.lazy(() =>
+    import('../components/Integration')
   );
-  components['scripture-plan'] = (
-    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
+  components[slug(t.integrations)] = LazyLoad({ ...props })(IntegrationPanel);
+  const GroupSettings = React.lazy(() =>
+    import('../components/GroupSettings/GroupSettings')
   );
-  components['other-plan'] = (
-    <PlanTabs
-      {...props}
-      bookCol={-1}
-      setChanged={setChanged}
-      checkSaved={checkSavedFn}
-    />
-  );
-  components[slug(t.team)] = <Team {...props} detail={true} />;
-  components[slug(t.settings)] = (
-    <ProjectSettings
-      {...props}
-      noMargin={true}
-      add={addProject}
-      finishAdd={handleFinishAdd}
-    />
-  );
-  components[slug(t.integrations)] = <IntegrationPanel {...props} />;
-  components['group'] = <GroupSettings {...props} />;
-  components[slug(t.reports)] = <Visualize {...props} />;
+  components['group'] = LazyLoad({ ...props })(GroupSettings);
+  const Visualize = React.lazy(() => import('../components/Visualize'));
+  components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
   components['none'] = <></>;
-  components[slug(t.allTasks)] = (
-    <AllTaskTable
-      {...props}
-      transcriber={(desc: MediaDescription) => {
-        setMediaDesc(desc);
-        setExitChoice(t.allTasks);
-        handleChoice(RoleNames.Transcriber);
-      }}
-    />
-  );
-  components[slug(t.todo)] = (
-    <ToDoTable
-      {...props}
-      transcriber={(desc: MediaDescription) => {
-        setMediaDesc(desc);
-        setExitChoice(t.todo);
-        handleChoice(RoleNames.Transcriber);
-      }}
-    />
-  );
+  const AllTaskTable = React.lazy(() => import('../components/AllTaskTable'));
+  components[slug(t.allTasks)] = LazyLoad({
+    ...props,
+    transcriber: (desc: MediaDescription) => {
+      setMediaDesc(desc);
+      setExitChoice(t.allTasks);
+      handleChoice(RoleNames.Transcriber);
+    },
+  })(AllTaskTable);
+  const ToDoTable = React.lazy(() => import('../components/ToDoTable'));
+  components[slug(t.todo)] = LazyLoad({
+    ...props,
+    transcriber: (desc: MediaDescription) => {
+      setMediaDesc(desc);
+      setExitChoice(t.todo);
+      handleChoice(RoleNames.Transcriber);
+    },
+  })(ToDoTable);
   if (mediaDesc) {
-    components['transcriber'] = (
-      <Transcriber
-        {...mediaDesc}
-        auth={auth}
-        done={() => handleChoice(slug(exitChoice))}
-      />
-    );
+    components['transcriber'] = LazyLoad({
+      ...mediaDesc,
+      auth: auth,
+      done: () => handleChoice(slug(exitChoice)),
+    })(Transcriber);
   }
 
   let swapTarget = deepLink({

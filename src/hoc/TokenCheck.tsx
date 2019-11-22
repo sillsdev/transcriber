@@ -4,7 +4,7 @@ import { IState } from '../model';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
-import TokenDialog from './TokenDialog';
+import TokenDialog from '../components/TokenDialog';
 import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';

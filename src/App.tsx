@@ -6,7 +6,7 @@ import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
 import Callback from './callback/Callback';
-import TokenCheck from './components/TokenCheck';
+import TokenCheck from './hoc/TokenCheck';
 import Auth from './auth/Auth';
 import { parseQuery } from './utils/parseQuery';
 

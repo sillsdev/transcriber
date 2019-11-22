@@ -10,7 +10,7 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import { logError } from './logErrorService';
+import { logError } from '../components/logErrorService';
 
 const styles = (theme: Theme) =>
   createStyles({
