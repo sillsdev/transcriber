@@ -400,6 +400,7 @@ const initialState = {
 			"save": "Save",
 			"invalidEmail": "Invalid email address",
 			"alreadyInvited": "Already invited!",
+			"resend": "Resend",
 			"sil": "SIL International",
 			"transcriber": "SIL Transcriber",
 			"invitation": "has invited you to join",

@@ -367,6 +367,7 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "invalidEmail": string;
     "alreadyInvited": string;
+    "resend": string;
     "sil": string;
     "transcriber": string;
     "invitation": string;

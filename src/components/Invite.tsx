@@ -26,6 +26,7 @@ import {
   Grid,
   FormLabel,
   Checkbox,
+  FormControlLabel,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import {
@@ -119,9 +120,6 @@ function Invite(props: IProps) {
   const [groupsNoAll, setGroupsNoAll] = useState();
   const [message, setMessage] = useState(<></>);
   const [allowMultiple, setallowMultiple] = useState(false);
-
-  const debugging = (): boolean =>
-    AUTH_CONFIG.callbackUrl === 'http://localhost:3000/callback';
 
   const resetFields = () => {
     setEmail('');
@@ -360,6 +358,20 @@ function Invite(props: IProps) {
                 required
               />
             </Grid>
+            {hasInvite(email) && (
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={allowMultiple}
+                      onChange={event => setallowMultiple(event.target.checked)}
+                      value="allowMultiple"
+                    />
+                  }
+                  label={t.resend}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <FormLabel>{t.organization}</FormLabel>
             </Grid>
@@ -513,13 +525,6 @@ function Invite(props: IProps) {
           </Grid>
         </DialogContent>
         <DialogActions>
-          {debugging() && (
-            <Checkbox
-              checked={allowMultiple}
-              onChange={event => setallowMultiple(event.target.checked)}
-              value="secondary"
-            />
-          )}
           <Button onClick={handleCancel} variant="outlined" color="primary">
             {t.cancel}
           </Button>

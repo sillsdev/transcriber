@@ -1708,6 +1708,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.resend">
+         <segment>
+            <source>Resend</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.sil">
          <segment>
             <source>SIL International</source>

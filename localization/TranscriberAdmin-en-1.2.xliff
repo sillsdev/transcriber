@@ -1993,6 +1993,13 @@
                     <context context-type="sourcefile">Invite.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="invite.resend">
+                <source>Resend</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Invite.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="invite.sil">
 				<source>SIL International</source>
 				<target/>
