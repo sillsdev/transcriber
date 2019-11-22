@@ -61,6 +61,10 @@ import UserMenu from '../components/UserMenu';
 import HelpMenu from '../components/HelpMenu';
 import OrgSettings from '../components/OrgSettings';
 import LazyLoad from '../hoc/LazyLoad';
+import PlanTabs from '../components/PlanTabs';
+import MediaTab from '../components/MediaTab';
+import Team from '../components/GroupSettings/Team';
+import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
 import Transcriber from '../components/Transcriber';
 import { setDefaultProj, deepLink } from '../utils';
@@ -684,31 +688,30 @@ export function ResponsiveDrawer(props: IProps) {
   );
   const GroupTabs = React.lazy(() => import('../components/GroupTabs'));
   components[slug(t.usersAndGroups)] = LazyLoad({ ...props })(GroupTabs);
-  const MediaTab = React.lazy(() => import('../components/MediaTab'));
-  components[slug(t.media)] = LazyLoad({
-    ...props,
-    projectplans: plans.filter(p => related(p, 'project') === project),
-    planColumn: true,
-  })(MediaTab);
+  components[slug(t.media)] = (
+    <MediaTab
+      {...props}
+      projectplans={plans.filter(p => related(p, 'project') === project)}
+      planColumn={true}
+    />
+  );
   const PlanTable = React.lazy(() => import('../components/PlanTable'));
   components[slug(t.plans)] = LazyLoad({
     ...props,
     displaySet: handlePlanType,
   })(PlanTable);
-  const PlanTabs = React.lazy(() => import('../components/PlanTabs'));
-  components['scripture-plan'] = LazyLoad({
-    ...props,
-    setChanged: setChanged,
-    checkSaved: checkSavedFn,
-  })(PlanTabs);
-  components['other-plan'] = LazyLoad({
-    ...props,
-    bookCol: -1,
-    setChanged: setChanged,
-    checkSaved: checkSavedFn,
-  })(PlanTabs);
-  const Team = React.lazy(() => import('../components/GroupSettings/Team'));
-  components[slug(t.team)] = LazyLoad({ ...props, detail: true })(Team);
+  components['scripture-plan'] = (
+    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
+  );
+  components['other-plan'] = (
+    <PlanTabs
+      {...props}
+      bookCol={-1}
+      setChanged={setChanged}
+      checkSaved={checkSavedFn}
+    />
+  );
+  components[slug(t.team)] = <Team {...props} detail={true} />;
   const ProjectSettings = React.lazy(() =>
     import('../components/ProjectSettings')
   );
@@ -722,10 +725,7 @@ export function ResponsiveDrawer(props: IProps) {
     import('../components/Integration')
   );
   components[slug(t.integrations)] = LazyLoad({ ...props })(IntegrationPanel);
-  const GroupSettings = React.lazy(() =>
-    import('../components/GroupSettings/GroupSettings')
-  );
-  components['group'] = LazyLoad({ ...props })(GroupSettings);
+  components['group'] = <GroupSettings {...props} />;
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
   components['none'] = <></>;
