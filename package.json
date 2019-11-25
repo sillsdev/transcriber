@@ -47,7 +47,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "clean": "rimraf build converage",
     "start": "react-scripts start",
-    "build": "react-scripts --max_old_space_size=10000 build",
+    "build": "react-scripts --max_old_space_size=8192 build",
     "test": "react-scripts test",
     "deploy": "npm run stamp && amplify publish",
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
