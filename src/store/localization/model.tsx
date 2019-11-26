@@ -104,6 +104,9 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "saving": string;
     "selectRows": string;
+    "confirm": string;
+    "sectionAbove": string;
+    "passageAbove": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {

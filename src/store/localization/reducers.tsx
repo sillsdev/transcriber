@@ -118,6 +118,9 @@ const initialState = {
 			"save": "Save",
 			"saving": "Saving",
 			"selectRows": "Please select row(s) to {0}.",
+			"confirm": "{0} {1} Item(s). Are you sure?",
+			"sectionAbove": "Insert section above",
+			"passageAbove": "Insert passage above",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({

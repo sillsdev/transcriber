@@ -43,6 +43,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const initialPosition = {
+  mouseX: null,
+  mouseY: null,
+  i: 0,
+  j: 0,
+};
+
 interface ICell {
   value: any;
   readOnly?: boolean;
@@ -71,8 +78,8 @@ interface IProps extends IStateProps {
   save: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
-  addPassage: () => void;
-  addSection: () => void;
+  addPassage: (i?: number) => void;
+  addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
   setChanged?: (v: boolean) => void;
 }
@@ -97,6 +104,12 @@ export function PlanSheet(props: IProps) {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [message, setMessage] = useState(<></>);
+  const [position, setPosition] = useState<{
+    mouseX: null | number;
+    mouseY: null | number;
+    i: number;
+    j: number;
+  }>(initialPosition);
   const [data, setData] = useState(Array<Array<ICell>>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
@@ -177,27 +190,51 @@ export function PlanSheet(props: IProps) {
     setPassageMediaVisible(status);
   };
 
+  const doUpdate = (grid: ICell[][]) => {
+    updateData(
+      justData(grid).map(row =>
+        row.map((cell, cellIndex) =>
+          cellIndex !== bookCol && lookupBook !== null
+            ? cell
+            : lookupBook && lookupBook(cell)
+        )
+      )
+    );
+  };
+
   const handleCellsChanged = (changes: Array<IChange>) => {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
       grid[row][col] = { ...grid[row][col], value };
     });
     if (changes.length > 0) {
-      // setData(grid);
-      updateData(
-        justData(grid).map(row =>
-          row.map((cell, cellIndex) =>
-            cellIndex !== bookCol && lookupBook !== null
-              ? cell
-              : lookupBook && lookupBook(cell)
-          )
-        )
-      );
+      doUpdate(grid);
     }
   };
 
-  const handleContextMenu = (e: MouseEvent, cell: any) =>
-    cell.readOnly ? e.preventDefault() : null;
+  const handleContextMenu = (
+    e: MouseEvent,
+    cell: any,
+    i: number,
+    j: number
+  ) => {
+    e.preventDefault();
+    if (!cell.readOnly) {
+      setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
+    }
+  };
+
+  const handleNoContextMenu = () => setPosition(initialPosition);
+
+  const handleSectionAbove = () => {
+    addSection(position.i - 1);
+    setPosition(initialPosition);
+  };
+
+  const handlePassageAbove = () => {
+    addPassage(position.i - 1);
+    setPosition(initialPosition);
+  };
 
   const handlePaste = (clipBoard: string) => {
     if (projRole !== 'admin') return Array<Array<string>>();
@@ -207,8 +244,15 @@ export function PlanSheet(props: IProps) {
       .join('\n')
       .replace(/\r?\n$/, '')
       .split('\n');
-    if (paste) return paste(lines.map(clipBoard => clipBoard.split('\t')));
-    return lines.map(clipBoard => clipBoard.split('\t'));
+    if (paste)
+      return paste(
+        lines.map(clipBoard =>
+          clipBoard.split('\t').map(v => (typeof v === 'string' ? v.trim() : v))
+        )
+      );
+    return lines.map(clipBoard =>
+      clipBoard.split('\t').map(v => (typeof v === 'string' ? v.trim() : v))
+    );
   };
 
   const handleUp = () => {
@@ -378,6 +422,20 @@ export function PlanSheet(props: IProps) {
           parsePaste={handlePaste}
           cellRenderer={cellRender}
         />
+        <Menu
+          keepMounted
+          open={position.mouseY !== null && projRole === 'admin'}
+          onClose={handleNoContextMenu}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            position.mouseY !== null && position.mouseX !== null
+              ? { top: position.mouseY, left: position.mouseX }
+              : undefined
+          }
+        >
+          <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
+          <MenuItem onClick={handlePassageAbove}>{t.passageAbove}</MenuItem>
+        </Menu>
       </div>
       <PassageMedia
         visible={passageMediaVisible}
@@ -385,7 +443,9 @@ export function PlanSheet(props: IProps) {
       />
       {confirmAction !== '' ? (
         <Confirm
-          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
+          text={t.confirm
+            .replace('{0}', confirmAction)
+            .replace('{1}', check.length.toString())}
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />

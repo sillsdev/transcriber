@@ -551,7 +551,28 @@
                     <context context-type="sourcefile">PlanSheet.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="scriptureTable.section">
+        	<trans-unit id="planSheet.confirm">
+        		<source>{0} {1} Item(s). Are you sure?</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.sectionAbove">
+        		<source>Insert section above</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.passageAbove">
+        		<source>Insert passage above</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="scriptureTable.section">
                 <source>Section</source>
                 <target/>
                 <context-group>

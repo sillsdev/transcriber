@@ -469,7 +469,25 @@
          	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
          </segment>
       </unit>
-      <unit id="scriptureTable.section">
+		<unit id="planSheet.confirm">
+			<segment>
+				<source>{0} {1} Item(s). Are you sure?</source>
+				<target>{0} {1} article(s). T'es sûr de toi ?</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.sectionAbove">
+			<segment>
+				<source>Insert section above</source>
+				<target>Insérer section ci-dessus</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.passageAbove">
+			<segment>
+				<source>Insert passage above</source>
+				<target>Insérer passage ci-dessus</target>
+			</segment>
+		</unit>
+		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
             <target>Section</target>

@@ -472,6 +472,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.confirm">
+         <segment>
+            <source>{0} {1} Item(s). Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.sectionAbove">
+         <segment>
+            <source>Insert section above</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageAbove">
+         <segment>
+            <source>Insert passage above</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
