@@ -216,6 +216,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "myTasks": string;
     "todo": string;
     "allTasks": string;
+    "tasks": string;
     "plans": string;
     "team": string;
     "settings": string;
@@ -433,6 +434,9 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "yes": string;
     "no": string;
     "loadingTable": string;
+    "title": string;
+    "description": string;
+    "duration": string;
 };
 
 export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
@@ -510,6 +514,16 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
     "delete": string;
 };
 
+export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
+    "noMedia": string;
+    "inProgress": string;
+    "transcribe": string;
+    "review": string;
+    "sync": string;
+    "done": string;
+    "section": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -550,5 +564,6 @@ export interface ILocalizedStrings {
 	transcriber: ITranscriberStrings;
 	profile: IProfileStrings;
 	deleteExpansion: IDeleteExpansionStrings;
+	taskItem: ITaskItemStrings;
 	[key: string]: any;
 };

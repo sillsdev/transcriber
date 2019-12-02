@@ -14,3 +14,4 @@ export * from './role';
 export * from './AddOrganization';
 export * from './CreateOrg';
 export * from './deepLink';
+export * from './sort';

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -52,7 +53,6 @@ import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
-import AllListIcon from '@material-ui/icons/ViewList';
 import SwapAppIcon from '@material-ui/icons/ExitToApp';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
@@ -66,13 +66,15 @@ import MediaTab from '../components/MediaTab';
 import Team from '../components/GroupSettings/Team';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
+import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import { setDefaultProj, deepLink } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
+import { TaskItemWidth } from '../components/TaskTable';
 
-const drawerWidth = 240;
+export const DrawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,7 +89,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     drawer: {
       [theme.breakpoints.up('sm')]: {
-        width: drawerWidth,
+        width: DrawerWidth,
         flexShrink: 0,
       },
     },
@@ -97,9 +99,9 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: theme.spacing(1.5),
     },
     appBar: {
-      marginLeft: drawerWidth,
+      marginLeft: DrawerWidth,
       [theme.breakpoints.up('sm')]: {
-        width: `calc(100% - ${drawerWidth}px)`,
+        width: `calc(100% - ${DrawerWidth}px)`,
       },
     },
     menuButton: {
@@ -114,7 +116,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
-      width: drawerWidth,
+      width: DrawerWidth,
     },
     content: {
       flexGrow: 1,
@@ -148,6 +150,21 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logo: {
       paddingRight: theme.spacing(2),
+    },
+    panel2: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    topFilter: {
+      zIndex: 2,
+      position: 'absolute',
+      left: DrawerWidth,
+      backgroundColor: 'white',
+    },
+    topTranscriber: {
+      zIndex: 1,
+      position: 'absolute',
+      left: DrawerWidth + TaskItemWidth + theme.spacing(2),
     },
   })
 );
@@ -214,8 +231,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [projRole, setProjRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
-  const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.todo) : '');
-  const [content, setContent] = useState(API_CONFIG.isApp ? slug(t.todo) : '');
+  const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
+  const [content, setContent] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
   const [curOrg, setCurOrg] = useState<number | null>(null);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
@@ -233,6 +250,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [mediaDesc, setMediaDesc] = useState<MediaDescription>();
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
+  const [topFilter, setTopFilter] = useState(false);
   const newOrgRef = useRef<any>();
 
   const handleDrawerToggle = () => {
@@ -264,8 +282,8 @@ export function ResponsiveDrawer(props: IProps) {
       setOrganization(value);
       setDefaultProj(value, memory, setProject);
       setAddProject(false);
-      setChoice(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
-      setContent(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
+      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
       setGroup('');
     }
   };
@@ -278,8 +296,8 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     setAddProject(false);
     setProject(value);
-    setContent(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
-    setChoice(API_CONFIG.isApp ? slug(t.todo) : slug(t.plans));
+    setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+    setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
     setGroup('');
     setTitle(t.projectSummary);
   };
@@ -352,6 +370,7 @@ export function ResponsiveDrawer(props: IProps) {
     }
     return '';
   };
+  const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   useEffect(() => {
     const orgOpts = organizations
@@ -550,7 +569,7 @@ export function ResponsiveDrawer(props: IProps) {
   }
 
   const transcriberIcons = API_CONFIG.isApp
-    ? [<ListIcon />, <AllListIcon />]
+    ? [<ListIcon />]
     : [<PlanIcon />, <TeamIcon />, <MediaIcon />, <ReportIcon />];
 
   const drawer = (
@@ -638,7 +657,7 @@ export function ResponsiveDrawer(props: IProps) {
             <div>
               <List>
                 {(API_CONFIG.isApp
-                  ? [t.todo, t.allTasks]
+                  ? [t.tasks]
                   : [t.plans, t.team, t.media, t.reports]
                 ).map((text, index) => (
                   <ListItem
@@ -729,30 +748,41 @@ export function ResponsiveDrawer(props: IProps) {
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
   components['none'] = <></>;
-  const AllTaskTable = React.lazy(() => import('../components/AllTaskTable'));
-  components[slug(t.allTasks)] = LazyLoad({
-    ...props,
-    transcriber: (desc: MediaDescription) => {
-      setMediaDesc(desc);
-      setExitChoice(t.allTasks);
-      handleChoice(RoleNames.Transcriber);
-    },
-  })(AllTaskTable);
-  const ToDoTable = React.lazy(() => import('../components/ToDoTable'));
-  components[slug(t.todo)] = LazyLoad({
-    ...props,
-    transcriber: (desc: MediaDescription) => {
-      setMediaDesc(desc);
-      setExitChoice(t.todo);
-      handleChoice(RoleNames.Transcriber);
-    },
-  })(ToDoTable);
+  components[slug(t.tasks)] = (
+    <TaskTable
+      {...props}
+      transcriber={(desc: MediaDescription) => {
+        setMediaDesc(desc);
+        setExitChoice(t.tasks);
+        handleChoice(RoleNames.Transcriber);
+      }}
+    />
+  );
+
   if (mediaDesc) {
-    components['transcriber'] = LazyLoad({
-      ...mediaDesc,
-      auth: auth,
-      done: () => handleChoice(slug(exitChoice)),
-    })(Transcriber);
+    components['transcriber'] = (
+      <div className={classes.panel2}>
+        <div className={clsx({ [classes.topFilter]: topFilter })}>
+          <TaskTable
+            {...props}
+            onFilter={handleTopFilter}
+            curDesc={mediaDesc}
+            transcriber={(desc: MediaDescription) => {
+              setMediaDesc(desc);
+              setExitChoice(t.tasks);
+              handleChoice(RoleNames.Transcriber);
+            }}
+          />
+        </div>
+        <div className={classes.topTranscriber}>
+          <Transcriber
+            {...mediaDesc}
+            auth={auth}
+            done={() => handleChoice(slug(exitChoice))}
+          />
+        </div>
+      </div>
+    );
   }
 
   let swapTarget = deepLink({
@@ -769,10 +799,10 @@ export function ResponsiveDrawer(props: IProps) {
   if (API_CONFIG.isApp && swapTarget) {
     swapTarget =
       AUTH_CONFIG.adminEndpoint +
-      swapTarget.replace(slug(t.todo), slug(t.plans));
+      swapTarget.replace(slug(t.tasks), slug(t.plans));
   } else if (swapTarget) {
     const part = swapTarget.split('/');
-    part[3] = slug(t.todo);
+    part[3] = slug(t.tasks);
     swapTarget = AUTH_CONFIG.appEndpoint + part.join('/');
   } else {
     swapTarget = API_CONFIG.isApp

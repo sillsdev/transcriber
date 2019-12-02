@@ -147,7 +147,8 @@ interface IStateProps {
 }
 interface IProps extends IStateProps {
   columns: Array<Column>;
-  columnWidths: Array<TableColumnWidthInfo>;
+  columnWidths?: Array<TableColumnWidthInfo>;
+  columnFormatting?: Table.ColumnExtension[];
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
   sortingEnabled?: Array<SortingState.ColumnExtension>;
   filteringEnabled?: Array<FilteringState.ColumnExtension>;
@@ -166,6 +167,7 @@ export function ShapingTable(props: IProps) {
     t,
     columns,
     columnWidths,
+    columnFormatting,
     columnSorting /* special sort function for each column as needed */,
     sortingEnabled /* whether sorting is enabled for each column */,
     filteringEnabled /* whether filtering is enabled for each column */,
@@ -218,23 +220,42 @@ export function ShapingTable(props: IProps) {
 
       <DragDropProvider />
 
-      {dataCell && noDataCell ? (
+      {dataCell && noDataCell && !columnFormatting ? (
         <Table cellComponent={dataCell} noDataCellComponent={noDataCell} />
-      ) : dataCell && !noDataCell ? (
+      ) : dataCell && !noDataCell && !columnFormatting ? (
         <Table cellComponent={dataCell} />
-      ) : !dataCell && noDataCell ? (
+      ) : !dataCell && noDataCell && !columnFormatting ? (
         <Table noDataCellComponent={noDataCell} />
+      ) : dataCell && noDataCell && columnFormatting ? (
+        <Table
+          cellComponent={dataCell}
+          noDataCellComponent={noDataCell}
+          columnExtensions={columnFormatting}
+        />
+      ) : dataCell && !noDataCell && columnFormatting ? (
+        <Table cellComponent={dataCell} columnExtensions={columnFormatting} />
+      ) : !dataCell && noDataCell && columnFormatting ? (
+        <Table
+          noDataCellComponent={noDataCell}
+          columnExtensions={columnFormatting}
+        />
+      ) : !dataCell && !noDataCell && columnFormatting ? (
+        <Table columnExtensions={columnFormatting} />
       ) : (
         <Table />
       )}
       <TableColumnVisibility
-        defaultHiddenColumnNames={defaultHiddenColumnNames}
+        hiddenColumnNames={
+          defaultHiddenColumnNames ? defaultHiddenColumnNames : []
+        }
         emptyMessageComponent={noCols}
       />
-      <TableColumnResizing
-        minColumnWidth={50}
-        defaultColumnWidths={columnWidths}
-      />
+      {columnWidths && (
+        <TableColumnResizing
+          minColumnWidth={50}
+          defaultColumnWidths={columnWidths}
+        />
+      )}
       {!select || <TableSelection showSelectAll={true} />}
 
       <TableHeaderRow showSortingControls={true} />

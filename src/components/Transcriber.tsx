@@ -35,6 +35,8 @@ import SnackBar from './SnackBar';
 import { sectionDescription, passageDescription } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
+import { DrawerWidth } from '../routes/drawer';
+import { TaskItemWidth } from '../components/TaskTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -116,6 +118,7 @@ export function Transcriber(props: IProps) {
     state === 'transcrbing' || state === 'transcribeReady'
   );
   const [height, setHeight] = React.useState(window.innerHeight);
+  const [width, setWidth] = React.useState(window.innerWidth);
   const [defaultValue, setDefaultValue] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
   const [message, setMessage] = React.useState(<></>);
@@ -223,7 +226,10 @@ export function Transcriber(props: IProps) {
   const handleMessageReset = () => setMessage(<></>);
 
   React.useEffect(() => {
-    const handleResize = debounce(() => setHeight(window.innerWidth), 100);
+    const handleResize = debounce(() => {
+      setHeight(window.innerHeight);
+      setWidth(window.innerWidth - DrawerWidth - TaskItemWidth);
+    }, 100);
 
     window.addEventListener('resize', handleResize);
 
@@ -255,7 +261,11 @@ export function Transcriber(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper} onKeyUp={handleKey}>
+      <Paper
+        className={classes.paper}
+        onKeyUp={handleKey}
+        style={{ width: width }}
+      >
         <Grid container direction="column">
           <Grid container xs={12} direction="row" className={classes.row}>
             <Grid
@@ -431,7 +441,6 @@ const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Transcriber) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(Transcriber) as any
+) as any;

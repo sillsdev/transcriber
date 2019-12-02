@@ -1167,7 +1167,14 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.plans">
+        	<trans-unit id="main.tasks">
+        		<source>Tasks</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.plans">
                 <source>Plans</source>
                 <target/>
                 <context-group>
@@ -2350,7 +2357,28 @@
                     <context context-type="sourcefile">ToDoTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="integration.sync">
+        	<trans-unit id="toDoTable.title">
+        		<source>Title</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskItem.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="toDoTable.description">
+        		<source>Description</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskItem.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="toDoTable.duration">
+        		<source>Duration</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskItem.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="integration.sync">
                 <source>Sync</source>
                 <target/>
                 <context-group>
@@ -2788,6 +2816,55 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">DeleteExpansion.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.noMedia">
+        		<source>No Audio</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.inProgress">
+        		<source>In Progress</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.transcribe">
+        		<source>Transcribe</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.review">
+        		<source>Review</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.sync">
+        		<source>Sync</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.done">
+        		<source>Done</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.section">
+        		<source>Section {0}.{1}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskItem.tsx</context>
         		</context-group>
         	</trans-unit>
         </body>

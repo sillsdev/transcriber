@@ -31,9 +31,11 @@ export function UserAvatar(props: IProps) {
     ? curUserRec[0]
     : { attributes: { avatarUrl: null, name: '' } };
 
-  return curUser.attributes.avatarUrl && !API_CONFIG.offline ? (
+  return curUser.attributes &&
+    curUser.attributes.avatarUrl &&
+    !API_CONFIG.offline ? (
     <Avatar alt={curUser.attributes.name} src={curUser.attributes.avatarUrl} />
-  ) : curUser.attributes.name !== '' ? (
+  ) : curUser.attributes && curUser.attributes.name !== '' ? (
     <Avatar>{makeAbbr(curUser.attributes.name)}</Avatar>
   ) : (
     <></>

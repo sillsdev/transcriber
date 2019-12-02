@@ -1000,6 +1000,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.tasks">
+         <segment>
+            <source>Tasks</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.plans">
          <segment>
             <source>Plans</source>
@@ -2014,6 +2020,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="toDoTable.title">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.duration">
+         <segment>
+            <source>Duration</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.sync">
          <segment>
             <source>Sync</source>
@@ -2389,6 +2413,48 @@
       <unit id="deleteExpansion.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.noMedia">
+         <segment>
+            <source>No Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.inProgress">
+         <segment>
+            <source>In Progress</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.review">
+         <segment>
+            <source>Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.sync">
+         <segment>
+            <source>Sync</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.done">
+         <segment>
+            <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.section">
+         <segment>
+            <source>Section {0}.{1}</source>
             <target/>
          </segment>
       </unit>

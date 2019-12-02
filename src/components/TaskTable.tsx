@@ -29,18 +29,21 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import ShapingTable from './ShapingTable';
-import {
-  PassageDescription,
-  PassageDescriptionCompare,
-} from './passageDescription';
-import {
-  SectionDescription,
-  SectionDescriptionCompare,
-} from './sectionDescription';
+import TaskItem from './TaskItem';
 import SnackBar from './SnackBar';
-import Duration from './Duration';
+import { formatTime } from './Duration';
 import Auth from '../auth/Auth';
-import { related, hasRelated, remoteId } from '../utils';
+import {
+  related,
+  hasRelated,
+  remoteId,
+  sectionNumber,
+  passageNumber,
+  numCompare,
+} from '../utils';
+import './TaskTable.css';
+
+export const TaskItemWidth = 370;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     dialogHeader: theme.mixins.gutters({
+      width: '370px',
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
@@ -73,16 +77,23 @@ const useStyles = makeStyles((theme: Theme) =>
     playIcon: {
       fontSize: 16,
     },
+    list: {
+      display: 'flex',
+    },
   })
 );
 
 interface IRow {
-  desc: MediaDescription;
+  composite: JSX.Element | null;
+  media: MediaDescription;
   play: string;
   plan: string;
-  section: JSX.Element | null;
-  passage: JSX.Element | null;
-  length: JSX.Element;
+  section: number;
+  sectPass: string;
+  title: string;
+  description: string;
+  length: string;
+  duration: number;
   state: string;
   action: string;
   assigned: string;
@@ -114,9 +125,12 @@ interface IRecordProps {
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
   transcriber: (mediaDescription: MediaDescription) => void;
+  filtering?: boolean;
+  onFilter?: (top: boolean) => void;
+  curDesc?: MediaDescription;
 }
 
-export function ToDoTable(props: IProps) {
+export function TaskTable(props: IProps) {
   const {
     auth,
     activityState,
@@ -134,6 +148,9 @@ export function ToDoTable(props: IProps) {
     hasUrl,
     mediaUrl,
     tableLoad,
+    filtering,
+    onFilter,
+    curDesc,
   } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -141,29 +158,59 @@ export function ToDoTable(props: IProps) {
   const [user] = useGlobal('user');
   const [project] = useGlobal('project');
   const [columns] = useState([
+    { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
     { name: 'plan', title: t.plan },
     { name: 'section', title: t.section },
-    { name: 'passage', title: t.passage },
+    { name: 'title', title: t.title },
+    { name: 'sectPass', title: t.passage },
+    { name: 'description', title: t.description },
     { name: 'length', title: t.length },
+    { name: 'duration', title: t.duration },
     { name: 'state', title: t.state },
     { name: 'action', title: t.action },
     { name: 'assigned', title: t.assigned },
   ]);
-  const [columnWidth] = useState([
-    { columnName: 'play', width: 65 },
-    { columnName: 'plan', width: 100 },
-    { columnName: 'section', width: 200 },
-    { columnName: 'passage', width: 150 },
-    { columnName: 'length', width: 100 },
-    { columnName: 'state', width: 150 },
-    { columnName: 'action', width: 150 },
-    { columnName: 'assigned', width: 150 },
+  const [columnFormatting, setColumnFormatting] = useState([
+    { columnName: 'composite', width: TaskItemWidth, align: 'left' },
+    { columnName: 'play', width: 65, align: 'left' },
+    { columnName: 'plan', width: 100, align: 'left' },
+    { columnName: 'section', width: 65, align: 'right' },
+    { columnName: 'title', width: 150, align: 'left', wordWrapEnabled: true },
+    { columnName: 'sectPass', width: 65, align: 'left' },
+    {
+      columnName: 'description',
+      width: 150,
+      align: 'left',
+      wordWrapEnabled: true,
+    },
+    { columnName: 'length', width: 100, align: 'left' },
+    { columnName: 'duration', width: 100, align: 'right' },
+    { columnName: 'state', width: 150, align: 'left' },
+    { columnName: 'action', width: 150, align: 'left' },
+    { columnName: 'assigned', width: 150, align: 'left' },
   ]);
+  const columnSorting = [
+    { columnName: 'section', compare: numCompare },
+    { columnName: 'duration', compare: numCompare },
+  ];
+  const numCols = ['section', 'duration'];
+  const sortingEnabled = [
+    { columnName: 'composite', sortingEnabled: false },
+    { columnName: 'play', sortingEnabled: false },
+    { columnName: 'action', sortingEnabled: false },
+  ];
+  const filteringEnabled = [
+    { columnName: 'composite', filteringEnabled: false },
+    { columnName: 'play', filteringEnabled: false },
+    { columnName: 'action', filteringEnabled: false },
+  ];
   const [role, setRole] = useState('');
 
   const [rows, setRows] = useState(Array<IRow>());
-  const [filter, setFilter] = useState(false);
+  const [filter, setFilter] = useState(
+    filtering === undefined ? false : filtering
+  );
   const [message, setMessage] = useState(<></>);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -173,19 +220,24 @@ export function ToDoTable(props: IProps) {
   const handleMessageReset = () => {
     setMessage(<></>);
   };
-  const handleFilter = () => setFilter(!filter);
+  const handleFilter = () => {
+    if (onFilter) onFilter(!filter);
+    setFilter(!filter);
+  };
   const next: { [key: string]: string } = {
     transcribeReady: 'transcribing',
     transcribed: 'reviewing',
   };
   const handleSelect = (mediaDescription: MediaDescription) => (e: any) => {
-    memory.update((t: TransformBuilder) =>
-      t.replaceAttribute(
-        { type: 'passage', id: mediaDescription.passage.id },
-        'state',
-        next[mediaDescription.state]
-      )
-    );
+    if (mediaDescription.role !== 'view') {
+      memory.update((t: TransformBuilder) =>
+        t.replaceAttribute(
+          { type: 'passage', id: mediaDescription.passage.id },
+          'state',
+          next[mediaDescription.state]
+        )
+      );
+    }
     transcriber(mediaDescription);
   };
   const getPlanName = (plan: Plan) => {
@@ -213,7 +265,7 @@ export function ToDoTable(props: IProps) {
     playItem: string
   ) => {
     const readyRecs = passages.filter(
-      p => p.attributes && p.attributes.state === state
+      p => (p.attributes && p.attributes.state === state) || role === 'view'
     );
     readyRecs.forEach(p => {
       const passSecRecs = passageSections.filter(
@@ -236,27 +288,55 @@ export function ToDoTable(props: IProps) {
             if (planRecs.length > 0) {
               if (related(planRecs[0], 'project') === project) {
                 const assignee = related(secRecs[0], role);
-                if (!assignee || assignee === '' || assignee === user) {
-                  const mediaDescription: MediaDescription = {
-                    section: secRecs[0],
-                    passage: p,
-                    mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
-                    mediaId: mediaRec.id,
-                    duration: mediaRec.attributes.duration,
-                    state,
-                    role,
-                  };
-                  rowList.push({
-                    desc: mediaDescription,
-                    play: playItem,
-                    plan: getPlanName(planRecs[0]),
-                    section: <SectionDescription section={secRecs[0]} />,
-                    passage: <PassageDescription passage={p} />,
-                    length: <Duration seconds={mediaRec.attributes.duration} />,
-                    state: activityState.getString(state),
-                    action: t.getString(role),
-                    assigned: assignee === user ? t.yes : t.no,
-                  });
+                if (
+                  !assignee ||
+                  assignee === '' ||
+                  assignee === user ||
+                  role === 'view'
+                ) {
+                  let already: IRow[] = [];
+                  if (role === 'view') {
+                    already = rowList.filter(
+                      r => r.media.mediaId === mediaRec.id
+                    );
+                  }
+                  if (role !== 'view' || already.length === 0) {
+                    const curState =
+                      role === 'view' ? p.attributes.state : state;
+                    const mediaDescription: MediaDescription = {
+                      section: secRecs[0],
+                      passage: p,
+                      mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
+                      mediaId: mediaRec.id,
+                      duration: mediaRec.attributes.duration,
+                      state: curState,
+                      role,
+                    };
+                    rowList.push({
+                      composite: (
+                        <TaskItem
+                          mediaDesc={mediaDescription}
+                          mediaRec={mediaRec}
+                          select={handleSelect}
+                        />
+                      ),
+                      media: mediaDescription,
+                      play: playItem,
+                      plan: getPlanName(planRecs[0]),
+                      section: Number(sectionNumber(secRecs[0])),
+                      sectPass:
+                        sectionNumber(secRecs[0]) +
+                        '.' +
+                        passageNumber(p).trim(),
+                      title: secRecs[0].attributes.name,
+                      description: p.attributes.title,
+                      length: formatTime(mediaRec.attributes.duration),
+                      duration: mediaRec.attributes.duration,
+                      state: activityState.getString(curState),
+                      action: t.getString(role),
+                      assigned: assignee === user ? t.yes : t.no,
+                    });
+                  }
                 }
               }
             }
@@ -265,6 +345,55 @@ export function ToDoTable(props: IProps) {
       }
     });
   };
+
+  useEffect(() => {
+    if (!filter) {
+      setColumnFormatting([
+        { columnName: 'composite', width: TaskItemWidth, align: 'left' },
+        { columnName: 'play', width: 1, align: 'left' },
+        { columnName: 'plan', width: 1, align: 'left' },
+        { columnName: 'section', width: 1, align: 'right' },
+        { columnName: 'title', width: 1, align: 'left', wordWrapEnabled: true },
+        { columnName: 'sectPass', width: 1, align: 'left' },
+        {
+          columnName: 'description',
+          width: 1,
+          align: 'left',
+          wordWrapEnabled: true,
+        },
+        { columnName: 'length', width: 1, align: 'left' },
+        { columnName: 'duration', width: 1, align: 'right' },
+        { columnName: 'state', width: 1, align: 'left' },
+        { columnName: 'action', width: 1, align: 'left' },
+        { columnName: 'assigned', width: 1, align: 'left' },
+      ]);
+    } else {
+      setColumnFormatting([
+        { columnName: 'composite', width: 1, align: 'left' },
+        { columnName: 'play', width: 65, align: 'left' },
+        { columnName: 'plan', width: 100, align: 'left' },
+        { columnName: 'section', width: 65, align: 'right' },
+        {
+          columnName: 'title',
+          width: 150,
+          align: 'left',
+          wordWrapEnabled: true,
+        },
+        { columnName: 'sectPass', width: 65, align: 'left' },
+        {
+          columnName: 'description',
+          width: 150,
+          align: 'left',
+          wordWrapEnabled: true,
+        },
+        { columnName: 'length', width: 100, align: 'left' },
+        { columnName: 'duration', width: 100, align: 'right' },
+        { columnName: 'state', width: 150, align: 'left' },
+        { columnName: 'action', width: 150, align: 'left' },
+        { columnName: 'assigned', width: 150, align: 'left' },
+      ]);
+    }
+  }, [filter]);
 
   useEffect(() => {
     const projectRecs = projects.filter(p => p.id === project);
@@ -300,11 +429,12 @@ export function ToDoTable(props: IProps) {
         addTasks('transcribed', 'reviewer', rowList, playItem);
       }
       addTasks('transcribeReady', 'transcriber', rowList, playItem);
+      addTasks('', 'view', rowList, playItem);
     }
     setRows(rowList);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role, playItem]);
+  }, [role, playItem, curDesc]);
 
   useEffect(() => {
     if (hasUrl && audioRef.current && !playing && playItem !== '') {
@@ -333,7 +463,7 @@ export function ToDoTable(props: IProps) {
   }, [tableLoad]);
 
   interface ICell {
-    value: string;
+    value: any;
     style?: React.CSSProperties;
     mediaId?: string;
     row: IRow;
@@ -368,7 +498,7 @@ export function ToDoTable(props: IProps) {
         variant="contained"
         color="primary"
         className={classes.link}
-        onClick={handleSelect(restProps.row.desc)}
+        onClick={handleSelect(restProps.row.media)}
       >
         {value}
       </Button>
@@ -376,18 +506,32 @@ export function ToDoTable(props: IProps) {
   );
 
   const Cell = (props: ICell) => {
-    const { row, column } = props;
-    if (column.name === 'play') {
-      return <PlayCell {...props} mediaId={row.desc.mediaRemoteId} />;
+    const { row, column, value } = props;
+    if (!filter) {
+      return column.name === 'composite' ? (
+        <div style={{ width: TaskItemWidth }}>{value}</div>
+      ) : (
+        <>{'\u00a0'}</>
+      );
+    } else {
+      if (column.name === 'composite') {
+        return <>{'\u00a0'}</>;
+      } else if (column.name === 'play') {
+        return <PlayCell {...props} mediaId={row.media.mediaRemoteId} />;
+      }
+      if (column.name === 'action') {
+        return <LinkCell {...props} />;
+      }
+      return <Table.Cell {...props} />;
     }
-    if (column.name === 'action') {
-      return <LinkCell {...props} />;
-    }
-    return <Table.Cell {...props} />;
   };
 
   return (
-    <div className={classes.root}>
+    <div
+      id="TaskTable"
+      className={classes.root}
+      data-list={!filter ? 'true' : ''}
+    >
       <div className={classes.container}>
         <div className={classes.paper}>
           <div className={classes.dialogHeader}>
@@ -411,17 +555,16 @@ export function ToDoTable(props: IProps) {
           </div>
           <ShapingTable
             columns={columns}
-            columnWidths={columnWidth}
+            columnFormatting={filter ? columnFormatting : []}
             dataCell={Cell}
             sorting={[
               { columnName: 'plan', direction: 'asc' },
-              { columnName: 'section', direction: 'asc' },
-              { columnName: 'passage', direction: 'asc' },
+              { columnName: 'sectPass', direction: 'asc' },
             ]}
-            columnSorting={[
-              { columnName: 'section', compare: SectionDescriptionCompare },
-              { columnName: 'passage', compare: PassageDescriptionCompare },
-            ]}
+            sortingEnabled={sortingEnabled}
+            filteringEnabled={filteringEnabled}
+            columnSorting={columnSorting}
+            numCols={numCols}
             shaping={filter}
             rows={rows}
           />
@@ -460,7 +603,6 @@ const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ToDoTable) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(TaskTable) as any
+) as any;

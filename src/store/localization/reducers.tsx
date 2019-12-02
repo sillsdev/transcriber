@@ -238,6 +238,7 @@ const initialState = {
 			"myTasks": "My Tasks",
 			"todo": "To Do",
 			"allTasks": "All Tasks",
+			"tasks": "Tasks",
 			"plans": "Plans",
 			"team": "Team",
 			"settings": "Settings",
@@ -471,6 +472,9 @@ const initialState = {
 			"yes": "Yes",
 			"no": "No",
 			"loadingTable": "Loading data",
+			"title": "Title",
+			"description": "Description",
+			"duration": "Duration",
 		}
 	}),
 	"integration": new LocalizedStrings({
@@ -552,6 +556,17 @@ const initialState = {
 			"delete": "Delete",
 		}
 	}),
+	"taskItem": new LocalizedStrings({
+		"en": {
+			"noMedia": "No Audio",
+			"inProgress": "In Progress",
+			"transcribe": "Transcribe",
+			"review": "Review",
+			"sync": "Sync",
+			"done": "Done",
+			"section": "Section {0}.{1}",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -597,6 +612,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
+				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
 			};
 		case SET_LANGUAGE:
 			return {

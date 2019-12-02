@@ -997,7 +997,13 @@
          	<target>Toutes les tâches</target>
          </segment>
       </unit>
-      <unit id="main.plans">
+		<unit id="main.tasks">
+			<segment>
+				<source>Tasks</source>
+				<target>Tâches</target>
+			</segment>
+		</unit>
+		<unit id="main.plans">
 			<segment>
 				<source>Plans</source>
 				<target>Programmes</target>
@@ -2013,6 +2019,24 @@
 				<target>Chargement des données</target>
 			</segment>
 		</unit>
+		<unit id="toDoTable.title">
+			<segment>
+				<source>Title</source>
+				<target>Titre</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.description">
+			<segment>
+				<source>Description</source>
+				<target>Description</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.duration">
+			<segment>
+				<source>Duration</source>
+				<target>Durée</target>
+			</segment>
+		</unit>
 		<unit id="integration.sync">
          <segment>
             <source>Sync</source>
@@ -2389,6 +2413,48 @@
 			<segment>
 				<source>Delete</source>
 				<target>Supprimer</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.noMedia">
+			<segment>
+				<source>No Audio</source>
+				<target>Pas d'audio</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.inProgress">
+			<segment>
+				<source>In Progress</source>
+				<target>En cours</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.transcribe">
+			<segment>
+				<source>Transcribe</source>
+				<target>Transcrire</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.review">
+			<segment>
+				<source>Review</source>
+				<target>Examiner</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.sync">
+			<segment>
+				<source>Sync</source>
+				<target>Synchroniser</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.done">
+			<segment>
+				<source>Done</source>
+				<target>Terminé</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.section">
+			<segment>
+				<source>Section {0}.{1}</source>
+				<target>Section {0}.{1}</target>
 			</segment>
 		</unit>
 	</file>
