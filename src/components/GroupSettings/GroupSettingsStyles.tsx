@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) =>
       // color: theme.palette.primary.dark,
     },
     noProjects: {
-      width: 400,
       marginLeft: theme.spacing(3),
+      marginRight: theme.spacing(3),
       backgroundColor: theme.palette.grey[200],
     },
     textField: {

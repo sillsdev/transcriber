@@ -66,28 +66,50 @@ function GroupMemberAdd(props: IProps) {
     const fileRole: RoleNames =
       role === 'owner' ? RoleNames.Admin : (role as RoleNames);
     const roleId = getRoleId(roles, fileRole);
-    const groupMemberRec: GroupMembership = {
-      type: 'groupmembership',
-    } as any;
-    schema.initializeRecord(groupMemberRec);
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(groupMemberRec),
-      t.replaceRelatedRecord(
-        { type: 'groupmembership', id: groupMemberRec.id },
-        'user',
-        { type: 'user', id: currentPerson ? currentPerson : '' }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'groupmembership', id: groupMemberRec.id },
-        'group',
-        { type: 'group', id: group }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'groupmembership', id: groupMemberRec.id },
-        'role',
-        { type: 'role', id: roleId }
-      ),
-    ]);
+    const groupMemberRecs: GroupMembership[] = memory.cache.query(
+      (q: QueryBuilder) =>
+        q.findRecords('groupmembership').filter(
+          {
+            relation: 'user',
+            record: { type: 'user', id: currentPerson ? currentPerson : '' },
+          },
+          { relation: 'group', record: { type: 'group', id: group } }
+        )
+    ) as any;
+    let groupMemberRec: GroupMembership;
+    if (groupMemberRecs.length > 0) {
+      groupMemberRec = groupMemberRecs[0];
+      await memory.update((t: TransformBuilder) =>
+        t.replaceRelatedRecord(
+          { type: 'groupmembership', id: groupMemberRec.id },
+          'role',
+          { type: 'role', id: roleId }
+        )
+      );
+    } else {
+      groupMemberRec = {
+        type: 'groupmembership',
+      } as any;
+      schema.initializeRecord(groupMemberRec);
+      await memory.update((t: TransformBuilder) => [
+        t.addRecord(groupMemberRec),
+        t.replaceRelatedRecord(
+          { type: 'groupmembership', id: groupMemberRec.id },
+          'user',
+          { type: 'user', id: currentPerson ? currentPerson : '' }
+        ),
+        t.replaceRelatedRecord(
+          { type: 'groupmembership', id: groupMemberRec.id },
+          'group',
+          { type: 'group', id: group }
+        ),
+        t.replaceRelatedRecord(
+          { type: 'groupmembership', id: groupMemberRec.id },
+          'role',
+          { type: 'role', id: roleId }
+        ),
+      ]);
+    }
     if (role === RoleNames.Reviewer) {
       setMessage(<span>{t.allReviewersCanTranscribe}</span>);
     }
@@ -99,9 +121,21 @@ function GroupMemberAdd(props: IProps) {
       onClose={handleCancel}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">{t.addGroupMember}</DialogTitle>
+      <DialogTitle id="form-dialog-title">
+        {t.addGroupMember.replace(
+          '{0}',
+          role.toLocaleLowerCase() === 'admin' ? 'Owner' : role
+        )}
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText>{t.addMemberInstruction}</DialogContentText>
+        <DialogContentText>
+          {t.addMemberInstruction.replace(
+            '{0}',
+            role.toLocaleLowerCase() === 'admin'
+              ? 'owner'
+              : role.toLocaleLowerCase()
+          )}
+        </DialogContentText>
         <TextField
           id="choos-group-member"
           select

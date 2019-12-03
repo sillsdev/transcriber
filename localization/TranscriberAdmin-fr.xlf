@@ -1396,14 +1396,14 @@
       </unit>
       <unit id="groupSettings.addGroupMember">
          <segment>
-			<source>Add Group Member</source>
-			<target>Ajouter un membre du groupe</target>
+			<source>Choose {0}</source>
+         	<target>Choisir l(e) {0}</target>
          </segment>
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-         	<source>Select the person you want to add to the group.</source>
-         	<target>Sélectionner la personne que vous voulez ajouter au groupe.</target>
+         	<source>Choose a person who will act as a {0} for projects in this group.</source>
+         	<target>Choisissez une personne qui agira à titre d(e) {0} pour les projets de ce groupe.</target>
          </segment>
       </unit>
       <unit id="groupSettings.cancel">
@@ -1414,8 +1414,8 @@
       </unit>
       <unit id="groupSettings.add">
          <segment>
-			<source>Add</source>
-			<target>Ajouter</target>
+			<source>Ok</source>
+         	<target>Ok</target>
          </segment>
       </unit>
 	<unit id="groupSettings.delete">

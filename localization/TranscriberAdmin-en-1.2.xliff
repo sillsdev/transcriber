@@ -1630,14 +1630,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupSettings.addGroupMember">
-                <source>Add Group Member</source>
+                <source>Choose {0}</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="groupSettings.addMemberInstruction">
-                <source>Select the person you want to add to the group.</source>
+            	<source>Choose a person who will act as a {0} for projects in this group.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -1651,7 +1651,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupSettings.add">
-                <source>Add</source>
+                <source>Ok</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>

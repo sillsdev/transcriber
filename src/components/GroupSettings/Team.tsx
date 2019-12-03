@@ -124,7 +124,7 @@ function Team(props: IProps) {
       .filter(r => r.id === groupRole[0])
       .map(r => r.attributes && r.attributes.roleName);
     if (roleName.length === 0) return false; // This should not happen
-    const roleKey = roleName[0].toLocaleLowerCase();
+    const roleKey = roleName[0];
     return groupRoles.indexOf(roleKey as RoleNames) > roleIndex;
   };
 

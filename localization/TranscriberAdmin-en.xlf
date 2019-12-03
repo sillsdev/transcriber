@@ -1398,13 +1398,13 @@
       </unit>
       <unit id="groupSettings.addGroupMember">
          <segment>
-            <source>Add Group Member</source>
+            <source>Choose {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-            <source>Select the person you want to add to the group.</source>
+            <source>Choose a person who will act as a {0} for projects in this group.</source>
             <target/>
          </segment>
       </unit>
@@ -1416,7 +1416,7 @@
       </unit>
       <unit id="groupSettings.add">
          <segment>
-            <source>Add</source>
+            <source>Ok</source>
             <target/>
          </segment>
       </unit>
