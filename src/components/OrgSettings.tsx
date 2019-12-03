@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Redirect } from 'react-router-dom';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
@@ -17,10 +18,14 @@ import {
   Button,
 } from '@material-ui/core';
 import LinkIcon from '@material-ui/icons/Link';
-import EditIcon from '@material-ui/icons/Edit';
+import SaveIcon from '@material-ui/icons/Save';
+// import EditIcon from '@material-ui/icons/Edit';
 import OrgIcon from '@material-ui/icons/AccountBalance';
+import DeleteExpansion from './DeleteExpansion';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
+import { API_CONFIG } from '../api-variable';
+import { CreateOrg } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
     },
     group: {
       paddingBottom: theme.spacing(3),
@@ -77,43 +83,107 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function OrgSettings(props: IProps) {
-  const { add, organizations, t, noMargin } = props;
+  const { add, organizations, t, noMargin, finishAdd } = props;
   const classes = useStyles();
+  const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
-  const [organization] = useGlobal('organization');
+  const [remote] = useGlobal('remote');
+  const [orgRole] = useGlobal('orgRole');
+  const [user] = useGlobal('user');
+  const [organization, setOrganization] = useGlobal('organization');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_project, setProject] = useGlobal('project');
+  const [curOrg, setCurOrg] = useState<Organization>();
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [orgAvatar, setOrgAvatar] = useState('');
-  const [website, setWebsite] = useState('');
+  const [description, setDescription] = useState<string | null>(null);
+  const [orgAvatar, setOrgAvatar] = useState<string | null>(null);
+  const [website, setWebsite] = useState<string | null>(null);
+  const [publicByDefault, setPublic] = useState(true);
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
   const websiteRef = useRef<any>();
+  const [changed, setChanged] = useState(false);
+  const [view, setView] = useState('');
 
   const handleNameChange = (e: any) => {
+    setChanged(true);
     setName(e.target.value);
   };
+
   const handleDescriptionChange = (e: any) => {
+    setChanged(true);
     setDescription(e.target.value);
   };
+
   const handleWebsiteChange = (e: any) => {
+    setChanged(true);
     setWebsite(e.target.value);
   };
+
   const handleWebsiteLink = () => {
     if (websiteRef.current) {
       websiteRef.current.click();
     }
   };
-  const handleMessageReset = () => () => {
-    setMessage(<></>);
+
+  const handleMessageReset = () => () => setMessage(<></>);
+
+  const handleSave = () => {
+    memory.update((t: TransformBuilder) => [
+      t.updateRecord({
+        type: 'organization',
+        id: organization,
+        attributes: {
+          name,
+          description,
+          websiteUrl: website,
+          logoUrl: orgAvatar,
+          publicByDefault,
+          dateUpdated: new Date().toISOString(),
+        },
+      }),
+      // we aren't allowing them to change owner oraganization currently
+    ]);
   };
+
+  const handleAdd = () => {
+    let orgRec: Organization = {
+      type: 'organization',
+      attributes: {
+        name,
+        description,
+        websiteUrl: website,
+        logoUrl: orgAvatar,
+        publicByDefault,
+      },
+    } as any;
+    CreateOrg({
+      orgRec,
+      user,
+      schema,
+      memory,
+      remote,
+      setOrganization,
+      setProject,
+    });
+    if (finishAdd) {
+      finishAdd();
+    }
+  };
+
+  const handleCancel = () => setView('Main');
+
+  const handleDelete = (o: Organization | undefined) => () => {
+    if (o !== undefined) setDeleteItem(o.id);
+  };
+
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({ type: 'organization', id: deleteItem })
     );
   };
-  const handleDeleteRefused = () => {
-    setDeleteItem('');
-  };
+
+  const handleDeleteRefused = () => setDeleteItem('');
 
   useEffect(() => {
     let org: Organization = {
@@ -125,26 +195,31 @@ export function OrgSettings(props: IProps) {
         slug: '',
         websiteUrl: '',
         logoUrl: '',
-        publicByDefault: false,
+        publicByDefault: true,
         dateCreated: '',
         dateUpdated: '',
       },
-    } as any;
+    } as Organization;
     if (!add) {
       const orgRecords = organizations.filter(
         (o: Organization) => o.id === organization
       );
       if (orgRecords.length > 0) {
         org = orgRecords[0];
+        setCurOrg(org);
       }
     }
     const attr = org.attributes;
     setName(attr.name);
-    setDescription(attr.description ? attr.description : '');
-    setOrgAvatar(attr.logoUrl ? attr.logoUrl : '');
-    setWebsite(attr.websiteUrl ? attr.websiteUrl : '');
+    setDescription(attr.description);
+    setOrgAvatar(attr.logoUrl);
+    setWebsite(attr.websiteUrl);
+    setOrgAvatar(attr.logoUrl);
+    setPublic(attr.publicByDefault);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, organization, organizations]);
+
+  if (/Main/i.test(view)) return <Redirect to="/main" />;
 
   return (
     <div
@@ -164,9 +239,9 @@ export function OrgSettings(props: IProps) {
                   value={name}
                   onChange={handleNameChange}
                   margin="normal"
+                  style={{ width: 400 }}
                   variant="filled"
                   required={true}
-                  disabled
                 />
               }
               label=""
@@ -195,7 +270,6 @@ export function OrgSettings(props: IProps) {
                   style={{ width: 400 }}
                   variant="filled"
                   required={false}
-                  disabled
                 />
               }
               label=""
@@ -213,12 +287,12 @@ export function OrgSettings(props: IProps) {
                     style={{ width: 400 }}
                     variant="filled"
                     required={false}
-                    disabled
                   />
                   <IconButton
                     color="primary"
                     className={classes.iconButton}
                     onClick={handleWebsiteLink}
+                    disabled={!website || website.indexOf('.') === -1}
                   >
                     <LinkIcon />
                   </IconButton>
@@ -228,26 +302,47 @@ export function OrgSettings(props: IProps) {
             />
           </FormGroup>
         </FormControl>
-        <div className={classes.actions}>
-          <Button
-            key="save"
-            aria-label={t.save}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            disabled={name === ''}
-            onClick={() => setMessage(<span>{'Not implemented'}</span>)}
-          >
-            {'Edit'}
-            <EditIcon className={classes.icon} />
-          </Button>
-        </div>
+        {!API_CONFIG.isApp && orgRole === 'admin' && (
+          <div className={classes.actions}>
+            <Button
+              key="cancel"
+              aria-label={t.cancel}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleCancel}
+            >
+              {t.cancel}
+            </Button>
+            <Button
+              key="add"
+              aria-label={t.add}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              disabled={name === '' || !changed}
+              onClick={curOrg === undefined ? handleAdd : handleSave}
+            >
+              {curOrg === undefined ? t.add : t.save}
+              <SaveIcon className={classes.icon} />
+            </Button>
+          </div>
+        )}
+        {curOrg !== undefined && (
+          <DeleteExpansion
+            title={t.deleteOrg}
+            explain={t.deleteExplained}
+            handleDelete={() => handleDelete(curOrg)}
+          />
+        )}
       </div>
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a
         ref={websiteRef}
         href={
-          !website || website.toLocaleLowerCase().indexOf('http') !== -1
+          !website
+            ? '#'
+            : website.toLocaleLowerCase().indexOf('http') !== -1
             ? website
             : 'http://' + website
         }
@@ -275,6 +370,6 @@ const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  OrgSettings
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(OrgSettings) as any
+) as any;

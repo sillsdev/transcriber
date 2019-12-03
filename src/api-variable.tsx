@@ -6,4 +6,10 @@ export const API_CONFIG = {
   offline:
     process.env.REACT_APP_OFFLINE === 'true' || process.env.NODE_ENV === 'test',
   help: process.env.REACT_APP_HELP ? process.env.REACT_APP_HELP : '',
+  community: process.env.REACT_APP_COMMUNITY
+    ? process.env.REACT_APP_COMMUNITY
+    : '',
+  isApp: process.env.REACT_APP_APPMODE
+    ? process.env.REACT_APP_APPMODE === 'true'
+    : false,
 };

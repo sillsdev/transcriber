@@ -114,7 +114,7 @@
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -388,6 +388,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planTable.filter">
+         <segment>
+            <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTable.silTranscriberAdmin">
          <segment>
             <source>SIL Transcriber Admin</source>
@@ -397,6 +403,12 @@
       <unit id="planTable.choosePlan">
          <segment>
             <source>Choose a Project Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -460,6 +472,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.confirm">
+         <segment>
+            <source>{0} {1} Item(s). Are you sure?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.sectionAbove">
+         <segment>
+            <source>Insert section above</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageAbove">
+         <segment>
+            <source>Insert passage above</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
@@ -493,6 +523,12 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -558,13 +594,7 @@
       </unit>
       <unit id="assignmentTable.filter">
          <segment>
-            <source>Filter</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="assignmentTable.group">
-         <segment>
-            <source>Group</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -672,13 +702,13 @@
       </unit>
       <unit id="planAdd.addPlan">
          <segment>
-            <source>Add a Plan</source>
+            <source>Add Plan</source>
             <target/>
          </segment>
       </unit>
       <unit id="planAdd.newPlanTask">
          <segment>
-            <source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
+            <source>Type the name of the plan, which could be the name of a book of the Bible, a story, a lectionary and so on.</source>
             <target/>
          </segment>
       </unit>
@@ -690,7 +720,7 @@
       </unit>
       <unit id="planAdd.selectPlanType">
          <segment>
-            <source>Select plan type.</source>
+            <source>Choose the plan type.</source>
             <target/>
          </segment>
       </unit>
@@ -840,7 +870,7 @@
       </unit>
       <unit id="mediaTab.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -853,6 +883,18 @@
       <unit id="mediaTab.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.unsupported">
+         <segment>
+            <source>File {0} is an unsupported file type.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -898,6 +940,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.silTranscriber">
+         <segment>
+            <source>SIL Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.search">
          <segment>
             <source>Search…</source>
@@ -925,6 +973,30 @@
       <unit id="main.media">
          <segment>
             <source>Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.myTasks">
+         <segment>
+            <source>My Tasks</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.todo">
+         <segment>
+            <source>To Do</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.allTasks">
+         <segment>
+            <source>All Tasks</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.tasks">
+         <segment>
+            <source>Tasks</source>
             <target/>
          </segment>
       </unit>
@@ -958,9 +1030,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.loadingTranscriber">
+      <unit id="main.loadingTranscriberAdmin">
          <segment>
             <source>Loading SIL Transcriber Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.loadingTranscriber">
+         <segment>
+            <source>Loading SIL Transcriber</source>
             <target/>
          </segment>
       </unit>
@@ -994,6 +1072,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.helpCenter">
+         <segment>
+            <source>Help Center</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.reportIssue">
+         <segment>
+            <source>Report an Issue</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.version">
+         <segment>
+            <source>Version: </source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.planUnsaved">
          <segment>
             <source>Plan Unsaved</source>
@@ -1009,6 +1105,60 @@
       <unit id="main.newOrganization">
          <segment>
             <source>Add Organization</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.switchToAdmin">
+         <segment>
+            <source>Open project in Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.switchToApp">
+         <segment>
+            <source>Open project in App</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.crashMessage">
+         <segment>
+            <source>Something went wrong. The developers need to address this issue.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.reports">
+         <segment>
+            <source>Reports</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.sessionExpiring">
+         <segment>
+            <source>Session Expiring</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.sessionExpireTask">
+         <segment>
+            <source>Your session will expire in {0} seconds. Would you like to continue?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.exit">
+         <segment>
+            <source>Exit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.continue">
+         <segment>
+            <source>Continue</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.myWorkbench">
+         <segment>
+            <source>My Workbench</source>
             <target/>
          </segment>
       </unit>
@@ -1032,13 +1182,7 @@
       </unit>
       <unit id="transcriptionTab.filter">
          <segment>
-            <source>Filter</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.group">
-         <segment>
-            <source>Group</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -1122,7 +1266,7 @@
       </unit>
       <unit id="groupTable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -1188,7 +1332,7 @@
       </unit>
       <unit id="groupAdd.newGroupTask">
          <segment>
-            <source>Enter (or edit) basic group information.</source>
+            <source>Type the name and abbreviation of the group.</source>
             <target/>
          </segment>
       </unit>
@@ -1228,6 +1372,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.owners">
+         <segment>
+            <source>Owners</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupSettings.reviewers">
          <segment>
             <source>Reviewers</source>
@@ -1242,13 +1392,13 @@
       </unit>
       <unit id="groupSettings.addGroupMember">
          <segment>
-            <source>Add Group Member</source>
+            <source>Choose {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-            <source>Enter the name of a person in the organization to be included in the group.</source>
+            <source>Choose a person who will act as a {0} for projects in this group.</source>
             <target/>
          </segment>
       </unit>
@@ -1260,7 +1410,7 @@
       </unit>
       <unit id="groupSettings.add">
          <segment>
-            <source>Add</source>
+            <source>Ok</source>
             <target/>
          </segment>
       </unit>
@@ -1270,15 +1420,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.choose">
+         <segment>
+            <source>Choose...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupSettings.allReviewersCanTranscribe">
          <segment>
             <source>All Reviewers are allowed to transcribe.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.noProjects">
+      <unit id="groupSettings.groupExplain">
          <segment>
-            <source>There are no projects that use this group.</source>
+            <source>Groups connect organization members to a project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.case1">
+         <segment>
+            <source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.case2">
+         <segment>
+            <source>Existing projects can be associated with this group in Settings.</source>
             <target/>
          </segment>
       </unit>
@@ -1297,6 +1465,12 @@
       <unit id="groupSettings.invalidRole">
          <segment>
             <source>Invalid Role. User not added.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.loadingTable">
+         <segment>
+            <source>Loading data</source>
             <target/>
          </segment>
       </unit>
@@ -1332,7 +1506,7 @@
       </unit>
       <unit id="languagePicker.selectLanguage">
          <segment>
-            <source>Select a Language</source>
+            <source>Choose Language Details</source>
             <target/>
          </segment>
       </unit>
@@ -1374,7 +1548,7 @@
       </unit>
       <unit id="languagePicker.select">
          <segment>
-            <source>Select</source>
+            <source>Save</source>
             <target/>
          </segment>
       </unit>
@@ -1474,9 +1648,51 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.selectRole">
+      <unit id="invite.organization">
+         <segment>
+            <source>Organization</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.selectOrgRole">
          <segment>
             <source>Select Organizational Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.allusersgroup">
+         <segment>
+            <source>All Users Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.groups">
+         <segment>
+            <source>Groups</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.group">
+         <segment>
+            <source>Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.additionalgroup">
+         <segment>
+            <source>Optional additional Group</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.groupRole">
+         <segment>
+            <source>Group Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.selectGroupRole">
+         <segment>
+            <source>Select Group Role</source>
             <target/>
          </segment>
       </unit>
@@ -1486,9 +1702,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.add">
+      <unit id="invite.send">
          <segment>
-            <source>Add</source>
+            <source>Send</source>
             <target/>
          </segment>
       </unit>
@@ -1510,6 +1726,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.resend">
+         <segment>
+            <source>Resend</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.sil">
+         <segment>
+            <source>SIL International</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.transcriber">
+         <segment>
+            <source>SIL Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.invitation">
+         <segment>
+            <source>has invited you to join</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.instructions">
+         <segment>
+            <source>Please click the following link to accept the invitation:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.emailsubject">
+         <segment>
+            <source>SIL Transcriber Invitation</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invitationTable.email">
          <segment>
             <source>Email</source>
@@ -1519,6 +1771,18 @@
       <unit id="invitationTable.role">
          <segment>
             <source>Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.allUsers">
+         <segment>
+            <source>All Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.group">
+         <segment>
+            <source>Group</source>
             <target/>
          </segment>
       </unit>
@@ -1548,13 +1812,19 @@
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
       <unit id="invitationTable.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invitationTable.noData">
+         <segment>
+            <source>No invitations</source>
             <target/>
          </segment>
       </unit>
@@ -1597,6 +1867,588 @@
       <unit id="orgSettings.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.deleteOrg">
+         <segment>
+            <source>Delete Organization</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="orgSettings.deleteExplained">
+         <segment>
+            <source>Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.title">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.task">
+         <segment>
+            <source>You can upload audio files in .mp3 format or in .wav format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.dragDrop">
+         <segment>
+            <source>Drag and drop files here, or click here to browse for the files.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.upload">
+         <segment>
+            <source>Upload</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="myTask.todo">
+         <segment>
+            <source>To Do</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="myTask.history">
+         <segment>
+            <source>History</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.filter">
+         <segment>
+            <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.plan">
+         <segment>
+            <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.passage">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.state">
+         <segment>
+            <source>State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.action">
+         <segment>
+            <source>Action</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.transcriber">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.reviewer">
+         <segment>
+            <source>Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.view">
+         <segment>
+            <source>View</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.length">
+         <segment>
+            <source>Duration</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.assigned">
+         <segment>
+            <source>Assigned</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.yes">
+         <segment>
+            <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.no">
+         <segment>
+            <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.loadingTable">
+         <segment>
+            <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.title">
+         <segment>
+            <source>Title</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="toDoTable.duration">
+         <segment>
+            <source>Duration</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.sync">
+         <segment>
+            <source>Sync</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.paratextAssociation">
+         <segment>
+            <source>Paratext association</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.selectProject">
+         <segment>
+            <source>Select Paratext Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.noProject">
+         <segment>
+            <source>You are not a member of any Paratext projects.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.projectsPending">
+         <segment>
+            <source>Querying projects...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.countPending">
+         <segment>
+            <source>Querying count...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.usernamePending">
+         <segment>
+            <source>Querying username...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.offline">
+         <segment>
+            <source>Offline</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionOnline">
+         <segment>
+            <source>Are you connected to the Internet?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.yes">
+         <segment>
+            <source>Yes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.no">
+         <segment>
+            <source>No</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionProject">
+         <segment>
+            <source>Are you connected to a Paratext Project?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.removeProject">
+         <segment>
+            <source>Remove Project Association</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionAccount">
+         <segment>
+            <source>Do you have a Paratext Account?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionPermission">
+         <segment>
+            <source>Do you have permission to edit the Paratext project text?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.allCriteria">
+         <segment>
+            <source>You must satisfy all criteria to sync.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.projectError">
+         <segment>
+            <source>Project Query error:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.usernameError">
+         <segment>
+            <source>Username error:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.syncPending">
+         <segment>
+            <source>Syncing...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.syncError">
+         <segment>
+            <source>Sync error:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.syncComplete">
+         <segment>
+            <source>Sync Complete!</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.countError">
+         <segment>
+            <source>Count query error: </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.countReady">
+         <segment>
+            <source>Passages ready to sync: </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.paratext">
+         <segment>
+            <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.render">
+         <segment>
+            <source>Render</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.onestory">
+         <segment>
+            <source>One Story</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.submit">
+         <segment>
+            <source>Submit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.reject">
+         <segment>
+            <source>Reject</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.settingsTip">
+         <segment>
+            <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.backTip">
+         <segment>
+            <source>Skip back (F2)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.aheadTip">
+         <segment>
+            <source>Skip ahead (F4)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.playTip">
+         <segment>
+            <source>Pause (ESC)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.pauseTip">
+         <segment>
+            <source>Play (ESC)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectTranscriptionTip">
+         <segment>
+            <source>Audio recording is unusable</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectReviewTip">
+         <segment>
+            <source>Transcription requires changes.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitTranscriptionTip">
+         <segment>
+            <source>Mark this transcription as complete.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitReviewTip">
+         <segment>
+            <source>Mark this review as complete.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.saveTip">
+         <segment>
+            <source>Save transcription changes without marking as complete.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.saveReviewTip">
+         <segment>
+            <source>Save position in recording without marking as complete.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.name">
+         <segment>
+            <source>Full Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.given">
+         <segment>
+            <source>Given Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.family">
+         <segment>
+            <source>Family Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.email">
+         <segment>
+            <source>Email</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.phone">
+         <segment>
+            <source>Phone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.timezone">
+         <segment>
+            <source>Time zone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.locale">
+         <segment>
+            <source>Locale</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.locked">
+         <segment>
+            <source>Locked</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.deleteUser">
+         <segment>
+            <source>Delete User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.deleteExplained">
+         <segment>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.silTranscriberAdmin">
+         <segment>
+            <source>SIL Transcriber Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.silTranscriber">
+         <segment>
+            <source>SIL Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.userProfile">
+         <segment>
+            <source>User profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.completeProfile">
+         <segment>
+            <source>Complete User Profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="deleteExpansion.dangerZone">
+         <segment>
+            <source>Danger Zone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="deleteExpansion.advanced">
+         <segment>
+            <source>Advanced</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="deleteExpansion.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.noMedia">
+         <segment>
+            <source>No Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.inProgress">
+         <segment>
+            <source>In Progress</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.review">
+         <segment>
+            <source>Review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.sync">
+         <segment>
+            <source>Sync</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.done">
+         <segment>
+            <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.section">
+         <segment>
+            <source>Section {0}.{1}</source>
             <target/>
          </segment>
       </unit>

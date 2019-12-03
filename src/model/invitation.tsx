@@ -5,6 +5,9 @@ export interface Invitation extends Record {
     email: string;
     silId: number;
     accepted: boolean;
+    strings: string;
+    loginLink: string;
+    invitedBy: string;
     dateCreated: string;
     dateUpdated: string;
     lastModfiedBy: number;
@@ -12,6 +15,9 @@ export interface Invitation extends Record {
   relationships?: {
     organization: RecordRelationship;
     role: RecordRelationship;
+    allUsersRole: RecordRelationship;
+    group: RecordRelationship;
+    groupRole: RecordRelationship;
   };
 }
 export default Invitation;

@@ -15,4 +15,10 @@ export const AUTH_CONFIG = {
   newOrgApp: process.env.REACT_APP_NEWORGAPP
     ? process.env.REACT_APP_NEWORGAPP
     : '',
+  adminEndpoint: process.env.REACT_APP_ADMIN_ENDPOINT
+    ? process.env.REACT_APP_ADMIN_ENDPOINT
+    : '',
+  appEndpoint: process.env.REACT_APP_APP_ENDPOINT
+    ? process.env.REACT_APP_APP_ENDPOINT
+    : '',
 };

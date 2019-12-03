@@ -87,8 +87,10 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "sections": string;
     "taks": string;
     "action": string;
+    "filter": string;
     "silTranscriberAdmin": string;
     "choosePlan": string;
+    "loadingTable": string;
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
@@ -102,6 +104,9 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "saving": string;
     "selectRows": string;
+    "confirm": string;
+    "sectionAbove": string;
+    "passageAbove": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -111,6 +116,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "book": string;
     "reference": string;
     "description": string;
+    "loadingTable": string;
 };
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
@@ -125,7 +131,6 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "removeSec": string;
     "delete": string;
     "filter": string;
-    "group": string;
     "transcriber": string;
     "reviewer": string;
     "selectRowsToAssign": string;
@@ -186,6 +191,8 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "filter": string;
     "selectFiles": string;
     "selectRows": string;
+    "unsupported": string;
+    "loadingTable": string;
 };
 
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
@@ -199,25 +206,43 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
 
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
+    "silTranscriber": string;
     "search": string;
     "organization": string;
     "usersAndGroups": string;
     "passages": string;
     "media": string;
+    "myTasks": string;
+    "todo": string;
+    "allTasks": string;
+    "tasks": string;
     "plans": string;
     "team": string;
     "settings": string;
     "integrations": string;
     "project": string;
+    "loadingTranscriberAdmin": string;
     "loadingTranscriber": string;
     "projectSummary": string;
     "addProject": string;
     "logout": string;
     "myAccount": string;
     "clearCache": string;
+    "helpCenter": string;
+    "reportIssue": string;
+    "version": string;
     "planUnsaved": string;
     "loseData": string;
     "newOrganization": string;
+    "switchToAdmin": string;
+    "switchToApp": string;
+    "crashMessage": string;
+    "reports": string;
+    "sessionExpiring": string;
+    "sessionExpireTask": string;
+    "exit": string;
+    "continue": string;
+    "myWorkbench": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
@@ -225,7 +250,6 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "sectionstate": string;
     "passages": string;
     "filter": string;
-    "group": string;
     "transcriber": string;
     "reviewer": string;
 };
@@ -272,6 +296,7 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "abbreviation": string;
     "save": string;
     "projects": string;
+    "owners": string;
     "reviewers": string;
     "transcribers": string;
     "addGroupMember": string;
@@ -279,11 +304,15 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "cancel": string;
     "add": string;
     "delete": string;
+    "choose": string;
     "allReviewersCanTranscribe": string;
-    "noProjects": string;
+    "groupExplain": string;
+    "case1": string;
+    "case2": string;
     "assignedSections": string;
     "projectPlans": string;
     "invalidRole": string;
+    "loadingTable": string;
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
@@ -328,23 +357,39 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "newInviteTask": string;
     "email": string;
     "role": string;
-    "selectRole": string;
+    "organization": string;
+    "selectOrgRole": string;
+    "allusersgroup": string;
+    "groups": string;
+    "group": string;
+    "additionalgroup": string;
+    "groupRole": string;
+    "selectGroupRole": string;
     "cancel": string;
-    "add": string;
+    "send": string;
     "save": string;
     "invalidEmail": string;
     "alreadyInvited": string;
+    "resend": string;
+    "sil": string;
+    "transcriber": string;
+    "invitation": string;
+    "instructions": string;
+    "emailsubject": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
     "email": string;
     "role": string;
+    "allUsers": string;
+    "group": string;
     "accepted": string;
     "invite": string;
     "action": string;
     "delete": string;
     "filter": string;
     "selectRows": string;
+    "noData": string;
 };
 
 export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
@@ -355,6 +400,127 @@ export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
     "logo": string;
     "publicByDefault": string;
     "save": string;
+    "cancel": string;
+    "deleteOrg": string;
+    "deleteExplained": string;
+};
+
+export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
+    "task": string;
+    "dragDrop": string;
+    "cancel": string;
+    "upload": string;
+};
+
+export interface IMyTaskStrings extends Localize.LocalizedStringsMethods {
+    "todo": string;
+    "history": string;
+};
+
+export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
+    "filter": string;
+    "plan": string;
+    "section": string;
+    "passage": string;
+    "state": string;
+    "action": string;
+    "transcriber": string;
+    "reviewer": string;
+    "view": string;
+    "length": string;
+    "assigned": string;
+    "yes": string;
+    "no": string;
+    "loadingTable": string;
+    "title": string;
+    "description": string;
+    "duration": string;
+};
+
+export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
+    "sync": string;
+    "paratextAssociation": string;
+    "selectProject": string;
+    "noProject": string;
+    "projectsPending": string;
+    "countPending": string;
+    "usernamePending": string;
+    "offline": string;
+    "expiredToken": string;
+    "expiredParatextToken": string;
+    "questionOnline": string;
+    "yes": string;
+    "no": string;
+    "questionProject": string;
+    "removeProject": string;
+    "questionAccount": string;
+    "questionPermission": string;
+    "allCriteria": string;
+    "projectError": string;
+    "usernameError": string;
+    "syncPending": string;
+    "syncError": string;
+    "syncComplete": string;
+    "countError": string;
+    "countReady": string;
+    "paratext": string;
+    "render": string;
+    "onestory": string;
+};
+
+export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
+    "submit": string;
+    "reject": string;
+    "save": string;
+    "close": string;
+    "settingsTip": string;
+    "backTip": string;
+    "aheadTip": string;
+    "playTip": string;
+    "pauseTip": string;
+    "rejectTranscriptionTip": string;
+    "rejectReviewTip": string;
+    "submitTranscriptionTip": string;
+    "submitReviewTip": string;
+    "saveTip": string;
+    "saveReviewTip": string;
+};
+
+export interface IProfileStrings extends Localize.LocalizedStringsMethods {
+    "name": string;
+    "given": string;
+    "family": string;
+    "email": string;
+    "phone": string;
+    "timezone": string;
+    "locale": string;
+    "locked": string;
+    "add": string;
+    "save": string;
+    "deleteUser": string;
+    "deleteExplained": string;
+    "cancel": string;
+    "silTranscriberAdmin": string;
+    "silTranscriber": string;
+    "userProfile": string;
+    "completeProfile": string;
+};
+
+export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {
+    "dangerZone": string;
+    "advanced": string;
+    "delete": string;
+};
+
+export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
+    "noMedia": string;
+    "inProgress": string;
+    "transcribe": string;
+    "review": string;
+    "sync": string;
+    "done": string;
+    "section": string;
 };
 
 export interface ILocalizedStrings {
@@ -390,5 +556,13 @@ export interface ILocalizedStrings {
 	invite: IInviteStrings;
 	invitationTable: IInvitationTableStrings;
 	orgSettings: IOrgSettingsStrings;
+	mediaUpload: IMediaUploadStrings;
+	myTask: IMyTaskStrings;
+	toDoTable: IToDoTableStrings;
+	integration: IIntegrationStrings;
+	transcriber: ITranscriberStrings;
+	profile: IProfileStrings;
+	deleteExpansion: IDeleteExpansionStrings;
+	taskItem: ITaskItemStrings;
 	[key: string]: any;
 };

@@ -12,18 +12,15 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import { IntegratedSorting, SortingState } from '@devexpress/dx-react-grid';
-import {
-  Grid,
-  Table,
-  TableColumnResizing,
-  TableHeaderRow,
-  Toolbar,
-} from '@devexpress/dx-react-grid-material-ui';
+import FilterIcon from '@material-ui/icons/FilterList';
+import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { Table } from '@devexpress/dx-react-grid-material-ui';
+import ShapingTable from './ShapingTable';
 import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import Related from '../utils/related';
+import { numCompare } from '../utils/sort';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ICell {
+interface IRow {
   name: string;
   planType: string;
   sections: string;
@@ -69,6 +66,7 @@ interface ICell {
 
 interface IStateProps {
   t: IPlanTableStrings;
+  tableLoad: string[];
 }
 
 interface IRecordProps {
@@ -82,16 +80,17 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function PlanTable(props: IProps) {
-  const { plans, planTypes, sections, t, displaySet } = props;
+  const { plans, planTypes, sections, t, displaySet, tableLoad } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
+  const [projRole] = useGlobal('projRole');
   const [project] = useGlobal('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
     { name: 'planType', title: t.type },
     { name: 'sections', title: t.sections },
-    { name: 'action', title: t.action },
+    { name: 'action', title: projRole === 'admin' ? t.action : '\u00A0' },
   ]);
   const [columnWidth] = useState([
     { columnName: 'name', width: 300 },
@@ -99,7 +98,13 @@ export function PlanTable(props: IProps) {
     { columnName: 'sections', width: 100 },
     { columnName: 'action', width: 150 },
   ]);
-  const [rows, setRows] = useState(Array<ICell>());
+  const columnSorting = [{ columnName: 'sections', compare: numCompare }];
+  const sortingEnabled = [{ columnName: 'action', sortingEnabled: false }];
+  const filteringEnabled = [{ columnName: 'action', filteringEnabled: false }];
+
+  const numCols = ['sections'];
+  const [rows, setRows] = useState(Array<IRow>());
+  const [filter, setFilter] = useState(false);
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [view, setView] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
@@ -108,6 +113,7 @@ export function PlanTable(props: IProps) {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogData, setDialogData] = useState(null as Plan | null);
   const [message, setMessage] = useState(<></>);
+  const [loading, setLoading] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -171,14 +177,19 @@ export function PlanTable(props: IProps) {
       })
     );
   };
-  const handleSelect = (planId: string, type: string) => (e: any) => {
+  const handleFilter = () => setFilter(!filter);
+  const handleSelectEv = (planId: string, type: string) => (e: any) =>
+    handleSelect(planId, type);
+  const handleSelect = (planId: string, type: string) => {
     setPlan(planId);
     displaySet(type.toLocaleLowerCase());
   };
   const getType = (p: Plan) => {
     const typeId = Related(p, 'plantype');
     const typeRec = planTypes.filter(pt => pt.id === typeId);
-    return typeRec && typeRec.length === 1 ? typeRec[0].attributes.name : '--';
+    return typeRec && typeRec.length === 1 && typeRec[0].attributes
+      ? typeRec[0].attributes.name
+      : '--';
   };
   const sectionCount = (p: Plan) => {
     return sections.filter(s => Related(s, 'plan') === p.id).length.toString();
@@ -193,75 +204,81 @@ export function PlanTable(props: IProps) {
           planType: getType(p),
           sections: sectionCount(p),
           action: p.id,
-        } as ICell;
+        } as IRow;
       })
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [plans]);
+  }, [plans, project]);
 
-  const LinkCell = ({
-    value,
-    style,
-    ...restProps
-  }: {
+  useEffect(() => {
+    if (
+      tableLoad.length > 0 &&
+      (!tableLoad.includes('plantype') || !tableLoad.includes('section')) &&
+      !loading
+    ) {
+      setMessage(<span>{t.loadingTable}</span>);
+      setLoading(true);
+    } else if (loading) {
+      setMessage(<></>);
+      setLoading(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [tableLoad]);
+
+  interface ICell {
     value: string;
-    style: object;
-    row: any;
+    style?: React.CSSProperties;
+    row: IRow;
     column: any;
     tableRow: any;
     tableColumn: any;
-  }) => (
+  }
+
+  const LinkCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
       <Button
         key={value}
         aria-label={value}
         color="primary"
         className={classes.link}
-        onClick={handleSelect(restProps.row.action, restProps.row.planType)}
+        onClick={handleSelectEv(restProps.row.action, restProps.row.planType)}
       >
         {value}
-        <EditIcon className={classes.editIcon} />
+        {/* <EditIcon className={classes.editIcon} /> */}
       </Button>
     </Table.Cell>
   );
 
-  const ActionCell = ({
-    value,
-    style,
-    ...restProps
-  }: {
-    value: string;
-    style: object;
-    row: any;
-    column: any;
-    tableRow: any;
-    tableColumn: any;
-  }) => (
+  const ActionCell = ({ value, style, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      <IconButton
-        id={'edit-' + value}
-        key={'edit-' + value}
-        aria-label={'edit-' + value}
-        color="default"
-        className={classes.actionIcon}
-        onClick={handleEdit(restProps.row.action)}
-      >
-        <EditIcon />
-      </IconButton>
-      <IconButton
-        id={'del-' + value}
-        key={'del-' + value}
-        aria-label={'del-' + value}
-        color="default"
-        className={classes.actionIcon}
-        onClick={handleDelete}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {projRole === 'admin' && (
+        <>
+          <IconButton
+            id={'edit-' + value}
+            key={'edit-' + value}
+            aria-label={'edit-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleEdit(restProps.row.action)}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            id={'del-' + value}
+            key={'del-' + value}
+            aria-label={'del-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleDelete}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      )}
     </Table.Cell>
   );
 
-  const Cell = (props: any) => {
+  const Cell = (props: ICell) => {
     const { column } = props;
     if (column.name === 'name') {
       return <LinkCell {...props} />;
@@ -279,32 +296,51 @@ export function PlanTable(props: IProps) {
       <div className={classes.container}>
         <div className={classes.paper}>
           <div className={classes.dialogHeader}>
+            {projRole === 'admin' && (
+              <>
+                <Button
+                  key="add"
+                  aria-label={t.addPlan}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAdd}
+                >
+                  {t.addPlan}
+                  <AddIcon className={classes.buttonIcon} />
+                </Button>
+              </>
+            )}
+            <div className={classes.grow}>{'\u00A0'}</div>
             <Button
-              key="add"
-              aria-label={t.addPlan}
+              key="filter"
+              aria-label={t.filter}
               variant="outlined"
               color="primary"
               className={classes.button}
-              onClick={handleAdd}
+              onClick={handleFilter}
+              title={'Show/Hide filter rows'}
             >
-              {t.addPlan}
-              <AddIcon className={classes.buttonIcon} />
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
             </Button>
-            <div className={classes.grow} />
           </div>
-          <Grid rows={rows} columns={columns}>
-            <SortingState
-              defaultSorting={[{ columnName: 'name', direction: 'asc' }]}
-            />
-            <IntegratedSorting />
-            <Table cellComponent={Cell} />
-            <TableColumnResizing
-              minColumnWidth={50}
-              defaultColumnWidths={columnWidth}
-            />
-            <TableHeaderRow showSortingControls={true} />
-            <Toolbar />
-          </Grid>
+          <ShapingTable
+            columns={columns}
+            columnWidths={columnWidth}
+            sortingEnabled={sortingEnabled}
+            filteringEnabled={filteringEnabled}
+            columnSorting={columnSorting}
+            dataCell={Cell}
+            sorting={[{ columnName: 'name', direction: 'asc' }]}
+            numCols={numCols}
+            shaping={filter}
+            rows={rows}
+          />
         </div>
       </div>
       <PlanAdd
@@ -329,6 +365,7 @@ export function PlanTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planTable' }),
+  tableLoad: state.orbit.tableLoad,
 });
 
 const mapRecordsToProps = {
@@ -337,6 +374,6 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  PlanTable
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(PlanTable) as any
+) as any;

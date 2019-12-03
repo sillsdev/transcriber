@@ -20,6 +20,7 @@ import { Typography, NoSsr, Paper, Chip, MenuItem } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TextField, { BaseTextFieldProps } from '@material-ui/core/TextField';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
+import './ReactSelect.css';
 
 export interface OptionType {
   label: string;
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     valueContainer: {
       display: 'flex',
-      flexWrap: 'wrap',
+      // flexWrap: 'wrap',
       flex: 1,
       alignItems: 'center',
       overflow: 'hidden',
@@ -66,6 +67,11 @@ const useStyles = makeStyles((theme: Theme) =>
     singleValue: {
       fontSize: 16,
     },
+    longSingleValue: {
+      fontSize: 10,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
     placeholder: {
       position: 'absolute',
       left: 2,
@@ -78,6 +84,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: theme.spacing(1),
       left: 0,
       right: 0,
+      width: 400,
     },
     divider: {
       height: theme.spacing(2),
@@ -189,9 +196,12 @@ Placeholder.propTypes = {
 } as any;
 
 function SingleValue(props: SingleValueProps<OptionType>) {
+  const length = typeof props.children === 'string' ? props.children.length : 0;
   return (
     <Typography
-      className={props.selectProps.classes.singleValue}
+      className={clsx(props.selectProps.classes.singleValue, {
+        [props.selectProps.classes.longSingleValue]: length > 16,
+      })}
       {...props.innerProps}
     >
       {props.children}
@@ -323,6 +333,7 @@ export function SingleReactSelect(props: IProps) {
 
   return (
     <div
+      id="SingleSelect"
       className={clsx(classes.root, {
         [classes.noExtraRoot]: rightSize,
       })}

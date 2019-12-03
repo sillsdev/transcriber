@@ -13,7 +13,9 @@ const localStrings = createSelector(
   layoutSelector,
   langSelector,
   (layout, lang) => {
-    layout.setLanguage(lang);
+    if (lang) {
+      layout.setLanguage(lang);
+    }
     return layout;
   }
 );

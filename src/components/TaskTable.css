@@ -1,0 +1,15 @@
+#TaskTable[data-list='true'] {
+  width: inherit !important;
+}
+
+#TaskTable[data-list='true'] thead {
+  display: none;
+}
+
+#TaskTable .MuiListItem-root {
+  padding: 0 16px;
+}
+
+#TaskTable .MuiList-root {
+  padding: 0;
+}

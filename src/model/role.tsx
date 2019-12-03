@@ -1,5 +1,13 @@
 import { Record, RecordRelationship } from '@orbit/data';
 
+export enum RoleNames {
+  Transcriber = 'Transcriber',
+  Reviewer = 'Reviewer',
+  Admin = 'Admin',
+  Member = 'Member',
+  SuperAdmin = 'SuperAdmin',
+}
+
 export interface Role extends Record {
   attributes: {
     orgRole: boolean;

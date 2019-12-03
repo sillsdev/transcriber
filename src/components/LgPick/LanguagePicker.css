@@ -1,0 +1,9 @@
+#LanguagePicker .MuiDialog-paperScrollPaper {
+  margin-bottom: auto;
+  width: 90%;
+}
+
+/* This changes the background of the filled component for dark themes
+ #LangBcp47 .MuiFilledInput-root {
+  background-color: rgba(255, 255, 255, 0.9);
+} */

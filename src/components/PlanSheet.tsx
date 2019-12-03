@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useGlobal } from 'reactn';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -21,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginBottom: theme.spacing(4),
     },
     paper: {},
     actions: theme.mixins.gutters({
@@ -44,6 +42,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
+const initialPosition = {
+  mouseX: null,
+  mouseY: null,
+  i: 0,
+  j: 0,
+};
 
 interface ICell {
   value: any;
@@ -73,8 +78,8 @@ interface IProps extends IStateProps {
   save: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
-  addPassage: () => void;
-  addSection: () => void;
+  addPassage: (i?: number) => void;
+  addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
   setChanged?: (v: boolean) => void;
 }
@@ -97,7 +102,14 @@ export function PlanSheet(props: IProps) {
     setChanged,
   } = props;
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
   const [message, setMessage] = useState(<></>);
+  const [position, setPosition] = useState<{
+    mouseX: null | number;
+    mouseY: null | number;
+    i: number;
+    j: number;
+  }>(initialPosition);
   const [data, setData] = useState(Array<Array<ICell>>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
@@ -178,37 +190,69 @@ export function PlanSheet(props: IProps) {
     setPassageMediaVisible(status);
   };
 
+  const doUpdate = (grid: ICell[][]) => {
+    updateData(
+      justData(grid).map(row =>
+        row.map((cell, cellIndex) =>
+          cellIndex !== bookCol && lookupBook !== null
+            ? cell
+            : lookupBook && lookupBook(cell)
+        )
+      )
+    );
+  };
+
   const handleCellsChanged = (changes: Array<IChange>) => {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
       grid[row][col] = { ...grid[row][col], value };
     });
     if (changes.length > 0) {
-      // setData(grid);
-      updateData(
-        justData(grid).map(row =>
-          row.map((cell, cellIndex) =>
-            cellIndex !== bookCol && lookupBook !== null
-              ? cell
-              : lookupBook && lookupBook(cell)
-          )
-        )
-      );
+      doUpdate(grid);
     }
   };
 
-  const handleContextMenu = (e: MouseEvent, cell: any) =>
-    cell.readOnly ? e.preventDefault() : null;
+  const handleContextMenu = (
+    e: MouseEvent,
+    cell: any,
+    i: number,
+    j: number
+  ) => {
+    e.preventDefault();
+    if (!cell.readOnly) {
+      setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
+    }
+  };
+
+  const handleNoContextMenu = () => setPosition(initialPosition);
+
+  const handleSectionAbove = () => {
+    addSection(position.i - 1);
+    setPosition(initialPosition);
+  };
+
+  const handlePassageAbove = () => {
+    addPassage(position.i - 1);
+    setPosition(initialPosition);
+  };
 
   const handlePaste = (clipBoard: string) => {
+    if (projRole !== 'admin') return Array<Array<string>>();
     const blankLines = /\r?\n\t*\r?\n/;
     const chunks = clipBoard.split(blankLines);
     const lines = chunks
       .join('\n')
       .replace(/\r?\n$/, '')
       .split('\n');
-    if (paste) return paste(lines.map(clipBoard => clipBoard.split('\t')));
-    return lines.map(clipBoard => clipBoard.split('\t'));
+    if (paste)
+      return paste(
+        lines.map(clipBoard =>
+          clipBoard.split('\t').map(v => (typeof v === 'string' ? v.trim() : v))
+        )
+      );
+    return lines.map(clipBoard =>
+      clipBoard.split('\t').map(v => (typeof v === 'string' ? v.trim() : v))
+    );
   };
 
   const handleUp = () => {
@@ -221,6 +265,7 @@ export function PlanSheet(props: IProps) {
   const cellRender = (props: any) => <td {...props} onMouseUp={handleUp} />;
 
   const bookEditor = (props: any) => {
+    if (projRole !== 'admin') return <></>;
     if (setChanged) setChanged(true);
     return (
       <BookSelect
@@ -236,6 +281,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const textEditor = (props: any) => {
+    if (projRole !== 'admin') return <></>;
     if (setChanged) setChanged(true);
     return (
       <SheetText
@@ -302,65 +348,69 @@ export function PlanSheet(props: IProps) {
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="addSection"
-            aria-label={t.addSection}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAddSection}
-          >
-            {t.addSection}
-            <AddIcon className={classes.icon} />
-          </Button>
-          <Button
-            key="addPassage"
-            aria-label={t.addPassage}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAddPassage}
-          >
-            {t.addPassage}
-            <AddIcon className={classes.icon} />
-          </Button>
-          <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleMenu}
-          >
-            {t.action}
-            <DropDownIcon className={classes.icon} />
-          </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
-          >
-            <MenuItem onClick={handleConfirmAction('Delete')}>
-              {t.delete}
-            </MenuItem>
-            <MenuItem onClick={handlePassageMedia(true)}>
-              {t.attachMedia}
-            </MenuItem>
-          </Menu>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
-            key="save"
-            aria-label={t.save}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSave}
-          >
-            {t.save}
-            <SaveIcon className={classes.icon} />
-          </Button>
+          {projRole === 'admin' && (
+            <>
+              <Button
+                key="addSection"
+                aria-label={t.addSection}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleAddSection}
+              >
+                {t.addSection}
+                <AddIcon className={classes.icon} />
+              </Button>
+              <Button
+                key="addPassage"
+                aria-label={t.addPassage}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleAddPassage}
+              >
+                {t.addPassage}
+                <AddIcon className={classes.icon} />
+              </Button>
+              <Button
+                key="action"
+                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                aria-label={t.action}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.action}
+                <DropDownIcon className={classes.icon} />
+              </Button>
+              <Menu
+                id="action-menu"
+                anchorEl={actionMenuItem}
+                open={Boolean(actionMenuItem)}
+                onClose={handleConfirmAction('Close')}
+              >
+                <MenuItem onClick={handleConfirmAction('Delete')}>
+                  {t.delete}
+                </MenuItem>
+                <MenuItem onClick={handlePassageMedia(true)}>
+                  {t.attachMedia}
+                </MenuItem>
+              </Menu>
+              <div className={classes.grow}>{'\u00A0'}</div>
+              <Button
+                key="save"
+                aria-label={t.save}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleSave}
+              >
+                {t.save}
+                <SaveIcon className={classes.icon} />
+              </Button>
+            </>
+          )}
         </div>
 
         <DataSheet
@@ -372,6 +422,20 @@ export function PlanSheet(props: IProps) {
           parsePaste={handlePaste}
           cellRenderer={cellRender}
         />
+        <Menu
+          keepMounted
+          open={position.mouseY !== null && projRole === 'admin'}
+          onClose={handleNoContextMenu}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            position.mouseY !== null && position.mouseX !== null
+              ? { top: position.mouseY, left: position.mouseX }
+              : undefined
+          }
+        >
+          <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
+          <MenuItem onClick={handlePassageAbove}>{t.passageAbove}</MenuItem>
+        </Menu>
       </div>
       <PassageMedia
         visible={passageMediaVisible}
@@ -379,7 +443,9 @@ export function PlanSheet(props: IProps) {
       />
       {confirmAction !== '' ? (
         <Confirm
-          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
+          text={t.confirm
+            .replace('{0}', confirmAction)
+            .replace('{1}', check.length.toString())}
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />

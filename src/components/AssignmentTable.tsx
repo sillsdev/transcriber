@@ -23,24 +23,20 @@ import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import UserPassage from '../model/userPassage';
 import './AssignmentTable.css';
 import AssignSection from './AssignSection';
 import {
-  sectionNumber,
+  sectionDescription,
   sectionReviewerName,
   sectionTranscriberName,
   sectionCompare,
-} from '../utils/section';
-import { passageNumber, passageCompare } from '../utils/passage';
+} from '../utils';
+import { passageDescription, passageCompare } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginBottom: theme.spacing(4),
     },
     paper: {},
     actions: theme.mixins.gutters({
@@ -77,32 +73,6 @@ const getChildRows = (row: any, rootRows: any[]) => {
   return childRows.length ? childRows : null;
 };
 
-/* build the section name = sequence + name */
-const getSection = (section: Section) => {
-  const name =
-    section && section.attributes && section.attributes.name
-      ? section.attributes.name
-      : '';
-  return sectionNumber(section) + ' ' + name;
-};
-
-/* build the passage name = sequence + book + reference */
-const getReference = (passage: Passage[]) => {
-  if (passage.length === 0) return '';
-  if (!passage[0].attributes) return '';
-  const book =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.book
-      ? passage[0].attributes.book
-      : '');
-  const reference =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.reference
-      ? passage[0].attributes.reference
-      : '');
-  return passageNumber(passage[0]) + book + reference;
-};
-
 const getAssignments = (
   plan: string,
   passages: Array<Passage>,
@@ -125,7 +95,7 @@ const getAssignments = (
   plansections.forEach(function(section) {
     sectionRow = {
       id: section.id,
-      name: getSection(section),
+      name: sectionDescription(section),
       state: '',
       reviewer: sectionReviewerName(section, users),
       transcriber: sectionTranscriberName(section, users),
@@ -146,7 +116,7 @@ const getAssignments = (
         : '';
       rowData.push({
         id: passageId,
-        name: getReference(passage),
+        name: passage.length > 0 ? passageDescription(passage[0]) : '',
         state: state,
         reviewer: '',
         transcriber: '',
@@ -164,7 +134,6 @@ interface IStateProps {
 }
 
 interface IRecordProps {
-  userPassages: Array<UserPassage>;
   passages: Array<Passage>;
   passageSections: Array<PassageSection>;
   sections: Array<Section>;
@@ -184,12 +153,12 @@ export function AssignmentTable(props: IProps) {
     passages,
     passageSections,
     sections,
-    userPassages,
     users,
     roles,
   } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
+  const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -212,7 +181,6 @@ export function AssignmentTable(props: IProps) {
   ];
 
   const [filter, setFilter] = useState(false);
-  const [group, setGroup] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
 
   const handleMessageReset = () => {
@@ -280,7 +248,6 @@ export function AssignmentTable(props: IProps) {
   };
 
   const handleFilter = () => setFilter(!filter);
-  const handleGroup = () => setGroup(!group);
 
   useEffect(() => {
     setData(
@@ -293,43 +260,38 @@ export function AssignmentTable(props: IProps) {
         activityState
       )
     );
-  }, [
-    plan,
-    userPassages,
-    passages,
-    passageSections,
-    sections,
-    users,
-    roles,
-    activityState,
-  ]);
+  }, [plan, passages, passageSections, sections, users, roles, activityState]);
 
   return (
     <div id="AssignmentTable" className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="assign"
-            aria-label={t.assignSec}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAssignSection(true)}
-            title={t.assignSec}
-          >
-            {t.assignSec}
-          </Button>
-          <Button
-            key="remove"
-            aria-label={t.removeSec}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleRemoveAssignments}
-            title={t.removeSec}
-          >
-            {t.removeSec}
-          </Button>
+          {projRole === 'admin' && (
+            <>
+              <Button
+                key="assign"
+                aria-label={t.assignSec}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleAssignSection(true)}
+                title={t.assignSec}
+              >
+                {t.assignSec}
+              </Button>
+              <Button
+                key="remove"
+                aria-label={t.removeSec}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleRemoveAssignments}
+                title={t.removeSec}
+              >
+                {t.removeSec}
+              </Button>
+            </>
+          )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
@@ -347,29 +309,13 @@ export function AssignmentTable(props: IProps) {
               <FilterIcon className={classes.icon} />
             )}
           </Button>
-          <Button
-            key="group"
-            aria-label={t.group}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleGroup}
-            title={'Show/Hide group panel'}
-          >
-            {t.group}
-            {group ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
-            )}
-          </Button>
         </div>
         <TreeGrid
           columns={columnDefs}
           columnWidths={columnWidths}
           rows={data}
           getChildRows={getChildRows}
-          pageSizes={[5, 10, 20]}
+          pageSizes={[]}
           tableColumnExtensions={[
             { columnName: 'passages', align: 'right' },
             { columnName: 'name', wordWrapEnabled: true },
@@ -381,7 +327,7 @@ export function AssignmentTable(props: IProps) {
           sorting={[{ columnName: 'name', direction: 'asc' }]}
           treeColumn={'name'}
           showfilters={filter}
-          showgroups={group}
+          showgroups={filter}
           select={handleCheck}
         />{' '}
       </div>
@@ -411,7 +357,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 const mapRecordsToProps = {
-  userPassages: (q: QueryBuilder) => q.findRecords('userpassage'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
@@ -419,6 +364,6 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  AssignmentTable
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(AssignmentTable) as any
+) as any;

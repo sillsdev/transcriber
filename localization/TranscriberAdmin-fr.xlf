@@ -4,13 +4,13 @@
 		<unit id="access.silTranscriberAccess">
 			<segment>
 				<source>SIL Transcriber Access</source>
-				<target>Accès du Transcripteur SIL</target>
+				<target>Accès du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
 				<source>Access SIL Transcriber</source>
-				<target>Accès au Transcripteur SIL</target>
+				<target>Accès au SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="access.createAccount">
@@ -34,7 +34,7 @@
 		<unit id="usertable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="usertable.chooseUser">
@@ -111,8 +111,8 @@
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source>Filter</source>
-         	<target>Filtre</target>
+            <source>Configure</source>
+         	<target>Configurer</target>
          </segment>
       </unit>
       <unit id="usertable.selectRows">
@@ -145,10 +145,10 @@
 				<target>Oui</target>
 			</segment>
 		</unit>
-		<unit id="organizationTable.transcriberAdmin">
+		<unit id="projectTable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="projectTable.chooseProject">
@@ -385,16 +385,28 @@
 				<target>Action</target>
 			</segment>
 		</unit>
+		<unit id="planTable.filter">
+			<segment>
+				<source>Configure</source>
+				<target>Configurer</target>
+			</segment>
+		</unit>
 		<unit id="planTable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="planTable.choosePlan">
 			<segment>
 				<source>Choose a Project Plan</source>
 				<target>Choisissez un plan de projet</target>
+			</segment>
+		</unit>
+		<unit id="planTable.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.action">
@@ -445,103 +457,133 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.title">
+		<unit id="planSheet.saving">
+         <segment>
+            <source>Saving</source>
+         	<target>Épargner</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.selectRows">
+         <segment>
+            <source>Please select row(s) to {0}.</source>
+         	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
+		<unit id="planSheet.confirm">
 			<segment>
-				<source>Assignments</source>
-				<target>Affectations</target>
+				<source>{0} {1} Item(s). Are you sure?</source>
+				<target>{0} {1} article(s). T'es sûr de toi ?</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.sectionstate">
+		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>State</source>
-				<target>État</target>
+				<source>Insert section above</source>
+				<target>Insérer section ci-dessus</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.passages">
+		<unit id="planSheet.passageAbove">
 			<segment>
-				<source>Passages</source>
-				<target>Passages</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.passagestate">
-			<segment>
-				<source>State</source>
-				<target>État</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.user">
-			<segment>
-				<source>User</source>
-				<target>Utilisatrice</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.role">
-			<segment>
-				<source>Role</source>
-				<target>Rôle</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.action">
-			<segment>
-				<source>Action</source>
-				<target>Action</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.assignSection">
-			<segment>
-				<source>Assign Section</source>
-				<target>Assigner un ensemble</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.removeSec">
-			<segment>
-				<source>Remove Assignment</source>
-				<target>Supprimer un affectation</target>
+				<source>Insert passage above</source>
+				<target>Insérer passage ci-dessus</target>
 			</segment>
 		</unit>
 		<unit id="scriptureTable.section">
+         <segment>
+            <source>Section</source>
+            <target>Section</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.title">
+         <segment>
+            <source>Title</source>
+            <target>Titre</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.passage">
+         <segment>
+            <source>Passage</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.book">
+         <segment>
+            <source>Book</source>
+            <target>Livre</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.reference">
+         <segment>
+            <source>Reference</source>
+         	<target>Référence</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.description">
+         <segment>
+            <source>Description</source>
+            <target>Description</target>
+         </segment>
+      </unit>
+		<unit id="scriptureTable.loadingTable">
 			<segment>
-				<source>Section</source>
-				<target>Ensemble</target>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
 			</segment>
 		</unit>
-		<unit id="scriptureTable.title">
-			<segment>
-				<source>Title</source>
-				<target>Titre</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.passage">
-			<segment>
-				<source>Passage</source>
-				<target>Passage</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.book">
-			<segment>
-				<source>Book</source>
-				<target>Livre</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.reference">
-			<segment>
-				<source>Reference</source>
-				<target>Référence</target>
-			</segment>
-		</unit>
-		<unit id="scriptureTable.description">
-			<segment>
-				<source>Description</source>
-				<target>Description du passage</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.assignSec">
+		<unit id="assignmentTable.title">
+         <segment>
+            <source>Assignments</source>
+         	<target>Affectations</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.section">
+         <segment>
+            <source>Section</source>
+            <target>Section</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.sectionstate">
+         <segment>
+            <source>State</source>
+         	<target>État de la section</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.passages">
+         <segment>
+            <source>Passages</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.passagestate">
+         <segment>
+            <source>State</source>
+         	<target>État du passage</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.user">
+         <segment>
+            <source>User</source>
+         	<target>Utilisateur</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.role">
+         <segment>
+            <source>Role</source>
+         	<target>Rôle</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.assignSec">
          <segment>
             <source>Assign Section</source>
          	<target>Affecter une section</target>
          </segment>
       </unit>
-		<unit id="assignmentTable.delete">
+		<unit id="assignmentTable.removeSec">
+         <segment>
+            <source>Remove Assignment</source>
+         	<target>Retirer l'assignation</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.delete">
 			<segment>
 				<source>Delete</source>
 				<target>Effacer</target>
@@ -549,14 +591,8 @@
 		</unit>
 		<unit id="assignmentTable.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.group">
-			<segment>
-				<source>Group</source>
-				<target>Groupe</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.transcriber">
@@ -663,14 +699,14 @@
 		</unit>
 		<unit id="planAdd.addPlan">
 			<segment>
-				<source>Add a Plan</source>
+				<source>Add Plan</source>
 				<target>Nouveau programme</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.newPlanTask">
 			<segment>
-				<source>Enter information for a new plan. (It could be a book of the Bible to be transcribed, a story, a lexionary, and so on.)</source>
-				<target>Saisissez les informations d'un nouveau programme. (Il peut s'agir d'un livre de la Bible à transcrire, d'une histoire, d'un ordre de service, etc.</target>
+				<source>Type the name of the plan, which could be the name of a book of the Bible, a story, a lectionary and so on.</source>
+				<target>Tapez le nom du plan, qui peut être le nom d'un livre de la Bible, d'une histoire, d'un lectionnaire, etc.</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.planType">
@@ -712,7 +748,7 @@
 		<unit id="planAdd.selectAPlanType">
 			<segment>
 				<source>Please select a plan type</source>
-				<target>Veuillez sélectionner un type de programme</target>
+				<target>Sélectionner un type de programme</target>
 			</segment>
 		</unit>
 		<unit id="planAdd.editPlan">
@@ -759,10 +795,10 @@
 		</unit>
 		<unit id="mediaTab.uploadComplete">
 			<segment>
-				<source>Upload Complete</source>
+				<source>Upload complete.</source>
 				<target>Charger achevées</target>
 			</segment>
-		</unit>	    
+		</unit>
 		<unit id="mediaTab.planName">
          <segment>
             <source>Plan</source>
@@ -831,8 +867,8 @@
 		</unit>
 		<unit id="mediaTab.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.selectFiles">
@@ -847,7 +883,19 @@
          	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
          </segment>
       </unit>
-      <unit id="passageMedia.attachAvailableMedia">
+	  <unit id="mediaTab.unsupported">
+	  	<segment>
+	  		<source>File {0} is an unsupported file type.</source>
+	  		<target>Fichier {0} est un type de fichier non supporté.</target>
+	  	</segment>
+	  </unit>
+		<unit id="mediaTab.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
+		<unit id="passageMedia.attachAvailableMedia">
 			<segment>
 				<source>Attach available media files to passages (with no current media).</source>
 				<target>Joindre les fichiers multimédias disponibles aux passages (qui ne contiennent aucun média actuel).</target>
@@ -886,7 +934,13 @@
 		<unit id="main.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
-				<target>Administration du Transcripteur SIL</target>
+				<target>Administration du SIL Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="main.silTranscriber">
+			<segment>
+				<source>SIL Transcriber</source>
+				<target>SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="main.search">
@@ -897,7 +951,7 @@
 		</unit>
 		<unit id="main.organization">
 			<segment>
-				<source>org Details</source>
+				<source>Org Details</source>
 				<target>Détails de l'organisation</target>
 			</segment>
 		</unit>
@@ -917,6 +971,30 @@
 			<segment>
 				<source>Media</source>
 				<target>Fichiers audio</target>
+			</segment>
+		</unit>
+		<unit id="main.myTasks">
+         <segment>
+            <source>My Tasks</source>
+         	<target>Mes Tâches</target>
+         </segment>
+      </unit>
+		<unit id="main.todo">
+			<segment>
+				<source>To Do</source>
+				<target>À faire</target>
+			</segment>
+		</unit>
+		<unit id="main.allTasks">
+         <segment>
+            <source>All Tasks</source>
+         	<target>Toutes les tâches</target>
+         </segment>
+      </unit>
+		<unit id="main.tasks">
+			<segment>
+				<source>Tasks</source>
+				<target>Tâches</target>
 			</segment>
 		</unit>
 		<unit id="main.plans">
@@ -949,10 +1027,16 @@
 				<target>Project</target>
 			</segment>
 		</unit>
-		<unit id="main.loadingTranscriber">
+		<unit id="main.loadingTranscriberAdmin">
 			<segment>
 				<source>Loading SIL Transcriber Admin</source>
-				<target>Chargement de SIL Transcriber Admin</target>
+				<target>Chargement de SIL Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="main.loadingTranscriber">
+			<segment>
+				<source>Loading SIL Transcriber</source>
+				<target>Chargement de SIL Transcriber</target>
 			</segment>
 		</unit>
 		<unit id="main.projectSummary">
@@ -985,6 +1069,24 @@
          	<target>Effacer le cache</target>
          </segment>
       </unit>
+      <unit id="main.helpCenter">
+         <segment>
+            <source>Help Center</source>
+         	<target>Centre d'aide</target>
+         </segment>
+      </unit>
+      <unit id="main.reportIssue">
+         <segment>
+            <source>Report an Issue</source>
+         	<target>Signaler un problème</target>
+         </segment>
+      </unit>
+      <unit id="main.version">
+         <segment>
+            <source>Version: </source>
+         	<target>Version: </target>
+         </segment>
+      </unit>
       <unit id="main.planUnsaved">
          <segment>
 			<source>Plan Unsaved</source>
@@ -1003,7 +1105,61 @@
             <target>Ajouter Organization</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.section">
+		<unit id="main.switchToAdmin">
+			<segment>
+				<source>Open project in Admin</source>
+				<target>Ouvrir le projet dans Admin</target>
+			</segment>
+		</unit>
+		<unit id="main.switchToApp">
+			<segment>
+				<source>Open project in App</source>
+				<target>Ouvrir le projet dans App</target>
+			</segment>
+		</unit>
+		<unit id="main.crashMessage">
+			<segment>
+				<source>Something went wrong. The developers need to address this issue.</source>
+				<target>Quelque chose a mal tourné. Les développeurs doivent se pencher sur cette question.</target>
+			</segment>
+		</unit>
+		<unit id="main.reports">
+			<segment>
+				<source>Reports</source>
+				<target>Rapports</target>
+			</segment>
+		</unit>
+		<unit id="main.sessionExpiring">
+         <segment>
+            <source>Session Expiring</source>
+         	<target>Session expirant</target>
+         </segment>
+      </unit>
+      <unit id="main.sessionExpireTask">
+         <segment>
+            <source>Your session will expire in {0} seconds. Would you like to continue?</source>
+         	<target>Votre session expirera dans {0} secondes. Voulez-vous continuer ?</target>
+         </segment>
+      </unit>
+      <unit id="main.exit">
+         <segment>
+            <source>Exit</source>
+            <target>Sortir</target>
+         </segment>
+      </unit>
+      <unit id="main.continue">
+         <segment>
+            <source>Continue</source>
+            <target>Continuer</target>
+         </segment>
+      </unit>
+		<unit id="main.myWorkbench">
+			<segment>
+				<source>My Workbench</source>
+				<target>Mon Atelier</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>
@@ -1024,14 +1180,8 @@
 
 		<unit id="transcriptionTab.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
-			</segment>
-		</unit>
-		<unit id="transcriptionTab.group">
-			<segment>
-				<source>Group</source>
-				<target>Groupe</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.transcriber">
@@ -1114,8 +1264,8 @@
       </unit>
       <unit id="groupTable.filter">
          <segment>
-			<source>Filter</source>
-			<target>Filtre</target>
+			<source>Configure</source>
+         	<target>Configurer</target>
          </segment>
       </unit>
 		<unit id="groupTable.action">
@@ -1180,13 +1330,13 @@
       </unit>
       <unit id="groupAdd.newGroupTask">
          <segment>
-            <source>Enter (or edit) basic group information.</source>
-			<target>Saisissez (ou modifiez) les informations de base du groupe.</target>
+         	<source>Type the name and abbreviation of the group.</source>
+         	<target>Tapez le nom et l'abréviation du groupe.</target>
          </segment>
       </unit>
       <unit id="groupAdd.name">
          <segment>
-            <source>Group Name</source>
+            <source>Name</source>
 			<target>Nom du group</target>
          </segment>
       </unit>
@@ -1220,13 +1370,19 @@
             <target>Projects</target>
          </segment>
       </unit>
-      <unit id="groupSettings.reviewers">
+	  <unit id="groupSettings.owners">
          <segment>
-			<source>Reviewers</source>
-			<target>Réviseur</target>
+			<source>Owner(s)</source>
+         	<target>Maître(s)</target>
          </segment>
       </unit>
-	<unit id="groupSettings.transcribers">
+		<unit id="groupSettings.reviewers">
+			<segment>
+				<source>Reviewers</source>
+				<target>Réviseur</target>
+			</segment>
+		</unit>
+		<unit id="groupSettings.transcribers">
          <segment>
 			<source>Transcribers</source>
 			<target>Transcripteur</target>
@@ -1234,14 +1390,14 @@
       </unit>
       <unit id="groupSettings.addGroupMember">
          <segment>
-			<source>Add Group Member</source>
-			<target>Ajouter un membre du groupe</target>
+			<source>Choose {0}</source>
+         	<target>Choisir l(e) {0}</target>
          </segment>
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
-			<source>Enter the name of a person in the organization to be included in the group.</source>
-			<target>Saisissez le nom d'une personne de l'organisation à inclure dans le groupe.</target>
+         	<source>Choose a person who will act as a {0} for projects in this group.</source>
+         	<target>Choisissez une personne qui agira à titre d(e) {0} pour les projets de ce groupe.</target>
          </segment>
       </unit>
       <unit id="groupSettings.cancel">
@@ -1252,8 +1408,8 @@
       </unit>
       <unit id="groupSettings.add">
          <segment>
-			<source>Add</source>
-			<target>Ajouter</target>
+			<source>Ok</source>
+         	<target>Ok</target>
          </segment>
       </unit>
 	<unit id="groupSettings.delete">
@@ -1262,19 +1418,37 @@
 			<target>Supprimer</target>
 		</segment>
 	</unit>
-	<unit id="groupSettings.allReviewersCanTranscribe">
+		<unit id="groupSettings.choose">
+			<segment>
+				<source>Choose...</source>
+				<target>Choisir....</target>
+			</segment>
+		</unit>
+		<unit id="groupSettings.allReviewersCanTranscribe">
 		<segment>
 			<source>All Reviewers are allowed to transcribe.</source>
 			<target>Tous les réviseurs sont autorisés à transcrire.</target>
 		</segment>
 	</unit>
-   <unit id="groupSettings.noProjects">
+	<unit id="groupSettings.groupExplain">
          <segment>
-            <source>There are no projects that use this group.</source>
-         	<target>Aucun projet n'utilise ce groupe.</target>
+            <source>Groups connect organization members to a project.</source>
+         	<target>Les groupes relient les membres de l'organisation à un projet.</target>
          </segment>
       </unit>
-	<unit id="groupSettings.assignedSections">
+      <unit id="groupSettings.case1">
+         <segment>
+         	<source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
+         	<target>Si le projet n'existe pas, cliquez sur le bouton plus dans le volet de navigation pour le créer.</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.case2">
+         <segment>
+         	<source>Existing projects can be associated with this group in Settings.</source>
+         	<target>Les projets existants peuvent être associés à ce groupe dans Paramètres.</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.assignedSections">
          <segment>
             <source>  Assigned Sections: </source>
          	<target>  Sections assignées : </target>
@@ -1292,12 +1466,18 @@
          	<target>Rôle invalide. Utilisateur non ajouté.</target>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
+		<unit id="groupSettings.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
+		<unit id="shapingTable.NoColumns">
 			<segment>
 				<source>No columns visible</source>
 				<target>Aucune colonne visible</target>
 			</segment>
-	</unit>	    
+	</unit>
     <unit id="treeChart.noData">
          <segment>
 			<source>No Transcription Data Yet</source>
@@ -1324,8 +1504,8 @@
       </unit>
       <unit id="languagePicker.selectLanguage">
          <segment>
-            <source>Select a Language</source>
-         	<target>Sélectionnez une langue</target>
+            <source>Choose Language Details</source>
+         	<target>Choisir les détails de la langue</target>
          </segment>
       </unit>
       <unit id="languagePicker.findALanguage">
@@ -1366,8 +1546,8 @@
       </unit>
    <unit id="languagePicker.select">
          <segment>
-            <source>Select</source>
-         	<target>Sélectionner</target>
+            <source>Save</source>
+         	<target>Enregistrer</target>
          </segment>
       </unit>
       <unit id="languagePicker.cancel">
@@ -1462,26 +1642,69 @@
       </unit>
       <unit id="invite.role">
          <segment>
-            <source>Role</source>
-         	<target>Rôle</target>
+            <source>Organization Role</source>
+         	<target>Rôle organisationnel</target>
          </segment>
       </unit>
-      <unit id="invite.selectRole">
+	  <unit id="invite.organization">
+         <segment>
+            <source>Organization</source>
+            <target>Organisation</target>
+         </segment>
+      </unit>
+      <unit id="invite.selectOrgRole">
          <segment>
             <source>Select Organizational Role</source>
          	<target>Sélectionner le rôle organisationnel</target>
          </segment>
       </unit>
+	  <unit id="invite.allusersgroup">
+         <segment>
+            <source>All Users Group</source>
+            <target>Groupe de tous les Utilisateurs</target>
+         </segment>
+      </unit>
+      <unit id="invite.groups">
+         <segment>
+            <source>Groups</source>
+            <target>Groupes</target>
+         </segment>
+      </unit>
+      <unit id="invite.group">
+         <segment>
+            <source>Group</source>
+            <target>Groupe</target>
+         </segment>
+      </unit>
+      <unit id="invite.additionalgroup">
+         <segment>
+            <source>Optional additional Group</source>
+            <target>Groupe supplémentaire facultatif</target>
+         </segment>
+      </unit>
+      <unit id="invite.groupRole">
+         <segment>
+            <source>Group Role</source>
+            <target>Rôle Groupe</target>
+         </segment>
+      </unit>
+      <unit id="invite.selectGroupRole">
+         <segment>
+            <source>Select Group Role</source>
+            <target>Sélectionner le rôle Groupe</target>
+         </segment>
+      </unit>
+   
       <unit id="invite.cancel">
          <segment>
             <source>Cancel</source>
          	<target>Annuler</target>
          </segment>
       </unit>
-      <unit id="invite.add">
+      <unit id="invite.send">
          <segment>
-            <source>Add</source>
-         	<target>Ajouter</target>
+            <source>Send</source>
+         	<target>Envoyer</target>
          </segment>
       </unit>
       <unit id="invite.save">
@@ -1502,6 +1725,42 @@
 				<target>Déjà invité !</target>
 			</segment>
 		</unit>
+      <unit id="invite.resend">
+         <segment>
+            <source>Resend</source>
+            <target>Renvoyer</target>
+         </segment>
+      </unit>
+      <unit id="invite.sil">
+         <segment>
+            <source>SIL International</source>
+            <target>SIL International</target>
+         </segment>
+      </unit>
+      <unit id="invite.transcriber">
+         <segment>
+            <source>SIL Transcriber</source>
+            <target>SIL Transcriber</target>
+         </segment>
+      </unit>
+      <unit id="invite.invitation">
+         <segment>
+            <source>has invited you to join</source>
+            <target>vous a invité à rejoindre</target>
+         </segment>
+      </unit>
+      <unit id="invite.instructions">
+         <segment>
+            <source>Please click the following link to accept the invitation:</source>
+            <target>Veuillez cliquer sur le lien suivant pour accepter l'invitation:</target>
+         </segment>
+      </unit>
+      <unit id="invite.emailsubject">
+         <segment>
+            <source>SIL Transcriber Invitation</source>
+            <target>SIL Transcriber Invitation</target>
+         </segment>
+      </unit>
 		<unit id="invitationTable.email">
          <segment>
             <source>Email</source>
@@ -1512,6 +1771,18 @@
          <segment>
             <source>Role</source>
          	<target>Rôle</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.allUsers">
+         <segment>
+            <source>All Users</source>
+            <target>Groupe de tous les Utilisateurs</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.group">
+         <segment>
+            <source>Group</source>
+            <target>Groupe</target>
          </segment>
       </unit>
       <unit id="invitationTable.accepted">
@@ -1540,14 +1811,20 @@
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source>Filter</source>
-            <target>Filtre</target>
+            <source>Configure</source>
+         	<target>Configurer</target>
          </segment>
       </unit>
    <unit id="invitationTable.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
          	<target>Veuillez sélectionner la ou les lignes de {0}.</target>
+         </segment>
+      </unit>
+      <unit id="invitationTable.noData">
+         <segment>
+            <source>No invitations</source>
+         	<target>Pas d'invitations</target>
          </segment>
       </unit>
       <unit id="orgSettings.add">
@@ -1592,5 +1869,587 @@
             <target>Enregistrer</target>
          </segment>
       </unit>
-   </file>
+		<unit id="orgSettings.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="orgSettings.deleteOrg">
+			<segment>
+				<source>Delete Organization</source>
+				<target>Supprimer l'organisation</target>
+			</segment>
+		</unit>
+		<unit id="orgSettings.deleteExplained">
+			<segment>
+				<source>Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.</source>
+				<target>La suppression de cet organisme empêchera tout membre de l'organisme de travailler à l'un ou l'autre des projets ou des plans de cet organisme.</target>
+			</segment>
+		</unit>
+		<unit id="mediaUpload.title">
+         <segment>
+            <source>Upload Media</source>
+         	<target>Télécharger des fichiers audio</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.task">
+         <segment>
+            <source>You can upload audio files in .mp3 format or in .wav format.</source>
+         	<target>Vous pouvez télécharger des fichiers audio au format .mp3 ou .wav.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.dragDrop">
+         <segment>
+            <source>Drag and drop files here, or click here to browse for the files.</source>
+         	<target>Glissez-déposez les fichiers ici, ou cliquez ici pour rechercher les fichiers.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.cancel">
+         <segment>
+            <source>Cancel</source>
+         	<target>annuler</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.upload">
+         <segment>
+            <source>Upload</source>
+         	<target>Télécharger</target>
+         </segment>
+      </unit>
+   <unit id="myTask.todo">
+         <segment>
+            <source>To Do</source>
+         	<target>À faire</target>
+         </segment>
+      </unit>
+      <unit id="myTask.history">
+         <segment>
+            <source>History</source>
+         	<target>Historique</target>
+         </segment>
+      </unit>
+		<unit id="toDoTable.filter">
+			<segment>
+				<source>Configure</source>
+				<target>Configurer</target>
+			</segment>
+		</unit>
+	<unit id="toDoTable.plan">
+         <segment>
+            <source>Plan</source>
+            <target>Programme</target>
+         </segment>
+      </unit>
+      <unit id="toDoTable.section">
+         <segment>
+            <source>Section</source>
+            <target>Section</target>
+         </segment>
+      </unit>
+      <unit id="toDoTable.passage">
+         <segment>
+            <source>Passage</source>
+            <target>Passage</target>
+         </segment>
+      </unit>
+      <unit id="toDoTable.state">
+         <segment>
+            <source>State</source>
+         	<target>État</target>
+         </segment>
+      </unit>
+		<unit id="toDoTable.action">
+			<segment>
+				<source>Action</source>
+				<target>Action</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.transcriber">
+			<segment>
+				<source>Transcribe</source>
+				<target>Transcrire</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.reviewer">
+			<segment>
+				<source>Review</source>
+				<target>Controler</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.view">
+			<segment>
+				<source>View</source>
+				<target>Voir</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.length">
+			<segment>
+				<source>Duration</source>
+				<target>Durée</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.assigned">
+			<segment>
+				<source>Assigned</source>
+				<target>Affecté à</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.yes">
+			<segment>
+				<source>Yes</source>
+				<target>Oui</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.no">
+			<segment>
+				<source>no</source>
+				<target>Non</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.title">
+			<segment>
+				<source>Title</source>
+				<target>Titre</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.description">
+			<segment>
+				<source>Description</source>
+				<target>Description</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.duration">
+			<segment>
+				<source>Duration</source>
+				<target>Durée</target>
+			</segment>
+		</unit>
+		<unit id="integration.sync">
+         <segment>
+            <source>Sync</source>
+            <target>Sync</target>
+         </segment>
+      </unit>
+      <unit id="integration.paratextAssociation">
+         <segment>
+            <source>Paratext association</source>
+    		<target>Association paratext</target>
+	     </segment>
+      </unit>
+      <unit id="integration.selectProject">
+         <segment>
+            <source>Select Paratext Project</source>
+    		<target>Sélectionnez le projet Paratext</target>
+	     </segment>
+      </unit>
+      <unit id="integration.noProject">
+         <segment>
+            <source>You are not a member of any Paratext projects.</source>
+    		<target>Vous n'êtes membre d'aucun projet Paratext.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.projectsPending">
+         <segment>
+            <source>Querying projects...</source>
+            <target>Requête de projets ...</target>
+         </segment>
+      </unit>
+      <unit id="integration.countPending">
+         <segment>
+            <source>Querying count...</source>
+            <target>Requête de nombre ...</target>
+         </segment>
+      </unit>
+      <unit id="integration.usernamePending">
+         <segment>
+            <source>Querying username...</source>
+            <target>Requête le nom d'utilisateur...</target>
+         </segment>
+      </unit>
+      <unit id="integration.offline">
+         <segment>
+            <source>Offline</source>
+    		<target>Hors ligne</target>
+	     </segment>
+      </unit>
+      <unit id="integration.expiredToken">
+         <segment>
+            <source>Your login has expired and can't be automatically renewed.  Please logout and login again.</source>
+    		<target>Votre identifiant a expiré et ne peut pas être automatiquement renouvelé. Veuillez vous déconnecter et vous reconnecter.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+    		<target>Votre connexion paratext a expiré et ne peut pas être automatiquement renouvelée. Veuillez vous déconnecter et vous reconnecter.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.questionOnline">
+         <segment>
+            <source>Are you connected to the Internet?</source>
+    		<target>Êtes-vous connecté à Internet?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.yes">
+         <segment>
+            <source>Yes</source>
+			<target>Oui</target>
+         </segment>
+      </unit>
+      <unit id="integration.no">
+         <segment>
+            <source>No</source>
+			<target>Non</target>
+	     </segment>
+      </unit>
+   <unit id="integration.questionProject">
+         <segment>
+            <source>Are you connected to a Paratext Project?</source>
+    		<target>Êtes-vous connecté à un projet Paratext?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.removeProject">
+         <segment>
+            <source>Remove Project Association</source>
+    		<target>Supprimer l'association de projet</target>
+	     </segment>
+      </unit>
+      <unit id="integration.questionAccount">
+         <segment>
+            <source>Do you have a Paratext Account?</source>
+    		<target>Avez-vous un compte Paratext?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.questionPermission">
+         <segment>
+            <source>Do you have permission to edit the Paratext project text?</source>
+    		<target>Avez-vous la permission de modifier le texte du projet Paratext?</target>
+	     </segment>
+      </unit>
+      <unit id="integration.allCriteria">
+         <segment>
+            <source>You must satisfy all criteria to sync.</source>
+    		<target>Vous devez satisfaire aux critères pour la synchronisation.</target>
+	     </segment>
+      </unit>
+      <unit id="integration.projectError">
+         <segment>
+            <source>Project Query error:</source>
+    		<target>Erreur de requête de projet:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.usernameError">
+         <segment>
+            <source>Username error:</source>
+    		<target>Erreur de nom d'utilisateur:</target>
+	     </segment>
+      </unit>
+	  <unit id="integration.syncPending">
+         <segment>
+            <source>Syncing...</source>
+    		<target>Synchroniser ...</target>
+	    </segment>
+      </unit>
+      <unit id="integration.syncError">
+         <segment>
+            <source>Sync error:</source>
+    		<target>Erreur de synchronisation:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.syncComplete">
+         <segment>
+            <source>Sync Complete!</source>
+            <target>Synchronisation terminée!</target>
+         </segment>
+      </unit>
+	  <unit id="integration.countError">
+         <segment>
+            <source>Count query error: </source>
+    		<target>Compter l'erreur de requête:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.countReady">
+         <segment>
+            <source>Passages ready to sync: </source>
+    		<target>Passages prêts à être synchronisés:</target>
+	     </segment>
+      </unit>
+      <unit id="integration.paratext">
+         <segment>
+            <source>Paratext</source>
+    		<target>Non</target>
+	     </segment>
+      </unit>
+      <unit id="integration.render">
+         <segment>
+            <source>Render</source>
+    		<target>Rendre</target>
+	     </segment>
+      </unit>
+      <unit id="integration.onestory">
+         <segment>
+            <source>One Story</source>
+    		<target>Une Histoire</target>
+	     </segment>
+      </unit>
+		<unit id="transcriber.submit">
+			<segment>
+				<source>Submit</source>
+				<target>Soumettre</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.reject">
+			<segment>
+				<source>Reject</source>
+				<target>Rejeter</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.save">
+			<segment>
+				<source>Save</source>
+				<target>Sauvegarde</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.close">
+			<segment>
+				<source>Close</source>
+				<target>Fermer</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.settingsTip">
+         <segment>
+            <source>Settings</source>
+         	<target>Paramètres</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.backTip">
+         <segment>
+            <source>Skip back (F2)</source>
+         	<target>Saut en arrière (F2)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.aheadTip">
+         <segment>
+            <source>Skip ahead (F4)</source>
+         	<target>Sauter en avant (F4)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.playTip">
+         <segment>
+            <source>Pause (ESC)</source>
+         	<target>Pause (ESC)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pauseTip">
+         <segment>
+            <source>Play (ESC)</source>
+         	<target>Ecouter (ESC)</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectTranscriptionTip">
+         <segment>
+            <source>Audio recording is unusable</source>
+         	<target>L'enregistrement audio est inutilisable</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.rejectReviewTip">
+         <segment>
+            <source>Transcription requires changes.</source>
+         	<target>La transcription exige des changements.</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitTranscriptionTip">
+         <segment>
+            <source>Mark this transcription as complete.</source>
+         	<target>Marquez cette transcription comme complète.</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.submitReviewTip">
+         <segment>
+            <source>Mark this review as complete.</source>
+         	<target>Cochez cette évaluation comme étant complète.</target>
+         </segment>
+      </unit>
+		<unit id="transcriber.saveTip">
+			<segment>
+				<source>Save transcription changes without marking as complete.</source>
+				<target>Enregistrer les modifications de transcription sans les marquer comme complètes.</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.saveReviewTip">
+         <segment>
+            <source>Save position in recording without marking as complete.</source>
+            <target>Enregistrer la position dans l'enregistrement sans marquer comme complète.</target>
+         </segment>
+      </unit>
+	<unit id="profile.name">
+         <segment>
+            <source>Full Name</source>
+         	<target>Nom et prénom</target>
+         </segment>
+      </unit>
+      <unit id="profile.given">
+         <segment>
+            <source>Given Name</source>
+         	<target>Prénom</target>
+         </segment>
+      </unit>
+      <unit id="profile.family">
+         <segment>
+            <source>Family Name</source>
+            <target>Nom</target>
+         </segment>
+      </unit>
+      <unit id="profile.email">
+         <segment>
+            <source>Email</source>
+         	<target>Courriel</target>
+         </segment>
+      </unit>
+      <unit id="profile.phone">
+         <segment>
+            <source>Phone</source>
+         	<target>Numéro de téléphone</target>
+         </segment>
+      </unit>
+      <unit id="profile.timezone">
+         <segment>
+            <source>Time zone</source>
+         	<target>Fuseau horaire</target>
+         </segment>
+      </unit>
+      <unit id="profile.locale">
+         <segment>
+            <source>Locale</source>
+         	<target>Locale</target>
+         </segment>
+      </unit>
+      <unit id="profile.locked">
+         <segment>
+            <source>Locked</source>
+         	<target>Verrouillé</target>
+         </segment>
+      </unit>
+      <unit id="profile.add">
+         <segment>
+            <source>Add</source>
+            <target>Ajouter</target>
+         </segment>
+      </unit>
+      <unit id="profile.save">
+         <segment>
+            <source>Save</source>
+         	<target>Sauvegarder</target>
+         </segment>
+      </unit>
+      <unit id="profile.deleteUser">
+         <segment>
+            <source>Delete User</source>
+         	<target>Supprimer un utilisateur</target>
+         </segment>
+      </unit>
+      <unit id="profile.deleteExplained">
+         <segment>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
+         	<target>La suppression de votre utilisateur vous empêchera d'utiliser le programme et supprimera les références à votre travail.</target>
+         </segment>
+      </unit>
+		<unit id="profile.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="profile.silTranscriberAdmin">
+			<segment>
+				<source>SIL Transcriber Admin</source>
+				<target>Administration du SIL Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="profile.silTranscriber">
+			<segment>
+				<source>SIL Transcriber</source>
+				<target>SIL Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="profile.userProfile">
+			<segment>
+				<source>User Profile</source>
+				<target>Profil de l'utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="profile.completeProfile">
+			<segment>
+				<source>Complete User Profile</source>
+				<target>Remplir le profil de l'utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="deleteExpansion.dangerZone">
+			<segment>
+				<source>Danger Zone</source>
+				<target>Zone de danger</target>
+			</segment>
+		</unit>
+		<unit id="deleteExpansion.advanced">
+			<segment>
+				<source>Advanced</source>
+				<target>Avancé</target>
+			</segment>
+		</unit>
+		<unit id="deleteExpansion.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Supprimer</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.noMedia">
+			<segment>
+				<source>No Audio</source>
+				<target>Pas d'audio</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.inProgress">
+			<segment>
+				<source>In Progress</source>
+				<target>En cours</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.transcribe">
+			<segment>
+				<source>Transcribe</source>
+				<target>Transcrire</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.review">
+			<segment>
+				<source>Review</source>
+				<target>Examiner</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.sync">
+			<segment>
+				<source>Sync</source>
+				<target>Synchroniser</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.done">
+			<segment>
+				<source>Done</source>
+				<target>Terminé</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.section">
+			<segment>
+				<source>Section {0}.{1}</source>
+				<target>Section {0}.{1}</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>

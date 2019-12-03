@@ -25,8 +25,12 @@ const memory = new Memory({ schema, keyMap });
 
 const globals = {
   organization: null,
+  orgRole: 'admin',
   project: null,
+  projRole: 'admin',
   plan: null,
+  tab: 0,
+  group: '',
   user: null,
   lang: 'en',
   memory: memory,
@@ -55,6 +59,8 @@ const tree = (
 );
 
 const addOneSection = async () => {
+  memory.cache.reset();
+  keyMap.reset();
   const plan = {
     type: 'plan',
     attributes: {
@@ -257,7 +263,7 @@ test('ScriptureTable Delete passage row gives confirmation', async () => {
   expect(true);
 });
 
-test('ScriptureTable Delete passage row', async () => {
+test('ScriptureTable Delete passage row removes row', async () => {
   const sectionId = await addOneSection();
   await addPassageToSection(sectionId);
 
@@ -275,7 +281,7 @@ test('ScriptureTable Delete passage row', async () => {
   expect(body && body.children.length).toBe(2);
 });
 
-test('ScriptureTable Delete section rows', async () => {
+test('ScriptureTable Delete section row removes rows', async () => {
   const sectionId = await addOneSection();
   await addPassageToSection(sectionId);
 

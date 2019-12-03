@@ -55,7 +55,9 @@ export function Logout(props: IProps) {
   const { fetchLocalization, setLanguage } = props;
 
   useEffect(() => {
-    setLanguage(navigator.language.split('-')[0]);
+    if (navigator.language.split('-')[0]) {
+      setLanguage(navigator.language.split('-')[0]);
+    }
     fetchLocalization();
     auth.logout();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

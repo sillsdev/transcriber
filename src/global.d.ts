@@ -7,7 +7,9 @@ import JSONAPISource from '@orbit/jsonapi';
 declare module 'reactn/default' {
   export interface State {
     organization: string;
+    orgRole: string;
     project: string;
+    projRole: string;
     plan: string;
     tab: number;
     group: string;

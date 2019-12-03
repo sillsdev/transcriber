@@ -2,30 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, Role, Invitation, IInvitationTableStrings } from '../model';
+import {
+  IState,
+  Role,
+  Invitation,
+  IInvitationTableStrings,
+  Group,
+} from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core';
+import { Button, Menu, MenuItem, Typography } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
-import Invite from './Invite';
+import { Table } from '@devexpress/dx-react-grid-material-ui';
+import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related, remoteIdNum } from '../utils';
-import moment from 'moment';
+import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginBottom: theme.spacing(4),
     },
     paper: {},
     actions: theme.mixins.gutters({
@@ -53,7 +56,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IRow {
   email: string;
-  role: string;
+  orgRole: string;
+  allUsersRole: string;
+  group: string;
+  groupRole: string;
   accepted: string;
   id: RecordIdentity;
 }
@@ -61,6 +67,7 @@ interface IRow {
 const getMedia = (
   organization: string,
   roles: Array<Role>,
+  groups: Array<Group>,
   invitations: Array<Invitation>
 ) => {
   const invites = invitations.filter(
@@ -68,9 +75,16 @@ const getMedia = (
   );
   return invites.map(i => {
     const role = roles.filter(r => r.id === related(i, 'role'));
+    const allusersrole = roles.filter(r => r.id === related(i, 'allUsersRole'));
+    const grouprole = roles.filter(r => r.id === related(i, 'groupRole'));
+    const group = groups.filter(r => r.id === related(i, 'group'));
     return {
       email: i.attributes.email ? i.attributes.email : '',
-      role: role.length === 1 ? role[0].attributes.roleName : '',
+      orgRole: role.length === 1 ? role[0].attributes.roleName : 'xx',
+      allUsersRole:
+        allusersrole.length === 1 ? allusersrole[0].attributes.roleName : 'x',
+      group: group.length === 1 ? group[0].attributes.name : '',
+      groupRole: grouprole.length === 1 ? grouprole[0].attributes.roleName : '',
       accepted: i.attributes.accepted ? 'true' : 'false',
       id: { type: 'invitation', id: i.id },
     } as IRow;
@@ -85,19 +99,18 @@ interface IDispatchProps {}
 
 interface IRecordProps {
   roles: Array<Role>;
+  groups: Array<Group>;
   invitations: Array<Invitation>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function InvitationTable(props: IProps) {
-  const { t, roles, invitations } = props;
+  const { t, roles, groups, invitations } = props;
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
-  const [user] = useGlobal('user');
+  const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
@@ -105,12 +118,18 @@ export function InvitationTable(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
     { name: 'email', title: t.email },
-    { name: 'role', title: t.role },
+    { name: 'orgRole', title: t.role },
+    { name: 'allUsersRole', title: t.allUsers },
+    { name: 'group', title: t.group },
+    { name: 'groupRole', title: t.role },
     { name: 'accepted', title: t.accepted },
   ];
   const columnWidths = [
     { columnName: 'email', width: 200 },
-    { columnName: 'role', width: 100 },
+    { columnName: 'orgRole', width: 100 },
+    { columnName: 'allUsersRole', width: 100 },
+    { columnName: 'group', width: 150 },
+    { columnName: 'groupRole', width: 100 },
     { columnName: 'accepted', width: 100 },
   ];
   const [filter, setFilter] = useState(false);
@@ -118,42 +137,12 @@ export function InvitationTable(props: IProps) {
   const [dialogData, setDialogData] = useState(null as Invitation | null);
 
   const handleAdd = () => {
+    console.log(dialogVisible);
     setDialogData(null);
     setDialogVisible(true);
   };
-  const handleAddMethod = async (email: string, role: string) => {
+  const handleAddComplete = async (invite: IInviteData) => {
     setDialogVisible(false);
-    let invitation: Invitation = {
-      type: 'invitation',
-      attributes: {
-        email: email,
-        accepted: false,
-        dateCreated: moment().format(),
-        dateUpdated: null,
-        lastUpdatedBy: remoteIdNum('user', user, keyMap),
-      },
-    } as any;
-    schema.initializeRecord(invitation);
-
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(invitation),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'role',
-        {
-          type: 'role',
-          id: role,
-        }
-      ),
-    ]);
   };
 
   const handleAddCancel = () => {
@@ -190,47 +179,63 @@ export function InvitationTable(props: IProps) {
     setConfirmAction('');
   };
 
+  const NoDataCell = connect(mapStateToProps)(
+    ({ value, style, t, ...restProps }: any) => {
+      return (
+        <Table.Cell {...restProps} style={{ ...style }} value>
+          <Typography variant="h6" align="center">
+            {t.noData}
+          </Typography>
+        </Table.Cell>
+      );
+    }
+  ) as any;
+
   useEffect(() => {
-    setData(getMedia(organization, roles, invitations));
-  }, [organization, roles, invitations, confirmAction]);
+    setData(getMedia(organization, roles, groups, invitations));
+  }, [organization, roles, groups, invitations, confirmAction]);
 
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="add"
-            aria-label={t.invite}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAdd}
-          >
-            {t.invite}
-            <AddIcon className={classes.buttonIcon} />
-          </Button>
-          <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleMenu}
-          >
-            {t.action}
-            <DropDownIcon className={classes.buttonIcon} />
-          </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
-          >
-            <MenuItem onClick={handleConfirmAction('Delete')}>
-              {t.delete}
-            </MenuItem>
-          </Menu>
+          {orgRole === 'admin' && (
+            <>
+              <Button
+                key="add"
+                aria-label={t.invite}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleAdd}
+              >
+                {t.invite}
+                <AddIcon className={classes.buttonIcon} />
+              </Button>
+              <Button
+                key="action"
+                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                aria-label={t.action}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.action}
+                <DropDownIcon className={classes.buttonIcon} />
+              </Button>
+              <Menu
+                id="action-menu"
+                anchorEl={actionMenuItem}
+                open={Boolean(actionMenuItem)}
+                onClose={handleConfirmAction('Close')}
+              >
+                <MenuItem onClick={handleConfirmAction('Delete')}>
+                  {t.delete}
+                </MenuItem>
+              </Menu>
+            </>
+          )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
@@ -252,6 +257,7 @@ export function InvitationTable(props: IProps) {
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
+          noDataCell={NoDataCell}
           rows={data}
           select={handleCheck}
           shaping={filter}
@@ -259,8 +265,8 @@ export function InvitationTable(props: IProps) {
       </div>
       <Invite
         visible={dialogVisible}
-        planIn={dialogData}
-        addMethod={handleAddMethod}
+        inviteIn={dialogData}
+        addCompleteMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
       {confirmAction !== '' ? (
@@ -287,10 +293,10 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
+  groups: (q: QueryBuilder) => q.findRecords('group'),
   invitations: (q: QueryBuilder) => q.findRecords('invitation'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(InvitationTable) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(InvitationTable) as any
+) as any;

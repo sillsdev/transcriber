@@ -81,13 +81,24 @@ export default function TreeGrid(props: IProps) {
         <CustomTreeData getChildRows={getChildRows} />
         <FilteringState />
         <SortingState defaultSorting={sorting ? sorting : Array<Sorting>()} />
-        <PagingState defaultCurrentPage={0} defaultPageSize={pageSizes[0]} />
+        {pageSizes.length > 0 && (
+          <>
+            <PagingState
+              defaultCurrentPage={0}
+              defaultPageSize={pageSizes[0]}
+            />
+          </>
+        )}
         <SelectionState onSelectionChange={handleSelect} />
         <GroupingState columnExtensions={groupingStateColumnExtensions} />
 
         <IntegratedFiltering />
         <IntegratedSorting />
-        <IntegratedPaging />
+        {pageSizes.length > 0 && (
+          <>
+            <IntegratedPaging />
+          </>
+        )}
         <IntegratedSelection />
         <DragDropProvider />
         <IntegratedGrouping />
@@ -118,7 +129,11 @@ export default function TreeGrid(props: IProps) {
         ) : (
           <TableTreeColumn for={treeColumn} />
         )}
-        <PagingPanel pageSizes={pageSizes} />
+        {pageSizes.length > 0 && (
+          <>
+            <PagingPanel pageSizes={pageSizes} />
+          </>
+        )}
         {showgroups !== null && showgroups ? <Toolbar /> : <></>}
         {showgroups !== null && showgroups ? <TableGroupRow /> : <></>}
         {showgroups !== null && showgroups ? (

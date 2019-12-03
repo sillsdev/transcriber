@@ -38,8 +38,13 @@ function GroupAdd(props: IProps) {
   );
   const [abbr, setAbbr] = useState((groupIn && groupIn.attributes.name) || '');
   const [message, setMessage] = useState(<></>);
+  const [inProcess, setInProcess] = useState(false);
 
   const handleAddOrSave = () => {
+    doAddOrSave();
+    setInProcess(true);
+  };
+  const doAddOrSave = async () => {
     if (
       !groupIn ||
       name !== groupIn.attributes.name ||
@@ -134,7 +139,7 @@ function GroupAdd(props: IProps) {
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
-            disabled={name === '' || name === t.newGroup}
+            disabled={name === '' || name === t.newGroup || inProcess}
           >
             {!groupIn ? t.add : t.save}
           </Button>

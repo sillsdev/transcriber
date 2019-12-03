@@ -5,8 +5,9 @@ import {
   IOrbitState,
   IUploadState,
   IContextState,
-  ILangTagData,
   IMediaState,
+  IParatextState,
+  IAuthState,
 } from '.';
 
 export interface IState {
@@ -19,6 +20,7 @@ export interface IState {
     initials: string;
   };
   upload: IUploadState;
-  langTag: ILangTagData;
   media: IMediaState;
+  paratext: IParatextState;
+  auth: IAuthState;
 }

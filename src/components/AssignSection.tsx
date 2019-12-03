@@ -9,6 +9,7 @@ import {
   Project,
   GroupMembership,
   Role,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -42,7 +43,7 @@ import {
   sectionReviewerName,
   sectionNumber,
 } from '../utils/section';
-import { related } from '../utils';
+import { related, getRoleId } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -103,25 +104,29 @@ function AssignSection(props: IProps) {
     setMessage(<></>);
   };
 
-  const assign = async (section: Section, userId: string, role: string) => {
+  const assign = async (section: Section, userId: string, role: RoleNames) => {
     await memory.update((t: TransformBuilder) =>
-      t.replaceRelatedRecord({ type: 'section', id: section.id }, role, {
-        type: 'user',
-        id: userId,
-      })
+      t.replaceRelatedRecord(
+        { type: 'section', id: section.id },
+        role.toLowerCase(),
+        {
+          type: 'user',
+          id: userId,
+        }
+      )
     );
   };
 
   const handleSelectTranscriber = (id: string) => () => {
     setSelectedTranscriber(id);
     sections.forEach(function(s) {
-      assign(s, id, 'transcriber');
+      assign(s, id, RoleNames.Transcriber);
     });
   };
   const handleSelectReviewer = (id: string) => () => {
     setSelectedReviewer(id);
     sections.forEach(function(s) {
-      assign(s, id, 'reviewer');
+      assign(s, id, RoleNames.Reviewer);
     });
   };
 
@@ -131,17 +136,11 @@ function AssignSection(props: IProps) {
 
   const projectRec = projects.filter(p => p.id === project);
   const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
-  const transcriberRoleId = roles
-    .filter(
-      r => r.attributes && r.attributes.roleName.toLowerCase() === 'transcriber'
-    )
-    .map(r => r.id);
-  const transcriberIds =
-    transcriberRoleId.length > 0
-      ? groupMemberships
-          .filter(gm => related(gm, 'group') === groupId)
-          .map(gm => related(gm, 'user'))
-      : [];
+  const transcriberRoleId = getRoleId(roles, RoleNames.Transcriber);
+
+  const transcriberIds = groupMemberships
+    .filter(gm => related(gm, 'group') === groupId)
+    .map(gm => related(gm, 'user'));
 
   const transcriberUserList = users
     .filter(u => u.attributes && transcriberIds.indexOf(u.id) !== -1)
@@ -173,7 +172,7 @@ function AssignSection(props: IProps) {
     .filter(
       gm =>
         related(gm, 'group') === groupId &&
-        related(gm, 'role') !== transcriberRoleId[0]
+        related(gm, 'role') !== transcriberRoleId
     )
     .map(gm => related(gm, 'user'));
   const reviewerUserList = users
@@ -290,6 +289,6 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  AssignSection
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(AssignSection) as any
+) as any;

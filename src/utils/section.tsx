@@ -35,3 +35,12 @@ export function updatableSection(sectionIn: Section, updatedattributes: any) {
 export function sectionCompare(a: Section, b: Section) {
   return numCompare(a.attributes.sequencenum, b.attributes.sequencenum);
 }
+
+/* build the section name = sequence + name */
+export function sectionDescription(section: Section) {
+  const name =
+    section && section.attributes && section.attributes.name
+      ? section.attributes.name
+      : '';
+  return sectionNumber(section) + '\u00A0\u00A0 ' + name;
+}

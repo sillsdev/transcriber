@@ -68,7 +68,9 @@ export function Access(props: IProps) {
   const accessRef = useRef<any>(null);
 
   useEffect(() => {
-    setLanguage(navigator.language.split('-')[0]);
+    if (navigator.language.split('-')[0]) {
+      setLanguage(navigator.language.split('-')[0]);
+    }
     fetchLocalization();
     const localAuth = localStorage.getItem('trAdminAuthResult');
     if (localAuth) {
@@ -81,10 +83,10 @@ export function Access(props: IProps) {
     if (!auth.isAuthenticated()) {
       localStorage.removeItem('trAdminAuthResult');
       if (Online() && !API_CONFIG.offline) {
-        accessRef.current.click();
+        // accessRef.current.click();
+        auth.login();
       }
     }
-    // auth.login();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 

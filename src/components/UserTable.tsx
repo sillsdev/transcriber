@@ -6,7 +6,6 @@ import {
   IState,
   User,
   Role,
-  Invitation,
   OrganizationMembership,
   IUsertableStrings,
 } from '../model';
@@ -19,20 +18,16 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
-import Invite from './Invite';
+import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related, remoteIdNum } from '../utils';
-import moment from 'moment';
+import { related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
-      marginLeft: theme.spacing(4),
-      marginRight: theme.spacing(4),
-      marginBottom: theme.spacing(4),
     },
     paper: {},
     actions: theme.mixins.gutters({
@@ -119,9 +114,7 @@ export function UserTable(props: IProps) {
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
-  const [user] = useGlobal('user');
+  const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
@@ -149,39 +142,8 @@ export function UserTable(props: IProps) {
   const handleAdd = () => {
     setDialogVisible(true);
   };
-  const handleAddMethod = async (email: string, role: string) => {
+  const handleAddComplete = async (invite: IInviteData) => {
     setDialogVisible(false);
-    let invitation: Invitation = {
-      type: 'invitation',
-      attributes: {
-        email: email,
-        accepted: false,
-        dateCreated: moment().format(),
-        dateUpdated: null,
-        lastUpdatedBy: remoteIdNum('user', user, keyMap),
-      },
-    } as any;
-    schema.initializeRecord(invitation);
-
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(invitation),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
-      ),
-      t.replaceRelatedRecord(
-        { type: 'invitation', id: invitation.id },
-        'role',
-        {
-          type: 'role',
-          id: role,
-        }
-      ),
-    ]);
   };
 
   const handleAddCancel = () => {
@@ -226,39 +188,43 @@ export function UserTable(props: IProps) {
     <div className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
-          <Button
-            key="add"
-            aria-label={t.invite}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleAdd}
-          >
-            {t.invite}
-            <AddIcon className={classes.buttonIcon} />
-          </Button>
-          <Button
-            key="action"
-            aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-            aria-label={t.action}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleMenu}
-          >
-            {t.action}
-            <DropDownIcon className={classes.buttonIcon} />
-          </Button>
-          <Menu
-            id="action-menu"
-            anchorEl={actionMenuItem}
-            open={Boolean(actionMenuItem)}
-            onClose={handleConfirmAction('Close')}
-          >
-            <MenuItem onClick={handleConfirmAction('Delete')}>
-              {t.delete}
-            </MenuItem>
-          </Menu>
+          {orgRole === 'admin' && (
+            <>
+              <Button
+                key="add"
+                aria-label={t.invite}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleAdd}
+              >
+                {t.invite}
+                <AddIcon className={classes.buttonIcon} />
+              </Button>
+              <Button
+                key="action"
+                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                aria-label={t.action}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleMenu}
+              >
+                {t.action}
+                <DropDownIcon className={classes.buttonIcon} />
+              </Button>
+              <Menu
+                id="action-menu"
+                anchorEl={actionMenuItem}
+                open={Boolean(actionMenuItem)}
+                onClose={handleConfirmAction('Close')}
+              >
+                <MenuItem onClick={handleConfirmAction('Delete')}>
+                  {t.delete}
+                </MenuItem>
+              </Menu>
+            </>
+          )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
@@ -288,7 +254,7 @@ export function UserTable(props: IProps) {
       <Invite
         visible={dialogVisible}
         inviteIn={null}
-        addMethod={handleAddMethod}
+        addCompleteMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
       {confirmAction !== '' ? (
@@ -320,7 +286,6 @@ const mapRecordsToProps = {
     q.findRecords('organizationmembership'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserTable) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(UserTable) as any
+) as any;

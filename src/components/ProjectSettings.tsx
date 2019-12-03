@@ -17,14 +17,15 @@ import {
   FormControlLabel,
   Button,
   Checkbox,
-  Typography,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
+import DeleteExpansion from './DeleteExpansion';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { related } from '../utils';
-import LanguagePicker from './LanguagePicker';
+import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
+import { API_CONFIG } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       paddingLeft: theme.spacing(4),
+      paddingRight: theme.spacing(4),
     },
     group: {
       paddingBottom: theme.spacing(3),
@@ -44,18 +46,12 @@ const useStyles = makeStyles((theme: Theme) =>
     label: {
       // color: theme.palette.primary.dark,
     },
-    info: {
-      justifyContent: 'flex-end',
-    },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
     languageField: {
       marginLeft: 0,
-    },
-    dense: {
-      marginTop: 16,
     },
     menu: {
       width: 200,
@@ -71,16 +67,6 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       marginLeft: theme.spacing(1),
     },
-    moreButton: {
-      textDecoration: 'underline',
-    },
-    smallIcon: {
-      marginRight: theme.spacing(1),
-      fontSize: 12,
-    },
-    link: {
-      color: theme.palette.primary.contrastText,
-    },
     sameLine: {
       display: 'flex',
     },
@@ -90,22 +76,8 @@ const useStyles = makeStyles((theme: Theme) =>
     previewCol: {
       marginTop: theme.spacing(2),
     },
-    dangerGroup: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexGrow: 1,
-      padding: '20px',
-      border: '1px solid',
-      borderColor: theme.palette.secondary.main,
-    },
     grow: {
       flexGrow: 1,
-    },
-    dangerHeader: {
-      paddingBottom: '10px',
-    },
-    deletePos: {
-      alignSelf: 'center',
     },
   })
 );
@@ -131,6 +103,8 @@ export function ProjectSettings(props: IProps) {
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
+  const [orgRole] = useGlobal('orgRole');
+  const [projRole] = useGlobal('projRole');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
@@ -159,10 +133,6 @@ export function ProjectSettings(props: IProps) {
   const handleGroupChange = (e: any) => {
     setProjectGroup(e.target.value);
   };
-  // const handleDefaultFontChange = (e: any) => {
-  //   setDefaultFont(e.target.value);
-  //   setRtl(safeFonts.filter(option => option.value === e.target.value)[0].rtl);
-  // };
   const handleSize = (v: string) => {
     setDefaultFontSize(v);
   };
@@ -335,6 +305,10 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
+                  disabled={
+                    API_CONFIG.isApp ||
+                    (orgRole !== 'admin' && projRole !== 'admin')
+                  }
                 />
               }
               label=""
@@ -351,6 +325,10 @@ export function ProjectSettings(props: IProps) {
                   style={{ width: 400 }}
                   variant="filled"
                   required={false}
+                  disabled={
+                    API_CONFIG.isApp ||
+                    (orgRole !== 'admin' && projRole !== 'admin')
+                  }
                 />
               }
               label=""
@@ -373,6 +351,10 @@ export function ProjectSettings(props: IProps) {
                   margin="normal"
                   variant="filled"
                   required={true}
+                  disabled={
+                    API_CONFIG.isApp ||
+                    (orgRole !== 'admin' && projRole !== 'admin')
+                  }
                 >
                   {groups
                     .filter(g => related(g, 'owner') === organization)
@@ -403,6 +385,10 @@ export function ProjectSettings(props: IProps) {
                     setCode={setBcp47}
                     setName={setLanguageName}
                     setFont={setDefaultFont}
+                    disabled={
+                      API_CONFIG.isApp ||
+                      (orgRole !== 'admin' && projRole !== 'admin')
+                    }
                   />
                 }
                 label=""
@@ -414,6 +400,10 @@ export function ProjectSettings(props: IProps) {
                     id="checkbox-rtl"
                     checked={rtl}
                     onChange={handleRtlChange}
+                    disabled={
+                      API_CONFIG.isApp ||
+                      (orgRole !== 'admin' && projRole !== 'admin')
+                    }
                   />
                 }
                 label={t.rightToLeft}
@@ -436,6 +426,10 @@ export function ProjectSettings(props: IProps) {
                       style={{ width: 400 }}
                       variant="filled"
                       required={false}
+                      disabled={
+                        API_CONFIG.isApp ||
+                        (orgRole !== 'admin' && projRole !== 'admin')
+                      }
                     />
                   }
                   label=""
@@ -449,6 +443,10 @@ export function ProjectSettings(props: IProps) {
                       value={defaultFontSize}
                       font={defaultFont}
                       setSize={handleSize}
+                      disabled={
+                        API_CONFIG.isApp ||
+                        (orgRole !== 'admin' && projRole !== 'admin')
+                      }
                     />
                   }
                   label=""
@@ -457,7 +455,11 @@ export function ProjectSettings(props: IProps) {
               <div className={classes.previewCol}>
                 <FormLabel className={classes.label}>{t.preview}</FormLabel>
                 <div
-                  style={{ fontSize: defaultFontSize, fontFamily: defaultFont }}
+                  style={{
+                    fontSize: defaultFontSize,
+                    fontFamily: defaultFont,
+                    width: 400,
+                  }}
                 >
                   The quick, brown fox jumped over the lazy dog.
                 </div>
@@ -465,56 +467,38 @@ export function ProjectSettings(props: IProps) {
             </div>
           </FormGroup>
         </FormControl>
-        <div className={classes.actions}>
-          <Button
-            key="add"
-            aria-label={t.add}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            disabled={
-              name === '' ||
-              projectType === '' ||
-              projectGroup === '' ||
-              bcp47 === '' ||
-              bcp47 === 'und' ||
-              defaultFont === ''
-            }
-            onClick={currentProject === undefined ? handleAdd : handleSave}
-          >
-            {currentProject === undefined ? t.add : t.save}
-            <SaveIcon className={classes.icon} />
-          </Button>
-        </div>
-        <FormLabel className={classes.label}>
-          <Typography variant="h5" className={classes.dangerHeader}>
-            {t.dangerZone}
-          </Typography>
-        </FormLabel>
-        <FormGroup className={classes.dangerGroup}>
-          <div>
-            <FormLabel className={classes.label}>
-              <Typography variant="h6">{t.deleteProject}</Typography>
-            </FormLabel>
-            <FormLabel className={classes.label}>
-              <p>{t.deleteExplained}</p>
-            </FormLabel>
-          </div>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <div className={classes.deletePos}>
-            <Button
-              key="delete"
-              color="secondary"
-              aria-label={t.delete}
-              variant="contained"
-              className={classes.button}
-              disabled={currentProject === undefined}
-              onClick={handleDelete(currentProject)}
-            >
-              {t.delete}
-            </Button>
-          </div>
-        </FormGroup>
+        {!API_CONFIG.isApp && (orgRole === 'admin' || projRole === 'admin') && (
+          <>
+            <div className={classes.actions}>
+              <Button
+                key="add"
+                aria-label={t.add}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={
+                  name === '' ||
+                  projectType === '' ||
+                  projectGroup === '' ||
+                  bcp47 === '' ||
+                  bcp47 === 'und' ||
+                  defaultFont === ''
+                }
+                onClick={currentProject === undefined ? handleAdd : handleSave}
+              >
+                {currentProject === undefined ? t.add : t.save}
+                <SaveIcon className={classes.icon} />
+              </Button>
+            </div>
+            {currentProject !== undefined && (
+              <DeleteExpansion
+                title={t.deleteProject}
+                explain={t.deleteExplained}
+                handleDelete={() => handleDelete(currentProject)}
+              />
+            )}
+          </>
+        )}
       </div>
       {deleteItem !== '' ? (
         <Confirm

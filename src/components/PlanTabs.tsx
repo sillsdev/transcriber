@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IState, IPlanTabsStrings, Plan } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { AppBar, Tabs, Tab, Typography } from '@material-ui/core';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
 import ScriptureTable from '../components/ScriptureTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
@@ -22,18 +22,6 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
   })
 );
-
-interface IContainerProps {
-  children: any;
-}
-
-function TabContainer(props: IContainerProps) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
 
 interface IStateProps {
   t: IPlanTabsStrings;
@@ -80,7 +68,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         </Tabs>
       </AppBar>
       {tab === 0 && (
-        <TabContainer>
+        <>
           {bookCol !== -1 ? (
             <ScriptureTable
               {...props}
@@ -106,26 +94,13 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
               }}
             />
           )}
-        </TabContainer>
+        </>
       )}
       {tab === 1 && (
-        <TabContainer>
-          <MediaTab
-            {...props}
-            projectplans={plans.filter(p => p.id === plan)}
-          />
-        </TabContainer>
+        <MediaTab {...props} projectplans={plans.filter(p => p.id === plan)} />
       )}
-      {tab === 2 && (
-        <TabContainer>
-          <AssignmentTable {...props} />
-        </TabContainer>
-      )}
-      {tab === 3 && (
-        <TabContainer>
-          <TranscriptionTab {...props} />
-        </TabContainer>
-      )}
+      {tab === 2 && <AssignmentTable {...props} />}
+      {tab === 3 && <TranscriptionTab {...props} />}
     </div>
   );
 };

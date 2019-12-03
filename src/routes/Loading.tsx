@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
+import jwtDecode from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings, Organization, Invitation } from '../model';
+import { IState, IMainStrings, Organization, Invitation, User } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
@@ -18,9 +19,16 @@ import {
 } from '@material-ui/core';
 import UserMenu from '../components/UserMenu';
 import * as action from '../store';
-import logo from './transcriber9.png';
-import { parseQuery, IParsedArgs } from '../utils/parseQuery';
-import { related, hasRelated, setDefaultProj } from '../utils';
+import logo from './LogoNoShadow-4x.png';
+import JSONAPISource from '@orbit/jsonapi';
+import { parseQuery } from '../utils/parseQuery';
+import {
+  related,
+  hasRelated,
+  hasAnyRelated,
+  setDefaultProj,
+  CreateOrg,
+} from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,10 +76,9 @@ interface IStateProps {
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
-  fetchLangTags: typeof action.fetchLangTags;
   setLanguage: typeof action.setLanguage;
   fetchOrbitData: typeof action.fetchOrbitData;
-  fetchScriptFonts: typeof action.fetchScriptFonts;
+  setExpireAt: typeof action.setExpireAt;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -79,15 +86,9 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Loading(props: IProps) {
-  const { orbitLoaded, auth, t } = props;
+  const { orbitLoaded, auth, setExpireAt, t } = props;
   const classes = useStyles();
-  const {
-    fetchOrbitData,
-    fetchLocalization,
-    fetchLangTags,
-    fetchScriptFonts,
-    setLanguage,
-  } = props;
+  const { fetchOrbitData, fetchLocalization, setLanguage } = props;
   const { isAuthenticated } = auth;
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
@@ -113,99 +114,47 @@ export function Loading(props: IProps) {
     }
   };
 
-  const ReloadOrgTables = async () => {
-    await remote
-      .pull(q => q.findRecords('organization'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('organizationmembership'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('group'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('groupmembership'))
-      .then(transform => memory.sync(transform));
-    await remote
-      .pull(q => q.findRecords('user'))
-      .then(transform => memory.sync(transform));
-  };
-
-  const CreateOrg = async (props: IParsedArgs) => {
-    const { orgId, orgName } = props;
-    if (!localStorage.getItem('newOrg')) return;
-    localStorage.removeItem('newOrg');
-
-    let organization: Organization = {
-      type: 'organization',
-      attributes: {
-        name: orgName,
-        SilId: orgId,
-        publicByDefault: true,
-      },
-    } as any;
-    schema.initializeRecord(organization);
-
-    await remote.update((t: TransformBuilder) => [
-      t.addRecord(organization),
-      t.replaceRelatedRecord(
-        { type: 'organization', id: organization.id },
-        'owner',
-        {
-          type: 'user',
-          id: user,
-        }
-      ),
-    ]);
-    await ReloadOrgTables();
-    const newOrgRec: Organization[] = memory.cache.query((q: QueryBuilder) =>
-      q
-        .findRecords('organization')
-        .filter({ attribute: 'name', value: orgName })
-    ) as any;
-    setOrganization(newOrgRec[0].id);
-    setDefaultProj(newOrgRec[0].id, memory, setProject);
-    setNewOrgParams(null);
-  };
-
-  const InviteUser = async () => {
+  //remote is passed in because it wasn't always available in global
+  const InviteUser = async (newremote: JSONAPISource) => {
     const inviteId = localStorage.getItem('inviteId');
     if (!inviteId) return;
     localStorage.removeItem('inviteId');
-    const invite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
+    const invite: Invitation[] = (await newremote.query((q: QueryBuilder) =>
       q
         .findRecords('invitation')
         .filter({ attribute: 'silId', value: parseInt(inviteId) })
-    ) as any;
+    )) as any;
     if (invite.length > 0) {
-      await remote.update((t: TransformBuilder) =>
+      await newremote.update((t: TransformBuilder) =>
         t.replaceAttribute(invite[0], 'accepted', true)
       );
-      await ReloadOrgTables();
       const orgId = related(invite[0], 'organization');
       setOrganization(orgId);
-      setDefaultProj(orgId, memory, setProject);
     }
   };
 
   const setDefaultOrg = async () => {
-    let orgs: Organization[] = (await memory.cache.query((q: QueryBuilder) =>
+    let orgs: Organization[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
-    )) as any;
-    orgs = orgs
-      .filter(o => hasRelated(o, 'users', user) && o.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
-    if (orgs.length > 0) {
-      setOrganization(orgs[0].id);
-      setDefaultProj(orgs[0].id, memory, setProject);
+    ) as any;
+    if (organization === '') {
+      orgs = orgs
+        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
+      if (orgs.length > 0) {
+        setOrganization(orgs[0].id);
+        setDefaultProj(orgs[0].id, memory, setProject);
+      }
+    } else {
+      setDefaultProj(organization, memory, setProject);
     }
   };
 
   useEffect(() => {
-    setLanguage(navigator.language.split('-')[0]);
+    if (navigator.language.split('-')[0]) {
+      setLanguage(navigator.language.split('-')[0]);
+    }
     fetchLocalization();
-    fetchLangTags();
-    fetchScriptFonts();
     fetchOrbitData(
       schema,
       memory,
@@ -214,34 +163,86 @@ export function Loading(props: IProps) {
       setUser,
       setBucket,
       setRemote,
-      setCompleted
+      setCompleted,
+      InviteUser
     );
+    if (!API_CONFIG.offline) {
+      const decodedToken: any = jwtDecode(auth.getAccessToken());
+      setExpireAt(decodedToken.exp);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {
-    if (completed === 100) {
-      setDefaultOrg();
+    if (completed >= 70 && organization === '') {
       if (newOrgParams) {
-        CreateOrg(parseQuery(newOrgParams));
+        if (localStorage.getItem('newOrg')) {
+          localStorage.removeItem('newOrg');
+          const { orgId, orgName } = parseQuery(newOrgParams);
+          let orgRec: Organization = {
+            type: 'organization',
+            attributes: {
+              name: orgName,
+              SilId: orgId,
+              publicByDefault: true,
+            },
+          } as any;
+          CreateOrg({
+            orgRec,
+            user,
+            schema,
+            memory,
+            remote,
+            setOrganization,
+            setProject,
+          });
+        }
+        setNewOrgParams(null);
       }
-      InviteUser();
-      setDefaultProj(organization, memory, setProject);
+      setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [completed]);
+  }, [completed, user]);
 
   if (!isAuthenticated()) return <Redirect to="/" />;
 
-  if (/Logout/i.test(view)) {
-    return <Redirect to="/logout" />;
-  }
+  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 
   if (
     orbitLoaded &&
     (completed === 100 || API_CONFIG.offline) &&
     newOrgParams === null
   ) {
+    if (user && user !== '') {
+      const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords([{ type: 'user', id: user }])
+      ) as any;
+      if (userRec.length === 1) {
+        if (!hasAnyRelated(userRec[0], 'groupMemberships')) {
+          const orgRec: Organization = {
+            type: 'organization',
+            attributes: {
+              name: t.myWorkbench,
+              description:
+                'Default organization of ' + userRec[0].attributes.name,
+              publicByDefault: true,
+            },
+          } as any;
+          CreateOrg({
+            orgRec,
+            user,
+            schema,
+            memory,
+            remote,
+            setOrganization,
+            setProject,
+          });
+        }
+        if (!userRec[0].attributes.givenName) {
+          return <Redirect to="/profile" />;
+        }
+      }
+    }
     return <Redirect to="/main" />;
   }
 
@@ -250,7 +251,7 @@ export function Loading(props: IProps) {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" noWrap>
-            {t.silTranscriberAdmin}
+            {API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
           <UserMenu action={handleUserMenuAction} auth={auth} />
@@ -260,7 +261,9 @@ export function Loading(props: IProps) {
         <Paper className={classes.paper}>
           <img src={logo} className={classes.icon} alt="logo" />
           <Typography variant="h6" className={classes.message}>
-            {t.loadingTranscriber}
+            {API_CONFIG.isApp
+              ? t.loadingTranscriber
+              : t.loadingTranscriberAdmin}
           </Typography>
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
@@ -280,14 +283,10 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
       fetchOrbitData: action.fetchOrbitData,
-      fetchLangTags: action.fetchLangTags,
-      fetchScriptFonts: action.fetchScriptFonts,
+      setExpireAt: action.setExpireAt,
     },
     dispatch
   ),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Loading) as any;
+export default connect(mapStateToProps, mapDispatchToProps)(Loading) as any;
