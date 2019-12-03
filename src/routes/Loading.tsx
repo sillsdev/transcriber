@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
-import moment from 'moment';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -220,11 +219,10 @@ export function Loading(props: IProps) {
       ) as any;
       if (userRec.length === 1) {
         if (!hasAnyRelated(userRec[0], 'groupMemberships')) {
-          const now = moment().format('L LTS');
           const orgRec: Organization = {
             type: 'organization',
             attributes: {
-              name: 'Work begun ' + now,
+              name: t.myWorkbench,
               description:
                 'Default organization of ' + userRec[0].attributes.name,
               publicByDefault: true,

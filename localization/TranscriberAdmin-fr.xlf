@@ -1159,7 +1159,13 @@
             <target>Continuer</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.section">
+		<unit id="main.myWorkbench">
+			<segment>
+				<source>My Workbench</source>
+				<target>Mon Atelier</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>
 				<target>Ensemble</target>

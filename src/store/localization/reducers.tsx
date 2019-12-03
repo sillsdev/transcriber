@@ -265,6 +265,7 @@ const initialState = {
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",
 			"exit": "Exit",
 			"continue": "Continue",
+			"myWorkbench": "My Workbench",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({

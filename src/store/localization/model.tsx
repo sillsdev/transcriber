@@ -243,6 +243,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "sessionExpireTask": string;
     "exit": string;
     "continue": string;
+    "myWorkbench": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {

@@ -1356,6 +1356,13 @@
                     <context context-type="sourcefile">TokenCheck.tsx</context>
                 </context-group>
             </trans-unit>
+        	<trans-unit id="main.myWorkbench">
+        		<source>My Workbench</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Loading.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcriptionTab.section">
                 <source>Section</source>
                 <target/>

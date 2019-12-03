@@ -1162,6 +1162,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.myWorkbench">
+         <segment>
+            <source>My Workbench</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>
