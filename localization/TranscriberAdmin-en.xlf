@@ -114,7 +114,7 @@
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -390,7 +390,7 @@
       </unit>
       <unit id="planTable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -594,13 +594,7 @@
       </unit>
       <unit id="assignmentTable.filter">
          <segment>
-            <source>Filter</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="assignmentTable.group">
-         <segment>
-            <source>Group</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -876,7 +870,7 @@
       </unit>
       <unit id="mediaTab.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -1188,13 +1182,7 @@
       </unit>
       <unit id="transcriptionTab.filter">
          <segment>
-            <source>Filter</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.group">
-         <segment>
-            <source>Group</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -1278,7 +1266,7 @@
       </unit>
       <unit id="groupTable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -1824,7 +1812,7 @@
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -1944,7 +1932,7 @@
       </unit>
       <unit id="toDoTable.filter">
          <segment>
-            <source>Filter</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>

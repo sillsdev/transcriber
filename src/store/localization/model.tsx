@@ -131,7 +131,6 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "removeSec": string;
     "delete": string;
     "filter": string;
-    "group": string;
     "transcriber": string;
     "reviewer": string;
     "selectRowsToAssign": string;
@@ -251,7 +250,6 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "sectionstate": string;
     "passages": string;
     "filter": string;
-    "group": string;
     "transcriber": string;
     "reviewer": string;
 };
