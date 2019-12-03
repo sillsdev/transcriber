@@ -111,8 +111,8 @@
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source>Filter</source>
-         	<target>Filtre</target>
+            <source>Configure</source>
+         	<target>Configurer</target>
          </segment>
       </unit>
       <unit id="usertable.selectRows">
@@ -387,8 +387,8 @@
 		</unit>
 		<unit id="planTable.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 		<unit id="planTable.silTranscriberAdmin">
@@ -591,14 +591,8 @@
 		</unit>
 		<unit id="assignmentTable.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.group">
-			<segment>
-				<source>Group</source>
-				<target>Groupe</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.transcriber">
@@ -873,8 +867,8 @@
 		</unit>
 		<unit id="mediaTab.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.selectFiles">
@@ -1186,14 +1180,8 @@
 
 		<unit id="transcriptionTab.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
-			</segment>
-		</unit>
-		<unit id="transcriptionTab.group">
-			<segment>
-				<source>Group</source>
-				<target>Groupe</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.transcriber">
@@ -1276,8 +1264,8 @@
       </unit>
       <unit id="groupTable.filter">
          <segment>
-			<source>Filter</source>
-			<target>Filtre</target>
+			<source>Configure</source>
+         	<target>Configurer</target>
          </segment>
       </unit>
 		<unit id="groupTable.action">
@@ -1823,8 +1811,8 @@
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source>Filter</source>
-            <target>Filtre</target>
+            <source>Configure</source>
+         	<target>Configurer</target>
          </segment>
       </unit>
    <unit id="invitationTable.selectRows">
@@ -1943,8 +1931,8 @@
       </unit>
 		<unit id="toDoTable.filter">
 			<segment>
-				<source>Filter</source>
-				<target>Filtre</target>
+				<source>Configure</source>
+				<target>Configurer</target>
 			</segment>
 		</unit>
 	<unit id="toDoTable.plan">

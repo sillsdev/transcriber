@@ -181,7 +181,6 @@ export function AssignmentTable(props: IProps) {
   ];
 
   const [filter, setFilter] = useState(false);
-  const [group, setGroup] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
 
   const handleMessageReset = () => {
@@ -249,7 +248,6 @@ export function AssignmentTable(props: IProps) {
   };
 
   const handleFilter = () => setFilter(!filter);
-  const handleGroup = () => setGroup(!group);
 
   useEffect(() => {
     setData(
@@ -311,22 +309,6 @@ export function AssignmentTable(props: IProps) {
               <FilterIcon className={classes.icon} />
             )}
           </Button>
-          <Button
-            key="group"
-            aria-label={t.group}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleGroup}
-            title={'Show/Hide group panel'}
-          >
-            {t.group}
-            {group ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
-            )}
-          </Button>
         </div>
         <TreeGrid
           columns={columnDefs}
@@ -345,7 +327,7 @@ export function AssignmentTable(props: IProps) {
           sorting={[{ columnName: 'name', direction: 'asc' }]}
           treeColumn={'name'}
           showfilters={filter}
-          showgroups={group}
+          showgroups={filter}
           select={handleCheck}
         />{' '}
       </div>
@@ -382,6 +364,6 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  AssignmentTable
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(AssignmentTable) as any
+) as any;

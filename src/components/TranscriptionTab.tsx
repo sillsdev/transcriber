@@ -210,14 +210,12 @@ export function TranscriptionTab(props: IProps) {
   ];
 
   const [filter, setFilter] = useState(false);
-  const [group, setGroup] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
   };
 
   const handleFilter = () => setFilter(!filter);
-  const handleGroup = () => setGroup(!group);
 
   const handleSelect = (passageId: string) => () => {
     setPassageId(passageId);
@@ -288,22 +286,6 @@ export function TranscriptionTab(props: IProps) {
               <FilterIcon className={classes.icon} />
             )}
           </Button>
-          <Button
-            key="group"
-            aria-label={t.group}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleGroup}
-            title={'Show/Hide group panel'}
-          >
-            {t.group}
-            {group ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
-            )}
-          </Button>
         </div>
         <TreeGrid
           columns={columnDefs}
@@ -323,7 +305,7 @@ export function TranscriptionTab(props: IProps) {
           sorting={[{ columnName: 'name', direction: 'asc' }]}
           treeColumn={'name'}
           showfilters={filter}
-          showgroups={group}
+          showgroups={filter}
           showSelection={false}
         />{' '}
       </div>
@@ -354,6 +336,6 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  TranscriptionTab
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(TranscriptionTab) as any
+) as any;
