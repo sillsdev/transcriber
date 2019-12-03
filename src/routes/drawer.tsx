@@ -442,13 +442,15 @@ export function ResponsiveDrawer(props: IProps) {
   }, [projOptions, project, addProject]);
 
   useEffect(() => {
-    const projRecs = projects.filter(p => p.id === project);
-    if (projRecs.length === 1) {
-      const groupId = related(projRecs[0], 'group');
+    try {
+      const projRec: Project = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'project', id: project })
+      ) as any;
+      const groupId = related(projRec, 'group');
       setProjRole(getRole(groupMemberships, 'group', groupId));
-    }
+    } catch {} // Ignore if project not found
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, addProject]);
+  }, [project, addProject, curProj, user]);
 
   useEffect(() => {
     const curPlan = plans.filter(p => p.id === plan);
