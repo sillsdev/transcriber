@@ -306,6 +306,7 @@ export function Profile(props: IProps) {
         timercountUp: timerDir,
         playbackSpeed: speed,
         progressbarTypeid: progBar,
+        notifications: 1,
         hotKeys,
         avatarUrl,
         dateCreated: null,
@@ -535,6 +536,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  Profile
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(Profile) as any
+) as any;
