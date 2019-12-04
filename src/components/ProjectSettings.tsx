@@ -227,7 +227,7 @@ export function ProjectSettings(props: IProps) {
     }
   };
 
-  const handleDelete = (p: Project | undefined) => () => {
+  const handleDelete = (p: Project | undefined) => {
     if (p !== undefined) setDeleteItem(p.id);
   };
   const handleDeleteConfirmed = () => {
@@ -523,6 +523,6 @@ const mapRecordsToProps = {
   groups: (q: QueryBuilder) => q.findRecords('group'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  ProjectSettings
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(ProjectSettings) as any
+) as any;
