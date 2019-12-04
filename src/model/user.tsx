@@ -19,6 +19,7 @@ export interface User extends Record {
     progressbarTypeid: string | null;
     avatarUrl: string | null;
     hotKeys: string | null;
+    notifications: number;
     dateCreated: string | null;
     dateUpdated: string | null;
     lastModifiedBy: string | null;

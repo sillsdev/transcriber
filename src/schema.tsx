@@ -250,6 +250,7 @@ const schemaDefinition: SchemaSettings = {
         state: { type: 'string' },
         hold: { type: 'boolean' },
         title: { type: 'string' },
+        lastComment: { type: 'string' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
       },
@@ -268,6 +269,18 @@ const schemaDefinition: SchemaSettings = {
       relationships: {
         passage: { type: 'hasOne', model: 'passage', inverse: 'sections' },
         section: { type: 'hasOne', model: 'section', inverse: 'passages' },
+      },
+    },
+    passagestatechange: {
+      keys: { remoteId: {} },
+      attributes: {
+        state: { type: 'string' },
+        comments: { type: 'string' },
+        dateCreated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
+      },
+      relationships: {
+        passage: { type: 'hasOne', model: 'passage' },
       },
     },
     mediafile: {
@@ -313,6 +326,7 @@ const schemaDefinition: SchemaSettings = {
         progressbarTypeid: { type: 'number' },
         avatarUrl: { type: 'string' },
         hotKeys: { type: 'string' },
+        notifications: { type: 'number' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
         lastModifiedBy: { type: 'number' },
