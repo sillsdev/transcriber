@@ -243,7 +243,8 @@ export function Loading(props: IProps) {
         }
       }
     }
-    return <Redirect to="/main" />;
+    const deepLink = localStorage.getItem('url');
+    return <Redirect to={deepLink ? deepLink : '/main'} />;
   }
 
   return (

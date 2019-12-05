@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
+import Auth from '../auth/Auth';
 import { connect } from 'react-redux';
 import { IState, User, IProfileStrings } from '../model';
 import localStrings from '../selector/localize';
@@ -99,17 +100,24 @@ interface IRecordProps {
 }
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
+  auth: Auth;
   noMargin?: boolean;
   finishAdd?: () => void;
+  history: {
+    location: {
+      pathname: string;
+    };
+  };
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd } = props;
+  const { users, t, noMargin, finishAdd, auth, history } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [bucket] = useGlobal('bucket');
+  const { isAuthenticated } = auth;
   // const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
@@ -337,6 +345,10 @@ export function Profile(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [user]);
 
+  if (!isAuthenticated()) {
+    localStorage.setItem('url', history.location.pathname);
+    return <Redirect to="/" />;
+  }
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Main/i.test(view)) return <Redirect to="/main" />;
 
