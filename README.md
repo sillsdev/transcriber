@@ -1,5 +1,4 @@
-web-transcriber-admin
-=====================
+# web-transcriber-admin
 
 A `react` web app for Transcriber administration
 
@@ -11,6 +10,12 @@ Clone the app, go to the project directory, and execute:
 npm install
 npm run stamp # this creates a file with the date to display in the version
 node src\components\LgPick\langPicker\makeIndexes.js # builds language indexes
+```
+
+Make the font folder using fonts from [SIL Fonts](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=using_web_fonts) and [Google Noto fonts](https://www.google.com/get/noto/)
+
+```
+node src\components\LgPick\langPicker\fontList.js # builds font folder
 ```
 
 Building the project to determine if all dependencies have been met:
@@ -158,4 +163,3 @@ npm start
 ```
 
 from code you can use the debugger if you set the `.vscode/launch.json configurations.url` to `http://localhost:3000`.
-
