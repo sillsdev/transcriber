@@ -1694,7 +1694,7 @@
             <target>Sélectionner le rôle Groupe</target>
          </segment>
       </unit>
-   
+
       <unit id="invite.cancel">
          <segment>
             <source>Cancel</source>
@@ -1753,6 +1753,18 @@
          <segment>
             <source>Please click the following link to accept the invitation:</source>
             <target>Veuillez cliquer sur le lien suivant pour accepter l'invitation:</target>
+         </segment>
+      </unit>
+         <unit id="invite.questions">
+         <segment>
+            <source>Questions? Contact</source>
+            <target>Des questions? Contact</target>
+         </segment>
+      </unit>
+      <unit id="invite.join">
+         <segment>
+            <source>Join</source>
+            <target>Rejoindre</target>
          </segment>
       </unit>
       <unit id="invite.emailsubject">

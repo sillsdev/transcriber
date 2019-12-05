@@ -2049,6 +2049,20 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
+            <trans-unit id="invite.questions">
+				<source>Questions? Contact</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
+            <trans-unit id="invite.join">
+				<source>Join</source>
+				<target/>
+				<context-group>
+					<context context-type="sourcefile">Invite.tsx</context>
+				</context-group>
+			</trans-unit>
 			<trans-unit id="invite.emailsubject">
 				<source>SIL Transcriber Invitation</source>
 				<target/>

@@ -375,6 +375,8 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "transcriber": string;
     "invitation": string;
     "instructions": string;
+    "questions": string;
+    "join": string;
     "emailsubject": string;
 };
 

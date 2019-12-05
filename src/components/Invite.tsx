@@ -135,6 +135,8 @@ function Invite(props: IProps) {
       Invitation: t.invitation,
       Instructions: t.instructions,
       Subject: t.emailsubject,
+      Questions: t.questions,
+      Join: t.join,
     };
     const link =
       IsAdmin(roles, role) ||

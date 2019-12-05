@@ -408,6 +408,8 @@ const initialState = {
 			"transcriber": "SIL Transcriber",
 			"invitation": "has invited you to join",
 			"instructions": "Please click the following link to accept the invitation:",
+			"questions": "Questions? Contact",
+			"join": "Join",
 			"emailsubject": "SIL Transcriber Invitation",
 		}
 	}),

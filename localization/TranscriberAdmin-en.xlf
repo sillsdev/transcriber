@@ -1756,6 +1756,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.questions">
+         <segment>
+            <source>Questions? Contact</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.join">
+         <segment>
+            <source>Join</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.emailsubject">
          <segment>
             <source>SIL Transcriber Invitation</source>
