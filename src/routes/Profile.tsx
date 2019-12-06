@@ -3,7 +3,9 @@ import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { IState, User, IProfileStrings, DigestPreference } from '../model';
+import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -129,11 +131,19 @@ interface IStateProps {
   t: IProfileStrings;
 }
 
+interface IDispatchProps {
+  setLanguage: typeof action.setLanguage;
+}
+
 interface IRecordProps {
   users: Array<User>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps
+  extends IStateProps,
+    IDispatchProps,
+    IRecordProps,
+    WithDataProps {
   auth: Auth;
   noMargin?: boolean;
   finishAdd?: () => void;
@@ -145,7 +155,7 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, auth, history } = props;
+  const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
@@ -281,6 +291,7 @@ export function Profile(props: IProps) {
         }),
         // we aren't allowing them to change owner oraganization currently
       ]);
+      setLanguage(locale);
     }
     setView('Main');
   };
@@ -672,6 +683,15 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      setLanguage: action.setLanguage,
+    },
+    dispatch
+  ),
+});
+
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(Profile) as any
+  connect(mapStateToProps, mapDispatchToProps)(Profile) as any
 ) as any;

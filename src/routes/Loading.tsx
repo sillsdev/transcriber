@@ -176,6 +176,13 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     if (completed >= 70 && organization === '') {
+      if (user && user !== '') {
+        const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
+          q.findRecords([{ type: 'user', id: user }])
+        ) as any;
+        const locale = userRec[0].attributes.locale;
+        if (locale) setLanguage(locale);
+      }
       if (newOrgParams) {
         if (localStorage.getItem('newOrg')) {
           localStorage.removeItem('newOrg');
