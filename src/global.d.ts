@@ -20,5 +20,6 @@ declare module 'reactn/default' {
     keyMap: KeyMap;
     bucket: Bucket;
     remote: JSONAPISource;
+    remoteBusy: boolean;
   }
 }

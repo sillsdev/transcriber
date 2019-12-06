@@ -109,7 +109,6 @@ export function ScriptureTable(props: IProps) {
   const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
-  const [remote] = useGlobal('remote');
   const [message, setMessage] = useState(<></>);
   const [rowId, setRowId] = useState(Array<ISequencedRecordIdentity>());
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -133,8 +132,6 @@ export function ScriptureTable(props: IProps) {
   const [inData, setInData] = useState(Array<Array<any>>());
   const [complete, setComplete] = useState(0);
   const [loading, setLoading] = useState(false);
-  const timer = React.useRef<NodeJS.Timeout>();
-  const [busy, setBusy] = useState(false);
 
   const showBook = (cols: ICols) => cols.Book >= 0;
 
@@ -730,29 +727,11 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [tableLoad]);
 
-  useEffect(() => {
-    if (remote) {
-      // remote is null if offline
-      timer.current = setInterval(() => {
-        setBusy(remote.requestQueue.length !== 0);
-      }, 1000);
-      return () => {
-        if (timer.current) clearInterval(timer.current);
-      };
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [remote]);
-
   return (
     <div className={classes.container}>
       {complete === 0 || (
         <div className={classes.progress}>
           <LinearProgress variant="determinate" value={complete} />
-        </div>
-      )}
-      {!busy || (
-        <div className={classes.progress}>
-          <LinearProgress variant="indeterminate" />
         </div>
       )}
       <PlanSheet
