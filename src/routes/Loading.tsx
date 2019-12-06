@@ -28,6 +28,7 @@ import {
   hasAnyRelated,
   setDefaultProj,
   CreateOrg,
+  uiLang,
 } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -238,7 +239,12 @@ export function Loading(props: IProps) {
             setProject,
           });
         }
-        if (!userRec[0].attributes.givenName) {
+        if (
+          !userRec[0].attributes.givenName ||
+          !userRec[0].attributes.timezone ||
+          !userRec[0].attributes.locale ||
+          !uiLang.includes(userRec[0].attributes.locale)
+        ) {
           return <Redirect to="/profile" />;
         }
       }

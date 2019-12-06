@@ -2340,7 +2340,7 @@
       </unit>
       <unit id="profile.locale">
          <segment>
-            <source>Locale</source>
+            <source>Preferred Language</source>
             <target/>
          </segment>
       </unit>
@@ -2401,6 +2401,18 @@
       <unit id="profile.completeProfile">
          <segment>
             <source>Complete User Profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.sendNews">
+         <segment>
+            <source>Recieve SIL Transcriber and Language Technology news</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.sendDigest">
+         <segment>
+            <source>Recieve daily digests</source>
             <target/>
          </segment>
       </unit>

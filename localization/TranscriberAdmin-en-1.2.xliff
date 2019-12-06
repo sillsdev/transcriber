@@ -2728,7 +2728,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.locale">
-        		<source>Locale</source>
+        		<source>Preferred Language</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
@@ -2799,6 +2799,20 @@
         	</trans-unit>
         	<trans-unit id="profile.completeProfile">
         		<source>Complete User Profile</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.sendNews">
+        		<source>Recieve SIL Transcriber and Language Technology news</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.sendDigest">
+        		<source>Recieve daily digests</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>

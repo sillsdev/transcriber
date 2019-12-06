@@ -537,7 +537,7 @@ const initialState = {
 			"email": "Email",
 			"phone": "Phone",
 			"timezone": "Time zone",
-			"locale": "Locale",
+			"locale": "Preferred Language",
 			"locked": "Locked",
 			"add": "Add",
 			"save": "Save",
@@ -548,6 +548,8 @@ const initialState = {
 			"silTranscriber": "SIL Transcriber",
 			"userProfile": "User profile",
 			"completeProfile": "Complete User Profile",
+			"sendNews": "Recieve SIL Transcriber and Language Technology news",
+			"sendDigest": "Recieve daily digests",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({

@@ -2339,8 +2339,8 @@
       </unit>
       <unit id="profile.locale">
          <segment>
-            <source>Locale</source>
-         	<target>Locale</target>
+            <source>Preferred language</source>
+         	<target>Langue préférée</target>
          </segment>
       </unit>
       <unit id="profile.locked">
@@ -2401,6 +2401,18 @@
 			<segment>
 				<source>Complete User Profile</source>
 				<target>Remplir le profil de l'utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="profile.sendNews">
+			<segment>
+				<source>Recieve SIL Transcriber and Language Technology news</source>
+				<target>Recevez les nouvelles de SIL Transcriber et de Language Technology</target>
+			</segment>
+		</unit>
+		<unit id="profile.sendDigest">
+			<segment>
+				<source>Receive daily digest</source>
+				<target>Recevoir les résumés quotidiens</target>
 			</segment>
 		</unit>
 		<unit id="deleteExpansion.dangerZone">

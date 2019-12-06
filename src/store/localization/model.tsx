@@ -507,6 +507,8 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "silTranscriber": string;
     "userProfile": string;
     "completeProfile": string;
+    "sendNews": string;
+    "sendDigest": string;
 };
 
 export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {
