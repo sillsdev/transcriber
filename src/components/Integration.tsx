@@ -369,7 +369,8 @@ export function IntegrationPanel(props: IProps) {
       else if (paratext_syncStatus.statusMsg !== '') {
         setMessage(<span>{paratext_syncStatus.statusMsg}</span>);
       }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+      getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);
 
   useEffect(() => {
