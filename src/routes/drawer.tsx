@@ -507,14 +507,15 @@ export function ResponsiveDrawer(props: IProps) {
     if (remote) {
       // remote is null if offline
       timer.current = setInterval(() => {
-        setBusy(remote.requestQueue.length !== 0);
+        const isBusy = remote.requestQueue.length !== 0;
+        if (busy !== isBusy) setBusy(isBusy);
       }, 1000);
       return () => {
         if (timer.current) clearInterval(timer.current);
       };
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [remote]);
+  }, [remote, busy]);
 
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
