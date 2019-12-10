@@ -743,12 +743,18 @@ export function ResponsiveDrawer(props: IProps) {
     displaySet: handlePlanType,
   })(PlanTable);
   components['scripture-plan'] = (
-    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
+    <PlanTabs
+      {...props}
+      changed={changed}
+      setChanged={setChanged}
+      checkSaved={checkSavedFn}
+    />
   );
   components['other-plan'] = (
     <PlanTabs
       {...props}
       bookCol={-1}
+      changed={changed}
       setChanged={setChanged}
       checkSaved={checkSavedFn}
     />

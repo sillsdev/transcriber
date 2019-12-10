@@ -81,6 +81,7 @@ interface IProps extends IStateProps {
   addPassage: (i?: number) => void;
   addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
+  changed: boolean;
   setChanged?: (v: boolean) => void;
 }
 
@@ -99,6 +100,7 @@ export function PlanSheet(props: IProps) {
     addPassage,
     addSection,
     paste,
+    changed,
     setChanged,
   } = props;
   const classes = useStyles();
@@ -406,6 +408,7 @@ export function PlanSheet(props: IProps) {
                 color="primary"
                 className={classes.button}
                 onClick={handleSave}
+                disabled={!changed}
               >
                 {t.save}
                 <SaveIcon className={classes.icon} />

@@ -83,6 +83,7 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
+  changed: boolean;
   setChanged?: (v: boolean) => void;
   cols: ICols;
 }
@@ -98,6 +99,7 @@ export function ScriptureTable(props: IProps) {
     allBookData,
     fetchBooks,
     queryStore,
+    changed,
     setChanged,
     passageSections,
     passages,
@@ -747,6 +749,7 @@ export function ScriptureTable(props: IProps) {
         updateData={updateData}
         paste={handlePaste}
         lookupBook={lookupBook}
+        changed={changed}
         setChanged={setChanged}
         t={s}
       />
