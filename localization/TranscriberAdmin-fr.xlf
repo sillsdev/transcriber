@@ -409,7 +409,19 @@
 				<target>Chargement des données</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.action">
+		<unit id="planTable.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+         	<target>Transcription des Écritures</target>
+         </segment>
+      </unit>
+      <unit id="planTable.other">
+         <segment>
+            <source>General Transcription</source>
+         	<target>Transcription générale</target>
+         </segment>
+      </unit>
+      <unit id="planSheet.action">
 			<segment>
 				<source>Action</source>
 				<target>Action</target>
@@ -757,7 +769,19 @@
 				<target>Modifier les détails du programme</target>
 			</segment>
 		</unit>
-		<unit id="mediaTab.action">
+		<unit id="planAdd.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+         	<target>Transcription des Écritures</target>
+         </segment>
+      </unit>
+      <unit id="planAdd.other">
+         <segment>
+            <source>General Transcription</source>
+         	<target>Transcription générale</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.action">
 			<segment>
 				<source>Action</source>
 				<target>Action</target>

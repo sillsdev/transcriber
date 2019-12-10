@@ -387,7 +387,7 @@
                 <source>Save</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">PlanTable.tsx</context>
+                	<context context-type="sourcefile">ProjectSettings.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="projectSettings.group">
@@ -401,14 +401,14 @@
                 <source>Preview</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">PlanTable.tsx</context>
+                	<context context-type="sourcefile">ProjectSettings.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="projectSettings.selectProjectGroup">
                 <source>Select project group. Each project relates to a single group. Group members can work on the project.</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">PlanTable.tsx</context>
+                	<context context-type="sourcefile">ProjectSettingstsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="planTable.addPlan">
@@ -481,7 +481,21 @@
                     <context context-type="sourcefile">PlanTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planSheet.action">
+        	<trans-unit id="planTable.scripture">
+        		<source>Scripture Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.other">
+        		<source>General Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.action">
                 <source>Action</source>
                 <target/>
                 <context-group>
@@ -887,7 +901,21 @@
                     <context context-type="sourcefile">PlanAdd.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="mediaTab.action">
+        	<trans-unit id="planAdd.scripture">
+        		<source>Scripture Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanAdd.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planAdd.other">
+        		<source>General Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanAdd.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.action">
                 <source>Action</source>
                 <target/>
                 <context-group>

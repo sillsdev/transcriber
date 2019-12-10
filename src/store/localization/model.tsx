@@ -91,6 +91,8 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "choosePlan": string;
     "loadingTable": string;
+    "scripture": string;
+    "other": string;
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
@@ -167,6 +169,8 @@ export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
     "newPlan": string;
     "selectAPlanType": string;
     "editPlan": string;
+    "scripture": string;
+    "other": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {

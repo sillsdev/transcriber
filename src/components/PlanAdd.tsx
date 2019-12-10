@@ -160,11 +160,15 @@ function PlanAdd(props: IProps) {
             variant="filled"
             required
           >
-            {planTypes.map((option: PlanType) => (
-              <MenuItem key={option.id} value={option.id}>
-                {option.attributes && option.attributes.name}
-              </MenuItem>
-            ))}
+            {planTypes
+              .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+              .map((option: PlanType) => (
+                <MenuItem key={option.id} value={option.id}>
+                  {option.attributes &&
+                    option.attributes.name &&
+                    t.getString(option.attributes.name.toLowerCase())}
+                </MenuItem>
+              ))}
           </TextField>
         </DialogContent>
         <DialogActions>
@@ -194,6 +198,6 @@ const mapRecordsToProps = {
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  PlanAdd
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(PlanAdd) as any
+) as any;

@@ -104,6 +104,8 @@ const initialState = {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
 			"loadingTable": "Loading data",
+			"scripture": "Scripture Transcription",
+			"other": "General Transcription",
 		}
 	}),
 	"planSheet": new LocalizedStrings({
@@ -186,6 +188,8 @@ const initialState = {
 			"newPlan": "New Plan",
 			"selectAPlanType": "Please select a plan type",
 			"editPlan": "Edit Plan Details",
+			"scripture": "Scripture Transcription",
+			"other": "General Transcription",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({

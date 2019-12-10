@@ -94,7 +94,7 @@ export function PlanTable(props: IProps) {
   ]);
   const [columnWidth] = useState([
     { columnName: 'name', width: 300 },
-    { columnName: 'planType', width: 100 },
+    { columnName: 'planType', width: 170 },
     { columnName: 'sections', width: 100 },
     { columnName: 'action', width: 150 },
   ]);
@@ -188,7 +188,7 @@ export function PlanTable(props: IProps) {
     const typeId = Related(p, 'plantype');
     const typeRec = planTypes.filter(pt => pt.id === typeId);
     return typeRec && typeRec.length === 1 && typeRec[0].attributes
-      ? typeRec[0].attributes.name
+      ? t.getString(typeRec[0].attributes.name.toLowerCase())
       : '--';
   };
   const sectionCount = (p: Plan) => {
