@@ -21,7 +21,7 @@ import Related from '../utils/related';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     menu: {
-      width: 400,
+      width: 300,
     },
   })
 );
@@ -138,6 +138,7 @@ function PlanAdd(props: IProps) {
             margin="dense"
             variant="filled"
             id="name"
+            className={classes.menu}
             label={t.name}
             value={name}
             onChange={handleNameChange}
@@ -148,6 +149,7 @@ function PlanAdd(props: IProps) {
             id="select-plan-type"
             select
             label={t.planType}
+            className={classes.menu}
             value={planType}
             onChange={handleTypeChange}
             SelectProps={{
