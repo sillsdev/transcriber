@@ -496,7 +496,7 @@ export function ResponsiveDrawer(props: IProps) {
     });
     if (target) history.push(target);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, organization, choice, content, plan, group, tab]);
+  }, [project, organization, choice, content, plan, group, tab, busy]);
 
   useEffect(() => {
     if (orbitStatus >= 400 && orbitStatus < 500) setView('Logout');

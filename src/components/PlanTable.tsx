@@ -156,7 +156,7 @@ export function PlanTable(props: IProps) {
         id: project,
       }),
     ]);
-    handleSelect(plan.id, planType);
+    handleSelect(plan.id);
   };
   const handleAddCancel = () => {
     setDialogVisible(false);
@@ -178,11 +178,17 @@ export function PlanTable(props: IProps) {
     );
   };
   const handleFilter = () => setFilter(!filter);
-  const handleSelectEv = (planId: string, type: string) => (e: any) =>
-    handleSelect(planId, type);
-  const handleSelect = (planId: string, type: string) => {
+  const handleSelectEv = (planId: string) => (e: any) => handleSelect(planId);
+  const handleSelect = (planId: string) => {
     setPlan(planId);
-    displaySet(type.toLocaleLowerCase());
+    const planRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plan', id: planId })
+    ) as Plan;
+    const typeId = Related(planRec, 'plantype');
+    const typeRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plantype', id: typeId })
+    ) as PlanType;
+    displaySet(typeRec.attributes.name.toLowerCase());
   };
   const getType = (p: Plan) => {
     const typeId = Related(p, 'plantype');
@@ -241,7 +247,7 @@ export function PlanTable(props: IProps) {
         aria-label={value}
         color="primary"
         className={classes.link}
-        onClick={handleSelectEv(restProps.row.action, restProps.row.planType)}
+        onClick={handleSelectEv(restProps.row.action)}
       >
         {value}
         {/* <EditIcon className={classes.editIcon} /> */}
