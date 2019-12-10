@@ -633,7 +633,7 @@
       </unit>
       <unit id="assignSection.title">
 			<segment>
-				<source>Assign sections to Users</source>
+				<source>Assign Sections to Users</source>
 				<target>Assigner Ensembles aux Utilisatrices</target>
 			</segment>
 		</unit>

@@ -157,7 +157,7 @@ const initialState = {
 	}),
 	"assignSection": new LocalizedStrings({
 		"en": {
-			"title": "Assign sections to Users",
+			"title": "Assign Sections to Users",
 			"sections": "Sections",
 			"users": "Users",
 			"reviewer": "Reviewer",

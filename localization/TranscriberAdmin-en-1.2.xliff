@@ -741,7 +741,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="assignSection.title">
-                <source>Assign sections to Users</source>
+                <source>Assign Sections to Users</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">AssignSection.tsx</context>
