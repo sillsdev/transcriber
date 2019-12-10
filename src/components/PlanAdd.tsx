@@ -21,7 +21,7 @@ import Related from '../utils/related';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     menu: {
-      width: 200,
+      width: 400,
     },
   })
 );
