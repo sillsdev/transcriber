@@ -368,6 +368,7 @@ export function PlanSheet(props: IProps) {
                 color="primary"
                 className={classes.button}
                 onClick={handleAddPassage}
+                disabled={data.length < 2}
               >
                 {t.addPassage}
                 <AddIcon className={classes.icon} />
@@ -434,7 +435,9 @@ export function PlanSheet(props: IProps) {
           }
         >
           <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
-          <MenuItem onClick={handlePassageAbove}>{t.passageAbove}</MenuItem>
+          <MenuItem onClick={handlePassageAbove} disabled={position.i < 2}>
+            {t.passageAbove}
+          </MenuItem>
         </Menu>
       </div>
       <PassageMedia
