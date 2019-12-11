@@ -409,12 +409,15 @@ const initialState = {
 			"alreadyInvited": "Already invited!",
 			"resend": "Resend",
 			"sil": "SIL International",
-			"transcriber": "SIL Transcriber",
+			"silTranscriber": "SIL Transcriber",
 			"invitation": "has invited you to join",
 			"instructions": "Please click the following link to accept the invitation:",
 			"questions": "Questions? Contact",
 			"join": "Join",
 			"emailsubject": "SIL Transcriber Invitation",
+			"admin": "Owner",
+			"transcriber": "Transcriber",
+			"reviewer": "Reviewer",
 		}
 	}),
 	"invitationTable": new LocalizedStrings({

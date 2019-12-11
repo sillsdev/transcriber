@@ -131,7 +131,7 @@ function Invite(props: IProps) {
   const handleAdd = async () => {
     const strings = {
       SILOrg: t.sil,
-      App: t.transcriber,
+      App: t.silTranscriber,
       Invitation: t.invitation,
       Instructions: t.instructions,
       Subject: t.emailsubject,
@@ -461,7 +461,7 @@ function Invite(props: IProps) {
                   )
                   .map((option: Role) => (
                     <MenuItem key={option.id} value={option.id}>
-                      {option.attributes.roleName}
+                      {t.getString(option.attributes.roleName.toLowerCase())}
                     </MenuItem>
                   ))}
               </TextField>
@@ -517,7 +517,9 @@ function Invite(props: IProps) {
                       )
                       .map((option: Role) => (
                         <MenuItem key={option.id} value={option.id}>
-                          {option.attributes.roleName}
+                          {t.getString(
+                            option.attributes.roleName.toLowerCase()
+                          )}
                         </MenuItem>
                       ))}
                   </TextField>

@@ -1761,7 +1761,7 @@
             <target>SIL International</target>
          </segment>
       </unit>
-      <unit id="invite.transcriber">
+      <unit id="invite.silTranscriber">
          <segment>
             <source>SIL Transcriber</source>
             <target>SIL Transcriber</target>
@@ -1797,6 +1797,24 @@
             <target>SIL Transcriber Invitation</target>
          </segment>
       </unit>
+		<unit id="invite.admin">
+			<segment>
+				<source>Owner</source>
+				<target>Patron</target>
+			</segment>
+		</unit>
+		<unit id="invite.transcriber">
+			<segment>
+				<source>Transcriber</source>
+				<target>Transcripteur</target>
+			</segment>
+		</unit>
+		<unit id="invite.reviewer">
+			<segment>
+				<source>Reviewer</source>
+				<target>Examinateur</target>
+			</segment>
+		</unit>
 		<unit id="invitationTable.email">
          <segment>
             <source>Email</source>

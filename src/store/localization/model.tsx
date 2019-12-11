@@ -376,12 +376,15 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "alreadyInvited": string;
     "resend": string;
     "sil": string;
-    "transcriber": string;
+    "silTranscriber": string;
     "invitation": string;
     "instructions": string;
     "questions": string;
     "join": string;
     "emailsubject": string;
+    "admin": string;
+    "transcriber": string;
+    "reviewer": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
