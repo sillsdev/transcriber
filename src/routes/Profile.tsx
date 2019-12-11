@@ -333,8 +333,8 @@ export function Profile(props: IProps) {
 
   const handleCancel = () => setView('Main');
 
-  const handleDelete = (u: User | undefined) => () => {
-    if (u !== undefined) setDeleteItem(u.id);
+  const handleDelete = () => {
+    if (currentUser) setDeleteItem(currentUser.id);
   };
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
@@ -657,7 +657,7 @@ export function Profile(props: IProps) {
               <DeleteExpansion
                 title={t.deleteUser}
                 explain={t.deleteExplained}
-                handleDelete={() => handleDelete(currentUser)}
+                handleDelete={() => handleDelete()}
               />
             )}
         </div>

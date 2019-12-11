@@ -226,9 +226,8 @@ export function ProjectSettings(props: IProps) {
       finishAdd();
     }
   };
-
-  const handleDelete = (p: Project | undefined) => {
-    if (p !== undefined) setDeleteItem(p.id);
+  const handleDelete = () => {
+    if (currentProject !== undefined) setDeleteItem(currentProject.id);
   };
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
@@ -494,7 +493,7 @@ export function ProjectSettings(props: IProps) {
               <DeleteExpansion
                 title={t.deleteProject}
                 explain={t.deleteExplained}
-                handleDelete={() => handleDelete(currentProject)}
+                handleDelete={() => handleDelete()}
               />
             )}
           </>
