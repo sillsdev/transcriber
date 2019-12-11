@@ -2056,7 +2056,7 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="invite.transcriber">
+			<trans-unit id="invite.silTranscriber">
 				<source>SIL Transcriber</source>
 				<target/>
 				<context-group>
@@ -2098,7 +2098,28 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="invitationTable.email">
+        	<trans-unit id="invite.admin">
+        		<source>Owner</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="invite.transcriber">
+        		<source>Transcriber</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="invite.reviewer">
+        		<source>Reviewer</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="invitationTable.email">
                 <source>Email</source>
                 <target/>
                 <context-group>

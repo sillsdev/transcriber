@@ -102,12 +102,14 @@ interface IRow {
 interface IStateProps {
   activityState: IActivityStateStrings;
   t: IToDoTableStrings;
+  lang: string;
   hasUrl: boolean;
   mediaUrl: string;
   tableLoad: string[];
 }
 
 interface IDispatchProps {
+  fetchBooks: typeof actions.fetchBooks;
   fetchMediaUrl: typeof actions.fetchMediaUrl;
 }
 
@@ -143,7 +145,9 @@ export function TaskTable(props: IProps) {
     sections,
     mediafiles,
     t,
+    lang,
     transcriber,
+    fetchBooks,
     fetchMediaUrl,
     hasUrl,
     mediaUrl,
@@ -345,6 +349,11 @@ export function TaskTable(props: IProps) {
       }
     });
   };
+
+  React.useEffect(() => {
+    fetchBooks(lang);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [lang]);
 
   useEffect(() => {
     if (!filter) {
@@ -582,10 +591,12 @@ const mapStateToProps = (state: IState): IStateProps => ({
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
   tableLoad: state.orbit.tableLoad,
+  lang: state.strings.lang,
 });
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
+      fetchBooks: actions.fetchBooks,
       fetchMediaUrl: actions.fetchMediaUrl,
     },
     dispatch

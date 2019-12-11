@@ -289,9 +289,20 @@ export function ResponsiveDrawer(props: IProps) {
       setOrganization(value);
       setDefaultProj(value, memory, setProject);
       setAddProject(false);
-      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
       setGroup('');
+      const projRecs = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('project').filter({
+          relation: 'organization',
+          record: { type: 'organization', id: value },
+        })
+      ) as Project[];
+      handleChoice(
+        projRecs.length === 0
+          ? 'none'
+          : API_CONFIG.isApp
+          ? slug(t.tasks)
+          : slug(t.plans)
+      );
     }
   };
 
