@@ -69,6 +69,7 @@ import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
+import IntegrationPanel from '../components/Integration';
 import { setDefaultProj, deepLink } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -780,10 +781,7 @@ export function ResponsiveDrawer(props: IProps) {
     add: addProject,
     finishAdd: handleFinishAdd,
   })(ProjectSettings);
-  const IntegrationPanel = React.lazy(() =>
-    import('../components/Integration')
-  );
-  components[slug(t.integrations)] = LazyLoad({ ...props })(IntegrationPanel);
+  components[slug(t.integrations)] = <IntegrationPanel {...props} />; // Don't lazy load this...it causes problems
   components['group'] = <GroupSettings {...props} />;
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
