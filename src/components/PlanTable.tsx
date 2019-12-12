@@ -118,9 +118,7 @@ export function PlanTable(props: IProps) {
   const handleMessageReset = () => {
     setMessage(<></>);
   };
-  const handleDelete = (e: any) => {
-    setDeleteItem(e.currentTarget.id);
-  };
+  const handleDelete = (value: string) => () => setDeleteItem(value);
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({
@@ -265,7 +263,7 @@ export function PlanTable(props: IProps) {
             aria-label={'edit-' + value}
             color="default"
             className={classes.actionIcon}
-            onClick={handleEdit(restProps.row.action)}
+            onClick={handleEdit(value)}
           >
             <EditIcon />
           </IconButton>
@@ -275,7 +273,7 @@ export function PlanTable(props: IProps) {
             aria-label={'del-' + value}
             color="default"
             className={classes.actionIcon}
-            onClick={handleDelete}
+            onClick={handleDelete(value)}
           >
             <DeleteIcon />
           </IconButton>
