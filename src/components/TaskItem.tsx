@@ -1,5 +1,4 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -9,7 +8,6 @@ import {
   MediaDescription,
   MediaFile,
 } from '../model';
-import * as actions from '../store';
 import localStrings from '../selector/localize';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import {
@@ -43,33 +41,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: ITaskItemStrings;
-  lang: string;
   allBookData: BookName[];
-}
-
-interface IDispatchProps {
-  fetchBooks: typeof actions.fetchBooks;
 }
 
 interface IRecordProps {
   users: Array<User>;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps extends IStateProps {
   mediaDesc: MediaDescription;
   mediaRec: MediaFile;
   select: (media: MediaDescription) => (e: any) => void;
 }
 
 export function TaskItem(props: IProps) {
-  const { allBookData, fetchBooks, lang, t, mediaRec, select } = props;
+  const { allBookData, t, mediaRec, select } = props;
   const { passage, section } = props.mediaDesc;
   const classes = useStyles();
-
-  React.useEffect(() => {
-    fetchBooks(lang);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
 
   let book = '';
   let ref = '';
@@ -116,17 +104,7 @@ export function TaskItem(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'taskItem' }),
-  lang: state.strings.lang,
   allBookData: state.books.bookData,
 });
 
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchBooks: actions.fetchBooks,
-    },
-    dispatch
-  ),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TaskItem) as any;
+export default connect(mapStateToProps)(TaskItem) as any;

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
+import Auth from '../auth/Auth';
 import { connect } from 'react-redux';
-import { IState, User, IProfileStrings } from '../model';
+import { bindActionCreators } from 'redux';
+import { IState, User, IProfileStrings, DigestPreference } from '../model';
+import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -25,15 +28,36 @@ import {
   Checkbox,
   Typography,
   Avatar,
+  MenuItem,
 } from '@material-ui/core';
 import UserMenu from '../components/UserMenu';
 import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { remoteId, makeAbbr } from '../utils';
+import { remoteId, makeAbbr, uiLang } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { Redirect } from 'react-router';
+import moment from 'moment-timezone';
+import en from '../assets/en.json';
+import fr from '../assets/fr.json';
+
+interface ILangDes {
+  type: string;
+  content: string;
+}
+interface ILdml {
+  [loc: string]: {
+    ldml: {
+      localeDisplayNames: {
+        languages: {
+          language: Array<ILangDes>;
+        };
+      };
+    };
+  };
+}
+const ldml: ILdml = { en, fr };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,6 +91,19 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
+    locale: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 206,
+    },
+    timezone: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      width: 206,
+    },
+    menu: {
+      width: 200,
+    },
     actions: theme.mixins.gutters({
       paddingBottom: 16,
       display: 'flex',
@@ -94,32 +131,52 @@ interface IStateProps {
   t: IProfileStrings;
 }
 
+interface IDispatchProps {
+  setLanguage: typeof action.setLanguage;
+}
+
 interface IRecordProps {
   users: Array<User>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps
+  extends IStateProps,
+    IDispatchProps,
+    IRecordProps,
+    WithDataProps {
+  auth: Auth;
   noMargin?: boolean;
   finishAdd?: () => void;
+  history: {
+    location: {
+      pathname: string;
+    };
+  };
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd } = props;
+  const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [bucket] = useGlobal('bucket');
+  const { isAuthenticated } = auth;
   // const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
+  const [orgRole] = useGlobal('orgRole');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
+  const [timezone, setTimezone] = useState<string | null>(moment.tz.guess());
+  const [locale, setLocale] = useState<string>(
+    navigator.language.split('-')[0]
+  );
+  const [news, setNews] = useState<boolean | null>(null);
+  const [digest, setDigest] = useState<DigestPreference | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
-  const [timezone, setTimezone] = useState<string | null>(null);
-  const [locale, setLocale] = useState<string | null>(null);
   const [bcp47, setBcp47] = useState<string | null>(null);
   const [timerDir, setTimerDir] = useState<string | null>(null);
   const [speed, setSpeed] = useState<string | null>(null);
@@ -183,6 +240,18 @@ export function Profile(props: IProps) {
     setLocked(!locked);
   };
 
+  const handleNewsChange = () => {
+    setChanged(true);
+    setNews(!news);
+  };
+
+  const handleDigestChange = () => {
+    setChanged(true);
+    setDigest(
+      digest ? DigestPreference.noDigest : DigestPreference.dailyDigest
+    );
+  };
+
   const handleMessageReset = () => setMessage(<></>);
 
   const handleUserMenuAction = (what: string) => {
@@ -213,6 +282,8 @@ export function Profile(props: IProps) {
             timercountUp: timerDir,
             playbackSpeed: speed,
             progressbarTypeid: progBar,
+            digestPreference: digest,
+            newsPreference: news,
             hotKeys,
             avatarUrl,
             dateUpdated: new Date().toISOString(),
@@ -220,6 +291,7 @@ export function Profile(props: IProps) {
         }),
         // we aren't allowing them to change owner oraganization currently
       ]);
+      setLanguage(locale);
     }
     setView('Main');
   };
@@ -241,6 +313,8 @@ export function Profile(props: IProps) {
           timercountUp: timerDir,
           playbackSpeed: speed,
           progressbarTypeid: progBar,
+          digestPreference: digest,
+          newsPreference: news,
           hotKeys,
           avatarUrl,
           dateCreated: new Date().toISOString(),
@@ -259,8 +333,8 @@ export function Profile(props: IProps) {
 
   const handleCancel = () => setView('Main');
 
-  const handleDelete = (u: User | undefined) => () => {
-    if (u !== undefined) setDeleteItem(u.id);
+  const handleDelete = () => {
+    if (currentUser) setDeleteItem(currentUser.id);
   };
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
@@ -269,6 +343,12 @@ export function Profile(props: IProps) {
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
+  };
+
+  const langName = (loc: string, opt: string): string => {
+    return ldml[loc].ldml.localeDisplayNames.languages.language
+      .filter(d => d.type === opt)
+      .map(d => d.content)[0];
   };
 
   interface IBigAvatarProps {
@@ -306,6 +386,8 @@ export function Profile(props: IProps) {
         timercountUp: timerDir,
         playbackSpeed: speed,
         progressbarTypeid: progBar,
+        digestPreference: DigestPreference.dailyDigest,
+        newsPreference: false,
         hotKeys,
         avatarUrl,
         dateCreated: null,
@@ -325,7 +407,9 @@ export function Profile(props: IProps) {
     setEmail(attr.email);
     setPhone(attr.phone);
     setTimezone(attr.timezone);
-    setLocale(attr.locale);
+    setLocale(attr.locale ? attr.locale : navigator.language.split('-')[0]);
+    setNews(attr.newsPreference);
+    setDigest(attr.digestPreference);
     setLocked(true);
     setBcp47(attr.uilanguagebcp47);
     setTimerDir(attr.timercountUp);
@@ -336,6 +420,18 @@ export function Profile(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [user]);
 
+  useEffect(() => {
+    if (timezone === null) {
+      const myZone = moment.tz.guess();
+      setTimezone(myZone);
+      setChanged(true);
+    }
+  }, [timezone]);
+
+  if (!isAuthenticated()) {
+    localStorage.setItem('url', history.location.pathname);
+    return <Redirect to="/" />;
+  }
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Main/i.test(view)) return <Redirect to="/main" />;
 
@@ -359,12 +455,12 @@ export function Profile(props: IProps) {
       >
         <div className={classes.paper}>
           <Grid container>
-            <StyledGrid item xs={12} lg={6}>
+            <StyledGrid item xs={12} lg={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name} />
               {name !== email && <h3 className={classes.caption}>{name}</h3>}
               <Typography className={classes.caption}>{email}</Typography>
             </StyledGrid>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12} lg={7}>
               {(currentUser === undefined ||
                 currentUser.attributes.name ===
                   currentUser.attributes.email) && <h2>{t.completeProfile}</h2>}
@@ -415,6 +511,84 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
+                  <FormControlLabel
+                    control={
+                      <TextField
+                        id="select-locale"
+                        select
+                        label={t.locale}
+                        className={classes.locale}
+                        value={locale}
+                        onChange={handleLocaleChange}
+                        SelectProps={{
+                          MenuProps: {
+                            className: classes.menu,
+                          },
+                        }}
+                        margin="normal"
+                        variant="filled"
+                        required={true}
+                      >
+                        {uiLang.map((option: string, idx: number) => (
+                          <MenuItem key={'loc' + idx} value={option}>
+                            {langName(locale, option)}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    }
+                    label=""
+                  />
+                  <FormControlLabel
+                    control={
+                      <TextField
+                        id="select-timezone"
+                        select
+                        label={t.timezone}
+                        className={classes.timezone}
+                        value={timezone}
+                        onChange={handleTimezoneChange}
+                        SelectProps={{
+                          MenuProps: {
+                            className: classes.menu,
+                          },
+                        }}
+                        margin="normal"
+                        variant="filled"
+                        required={true}
+                      >
+                        {moment.tz
+                          .names()
+                          .map((option: string, idx: number) => (
+                            <MenuItem key={'tz' + idx} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                      </TextField>
+                    }
+                    label=""
+                  />
+                  <FormControlLabel
+                    className={classes.textField}
+                    control={
+                      <Checkbox
+                        id="news"
+                        checked={news === true}
+                        onChange={handleNewsChange}
+                      />
+                    }
+                    label={t.sendNews}
+                  />
+                  <FormControlLabel
+                    className={classes.textField}
+                    control={
+                      <Checkbox
+                        id="digest"
+                        checked={digest === 1}
+                        onChange={handleDigestChange}
+                      />
+                    }
+                    label={t.sendDigest}
+                  />
                   {showDetail && (
                     <>
                       <FormControlLabel
@@ -431,45 +605,19 @@ export function Profile(props: IProps) {
                         }
                         label=""
                       />
-                      <FormControlLabel
-                        control={
-                          <TextField
-                            id="timezone"
-                            label={t.timezone}
-                            className={classes.textField}
-                            value={timezone}
-                            onChange={handleTimezoneChange}
-                            margin="normal"
-                            variant="filled"
-                          />
-                        }
-                        label=""
-                      />
-                      <FormControlLabel
-                        control={
-                          <TextField
-                            id="locale"
-                            label={t.locale}
-                            className={classes.textField}
-                            value={locale}
-                            onChange={handleLocaleChange}
-                            margin="normal"
-                            variant="filled"
-                          />
-                        }
-                        label=""
-                      />
-                      <FormControlLabel
-                        className={classes.textField}
-                        control={
-                          <Checkbox
-                            id="checkbox-locked"
-                            checked={locked}
-                            onChange={handleLockedChange}
-                          />
-                        }
-                        label={t.locked}
-                      />
+                      {orgRole === 'admin' && (
+                        <FormControlLabel
+                          className={classes.textField}
+                          control={
+                            <Checkbox
+                              id="checkbox-locked"
+                              checked={locked}
+                              onChange={handleLockedChange}
+                            />
+                          }
+                          label={t.locked}
+                        />
+                      )}
                     </>
                   )}
                 </FormGroup>
@@ -509,7 +657,7 @@ export function Profile(props: IProps) {
               <DeleteExpansion
                 title={t.deleteUser}
                 explain={t.deleteExplained}
-                handleDelete={() => handleDelete(currentUser)}
+                handleDelete={() => handleDelete()}
               />
             )}
         </div>
@@ -535,6 +683,15 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  Profile
-) as any) as any;
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      setLanguage: action.setLanguage,
+    },
+    dispatch
+  ),
+});
+
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(Profile) as any
+) as any;

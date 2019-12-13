@@ -35,6 +35,7 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  LinearProgress,
 } from '@material-ui/core';
 import {
   makeStyles,
@@ -68,6 +69,7 @@ import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
+import IntegrationPanel from '../components/Integration';
 import { setDefaultProj, deepLink } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -166,6 +168,9 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'absolute',
       left: DrawerWidth + TaskItemWidth + theme.spacing(2),
     },
+    progress: {
+      width: '100%',
+    },
   })
 );
 
@@ -222,8 +227,10 @@ export function ResponsiveDrawer(props: IProps) {
   const theme = useTheme();
   const [keyMap] = useGlobal('keyMap');
   const [memory] = useGlobal('memory');
+  const [remote] = useGlobal('remote');
   const [bucket] = useGlobal('bucket');
   const [user] = useGlobal('user');
+  const [busy, setBusy] = useGlobal('remoteBusy');
   const [organization, setOrganization] = useGlobal('organization');
   const [orgRole, setOrgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
@@ -252,6 +259,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
   const newOrgRef = useRef<any>();
+  const timer = React.useRef<NodeJS.Timeout>();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -282,9 +290,20 @@ export function ResponsiveDrawer(props: IProps) {
       setOrganization(value);
       setDefaultProj(value, memory, setProject);
       setAddProject(false);
-      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
       setGroup('');
+      const projRecs = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('project').filter({
+          relation: 'organization',
+          record: { type: 'organization', id: value },
+        })
+      ) as Project[];
+      handleChoice(
+        projRecs.length === 0
+          ? 'none'
+          : API_CONFIG.isApp
+          ? slug(t.tasks)
+          : slug(t.plans)
+      );
     }
   };
 
@@ -489,12 +508,26 @@ export function ResponsiveDrawer(props: IProps) {
     });
     if (target) history.push(target);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, organization, choice, content, plan, group, tab]);
+  }, [project, organization, choice, content, plan, group, tab, busy]);
 
   useEffect(() => {
     if (orbitStatus >= 400 && orbitStatus < 500) setView('Logout');
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orbitStatus]);
+
+  useEffect(() => {
+    if (remote) {
+      // remote is null if offline
+      timer.current = setInterval(() => {
+        const isBusy = remote.requestQueue.length !== 0;
+        if (busy !== isBusy) setBusy(isBusy);
+      }, 1000);
+      return () => {
+        if (timer.current) clearInterval(timer.current);
+      };
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [remote, busy]);
 
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
@@ -722,12 +755,18 @@ export function ResponsiveDrawer(props: IProps) {
     displaySet: handlePlanType,
   })(PlanTable);
   components['scripture-plan'] = (
-    <PlanTabs {...props} setChanged={setChanged} checkSaved={checkSavedFn} />
+    <PlanTabs
+      {...props}
+      changed={changed}
+      setChanged={setChanged}
+      checkSaved={checkSavedFn}
+    />
   );
   components['other-plan'] = (
     <PlanTabs
       {...props}
       bookCol={-1}
+      changed={changed}
       setChanged={setChanged}
       checkSaved={checkSavedFn}
     />
@@ -742,10 +781,7 @@ export function ResponsiveDrawer(props: IProps) {
     add: addProject,
     finishAdd: handleFinishAdd,
   })(ProjectSettings);
-  const IntegrationPanel = React.lazy(() =>
-    import('../components/Integration')
-  );
-  components[slug(t.integrations)] = LazyLoad({ ...props })(IntegrationPanel);
+  components[slug(t.integrations)] = <IntegrationPanel {...props} />; // Don't lazy load this...it causes problems
   components['group'] = <GroupSettings {...props} />;
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
@@ -886,7 +922,14 @@ export function ResponsiveDrawer(props: IProps) {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>{components[content]}</main>
+      <main className={classes.content}>
+        {!busy || (
+          <div className={classes.progress}>
+            <LinearProgress variant="indeterminate" />
+          </div>
+        )}
+        {components[content]}
+      </main>
       {alertOpen ? (
         <Confirm
           title={t.planUnsaved}

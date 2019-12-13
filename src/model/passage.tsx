@@ -12,6 +12,7 @@ export interface Passage extends Record {
     state: string;
     hold: boolean;
     title: string;
+    lastComment: string;
     dateCreated: string | null;
     dateUpdated: string | null;
   };

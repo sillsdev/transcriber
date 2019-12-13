@@ -94,7 +94,7 @@ export function PlanTable(props: IProps) {
   ]);
   const [columnWidth] = useState([
     { columnName: 'name', width: 300 },
-    { columnName: 'planType', width: 100 },
+    { columnName: 'planType', width: 170 },
     { columnName: 'sections', width: 100 },
     { columnName: 'action', width: 150 },
   ]);
@@ -118,9 +118,7 @@ export function PlanTable(props: IProps) {
   const handleMessageReset = () => {
     setMessage(<></>);
   };
-  const handleDelete = (e: any) => {
-    setDeleteItem(e.currentTarget.id);
-  };
+  const handleDelete = (value: string) => () => setDeleteItem(value);
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({
@@ -156,7 +154,7 @@ export function PlanTable(props: IProps) {
         id: project,
       }),
     ]);
-    handleSelect(plan.id, planType);
+    handleSelect(plan.id);
   };
   const handleAddCancel = () => {
     setDialogVisible(false);
@@ -178,17 +176,23 @@ export function PlanTable(props: IProps) {
     );
   };
   const handleFilter = () => setFilter(!filter);
-  const handleSelectEv = (planId: string, type: string) => (e: any) =>
-    handleSelect(planId, type);
-  const handleSelect = (planId: string, type: string) => {
+  const handleSelectEv = (planId: string) => (e: any) => handleSelect(planId);
+  const handleSelect = (planId: string) => {
     setPlan(planId);
-    displaySet(type.toLocaleLowerCase());
+    const planRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plan', id: planId })
+    ) as Plan;
+    const typeId = Related(planRec, 'plantype');
+    const typeRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plantype', id: typeId })
+    ) as PlanType;
+    displaySet(typeRec.attributes.name.toLowerCase());
   };
   const getType = (p: Plan) => {
     const typeId = Related(p, 'plantype');
     const typeRec = planTypes.filter(pt => pt.id === typeId);
     return typeRec && typeRec.length === 1 && typeRec[0].attributes
-      ? typeRec[0].attributes.name
+      ? t.getString(typeRec[0].attributes.name.toLowerCase())
       : '--';
   };
   const sectionCount = (p: Plan) => {
@@ -241,7 +245,7 @@ export function PlanTable(props: IProps) {
         aria-label={value}
         color="primary"
         className={classes.link}
-        onClick={handleSelectEv(restProps.row.action, restProps.row.planType)}
+        onClick={handleSelectEv(restProps.row.action)}
       >
         {value}
         {/* <EditIcon className={classes.editIcon} /> */}
@@ -259,7 +263,7 @@ export function PlanTable(props: IProps) {
             aria-label={'edit-' + value}
             color="default"
             className={classes.actionIcon}
-            onClick={handleEdit(restProps.row.action)}
+            onClick={handleEdit(value)}
           >
             <EditIcon />
           </IconButton>
@@ -269,7 +273,7 @@ export function PlanTable(props: IProps) {
             aria-label={'del-' + value}
             color="default"
             className={classes.actionIcon}
-            onClick={handleDelete}
+            onClick={handleDelete(value)}
           >
             <DeleteIcon />
           </IconButton>

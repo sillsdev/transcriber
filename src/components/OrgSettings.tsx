@@ -173,8 +173,8 @@ export function OrgSettings(props: IProps) {
 
   const handleCancel = () => setView('Main');
 
-  const handleDelete = (o: Organization | undefined) => () => {
-    if (o !== undefined) setDeleteItem(o.id);
+  const handleDelete = () => {
+    if (curOrg !== undefined) setDeleteItem(curOrg.id);
   };
 
   const handleDeleteConfirmed = () => {
@@ -332,7 +332,7 @@ export function OrgSettings(props: IProps) {
           <DeleteExpansion
             title={t.deleteOrg}
             explain={t.deleteExplained}
-            handleDelete={() => handleDelete(curOrg)}
+            handleDelete={() => handleDelete()}
           />
         )}
       </div>

@@ -1,5 +1,8 @@
 import { Record, RecordRelationship } from '@orbit/data';
-
+export enum DigestPreference {
+  noDigest = 0,
+  dailyDigest = 1,
+}
 export interface User extends Record {
   attributes: {
     name: string;
@@ -19,6 +22,8 @@ export interface User extends Record {
     progressbarTypeid: string | null;
     avatarUrl: string | null;
     hotKeys: string | null;
+    digestPreference: DigestPreference | null;
+    newsPreference: boolean | null;
     dateCreated: string | null;
     dateUpdated: string | null;
     lastModifiedBy: string | null;

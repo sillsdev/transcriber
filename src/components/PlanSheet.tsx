@@ -81,6 +81,7 @@ interface IProps extends IStateProps {
   addPassage: (i?: number) => void;
   addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
+  changed: boolean;
   setChanged?: (v: boolean) => void;
 }
 
@@ -99,6 +100,7 @@ export function PlanSheet(props: IProps) {
     addPassage,
     addSection,
     paste,
+    changed,
     setChanged,
   } = props;
   const classes = useStyles();
@@ -368,6 +370,7 @@ export function PlanSheet(props: IProps) {
                 color="primary"
                 className={classes.button}
                 onClick={handleAddPassage}
+                disabled={data.length < 2}
               >
                 {t.addPassage}
                 <AddIcon className={classes.icon} />
@@ -405,6 +408,7 @@ export function PlanSheet(props: IProps) {
                 color="primary"
                 className={classes.button}
                 onClick={handleSave}
+                disabled={!changed}
               >
                 {t.save}
                 <SaveIcon className={classes.icon} />
@@ -434,7 +438,9 @@ export function PlanSheet(props: IProps) {
           }
         >
           <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
-          <MenuItem onClick={handlePassageAbove}>{t.passageAbove}</MenuItem>
+          <MenuItem onClick={handlePassageAbove} disabled={position.i < 2}>
+            {t.passageAbove}
+          </MenuItem>
         </Menu>
       </div>
       <PassageMedia

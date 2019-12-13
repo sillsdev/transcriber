@@ -412,6 +412,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planTable.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planTable.other">
+         <segment>
+            <source>General Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
@@ -624,7 +636,7 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign sections to Users</source>
+            <source>Assign Sections to Users</source>
             <target/>
          </segment>
       </unit>
@@ -757,6 +769,18 @@
       <unit id="planAdd.editPlan">
          <segment>
             <source>Edit Plan Details</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planAdd.other">
+         <segment>
+            <source>General Transcription</source>
             <target/>
          </segment>
       </unit>
@@ -1738,7 +1762,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.transcriber">
+      <unit id="invite.silTranscriber">
          <segment>
             <source>SIL Transcriber</source>
             <target/>
@@ -1756,9 +1780,39 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.questions">
+         <segment>
+            <source>Questions? Contact</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.join">
+         <segment>
+            <source>Join</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.emailsubject">
          <segment>
             <source>SIL Transcriber Invitation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.admin">
+         <segment>
+            <source>Owner</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.reviewer">
+         <segment>
+            <source>Reviewer</source>
             <target/>
          </segment>
       </unit>
@@ -2328,7 +2382,7 @@
       </unit>
       <unit id="profile.locale">
          <segment>
-            <source>Locale</source>
+            <source>Preferred Language</source>
             <target/>
          </segment>
       </unit>
@@ -2389,6 +2443,18 @@
       <unit id="profile.completeProfile">
          <segment>
             <source>Complete User Profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.sendNews">
+         <segment>
+            <source>Recieve SIL Transcriber and Language Technology news</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.sendDigest">
+         <segment>
+            <source>Recieve daily digests</source>
             <target/>
          </segment>
       </unit>

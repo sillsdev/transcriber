@@ -104,6 +104,8 @@ const initialState = {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
 			"loadingTable": "Loading data",
+			"scripture": "Scripture Transcription",
+			"other": "General Transcription",
 		}
 	}),
 	"planSheet": new LocalizedStrings({
@@ -155,7 +157,7 @@ const initialState = {
 	}),
 	"assignSection": new LocalizedStrings({
 		"en": {
-			"title": "Assign sections to Users",
+			"title": "Assign Sections to Users",
 			"sections": "Sections",
 			"users": "Users",
 			"reviewer": "Reviewer",
@@ -186,6 +188,8 @@ const initialState = {
 			"newPlan": "New Plan",
 			"selectAPlanType": "Please select a plan type",
 			"editPlan": "Edit Plan Details",
+			"scripture": "Scripture Transcription",
+			"other": "General Transcription",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
@@ -405,10 +409,15 @@ const initialState = {
 			"alreadyInvited": "Already invited!",
 			"resend": "Resend",
 			"sil": "SIL International",
-			"transcriber": "SIL Transcriber",
+			"silTranscriber": "SIL Transcriber",
 			"invitation": "has invited you to join",
 			"instructions": "Please click the following link to accept the invitation:",
+			"questions": "Questions? Contact",
+			"join": "Join",
 			"emailsubject": "SIL Transcriber Invitation",
+			"admin": "Owner",
+			"transcriber": "Transcriber",
+			"reviewer": "Reviewer",
 		}
 	}),
 	"invitationTable": new LocalizedStrings({
@@ -535,7 +544,7 @@ const initialState = {
 			"email": "Email",
 			"phone": "Phone",
 			"timezone": "Time zone",
-			"locale": "Locale",
+			"locale": "Preferred Language",
 			"locked": "Locked",
 			"add": "Add",
 			"save": "Save",
@@ -546,6 +555,8 @@ const initialState = {
 			"silTranscriber": "SIL Transcriber",
 			"userProfile": "User profile",
 			"completeProfile": "Complete User Profile",
+			"sendNews": "Recieve SIL Transcriber and Language Technology news",
+			"sendDigest": "Recieve daily digests",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({

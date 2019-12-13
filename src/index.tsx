@@ -32,6 +32,9 @@ setGlobal({
   memory: memory,
   schema: schema,
   keyMap: keyMap,
+  bucket: undefined,
+  remote: undefined,
+  remoteBusy: false,
 });
 
 const Root = () => (

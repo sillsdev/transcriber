@@ -142,15 +142,17 @@ export function IntegrationPanel(props: IProps) {
   const [online] = React.useState(Online());
   const [hasPtProj, setHasPtProj] = React.useState(false);
   const [ptProj, setPtProj] = React.useState(-1);
+  const [ptProjName, setPtProjName] = React.useState('');
   const [hasParatext, setHasParatext] = React.useState(false);
   const [hasPermission, setHasPermission] = React.useState(false);
   const [ptPermission, setPtPermission] = React.useState('None');
   const [project] = useGlobal('project');
   const [keyMap] = useGlobal('keyMap');
-  const [paratextIntegration, setParatextIntegration] = React.useState('');
+  const [paratextIntegration, setParatextIntegration] = React.useState();
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
   const [message, setMessage] = React.useState(<></>);
+  const [busy] = useGlobal('remoteBusy');
 
   const handleMessageReset = () => () => {
     setMessage(<></>);
@@ -169,7 +171,7 @@ export function IntegrationPanel(props: IProps) {
   };
   const getParatextIntegration = () => {
     const intfind: Integration[] = integrations.filter(
-      i => i.attributes.name === 'paratext'
+      i => i.attributes && i.attributes.name === 'paratext'
     );
     if (intfind.length === 0)
       addParatextIntegration().then(res => setParatextIntegration(res));
@@ -234,11 +236,16 @@ export function IntegrationPanel(props: IProps) {
   };
   const handleParatextProjectChange = (e: any) => {
     console.log(e.target.value);
+    if (e.target.value === t.removeProject) {
+      handleRemoveIntegration();
+      return;
+    }
     var index: number = paratext_projects.findIndex(
       p => p.Name === e.target.value
     );
     if (ptProj >= 0) removeProjectFromParatextList(ptProj);
     setPtProj(index);
+    setPtProjName(e.target.value);
     if (index >= 0) {
       const paratextProject: ParatextProject = paratext_projects[index];
       const setting = {
@@ -275,6 +282,7 @@ export function IntegrationPanel(props: IProps) {
     setConfirmItem(null);
     removeProjectFromParatextList(ptProj);
     setPtProj(-1);
+    setPtProjName('');
   };
   const handleDeleteRefused = () => setConfirmItem(null);
   const getProjectLabel = (): string => {
@@ -293,6 +301,7 @@ export function IntegrationPanel(props: IProps) {
       p => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
     );
     setPtProj(index);
+    setPtProjName(paratext_projects[index].Name);
     if (pRef && pRef.current) pRef.current.focus();
   };
   const translateError = (err: IAxiosStatus): string => {
@@ -305,15 +314,23 @@ export function IntegrationPanel(props: IProps) {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
   useEffect(() => {
-    resetSync();
-    getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
-    getParatextIntegration();
-    if (!paratext_projectsStatus.complete || paratext_projectsStatus.errStatus)
-      getProjects(auth, t.projectsPending);
-    if (!paratext_usernameStatus.complete || paratext_usernameStatus.errStatus)
-      getUserName(auth, t.usernamePending);
+    if (!busy && integrations.length > 0 && !paratextIntegration) {
+      resetSync();
+      getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
+      getParatextIntegration();
+      if (
+        !paratext_projectsStatus.complete ||
+        paratext_projectsStatus.errStatus
+      )
+        getProjects(auth, t.projectsPending);
+      if (
+        !paratext_usernameStatus.complete ||
+        paratext_usernameStatus.errStatus
+      )
+        getUserName(auth, t.usernamePending);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
+  }, [busy, integrations.length]);
 
   useEffect(() => {
     if (paratext_countStatus && paratext_countStatus.errStatus)
@@ -368,6 +385,7 @@ export function IntegrationPanel(props: IProps) {
         );
       else if (paratext_syncStatus.statusMsg !== '') {
         setMessage(<span>{paratext_syncStatus.statusMsg}</span>);
+        getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
       }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);
@@ -420,65 +438,56 @@ export function IntegrationPanel(props: IProps) {
               <ListItemText
                 primary={t.questionProject}
                 secondary={
-                  <>
-                    <TextField
-                      ref={pRef}
-                      id="select-project"
-                      select
-                      label={getProjectLabel()}
-                      className={classes.textField}
-                      value={
-                        ptProj >= 0 && paratext_projects[ptProj]
-                          ? paratext_projects[ptProj].Name
-                          : null
-                      }
-                      onChange={handleParatextProjectChange}
-                      SelectProps={{
-                        MenuProps: {
-                          className: classes.menu,
-                        },
-                      }}
-                      InputProps={{
-                        classes: {
-                          input: classes.formTextInput,
-                        },
-                      }}
-                      InputLabelProps={{
-                        classes: {
-                          root: classes.formTextLabel,
-                        },
-                      }}
-                      margin="normal"
-                      variant="filled"
-                      required={true}
-                    >
-                      {paratext_projects
-                        .sort((i, j) => (i.Name < j.Name ? -1 : 1))
-                        .map((option: ParatextProject) => (
-                          <MenuItem key={option.ParatextId} value={option.Name}>
-                            {option.Name +
-                              ' (' +
-                              option.LanguageName +
-                              '-' +
-                              option.LanguageTag +
-                              ')'}
-                          </MenuItem>
-                        ))}
-                    </TextField>
-                    <br />
-                    <Button
-                      key="removeassociation"
-                      aria-label={'removeassociation'}
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      disabled={!hasPtProj}
-                      onClick={handleRemoveIntegration}
-                    >
-                      {t.removeProject}
-                      <DeleteIcon className={classes.icon} />
-                    </Button>
-                  </>
+                  <TextField
+                    ref={pRef}
+                    id="select-project"
+                    select
+                    label={getProjectLabel()}
+                    className={classes.textField}
+                    value={ptProjName}
+                    onChange={handleParatextProjectChange}
+                    SelectProps={{
+                      MenuProps: {
+                        className: classes.menu,
+                      },
+                    }}
+                    InputProps={{
+                      classes: {
+                        input: classes.formTextInput,
+                      },
+                    }}
+                    InputLabelProps={{
+                      classes: {
+                        root: classes.formTextLabel,
+                      },
+                    }}
+                    margin="normal"
+                    variant="filled"
+                    required={true}
+                  >
+                    {paratext_projects
+                      .sort((i, j) => (i.Name < j.Name ? -1 : 1))
+                      .map((option: ParatextProject) => (
+                        <MenuItem key={option.ParatextId} value={option.Name}>
+                          {option.Name +
+                            ' (' +
+                            option.LanguageName +
+                            '-' +
+                            option.LanguageTag +
+                            ')'}
+                        </MenuItem>
+                      ))
+                      .concat(
+                        <MenuItem
+                          key={t.removeProject}
+                          value={t.removeProject}
+                          disabled={!hasPtProj}
+                        >
+                          {t.removeProject + '\u00A0\u00A0'}
+                          <DeleteIcon />
+                        </MenuItem>
+                      )}
+                  </TextField>
                 }
               />
             </ListItem>
@@ -628,7 +637,6 @@ const mapRecordsToProps = {
   integrations: (q: QueryBuilder) => q.findRecords('integration'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(IntegrationPanel) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(IntegrationPanel) as any
+) as any;

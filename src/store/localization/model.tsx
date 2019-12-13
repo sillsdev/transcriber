@@ -91,6 +91,8 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "choosePlan": string;
     "loadingTable": string;
+    "scripture": string;
+    "other": string;
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
@@ -167,6 +169,8 @@ export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
     "newPlan": string;
     "selectAPlanType": string;
     "editPlan": string;
+    "scripture": string;
+    "other": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
@@ -372,10 +376,15 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "alreadyInvited": string;
     "resend": string;
     "sil": string;
-    "transcriber": string;
+    "silTranscriber": string;
     "invitation": string;
     "instructions": string;
+    "questions": string;
+    "join": string;
     "emailsubject": string;
+    "admin": string;
+    "transcriber": string;
+    "reviewer": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
@@ -505,6 +514,8 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "silTranscriber": string;
     "userProfile": string;
     "completeProfile": string;
+    "sendNews": string;
+    "sendDigest": string;
 };
 
 export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {

@@ -2,6 +2,7 @@ import React from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import * as actions from '../store';
 import {
   MediaDescription,
@@ -259,6 +260,19 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
+  const fontFamily =
+    projRec && projRec.attributes && projRec.attributes.defaultFont
+      ? projRec.attributes.defaultFont.split(',')[0].replace(/ /g, '')
+      : 'CharisSIL';
+
+  // See: https://github.com/typekit/webfontloader#custom
+  const fontConfig = {
+    custom: {
+      families: [fontFamily],
+      urls: ['/fonts/' + fontFamily + '.css'],
+    },
+  };
+
   return (
     <div className={classes.root}>
       <Paper
@@ -298,27 +312,28 @@ export function Transcriber(props: IProps) {
           </Grid>
           <Grid item xs={12} sm container>
             <Grid ref={transcriptionRef} item xs container direction="column">
-              <TextareaAutosize
-                defaultValue={defaultValue}
-                readOnly={role !== 'transcriber'}
-                style={{
-                  backgroundColor: '#cfe8fc',
-                  height: height - 240,
-                  width: '98hu',
-                  fontFamily:
-                    projRec &&
-                    projRec.attributes &&
-                    projRec.attributes.defaultFont
-                      ? projRec.attributes.defaultFont
-                      : 'CharisSIL',
-                  fontSize:
-                    projRec &&
-                    projRec.attributes &&
-                    projRec.attributes.defaultFontSize
-                      ? projRec.attributes.defaultFontSize
-                      : 'large',
-                }}
-              />
+              <WebFontLoader config={fontConfig}>
+                <TextareaAutosize
+                  defaultValue={defaultValue}
+                  readOnly={role !== 'transcriber'}
+                  style={{
+                    backgroundColor: '#cfe8fc',
+                    height: height - 240,
+                    width: '98hu',
+                    fontFamily: fontFamily,
+                    fontSize:
+                      projRec &&
+                      projRec.attributes &&
+                      projRec.attributes.defaultFontSize
+                        ? projRec.attributes.defaultFontSize
+                        : 'large',
+                    direction:
+                      projRec && projRec.attributes && projRec.attributes.rtl
+                        ? 'rtl'
+                        : 'ltr',
+                  }}
+                />
+              </WebFontLoader>
             </Grid>
           </Grid>
           <Grid container xs={12} direction="row" className={classes.row}>
