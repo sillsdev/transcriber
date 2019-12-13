@@ -9,6 +9,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         state: { type: 'string' },
         sequencenum: { type: 'number' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {},
     },
@@ -19,6 +22,9 @@ const schemaDefinition: SchemaSettings = {
         abbreviation: { type: 'string' },
         ownerId: { type: 'number' },
         allUsers: { type: 'boolean' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
@@ -35,6 +41,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         font: { type: 'string' },
         fontSize: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         user: { type: 'hasOne', model: 'user', inverse: 'groupMemberships' },
@@ -47,6 +56,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         url: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         projectIntegrations: {
@@ -114,7 +126,11 @@ const schemaDefinition: SchemaSettings = {
     },
     organizationmembership: {
       keys: { remoteId: {} },
-      attributes: {},
+      attributes: {
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
+      },
       relationships: {
         user: {
           type: 'hasOne',
@@ -130,6 +146,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         slug: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         project: { type: 'hasOne', model: 'project', inverse: 'plans' },
@@ -143,6 +162,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         description: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         plans: { type: 'hasMany', model: 'plan', inverse: 'plantype' },
@@ -164,6 +186,7 @@ const schemaDefinition: SchemaSettings = {
         isPublic: { type: 'boolean' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         projecttype: {
@@ -187,6 +210,9 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         settings: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         integration: {
@@ -206,6 +232,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         description: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         projects: { type: 'hasMany', model: 'project', inverse: 'projecttype' },
@@ -217,6 +246,9 @@ const schemaDefinition: SchemaSettings = {
         orgRole: { type: 'boolean' },
         groupRole: { type: 'boolean' },
         roleName: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         userRoles: { type: 'hasMany', model: 'organizationalmembership' },
@@ -228,6 +260,9 @@ const schemaDefinition: SchemaSettings = {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
         state: { type: 'string' },
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         // projects: { type: 'hasMany', model: 'project', inverse: 'sections' },
@@ -253,6 +288,7 @@ const schemaDefinition: SchemaSettings = {
         lastComment: { type: 'string' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'passage' },
@@ -265,7 +301,11 @@ const schemaDefinition: SchemaSettings = {
     },
     passagesection: {
       keys: { remoteId: {} },
-      attributes: {},
+      attributes: {
+        dateCreated: { type: 'date' },
+        dateUpdated: { type: 'date' },
+        lastModifiedBy: { type: 'number' },
+      },
       relationships: {
         passage: { type: 'hasOne', model: 'passage', inverse: 'sections' },
         section: { type: 'hasOne', model: 'section', inverse: 'passages' },
@@ -297,9 +337,10 @@ const schemaDefinition: SchemaSettings = {
         transcription: { type: 'string' },
         originalFile: { type: 'string' },
         filesize: { type: 'number' },
+        position: { type: 'number' },
         dateCreated: { type: 'date' },
         dateUpdated: { type: 'date' },
-        position: { type: 'number' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },

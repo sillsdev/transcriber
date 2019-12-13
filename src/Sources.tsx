@@ -1,4 +1,5 @@
 import { Base64 } from 'js-base64';
+import moment from 'moment';
 import { IApiError } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -213,6 +214,7 @@ export const Sources = async (
   });
 
   if (!API_CONFIG.offline && userToken !== tokData.sub) {
+    localStorage.setItem('lastTime', moment.utc().toISOString());
     await InviteUser(remote);
 
     await remote

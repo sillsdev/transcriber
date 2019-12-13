@@ -264,7 +264,9 @@ export function PlanSheet(props: IProps) {
     }
   };
 
-  const cellRender = (props: any) => <td {...props} onMouseUp={handleUp} />;
+  const cellRender = (props: any) => (
+    <td {...props} editing="false" onMouseUp={handleUp} />
+  );
 
   const bookEditor = (props: any) => {
     if (projRole !== 'admin') return <></>;

@@ -70,11 +70,13 @@ import Confirm from '../components/AlertDialog';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import IntegrationPanel from '../components/Integration';
+import PlanTable from '../components/PlanTable';
 import { setDefaultProj, deepLink } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
+import { dateChanges } from './dateChanges';
 
 export const DrawerWidth = 240;
 
@@ -229,6 +231,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [bucket] = useGlobal('bucket');
+  const [schema] = useGlobal('schema');
   const [user] = useGlobal('user');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [organization, setOrganization] = useGlobal('organization');
@@ -260,6 +263,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [topFilter, setTopFilter] = useState(false);
   const newOrgRef = useRef<any>();
   const timer = React.useRef<NodeJS.Timeout>();
+  const syncTimer = React.useRef<NodeJS.Timeout>();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -518,12 +522,26 @@ export function ResponsiveDrawer(props: IProps) {
   useEffect(() => {
     if (remote) {
       // remote is null if offline
-      timer.current = setInterval(() => {
-        const isBusy = remote.requestQueue.length !== 0;
-        if (busy !== isBusy) setBusy(isBusy);
-      }, 1000);
+      if (timer.current === undefined)
+        timer.current = setInterval(() => {
+          const isBusy = remote.requestQueue.length !== 0;
+          if (busy !== isBusy) setBusy(isBusy);
+        }, 1000);
+      if (syncTimer.current === undefined)
+        syncTimer.current = setInterval(() => {
+          if (!busy) {
+            dateChanges(auth, keyMap, remote, memory, schema);
+          }
+        }, 1000 * 5);
       return () => {
-        if (timer.current) clearInterval(timer.current);
+        if (timer.current) {
+          clearInterval(timer.current);
+          timer.current = undefined;
+        }
+        if (syncTimer.current) {
+          clearInterval(syncTimer.current);
+          syncTimer.current = undefined;
+        }
       };
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -749,11 +767,9 @@ export function ResponsiveDrawer(props: IProps) {
       planColumn={true}
     />
   );
-  const PlanTable = React.lazy(() => import('../components/PlanTable'));
-  components[slug(t.plans)] = LazyLoad({
-    ...props,
-    displaySet: handlePlanType,
-  })(PlanTable);
+  components[slug(t.plans)] = (
+    <PlanTable {...props} displaySet={handlePlanType} />
+  );
   components['scripture-plan'] = (
     <PlanTabs
       {...props}
