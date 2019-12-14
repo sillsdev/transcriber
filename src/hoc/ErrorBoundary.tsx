@@ -69,7 +69,7 @@ export class ErrorBoundary extends React.Component<IProps, ErrorBoundaryProps> {
   render() {
     const { classes, t } = this.props;
 
-    if (this.state.hasError) {
+    if (this.state.hasError && localStorage.getItem('isLoggedIn')) {
       // You can render any custom fallback UI
       return (
         <div id="myModal" className={classes.modal}>
