@@ -443,7 +443,7 @@ export function TaskTable(props: IProps) {
     setRows(rowList);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role, playItem, curDesc]);
+  }, [role, playItem, curDesc, project]);
 
   useEffect(() => {
     if (hasUrl && audioRef.current && !playing && playItem !== '') {
