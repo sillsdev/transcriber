@@ -317,6 +317,7 @@ export function Transcriber(props: IProps) {
                   defaultValue={defaultValue}
                   readOnly={role !== 'transcriber'}
                   style={{
+                    overflow: 'auto',
                     backgroundColor: '#cfe8fc',
                     height: height - 240,
                     width: '98hu',
