@@ -39,7 +39,7 @@ export const Sources = async (
   const userToken = localStorage.getItem('user-token');
 
   const bucket: Bucket = new IndexedDBBucket({
-    namespace: 'transcriber-' + tokData.sub.replace('|', '-') + '-bucket',
+    namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
   setBucket(bucket);
 
