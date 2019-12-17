@@ -24,12 +24,18 @@ export const dateChanges = (
   let lastTime = localStorage.getItem('lastTime');
   if (!lastTime) lastTime = moment.utc().toISOString(); // should not happen
   let nextTime = moment.utc().toISOString();
-
-  Axios.get(API_CONFIG.host + '/api/datachanges/' + lastTime, {
-    headers: {
-      Authorization: 'Bearer ' + auth.accessToken,
-    },
-  }).then(response => {
+  Axios.get(
+    API_CONFIG.host +
+      '/api/datachanges/since/' +
+      lastTime +
+      '?origin=' +
+      window.location.origin,
+    {
+      headers: {
+        Authorization: 'Bearer ' + auth.accessToken,
+      },
+    }
+  ).then(response => {
     const data = response.data.data as DataChange;
     const changes = data.attributes.changes;
     changes.forEach(table => {
