@@ -21,19 +21,25 @@ export const getMediaRec = (passageId: string, memory: Memory) => {
 };
 
 export const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
-  const planId = related(rec, 'plan') as string;
-  const planRec = memory.cache.query((q: QueryBuilder) =>
-    q.findRecord({ type: 'plan', id: planId })
-  ) as Plan;
+  let planRec: Plan | undefined = undefined;
+  if (rec) {
+    const planId = related(rec, 'plan') as string;
+    planRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plan', id: planId })
+    ) as Plan;
+  }
   return planRec;
 };
 
 export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
-  const planRec = getMediaPlanRec(rec, memory);
-  const projId = related(planRec, 'project') as string;
-  const projRec = memory.cache.query((q: QueryBuilder) =>
-    q.findRecord({ type: 'project', id: projId })
-  ) as Project;
+  let projRec: Project | undefined = undefined;
+  if (rec) {
+    const planRec = getMediaPlanRec(rec, memory);
+    const projId = related(planRec, 'project') as string;
+    projRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'project', id: projId })
+    ) as Project;
+  }
   return projRec;
 };
 
@@ -43,10 +49,12 @@ export const getMediaLang = (rec: MediaFile | null, memory: Memory) => {
 };
 
 export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
+  let passageRec: Passage | undefined = undefined;
   const passageId = related(rec, 'passage');
-  const passageRec = memory.cache.query((q: QueryBuilder) =>
-    q.findRecord({ type: 'passage', id: passageId })
-  ) as Passage;
+  if (passageId)
+    passageRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'passage', id: passageId })
+    ) as Passage;
   const passageSectionIds = related(passageRec, 'sections') as Array<
     RecordIdentity
   >;

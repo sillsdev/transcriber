@@ -295,8 +295,8 @@ export function TranscriptionTab(props: IProps) {
     const xmlDoc = parser.parseFromString(eaf(), 'text/xml');
     updateXml('@DATE', xmlDoc, moment().format('YYYY-MM-DDTHH:MM:SSZ'));
     updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, transcription);
-    updateXml('@DEFAULT_LOCALE', xmlDoc, lang);
-    updateXml('@LANGUAGE_CODE', xmlDoc, lang);
+    updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');
+    updateXml('@LANGUAGE_CODE', xmlDoc, lang ? lang : 'en');
     updateXml("*[@TIME_SLOT_ID='ts2']/@TIME_VALUE", xmlDoc, duration);
     updateXml('@MEDIA_FILE', xmlDoc, audioName ? audioName : name + ext);
     updateXml('@MEDIA_URL', xmlDoc, audioName ? audioName : name + ext);
