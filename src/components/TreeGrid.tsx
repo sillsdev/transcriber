@@ -16,6 +16,7 @@ import {
   IntegratedSorting,
   IntegratedSelection,
   IntegratedGrouping,
+  TableColumnVisibility,
 } from '@devexpress/dx-react-grid';
 import {
   Grid,
@@ -40,7 +41,10 @@ interface IProps {
   sorting?: Array<Sorting>;
   pageSizes: Array<number>;
   tableColumnExtensions: Table.ColumnExtension[];
+  defaultHiddenColumnNames?: Array<string>;
   groupingStateColumnExtensions: GroupingState.ColumnExtension[];
+  dataCell?: any;
+  noDataCell?: any;
   treeColumn: string;
   showfilters?: boolean;
   showgroups?: boolean;
@@ -57,6 +61,7 @@ export default function TreeGrid(props: IProps) {
     getChildRows,
     pageSizes,
     tableColumnExtensions,
+    defaultHiddenColumnNames,
     groupingStateColumnExtensions,
     cellComponent,
     sorting,
@@ -65,6 +70,8 @@ export default function TreeGrid(props: IProps) {
     showgroups,
     showSelection,
     select,
+    dataCell,
+    noDataCell,
   } = props;
   const handleSelect = (checks: Array<string | number>) => {
     if (select) {
@@ -72,6 +79,7 @@ export default function TreeGrid(props: IProps) {
     }
   };
   const noRow = () => <></>;
+  const noCols = () => <></>;
   //const totalSummaryItems = [{ columnName: 'passages', type: 'count' }];
   //const groupSummaryItems = [{ columnName: 'passages', type: 'count' }];
   return (
@@ -103,7 +111,39 @@ export default function TreeGrid(props: IProps) {
         <DragDropProvider />
         <IntegratedGrouping />
 
-        <Table columnExtensions={tableColumnExtensions} />
+        {dataCell && noDataCell && !tableColumnExtensions ? (
+          <Table cellComponent={dataCell} noDataCellComponent={noDataCell} />
+        ) : dataCell && !noDataCell && !tableColumnExtensions ? (
+          <Table cellComponent={dataCell} />
+        ) : !dataCell && noDataCell && !tableColumnExtensions ? (
+          <Table noDataCellComponent={noDataCell} />
+        ) : dataCell && noDataCell && tableColumnExtensions ? (
+          <Table
+            cellComponent={dataCell}
+            noDataCellComponent={noDataCell}
+            columnExtensions={tableColumnExtensions}
+          />
+        ) : dataCell && !noDataCell && tableColumnExtensions ? (
+          <Table
+            cellComponent={dataCell}
+            columnExtensions={tableColumnExtensions}
+          />
+        ) : !dataCell && noDataCell && tableColumnExtensions ? (
+          <Table
+            noDataCellComponent={noDataCell}
+            columnExtensions={tableColumnExtensions}
+          />
+        ) : !dataCell && !noDataCell && tableColumnExtensions ? (
+          <Table columnExtensions={tableColumnExtensions} />
+        ) : (
+          <Table />
+        )}
+        <TableColumnVisibility
+          hiddenColumnNames={
+            defaultHiddenColumnNames ? defaultHiddenColumnNames : []
+          }
+          emptyMessageComponent={noCols}
+        />
         <TableColumnResizing defaultColumnWidths={columnWidths} />
         <TableHeaderRow showSortingControls />
         {showfilters !== null && !showfilters ? (

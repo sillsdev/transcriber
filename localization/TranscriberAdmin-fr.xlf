@@ -352,7 +352,7 @@
       <unit id="planTable.addPlan">
          <segment>
             <source>Add Plan</source>
-            <target>Ajouter un programme</target>
+            <target>Ajouter un plan</target>
          </segment>
       </unit>
       <unit id="planTable.name">
@@ -1075,6 +1075,12 @@
 				<target>Ajouter un projet</target>
 			</segment>
 		</unit>
+		<unit id="main.export">
+			<segment>
+				<source>Export</source>
+				<target>Exporter</target>
+			</segment>
+		</unit>
 		<unit id="main.logout">
 			<segment>
 				<source>Log Out</source>
@@ -1220,7 +1226,13 @@
 				<target>Réviseur</target>
 			</segment>
 		</unit>
-	<unit id="transcriptionShow.transcription">
+		<unit id="transcriptionTab.plan">
+			<segment>
+				<source>Plan</source>
+				<target>Plan</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>
             <target>Transcription</target>

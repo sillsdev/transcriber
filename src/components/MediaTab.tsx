@@ -268,7 +268,9 @@ export function MediaTab(props: IProps) {
     { columnName: 'version', width: 100 },
     { columnName: 'date', width: 100 },
   ];
-  const defaultHiddenColumnNames: string[] = [];
+  const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<
+    string[]
+  >([]);
 
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
@@ -373,12 +375,12 @@ export function MediaTab(props: IProps) {
     if (planColumn) {
       if (defaultHiddenColumnNames.length > 0)
         //assume planName is only one
-        defaultHiddenColumnNames.pop();
+        setDefaultHiddenColumnNames([]);
     } else if (projectplans.length === 1) {
       if (plan === '') {
         setPlan(projectplans[0].id); //set the global plan
       }
-      defaultHiddenColumnNames.push('planName');
+      setDefaultHiddenColumnNames(['planName']);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projectplans, plan, planColumn]);
@@ -651,7 +653,6 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MediaTab) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(MediaTab) as any
+) as any;

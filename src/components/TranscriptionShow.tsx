@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
 import localStrings from '../selector/localize';
+import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 // import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -15,7 +17,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
-import { related } from '../utils/related';
+import { getMediaProjRec, getMediaRec } from '../utils';
 
 // const useStyles = makeStyles((theme: Theme) =>
 //   createStyles({})
@@ -36,11 +38,15 @@ interface IProps extends IRecordProps, IStateProps {
 }
 
 function TranscriptionShow(props: IProps) {
-  const { passageId, t, visible, closeMethod, mediafiles } = props;
+  const { passageId, t, visible, closeMethod } = props;
   // const classes = useStyles();
+  const [memory] = useGlobal('memory');
   const [open, setOpen] = useState(visible);
   const [message, setMessage] = useState(<></>);
   const [transcription, setTranscription] = useState('');
+  const [fontName, setFontName] = useState();
+  const [fontSize, setFontSize] = useState();
+  const [rtl, setRtl] = useState();
 
   const handleChange = () => {};
 
@@ -59,11 +65,32 @@ function TranscriptionShow(props: IProps) {
   }, [visible]);
 
   useEffect(() => {
-    const media = mediafiles.filter(m => related(m, 'passage') === passageId);
-    if (media.length > 0) {
-      setTranscription(media[0].attributes.transcription);
+    if (passageId) {
+      const mediaRec = getMediaRec(passageId, memory);
+      const attr = mediaRec && mediaRec.attributes;
+      setTranscription(attr ? attr.transcription : '');
+      const projRec = getMediaProjRec(mediaRec, memory);
+      const projAttr = projRec && projRec.attributes;
+      if (projAttr) {
+        setFontName(projAttr.defaultFont);
+        setFontSize(projAttr.defaultFontSize);
+        setRtl(projAttr.rtl);
+      }
     }
-  }, [passageId, mediafiles]);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [passageId]);
+
+  const fontFamily = fontName
+    ? fontName.split(',')[0].replace(/ /g, '')
+    : 'CharisSIL';
+
+  // See: https://github.com/typekit/webfontloader#custom
+  const fontConfig = {
+    custom: {
+      families: [fontFamily],
+      urls: ['/fonts/' + fontFamily + '.css'],
+    },
+  };
 
   return (
     <div>
@@ -75,17 +102,24 @@ function TranscriptionShow(props: IProps) {
         <DialogTitle id="form-dialog-title">{t.transcription}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.transcriptionDisplay}</DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            variant="filled"
-            multiline
-            id="transcription"
-            label={t.transcription}
-            value={transcription}
-            onChange={handleChange}
-            fullWidth
-          />
+          <WebFontLoader config={fontConfig}>
+            <TextField
+              autoFocus
+              margin="dense"
+              variant="filled"
+              multiline
+              id="transcription"
+              label={t.transcription}
+              value={transcription}
+              onChange={handleChange}
+              style={{
+                fontFamily,
+                fontSize: fontSize ? fontSize : 'large',
+                direction: rtl ? 'rtl' : 'ltr',
+              }}
+              fullWidth
+            />
+          </WebFontLoader>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="contained" color="primary">
@@ -106,6 +140,6 @@ const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  TranscriptionShow
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(TranscriptionShow) as any
+) as any;

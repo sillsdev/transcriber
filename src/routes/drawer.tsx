@@ -50,6 +50,7 @@ import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
+import DownloadIcon from '@material-ui/icons/CloudDownload';
 import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
@@ -64,6 +65,7 @@ import OrgSettings from '../components/OrgSettings';
 import LazyLoad from '../hoc/LazyLoad';
 import PlanTabs from '../components/PlanTabs';
 import MediaTab from '../components/MediaTab';
+import TranscriptionTab from '../components/TranscriptionTab';
 import Team from '../components/GroupSettings/Team';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
@@ -625,6 +627,12 @@ export function ResponsiveDrawer(props: IProps) {
     ? [<ListIcon />]
     : [<PlanIcon />, <TeamIcon />, <MediaIcon />, <ReportIcon />];
 
+  const projectIcons = [
+    <SettingsIcon />,
+    <DownloadIcon />,
+    <IntegrationIcon />,
+  ];
+
   const drawer = (
     <div>
       <div className={classes.toolbar}>
@@ -726,16 +734,14 @@ export function ResponsiveDrawer(props: IProps) {
               </List>
               <Divider />
               <List>
-                {[t.settings, t.integrations].map((text, index) => (
+                {[t.settings, t.export, t.integrations].map((text, index) => (
                   <ListItem
                     button
                     key={text}
                     selected={slug(text) === choice}
                     onClick={checkSavedEv(() => handleChoice(text))}
                   >
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
-                    </ListItemIcon>
+                    <ListItemIcon>{projectIcons[index]}</ListItemIcon>
                     <ListItemText primary={text} />
                   </ListItem>
                 ))}
@@ -764,6 +770,13 @@ export function ResponsiveDrawer(props: IProps) {
     <MediaTab
       {...props}
       projectplans={plans.filter(p => related(p, 'project') === project)}
+      planColumn={true}
+    />
+  );
+  components[slug(t.export)] = (
+    <TranscriptionTab
+      {...props}
+      projectPlans={plans.filter(p => related(p, 'project') === project)}
       planColumn={true}
     />
   );

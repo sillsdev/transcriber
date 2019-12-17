@@ -229,6 +229,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "loadingTranscriber": string;
     "projectSummary": string;
     "addProject": string;
+    "export": string;
     "logout": string;
     "myAccount": string;
     "clearCache": string;
@@ -256,6 +257,9 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "filter": string;
     "transcriber": string;
     "reviewer": string;
+    "plan": string;
+    "elan": string;
+    "export": string;
 };
 
 export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {

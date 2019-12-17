@@ -1078,6 +1078,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.export">
+         <segment>
+            <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.logout">
          <segment>
             <source>Log Out</source>
@@ -1219,6 +1225,24 @@
       <unit id="transcriptionTab.reviewer">
          <segment>
             <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.plan">
+         <segment>
+            <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.elan">
+         <segment>
+            <source>Elan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.export">
+         <segment>
+            <source>Export</source>
             <target/>
          </segment>
       </unit>

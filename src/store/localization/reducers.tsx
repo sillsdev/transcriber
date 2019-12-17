@@ -251,6 +251,7 @@ const initialState = {
 			"loadingTranscriber": "Loading SIL Transcriber",
 			"projectSummary": "Project Summary",
 			"addProject": "Add Project",
+			"export": "Export",
 			"logout": "Log Out",
 			"myAccount": "My Account",
 			"clearCache": "Clear cache",
@@ -279,6 +280,9 @@ const initialState = {
 			"filter": "Configure",
 			"transcriber": "Transcriber",
 			"reviewer": "Reviewer",
+			"plan": "Plan",
+			"elan": "Elan",
+			"export": "Export",
 		}
 	}),
 	"transcriptionShow": new LocalizedStrings({

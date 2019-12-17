@@ -1258,7 +1258,14 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.logout">
+        	<trans-unit id="main.export">
+        		<source>Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.logout">
                 <source>Log Out</source>
                 <target/>
                 <context-group>
@@ -1426,7 +1433,28 @@
                     <context context-type="sourcefile">TranscriptionTab.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriptionShow.transcription">
+        	<trans-unit id="transcriptionTab.plan">
+        		<source>Plan</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.elan">
+        		<source>Elan</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.export">
+        		<source>Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionShow.transcription">
                 <source>Transcription</source>
                 <target/>
                 <context-group>
