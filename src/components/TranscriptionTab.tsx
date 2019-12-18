@@ -14,10 +14,11 @@ import {
   IActivityStateStrings,
   Role,
   Plan,
+  MediaFile,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
@@ -437,8 +438,12 @@ export function TranscriptionTab(props: IProps) {
           q.findRecord({ type: 'passage', id: row.id })
         ) as Passage;
         const state = passRec && passRec.attributes && passRec.attributes.state;
-        const mediaFiles: RecordIdentity[] = related(passRec, 'mediafiles');
-        if (state !== 'noMedia' && mediaFiles && mediaFiles.length > 0)
+        const media = memory.cache.query((q: QueryBuilder) =>
+          q
+            .findRecords('mediafile')
+            .filter({ relation: 'passage', record: passRec })
+        ) as MediaFile[];
+        if (state !== 'noMedia' && media.length > 0)
           return <ActionCell {...props} />;
         else return <></>;
       }
