@@ -282,7 +282,7 @@ export function TranscriptionTab(props: IProps) {
     const mediaAttr = mediaRec && mediaRec.attributes;
     const transcription = mediaAttr ? mediaAttr.transcription : '';
     const durationNum = mediaAttr && mediaAttr.duration;
-    const duration = durationNum ? durationNum.toString() : '0';
+    const duration = durationNum ? (durationNum * 1000).toString() : '0';
     const lang = getMediaLang(mediaRec, memory);
     const name = getMediaName(mediaRec, memory);
     const mime = mediaAttr && mediaAttr.contentType;
