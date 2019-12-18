@@ -1153,6 +1153,12 @@
 				<target>Quelque chose a mal tourné. Les développeurs doivent se pencher sur cette question.</target>
 			</segment>
 		</unit>
+		<unit id="main.apiError">
+			<segment>
+				<source>API Error:</source>
+				<target>Erreur de l'IPA:</target>
+			</segment>
+		</unit>
 		<unit id="main.reports">
 			<segment>
 				<source>Reports</source>

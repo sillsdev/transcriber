@@ -340,6 +340,7 @@ export function Profile(props: IProps) {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({ type: 'user', id: deleteItem })
     );
+    setView('Logout');
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');

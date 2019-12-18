@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { IMainStrings, IState } from '../model';
 import { connect } from 'react-redux';
@@ -40,6 +40,8 @@ const styles = (theme: Theme) =>
 
 interface IStateProps {
   t: IMainStrings;
+  orbitStatus: number;
+  orbitMessage: string;
 }
 
 interface IProps extends IStateProps, WithStyles<typeof styles> {
@@ -50,6 +52,7 @@ interface ErrorBoundaryProps {
   hasError: boolean;
   error: string;
 }
+
 export class ErrorBoundary extends React.Component<IProps, ErrorBoundaryProps> {
   constructor(props: IProps) {
     super(props);
@@ -67,22 +70,33 @@ export class ErrorBoundary extends React.Component<IProps, ErrorBoundaryProps> {
   }
 
   render() {
-    const { classes, t } = this.props;
+    const { classes, t, orbitStatus, orbitMessage } = this.props;
 
-    if (this.state.hasError && localStorage.getItem('isLoggedIn')) {
-      // You can render any custom fallback UI
+    const modalMessage = (message: ReactElement | string) => {
       return (
         <div id="myModal" className={classes.modal}>
           <div className={classes.modalContent}>
             <Typography>{t.crashMessage}</Typography>
-            {this.state.error}
+            {message}
             <Link to="/logout">
               <Button variant="contained">{t.logout}</Button>
             </Link>
           </div>
         </div>
       );
-    }
+    };
+
+    if (orbitStatus >= 400)
+      modalMessage(
+        <>
+          {t.apiError + ' ' + orbitStatus.toString()}
+          <br />
+          {orbitMessage}
+        </>
+      );
+
+    if (this.state.hasError && localStorage.getItem('isLoggedIn'))
+      modalMessage(this.state.error);
 
     // If there is no error just render the children component.
     return this.props.children;
@@ -91,6 +105,8 @@ export class ErrorBoundary extends React.Component<IProps, ErrorBoundaryProps> {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
+  orbitStatus: state.orbit.status,
+  orbitMessage: state.orbit.message,
 });
 
 export default withStyles(styles)(connect(mapStateToProps)(ErrorBoundary));

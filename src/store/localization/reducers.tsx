@@ -264,6 +264,7 @@ const initialState = {
 			"switchToAdmin": "Open project in Admin",
 			"switchToApp": "Open project in App",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
+			"apiError": "API Error:",
 			"reports": "Reports",
 			"sessionExpiring": "Session Expiring",
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",

@@ -242,6 +242,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "switchToAdmin": string;
     "switchToApp": string;
     "crashMessage": string;
+    "apiError": string;
     "reports": string;
     "sessionExpiring": string;
     "sessionExpireTask": string;

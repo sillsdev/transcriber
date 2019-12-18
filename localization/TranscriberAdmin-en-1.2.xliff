@@ -1349,6 +1349,13 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
+        	<trans-unit id="main.apiError">
+        		<source>API Error:</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.reports">
         		<source>Reports</source>
         		<target/>

@@ -185,7 +185,6 @@ interface componentType {
 interface IStateProps {
   t: IMainStrings;
   orbitLoaded: boolean;
-  orbitStatus: number;
 }
 
 interface IDispatchProps {
@@ -222,7 +221,6 @@ export function ResponsiveDrawer(props: IProps) {
     projects,
     plans,
     orbitLoaded,
-    orbitStatus,
     organizationMemberships,
     groupMemberships,
     roles,
@@ -515,11 +513,6 @@ export function ResponsiveDrawer(props: IProps) {
     if (target) history.push(target);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, organization, choice, content, plan, group, tab, busy]);
-
-  useEffect(() => {
-    if (orbitStatus >= 400 && orbitStatus < 500) setView('Logout');
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orbitStatus]);
 
   useEffect(() => {
     if (remote) {
@@ -988,7 +981,6 @@ export function ResponsiveDrawer(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitLoaded: state.orbit.loaded,
-  orbitStatus: state.orbit.status,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

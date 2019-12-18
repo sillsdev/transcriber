@@ -1156,6 +1156,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.apiError">
+         <segment>
+            <source>API Error:</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.reports">
          <segment>
             <source>Reports</source>
