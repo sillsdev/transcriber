@@ -17,18 +17,22 @@ import PersonItems from './PersonItems';
 interface IStateProps {
   t: IGroupSettingsStrings;
 }
-
+export interface IPerson {
+  canDelete: boolean;
+  user: string;
+}
 interface IProps extends IStateProps {
   detail: boolean;
   title: string;
-  people: string[];
+  titledetail: string;
+  people: IPerson[];
   add: () => void;
   del: (id: string, name: string) => void;
   allUsers?: boolean;
 }
 
 function TeamCol(props: IProps) {
-  const { detail, people, add, del, allUsers, title } = props;
+  const { detail, people, add, del, allUsers, title, titledetail } = props;
   const classes = useStyles();
   const [orgRole] = useGlobal('orgRole');
 
@@ -36,7 +40,8 @@ function TeamCol(props: IProps) {
     <Grid item xs={12} md={4}>
       <FormGroup className={classes.group}>
         <FormLabel className={classes.label}>
-          {title} <div className={classes.grow}>{'\u00A0'}</div>
+          {title} {titledetail}
+          <div className={classes.grow}>{'\u00A0'}</div>
           {!detail && orgRole === 'admin' && !allUsers && (
             <IconButton
               size="small"

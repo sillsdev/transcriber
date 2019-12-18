@@ -110,24 +110,25 @@ export function GroupSettings(props: IProps) {
           <FormGroup className={classes.group}>
             <GroupProjects />
           </FormGroup>
+          <FormGroup className={classes.group}>
+            {orgRole === 'admin' && (
+              <div>
+                <Button
+                  key="save"
+                  aria-label={t.save}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleSave}
+                >
+                  {t.save}
+                  <SaveIcon className={classes.icon} />
+                </Button>
+              </div>
+            )}
+          </FormGroup>
         </FormControl>
-
         <Team selectedGroup={group} detail={false} />
-        {orgRole === 'admin' && (
-          <div className={classes.actions}>
-            <Button
-              key="save"
-              aria-label={t.save}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleSave}
-            >
-              {t.save}
-              <SaveIcon className={classes.icon} />
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );

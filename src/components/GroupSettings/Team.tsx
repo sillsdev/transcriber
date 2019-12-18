@@ -190,6 +190,7 @@ function Team(props: IProps) {
         <TeamCol
           {...props}
           title={t.owners}
+          titledetail={t.ownersDetail}
           people={useOwnerIds(props)}
           add={() => handleAdd(RoleNames.Admin)}
           del={(id: string, name: string) =>
@@ -199,6 +200,7 @@ function Team(props: IProps) {
         <TeamCol
           {...props}
           title={t.reviewers}
+          titledetail={t.reviewersDetail}
           people={useReviewerIds(props)}
           add={() => handleAdd(RoleNames.Reviewer)}
           del={(id: string, name: string) =>
@@ -208,6 +210,7 @@ function Team(props: IProps) {
         <TeamCol
           {...props}
           title={t.transcribers}
+          titledetail={t.transcribersDetail}
           people={useTranscriberIds(props)}
           add={() => handleAdd(RoleNames.Transcriber)}
           del={handleRemove}

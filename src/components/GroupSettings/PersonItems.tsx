@@ -15,6 +15,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import UserAvatar from '../UserAvatar';
 import useStyles from './GroupSettingsStyles';
 import Involvement from './Involvement';
+import { IPerson } from './TeamCol';
 
 interface IRecordProps {
   users: Array<User>;
@@ -22,7 +23,7 @@ interface IRecordProps {
 
 interface IProps extends IRecordProps {
   detail: boolean;
-  ids: Array<string>;
+  ids: Array<IPerson>;
   rev: boolean;
   del: (id: string, name: string) => void;
   allUsers?: boolean;
@@ -38,10 +39,16 @@ function PersonItems(props: IProps) {
   return (
     <>
       {users
-        .filter(u => u.attributes && ids.indexOf(u.id) !== -1)
+        .filter(
+          u => u.attributes && ids.map(id => id.user).indexOf(u.id) !== -1
+        )
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
         .map(u => (
-          <ListItem>
+          <ListItem
+            disabled={
+              !detail && !ids.filter(id => id.user === u.id)[0].canDelete
+            }
+          >
             <ListItemAvatar className={classes.avatar}>
               <UserAvatar {...props} userRec={u} />
             </ListItemAvatar>
@@ -49,17 +56,20 @@ function PersonItems(props: IProps) {
               primary={u.attributes.name}
               secondary={detail ? <Involvement user={u.id} rev={rev} /> : null}
             />
-            {!detail && orgRole === 'admin' && !allUsers && (
-              <ListItemSecondaryAction>
-                <IconButton
-                  edge="end"
-                  aria-label="Delete"
-                  onClick={handeleDel(u.id, u.attributes.name)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            )}
+            {!detail &&
+              orgRole === 'admin' &&
+              ids.filter(id => id.user === u.id)[0].canDelete && (
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    aria-label="Delete"
+                    disabled={allUsers}
+                    onClick={handeleDel(u.id, u.attributes.name)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              )}
           </ListItem>
         ))}
     </>
