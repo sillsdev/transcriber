@@ -27,6 +27,8 @@ import {
   FormLabel,
   Checkbox,
   FormControlLabel,
+  ListItem,
+  ListItemText,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import {
@@ -460,9 +462,16 @@ function Invite(props: IProps) {
                     i.attributes.roleName < j.attributes.roleName ? -1 : 1
                   )
                   .map((option: Role) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      {t.getString(option.attributes.roleName.toLowerCase())}
-                    </MenuItem>
+                    <ListItem key={option.id} value={option.id}>
+                      <ListItemText
+                        primary={t.getString(
+                          option.attributes.roleName.toLowerCase()
+                        )}
+                        secondary={t.getString(
+                          option.attributes.roleName.toLowerCase() + 'Detail'
+                        )}
+                      />
+                    </ListItem>
                   ))}
               </TextField>
             </Grid>
@@ -516,11 +525,17 @@ function Invite(props: IProps) {
                         i.attributes.roleName < j.attributes.roleName ? -1 : 1
                       )
                       .map((option: Role) => (
-                        <MenuItem key={option.id} value={option.id}>
-                          {t.getString(
-                            option.attributes.roleName.toLowerCase()
-                          )}
-                        </MenuItem>
+                        <ListItem key={option.id} value={option.id}>
+                          <ListItemText
+                            primary={t.getString(
+                              option.attributes.roleName.toLowerCase()
+                            )}
+                            secondary={t.getString(
+                              option.attributes.roleName.toLowerCase() +
+                                'Detail'
+                            )}
+                          />
+                        </ListItem>
                       ))}
                   </TextField>
                 </Grid>

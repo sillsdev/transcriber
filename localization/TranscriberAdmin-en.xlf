@@ -1444,6 +1444,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.ownersDetail">
+         <segment>
+            <source>(Manage + Review + Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.reviewersDetail">
+         <segment>
+            <source>(Review + Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.transcribersDetail">
+         <segment>
+            <source>(Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupSettings.addGroupMember">
          <segment>
             <source>Choose {0}</source>
@@ -1834,15 +1852,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.adminDetail">
+         <segment>
+            <source>(Manage + Review + Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.transcriber">
          <segment>
             <source>Transcriber</source>
             <target/>
          </segment>
       </unit>
+      <unit id="invite.transcriberDetail">
+         <segment>
+            <source>(Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.reviewer">
          <segment>
             <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.reviewerDetail">
+         <segment>
+            <source>(Review + Transcribe)</source>
             <target/>
          </segment>
       </unit>

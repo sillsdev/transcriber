@@ -336,6 +336,9 @@ const initialState = {
 			"owners": "Owners",
 			"reviewers": "Reviewers",
 			"transcribers": "Transcribers",
+			"ownersDetail": "(Manage + Review + Transcribe)",
+			"reviewersDetail": "(Review + Transcribe)",
+			"transcribersDetail": "(Transcribe)",
 			"addGroupMember": "Choose {0}",
 			"addMemberInstruction": "Choose a person who will act as a {0} for projects in this group.",
 			"cancel": "Cancel",
@@ -421,8 +424,11 @@ const initialState = {
 			"join": "Join",
 			"emailsubject": "SIL Transcriber Invitation",
 			"admin": "Owner",
+			"adminDetail": "(Manage + Review + Transcribe)",
 			"transcriber": "Transcriber",
+			"transcriberDetail": "(Transcribe)",
 			"reviewer": "Reviewer",
+			"reviewerDetail": "(Review + Transcribe)",
 		}
 	}),
 	"invitationTable": new LocalizedStrings({

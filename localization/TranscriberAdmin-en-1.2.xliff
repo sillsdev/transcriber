@@ -1685,6 +1685,27 @@
                     <context context-type="sourcefile">GroupSettings.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="groupSettings.ownersDetail">
+                <source>(Manage + Review + Transcribe)</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="groupSettings.reviewersDetail">
+                <source>(Review + Transcribe)</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="groupSettings.transcribersDetail">
+                <source>(Transcribe)</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="groupSettings.addGroupMember">
                 <source>Choose {0}</source>
                 <target/>
@@ -2140,8 +2161,22 @@
         			<context context-type="sourcefile">Invite.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="invite.transcriber">
+        	<trans-unit id="invite.adminDetail">
+        		<source>(Manage + Review + Transcribe)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="invite.transcriber">
         		<source>Transcriber</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="invite.transcriberDetail">
+        		<source>(Transcribe)</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Invite.tsx</context>
@@ -2154,7 +2189,14 @@
         			<context context-type="sourcefile">Invite.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="invitationTable.email">
+        	<trans-unit id="invite.reviewerDetail">
+        		<source>(Review + Transcribe)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="invitationTable.email">
                 <source>Email</source>
                 <target/>
                 <context-group>

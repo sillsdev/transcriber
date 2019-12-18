@@ -308,6 +308,9 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "owners": string;
     "reviewers": string;
     "transcribers": string;
+    "ownersDetail": string;
+    "reviewersDetail": string;
+    "transcribersDetail": string;
     "addGroupMember": string;
     "addMemberInstruction": string;
     "cancel": string;
@@ -388,8 +391,11 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "join": string;
     "emailsubject": string;
     "admin": string;
+    "adminDetail": string;
     "transcriber": string;
+    "transcriberDetail": string;
     "reviewer": string;
+    "reviewerDetail": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
