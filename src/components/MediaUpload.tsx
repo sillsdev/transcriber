@@ -111,7 +111,7 @@ function MediaUpload(props: IProps) {
           id="upload"
           style={{ display: 'none' }}
           type="file"
-          accept="audio/mpeg, audio/wav"
+          accept=".mp3, .m4a, .wav"
           multiple={true}
           onChange={handleNameChange}
         />

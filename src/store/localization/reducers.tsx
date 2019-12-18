@@ -456,7 +456,7 @@ const initialState = {
 	"mediaUpload": new LocalizedStrings({
 		"en": {
 			"title": "Upload Media",
-			"task": "You can upload audio files in .mp3 format or in .wav format.",
+			"task": "You can upload audio files in .mp3, .m4a or .wav format.",
 			"dragDrop": "Drag and drop files here, or click here to browse for the files.",
 			"cancel": "Cancel",
 			"upload": "Upload",

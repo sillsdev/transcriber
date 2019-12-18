@@ -2302,7 +2302,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="mediaUpload.task">
-                <source>You can upload audio files in .mp3 format or in .wav format.</source>
+                <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>

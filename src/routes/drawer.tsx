@@ -534,7 +534,7 @@ export function ResponsiveDrawer(props: IProps) {
           if (!busy) {
             dateChanges(auth, keyMap, remote, memory, schema);
           }
-        }, 1000 * 5);
+        }, 1000 * 20);
       return () => {
         if (timer.current) {
           clearInterval(timer.current);

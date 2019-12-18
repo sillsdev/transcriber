@@ -186,7 +186,8 @@ export function PlanTable(props: IProps) {
     const typeRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'plantype', id: typeId })
     ) as PlanType;
-    displaySet(typeRec.attributes.name.toLowerCase());
+    if (typeRec.attributes && typeRec.attributes.name)
+      displaySet(typeRec.attributes.name.toLowerCase());
   };
   const getType = (p: Plan) => {
     const typeId = Related(p, 'plantype');

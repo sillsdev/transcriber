@@ -412,7 +412,9 @@ export function MediaTab(props: IProps) {
         setComplete(
           Math.min((currentlyLoading * 100) / uploadList.length, 100)
         );
-        if (/\.wav$|\.mp3$/.test(uploadList[currentlyLoading + 1].name)) {
+        if (
+          /\.wav$|\.mp3$|\.m4a$/.test(uploadList[currentlyLoading + 1].name)
+        ) {
           const planId = remoteIdNum('plan', plan, keyMap);
           const mediaFile = {
             planId: planId,
