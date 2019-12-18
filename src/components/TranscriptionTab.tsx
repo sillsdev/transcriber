@@ -17,7 +17,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
@@ -29,7 +29,6 @@ import { Table } from '@devexpress/dx-react-grid-material-ui';
 import SnackBar from './SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
-import related from '../utils/related';
 import Auth from '../auth/Auth';
 import {
   sectionNumber,
@@ -44,6 +43,7 @@ import {
   getMediaLang,
   getMediaName,
   remoteId,
+  related,
 } from '../utils';
 import eaf from './TranscriptionEaf';
 
@@ -432,7 +432,16 @@ export function TranscriptionTab(props: IProps) {
   const DataCell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'action') {
-      if (row.parentId !== '') return <ActionCell {...props} />;
+      if (row.parentId !== '') {
+        const passRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'passage', id: row.id })
+        ) as Passage;
+        const state = passRec && passRec.attributes && passRec.attributes.state;
+        const mediaFiles: RecordIdentity[] = related(passRec, 'mediafiles');
+        if (state !== 'noMedia' && mediaFiles && mediaFiles.length > 0)
+          return <ActionCell {...props} />;
+        else return <></>;
+      }
     }
     return <Table.Cell {...props} />;
   };
