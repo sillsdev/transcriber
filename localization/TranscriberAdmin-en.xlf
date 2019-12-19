@@ -2212,6 +2212,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login to sync projects.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.questionOnline">
          <segment>
             <source>Are you connected to the Internet?</source>

@@ -306,8 +306,11 @@ export function IntegrationPanel(props: IProps) {
   };
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
-    if (err.errStatus === 500 && err.errMsg.includes('401'))
-      return t.expiredParatextToken;
+    if (err.errStatus === 500) {
+      if (err.errMsg.includes('401')) return t.expiredParatextToken;
+
+      return t.invalidParatextLogin;
+    }
     return err.errMsg;
   };
   const canEditParatextText = (role: string): boolean => {

@@ -469,6 +469,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "offline": string;
     "expiredToken": string;
     "expiredParatextToken": string;
+    "invalidParatextLogin": string;
     "questionOnline": string;
     "yes": string;
     "no": string;

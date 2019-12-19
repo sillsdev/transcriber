@@ -2581,7 +2581,13 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="integration.questionOnline">
+            <trans-unit id="integration.invalidParatextLogin">
+                <source>You must login with a valid paratext login to sync projects.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>            <trans-unit id="integration.questionOnline">
                 <source>Are you connected to the Internet?</source>
                 <target/>
                 <context-group>

@@ -2199,6 +2199,12 @@
     		<target>Votre connexion paratext a expiré et ne peut pas être automatiquement renouvelée. Veuillez vous déconnecter et vous reconnecter.</target>
 	     </segment>
       </unit>
+      <unit id="integration.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login to sync projects.</source>
+            <target>Vous devez vous connecter avec une connexion paratext valide pour synchroniser les projets</target>
+         </segment>
+      </unit>
       <unit id="integration.questionOnline">
          <segment>
             <source>Are you connected to the Internet?</source>

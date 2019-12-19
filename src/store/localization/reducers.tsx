@@ -508,6 +508,7 @@ const initialState = {
 			"offline": "Offline",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please logout and login again.",
+			"invalidParatextLogin": "You must login with a valid paratext login to sync projects.",
 			"questionOnline": "Are you connected to the Internet?",
 			"yes": "Yes",
 			"no": "No",
