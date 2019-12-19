@@ -156,17 +156,30 @@ export const Sources = async (
             // When non-network errors occur, notify the user and
             // reset state.
             let label = transform.options && transform.options.label;
-            const response = ex.response as any;
-            const url: string | null = response && response.url;
             if (label) {
               alert(`Unable to complete "${label}"`);
             } else {
-              alert(
-                `Unable to complete operation ` +
-                  transform.operations[0].op +
-                  ` ` +
-                  (url ? url.split('/').pop() : '')
-              );
+              const response = ex.response as any;
+              const url: string | null = response && response.url;
+              const data = (ex as any).data;
+              const detail =
+                data &&
+                data.errors &&
+                Array.isArray(data.errors) &&
+                data.errors.length > 0 &&
+                data.errors[0].detail;
+              if (url && detail) {
+                alert(
+                  `Unable to complete ` +
+                    transform.operations[0].op +
+                    ` in ` +
+                    url.split('/').pop() +
+                    `: ` +
+                    detail
+                );
+              } else {
+                alert(`Unable to complete operation`);
+              }
             }
 
             // Roll back memory to position before transform
