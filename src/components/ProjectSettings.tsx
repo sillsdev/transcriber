@@ -237,6 +237,10 @@ export function ProjectSettings(props: IProps) {
   const handleDeleteRefused = () => {
     setDeleteItem('');
   };
+  const handleLanguageName = (lang: string) => {
+    setLanguageName(lang);
+    if (name === '') setName(lang);
+  };
 
   useEffect(() => {
     let proj: Project = {
@@ -261,7 +265,10 @@ export function ProjectSettings(props: IProps) {
     };
     if (add) {
       setCurrentProject(undefined);
-      setProjectGroup('');
+      const allUsers = groups.filter(
+        g => related(g, 'owner') === organization && g.attributes.allUsers
+      );
+      setProjectGroup(allUsers.length > 0 ? allUsers[0].id : '');
     } else {
       const curProj = projects.filter((p: Project) => p.id === project);
       if (curProj.length === 1) {
@@ -382,7 +389,7 @@ export function ProjectSettings(props: IProps) {
                     name={languageName}
                     font={defaultFont}
                     setCode={setBcp47}
-                    setName={setLanguageName}
+                    setName={handleLanguageName}
                     setFont={setDefaultFont}
                     disabled={
                       API_CONFIG.isApp ||

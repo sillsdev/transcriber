@@ -261,6 +261,7 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
+  const swapRef = useRef<any>();
   const newOrgRef = useRef<any>();
   const timer = React.useRef<NodeJS.Timeout>();
   const syncTimer = React.useRef<NodeJS.Timeout>();
@@ -421,10 +422,16 @@ export function ResponsiveDrawer(props: IProps) {
     if (orgOptions) {
       const cur = orgOptions.map(oo => oo.value).indexOf(organization);
       if (cur !== -1) setCurOrg(cur);
+      else if (
+        !busy &&
+        orgOptions.length > (API_CONFIG.isApp ? 0 : 1) &&
+        curOrg === null
+      )
+        handleCommitOrg(orgOptions[0].value);
     }
     setOrgRole(getRole(organizationMemberships, 'organization', organization));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orgOptions, organization]);
+  }, [orgOptions, organization, busy]);
 
   useEffect(() => {
     const orgRec = organizations.filter(o => o.id === organization);
@@ -453,6 +460,14 @@ export function ResponsiveDrawer(props: IProps) {
     const projKeys = projOptions.map(o => o.value);
     if (projKeys.length === 0) {
       setCurProj(null);
+      if (!busy && curOrg !== null) {
+        if (API_CONFIG.isApp && swapRef && swapRef.current)
+          swapRef.current.click();
+        setAddProject(true);
+        setContent(slug(t.settings));
+        setChoice(slug(t.settings));
+        setTitle(t.addProject);
+      }
       return;
     }
     const cur = projKeys.indexOf(project);
@@ -461,8 +476,11 @@ export function ResponsiveDrawer(props: IProps) {
     } else {
       setCurProj(cur);
     }
+    if (!busy && projKeys.length === 1 && curProj == null) {
+      handleCommitProj(projKeys[0]);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject]);
+  }, [projOptions, project, addProject, busy, swapRef, curOrg]);
 
   useEffect(() => {
     try {
@@ -962,6 +980,8 @@ export function ResponsiveDrawer(props: IProps) {
       ) : (
         <></>
       )}
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+      <a ref={swapRef} href={swapTarget} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a
         ref={newOrgRef}
