@@ -301,7 +301,7 @@ export function IntegrationPanel(props: IProps) {
       p => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
     );
     setPtProj(index);
-    setPtProjName(paratext_projects[index].Name);
+    setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     if (pRef && pRef.current) pRef.current.focus();
   };
   const translateError = (err: IAxiosStatus): string => {
