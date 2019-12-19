@@ -302,7 +302,7 @@ export function OrgSettings(props: IProps) {
             />
           </FormGroup>
         </FormControl>
-        {!API_CONFIG.isApp && orgRole === 'admin' && (
+        {!API_CONFIG.isApp && (curOrg === undefined || orgRole === 'admin') && (
           <div className={classes.actions}>
             <Button
               key="cancel"
@@ -328,7 +328,7 @@ export function OrgSettings(props: IProps) {
             </Button>
           </div>
         )}
-        {curOrg !== undefined && (
+        {curOrg !== undefined && orgRole === 'admin' && (
           <DeleteExpansion
             title={t.deleteOrg}
             explain={t.deleteExplained}
