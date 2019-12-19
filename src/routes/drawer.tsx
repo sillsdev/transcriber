@@ -461,12 +461,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (projKeys.length === 0) {
       setCurProj(null);
       if (!busy && curOrg !== null) {
-        if (API_CONFIG.isApp && swapRef && swapRef.current)
-          swapRef.current.click();
-        setAddProject(true);
-        setContent(slug(t.settings));
-        setChoice(slug(t.settings));
-        setTitle(t.addProject);
+        if (!API_CONFIG.isApp) handleAddProject();
       }
       return;
     }
@@ -540,12 +535,23 @@ export function ResponsiveDrawer(props: IProps) {
           const isBusy = remote.requestQueue.length !== 0;
           if (busy !== isBusy) setBusy(isBusy);
         }, 1000);
-      if (syncTimer.current === undefined)
+      if (syncTimer.current === undefined) {
+        if (!busy) {
+          dateChanges(auth, keyMap, remote, memory, schema);
+        }
         syncTimer.current = setInterval(() => {
           if (!busy) {
+            if (API_CONFIG.isApp && curOrg !== null) {
+              if (projOptions.length === 0) {
+                if (swapRef && swapRef.current) {
+                  swapRef.current.click();
+                }
+              }
+            }
             dateChanges(auth, keyMap, remote, memory, schema);
           }
-        }, 1000 * 20);
+        }, 1000 * 10);
+      }
       return () => {
         if (timer.current) {
           clearInterval(timer.current);
@@ -558,7 +564,7 @@ export function ResponsiveDrawer(props: IProps) {
       };
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [remote, busy]);
+  }, [remote, busy, curOrg]);
 
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;

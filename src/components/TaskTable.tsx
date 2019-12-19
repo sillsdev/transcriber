@@ -157,6 +157,7 @@ export function TaskTable(props: IProps) {
     curDesc,
   } = props;
   const classes = useStyles();
+  const [busy] = useGlobal('remoteBusy');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [user] = useGlobal('user');
@@ -443,7 +444,7 @@ export function TaskTable(props: IProps) {
     setRows(rowList);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [role, playItem, curDesc, project]);
+  }, [role, playItem, curDesc, project, busy]);
 
   useEffect(() => {
     if (hasUrl && audioRef.current && !playing && playItem !== '') {
