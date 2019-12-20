@@ -111,8 +111,8 @@
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source>Configure</source>
-         	<target>Configurer</target>
+            <source>Filter</source>
+         	<target>Filtre</target>
          </segment>
       </unit>
       <unit id="usertable.selectRows">
@@ -393,8 +393,8 @@
 		</unit>
 		<unit id="planTable.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="planTable.silTranscriberAdmin">
@@ -609,8 +609,8 @@
 		</unit>
 		<unit id="assignmentTable.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.transcriber">
@@ -897,8 +897,8 @@
 		</unit>
 		<unit id="mediaTab.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.selectFiles">
@@ -1222,8 +1222,8 @@
 
 		<unit id="transcriptionTab.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.transcriber">
@@ -1312,8 +1312,8 @@
       </unit>
       <unit id="groupTable.filter">
          <segment>
-			<source>Configure</source>
-         	<target>Configurer</target>
+			<source>Filter</source>
+         	<target>Filtre</target>
          </segment>
       </unit>
 		<unit id="groupTable.action">
@@ -1925,8 +1925,8 @@
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source>Configure</source>
-         	<target>Configurer</target>
+            <source>Filter</source>
+         	<target>Filtre</target>
          </segment>
       </unit>
    <unit id="invitationTable.selectRows">
@@ -2045,8 +2045,8 @@
       </unit>
 		<unit id="toDoTable.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 	<unit id="toDoTable.plan">

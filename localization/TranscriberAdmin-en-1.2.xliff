@@ -132,7 +132,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="usertable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">UserTable.tsx</context>
@@ -461,7 +461,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="planTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PlanTable.tsx</context>
@@ -713,7 +713,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="assignmentTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -1049,7 +1049,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="mediaTab.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaTab.tsx</context>
@@ -1427,7 +1427,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriptionTab.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -1546,7 +1546,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupTable.tsx</context>
@@ -2260,7 +2260,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invitationTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">InvitationTable.tsx</context>
@@ -2400,7 +2400,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="toDoTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ToDoTable.tsx</context>
