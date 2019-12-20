@@ -248,6 +248,9 @@ export function Transcriber(props: IProps) {
       const attr = mediaRec[0].attributes;
       setDefaultValue(attr.transcription);
       setDefaultPosition(attr.position);
+      setPlaying(false);
+      //focus on player
+      if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
   }, [mediaId, mediafiles]);
 
