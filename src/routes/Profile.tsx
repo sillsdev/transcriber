@@ -490,7 +490,7 @@ export function Profile(props: IProps) {
                         id="given"
                         label={t.given}
                         className={classes.textField}
-                        value={given}
+                        value={given || ''}
                         onChange={handleGivenChange}
                         margin="normal"
                         variant="filled"
@@ -504,7 +504,7 @@ export function Profile(props: IProps) {
                         id="family"
                         label={t.family}
                         className={classes.textField}
-                        value={family}
+                        value={family || ''}
                         onChange={handleFamilyChange}
                         margin="normal"
                         variant="filled"

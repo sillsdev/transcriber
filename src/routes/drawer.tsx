@@ -79,6 +79,7 @@ import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
+import busyImage from './busy.gif';
 
 export const DrawerWidth = 240;
 
@@ -174,6 +175,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     progress: {
       width: '100%',
+    },
+    busy: {
+      margin: 'auto',
     },
   })
 );
@@ -831,7 +835,11 @@ export function ResponsiveDrawer(props: IProps) {
   components['group'] = <GroupSettings {...props} />;
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
-  components['none'] = <></>;
+  components['none'] = (
+    <div className={classes.busy}>
+      <img src={busyImage} alt="busy" />
+    </div>
+  );
   components[slug(t.tasks)] = (
     <TaskTable
       {...props}
