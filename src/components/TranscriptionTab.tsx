@@ -47,6 +47,8 @@ import {
   related,
 } from '../utils';
 import eaf from './TranscriptionEaf';
+var Encoder = require('node-html-encoder').Encoder;
+var encoder = new Encoder('entity');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -281,7 +283,9 @@ export function TranscriptionTab(props: IProps) {
   const handleEaf = (passageId: string) => () => {
     const mediaRec = getMediaRec(passageId, memory);
     const mediaAttr = mediaRec && mediaRec.attributes;
-    const transcription = mediaAttr ? mediaAttr.transcription : '';
+    const transcription =
+      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+    const encTranscript = encoder.htmlEncode(transcription);
     const durationNum = mediaAttr && mediaAttr.duration;
     const duration = durationNum ? (durationNum * 1000).toString() : '0';
     const lang = getMediaLang(mediaRec, memory);
@@ -295,15 +299,29 @@ export function TranscriptionTab(props: IProps) {
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(eaf(), 'text/xml');
     updateXml('@DATE', xmlDoc, moment().format('YYYY-MM-DDTHH:MM:SSZ'));
-    updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, transcription);
+    // updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, encTranscript);
     updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');
     updateXml('@LANGUAGE_CODE', xmlDoc, lang ? lang : 'en');
     updateXml("*[@TIME_SLOT_ID='ts2']/@TIME_VALUE", xmlDoc, duration);
     updateXml('@MEDIA_FILE', xmlDoc, audioName ? audioName : name + ext);
     updateXml('@MEDIA_URL', xmlDoc, audioName ? audioName : name + ext);
     updateXml('@MIME_TYPE', xmlDoc, mime ? mime : 'audio/*');
+    const annotationValue = 'ANNOTATION_VALUE';
     const serializer = new XMLSerializer();
-    const eafCode = btoa(serializer.serializeToString(xmlDoc));
+    const eafCode = btoa(
+      serializer
+        .serializeToString(xmlDoc)
+        .replace(
+          '<' + annotationValue + '/>',
+          '<' +
+            annotationValue +
+            '>' +
+            encTranscript +
+            '</' +
+            annotationValue +
+            '>'
+        )
+    );
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name);
   };
