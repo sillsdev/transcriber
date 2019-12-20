@@ -647,7 +647,10 @@ export function Profile(props: IProps) {
                   disabled={name === '' || !changed}
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
-                  {currentUser === undefined ? t.add : t.save}
+                  {currentUser === undefined ||
+                  currentUser.attributes.name === currentUser.attributes.email
+                    ? t.add
+                    : t.save}
                   <SaveIcon className={classes.icon} />
                 </Button>
               </div>

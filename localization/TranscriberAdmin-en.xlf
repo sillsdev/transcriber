@@ -2472,7 +2472,7 @@
       </unit>
       <unit id="profile.add">
          <segment>
-            <source>Add</source>
+            <source>Next</source>
             <target/>
          </segment>
       </unit>

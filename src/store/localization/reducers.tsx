@@ -559,7 +559,7 @@ const initialState = {
 			"timezone": "Time zone",
 			"locale": "Preferred Language",
 			"locked": "Locked",
-			"add": "Add",
+			"add": "Next",
 			"save": "Save",
 			"deleteUser": "Delete User",
 			"deleteExplained": "Deleting your user will block you from using the program and remove references to your work.",

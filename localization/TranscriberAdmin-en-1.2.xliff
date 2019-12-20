@@ -2881,7 +2881,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.add">
-        		<source>Add</source>
+        		<source>Next</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>

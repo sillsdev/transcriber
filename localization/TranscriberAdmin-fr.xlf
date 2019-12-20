@@ -2459,8 +2459,8 @@
       </unit>
       <unit id="profile.add">
          <segment>
-            <source>Add</source>
-            <target>Ajouter</target>
+            <source>Next</source>
+            <target>Prochain</target>
          </segment>
       </unit>
       <unit id="profile.save">
