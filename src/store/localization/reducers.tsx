@@ -90,6 +90,7 @@ const initialState = {
 			"group": "Group",
 			"preview": "Preview",
 			"selectProjectGroup": "Select project group. Each project relates to a single group. Group members can work on the project.",
+			"notAdminInGroup": "You are not an admin in this group, so you will be unable to manage the project.",
 		}
 	}),
 	"planTable": new LocalizedStrings({

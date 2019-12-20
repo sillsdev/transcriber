@@ -8,6 +8,8 @@ import {
   Project,
   GroupMembership,
   IGroupTableStrings,
+  Role,
+  RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -26,8 +28,9 @@ import ShapingTable from './ShapingTable';
 import GroupAdd from '../components/GroupAdd';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import { remoteIdNum } from '../utils';
+import { remoteIdNum, getRoleId } from '../utils';
 import { numCompare } from '../utils/sort';
+import { addGroupMember } from '../utils/groupmembership';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -102,6 +105,7 @@ interface IStateProps {
 interface IDispatchProps {}
 
 interface IRecordProps {
+  roles: Array<Role>;
   groups: Array<Group>;
   projects: Array<Project>;
   groupMemberships: Array<GroupMembership>;
@@ -112,12 +116,13 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 }
 
 export function GroupTable(props: IProps) {
-  const { t, groups, projects, groupMemberships } = props;
+  const { t, roles, groups, projects, groupMemberships } = props;
   const classes = useStyles();
   const [keyMap] = useGlobal('keyMap');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [group, setGroup] = useGlobal('group');
+  const [user] = useGlobal('user');
   const [schema] = useGlobal('schema');
   const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
@@ -174,6 +179,14 @@ export function GroupTable(props: IProps) {
         id: organization,
       }),
     ]);
+    //add the user creating the group as a group admin
+    await addGroupMember(
+      schema,
+      memory,
+      group.id,
+      user,
+      getRoleId(roles, RoleNames.Admin)
+    );
     setGroup(group.id);
   };
 
@@ -363,12 +376,12 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 const mapRecordsToProps = {
+  roles: (q: QueryBuilder) => q.findRecords('role'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 
-export default withData(mapRecordsToProps)(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(GroupTable) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(GroupTable) as any
+) as any;

@@ -352,6 +352,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectSettings.notAdminInGroup">
+         <segment>
+            <source>You are not an admin in this group, so you will be unable to manage the project.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTable.addPlan">
          <segment>
             <source>Add Plan</source>

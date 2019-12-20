@@ -78,6 +78,7 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "group": string;
     "preview": string;
     "selectProjectGroup": string;
+    "notAdminInGroup": string;
 };
 
 export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
