@@ -164,8 +164,8 @@ export function Transcriber(props: IProps) {
   const handleJump = (amount: number) => () => handleJumpFn(amount);
   const handleReject = async () => {
     const newState = transcribing
-      ? ActivityStates.NoMedia
-      : ActivityStates.TranscribeReady;
+      ? ActivityStates.NeedsNewRecording
+      : ActivityStates.NeedsNewTranscription;
     await memory.update((t: TransformBuilder) =>
       t.replaceAttribute({ type: 'passage', id: passage.id }, 'state', newState)
     );
@@ -237,7 +237,6 @@ export function Transcriber(props: IProps) {
     }, 100);
 
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };

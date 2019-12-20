@@ -8,17 +8,32 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  state: string;
+  state: ActivityStates;
 }
 
-export const NextState = (props: IProps) => {
+export const NextAction = (props: IProps) => {
   const { state, t } = props;
-
-  let text = state[0].toLocaleUpperCase() + state.slice(1);
-  if (/trans|noMedia/i.test(state)) text = t.transcribe;
-  if (/transcribed|review/i.test(state)) text = t.review;
-  if (/appr/i.test(state)) text = t.sync;
-  if (/syn|done/i.test(state)) text = t.done;
+  var text: string = t.noMedia;
+  switch (state) {
+    case ActivityStates.NoMedia:
+    case ActivityStates.TranscribeReady:
+    case ActivityStates.Transcribing:
+    case ActivityStates.NeedsNewTranscription:
+    case ActivityStates.NeedsNewRecording:
+      text = t.transcribe;
+      break;
+    case ActivityStates.Transcribed:
+    case ActivityStates.Reviewing:
+      text = t.review;
+      break;
+    case ActivityStates.Approved:
+      text = t.sync;
+      break;
+    case ActivityStates.Synced:
+    case ActivityStates.Done:
+      text = t.done;
+      break;
+  }
   return text;
 };
 
@@ -27,12 +42,21 @@ export const TaskFlag = (props: IProps) => {
 
   const Flag = ({ state }: { state: string }) => {
     let text = undefined;
-    if (state === ActivityStates.NoMedia) text = t.noMedia;
-    if (
-      state === ActivityStates.Transcribing ||
-      state === ActivityStates.Reviewing
-    )
-      text = t.inProgress;
+    switch (state) {
+      case ActivityStates.NoMedia:
+        text = t.noMedia;
+        break;
+      case ActivityStates.NeedsNewRecording:
+        text = t.needsNewRecording;
+        break;
+      case ActivityStates.NeedsNewTranscription:
+        text = t.needsNewTranscription;
+        break;
+      case ActivityStates.Transcribing:
+      case ActivityStates.Reviewing:
+        text = t.inProgress;
+        break;
+    }
     if (!text) return <></>;
     return <Chip size="small" label={text} color="secondary" />;
   };
@@ -42,7 +66,7 @@ export const TaskFlag = (props: IProps) => {
       <Chip
         size="small"
         icon={<Pencil />}
-        label={NextState(props)}
+        label={NextAction(props)}
         color="primary"
       />
     );

@@ -2985,6 +2985,20 @@
         			<context context-type="sourcefile">TaskFlag.tsx</context>
         		</context-group>
         	</trans-unit>
+            <trans-unit id="taskItem.needsNewRecording">
+        		<source>Needs New Audio</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="taskItem.needsNewTranscription">
+        		<source>Needs Corrections</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="taskItem.inProgress">
         		<source>In Progress</source>
         		<target/>

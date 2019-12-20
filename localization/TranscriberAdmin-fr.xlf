@@ -2547,6 +2547,18 @@
 				<target>Pas d'audio</target>
 			</segment>
 		</unit>
+        <unit id="taskItem.needsNewRecording">
+         <segment>
+            <source>Needs New Audio</source>
+			<target>Problème d'enregistrement</target>
+         </segment>
+      </unit>
+      <unit id="taskItem.needsNewTranscription">
+         <segment>
+            <source>Needs Corrections</source>
+			<target>Besoin de changement</target>
+         </segment>
+      </unit>
 		<unit id="taskItem.inProgress">
 			<segment>
 				<source>In Progress</source>

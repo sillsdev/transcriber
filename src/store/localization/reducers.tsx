@@ -582,6 +582,8 @@ const initialState = {
 	"taskItem": new LocalizedStrings({
 		"en": {
 			"noMedia": "No Audio",
+			"needsNewRecording": "Needs New Audio",
+			"needsNewTranscription": "Needs Corrections",
 			"inProgress": "In Progress",
 			"transcribe": "Transcribe",
 			"review": "Review",

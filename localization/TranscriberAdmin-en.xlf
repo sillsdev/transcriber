@@ -2560,6 +2560,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="taskItem.needsNewRecording">
+         <segment>
+            <source>Needs New Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.needsNewTranscription">
+         <segment>
+            <source>Needs Corrections</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="taskItem.inProgress">
          <segment>
             <source>In Progress</source>

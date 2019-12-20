@@ -17,7 +17,7 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
 } from '@material-ui/core';
-import TaskFlag, { NextState } from './TaskFlag';
+import TaskFlag, { NextAction } from './TaskFlag';
 import UserAvatar from './UserAvatar';
 import Duration from './Duration';
 import { related, sectionNumber, passageNumber } from '../utils';
@@ -69,7 +69,7 @@ export function TaskItem(props: IProps) {
     if (bookItem.length > 0) book = bookItem[0].long;
   }
 
-  const next = NextState({ ...props, state: attr.state });
+  const next = NextAction({ ...props, state: attr.state });
   let assigned = undefined;
   if (next === t.transcribe) assigned = related(section, 'transcriber');
   if (next === t.review) assigned = related(section, 'reviewer');

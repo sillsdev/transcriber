@@ -231,6 +231,7 @@ export function TaskTable(props: IProps) {
     setFilter(!filter);
   };
   const next: { [key: string]: string } = {
+    needsNewTranscription: ActivityStates.Transcribing,
     transcribeReady: ActivityStates.Transcribing,
     transcribed: ActivityStates.Reviewing,
   };
@@ -442,6 +443,12 @@ export function TaskTable(props: IProps) {
       }
       addTasks(
         ActivityStates.TranscribeReady,
+        'transcriber',
+        rowList,
+        playItem
+      );
+      addTasks(
+        ActivityStates.NeedsNewTranscription,
         'transcriber',
         rowList,
         playItem

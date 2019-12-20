@@ -3,13 +3,14 @@ import {
   RecordRelationship,
   RecordHasManyRelationship,
 } from '@orbit/data';
+import { ActivityStates } from '.';
 
 export interface Passage extends Record {
   attributes: {
     sequencenum: number;
     book: string;
     reference: string;
-    state: string;
+    state: ActivityStates;
     hold: boolean;
     title: string;
     lastComment: string;

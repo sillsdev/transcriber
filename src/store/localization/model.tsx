@@ -539,6 +539,8 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "noMedia": string;
+    "needsNewRecording": string;
+    "needsNewTranscription": string;
     "inProgress": string;
     "transcribe": string;
     "review": string;
