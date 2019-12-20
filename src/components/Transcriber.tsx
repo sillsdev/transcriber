@@ -10,6 +10,7 @@ import {
   Project,
   ITranscriberStrings,
   IState,
+  ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -116,7 +117,8 @@ export function Transcriber(props: IProps) {
   const [seeking, setSeeking] = React.useState(false);
   const [jump] = React.useState(2);
   const [transcribing] = React.useState(
-    state === 'transcrbing' || state === 'transcribeReady'
+    state === ActivityStates.Transcribing ||
+      state === ActivityStates.TranscribeReady
   );
   const [height, setHeight] = React.useState(window.innerHeight);
   const [width, setWidth] = React.useState(window.innerWidth);
@@ -161,17 +163,19 @@ export function Transcriber(props: IProps) {
   };
   const handleJump = (amount: number) => () => handleJumpFn(amount);
   const handleReject = async () => {
-    const newState = transcribing ? 'nomedia' : 'transcribeReady';
+    const newState = transcribing
+      ? ActivityStates.NoMedia
+      : ActivityStates.TranscribeReady;
     await memory.update((t: TransformBuilder) =>
       t.replaceAttribute({ type: 'passage', id: passage.id }, 'state', newState)
     );
     done();
   };
   const next: { [key: string]: string } = {
-    transcribing: 'transcribed',
-    reviewing: 'approved',
-    transcribeReady: 'transcribed',
-    transcribed: 'approved',
+    transcribing: ActivityStates.Transcribed,
+    reviewing: ActivityStates.Approved,
+    transcribeReady: ActivityStates.Transcribed,
+    transcribed: ActivityStates.Approved,
   };
   const handleSubmit = async () => {
     if (transcriptionRef.current) {

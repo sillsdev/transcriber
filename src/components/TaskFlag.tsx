@@ -1,5 +1,5 @@
 import React from 'react';
-import { ITaskItemStrings } from '../model';
+import { ITaskItemStrings, ActivityStates } from '../model';
 import { Chip } from '@material-ui/core';
 import Pencil from '@material-ui/icons/Edit';
 
@@ -27,8 +27,12 @@ export const TaskFlag = (props: IProps) => {
 
   const Flag = ({ state }: { state: string }) => {
     let text = undefined;
-    if (state === 'noMedia') text = t.noMedia;
-    if (state === 'transcribing' || state === 'reviewing') text = t.inProgress;
+    if (state === ActivityStates.NoMedia) text = t.noMedia;
+    if (
+      state === ActivityStates.Transcribing ||
+      state === ActivityStates.Reviewing
+    )
+      text = t.inProgress;
     if (!text) return <></>;
     return <Chip size="small" label={text} color="secondary" />;
   };

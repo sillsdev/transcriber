@@ -15,6 +15,7 @@ import {
   Role,
   Plan,
   MediaFile,
+  ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
@@ -461,7 +462,7 @@ export function TranscriptionTab(props: IProps) {
             .findRecords('mediafile')
             .filter({ relation: 'passage', record: passRec })
         ) as MediaFile[];
-        if (state !== 'noMedia' && media.length > 0)
+        if (state !== ActivityStates.NoMedia && media.length > 0)
           return <ActionCell {...props} />;
         else return <></>;
       }

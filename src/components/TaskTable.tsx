@@ -16,6 +16,7 @@ import {
   MediaDescription,
   IActivityStateStrings,
   IToDoTableStrings,
+  ActivityStates,
   RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -230,9 +231,10 @@ export function TaskTable(props: IProps) {
     setFilter(!filter);
   };
   const next: { [key: string]: string } = {
-    transcribeReady: 'transcribing',
-    transcribed: 'reviewing',
+    transcribeReady: ActivityStates.Transcribing,
+    transcribed: ActivityStates.Reviewing,
   };
+
   const handleSelect = (mediaDescription: MediaDescription) => (e: any) => {
     if (mediaDescription.role !== 'view') {
       memory.update((t: TransformBuilder) =>
@@ -432,13 +434,18 @@ export function TaskTable(props: IProps) {
     const rowList: IRow[] = [];
     if (role !== '') {
       if (role !== RoleNames.Transcriber) {
-        addTasks('reviewing', 'reviewer', rowList, playItem);
+        addTasks(ActivityStates.Reviewing, 'reviewer', rowList, playItem);
       }
-      addTasks('transcribing', 'transcriber', rowList, playItem);
+      addTasks(ActivityStates.Transcribing, 'transcriber', rowList, playItem);
       if (role !== RoleNames.Transcriber) {
-        addTasks('transcribed', 'reviewer', rowList, playItem);
+        addTasks(ActivityStates.Transcribed, 'reviewer', rowList, playItem);
       }
-      addTasks('transcribeReady', 'transcriber', rowList, playItem);
+      addTasks(
+        ActivityStates.TranscribeReady,
+        'transcriber',
+        rowList,
+        playItem
+      );
       addTasks('', 'view', rowList, playItem);
     }
     setRows(rowList);
