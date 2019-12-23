@@ -10,6 +10,7 @@ import {
   RoleNames,
   Group,
   GroupMembership,
+  PlanType,
   IProjectSettingsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -25,6 +26,8 @@ import {
   FormControlLabel,
   Button,
   Checkbox,
+  Grid,
+  Typography,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteExpansion from './DeleteExpansion';
@@ -35,6 +38,9 @@ import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
 import { API_CONFIG } from '../api-variable';
 import { getRoleId } from '../utils';
+import { SelectPlanType } from '../control';
+import { projectShortcut } from './ProjectShortcut';
+import { saveNewProject } from '../crud/saveNewProject';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,6 +76,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
     }),
+    next: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    subHead: {
+      marginTop: theme.spacing(2),
+      marginBottom: 0,
+    },
     button: {
       margin: theme.spacing(1),
     },
@@ -101,12 +115,13 @@ interface IRecordProps {
   roles: Array<Role>;
   groups: Array<Group>;
   groupmemberships: Array<GroupMembership>;
+  planTypes: Array<PlanType>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
   noMargin?: boolean;
   add?: boolean;
-  finishAdd?: () => void;
+  finishAdd?: (to?: string) => void;
 }
 
 export function ProjectSettings(props: IProps) {
@@ -117,6 +132,7 @@ export function ProjectSettings(props: IProps) {
     groups,
     groupmemberships,
     roles,
+    planTypes,
     t,
     noMargin,
     finishAdd,
@@ -124,11 +140,14 @@ export function ProjectSettings(props: IProps) {
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
+  const [keyMap] = useGlobal('keyMap');
   const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_plan, setPlan] = useGlobal('plan');
   const [currentProject, setCurrentProject] = useState<Project | undefined>();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -140,6 +159,7 @@ export function ProjectSettings(props: IProps) {
   const [defaultFont, setDefaultFont] = useState('');
   const [defaultFontSize, setDefaultFontSize] = useState('large');
   const [rtl, setRtl] = useState(false);
+  const [planType, setPlanType] = useState('');
   const [projectGroup, setProjectGroup] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
@@ -211,52 +231,21 @@ export function ProjectSettings(props: IProps) {
     ]);
   };
   const handleAdd = () => {
-    let project: Project = {
-      type: 'project',
-      attributes: {
-        name: name,
-        description: description,
-        uilanguagebcp47: null,
-        language: bcp47,
-        languageName: languageName,
-        defaultFont: defaultFont,
-        defaultFontSize: defaultFontSize,
-        rtl: rtl,
-        allowClaim: true,
-        isPublic: true,
-        dateCreated: new Date().toISOString(),
-        dateUpdated: null,
-      },
-    } as any;
-    schema.initializeRecord(project);
-    memory.update((t: TransformBuilder) => [
-      t.addRecord(project),
-      t.replaceRelatedRecord(
-        { type: 'project', id: project.id },
-        'projecttype',
-        {
-          type: 'projecttype',
-          id: projectType,
-        }
-      ),
-      t.replaceRelatedRecord({ type: 'project', id: project.id }, 'group', {
-        type: 'group',
-        id: projectGroup ? projectGroup : '',
-      }),
-      t.replaceRelatedRecord(
-        { type: 'project', id: project.id },
-        'organization',
-        {
-          type: 'organization',
-          id: organization,
-        }
-      ),
-      t.replaceRelatedRecord({ type: 'project', id: project.id }, 'owner', {
-        type: 'user',
-        id: user,
-      }),
-    ]);
-    setProject(project.id);
+    saveNewProject({
+      name,
+      description,
+      language: bcp47,
+      languageName,
+      defaultFont,
+      defaultFontSize,
+      rtl,
+      projectType,
+      projectGroup,
+      organization,
+      user,
+      schema,
+      memory,
+    }).then(project => setProject(project.id));
 
     if (finishAdd) {
       finishAdd();
@@ -276,6 +265,43 @@ export function ProjectSettings(props: IProps) {
   const handleLanguageName = (lang: string) => {
     setLanguageName(lang);
     if (name === '') setName(lang);
+  };
+  const handleTypeChange = (e: any) => {
+    setPlanType(e.target.value);
+  };
+  const handleUpload = () => {
+    saveNewProject({
+      name,
+      description,
+      language: bcp47,
+      languageName,
+      defaultFont,
+      defaultFontSize,
+      rtl,
+      projectType,
+      projectGroup,
+      organization,
+      user,
+      schema,
+      memory,
+    }).then(project => {
+      setProject(project.id);
+      projectShortcut({
+        organization,
+        project: project.id,
+        planType,
+        planTypes,
+        planName: t.defaultPlanName,
+        sectionName: t.defaultSectionName,
+        reference: t.defaultReference,
+        schema,
+        memory,
+        keyMap,
+        setPlan,
+      }).then(url => {
+        if (finishAdd) finishAdd(url);
+      });
+    });
   };
 
   useEffect(() => {
@@ -326,6 +352,19 @@ export function ProjectSettings(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, project, projects]);
 
+  useEffect(() => {
+    if (planType === '') {
+      const general = planTypes.filter(
+        pt =>
+          pt.attributes &&
+          pt.attributes.name &&
+          /other/i.test(pt.attributes.name)
+      );
+      if (general.length > 0) setPlanType(general[0].id);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [planType, planTypes]);
+
   return (
     <div
       className={clsx(classes.container, {
@@ -333,137 +372,38 @@ export function ProjectSettings(props: IProps) {
       })}
     >
       <div className={classes.paper}>
-        <FormControl>
-          <FormLabel className={classes.label}>{t.general}</FormLabel>
-          <FormGroup className={classes.group}>
-            <FormControlLabel
-              control={
-                <TextField
-                  id="name"
-                  label={t.name}
-                  className={classes.textField}
-                  value={name}
-                  onChange={handleNameChange}
-                  margin="normal"
-                  variant="filled"
-                  required={true}
-                  disabled={
-                    API_CONFIG.isApp ||
-                    (orgRole !== 'admin' && projRole !== 'admin')
-                  }
-                />
-              }
-              label=""
-            />
-            <FormControlLabel
-              control={
-                <TextField
-                  id="description"
-                  label={t.description}
-                  className={classes.textField}
-                  value={description}
-                  onChange={handleDescriptionChange}
-                  margin="normal"
-                  style={{ width: 400 }}
-                  variant="filled"
-                  required={false}
-                  disabled={
-                    API_CONFIG.isApp ||
-                    (orgRole !== 'admin' && projRole !== 'admin')
-                  }
-                />
-              }
-              label=""
-            />
-            <FormControlLabel
-              control={
-                <TextField
-                  id="select-group"
-                  select
-                  label={t.group}
-                  className={classes.textField}
-                  value={projectGroup}
-                  onChange={handleGroupChange}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes.menu,
-                    },
-                  }}
-                  helperText={t.selectProjectGroup}
-                  margin="normal"
-                  variant="filled"
-                  required={true}
-                  disabled={
-                    API_CONFIG.isApp ||
-                    (orgRole !== 'admin' && projRole !== 'admin')
-                  }
-                >
-                  {groups
-                    .filter(g => related(g, 'owner') === organization)
-                    .sort((i, j) =>
-                      i.attributes.name < j.attributes.name ? -1 : 1
-                    )
-                    .map((option: Group) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.attributes.name}
-                      </MenuItem>
-                    ))}
-                </TextField>
-              }
-              label=""
-            />
-          </FormGroup>
-          <FormLabel className={classes.label}>{t.language}</FormLabel>
-          <FormGroup className={classes.group}>
-            <div className={classes.sameLine}>
-              <FormControlLabel
-                ref={langEl}
-                className={classes.languageField}
-                control={
-                  <LanguagePicker
-                    value={bcp47}
-                    name={languageName}
-                    font={defaultFont}
-                    setCode={setBcp47}
-                    setName={handleLanguageName}
-                    setFont={setDefaultFont}
-                    disabled={
-                      API_CONFIG.isApp ||
-                      (orgRole !== 'admin' && projRole !== 'admin')
-                    }
-                  />
-                }
-                label=""
-              />
-              <FormControlLabel
-                className={classes.textField}
-                control={
-                  <Checkbox
-                    id="checkbox-rtl"
-                    checked={rtl}
-                    onChange={handleRtlChange}
-                    disabled={
-                      API_CONFIG.isApp ||
-                      (orgRole !== 'admin' && projRole !== 'admin')
-                    }
-                  />
-                }
-                label={t.rightToLeft}
-              />
-            </div>
-            <div className={classes.sameLine}>
-              <div className={classes.sameCol}>
+        <Grid container>
+          <Grid item>
+            <FormControl>
+              <FormLabel className={classes.label}>{t.general}</FormLabel>
+              <FormGroup className={classes.group}>
                 <FormControlLabel
                   control={
                     <TextField
-                      id="default-font"
-                      label={t.defaultFont}
+                      id="name"
+                      label={t.name}
                       className={classes.textField}
-                      value={defaultFont}
-                      onClick={() => langEl.current.click()}
-                      onKeyDown={(e: any) => {
-                        if (e.keyCode !== 9) langEl.current.click();
-                      }}
+                      value={name}
+                      onChange={handleNameChange}
+                      margin="normal"
+                      variant="filled"
+                      required={true}
+                      disabled={
+                        API_CONFIG.isApp ||
+                        (orgRole !== 'admin' && projRole !== 'admin')
+                      }
+                    />
+                  }
+                  label=""
+                />
+                <FormControlLabel
+                  control={
+                    <TextField
+                      id="description"
+                      label={t.description}
+                      className={classes.textField}
+                      value={description}
+                      onChange={handleDescriptionChange}
                       margin="normal"
                       style={{ width: 400 }}
                       variant="filled"
@@ -476,71 +416,224 @@ export function ProjectSettings(props: IProps) {
                   }
                   label=""
                 />
-                <br />
                 <FormControlLabel
-                  className={classes.textField}
                   control={
-                    <FontSize
-                      label={t.defaultFontSize}
-                      value={defaultFontSize}
-                      font={defaultFont}
-                      setSize={handleSize}
+                    <TextField
+                      id="select-group"
+                      select
+                      label={t.group}
+                      className={classes.textField}
+                      value={projectGroup}
+                      onChange={handleGroupChange}
+                      SelectProps={{
+                        MenuProps: {
+                          className: classes.menu,
+                        },
+                      }}
+                      helperText={t.selectProjectGroup}
+                      margin="normal"
+                      variant="filled"
+                      required={true}
                       disabled={
                         API_CONFIG.isApp ||
                         (orgRole !== 'admin' && projRole !== 'admin')
                       }
-                    />
+                    >
+                      {groups
+                        .filter(g => related(g, 'owner') === organization)
+                        .sort((i, j) =>
+                          i.attributes.name < j.attributes.name ? -1 : 1
+                        )
+                        .map((option: Group) => (
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.attributes.name}
+                          </MenuItem>
+                        ))}
+                    </TextField>
                   }
                   label=""
                 />
-              </div>
-              <div className={classes.previewCol}>
-                <FormLabel className={classes.label}>{t.preview}</FormLabel>
-                <div
-                  style={{
-                    fontSize: defaultFontSize,
-                    fontFamily: defaultFont,
-                    width: 400,
-                  }}
-                >
-                  The quick, brown fox jumped over the lazy dog.
+              </FormGroup>
+              <FormLabel className={classes.label}>{t.language}</FormLabel>
+              <FormGroup className={classes.group}>
+                <div className={classes.sameLine}>
+                  <FormControlLabel
+                    ref={langEl}
+                    className={classes.languageField}
+                    control={
+                      <LanguagePicker
+                        value={bcp47}
+                        name={languageName}
+                        font={defaultFont}
+                        setCode={setBcp47}
+                        setName={handleLanguageName}
+                        setFont={setDefaultFont}
+                        disabled={
+                          API_CONFIG.isApp ||
+                          (orgRole !== 'admin' && projRole !== 'admin')
+                        }
+                      />
+                    }
+                    label=""
+                  />
+                  <FormControlLabel
+                    className={classes.textField}
+                    control={
+                      <Checkbox
+                        id="checkbox-rtl"
+                        checked={rtl}
+                        onChange={handleRtlChange}
+                        disabled={
+                          API_CONFIG.isApp ||
+                          (orgRole !== 'admin' && projRole !== 'admin')
+                        }
+                      />
+                    }
+                    label={t.rightToLeft}
+                  />
                 </div>
-              </div>
-            </div>
-          </FormGroup>
-        </FormControl>
-        {!API_CONFIG.isApp && (orgRole === 'admin' || projRole === 'admin') && (
-          <>
-            <div className={classes.actions}>
-              <Button
-                key="add"
-                aria-label={t.add}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                disabled={
-                  name === '' ||
-                  projectType === '' ||
-                  projectGroup === '' ||
-                  bcp47 === '' ||
-                  bcp47 === 'und' ||
-                  defaultFont === ''
-                }
-                onClick={currentProject === undefined ? handleAdd : handleSave}
-              >
-                {currentProject === undefined ? t.add : t.save}
-                <SaveIcon className={classes.icon} />
-              </Button>
-            </div>
-            {currentProject !== undefined && (
-              <DeleteExpansion
-                title={t.deleteProject}
-                explain={t.deleteExplained}
-                handleDelete={() => handleDelete()}
-              />
-            )}
-          </>
-        )}
+                <div className={classes.sameLine}>
+                  <div className={classes.sameCol}>
+                    <FormControlLabel
+                      control={
+                        <TextField
+                          id="default-font"
+                          label={t.defaultFont}
+                          className={classes.textField}
+                          value={defaultFont}
+                          onClick={() => langEl.current.click()}
+                          onKeyDown={(e: any) => {
+                            if (e.keyCode !== 9) langEl.current.click();
+                          }}
+                          margin="normal"
+                          style={{ width: 400 }}
+                          variant="filled"
+                          required={false}
+                          disabled={
+                            API_CONFIG.isApp ||
+                            (orgRole !== 'admin' && projRole !== 'admin')
+                          }
+                        />
+                      }
+                      label=""
+                    />
+                    <br />
+                    <FormControlLabel
+                      className={classes.textField}
+                      control={
+                        <FontSize
+                          label={t.defaultFontSize}
+                          value={defaultFontSize}
+                          font={defaultFont}
+                          setSize={handleSize}
+                          disabled={
+                            API_CONFIG.isApp ||
+                            (orgRole !== 'admin' && projRole !== 'admin')
+                          }
+                        />
+                      }
+                      label=""
+                    />
+                  </div>
+                  <div className={classes.previewCol}>
+                    <FormLabel className={classes.label}>{t.preview}</FormLabel>
+                    <div
+                      style={{
+                        fontSize: defaultFontSize,
+                        fontFamily: defaultFont,
+                        width: 400,
+                      }}
+                    >
+                      The quick, brown fox jumped over the lazy dog.
+                    </div>
+                  </div>
+                </div>
+              </FormGroup>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            {!API_CONFIG.isApp &&
+              (orgRole === 'admin' || projRole === 'admin') && (
+                <div className={classes.next}>
+                  {currentProject === undefined && (
+                    <>
+                      <Typography variant="h4">{t.nextSteps}</Typography>
+                      <Typography variant="h6" className={classes.subHead}>
+                        {t.configure}
+                      </Typography>
+                    </>
+                  )}
+                  <div className={classes.actions}>
+                    <Button
+                      key="add"
+                      aria-label={t.add}
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      disabled={
+                        name === '' ||
+                        projectType === '' ||
+                        projectGroup === '' ||
+                        bcp47 === '' ||
+                        bcp47 === 'und' ||
+                        defaultFont === ''
+                      }
+                      onClick={
+                        currentProject === undefined ? handleAdd : handleSave
+                      }
+                    >
+                      {currentProject === undefined ? t.add : t.save}
+                      {currentProject !== undefined && (
+                        <SaveIcon className={classes.icon} />
+                      )}
+                    </Button>
+                  </div>
+                  {currentProject === undefined && (
+                    <>
+                      <Typography variant="h6" className={classes.subHead}>
+                        {t.startNow}
+                      </Typography>
+                      <SelectPlanType
+                        planType={planType}
+                        planTypes={planTypes}
+                        handleTypeChange={handleTypeChange}
+                      />
+                      <div className={classes.actions}>
+                        <Button
+                          key="upload"
+                          aria-label={t.add}
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          disabled={
+                            name === '' ||
+                            projectType === '' ||
+                            projectGroup === '' ||
+                            bcp47 === '' ||
+                            bcp47 === 'und' ||
+                            defaultFont === '' ||
+                            planType === ''
+                          }
+                          onClick={handleUpload}
+                        >
+                          {t.upload}
+                        </Button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+          </Grid>
+        </Grid>
+        {!API_CONFIG.isApp &&
+          (orgRole === 'admin' || projRole === 'admin') &&
+          currentProject !== undefined && (
+            <DeleteExpansion
+              title={t.deleteProject}
+              explain={t.deleteExplained}
+              handleDelete={() => handleDelete()}
+            />
+          )}
       </div>
       {deleteItem !== '' ? (
         <Confirm
@@ -565,6 +658,7 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
   groupmemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
 };
 
 export default withData(mapRecordsToProps)(

@@ -21,5 +21,6 @@ declare module 'reactn/default' {
     bucket: Bucket;
     remote: JSONAPISource;
     remoteBusy: boolean;
+    open: boolean; // open a dialog
   }
 }

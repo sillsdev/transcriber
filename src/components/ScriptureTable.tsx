@@ -11,7 +11,6 @@ import {
   IScriptureTableStrings,
   BookNameMap,
   BookName,
-  ActivityStates,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
@@ -22,6 +21,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
+import { saveNewPassage, saveNewSection } from '../crud';
 import Related, { related } from '../utils/related';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -109,7 +109,6 @@ export function ScriptureTable(props: IProps) {
   } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
-  const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [message, setMessage] = useState(<></>);
@@ -409,45 +408,6 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleSave = async (rows: string[][]) => {
-    const saveNewPassage = async (rowIndex: number, secId: string) => {
-      const passageRow = rows[rowIndex];
-      const p = {
-        type: 'passage',
-        attributes: {
-          sequencenum: passageRow[cols.PassageSeq],
-          book: showBook(cols) ? passageRow[cols.Book] : '',
-          reference: passageRow[cols.Reference],
-          title: passageRow[cols.Title],
-          position: 0,
-          hold: false,
-          state: ActivityStates.NoMedia,
-        },
-      } as any;
-      schema.initializeRecord(p);
-      const passageSection = {
-        type: 'passagesection',
-        attributes: {
-          sectionId: 0,
-          passageId: 0,
-        },
-      } as any;
-      await memory.update((t: TransformBuilder) => [t.addRecord(p)]);
-      await memory.update((t: TransformBuilder) => [
-        t.addRecord(passageSection),
-        t.replaceRelatedRecord(
-          { type: 'passagesection', id: passageSection.id },
-          'section',
-          { type: 'section', id: secId }
-        ),
-        t.replaceRelatedRecord(
-          { type: 'passagesection', id: passageSection.id },
-          'passage',
-          { type: 'passage', id: p.id }
-        ),
-      ]);
-      return p;
-    };
-
     const updatePassage = async (rowIndex: number) => {
       const passageRow = rows[rowIndex];
       const inpRow = inData[rowIndex];
@@ -493,12 +453,25 @@ export function ScriptureTable(props: IProps) {
       );
     };
 
-    const doPassages = async (rowIndex: number, secId: string) => {
+    const doPassages = async (rowIndex: number, section: RecordIdentity) => {
       rowIndex += 1;
       while (rowIndex < rows.length && isPassageRow(rowId[rowIndex])) {
         if (isPassageRow(rowId[rowIndex])) {
           if (rowId[rowIndex].id === '') {
-            let passage = await saveNewPassage(rowIndex, secId);
+            const passageRow = rows[rowIndex];
+            const sequencenum = parseInt(passageRow[cols.PassageSeq]);
+            const book = showBook(cols) ? passageRow[cols.Book] : '';
+            const reference = passageRow[cols.Reference];
+            const title = passageRow[cols.Title];
+            let passage = await saveNewPassage({
+              sequencenum,
+              book,
+              reference,
+              title,
+              section,
+              schema,
+              memory,
+            });
             newRowId(rowIndex, passage.id);
           } else {
             updatePassage(rowIndex);
@@ -506,30 +479,6 @@ export function ScriptureTable(props: IProps) {
         }
         rowIndex += 1;
       }
-    };
-
-    const saveNewSection = async (
-      rowIndex: number,
-      planId: string,
-      projectId: string
-    ) => {
-      const sectionRow = rows[rowIndex];
-      const sec = {
-        type: 'section',
-        attributes: {
-          sequencenum: parseInt(sectionRow[cols.SectionSeq]),
-          name: sectionRow[cols.SectionnName],
-        },
-      } as any;
-      schema.initializeRecord(sec);
-      await memory.update((t: TransformBuilder) => [
-        t.addRecord(sec),
-        t.replaceRelatedRecord({ type: 'section', id: sec.id }, 'plan', {
-          type: 'plan',
-          id: planId,
-        }),
-      ]);
-      return sec;
     };
 
     const updateSection = async (rowIndex: number) => {
@@ -563,16 +512,22 @@ export function ScriptureTable(props: IProps) {
       setComplete(Math.min((rowIndex * 100) / rows.length, 100));
       if (isSectionRow(rowId[rowIndex])) {
         if (!rowId[rowIndex].id) {
-          let section = await saveNewSection(
-            rowIndex,
-            plan as string,
-            project as string
-          );
+          const sectionRow = rows[rowIndex];
+          const sequencenum = parseInt(sectionRow[cols.SectionSeq]);
+          const name = sectionRow[cols.SectionnName];
+          const planRecId = { type: 'plan', id: plan };
+          let section = (await saveNewSection({
+            sequencenum,
+            name,
+            plan: planRecId,
+            schema,
+            memory,
+          })) as Section;
           newRowId(rowIndex, section.id);
-          doPassages(rowIndex, section.id);
+          doPassages(rowIndex, section);
         } else {
           let section = await updateSection(rowIndex);
-          doPassages(rowIndex, section.id);
+          doPassages(rowIndex, section);
         }
       }
     }

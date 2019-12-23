@@ -70,6 +70,10 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "selectFontSize": string;
     "rightToLeft": string;
     "add": string;
+    "upload": string;
+    "nextSteps": string;
+    "configure": string;
+    "startNow": string;
     "dangerZone": string;
     "deleteProject": string;
     "deleteExplained": string;
@@ -79,6 +83,9 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "preview": string;
     "selectProjectGroup": string;
     "notAdminInGroup": string;
+    "defaultPlanName": string;
+    "defaultSectionName": string;
+    "defaultReference": string;
 };
 
 export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
@@ -92,8 +99,6 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "choosePlan": string;
     "loadingTable": string;
-    "scripture": string;
-    "other": string;
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
@@ -240,6 +245,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "planUnsaved": string;
     "loseData": string;
     "newOrganization": string;
+    "admin": string;
+    "transcribe": string;
     "switchToAdmin": string;
     "switchToApp": string;
     "crashMessage": string;
@@ -549,6 +556,12 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "section": string;
 };
 
+export interface IControlStrings extends Localize.LocalizedStringsMethods {
+    "contentType": string;
+    "scripture": string;
+    "other": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -590,5 +603,6 @@ export interface ILocalizedStrings {
 	profile: IProfileStrings;
 	deleteExpansion: IDeleteExpansionStrings;
 	taskItem: ITaskItemStrings;
+	control: IControlStrings;
 	[key: string]: any;
 };

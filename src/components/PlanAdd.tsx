@@ -13,9 +13,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  MenuItem,
 } from '@material-ui/core';
 import SnackBar from '../components/SnackBar';
+import { SelectPlanType } from '../control';
 import Related from '../utils/related';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -145,34 +145,11 @@ function PlanAdd(props: IProps) {
             required
             fullWidth
           />
-          <TextField
-            id="select-plan-type"
-            select
-            label={t.planType}
-            className={classes.menu}
-            value={planType}
-            onChange={handleTypeChange}
-            SelectProps={{
-              MenuProps: {
-                className: classes.menu,
-              },
-            }}
-            helperText={t.selectPlanType}
-            margin="normal"
-            variant="filled"
-            required
-          >
-            {planTypes
-              .filter(t => t.attributes)
-              .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-              .map((option: PlanType) => (
-                <MenuItem key={option.id} value={option.id}>
-                  {option.attributes &&
-                    option.attributes.name &&
-                    t.getString(option.attributes.name.toLowerCase())}
-                </MenuItem>
-              ))}
-          </TextField>
+          <SelectPlanType
+            planType={planType}
+            planTypes={planTypes}
+            handleTypeChange={handleTypeChange}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} variant="outlined" color="primary">
