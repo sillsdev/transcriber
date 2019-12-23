@@ -100,7 +100,12 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         <MediaTab {...props} projectplans={plans.filter(p => p.id === plan)} />
       )}
       {tab === 2 && <AssignmentTable {...props} />}
-      {tab === 3 && <TranscriptionTab {...props} />}
+      {tab === 3 && (
+        <TranscriptionTab
+          {...props}
+          projectPlans={plans.filter(p => p.id === plan)}
+        />
+      )}
     </div>
   );
 };
@@ -112,6 +117,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planTabs' }),
 });
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  ScrollableTabsButtonAuto
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(ScrollableTabsButtonAuto) as any
+) as any;

@@ -34,7 +34,7 @@ const initialState = {
 			"invite": "Invite",
 			"action": "Action",
 			"delete": "Delete",
-			"filter": "Configure",
+			"filter": "Filter",
 			"selectRows": "Please select row(s) to {0}.",
 		}
 	}),
@@ -90,6 +90,7 @@ const initialState = {
 			"group": "Group",
 			"preview": "Preview",
 			"selectProjectGroup": "Select project group. Each project relates to a single group. Group members can work on the project.",
+			"notAdminInGroup": "You are not an admin in this group, so you will be unable to manage the project.",
 		}
 	}),
 	"planTable": new LocalizedStrings({
@@ -100,7 +101,7 @@ const initialState = {
 			"sections": "Sections",
 			"taks": "Passages",
 			"action": "Action",
-			"filter": "Configure",
+			"filter": "Filter",
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
 			"loadingTable": "Loading data",
@@ -148,7 +149,7 @@ const initialState = {
 			"assignSec": "Assign Section",
 			"removeSec": "Remove Assignment",
 			"delete": "Delete",
-			"filter": "Configure",
+			"filter": "Filter",
 			"transcriber": "Transcriber",
 			"reviewer": "Reviewer",
 			"selectRowsToAssign": "Please select row(s) to assign.",
@@ -212,7 +213,7 @@ const initialState = {
 			"version": "Version",
 			"section": "Section",
 			"date": "Date",
-			"filter": "Configure",
+			"filter": "Filter",
 			"selectFiles": "Please select files to be uploaded.",
 			"selectRows": "Please select row(s) to {0}.",
 			"unsupported": "File {0} is an unsupported file type.",
@@ -251,6 +252,7 @@ const initialState = {
 			"loadingTranscriber": "Loading SIL Transcriber",
 			"projectSummary": "Project Summary",
 			"addProject": "Add Project",
+			"export": "Export",
 			"logout": "Log Out",
 			"myAccount": "My Account",
 			"clearCache": "Clear cache",
@@ -263,6 +265,7 @@ const initialState = {
 			"switchToAdmin": "Open project in Admin",
 			"switchToApp": "Open project in App",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
+			"apiError": "API Error:",
 			"reports": "Reports",
 			"sessionExpiring": "Session Expiring",
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",
@@ -276,9 +279,12 @@ const initialState = {
 			"section": "Section",
 			"sectionstate": "State",
 			"passages": "Passages",
-			"filter": "Configure",
+			"filter": "Filter",
 			"transcriber": "Transcriber",
 			"reviewer": "Reviewer",
+			"plan": "Plan",
+			"elan": "Elan",
+			"export": "Export",
 		}
 	}),
 	"transcriptionShow": new LocalizedStrings({
@@ -302,7 +308,7 @@ const initialState = {
 			"owner": "Owner",
 			"projects": "Projects",
 			"members": "Members",
-			"filter": "Configure",
+			"filter": "Filter",
 			"action": "Action",
 			"delete": "Delete",
 			"addGroup": "Add Group",
@@ -331,6 +337,9 @@ const initialState = {
 			"owners": "Owners",
 			"reviewers": "Reviewers",
 			"transcribers": "Transcribers",
+			"ownersDetail": "(Manage + Review + Transcribe)",
+			"reviewersDetail": "(Review + Transcribe)",
+			"transcribersDetail": "(Transcribe)",
 			"addGroupMember": "Choose {0}",
 			"addMemberInstruction": "Choose a person who will act as a {0} for projects in this group.",
 			"cancel": "Cancel",
@@ -416,8 +425,11 @@ const initialState = {
 			"join": "Join",
 			"emailsubject": "SIL Transcriber Invitation",
 			"admin": "Owner",
+			"adminDetail": "(Manage + Review + Transcribe)",
 			"transcriber": "Transcriber",
+			"transcriberDetail": "(Transcribe)",
 			"reviewer": "Reviewer",
+			"reviewerDetail": "(Review + Transcribe)",
 		}
 	}),
 	"invitationTable": new LocalizedStrings({
@@ -430,7 +442,7 @@ const initialState = {
 			"invite": "Invite",
 			"action": "Action",
 			"delete": "Delete",
-			"filter": "Configure",
+			"filter": "Filter",
 			"selectRows": "Please select row(s) to {0}.",
 			"noData": "No invitations",
 		}
@@ -452,7 +464,7 @@ const initialState = {
 	"mediaUpload": new LocalizedStrings({
 		"en": {
 			"title": "Upload Media",
-			"task": "You can upload audio files in .mp3 format or in .wav format.",
+			"task": "You can upload audio files in .mp3, .m4a or .wav format.",
 			"dragDrop": "Drag and drop files here, or click here to browse for the files.",
 			"cancel": "Cancel",
 			"upload": "Upload",
@@ -466,7 +478,7 @@ const initialState = {
 	}),
 	"toDoTable": new LocalizedStrings({
 		"en": {
-			"filter": "Configure",
+			"filter": "Filter",
 			"plan": "Plan",
 			"section": "Section",
 			"passage": "Passage",
@@ -497,6 +509,7 @@ const initialState = {
 			"offline": "Offline",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please logout and login again.",
+			"invalidParatextLogin": "You must login with a valid paratext login to sync projects.",
 			"questionOnline": "Are you connected to the Internet?",
 			"yes": "Yes",
 			"no": "No",
@@ -546,7 +559,7 @@ const initialState = {
 			"timezone": "Time zone",
 			"locale": "Preferred Language",
 			"locked": "Locked",
-			"add": "Add",
+			"add": "Next",
 			"save": "Save",
 			"deleteUser": "Delete User",
 			"deleteExplained": "Deleting your user will block you from using the program and remove references to your work.",
@@ -569,6 +582,8 @@ const initialState = {
 	"taskItem": new LocalizedStrings({
 		"en": {
 			"noMedia": "No Audio",
+			"needsNewRecording": "Needs New Audio",
+			"needsNewTranscription": "Needs Corrections",
 			"inProgress": "In Progress",
 			"transcribe": "Transcribe",
 			"review": "Review",

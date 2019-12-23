@@ -1,4 +1,5 @@
 import { Base64 } from 'js-base64';
+import moment from 'moment';
 import { IApiError } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -38,7 +39,7 @@ export const Sources = async (
   const userToken = localStorage.getItem('user-token');
 
   const bucket: Bucket = new IndexedDBBucket({
-    namespace: 'transcriber-' + tokData.sub.replace('|', '-') + '-bucket',
+    namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
   setBucket(bucket);
 
@@ -158,7 +159,27 @@ export const Sources = async (
             if (label) {
               alert(`Unable to complete "${label}"`);
             } else {
-              alert(`Unable to complete operation`);
+              const response = ex.response as any;
+              const url: string | null = response && response.url;
+              const data = (ex as any).data;
+              const detail =
+                data &&
+                data.errors &&
+                Array.isArray(data.errors) &&
+                data.errors.length > 0 &&
+                data.errors[0].detail;
+              if (url && detail) {
+                alert(
+                  `Unable to complete ` +
+                    transform.operations[0].op +
+                    ` in ` +
+                    url.split('/').pop() +
+                    `: ` +
+                    detail
+                );
+              } else {
+                alert(`Unable to complete operation`);
+              }
             }
 
             // Roll back memory to position before transform
@@ -213,6 +234,7 @@ export const Sources = async (
   });
 
   if (!API_CONFIG.offline && userToken !== tokData.sub) {
+    localStorage.setItem('lastTime', moment.utc().toISOString());
     await InviteUser(remote);
 
     await remote

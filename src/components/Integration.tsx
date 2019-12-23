@@ -301,13 +301,16 @@ export function IntegrationPanel(props: IProps) {
       p => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
     );
     setPtProj(index);
-    setPtProjName(paratext_projects[index].Name);
+    setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     if (pRef && pRef.current) pRef.current.focus();
   };
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
-    if (err.errStatus === 500 && err.errMsg.includes('401'))
-      return t.expiredParatextToken;
+    if (err.errStatus === 500) {
+      if (err.errMsg.includes('401')) return t.expiredParatextToken;
+
+      return t.invalidParatextLogin;
+    }
     return err.errMsg;
   };
   const canEditParatextText = (role: string): boolean => {

@@ -16,6 +16,7 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ScriptureTable from '../components/ScriptureTable';
+import { ActivityStates } from '../model';
 
 const theme = createMuiTheme({});
 
@@ -96,7 +97,7 @@ const addPassageToSection = async (sectionId: string) => {
       book: 'GEN',
       reference: '1:1-20',
       position: 0,
-      state: 'noMedia',
+      state: ActivityStates.NoMedia,
       hold: false,
       title: 'Seven Days',
     },

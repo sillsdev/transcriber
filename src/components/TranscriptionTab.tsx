@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
+import moment from 'moment';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as actions from '../store';
 import {
   IState,
   Passage,
   PassageSection,
   Section,
   User,
-  IAssignmentTableStrings,
+  ITranscriptionTabStrings,
   IActivityStateStrings,
   Role,
+  Plan,
+  MediaFile,
+  ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, IconButton } from '@material-ui/core';
+// import CopyIcon from '@material-ui/icons/FileCopy';
+import SoundIcon from '@material-ui/icons/Audiotrack';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
@@ -23,7 +31,6 @@ import { Table } from '@devexpress/dx-react-grid-material-ui';
 import SnackBar from './SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
-import related from '../utils/related';
 import Auth from '../auth/Auth';
 import {
   sectionNumber,
@@ -32,6 +39,17 @@ import {
   sectionCompare,
 } from '../utils/section';
 import { passageNumber, passageCompare } from '../utils/passage';
+import {
+  updateXml,
+  getMediaRec,
+  getMediaLang,
+  getMediaName,
+  remoteId,
+  related,
+} from '../utils';
+import eaf from './TranscriptionEaf';
+var Encoder = require('node-html-encoder').Encoder;
+var encoder = new Encoder('entity');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,6 +74,10 @@ const useStyles = makeStyles((theme: Theme) =>
     icon: {
       marginLeft: theme.spacing(1),
     },
+    actionIcon: {},
+    actionWords: {
+      fontSize: 'small',
+    },
     viewIcon: {
       fontSize: 16,
     },
@@ -67,9 +89,11 @@ interface IRow {
   id: string;
   name: string;
   state: string;
+  planName: string;
   transcriber: string;
   reviewer: string;
   passages: string;
+  action: string;
   parentId: string;
 }
 const getChildRows = (row: any, rootRows: any[]) => {
@@ -103,7 +127,7 @@ const getReference = (passage: Passage[]) => {
 };
 
 const getAssignments = (
-  plan: string,
+  projectPlans: Plan[],
   passages: Array<Passage>,
   passageSections: Array<PassageSection>,
   sections: Array<Section>,
@@ -115,54 +139,62 @@ const getAssignments = (
     const pb = passages.filter(p => p.id === related(b, 'passage'));
     return passageCompare(pa[0], pb[0]);
   }
-  var sectionRow: IRow;
   const rowData: IRow[] = [];
-  const plansections = sections
-    .filter(s => related(s, 'plan') === plan && s.attributes)
-    .sort(sectionCompare);
-
-  plansections.forEach(function(section) {
-    sectionRow = {
-      id: section.id,
-      name: getSection(section),
-      state: '',
-      reviewer: sectionReviewerName(section, users),
-      transcriber: sectionTranscriberName(section, users),
-      passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
-      parentId: '',
-    };
-    rowData.push(sectionRow);
-    //const passageSections: PassageSection[] = related(section, 'passages');
-    const sectionps = passageSections
-      .filter(ps => related(ps, 'section') === section.id)
-      .sort(passageSectionCompare);
-    sectionRow.passages = sectionps.length.toString();
-    sectionps.forEach(function(ps: PassageSection, psindex: number) {
-      const passageId = related(ps, 'passage');
-      const passage = passages.filter(p => p.id === passageId);
-      const state =
-        passage.length > 0 &&
-        passage[0].attributes &&
-        passage[0].attributes.state
-          ? activityState.getString(passage[0].attributes.state)
-          : '';
-      rowData.push({
-        id: passageId,
-        name: getReference(passage),
-        state: state,
-        reviewer: '',
-        transcriber: '',
-        passages: '',
-        parentId: section.id,
-      } as IRow);
-    });
+  projectPlans.forEach(planRec => {
+    sections
+      .filter(s => related(s, 'plan') === planRec.id && s.attributes)
+      .sort(sectionCompare)
+      .forEach(section => {
+        const sectionps = passageSections
+          .filter(ps => related(ps, 'section') === section.id)
+          .sort(passageSectionCompare);
+        rowData.push({
+          id: section.id,
+          name: getSection(section),
+          state: '',
+          planName: planRec.attributes.name,
+          reviewer: sectionReviewerName(section, users),
+          transcriber: sectionTranscriberName(section, users),
+          passages: sectionps.length.toString(),
+          action: '',
+          parentId: '',
+        });
+        sectionps.forEach((ps: PassageSection) => {
+          const passageId = related(ps, 'passage');
+          const passage = passages.filter(p => p.id === passageId);
+          const state =
+            passage.length > 0 &&
+            passage[0].attributes &&
+            passage[0].attributes.state
+              ? activityState.getString(passage[0].attributes.state)
+              : '';
+          rowData.push({
+            id: passageId,
+            name: getReference(passage),
+            state: state,
+            planName: planRec.attributes.name,
+            reviewer: '',
+            transcriber: '',
+            passages: '',
+            action: passageId,
+            parentId: section.id,
+          } as IRow);
+        });
+      });
   });
+
   return rowData as Array<IRow>;
 };
 
 interface IStateProps {
-  t: IAssignmentTableStrings;
+  t: ITranscriptionTabStrings;
   activityState: IActivityStateStrings;
+  hasUrl: boolean;
+  mediaUrl: string;
+}
+
+interface IDispatchProps {
+  fetchMediaUrl: typeof actions.fetchMediaUrl;
 }
 
 interface IRecordProps {
@@ -173,13 +205,20 @@ interface IRecordProps {
   roles: Array<Role>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps
+  extends IStateProps,
+    IDispatchProps,
+    IRecordProps,
+    WithDataProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
+  projectPlans: Plan[];
+  planColumn?: boolean;
 }
 
 export function TranscriptionTab(props: IProps) {
   const {
+    auth,
     activityState,
     t,
     passages,
@@ -187,27 +226,44 @@ export function TranscriptionTab(props: IProps) {
     sections,
     users,
     roles,
+    projectPlans,
+    planColumn,
+    hasUrl,
+    mediaUrl,
+    fetchMediaUrl,
   } = props;
   const classes = useStyles();
-  const [plan] = useGlobal('plan');
+  const [plan, setPlan] = useGlobal('plan');
+  const [memory] = useGlobal('memory');
+  const [keyMap] = useGlobal('keyMap');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
+  const eafAnchor = React.useRef<HTMLAnchorElement>(null);
+  const [dataUrl, setDataUrl] = useState();
+  const [dataName, setDataName] = useState('');
 
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
+    { name: 'planName', title: t.plan },
     { name: 'passages', title: t.passages },
     { name: 'transcriber', title: t.transcriber },
     { name: 'reviewer', title: t.reviewer },
+    { name: 'action', title: '\u00A0' },
   ];
   const columnWidths = [
     { columnName: 'name', width: 300 },
     { columnName: 'state', width: 150 },
-    { columnName: 'passages', width: 100 },
-    { columnName: 'transcriber', width: 200 },
-    { columnName: 'reviewer', width: 200 },
+    { columnName: 'planName', width: 150 },
+    { columnName: 'passages', width: 120 },
+    { columnName: 'transcriber', width: 120 },
+    { columnName: 'reviewer', width: 120 },
+    { columnName: 'action', width: 150 },
   ];
+  const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<
+    string[]
+  >([]);
 
   const [filter, setFilter] = useState(false);
 
@@ -220,14 +276,97 @@ export function TranscriptionTab(props: IProps) {
   const handleSelect = (passageId: string) => () => {
     setPassageId(passageId);
   };
+
   const handleCloseTranscription = () => {
     setPassageId('');
   };
 
+  const handleEaf = (passageId: string) => () => {
+    const mediaRec = getMediaRec(passageId, memory);
+    const mediaAttr = mediaRec && mediaRec.attributes;
+    const transcription =
+      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+    const encTranscript = encoder.htmlEncode(transcription);
+    const durationNum = mediaAttr && mediaAttr.duration;
+    const duration = durationNum ? (durationNum * 1000).toString() : '0';
+    const lang = getMediaLang(mediaRec, memory);
+    const name = getMediaName(mediaRec, memory);
+    const mime = mediaAttr && mediaAttr.contentType;
+    const ext = /mpeg/.test(mime ? mime : '') ? '.mp3' : '.wav';
+    const audioUrl = mediaAttr && mediaAttr.audioUrl;
+    const audioBase = audioUrl && audioUrl.split('?')[0];
+    const audioName = audioBase && audioBase.split('/').pop();
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(eaf(), 'text/xml');
+    updateXml('@DATE', xmlDoc, moment().format('YYYY-MM-DDTHH:MM:SSZ'));
+    // updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, encTranscript);
+    updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');
+    updateXml('@LANGUAGE_CODE', xmlDoc, lang ? lang : 'en');
+    updateXml("*[@TIME_SLOT_ID='ts2']/@TIME_VALUE", xmlDoc, duration);
+    updateXml('@MEDIA_FILE', xmlDoc, audioName ? audioName : name + ext);
+    updateXml('@MEDIA_URL', xmlDoc, audioName ? audioName : name + ext);
+    updateXml('@MIME_TYPE', xmlDoc, mime ? mime : 'audio/*');
+    const annotationValue = 'ANNOTATION_VALUE';
+    const serializer = new XMLSerializer();
+    const eafCode = btoa(
+      serializer
+        .serializeToString(xmlDoc)
+        .replace(
+          '<' + annotationValue + '/>',
+          '<' +
+            annotationValue +
+            '>' +
+            encTranscript +
+            '</' +
+            annotationValue +
+            '>'
+        )
+    );
+    setDataUrl('data:text/xml;base64,' + eafCode);
+    setDataName(name);
+  };
+
+  const handleAudio = (passageId: string) => () => {
+    const mediaRec = getMediaRec(passageId, memory);
+    const id = remoteId('mediafile', mediaRec ? mediaRec.id : '', keyMap);
+    const name = getMediaName(mediaRec, memory);
+    fetchMediaUrl(id, auth);
+    setDataName(name);
+  };
+
+  useEffect(() => {
+    if (dataUrl && dataName !== '') {
+      if (eafAnchor && eafAnchor.current) {
+        eafAnchor.current.click();
+        setDataUrl(undefined);
+        setDataName('');
+      }
+    }
+  }, [dataUrl, dataName, eafAnchor]);
+
+  useEffect(() => {
+    if (dataName !== '' && !dataUrl) setDataUrl(mediaUrl);
+  }, [hasUrl, mediaUrl, dataName, dataUrl]);
+
+  useEffect(() => {
+    if (planColumn) {
+      if (defaultHiddenColumnNames.length > 0)
+        //assume planName is only one
+        setDefaultHiddenColumnNames([]);
+    } else if (projectPlans.length === 1) {
+      if (plan === '') {
+        setPlan(projectPlans[0].id); //set the global plan
+      }
+      setDefaultHiddenColumnNames(['planName']);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [projectPlans, plan, planColumn]);
+
   useEffect(() => {
     setData(
       getAssignments(
-        plan as string,
+        projectPlans,
         passages,
         passageSections,
         sections,
@@ -235,7 +374,25 @@ export function TranscriptionTab(props: IProps) {
         activityState
       )
     );
-  }, [plan, passages, passageSections, sections, users, roles, activityState]);
+  }, [
+    plan,
+    projectPlans,
+    passages,
+    passageSections,
+    sections,
+    users,
+    roles,
+    activityState,
+  ]);
+
+  interface ICell {
+    value: string;
+    style?: React.CSSProperties;
+    row: IRow;
+    column: any;
+    tableRow: any;
+    tableColumn: any;
+  }
 
   const LinkCell = ({ value, style, ...restProps }: any) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
@@ -253,7 +410,34 @@ export function TranscriptionTab(props: IProps) {
     </Table.Cell>
   );
 
-  const Cell = (props: any) => {
+  const ActionCell = ({ value, style, ...restProps }: ICell) => (
+    <Table.Cell {...restProps} style={{ ...style }} value>
+      <IconButton
+        id={'eaf-' + value}
+        key={'eaf-' + value}
+        aria-label={'eaf-' + value}
+        color="default"
+        className={classes.actionWords}
+        onClick={handleEaf(value)}
+      >
+        {t.elan}
+        <br />
+        {t.export}
+      </IconButton>
+      <IconButton
+        id={'aud-' + value}
+        key={'aud-' + value}
+        aria-label={'aud-' + value}
+        color="default"
+        className={classes.actionIcon}
+        onClick={handleAudio(value)}
+      >
+        <SoundIcon />
+      </IconButton>
+    </Table.Cell>
+  );
+
+  const TreeCell = (props: any) => {
     const { column, row } = props;
     if (column.name === 'name' && row.parentId !== '') {
       return <LinkCell {...props} />;
@@ -263,6 +447,27 @@ export function TranscriptionTab(props: IProps) {
         <div style={{ display: 'flex' }}>{props.children}</div>
       </td>
     );
+  };
+
+  const DataCell = (props: ICell) => {
+    const { column, row } = props;
+    if (column.name === 'action') {
+      if (row.parentId !== '') {
+        const passRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'passage', id: row.id })
+        ) as Passage;
+        const state = passRec && passRec.attributes && passRec.attributes.state;
+        const media = memory.cache.query((q: QueryBuilder) =>
+          q
+            .findRecords('mediafile')
+            .filter({ relation: 'passage', record: passRec })
+        ) as MediaFile[];
+        if (state !== ActivityStates.NoMedia && media.length > 0)
+          return <ActionCell {...props} />;
+        else return <></>;
+      }
+    }
+    return <Table.Cell {...props} />;
   };
 
   return (
@@ -292,7 +497,8 @@ export function TranscriptionTab(props: IProps) {
           columnWidths={columnWidths}
           rows={data}
           getChildRows={getChildRows}
-          cellComponent={Cell}
+          cellComponent={TreeCell}
+          dataCell={DataCell}
           pageSizes={[]}
           tableColumnExtensions={[
             { columnName: 'passages', align: 'right' },
@@ -302,11 +508,15 @@ export function TranscriptionTab(props: IProps) {
             { columnName: 'name', groupingEnabled: false },
             { columnName: 'passages', groupingEnabled: false },
           ]}
-          sorting={[{ columnName: 'name', direction: 'asc' }]}
+          sorting={[
+            { columnName: 'planName', direction: 'asc' },
+            { columnName: 'name', direction: 'asc' },
+          ]}
           treeColumn={'name'}
           showfilters={filter}
           showgroups={filter}
           showSelection={false}
+          defaultHiddenColumnNames={defaultHiddenColumnNames}
         />{' '}
       </div>
       {passageId !== '' ? (
@@ -316,8 +526,10 @@ export function TranscriptionTab(props: IProps) {
           closeMethod={handleCloseTranscription}
         />
       ) : (
-        ''
+        <></>
       )}
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+      <a ref={eafAnchor} href={dataUrl} download={dataName + '.eaf'} />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
@@ -326,6 +538,17 @@ export function TranscriptionTab(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
   activityState: localStrings(state, { layout: 'activityState' }),
+  hasUrl: state.media.loaded,
+  mediaUrl: state.media.url,
+});
+
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      fetchMediaUrl: actions.fetchMediaUrl,
+    },
+    dispatch
+  ),
 });
 
 const mapRecordsToProps = {
@@ -337,5 +560,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(TranscriptionTab) as any
+  connect(mapStateToProps, mapDispatchToProps)(TranscriptionTab) as any
 ) as any;

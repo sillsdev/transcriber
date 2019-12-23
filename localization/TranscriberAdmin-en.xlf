@@ -114,7 +114,7 @@
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -352,6 +352,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectSettings.notAdminInGroup">
+         <segment>
+            <source>You are not an admin in this group, so you will be unable to manage the project.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTable.addPlan">
          <segment>
             <source>Add Plan</source>
@@ -390,7 +396,7 @@
       </unit>
       <unit id="planTable.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -606,7 +612,7 @@
       </unit>
       <unit id="assignmentTable.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -894,7 +900,7 @@
       </unit>
       <unit id="mediaTab.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -1078,6 +1084,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.export">
+         <segment>
+            <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.logout">
          <segment>
             <source>Log Out</source>
@@ -1150,6 +1162,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.apiError">
+         <segment>
+            <source>API Error:</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.reports">
          <segment>
             <source>Reports</source>
@@ -1206,7 +1224,7 @@
       </unit>
       <unit id="transcriptionTab.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -1219,6 +1237,24 @@
       <unit id="transcriptionTab.reviewer">
          <segment>
             <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.plan">
+         <segment>
+            <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.elan">
+         <segment>
+            <source>Elan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.export">
+         <segment>
+            <source>Export</source>
             <target/>
          </segment>
       </unit>
@@ -1290,7 +1326,7 @@
       </unit>
       <unit id="groupTable.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -1411,6 +1447,24 @@
       <unit id="groupSettings.transcribers">
          <segment>
             <source>Transcribers</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.ownersDetail">
+         <segment>
+            <source>(Manage + Review + Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.reviewersDetail">
+         <segment>
+            <source>(Review + Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.transcribersDetail">
+         <segment>
+            <source>(Transcribe)</source>
             <target/>
          </segment>
       </unit>
@@ -1804,15 +1858,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.adminDetail">
+         <segment>
+            <source>(Manage + Review + Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.transcriber">
          <segment>
             <source>Transcriber</source>
             <target/>
          </segment>
       </unit>
+      <unit id="invite.transcriberDetail">
+         <segment>
+            <source>(Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.reviewer">
          <segment>
             <source>Reviewer</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.reviewerDetail">
+         <segment>
+            <source>(Review + Transcribe)</source>
             <target/>
          </segment>
       </unit>
@@ -1866,7 +1938,7 @@
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -1950,7 +2022,7 @@
       </unit>
       <unit id="mediaUpload.task">
          <segment>
-            <source>You can upload audio files in .mp3 format or in .wav format.</source>
+            <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
             <target/>
          </segment>
       </unit>
@@ -1986,7 +2058,7 @@
       </unit>
       <unit id="toDoTable.filter">
          <segment>
-            <source>Configure</source>
+            <source>Filter</source>
             <target/>
          </segment>
       </unit>
@@ -2143,6 +2215,12 @@
       <unit id="integration.expiredParatextToken">
          <segment>
             <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login to sync projects.</source>
             <target/>
          </segment>
       </unit>
@@ -2394,7 +2472,7 @@
       </unit>
       <unit id="profile.add">
          <segment>
-            <source>Add</source>
+            <source>Next</source>
             <target/>
          </segment>
       </unit>
@@ -2479,6 +2557,18 @@
       <unit id="taskItem.noMedia">
          <segment>
             <source>No Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.needsNewRecording">
+         <segment>
+            <source>Needs New Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.needsNewTranscription">
+         <segment>
+            <source>Needs Corrections</source>
             <target/>
          </segment>
       </unit>

@@ -11,6 +11,7 @@ export interface IApiError extends Exception {
 export interface IOrbitState {
   loaded: boolean;
   status: number;
+  message: string;
   tableLoad: string[];
 }
 

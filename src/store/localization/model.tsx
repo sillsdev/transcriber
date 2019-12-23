@@ -78,6 +78,7 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "group": string;
     "preview": string;
     "selectProjectGroup": string;
+    "notAdminInGroup": string;
 };
 
 export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
@@ -229,6 +230,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "loadingTranscriber": string;
     "projectSummary": string;
     "addProject": string;
+    "export": string;
     "logout": string;
     "myAccount": string;
     "clearCache": string;
@@ -241,6 +243,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "switchToAdmin": string;
     "switchToApp": string;
     "crashMessage": string;
+    "apiError": string;
     "reports": string;
     "sessionExpiring": string;
     "sessionExpireTask": string;
@@ -256,6 +259,9 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "filter": string;
     "transcriber": string;
     "reviewer": string;
+    "plan": string;
+    "elan": string;
+    "export": string;
 };
 
 export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {
@@ -303,6 +309,9 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "owners": string;
     "reviewers": string;
     "transcribers": string;
+    "ownersDetail": string;
+    "reviewersDetail": string;
+    "transcribersDetail": string;
     "addGroupMember": string;
     "addMemberInstruction": string;
     "cancel": string;
@@ -383,8 +392,11 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "join": string;
     "emailsubject": string;
     "admin": string;
+    "adminDetail": string;
     "transcriber": string;
+    "transcriberDetail": string;
     "reviewer": string;
+    "reviewerDetail": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
@@ -458,6 +470,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "offline": string;
     "expiredToken": string;
     "expiredParatextToken": string;
+    "invalidParatextLogin": string;
     "questionOnline": string;
     "yes": string;
     "no": string;
@@ -526,6 +539,8 @@ export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethod
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "noMedia": string;
+    "needsNewRecording": string;
+    "needsNewTranscription": string;
     "inProgress": string;
     "transcribe": string;
     "review": string;

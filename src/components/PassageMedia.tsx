@@ -8,6 +8,7 @@ import {
   MediaFile,
   Passage,
   IPassageMediaStrings,
+  ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -99,7 +100,7 @@ function PassageMedia(props: IProps) {
       t.replaceAttribute(
         { type: 'passage', id: passage },
         'state',
-        'transcribeReady'
+        ActivityStates.TranscribeReady
       ),
     ]);
   };
@@ -110,7 +111,11 @@ function PassageMedia(props: IProps) {
         'passage',
         null
       ),
-      t.replaceAttribute({ type: 'passage', id: passage }, 'state', 'noMedia'),
+      t.replaceAttribute(
+        { type: 'passage', id: passage },
+        'state',
+        ActivityStates.NoMedia
+      ),
     ]);
   };
   const handleSelectPassage = (id: string) => () => {
@@ -370,6 +375,6 @@ const mapRecordsToProps = {
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  PassageMedia
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(PassageMedia) as any
+) as any;

@@ -25,6 +25,7 @@ import SnackBar from '../SnackBar';
 import { OptionType } from '../ReactSelect';
 import useStyles from './GroupSettingsStyles';
 import { getRoleId } from '../../utils';
+import { addGroupMember } from '../../utils/groupmembership';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -87,28 +88,13 @@ function GroupMemberAdd(props: IProps) {
         )
       );
     } else {
-      groupMemberRec = {
-        type: 'groupmembership',
-      } as any;
-      schema.initializeRecord(groupMemberRec);
-      await memory.update((t: TransformBuilder) => [
-        t.addRecord(groupMemberRec),
-        t.replaceRelatedRecord(
-          { type: 'groupmembership', id: groupMemberRec.id },
-          'user',
-          { type: 'user', id: currentPerson ? currentPerson : '' }
-        ),
-        t.replaceRelatedRecord(
-          { type: 'groupmembership', id: groupMemberRec.id },
-          'group',
-          { type: 'group', id: group }
-        ),
-        t.replaceRelatedRecord(
-          { type: 'groupmembership', id: groupMemberRec.id },
-          'role',
-          { type: 'role', id: roleId }
-        ),
-      ]);
+      await addGroupMember(
+        schema,
+        memory,
+        group,
+        currentPerson ? currentPerson : '',
+        roleId
+      );
     }
     if (role === RoleNames.Reviewer) {
       setMessage(<span>{t.allReviewersCanTranscribe}</span>);

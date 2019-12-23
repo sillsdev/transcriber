@@ -340,6 +340,7 @@ export function Profile(props: IProps) {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({ type: 'user', id: deleteItem })
     );
+    setView('Logout');
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
@@ -489,7 +490,7 @@ export function Profile(props: IProps) {
                         id="given"
                         label={t.given}
                         className={classes.textField}
-                        value={given}
+                        value={given || ''}
                         onChange={handleGivenChange}
                         margin="normal"
                         variant="filled"
@@ -503,7 +504,7 @@ export function Profile(props: IProps) {
                         id="family"
                         label={t.family}
                         className={classes.textField}
-                        value={family}
+                        value={family || ''}
                         onChange={handleFamilyChange}
                         margin="normal"
                         variant="filled"
@@ -646,7 +647,10 @@ export function Profile(props: IProps) {
                   disabled={name === '' || !changed}
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
-                  {currentUser === undefined ? t.add : t.save}
+                  {currentUser === undefined ||
+                  currentUser.attributes.name === currentUser.attributes.email
+                    ? t.add
+                    : t.save}
                   <SaveIcon className={classes.icon} />
                 </Button>
               </div>

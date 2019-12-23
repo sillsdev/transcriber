@@ -163,6 +163,7 @@ function PlanAdd(props: IProps) {
             required
           >
             {planTypes
+              .filter(t => t.attributes)
               .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
               .map((option: PlanType) => (
                 <MenuItem key={option.id} value={option.id}>

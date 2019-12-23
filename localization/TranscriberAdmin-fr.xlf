@@ -111,8 +111,8 @@
       </unit>
       <unit id="usertable.filter">
          <segment>
-            <source>Configure</source>
-         	<target>Configurer</target>
+            <source>Filter</source>
+         	<target>Filtre</target>
          </segment>
       </unit>
       <unit id="usertable.selectRows">
@@ -349,10 +349,16 @@
 			<target>Sélectionnez le groupe de projet. Chaque projet concerne un seul groupe. Les membres du groupe peuvent travailler sur le projet.</target>
          </segment>
       </unit>
+      <unit id="projectSettings.notAdminInGroup">
+         <segment>
+            <source>You are not an admin in this group, so you will be unable to manage the project.</source>
+            <target>Vous n'êtes pas administrateur de ce groupe, vous ne pourrez donc pas gérer le projet.</target>
+         </segment>
+      </unit>
       <unit id="planTable.addPlan">
          <segment>
             <source>Add Plan</source>
-            <target>Ajouter un programme</target>
+            <target>Ajouter un plan</target>
          </segment>
       </unit>
       <unit id="planTable.name">
@@ -387,8 +393,8 @@
 		</unit>
 		<unit id="planTable.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="planTable.silTranscriberAdmin">
@@ -603,8 +609,8 @@
 		</unit>
 		<unit id="assignmentTable.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.transcriber">
@@ -891,8 +897,8 @@
 		</unit>
 		<unit id="mediaTab.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.selectFiles">
@@ -1075,6 +1081,12 @@
 				<target>Ajouter un projet</target>
 			</segment>
 		</unit>
+		<unit id="main.export">
+			<segment>
+				<source>Export</source>
+				<target>Exporter</target>
+			</segment>
+		</unit>
 		<unit id="main.logout">
 			<segment>
 				<source>Log Out</source>
@@ -1147,6 +1159,12 @@
 				<target>Quelque chose a mal tourné. Les développeurs doivent se pencher sur cette question.</target>
 			</segment>
 		</unit>
+		<unit id="main.apiError">
+			<segment>
+				<source>API Error:</source>
+				<target>Erreur de l'IPA:</target>
+			</segment>
+		</unit>
 		<unit id="main.reports">
 			<segment>
 				<source>Reports</source>
@@ -1204,8 +1222,8 @@
 
 		<unit id="transcriptionTab.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.transcriber">
@@ -1220,7 +1238,13 @@
 				<target>Réviseur</target>
 			</segment>
 		</unit>
-	<unit id="transcriptionShow.transcription">
+		<unit id="transcriptionTab.plan">
+			<segment>
+				<source>Plan</source>
+				<target>Plan</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>
             <target>Transcription</target>
@@ -1288,8 +1312,8 @@
       </unit>
       <unit id="groupTable.filter">
          <segment>
-			<source>Configure</source>
-         	<target>Configurer</target>
+			<source>Filter</source>
+         	<target>Filtre</target>
          </segment>
       </unit>
 		<unit id="groupTable.action">
@@ -1410,6 +1434,24 @@
          <segment>
 			<source>Transcribers</source>
 			<target>Transcripteur</target>
+         </segment>
+      </unit>
+            <unit id="groupSettings.ownersDetail">
+         <segment>
+            <source>(Manage + Review + Transcribe)</source>
+            <target>(Gérer + Réviser + Transcrire)</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.reviewersDetail">
+         <segment>
+            <source>(Review + Transcribe)</source>
+            <target>(Réviser + Transcrire)</target>
+        </segment>
+      </unit>
+      <unit id="groupSettings.transcribersDetail">
+         <segment>
+            <source>(Transcribe)</source>
+            <target>(Transcrire)</target>
          </segment>
       </unit>
       <unit id="groupSettings.addGroupMember">
@@ -1803,18 +1845,36 @@
 				<target>Patron</target>
 			</segment>
 		</unit>
+     <unit id="invite.adminDetail">
+         <segment>
+            <source>(Manage + Review + Transcribe)</source>
+            <target>(Gérer + Réviser + Transcrire)</target>
+         </segment>
+      </unit>
 		<unit id="invite.transcriber">
 			<segment>
 				<source>Transcriber</source>
 				<target>Transcripteur</target>
 			</segment>
 		</unit>
+     <unit id="invite.transcriberDetail">
+         <segment>
+            <source>(Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
 		<unit id="invite.reviewer">
 			<segment>
 				<source>Reviewer</source>
 				<target>Examinateur</target>
 			</segment>
 		</unit>
+     <unit id="invite.reviewerDetail">
+         <segment>
+            <source>(Review + Transcribe)</source>
+            <target/>
+         </segment>
+      </unit>
 		<unit id="invitationTable.email">
          <segment>
             <source>Email</source>
@@ -1865,8 +1925,8 @@
       </unit>
       <unit id="invitationTable.filter">
          <segment>
-            <source>Configure</source>
-         	<target>Configurer</target>
+            <source>Filter</source>
+         	<target>Filtre</target>
          </segment>
       </unit>
    <unit id="invitationTable.selectRows">
@@ -1949,8 +2009,8 @@
       </unit>
       <unit id="mediaUpload.task">
          <segment>
-            <source>You can upload audio files in .mp3 format or in .wav format.</source>
-         	<target>Vous pouvez télécharger des fichiers audio au format .mp3 ou .wav.</target>
+            <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
+         	<target>Vous pouvez télécharger des fichiers audio au format .mp3, .m4a ou .wav.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDrop">
@@ -1985,8 +2045,8 @@
       </unit>
 		<unit id="toDoTable.filter">
 			<segment>
-				<source>Configure</source>
-				<target>Configurer</target>
+				<source>Filter</source>
+				<target>Filtre</target>
 			</segment>
 		</unit>
 	<unit id="toDoTable.plan">
@@ -2144,6 +2204,12 @@
             <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
     		<target>Votre connexion paratext a expiré et ne peut pas être automatiquement renouvelée. Veuillez vous déconnecter et vous reconnecter.</target>
 	     </segment>
+      </unit>
+      <unit id="integration.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login to sync projects.</source>
+            <target>Vous devez vous connecter avec une connexion paratext valide pour synchroniser les projets</target>
+         </segment>
       </unit>
       <unit id="integration.questionOnline">
          <segment>
@@ -2393,8 +2459,8 @@
       </unit>
       <unit id="profile.add">
          <segment>
-            <source>Add</source>
-            <target>Ajouter</target>
+            <source>Next</source>
+            <target>Prochain</target>
          </segment>
       </unit>
       <unit id="profile.save">
@@ -2481,6 +2547,18 @@
 				<target>Pas d'audio</target>
 			</segment>
 		</unit>
+        <unit id="taskItem.needsNewRecording">
+         <segment>
+            <source>Needs New Audio</source>
+			<target>Problème d'enregistrement</target>
+         </segment>
+      </unit>
+      <unit id="taskItem.needsNewTranscription">
+         <segment>
+            <source>Needs Corrections</source>
+			<target>Besoin de changement</target>
+         </segment>
+      </unit>
 		<unit id="taskItem.inProgress">
 			<segment>
 				<source>In Progress</source>

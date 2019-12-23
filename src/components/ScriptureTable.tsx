@@ -11,6 +11,7 @@ import {
   IScriptureTableStrings,
   BookNameMap,
   BookName,
+  ActivityStates,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
@@ -419,7 +420,7 @@ export function ScriptureTable(props: IProps) {
           title: passageRow[cols.Title],
           position: 0,
           hold: false,
-          state: 'noMedia',
+          state: ActivityStates.NoMedia,
         },
       } as any;
       schema.initializeRecord(p);

@@ -132,7 +132,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="usertable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">UserTable.tsx</context>
@@ -411,6 +411,13 @@
                 	<context context-type="sourcefile">ProjectSettingstsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="projectSettings.notAdminInGroup">
+                <source>You are not an admin in this group, so you will be unable to manage the project.</source>
+                <target/>
+                <context-group>
+                	<context context-type="sourcefile">ProjectSettingstsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="planTable.addPlan">
                 <source>Add Plan</source>
                 <target/>
@@ -454,7 +461,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="planTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PlanTable.tsx</context>
@@ -706,7 +713,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="assignmentTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -1042,7 +1049,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="mediaTab.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaTab.tsx</context>
@@ -1258,7 +1265,14 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.logout">
+        	<trans-unit id="main.export">
+        		<source>Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.logout">
                 <source>Log Out</source>
                 <target/>
                 <context-group>
@@ -1342,6 +1356,13 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
+        	<trans-unit id="main.apiError">
+        		<source>API Error:</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.reports">
         		<source>Reports</source>
         		<target/>
@@ -1406,7 +1427,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriptionTab.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -1426,7 +1447,28 @@
                     <context context-type="sourcefile">TranscriptionTab.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriptionShow.transcription">
+        	<trans-unit id="transcriptionTab.plan">
+        		<source>Plan</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.elan">
+        		<source>Elan</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.export">
+        		<source>Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionShow.transcription">
                 <source>Transcription</source>
                 <target/>
                 <context-group>
@@ -1504,7 +1546,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupTable.tsx</context>
@@ -1645,6 +1687,27 @@
             </trans-unit>
             <trans-unit id="groupSettings.transcribers">
                 <source>Transcribers</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="groupSettings.ownersDetail">
+                <source>(Manage + Review + Transcribe)</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="groupSettings.reviewersDetail">
+                <source>(Review + Transcribe)</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="groupSettings.transcribersDetail">
+                <source>(Transcribe)</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2105,8 +2168,22 @@
         			<context context-type="sourcefile">Invite.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="invite.transcriber">
+        	<trans-unit id="invite.adminDetail">
+        		<source>(Manage + Review + Transcribe)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="invite.transcriber">
         		<source>Transcriber</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="invite.transcriberDetail">
+        		<source>(Transcribe)</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Invite.tsx</context>
@@ -2119,7 +2196,14 @@
         			<context context-type="sourcefile">Invite.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="invitationTable.email">
+        	<trans-unit id="invite.reviewerDetail">
+        		<source>(Review + Transcribe)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="invitationTable.email">
                 <source>Email</source>
                 <target/>
                 <context-group>
@@ -2176,7 +2260,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invitationTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">InvitationTable.tsx</context>
@@ -2274,7 +2358,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="mediaUpload.task">
-                <source>You can upload audio files in .mp3 format or in .wav format.</source>
+                <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -2316,7 +2400,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="toDoTable.filter">
-                <source>Configure</source>
+                <source>Filter</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ToDoTable.tsx</context>
@@ -2504,7 +2588,13 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="integration.questionOnline">
+            <trans-unit id="integration.invalidParatextLogin">
+                <source>You must login with a valid paratext login to sync projects.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>            <trans-unit id="integration.questionOnline">
                 <source>Are you connected to the Internet?</source>
                 <target/>
                 <context-group>
@@ -2791,7 +2881,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.add">
-        		<source>Add</source>
+        		<source>Next</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
@@ -2890,6 +2980,20 @@
         	</trans-unit>
         	<trans-unit id="taskItem.noMedia">
         		<source>No Audio</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="taskItem.needsNewRecording">
+        		<source>Needs New Audio</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="taskItem.needsNewTranscription">
+        		<source>Needs Corrections</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>

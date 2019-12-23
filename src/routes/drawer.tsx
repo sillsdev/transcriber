@@ -50,6 +50,7 @@ import TeamIcon from '@material-ui/icons/GroupWorkTwoTone';
 import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
+import DownloadIcon from '@material-ui/icons/CloudDownload';
 import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
@@ -64,17 +65,21 @@ import OrgSettings from '../components/OrgSettings';
 import LazyLoad from '../hoc/LazyLoad';
 import PlanTabs from '../components/PlanTabs';
 import MediaTab from '../components/MediaTab';
+import TranscriptionTab from '../components/TranscriptionTab';
 import Team from '../components/GroupSettings/Team';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import IntegrationPanel from '../components/Integration';
+import PlanTable from '../components/PlanTable';
 import { setDefaultProj, deepLink } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
+import { dateChanges } from './dateChanges';
+import busyImage from './busy.gif';
 
 export const DrawerWidth = 240;
 
@@ -171,6 +176,9 @@ const useStyles = makeStyles((theme: Theme) =>
     progress: {
       width: '100%',
     },
+    busy: {
+      margin: 'auto',
+    },
   })
 );
 
@@ -181,7 +189,6 @@ interface componentType {
 interface IStateProps {
   t: IMainStrings;
   orbitLoaded: boolean;
-  orbitStatus: number;
 }
 
 interface IDispatchProps {
@@ -218,7 +225,6 @@ export function ResponsiveDrawer(props: IProps) {
     projects,
     plans,
     orbitLoaded,
-    orbitStatus,
     organizationMemberships,
     groupMemberships,
     roles,
@@ -229,6 +235,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [bucket] = useGlobal('bucket');
+  const [schema] = useGlobal('schema');
   const [user] = useGlobal('user');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [organization, setOrganization] = useGlobal('organization');
@@ -258,8 +265,10 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
+  const swapRef = useRef<any>();
   const newOrgRef = useRef<any>();
   const timer = React.useRef<NodeJS.Timeout>();
+  const syncTimer = React.useRef<NodeJS.Timeout>();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -417,10 +426,16 @@ export function ResponsiveDrawer(props: IProps) {
     if (orgOptions) {
       const cur = orgOptions.map(oo => oo.value).indexOf(organization);
       if (cur !== -1) setCurOrg(cur);
+      else if (
+        !busy &&
+        orgOptions.length > (API_CONFIG.isApp ? 0 : 1) &&
+        curOrg === null
+      )
+        handleCommitOrg(orgOptions[0].value);
     }
     setOrgRole(getRole(organizationMemberships, 'organization', organization));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orgOptions, organization]);
+  }, [orgOptions, organization, busy]);
 
   useEffect(() => {
     const orgRec = organizations.filter(o => o.id === organization);
@@ -449,6 +464,9 @@ export function ResponsiveDrawer(props: IProps) {
     const projKeys = projOptions.map(o => o.value);
     if (projKeys.length === 0) {
       setCurProj(null);
+      if (!busy && curOrg !== null) {
+        if (!API_CONFIG.isApp) handleAddProject();
+      }
       return;
     }
     const cur = projKeys.indexOf(project);
@@ -457,8 +475,11 @@ export function ResponsiveDrawer(props: IProps) {
     } else {
       setCurProj(cur);
     }
+    if (!busy && projKeys.length === 1 && curProj == null) {
+      handleCommitProj(projKeys[0]);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject]);
+  }, [projOptions, project, addProject, busy, swapRef, curOrg]);
 
   useEffect(() => {
     try {
@@ -511,23 +532,43 @@ export function ResponsiveDrawer(props: IProps) {
   }, [project, organization, choice, content, plan, group, tab, busy]);
 
   useEffect(() => {
-    if (orbitStatus >= 400 && orbitStatus < 500) setView('Logout');
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orbitStatus]);
-
-  useEffect(() => {
     if (remote) {
       // remote is null if offline
-      timer.current = setInterval(() => {
-        const isBusy = remote.requestQueue.length !== 0;
-        if (busy !== isBusy) setBusy(isBusy);
-      }, 1000);
+      if (timer.current === undefined)
+        timer.current = setInterval(() => {
+          const isBusy = remote.requestQueue.length !== 0;
+          if (busy !== isBusy) setBusy(isBusy);
+        }, 1000);
+      if (syncTimer.current === undefined) {
+        if (!busy) {
+          dateChanges(auth, keyMap, remote, memory, schema);
+        }
+        syncTimer.current = setInterval(() => {
+          if (!busy) {
+            if (API_CONFIG.isApp && curOrg !== null) {
+              if (projOptions.length === 0) {
+                if (swapRef && swapRef.current) {
+                  swapRef.current.click();
+                }
+              }
+            }
+            dateChanges(auth, keyMap, remote, memory, schema);
+          }
+        }, 1000 * 10);
+      }
       return () => {
-        if (timer.current) clearInterval(timer.current);
+        if (timer.current) {
+          clearInterval(timer.current);
+          timer.current = undefined;
+        }
+        if (syncTimer.current) {
+          clearInterval(syncTimer.current);
+          syncTimer.current = undefined;
+        }
       };
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [remote, busy]);
+  }, [remote, busy, curOrg]);
 
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
@@ -606,6 +647,12 @@ export function ResponsiveDrawer(props: IProps) {
   const transcriberIcons = API_CONFIG.isApp
     ? [<ListIcon />]
     : [<PlanIcon />, <TeamIcon />, <MediaIcon />, <ReportIcon />];
+
+  const projectIcons = [
+    <SettingsIcon />,
+    <DownloadIcon />,
+    <IntegrationIcon />,
+  ];
 
   const drawer = (
     <div>
@@ -708,16 +755,14 @@ export function ResponsiveDrawer(props: IProps) {
               </List>
               <Divider />
               <List>
-                {[t.settings, t.integrations].map((text, index) => (
+                {[t.settings, t.export, t.integrations].map((text, index) => (
                   <ListItem
                     button
                     key={text}
                     selected={slug(text) === choice}
                     onClick={checkSavedEv(() => handleChoice(text))}
                   >
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <SettingsIcon /> : <IntegrationIcon />}
-                    </ListItemIcon>
+                    <ListItemIcon>{projectIcons[index]}</ListItemIcon>
                     <ListItemText primary={text} />
                   </ListItem>
                 ))}
@@ -749,11 +794,16 @@ export function ResponsiveDrawer(props: IProps) {
       planColumn={true}
     />
   );
-  const PlanTable = React.lazy(() => import('../components/PlanTable'));
-  components[slug(t.plans)] = LazyLoad({
-    ...props,
-    displaySet: handlePlanType,
-  })(PlanTable);
+  components[slug(t.export)] = (
+    <TranscriptionTab
+      {...props}
+      projectPlans={plans.filter(p => related(p, 'project') === project)}
+      planColumn={true}
+    />
+  );
+  components[slug(t.plans)] = (
+    <PlanTable {...props} displaySet={handlePlanType} />
+  );
   components['scripture-plan'] = (
     <PlanTabs
       {...props}
@@ -785,7 +835,11 @@ export function ResponsiveDrawer(props: IProps) {
   components['group'] = <GroupSettings {...props} />;
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
-  components['none'] = <></>;
+  components['none'] = (
+    <div className={classes.busy}>
+      <img src={busyImage} alt="busy" />
+    </div>
+  );
   components[slug(t.tasks)] = (
     <TaskTable
       {...props}
@@ -941,6 +995,8 @@ export function ResponsiveDrawer(props: IProps) {
         <></>
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+      <a ref={swapRef} href={swapTarget} />
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a
         ref={newOrgRef}
         href={
@@ -959,7 +1015,6 @@ export function ResponsiveDrawer(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitLoaded: state.orbit.loaded,
-  orbitStatus: state.orbit.status,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

@@ -3,7 +3,15 @@ import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import ProjectType from '../model/projectType';
 import { connect } from 'react-redux';
-import { IState, Project, Group, IProjectSettingsStrings } from '../model';
+import {
+  IState,
+  Project,
+  Role,
+  RoleNames,
+  Group,
+  GroupMembership,
+  IProjectSettingsStrings,
+} from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -26,6 +34,7 @@ import { related } from '../utils';
 import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
 import { API_CONFIG } from '../api-variable';
+import { getRoleId } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,7 +98,9 @@ interface IStateProps {
 interface IRecordProps {
   projects: Array<Project>;
   projectTypes: Array<ProjectType>;
+  roles: Array<Role>;
   groups: Array<Group>;
+  groupmemberships: Array<GroupMembership>;
 }
 
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
@@ -99,7 +110,17 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function ProjectSettings(props: IProps) {
-  const { add, projects, projectTypes, groups, t, noMargin, finishAdd } = props;
+  const {
+    add,
+    projects,
+    projectTypes,
+    groups,
+    groupmemberships,
+    roles,
+    t,
+    noMargin,
+    finishAdd,
+  } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
@@ -124,14 +145,28 @@ export function ProjectSettings(props: IProps) {
   const [message, setMessage] = useState(<></>);
   const langEl = React.useRef<any>();
 
+  const AdminRoleId = getRoleId(roles, RoleNames.Admin);
+
   const handleNameChange = (e: any) => {
     setName(e.target.value);
   };
   const handleDescriptionChange = (e: any) => {
     setDescription(e.target.value);
   };
+
+  const setGroup = (value: string) => {
+    setProjectGroup(value);
+    if (value !== '') {
+      var gms = groupmemberships.filter(
+        gm => related(gm, 'group') === value && related(gm, 'user') === user
+      );
+      if (gms.length === 0 || related(gms[0], 'role') !== AdminRoleId) {
+        setMessage(<span>{t.notAdminInGroup}</span>);
+      }
+    }
+  };
   const handleGroupChange = (e: any) => {
-    setProjectGroup(e.target.value);
+    setGroup(e.target.value);
   };
   const handleSize = (v: string) => {
     setDefaultFontSize(v);
@@ -222,6 +257,7 @@ export function ProjectSettings(props: IProps) {
       }),
     ]);
     setProject(project.id);
+
     if (finishAdd) {
       finishAdd();
     }
@@ -236,6 +272,10 @@ export function ProjectSettings(props: IProps) {
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
+  };
+  const handleLanguageName = (lang: string) => {
+    setLanguageName(lang);
+    if (name === '') setName(lang);
   };
 
   useEffect(() => {
@@ -261,14 +301,17 @@ export function ProjectSettings(props: IProps) {
     };
     if (add) {
       setCurrentProject(undefined);
-      setProjectGroup('');
+      const allUsers = groups.filter(
+        g => related(g, 'owner') === organization && g.attributes.allUsers
+      );
+      setGroup(allUsers.length > 0 ? allUsers[0].id : '');
     } else {
       const curProj = projects.filter((p: Project) => p.id === project);
       if (curProj.length === 1) {
         proj = curProj[0];
-        setProjectGroup(related(proj, 'group'));
+        setGroup(related(proj, 'group'));
       } else {
-        setProjectGroup('');
+        setGroup('');
       }
       setCurrentProject(proj);
     }
@@ -382,7 +425,7 @@ export function ProjectSettings(props: IProps) {
                     name={languageName}
                     font={defaultFont}
                     setCode={setBcp47}
-                    setName={setLanguageName}
+                    setName={handleLanguageName}
                     setFont={setDefaultFont}
                     disabled={
                       API_CONFIG.isApp ||
@@ -519,7 +562,9 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
   projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
+  groupmemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
 };
 
 export default withData(mapRecordsToProps)(
