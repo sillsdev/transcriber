@@ -297,8 +297,32 @@
 		</unit>
 		<unit id="projectSettings.add">
 			<segment>
-				<source>Add</source>
-				<target>Ajouter</target>
+				<source>Add a Plan</source>
+				<target>Ajouter un plan</target>
+			</segment>
+		</unit>
+		<unit id="projectSettings.upload">
+			<segment>
+				<source>Upload Media and Transcribe</source>
+				<target>Télécharger les médias et les transcrire</target>
+			</segment>
+		</unit>
+		<unit id="projectSettings.nextSteps">
+			<segment>
+				<source>Next Steps</source>
+				<target>Prochaines étapes</target>
+			</segment>
+		</unit>
+		<unit id="projectSettings.configure">
+			<segment>
+				<source>Configure a Collaborative Project</source>
+				<target>Configurer un projet collaboratif</target>
+			</segment>
+		</unit>
+		<unit id="projectSettings.startNow">
+			<segment>
+				<source>Start Transcribing Now</source>
+				<target>Commencez à transcrire maintenant</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.dangerZone">
@@ -355,7 +379,25 @@
             <target>Vous n'êtes pas administrateur de ce groupe, vous ne pourrez donc pas gérer le projet.</target>
          </segment>
       </unit>
-      <unit id="planTable.addPlan">
+		<unit id="projectSettings.defaultPlanName">
+			<segment>
+				<source>Simple Plan</source>
+				<target>Plan simple</target>
+			</segment>
+		</unit>
+		<unit id="projectSettings.defaultSectionName">
+			<segment>
+				<source>Section 1</source>
+				<target>Section 1</target>
+			</segment>
+		</unit>
+		<unit id="projectSettings.defaultReference">
+			<segment>
+				<source>Text 1</source>
+				<target>Texte 1</target>
+			</segment>
+		</unit>
+		<unit id="planTable.addPlan">
          <segment>
             <source>Add Plan</source>
             <target>Ajouter un plan</target>
@@ -415,18 +457,6 @@
 				<target>Chargement des données</target>
 			</segment>
 		</unit>
-		<unit id="planTable.scripture">
-         <segment>
-            <source>Scripture Transcription</source>
-         	<target>Transcription des Écritures</target>
-         </segment>
-      </unit>
-      <unit id="planTable.other">
-         <segment>
-            <source>General Transcription</source>
-         	<target>Transcription générale</target>
-         </segment>
-      </unit>
       <unit id="planSheet.action">
 			<segment>
 				<source>Action</source>
@@ -1141,6 +1171,18 @@
             <target>Ajouter Organization</target>
          </segment>
       </unit>
+		<unit id="main.admin">
+			<segment>
+				<source>Admin</source>
+				<target>Admin</target>
+			</segment>
+		</unit>
+		<unit id="main.transcribe">
+			<segment>
+				<source>Transcribe</source>
+				<target>Transcrires</target>
+			</segment>
+		</unit>
 		<unit id="main.switchToAdmin">
 			<segment>
 				<source>Open project in Admin</source>
@@ -2593,6 +2635,24 @@
 			<segment>
 				<source>Section {0}.{1}</source>
 				<target>Section {0}.{1}</target>
+			</segment>
+		</unit>
+		<unit id="control.contentType">
+			<segment>
+				<source>Content Type</source>
+				<target>Type de contenu</target>
+			</segment>
+		</unit>
+		<unit id="control.scripture">
+			<segment>
+				<source>Scripture Transcription</source>
+				<target>Transcription des Écritures</target>
+			</segment>
+		</unit>
+		<unit id="control.other">
+			<segment>
+				<source>General Transcription</source>
+				<target>Transcription générale</target>
 			</segment>
 		</unit>
 	</file>

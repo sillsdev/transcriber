@@ -349,13 +349,41 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="projectSettings.add">
-                <source>Add</source>
+                <source>Add a Plan</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ProjectSettings.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="projectSettings.dangerZone">
+        	<trans-unit id="projectSettings.upload">
+        		<source>Upload Media and Transcribe</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.nextSteps">
+        		<source>Next Steps</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.configure">
+        		<source>Configure a Collaborative Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.startNow">
+        		<source>Start Transcribing Now</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.dangerZone">
                 <source>Danger Zone</source>
                 <target/>
                 <context-group>
@@ -418,7 +446,28 @@
                 	<context context-type="sourcefile">ProjectSettingstsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planTable.addPlan">
+        	<trans-unit id="projectSettings.defaultPlanName">
+        		<source>Simple Plan</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettingstsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.defaultSectionName">
+        		<source>Section 1</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettingstsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.defaultReference">
+        		<source>Text 1</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettingstsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.addPlan">
                 <source>Add Plan</source>
                 <target/>
                 <context-group>
@@ -488,20 +537,6 @@
                     <context context-type="sourcefile">PlanTable.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="planTable.scripture">
-        		<source>Scripture Transcription</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanTable.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planTable.other">
-        		<source>General Transcription</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanTable.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="planSheet.action">
                 <source>Action</source>
                 <target/>
@@ -1335,7 +1370,21 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.switchToAdmin">
+        	<trans-unit id="main.admin">
+        		<source>Admin</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.transcribe">
+        		<source>Transcribe</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.switchToAdmin">
                 <source>Open project in Admin</source>
                 <target/>
                 <context-group>
@@ -3039,6 +3088,27 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskItem.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="control.contentType">
+        		<source>Content Type</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">selectPlanType.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="control.scripture">
+        		<source>Scripture Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">selectPlanType.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="control.other">
+        		<source>General Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">selectPlanType.tsx</context>
         		</context-group>
         	</trans-unit>
         </body>

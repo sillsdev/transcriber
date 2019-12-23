@@ -242,6 +242,9 @@ export function TranscriptionTab(props: IProps) {
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
   const [dataUrl, setDataUrl] = useState();
   const [dataName, setDataName] = useState('');
+  const audAnchor = React.useRef<HTMLAnchorElement>(null);
+  const [audUrl, setAudUrl] = useState();
+  const [audName, setAudName] = useState('');
 
   const columnDefs = [
     { name: 'name', title: t.section },
@@ -264,7 +267,6 @@ export function TranscriptionTab(props: IProps) {
   const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<
     string[]
   >([]);
-
   const [filter, setFilter] = useState(false);
 
   const handleMessageReset = () => {
@@ -325,14 +327,16 @@ export function TranscriptionTab(props: IProps) {
     );
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name);
+    handleAudioFn(passageId);
   };
 
-  const handleAudio = (passageId: string) => () => {
+  const handleAudio = (passageId: string) => () => handleAudioFn(passageId);
+  const handleAudioFn = (passageId: string) => {
     const mediaRec = getMediaRec(passageId, memory);
     const id = remoteId('mediafile', mediaRec ? mediaRec.id : '', keyMap);
     const name = getMediaName(mediaRec, memory);
     fetchMediaUrl(id, auth);
-    setDataName(name);
+    setAudName(name);
   };
 
   useEffect(() => {
@@ -346,8 +350,18 @@ export function TranscriptionTab(props: IProps) {
   }, [dataUrl, dataName, eafAnchor]);
 
   useEffect(() => {
-    if (dataName !== '' && !dataUrl) setDataUrl(mediaUrl);
-  }, [hasUrl, mediaUrl, dataName, dataUrl]);
+    if (audUrl && audName !== '') {
+      if (audAnchor && audAnchor.current) {
+        audAnchor.current.click();
+        setAudUrl(undefined);
+        setAudName('');
+      }
+    }
+  }, [audUrl, audName, audAnchor]);
+
+  useEffect(() => {
+    if (audName !== '' && !audUrl) setAudUrl(mediaUrl);
+  }, [hasUrl, mediaUrl, audName, audUrl]);
 
   useEffect(() => {
     if (planColumn) {
@@ -530,6 +544,14 @@ export function TranscriptionTab(props: IProps) {
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={eafAnchor} href={dataUrl} download={dataName + '.eaf'} />
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+      <a
+        ref={audAnchor}
+        href={audUrl}
+        download={audName}
+        target="_blank"
+        rel="noopener noreferrer"
+      />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );

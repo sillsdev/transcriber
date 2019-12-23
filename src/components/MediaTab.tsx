@@ -237,6 +237,7 @@ export function MediaTab(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
+  const [urlOpen, setUrlOpen] = useGlobal('open');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
@@ -370,6 +371,14 @@ export function MediaTab(props: IProps) {
       setPlayItem('');
     }
   };
+
+  useEffect(() => {
+    if (urlOpen) {
+      setUploadVisible(true);
+      setUrlOpen(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [urlOpen]);
 
   useEffect(() => {
     if (planColumn) {

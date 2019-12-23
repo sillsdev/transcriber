@@ -81,7 +81,11 @@ const initialState = {
 			"defaultFontSize": "Default Font Size",
 			"selectFontSize": "Please select the default font size",
 			"rightToLeft": "Right to left?",
-			"add": "Add",
+			"add": "Add a Plan",
+			"upload": "Upload Media and Transcribe",
+			"nextSteps": "Next Steps",
+			"configure": "Configure a Collaborative Project",
+			"startNow": "Start Transcribing Now",
 			"dangerZone": "Danger Zone",
 			"deleteProject": "Delete this Project",
 			"deleteExplained": "All plans, sections, passages, and media files will be removed.",
@@ -91,6 +95,9 @@ const initialState = {
 			"preview": "Preview",
 			"selectProjectGroup": "Select project group. Each project relates to a single group. Group members can work on the project.",
 			"notAdminInGroup": "You are not an admin in this group, so you will be unable to manage the project.",
+			"defaultPlanName": "Simple Plan",
+			"defaultSectionName": "Section 1",
+			"defaultReference": "Text 1",
 		}
 	}),
 	"planTable": new LocalizedStrings({
@@ -105,8 +112,6 @@ const initialState = {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
 			"loadingTable": "Loading data",
-			"scripture": "Scripture Transcription",
-			"other": "General Transcription",
 		}
 	}),
 	"planSheet": new LocalizedStrings({
@@ -262,6 +267,8 @@ const initialState = {
 			"planUnsaved": "Plan Unsaved",
 			"loseData": "Do you want to leave this page and lose your changes?",
 			"newOrganization": "Add Organization",
+			"admin": "Admin",
+			"transcribe": "Transcribe",
 			"switchToAdmin": "Open project in Admin",
 			"switchToApp": "Open project in App",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
@@ -592,6 +599,13 @@ const initialState = {
 			"section": "Section {0}.{1}",
 		}
 	}),
+	"control": new LocalizedStrings({
+		"en": {
+			"contentType": "Content Type",
+			"scripture": "Scripture Transcription",
+			"other": "General Transcription",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -638,6 +652,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
+				"control" : new LocalizedStrings(action.payload.data.control),
 			};
 		case SET_LANGUAGE:
 			return {

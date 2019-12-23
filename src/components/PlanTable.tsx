@@ -19,6 +19,7 @@ import ShapingTable from './ShapingTable';
 import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
+import { saveNewPlan } from '../crud';
 import Related from '../utils/related';
 import { numCompare } from '../utils/sort';
 
@@ -136,25 +137,9 @@ export function PlanTable(props: IProps) {
   };
   const handleAddMethod = async (name: string, planType: string) => {
     setDialogVisible(false);
-    let plan: Plan = {
-      type: 'plan',
-      attributes: {
-        name: name,
-      },
-    } as any;
-    schema.initializeRecord(plan);
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(plan),
-      t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'plantype', {
-        type: 'plantype',
-        id: planType,
-      }),
-      t.replaceRelatedRecord({ type: 'plan', id: plan.id }, 'project', {
-        type: 'project',
-        id: project,
-      }),
-    ]);
-    handleSelect(plan.id);
+    saveNewPlan({ project, name, planType, schema, memory }).then(plan =>
+      handleSelect(plan.id)
+    );
   };
   const handleAddCancel = () => {
     setDialogVisible(false);

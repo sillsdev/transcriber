@@ -16,6 +16,7 @@ import {
   GroupMembership,
   Role,
   RoleNames,
+  MediaFile,
 } from '../model';
 import * as actions from '../store';
 import localStrings from '../selector/localize';
@@ -36,6 +37,7 @@ import {
   Toolbar,
   Typography,
   LinearProgress,
+  Button,
 } from '@material-ui/core';
 import {
   makeStyles,
@@ -55,7 +57,6 @@ import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
-import SwapAppIcon from '@material-ui/icons/ExitToApp';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import { related, hasRelated, slug, remoteIdGuid } from '../utils';
@@ -179,6 +180,11 @@ const useStyles = makeStyles((theme: Theme) =>
     busy: {
       margin: 'auto',
     },
+    navButton: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
   })
 );
 
@@ -202,6 +208,7 @@ interface IRecordProps {
   plans: Array<Plan>;
   groupMemberships: Array<GroupMembership>;
   roles: Array<Role>;
+  mediafiles: Array<MediaFile>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
@@ -228,6 +235,7 @@ export function ResponsiveDrawer(props: IProps) {
     organizationMemberships,
     groupMemberships,
     roles,
+    mediafiles,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -245,6 +253,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [projRole, setProjRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_open, setOpen] = useGlobal('open');
   const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
   const [content, setContent] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
@@ -265,6 +275,7 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
+  const [transcribe, setTranscribe] = useState(false);
   const swapRef = useRef<any>();
   const newOrgRef = useRef<any>();
   const timer = React.useRef<NodeJS.Timeout>();
@@ -347,10 +358,17 @@ export function ResponsiveDrawer(props: IProps) {
     setTitle(t.addProject);
   };
 
-  const handleFinishAdd = () => {
-    setAddProject(false);
+  const handleFinishAdd = (to?: string) => {
     setChoice(slug(t.plans));
-    setContent(slug(t.plans));
+    if (to) {
+      localStorage.setItem('url', to);
+      const parts = to.split('/');
+      setContent(parts[3]);
+      setOpen(true);
+    } else {
+      setContent(slug(t.plans));
+    }
+    setAddProject(false);
   };
 
   const handleUserMenuAction = (what: string) => {
@@ -475,7 +493,7 @@ export function ResponsiveDrawer(props: IProps) {
     } else {
       setCurProj(cur);
     }
-    if (!busy && projKeys.length === 1 && curProj == null) {
+    if (!busy && projKeys.length === 1 && curProj == null && !addProject) {
       handleCommitProj(projKeys[0]);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -570,6 +588,18 @@ export function ResponsiveDrawer(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [remote, busy, curOrg]);
 
+  useEffect(() => {
+    const media = mediafiles.filter(m => {
+      const plan = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'plan', id: related(m, 'plan') })
+      );
+      return related(plan, 'project') === project;
+    });
+    const propsal = media.length > 0;
+    if (propsal !== transcribe) setTranscribe(propsal);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [mediafiles, project, busy]);
+
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
@@ -642,6 +672,31 @@ export function ResponsiveDrawer(props: IProps) {
         setTab(parseInt(parts[UrlTaskTabPart]));
       }
     }
+  }
+
+  let swapTarget = deepLink({
+    organization,
+    project,
+    plan,
+    group,
+    tab,
+    choice,
+    content,
+    keyMap,
+    t,
+  });
+  if (API_CONFIG.isApp && swapTarget) {
+    swapTarget =
+      AUTH_CONFIG.adminEndpoint +
+      swapTarget.replace(slug(t.tasks), slug(t.plans));
+  } else if (swapTarget) {
+    const part = swapTarget.split('/');
+    part[3] = slug(t.tasks);
+    swapTarget = AUTH_CONFIG.appEndpoint + part.join('/');
+  } else {
+    swapTarget = API_CONFIG.isApp
+      ? AUTH_CONFIG.adminEndpoint
+      : AUTH_CONFIG.appEndpoint;
   }
 
   const transcriberIcons = API_CONFIG.isApp
@@ -737,6 +792,24 @@ export function ResponsiveDrawer(props: IProps) {
           </div>
           {curProj === null || (
             <div>
+              {!API_CONFIG.isApp && (
+                <div className={classes.navButton}>
+                  <a
+                    href={transcribe ? swapTarget : ''}
+                    style={{ textDecoration: 'none' }}
+                    title={t.switchToApp}
+                  >
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={!transcribe}
+                      style={{ color: 'white' }}
+                    >
+                      {t.transcribe}
+                    </Button>
+                  </a>
+                </div>
+              )}
               <List>
                 {(API_CONFIG.isApp
                   ? [t.tasks]
@@ -767,6 +840,23 @@ export function ResponsiveDrawer(props: IProps) {
                   </ListItem>
                 ))}
               </List>
+              {API_CONFIG.isApp && (
+                <div className={classes.navButton}>
+                  <a
+                    href={swapTarget}
+                    style={{ textDecoration: 'none' }}
+                    title={t.switchToAdmin}
+                  >
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      style={{ color: 'white' }}
+                    >
+                      {t.admin}
+                    </Button>
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </>
@@ -877,31 +967,6 @@ export function ResponsiveDrawer(props: IProps) {
     );
   }
 
-  let swapTarget = deepLink({
-    organization,
-    project,
-    plan,
-    group,
-    tab,
-    choice,
-    content,
-    keyMap,
-    t,
-  });
-  if (API_CONFIG.isApp && swapTarget) {
-    swapTarget =
-      AUTH_CONFIG.adminEndpoint +
-      swapTarget.replace(slug(t.tasks), slug(t.plans));
-  } else if (swapTarget) {
-    const part = swapTarget.split('/');
-    part[3] = slug(t.tasks);
-    swapTarget = AUTH_CONFIG.appEndpoint + part.join('/');
-  } else {
-    swapTarget = API_CONFIG.isApp
-      ? AUTH_CONFIG.adminEndpoint
-      : AUTH_CONFIG.appEndpoint;
-  }
-
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -928,17 +993,6 @@ export function ResponsiveDrawer(props: IProps) {
             </Typography>
           </div>
           {'\u00A0'}
-          <a
-            href={swapTarget}
-            style={{ textDecoration: 'none' }}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={API_CONFIG.isApp ? t.switchToAdmin : t.switchToApp}
-          >
-            <IconButton style={{ color: 'white' }}>
-              <SwapAppIcon />
-            </IconButton>
-          </a>
           <HelpMenu />
           <UserMenu
             action={(v: string) => checkSavedFn(() => handleUserMenuAction(v))}
@@ -1034,6 +1088,7 @@ const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
 export default withData(mapRecordsToProps)(

@@ -300,7 +300,31 @@
       </unit>
       <unit id="projectSettings.add">
          <segment>
-            <source>Add</source>
+            <source>Add a Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.upload">
+         <segment>
+            <source>Upload Media and Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.nextSteps">
+         <segment>
+            <source>Next Steps</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.configure">
+         <segment>
+            <source>Configure a Collaborative Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.startNow">
+         <segment>
+            <source>Start Transcribing Now</source>
             <target/>
          </segment>
       </unit>
@@ -355,6 +379,24 @@
       <unit id="projectSettings.notAdminInGroup">
          <segment>
             <source>You are not an admin in this group, so you will be unable to manage the project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.defaultPlanName">
+         <segment>
+            <source>Simple Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.defaultSectionName">
+         <segment>
+            <source>Section 1</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.defaultReference">
+         <segment>
+            <source>Text 1</source>
             <target/>
          </segment>
       </unit>
@@ -415,18 +457,6 @@
       <unit id="planTable.loadingTable">
          <segment>
             <source>Loading data</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planTable.scripture">
-         <segment>
-            <source>Scripture Transcription</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planTable.other">
-         <segment>
-            <source>General Transcription</source>
             <target/>
          </segment>
       </unit>
@@ -1141,6 +1171,18 @@
       <unit id="main.newOrganization">
          <segment>
             <source>Add Organization</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.admin">
+         <segment>
+            <source>Admin</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.transcribe">
+         <segment>
+            <source>Transcribe</source>
             <target/>
          </segment>
       </unit>
@@ -2605,6 +2647,24 @@
       <unit id="taskItem.section">
          <segment>
             <source>Section {0}.{1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="control.contentType">
+         <segment>
+            <source>Content Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="control.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="control.other">
+         <segment>
+            <source>General Transcription</source>
             <target/>
          </segment>
       </unit>
