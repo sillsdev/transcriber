@@ -1594,6 +1594,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupSettings.noDeleteInfo">
+         <segment>
+            <source>This role is included in a higher role and cannot be deleted.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="groupSettings.noDeleteAllUsersInfo">
+         <segment>
+            <source>Cannot delete users from the All Users group</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shapingTable.NoColumns">
          <segment>
             <source>No columns visible</source>

@@ -1860,6 +1860,20 @@
                     <context context-type="sourcefile">GroupSettings.tsx</context>
                 </context-group>
             </trans-unit>
+                <trans-unit id="groupSettings.noDeleteInfo">
+                <source>This role is included in a higher role and cannot be deleted.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="groupSettings.noDeleteAllUsersInfo">
+                <source>Cannot delete users from the All Users group</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="shapingTable.NoColumns">
                 <source>No columns visible</source>
                 <target/>

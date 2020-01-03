@@ -361,6 +361,8 @@ const initialState = {
 			"projectPlans": "Project Plans",
 			"invalidRole": "Invalid Role. User not added.",
 			"loadingTable": "Loading data",
+			"noDeleteInfo": "This role is included in a higher role and cannot be deleted.",
+			"noDeleteAllUsersInfo": "Cannot delete users from the All Users group",
 		}
 	}),
 	"shapingTable": new LocalizedStrings({

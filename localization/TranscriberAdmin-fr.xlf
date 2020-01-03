@@ -1580,6 +1580,18 @@
 				<target>Chargement des données</target>
 			</segment>
 		</unit>
+        <unit id="groupSettings.noDeleteInfo">
+         <segment>
+            <source>This role is included in a higher role and cannot be deleted.</source>
+            <target>Ce rôle est inclus dans le rôle supérieur et ne peut pas être supprimé.</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.noDeleteAllUsersInfo">
+         <segment>
+            <source>Cannot delete users from the All Users group</source>
+            <target>Impossible de supprimer des utilisateurs du groupe Tous les utilisateurs</target>
+         </segment>
+      </unit>
 		<unit id="shapingTable.NoColumns">
 			<segment>
 				<source>No columns visible</source>

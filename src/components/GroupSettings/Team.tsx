@@ -206,6 +206,7 @@ function Team(props: IProps) {
           del={(id: string, name: string) =>
             handleUpdate(id, RoleNames.Transcriber)
           }
+          noDeleteInfo={t.noDeleteInfo}
         />
         <TeamCol
           {...props}
@@ -215,6 +216,8 @@ function Team(props: IProps) {
           add={() => handleAdd(RoleNames.Transcriber)}
           del={handleRemove}
           allUsers={allUsers}
+          noDeleteInfo={t.noDeleteInfo}
+          noDeleteAllUsersInfo={t.noDeleteAllUsersInfo}
         />
       </Grid>
       <GroupMemberAdd

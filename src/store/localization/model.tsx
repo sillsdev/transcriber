@@ -333,6 +333,8 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "projectPlans": string;
     "invalidRole": string;
     "loadingTable": string;
+    "noDeleteInfo": string;
+    "noDeleteAllUsersInfo": string;
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
