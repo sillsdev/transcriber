@@ -803,7 +803,6 @@ export function ResponsiveDrawer(props: IProps) {
                       variant="contained"
                       color="primary"
                       disabled={!transcribe}
-                      style={{ color: 'white' }}
                     >
                       {t.transcribe}
                     </Button>
@@ -847,11 +846,7 @@ export function ResponsiveDrawer(props: IProps) {
                     style={{ textDecoration: 'none' }}
                     title={t.switchToAdmin}
                   >
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      style={{ color: 'blue' }}
-                    >
+                    <Button variant="outlined" color="primary">
                       {t.admin}
                     </Button>
                   </a>

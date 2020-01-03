@@ -38,11 +38,7 @@ import {
   sectionTranscriberName,
   sectionCompare,
 } from '../utils/section';
-import {
-  passageNumber,
-  passageCompare,
-  passageDescription,
-} from '../utils/passage';
+import { passageCompare, passageDescription } from '../utils/passage';
 import {
   updateXml,
   getMediaRec,

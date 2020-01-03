@@ -33,7 +33,6 @@ import {
 import SnackBar from './SnackBar';
 import related from '../utils/related';
 import { passageRefCompare, passageReference } from '../utils/passage';
-import { getQueriesForElement } from '@testing-library/react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
