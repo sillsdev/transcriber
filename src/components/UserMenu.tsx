@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
@@ -10,6 +11,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from '@material-ui/core';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccountIcon from '@material-ui/icons/AccountCircle';
@@ -60,6 +62,9 @@ interface IProps extends IStateProps {
 
 export function UserMenu(props: IProps) {
   const { action, t } = props;
+  const [orgRole] = useGlobal('orgRole');
+  const [projRole] = useGlobal('projRole');
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
 
@@ -91,6 +96,20 @@ export function UserMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
+        <StyledMenuItem>
+          <ListItemText
+            primary={
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography>{t.orgRole + ' ' + orgRole}</Typography>
+                <Typography>
+                  {t.projRole +
+                    ' ' +
+                    (projRole === 'admin' ? t.owner : projRole)}
+                </Typography>
+              </div>
+            }
+          />
+        </StyledMenuItem>
         {/* <a
           href={
             AUTH_CONFIG.myAccountApp +

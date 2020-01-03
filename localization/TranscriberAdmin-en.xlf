@@ -1132,6 +1132,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.orgRole">
+         <segment>
+            <source>Organizational Role:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.projRole">
+         <segment>
+            <source>Role in Project:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.owner">
+         <segment>
+            <source>Owner</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.clearCache">
          <segment>
             <source>Clear cache</source>
