@@ -86,7 +86,16 @@ export function passageRefCompare(a: Passage, b: Passage) {
 export function passageDescription(passage: Passage) {
   const attr = passage.attributes;
   if (!attr) return '';
-  const book = ' ' + (attr.book ? attr.book : '');
-  const reference = ' ' + (attr.reference ? attr.reference : '');
+  const book = attr.book ? attr.book + ' ' : '';
+  const reference = attr.reference ? attr.reference : '';
   return passageNumber(passage) + '\u00A0\u00A0' + book + reference;
+}
+
+/* build the passage ref = book + reference */
+export function passageReference(passage: Passage) {
+  const attr = passage.attributes;
+  if (!attr) return '';
+  const book = attr.book ? attr.book + ' ' : '';
+  const reference = attr.reference ? attr.reference : '';
+  return book + reference;
 }

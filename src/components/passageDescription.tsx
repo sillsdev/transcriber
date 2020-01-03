@@ -1,7 +1,7 @@
 import React from 'react';
 import { Passage } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { passageNumber } from '../utils';
+import { passageNumber, passageReference } from '../utils';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -29,15 +29,15 @@ export const PassageDescription = (props: IProps) => {
 
   const attr = passage.attributes;
   if (!attr) return null;
-  const book = ' ' + (attr.book ? attr.book : '');
-  const reference = ' ' + (attr.reference ? attr.reference : '');
 
   return (
     <div id="SectionDescription" className={classes.root}>
       <Typography className={classes.number}>
         {passageNumber(passage) + '\u00A0\u00A0'}
       </Typography>
-      <Typography className={classes.ref}>{book + reference}</Typography>
+      <Typography className={classes.ref}>
+        {passageReference(passage)}
+      </Typography>
     </div>
   );
 };

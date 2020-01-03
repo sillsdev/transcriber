@@ -790,7 +790,7 @@ export function ResponsiveDrawer(props: IProps) {
               </div>
             )}
           </div>
-          {curProj === null || (
+          {curProj === null || busy || (
             <div>
               {!API_CONFIG.isApp && (
                 <div className={classes.navButton}>
@@ -850,7 +850,7 @@ export function ResponsiveDrawer(props: IProps) {
                     <Button
                       variant="outlined"
                       color="primary"
-                      style={{ color: 'white' }}
+                      style={{ color: 'blue' }}
                     >
                       {t.admin}
                     </Button>

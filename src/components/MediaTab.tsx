@@ -38,7 +38,12 @@ import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
-import { remoteIdNum, remoteId } from '../utils';
+import {
+  remoteIdNum,
+  remoteId,
+  passageReference,
+  sectionDescription,
+} from '../utils';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare } from '../utils/sort';
 
@@ -91,18 +96,13 @@ interface IRow {
   parentId?: string;
 }
 const getSection = (section: Section[]) => {
-  const sectionId =
-    section.length > 0 && section[0].attributes.sequencenum
-      ? section[0].attributes.sequencenum.toString()
-      : '';
-  const sectionName = section.length > 0 ? section[0].attributes.name : '';
-  return sectionId + ' ' + sectionName;
+  if (section.length === 0) return '';
+  return sectionDescription(section[0]);
 };
 
 const getReference = (passage: Passage[]) => {
-  const book = passage.length > 0 ? passage[0].attributes.book : '';
-  const reference = passage.length > 0 ? passage[0].attributes.reference : '';
-  return book + ' ' + reference;
+  if (passage.length === 0) return '';
+  return passageReference(passage[0]);
 };
 
 interface ILatest {

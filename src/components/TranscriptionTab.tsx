@@ -38,7 +38,11 @@ import {
   sectionTranscriberName,
   sectionCompare,
 } from '../utils/section';
-import { passageNumber, passageCompare } from '../utils/passage';
+import {
+  passageNumber,
+  passageCompare,
+  passageDescription,
+} from '../utils/passage';
 import {
   updateXml,
   getMediaRec,
@@ -113,17 +117,7 @@ const getSection = (section: Section) => {
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage[]) => {
   if (passage.length === 0) return '';
-  const book =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.book
-      ? passage[0].attributes.book
-      : '');
-  const ref =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.reference
-      ? passage[0].attributes.reference
-      : '');
-  return passageNumber(passage[0]) + book + ref;
+  return passageDescription(passage[0]);
 };
 
 const getAssignments = (
