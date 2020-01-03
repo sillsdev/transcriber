@@ -48,8 +48,8 @@ import {
   related,
 } from '../utils';
 import eaf from './TranscriptionEaf';
-var Encoder = require('node-html-encoder').Encoder;
-var encoder = new Encoder('entity');
+let Encoder = require('node-html-encoder').Encoder;
+let encoder = new Encoder('entity');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

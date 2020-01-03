@@ -213,7 +213,7 @@ export function ScriptureTable(props: IProps) {
       !i || j < i ? row[cols.SectionSeq] || 0 : 0
     ) as number[];
     const sequencenum = Math.max(...sequenceNums, 0) + 1;
-    var newRow;
+    let newRow;
     if (showBook(cols)) {
       newRow = [sequencenum, '', '', '', '', ''];
     } else {
@@ -229,7 +229,7 @@ export function ScriptureTable(props: IProps) {
     const lastRow = data.length - 1; //FUTURE TODO? pass in section row?
     const sequencenum =
       (data[i ? i : lastRow][cols.PassageSeq] || 1) + (i ? 0 : 1);
-    var newRow;
+    let newRow;
     if (showBook(cols)) {
       const book = data[lastRow][cols.Book] || '';
       newRow = ['', '', sequencenum, book, '', ''];
@@ -304,7 +304,7 @@ export function ScriptureTable(props: IProps) {
         return false;
       }
     }
-    var invalidSec = rows
+    let invalidSec = rows
       .filter(
         (row, rowIndex) =>
           rowIndex > 0 && !isBlankOrValidNumber(row[cols.SectionSeq])
@@ -314,7 +314,7 @@ export function ScriptureTable(props: IProps) {
       setMessage(<span>Invalid section number(s): {invalidSec.join()}</span>);
       return false;
     }
-    var invalidPas = rows
+    let invalidPas = rows
       .filter(
         (row, rowIndex) =>
           rowIndex > 0 && !isBlankOrValidNumber(row[cols.PassageSeq])
@@ -358,7 +358,7 @@ export function ScriptureTable(props: IProps) {
       isValidNumber(value[cols.SectionSeq]) &&
       isValidNumber(value[cols.PassageSeq])
     ) {
-      var cp = [...value];
+      let cp = [...value];
       cp[cols.PassageSeq] = '';
       value[cols.SectionSeq] = '';
       array.splice(index, 0, cp); //copy the row -- the copy goes in before
@@ -436,8 +436,8 @@ export function ScriptureTable(props: IProps) {
     const updatePassage = async (rowIndex: number) => {
       const passageRow = rows[rowIndex];
       const inpRow = inData[rowIndex];
-      var changed = false;
-      for (var i = 0; i < inpRow.length; i++) {
+      let changed = false;
+      for (let i = 0; i < inpRow.length; i++) {
         if (inpRow[i] !== passageRow[i]) {
           changed = true;
           break;
@@ -572,7 +572,7 @@ export function ScriptureTable(props: IProps) {
       let passage = passages.find(p => p.id === pId);
       if (passage != null) {
         if (!passage.attributes) return;
-        var newRow;
+        let newRow;
         if (showBook(cols)) {
           newRow = [
             '',
@@ -643,7 +643,7 @@ export function ScriptureTable(props: IProps) {
             id: sec.id,
             sequencenum: sec.attributes.sequencenum,
           });
-          var newRow;
+          let newRow;
           if (showBook(cols)) {
             newRow = [
               sec.attributes.sequencenum,

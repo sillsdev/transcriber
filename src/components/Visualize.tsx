@@ -80,13 +80,13 @@ export function Visualize(props: IProps) {
         const selPassages = passageSections.filter(
           ps => related(ps, 'section') === s.id
         );
-        var roleName = 'transcriber';
-        var rowKey = pl.id + ':' + roleName;
+        let roleName = 'transcriber';
+        let rowKey = pl.id + ':' + roleName;
         rowTot[rowKey] = rowTot.hasOwnProperty(rowKey)
           ? rowTot[rowKey] + selPassages.length
           : selPassages.length;
 
-        var userRec = users.filter(u => u.id === related(s, roleName));
+        let userRec = users.filter(u => u.id === related(s, roleName));
         if (userRec.length > 0) {
           const userName = userRec[0].attributes
             ? userRec[0].attributes.name
@@ -166,6 +166,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  Visualize
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(Visualize) as any
+) as any;

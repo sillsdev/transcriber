@@ -15,15 +15,15 @@ export function passageCompare(a: Passage, b: Passage) {
 }
 
 function TryParseInt(str: string, defaultValue: number): number {
-  var retValue = parseInt(str);
+  let retValue = parseInt(str);
   if (isNaN(retValue)) retValue = defaultValue;
   return retValue;
 }
 
 function parseReferencePart(a: Passage, start: boolean, part: string) {
-  var colon = part.indexOf(':');
-  var chapter: number = 0;
-  var verse: number = 0;
+  let colon = part.indexOf(':');
+  let chapter: number = 0;
+  let verse: number = 0;
   if (colon > 0) {
     chapter = TryParseInt(a.attributes.reference.substring(0, colon), 0);
     part = part.substring(colon + 1);
@@ -45,8 +45,8 @@ function parseRef(a: Passage) {
       a.startVerse = 0;
       a.endVerse = 0;
     } else {
-      var dash = a.attributes.reference.indexOf('-');
-      var firstPart =
+      let dash = a.attributes.reference.indexOf('-');
+      let firstPart =
         dash > 0
           ? a.attributes.reference.substring(0, dash)
           : a.attributes.reference;

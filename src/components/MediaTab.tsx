@@ -124,7 +124,7 @@ const getMedia = (
       ? Math.max(latest[name], f.attributes.versionNumber)
       : f.attributes.versionNumber;
   });
-  var media: MediaFile[];
+  let media: MediaFile[];
   if (projectplans && projectplans.length > 0) {
     //all plans in current project
     media = mediaFiles.filter(
@@ -326,7 +326,7 @@ export function MediaTab(props: IProps) {
     }
     if (confirmAction === 'Delete') {
       check.forEach(i => {
-        var versions = mediaFiles.filter(
+        let versions = mediaFiles.filter(
           f =>
             related(f, 'plan') === data[i].planid &&
             f.attributes.originalFile === data[i].fileName

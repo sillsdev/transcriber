@@ -18,7 +18,7 @@ export const errStatus = (err: AxiosError): IAxiosStatus => {
     // Request made and server responded
     console.log(err.response.data);
     if (Array.isArray(err.response.data.errors)) {
-      var detail = err.response.data.errors[0];
+      let detail = err.response.data.errors[0];
       console.log(detail);
       console.log(detail.detail);
       err.message += ' Detail: ' + detail.detail;

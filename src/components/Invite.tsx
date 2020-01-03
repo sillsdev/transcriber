@@ -273,7 +273,7 @@ function Invite(props: IProps) {
 
   useEffect(() => {
     if (user !== '') {
-      var cur = getUserById(users, user);
+      let cur = getUserById(users, user);
       setcurrentUser(
         cur && cur.attributes
           ? cur.attributes.name + ' (' + cur.attributes.email + ')'

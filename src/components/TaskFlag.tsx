@@ -13,7 +13,7 @@ interface IProps extends IStateProps {
 
 export const NextAction = (props: IProps) => {
   const { state, t } = props;
-  var text: string = t.noMedia;
+  let text: string = t.noMedia;
   switch (state) {
     case ActivityStates.NoMedia:
     case ActivityStates.TranscribeReady:
