@@ -221,6 +221,7 @@ export function TaskTable(props: IProps) {
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState('');
   const audioRef = useRef<any>();
 
   const handleMessageReset = () => {
@@ -235,8 +236,8 @@ export function TaskTable(props: IProps) {
     transcribeReady: ActivityStates.Transcribing,
     transcribed: ActivityStates.Reviewing,
   };
-
-  const handleSelect = (mediaDescription: MediaDescription) => (e: any) => {
+  const processSelect = (mediaDescription: MediaDescription) => {
+    setSelected(mediaDescription.passage.id);
     if (mediaDescription.role !== 'view') {
       memory.update((t: TransformBuilder) =>
         t.replaceAttribute(
@@ -247,6 +248,9 @@ export function TaskTable(props: IProps) {
       );
     }
     transcriber(mediaDescription);
+  };
+  const handleSelect = (mediaDescription: MediaDescription) => (e: any) => {
+    processSelect(mediaDescription);
   };
   const getPlanName = (plan: Plan) => {
     return plan.attributes ? plan.attributes.name : '';
@@ -310,7 +314,11 @@ export function TaskTable(props: IProps) {
                   }
                   if (role !== 'view' || already.length === 0) {
                     const curState =
-                      role === 'view' ? p.attributes.state : state;
+                      role === 'view'
+                        ? p.attributes && p.attributes.state
+                          ? p.attributes.state
+                          : state
+                        : state;
                     const mediaDescription: MediaDescription = {
                       section: secRecs[0],
                       passage: p,
@@ -456,6 +464,10 @@ export function TaskTable(props: IProps) {
       addTasks('', 'view', rowList, playItem);
     }
     setRows(rowList);
+    if (rowList.length > 0 && selected === '') {
+      console.log('Select first task');
+      processSelect(rowList[0].media);
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role, playItem, curDesc, project, busy]);
