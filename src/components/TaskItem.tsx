@@ -63,10 +63,13 @@ export function TaskItem(props: IProps) {
   let ref = '';
   const attr = passage.attributes;
   if (attr) {
-    book = attr.book;
     ref = attr.reference;
-    const bookItem = allBookData.filter(b => b.code === book);
-    if (bookItem.length > 0) book = bookItem[0].long;
+    book = attr.book;
+    if (book) {
+      const bookItem = allBookData.filter(b => b.code === book);
+      if (bookItem.length > 0) book = bookItem[0].long;
+      book = book + ' ';
+    } else book = '';
   }
 
   const next = NextAction({ ...props, state: attr.state });
@@ -77,11 +80,13 @@ export function TaskItem(props: IProps) {
   return (
     <List className={classes.root}>
       <ListItem alignItems="flex-start" onClick={select(props.mediaDesc)}>
-        <ListItemAvatar>
-          {assigned && <UserAvatar {...props} userRec={assigned} />}
-        </ListItemAvatar>
+        {assigned && (
+          <ListItemAvatar>
+            {<UserAvatar {...props} userRec={assigned} />}
+          </ListItemAvatar>
+        )}
         <ListItemText
-          primary={book + ' ' + ref}
+          primary={book + ref}
           secondary={<TaskFlag {...props} state={attr.state} />}
         />
         <ListItemSecondaryAction>

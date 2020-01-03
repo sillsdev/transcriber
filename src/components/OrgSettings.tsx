@@ -211,9 +211,9 @@ export function OrgSettings(props: IProps) {
     }
     const attr = org.attributes;
     setName(attr.name);
-    setDescription(attr.description);
+    setDescription(attr.description || '');
     setOrgAvatar(attr.logoUrl);
-    setWebsite(attr.websiteUrl);
+    setWebsite(attr.websiteUrl || '');
     setOrgAvatar(attr.logoUrl);
     setPublic(attr.publicByDefault);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -236,7 +236,7 @@ export function OrgSettings(props: IProps) {
                   id="name"
                   label={t.name}
                   className={classes.textField}
-                  value={name}
+                  value={name || ''}
                   onChange={handleNameChange}
                   margin="normal"
                   style={{ width: 400 }}
@@ -264,7 +264,7 @@ export function OrgSettings(props: IProps) {
                   id="description"
                   label={t.description}
                   className={classes.textField}
-                  value={description}
+                  value={description || ''}
                   onChange={handleDescriptionChange}
                   margin="normal"
                   style={{ width: 400 }}
@@ -281,7 +281,7 @@ export function OrgSettings(props: IProps) {
                     id="website"
                     label={t.website}
                     className={classes.textField}
-                    value={website}
+                    value={website || ''}
                     onChange={handleWebsiteChange}
                     margin="normal"
                     style={{ width: 400 }}

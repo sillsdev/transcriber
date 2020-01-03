@@ -10,8 +10,10 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   IconButton,
+  Tooltip,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
+import InfoIcon from '@material-ui/icons/Info';
 import UserAvatar from '../UserAvatar';
 import useStyles from './GroupSettingsStyles';
 import Involvement from './Involvement';
@@ -27,14 +29,25 @@ interface IProps extends IRecordProps {
   rev: boolean;
   del: (id: string, name: string) => void;
   allUsers?: boolean;
+  noDeleteInfo?: string;
+  noDeleteAllUsersInfo?: string;
 }
 
 function PersonItems(props: IProps) {
-  const { detail, users, ids, rev, del, allUsers } = props;
+  const {
+    detail,
+    users,
+    ids,
+    rev,
+    del,
+    allUsers,
+    noDeleteInfo,
+    noDeleteAllUsersInfo,
+  } = props;
   const classes = useStyles();
   const [orgRole] = useGlobal('orgRole');
 
-  const handeleDel = (id: string, name: string) => () => del(id, name);
+  const handleDel = (id: string, name: string) => () => del(id, name);
 
   return (
     <>
@@ -58,16 +71,35 @@ function PersonItems(props: IProps) {
             />
             {!detail &&
               orgRole === 'admin' &&
-              ids.filter(id => id.user === u.id)[0].canDelete && (
+              ids.filter(id => id.user === u.id)[0].canDelete &&
+              !allUsers && (
                 <ListItemSecondaryAction>
                   <IconButton
                     edge="end"
                     aria-label="Delete"
                     disabled={allUsers}
-                    onClick={handeleDel(u.id, u.attributes.name)}
+                    onClick={handleDel(u.id, u.attributes.name)}
                   >
                     <DeleteIcon />
                   </IconButton>
+                </ListItemSecondaryAction>
+              )}
+            {!detail &&
+              orgRole === 'admin' &&
+              (!ids.filter(id => id.user === u.id)[0].canDelete ||
+                allUsers) && (
+                <ListItemSecondaryAction>
+                  <Tooltip
+                    title={
+                      !ids.filter(id => id.user === u.id)[0].canDelete
+                        ? noDeleteInfo || ''
+                        : noDeleteAllUsersInfo || ''
+                    }
+                  >
+                    <IconButton edge="end" aria-label="Info">
+                      <InfoIcon />
+                    </IconButton>
+                  </Tooltip>
                 </ListItemSecondaryAction>
               )}
           </ListItem>

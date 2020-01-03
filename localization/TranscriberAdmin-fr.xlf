@@ -1129,6 +1129,24 @@
 				<target>Mon compte</target>
 			</segment>
 		</unit>
+		<unit id="main.orgROle">
+			<segment>
+				<source>Organizational Role:</source>
+				<target>Rôle organisationnel</target>
+			</segment>
+		</unit>
+		<unit id="main.projRole">
+			<segment>
+				<source>Role in Project:</source>
+				<target>Rôle dans le projet</target>
+			</segment>
+		</unit>
+		<unit id="main.owner">
+			<segment>
+				<source>Owner</source>
+				<target>Maître</target>
+			</segment>
+		</unit>
 		<unit id="main.clearCache">
          <segment>
             <source>Clear cache</source>
@@ -1580,6 +1598,18 @@
 				<target>Chargement des données</target>
 			</segment>
 		</unit>
+        <unit id="groupSettings.noDeleteInfo">
+         <segment>
+            <source>This role is included in a higher role and cannot be deleted.</source>
+            <target>Ce rôle est inclus dans le rôle supérieur et ne peut pas être supprimé.</target>
+         </segment>
+      </unit>
+      <unit id="groupSettings.noDeleteAllUsersInfo">
+         <segment>
+            <source>Cannot delete users from the All Users group</source>
+            <target>Impossible de supprimer des utilisateurs du groupe Tous les utilisateurs</target>
+         </segment>
+      </unit>
 		<unit id="shapingTable.NoColumns">
 			<segment>
 				<source>No columns visible</source>
@@ -2207,9 +2237,15 @@
       </unit>
       <unit id="integration.noProject">
          <segment>
-            <source>You are not a member of any Paratext projects.</source>
-    		<target>Vous n'êtes membre d'aucun projet Paratext.</target>
+            <source>You are not a member of a</source>
+    		<target>Vous n'êtes membre d'un</target>
 	     </segment>
+      </unit>
+      <unit id="integration.ParatextProject">
+         <segment>
+            <source>Paratext Project</source>
+            <target>projet Paratext</target>
+         </segment>
       </unit>
       <unit id="integration.projectsPending">
          <segment>
@@ -2273,8 +2309,8 @@
       </unit>
    <unit id="integration.questionProject">
          <segment>
-            <source>Are you connected to a Paratext Project?</source>
-    		<target>Êtes-vous connecté à un projet Paratext?</target>
+            <source>Are you connected to a</source>
+    		<target>Êtes-vous connecté à un</target>
 	     </segment>
       </unit>
       <unit id="integration.removeProject">

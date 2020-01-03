@@ -177,7 +177,7 @@ export function ProjectSettings(props: IProps) {
   const setGroup = (value: string) => {
     setProjectGroup(value);
     if (value !== '') {
-      var gms = groupmemberships.filter(
+      let gms = groupmemberships.filter(
         gm => related(gm, 'group') === value && related(gm, 'user') === user
       );
       if (gms.length === 0 || related(gms[0], 'role') !== AdminRoleId) {

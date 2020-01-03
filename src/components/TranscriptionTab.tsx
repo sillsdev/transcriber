@@ -38,7 +38,7 @@ import {
   sectionTranscriberName,
   sectionCompare,
 } from '../utils/section';
-import { passageNumber, passageCompare } from '../utils/passage';
+import { passageCompare, passageDescription } from '../utils/passage';
 import {
   updateXml,
   getMediaRec,
@@ -48,8 +48,8 @@ import {
   related,
 } from '../utils';
 import eaf from './TranscriptionEaf';
-var Encoder = require('node-html-encoder').Encoder;
-var encoder = new Encoder('entity');
+let Encoder = require('node-html-encoder').Encoder;
+let encoder = new Encoder('entity');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -113,17 +113,7 @@ const getSection = (section: Section) => {
 /* build the passage name = sequence + book + reference */
 const getReference = (passage: Passage[]) => {
   if (passage.length === 0) return '';
-  const book =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.book
-      ? passage[0].attributes.book
-      : '');
-  const ref =
-    ' ' +
-    (passage[0].attributes && passage[0].attributes.reference
-      ? passage[0].attributes.reference
-      : '');
-  return passageNumber(passage[0]) + book + ref;
+  return passageDescription(passage[0]);
 };
 
 const getAssignments = (

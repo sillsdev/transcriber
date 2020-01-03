@@ -238,6 +238,9 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "export": string;
     "logout": string;
     "myAccount": string;
+    "orgRole": string;
+    "projRole": string;
+    "owner": string;
     "clearCache": string;
     "helpCenter": string;
     "reportIssue": string;
@@ -333,6 +336,8 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "projectPlans": string;
     "invalidRole": string;
     "loadingTable": string;
+    "noDeleteInfo": string;
+    "noDeleteAllUsersInfo": string;
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
@@ -471,6 +476,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "paratextAssociation": string;
     "selectProject": string;
     "noProject": string;
+    "ParatextProject": string;
     "projectsPending": string;
     "countPending": string;
     "usernamePending": string;

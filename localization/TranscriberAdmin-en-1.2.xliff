@@ -1321,7 +1321,28 @@
                     <context context-type="sourcefile">UserMenu.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.clearCache">
+        	<trans-unit id="main.orgRole">
+        		<source>Organizational Role:</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UserMenu.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.projRole">
+        		<source>Role in Project:</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UserMenu.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.owner">
+        		<source>Owner</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UserMenu.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.clearCache">
                 <source>Clear cache</source>
                 <target/>
                 <context-group>
@@ -1855,6 +1876,20 @@
             </trans-unit>
             <trans-unit id="groupSettings.loadingTable">
                 <source>Loading data</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+                <trans-unit id="groupSettings.noDeleteInfo">
+                <source>This role is included in a higher role and cannot be deleted.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">GroupSettings.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="groupSettings.noDeleteAllUsersInfo">
+                <source>Cannot delete users from the All Users group</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2589,7 +2624,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.noProject">
-                <source>You are not a member of any Paratext projects.</source>
+                <source>You are not a member of a</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="integration.ParatextProject">
+                <source>Paratext Project</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
@@ -2665,7 +2707,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.questionProject">
-                <source>Are you connected to a Paratext Project?</source>
+                <source>Are you connected to a</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>

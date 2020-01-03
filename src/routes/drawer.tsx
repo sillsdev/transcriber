@@ -107,6 +107,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingRight: theme.spacing(1.5),
     },
     appBar: {
+      boxShadow: 'none',
       marginLeft: DrawerWidth,
       [theme.breakpoints.up('sm')]: {
         width: `calc(100% - ${DrawerWidth}px)`,
@@ -790,26 +791,8 @@ export function ResponsiveDrawer(props: IProps) {
               </div>
             )}
           </div>
-          {curProj === null || (
+          {curProj === null || busy || (
             <div>
-              {!API_CONFIG.isApp && (
-                <div className={classes.navButton}>
-                  <a
-                    href={transcribe ? swapTarget : ''}
-                    style={{ textDecoration: 'none' }}
-                    title={t.switchToApp}
-                  >
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      disabled={!transcribe}
-                      style={{ color: 'white' }}
-                    >
-                      {t.transcribe}
-                    </Button>
-                  </a>
-                </div>
-              )}
               <List>
                 {(API_CONFIG.isApp
                   ? [t.tasks]
@@ -840,23 +823,6 @@ export function ResponsiveDrawer(props: IProps) {
                   </ListItem>
                 ))}
               </List>
-              {API_CONFIG.isApp && (
-                <div className={classes.navButton}>
-                  <a
-                    href={swapTarget}
-                    style={{ textDecoration: 'none' }}
-                    title={t.switchToAdmin}
-                  >
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      style={{ color: 'white' }}
-                    >
-                      {t.admin}
-                    </Button>
-                  </a>
-                </div>
-              )}
             </div>
           )}
         </>
@@ -970,7 +936,7 @@ export function ResponsiveDrawer(props: IProps) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} color="inherit">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -986,12 +952,35 @@ export function ResponsiveDrawer(props: IProps) {
             {title}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography>{'Organization: ' + orgRole}</Typography>
-            <Typography>
-              {'Project: ' + (projRole === 'admin' ? 'owner' : projRole)}
-            </Typography>
-          </div>
+          {!API_CONFIG.isApp ? (
+            <div className={classes.navButton}>
+              <a
+                href={transcribe ? swapTarget : ''}
+                style={{ textDecoration: 'none' }}
+                title={t.switchToApp}
+              >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={!transcribe}
+                >
+                  {t.transcribe}
+                </Button>
+              </a>
+            </div>
+          ) : (
+            <div className={classes.navButton}>
+              <a
+                href={swapTarget}
+                style={{ textDecoration: 'none' }}
+                title={t.switchToAdmin}
+              >
+                <Button variant="contained" color="primary">
+                  {t.admin}
+                </Button>
+              </a>
+            </div>
+          )}
           {'\u00A0'}
           <HelpMenu />
           <UserMenu

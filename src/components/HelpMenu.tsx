@@ -20,9 +20,7 @@ const buildDate = require('../buildDate.json').date;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    help: {
-      color: 'white',
-    },
+    help: {},
     version: {
       paddingTop: theme.spacing(2),
       alignSelf: 'center',
@@ -93,7 +91,6 @@ export function HelpMenu(props: IProps) {
       <IconButton
         aria-controls="customized-menu"
         aria-haspopup="true"
-        // variant="contained"
         color="primary"
         onClick={handleClick}
       >

@@ -32,7 +32,7 @@ import {
 // import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import SnackBar from './SnackBar';
 import related from '../utils/related';
-import { passageRefCompare } from '../utils/passage';
+import { passageRefCompare, passageReference } from '../utils/passage';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -228,14 +228,7 @@ function PassageMedia(props: IProps) {
               inputProps={{ 'aria-labelledby': labelId }}
             />
           </ListItemIcon>
-          <ListItemText
-            id={labelId}
-            primary={
-              p.attributes
-                ? p.attributes.book + ' ' + p.attributes.reference
-                : ''
-            }
-          />
+          <ListItemText id={labelId} primary={passageReference(p)} />
         </ListItem>
       );
     });
@@ -278,7 +271,7 @@ function PassageMedia(props: IProps) {
           id={labelId}
           primary={
             <span>
-              {passage.attributes.book + ' ' + passage.attributes.reference}
+              {passageReference(passage as Passage)}
               {/* <ArrowForwardIcon fontSize="small" /> */}
               {'\u00A0\u2192\u00A0' /* Foward arrow */}
               {m.attributes.originalFile}

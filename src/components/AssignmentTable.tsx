@@ -86,7 +86,7 @@ const getAssignments = (
     const pb = passages.filter(p => p.id === related(b, 'passage'));
     return passageCompare(pa[0], pb[0]);
   }
-  var sectionRow: IRow;
+  let sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
     .filter(s => related(s, 'plan') === plan && s.attributes)
@@ -213,8 +213,8 @@ export function AssignmentTable(props: IProps) {
     }
   };
   const getSelectedSections = () => {
-    var selected = Array<Section>();
-    var one: any;
+    let selected = Array<Section>();
+    let one: any;
     check.forEach(c => {
       one = sections.find(function(s) {
         return c <= data.length ? s.id === data[c].id : undefined;

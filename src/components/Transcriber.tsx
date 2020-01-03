@@ -179,7 +179,7 @@ export function Transcriber(props: IProps) {
   };
   const handleSubmit = async () => {
     if (transcriptionRef.current) {
-      var transcription = transcriptionRef.current.firstChild.value;
+      let transcription = transcriptionRef.current.firstChild.value;
       if (next.hasOwnProperty(state)) {
         await memory.update((t: TransformBuilder) => [
           t.replaceAttribute(
@@ -204,7 +204,7 @@ export function Transcriber(props: IProps) {
   };
   const handleSave = async () => {
     if (transcriptionRef.current) {
-      var transcription = transcriptionRef.current.firstChild.value;
+      let transcription = transcriptionRef.current.firstChild.value;
       memory.update((t: TransformBuilder) =>
         t.updateRecord({
           type: 'mediafile',
