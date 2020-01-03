@@ -43,23 +43,27 @@ export const getUserName = (auth: Auth, pendingmsg: string) => (
       });
     });
 };
-export const getProjects = (auth: Auth, pendingmsg: string) => (
-  dispatch: any
-) => {
+export const getProjects = (
+  auth: Auth,
+  pendingmsg: string,
+  languageTag?: string
+) => (dispatch: any) => {
   dispatch({
     payload: pendingStatus(pendingmsg),
     type: PROJECTS_PENDING,
   });
-  Axios.get(API_CONFIG.host + '/api/paratext/projects', {
+  let url = API_CONFIG.host + '/api/paratext/projects';
+  if (languageTag) url += '/' + languageTag;
+  Axios.get(url, {
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
     .then(response => {
       console.log(response.data);
-      var pt: ParatextProject[] = [];
-      for (var ix = 0; ix < response.data.length; ix++) {
-        var o: ParatextProject = {
+      let pt: ParatextProject[] = [];
+      for (let ix = 0; ix < response.data.length; ix++) {
+        let o: ParatextProject = {
           Name: response.data[ix].Name,
           ParatextId: response.data[ix].ParatextId,
           LanguageName: response.data[ix].LanguageName,
@@ -86,7 +90,7 @@ export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
     payload: pendingStatus(pendingmsg),
     type: COUNT_PENDING,
   });
-  var path = API_CONFIG.host + '/api/paratext/project/' + projectId + '/count';
+  let path = API_CONFIG.host + '/api/paratext/project/' + projectId + '/count';
   Axios.get(path, {
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,

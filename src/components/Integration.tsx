@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IIntegrationStrings } from '../model';
+import { IState, IIntegrationStrings, Project } from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from 'react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -114,6 +114,7 @@ interface IDispatchProps {
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
   integrations: Array<Integration>;
+  projects: Array<Project>;
 }
 interface IProps
   extends IStateProps,
@@ -136,7 +137,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_syncStatus,
   } = props;
   const { getUserName, getCount, getProjects, syncProject, resetSync } = props;
-  const { projectintegrations, integrations } = props;
+  const { projectintegrations, integrations, projects } = props;
   const classes = useStyles();
 
   const [online] = React.useState(Online());
@@ -156,6 +157,10 @@ export function IntegrationPanel(props: IProps) {
 
   const handleMessageReset = () => () => {
     setMessage(<></>);
+  };
+  const getProject = () => {
+    const projfind: Project[] = projects.filter(p => p.id === project);
+    return projfind.length > 0 ? projfind[0] : undefined;
   };
   const addParatextIntegration = async (): Promise<string> => {
     const int = {
@@ -240,7 +245,7 @@ export function IntegrationPanel(props: IProps) {
       handleRemoveIntegration();
       return;
     }
-    var index: number = paratext_projects.findIndex(
+    let index: number = paratext_projects.findIndex(
       p => p.Name === e.target.value
     );
     if (ptProj >= 0) removeProjectFromParatextList(ptProj);
@@ -254,7 +259,7 @@ export function IntegrationPanel(props: IProps) {
         LanguageTag: paratextProject.LanguageTag,
         LanguageName: paratextProject.LanguageName,
       };
-      var projint = getProjectIntegration(paratextIntegration);
+      let projint = getProjectIntegration(paratextIntegration);
       if (projint === '') {
         addProjectIntegration(paratextIntegration, JSON.stringify(setting));
       } else {
@@ -291,13 +296,13 @@ export function IntegrationPanel(props: IProps) {
         ? !paratext_projectsStatus.errStatus
           ? paratext_projects.length > 0
             ? t.selectProject
-            : t.noProject
+            : formatWithLanguage(t.noProject, t.ParatextProject, '.')
           : translateError(paratext_projectsStatus)
         : t.projectsPending
       : t.offline;
   };
   const findConnectedProject = () => {
-    var index = paratext_projects.findIndex(
+    let index = paratext_projects.findIndex(
       p => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
     );
     setPtProj(index);
@@ -316,6 +321,15 @@ export function IntegrationPanel(props: IProps) {
   const canEditParatextText = (role: string): boolean => {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
+  const formatWithLanguage = (
+    beforeLang: string,
+    afterLang: string,
+    endPunct: string
+  ): string => {
+    let proj = getProject();
+    let language = proj && proj.attributes ? proj.attributes.languageName : '';
+    return beforeLang + ' ' + language + ' ' + afterLang + endPunct;
+  };
   useEffect(() => {
     if (!busy && integrations.length > 0 && !paratextIntegration) {
       resetSync();
@@ -324,8 +338,14 @@ export function IntegrationPanel(props: IProps) {
       if (
         !paratext_projectsStatus.complete ||
         paratext_projectsStatus.errStatus
-      )
-        getProjects(auth, t.projectsPending);
+      ) {
+        let proj = getProject();
+        getProjects(
+          auth,
+          t.projectsPending,
+          proj && proj.attributes ? proj.attributes.language : undefined
+        );
+      }
       if (
         !paratext_usernameStatus.complete ||
         paratext_usernameStatus.errStatus
@@ -439,7 +459,11 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={t.questionProject}
+                primary={formatWithLanguage(
+                  t.questionProject,
+                  t.ParatextProject,
+                  '?'
+                )}
                 secondary={
                   <TextField
                     ref={pRef}
@@ -638,6 +662,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 const mapRecordsToProps = {
   projectintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
   integrations: (q: QueryBuilder) => q.findRecords('integration'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
 export default withData(mapRecordsToProps)(

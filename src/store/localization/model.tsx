@@ -473,6 +473,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "paratextAssociation": string;
     "selectProject": string;
     "noProject": string;
+    "ParatextProject": string;
     "projectsPending": string;
     "countPending": string;
     "usernamePending": string;
