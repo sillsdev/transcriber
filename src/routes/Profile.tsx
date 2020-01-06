@@ -69,6 +69,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBar: {
       width: '100%',
+      boxShadow: 'none',
     },
     container: {
       display: 'flex',
@@ -438,7 +439,7 @@ export function Profile(props: IProps) {
 
   return (
     <div id="Profile" className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} color="inherit">
         <Toolbar>
           <Typography variant="h6" noWrap>
             {(API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin) +

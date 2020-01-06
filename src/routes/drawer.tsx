@@ -74,13 +74,13 @@ import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import IntegrationPanel from '../components/Integration';
 import PlanTable from '../components/PlanTable';
+import Busy from '../components/Busy';
 import { setDefaultProj, deepLink } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
-import busyImage from './busy.gif';
 
 export const DrawerWidth = 240;
 
@@ -891,11 +891,7 @@ export function ResponsiveDrawer(props: IProps) {
   components['group'] = <GroupSettings {...props} />;
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
-  components['none'] = (
-    <div className={classes.busy}>
-      <img src={busyImage} alt="busy" />
-    </div>
-  );
+  components['none'] = <Busy />;
   components[slug(t.tasks)] = (
     <TaskTable
       {...props}
