@@ -918,13 +918,15 @@ export function ResponsiveDrawer(props: IProps) {
             }}
           />
         </div>
-        <div className={classes.topTranscriber}>
-          <Transcriber
-            {...mediaDesc}
-            auth={auth}
-            done={() => handleChoice(slug(exitChoice))}
-          />
-        </div>
+        {!topFilter && (
+          <div className={classes.topTranscriber}>
+            <Transcriber
+              {...mediaDesc}
+              auth={auth}
+              done={() => handleChoice(slug(exitChoice))}
+            />
+          </div>
+        )}
       </div>
     );
   }
