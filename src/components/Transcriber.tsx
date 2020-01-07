@@ -140,6 +140,8 @@ export function Transcriber(props: IProps) {
     if (!seeking) {
       if (!totalSeconds || totalSeconds < ctrl.loadedSeconds) {
         setTotalSeconds(ctrl.loadedSeconds);
+      } else {
+        setTotalSeconds(duration);
       }
       setPlayedSeconds(ctrl.playedSeconds);
     }
@@ -246,7 +248,7 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
-      setDefaultValue(attr.transcription);
+      setDefaultValue(attr.transcription ? attr.transcription : '');
       setDefaultPosition(attr.position);
       setPlaying(false);
       //focus on player

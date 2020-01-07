@@ -4,14 +4,14 @@ export interface MediaFile extends Record {
   attributes: {
     planId: number; //allow this because we use axios to create a mediafile
     versionNumber: number;
-    artifactType: string;
-    eafUrl: string;
+    artifactType: string | null;
+    eafUrl: string | null;
     audioUrl: string;
     duration: number;
     contentType: string;
-    audioQuality: string;
-    textQuality: string;
-    transcription: string;
+    audioQuality: string | null;
+    textQuality: string | null;
+    transcription: string | null;
     originalFile: string;
     filesize: number;
     position: number;
