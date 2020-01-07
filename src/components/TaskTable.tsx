@@ -544,11 +544,27 @@ export function TaskTable(props: IProps) {
   const Cell = (props: ICell) => {
     const { row, column, value } = props;
     if (!filter) {
-      return column.name === 'composite' ? (
-        <div style={{ width: TaskItemWidth }}>{value}</div>
-      ) : (
-        <>{'\u00a0'}</>
-      );
+      const curId =
+        value &&
+        value.props &&
+        value.props.mediaDesc &&
+        value.props.mediaDesc.passage &&
+        value.props.mediaDesc.passage.id
+          ? value.props.mediaDesc.passage.id
+          : '';
+      if (column.name === 'composite') {
+        return (
+          <div
+            style={{
+              width: TaskItemWidth,
+              backgroundColor: curId === selected ? 'lightgray' : 'transparent',
+            }}
+          >
+            {value}
+          </div>
+        );
+      }
+      return <>{'\u00a0'}</>;
     } else {
       if (column.name === 'composite') {
         return <>{'\u00a0'}</>;
