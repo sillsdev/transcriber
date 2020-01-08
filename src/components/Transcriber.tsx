@@ -26,7 +26,7 @@ import {
   TextareaAutosize,
   Tooltip,
 } from '@material-ui/core';
-import GearIcon from '@material-ui/icons/SettingsApplications';
+// import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       margin: 'auto',
-      maxWidth: '100vh',
     },
     progress: {
       flexGrow: 1,
@@ -58,6 +57,9 @@ const useStyles = makeStyles((theme: Theme) =>
     row: {
       alignItems: 'center',
       whiteSpace: 'nowrap',
+    },
+    padRow: {
+      paddingTop: '16px',
     },
     button: {
       marginLeft: theme.spacing(1),
@@ -232,10 +234,15 @@ export function Transcriber(props: IProps) {
   };
   const handleMessageReset = () => setMessage(<></>);
 
+  const setDimensions = () => {
+    setHeight(window.innerHeight);
+    setWidth(window.innerWidth - DrawerWidth - TaskItemWidth);
+  };
+
   React.useEffect(() => {
+    setDimensions();
     const handleResize = debounce(() => {
-      setHeight(window.innerHeight);
-      setWidth(window.innerWidth - DrawerWidth - TaskItemWidth);
+      setDimensions();
     }, 100);
 
     window.addEventListener('resize', handleResize);
@@ -286,7 +293,7 @@ export function Transcriber(props: IProps) {
       <Paper
         className={classes.paper}
         onKeyUp={handleKey}
-        style={{ width: width }}
+        style={{ width: width - 24 }}
       >
         <Grid container direction="column">
           <Grid container xs={12} direction="row" className={classes.row}>
@@ -318,41 +325,7 @@ export function Transcriber(props: IProps) {
               </Typography>
             </Grid>
           </Grid>
-          <Grid item xs={12} sm container>
-            <Grid ref={transcriptionRef} item xs container direction="column">
-              <WebFontLoader config={fontConfig}>
-                <TextareaAutosize
-                  defaultValue={defaultValue}
-                  readOnly={role !== 'transcriber'}
-                  style={{
-                    overflow: 'auto',
-                    backgroundColor: '#cfe8fc',
-                    height: height - 240,
-                    width: '98hu',
-                    fontFamily: fontFamily,
-                    fontSize:
-                      projRec &&
-                      projRec.attributes &&
-                      projRec.attributes.defaultFontSize
-                        ? projRec.attributes.defaultFontSize
-                        : 'large',
-                    direction:
-                      projRec && projRec.attributes && projRec.attributes.rtl
-                        ? 'rtl'
-                        : 'ltr',
-                  }}
-                />
-              </WebFontLoader>
-            </Grid>
-          </Grid>
           <Grid container xs={12} direction="row" className={classes.row}>
-            <Grid item>
-              <Tooltip title={t.settingsTip}>
-                <IconButton>
-                  <GearIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
             <Grid container xs justify="center">
               <Tooltip title={t.backTip}>
                 <IconButton onClick={handleJump(-1 * jump)}>
@@ -370,7 +343,36 @@ export function Transcriber(props: IProps) {
                 </IconButton>
               </Tooltip>
             </Grid>
-            <Grid item>
+          </Grid>
+          <Grid item xs={12} sm container>
+            <Grid ref={transcriptionRef} item xs container direction="column">
+              <WebFontLoader config={fontConfig}>
+                <TextareaAutosize
+                  defaultValue={defaultValue}
+                  readOnly={role !== 'transcriber'}
+                  style={{
+                    overflow: 'auto',
+                    backgroundColor: '#cfe8fc',
+                    height: height - 304,
+                    width: '98hu',
+                    fontFamily: fontFamily,
+                    fontSize:
+                      projRec &&
+                      projRec.attributes &&
+                      projRec.attributes.defaultFontSize
+                        ? projRec.attributes.defaultFontSize
+                        : 'large',
+                    direction:
+                      projRec && projRec.attributes && projRec.attributes.rtl
+                        ? 'rtl'
+                        : 'ltr',
+                  }}
+                />
+              </WebFontLoader>
+            </Grid>
+          </Grid>
+          <Grid container xs={12} direction="row" className={classes.padRow}>
+            <Grid container xs justify="flex-end">
               {role !== 'view' ? (
                 <>
                   <Tooltip
