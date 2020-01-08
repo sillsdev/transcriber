@@ -43,6 +43,7 @@ import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { DrawerWidth } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
+import keycode from 'keycode';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -227,14 +228,25 @@ export function Transcriber(props: IProps) {
     done();
   };
   const handleClose = () => done();
-  const handleKey = (e: any) => {
+  const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
-    const ESC = 27;
-    const F2 = 113;
-    const F4 = 115;
-    if (e.keyCode === ESC) setPlaying(!playing);
-    if (e.keyCode === F2) handleJumpFn(-1 * jump);
-    if (e.keyCode === F4) handleJumpFn(jump);
+    const PlayPauseKey = keycode('ESC');
+    const JumpBackKey = keycode('F2');
+    const JumpAheadKey = keycode('F4');
+    switch (e.keyCode) {
+      case PlayPauseKey:
+        setPlaying(!playing);
+        e.preventDefault();
+        return;
+      case JumpBackKey:
+        handleJumpFn(-1 * jump);
+        e.preventDefault();
+        return;
+      case JumpAheadKey:
+        handleJumpFn(jump);
+        e.preventDefault();
+        return;
+    }
   };
   const handleMessageReset = () => setMessage(<></>);
 
@@ -296,7 +308,7 @@ export function Transcriber(props: IProps) {
     <div className={classes.root}>
       <Paper
         className={classes.paper}
-        onKeyUp={handleKey}
+        onKeyDown={handleKey}
         style={{ width: width - 24 }}
       >
         <Grid container direction="column">
