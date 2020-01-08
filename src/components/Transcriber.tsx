@@ -34,7 +34,11 @@ import SkipAheadIcon from '@material-ui/icons/FastForward';
 import ReactPlayer from 'react-player';
 import Duration from './Duration';
 import SnackBar from './SnackBar';
-import { sectionDescription, passageDescription } from '../utils';
+import {
+  sectionDescription,
+  passageDescription,
+  relMouseCoords,
+} from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { DrawerWidth } from '../routes/drawer';
@@ -153,8 +157,8 @@ export function Transcriber(props: IProps) {
     setSeeking(false);
     if (progressRef.current && playerRef.current) {
       const clientWidth = progressRef.current.clientWidth;
-      const offsetLeft = progressRef.current.offsetLeft;
-      playerRef.current.seekTo((e.clientX - offsetLeft) / clientWidth);
+      const { x } = relMouseCoords(e, progressRef.current);
+      playerRef.current.seekTo(x / clientWidth);
     }
   };
   const handleJumpFn = (amount: number) => {
