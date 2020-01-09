@@ -514,7 +514,8 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "aheadTip": string;
     "playTip": string;
     "pauseTip": string;
-    "speedTip": string;
+    "slowerTip": string;
+    "fasterTip": string;
     "rejectTranscriptionTip": string;
     "rejectReviewTip": string;
     "submitTranscriptionTip": string;

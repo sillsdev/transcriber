@@ -2451,10 +2451,16 @@
          	<target>Ecouter ({0})</target>
          </segment>
       </unit>
-		<unit id="transcriber.speedTip">
+		<unit id="transcriber.slowerTip">
 			<segment>
-				<source>Speed (slower {0} / faster {1})</source>
-				<target>Vitesse (plus lente {0} / plus rapide {1})</target>
+				<source>Slower ({0})</source>
+				<target>Plus lente ({0})</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.fasterTip">
+			<segment>
+				<source>Faster ({0})</source>
+				<target>Plus rapide ({1})</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.rejectTranscriptionTip">

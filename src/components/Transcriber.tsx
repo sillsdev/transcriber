@@ -25,13 +25,13 @@ import {
   LinearProgress,
   TextareaAutosize,
   Tooltip,
-  Slider,
 } from '@material-ui/core';
 // import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import SkipAheadIcon from '@material-ui/icons/FastForward';
+import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
 import Duration from './Duration';
 import SnackBar from './SnackBar';
@@ -181,12 +181,15 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleJump = (amount: number) => () => handleJumpFn(amount);
-  const handleSpeedChange = (
-    e: React.ChangeEvent<{}>,
-    val: number | number[]
-  ) => {
-    if (!Array.isArray(val)) setPlaySpeed(val);
+  const rnd1 = (val: number) => Math.round(val * 10) / 10;
+  const handleSlowerFn = () => {
+    if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
   };
+  const handleSlowerEv = () => () => handleSlowerFn();
+  const handleFasterFn = () => {
+    if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
+  };
+  const handleFasterEv = () => () => handleFasterFn();
   const handleReject = async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
@@ -244,7 +247,6 @@ export function Transcriber(props: IProps) {
     done();
   };
   const handleClose = () => done();
-  const rnd1 = (val: number) => Math.round(val * 10) / 10;
   const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
@@ -266,11 +268,11 @@ export function Transcriber(props: IProps) {
         e.preventDefault();
         return;
       case SlowerKey:
-        if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
+        handleSlowerFn();
         e.preventDefault();
         return;
       case FasterKey:
-        if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
+        handleFasterFn();
         e.preventDefault();
         return;
     }
@@ -350,6 +352,12 @@ export function Transcriber(props: IProps) {
             <Grid item>{passageDescription(passage)}</Grid>
           </Grid>
           <Grid container xs={12} direction="row" className={classes.row}>
+            <Grid item>
+              <Typography>
+                <Duration seconds={playedSeconds} /> {' / '}
+                <Duration seconds={totalSeconds} />
+              </Typography>
+            </Grid>
             <Grid item xs>
               <div className={classes.progress}>
                 <LinearProgress
@@ -361,18 +369,14 @@ export function Transcriber(props: IProps) {
                 />
               </div>
             </Grid>
-            <Grid item>
-              <Typography>
-                <Duration seconds={playedSeconds} /> {' / '}
-                <Duration seconds={totalSeconds} />
-              </Typography>
-            </Grid>
           </Grid>
           <Grid container xs={12} direction="row" className={classes.row}>
             <Grid container xs justify="center">
               <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
                 <IconButton onClick={handleJump(-1 * jump)}>
-                  <SkipBackIcon />
+                  <>
+                    <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
+                  </>
                 </IconButton>
               </Tooltip>
               <Tooltip
@@ -382,30 +386,32 @@ export function Transcriber(props: IProps) {
                 )}
               >
                 <IconButton onClick={handlePlayStatus(!playing)}>
-                  {playing ? <PauseIcon /> : <PlayIcon />}
+                  <>
+                    {playing ? <PauseIcon /> : <PlayIcon />}{' '}
+                    <Typography>{PLAY_PAUSE_KEY}</Typography>
+                  </>
                 </IconButton>
               </Tooltip>
               <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
                 <IconButton onClick={handleJump(jump)}>
-                  <SkipAheadIcon />
+                  <>
+                    <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
+                  </>
                 </IconButton>
               </Tooltip>
-            </Grid>
-            <Grid item xs>
-              <Tooltip
-                title={t.speedTip
-                  .replace('{0}', SLOWER_KEY)
-                  .replace('{1}', FASTER_KEY)}
-              >
-                <Slider
-                  value={playSpeed}
-                  step={SPEED_STEP}
-                  marks
-                  min={MIN_SPEED}
-                  max={MAX_SPEED}
-                  valueLabelDisplay="auto"
-                  onChange={handleSpeedChange}
-                />
+              <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
+                <IconButton onClick={handleSlowerEv}>
+                  <>
+                    <FaAngleDoubleDown /> <Typography>{SLOWER_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
+                <IconButton onClick={handleFasterEv}>
+                  <>
+                    <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
+                  </>
+                </IconButton>
               </Tooltip>
             </Grid>
           </Grid>

@@ -2873,8 +2873,15 @@
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="transcriber.speedTip">
-        		<source>Speed (slower {0} / faster {1})</source>
+        	<trans-unit id="transcriber.slowerTip">
+        		<source>Slower ({0})</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.fasterTip">
+        		<source>Faster ({0})</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>

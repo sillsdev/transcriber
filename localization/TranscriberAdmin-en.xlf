@@ -2464,9 +2464,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.speedTip">
+      <unit id="transcriber.slowerTip">
          <segment>
-            <source>Speed (slower {0} / faster {1})</source>
+            <source>Slower ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.fasterTip">
+         <segment>
+            <source>Faster ({0})</source>
             <target/>
          </segment>
       </unit>
