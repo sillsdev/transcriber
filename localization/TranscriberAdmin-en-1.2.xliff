@@ -2846,34 +2846,41 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.backTip">
-                <source>Skip back (F2)</source>
+                <source>Skip back ({0})</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.aheadTip">
-                <source>Skip ahead (F4)</source>
+                <source>Skip ahead ({0})</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.playTip">
-                <source>Pause (ESC)</source>
+                <source>Pause ({0})</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.pauseTip">
-                <source>Play (ESC)</source>
+                <source>Play ({0})</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriber.rejectTranscriptionTip">
+        	<trans-unit id="transcriber.speedTip">
+        		<source>Speed (slower {0} / faster {1})</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.rejectTranscriptionTip">
                 <source>Audio recording is unusable</source>
                 <target/>
                 <context-group>

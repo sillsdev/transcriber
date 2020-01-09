@@ -2442,25 +2442,31 @@
       </unit>
       <unit id="transcriber.backTip">
          <segment>
-            <source>Skip back (F2)</source>
+            <source>Skip back ({0})</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.aheadTip">
          <segment>
-            <source>Skip ahead (F4)</source>
+            <source>Skip ahead ({0})</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.playTip">
          <segment>
-            <source>Pause (ESC)</source>
+            <source>Pause ({0})</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.pauseTip">
          <segment>
-            <source>Play (ESC)</source>
+            <source>Play ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.speedTip">
+         <segment>
+            <source>Speed (slower {0} / faster {1})</source>
             <target/>
          </segment>
       </unit>

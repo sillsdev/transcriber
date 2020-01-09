@@ -2429,29 +2429,35 @@
       </unit>
       <unit id="transcriber.backTip">
          <segment>
-            <source>Skip back (F2)</source>
-         	<target>Saut en arrière (F2)</target>
+            <source>Skip back ({0})</source>
+         	<target>Saut en arrière ({0})</target>
          </segment>
       </unit>
       <unit id="transcriber.aheadTip">
          <segment>
-            <source>Skip ahead (F4)</source>
-         	<target>Sauter en avant (F4)</target>
+            <source>Skip ahead ({0})</source>
+         	<target>Sauter en avant ({0})</target>
          </segment>
       </unit>
       <unit id="transcriber.playTip">
          <segment>
-            <source>Pause (ESC)</source>
-         	<target>Pause (ESC)</target>
+            <source>Pause ({0})</source>
+         	<target>Pause ({0})</target>
          </segment>
       </unit>
       <unit id="transcriber.pauseTip">
          <segment>
-            <source>Play (ESC)</source>
-         	<target>Ecouter (ESC)</target>
+            <source>Play ({0})</source>
+         	<target>Ecouter ({0})</target>
          </segment>
       </unit>
-      <unit id="transcriber.rejectTranscriptionTip">
+		<unit id="transcriber.speedTip">
+			<segment>
+				<source>Speed (slower {0} / faster {1})</source>
+				<target>Vitesse (plus lente {0} / plus rapide {1})</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.rejectTranscriptionTip">
          <segment>
             <source>Audio recording is unusable</source>
          	<target>L'enregistrement audio est inutilisable</target>

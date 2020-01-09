@@ -48,6 +48,11 @@ import keycode from 'keycode';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
+const PLAY_PAUSE_KEY = 'ESC';
+const BACK_KEY = 'F2';
+const AHEAD_KEY = 'F3';
+const SLOWER_KEY = 'F4';
+const FASTER_KEY = 'F5';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -240,11 +245,11 @@ export function Transcriber(props: IProps) {
   const handleClose = () => done();
   const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
-    const PlayPauseKey = keycode('ESC');
-    const JumpBackKey = keycode('F2');
-    const JumpAheadKey = keycode('F3');
-    const SlowerKey = keycode('F4');
-    const FasterKey = keycode('F5');
+    const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
+    const JumpBackKey = keycode(BACK_KEY);
+    const JumpAheadKey = keycode(AHEAD_KEY);
+    const SlowerKey = keycode(SLOWER_KEY);
+    const FasterKey = keycode(FASTER_KEY);
     switch (e.keyCode) {
       case PlayPauseKey:
         setPlaying(!playing);
@@ -365,24 +370,33 @@ export function Transcriber(props: IProps) {
           </Grid>
           <Grid container xs={12} direction="row" className={classes.row}>
             <Grid container xs justify="center">
-              <Tooltip title={t.backTip}>
+              <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
                 <IconButton onClick={handleJump(-1 * jump)}>
                   <SkipBackIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={playing ? t.playTip : t.pauseTip}>
+              <Tooltip
+                title={(playing ? t.playTip : t.pauseTip).replace(
+                  '{0}',
+                  PLAY_PAUSE_KEY
+                )}
+              >
                 <IconButton onClick={handlePlayStatus(!playing)}>
                   {playing ? <PauseIcon /> : <PlayIcon />}
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t.aheadTip}>
+              <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
                 <IconButton onClick={handleJump(jump)}>
                   <SkipAheadIcon />
                 </IconButton>
               </Tooltip>
             </Grid>
             <Grid item xs>
-              <Tooltip title="spped">
+              <Tooltip
+                title={t.speedTip
+                  .replace('{0}', SLOWER_KEY)
+                  .replace('{1}', FASTER_KEY)}
+              >
                 <Slider
                   value={playSpeed}
                   step={0.1}
