@@ -11,6 +11,7 @@ import {
   ITranscriberStrings,
   IState,
   ActivityStates,
+  Passage,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -25,6 +26,9 @@ import {
   LinearProgress,
   TextareaAutosize,
   Tooltip,
+  Checkbox,
+  FormControlLabel,
+  TextField,
 } from '@material-ui/core';
 // import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
@@ -54,6 +58,7 @@ const BACK_KEY = 'F2';
 const AHEAD_KEY = 'F3';
 const SLOWER_KEY = 'F4';
 const FASTER_KEY = 'F5';
+const NON_BOX_HEIGHT = 304;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,6 +80,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     padRow: {
       paddingTop: '16px',
+    },
+    comment: {
+      paddingTop: '16px',
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
     },
     button: {
       marginLeft: theme.spacing(1),
@@ -127,6 +138,7 @@ export function Transcriber(props: IProps) {
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [projRec, setProjRec] = React.useState<Project>();
+  const [passRec, setPassRec] = React.useState<Passage>(passage);
   const [playing, setPlaying] = React.useState(false);
   const [playSpeed, setPlaySpeed] = React.useState(1);
   const [playedSeconds, setPlayedSeconds] = React.useState(0);
@@ -139,12 +151,16 @@ export function Transcriber(props: IProps) {
   );
   const [height, setHeight] = React.useState(window.innerHeight);
   const [width, setWidth] = React.useState(window.innerWidth);
+  const [boxHeight, setBoxHeight] = React.useState(height - NON_BOX_HEIGHT);
   const [defaultValue, setDefaultValue] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
   const [message, setMessage] = React.useState(<></>);
+  const [makeComment, setMakeComment] = React.useState(false);
+  const [comment, setComment] = React.useState('');
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
+  const commentRef = React.useRef<any>();
 
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const handleReady = () => {
@@ -185,18 +201,23 @@ export function Transcriber(props: IProps) {
   const handleSlowerFn = () => {
     if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
   };
-  const handleSlowerEv = () => () => handleSlowerFn();
+  const handleSlowerEv = () => handleSlowerFn();
   const handleFasterFn = () => {
     if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
   };
-  const handleFasterEv = () => () => handleFasterFn();
+  const handleFasterEv = () => handleFasterFn();
+  const handleMakeComment = () => setMakeComment(!makeComment);
+  const handleCommentChange = (e: any) => {
+    setComment(e.target.value);
+  };
   const handleReject = async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
       : ActivityStates.NeedsNewTranscription;
-    await memory.update((t: TransformBuilder) =>
-      t.replaceAttribute({ type: 'passage', id: passage.id }, 'state', newState)
-    );
+    await memory.update((t: TransformBuilder) => [
+      t.replaceAttribute(passRec, 'lastComment', comment),
+      t.replaceAttribute(passRec, 'state', newState),
+    ]);
     done();
   };
   const next: { [key: string]: string } = {
@@ -210,11 +231,8 @@ export function Transcriber(props: IProps) {
       let transcription = transcriptionRef.current.firstChild.value;
       if (next.hasOwnProperty(state)) {
         await memory.update((t: TransformBuilder) => [
-          t.replaceAttribute(
-            { type: 'passage', id: passage.id },
-            'state',
-            next[state]
-          ),
+          t.replaceAttribute(passRec, 'lastComment', comment),
+          t.replaceAttribute(passRec, 'state', next[state]),
           t.updateRecord({
             type: 'mediafile',
             id: mediaId,
@@ -233,7 +251,8 @@ export function Transcriber(props: IProps) {
   const handleSave = async () => {
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
-      memory.update((t: TransformBuilder) =>
+      memory.update((t: TransformBuilder) => [
+        t.replaceAttribute(passRec, 'lastComment', comment),
         t.updateRecord({
           type: 'mediafile',
           id: mediaId,
@@ -241,8 +260,8 @@ export function Transcriber(props: IProps) {
             transcription: transcription,
             position: playedSeconds,
           },
-        })
-      );
+        }),
+      ]);
     }
     done();
   };
@@ -297,6 +316,12 @@ export function Transcriber(props: IProps) {
   }, []);
 
   React.useEffect(() => {
+    const commentHeight =
+      commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
+    setBoxHeight(height - NON_BOX_HEIGHT - commentHeight);
+  }, [height, makeComment, comment]);
+
+  React.useEffect(() => {
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
@@ -307,6 +332,19 @@ export function Transcriber(props: IProps) {
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
   }, [mediaId, mediafiles]);
+
+  React.useEffect(() => {
+    setPassRec(
+      memory.cache.query((q: QueryBuilder) => q.findRecord(passage)) as Passage
+    );
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [passage]);
+
+  React.useEffect(() => {
+    if (passRec && passRec.attributes && passRec.attributes.lastComment) {
+      setComment(passRec.attributes.lastComment);
+    } else setComment('');
+  }, [passRec]);
 
   React.useEffect(() => {
     fetchMediaUrl(mediaRemoteId, auth);
@@ -349,7 +387,7 @@ export function Transcriber(props: IProps) {
             >
               {sectionDescription(section)}
             </Grid>
-            <Grid item>{passageDescription(passage)}</Grid>
+            <Grid item>{passageDescription(passRec)}</Grid>
           </Grid>
           <Grid container xs={12} direction="row" className={classes.row}>
             <Grid item>
@@ -424,7 +462,7 @@ export function Transcriber(props: IProps) {
                   style={{
                     overflow: 'auto',
                     backgroundColor: '#cfe8fc',
-                    height: height - 304,
+                    height: boxHeight,
                     width: '98hu',
                     fontFamily: fontFamily,
                     fontSize:
@@ -442,7 +480,34 @@ export function Transcriber(props: IProps) {
               </WebFontLoader>
             </Grid>
           </Grid>
+          <Grid container xs={12} direction="row">
+            {makeComment && (
+              <TextField
+                ref={commentRef}
+                label="Comment"
+                variant="filled"
+                multiline
+                rowsMax={5}
+                className={classes.comment}
+                value={comment}
+                onChange={handleCommentChange}
+                style={{ overflow: 'auto' }}
+              />
+            )}
+          </Grid>
           <Grid container xs={12} direction="row" className={classes.padRow}>
+            <Grid item>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    value={makeComment}
+                    onChange={handleMakeComment}
+                    color="primary"
+                  />
+                }
+                label="MakeComment"
+              />
+            </Grid>
             <Grid container xs justify="flex-end">
               {role !== 'view' ? (
                 <>
