@@ -25,6 +25,7 @@ import {
   LinearProgress,
   TextareaAutosize,
   Tooltip,
+  Slider,
 } from '@material-ui/core';
 // import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
@@ -44,6 +45,9 @@ import { debounce } from 'lodash';
 import { DrawerWidth } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
+
+const MIN_SPEED = 0.5;
+const MAX_SPEED = 2.0;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -118,7 +122,7 @@ export function Transcriber(props: IProps) {
   const [project] = useGlobal('project');
   const [projRec, setProjRec] = React.useState<Project>();
   const [playing, setPlaying] = React.useState(false);
-  const [playSpeed] = React.useState(1);
+  const [playSpeed, setPlaySpeed] = React.useState(1);
   const [playedSeconds, setPlayedSeconds] = React.useState(0);
   const [totalSeconds, setTotalSeconds] = React.useState(duration);
   const [seeking, setSeeking] = React.useState(false);
@@ -171,6 +175,12 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleJump = (amount: number) => () => handleJumpFn(amount);
+  const handleSpeedChange = (
+    e: React.ChangeEvent<{}>,
+    val: number | number[]
+  ) => {
+    if (!Array.isArray(val)) setPlaySpeed(val);
+  };
   const handleReject = async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
@@ -232,7 +242,9 @@ export function Transcriber(props: IProps) {
     // setMessage(<span>{e.keyCode} pressed</span>);
     const PlayPauseKey = keycode('ESC');
     const JumpBackKey = keycode('F2');
-    const JumpAheadKey = keycode('F4');
+    const JumpAheadKey = keycode('F3');
+    const SlowerKey = keycode('F4');
+    const FasterKey = keycode('F5');
     switch (e.keyCode) {
       case PlayPauseKey:
         setPlaying(!playing);
@@ -244,6 +256,16 @@ export function Transcriber(props: IProps) {
         return;
       case JumpAheadKey:
         handleJumpFn(jump);
+        e.preventDefault();
+        return;
+      case SlowerKey:
+        if (playSpeed > MIN_SPEED)
+          setPlaySpeed(Math.round(playSpeed * 10 - 1) / 10);
+        e.preventDefault();
+        return;
+      case FasterKey:
+        if (playSpeed < MAX_SPEED)
+          setPlaySpeed(Math.round(playSpeed * 10 + 1) / 10);
         e.preventDefault();
         return;
     }
@@ -357,6 +379,19 @@ export function Transcriber(props: IProps) {
                 <IconButton onClick={handleJump(jump)}>
                   <SkipAheadIcon />
                 </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item xs>
+              <Tooltip title="spped">
+                <Slider
+                  value={playSpeed}
+                  step={0.1}
+                  marks
+                  min={MIN_SPEED}
+                  max={MAX_SPEED}
+                  valueLabelDisplay="auto"
+                  onChange={handleSpeedChange}
+                />
               </Tooltip>
             </Grid>
           </Grid>
