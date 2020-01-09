@@ -48,6 +48,7 @@ import keycode from 'keycode';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
+const SPEED_STEP = 0.1;
 const PLAY_PAUSE_KEY = 'ESC';
 const BACK_KEY = 'F2';
 const AHEAD_KEY = 'F3';
@@ -243,6 +244,7 @@ export function Transcriber(props: IProps) {
     done();
   };
   const handleClose = () => done();
+  const rnd1 = (val: number) => Math.round(val * 10) / 10;
   const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
@@ -264,13 +266,11 @@ export function Transcriber(props: IProps) {
         e.preventDefault();
         return;
       case SlowerKey:
-        if (playSpeed > MIN_SPEED)
-          setPlaySpeed(Math.round(playSpeed * 10 - 1) / 10);
+        if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
         e.preventDefault();
         return;
       case FasterKey:
-        if (playSpeed < MAX_SPEED)
-          setPlaySpeed(Math.round(playSpeed * 10 + 1) / 10);
+        if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
         e.preventDefault();
         return;
     }
@@ -399,7 +399,7 @@ export function Transcriber(props: IProps) {
               >
                 <Slider
                   value={playSpeed}
-                  step={0.1}
+                  step={SPEED_STEP}
                   marks
                   min={MIN_SPEED}
                   max={MAX_SPEED}
