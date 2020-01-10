@@ -516,6 +516,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "pauseTip": string;
     "slowerTip": string;
     "fasterTip": string;
+    "historyTip": string;
     "comment": string;
     "makeComment": string;
     "rejectTranscriptionTip": string;

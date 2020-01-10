@@ -2463,6 +2463,12 @@
 				<target>Plus rapide ({1})</target>
 			</segment>
 		</unit>
+		<unit id="transcriber.historyTip">
+			<segment>
+				<source>History ({0})</source>
+				<target>Histoire ({1})</target>
+			</segment>
+		</unit>
 		<unit id="transcriber.comment">
 			<segment>
 				<source>Comment</source>

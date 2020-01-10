@@ -12,6 +12,7 @@ import {
   IState,
   ActivityStates,
   Passage,
+  PassageStateChange,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -34,12 +35,16 @@ import {
   Checkbox,
   FormControlLabel,
   TextField,
+  List,
+  ListItem,
+  ListItemText,
 } from '@material-ui/core';
 // import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import SkipAheadIcon from '@material-ui/icons/FastForward';
+import HistoryIcon from '@material-ui/icons/History';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
 import Duration from './Duration';
@@ -48,6 +53,7 @@ import {
   sectionDescription,
   passageDescription,
   relMouseCoords,
+  related,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -63,6 +69,7 @@ const BACK_KEY = 'F2';
 const AHEAD_KEY = 'F3';
 const SLOWER_KEY = 'F4';
 const FASTER_KEY = 'F5';
+const HISTORY_KEY = 'F6';
 const NON_BOX_HEIGHT = 304;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -114,6 +121,7 @@ interface IDispatchProps {
 
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
+  passageStateChanges: Array<PassageStateChange>;
 }
 
 interface IProps
@@ -137,6 +145,7 @@ export function Transcriber(props: IProps) {
     state,
     role,
     mediafiles,
+    passageStateChanges,
   } = props;
   const { mediaUrl, fetchMediaUrl, done } = props;
   const classes = useStyles();
@@ -163,6 +172,7 @@ export function Transcriber(props: IProps) {
   const [message, setMessage] = React.useState(<></>);
   const [makeComment, setMakeComment] = React.useState(false);
   const [comment, setComment] = React.useState('');
+  const [showHistory, setShowHistory] = React.useState(false);
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
@@ -216,6 +226,7 @@ export function Transcriber(props: IProps) {
   const handleCommentChange = (e: any) => {
     setComment(e.target.value);
   };
+  const handleShowHistory = () => setShowHistory(!showHistory);
   const handleReject = async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
@@ -303,6 +314,11 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleMessageReset = () => setMessage(<></>);
+  const curStateChanges = () => {
+    return passageStateChanges.filter(
+      psc => psc.attributes && related(psc, 'passage') === passRec.id
+    );
+  };
 
   const setDimensions = () => {
     setHeight(window.innerHeight);
@@ -388,7 +404,7 @@ export function Transcriber(props: IProps) {
         style={{ width: width - 24 }}
       >
         <Grid container direction="column">
-          <Grid container xs={12} direction="row" className={classes.row}>
+          <Grid container direction="row" className={classes.row}>
             <Grid
               item
               xs={9}
@@ -398,7 +414,7 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item>{passageDescription(passRec)}</Grid>
           </Grid>
-          <Grid container xs={12} direction="row" className={classes.row}>
+          <Grid container direction="row" className={classes.row}>
             <Grid item>
               <Typography>
                 <Duration seconds={playedSeconds} /> {' / '}
@@ -417,7 +433,7 @@ export function Transcriber(props: IProps) {
               </div>
             </Grid>
           </Grid>
-          <Grid container xs={12} direction="row" className={classes.row}>
+          <Grid container direction="row" className={classes.row}>
             <Grid container xs justify="center">
               <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
                 <IconButton onClick={handleJump(-1 * jump)}>
@@ -461,9 +477,27 @@ export function Transcriber(props: IProps) {
                 </IconButton>
               </Tooltip>
             </Grid>
+            <Grid item>
+              <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
+                <IconButton
+                  onClick={handleShowHistory}
+                  disabled={curStateChanges().length === 0}
+                >
+                  <>
+                    <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+            </Grid>
           </Grid>
           <Grid item xs={12} sm container>
-            <Grid ref={transcriptionRef} item xs container direction="column">
+            <Grid
+              ref={transcriptionRef}
+              item
+              xs={showHistory ? 6 : 12}
+              container
+              direction="column"
+            >
               <WebFontLoader config={fontConfig}>
                 <TextareaAutosize
                   defaultValue={defaultValue}
@@ -488,8 +522,32 @@ export function Transcriber(props: IProps) {
                 />
               </WebFontLoader>
             </Grid>
+            {showHistory && (
+              <Grid item xs={6} container direction="column">
+                <List>
+                  {curStateChanges()
+                    .sort((i, j) =>
+                      i.attributes.dateCreated < j.attributes.dateCreated
+                        ? -1
+                        : 1
+                    )
+                    .map(psc => (
+                      <ListItem>
+                        <ListItemText
+                          primary={
+                            psc.attributes.dateCreated +
+                            ' ' +
+                            psc.attributes.state
+                          }
+                          secondary={psc.attributes.comments}
+                        />
+                      </ListItem>
+                    ))}
+                </List>
+              </Grid>
+            )}
           </Grid>
-          <Grid container xs={12} direction="row">
+          <Grid container direction="row">
             {makeComment && (
               <TextField
                 ref={commentRef}
@@ -504,7 +562,7 @@ export function Transcriber(props: IProps) {
               />
             )}
           </Grid>
-          <Grid container xs={12} direction="row" className={classes.padRow}>
+          <Grid container direction="row" className={classes.padRow}>
             <Grid item>
               <FormControlLabel
                 control={
@@ -610,6 +668,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  passageStateChanges: (q: QueryBuilder) => q.findRecords('passagestatechange'),
 };
 
 export default withData(mapRecordsToProps)(
