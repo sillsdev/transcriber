@@ -315,7 +315,7 @@ export function ResponsiveDrawer(props: IProps) {
     setChoice(slug(choice));
     setContent(slug(choice));
     setTitle(choice);
-    setMini(slug(choice) === 'transcriber');
+    setMini(['transcriber', 'tasks'].includes(slug(choice)));
     if (choice === t.usersAndGroups) {
       if (tab > 1) {
         setTab(0);
