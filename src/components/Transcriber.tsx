@@ -16,7 +16,12 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  useTheme,
+} from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -46,7 +51,7 @@ import {
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
-import { DrawerWidth } from '../routes/drawer';
+import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
 
@@ -135,6 +140,7 @@ export function Transcriber(props: IProps) {
   } = props;
   const { mediaUrl, fetchMediaUrl, done } = props;
   const classes = useStyles();
+  const theme = useTheme();
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [projRec, setProjRec] = React.useState<Project>();
@@ -300,7 +306,7 @@ export function Transcriber(props: IProps) {
 
   const setDimensions = () => {
     setHeight(window.innerHeight);
-    setWidth(window.innerWidth - DrawerWidth - TaskItemWidth);
+    setWidth(window.innerWidth - theme.spacing(DrawerTask) - TaskItemWidth);
   };
 
   React.useEffect(() => {
@@ -313,6 +319,7 @@ export function Transcriber(props: IProps) {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   React.useEffect(() => {

@@ -38,6 +38,7 @@ import {
   Typography,
   LinearProgress,
   Button,
+  Tooltip,
 } from '@material-ui/core';
 import {
   makeStyles,
@@ -83,6 +84,8 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 
 export const DrawerWidth = 240;
+export const DrawerTask = 9;
+export const DrawerMin = 7;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -101,6 +104,13 @@ const useStyles = makeStyles((theme: Theme) =>
         flexShrink: 0,
       },
     },
+    drawerMini: {
+      overflowX: 'hidden',
+      width: theme.spacing(DrawerMin) + 1,
+      [theme.breakpoints.up('sm')]: {
+        width: theme.spacing(DrawerTask) + 1,
+      },
+    },
     header: {
       display: 'flex',
       flexDirection: 'row',
@@ -113,15 +123,21 @@ const useStyles = makeStyles((theme: Theme) =>
         width: `calc(100% - ${DrawerWidth}px)`,
       },
     },
+    appBarShift: {
+      boxShadow: 'none',
+      marginLeft: 0,
+      left: theme.spacing(DrawerMin) + 1,
+      width: `calc(100% - ${theme.spacing(DrawerMin)}px)`,
+      [theme.breakpoints.up('sm')]: {
+        left: theme.spacing(DrawerTask) + 1,
+        width: `calc(100% - ${theme.spacing(DrawerTask)}px)`,
+      },
+    },
     menuButton: {
       marginRight: theme.spacing(2),
       [theme.breakpoints.up('sm')]: {
         display: 'none',
       },
-    },
-    backButton: {
-      marginRight: theme.spacing(2),
-      color: theme.palette.primary.contrastText,
     },
     toolbar: theme.mixins.toolbar,
     drawerPaper: {
@@ -167,13 +183,19 @@ const useStyles = makeStyles((theme: Theme) =>
     topFilter: {
       zIndex: 2,
       position: 'absolute',
-      left: DrawerWidth,
+      left: theme.spacing(DrawerMin) + 1,
+      [theme.breakpoints.up('sm')]: {
+        left: theme.spacing(DrawerTask) + 1,
+      },
       backgroundColor: 'white',
     },
     topTranscriber: {
       zIndex: 1,
       position: 'absolute',
-      left: DrawerWidth + TaskItemWidth + theme.spacing(2),
+      left: theme.spacing(DrawerMin) + TaskItemWidth + theme.spacing(1),
+      [theme.breakpoints.up('sm')]: {
+        left: theme.spacing(DrawerTask) + TaskItemWidth + theme.spacing(2),
+      },
     },
     progress: {
       width: '100%',
@@ -264,6 +286,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [projOptions, setProjOptions] = useState(Array<OptionType>());
   const [curProj, setCurProj] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mini, setMini] = useState(false);
   const [addProject, setAddProject] = useState(false);
   const [addOrg, setAddOrg] = useState(false);
   const [title, setTitle] = useState(
@@ -292,6 +315,7 @@ export function ResponsiveDrawer(props: IProps) {
     setChoice(slug(choice));
     setContent(slug(choice));
     setTitle(choice);
+    setMini(slug(choice) === 'transcriber');
     if (choice === t.usersAndGroups) {
       if (tab > 1) {
         setTab(0);
@@ -721,18 +745,20 @@ export function ResponsiveDrawer(props: IProps) {
               <OrganizationIcon />
             )}
           </div>
-          <div className={classes.select}>
-            <ReactSelect
-              suggestions={orgOptions}
-              current={curOrg}
-              onCommit={(v: string, e: any, callback: () => void) =>
-                checkSavedFn(() => {
-                  handleCommitOrg(v);
-                  callback();
-                })
-              }
-            />
-          </div>
+          {!mini && (
+            <div className={classes.select}>
+              <ReactSelect
+                suggestions={orgOptions}
+                current={curOrg}
+                onCommit={(v: string, e: any, callback: () => void) =>
+                  checkSavedFn(() => {
+                    handleCommitOrg(v);
+                    callback();
+                  })
+                }
+              />
+            </div>
+          )}
         </div>
       </div>
       {curOrg === null || (
@@ -743,84 +769,92 @@ export function ResponsiveDrawer(props: IProps) {
               ? [t.organization]
               : [t.usersAndGroups, t.organization]
             ).map((text, index) => (
-              <ListItem
-                button
-                key={text}
-                selected={slug(text) === choice}
-                onClick={checkSavedEv(() => handleChoice(text))}
-              >
-                <ListItemIcon>
-                  {index === 0 && !API_CONFIG.isApp ? (
-                    <GroupIcon />
-                  ) : (
-                    <OrganizationIcon />
-                  )}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
+              <Tooltip title={text}>
+                <ListItem
+                  button
+                  key={text}
+                  selected={slug(text) === choice}
+                  onClick={checkSavedEv(() => handleChoice(text))}
+                >
+                  <ListItemIcon>
+                    {index === 0 && !API_CONFIG.isApp ? (
+                      <GroupIcon />
+                    ) : (
+                      <OrganizationIcon />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              </Tooltip>
             ))}
           </List>
           <Divider />
-          <div className={classes.project}>
-            <div className={classes.header}>
-              <Typography variant="h6">{t.project}</Typography>
-              {!API_CONFIG.isApp &&
-                (orgRole === 'admin' || projRole === 'admin') && (
-                  <>
-                    <div className={classes.grow}>{'\u00A0'}</div>
-                    <IconButton size="small" onClick={handleAddProject}>
-                      <AddIcon />
-                    </IconButton>
-                  </>
-                )}
-            </div>
-            {projOptions.length <= 0 || (
-              <div className={classes.contained}>
-                <div className={classes.select}>
-                  <ReactSelect
-                    suggestions={projOptions}
-                    current={curProj}
-                    onCommit={(v: string, e: any, callback: () => void) =>
-                      checkSavedFn(() => {
-                        handleCommitProj(v);
-                        callback();
-                      })
-                    }
-                  />
-                </div>
+          {!mini && (
+            <div className={classes.project}>
+              <div className={classes.header}>
+                <Typography variant="h6">{t.project}</Typography>
+                {!API_CONFIG.isApp &&
+                  (orgRole === 'admin' || projRole === 'admin') && (
+                    <>
+                      <div className={classes.grow}>{'\u00A0'}</div>
+                      <IconButton size="small" onClick={handleAddProject}>
+                        <AddIcon />
+                      </IconButton>
+                    </>
+                  )}
               </div>
-            )}
-          </div>
-          {curProj === null || busy || (
+              {projOptions.length > 0 && (
+                <div className={classes.contained}>
+                  <div className={classes.select}>
+                    <ReactSelect
+                      suggestions={projOptions}
+                      current={curProj}
+                      onCommit={(v: string, e: any, callback: () => void) =>
+                        checkSavedFn(() => {
+                          handleCommitProj(v);
+                          callback();
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {curProj !== null && !busy && (
             <div>
               <List>
                 {(API_CONFIG.isApp
                   ? [t.tasks]
                   : [t.plans, t.team, t.media, t.reports]
                 ).map((text, index) => (
-                  <ListItem
-                    button
-                    key={text}
-                    selected={slug(text) === choice}
-                    onClick={checkSavedEv(() => handleChoice(text))}
-                  >
-                    <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
+                  <Tooltip title={text}>
+                    <ListItem
+                      button
+                      key={text}
+                      selected={slug(text) === choice}
+                      onClick={checkSavedEv(() => handleChoice(text))}
+                    >
+                      <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                  </Tooltip>
                 ))}
               </List>
               <Divider />
               <List>
                 {[t.settings, t.export, t.integrations].map((text, index) => (
-                  <ListItem
-                    button
-                    key={text}
-                    selected={slug(text) === choice}
-                    onClick={checkSavedEv(() => handleChoice(text))}
-                  >
-                    <ListItemIcon>{projectIcons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
+                  <Tooltip title={text}>
+                    <ListItem
+                      button
+                      key={text}
+                      selected={slug(text) === choice}
+                      onClick={checkSavedEv(() => handleChoice(text))}
+                    >
+                      <ListItemIcon>{projectIcons[index]}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                  </Tooltip>
                 ))}
               </List>
             </div>
@@ -934,7 +968,14 @@ export function ResponsiveDrawer(props: IProps) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar} color="inherit">
+      <AppBar
+        position="fixed"
+        className={clsx({
+          [classes.appBarShift]: mini,
+          [classes.appBar]: !mini,
+        })}
+        color="inherit"
+      >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -987,7 +1028,10 @@ export function ResponsiveDrawer(props: IProps) {
           />
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="Project folders">
+      <nav
+        className={clsx(classes.drawer, { [classes.drawerMini]: mini })}
+        aria-label="app frames"
+      >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Hidden smUp implementation="css">
           <Drawer
@@ -995,8 +1039,12 @@ export function ResponsiveDrawer(props: IProps) {
             anchor={theme.direction === 'rtl' ? 'right' : 'left'}
             open={mobileOpen}
             onClose={handleDrawerToggle}
+            className={clsx(classes.drawer, { [classes.drawerMini]: mini })}
             classes={{
-              paper: classes.drawerPaper,
+              paper: clsx({
+                [classes.drawerMini]: mini,
+                [classes.drawerPaper]: !mini,
+              }),
             }}
             ModalProps={{
               keepMounted: true, // Better open performance on mobile.
@@ -1007,8 +1055,12 @@ export function ResponsiveDrawer(props: IProps) {
         </Hidden>
         <Hidden xsDown implementation="css">
           <Drawer
+            className={clsx(classes.drawer, { [classes.drawerMini]: mini })}
             classes={{
-              paper: classes.drawerPaper,
+              paper: clsx({
+                [classes.drawerMini]: mini,
+                [classes.drawerPaper]: !mini,
+              }),
             }}
             variant="permanent"
             open
