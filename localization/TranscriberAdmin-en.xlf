@@ -2476,6 +2476,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.comment">
+         <segment>
+            <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.makeComment">
+         <segment>
+            <source>Make Comment</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.rejectTranscriptionTip">
          <segment>
             <source>Audio recording is unusable</source>

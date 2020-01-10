@@ -556,6 +556,8 @@ const initialState = {
 			"pauseTip": "Play ({0})",
 			"slowerTip": "Slower ({0})",
 			"fasterTip": "Faster ({0})",
+			"comment": "Comment",
+			"makeComment": "Make Comment",
 			"rejectTranscriptionTip": "Audio recording is unusable",
 			"rejectReviewTip": "Transcription requires changes.",
 			"submitTranscriptionTip": "Mark this transcription as complete.",

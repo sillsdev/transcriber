@@ -2887,6 +2887,20 @@
         			<context context-type="sourcefile">Transcriber.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriber.comment">
+        		<source>Comment</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.makeComment">
+        		<source>Make Comment</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcriber.rejectTranscriptionTip">
                 <source>Audio recording is unusable</source>
                 <target/>

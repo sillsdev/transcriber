@@ -2463,6 +2463,18 @@
 				<target>Plus rapide ({1})</target>
 			</segment>
 		</unit>
+		<unit id="transcriber.comment">
+			<segment>
+				<source>Comment</source>
+				<target>Commentaire</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.makeComment">
+			<segment>
+				<source>Make Comment</source>
+				<target>Faire un commentaire</target>
+			</segment>
+		</unit>
 		<unit id="transcriber.rejectTranscriptionTip">
          <segment>
             <source>Audio recording is unusable</source>

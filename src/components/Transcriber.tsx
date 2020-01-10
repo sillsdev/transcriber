@@ -318,8 +318,10 @@ export function Transcriber(props: IProps) {
   React.useEffect(() => {
     const commentHeight =
       commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
-    setBoxHeight(height - NON_BOX_HEIGHT - commentHeight);
-  }, [height, makeComment, comment]);
+    const newBoxHeight = height - NON_BOX_HEIGHT - commentHeight;
+    if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [height, makeComment, comment, commentRef.current]);
 
   React.useEffect(() => {
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
@@ -484,7 +486,7 @@ export function Transcriber(props: IProps) {
             {makeComment && (
               <TextField
                 ref={commentRef}
-                label="Comment"
+                label={t.comment}
                 variant="filled"
                 multiline
                 rowsMax={5}
@@ -505,7 +507,7 @@ export function Transcriber(props: IProps) {
                     color="primary"
                   />
                 }
-                label="MakeComment"
+                label={t.makeComment}
               />
             </Grid>
             <Grid container xs justify="flex-end">
