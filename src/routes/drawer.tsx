@@ -618,9 +618,9 @@ export function ResponsiveDrawer(props: IProps) {
       const plan = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'plan', id: related(m, 'plan') })
       );
-      return related(plan, 'project') === project;
+      return related(plan, 'project') === project && related(m, 'passage');
     });
-    const propsal = media.length > 0;
+    const propsal = media.length > 0 && !busy;
     if (propsal !== transcribe) setTranscribe(propsal);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles, project, busy]);
@@ -1014,7 +1014,7 @@ export function ResponsiveDrawer(props: IProps) {
                 style={{ textDecoration: 'none' }}
                 title={t.switchToAdmin}
               >
-                <Button variant="contained" color="primary">
+                <Button variant="contained" color="primary" disabled={busy}>
                   {t.admin}
                 </Button>
               </a>
