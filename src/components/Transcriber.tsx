@@ -60,6 +60,7 @@ import { debounce } from 'lodash';
 import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
+import moment from 'moment';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -121,7 +122,6 @@ interface IDispatchProps {
 
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
-  passageStateChanges: Array<PassageStateChange>;
 }
 
 interface IProps
@@ -145,15 +145,18 @@ export function Transcriber(props: IProps) {
     state,
     role,
     mediafiles,
-    passageStateChanges,
   } = props;
   const { mediaUrl, fetchMediaUrl, done } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [projRec, setProjRec] = React.useState<Project>();
   const [passRec, setPassRec] = React.useState<Passage>(passage);
+  const [passageStateChanges, setPassageStateChanges] = React.useState<
+    PassageStateChange[]
+  >([]);
   const [playing, setPlaying] = React.useState(false);
   const [playSpeed, setPlaySpeed] = React.useState(1);
   const [playedSeconds, setPlayedSeconds] = React.useState(0);
@@ -314,11 +317,6 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleMessageReset = () => setMessage(<></>);
-  const curStateChanges = () => {
-    return passageStateChanges.filter(
-      psc => psc.attributes && related(psc, 'passage') === passRec.id
-    );
-  };
 
   const setDimensions = () => {
     setHeight(window.innerHeight);
@@ -337,6 +335,22 @@ export function Transcriber(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  React.useEffect(() => {
+    const loadStateChange = async () => {
+      const recs = (await memory.query((q: QueryBuilder) =>
+        q.findRecords('passagestatechange')
+      )) as PassageStateChange[];
+      if (recs) {
+        const curStateChanges = recs.filter(
+          r => related(r, 'passage') === passage.id
+        );
+        setPassageStateChanges(curStateChanges);
+      }
+    };
+    loadStateChange();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [passage]);
 
   React.useEffect(() => {
     const commentHeight =
@@ -395,6 +409,8 @@ export function Transcriber(props: IProps) {
       urls: ['/fonts/' + fontFamily + '.css'],
     },
   };
+
+  moment.locale(lang);
 
   return (
     <div className={classes.root}>
@@ -481,7 +497,7 @@ export function Transcriber(props: IProps) {
               <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
                 <IconButton
                   onClick={handleShowHistory}
-                  disabled={curStateChanges().length === 0}
+                  disabled={passageStateChanges.length === 0}
                 >
                   <>
                     <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
@@ -524,8 +540,8 @@ export function Transcriber(props: IProps) {
             </Grid>
             {showHistory && (
               <Grid item xs={6} container direction="column">
-                <List>
-                  {curStateChanges()
+                <List style={{ overflow: 'auto', height: boxHeight }}>
+                  {passageStateChanges
                     .sort((i, j) =>
                       i.attributes.dateCreated < j.attributes.dateCreated
                         ? -1
@@ -535,8 +551,8 @@ export function Transcriber(props: IProps) {
                       <ListItem>
                         <ListItemText
                           primary={
-                            psc.attributes.dateCreated +
-                            ' ' +
+                            moment(psc.attributes.dateCreated).calendar() +
+                            ' - ' +
                             psc.attributes.state
                           }
                           secondary={psc.attributes.comments}
@@ -668,7 +684,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-  passageStateChanges: (q: QueryBuilder) => q.findRecords('passagestatechange'),
 };
 
 export default withData(mapRecordsToProps)(
