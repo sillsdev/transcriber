@@ -18,3 +18,4 @@ export * from './sort';
 export * from './uiLang';
 export * from './updateXml';
 export * from './media';
+export * from './relMouseCoords';

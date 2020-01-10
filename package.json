@@ -1,6 +1,6 @@
 {
   "name": "transcriber-admin",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "private": true,
   "dependencies": {
     "@devexpress/dx-react-chart": "^2.2.1",
@@ -23,6 +23,7 @@
     "axios": "^0.19.0",
     "js-base64": "^2.5.1",
     "jwt-decode": "^2.2.0",
+    "keycode": "^2.2.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
@@ -31,6 +32,7 @@
     "react-datasheet": "^1.4.0",
     "react-dom": "^16.12.0",
     "react-file-drop": "^0.2.8",
+    "react-icons": "^3.8.0",
     "react-localization": "^1.0.15",
     "react-orbitjs": "^0.1.15",
     "react-player": "^1.14.2",

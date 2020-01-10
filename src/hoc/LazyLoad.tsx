@@ -1,8 +1,9 @@
 import React, { Suspense } from 'react';
+import Busy from '../components/Busy';
 
 const LazyLoad = (props: any) => (Component: any) => (
   <>
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Busy />}>
       <Component {...props} />
     </Suspense>
   </>

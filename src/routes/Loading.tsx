@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBar: {
       width: '100%',
+      boxShadow: 'none',
     },
     paper: theme.mixins.gutters({
       paddingTop: 16,
@@ -262,7 +263,7 @@ export function Loading(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} color="inherit">
         <Toolbar>
           <Typography variant="h6" noWrap>
             {API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin}

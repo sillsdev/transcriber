@@ -11,11 +11,18 @@ import {
   ITranscriberStrings,
   IState,
   ActivityStates,
+  Passage,
+  PassageStateChange,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  useTheme,
+} from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -25,20 +32,45 @@ import {
   LinearProgress,
   TextareaAutosize,
   Tooltip,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+  List,
+  ListItem,
+  ListItemText,
 } from '@material-ui/core';
-import GearIcon from '@material-ui/icons/SettingsApplications';
+// import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import SkipAheadIcon from '@material-ui/icons/FastForward';
+import HistoryIcon from '@material-ui/icons/History';
+import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
 import Duration from './Duration';
 import SnackBar from './SnackBar';
-import { sectionDescription, passageDescription } from '../utils';
+import {
+  sectionDescription,
+  passageDescription,
+  relMouseCoords,
+  related,
+} from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
-import { DrawerWidth } from '../routes/drawer';
+import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
+import keycode from 'keycode';
+
+const MIN_SPEED = 0.5;
+const MAX_SPEED = 2.0;
+const SPEED_STEP = 0.1;
+const PLAY_PAUSE_KEY = 'ESC';
+const BACK_KEY = 'F2';
+const AHEAD_KEY = 'F3';
+const SLOWER_KEY = 'F4';
+const FASTER_KEY = 'F5';
+const HISTORY_KEY = 'F6';
+const NON_BOX_HEIGHT = 304;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,7 +80,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       margin: 'auto',
-      maxWidth: '100vh',
     },
     progress: {
       flexGrow: 1,
@@ -58,6 +89,15 @@ const useStyles = makeStyles((theme: Theme) =>
     row: {
       alignItems: 'center',
       whiteSpace: 'nowrap',
+    },
+    padRow: {
+      paddingTop: '16px',
+    },
+    comment: {
+      paddingTop: '16px',
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 1,
     },
     button: {
       marginLeft: theme.spacing(1),
@@ -81,6 +121,7 @@ interface IDispatchProps {
 
 interface IRecordProps {
   mediafiles: Array<MediaFile>;
+  passageStateChanges: Array<PassageStateChange>;
 }
 
 interface IProps
@@ -104,14 +145,17 @@ export function Transcriber(props: IProps) {
     state,
     role,
     mediafiles,
+    passageStateChanges,
   } = props;
   const { mediaUrl, fetchMediaUrl, done } = props;
   const classes = useStyles();
+  const theme = useTheme();
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
   const [projRec, setProjRec] = React.useState<Project>();
+  const [passRec, setPassRec] = React.useState<Passage>(passage);
   const [playing, setPlaying] = React.useState(false);
-  const [playSpeed] = React.useState(1);
+  const [playSpeed, setPlaySpeed] = React.useState(1);
   const [playedSeconds, setPlayedSeconds] = React.useState(0);
   const [totalSeconds, setTotalSeconds] = React.useState(duration);
   const [seeking, setSeeking] = React.useState(false);
@@ -122,12 +166,17 @@ export function Transcriber(props: IProps) {
   );
   const [height, setHeight] = React.useState(window.innerHeight);
   const [width, setWidth] = React.useState(window.innerWidth);
+  const [boxHeight, setBoxHeight] = React.useState(height - NON_BOX_HEIGHT);
   const [defaultValue, setDefaultValue] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
   const [message, setMessage] = React.useState(<></>);
+  const [makeComment, setMakeComment] = React.useState(false);
+  const [comment, setComment] = React.useState('');
+  const [showHistory, setShowHistory] = React.useState(false);
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
+  const commentRef = React.useRef<any>();
 
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const handleReady = () => {
@@ -140,6 +189,8 @@ export function Transcriber(props: IProps) {
     if (!seeking) {
       if (!totalSeconds || totalSeconds < ctrl.loadedSeconds) {
         setTotalSeconds(ctrl.loadedSeconds);
+      } else {
+        setTotalSeconds(duration);
       }
       setPlayedSeconds(ctrl.playedSeconds);
     }
@@ -149,8 +200,8 @@ export function Transcriber(props: IProps) {
     setSeeking(false);
     if (progressRef.current && playerRef.current) {
       const clientWidth = progressRef.current.clientWidth;
-      const offsetLeft = progressRef.current.offsetLeft;
-      playerRef.current.seekTo((e.clientX - offsetLeft) / clientWidth);
+      const { x } = relMouseCoords(e, progressRef.current);
+      playerRef.current.seekTo(x / clientWidth);
     }
   };
   const handleJumpFn = (amount: number) => {
@@ -162,13 +213,28 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleJump = (amount: number) => () => handleJumpFn(amount);
+  const rnd1 = (val: number) => Math.round(val * 10) / 10;
+  const handleSlowerFn = () => {
+    if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
+  };
+  const handleSlowerEv = () => handleSlowerFn();
+  const handleFasterFn = () => {
+    if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
+  };
+  const handleFasterEv = () => handleFasterFn();
+  const handleMakeComment = () => setMakeComment(!makeComment);
+  const handleCommentChange = (e: any) => {
+    setComment(e.target.value);
+  };
+  const handleShowHistory = () => setShowHistory(!showHistory);
   const handleReject = async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
       : ActivityStates.NeedsNewTranscription;
-    await memory.update((t: TransformBuilder) =>
-      t.replaceAttribute({ type: 'passage', id: passage.id }, 'state', newState)
-    );
+    await memory.update((t: TransformBuilder) => [
+      t.replaceAttribute(passRec, 'lastComment', comment),
+      t.replaceAttribute(passRec, 'state', newState),
+    ]);
     done();
   };
   const next: { [key: string]: string } = {
@@ -182,11 +248,8 @@ export function Transcriber(props: IProps) {
       let transcription = transcriptionRef.current.firstChild.value;
       if (next.hasOwnProperty(state)) {
         await memory.update((t: TransformBuilder) => [
-          t.replaceAttribute(
-            { type: 'passage', id: passage.id },
-            'state',
-            next[state]
-          ),
+          t.replaceAttribute(passRec, 'lastComment', comment),
+          t.replaceAttribute(passRec, 'state', next[state]),
           t.updateRecord({
             type: 'mediafile',
             id: mediaId,
@@ -205,7 +268,8 @@ export function Transcriber(props: IProps) {
   const handleSave = async () => {
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
-      memory.update((t: TransformBuilder) =>
+      memory.update((t: TransformBuilder) => [
+        t.replaceAttribute(passRec, 'lastComment', comment),
         t.updateRecord({
           type: 'mediafile',
           id: mediaId,
@@ -213,46 +277,99 @@ export function Transcriber(props: IProps) {
             transcription: transcription,
             position: playedSeconds,
           },
-        })
-      );
+        }),
+      ]);
     }
     done();
   };
   const handleClose = () => done();
-  const handleKey = (e: any) => {
+  const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
-    const ESC = 27;
-    const F2 = 113;
-    const F4 = 115;
-    if (e.keyCode === ESC) setPlaying(!playing);
-    if (e.keyCode === F2) handleJumpFn(-1 * jump);
-    if (e.keyCode === F4) handleJumpFn(jump);
+    const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
+    const JumpBackKey = keycode(BACK_KEY);
+    const JumpAheadKey = keycode(AHEAD_KEY);
+    const SlowerKey = keycode(SLOWER_KEY);
+    const FasterKey = keycode(FASTER_KEY);
+    switch (e.keyCode) {
+      case PlayPauseKey:
+        setPlaying(!playing);
+        e.preventDefault();
+        return;
+      case JumpBackKey:
+        handleJumpFn(-1 * jump);
+        e.preventDefault();
+        return;
+      case JumpAheadKey:
+        handleJumpFn(jump);
+        e.preventDefault();
+        return;
+      case SlowerKey:
+        handleSlowerFn();
+        e.preventDefault();
+        return;
+      case FasterKey:
+        handleFasterFn();
+        e.preventDefault();
+        return;
+    }
   };
   const handleMessageReset = () => setMessage(<></>);
+  const curStateChanges = () => {
+    return passageStateChanges.filter(
+      psc => psc.attributes && related(psc, 'passage') === passRec.id
+    );
+  };
+
+  const setDimensions = () => {
+    setHeight(window.innerHeight);
+    setWidth(window.innerWidth - theme.spacing(DrawerTask) - TaskItemWidth);
+  };
 
   React.useEffect(() => {
+    setDimensions();
     const handleResize = debounce(() => {
-      setHeight(window.innerHeight);
-      setWidth(window.innerWidth - DrawerWidth - TaskItemWidth);
+      setDimensions();
     }, 100);
 
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  React.useEffect(() => {
+    const commentHeight =
+      commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
+    const newBoxHeight = height - NON_BOX_HEIGHT - commentHeight;
+    if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [height, makeComment, comment, commentRef.current]);
 
   React.useEffect(() => {
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
-      setDefaultValue(attr.transcription);
+      setDefaultValue(attr.transcription ? attr.transcription : '');
       setDefaultPosition(attr.position);
       setPlaying(false);
       //focus on player
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
   }, [mediaId, mediafiles]);
+
+  React.useEffect(() => {
+    setPassRec(
+      memory.cache.query((q: QueryBuilder) => q.findRecord(passage)) as Passage
+    );
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [passage]);
+
+  React.useEffect(() => {
+    if (passRec && passRec.attributes && passRec.attributes.lastComment) {
+      setComment(passRec.attributes.lastComment);
+    } else setComment('');
+  }, [passRec]);
 
   React.useEffect(() => {
     fetchMediaUrl(mediaRemoteId, auth);
@@ -283,11 +400,11 @@ export function Transcriber(props: IProps) {
     <div className={classes.root}>
       <Paper
         className={classes.paper}
-        onKeyUp={handleKey}
-        style={{ width: width }}
+        onKeyDown={handleKey}
+        style={{ width: width - 24 }}
       >
         <Grid container direction="column">
-          <Grid container xs={12} direction="row" className={classes.row}>
+          <Grid container direction="row" className={classes.row}>
             <Grid
               item
               xs={9}
@@ -295,9 +412,15 @@ export function Transcriber(props: IProps) {
             >
               {sectionDescription(section)}
             </Grid>
-            <Grid item>{passageDescription(passage)}</Grid>
+            <Grid item>{passageDescription(passRec)}</Grid>
           </Grid>
-          <Grid container xs={12} direction="row" className={classes.row}>
+          <Grid container direction="row" className={classes.row}>
+            <Grid item>
+              <Typography>
+                <Duration seconds={playedSeconds} /> {' / '}
+                <Duration seconds={totalSeconds} />
+              </Typography>
+            </Grid>
             <Grid item xs>
               <div className={classes.progress}>
                 <LinearProgress
@@ -309,15 +432,72 @@ export function Transcriber(props: IProps) {
                 />
               </div>
             </Grid>
+          </Grid>
+          <Grid container direction="row" className={classes.row}>
+            <Grid container xs justify="center">
+              <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
+                <IconButton onClick={handleJump(-1 * jump)}>
+                  <>
+                    <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+              <Tooltip
+                title={(playing ? t.playTip : t.pauseTip).replace(
+                  '{0}',
+                  PLAY_PAUSE_KEY
+                )}
+              >
+                <IconButton onClick={handlePlayStatus(!playing)}>
+                  <>
+                    {playing ? <PauseIcon /> : <PlayIcon />}{' '}
+                    <Typography>{PLAY_PAUSE_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
+                <IconButton onClick={handleJump(jump)}>
+                  <>
+                    <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
+                <IconButton onClick={handleSlowerEv}>
+                  <>
+                    <FaAngleDoubleDown /> <Typography>{SLOWER_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
+                <IconButton onClick={handleFasterEv}>
+                  <>
+                    <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+            </Grid>
             <Grid item>
-              <Typography>
-                <Duration seconds={playedSeconds} /> {' / '}
-                <Duration seconds={totalSeconds} />
-              </Typography>
+              <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
+                <IconButton
+                  onClick={handleShowHistory}
+                  disabled={curStateChanges().length === 0}
+                >
+                  <>
+                    <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
             </Grid>
           </Grid>
           <Grid item xs={12} sm container>
-            <Grid ref={transcriptionRef} item xs container direction="column">
+            <Grid
+              ref={transcriptionRef}
+              item
+              xs={showHistory ? 6 : 12}
+              container
+              direction="column"
+            >
               <WebFontLoader config={fontConfig}>
                 <TextareaAutosize
                   defaultValue={defaultValue}
@@ -325,7 +505,7 @@ export function Transcriber(props: IProps) {
                   style={{
                     overflow: 'auto',
                     backgroundColor: '#cfe8fc',
-                    height: height - 240,
+                    height: boxHeight,
                     width: '98hu',
                     fontFamily: fontFamily,
                     fontSize:
@@ -342,33 +522,60 @@ export function Transcriber(props: IProps) {
                 />
               </WebFontLoader>
             </Grid>
+            {showHistory && (
+              <Grid item xs={6} container direction="column">
+                <List>
+                  {curStateChanges()
+                    .sort((i, j) =>
+                      i.attributes.dateCreated < j.attributes.dateCreated
+                        ? -1
+                        : 1
+                    )
+                    .map(psc => (
+                      <ListItem>
+                        <ListItemText
+                          primary={
+                            psc.attributes.dateCreated +
+                            ' ' +
+                            psc.attributes.state
+                          }
+                          secondary={psc.attributes.comments}
+                        />
+                      </ListItem>
+                    ))}
+                </List>
+              </Grid>
+            )}
           </Grid>
-          <Grid container xs={12} direction="row" className={classes.row}>
+          <Grid container direction="row">
+            {makeComment && (
+              <TextField
+                ref={commentRef}
+                label={t.comment}
+                variant="filled"
+                multiline
+                rowsMax={5}
+                className={classes.comment}
+                value={comment}
+                onChange={handleCommentChange}
+                style={{ overflow: 'auto' }}
+              />
+            )}
+          </Grid>
+          <Grid container direction="row" className={classes.padRow}>
             <Grid item>
-              <Tooltip title={t.settingsTip}>
-                <IconButton>
-                  <GearIcon />
-                </IconButton>
-              </Tooltip>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    value={makeComment}
+                    onChange={handleMakeComment}
+                    color="primary"
+                  />
+                }
+                label={t.makeComment}
+              />
             </Grid>
-            <Grid container xs justify="center">
-              <Tooltip title={t.backTip}>
-                <IconButton onClick={handleJump(-1 * jump)}>
-                  <SkipBackIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={playing ? t.playTip : t.pauseTip}>
-                <IconButton onClick={handlePlayStatus(!playing)}>
-                  {playing ? <PauseIcon /> : <PlayIcon />}
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t.aheadTip}>
-                <IconButton onClick={handleJump(jump)}>
-                  <SkipAheadIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-            <Grid item>
+            <Grid container xs justify="flex-end">
               {role !== 'view' ? (
                 <>
                   <Tooltip
@@ -461,6 +668,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  passageStateChanges: (q: QueryBuilder) => q.findRecords('passagestatechange'),
 };
 
 export default withData(mapRecordsToProps)(

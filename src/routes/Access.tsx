@@ -29,8 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
     appBar: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
-      // background: '#FFE599',
-      // color: 'black'
+      boxShadow: 'none',
     }),
     version: {
       alignSelf: 'center',
@@ -98,7 +97,7 @@ export function Access(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static">
+      <AppBar className={classes.appBar} position="static" color="inherit">
         <Toolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
             {t.silTranscriberAccess}
@@ -147,7 +146,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Access) as any;
+export default connect(mapStateToProps, mapDispatchToProps)(Access) as any;

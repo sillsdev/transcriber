@@ -1,5 +1,5 @@
-#TaskTable[data-list='true'] {
-  width: inherit !important;
+#TaskTable[data-list='true'] table {
+  min-width: 372px !important;
 }
 
 #TaskTable[data-list='true'] thead {

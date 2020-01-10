@@ -68,7 +68,7 @@ function TranscriptionShow(props: IProps) {
     if (passageId) {
       const mediaRec = getMediaRec(passageId, memory);
       const attr = mediaRec && mediaRec.attributes;
-      setTranscription(attr ? attr.transcription : '');
+      setTranscription(attr && attr.transcription ? attr.transcription : '');
       const projRec = getMediaProjRec(mediaRec, memory);
       const projAttr = projRec && projRec.attributes;
       if (projAttr) {
