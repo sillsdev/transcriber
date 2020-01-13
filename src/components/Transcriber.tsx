@@ -215,16 +215,14 @@ export function Transcriber(props: IProps) {
       playerRef.current.seekTo(Math.max(playedSeconds + amount, 0));
     }
   };
-  const handleJump = (amount: number) => () => handleJumpFn(amount);
+  const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
   const rnd1 = (val: number) => Math.round(val * 10) / 10;
-  const handleSlowerFn = () => {
+  const handleSlower = () => {
     if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
   };
-  const handleSlowerEv = () => handleSlowerFn();
-  const handleFasterFn = () => {
+  const handleFaster = () => {
     if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
   };
-  const handleFasterEv = () => handleFasterFn();
   const handleMakeComment = () => setMakeComment(!makeComment);
   const handleCommentChange = (e: any) => {
     setComment(e.target.value);
@@ -293,6 +291,7 @@ export function Transcriber(props: IProps) {
     const JumpAheadKey = keycode(AHEAD_KEY);
     const SlowerKey = keycode(SLOWER_KEY);
     const FasterKey = keycode(FASTER_KEY);
+    const HistoryKey = keycode(HISTORY_KEY);
     switch (e.keyCode) {
       case PlayPauseKey:
         setPlaying(!playing);
@@ -307,11 +306,15 @@ export function Transcriber(props: IProps) {
         e.preventDefault();
         return;
       case SlowerKey:
-        handleSlowerFn();
+        handleSlower();
         e.preventDefault();
         return;
       case FasterKey:
-        handleFasterFn();
+        handleFaster();
+        e.preventDefault();
+        return;
+      case HistoryKey:
+        handleShowHistory();
         e.preventDefault();
         return;
     }
@@ -452,7 +455,7 @@ export function Transcriber(props: IProps) {
           <Grid container direction="row" className={classes.row}>
             <Grid container xs justify="center">
               <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                <IconButton onClick={handleJump(-1 * jump)}>
+                <IconButton onClick={handleJumpEv(-1 * jump)}>
                   <>
                     <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
                   </>
@@ -472,21 +475,21 @@ export function Transcriber(props: IProps) {
                 </IconButton>
               </Tooltip>
               <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                <IconButton onClick={handleJump(jump)}>
+                <IconButton onClick={handleJumpEv(jump)}>
                   <>
                     <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
                   </>
                 </IconButton>
               </Tooltip>
               <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                <IconButton onClick={handleSlowerEv}>
+                <IconButton onClick={handleSlower}>
                   <>
                     <FaAngleDoubleDown /> <Typography>{SLOWER_KEY}</Typography>
                   </>
                 </IconButton>
               </Tooltip>
               <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                <IconButton onClick={handleFasterEv}>
+                <IconButton onClick={handleFaster}>
                   <>
                     <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
                   </>
