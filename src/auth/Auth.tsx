@@ -15,6 +15,7 @@ export default class Auth {
     responseType: 'token id_token',
     scope: 'openid email profile',
     audience: 'https://transcriber_api',
+    leeway: 300,
   });
 
   constructor() {
