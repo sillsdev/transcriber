@@ -91,11 +91,9 @@ export function TaskItem(props: IProps) {
   return (
     <List className={classes.root}>
       <ListItem alignItems="flex-start" onClick={select(props.mediaDesc)}>
-        {assigned && (
-          <ListItemAvatar className={classes.listAvatar}>
-            {<UserAvatar {...props} userRec={userRec} small={true} />}
-          </ListItemAvatar>
-        )}
+        <ListItemAvatar className={classes.listAvatar}>
+          {assigned && <UserAvatar {...props} userRec={userRec} small={true} />}
+        </ListItemAvatar>
         <ListItemText
           primary={book + ref}
           secondary={<TaskFlag {...props} state={attr.state} />}
