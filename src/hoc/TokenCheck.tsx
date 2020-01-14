@@ -56,7 +56,7 @@ function TokenCheck(props: IProps) {
   const handleClose = (value: number) => {
     setModalOpen(false);
     if (timer.current) clearInterval(timer.current);
-    if (value < 0) {
+    if (value < 0 || localStorage.getItem('isLoggedIn') !== 'true') {
       setView('Logout');
     } else {
       auth
