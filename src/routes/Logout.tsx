@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { IState, IAccessStrings } from '../model';
@@ -62,7 +62,7 @@ export function Logout(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  if (auth.isAuthenticated()) return <Redirect to="/loading" />;
+  // if (auth.isAuthenticated()) return <Redirect to="/loading" />;
 
   return (
     <div className={classes.root}>
