@@ -638,7 +638,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   // reset location based on deep link (saved url)
   const url = localStorage.getItem('url');
-  if (orbitLoaded && url && view === '') {
+  if (
+    orbitLoaded &&
+    url &&
+    view === '' &&
+    localStorage.getItem('isLoggedIn') === 'true'
+  ) {
     const parts = url.split('/');
     const base = 1;
     const UrlOrgPart = base + 1;

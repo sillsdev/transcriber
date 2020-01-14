@@ -1,5 +1,4 @@
 import React from 'react';
-import history from '../history';
 import { IState } from '../model';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,6 +8,8 @@ import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
 import { API_CONFIG } from '../api-variable';
+
+const Expires = 0; // Set to 7110 to test 1:30 token
 
 interface IStateProps {
   expireAt: number | undefined;
@@ -27,7 +28,7 @@ function TokenCheck(props: IProps) {
   const { auth, children, expireAt, setExpireAt } = props;
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
-  const [view, setView] = React.useState('');
+  const view = React.useRef<any>('');
   const timer = React.useRef<NodeJS.Timeout>();
 
   React.useEffect(() => {
@@ -45,7 +46,7 @@ function TokenCheck(props: IProps) {
         const currentUnix = moment().format('X');
         const expires = moment.unix(expireAt).format('X');
         const secondsLeft = Number(expires) - Number(currentUnix);
-        if (secondsLeft < 30) {
+        if (secondsLeft < Expires + 30) {
           setSecondsToExpire(secondsLeft);
           setModalOpen(true);
         }
@@ -56,8 +57,8 @@ function TokenCheck(props: IProps) {
   const handleClose = (value: number) => {
     setModalOpen(false);
     if (timer.current) clearInterval(timer.current);
-    if (value < 0 || localStorage.getItem('isLoggedIn') !== 'true') {
-      setView('Logout');
+    if (value < 0) {
+      view.current = 'Logout';
     } else {
       auth
         .renewSession()
@@ -66,16 +67,17 @@ function TokenCheck(props: IProps) {
           setExpireAt(decodedToken.exp);
         })
         .catch((e: any) => {
-          setView('Logout');
+          view.current = 'Logout';
           console.log(e);
         });
     }
   };
 
-  if (modalOpen && view === '') {
-    if (secondsToExpire < 0) {
+  if (modalOpen && view.current === '') {
+    if (secondsToExpire < Expires) {
       if (timer.current) clearInterval(timer.current);
-      setView('Logout');
+      auth.logout();
+      view.current = 'loggedOut';
     }
     return (
       <TokenDialog
@@ -84,10 +86,9 @@ function TokenCheck(props: IProps) {
         onClose={handleClose}
       />
     );
-  } else if (view === 'Logout') {
+  } else if (view.current === 'Logout') {
     auth.logout();
-    history.replace('/');
-    setView('loggedOut');
+    view.current = 'loggedOut';
   }
 
   // If there is no error just render the children component.
