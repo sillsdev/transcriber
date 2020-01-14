@@ -42,6 +42,7 @@ import {
   passageNumber,
   numCompare,
 } from '../utils';
+import { debounce } from 'lodash';
 import './TaskTable.css';
 
 export const TaskItemWidth = 370;
@@ -221,6 +222,7 @@ export function TaskTable(props: IProps) {
   const [filter, setFilter] = useState(
     filtering === undefined ? false : filtering
   );
+  const [height, setHeight] = React.useState(window.innerHeight);
   const [message, setMessage] = useState(<></>);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -375,6 +377,23 @@ export function TaskTable(props: IProps) {
       }
     });
   };
+
+  const setDimensions = () => {
+    setHeight(window.innerHeight);
+  };
+
+  React.useEffect(() => {
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   React.useEffect(() => {
     fetchBooks(lang);
@@ -596,6 +615,7 @@ export function TaskTable(props: IProps) {
     <div
       id="TaskTable"
       className={classes.root}
+      style={{ height: height - 100, overflowY: 'auto' }}
       data-list={!filter ? 'true' : ''}
     >
       <div className={classes.container}>

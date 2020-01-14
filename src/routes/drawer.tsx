@@ -192,9 +192,9 @@ const useStyles = makeStyles((theme: Theme) =>
     topTranscriber: {
       zIndex: 1,
       position: 'absolute',
-      left: theme.spacing(DrawerMin) + TaskItemWidth + theme.spacing(1),
+      left: theme.spacing(DrawerMin) + TaskItemWidth + theme.spacing(0.5),
       [theme.breakpoints.up('sm')]: {
-        left: theme.spacing(DrawerTask) + TaskItemWidth + theme.spacing(2),
+        left: theme.spacing(DrawerTask) + TaskItemWidth + theme.spacing(0.5),
       },
     },
     progress: {
