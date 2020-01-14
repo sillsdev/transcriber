@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -21,6 +22,7 @@ import TaskFlag, { NextAction } from './TaskFlag';
 import UserAvatar from './UserAvatar';
 import Duration from './Duration';
 import { related, sectionNumber, passageNumber } from '../utils';
+import { QueryBuilder } from '@orbit/data';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,6 +37,9 @@ const useStyles = makeStyles((theme: Theme) =>
     detailAlign: {
       display: 'flex',
       flexDirection: 'row-reverse',
+    },
+    listAvatar: {
+      minWidth: theme.spacing(4),
     },
   })
 );
@@ -58,6 +63,7 @@ export function TaskItem(props: IProps) {
   const { allBookData, t, mediaRec, select } = props;
   const { passage, section } = props.mediaDesc;
   const classes = useStyles();
+  const [memory] = useGlobal('memory');
 
   let book = '';
   let ref = '';
@@ -73,16 +79,21 @@ export function TaskItem(props: IProps) {
   }
 
   const next = NextAction({ ...props, state: attr.state });
-  let assigned = undefined;
+  let assigned: string | null = null;
   if (next === t.transcribe) assigned = related(section, 'transcriber');
   if (next === t.review) assigned = related(section, 'reviewer');
+  const userRec: User = assigned
+    ? (memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'user', id: assigned as string })
+      ) as User)
+    : ({} as User);
 
   return (
     <List className={classes.root}>
       <ListItem alignItems="flex-start" onClick={select(props.mediaDesc)}>
         {assigned && (
-          <ListItemAvatar>
-            {<UserAvatar {...props} userRec={assigned} />}
+          <ListItemAvatar className={classes.listAvatar}>
+            {<UserAvatar {...props} userRec={userRec} small={true} />}
           </ListItemAvatar>
         )}
         <ListItemText

@@ -59,6 +59,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: 0,
+        paddingRight: 0,
+      },
     }),
     grow: {
       flexGrow: 1,
@@ -239,6 +243,16 @@ export function TaskTable(props: IProps) {
   const processSelect = (mediaDescription: MediaDescription) => {
     setSelected(mediaDescription.passage.id);
     if (mediaDescription.role !== 'view') {
+      const assignee = related(mediaDescription.section, mediaDescription.role);
+      if (!assignee) {
+        memory.update((t: TransformBuilder) =>
+          t.replaceRelatedRecord(
+            mediaDescription.section,
+            mediaDescription.role,
+            { type: 'user', id: user }
+          )
+        );
+      }
       memory.update((t: TransformBuilder) =>
         t.replaceAttribute(
           { type: 'passage', id: mediaDescription.passage.id },

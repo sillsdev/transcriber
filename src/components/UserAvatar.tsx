@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IState, User } from '../model';
 import { connect } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
@@ -7,6 +8,19 @@ import { withData } from 'react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
 import { API_CONFIG } from '../api-variable';
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    small: {
+      width: theme.spacing(3),
+      height: theme.spacing(3),
+    },
+    medium: {
+      width: theme.spacing(5),
+      height: theme.spacing(5),
+    },
+  })
+);
 
 interface IStateProps {}
 
@@ -16,10 +30,12 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IRecordProps {
   userRec?: User;
+  small?: boolean;
 }
 
 export function UserAvatar(props: IProps) {
-  const { userRec, users } = props;
+  const { userRec, users, small } = props;
+  const classes = useStyles();
   const [user] = useGlobal('user');
 
   const curUserRec = userRec
@@ -34,9 +50,15 @@ export function UserAvatar(props: IProps) {
   return curUser.attributes &&
     curUser.attributes.avatarUrl &&
     !API_CONFIG.offline ? (
-    <Avatar alt={curUser.attributes.name} src={curUser.attributes.avatarUrl} />
+    <Avatar
+      alt={curUser.attributes.name}
+      src={curUser.attributes.avatarUrl}
+      className={small ? classes.small : classes.medium}
+    />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (
-    <Avatar>{makeAbbr(curUser.attributes.name)}</Avatar>
+    <Avatar className={small ? classes.small : classes.medium}>
+      {makeAbbr(curUser.attributes.name)}
+    </Avatar>
   ) : (
     <></>
   );
