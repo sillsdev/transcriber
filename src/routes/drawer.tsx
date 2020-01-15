@@ -4,6 +4,7 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Axios from 'axios';
 import {
   IState,
   IMainStrings,
@@ -508,7 +509,19 @@ export function ResponsiveDrawer(props: IProps) {
     if (projKeys.length === 0) {
       setCurProj(null);
       if (!busy && curOrg !== null) {
-        if (!API_CONFIG.isApp) handleAddProject();
+        if (API_CONFIG.isApp) {
+          if (swapRef.current) {
+            Axios.get(API_CONFIG.host + '/api/projects/', {
+              headers: {
+                Authorization: 'Bearer ' + auth.accessToken,
+              },
+            }).then(strings => {
+              const data = strings.data.data;
+              if (Array.isArray(data) && data.length === 0)
+                swapRef.current.click();
+            });
+          }
+        } else handleAddProject();
       }
       return;
     }
@@ -588,13 +601,6 @@ export function ResponsiveDrawer(props: IProps) {
         }
         syncTimer.current = setInterval(() => {
           if (!busy) {
-            if (API_CONFIG.isApp && curOrg !== null) {
-              if (projOptions.length === 0) {
-                if (swapRef && swapRef.current) {
-                  swapRef.current.click();
-                }
-              }
-            }
             dateChanges(auth, keyMap, remote, memory, schema);
           }
         }, 1000 * 10);
