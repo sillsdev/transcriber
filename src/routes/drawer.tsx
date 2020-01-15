@@ -226,9 +226,7 @@ interface IDispatchProps {
 }
 
 interface IRecordProps {
-  organizations: Array<Organization>;
   organizationMemberships: Array<OrganizationMembership>;
-  projects: Array<Project>;
   plans: Array<Plan>;
   groupMemberships: Array<GroupMembership>;
   roles: Array<Role>;
@@ -252,8 +250,6 @@ export function ResponsiveDrawer(props: IProps) {
     auth,
     t,
     history,
-    organizations,
-    projects,
     plans,
     orbitLoaded,
     organizationMemberships,
@@ -444,27 +440,45 @@ export function ResponsiveDrawer(props: IProps) {
   };
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
+  const getOrgs = async () => {
+    return (await memory.query((q: QueryBuilder) =>
+      q.findRecords('organization')
+    )) as Organization[];
+  };
+  const getProjs = async () => {
+    return (await memory.query((q: QueryBuilder) =>
+      q.findRecords('project')
+    )) as Project[];
+  };
+
   useEffect(() => {
-    const orgOpts = organizations
-      .filter(o => hasRelated(o, 'users', user) && o.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-      .map((o: Organization) => {
-        return {
-          value: o.id,
-          label: o.attributes.name,
-        };
-      });
-    setOrgOptions(
-      API_CONFIG.isApp
-        ? orgOpts
-        : orgOpts.concat({
-            value: t.newOrganization,
-            label: t.newOrganization + '    \uFF0B',
-            // or \u2795
-          })
-    );
+    getOrgs().then(organizations => {
+      const orgOpts = organizations
+        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .map((o: Organization) => {
+          return {
+            value: o.id,
+            label: o.attributes.name,
+          };
+        });
+      setOrgOptions(
+        API_CONFIG.isApp
+          ? orgOpts
+          : orgOpts.concat({
+              value: t.newOrganization,
+              label: t.newOrganization + '    \uFF0B',
+              // or \u2795
+            })
+      );
+      const orgRec = organizations.filter(o => o.id === organization);
+      if (orgRec.length > 0) {
+        const attr = orgRec[0].attributes;
+        setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
+      }
+    });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organizations, organization, user]);
+  }, [organization, user]);
 
   useEffect(() => {
     if (orgOptions) {
@@ -482,27 +496,22 @@ export function ResponsiveDrawer(props: IProps) {
   }, [orgOptions, organization, busy]);
 
   useEffect(() => {
-    const orgRec = organizations.filter(o => o.id === organization);
-    if (orgRec.length > 0) {
-      const attr = orgRec[0].attributes;
-      setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
-    }
+    getProjs().then(projects => {
+      const projOpts = projects
+        .filter(
+          p => related(p, 'organization') === organization && p.attributes
+        )
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .map(p => {
+          return {
+            value: p.id,
+            label: p.attributes.name,
+          };
+        });
+      setProjOptions(projOpts);
+    });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, curOrg]);
-
-  useEffect(() => {
-    const projOpts = projects
-      .filter(p => related(p, 'organization') === organization && p.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-      .map(p => {
-        return {
-          value: p.id,
-          label: p.attributes.name,
-        };
-      });
-    setProjOptions(projOpts);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projects, organization, addProject]);
+  }, [organization, addProject]);
 
   useEffect(() => {
     const projKeys = projOptions.map(o => o.value);
@@ -1131,10 +1140,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 const mapRecordsToProps = {
-  organizations: (q: QueryBuilder) => q.findRecords('organization'),
   organizationMemberships: (q: QueryBuilder) =>
     q.findRecords('organizationmembership'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
