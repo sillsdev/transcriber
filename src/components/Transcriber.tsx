@@ -284,6 +284,21 @@ export function Transcriber(props: IProps) {
     done();
   };
   const handleClose = () => done();
+  const previous: { [key: string]: string } = {
+    transcribed: ActivityStates.TranscribeReady,
+    transcribing: ActivityStates.TranscribeReady,
+    reviewing: ActivityStates.Transcribed,
+    approved: ActivityStates.Transcribed,
+  };
+  const handleReopen = async () => {
+    if (previous.hasOwnProperty(state)) {
+      await memory.update((t: TransformBuilder) => [
+        t.replaceAttribute(passRec, 'lastComment', comment),
+        t.replaceAttribute(passRec, 'state', previous[state]),
+      ]);
+    }
+    done();
+  };
   const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
@@ -641,14 +656,25 @@ export function Transcriber(props: IProps) {
                   </Tooltip>{' '}
                 </>
               ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleClose}
-                >
-                  {t.close}
-                </Button>
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleReopen}
+                    disabled={!previous.hasOwnProperty(state)}
+                  >
+                    {t.reopen}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleClose}
+                  >
+                    {t.close}
+                  </Button>
+                </>
               )}
             </Grid>
           </Grid>

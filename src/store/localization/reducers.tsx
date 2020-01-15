@@ -549,6 +549,7 @@ const initialState = {
 			"reject": "Reject",
 			"save": "Save",
 			"close": "Close",
+			"reopen": "Reopen",
 			"settingsTip": "Settings",
 			"backTip": "Skip back ({0})",
 			"aheadTip": "Skip ahead ({0})",

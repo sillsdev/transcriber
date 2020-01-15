@@ -2421,6 +2421,12 @@
 				<target>Fermer</target>
 			</segment>
 		</unit>
+		<unit id="transcriber.reopen">
+			<segment>
+				<source>Reopen</source>
+				<target>Réouvrir</target>
+			</segment>
+		</unit>
 		<unit id="transcriber.settingsTip">
          <segment>
             <source>Settings</source>

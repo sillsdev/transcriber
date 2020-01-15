@@ -2838,7 +2838,14 @@
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriber.settingsTip">
+        	<trans-unit id="transcriber.reopen">
+        		<source>Reopen</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.settingsTip">
                 <source>Settings</source>
                 <target/>
                 <context-group>
