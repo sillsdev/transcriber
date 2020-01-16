@@ -228,7 +228,7 @@ export function Transcriber(props: IProps) {
     setComment(e.target.value);
   };
   const handleShowHistory = () => setShowHistory(!showHistory);
-  const handleReject = async () => {
+  const handleReject = (transcribing: boolean) => async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
       : ActivityStates.NeedsNewTranscription;
@@ -287,8 +287,8 @@ export function Transcriber(props: IProps) {
   const previous: { [key: string]: string } = {
     transcribed: ActivityStates.TranscribeReady,
     transcribing: ActivityStates.TranscribeReady,
-    reviewing: ActivityStates.Transcribed,
-    approved: ActivityStates.Transcribed,
+    reviewing: ActivityStates.TranscribeReady,
+    approved: ActivityStates.TranscribeReady,
   };
   const handleReopen = async () => {
     if (previous.hasOwnProperty(state)) {
@@ -623,7 +623,7 @@ export function Transcriber(props: IProps) {
                       variant="outlined"
                       color="primary"
                       className={classes.button}
-                      onClick={handleReject}
+                      onClick={handleReject(transcribing)}
                     >
                       {t.reject}
                     </Button>
