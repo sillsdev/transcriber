@@ -40,6 +40,13 @@ export const projectShortcut = async (props: IProps) => {
     schema,
     memory,
   });
+  const checkPlan = () => {
+    const val = remoteId('plan', plan.id, keyMap);
+    if (typeof val === 'undefined') {
+      setTimeout(checkPlan, 100);
+    }
+  };
+  checkPlan();
   setPlan(plan.id);
   const section = await saveNewSection({
     sequencenum: 1,

@@ -386,6 +386,7 @@ export function ResponsiveDrawer(props: IProps) {
       localStorage.setItem('url', to);
       const parts = to.split('/');
       setContent(parts[3]);
+      setTab(parseInt(parts[6]));
       setOpen(true);
     } else {
       setContent(slug(t.plans));
