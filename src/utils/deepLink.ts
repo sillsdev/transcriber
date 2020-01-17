@@ -30,8 +30,6 @@ export const deepLink = (props: IDeepLinkProps): string | null => {
     choice,
     content,
     keyMap,
-    setPlan,
-    setTab,
     t,
   } = props;
 
@@ -42,7 +40,6 @@ export const deepLink = (props: IDeepLinkProps): string | null => {
     if (choice === slug(t.usersAndGroups)) {
       const groupId = remoteId('group', group, keyMap);
       const groupPart = groupId ? '/' + groupId : '';
-      if (setPlan) setPlan('');
       return (
         '/main/' +
         orgId +
@@ -66,10 +63,6 @@ export const deepLink = (props: IDeepLinkProps): string | null => {
         tab.toString()
       );
     } else if (choice !== slug(t.plans) || !plan) {
-      if (choice !== slug(t.media)) {
-        if (setPlan) setPlan('');
-      }
-      if (setTab) setTab(0);
       return '/main/' + orgId + '/' + slug(choice) + '/' + projId;
     } else {
       const planId = remoteId('plan', plan, keyMap);

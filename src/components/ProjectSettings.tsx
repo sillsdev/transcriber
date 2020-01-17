@@ -118,10 +118,16 @@ interface IRecordProps {
   planTypes: Array<PlanType>;
 }
 
+export interface IAddArgs {
+  to?: string;
+  projectId?: string;
+  planId?: string;
+}
+
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
   noMargin?: boolean;
   add?: boolean;
-  finishAdd?: (to?: string) => void;
+  finishAdd?: (props: IAddArgs) => void;
 }
 
 export function ProjectSettings(props: IProps) {
@@ -248,7 +254,7 @@ export function ProjectSettings(props: IProps) {
     }).then(project => setProject(project.id));
 
     if (finishAdd) {
-      finishAdd();
+      finishAdd({});
     }
   };
   const handleDelete = () => {
@@ -285,7 +291,6 @@ export function ProjectSettings(props: IProps) {
       schema,
       memory,
     }).then(project => {
-      setProject(project.id);
       projectShortcut({
         organization,
         project: project.id,
@@ -297,9 +302,8 @@ export function ProjectSettings(props: IProps) {
         schema,
         memory,
         keyMap,
-        setPlan,
-      }).then(url => {
-        if (finishAdd) finishAdd(url);
+      }).then(({ url, planId }) => {
+        if (finishAdd) finishAdd({ to: url, projectId: project.id, planId });
       });
     });
   };

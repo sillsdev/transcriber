@@ -61,7 +61,6 @@ import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
-import { related, hasRelated, slug, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
 import HelpMenu from '../components/HelpMenu';
 import OrgSettings from '../components/OrgSettings';
@@ -76,8 +75,17 @@ import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import IntegrationPanel from '../components/Integration';
 import PlanTable from '../components/PlanTable';
+import { IAddArgs } from '../components/ProjectSettings';
 import Busy from '../components/Busy';
-import { setDefaultProj, deepLink } from '../utils';
+import {
+  related,
+  hasRelated,
+  slug,
+  setDefaultProj,
+  deepLink,
+  remoteId,
+  remoteIdGuid,
+} from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
@@ -323,6 +331,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleCommitOrg = (value: string) => {
     localStorage.removeItem('url');
+    localStorage.setItem('lastOrg', remoteId('organization', value, keyMap));
     if (value === t.newOrganization) {
       // if (newOrgRef.current) newOrgRef.current.click();
       setAddOrg(true);
@@ -355,6 +364,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
+    localStorage.setItem('lastProj', remoteId('project', value, keyMap));
     setAddProject(false);
     setProject(value);
     setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
@@ -380,18 +390,21 @@ export function ResponsiveDrawer(props: IProps) {
     setTitle(t.addProject);
   };
 
-  const handleFinishAdd = (to?: string) => {
-    setChoice(slug(t.plans));
+  const handleFinishAdd = async ({ to, projectId, planId }: IAddArgs) => {
     if (to) {
-      localStorage.setItem('url', to);
-      const parts = to.split('/');
-      setContent(parts[3]);
-      setTab(parseInt(parts[6]));
-      setOpen(true);
+      await setAddProject(false);
+      setTimeout(async () => {
+        await setProject(projectId || '');
+        await setPlan(planId || '');
+        const parts = to.split('/');
+        await setContent(parts[3]);
+        await setTab(parseInt(parts[6]));
+        await setOpen(true);
+      }, 500);
     } else {
       setContent(slug(t.plans));
+      setAddProject(false);
     }
-    setAddProject(false);
   };
 
   const handleUserMenuAction = (what: string) => {
@@ -483,7 +496,15 @@ export function ResponsiveDrawer(props: IProps) {
 
   useEffect(() => {
     if (orgOptions) {
-      const cur = orgOptions.map(oo => oo.value).indexOf(organization);
+      const orgKey =
+        organization !== ''
+          ? organization
+          : remoteIdGuid(
+              'organization',
+              localStorage.getItem('lastOrg') || '',
+              keyMap
+            ) || '';
+      const cur = orgOptions.map(oo => oo.value).indexOf(orgKey);
       if (cur !== -1) setCurOrg(cur);
       else if (
         !busy &&
@@ -510,32 +531,36 @@ export function ResponsiveDrawer(props: IProps) {
           };
         });
       setProjOptions(projOpts);
+      if (projOpts.length === 0) {
+        setCurProj(null);
+        if (swapRef.current) {
+          Axios.get(API_CONFIG.host + '/api/projects/', {
+            headers: {
+              Authorization: 'Bearer ' + auth.accessToken,
+            },
+          }).then(strings => {
+            const data = strings.data.data;
+            if (Array.isArray(data) && data.length === 0)
+              if (API_CONFIG.isApp) swapRef.current.click();
+              else handleAddProject();
+          });
+        }
+      }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject]);
+  }, [organization, addProject, swapRef.current]);
 
   useEffect(() => {
     const projKeys = projOptions.map(o => o.value);
-    if (projKeys.length === 0) {
-      setCurProj(null);
-      if (!busy && curOrg !== null) {
-        if (API_CONFIG.isApp) {
-          if (swapRef.current) {
-            Axios.get(API_CONFIG.host + '/api/projects/', {
-              headers: {
-                Authorization: 'Bearer ' + auth.accessToken,
-              },
-            }).then(strings => {
-              const data = strings.data.data;
-              if (Array.isArray(data) && data.length === 0)
-                swapRef.current.click();
-            });
-          }
-        } else handleAddProject();
-      }
-      return;
-    }
-    const cur = projKeys.indexOf(project);
+    const projKey =
+      project !== ''
+        ? project
+        : remoteIdGuid(
+            'project',
+            localStorage.getItem('lastProj') || '',
+            keyMap
+          ) || '';
+    const cur = projKeys.indexOf(projKey);
     if (addProject || cur === -1) {
       setCurProj(null);
     } else {
@@ -545,7 +570,7 @@ export function ResponsiveDrawer(props: IProps) {
       handleCommitProj(projKeys[0]);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject, busy, swapRef, curOrg]);
+  }, [projOptions, project, addProject, busy]);
 
   useEffect(() => {
     try {
@@ -589,13 +614,21 @@ export function ResponsiveDrawer(props: IProps) {
       choice,
       content,
       keyMap,
-      setPlan,
-      setTab,
       t,
     });
     if (target) history.push(target);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, organization, choice, content, plan, group, tab, busy]);
+  }, [
+    project,
+    organization,
+    choice,
+    content,
+    plan,
+    group,
+    tab,
+    addProject,
+    busy,
+  ]);
 
   useEffect(() => {
     if (remote) {
