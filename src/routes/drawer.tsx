@@ -1062,17 +1062,19 @@ export function ResponsiveDrawer(props: IProps) {
               </a>
             </div>
           ) : (
-            <div className={classes.navButton}>
-              <a
-                href={swapTarget}
-                style={{ textDecoration: 'none' }}
-                title={t.switchToAdmin}
-              >
-                <Button variant="contained" color="primary" disabled={busy}>
-                  {t.admin}
-                </Button>
-              </a>
-            </div>
+            (projRole === 'admin' || orgRole === 'admin') && (
+              <div className={classes.navButton}>
+                <a
+                  href={swapTarget}
+                  style={{ textDecoration: 'none' }}
+                  title={t.switchToAdmin}
+                >
+                  <Button variant="contained" color="primary" disabled={busy}>
+                    {t.admin}
+                  </Button>
+                </a>
+              </div>
+            )
           )}
           {'\u00A0'}
           <HelpMenu />
