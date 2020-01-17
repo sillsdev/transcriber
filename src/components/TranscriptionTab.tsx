@@ -273,6 +273,14 @@ export function TranscriptionTab(props: IProps) {
     setPassageId('');
   };
 
+  const hasTranscription = (passageId: string) => {
+    const mediaRec = getMediaRec(passageId, memory);
+    const mediaAttr = mediaRec && mediaRec.attributes;
+    const transcription =
+      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+    return transcription.length > 0;
+  };
+
   const handleEaf = (passageId: string) => () => {
     const mediaRec = getMediaRec(passageId, memory);
     const mediaAttr = mediaRec && mediaRec.attributes;
@@ -423,6 +431,7 @@ export function TranscriptionTab(props: IProps) {
         color="default"
         className={classes.actionWords}
         onClick={handleEaf(value)}
+        disabled={!hasTranscription(value)}
       >
         {t.elan}
         <br />
