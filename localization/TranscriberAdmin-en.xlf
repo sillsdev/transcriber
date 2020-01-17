@@ -214,6 +214,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectSettings.createdBy">
+         <segment>
+            <source>Created by {0}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectSettings.description">
          <segment>
             <source>Description</source>
@@ -424,9 +430,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planTable.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planTable.other">
+         <segment>
+            <source>General Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTable.sections">
          <segment>
             <source>Sections</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planTable.createdBy">
+         <segment>
+            <source>Created By</source>
             <target/>
          </segment>
       </unit>

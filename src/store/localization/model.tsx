@@ -55,6 +55,7 @@ export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethod
     "myProject": string;
     "general": string;
     "name": string;
+    "createdBy": string;
     "description": string;
     "projectType": string;
     "selectProjectType": string;
@@ -93,7 +94,10 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "addPlan": string;
     "name": string;
     "type": string;
+    "scripture": string;
+    "other": string;
     "sections": string;
+    "createdBy": string;
     "taks": string;
     "action": string;
     "filter": string;

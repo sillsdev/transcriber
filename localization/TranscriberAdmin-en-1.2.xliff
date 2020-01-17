@@ -250,7 +250,14 @@
                     <context context-type="sourcefile">ProjectSettings.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="projectSettings.description">
+        	<trans-unit id="projectSettings.createdBy">
+        		<source>Created by {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.description">
                 <source>Description</source>
                 <target/>
                 <context-group>
@@ -495,14 +502,35 @@
                     <context context-type="sourcefile">PlanTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planTable.sections">
+        	<trans-unit id="planTable.scripture">
+        		<source>Scripture Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanAdd.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.other">
+        		<source>General Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanAdd.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.sections">
                 <source>Sections</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PlanTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planTable.taks">
+        	<trans-unit id="planTable.createdBy">
+        		<source>Created By</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.taks">
                 <source>Passages</source>
                 <target/>
                 <context-group>

@@ -211,6 +211,12 @@
 				<target>Nom</target>
 			</segment>
 		</unit>
+		<unit id="projectSettings.createdBy">
+			<segment>
+				<source>Created by {0}</source>
+				<target>Créé par {0}</target>
+			</segment>
+		</unit>
 		<unit id="projectSettings.description">
 			<segment>
 				<source>Description</source>
@@ -421,10 +427,28 @@
 				<target>Type de programme</target>
 			</segment>
 		</unit>
+		<unit id="planTable.scripture">
+			<segment>
+				<source>Scripture Transcription</source>
+				<target>Transcription des Écritures</target>
+			</segment>
+		</unit>
+		<unit id="planTable.other">
+			<segment>
+				<source>General Transcription</source>
+				<target>Transcription générale</target>
+			</segment>
+		</unit>
 		<unit id="planTable.sections">
 			<segment>
 				<source>Sections</source>
 				<target>Ensembles</target>
+			</segment>
+		</unit>
+		<unit id="planTable.createdBy">
+			<segment>
+				<source>Created By</source>
+				<target>Créé par</target>
 			</segment>
 		</unit>
 		<unit id="planTable.taks">

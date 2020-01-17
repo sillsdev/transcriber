@@ -4,6 +4,7 @@ export interface Plan extends Record {
   attributes: {
     name: string;
     slug: string;
+    lastModifiedBy: number;
   };
   relationships?: {
     project: RecordRelationship;

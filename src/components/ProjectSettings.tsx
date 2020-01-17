@@ -37,7 +37,7 @@ import { related } from '../utils';
 import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
 import { API_CONFIG } from '../api-variable';
-import { getRoleId } from '../utils';
+import { getRoleId, getCreatedBy } from '../utils';
 import { SelectPlanType } from '../control';
 import { projectShortcut } from './ProjectShortcut';
 import { saveNewProject } from '../crud/saveNewProject';
@@ -152,8 +152,6 @@ export function ProjectSettings(props: IProps) {
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_plan, setPlan] = useGlobal('plan');
   const [currentProject, setCurrentProject] = useState<Project | undefined>();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -166,6 +164,7 @@ export function ProjectSettings(props: IProps) {
   const [defaultFontSize, setDefaultFontSize] = useState('large');
   const [rtl, setRtl] = useState(false);
   const [planType, setPlanType] = useState('');
+  const [createdBy, setCreatedBy] = useState('');
   const [projectGroup, setProjectGroup] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
@@ -327,6 +326,7 @@ export function ProjectSettings(props: IProps) {
         dateCreated: '',
         dateUpdated: '',
         dateArchived: '',
+        lastModifiedBy: 0,
       },
     };
     if (add) {
@@ -353,6 +353,7 @@ export function ProjectSettings(props: IProps) {
     setDefaultFont(attr.defaultFont ? attr.defaultFont : '');
     setDefaultFontSize(attr.defaultFontSize ? attr.defaultFontSize : 'large');
     setRtl(attr.rtl);
+    setCreatedBy(getCreatedBy(attr.lastModifiedBy, memory, keyMap));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, project, projects]);
 
@@ -392,6 +393,7 @@ export function ProjectSettings(props: IProps) {
                       margin="normal"
                       variant="filled"
                       required={true}
+                      helperText={t.createdBy.replace('{0}', createdBy)}
                       disabled={
                         API_CONFIG.isApp ||
                         (orgRole !== 'admin' && projRole !== 'admin')
