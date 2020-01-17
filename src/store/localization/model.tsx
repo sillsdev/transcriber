@@ -52,6 +52,7 @@ export interface IChartStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethods {
+    "myProject": string;
     "general": string;
     "name": string;
     "description": string;

@@ -196,6 +196,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectSettings.myProject">
+         <segment>
+            <source>My Project</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectSettings.general">
          <segment>
             <source>General</source>

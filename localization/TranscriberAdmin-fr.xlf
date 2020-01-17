@@ -193,6 +193,12 @@
 				<target>Total des transactions</target>
 			</segment>
 		</unit>
+		<unit id="projectSettings.myProject">
+			<segment>
+				<source>My Project</source>
+				<target>Mon projet</target>
+			</segment>
+		</unit>
 		<unit id="projectSettings.general">
 			<segment>
 				<source>General</source>

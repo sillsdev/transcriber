@@ -270,7 +270,7 @@ export function ProjectSettings(props: IProps) {
   };
   const handleLanguageName = (lang: string) => {
     setLanguageName(lang);
-    if (name === '') setName(lang);
+    if (name === t.myProject) setName(lang);
   };
   const handleTypeChange = (e: any) => {
     setPlanType(e.target.value);
@@ -313,7 +313,7 @@ export function ProjectSettings(props: IProps) {
       type: 'project',
       id: '',
       attributes: {
-        name: '',
+        name: t.myProject,
         slug: '',
         description: '',
         uilanguagebcp47: '',

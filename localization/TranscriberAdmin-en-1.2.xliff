@@ -229,7 +229,14 @@
                     <context context-type="sourcefile">Chart.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="projectSettings.general">
+        	<trans-unit id="projectSettings.myProject">
+        		<source>My Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.general">
                 <source>General</source>
                 <target/>
                 <context-group>

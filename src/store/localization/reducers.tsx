@@ -64,6 +64,7 @@ const initialState = {
 	}),
 	"projectSettings": new LocalizedStrings({
 		"en": {
+			"myProject": "My Project",
 			"general": "General",
 			"name": "Name",
 			"description": "Description",
