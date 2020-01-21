@@ -13,6 +13,10 @@ import {
   ActivityStates,
   Passage,
   PassageStateChange,
+  PassageSection,
+  Section,
+  Plan,
+  PlanType,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -244,13 +248,44 @@ export function Transcriber(props: IProps) {
     transcribeReady: ActivityStates.Transcribed,
     transcribed: ActivityStates.Approved,
   };
+  const getType = () => {
+    const passageSectionId = related(passRec, 'sections');
+    if (!passageSectionId || passageSectionId.length < 1) return null;
+    const passSecRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord(passageSectionId[0])
+    ) as PassageSection;
+    const sectionId = related(passSecRec, 'section');
+    if (!sectionId) return null;
+    const secRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'section', id: sectionId })
+    ) as Section;
+    const planId = related(secRec, 'plan');
+    if (!planId) return null;
+    const planRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plan', id: planId })
+    ) as Plan;
+    const planTypeId = related(planRec, 'plantype');
+    if (!planTypeId) return null;
+    const planTypeRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plantype', id: planTypeId })
+    ) as PlanType;
+    const planType =
+      planTypeRec &&
+      planTypeRec.attributes &&
+      planTypeRec.attributes.name &&
+      planTypeRec.attributes.name.toLowerCase();
+    return planType;
+  };
   const handleSubmit = async () => {
     if (transcriptionRef.current) {
-      let transcription = transcriptionRef.current.firstChild.value;
       if (next.hasOwnProperty(state)) {
+        const transcription = transcriptionRef.current.firstChild.value;
+        let nextState = next[state];
+        if (nextState === ActivityStates.Approved && getType() !== 'scripture')
+          nextState = ActivityStates.Done;
         await memory.update((t: TransformBuilder) => [
           t.replaceAttribute(passRec, 'lastComment', comment),
-          t.replaceAttribute(passRec, 'state', next[state]),
+          t.replaceAttribute(passRec, 'state', nextState),
           t.updateRecord({
             type: 'mediafile',
             id: mediaId,
