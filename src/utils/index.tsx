@@ -20,3 +20,4 @@ export * from './updateXml';
 export * from './media';
 export * from './relMouseCoords';
 export * from './createdBy';
+export * from './cleanFileName';
