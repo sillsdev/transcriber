@@ -260,6 +260,7 @@ const initialState = {
 			"project": "Project",
 			"loadingTranscriberAdmin": "Loading SIL Transcriber Admin",
 			"loadingTranscriber": "Loading SIL Transcriber",
+			"addOrganization": "Add Organization",
 			"projectSummary": "Project Summary",
 			"addProject": "Add Project",
 			"export": "Export",

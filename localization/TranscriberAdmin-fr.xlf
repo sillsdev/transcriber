@@ -1129,6 +1129,12 @@
 				<target>Chargement de SIL Transcriber</target>
 			</segment>
 		</unit>
+		<unit id="main.addOrganization">
+			<segment>
+				<source>Add Organization</source>
+				<target>Ajouter une organisation</target>
+			</segment>
+		</unit>
 		<unit id="main.projectSummary">
 			<segment>
 				<source>Project Summary</source>

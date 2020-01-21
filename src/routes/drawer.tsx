@@ -336,6 +336,7 @@ export function ResponsiveDrawer(props: IProps) {
       // if (newOrgRef.current) newOrgRef.current.click();
       setAddOrg(true);
       setContent(slug(t.organization));
+      setTitle(t.addOrganization);
     } else {
       if (value !== organization) setCurProj(null);
       setOrganization(value);
@@ -360,6 +361,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleFinishOrgAdd = () => {
     setAddOrg(false);
+    setTimeout(() => handleAddProject(), 1000);
   };
 
   const handleCommitProj = (value: string) => {

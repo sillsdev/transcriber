@@ -238,6 +238,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "project": string;
     "loadingTranscriberAdmin": string;
     "loadingTranscriber": string;
+    "addOrganization": string;
     "projectSummary": string;
     "addProject": string;
     "export": string;
