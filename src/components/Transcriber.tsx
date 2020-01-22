@@ -459,7 +459,7 @@ export function Transcriber(props: IProps) {
   const fontConfig = {
     custom: {
       families: [fontFamily],
-      urls: ['/fonts/' + fontFamily + '.css'],
+      urls: ['https://fonts.siltranscriber.org/' + fontFamily + '.css'],
     },
   };
 
