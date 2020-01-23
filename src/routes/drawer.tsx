@@ -373,7 +373,7 @@ export function ResponsiveDrawer(props: IProps) {
     setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
     setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
     setGroup('');
-    setTitle(t.projectSummary);
+    setTitle(t.plans);
   };
 
   const handlePlanType = (value: string | null) => {
