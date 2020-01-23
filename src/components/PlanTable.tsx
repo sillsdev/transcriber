@@ -20,6 +20,7 @@ import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { saveNewPlan } from '../crud';
+import { getCreatedBy } from '../utils';
 import Related from '../utils/related';
 import { numCompare } from '../utils/sort';
 
@@ -62,6 +63,7 @@ interface IRow {
   name: string;
   planType: string;
   sections: string;
+  createdBy: string;
   action: string;
 }
 
@@ -85,18 +87,21 @@ export function PlanTable(props: IProps) {
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
+  const [keyMap] = useGlobal('keyMap');
   const [projRole] = useGlobal('projRole');
   const [project] = useGlobal('project');
   const [columns] = useState([
     { name: 'name', title: t.name },
     { name: 'planType', title: t.type },
     { name: 'sections', title: t.sections },
+    { name: 'createdBy', title: t.createdBy },
     { name: 'action', title: projRole === 'admin' ? t.action : '\u00A0' },
   ]);
   const [columnWidth] = useState([
     { columnName: 'name', width: 300 },
     { columnName: 'planType', width: 170 },
     { columnName: 'sections', width: 100 },
+    { columnName: 'createdBy', width: 150 },
     { columnName: 'action', width: 150 },
   ]);
   const columnSorting = [{ columnName: 'sections', compare: numCompare }];
@@ -193,6 +198,7 @@ export function PlanTable(props: IProps) {
           name: p.attributes.name,
           planType: getType(p),
           sections: sectionCount(p),
+          createdBy: getCreatedBy(p.attributes.lastModifiedBy, memory, keyMap),
           action: p.id,
         } as IRow;
       })

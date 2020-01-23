@@ -13,6 +13,10 @@ import {
   ActivityStates,
   Passage,
   PassageStateChange,
+  PassageSection,
+  Section,
+  Plan,
+  PlanType,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -215,22 +219,20 @@ export function Transcriber(props: IProps) {
       playerRef.current.seekTo(Math.max(playedSeconds + amount, 0));
     }
   };
-  const handleJump = (amount: number) => () => handleJumpFn(amount);
+  const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
   const rnd1 = (val: number) => Math.round(val * 10) / 10;
-  const handleSlowerFn = () => {
+  const handleSlower = () => {
     if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
   };
-  const handleSlowerEv = () => handleSlowerFn();
-  const handleFasterFn = () => {
+  const handleFaster = () => {
     if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
   };
-  const handleFasterEv = () => handleFasterFn();
   const handleMakeComment = () => setMakeComment(!makeComment);
   const handleCommentChange = (e: any) => {
     setComment(e.target.value);
   };
   const handleShowHistory = () => setShowHistory(!showHistory);
-  const handleReject = async () => {
+  const handleReject = (transcribing: boolean) => async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
       : ActivityStates.NeedsNewTranscription;
@@ -246,13 +248,44 @@ export function Transcriber(props: IProps) {
     transcribeReady: ActivityStates.Transcribed,
     transcribed: ActivityStates.Approved,
   };
+  const getType = () => {
+    const passageSectionId = related(passRec, 'sections');
+    if (!passageSectionId || passageSectionId.length < 1) return null;
+    const passSecRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord(passageSectionId[0])
+    ) as PassageSection;
+    const sectionId = related(passSecRec, 'section');
+    if (!sectionId) return null;
+    const secRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'section', id: sectionId })
+    ) as Section;
+    const planId = related(secRec, 'plan');
+    if (!planId) return null;
+    const planRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plan', id: planId })
+    ) as Plan;
+    const planTypeId = related(planRec, 'plantype');
+    if (!planTypeId) return null;
+    const planTypeRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'plantype', id: planTypeId })
+    ) as PlanType;
+    const planType =
+      planTypeRec &&
+      planTypeRec.attributes &&
+      planTypeRec.attributes.name &&
+      planTypeRec.attributes.name.toLowerCase();
+    return planType;
+  };
   const handleSubmit = async () => {
     if (transcriptionRef.current) {
-      let transcription = transcriptionRef.current.firstChild.value;
       if (next.hasOwnProperty(state)) {
+        const transcription = transcriptionRef.current.firstChild.value;
+        let nextState = next[state];
+        if (nextState === ActivityStates.Approved && getType() !== 'scripture')
+          nextState = ActivityStates.Done;
         await memory.update((t: TransformBuilder) => [
           t.replaceAttribute(passRec, 'lastComment', comment),
-          t.replaceAttribute(passRec, 'state', next[state]),
+          t.replaceAttribute(passRec, 'state', nextState),
           t.updateRecord({
             type: 'mediafile',
             id: mediaId,
@@ -286,6 +319,21 @@ export function Transcriber(props: IProps) {
     done();
   };
   const handleClose = () => done();
+  const previous: { [key: string]: string } = {
+    transcribed: ActivityStates.TranscribeReady,
+    transcribing: ActivityStates.TranscribeReady,
+    reviewing: ActivityStates.TranscribeReady,
+    approved: ActivityStates.TranscribeReady,
+  };
+  const handleReopen = async () => {
+    if (previous.hasOwnProperty(state)) {
+      await memory.update((t: TransformBuilder) => [
+        t.replaceAttribute(passRec, 'lastComment', comment),
+        t.replaceAttribute(passRec, 'state', previous[state]),
+      ]);
+    }
+    done();
+  };
   const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
@@ -293,6 +341,7 @@ export function Transcriber(props: IProps) {
     const JumpAheadKey = keycode(AHEAD_KEY);
     const SlowerKey = keycode(SLOWER_KEY);
     const FasterKey = keycode(FASTER_KEY);
+    const HistoryKey = keycode(HISTORY_KEY);
     switch (e.keyCode) {
       case PlayPauseKey:
         setPlaying(!playing);
@@ -307,11 +356,15 @@ export function Transcriber(props: IProps) {
         e.preventDefault();
         return;
       case SlowerKey:
-        handleSlowerFn();
+        handleSlower();
         e.preventDefault();
         return;
       case FasterKey:
-        handleFasterFn();
+        handleFaster();
+        e.preventDefault();
+        return;
+      case HistoryKey:
+        handleShowHistory();
         e.preventDefault();
         return;
     }
@@ -406,7 +459,7 @@ export function Transcriber(props: IProps) {
   const fontConfig = {
     custom: {
       families: [fontFamily],
-      urls: ['/fonts/' + fontFamily + '.css'],
+      urls: ['https://fonts.siltranscriber.org/' + fontFamily + '.css'],
     },
   };
 
@@ -452,7 +505,7 @@ export function Transcriber(props: IProps) {
           <Grid container direction="row" className={classes.row}>
             <Grid container xs justify="center">
               <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                <IconButton onClick={handleJump(-1 * jump)}>
+                <IconButton onClick={handleJumpEv(-1 * jump)}>
                   <>
                     <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
                   </>
@@ -472,21 +525,21 @@ export function Transcriber(props: IProps) {
                 </IconButton>
               </Tooltip>
               <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                <IconButton onClick={handleJump(jump)}>
+                <IconButton onClick={handleJumpEv(jump)}>
                   <>
                     <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
                   </>
                 </IconButton>
               </Tooltip>
               <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                <IconButton onClick={handleSlowerEv}>
+                <IconButton onClick={handleSlower}>
                   <>
                     <FaAngleDoubleDown /> <Typography>{SLOWER_KEY}</Typography>
                   </>
                 </IconButton>
               </Tooltip>
               <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                <IconButton onClick={handleFasterEv}>
+                <IconButton onClick={handleFaster}>
                   <>
                     <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
                   </>
@@ -605,7 +658,7 @@ export function Transcriber(props: IProps) {
                       variant="outlined"
                       color="primary"
                       className={classes.button}
-                      onClick={handleReject}
+                      onClick={handleReject(transcribing)}
                     >
                       {t.reject}
                     </Button>
@@ -638,14 +691,25 @@ export function Transcriber(props: IProps) {
                   </Tooltip>{' '}
                 </>
               ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleClose}
-                >
-                  {t.close}
-                </Button>
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleReopen}
+                    disabled={!previous.hasOwnProperty(state)}
+                  >
+                    {t.reopen}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleClose}
+                  >
+                    {t.close}
+                  </Button>
+                </>
               )}
             </Grid>
           </Grid>

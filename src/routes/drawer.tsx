@@ -4,6 +4,7 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Axios from 'axios';
 import {
   IState,
   IMainStrings,
@@ -60,7 +61,6 @@ import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
-import { related, hasRelated, slug, remoteIdGuid } from '../utils';
 import UserMenu from '../components/UserMenu';
 import HelpMenu from '../components/HelpMenu';
 import OrgSettings from '../components/OrgSettings';
@@ -75,8 +75,18 @@ import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import IntegrationPanel from '../components/Integration';
 import PlanTable from '../components/PlanTable';
+import { IAddArgs } from '../components/ProjectSettings';
 import Busy from '../components/Busy';
-import { setDefaultProj, deepLink } from '../utils';
+import {
+  related,
+  hasRelated,
+  slug,
+  setDefaultProj,
+  deepLink,
+  remoteId,
+  remoteIdGuid,
+  makeAbbr,
+} from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
@@ -192,9 +202,9 @@ const useStyles = makeStyles((theme: Theme) =>
     topTranscriber: {
       zIndex: 1,
       position: 'absolute',
-      left: theme.spacing(DrawerMin) + TaskItemWidth + theme.spacing(1),
+      left: theme.spacing(DrawerMin) + TaskItemWidth + theme.spacing(0.5),
       [theme.breakpoints.up('sm')]: {
-        left: theme.spacing(DrawerTask) + TaskItemWidth + theme.spacing(2),
+        left: theme.spacing(DrawerTask) + TaskItemWidth + theme.spacing(0.5),
       },
     },
     progress: {
@@ -225,9 +235,7 @@ interface IDispatchProps {
 }
 
 interface IRecordProps {
-  organizations: Array<Organization>;
   organizationMemberships: Array<OrganizationMembership>;
-  projects: Array<Project>;
   plans: Array<Plan>;
   groupMemberships: Array<GroupMembership>;
   roles: Array<Role>;
@@ -251,8 +259,6 @@ export function ResponsiveDrawer(props: IProps) {
     auth,
     t,
     history,
-    organizations,
-    projects,
     plans,
     orbitLoaded,
     organizationMemberships,
@@ -326,10 +332,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleCommitOrg = (value: string) => {
     localStorage.removeItem('url');
+    localStorage.setItem('lastOrg', remoteId('organization', value, keyMap));
     if (value === t.newOrganization) {
       // if (newOrgRef.current) newOrgRef.current.click();
       setAddOrg(true);
       setContent(slug(t.organization));
+      setTitle(t.addOrganization);
     } else {
       if (value !== organization) setCurProj(null);
       setOrganization(value);
@@ -354,10 +362,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleFinishOrgAdd = () => {
     setAddOrg(false);
+    setTimeout(() => handleAddProject(), 1000);
   };
 
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
+    localStorage.setItem('lastProj', remoteId('project', value, keyMap));
     setAddProject(false);
     setProject(value);
     setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
@@ -383,17 +393,21 @@ export function ResponsiveDrawer(props: IProps) {
     setTitle(t.addProject);
   };
 
-  const handleFinishAdd = (to?: string) => {
-    setChoice(slug(t.plans));
+  const handleFinishAdd = async ({ to, projectId, planId }: IAddArgs) => {
     if (to) {
-      localStorage.setItem('url', to);
-      const parts = to.split('/');
-      setContent(parts[3]);
-      setOpen(true);
+      await setAddProject(false);
+      setTimeout(async () => {
+        await setProject(projectId || '');
+        await setPlan(planId || '');
+        const parts = to.split('/');
+        await setContent(parts[3]);
+        await setTab(parseInt(parts[6]));
+        await setOpen(true);
+      }, 500);
     } else {
       setContent(slug(t.plans));
+      setAddProject(false);
     }
-    setAddProject(false);
   };
 
   const handleUserMenuAction = (what: string) => {
@@ -443,31 +457,57 @@ export function ResponsiveDrawer(props: IProps) {
   };
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
+  const getOrgs = async () => {
+    return (await memory.query((q: QueryBuilder) =>
+      q.findRecords('organization')
+    )) as Organization[];
+  };
+  const getProjs = async () => {
+    return (await memory.query((q: QueryBuilder) =>
+      q.findRecords('project')
+    )) as Project[];
+  };
+
   useEffect(() => {
-    const orgOpts = organizations
-      .filter(o => hasRelated(o, 'users', user) && o.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-      .map((o: Organization) => {
-        return {
-          value: o.id,
-          label: o.attributes.name,
-        };
-      });
-    setOrgOptions(
-      API_CONFIG.isApp
-        ? orgOpts
-        : orgOpts.concat({
-            value: t.newOrganization,
-            label: t.newOrganization + '    \uFF0B',
-            // or \u2795
-          })
-    );
+    getOrgs().then(organizations => {
+      const orgOpts = organizations
+        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .map((o: Organization) => {
+          return {
+            value: o.id,
+            label: o.attributes.name,
+          };
+        });
+      setOrgOptions(
+        API_CONFIG.isApp
+          ? orgOpts
+          : orgOpts.concat({
+              value: t.newOrganization,
+              label: t.newOrganization + '    \uFF0B',
+              // or \u2795
+            })
+      );
+      const orgRec = organizations.filter(o => o.id === organization);
+      if (orgRec.length > 0) {
+        const attr = orgRec[0].attributes;
+        setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
+      }
+    });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organizations, organization, user]);
+  }, [organization, user]);
 
   useEffect(() => {
     if (orgOptions) {
-      const cur = orgOptions.map(oo => oo.value).indexOf(organization);
+      const orgKey =
+        organization !== ''
+          ? organization
+          : remoteIdGuid(
+              'organization',
+              localStorage.getItem('lastOrg') || '',
+              keyMap
+            ) || '';
+      const cur = orgOptions.map(oo => oo.value).indexOf(orgKey);
       if (cur !== -1) setCurOrg(cur);
       else if (
         !busy &&
@@ -481,48 +521,67 @@ export function ResponsiveDrawer(props: IProps) {
   }, [orgOptions, organization, busy]);
 
   useEffect(() => {
-    const orgRec = organizations.filter(o => o.id === organization);
-    if (orgRec.length > 0) {
-      const attr = orgRec[0].attributes;
-      setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
-    }
+    getProjs().then(projects => {
+      const projOpts = projects
+        .filter(
+          p => related(p, 'organization') === organization && p.attributes
+        )
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .map(p => {
+          return {
+            value: p.id,
+            label: p.attributes.name,
+          };
+        });
+      setProjOptions(projOpts);
+      if (projOpts.length === 0) {
+        setCurProj(null);
+        if (swapRef.current) {
+          Axios.get(API_CONFIG.host + '/api/projects/', {
+            headers: {
+              Authorization: 'Bearer ' + auth.accessToken,
+            },
+          }).then(strings => {
+            const data = strings.data.data;
+            if (Array.isArray(data) && data.length === 0)
+              if (API_CONFIG.isApp) swapRef.current.click();
+              else handleAddProject();
+          });
+        }
+      }
+    });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, curOrg]);
-
-  useEffect(() => {
-    const projOpts = projects
-      .filter(p => related(p, 'organization') === organization && p.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-      .map(p => {
-        return {
-          value: p.id,
-          label: p.attributes.name,
-        };
-      });
-    setProjOptions(projOpts);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projects, organization, addProject]);
+  }, [organization, addProject, swapRef.current]);
 
   useEffect(() => {
     const projKeys = projOptions.map(o => o.value);
-    if (projKeys.length === 0) {
-      setCurProj(null);
-      if (!busy && curOrg !== null) {
-        if (!API_CONFIG.isApp) handleAddProject();
-      }
-      return;
-    }
-    const cur = projKeys.indexOf(project);
+    const projKey =
+      project !== ''
+        ? project
+        : remoteIdGuid(
+            'project',
+            localStorage.getItem('lastProj') || '',
+            keyMap
+          ) || '';
+    const cur = projKeys.indexOf(projKey);
     if (addProject || cur === -1) {
       setCurProj(null);
-    } else {
+    } else if (!busy && curProj !== cur) {
       setCurProj(cur);
+      setTimeout(() => handleCommitProj(projKeys[cur]), 500);
     }
-    if (!busy && projKeys.length === 1 && curProj == null && !addProject) {
-      handleCommitProj(projKeys[0]);
+    if (
+      !busy &&
+      projKeys.length > 0 &&
+      curProj == null &&
+      !addProject &&
+      cur < 0
+    ) {
+      setCurProj(0);
+      setTimeout(() => handleCommitProj(projKeys[0]), 500);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject, busy, swapRef, curOrg]);
+  }, [projOptions, project, addProject, busy]);
 
   useEffect(() => {
     try {
@@ -566,13 +625,21 @@ export function ResponsiveDrawer(props: IProps) {
       choice,
       content,
       keyMap,
-      setPlan,
-      setTab,
       t,
     });
     if (target) history.push(target);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project, organization, choice, content, plan, group, tab, busy]);
+  }, [
+    project,
+    organization,
+    choice,
+    content,
+    plan,
+    group,
+    tab,
+    addProject,
+    busy,
+  ]);
 
   useEffect(() => {
     if (remote) {
@@ -588,13 +655,6 @@ export function ResponsiveDrawer(props: IProps) {
         }
         syncTimer.current = setInterval(() => {
           if (!busy) {
-            if (API_CONFIG.isApp && curOrg !== null) {
-              if (projOptions.length === 0) {
-                if (swapRef && swapRef.current) {
-                  swapRef.current.click();
-                }
-              }
-            }
             dateChanges(auth, keyMap, remote, memory, schema);
           }
         }, 1000 * 10);
@@ -638,7 +698,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   // reset location based on deep link (saved url)
   const url = localStorage.getItem('url');
-  if (orbitLoaded && url) {
+  if (
+    orbitLoaded &&
+    url &&
+    view === '' &&
+    localStorage.getItem('isLoggedIn') === 'true'
+  ) {
     const parts = url.split('/');
     const base = 1;
     const UrlOrgPart = base + 1;
@@ -740,9 +805,13 @@ export function ResponsiveDrawer(props: IProps) {
         <div className={classes.organization}>
           <div className={classes.avatar}>
             {orgAvatar && orgAvatar.startsWith('http') ? (
-              <Avatar src={orgAvatar} />
+              <Avatar variant="square" src={orgAvatar} />
+            ) : curOrg != null && orgOptions.length > 0 ? (
+              <Avatar variant="square">
+                {makeAbbr(orgOptions[curOrg].label)}
+              </Avatar>
             ) : (
-              <OrganizationIcon />
+              <></>
             )}
           </div>
           {!mini && (
@@ -1008,17 +1077,19 @@ export function ResponsiveDrawer(props: IProps) {
               </a>
             </div>
           ) : (
-            <div className={classes.navButton}>
-              <a
-                href={swapTarget}
-                style={{ textDecoration: 'none' }}
-                title={t.switchToAdmin}
-              >
-                <Button variant="contained" color="primary" disabled={busy}>
-                  {t.admin}
-                </Button>
-              </a>
-            </div>
+            (projRole === 'admin' || orgRole === 'admin') && (
+              <div className={classes.navButton}>
+                <a
+                  href={swapTarget}
+                  style={{ textDecoration: 'none' }}
+                  title={t.switchToAdmin}
+                >
+                  <Button variant="contained" color="primary" disabled={busy}>
+                    {t.admin}
+                  </Button>
+                </a>
+              </div>
+            )
           )}
           {'\u00A0'}
           <HelpMenu />
@@ -1120,10 +1191,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 const mapRecordsToProps = {
-  organizations: (q: QueryBuilder) => q.findRecords('organization'),
   organizationMemberships: (q: QueryBuilder) =>
     q.findRecords('organizationmembership'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   roles: (q: QueryBuilder) => q.findRecords('role'),

@@ -193,6 +193,12 @@
 				<target>Total des transactions</target>
 			</segment>
 		</unit>
+		<unit id="projectSettings.myProject">
+			<segment>
+				<source>My Project</source>
+				<target>Mon projet</target>
+			</segment>
+		</unit>
 		<unit id="projectSettings.general">
 			<segment>
 				<source>General</source>
@@ -203,6 +209,12 @@
 			<segment>
 				<source>Name</source>
 				<target>Nom</target>
+			</segment>
+		</unit>
+		<unit id="projectSettings.createdBy">
+			<segment>
+				<source>Created by {0}</source>
+				<target>Créé par {0}</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.description">
@@ -309,20 +321,20 @@
 		</unit>
 		<unit id="projectSettings.nextSteps">
 			<segment>
-				<source>Next Steps</source>
-				<target>Prochaines étapes</target>
+				<source>Select Next Step</source>
+				<target>Sélectionnez l'étape suivante</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.configure">
 			<segment>
-				<source>Configure a Collaborative Project</source>
-				<target>Configurer un projet collaboratif</target>
+				<source>&#x2022; Configure a Collaborative Project</source>
+				<target>&#x2022; Configurer un projet collaboratif</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.startNow">
 			<segment>
-				<source>Start Transcribing Now</source>
-				<target>Commencez à transcrire maintenant</target>
+				<source>&#x2022; Start Transcribing Now</source>
+				<target>&#x2022; Commencez à transcrire maintenant</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.dangerZone">
@@ -415,10 +427,28 @@
 				<target>Type de programme</target>
 			</segment>
 		</unit>
+		<unit id="planTable.scripture">
+			<segment>
+				<source>Scripture Transcription</source>
+				<target>Transcription des Écritures</target>
+			</segment>
+		</unit>
+		<unit id="planTable.other">
+			<segment>
+				<source>General Transcription</source>
+				<target>Transcription générale</target>
+			</segment>
+		</unit>
 		<unit id="planTable.sections">
 			<segment>
 				<source>Sections</source>
 				<target>Ensembles</target>
+			</segment>
+		</unit>
+		<unit id="planTable.createdBy">
+			<segment>
+				<source>Created By</source>
+				<target>Créé par</target>
 			</segment>
 		</unit>
 		<unit id="planTable.taks">
@@ -1099,6 +1129,12 @@
 				<target>Chargement de SIL Transcriber</target>
 			</segment>
 		</unit>
+		<unit id="main.addOrganization">
+			<segment>
+				<source>Add Organization</source>
+				<target>Ajouter une organisation</target>
+			</segment>
+		</unit>
 		<unit id="main.projectSummary">
 			<segment>
 				<source>Project Summary</source>
@@ -1304,6 +1340,30 @@
 				<target>Plan</target>
 			</segment>
 		</unit>
+        <unit id="transcriptionTab.exportProject">
+         <segment>
+            <source>Export Project</source>
+            <target>Exporter une projet</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportError">
+         <segment>
+            <source>Export Error</source>
+            <target>Erreur d'exportation</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadComplete">
+         <segment>
+            <source>Download complete</source>
+            <target>Téléchargement complet</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+         </segment>
+      </unit>
 		<unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>
@@ -2419,6 +2479,12 @@
 			<segment>
 				<source>Close</source>
 				<target>Fermer</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.reopen">
+			<segment>
+				<source>Reopen</source>
+				<target>Réouvrir</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.settingsTip">

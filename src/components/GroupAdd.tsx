@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { IState, Group, PlanType, IGroupAddStrings } from '../model';
+import { IState, Group, IGroupAddStrings } from '../model';
 import localStrings from '../selector/localize';
 import {
   Button,
@@ -18,11 +18,7 @@ interface IStateProps {
   t: IGroupAddStrings;
 }
 
-interface IRecordProps {
-  planTypes: Array<PlanType>;
-}
-
-interface IProps extends IRecordProps, IStateProps {
+interface IProps extends IStateProps {
   groupIn: Group | null;
   visible: boolean;
   addMethod?: (groupName: string, groupAbbr: string) => void;
@@ -68,6 +64,7 @@ function GroupAdd(props: IProps) {
       }
     }
     setOpen(false);
+    setInProcess(false);
   };
   const handleCancel = () => {
     if (cancelMethod) {

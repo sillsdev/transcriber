@@ -52,8 +52,10 @@ export interface IChartStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethods {
+    "myProject": string;
     "general": string;
     "name": string;
+    "createdBy": string;
     "description": string;
     "projectType": string;
     "selectProjectType": string;
@@ -92,7 +94,10 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "addPlan": string;
     "name": string;
     "type": string;
+    "scripture": string;
+    "other": string;
     "sections": string;
+    "createdBy": string;
     "taks": string;
     "action": string;
     "filter": string;
@@ -233,6 +238,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "project": string;
     "loadingTranscriberAdmin": string;
     "loadingTranscriber": string;
+    "addOrganization": string;
     "projectSummary": string;
     "addProject": string;
     "export": string;
@@ -272,6 +278,10 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "plan": string;
     "elan": string;
     "export": string;
+    "exportProject": string;
+    "exportError": string;
+    "downloadComplete": string;
+    "expiredToken": string;
 };
 
 export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {
@@ -509,6 +519,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "reject": string;
     "save": string;
     "close": string;
+    "reopen": string;
     "settingsTip": string;
     "backTip": string;
     "aheadTip": string;

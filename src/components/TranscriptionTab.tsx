@@ -17,6 +17,7 @@ import {
   MediaFile,
   ActivityStates,
 } from '../model';
+import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -46,6 +47,7 @@ import {
   getMediaName,
   remoteId,
   related,
+  remoteIdNum,
 } from '../utils';
 import eaf from './TranscriptionEaf';
 let Encoder = require('node-html-encoder').Encoder;
@@ -68,7 +70,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       margin: theme.spacing(1),
-      variant: 'outlined',
       color: 'primary',
     },
     icon: {
@@ -181,10 +182,14 @@ interface IStateProps {
   activityState: IActivityStateStrings;
   hasUrl: boolean;
   mediaUrl: string;
+  exportFile: File;
+  exportStatus: IAxiosStatus;
 }
 
 interface IDispatchProps {
   fetchMediaUrl: typeof actions.fetchMediaUrl;
+  exportProject: typeof actions.exportProject;
+  exportComplete: typeof actions.exportComplete;
 }
 
 interface IRecordProps {
@@ -221,6 +226,10 @@ export function TranscriptionTab(props: IProps) {
     hasUrl,
     mediaUrl,
     fetchMediaUrl,
+    exportProject,
+    exportComplete,
+    exportStatus,
+    exportFile,
   } = props;
   const classes = useStyles();
   const [plan, setPlan] = useGlobal('plan');
@@ -235,7 +244,10 @@ export function TranscriptionTab(props: IProps) {
   const audAnchor = React.useRef<HTMLAnchorElement>(null);
   const [audUrl, setAudUrl] = useState();
   const [audName, setAudName] = useState('');
-
+  const exportAnchor = React.useRef<HTMLAnchorElement>(null);
+  const [exportUrl, setExportUrl] = useState();
+  const [exportName, setExportName] = useState('');
+  const [project] = useGlobal('project');
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -264,13 +276,32 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleFilter = () => setFilter(!filter);
+  const translateError = (err: IAxiosStatus): string => {
+    if (err.errStatus === 401) return t.expiredToken;
 
+    return err.errMsg;
+  };
+  const handleProjectExport = () => {
+    exportProject(
+      remoteIdNum('project', project, keyMap),
+      auth,
+      'exporting project'
+    );
+  };
   const handleSelect = (passageId: string) => () => {
     setPassageId(passageId);
   };
 
   const handleCloseTranscription = () => {
     setPassageId('');
+  };
+
+  const hasTranscription = (passageId: string) => {
+    const mediaRec = getMediaRec(passageId, memory);
+    const mediaAttr = mediaRec && mediaRec.attributes;
+    const transcription =
+      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+    return transcription.length > 0;
   };
 
   const handleEaf = (passageId: string) => () => {
@@ -316,7 +347,7 @@ export function TranscriptionTab(props: IProps) {
         )
     );
     setDataUrl('data:text/xml;base64,' + eafCode);
-    setDataName(name);
+    setDataName(name + '.eaf');
     handleAudioFn(passageId);
   };
 
@@ -329,6 +360,16 @@ export function TranscriptionTab(props: IProps) {
     setAudName(name);
   };
 
+  const showMessage = (title: string, msg: string) => {
+    setMessage(
+      <span>
+        {title}
+        <br />
+        {msg}
+      </span>
+    );
+  };
+
   useEffect(() => {
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
@@ -338,6 +379,42 @@ export function TranscriptionTab(props: IProps) {
       }
     }
   }, [dataUrl, dataName, eafAnchor]);
+
+  useEffect(() => {
+    if (exportUrl && exportName !== '') {
+      if (exportAnchor && exportAnchor.current) {
+        console.log('ExportName: ' + exportName);
+        exportAnchor.current.click();
+        URL.revokeObjectURL(exportUrl);
+        setExportUrl(undefined);
+        showMessage(t.exportProject, exportName + ' ' + t.downloadComplete);
+        setExportName('');
+        exportComplete();
+        console.log('out ExportName: ' + exportName);
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [exportUrl, exportName, exportAnchor]);
+
+  useEffect(() => {
+    if (exportStatus) {
+      if (exportStatus.errStatus) {
+        showMessage(t.exportError, translateError(exportStatus));
+      } else {
+        if (exportStatus.statusMsg) {
+          showMessage(t.exportProject, exportStatus.statusMsg);
+        }
+        if (exportStatus.complete && exportName === '') {
+          console.log('set export Name');
+          setExportName(exportFile.name);
+          console.log(exportName);
+          var objectUrl = URL.createObjectURL(exportFile);
+          setExportUrl(objectUrl);
+        }
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [exportStatus]);
 
   useEffect(() => {
     if (audUrl && audName !== '') {
@@ -423,6 +500,7 @@ export function TranscriptionTab(props: IProps) {
         color="default"
         className={classes.actionWords}
         onClick={handleEaf(value)}
+        disabled={!hasTranscription(value)}
       >
         {t.elan}
         <br />
@@ -478,6 +556,19 @@ export function TranscriptionTab(props: IProps) {
     <div id="TranscriptionTab" className={classes.container}>
       <div className={classes.paper}>
         <div className={classes.actions}>
+          {planColumn && (
+            <Button
+              key="export"
+              aria-label={t.exportProject}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleProjectExport}
+              title={t.exportProject}
+            >
+              {t.exportProject}
+            </Button>
+          )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
             key="filter"
@@ -533,7 +624,9 @@ export function TranscriptionTab(props: IProps) {
         <></>
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a ref={eafAnchor} href={dataUrl} download={dataName + '.eaf'} />
+      <a ref={exportAnchor} href={exportUrl} download={exportName} />
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+      <a ref={eafAnchor} href={dataUrl} download={dataName} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a
         ref={audAnchor}
@@ -552,12 +645,16 @@ const mapStateToProps = (state: IState): IStateProps => ({
   activityState: localStrings(state, { layout: 'activityState' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  exportFile: state.importexport.exportFile,
+  exportStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchMediaUrl: actions.fetchMediaUrl,
+      exportProject: actions.exportProject,
+      exportComplete: actions.exportComplete,
     },
     dispatch
   ),

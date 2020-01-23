@@ -229,7 +229,14 @@
                     <context context-type="sourcefile">Chart.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="projectSettings.general">
+        	<trans-unit id="projectSettings.myProject">
+        		<source>My Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.general">
                 <source>General</source>
                 <target/>
                 <context-group>
@@ -243,7 +250,14 @@
                     <context context-type="sourcefile">ProjectSettings.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="projectSettings.description">
+        	<trans-unit id="projectSettings.createdBy">
+        		<source>Created by {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectSettings.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projectSettings.description">
                 <source>Description</source>
                 <target/>
                 <context-group>
@@ -363,21 +377,21 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.nextSteps">
-        		<source>Next Steps</source>
+        		<source>Select Next Step</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.configure">
-        		<source>Configure a Collaborative Project</source>
+        		<source>&#x2022; Configure a Collaborative Project</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.startNow">
-        		<source>Start Transcribing Now</source>
+        		<source>&#x2022; Start Transcribing Now</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
@@ -488,14 +502,35 @@
                     <context context-type="sourcefile">PlanTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planTable.sections">
+        	<trans-unit id="planTable.scripture">
+        		<source>Scripture Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanAdd.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.other">
+        		<source>General Transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanAdd.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.sections">
                 <source>Sections</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PlanTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planTable.taks">
+        	<trans-unit id="planTable.createdBy">
+        		<source>Created By</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTable.taks">
                 <source>Passages</source>
                 <target/>
                 <context-group>
@@ -1286,7 +1321,14 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.projectSummary">
+        	<trans-unit id="main.addOrganization">
+        		<source>Add Organization</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.projectSummary">
                 <source>Project Summary</source>
                 <target/>
                 <context-group>
@@ -1538,7 +1580,35 @@
         			<context context-type="sourcefile">TranscriptionTab.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="transcriptionShow.transcription">
+            <trans-unit id="transcriptionTab.exportProject">
+        		<source>Export Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportError">
+        		<source>Export Error</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.downloadComplete">
+                <source>Download complete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ExportTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="transcriptionTab.expiredToken">
+                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ExportTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="transcriptionShow.transcription">
                 <source>Transcription</source>
                 <target/>
                 <context-group>
@@ -2838,7 +2908,14 @@
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriber.settingsTip">
+        	<trans-unit id="transcriber.reopen">
+        		<source>Reopen</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.settingsTip">
                 <source>Settings</source>
                 <target/>
                 <context-group>
@@ -3188,6 +3265,7 @@
         			<context context-type="sourcefile">selectPlanType.tsx</context>
         		</context-group>
         	</trans-unit>
+
         </body>
     </file>
 </xliff>

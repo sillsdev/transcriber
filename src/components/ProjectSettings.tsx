@@ -37,7 +37,7 @@ import { related } from '../utils';
 import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
 import { API_CONFIG } from '../api-variable';
-import { getRoleId } from '../utils';
+import { getRoleId, getCreatedBy } from '../utils';
 import { SelectPlanType } from '../control';
 import { projectShortcut } from './ProjectShortcut';
 import { saveNewProject } from '../crud/saveNewProject';
@@ -102,6 +102,12 @@ const useStyles = makeStyles((theme: Theme) =>
     grow: {
       flexGrow: 1,
     },
+    stepOption: {
+      paddingTop: theme.spacing(1),
+    },
+    typeSelect: {
+      paddingLeft: theme.spacing(1),
+    },
   })
 );
 
@@ -118,10 +124,16 @@ interface IRecordProps {
   planTypes: Array<PlanType>;
 }
 
+export interface IAddArgs {
+  to?: string;
+  projectId?: string;
+  planId?: string;
+}
+
 interface IProps extends IStateProps, IRecordProps, WithDataProps {
   noMargin?: boolean;
   add?: boolean;
-  finishAdd?: (to?: string) => void;
+  finishAdd?: (props: IAddArgs) => void;
 }
 
 export function ProjectSettings(props: IProps) {
@@ -146,8 +158,6 @@ export function ProjectSettings(props: IProps) {
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
   const [organization] = useGlobal('organization');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_plan, setPlan] = useGlobal('plan');
   const [currentProject, setCurrentProject] = useState<Project | undefined>();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -160,6 +170,7 @@ export function ProjectSettings(props: IProps) {
   const [defaultFontSize, setDefaultFontSize] = useState('large');
   const [rtl, setRtl] = useState(false);
   const [planType, setPlanType] = useState('');
+  const [createdBy, setCreatedBy] = useState('');
   const [projectGroup, setProjectGroup] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
@@ -248,7 +259,7 @@ export function ProjectSettings(props: IProps) {
     }).then(project => setProject(project.id));
 
     if (finishAdd) {
-      finishAdd();
+      finishAdd({});
     }
   };
   const handleDelete = () => {
@@ -264,7 +275,7 @@ export function ProjectSettings(props: IProps) {
   };
   const handleLanguageName = (lang: string) => {
     setLanguageName(lang);
-    if (name === '') setName(lang);
+    if (name === t.myProject) setName(lang);
   };
   const handleTypeChange = (e: any) => {
     setPlanType(e.target.value);
@@ -285,7 +296,6 @@ export function ProjectSettings(props: IProps) {
       schema,
       memory,
     }).then(project => {
-      setProject(project.id);
       projectShortcut({
         organization,
         project: project.id,
@@ -297,9 +307,8 @@ export function ProjectSettings(props: IProps) {
         schema,
         memory,
         keyMap,
-        setPlan,
-      }).then(url => {
-        if (finishAdd) finishAdd(url);
+      }).then(({ url, planId }) => {
+        if (finishAdd) finishAdd({ to: url, projectId: project.id, planId });
       });
     });
   };
@@ -309,7 +318,7 @@ export function ProjectSettings(props: IProps) {
       type: 'project',
       id: '',
       attributes: {
-        name: '',
+        name: t.myProject,
         slug: '',
         description: '',
         uilanguagebcp47: '',
@@ -323,6 +332,7 @@ export function ProjectSettings(props: IProps) {
         dateCreated: '',
         dateUpdated: '',
         dateArchived: '',
+        lastModifiedBy: 0,
       },
     };
     if (add) {
@@ -349,6 +359,7 @@ export function ProjectSettings(props: IProps) {
     setDefaultFont(attr.defaultFont ? attr.defaultFont : '');
     setDefaultFontSize(attr.defaultFontSize ? attr.defaultFontSize : 'large');
     setRtl(attr.rtl);
+    setCreatedBy(getCreatedBy(attr.lastModifiedBy, memory, keyMap));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, project, projects]);
 
@@ -388,6 +399,7 @@ export function ProjectSettings(props: IProps) {
                       margin="normal"
                       variant="filled"
                       required={true}
+                      helperText={t.createdBy.replace('{0}', createdBy)}
                       disabled={
                         API_CONFIG.isApp ||
                         (orgRole !== 'admin' && projRole !== 'admin')
@@ -557,48 +569,50 @@ export function ProjectSettings(props: IProps) {
                 <div className={classes.next}>
                   {currentProject === undefined && (
                     <>
-                      <Typography variant="h4">{t.nextSteps}</Typography>
-                      <Typography variant="h6" className={classes.subHead}>
-                        {t.configure}
-                      </Typography>
+                      <Typography variant="h6">{t.nextSteps}</Typography>
+                      <FormControl>
+                        <FormLabel className={classes.label}>
+                          {t.configure}
+                        </FormLabel>
+                      </FormControl>
                     </>
                   )}
-                  <div className={classes.actions}>
-                    <Button
-                      key="add"
-                      aria-label={t.add}
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      disabled={
-                        name === '' ||
-                        projectType === '' ||
-                        projectGroup === '' ||
-                        bcp47 === '' ||
-                        bcp47 === 'und' ||
-                        defaultFont === ''
-                      }
-                      onClick={
-                        currentProject === undefined ? handleAdd : handleSave
-                      }
-                    >
-                      {currentProject === undefined ? t.add : t.save}
-                      {currentProject !== undefined && (
-                        <SaveIcon className={classes.icon} />
-                      )}
-                    </Button>
-                  </div>
+                  <Button
+                    key="add"
+                    aria-label={t.add}
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    disabled={
+                      name === '' ||
+                      projectType === '' ||
+                      projectGroup === '' ||
+                      bcp47 === '' ||
+                      bcp47 === 'und' ||
+                      defaultFont === ''
+                    }
+                    onClick={
+                      currentProject === undefined ? handleAdd : handleSave
+                    }
+                  >
+                    {currentProject === undefined ? t.add : t.save}
+                    {currentProject !== undefined && (
+                      <SaveIcon className={classes.icon} />
+                    )}
+                  </Button>
                   {currentProject === undefined && (
                     <>
-                      <Typography variant="h6" className={classes.subHead}>
-                        {t.startNow}
-                      </Typography>
-                      <SelectPlanType
-                        planType={planType}
-                        planTypes={planTypes}
-                        handleTypeChange={handleTypeChange}
-                      />
-                      <div className={classes.actions}>
+                      <FormControl className={classes.stepOption}>
+                        <FormLabel className={classes.label}>
+                          {t.startNow}
+                        </FormLabel>
+                        <div className={classes.typeSelect}>
+                          <SelectPlanType
+                            planType={planType}
+                            planTypes={planTypes}
+                            handleTypeChange={handleTypeChange}
+                          />
+                        </div>
                         <Button
                           key="upload"
                           aria-label={t.add}
@@ -618,7 +632,7 @@ export function ProjectSettings(props: IProps) {
                         >
                           {t.upload}
                         </Button>
-                      </div>
+                      </FormControl>
                     </>
                   )}
                 </div>

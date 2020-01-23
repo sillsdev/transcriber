@@ -8,7 +8,7 @@ import {
 } from '../model';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { related } from '.';
+import { related, cleanFileName } from '.';
 
 export const getMediaRec = (passageId: string, memory: Memory) => {
   const mediaRecs = memory.cache.query((q: QueryBuilder) =>
@@ -86,6 +86,5 @@ export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
   let val = projName + '_' + planName + '_';
   if (book && book !== '') val = val + book + '_';
   val = val + secSeq + '-' + seq + '_' + ref + 'v' + ver;
-  val = val.replace(/:/g, '_');
-  return encodeURIComponent(val);
+  return cleanFileName(val);
 };

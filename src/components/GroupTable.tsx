@@ -15,10 +15,10 @@ import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { Button, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-// import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     addIcon: {},
     link: {},
+    actionIcon: {},
   })
 );
 
@@ -67,6 +68,7 @@ interface IRow {
   owner: string;
   projects: number;
   members: number;
+  action: string;
   id: RecordIdentity;
 }
 
@@ -89,6 +91,7 @@ const getMedia = (
       abbr: g.attributes.abbreviation,
       projects: selectedProjects.length,
       members: members.length,
+      action: g.id,
       id: { type: 'group', id: g.id },
     } as IRow;
   });
@@ -127,32 +130,33 @@ export function GroupTable(props: IProps) {
   const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
-  // [
-  //   {fileName: 'GEN-001-001025.mp3', sectionId: '1', sectionName: 'Creation Story', book: 'Genesis', reference: '1:1-25a', duration: '30 seconds', size: 250, version: '1' },
-  //   {fileName: 'GEN-001-002631.mp3', sectionId: '', sectionName: '', book: '', reference: '', duration: '45 seconds', size: 445, version: '1' },
-  // ]);
-  const [actionMenuItem, setActionMenuItem] = useState(null);
-  const [check, setCheck] = useState(Array<number>());
-  const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'abbr', title: t.abbr },
     { name: 'projects', title: t.projects },
     { name: 'members', title: t.members },
+    {
+      name: 'action',
+      title: orgRole === 'admin' ? t.action : '\u00A0',
+    },
   ];
   const columnWidths = [
     { columnName: 'name', width: 150 },
     { columnName: 'abbr', width: 150 },
     { columnName: 'projects', width: 100 },
     { columnName: 'members', width: 100 },
+    { columnName: 'action', width: 150 },
   ];
 
   const columnSorting = [
     { columnName: 'projects', compare: numCompare },
     { columnName: 'members', compare: numCompare },
   ];
+  const sortingEnabled = [{ columnName: 'action', sortingEnabled: false }];
+  const filteringEnabled = [{ columnName: 'action', filteringEnabled: false }];
   const numCols = ['projects', 'members'];
   const [filter, setFilter] = useState(false);
+  const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogData, setDialogData] = useState(null as Group | null);
 
@@ -189,9 +193,14 @@ export function GroupTable(props: IProps) {
     );
     setGroup(group.id);
   };
-
   const handleAddCancel = () => {
     setDialogVisible(false);
+  };
+
+  const handleEdit = (groupId: string) => (e: any) => {
+    const groupRec = groups.filter(g => g.id === groupId);
+    setDialogData(groupRec && groupRec.length === 1 ? groupRec[0] : null);
+    setDialogVisible(true);
   };
   const handleEditMethod = async (group: any) => {
     setDialogVisible(false);
@@ -204,38 +213,33 @@ export function GroupTable(props: IProps) {
       })
     );
   };
+
+  const handleDelete = (value: string) => () => setDeleteItem(value);
+  const handleDeleteConfirmed = () => {
+    memory.update((t: TransformBuilder) =>
+      t.removeRecord({
+        type: 'group',
+        id: deleteItem,
+      })
+    );
+  };
+  const handleDeleteRefused = () => {
+    setDeleteItem('');
+  };
+
   const handleMessageReset = () => {
     setMessage(<></>);
   };
-  const handleCheck = (checks: Array<number>) => {
-    setCheck(checks);
-  };
   const handleFilter = () => setFilter(!filter);
-  const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
-  const handleConfirmAction = (what: string) => (e: any) => {
-    setActionMenuItem(null);
-    if (!/Close/i.test(what)) {
-      if (check.length === 0) {
-        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
-      } else {
-        setConfirmAction(what);
-      }
-    }
-  };
-  const handleActionConfirmed = () => {
-    if (confirmAction === 'Delete') {
-      setCheck(Array<number>());
-      check.forEach(i => {
-        memory.update((t: TransformBuilder) => t.removeRecord(data[i].id));
-      });
-    }
-    setConfirmAction('');
-  };
-  const handleActionRefused = () => {
-    setConfirmAction('');
-  };
   const handleSelect = (id: RecordIdentity) => () => {
     setGroup(id.id);
+  };
+
+  const isAllUsers = (groupId: string) => {
+    const groupRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'group', id: groupId })
+    ) as Group;
+    return groupRec && groupRec.attributes && groupRec.attributes.allUsers;
   };
 
   useEffect(() => {
@@ -246,9 +250,18 @@ export function GroupTable(props: IProps) {
 
   useEffect(() => {
     setData(getMedia(organization, groups, projects, groupMemberships));
-  }, [organization, groups, projects, groupMemberships, confirmAction]);
+  }, [organization, groups, projects, groupMemberships]);
 
-  const LinkCell = ({ value, style, ...restProps }: any) => {
+  interface ICell {
+    value: string;
+    style?: React.CSSProperties;
+    row: IRow;
+    column: any;
+    tableRow: any;
+    tableColumn: any;
+  }
+
+  const LinkCell = ({ value, style, ...restProps }: ICell) => {
     return (
       <Table.Cell {...restProps} style={{ ...style }} value>
         <Button
@@ -259,16 +272,48 @@ export function GroupTable(props: IProps) {
           onClick={handleSelect(restProps.row.id)}
         >
           {value}
-          {/* <EditIcon className={classes.editIcon} /> */}
         </Button>
       </Table.Cell>
     );
   };
 
+  const ActionCell = ({ value, style, ...restProps }: ICell) => (
+    <Table.Cell {...restProps} style={{ ...style }} value>
+      {orgRole === 'admin' && (
+        <>
+          <IconButton
+            id={'edit-' + value}
+            key={'edit-' + value}
+            aria-label={'edit-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleEdit(value)}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            id={'del-' + value}
+            key={'del-' + value}
+            aria-label={'del-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleDelete(value)}
+            disabled={isAllUsers(value)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      )}
+    </Table.Cell>
+  );
+
   const Cell = (props: any) => {
     const { column } = props;
     if (column.name === 'name') {
       return <LinkCell {...props} />;
+    }
+    if (column.name === 'action') {
+      return <ActionCell {...props} />;
     }
     return <Table.Cell {...props} />;
   };
@@ -278,41 +323,17 @@ export function GroupTable(props: IProps) {
       <div className={classes.paper}>
         <div className={classes.actions}>
           {orgRole === 'admin' && (
-            <>
-              <Button
-                key="add"
-                aria-label={t.addGroup}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleAdd}
-              >
-                {t.addGroup}
-                <AddIcon className={classes.buttonIcon} />
-              </Button>
-              <Button
-                key="action"
-                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-                aria-label={t.action}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleMenu}
-              >
-                {t.action}
-                <DropDownIcon className={classes.buttonIcon} />
-              </Button>
-              <Menu
-                id="action-menu"
-                anchorEl={actionMenuItem}
-                open={Boolean(actionMenuItem)}
-                onClose={handleConfirmAction('Close')}
-              >
-                <MenuItem onClick={handleConfirmAction('Delete')}>
-                  {t.delete}
-                </MenuItem>
-              </Menu>
-            </>
+            <Button
+              key="add"
+              aria-label={t.addGroup}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleAdd}
+            >
+              {t.addGroup}
+              <AddIcon className={classes.buttonIcon} />
+            </Button>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button
@@ -335,26 +356,26 @@ export function GroupTable(props: IProps) {
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
+          sortingEnabled={sortingEnabled}
+          filteringEnabled={filteringEnabled}
           columnSorting={columnSorting}
           dataCell={Cell}
           numCols={numCols}
           rows={data}
-          select={handleCheck}
           shaping={filter}
         />
       </div>
       <GroupAdd
         visible={dialogVisible}
-        planIn={dialogData}
+        groupIn={dialogData}
         addMethod={handleAddMethod}
         editMethod={handleEditMethod}
         cancelMethod={handleAddCancel}
       />
-      {confirmAction !== '' ? (
+      {deleteItem !== '' ? (
         <Confirm
-          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
-          yesResponse={handleActionConfirmed}
-          noResponse={handleActionRefused}
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
         />
       ) : (
         <></>

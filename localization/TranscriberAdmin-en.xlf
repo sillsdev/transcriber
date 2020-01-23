@@ -196,6 +196,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectSettings.myProject">
+         <segment>
+            <source>My Project</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projectSettings.general">
          <segment>
             <source>General</source>
@@ -205,6 +211,12 @@
       <unit id="projectSettings.name">
          <segment>
             <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSettings.createdBy">
+         <segment>
+            <source>Created by {0}</source>
             <target/>
          </segment>
       </unit>
@@ -312,19 +324,19 @@
       </unit>
       <unit id="projectSettings.nextSteps">
          <segment>
-            <source>Next Steps</source>
+            <source>Select Next Step</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSettings.configure">
          <segment>
-            <source>Configure a Collaborative Project</source>
+            <source>• Configure a Collaborative Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSettings.startNow">
          <segment>
-            <source>Start Transcribing Now</source>
+            <source>• Start Transcribing Now</source>
             <target/>
          </segment>
       </unit>
@@ -418,9 +430,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planTable.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planTable.other">
+         <segment>
+            <source>General Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planTable.sections">
          <segment>
             <source>Sections</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planTable.createdBy">
+         <segment>
+            <source>Created By</source>
             <target/>
          </segment>
       </unit>
@@ -1102,6 +1132,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.addOrganization">
+         <segment>
+            <source>Add Organization</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.projectSummary">
          <segment>
             <source>Project Summary</source>
@@ -1315,6 +1351,30 @@
       <unit id="transcriptionTab.export">
          <segment>
             <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportProject">
+         <segment>
+            <source>Export Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportError">
+         <segment>
+            <source>Export Error</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadComplete">
+         <segment>
+            <source>Download complete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -2431,6 +2491,12 @@
       <unit id="transcriber.close">
          <segment>
             <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.reopen">
+         <segment>
+            <source>Reopen</source>
             <target/>
          </segment>
       </unit>

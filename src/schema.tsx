@@ -9,8 +9,8 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         state: { type: 'string' },
         sequencenum: { type: 'number' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {},
@@ -22,8 +22,8 @@ const schemaDefinition: SchemaSettings = {
         abbreviation: { type: 'string' },
         ownerId: { type: 'number' },
         allUsers: { type: 'boolean' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -41,8 +41,8 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         font: { type: 'string' },
         fontSize: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -56,8 +56,8 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         url: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -77,8 +77,8 @@ const schemaDefinition: SchemaSettings = {
         strings: { type: 'string' },
         silId: { type: 'numer' },
         accepted: { type: 'boolean' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastUpdatedBy: { type: 'number' },
       },
       relationships: {
@@ -114,8 +114,8 @@ const schemaDefinition: SchemaSettings = {
         websiteUrl: { type: 'string' },
         logoUrl: { type: 'string' },
         publicByDefault: { type: 'boolean' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -127,8 +127,8 @@ const schemaDefinition: SchemaSettings = {
     organizationmembership: {
       keys: { remoteId: {} },
       attributes: {
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -146,8 +146,8 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         slug: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -162,8 +162,8 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         description: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -184,8 +184,8 @@ const schemaDefinition: SchemaSettings = {
         rtl: { type: 'boolean' },
         allowClaim: { type: 'boolean' },
         isPublic: { type: 'boolean' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -210,8 +210,8 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         settings: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -232,8 +232,8 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         name: { type: 'string' },
         description: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -246,8 +246,8 @@ const schemaDefinition: SchemaSettings = {
         orgRole: { type: 'boolean' },
         groupRole: { type: 'boolean' },
         roleName: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -260,8 +260,8 @@ const schemaDefinition: SchemaSettings = {
         sequencenum: { type: 'number' },
         name: { type: 'string' },
         state: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -286,8 +286,8 @@ const schemaDefinition: SchemaSettings = {
         hold: { type: 'boolean' },
         title: { type: 'string' },
         lastComment: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -302,8 +302,8 @@ const schemaDefinition: SchemaSettings = {
     passagesection: {
       keys: { remoteId: {} },
       attributes: {
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -316,7 +316,7 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         state: { type: 'string' },
         comments: { type: 'string' },
-        dateCreated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -338,8 +338,8 @@ const schemaDefinition: SchemaSettings = {
         originalFile: { type: 'string' },
         filesize: { type: 'number' },
         position: { type: 'number' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -369,8 +369,8 @@ const schemaDefinition: SchemaSettings = {
         hotKeys: { type: 'string' },
         digestPreference: { type: 'number' },
         newsPreference: { type: 'boolean' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
@@ -406,8 +406,8 @@ const schemaDefinition: SchemaSettings = {
         progressbarTypeid: { type: 'number' },
         avatarUrl: { type: 'string' },
         hotKeys: { type: 'string' },
-        dateCreated: { type: 'date' },
-        dateUpdated: { type: 'date' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {

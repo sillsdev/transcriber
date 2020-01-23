@@ -15,6 +15,7 @@ export default class Auth {
     responseType: 'token id_token',
     scope: 'openid email profile',
     audience: 'https://transcriber_api',
+    leeway: 300,
   });
 
   constructor() {
@@ -47,7 +48,8 @@ export default class Auth {
       } else if (err) {
         history.replace('/');
         console.log(err);
-        alert(`Error: ${err.error}. Check the console for further details.`);
+        if (err.error !== 'invalid_token')
+          alert(`Error: ${err.error}. Check the console for further details.`);
       }
     });
   }
@@ -103,7 +105,7 @@ export default class Auth {
     });
 
     // navigate to the home route
-    history.replace('/loading');
+    // history.replace('/loading');
   }
 
   isAuthenticated() {
