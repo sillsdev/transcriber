@@ -85,6 +85,7 @@ import {
   deepLink,
   remoteId,
   remoteIdGuid,
+  makeAbbr,
 } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -796,9 +797,13 @@ export function ResponsiveDrawer(props: IProps) {
         <div className={classes.organization}>
           <div className={classes.avatar}>
             {orgAvatar && orgAvatar.startsWith('http') ? (
-              <Avatar src={orgAvatar} />
+              <Avatar variant="square" src={orgAvatar} />
+            ) : curOrg != null && orgOptions.length > 0 ? (
+              <Avatar variant="square">
+                {makeAbbr(orgOptions[curOrg].label)}
+              </Avatar>
             ) : (
-              <OrganizationIcon />
+              <></>
             )}
           </div>
           {!mini && (
