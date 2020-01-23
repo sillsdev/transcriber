@@ -566,11 +566,19 @@ export function ResponsiveDrawer(props: IProps) {
     const cur = projKeys.indexOf(projKey);
     if (addProject || cur === -1) {
       setCurProj(null);
-    } else {
+    } else if (!busy && curProj !== cur) {
       setCurProj(cur);
+      setTimeout(() => handleCommitProj(projKeys[cur]), 500);
     }
-    if (!busy && projKeys.length === 1 && curProj == null && !addProject) {
-      handleCommitProj(projKeys[0]);
+    if (
+      !busy &&
+      projKeys.length > 0 &&
+      curProj == null &&
+      !addProject &&
+      cur < 0
+    ) {
+      setCurProj(0);
+      setTimeout(() => handleCommitProj(projKeys[0]), 500);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projOptions, project, addProject, busy]);
