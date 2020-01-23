@@ -1340,6 +1340,30 @@
 				<target>Plan</target>
 			</segment>
 		</unit>
+        <unit id="transcriptionTab.exportProject">
+         <segment>
+            <source>Export Project</source>
+            <target>Exporter une projet</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportError">
+         <segment>
+            <source>Export Error</source>
+            <target>Erreur d'exportation</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadComplete">
+         <segment>
+            <source>Download complete</source>
+            <target>Téléchargement complet</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+         </segment>
+      </unit>
 		<unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>

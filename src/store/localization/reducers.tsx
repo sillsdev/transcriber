@@ -301,6 +301,10 @@ const initialState = {
 			"plan": "Plan",
 			"elan": "Elan",
 			"export": "Export",
+			"exportProject": "Export Project",
+			"exportError": "Export Error",
+			"downloadComplete": "Download complete",
+			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
 		}
 	}),
 	"transcriptionShow": new LocalizedStrings({

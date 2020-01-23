@@ -6,6 +6,7 @@ import uploadReducer from './upload/reducers';
 import contextReducer from './context/reducer';
 import mediaReducer from './media/reducers';
 import paratextReducer from './paratext/reducers';
+import exportReducer from './importexport/reducers';
 import authReducer from './auth/reducers';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -20,6 +21,7 @@ const appReducer = combineReducers({
   upload: uploadReducer,
   media: mediaReducer,
   paratext: paratextReducer,
+  importexport: exportReducer,
   auth: authReducer,
 });
 
@@ -42,4 +44,5 @@ export * from './orbit/actions';
 export * from './upload/actions';
 export * from './media/actions';
 export * from './paratext/actions';
+export * from './importexport/actions';
 export * from './auth/actions';

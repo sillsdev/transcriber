@@ -278,6 +278,10 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "plan": string;
     "elan": string;
     "export": string;
+    "exportProject": string;
+    "exportError": string;
+    "downloadComplete": string;
+    "expiredToken": string;
 };
 
 export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {
