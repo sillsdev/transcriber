@@ -305,6 +305,7 @@ export interface IGroupTableStrings extends Localize.LocalizedStringsMethods {
     "filter": string;
     "action": string;
     "delete": string;
+    "removeSelected": string;
     "addGroup": string;
     "selectRows": string;
 };

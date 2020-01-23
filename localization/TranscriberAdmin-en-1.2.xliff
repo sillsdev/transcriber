@@ -1706,7 +1706,14 @@
                     <context context-type="sourcefile">GroupTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupTable.addGroup">
+        	<trans-unit id="groupTable.removeSelected">
+        		<source>{0} active projects depend on this group. Assign each project to some other group before deleting this group.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">GroupTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="groupTable.addGroup">
                 <source>Add Group</source>
                 <target/>
                 <context-group>

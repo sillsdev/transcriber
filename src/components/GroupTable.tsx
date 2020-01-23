@@ -214,7 +214,20 @@ export function GroupTable(props: IProps) {
     );
   };
 
-  const handleDelete = (value: string) => () => setDeleteItem(value);
+  const handleDelete = (value: string) => () => {
+    const selectedProjects = projects.filter(
+      p => related(p, 'group') === value
+    );
+    if (selectedProjects.length > 0) {
+      setMessage(
+        <span>
+          {t.removeSelected.replace('{0}', selectedProjects.length.toString())}
+        </span>
+      );
+      return;
+    }
+    setDeleteItem(value);
+  };
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({

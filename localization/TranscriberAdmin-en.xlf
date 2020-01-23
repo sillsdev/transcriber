@@ -1462,6 +1462,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="groupTable.removeSelected">
+         <segment>
+            <source>{0} active projects depend on this group. Assign each project to some other group before deleting this group.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="groupTable.addGroup">
          <segment>
             <source>Add Group</source>

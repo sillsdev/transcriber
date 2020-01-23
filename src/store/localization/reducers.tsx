@@ -331,6 +331,7 @@ const initialState = {
 			"filter": "Filter",
 			"action": "Action",
 			"delete": "Delete",
+			"removeSelected": "{0} active projects depend on this group. Assign each project to some other group before deleting this group.",
 			"addGroup": "Add Group",
 			"selectRows": "Please select row(s) to {0}.",
 		}

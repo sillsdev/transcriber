@@ -1448,7 +1448,13 @@
          	<target>Supprimer</target>
          </segment>
       </unit>
-      <unit id="groupTable.addGroup">
+		<unit id="groupTable.removeSelected">
+			<segment>
+				<source>Active projects ({0}) depend on this group. Assign each project to some other group before deleting this group.</source>
+				<target>Les projets actifs ({0}) dépendent de ce groupe. Assignez chaque projet à un autre groupe avant de supprimer ce groupe.</target>
+			</segment>
+		</unit>
+		<unit id="groupTable.addGroup">
          <segment>
             <source>Add Group</source>
             <target>Ajouter un groupe</target>
