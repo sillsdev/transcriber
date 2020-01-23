@@ -377,21 +377,21 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.nextSteps">
-        		<source>Next Steps</source>
+        		<source>Select Next Step</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.configure">
-        		<source>Configure a Collaborative Project</source>
+        		<source>&#x2022; Configure a Collaborative Project</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.startNow">
-        		<source>Start Transcribing Now</source>
+        		<source>&#x2022; Start Transcribing Now</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>

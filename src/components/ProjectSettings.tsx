@@ -102,6 +102,12 @@ const useStyles = makeStyles((theme: Theme) =>
     grow: {
       flexGrow: 1,
     },
+    stepOption: {
+      paddingTop: theme.spacing(1),
+    },
+    typeSelect: {
+      paddingLeft: theme.spacing(1),
+    },
   })
 );
 
@@ -563,48 +569,50 @@ export function ProjectSettings(props: IProps) {
                 <div className={classes.next}>
                   {currentProject === undefined && (
                     <>
-                      <Typography variant="h4">{t.nextSteps}</Typography>
-                      <Typography variant="h6" className={classes.subHead}>
-                        {t.configure}
-                      </Typography>
+                      <Typography variant="h6">{t.nextSteps}</Typography>
+                      <FormControl>
+                        <FormLabel className={classes.label}>
+                          {t.configure}
+                        </FormLabel>
+                      </FormControl>
                     </>
                   )}
-                  <div className={classes.actions}>
-                    <Button
-                      key="add"
-                      aria-label={t.add}
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      disabled={
-                        name === '' ||
-                        projectType === '' ||
-                        projectGroup === '' ||
-                        bcp47 === '' ||
-                        bcp47 === 'und' ||
-                        defaultFont === ''
-                      }
-                      onClick={
-                        currentProject === undefined ? handleAdd : handleSave
-                      }
-                    >
-                      {currentProject === undefined ? t.add : t.save}
-                      {currentProject !== undefined && (
-                        <SaveIcon className={classes.icon} />
-                      )}
-                    </Button>
-                  </div>
+                  <Button
+                    key="add"
+                    aria-label={t.add}
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    disabled={
+                      name === '' ||
+                      projectType === '' ||
+                      projectGroup === '' ||
+                      bcp47 === '' ||
+                      bcp47 === 'und' ||
+                      defaultFont === ''
+                    }
+                    onClick={
+                      currentProject === undefined ? handleAdd : handleSave
+                    }
+                  >
+                    {currentProject === undefined ? t.add : t.save}
+                    {currentProject !== undefined && (
+                      <SaveIcon className={classes.icon} />
+                    )}
+                  </Button>
                   {currentProject === undefined && (
                     <>
-                      <Typography variant="h6" className={classes.subHead}>
-                        {t.startNow}
-                      </Typography>
-                      <SelectPlanType
-                        planType={planType}
-                        planTypes={planTypes}
-                        handleTypeChange={handleTypeChange}
-                      />
-                      <div className={classes.actions}>
+                      <FormControl className={classes.stepOption}>
+                        <FormLabel className={classes.label}>
+                          {t.startNow}
+                        </FormLabel>
+                        <div className={classes.typeSelect}>
+                          <SelectPlanType
+                            planType={planType}
+                            planTypes={planTypes}
+                            handleTypeChange={handleTypeChange}
+                          />
+                        </div>
                         <Button
                           key="upload"
                           aria-label={t.add}
@@ -624,7 +632,7 @@ export function ProjectSettings(props: IProps) {
                         >
                           {t.upload}
                         </Button>
-                      </div>
+                      </FormControl>
                     </>
                   )}
                 </div>

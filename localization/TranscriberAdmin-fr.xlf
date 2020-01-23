@@ -321,20 +321,20 @@
 		</unit>
 		<unit id="projectSettings.nextSteps">
 			<segment>
-				<source>Next Steps</source>
-				<target>Prochaines étapes</target>
+				<source>Select Next Step</source>
+				<target>Sélectionnez l'étape suivante</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.configure">
 			<segment>
-				<source>Configure a Collaborative Project</source>
-				<target>Configurer un projet collaboratif</target>
+				<source>&#x2022; Configure a Collaborative Project</source>
+				<target>&#x2022; Configurer un projet collaboratif</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.startNow">
 			<segment>
-				<source>Start Transcribing Now</source>
-				<target>Commencez à transcrire maintenant</target>
+				<source>&#x2022; Start Transcribing Now</source>
+				<target>&#x2022; Commencez à transcrire maintenant</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.dangerZone">
