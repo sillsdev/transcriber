@@ -3,7 +3,7 @@ import { IAxiosStatus } from '../AxiosStatus';
 // Describing the shape of the paratext integration slice of state
 export interface IImportExportState {
   loaded: boolean;
-  exportFile: File;
+  exportFile: { name: string; data: Blob };
   importexportStatus: IAxiosStatus;
 }
 
@@ -20,7 +20,7 @@ interface ExportPendingMsg {
 
 interface ExportSucceededMsg {
   type: typeof EXPORT_SUCCESS;
-  payload: File;
+  payload: { name: string; data: Blob };
 }
 
 interface ExportFailedMsg {

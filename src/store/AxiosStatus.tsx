@@ -35,7 +35,7 @@ export const errStatus = (err: AxiosError): IAxiosStatus => {
   return {
     complete: true,
     statusMsg: 'Error',
-    errStatus: err.response!.status,
+    errStatus: err.response ? err.response.status : -1,
     errMsg: err.message,
   };
 };

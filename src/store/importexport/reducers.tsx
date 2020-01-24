@@ -26,7 +26,6 @@ export default function(
       };
     case EXPORT_SUCCESS:
       console.log('Export success');
-      console.log(action.payload.name + ':' + action.payload.size);
       return {
         ...state,
         loaded: true,

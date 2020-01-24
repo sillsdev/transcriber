@@ -182,7 +182,7 @@ interface IStateProps {
   activityState: IActivityStateStrings;
   hasUrl: boolean;
   mediaUrl: string;
-  exportFile: File;
+  exportFile: { name: string; data: Blob };
   exportStatus: IAxiosStatus;
 }
 
@@ -405,10 +405,8 @@ export function TranscriptionTab(props: IProps) {
           showMessage(t.exportProject, exportStatus.statusMsg);
         }
         if (exportStatus.complete && exportName === '') {
-          console.log('set export Name');
           setExportName(exportFile.name);
-          console.log(exportName);
-          var objectUrl = URL.createObjectURL(exportFile);
+          var objectUrl = URL.createObjectURL(exportFile.data);
           setExportUrl(objectUrl);
         }
       }
