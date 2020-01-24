@@ -306,6 +306,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
+  const [delProject, setDelProject] = useState(false);
   const swapRef = useRef<any>();
   const newOrgRef = useRef<any>();
   const timer = React.useRef<NodeJS.Timeout>();
@@ -373,7 +374,7 @@ export function ResponsiveDrawer(props: IProps) {
     setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
     setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
     setGroup('');
-    setTitle(t.projectSummary);
+    setTitle(t.plans);
   };
 
   const handlePlanType = (value: string | null) => {
@@ -400,13 +401,16 @@ export function ResponsiveDrawer(props: IProps) {
         await setProject(projectId || '');
         await setPlan(planId || '');
         const parts = to.split('/');
-        await setContent(parts[3]);
-        await setTab(parseInt(parts[6]));
-        await setOpen(true);
+        setTimeout(async () => {
+          await setContent(parts[3]);
+          await setTab(parseInt(parts[6]));
+          await setOpen(true);
+        }, 2000);
       }, 500);
     } else {
       setContent(slug(t.plans));
-      setAddProject(false);
+      if (addProject) setAddProject(false);
+      else setDelProject(true);
     }
   };
 
@@ -521,6 +525,10 @@ export function ResponsiveDrawer(props: IProps) {
   }, [orgOptions, organization, busy]);
 
   useEffect(() => {
+    if (delProject) {
+      setDelProject(false);
+      return;
+    }
     getProjs().then(projects => {
       const projOpts = projects
         .filter(
@@ -551,7 +559,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject, swapRef.current]);
+  }, [organization, addProject, delProject, swapRef.current]);
 
   useEffect(() => {
     const projKeys = projOptions.map(o => o.value);

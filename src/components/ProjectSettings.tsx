@@ -27,7 +27,8 @@ import {
   Button,
   Checkbox,
   Grid,
-  Typography,
+  RadioGroup,
+  Radio,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import DeleteExpansion from './DeleteExpansion';
@@ -136,6 +137,11 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
   finishAdd?: (props: IAddArgs) => void;
 }
 
+enum NextOptions {
+  Start = 'start',
+  Configure = 'configure',
+}
+
 export function ProjectSettings(props: IProps) {
   const {
     add,
@@ -174,6 +180,7 @@ export function ProjectSettings(props: IProps) {
   const [projectGroup, setProjectGroup] = useState('');
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
+  const [nextOption, setNextOption] = useState<NextOptions>(NextOptions.Start);
   const langEl = React.useRef<any>();
 
   const AdminRoleId = getRoleId(roles, RoleNames.Admin);
@@ -269,6 +276,10 @@ export function ProjectSettings(props: IProps) {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({ type: 'project', id: deleteItem })
     );
+    setProject('');
+    if (finishAdd) {
+      finishAdd({});
+    }
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
@@ -279,6 +290,9 @@ export function ProjectSettings(props: IProps) {
   };
   const handleTypeChange = (e: any) => {
     setPlanType(e.target.value);
+  };
+  const handleNextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNextOption((e.target as HTMLInputElement).value as NextOptions);
   };
   const handleUpload = () => {
     saveNewProject({
@@ -567,49 +581,26 @@ export function ProjectSettings(props: IProps) {
             {!API_CONFIG.isApp &&
               (orgRole === 'admin' || projRole === 'admin') && (
                 <div className={classes.next}>
-                  {currentProject === undefined && (
-                    <>
-                      <Typography variant="h6">{t.nextSteps}</Typography>
-                      <FormControl>
-                        <FormLabel className={classes.label}>
-                          {t.configure}
-                        </FormLabel>
-                      </FormControl>
-                    </>
-                  )}
-                  <Button
-                    key="add"
-                    aria-label={t.add}
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    disabled={
-                      name === '' ||
-                      projectType === '' ||
-                      projectGroup === '' ||
-                      bcp47 === '' ||
-                      bcp47 === 'und' ||
-                      defaultFont === ''
-                    }
-                    onClick={
-                      currentProject === undefined ? handleAdd : handleSave
-                    }
-                  >
-                    {currentProject === undefined ? t.add : t.save}
-                    {currentProject !== undefined && (
-                      <SaveIcon className={classes.icon} />
-                    )}
-                  </Button>
-                  {currentProject === undefined && (
-                    <>
-                      <FormControl className={classes.stepOption}>
-                        <FormLabel className={classes.label}>
-                          {t.startNow}
-                        </FormLabel>
+                  {currentProject === undefined ? (
+                    <FormControl>
+                      <FormLabel className={classes.label}>
+                        {t.nextSteps}
+                      </FormLabel>
+                      <RadioGroup
+                        aria-label={t.nextSteps}
+                        value={nextOption}
+                        onChange={handleNextChange}
+                      >
+                        <FormControlLabel
+                          value={NextOptions.Start}
+                          control={<Radio color="primary" />}
+                          label={t.startNow}
+                        />
                         <div className={classes.typeSelect}>
                           <SelectPlanType
                             planType={planType}
                             planTypes={planTypes}
+                            disable={nextOption !== NextOptions.Start}
                             handleTypeChange={handleTypeChange}
                           />
                         </div>
@@ -620,6 +611,7 @@ export function ProjectSettings(props: IProps) {
                           color="primary"
                           className={classes.button}
                           disabled={
+                            nextOption !== NextOptions.Start ||
                             name === '' ||
                             projectType === '' ||
                             projectGroup === '' ||
@@ -632,8 +624,52 @@ export function ProjectSettings(props: IProps) {
                         >
                           {t.upload}
                         </Button>
-                      </FormControl>
-                    </>
+                        <FormControlLabel
+                          value={NextOptions.Configure}
+                          control={<Radio color="primary" />}
+                          label={t.configure}
+                        />
+                        <Button
+                          key="add"
+                          aria-label={t.add}
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          disabled={
+                            nextOption !== NextOptions.Configure ||
+                            name === '' ||
+                            projectType === '' ||
+                            projectGroup === '' ||
+                            bcp47 === '' ||
+                            bcp47 === 'und' ||
+                            defaultFont === ''
+                          }
+                          onClick={handleAdd}
+                        >
+                          {t.add}
+                        </Button>
+                      </RadioGroup>
+                    </FormControl>
+                  ) : (
+                    <Button
+                      key="save"
+                      aria-label={t.save}
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      disabled={
+                        name === '' ||
+                        projectType === '' ||
+                        projectGroup === '' ||
+                        bcp47 === '' ||
+                        bcp47 === 'und' ||
+                        defaultFont === ''
+                      }
+                      onClick={handleSave}
+                    >
+                      {t.save}
+                      <SaveIcon className={classes.icon} />
+                    </Button>
                   )}
                 </div>
               )}

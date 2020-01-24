@@ -327,14 +327,14 @@
 		</unit>
 		<unit id="projectSettings.configure">
 			<segment>
-				<source>&#x2022; Configure a Collaborative Project</source>
-				<target>&#x2022; Configurer un projet collaboratif</target>
+				<source>Configure a Collaborative Project</source>
+				<target>Configurer un projet collaboratif</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.startNow">
 			<segment>
-				<source>&#x2022; Start Transcribing Now</source>
-				<target>&#x2022; Commencez à transcrire maintenant</target>
+				<source>Start Transcribing Now</source>
+				<target>Commencez à transcrire maintenant</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.dangerZone">
@@ -1448,7 +1448,13 @@
          	<target>Supprimer</target>
          </segment>
       </unit>
-      <unit id="groupTable.addGroup">
+		<unit id="groupTable.removeSelected">
+			<segment>
+				<source>Active projects ({0}) depend on this group. Assign each project to some other group before deleting this group.</source>
+				<target>Les projets actifs ({0}) dépendent de ce groupe. Assignez chaque projet à un autre groupe avant de supprimer ce groupe.</target>
+			</segment>
+		</unit>
+		<unit id="groupTable.addGroup">
          <segment>
             <source>Add Group</source>
             <target>Ajouter un groupe</target>

@@ -86,8 +86,8 @@ const initialState = {
 			"add": "Add a Plan",
 			"upload": "Upload Media and Transcribe",
 			"nextSteps": "Select Next Step",
-			"configure": "• Configure a Collaborative Project",
-			"startNow": "• Start Transcribing Now",
+			"configure": "Configure a Collaborative Project",
+			"startNow": "Start Transcribing Now",
 			"dangerZone": "Danger Zone",
 			"deleteProject": "Delete this Project",
 			"deleteExplained": "All plans, sections, passages, and media files will be removed.",
@@ -331,6 +331,7 @@ const initialState = {
 			"filter": "Filter",
 			"action": "Action",
 			"delete": "Delete",
+			"removeSelected": "{0} active projects depend on this group. Assign each project to some other group before deleting this group.",
 			"addGroup": "Add Group",
 			"selectRows": "Please select row(s) to {0}.",
 		}
