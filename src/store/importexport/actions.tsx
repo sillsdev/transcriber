@@ -32,16 +32,11 @@ export const exportProject = (
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,
     },
-    responseType: 'arraybuffer',
     timeout: 30000,
   })
     .then(response => {
-      var filename = response.headers['content-disposition'];
-      var idx = filename.indexOf('filename=') + 'filename='.length;
-      filename = filename.substring(idx);
-      //new File() is not supported by all browsers...so fake it here
       dispatch({
-        payload: { name: filename, data: new Blob([response.data]) },
+        payload: response.data,
         type: EXPORT_SUCCESS,
       });
     })

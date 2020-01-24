@@ -30,7 +30,9 @@ export default function(
         ...state,
         loaded: true,
         exportFile: action.payload,
-        importexportStatus: successStatus(action.payload.name),
+        importexportStatus: successStatus(
+          action.payload.data.attributes.message
+        ),
       };
     case EXPORT_ERROR:
       return {
