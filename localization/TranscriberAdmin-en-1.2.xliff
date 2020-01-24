@@ -384,14 +384,14 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.configure">
-        		<source>&#x2022; Configure a Collaborative Project</source>
+        		<source>Configure a Collaborative Project</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.startNow">
-        		<source>&#x2022; Start Transcribing Now</source>
+        		<source>Start Transcribing Now</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>

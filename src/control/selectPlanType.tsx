@@ -18,11 +18,12 @@ interface IStateProps {
 interface IProps extends IStateProps, WithStyles<typeof styles> {
   planType: string;
   planTypes: PlanType[];
+  disable?: boolean;
   handleTypeChange: (e: any) => void;
 }
 
 function selectPlanType(props: IProps) {
-  const { planType, planTypes, t, handleTypeChange, classes } = props;
+  const { planType, planTypes, t, handleTypeChange, classes, disable } = props;
 
   return (
     <div>
@@ -38,6 +39,7 @@ function selectPlanType(props: IProps) {
             className: classes.menu,
           },
         }}
+        disabled={disable}
         margin="normal"
         variant="filled"
         required

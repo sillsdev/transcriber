@@ -330,13 +330,13 @@
       </unit>
       <unit id="projectSettings.configure">
          <segment>
-            <source>• Configure a Collaborative Project</source>
+            <source>Configure a Collaborative Project</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSettings.startNow">
          <segment>
-            <source>• Start Transcribing Now</source>
+            <source>Start Transcribing Now</source>
             <target/>
          </segment>
       </unit>
