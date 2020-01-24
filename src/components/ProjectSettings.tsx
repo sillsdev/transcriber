@@ -276,6 +276,10 @@ export function ProjectSettings(props: IProps) {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({ type: 'project', id: deleteItem })
     );
+    setProject('');
+    if (finishAdd) {
+      finishAdd({});
+    }
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
