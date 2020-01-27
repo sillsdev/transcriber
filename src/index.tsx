@@ -35,6 +35,8 @@ setGlobal({
   bucket: undefined,
   remote: undefined,
   remoteBusy: false,
+  autoOpenAddMedia: false,
+  editUserId: null,
 });
 
 const Root = () => (

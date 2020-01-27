@@ -162,6 +162,7 @@ export function Profile(props: IProps) {
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [bucket] = useGlobal('bucket');
+  const [editId, setEditId] = useGlobal('editUserId');
   const { isAuthenticated } = auth;
   // const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
@@ -294,6 +295,9 @@ export function Profile(props: IProps) {
       ]);
       setLanguage(locale);
     }
+    if (editId) {
+      setEditId(null);
+    }
     setView('Main');
   };
 
@@ -332,7 +336,12 @@ export function Profile(props: IProps) {
     setView('Main');
   };
 
-  const handleCancel = () => setView('Main');
+  const handleCancel = () => {
+    if (editId) {
+      setEditId(null);
+    }
+    setView('Main');
+  };
 
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
@@ -397,7 +406,7 @@ export function Profile(props: IProps) {
         lastModifiedBy: remoteId('user', user, keyMap),
       },
     };
-    const current = users.filter(u => u.id === user);
+    const current = users.filter(u => u.id === (editId ? editId : user));
     if (current.length === 1) {
       userRec = current[0];
       setCurrentUser(userRec);
@@ -657,7 +666,8 @@ export function Profile(props: IProps) {
               </div>
             </Grid>
           </Grid>
-          {currentUser &&
+          {!editId &&
+            currentUser &&
             currentUser.attributes.name !== currentUser.attributes.email && (
               <DeleteExpansion
                 title={t.deleteUser}

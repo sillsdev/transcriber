@@ -1340,7 +1340,19 @@
 				<target>Plan</target>
 			</segment>
 		</unit>
-        <unit id="transcriptionTab.exportProject">
+        <unit id="transcriptionTab.elan">
+         <segment>
+            <source>Elan</source>
+            <target>Elan</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.export">
+         <segment>
+            <source>Export</source>
+         	<target>Exporter</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
             <target>Exporter une projet</target>
@@ -1998,7 +2010,7 @@
      <unit id="invite.transcriberDetail">
          <segment>
             <source>(Transcribe)</source>
-            <target/>
+         	<target>(Transcription)</target>
          </segment>
       </unit>
 		<unit id="invite.reviewer">
@@ -2010,7 +2022,7 @@
      <unit id="invite.reviewerDetail">
          <segment>
             <source>(Review + Transcribe)</source>
-            <target/>
+         	<target>(Révision + transcription)</target>
          </segment>
       </unit>
 		<unit id="invitationTable.email">
@@ -2667,7 +2679,7 @@
 				<target>Annuler</target>
 			</segment>
 		</unit>
-		<unit id="profile.silTranscriberAdmin">
+      <unit id="profile.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
 				<target>Administration du SIL Transcriber</target>

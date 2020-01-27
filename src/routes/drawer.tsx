@@ -81,7 +81,6 @@ import {
   related,
   hasRelated,
   slug,
-  setDefaultProj,
   deepLink,
   remoteId,
   remoteIdGuid,
@@ -283,7 +282,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_open, setOpen] = useGlobal('open');
+  const [_open, setOpen] = useGlobal('autoOpenAddMedia');
   const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
   const [content, setContent] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
@@ -335,29 +334,26 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     localStorage.setItem('lastOrg', remoteId('organization', value, keyMap));
     if (value === t.newOrganization) {
-      // if (newOrgRef.current) newOrgRef.current.click();
       setAddOrg(true);
       setContent(slug(t.organization));
       setTitle(t.addOrganization);
-    } else {
-      if (value !== organization) setCurProj(null);
+    } else if (value !== organization) {
       setOrganization(value);
-      setDefaultProj(value, memory, setProject);
       setAddProject(false);
       setGroup('');
+      setProjOptions([]);
+      setCurProj(null);
       const projRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('project').filter({
           relation: 'organization',
           record: { type: 'organization', id: value },
         })
       ) as Project[];
-      handleChoice(
-        projRecs.length === 0
-          ? 'none'
-          : API_CONFIG.isApp
-          ? slug(t.tasks)
-          : slug(t.plans)
+      const sortedProjRecs = projRecs.sort((i, j) =>
+        i.attributes.name < j.attributes.name ? -1 : 1
       );
+      if (projRecs.length !== 0) handleCommitProj(sortedProjRecs[0].id);
+      else setContent('none');
     }
   };
 
@@ -369,12 +365,14 @@ export function ResponsiveDrawer(props: IProps) {
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
     localStorage.setItem('lastProj', remoteId('project', value, keyMap));
-    setAddProject(false);
-    setProject(value);
-    setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-    setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-    setGroup('');
-    setTitle(t.plans);
+    if (!addProject && value !== project) {
+      setAddProject(false);
+      setProject(value);
+      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+      setGroup('');
+      setTitle(t.plans);
+    }
   };
 
   const handlePlanType = (value: string | null) => {
@@ -522,7 +520,7 @@ export function ResponsiveDrawer(props: IProps) {
     }
     setOrgRole(getRole(organizationMemberships, 'organization', organization));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orgOptions, organization, busy]);
+  }, [orgOptions, organization]);
 
   useEffect(() => {
     if (delProject) {
@@ -550,10 +548,15 @@ export function ResponsiveDrawer(props: IProps) {
               Authorization: 'Bearer ' + auth.accessToken,
             },
           }).then(strings => {
-            const data = strings.data.data;
-            if (Array.isArray(data) && data.length === 0)
+            const data = strings.data.data as Record[];
+            const orgRemId = localStorage.getItem('lastOrg');
+            const filtered = data.filter(
+              r => related(r, 'organization') === orgRemId
+            );
+            if (filtered.length === 0) {
               if (API_CONFIG.isApp) swapRef.current.click();
               else handleAddProject();
+            }
           });
         }
       }
@@ -589,7 +592,7 @@ export function ResponsiveDrawer(props: IProps) {
       setTimeout(() => handleCommitProj(projKeys[0]), 500);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject, busy]);
+  }, [projOptions, project, addProject, organization]);
 
   useEffect(() => {
     try {

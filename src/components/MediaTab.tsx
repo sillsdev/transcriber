@@ -237,7 +237,7 @@ export function MediaTab(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
-  const [urlOpen, setUrlOpen] = useGlobal('open');
+  const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
