@@ -1,13 +1,14 @@
 import * as type from './types';
-import { successStatus, pendingStatus } from '../AxiosStatus';
+import { successStatus } from '../AxiosStatus';
 
 export const paratextCleanState = {
   count: 0,
-  countStatus: pendingStatus(''),
+  countStatus: undefined,
   username: '',
-  usernameStatus: pendingStatus(''),
+  usernameStatus: undefined,
   projects: [] as any,
-  projectsStatus: pendingStatus(''),
+  projectsStatus: undefined,
+  syncStatus: undefined,
 } as type.IParatextState;
 
 export default function(
