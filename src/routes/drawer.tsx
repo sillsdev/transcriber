@@ -283,8 +283,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [tab, setTab] = useGlobal('tab');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_open, setOpen] = useGlobal('autoOpenAddMedia');
-  const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
-  const [content, setContent] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
+  const [choice, setChoice] = useState('');
+  const [content, setContent] = useState('');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
   const [curOrg, setCurOrg] = useState<number | null>(null);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
@@ -368,10 +368,13 @@ export function ResponsiveDrawer(props: IProps) {
     if (!addProject && value !== project) {
       setAddProject(false);
       setProject(value);
-      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-      setGroup('');
-      setTitle(t.plans);
+      //only do this if we aren't already deeper...
+      if (choice === '' || choice === 'transcriber') {
+        setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+        setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+        setTitle(API_CONFIG.isApp ? t.tasks : t.plans);
+        setGroup('');
+      }
     }
   };
 
