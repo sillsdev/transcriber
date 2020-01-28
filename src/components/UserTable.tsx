@@ -81,7 +81,8 @@ const getMedia = (
   organization: string,
   users: Array<User>,
   roles: Array<Role>,
-  organizationMemberships: Array<OrganizationMembership>
+  organizationMemberships: Array<OrganizationMembership>,
+  t: IUsertableStrings
 ) => {
   const members = organizationMemberships
     .filter(om => related(om, 'organization') === organization)
@@ -95,7 +96,7 @@ const getMedia = (
       if (u.attributes) {
         rowData.push({
           name: u.attributes.name,
-          email: u.attributes.email ? u.attributes.email : '',
+          email: u.attributes.email ? u.attributes.email : t.offline,
           locale: u.attributes.locale ? u.attributes.locale : '',
           phone: u.attributes.phone ? u.attributes.phone : '',
           timezone: u.attributes.timezone ? u.attributes.timezone : '',
@@ -135,6 +136,7 @@ export function UserTable(props: IProps) {
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
+  const [developer] = useGlobal('developer');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [editId, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
@@ -206,7 +208,8 @@ export function UserTable(props: IProps) {
   const isCurrentUser = (userId: string) => userId === user;
 
   useEffect(() => {
-    setData(getMedia(organization, users, roles, organizationMemberships));
+    setData(getMedia(organization, users, roles, organizationMemberships, t));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organization, users, roles, organizationMemberships]);
 
   interface ICell {
@@ -265,17 +268,32 @@ export function UserTable(props: IProps) {
       <div className={classes.paper}>
         <div className={classes.actions}>
           {orgRole === 'admin' && (
-            <Button
-              key="add"
-              aria-label={t.invite}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleAdd}
-            >
-              {t.invite}
-              <AddIcon className={classes.buttonIcon} />
-            </Button>
+            <>
+              <Button
+                key="add"
+                aria-label={t.invite}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleAdd}
+              >
+                {t.invite}
+                <AddIcon className={classes.buttonIcon} />
+              </Button>
+              {developer && (
+                <Button
+                  key="offline"
+                  aria-label={t.offline}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleEdit('Add')}
+                >
+                  {t.offline}
+                  <AddIcon className={classes.buttonIcon} />
+                </Button>
+              )}
+            </>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Button

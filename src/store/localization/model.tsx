@@ -24,6 +24,7 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "continue": string;
     "role": string;
     "invite": string;
+    "offline": string;
     "action": string;
     "delete": string;
     "filter": string;
@@ -250,6 +251,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "clearCache": string;
     "helpCenter": string;
     "reportIssue": string;
+    "developer": string;
     "version": string;
     "planUnsaved": string;
     "loseData": string;
@@ -548,6 +550,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "timezone": string;
     "locale": string;
     "locked": string;
+    "next": string;
     "add": string;
     "save": string;
     "deleteUser": string;
@@ -557,6 +560,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "silTranscriber": string;
     "userProfile": string;
     "completeProfile": string;
+    "addOfflineUser": string;
     "sendNews": string;
     "sendDigest": string;
 };

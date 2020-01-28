@@ -97,7 +97,13 @@
          	<target>Inviter</target>
          </segment>
       </unit>
-      <unit id="usertable.action">
+		<unit id="usertable.offline">
+			<segment>
+				<source>Offline</source>
+				<target>Hors ligne</target>
+			</segment>
+		</unit>
+		<unit id="usertable.action">
          <segment>
             <source>Action</source>
          	<target>Action</target>
@@ -1201,7 +1207,13 @@
          	<target>Signaler un problème</target>
          </segment>
       </unit>
-      <unit id="main.version">
+		<unit id="main.developer">
+			<segment>
+				<source>Developer Mode</source>
+				<target>Mode développeur</target>
+			</segment>
+		</unit>
+		<unit id="main.version">
          <segment>
             <source>Version: </source>
          	<target>Version: </target>
@@ -2649,13 +2661,19 @@
          	<target>Verrouillé</target>
          </segment>
       </unit>
-      <unit id="profile.add">
+      <unit id="profile.next">
          <segment>
             <source>Next</source>
             <target>Prochain</target>
          </segment>
       </unit>
-      <unit id="profile.save">
+		<unit id="profile.add">
+			<segment>
+				<source>Add</source>
+				<target>Ajouter</target>
+			</segment>
+		</unit>
+		<unit id="profile.save">
          <segment>
             <source>Save</source>
          	<target>Sauvegarder</target>
@@ -2701,6 +2719,12 @@
 			<segment>
 				<source>Complete User Profile</source>
 				<target>Remplir le profil de l'utilisateur</target>
+			</segment>
+		</unit>
+		<unit id="profile.addOfflineUser">
+			<segment>
+				<source>Add Offline User</source>
+				<target>Ajouter un utilisateur pour le hors ligne</target>
 			</segment>
 		</unit>
 		<unit id="profile.sendNews">

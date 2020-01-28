@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
@@ -14,6 +15,8 @@ import {
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ReportIcon from '@material-ui/icons/Report';
 import HelpIcon from '@material-ui/icons/Help';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import { API_CONFIG } from '../api-variable';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -71,9 +74,17 @@ export function HelpMenu(props: IProps) {
   const { action, t } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [shift, setShift] = React.useState(false);
+  const [developer, setDeveloper] = useGlobal('developer');
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleDeveloper = (event: React.MouseEvent<HTMLElement>) => {
+    setDeveloper(!developer);
+    setAnchorEl(null);
   };
 
   const handle = (what: string) => () => {
@@ -129,6 +140,14 @@ export function HelpMenu(props: IProps) {
             <ListItemText primary={t.reportIssue} />
           </StyledMenuItem>
         </a>
+        {shift && (
+          <StyledMenuItem onClick={handleDeveloper}>
+            <ListItemIcon>
+              {developer ? <RemoveIcon /> : <AddIcon />}
+            </ListItemIcon>
+            <ListItemText primary={t.developer} />
+          </StyledMenuItem>
+        )}
         <StyledMenuItem>
           <ListItemText
             primary={

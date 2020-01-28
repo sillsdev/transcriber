@@ -23,5 +23,6 @@ declare module 'reactn/default' {
     remoteBusy: boolean;
     autoOpenAddMedia: boolean; // open a dialog
     editUserId: string | null;
+    developer: boolean;
   }
 }

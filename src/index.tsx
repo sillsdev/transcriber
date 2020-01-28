@@ -37,6 +37,7 @@ setGlobal({
   remoteBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,
+  developer: false,
 });
 
 const Root = () => (
