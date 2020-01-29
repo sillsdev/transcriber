@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
+import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -13,11 +14,13 @@ import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
 import { QueryBuilder, RecordIdentity, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { Button, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
@@ -49,6 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
     },
     addIcon: {},
+    actionIcon: {},
     link: {},
   })
 );
@@ -61,32 +65,43 @@ interface IRow {
   phone: string;
   timezone: string;
   role: string;
+  action: string;
   id: RecordIdentity;
 }
+
+const getUser = (om: OrganizationMembership, users: User[]) => {
+  return users.filter(u => u.id === related(om, 'user'));
+};
+const getName = (om: OrganizationMembership, users: User[]) => {
+  const u = getUser(om, users);
+  return u && u.length > 0 && u[0].attributes && u[0].attributes.name;
+};
 
 const getMedia = (
   organization: string,
   users: Array<User>,
   roles: Array<Role>,
-  organizationMemberships: Array<OrganizationMembership>
+  organizationMemberships: Array<OrganizationMembership>,
+  t: IUsertableStrings
 ) => {
-  const members = organizationMemberships.filter(
-    om => related(om, 'organization') === organization
-  );
+  const members = organizationMemberships
+    .filter(om => related(om, 'organization') === organization)
+    .sort((i, j) => (getName(i, users) < getName(j, users) ? -1 : 1));
   const rowData: IRow[] = [];
   members.forEach(m => {
-    const user = users.filter(u => u.id === related(m, 'user'));
+    const user = getUser(m, users);
     const role = roles.filter(r => r.id === related(m, 'role'));
     if (user.length === 1) {
       const u = user[0];
       if (u.attributes) {
         rowData.push({
           name: u.attributes.name,
-          email: u.attributes.email ? u.attributes.email : '',
+          email: u.attributes.email ? u.attributes.email : t.offline,
           locale: u.attributes.locale ? u.attributes.locale : '',
           phone: u.attributes.phone ? u.attributes.phone : '',
           timezone: u.attributes.timezone ? u.attributes.timezone : '',
           role: role.length === 1 ? role[0].attributes.roleName : '',
+          action: u.id,
           id: { type: 'user', id: u.id },
         } as IRow);
       }
@@ -107,19 +122,27 @@ interface IRecordProps {
   organizationMemberships: Array<OrganizationMembership>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+  history: {
+    action: string;
+    location: {
+      pathname: string;
+    };
+  };
+}
 
 export function UserTable(props: IProps) {
-  const { t, users, roles, organizationMemberships } = props;
+  const { t, users, roles, organizationMemberships, history } = props;
   const classes = useStyles();
   const [organization] = useGlobal('organization');
+  const [user] = useGlobal('user');
+  const [developer] = useGlobal('developer');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [editId, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
-  const [actionMenuItem, setActionMenuItem] = useState(null);
-  const [check, setCheck] = useState(Array<number>());
-  const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
     { name: 'name', title: t.name },
     { name: 'email', title: t.email },
@@ -127,6 +150,10 @@ export function UserTable(props: IProps) {
     { name: 'phone', title: t.phone },
     { name: 'timezone', title: t.timezone },
     { name: 'role', title: t.role },
+    {
+      name: 'action',
+      title: orgRole === 'admin' ? t.action : '\u00A0',
+    },
   ];
   const columnWidths = [
     { columnName: 'name', width: 200 },
@@ -135,9 +162,12 @@ export function UserTable(props: IProps) {
     { columnName: 'phone', width: 100 },
     { columnName: 'timezone', width: 100 },
     { columnName: 'role', width: 100 },
+    { columnName: 'action', width: 150 },
   ];
   const [filter, setFilter] = useState(false);
+  const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [view, setView] = useState('');
 
   const handleAdd = () => {
     setDialogVisible(true);
@@ -149,40 +179,89 @@ export function UserTable(props: IProps) {
   const handleAddCancel = () => {
     setDialogVisible(false);
   };
+
+  const handleEdit = (userId: string) => (e: any) => {
+    localStorage.setItem('url', history.location.pathname);
+    setEditId(userId);
+    setView('Profile');
+  };
+
+  const handleDelete = (value: string) => () => {
+    setDeleteItem(value);
+  };
+  const handleDeleteConfirmed = () => {
+    memory.update((t: TransformBuilder) =>
+      t.removeRecord({
+        type: 'user',
+        id: deleteItem,
+      })
+    );
+  };
+  const handleDeleteRefused = () => {
+    setDeleteItem('');
+  };
+
   const handleMessageReset = () => {
     setMessage(<></>);
   };
-  const handleCheck = (checks: Array<number>) => {
-    setCheck(checks);
-  };
   const handleFilter = () => setFilter(!filter);
-  const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
-  const handleConfirmAction = (what: string) => (e: any) => {
-    setActionMenuItem(null);
-    if (!/Close/i.test(what)) {
-      if (check.length === 0) {
-        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
-      } else {
-        setConfirmAction(what);
-      }
-    }
-  };
-  const handleActionConfirmed = () => {
-    if (confirmAction === 'Delete') {
-      setCheck(Array<number>());
-      check.forEach(i => {
-        memory.update((t: TransformBuilder) => t.removeRecord(data[i].id));
-      });
-    }
-    setConfirmAction('');
-  };
-  const handleActionRefused = () => {
-    setConfirmAction('');
-  };
+  const isCurrentUser = (userId: string) => userId === user;
 
   useEffect(() => {
-    setData(getMedia(organization, users, roles, organizationMemberships));
-  }, [organization, users, roles, organizationMemberships, confirmAction]);
+    setData(getMedia(organization, users, roles, organizationMemberships, t));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [organization, users, roles, organizationMemberships]);
+
+  interface ICell {
+    value: string;
+    style?: React.CSSProperties;
+    row: IRow;
+    column: any;
+    tableRow: any;
+    tableColumn: any;
+  }
+
+  const ActionCell = ({ value, style, ...restProps }: ICell) => (
+    <Table.Cell {...restProps} style={{ ...style }} value>
+      {orgRole === 'admin' && (
+        <>
+          <IconButton
+            id={'edit-' + value}
+            key={'edit-' + value}
+            aria-label={'edit-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleEdit(value)}
+            disabled={isCurrentUser(value)}
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton
+            id={'del-' + value}
+            key={'del-' + value}
+            aria-label={'del-' + value}
+            color="default"
+            className={classes.actionIcon}
+            onClick={handleDelete(value)}
+            disabled={isCurrentUser(value)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      )}
+    </Table.Cell>
+  );
+
+  const Cell = (props: any) => {
+    const { column } = props;
+    if (column.name === 'action') {
+      if (orgRole === 'admin') return <ActionCell {...props} />;
+      else return <></>;
+    }
+    return <Table.Cell {...props} />;
+  };
+
+  if (/profile/i.test(view)) return <Redirect to="/Profile" />;
 
   return (
     <div className={classes.container}>
@@ -201,28 +280,19 @@ export function UserTable(props: IProps) {
                 {t.invite}
                 <AddIcon className={classes.buttonIcon} />
               </Button>
-              <Button
-                key="action"
-                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-                aria-label={t.action}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleMenu}
-              >
-                {t.action}
-                <DropDownIcon className={classes.buttonIcon} />
-              </Button>
-              <Menu
-                id="action-menu"
-                anchorEl={actionMenuItem}
-                open={Boolean(actionMenuItem)}
-                onClose={handleConfirmAction('Close')}
-              >
-                <MenuItem onClick={handleConfirmAction('Delete')}>
-                  {t.delete}
-                </MenuItem>
-              </Menu>
+              {developer && (
+                <Button
+                  key="offline"
+                  aria-label={t.offline}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleEdit('Add')}
+                >
+                  {t.offline}
+                  <AddIcon className={classes.buttonIcon} />
+                </Button>
+              )}
             </>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
@@ -246,8 +316,8 @@ export function UserTable(props: IProps) {
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
+          dataCell={Cell}
           rows={data}
-          select={handleCheck}
           shaping={filter}
         />
       </div>
@@ -257,11 +327,10 @@ export function UserTable(props: IProps) {
         addCompleteMethod={handleAddComplete}
         cancelMethod={handleAddCancel}
       />
-      {confirmAction !== '' ? (
+      {deleteItem !== '' ? (
         <Confirm
-          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
-          yesResponse={handleActionConfirmed}
-          noResponse={handleActionRefused}
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
         />
       ) : (
         <></>

@@ -100,6 +100,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="usertable.offline">
+         <segment>
+            <source>Offline</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="usertable.action">
          <segment>
             <source>Action</source>
@@ -1201,6 +1207,12 @@
       <unit id="main.reportIssue">
          <segment>
             <source>Report an Issue</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.developer">
+         <segment>
+            <source>Developer mode</source>
             <target/>
          </segment>
       </unit>
@@ -2650,9 +2662,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.add">
+      <unit id="profile.next">
          <segment>
             <source>Next</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.add">
+         <segment>
+            <source>Add</source>
             <target/>
          </segment>
       </unit>
@@ -2701,6 +2719,12 @@
       <unit id="profile.completeProfile">
          <segment>
             <source>Complete User Profile</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.addOfflineUser">
+         <segment>
+            <source>Add Offline User</source>
             <target/>
          </segment>
       </unit>

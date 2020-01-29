@@ -16,6 +16,7 @@ import {
   Plan,
   MediaFile,
   ActivityStates,
+  FileResponse,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -182,7 +183,7 @@ interface IStateProps {
   activityState: IActivityStateStrings;
   hasUrl: boolean;
   mediaUrl: string;
-  exportFile: File;
+  exportFile: FileResponse;
   exportStatus: IAxiosStatus;
 }
 
@@ -405,11 +406,8 @@ export function TranscriptionTab(props: IProps) {
           showMessage(t.exportProject, exportStatus.statusMsg);
         }
         if (exportStatus.complete && exportName === '') {
-          console.log('set export Name');
-          setExportName(exportFile.name);
-          console.log(exportName);
-          var objectUrl = URL.createObjectURL(exportFile);
-          setExportUrl(objectUrl);
+          setExportName(exportFile.data.attributes.message);
+          setExportUrl(exportFile.data.attributes.fileurl);
         }
       }
     }

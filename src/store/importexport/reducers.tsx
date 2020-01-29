@@ -26,12 +26,13 @@ export default function(
       };
     case EXPORT_SUCCESS:
       console.log('Export success');
-      console.log(action.payload.name + ':' + action.payload.size);
       return {
         ...state,
         loaded: true,
         exportFile: action.payload,
-        importexportStatus: successStatus(action.payload.name),
+        importexportStatus: successStatus(
+          action.payload.data.attributes.message
+        ),
       };
     case EXPORT_ERROR:
       return {

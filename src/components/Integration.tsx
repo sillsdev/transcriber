@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IIntegrationStrings, Project } from '../model';
+import { IState, IIntegrationStrings, Project, Passage } from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from 'react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -95,12 +95,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   paratext_count: number; //state.paratext.count,
-  paratext_countStatus: IAxiosStatus;
+  paratext_countStatus?: IAxiosStatus;
   paratext_projects: ParatextProject[]; // state.paratext.projects,
-  paratext_projectsStatus: IAxiosStatus; // state.paratext.projectsQueried,
+  paratext_projectsStatus?: IAxiosStatus; // state.paratext.projectsQueried,
   paratext_username: string; // state.paratext.username
-  paratext_usernameStatus: IAxiosStatus;
-  paratext_syncStatus: IAxiosStatus; // state.paratext.syncStatus,
+  paratext_usernameStatus?: IAxiosStatus;
+  paratext_syncStatus?: IAxiosStatus; // state.paratext.syncStatus,
   t: IIntegrationStrings;
 }
 
@@ -110,11 +110,14 @@ interface IDispatchProps {
   getCount: typeof actions.getCount;
   syncProject: typeof actions.syncProject;
   resetSync: typeof actions.resetSync;
+  resetCount: typeof actions.resetCount;
+  resetProjects: typeof actions.resetProjects;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
   integrations: Array<Integration>;
   projects: Array<Project>;
+  passages: Array<Passage>;
 }
 interface IProps
   extends IStateProps,
@@ -136,8 +139,16 @@ export function IntegrationPanel(props: IProps) {
     paratext_projectsStatus,
     paratext_syncStatus,
   } = props;
-  const { getUserName, getCount, getProjects, syncProject, resetSync } = props;
-  const { projectintegrations, integrations, projects } = props;
+  const {
+    getUserName,
+    getCount,
+    getProjects,
+    syncProject,
+    resetSync,
+    resetCount,
+    resetProjects,
+  } = props;
+  const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
 
   const [online] = React.useState(Online());
@@ -147,6 +158,7 @@ export function IntegrationPanel(props: IProps) {
   const [hasParatext, setHasParatext] = React.useState(false);
   const [hasPermission, setHasPermission] = React.useState(false);
   const [ptPermission, setPtPermission] = React.useState('None');
+  const [myProject, setMyProject] = React.useState('');
   const [project] = useGlobal('project');
   const [keyMap] = useGlobal('keyMap');
   const [paratextIntegration, setParatextIntegration] = React.useState();
@@ -155,6 +167,15 @@ export function IntegrationPanel(props: IProps) {
   const [message, setMessage] = React.useState(<></>);
   const [busy] = useGlobal('remoteBusy');
 
+  const showMessage = (title: string, msg: string) => {
+    setMessage(
+      <span>
+        {title}
+        <br />
+        {msg}
+      </span>
+    );
+  };
   const handleMessageReset = () => () => {
     setMessage(<></>);
   };
@@ -240,7 +261,6 @@ export function IntegrationPanel(props: IProps) {
     ].ProjectIds.filter(p => p !== remoteIdNum('project', project, keyMap));
   };
   const handleParatextProjectChange = (e: any) => {
-    console.log(e.target.value);
     if (e.target.value === t.removeProject) {
       handleRemoveIntegration();
       return;
@@ -330,103 +350,95 @@ export function IntegrationPanel(props: IProps) {
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
     return beforeLang + ' ' + language + ' ' + afterLang + endPunct;
   };
+
   useEffect(() => {
-    if (!busy && integrations.length > 0 && !paratextIntegration) {
+    if (project !== myProject) {
+      setPtProj(-1);
+      setPtProjName('');
+      resetProjects();
+      resetCount();
+      setMyProject(project);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [project]);
+
+  useEffect(() => {
+    resetCount();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [passages]);
+
+  /* do this once */
+  useEffect(() => {
+    if (integrations.length > 0 && !paratextIntegration) {
       resetSync();
-      getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
       getParatextIntegration();
-      if (
-        !paratext_projectsStatus.complete ||
-        paratext_projectsStatus.errStatus
-      ) {
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [integrations, paratextIntegration]);
+
+  useEffect(() => {
+    if (!paratext_countStatus) {
+      getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
+    } else if (paratext_countStatus.errStatus)
+      showMessage(t.countError, translateError(paratext_countStatus));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [paratext_count, paratext_countStatus]);
+
+  useEffect(() => {
+    if (!paratext_usernameStatus) {
+      getUserName(auth, t.usernamePending);
+    } else if (paratext_usernameStatus.errStatus)
+      showMessage(t.usernameError, translateError(paratext_usernameStatus));
+
+    setHasParatext(paratext_username !== '');
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [paratext_username, paratext_usernameStatus]);
+
+  useEffect(() => {
+    if (!busy) {
+      if (!paratext_projectsStatus) {
         let proj = getProject();
         getProjects(
           auth,
           t.projectsPending,
           proj && proj.attributes ? proj.attributes.language : undefined
         );
+      } else {
+        if (paratext_projectsStatus.errStatus) {
+          showMessage(t.projectError, translateError(paratext_projectsStatus));
+        } else if (paratext_projectsStatus.complete) {
+          findConnectedProject();
+        }
       }
-      if (
-        !paratext_usernameStatus.complete ||
-        paratext_usernameStatus.errStatus
-      )
-        getUserName(auth, t.usernamePending);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [busy, integrations.length]);
-
-  useEffect(() => {
-    if (paratext_countStatus && paratext_countStatus.errStatus)
-      setMessage(
-        <span>
-          {t.countError} {translateError(paratext_countStatus)}
-        </span>
-      );
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_count, paratext_countStatus]);
-
-  useEffect(() => {
-    if (paratext_usernameStatus!.errStatus)
-      setMessage(
-        <span>
-          {t.usernameError}
-          {translateError(paratext_usernameStatus)}
-        </span>
-      );
-    setHasParatext(paratext_username !== '');
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_username, paratext_usernameStatus]);
-
-  useEffect(() => {
-    if (paratext_projectsStatus && paratext_projectsStatus.errStatus) {
-      setMessage(
-        <span>
-          {t.projectError}
-          {translateError(paratext_projectsStatus)}
-        </span>
-      );
-    }
-
-    if (
-      paratext_projectsStatus &&
-      paratext_projectsStatus.complete &&
-      !paratext_projectsStatus.errStatus
-    ) {
-      findConnectedProject();
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [paratext_projects, paratext_projectsStatus]);
+  }, [busy, paratext_projects, paratext_projectsStatus]);
 
   useEffect(() => {
     if (paratext_syncStatus)
       if (paratext_syncStatus.errStatus)
-        setMessage(
-          <span>
-            {t.syncError}
-            {translateError(paratext_syncStatus)}
-          </span>
-        );
+        showMessage(t.syncError, translateError(paratext_syncStatus));
       else if (paratext_syncStatus.statusMsg !== '') {
-        setMessage(<span>{paratext_syncStatus.statusMsg}</span>);
+        showMessage('', paratext_syncStatus.statusMsg);
         getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
       }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);
 
   useEffect(() => {
-    if (ptProj >= 0) {
-      setHasPtProj(true);
+    setHasPtProj(ptProj >= 0);
+
+    if (ptProj >= 0 && paratext_projects && paratext_projects.length > ptProj) {
       setPtPermission(paratext_projects[ptProj].CurrentUserRole);
       setHasPermission(
         paratext_projects[ptProj].IsConnectable &&
           canEditParatextText(paratext_projects[ptProj].CurrentUserRole)
       );
     } else {
-      setHasPtProj(false);
       setHasPermission(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [ptProj]);
+  }, [ptProj, paratext_projects]);
   const pRef = React.useRef<HTMLDivElement>(null);
 
   return (
@@ -531,7 +543,8 @@ export function IntegrationPanel(props: IProps) {
                   hasParatext
                     ? t.yes + ': ' + paratext_username
                     : online
-                    ? paratext_usernameStatus.complete
+                    ? paratext_usernameStatus &&
+                      paratext_usernameStatus.complete
                       ? t.no
                       : t.usernamePending
                     : t.offline
@@ -564,7 +577,7 @@ export function IntegrationPanel(props: IProps) {
               <ListItemText
                 primary={t.countReady}
                 secondary={
-                  paratext_countStatus.complete
+                  paratext_countStatus && paratext_countStatus.complete
                     ? paratext_count
                     : t.countPending
                 }
@@ -655,6 +668,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       getCount: actions.getCount,
       syncProject: actions.syncProject,
       resetSync: actions.resetSync,
+      resetCount: actions.resetCount,
+      resetProjects: actions.resetProjects,
     },
     dispatch
   ),
@@ -663,6 +678,7 @@ const mapRecordsToProps = {
   projectintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
   integrations: (q: QueryBuilder) => q.findRecords('integration'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
+  passages: (q: QueryBuilder) => q.findRecords('passage'),
 };
 
 export default withData(mapRecordsToProps)(

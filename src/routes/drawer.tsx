@@ -81,7 +81,6 @@ import {
   related,
   hasRelated,
   slug,
-  setDefaultProj,
   deepLink,
   remoteId,
   remoteIdGuid,
@@ -283,9 +282,9 @@ export function ResponsiveDrawer(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_open, setOpen] = useGlobal('open');
-  const [choice, setChoice] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
-  const [content, setContent] = useState(API_CONFIG.isApp ? slug(t.tasks) : '');
+  const [_open, setOpen] = useGlobal('autoOpenAddMedia');
+  const [choice, setChoice] = useState('');
+  const [content, setContent] = useState('');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
   const [curOrg, setCurOrg] = useState<number | null>(null);
   const [orgAvatar, setOrgAvatar] = useState<string>('');
@@ -335,29 +334,26 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     localStorage.setItem('lastOrg', remoteId('organization', value, keyMap));
     if (value === t.newOrganization) {
-      // if (newOrgRef.current) newOrgRef.current.click();
       setAddOrg(true);
       setContent(slug(t.organization));
       setTitle(t.addOrganization);
-    } else {
-      if (value !== organization) setCurProj(null);
+    } else if (value !== organization) {
       setOrganization(value);
-      setDefaultProj(value, memory, setProject);
       setAddProject(false);
       setGroup('');
+      setProjOptions([]);
+      setCurProj(null);
       const projRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('project').filter({
           relation: 'organization',
           record: { type: 'organization', id: value },
         })
       ) as Project[];
-      handleChoice(
-        projRecs.length === 0
-          ? 'none'
-          : API_CONFIG.isApp
-          ? slug(t.tasks)
-          : slug(t.plans)
+      const sortedProjRecs = projRecs.sort((i, j) =>
+        i.attributes.name < j.attributes.name ? -1 : 1
       );
+      if (projRecs.length !== 0) handleCommitProj(sortedProjRecs[0].id);
+      else setContent('none');
     }
   };
 
@@ -369,12 +365,14 @@ export function ResponsiveDrawer(props: IProps) {
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
     localStorage.setItem('lastProj', remoteId('project', value, keyMap));
-    setAddProject(false);
-    setProject(value);
-    setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-    setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-    setGroup('');
-    setTitle(t.plans);
+    if (value !== project) setProject(value);
+    console.log('handleCommitProj ' + choice);
+    if (choice === '' || choice === 'transcriber') {
+      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+      setTitle(API_CONFIG.isApp ? t.tasks : t.plans);
+      setGroup('');
+    }
   };
 
   const handlePlanType = (value: string | null) => {
@@ -394,23 +392,22 @@ export function ResponsiveDrawer(props: IProps) {
     setTitle(t.addProject);
   };
 
-  const handleFinishAdd = async ({ to, projectId, planId }: IAddArgs) => {
+  const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
     if (to) {
-      await setAddProject(false);
-      setTimeout(async () => {
-        await setProject(projectId || '');
-        await setPlan(planId || '');
-        const parts = to.split('/');
-        setTimeout(async () => {
-          await setContent(parts[3]);
-          await setTab(parseInt(parts[6]));
-          await setOpen(true);
-        }, 2000);
-      }, 500);
+      setAddProject(false);
+      setProject(projectId || '');
+      setPlan(planId || '');
+      const parts = to.split('/');
+      setContent(parts[3]);
+      setTab(parseInt(parts[6]));
+      setOpen(true);
     } else {
       setContent(slug(t.plans));
+      setChoice(slug(t.plans));
+      setTitle(t.plans);
       if (addProject) setAddProject(false);
       else setDelProject(true);
+      if (projectId) setProject(projectId);
     }
   };
 
@@ -522,7 +519,7 @@ export function ResponsiveDrawer(props: IProps) {
     }
     setOrgRole(getRole(organizationMemberships, 'organization', organization));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orgOptions, organization, busy]);
+  }, [orgOptions, organization]);
 
   useEffect(() => {
     if (delProject) {
@@ -550,10 +547,15 @@ export function ResponsiveDrawer(props: IProps) {
               Authorization: 'Bearer ' + auth.accessToken,
             },
           }).then(strings => {
-            const data = strings.data.data;
-            if (Array.isArray(data) && data.length === 0)
+            const data = strings.data.data as Record[];
+            const orgRemId = localStorage.getItem('lastOrg');
+            const filtered = data.filter(
+              r => related(r, 'organization') === orgRemId
+            );
+            if (filtered.length === 0) {
               if (API_CONFIG.isApp) swapRef.current.click();
               else handleAddProject();
+            }
           });
         }
       }
@@ -576,7 +578,7 @@ export function ResponsiveDrawer(props: IProps) {
       setCurProj(null);
     } else if (!busy && curProj !== cur) {
       setCurProj(cur);
-      setTimeout(() => handleCommitProj(projKeys[cur]), 500);
+      handleCommitProj(projKeys[cur]);
     }
     if (
       !busy &&
@@ -586,10 +588,10 @@ export function ResponsiveDrawer(props: IProps) {
       cur < 0
     ) {
       setCurProj(0);
-      setTimeout(() => handleCommitProj(projKeys[0]), 500);
+      handleCommitProj(projKeys[0]);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject, busy]);
+  }, [projOptions, project, addProject, organization, busy]);
 
   useEffect(() => {
     try {

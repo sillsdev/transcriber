@@ -1,6 +1,6 @@
 {
   "name": "transcriber-admin",
-  "version": "0.5.7a",
+  "version": "0.5.7b",
   "private": true,
   "dependencies": {
     "@devexpress/dx-react-chart": "^2.2.1",

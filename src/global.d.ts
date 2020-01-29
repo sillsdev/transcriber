@@ -21,6 +21,8 @@ declare module 'reactn/default' {
     bucket: Bucket;
     remote: JSONAPISource;
     remoteBusy: boolean;
-    open: boolean; // open a dialog
+    autoOpenAddMedia: boolean; // open a dialog
+    editUserId: string | null;
+    developer: boolean;
   }
 }

@@ -117,7 +117,14 @@
                     <context context-type="sourcefile">UserTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="usertable.action">
+        	<trans-unit id="usertable.offline">
+        		<source>Offline</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UserTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="usertable.action">
                 <source>Action</source>
                 <target/>
                 <context-group>
@@ -1405,7 +1412,14 @@
                     <context context-type="sourcefile">HelpMenu.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.version">
+        	<trans-unit id="main.developer">
+        		<source>Developer mode</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">HelpMenu.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.version">
                 <source>Version: </source>
                 <target/>
                 <context-group>
@@ -3090,8 +3104,15 @@
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="profile.add">
+        	<trans-unit id="profile.next">
         		<source>Next</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.add">
+        		<source>Add</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
@@ -3148,6 +3169,13 @@
         	</trans-unit>
         	<trans-unit id="profile.completeProfile">
         		<source>Complete User Profile</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.addOfflineUser">
+        		<source>Add Offline User</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>

@@ -4,12 +4,12 @@ import { IAxiosStatus } from '../AxiosStatus';
 // Describing the shape of the paratext integration slice of state
 export interface IParatextState {
   count: number;
-  countStatus: IAxiosStatus;
+  countStatus?: IAxiosStatus;
   username: string;
-  usernameStatus: IAxiosStatus;
+  usernameStatus?: IAxiosStatus;
   projects: ParatextProject[];
-  projectsStatus: IAxiosStatus;
-  syncStatus: IAxiosStatus;
+  projectsStatus?: IAxiosStatus;
+  syncStatus?: IAxiosStatus;
 }
 
 // Describing the different ACTION NAMES available

@@ -32,23 +32,13 @@ export const exportProject = (
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,
     },
-    //responseType: 'blob',
     timeout: 30000,
   })
     .then(response => {
-      var filename = response.headers['content-disposition'];
-      var idx = filename.indexOf('filename=') + 'filename='.length;
-      filename = filename.substring(idx);
-      var data = atob(response.data);
-      var u8 = new Uint8Array(data.length);
-      // Copy over all the values
-      for (var i = 0; i < data.length; i++) {
-        u8[i] = data[i].charCodeAt(0);
-      }
-      var file = new File([u8], filename, {
-        type: response.headers['content-type'],
+      dispatch({
+        payload: response.data,
+        type: EXPORT_SUCCESS,
       });
-      dispatch({ payload: file, type: EXPORT_SUCCESS });
     })
     .catch((err: AxiosError) => {
       console.log('export failed.');

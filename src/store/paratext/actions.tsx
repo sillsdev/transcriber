@@ -31,7 +31,6 @@ export const getUserName = (auth: Auth, pendingmsg: string) => (
     },
   })
     .then(response => {
-      console.log(response);
       dispatch({ payload: response.data, type: USERNAME_SUCCESS });
     })
     .catch((err: AxiosError) => {
@@ -43,6 +42,13 @@ export const getUserName = (auth: Auth, pendingmsg: string) => (
       });
     });
 };
+export const resetProjects = () => (dispatch: any) => {
+  dispatch({
+    payload: undefined,
+    type: PROJECTS_PENDING,
+  });
+};
+
 export const getProjects = (
   auth: Auth,
   pendingmsg: string,
@@ -60,7 +66,6 @@ export const getProjects = (
     },
   })
     .then(response => {
-      console.log(response.data);
       let pt: ParatextProject[] = [];
       for (let ix = 0; ix < response.data.length; ix++) {
         let o: ParatextProject = {
@@ -83,6 +88,14 @@ export const getProjects = (
       dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
     });
 };
+
+export const resetCount = () => (dispatch: any) => {
+  dispatch({
+    payload: undefined,
+    type: COUNT_PENDING,
+  });
+};
+
 export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
   dispatch: any
 ) => {
@@ -97,7 +110,6 @@ export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
     },
   })
     .then(response => {
-      console.log(response);
       dispatch({ payload: response.data, type: COUNT_SUCCESS });
     })
     .catch(err => {
@@ -107,7 +119,7 @@ export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
     });
 };
 export const resetSync = () => (dispatch: any) => {
-  dispatch({ payload: pendingStatus(''), type: SYNC_PENDING });
+  dispatch({ payload: undefined, type: SYNC_PENDING });
 };
 export const syncProject = (
   auth: Auth,
@@ -122,7 +134,6 @@ export const syncProject = (
     },
   })
     .then(response => {
-      console.log(response);
       dispatch({ payload: response.data, type: SYNC_SUCCESS });
       getCount(auth, projectId, '');
     })

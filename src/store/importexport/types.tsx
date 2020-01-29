@@ -1,9 +1,20 @@
 import { IAxiosStatus } from '../AxiosStatus';
 
+export interface FileResponse {
+  data: {
+    attributes: {
+      message: string;
+      fileurl: string;
+      contenttype: string;
+    };
+    type: string; //"file-responses",
+    id: string;
+  };
+}
 // Describing the shape of the paratext integration slice of state
 export interface IImportExportState {
   loaded: boolean;
-  exportFile: File;
+  exportFile: FileResponse;
   importexportStatus: IAxiosStatus;
 }
 
@@ -20,7 +31,7 @@ interface ExportPendingMsg {
 
 interface ExportSucceededMsg {
   type: typeof EXPORT_SUCCESS;
-  payload: File;
+  payload: FileResponse;
 }
 
 interface ExportFailedMsg {

@@ -4,7 +4,16 @@ import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, User, IProfileStrings, DigestPreference } from '../model';
+import {
+  IState,
+  User,
+  IProfileStrings,
+  DigestPreference,
+  OrganizationMembership,
+  Role,
+  Group,
+  GroupMembership,
+} from '../model';
 import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
@@ -35,7 +44,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { remoteId, makeAbbr, uiLang } from '../utils';
+import { remoteId, makeAbbr, uiLang, related } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
@@ -118,10 +127,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     caption: {
       display: 'table',
-      margin: '0 auto',
+      width: 200,
+      textAlign: 'center',
     },
     bigAvatar: {
-      margin: '0 auto',
       width: 200,
       height: 200,
     },
@@ -162,6 +171,8 @@ export function Profile(props: IProps) {
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [bucket] = useGlobal('bucket');
+  const [editId, setEditId] = useGlobal('editUserId');
+  const [organization] = useGlobal('organization');
   const { isAuthenticated } = auth;
   // const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
@@ -294,7 +305,68 @@ export function Profile(props: IProps) {
       ]);
       setLanguage(locale);
     }
+    if (editId) {
+      setEditId(null);
+    }
     setView('Main');
+  };
+
+  const roleRec = (roleRecs: Role[], kind: string, orgRole: boolean) => {
+    const lcKind = kind.toLowerCase();
+    return orgRole
+      ? roleRecs.filter(
+          r =>
+            r.attributes.orgRole &&
+            r.attributes.roleName &&
+            r.attributes.roleName.toLowerCase() === lcKind
+        )
+      : roleRecs.filter(
+          r =>
+            r.attributes.groupRole &&
+            r.attributes.roleName &&
+            r.attributes.roleName.toLowerCase() === lcKind
+        );
+  };
+
+  const addToOrgAndGroup = (userRec: User) => {
+    let orgMember: OrganizationMembership = {
+      type: 'organizationmembership',
+    } as any;
+    schema.initializeRecord(orgMember);
+    const roleRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('role')
+    ) as Role[];
+    const memberRec = roleRec(roleRecs, 'member', true);
+    const groups = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('group')
+    ) as Group[];
+    const allUsersGroup = groups.filter(
+      g => related(g, 'owner') === organization && g.attributes.allUsers
+    );
+    const reviewerRec = roleRec(roleRecs, 'reviewer', false);
+    let groupMbr: GroupMembership = {
+      type: 'groupmembership',
+    } as any;
+    schema.initializeRecord(groupMbr);
+    memory
+      .update((t: TransformBuilder) => [t.addRecord(userRec)])
+      .then(() => {
+        memory.update((t: TransformBuilder) => [
+          t.addRecord(orgMember),
+          t.replaceRelatedRecord(orgMember, 'user', userRec),
+          t.replaceRelatedRecord(orgMember, 'organization', {
+            type: 'organization',
+            id: organization,
+          }),
+          t.replaceRelatedRecord(orgMember, 'role', memberRec[0]),
+        ]);
+        memory.update((t: TransformBuilder) => [
+          t.addRecord(groupMbr),
+          t.replaceRelatedRecord(groupMbr, 'user', userRec),
+          t.replaceRelatedRecord(groupMbr, 'group', allUsersGroup[0]),
+          t.replaceRelatedRecord(groupMbr, 'role', reviewerRec[0]),
+        ]);
+      });
   };
 
   const handleAdd = () => {
@@ -324,7 +396,11 @@ export function Profile(props: IProps) {
         },
       } as any;
       schema.initializeRecord(userRec);
-      memory.update((t: TransformBuilder) => [t.addRecord(userRec)]);
+      if (!editId) {
+        memory.update((t: TransformBuilder) => t.addRecord(userRec));
+      } else {
+        addToOrgAndGroup(userRec);
+      }
     }
     if (finishAdd) {
       finishAdd();
@@ -332,7 +408,12 @@ export function Profile(props: IProps) {
     setView('Main');
   };
 
-  const handleCancel = () => setView('Main');
+  const handleCancel = () => {
+    if (editId) {
+      setEditId(null);
+    }
+    setView('Main');
+  };
 
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
@@ -397,10 +478,12 @@ export function Profile(props: IProps) {
         lastModifiedBy: remoteId('user', user, keyMap),
       },
     };
-    const current = users.filter(u => u.id === user);
-    if (current.length === 1) {
-      userRec = current[0];
-      setCurrentUser(userRec);
+    if (!editId || !/Add/i.test(editId)) {
+      const current = users.filter(u => u.id === (editId ? editId : user));
+      if (current.length === 1) {
+        userRec = current[0];
+        setCurrentUser(userRec);
+      }
     }
     const attr = userRec.attributes;
     setName(attr.name !== attr.email ? attr.name : '');
@@ -457,15 +540,26 @@ export function Profile(props: IProps) {
       >
         <div className={classes.paper}>
           <Grid container>
-            <StyledGrid item xs={12} lg={5}>
+            <StyledGrid item xs={12} md={6}>
               <BigAvatar avatarUrl={avatarUrl} name={name} />
-              {name !== email && <h3 className={classes.caption}>{name}</h3>}
-              <Typography className={classes.caption}>{email}</Typography>
+              {name !== email && (
+                <Typography variant="h6" className={classes.caption}>
+                  {name || ''}
+                </Typography>
+              )}
+              <Typography className={classes.caption}>{email || ''}</Typography>
             </StyledGrid>
-            <Grid item xs={12} lg={7}>
-              {(currentUser === undefined ||
-                currentUser.attributes.name ===
-                  currentUser.attributes.email) && <h2>{t.completeProfile}</h2>}
+            <Grid item xs={12} md={6}>
+              {editId && /Add/i.test(editId) ? (
+                <Typography variant="h6">{t.addOfflineUser}</Typography>
+              ) : (
+                (currentUser === undefined ||
+                  currentUser.attributes.name ===
+                    currentUser.attributes.email) && (
+                  <Typography variant="h6">{t.completeProfile}</Typography>
+                )
+              )}
+
               <FormControl>
                 <FormGroup className={classes.group}>
                   <FormControlLabel
@@ -569,28 +663,32 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  <FormControlLabel
-                    className={classes.textField}
-                    control={
-                      <Checkbox
-                        id="news"
-                        checked={news === true}
-                        onChange={handleNewsChange}
+                  {email !== '' && (
+                    <>
+                      <FormControlLabel
+                        className={classes.textField}
+                        control={
+                          <Checkbox
+                            id="news"
+                            checked={news === true}
+                            onChange={handleNewsChange}
+                          />
+                        }
+                        label={t.sendNews}
                       />
-                    }
-                    label={t.sendNews}
-                  />
-                  <FormControlLabel
-                    className={classes.textField}
-                    control={
-                      <Checkbox
-                        id="digest"
-                        checked={digest === 1}
-                        onChange={handleDigestChange}
+                      <FormControlLabel
+                        className={classes.textField}
+                        control={
+                          <Checkbox
+                            id="digest"
+                            checked={digest === 1}
+                            onChange={handleDigestChange}
+                          />
+                        }
+                        label={t.sendDigest}
                       />
-                    }
-                    label={t.sendDigest}
-                  />
+                    </>
+                  )}
                   {showDetail && (
                     <>
                       <FormControlLabel
@@ -625,20 +723,21 @@ export function Profile(props: IProps) {
                 </FormGroup>
               </FormControl>
               <div className={classes.actions}>
-                {currentUser &&
-                  currentUser.attributes.name !==
-                    currentUser.attributes.email && (
-                    <Button
-                      key="cancel"
-                      aria-label={t.cancel}
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleCancel}
-                    >
-                      {t.cancel}
-                    </Button>
-                  )}
+                {((editId && /Add/i.test(editId)) ||
+                  (currentUser &&
+                    currentUser.attributes.name !==
+                      currentUser.attributes.email)) && (
+                  <Button
+                    key="cancel"
+                    aria-label={t.cancel}
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleCancel}
+                  >
+                    {t.cancel}
+                  </Button>
+                )}
                 <Button
                   key="add"
                   aria-label={t.add}
@@ -648,16 +747,20 @@ export function Profile(props: IProps) {
                   disabled={name === '' || !changed}
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
-                  {currentUser === undefined ||
-                  currentUser.attributes.name === currentUser.attributes.email
+                  {editId && /Add/i.test(editId)
                     ? t.add
+                    : currentUser === undefined ||
+                      currentUser.attributes.name ===
+                        currentUser.attributes.email
+                    ? t.next
                     : t.save}
                   <SaveIcon className={classes.icon} />
                 </Button>
               </div>
             </Grid>
           </Grid>
-          {currentUser &&
+          {!editId &&
+            currentUser &&
             currentUser.attributes.name !== currentUser.attributes.email && (
               <DeleteExpansion
                 title={t.deleteUser}
