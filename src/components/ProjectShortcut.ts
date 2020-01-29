@@ -1,7 +1,7 @@
 import { PlanType } from '../model';
 import { Schema, KeyMap } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { remoteId } from '../utils';
+import { remoteId, waitForRemoteId } from '../utils';
 import { saveNewPlan, saveNewSection, saveNewPassage } from '../crud';
 
 interface IProps {
@@ -52,21 +52,19 @@ export const projectShortcut = async (props: IProps) => {
     schema,
     memory,
   });
-  const checkPlan = () => {
-    const val = remoteId('plan', plan.id, keyMap);
-    if (typeof val === 'undefined') {
-      setTimeout(checkPlan, 100);
-    }
-  };
-  checkPlan();
+  const planId = await waitForRemoteId(plan, keyMap);
+  const projId = await waitForRemoteId(
+    { type: 'project', id: project },
+    keyMap
+  );
   const rec = planTypes.filter(pt => pt.id === planType);
   const typeName = rec.length > 0 ? rec[0].attributes.name : 'other';
   return {
     url: '/main/{0}/{1}-plan/{2}/{3}/1/'
       .replace('{0}', remoteId('organization', organization, keyMap))
       .replace('{1}', typeName.toLowerCase())
-      .replace('{2}', remoteId('project', project, keyMap))
-      .replace('{3}', remoteId('plan', plan.id, keyMap)),
+      .replace('{2}', projId)
+      .replace('{3}', planId),
     planId: plan.id,
   };
 };

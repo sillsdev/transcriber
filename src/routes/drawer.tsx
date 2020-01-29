@@ -365,16 +365,13 @@ export function ResponsiveDrawer(props: IProps) {
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
     localStorage.setItem('lastProj', remoteId('project', value, keyMap));
-    if (!addProject && value !== project) {
-      setAddProject(false);
-      setProject(value);
-      //only do this if we aren't already deeper...
-      if (choice === '' || choice === 'transcriber') {
-        setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-        setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-        setTitle(API_CONFIG.isApp ? t.tasks : t.plans);
-        setGroup('');
-      }
+    if (value !== project) setProject(value);
+    console.log('handleCommitProj ' + choice);
+    if (choice === '' || choice === 'transcriber') {
+      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
+      setTitle(API_CONFIG.isApp ? t.tasks : t.plans);
+      setGroup('');
     }
   };
 
@@ -395,23 +392,22 @@ export function ResponsiveDrawer(props: IProps) {
     setTitle(t.addProject);
   };
 
-  const handleFinishAdd = async ({ to, projectId, planId }: IAddArgs) => {
+  const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
     if (to) {
-      await setAddProject(false);
-      setTimeout(async () => {
-        await setProject(projectId || '');
-        await setPlan(planId || '');
-        const parts = to.split('/');
-        setTimeout(async () => {
-          await setContent(parts[3]);
-          await setTab(parseInt(parts[6]));
-          await setOpen(true);
-        }, 2000);
-      }, 500);
+      setAddProject(false);
+      setProject(projectId || '');
+      setPlan(planId || '');
+      const parts = to.split('/');
+      setContent(parts[3]);
+      setTab(parseInt(parts[6]));
+      setOpen(true);
     } else {
       setContent(slug(t.plans));
+      setChoice(slug(t.plans));
+      setTitle(t.plans);
       if (addProject) setAddProject(false);
       else setDelProject(true);
+      if (projectId) setProject(projectId);
     }
   };
 
@@ -582,7 +578,7 @@ export function ResponsiveDrawer(props: IProps) {
       setCurProj(null);
     } else if (!busy && curProj !== cur) {
       setCurProj(cur);
-      setTimeout(() => handleCommitProj(projKeys[cur]), 500);
+      handleCommitProj(projKeys[cur]);
     }
     if (
       !busy &&
@@ -592,10 +588,10 @@ export function ResponsiveDrawer(props: IProps) {
       cur < 0
     ) {
       setCurProj(0);
-      setTimeout(() => handleCommitProj(projKeys[0]), 500);
+      handleCommitProj(projKeys[0]);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject, organization]);
+  }, [projOptions, project, addProject, organization, busy]);
 
   useEffect(() => {
     try {

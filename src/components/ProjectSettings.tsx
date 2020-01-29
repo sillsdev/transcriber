@@ -263,11 +263,9 @@ export function ProjectSettings(props: IProps) {
       user,
       schema,
       memory,
-    }).then(project => setProject(project.id));
-
-    if (finishAdd) {
-      finishAdd({});
-    }
+    }).then(project => {
+      if (finishAdd) finishAdd({ projectId: project.id });
+    });
   };
   const handleDelete = () => {
     if (currentProject !== undefined) setDeleteItem(currentProject.id);
