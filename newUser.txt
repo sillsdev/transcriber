@@ -1,0 +1,11 @@
+Dear <new user>,
+
+Thank you so much for trying out the beta version of SIL Transcriber. As we are still in active development, we are very interested in your first impressions. In order to help us finalize the product, would you help us by answering a few questions?
+
+1. Were you experimenting with the program or trying to apply it to a real transcription problem?
+
+2. Can you tell us a little about your project? Does it require transcription to happen without an internet connection?
+
+3. Did you encounter any problems that prevented you from getting started with your project?
+
+If you are just getting started and would like to try transcribing, you may find these slides helpful: https://docs.google.com/presentation/d/1U5TwS1BOzc5t0-slnvQeKFcQEkUkOU8BJrDdY-HyR7o/edit?usp=sharing
