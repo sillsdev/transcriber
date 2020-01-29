@@ -1,37 +1,37 @@
-import React from "react";
-import { ILanguagePickerStrings } from "./model";
-import { LangTag, ScriptName, IRanked } from "./langPicker/types";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { List, ListItem, ListItemText, Typography } from "@material-ui/core";
-import { debounce } from "lodash";
-import { LgPickI18nClean } from "./localization/reducers";
+import React from 'react';
+import { ILanguagePickerStrings } from './model';
+import { LangTag, ScriptName } from './langPicker/types';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { debounce } from 'lodash';
+import { LgPickI18nClean } from './localization/reducers';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      maxWidth: 752
+      maxWidth: 752,
     },
     demo: {
-      backgroundColor: theme.palette.background.paper
+      backgroundColor: theme.palette.background.paper,
     },
     list: {
-      overflowY: "scroll"
+      overflowY: 'scroll',
     },
     title: {
-      margin: theme.spacing(4, 0, 2)
+      margin: theme.spacing(4, 0, 2),
     },
     firstLine: {
-      display: "flex"
+      display: 'flex',
     },
     grow: {
-      flexGrow: 1
-    }
+      flexGrow: 1,
+    },
   })
 );
 
 interface IProps {
-  list: IRanked[];
+  list: number[];
   choose: (tag: LangTag) => void;
   subtag?: boolean;
   secondary?: boolean;
@@ -59,18 +59,18 @@ export function LanguageChoice(props: IProps) {
   React.useEffect(() => {
     const handleResize = debounce(() => setHeight(window.innerWidth), 100);
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   const scriptDetail = (tag: LangTag) => {
-    const tagParts = tag.tag.split("-");
+    const tagParts = tag.tag.split('-');
     return tagParts.length > 1 && tagParts[1].length === 4
-      ? t.inScript.replace("$1", scriptName[tagParts[1]])
-      : "";
+      ? t.inScript.replace('$1', scriptName[tagParts[1]])
+      : '';
   };
 
   const detail = (tag: LangTag) => {
@@ -78,18 +78,18 @@ export function LanguageChoice(props: IProps) {
       <>
         <Typography>
           {t.languageOf
-            .replace("$1", tag.regionname ? tag.regionname : "")
-            .replace("$2", scriptDetail(tag))}
+            .replace('$1', tag.regionname ? tag.regionname : '')
+            .replace('$2', scriptDetail(tag))}
         </Typography>
-        <Typography>{tag.names ? tag.names.join(", ") : ""}</Typography>
+        <Typography>{tag.names ? tag.names.join(', ') : ''}</Typography>
       </>
     );
   };
 
-  const langElems = (list: IRanked[], langTags: LangTag[]) => {
+  const langElems = (list: number[], langTags: LangTag[]) => {
     return list.map(r => {
-      const tag = langTags[r.index];
-      const tagParts = tag.tag.split("-");
+      const tag = langTags[r];
+      const tagParts = tag.tag.split('-');
       if (!subtag && tagParts.length > 1) {
         if (tagParts[1].length !== 4 || tagParts.length > 2) return <></>;
       }
@@ -103,7 +103,7 @@ export function LanguageChoice(props: IProps) {
             primary={
               <div className={classes.firstLine}>
                 <Typography>{tag.name}</Typography>
-                <div className={classes.grow}>{"\u00A0"}</div>
+                <div className={classes.grow}>{'\u00A0'}</div>
                 <Typography>{tag.tag}</Typography>
               </div>
             }

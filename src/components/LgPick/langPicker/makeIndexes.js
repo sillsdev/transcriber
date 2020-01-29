@@ -209,7 +209,8 @@ const makeFolder = (name, typeName, data) => {
     var letPart = {};
     keys.forEach(key => {
       if (key.slice(0, 1) === letter) {
-        letPart[key] = data[key];
+        if (name !== 'Scripts') letPart[key] = data[key].map(i => i.index);
+        else letPart[key] = data[key];
       }
     });
     const firstCode = letter.charCodeAt(0).toString();

@@ -365,14 +365,15 @@ export function ResponsiveDrawer(props: IProps) {
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
     localStorage.setItem('lastProj', remoteId('project', value, keyMap));
+    if (addProject) setAddProject(false); // for exiting from add project
     if (value !== project) setProject(value);
-    console.log('handleCommitProj ' + choice);
-    if (choice === '' || choice === 'transcriber') {
-      setContent(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-      setChoice(API_CONFIG.isApp ? slug(t.tasks) : slug(t.plans));
-      setTitle(API_CONFIG.isApp ? t.tasks : t.plans);
-      setGroup('');
+    const newTitle = API_CONFIG.isApp ? t.tasks : t.plans;
+    if (newTitle !== title) {
+      setContent(slug(newTitle));
+      setChoice(slug(newTitle));
+      setTitle(newTitle);
     }
+    if (group !== '') setGroup('');
   };
 
   const handlePlanType = (value: string | null) => {
@@ -397,10 +398,12 @@ export function ResponsiveDrawer(props: IProps) {
       setAddProject(false);
       setProject(projectId || '');
       setPlan(planId || '');
-      const parts = to.split('/');
-      setContent(parts[3]);
-      setTab(parseInt(parts[6]));
-      setOpen(true);
+      setTimeout(() => {
+        const parts = to.split('/');
+        setContent(parts[3]);
+        setTab(parseInt(parts[6]));
+        setOpen(true);
+      }, 2000);
     } else {
       setContent(slug(t.plans));
       setChoice(slug(t.plans));
