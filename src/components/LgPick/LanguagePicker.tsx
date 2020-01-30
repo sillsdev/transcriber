@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IState, ILanguagePickerStrings } from '../../model';
 import localStrings from '../../selector/localize';
-import { LangTag, IRanked } from './langPicker/types';
+import { LangTag } from './langPicker/types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -104,22 +104,25 @@ export const LanguagePicker = (props: IProps) => {
   const [subtag, setSubtag] = React.useState(false);
   const [response, setResponse] = React.useState('');
   const [tag, setTag] = React.useState<LangTag>();
-  const [scriptField, setScriptField] = React.useState(<></>);
-  const [fontField, setFontField] = React.useState(<></>);
+  const [defaultScript, setDefaultScript] = React.useState('');
   const [defaultFont, setDefaultFont] = React.useState('');
   const [fontOpts, setFontOpts] = React.useState(Array<string>());
   const langEl = React.useRef<any>();
 
+  const ExtStr = '-x-';
+
   const handleClickOpen = (e: any) => {
     if (e.keyCode && e.keyCode === 9) return;
-    const key = curValue.toLocaleLowerCase();
+    let key = curValue.toLocaleLowerCase();
+    const ext = key.indexOf(ExtStr);
+    if (ext !== -1) key = key.slice(0, ext);
     if (hasExact(key) && key !== 'und') {
       setResponse(curName + ' (' + curValue + ')');
-      const langTag = langTags[getExact(key)[0].index];
+      const langTag = langTags[getExact(key)[0]];
       setTag(langTag);
       selectFont(langTag);
+      setDefaultScript(langTag.script);
       setDefaultFont(curFont);
-      setScriptField(<></>);
     } else {
       handleClear();
     }
@@ -127,7 +130,6 @@ export const LanguagePicker = (props: IProps) => {
   };
   const handleClear = () => {
     setFontOpts([]);
-    setScriptField(<></>);
     setResponse('');
     setTag(undefined);
     setDefaultFont('');
@@ -176,8 +178,8 @@ export const LanguagePicker = (props: IProps) => {
     { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
   ];
 
-  const selectFont = (tag: LangTag) => {
-    if (tag.tag === 'und') return;
+  const selectFont = (tag: LangTag | undefined) => {
+    if (!tag || tag.tag === 'und') return;
     let code = tag.script + '-' + tag.region;
     if (!fontMap.hasOwnProperty(code)) {
       code = tag.script;
@@ -186,9 +188,6 @@ export const LanguagePicker = (props: IProps) => {
       setDefaultFont(safeFonts[0].value);
       setCurFont(safeFonts[0].value);
       setFontOpts(safeFonts.map(f => f.value));
-    } else if (fontMap[code].length === 1) {
-      setDefaultFont(fontMap[code][0]);
-      setCurFont(fontMap[code][0]);
     } else {
       const fonts = fontMap[code];
       setDefaultFont(fonts[0]);
@@ -198,53 +197,8 @@ export const LanguagePicker = (props: IProps) => {
   };
 
   React.useEffect(() => {
-    if (fontOpts.length > 0) {
-      setFontField(
-        <FormControlLabel
-          control={
-            <TextField
-              id="select-font"
-              autoFocus
-              select
-              className={classes.fontField}
-              label={t.font}
-              value={defaultFont}
-              onChange={addFontInfo}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              helperText={''}
-              margin="normal"
-              variant="filled"
-              required={true}
-            >
-              {fontOpts.map(s => (
-                <MenuItem key={s} value={s}>
-                  {s}
-                </MenuItem>
-              ))}
-            </TextField>
-          }
-          label=""
-        />
-      );
-    } else {
-      setFontField(<></>);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [defaultFont, fontOpts, classes]);
-
-  React.useEffect(() => {
     if (response === '') handleClear();
   }, [response]);
-
-  React.useEffect(() => {
-    // If we are changing the query...
-    if (tag === undefined && langEl.current) langEl.current.click();
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [scriptField]);
 
   React.useEffect(() => {
     setCurValue(value);
@@ -253,9 +207,10 @@ export const LanguagePicker = (props: IProps) => {
     setResponse(value !== 'und' ? name + ' (' + value + ')' : '');
   }, [value, name, font]);
 
-  const handleScriptChange = (tag: LangTag) => (e: any) => {
+  const handleScriptChange = (tag: LangTag | undefined) => (e: any) => {
     const val = e.target.value;
-    if (tag.script !== val) {
+    setDefaultScript(val);
+    if (tag && tag.script !== val) {
       const lgTag = tag.tag.split('-')[0];
       const newTag = langTags.filter(
         t => t.tag.split('-')[0] === lgTag && t.script === val
@@ -264,9 +219,8 @@ export const LanguagePicker = (props: IProps) => {
         setTag(newTag[0]);
       }
       displayTag(newTag[0]);
-    }
-    setScriptField(<></>);
-    selectFont(tag);
+      selectFont(newTag[0]);
+    } else selectFont(tag);
   };
 
   const selectScript = (tag: LangTag) => {
@@ -274,46 +228,18 @@ export const LanguagePicker = (props: IProps) => {
     const lgTag = tagParts[0];
     if (getScripts(lgTag).length !== 1) {
       if (tagParts.length > 1 && tagParts[1].length === 4) {
-        setScriptField(<></>);
         selectFont(tag);
         return;
       }
-      const defaultScript = getScripts(lgTag)[0];
-      setScriptField(
-        <FormControlLabel
-          control={
-            <TextField
-              id="select-script"
-              autoFocus
-              select
-              className={classes.textField}
-              label={t.script}
-              value={defaultScript}
-              onChange={handleScriptChange(tag)}
-              SelectProps={{
-                MenuProps: {
-                  className: classes.menu,
-                },
-              }}
-              helperText={''}
-              margin="normal"
-              variant="filled"
-              required={true}
-            >
-              {getScripts(lgTag).map(s => (
-                <MenuItem key={s} value={s}>
-                  {scriptName[s] + ' - ' + s}
-                </MenuItem>
-              ))}
-            </TextField>
-          }
-          label=""
-        />
-      );
+      setDefaultScript(getScripts(lgTag)[0]);
     } else {
-      setScriptField(<></>);
       selectFont(tag);
     }
+  };
+
+  const scriptList = (tag: LangTag | undefined) => {
+    if (!tag) return [];
+    return getScripts(tag.tag.split('-')[0]);
   };
 
   const handleLanguageClick = () => {
@@ -323,25 +249,26 @@ export const LanguagePicker = (props: IProps) => {
 
   const handleChoose = (tag: LangTag) => {
     setTag(tag);
-    displayTag(tag);
+    const ext = response.indexOf(ExtStr);
+    displayTag(
+      ext === -1 ? tag : { ...tag, tag: tag.tag + response.slice(ext) }
+    );
     selectScript(tag);
   };
 
-  const mergeList = (list: IRanked[], adds: IRanked[]) => {
-    let result = list.filter(
-      e => adds.filter(f => e.index === f.index).length > 0
-    );
+  const mergeList = (list: number[], adds: number[]) => {
+    let result = list.filter(e => adds.filter(f => e === f).length > 0);
     result = result.concat(
-      list.filter(e => adds.filter(f => e.index === f.index).length === 0)
+      list.filter(e => adds.filter(f => e === f).length === 0)
     );
     return result.concat(
-      adds.filter(e => list.filter(f => e.index === f.index).length === 0)
+      adds.filter(e => list.filter(f => e === f).length === 0)
     );
   };
 
   const optList = () => {
     if (!tag) {
-      let list = Array<IRanked>();
+      let list = Array<number>();
       response.split(' ').forEach(w => {
         const token = woBadChar(w).toLocaleLowerCase();
         if (hasExact(token)) {
@@ -450,8 +377,63 @@ export const LanguagePicker = (props: IProps) => {
             }}
           />
           {optList()}
-          {scriptField}
-          {fontField}
+          <FormControlLabel
+            control={
+              <TextField
+                id="select-script"
+                select
+                className={classes.textField}
+                label={t.script}
+                value={defaultScript}
+                onChange={handleScriptChange(tag)}
+                style={{ width: 300 }}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                helperText={''}
+                margin="normal"
+                variant="filled"
+                required={true}
+              >
+                {scriptList(tag).map(s => (
+                  <MenuItem key={s} value={s}>
+                    {scriptName[s] + ' - ' + s}
+                  </MenuItem>
+                ))}
+              </TextField>
+            }
+            label=""
+          />
+          <FormControlLabel
+            control={
+              <TextField
+                id="select-font"
+                select
+                className={classes.fontField}
+                label={t.font}
+                value={defaultFont}
+                onChange={addFontInfo}
+                SelectProps={{
+                  MenuProps: {
+                    className: classes.menu,
+                  },
+                }}
+                helperText={''}
+                margin="normal"
+                variant="filled"
+                required={true}
+              >
+                {fontOpts.map(s => (
+                  <MenuItem key={s} value={s}>
+                    {s}
+                  </MenuItem>
+                ))}
+              </TextField>
+            }
+            label=""
+          />
         </DialogContent>
         <DialogActions>
           <a

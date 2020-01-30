@@ -25,7 +25,7 @@ export interface IRanked {
 }
 
 export interface LangTagMap {
-  [code: string]: Array<IRanked>;
+  [code: string]: Array<number>;
 }
 
 export interface ScriptList {
