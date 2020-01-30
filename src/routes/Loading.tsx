@@ -208,7 +208,7 @@ export function Loading(props: IProps) {
         }
         setNewOrgParams(null);
       }
-      setDefaultOrg();
+      if (localStorage.getItem('url') === '') setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);

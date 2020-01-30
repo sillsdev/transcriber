@@ -282,7 +282,9 @@ export function ResponsiveDrawer(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_open, setOpen] = useGlobal('autoOpenAddMedia');
+  const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
+    'autoOpenAddMedia'
+  );
   const [choice, setChoice] = useState('');
   const [content, setContent] = useState('');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
@@ -321,6 +323,7 @@ export function ResponsiveDrawer(props: IProps) {
     setChoice(slug(choice));
     setContent(slug(choice));
     setTitle(choice);
+    setPlan('');
     setMini(['transcriber', 'tasks'].includes(slug(choice)));
     if (choice === t.usersAndGroups) {
       if (tab > 1) {
@@ -362,16 +365,27 @@ export function ResponsiveDrawer(props: IProps) {
     setTimeout(() => handleAddProject(), 1000);
   };
 
+  const mixCase = (s: string) => {
+    if (!s) return '';
+    return s.substr(0, 1).toLocaleUpperCase() + s.substring(1);
+  };
+
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
     localStorage.setItem('lastProj', remoteId('project', value, keyMap));
     if (addProject) setAddProject(false); // for exiting from add project
-    if (value !== project) setProject(value);
-    const newTitle = API_CONFIG.isApp ? t.tasks : t.plans;
-    if (newTitle !== title) {
+    if (choice === '') {
+      const newTitle = API_CONFIG.isApp ? t.tasks : t.plans;
       setContent(slug(newTitle));
       setChoice(slug(newTitle));
       setTitle(newTitle);
+    }
+    //on deep linking we will have already set the project
+    if (value !== project) {
+      setProject(value);
+      setContent(choice); //bring us out of plan details if down there
+      setTitle(mixCase(choice));
+      setPlan('');
     }
     if (group !== '') setGroup('');
   };
@@ -398,16 +412,17 @@ export function ResponsiveDrawer(props: IProps) {
       setAddProject(false);
       setProject(projectId || '');
       setPlan(planId || '');
+      const parts = to.split('/');
+      setContent(parts[3]);
+      setTab(parseInt(parts[6]));
       setTimeout(() => {
-        const parts = to.split('/');
-        setContent(parts[3]);
-        setTab(parseInt(parts[6]));
-        setOpen(true);
+        setAutoOpenAddMedia(true);
       }, 2000);
     } else {
       setContent(slug(t.plans));
       setChoice(slug(t.plans));
       setTitle(t.plans);
+      setPlan('');
       if (addProject) setAddProject(false);
       else setDelProject(true);
       if (projectId) setProject(projectId);
@@ -577,19 +592,14 @@ export function ResponsiveDrawer(props: IProps) {
             keyMap
           ) || '';
     const cur = projKeys.indexOf(projKey);
+
     if (addProject || cur === -1) {
       setCurProj(null);
     } else if (!busy && curProj !== cur) {
       setCurProj(cur);
       handleCommitProj(projKeys[cur]);
     }
-    if (
-      !busy &&
-      projKeys.length > 0 &&
-      curProj == null &&
-      !addProject &&
-      cur < 0
-    ) {
+    if (!busy && projKeys.length > 0 && !addProject && cur < 0) {
       setCurProj(0);
       handleCommitProj(projKeys[0]);
     }
@@ -730,10 +740,11 @@ export function ResponsiveDrawer(props: IProps) {
       const value = slug(parts[UrlChoicePart]);
       urlChoice =
         ['scripture-plan', 'other-plan'].indexOf(value) !== -1
-          ? slug(t.plans)
-          : value;
-      setChoice(urlChoice);
-      setContent(value);
+          ? t.plans
+          : 'transcriber'.indexOf(value) !== -1
+          ? t.tasks
+          : mixCase(value);
+      handleChoice(urlChoice);
     }
     const UrlProjPart = base + 3;
     const projId = remoteIdGuid('project', parts[UrlProjPart], keyMap);
