@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
-    }),
+    }) as any,
     next: {
       display: 'flex',
       flexDirection: 'column',

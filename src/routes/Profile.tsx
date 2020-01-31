@@ -118,7 +118,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: 16,
       display: 'flex',
       flexDirection: 'row',
-    }),
+    }) as any,
     button: {
       margin: theme.spacing(1),
     },

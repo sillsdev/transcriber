@@ -148,7 +148,7 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
-    toolbar: theme.mixins.toolbar,
+    toolbar: theme.mixins.toolbar as any,
     drawerPaper: {
       width: DrawerWidth,
     },

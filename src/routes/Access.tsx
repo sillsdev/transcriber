@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       boxShadow: 'none',
-    }),
+    }) as any,
     version: {
       alignSelf: 'center',
     },
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }),
+    }) as any,
   })
 );
 

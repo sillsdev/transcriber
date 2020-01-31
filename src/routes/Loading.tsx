@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('md')]: {
         width: '100%',
       },
-    }),
+    }) as any,
     button: {},
     icon: {
       alignSelf: 'center',

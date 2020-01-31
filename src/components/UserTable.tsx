@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },

@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }),
+    }) as any,
     editIcon: {
       fontSize: 16,
     },

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       backgroundColor: theme.palette.background.paper,
       flexDirection: 'column',
-    }),
+    }) as any,
   })
 );
 

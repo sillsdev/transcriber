@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingLeft: 0,
         paddingRight: 0,
       },
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }),
+    }) as any,
     editIcon: {
       fontSize: 16,
     },
