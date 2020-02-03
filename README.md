@@ -154,7 +154,7 @@ alternatively
 ## Creating installer
 
 1. `npm run clean` _# remove previous builds_
-2. `npm run build` _# same as for web app_
+2. `npm run electron-pack`
 3. `npm run dist`
 
 The _dist_ command creates a folder in the dist folder with an executable that can be launched directly by clicking on it. it also creates an installer in the _dist_ folder that can be distributed.
