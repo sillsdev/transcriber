@@ -105,6 +105,7 @@ export function Loading(props: IProps) {
   const [newOrgParams, setNewOrgParams] = useState(
     localStorage.getItem('newOrg')
   );
+  const [savedURL] = useState(localStorage.getItem('url') || '');
   const [view, setView] = useState('');
 
   const handleUserMenuAction = (what: string) => {
@@ -153,6 +154,7 @@ export function Loading(props: IProps) {
   };
 
   useEffect(() => {
+    console.log('Loading...savedURL:' + savedURL);
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
@@ -208,7 +210,7 @@ export function Loading(props: IProps) {
         }
         setNewOrgParams(null);
       }
-      if (localStorage.getItem('url') === '') setDefaultOrg();
+      if (savedURL.length <= '/main'.length) setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);

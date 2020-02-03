@@ -746,6 +746,7 @@ export function ResponsiveDrawer(props: IProps) {
           : mixCase(value);
       handleChoice(urlChoice);
     }
+    urlChoice = urlChoice.toLowerCase();
     const UrlProjPart = base + 3;
     const projId = remoteIdGuid('project', parts[UrlProjPart], keyMap);
     if (parts.length > UrlProjPart && project !== projId) {
