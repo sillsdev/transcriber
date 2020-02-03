@@ -130,6 +130,8 @@ Having created or obtained the _.env.\*_ files listed above, generate the enviro
 
 - `npm start` _# break points can be set in *vscode*_
 
+> NB. From _VsCode_ you can launch the debugger with _F5_. The first time you will need to choose the option.
+
 ## Deployment
 
 The `npm run dev`, `npm run qa` and `npm run prod` commands configure the admin app to deploy to _dev_, _qa_, or _prod_ respectively. The `npm run appdev`, `npm run apppqa` and `npm run appprod` commands configure the transcriber app to deploy to _dev_, _qa_, or _prod_ respectively. There are separate urls and separate _AWS S3_ buckets for each of these deployments. Once configuration files have been generated, execute the following to deploy the app:
@@ -146,6 +148,8 @@ The steps above regarding _installation_ and setting up the environments are als
 ## Electron Development
 
 - `npm run electron-dev` _# launches electron in developer mode_
+
+> NB. This `dev` mode uses two Chrome extensions: [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) and [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
 
 alternatively
 
@@ -166,13 +170,3 @@ To execute the tests included with the program, use the standard test suite:
 ```
 npm test
 ```
-
-## Debugging
-
-After using
-
-```
-npm start
-```
-
-from code you can use the debugger if you set the `.vscode/launch.json configurations.url` to `http://localhost:3000`.
