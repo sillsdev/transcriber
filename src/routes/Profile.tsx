@@ -280,7 +280,7 @@ export function Profile(props: IProps) {
       memory.update((t: TransformBuilder) => [
         t.updateRecord({
           type: 'user',
-          id: user,
+          id: currentUser === undefined ? user : currentUser.id, //currentuser will not be undefined here
           attributes: {
             name,
             givenName: given,
