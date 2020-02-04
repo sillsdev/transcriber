@@ -9,6 +9,8 @@ import {
   Role,
   OrganizationMembership,
   IUsertableStrings,
+  Group,
+  GroupMembership,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -190,12 +192,34 @@ export function UserTable(props: IProps) {
     setDeleteItem(value);
   };
   const handleDeleteConfirmed = () => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({
-        type: 'user',
-        id: deleteItem,
-      })
+    const orgMemberRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('organizationmembership')
+    ) as OrganizationMembership[];
+    const userOrgRec = orgMemberRecs.filter(
+      o =>
+        related(o, 'user') === deleteItem &&
+        related(o, 'organization') === organization
     );
+    if (userOrgRec.length === 1) {
+      memory.update((t: TransformBuilder) => t.removeRecord(userOrgRec[0]));
+    }
+    const groupRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('group')
+    ) as Group[];
+    const orgGroups = groupRecs
+      .filter(g => related(g, 'owner') === organization)
+      .map(og => og.id);
+    const grpMbrRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('groupmembership')
+    ) as GroupMembership[];
+    const userGrpOrgRecs = grpMbrRecs.filter(
+      g =>
+        related(g, 'user') === deleteItem &&
+        orgGroups.includes(related(g, 'group'))
+    );
+    userGrpOrgRecs.forEach(g => {
+      memory.update((t: TransformBuilder) => t.removeRecord(g));
+    });
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
