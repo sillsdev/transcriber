@@ -57,7 +57,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "clean": "rimraf build dist converage",
     "start": "react-scripts start",
-    "build": "npm run clean && react-scripts build",
+    "build": "npm run clean && node noHomepage.js && react-scripts build && git checkout package.json",
     "test": "craco test",
     "eject": "craco eject",
     "dist": "electron-builder",
