@@ -64,7 +64,7 @@ interface IRow {
   name: string;
   email: string;
   locale: string;
-  phone: string;
+  // phone: string;
   timezone: string;
   role: string;
   action: string;
@@ -100,7 +100,7 @@ const getMedia = (
           name: u.attributes.name,
           email: u.attributes.email ? u.attributes.email : t.offline,
           locale: u.attributes.locale ? u.attributes.locale : '',
-          phone: u.attributes.phone ? u.attributes.phone : '',
+          // phone: u.attributes.phone ? u.attributes.phone : '',
           timezone: u.attributes.timezone ? u.attributes.timezone : '',
           role: role.length === 1 ? role[0].attributes.roleName : '',
           action: u.id,
@@ -149,7 +149,7 @@ export function UserTable(props: IProps) {
     { name: 'name', title: t.name },
     { name: 'email', title: t.email },
     { name: 'locale', title: t.locale },
-    { name: 'phone', title: t.phone },
+    // { name: 'phone', title: t.phone },
     { name: 'timezone', title: t.timezone },
     { name: 'role', title: t.role },
     {
@@ -161,7 +161,7 @@ export function UserTable(props: IProps) {
     { columnName: 'name', width: 200 },
     { columnName: 'email', width: 200 },
     { columnName: 'locale', width: 100 },
-    { columnName: 'phone', width: 100 },
+    // { columnName: 'phone', width: 100 },
     { columnName: 'timezone', width: 100 },
     { columnName: 'role', width: 100 },
     { columnName: 'action', width: 150 },
