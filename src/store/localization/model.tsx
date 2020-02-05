@@ -2,10 +2,9 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAccess": string;
     "accessSilTranscriber": string;
-    "createAccount": string;
-    "accessExistingAccount": string;
+    "importProject": string;
+    "login": string;
 };
 
 export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {

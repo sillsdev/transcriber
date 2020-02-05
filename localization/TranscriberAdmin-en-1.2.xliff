@@ -5,35 +5,28 @@
 
     <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
         <body>
-            <trans-unit id="access.silTranscriberAccess">
-                <source>SIL Transcriber Access</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="access.accessSilTranscriber">
-                <source>Access SIL Transcriber</source>
+                <source>Welcome to SIL Transcriber. Select how to get started.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="access.createAccount">
-                <source>Create an Account</source>
+            <trans-unit id="access.importProject">
+                <source>Import Portable Transcriber Data</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="access.accessExistingAccount">
-                <source>Access with existing Account</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="snackbar.undo">
+        	<trans-unit id="access.login">
+        		<source>Online Login</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Access.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="snackbar.undo">
                 <source>UNDO</source>
                 <target/>
                 <context-group>

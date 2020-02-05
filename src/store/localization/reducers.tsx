@@ -8,10 +8,9 @@ const initialState = {
 	"lang": 'en',
 	"access": new LocalizedStrings({
 		"en": {
-			"silTranscriberAccess": "SIL Transcriber Access",
-			"accessSilTranscriber": "Access SIL Transcriber",
-			"createAccount": "Create an Account",
-			"accessExistingAccount": "Access with existing Account",
+			"accessSilTranscriber": "Welcome to SIL Transcriber. Select how to get started.",
+			"importProject": "Import Portable Transcriber Data",
+			"login": "Online Login",
 		}
 	}),
 	"snackbar": new LocalizedStrings({

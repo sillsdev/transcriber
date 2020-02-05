@@ -1,28 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
 	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
-		<unit id="access.silTranscriberAccess">
-			<segment>
-				<source>SIL Transcriber Access</source>
-				<target>Accès du SIL Transcriber</target>
-			</segment>
-		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
-				<source>Access SIL Transcriber</source>
-				<target>Accès au SIL Transcriber</target>
+				<source>Welcome to SIL Transcriber. Select how to get started.</source>
+				<target>Bienvenue à SIL Transcriber. Sélectionnez comment commencer.</target>
 			</segment>
 		</unit>
-		<unit id="access.createAccount">
+		<unit id="access.importProject">
 			<segment>
-				<source>Create an Account</source>
-				<target>Créer un compte</target>
+				<source>Import Portable Transcriber Data</source>
+				<target>Importation de données de transcripteurs portables</target>
 			</segment>
 		</unit>
-		<unit id="access.accessExistingAccount">
+		<unit id="access.login">
 			<segment>
-				<source>Access with existing Account</source>
-				<target>Accès avec compte existant</target>
+				<source>Online Login</source>
+				<target>Connexion en ligne</target>
 			</segment>
 		</unit>
 		<unit id="snackbar.undo">

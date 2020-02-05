@@ -4,27 +4,21 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.silTranscriberAccess">
-         <segment>
-            <source>SIL Transcriber Access</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>Access SIL Transcriber</source>
+            <source>Welcome to SIL Transcriber. Select how to get started.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.createAccount">
+      <unit id="access.importProject">
          <segment>
-            <source>Create an Account</source>
+            <source>Import Portable Transcriber Data</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.accessExistingAccount">
+      <unit id="access.login">
          <segment>
-            <source>Access with existing Account</source>
+            <source>Online Login</source>
             <target/>
          </segment>
       </unit>
