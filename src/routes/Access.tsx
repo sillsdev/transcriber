@@ -209,20 +209,26 @@ export function Access(props: IProps) {
             <Grid container direction="row">
               {users.length > 0 && (
                 <Grid item xs={12} md={6}>
-                  <List>
-                    {users
-                      .sort((i, j) =>
-                        i.attributes.name < j.attributes.name ? -1 : 1
-                      )
-                      .map(u => (
-                        <ListItem key={u.id} onClick={handleSelect(u.id)}>
-                          <ListItemIcon>
-                            <UserAvatar {...props} users={users} userRec={u} />
-                          </ListItemIcon>
-                          <ListItemText primary={u.attributes.name} />
-                        </ListItem>
-                      ))}
-                  </List>
+                  <div className={classes.actions}>
+                    <List>
+                      {users
+                        .sort((i, j) =>
+                          i.attributes.name < j.attributes.name ? -1 : 1
+                        )
+                        .map(u => (
+                          <ListItem key={u.id} onClick={handleSelect(u.id)}>
+                            <ListItemIcon>
+                              <UserAvatar
+                                {...props}
+                                users={users}
+                                userRec={u}
+                              />
+                            </ListItemIcon>
+                            <ListItemText primary={u.attributes.name} />
+                          </ListItem>
+                        ))}
+                    </List>
+                  </div>
                 </Grid>
               )}
               <Grid item xs={12} md={6}>
