@@ -4,6 +4,7 @@ import {
   IApiError,
   RESET_ORBIT_ERROR,
   LOAD_TABLE,
+  ORBIT_SAVING,
 } from './types';
 import { KeyMap, Schema } from '@orbit/data';
 import { Bucket } from '@orbit/core';
@@ -29,6 +30,13 @@ export const tableLoaded = (name: string) => {
   return {
     type: LOAD_TABLE,
     payload: name,
+  };
+};
+
+export const orbitSaving = (val: boolean) => {
+  return {
+    type: ORBIT_SAVING,
+    payload: val,
   };
 };
 

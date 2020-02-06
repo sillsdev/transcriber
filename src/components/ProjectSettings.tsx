@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import ProjectType from '../model/projectType';
+import * as action from '../store';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import {
   IState,
   Project,
@@ -114,6 +116,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IProjectSettingsStrings;
+  saving: boolean;
+}
+
+interface IDispatchProps {
+  orbitSaving: typeof action.orbitSaving;
 }
 
 interface IRecordProps {
@@ -131,7 +138,11 @@ export interface IAddArgs {
   planId?: string;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps
+  extends IStateProps,
+    IDispatchProps,
+    IRecordProps,
+    WithDataProps {
   noMargin?: boolean;
   add?: boolean;
   finishAdd?: (props: IAddArgs) => void;
@@ -154,6 +165,8 @@ export function ProjectSettings(props: IProps) {
     t,
     noMargin,
     finishAdd,
+    saving,
+    orbitSaving,
   } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
@@ -249,6 +262,8 @@ export function ProjectSettings(props: IProps) {
     ]);
   };
   const handleAdd = () => {
+    if (saving) return;
+    orbitSaving(true);
     saveNewProject({
       name,
       description,
@@ -265,6 +280,7 @@ export function ProjectSettings(props: IProps) {
       memory,
     }).then(project => {
       if (finishAdd) finishAdd({ projectId: project.id });
+      orbitSaving(false);
     });
   };
   const handleDelete = () => {
@@ -293,6 +309,8 @@ export function ProjectSettings(props: IProps) {
     setNextOption((e.target as HTMLInputElement).value as NextOptions);
   };
   const handleUpload = () => {
+    if (saving) return;
+    orbitSaving(true);
     saveNewProject({
       name,
       description,
@@ -321,6 +339,7 @@ export function ProjectSettings(props: IProps) {
         keyMap,
       }).then(({ url, planId }) => {
         if (finishAdd) finishAdd({ to: url, projectId: project.id, planId });
+        orbitSaving(false);
       });
     });
   };
@@ -387,6 +406,8 @@ export function ProjectSettings(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [planType, planTypes]);
+
+  if (saving) return <></>;
 
   return (
     <div
@@ -698,6 +719,16 @@ export function ProjectSettings(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'projectSettings' }),
+  saving: state.orbit.saving,
+});
+
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      orbitSaving: action.orbitSaving,
+    },
+    dispatch
+  ),
 });
 
 const mapRecordsToProps = {
@@ -710,5 +741,5 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(ProjectSettings) as any
+  connect(mapStateToProps, mapDispatchToProps)(ProjectSettings) as any
 ) as any;
