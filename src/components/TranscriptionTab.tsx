@@ -52,7 +52,7 @@ import {
 } from '../utils';
 import eaf from './TranscriptionEaf';
 let Encoder = require('node-html-encoder').Encoder;
-let encoder = new Encoder('entity');
+let encoder = new Encoder('numerical');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
