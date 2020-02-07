@@ -9,6 +9,7 @@ import {
   MediaFile,
   Project,
   ITranscriberStrings,
+  ITaskItemStrings,
   IState,
   ActivityStates,
   Passage,
@@ -17,6 +18,7 @@ import {
   Section,
   Plan,
   PlanType,
+  User,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -41,6 +43,7 @@ import {
   TextField,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
 // import GearIcon from '@material-ui/icons/SettingsApplications';
@@ -53,6 +56,8 @@ import TimerIcon from '@material-ui/icons/AccessTime';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
 import Duration, { formatTime } from './Duration';
+import UserAvatar from './UserAvatar';
+import TaskFlag from './TaskFlag';
 import SnackBar from './SnackBar';
 import {
   sectionDescription,
@@ -60,13 +65,14 @@ import {
   relMouseCoords,
   related,
   insertAtCursor,
+  remoteIdGuid,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -119,6 +125,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: ITranscriberStrings;
+  taskItemStrs: ITaskItemStrings;
   hasUrl: boolean;
   mediaUrl: string;
 }
@@ -143,6 +150,7 @@ interface IProps
 export function Transcriber(props: IProps) {
   const {
     t,
+    taskItemStrs,
     auth,
     section,
     passage,
@@ -156,6 +164,7 @@ export function Transcriber(props: IProps) {
   const { mediaUrl, fetchMediaUrl, done } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const [keyMap] = useGlobal('keyMap');
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
   const [project] = useGlobal('project');
@@ -480,6 +489,76 @@ export function Transcriber(props: IProps) {
   };
 
   moment.locale(lang);
+  const curZone = moment.tz.guess();
+  const userFromId = (remoteId: number) => {
+    const id = remoteIdGuid('user', remoteId.toString(), keyMap);
+    const user = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'user', id })
+    ) as User;
+    return user;
+  };
+  const nameFromId = (remoteId: number) => {
+    const user = userFromId(remoteId);
+    return user ? user.attributes.name : '';
+  };
+  const historyItem = (
+    psc: PassageStateChange,
+    comment: JSX.Element | string
+  ) => {
+    return (
+      <ListItem>
+        <ListItemIcon>
+          <UserAvatar
+            {...props}
+            userRec={userFromId(psc.attributes.lastModifiedBy)}
+          />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <>
+              <Typography variant="h6" component="span">
+                {nameFromId(psc.attributes.lastModifiedBy)}
+              </Typography>
+              {'\u00A0\u00A0 '}
+              <Typography component="span">
+                {moment
+                  .tz(moment.tz(psc.attributes.dateCreated, 'utc'), curZone)
+                  .calendar()}
+              </Typography>
+            </>
+          }
+          secondary={comment}
+        />
+      </ListItem>
+    );
+  };
+
+  const historyList = (passageStateChanges: PassageStateChange[]) => {
+    const results: Array<JSX.Element> = [];
+    let curState: ActivityStates;
+    let curComment = '';
+    passageStateChanges
+      .sort((i, j) =>
+        i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
+      )
+      .forEach(psc => {
+        if (psc.attributes.state !== curState) {
+          curState = psc.attributes.state;
+          results.push(
+            historyItem(
+              psc,
+              <TaskFlag {...props} t={taskItemStrs} state={curState} />
+            )
+          );
+        }
+        const comment = psc.attributes.comments;
+        if (comment && comment !== '' && comment !== curComment) {
+          curComment = comment;
+          results.push(historyItem(psc, comment));
+        }
+      });
+    return results;
+  };
 
   return (
     <div className={classes.root}>
@@ -618,24 +697,7 @@ export function Transcriber(props: IProps) {
             {showHistory && (
               <Grid item xs={6} container direction="column">
                 <List style={{ overflow: 'auto', height: boxHeight }}>
-                  {passageStateChanges
-                    .sort((i, j) =>
-                      i.attributes.dateCreated < j.attributes.dateCreated
-                        ? -1
-                        : 1
-                    )
-                    .map(psc => (
-                      <ListItem>
-                        <ListItemText
-                          primary={
-                            moment(psc.attributes.dateCreated).calendar() +
-                            ' - ' +
-                            psc.attributes.state
-                          }
-                          secondary={psc.attributes.comments}
-                        />
-                      </ListItem>
-                    ))}
+                  {historyList(passageStateChanges)}
                 </List>
               </Grid>
             )}
@@ -758,6 +820,7 @@ export function Transcriber(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriber' }),
+  taskItemStrs: localStrings(state, { layout: 'taskItem' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
 });
