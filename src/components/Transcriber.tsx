@@ -49,15 +49,17 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import SkipAheadIcon from '@material-ui/icons/FastForward';
 import HistoryIcon from '@material-ui/icons/History';
+import TimerIcon from '@material-ui/icons/AccessTime';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
-import Duration from './Duration';
+import Duration, { formatTime } from './Duration';
 import SnackBar from './SnackBar';
 import {
   sectionDescription,
   passageDescription,
   relMouseCoords,
   related,
+  insertAtCursor,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -75,6 +77,7 @@ const AHEAD_KEY = 'F3';
 const SLOWER_KEY = 'F4';
 const FASTER_KEY = 'F5';
 const HISTORY_KEY = 'F6';
+const TIMER_KEY = 'F7';
 const NON_BOX_HEIGHT = 304;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -232,6 +235,15 @@ export function Transcriber(props: IProps) {
     setComment(e.target.value);
   };
   const handleShowHistory = () => setShowHistory(!showHistory);
+  const handleTimer = () => {
+    if (transcriptionRef.current) {
+      transcriptionRef.current.firstChild.focus();
+      const timeStamp = '(' + formatTime(playedSeconds) + ')';
+      const textArea = transcriptionRef.current
+        .firstChild as HTMLTextAreaElement;
+      insertAtCursor(textArea, timeStamp);
+    }
+  };
   const handleReject = (transcribing: boolean) => async () => {
     const newState = transcribing
       ? ActivityStates.NeedsNewRecording
@@ -342,6 +354,7 @@ export function Transcriber(props: IProps) {
     const SlowerKey = keycode(SLOWER_KEY);
     const FasterKey = keycode(FASTER_KEY);
     const HistoryKey = keycode(HISTORY_KEY);
+    const TimerKey = keycode(TIMER_KEY);
     switch (e.keyCode) {
       case PlayPauseKey:
         setPlaying(!playing);
@@ -367,6 +380,9 @@ export function Transcriber(props: IProps) {
         handleShowHistory();
         e.preventDefault();
         return;
+      case TimerKey:
+        handleTimer();
+        e.preventDefault();
     }
   };
   const handleMessageReset = () => setMessage(<></>);
@@ -554,6 +570,14 @@ export function Transcriber(props: IProps) {
                 >
                   <>
                     <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
+                <IconButton onClick={handleTimer}>
+                  <>
+                    <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
                   </>
                 </IconButton>
               </Tooltip>

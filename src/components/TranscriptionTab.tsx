@@ -310,7 +310,9 @@ export function TranscriptionTab(props: IProps) {
     const mediaAttr = mediaRec && mediaRec.attributes;
     const transcription =
       mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
-    const encTranscript = encoder.htmlEncode(transcription);
+    const encTranscript = encoder
+      .htmlEncode(transcription)
+      .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');
     const durationNum = mediaAttr && mediaAttr.duration;
     const duration = durationNum ? (durationNum * 1000).toString() : '0';
     const lang = getMediaLang(mediaRec, memory);

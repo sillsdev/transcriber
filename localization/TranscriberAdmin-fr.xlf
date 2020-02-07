@@ -2559,6 +2559,12 @@
 				<target>Histoire ({1})</target>
 			</segment>
 		</unit>
+		<unit id="transcriber.timerTip">
+			<segment>
+				<source>Timestamp ({0})</source>
+				<target>Horodatage ({1})</target>
+			</segment>
+		</unit>
 		<unit id="transcriber.comment">
 			<segment>
 				<source>Comment</source>
