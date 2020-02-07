@@ -4,6 +4,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const isDev = require('electron-is-dev');
+const electronExtensions = require('./electronExtensions.js');
 
 //ToDo: Remove thiss and follow instructions here:
 //https://github.com/electron/electron/blob/master/docs/tutorial/security.md#electron-security-warnings
@@ -66,20 +67,7 @@ function createWindow() {
 }
 
 app.on('ready', async () => {
-  const path = require('path');
-  const os = require('os');
-  BrowserWindow.addDevToolsExtension(
-    path.join(
-      os.homedir(),
-      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.4.0_0'
-    )
-  );
-  BrowserWindow.addDevToolsExtension(
-    path.join(
-      os.homedir(),
-      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0'
-    )
-  );
+  electronExtensions(BrowserWindow);
   createWindow();
 });
 

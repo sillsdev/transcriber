@@ -147,6 +147,28 @@ The steps above regarding _installation_ and setting up the environments are als
 
 ## Electron Development
 
+Sometimes it is possible to include Chrome Extensions in the embedded Chrome browser in [Electron](www.electronjs.org/). If this works for you, you will need to include the `chromeExtensions.js` function in the `public` folder. This is the contents of that file:
+
+``` javascript
+const electronExtension = BrowserWindow => {
+  const path = require('path');
+  const os = require('os');
+  BrowserWindow.addDevToolsExtension(
+    path.join(
+      os.homedir(),
+      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.4.0_0'
+    )
+  );
+  BrowserWindow.addDevToolsExtension(
+    path.join(
+      os.homedir(),
+      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0'
+    )
+  );
+};
+module.exports = electronExtension;
+```
+
 - `npm run electron-dev` _# launches electron in developer mode_
 
 > NB. This `dev` mode uses two Chrome extensions: [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) and [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
