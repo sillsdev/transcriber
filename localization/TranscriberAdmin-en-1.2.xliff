@@ -3048,6 +3048,76 @@
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
+        	<trans-unit id="transcriberReject.explainRejection">
+        		<source>Please explain your reason for rejection in the comment.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.rejectTitle">
+        		<source>Rejection</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.rejectTask">
+        		<source>Choose next action and explain reason for rejection.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.nextState">
+        		<source>Next State</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.needsAudio">
+        		<source>Needs new audio</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.needsTranscription">
+        		<source>Needs new transcription</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.needsReview">
+        		<source>Needs new review</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.comment">
+        		<source>Comment</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriberReject.next">
+        		<source>Next</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriberReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="profile.name">
         		<source>Full Name</source>
         		<target/>

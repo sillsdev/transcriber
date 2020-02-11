@@ -57,6 +57,7 @@ import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
 import Duration, { formatTime } from './Duration';
 import UserAvatar from './UserAvatar';
+import TranscribeReject from './TranscribeReject';
 import TaskFlag from './TaskFlag';
 import SnackBar from './SnackBar';
 import {
@@ -192,6 +193,7 @@ export function Transcriber(props: IProps) {
   const [makeComment, setMakeComment] = React.useState(false);
   const [comment, setComment] = React.useState('');
   const [showHistory, setShowHistory] = React.useState(false);
+  const [rejectVisible, setRejectVisible] = React.useState(false);
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
@@ -253,16 +255,19 @@ export function Transcriber(props: IProps) {
       insertAtCursor(textArea, timeStamp);
     }
   };
-  const handleReject = (transcribing: boolean) => async () => {
-    const newState = transcribing
-      ? ActivityStates.NeedsNewRecording
-      : ActivityStates.NeedsNewTranscription;
-    await memory.update((t: TransformBuilder) => [
-      t.replaceAttribute(passRec, 'lastComment', comment),
-      t.replaceAttribute(passRec, 'state', newState),
+  const handleReject = () => {
+    setMakeComment(true);
+    setRejectVisible(true);
+  };
+  const handleRejected = (pass: Passage) => {
+    memory.update((t: TransformBuilder) => [
+      t.replaceAttribute(pass, 'lastComment', pass.attributes.lastComment),
+      t.replaceAttribute(pass, 'state', pass.attributes.state),
     ]);
     done();
   };
+  const handleRejectCancel = () => setRejectVisible(false);
+
   const next: { [key: string]: string } = {
     transcribing: ActivityStates.Transcribed,
     reviewing: ActivityStates.Approved,
@@ -744,7 +749,7 @@ export function Transcriber(props: IProps) {
                       variant="outlined"
                       color="primary"
                       className={classes.button}
-                      onClick={handleReject(transcribing)}
+                      onClick={handleReject}
                     >
                       {t.reject}
                     </Button>
@@ -800,6 +805,12 @@ export function Transcriber(props: IProps) {
             </Grid>
           </Grid>
         </Grid>
+        <TranscribeReject
+          visible={rejectVisible}
+          passageIn={passRec}
+          editMethod={handleRejected}
+          cancelMethod={handleRejectCancel}
+        />
       </Paper>
       <div className={classes.player}>
         <ReactPlayer

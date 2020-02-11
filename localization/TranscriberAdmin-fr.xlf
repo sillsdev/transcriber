@@ -2613,7 +2613,67 @@
             <target>Enregistrer la position dans l'enregistrement sans marquer comme complète.</target>
          </segment>
       </unit>
-	<unit id="profile.name">
+	<unit id="transcriberReject.explainRejection">
+         <segment>
+            <source>Please explain your reason for rejection in the comment.</source>
+         	<target>Veuillez expliquer les raisons de votre refus dans le commentaire.</target>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.rejectTitle">
+         <segment>
+            <source>Rejection</source>
+         	<target>Rejet</target>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.rejectTask">
+         <segment>
+            <source>Choose next action and explain reason for rejection.</source>
+         	<target>Choisissez l'action suivante et expliquez le motif du rejet.</target>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.nextState">
+         <segment>
+            <source>Next State</source>
+         	<target>État suivant</target>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.needsAudio">
+         <segment>
+            <source>Needs new audio</source>
+         	<target>Besoin d'un nouveau enregistrement</target>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.needsTranscription">
+         <segment>
+            <source>Needs new transcription</source>
+         	<target>Nécessite une nouvelle transcription</target>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.needsReview">
+         <segment>
+            <source>Needs new review</source>
+         	<target>Nécessite une nouvelle révision</target>
+         </segment>
+      </unit>
+		<unit id="transcriberReject.comment">
+			<segment>
+				<source>Comment</source>
+				<target>Commentaire</target>
+			</segment>
+		</unit>
+		<unit id="transcriberReject.cancel">
+         <segment>
+            <source>Cancel</source>
+         	<target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.next">
+         <segment>
+            <source>Next</source>
+         	<target>Suivant</target>
+         </segment>
+      </unit>
+      <unit id="profile.name">
          <segment>
             <source>Full Name</source>
          	<target>Nom et prénom</target>

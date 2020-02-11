@@ -581,6 +581,20 @@ const initialState = {
 			"saveReviewTip": "Save position in recording without marking as complete.",
 		}
 	}),
+	"transcriberReject": new LocalizedStrings({
+		"en": {
+			"explainRejection": "Please explain your reason for rejection in the comment.",
+			"rejectTitle": "Rejection",
+			"rejectTask": "Choose next action and explain reason for rejection.",
+			"nextState": "Next State",
+			"needsAudio": "Needs new audio",
+			"needsTranscription": "Needs new transcription",
+			"needsReview": "Needs new review",
+			"comment": "Comment",
+			"cancel": "Cancel",
+			"next": "Next",
+		}
+	}),
 	"profile": new LocalizedStrings({
 		"en": {
 			"name": "Full Name",
@@ -676,6 +690,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 				"integration" : new LocalizedStrings(action.payload.data.integration),
 				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
+				"transcriberReject" : new LocalizedStrings(action.payload.data.transcriberReject),
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),

@@ -2614,6 +2614,66 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriberReject.explainRejection">
+         <segment>
+            <source>Please explain your reason for rejection in the comment.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.rejectTitle">
+         <segment>
+            <source>Rejection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.rejectTask">
+         <segment>
+            <source>Choose next action and explain reason for rejection.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.nextState">
+         <segment>
+            <source>Next State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.needsAudio">
+         <segment>
+            <source>Needs new audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.needsTranscription">
+         <segment>
+            <source>Needs new transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.needsReview">
+         <segment>
+            <source>Needs new review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.comment">
+         <segment>
+            <source>Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriberReject.next">
+         <segment>
+            <source>Next</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.name">
          <segment>
             <source>Full Name</source>
