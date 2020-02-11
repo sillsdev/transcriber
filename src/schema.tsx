@@ -151,6 +151,7 @@ const schemaDefinition: SchemaSettings = {
         lastModifiedBy: { type: 'number' },
       },
       relationships: {
+        owner: { type: 'hasOne', model: 'user' },
         project: { type: 'hasOne', model: 'project', inverse: 'plans' },
         plantype: { type: 'hasOne', model: 'plantype', inverse: 'plans' },
         sections: { type: 'hasMany', model: 'section', inverse: 'plan' },

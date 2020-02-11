@@ -390,7 +390,7 @@ export function ProjectSettings(props: IProps) {
     setDefaultFont(attr.defaultFont ? attr.defaultFont : '');
     setDefaultFontSize(attr.defaultFontSize ? attr.defaultFontSize : 'large');
     setRtl(attr.rtl);
-    setCreatedBy(getCreatedBy(attr.lastModifiedBy, memory, keyMap));
+    setCreatedBy(getCreatedBy(related(proj, 'owner'), memory));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, project, projects]);
 
