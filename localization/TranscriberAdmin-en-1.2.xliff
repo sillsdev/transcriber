@@ -1349,6 +1349,13 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="main.loadingTable">
+        		<source>Loading data</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.logout">
                 <source>Log Out</source>
                 <target/>

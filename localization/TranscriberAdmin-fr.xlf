@@ -1153,6 +1153,12 @@
 				<target>Exporter</target>
 			</segment>
 		</unit>
+		<unit id="main.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
 		<unit id="main.logout">
 			<segment>
 				<source>Log Out</source>

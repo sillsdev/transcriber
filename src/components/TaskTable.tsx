@@ -216,7 +216,6 @@ export function TaskTable(props: IProps) {
     { columnName: 'play', filteringEnabled: false },
     { columnName: 'action', filteringEnabled: false },
   ];
-  const [role, setRole] = useState('');
 
   const [rows, setRows] = useState(Array<IRow>());
   const [filter, setFilter] = useState(
@@ -449,28 +448,28 @@ export function TaskTable(props: IProps) {
     }
   }, [filter]);
 
-  useEffect(() => {
+  const getUserRole = (user: string, project: string) => {
     const projectRecs = projects.filter(p => p.id === project);
     if (projectRecs.length === 0) {
-      setRole('');
-      return;
+      return '';
     }
     const groupId = related(projectRecs[0], 'group');
     const memberships = groupMemberships.filter(
       gm => related(gm, 'group') === groupId && related(gm, 'user') === user
     );
     if (memberships.length === 0) {
-      setRole('');
-      return;
+      return '';
     }
     const memberRole: string = related(memberships[0], 'role');
     const roleRecs = roles.filter(r => r.id === memberRole);
-    setRole(
-      roleRecs.length > 0 && roleRecs[0].attributes
-        ? roleRecs[0].attributes.roleName
-        : ''
-    );
-  }, [user, project, projects, groupMemberships, roles]);
+    return roleRecs.length > 0 && roleRecs[0].attributes
+      ? roleRecs[0].attributes.roleName
+      : '';
+  };
+  const role = React.useMemo(() => {
+    return getUserRole(user, project);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [user, project]);
 
   useEffect(() => {
     const rowList: IRow[] = [];

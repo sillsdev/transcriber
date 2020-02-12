@@ -1,15 +1,16 @@
 import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import busyImage from '../assets/busy.gif';
+import busyImage from '../assets/progress.gif';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     busy: {
-      width: '100%',
-      margin: 'auto',
+      display: 'flex',
+      height: `calc(100vh - 120px)`,
     },
     img: {
-      width: '100%',
+      width: '120px',
+      margin: 'auto',
     },
   })
 );

@@ -59,11 +59,22 @@ interface IProps extends IStateProps {
   select: (media: MediaDescription) => (e: any) => void;
 }
 
+const TaskAvatar = React.memo(({ assigned }: { assigned: string | null }) => {
+  const [memory] = useGlobal('memory');
+
+  if (!assigned) return <></>;
+  const userRec: User = assigned
+    ? (memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'user', id: assigned as string })
+      ) as User)
+    : ({} as User);
+  return <UserAvatar userRec={userRec} small={true} />;
+});
+
 export function TaskItem(props: IProps) {
   const { allBookData, t, mediaRec, select } = props;
   const { passage, section } = props.mediaDesc;
   const classes = useStyles();
-  const [memory] = useGlobal('memory');
 
   let book = '';
   let ref = '';
@@ -82,21 +93,12 @@ export function TaskItem(props: IProps) {
   let assigned: string | null = null;
   if (next === t.transcribe) assigned = related(section, 'transcriber');
   if (next === t.review) assigned = related(section, 'reviewer');
-  const userRec: User = assigned
-    ? (memory.cache.query((q: QueryBuilder) =>
-        q.findRecord({ type: 'user', id: assigned as string })
-      ) as User)
-    : ({} as User);
 
   return (
     <List className={classes.root}>
       <ListItem alignItems="flex-start" onClick={select(props.mediaDesc)}>
         <ListItemAvatar className={classes.listAvatar}>
-          {assigned ? (
-            <UserAvatar {...props} userRec={userRec} small={true} />
-          ) : (
-            <></>
-          )}
+          <TaskAvatar assigned={assigned} />
         </ListItemAvatar>
         <ListItemText
           primary={book + ref}

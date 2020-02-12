@@ -242,6 +242,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projectSummary": string;
     "addProject": string;
     "export": string;
+    "loadingTable": string;
     "logout": string;
     "myAccount": string;
     "orgRole": string;

@@ -77,6 +77,7 @@ import IntegrationPanel from '../components/Integration';
 import PlanTable from '../components/PlanTable';
 import { IAddArgs } from '../components/ProjectSettings';
 import Busy from '../components/Busy';
+import SnackBar from '../components/SnackBar';
 import {
   related,
   hasRelated,
@@ -300,6 +301,7 @@ export function ResponsiveDrawer(props: IProps) {
     API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin
   );
   const [view, setView] = useState('');
+  const [message, setMessage] = useState(<></>);
   const [changed, setChanged] = useState(false);
   const [exitChoice, setExitChoice] = useState('');
   const [mediaDesc, setMediaDesc] = useState<MediaDescription>();
@@ -390,6 +392,8 @@ export function ResponsiveDrawer(props: IProps) {
     if (group !== '') setGroup('');
   };
 
+  const handleMessageReset = () => setMessage(<></>);
+
   const handlePlanType = (value: string | null) => {
     localStorage.removeItem('url');
     if (!value || value.toLocaleLowerCase() === 'scripture') {
@@ -443,6 +447,10 @@ export function ResponsiveDrawer(props: IProps) {
     checkSavedFn(method);
   };
   const checkSavedFn = (method: () => any) => {
+    if (busy) {
+      setMessage(<span>{t.loadingTable}</span>);
+      return;
+    }
     if (changed) {
       saveConfirm.current = method;
       setAlertOpen(true);
@@ -910,44 +918,42 @@ export function ResponsiveDrawer(props: IProps) {
               )}
             </div>
           )}
-          {curProj !== null && !busy && (
-            <div>
-              <List>
-                {(API_CONFIG.isApp
-                  ? [t.tasks]
-                  : [t.plans, t.team, t.media, t.reports]
-                ).map((text, index) => (
-                  <Tooltip title={text}>
-                    <ListItem
-                      button
-                      key={text}
-                      selected={slug(text) === choice}
-                      onClick={checkSavedEv(() => handleChoice(text))}
-                    >
-                      <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  </Tooltip>
-                ))}
-              </List>
-              <Divider />
-              <List>
-                {[t.settings, t.export, t.integrations].map((text, index) => (
-                  <Tooltip title={text}>
-                    <ListItem
-                      button
-                      key={text}
-                      selected={slug(text) === choice}
-                      onClick={checkSavedEv(() => handleChoice(text))}
-                    >
-                      <ListItemIcon>{projectIcons[index]}</ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  </Tooltip>
-                ))}
-              </List>
-            </div>
-          )}
+          <List>
+            {(API_CONFIG.isApp
+              ? [t.tasks]
+              : [t.plans, t.team, t.media, t.reports]
+            ).map((text, index) => (
+              <Tooltip title={text}>
+                <ListItem
+                  button
+                  key={text}
+                  selected={slug(text) === choice}
+                  onClick={checkSavedEv(() => handleChoice(text))}
+                  disabled={curProj === null}
+                >
+                  <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              </Tooltip>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {[t.settings, t.export, t.integrations].map((text, index) => (
+              <Tooltip title={text}>
+                <ListItem
+                  button
+                  key={text}
+                  selected={slug(text) === choice}
+                  onClick={checkSavedEv(() => handleChoice(text))}
+                  disabled={curProj === null}
+                >
+                  <ListItemIcon>{projectIcons[index]}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              </Tooltip>
+            ))}
+          </List>
         </>
       )}
     </div>
@@ -1193,6 +1199,7 @@ export function ResponsiveDrawer(props: IProps) {
           auth.accessToken
         }
       ></a>
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

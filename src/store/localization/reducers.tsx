@@ -264,6 +264,7 @@ const initialState = {
 			"projectSummary": "Project Summary",
 			"addProject": "Add Project",
 			"export": "Export",
+			"loadingTable": "Loading data",
 			"logout": "Log Out",
 			"myAccount": "My Account",
 			"orgRole": "Organizational Role:",

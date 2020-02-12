@@ -1156,6 +1156,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.loadingTable">
+         <segment>
+            <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.logout">
          <segment>
             <source>Log Out</source>
