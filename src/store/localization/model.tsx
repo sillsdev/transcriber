@@ -542,14 +542,12 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "saveReviewTip": string;
 };
 
-export interface ITranscriberRejectStrings extends Localize.LocalizedStringsMethods {
-    "explainRejection": string;
+export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
     "rejectTitle": string;
-    "rejectTask": string;
-    "nextState": string;
+    "rejectReason": string;
     "needsAudio": string;
-    "needsTranscription": string;
-    "needsReview": string;
+    "needsCorrection": string;
+    "incomplete": string;
     "comment": string;
     "cancel": string;
     "next": string;
@@ -641,7 +639,7 @@ export interface ILocalizedStrings {
 	toDoTable: IToDoTableStrings;
 	integration: IIntegrationStrings;
 	transcriber: ITranscriberStrings;
-	transcriberReject: ITranscriberRejectStrings;
+	transcribeReject: ITranscribeRejectStrings;
 	profile: IProfileStrings;
 	deleteExpansion: IDeleteExpansionStrings;
 	taskItem: ITaskItemStrings;

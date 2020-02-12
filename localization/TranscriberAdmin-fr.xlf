@@ -2597,83 +2597,71 @@
       </unit>
       <unit id="transcriber.submitTranscriptionTip">
          <segment>
-            <source>Mark this transcription as complete.</source>
-         	<target>Marquez cette transcription comme complète.</target>
+            <source>Submit for review</source>
+         	<target>Soumettre pour examen</target>
          </segment>
       </unit>
       <unit id="transcriber.submitReviewTip">
          <segment>
-            <source>Mark this review as complete.</source>
-         	<target>Cochez cette évaluation comme étant complète.</target>
+            <source>Submit as complete.</source>
+         	<target>Soumettre comme complet</target>
          </segment>
       </unit>
 		<unit id="transcriber.saveTip">
 			<segment>
-				<source>Save transcription changes without marking as complete.</source>
-				<target>Enregistrer les modifications de transcription sans les marquer comme complètes.</target>
+				<source>Save changes and comment</source>
+				<target>Enregistrer les modifications et les commentaires</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save position in recording without marking as complete.</source>
-            <target>Enregistrer la position dans l'enregistrement sans marquer comme complète.</target>
+            <source>Save position and comment</source>
+         	<target>Enregistrer la position et le commentaire</target>
          </segment>
       </unit>
-	<unit id="transcriberReject.explainRejection">
-         <segment>
-            <source>Please explain your reason for rejection in the comment.</source>
-         	<target>Veuillez expliquer les raisons de votre refus dans le commentaire.</target>
-         </segment>
-      </unit>
-      <unit id="transcriberReject.rejectTitle">
+      <unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>
          	<target>Rejet</target>
          </segment>
       </unit>
-      <unit id="transcriberReject.rejectTask">
+      <unit id="transcribeReject.rejectReason">
          <segment>
-            <source>Choose next action and explain reason for rejection.</source>
-         	<target>Choisissez l'action suivante et expliquez le motif du rejet.</target>
+            <source>Reject Reasons</source>
+         	<target>Raisons du rejet</target>
          </segment>
       </unit>
-      <unit id="transcriberReject.nextState">
+      <unit id="transcribeReject.needsAudio">
          <segment>
-            <source>Next State</source>
-         	<target>État suivant</target>
-         </segment>
-      </unit>
-      <unit id="transcriberReject.needsAudio">
-         <segment>
-            <source>Needs new audio</source>
+            <source>Needs New Audio</source>
          	<target>Besoin d'un nouveau enregistrement</target>
          </segment>
       </unit>
-      <unit id="transcriberReject.needsTranscription">
+      <unit id="transcribeReject.needsCorrection">
          <segment>
-            <source>Needs new transcription</source>
-         	<target>Nécessite une nouvelle transcription</target>
+            <source>Needs Corrections</source>
+         	<target>Nécessite des corrections</target>
          </segment>
       </unit>
-      <unit id="transcriberReject.needsReview">
+      <unit id="transcribeReject.incomplete">
          <segment>
-            <source>Needs new review</source>
-         	<target>Nécessite une nouvelle révision</target>
+            <source>Incomplete</source>
+         	<target>Incomplet</target>
          </segment>
       </unit>
-		<unit id="transcriberReject.comment">
+		<unit id="transcribeReject.comment">
 			<segment>
-				<source>Comment</source>
-				<target>Commentaire</target>
+				<source>Additional Comment</source>
+				<target>Commentaire supplémentaire</target>
 			</segment>
 		</unit>
-		<unit id="transcriberReject.cancel">
+		<unit id="transcribeReject.cancel">
          <segment>
             <source>Cancel</source>
          	<target>Annuler</target>
          </segment>
       </unit>
-      <unit id="transcriberReject.next">
+      <unit id="transcribeReject.next">
          <segment>
             <source>Next</source>
          	<target>Suivant</target>
@@ -2825,20 +2813,20 @@
 		</unit>
 		<unit id="taskItem.noMedia">
 			<segment>
-				<source>No Audio</source>
-				<target>Pas d'audio</target>
+				<source>No Recording</source>
+				<target>Pas d'enregistrement</target>
 			</segment>
 		</unit>
         <unit id="taskItem.needsNewRecording">
          <segment>
-            <source>Needs New Audio</source>
-			<target>Problème d'enregistrement</target>
+            <source>Recording Needed</source>
+         	<target>Enregistrement nécessaire</target>
          </segment>
       </unit>
       <unit id="taskItem.needsNewTranscription">
          <segment>
-            <source>Needs Corrections</source>
-			<target>Besoin de changement</target>
+            <source>Correction Needed</source>
+         	<target>Correction nécessaire</target>
          </segment>
       </unit>
 		<unit id="taskItem.inProgress">

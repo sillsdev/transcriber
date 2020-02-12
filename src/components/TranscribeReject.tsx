@@ -4,7 +4,7 @@ import {
   IState,
   Passage,
   PlanType,
-  ITranscriberRejectStrings,
+  ITranscribeRejectStrings,
   ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
@@ -16,7 +16,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   FormControl,
   FormLabel,
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IStateProps {
-  t: ITranscriberRejectStrings;
+  t: ITranscribeRejectStrings;
 }
 
 interface IRecordProps {
@@ -77,10 +76,6 @@ function TranscribeReject(props: IProps) {
   };
   const handleCommentChange = (e: any) => setComment(e.target.value);
   const doAddOrSave = async () => {
-    if (comment === '') {
-      setMessage(<span>{t.explainRejection}</span>);
-      return;
-    }
     if (
       next !== passageIn.attributes.state ||
       comment !== passageIn.attributes.lastComment
@@ -133,12 +128,11 @@ function TranscribeReject(props: IProps) {
       >
         <DialogTitle id="form-dialog-title">{t.rejectTitle}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{t.rejectTask}</DialogContentText>
           <FormControl component="fieldset" className={classes.formControl}>
-            <FormLabel component="legend">{t.nextState}</FormLabel>
+            <FormLabel component="legend">{t.rejectReason}</FormLabel>
             <RadioGroup
-              aria-label={t.nextState}
-              name={t.nextState}
+              aria-label={t.rejectReason}
+              name={t.rejectReason}
               value={next}
               onChange={handleChange}
             >
@@ -150,12 +144,12 @@ function TranscribeReject(props: IProps) {
               <FormControlLabel
                 value={ActivityStates.NeedsNewTranscription}
                 control={<Radio color="primary" />}
-                label={t.needsTranscription}
+                label={t.needsCorrection}
               />
               <FormControlLabel
                 value={ActivityStates.TranscribeReady}
                 control={<Radio color="primary" />}
-                label={t.needsReview}
+                label={t.incomplete}
               />
             </RadioGroup>
           </FormControl>
@@ -164,10 +158,11 @@ function TranscribeReject(props: IProps) {
             variant="filled"
             multiline
             rowsMax={5}
+            required
             className={classes.comment}
             value={comment}
             onChange={handleCommentChange}
-            style={{ overflow: 'auto' }}
+            style={{ overflow: 'auto', width: '400px' }}
           />
         </DialogContent>
         <DialogActions>
@@ -195,7 +190,7 @@ function TranscribeReject(props: IProps) {
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcriberReject' }),
+  t: localStrings(state, { layout: 'transcribeReject' }),
 });
 
 const mapRecordsToProps = {

@@ -2598,83 +2598,71 @@
       </unit>
       <unit id="transcriber.submitTranscriptionTip">
          <segment>
-            <source>Mark this transcription as complete.</source>
+            <source>Submit for review</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.submitReviewTip">
          <segment>
-            <source>Mark this review as complete.</source>
+            <source>Submit as complete</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">
          <segment>
-            <source>Save transcription changes without marking as complete.</source>
+            <source>Save changes and comment</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save position in recording without marking as complete.</source>
+            <source>Save position and comment</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.explainRejection">
-         <segment>
-            <source>Please explain your reason for rejection in the comment.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriberReject.rejectTitle">
+      <unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.rejectTask">
+      <unit id="transcribeReject.rejectReason">
          <segment>
-            <source>Choose next action and explain reason for rejection.</source>
+            <source>Reject Reason</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.nextState">
+      <unit id="transcribeReject.needsAudio">
          <segment>
-            <source>Next State</source>
+            <source>Recording Needed</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.needsAudio">
+      <unit id="transcribeReject.needsCorrection">
          <segment>
-            <source>Needs new audio</source>
+            <source>Correction Needed</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.needsTranscription">
+      <unit id="transcribeReject.incomplete">
          <segment>
-            <source>Needs new transcription</source>
+            <source>Incomplete</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.needsReview">
+      <unit id="transcribeReject.comment">
          <segment>
-            <source>Needs new review</source>
+            <source>Additional Comment</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.comment">
-         <segment>
-            <source>Comment</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriberReject.cancel">
+      <unit id="transcribeReject.cancel">
          <segment>
             <source>Cancel</source>
             <target/>
          </segment>
       </unit>
-      <unit id="transcriberReject.next">
+      <unit id="transcribeReject.next">
          <segment>
             <source>Next</source>
             <target/>
@@ -2826,19 +2814,19 @@
       </unit>
       <unit id="taskItem.noMedia">
          <segment>
-            <source>No Audio</source>
+            <source>No Recording</source>
             <target/>
          </segment>
       </unit>
       <unit id="taskItem.needsNewRecording">
          <segment>
-            <source>Needs New Audio</source>
+            <source>Recording Needed</source>
             <target/>
          </segment>
       </unit>
       <unit id="taskItem.needsNewTranscription">
          <segment>
-            <source>Needs Corrections</source>
+            <source>Correction Needed</source>
             <target/>
          </segment>
       </unit>

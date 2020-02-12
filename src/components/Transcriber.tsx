@@ -738,22 +738,14 @@ export function Transcriber(props: IProps) {
             <Grid container xs justify="flex-end">
               {role !== 'view' ? (
                 <>
-                  <Tooltip
-                    title={
-                      transcribing
-                        ? t.rejectTranscriptionTip
-                        : t.rejectReviewTip
-                    }
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleReject}
                   >
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleReject}
-                    >
-                      {t.reject}
-                    </Button>
-                  </Tooltip>
+                    {t.reject}
+                  </Button>
                   <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
                     <Button
                       variant="outlined"
