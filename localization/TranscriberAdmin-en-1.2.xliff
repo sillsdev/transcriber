@@ -2085,7 +2085,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.noMedia">
-                <source>No Media</source>
+                <source>No Recording</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -2106,7 +2106,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.needsNewRecording">
-                <source>Recording Problem</source>
+                <source>Recording Needed</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -2127,14 +2127,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.needsNewTranscription">
-                <source>Needs Changes</source>
+                <source>Correction Needed</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.approved">
-                <source>Approved (not synced)</source>
+                <source>Approved</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>

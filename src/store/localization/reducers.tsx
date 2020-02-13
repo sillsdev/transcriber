@@ -409,14 +409,14 @@ const initialState = {
 	}),
 	"activityState": new LocalizedStrings({
 		"en": {
-			"noMedia": "No Media",
+			"noMedia": "No Recording",
 			"transcribeReady": "Ready For Transcription",
 			"transcribing": "Transcribing",
-			"needsNewRecording": "Recording Problem",
+			"needsNewRecording": "Recording Needed",
 			"transcribed": "Transcribed",
 			"reviewing": "Reviewing",
-			"needsNewTranscription": "Needs Changes",
-			"approved": "Approved (not synced)",
+			"needsNewTranscription": "Correction Needed",
+			"approved": "Approved",
 			"synced": "Synced",
 			"done": "Done",
 		}

@@ -1786,8 +1786,8 @@
       </unit>
    <unit id="activityState.noMedia">
          <segment>
-            <source>No Media</source>
-         	<target>Non Média</target>
+            <source>No Recording</source>
+         	<target>Pas d'enregistrement</target>
          </segment>
       </unit>
       <unit id="activityState.transcribeReady">
@@ -1804,8 +1804,8 @@
       </unit>
 		<unit id="activityState.needsNewRecording">
 			<segment>
-				<source>Recording Problem</source>
-				<target>Problème d'enregistrement</target>
+				<source>Recording Needed</source>
+				<target>Enregistrement nécessaire</target>
 			</segment>
 		</unit>
 		<unit id="activityState.transcribed">
@@ -1822,14 +1822,14 @@
       </unit>
 		<unit id="activityState.needsNewTranscription">
 			<segment>
-				<source>Needs Changes</source>
-				<target>Besoin de changement</target>
+				<source>Correction Needed</source>
+				<target>Correction nécessairet</target>
 			</segment>
 		</unit>
 		<unit id="activityState.approved">
          <segment>
-            <source>Approved (not synced)</source>
-         	<target>Approuvé (non synchronisé)</target>
+            <source>Approved</source>
+         	<target>Approuvé</target>
          </segment>
       </unit>
 		<unit id="activityState.synced">
