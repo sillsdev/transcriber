@@ -227,6 +227,7 @@ export function TaskTable(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState('');
+  const [selRole, setSelRole] = useState('');
   const audioRef = useRef<any>();
 
   const handleMessageReset = () => {
@@ -243,6 +244,7 @@ export function TaskTable(props: IProps) {
   };
   const processSelect = (mediaDescription: MediaDescription) => {
     setSelected(mediaDescription.passage.id);
+    setSelRole(mediaDescription.role);
     if (mediaDescription.role !== 'view') {
       const assignee = related(mediaDescription.section, mediaDescription.role);
       if (!assignee) {
@@ -496,9 +498,17 @@ export function TaskTable(props: IProps) {
       addTasks('', 'view', rowList, playItem);
     }
     setRows(rowList);
-    if (rowList.length > 0 && selected === '') {
+
+    if (selected === '') {
       console.log('Select first task');
-      processSelect(rowList[0].media);
+      if (rowList.length > 0) processSelect(rowList[0].media);
+    } else {
+      const selectedRow = rowList.filter(r => r.media.passage.id === selected);
+      if (selectedRow.length === 0) {
+        processSelect(rowList[0].media);
+      } else if (selectedRow[0].media.role !== selRole) {
+        processSelect(selectedRow[0].media);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
