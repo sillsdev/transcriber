@@ -1,18 +1,36 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IAccessStrings } from '../model';
+import { IState, IAccessStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Paper,
+  Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { AUTH_CONFIG } from '../auth/auth0-variables';
-import { API_CONFIG } from '../api-variable';
 import { Online } from '../utils';
+import { UserAvatar } from '../components/UserAvatar';
+import SnackBar from '../components/SnackBar';
+import { IAxiosStatus } from '../store/AxiosStatus';
+import { QueryBuilder } from '@orbit/data';
+import handleElectronImport from './ElectronImport';
+
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
+
+const isElectron = process.env.REACT_APP_MODE === 'electron';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,28 +48,51 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       boxShadow: 'none',
-    }),
+    }) as any,
     version: {
       alignSelf: 'center',
     },
-    actions: theme.mixins.gutters({
+    paper: theme.mixins.gutters({
       paddingTop: 16,
       paddingBottom: 16,
       marginTop: theme.spacing(3),
+      width: '40%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignContent: 'center',
+      [theme.breakpoints.down('md')]: {
+        width: '100%',
+      },
+    }) as any,
+    dialogHeader: theme.mixins.gutters({
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }),
+    }) as any,
+    actions: theme.mixins.gutters({
+      paddingTop: 16,
+      paddingBottom: 16,
+      marginTop: theme.spacing(2),
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+    }) as any,
+    button: {
+      marginRight: theme.spacing(1),
+    },
   })
 );
 
 interface IStateProps {
   t: IAccessStrings;
+  importStatus: IAxiosStatus;
 }
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
+  importProject: typeof action.importProject;
+  importComplete: typeof action.importComplete;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -60,17 +101,82 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Access(props: IProps) {
-  const { auth, t } = props;
+  const { auth, t, importStatus } = props;
   const classes = useStyles();
-  const { fetchLocalization, setLanguage } = props;
-  const nonce = 'test';
-  const accessRef = useRef<any>(null);
+  const {
+    fetchLocalization,
+    setLanguage,
+    importProject,
+    importComplete,
+  } = props;
+  const [memory] = useGlobal('memory');
+  const [offline, setOffline] = useGlobal('offline');
+  const [users, setUsers] = useState(Array<User>());
+  const [message, setMessage] = useState(<></>);
+
+  const handleLogin = () => auth.login();
+
+  const handleSelect = (uId: string) => () => {
+    const selected = users.filter(u => u.id === uId);
+    if (selected.length > 0) {
+      localStorage.setItem('user-id', selected[0].id);
+      setOffline(true);
+    }
+  };
+
+  const handleResetMessage = () => setMessage(<></>);
+
+  const handleImport = () => {
+    if (isElectron) {
+      if (
+        !handleElectronImport(
+          memory,
+          importProject,
+          t.importPending,
+          t.importComplete
+        )
+      ) {
+        setMessage(<span>t.importError</span>);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const showMessage = (title: string, msg: string) => {
+      setMessage(
+        <span>
+          {title}
+          <br />
+          {msg}
+        </span>
+      );
+    };
+    if (importStatus) {
+      if (importStatus.errStatus) {
+        showMessage(t.importError, importStatus.errMsg);
+      } else {
+        if (importStatus.statusMsg) {
+          showMessage(t.importProject, importStatus.statusMsg);
+        }
+        if (importStatus.complete) {
+          const curUsers = memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('user')
+          ) as User[];
+          setUsers(curUsers);
+          importComplete();
+        }
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [importStatus]);
 
   useEffect(() => {
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
+    if (!offline && !(/*await*/ Online())) setOffline(true);
+
     const localAuth = localStorage.getItem('trAdminAuthResult');
     if (localAuth) {
       try {
@@ -79,28 +185,33 @@ export function Access(props: IProps) {
         localStorage.removeItem('trAdminAuthResult');
       }
     }
-    if (!auth.isAuthenticated()) {
+    if (!auth.isAuthenticated(offline)) {
       localStorage.removeItem('trAdminAuthResult');
-      if (Online() && !API_CONFIG.offline) {
-        // accessRef.current.click();
-        auth.login();
+      if (!offline && !isElectron) {
+        handleLogin();
       }
+    }
+
+    if (isElectron) {
+      const curUsers = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('user')
+      ) as User[];
+      setUsers(curUsers);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-
-  if (auth.isAuthenticated()) return <Redirect to="/loading" />;
-
-  const callback = AUTH_CONFIG.callbackUrl
-    .replace('/callback', '')
-    .replace('https://', '');
+  if (
+    (!isElectron && auth.isAuthenticated(offline)) ||
+    (isElectron && localStorage.getItem('user-id') !== null)
+  )
+    return <Redirect to="/loading" />;
 
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static" color="inherit">
         <Toolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {t.silTranscriberAccess}
+            {process.env.REACT_APP_SITE_TITLE}
           </Typography>
         </Toolbar>
         <div className={classes.grow}>{'\u00A0'}</div>
@@ -110,30 +221,72 @@ export function Access(props: IProps) {
           {buildDate}
         </div>
       </AppBar>
-      <div className={classes.container}>
-        <div className={classes.actions}>
-          {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-          <a
-            ref={accessRef}
-            href={
-              AUTH_CONFIG.loginApp +
-              '/?clientid=' +
-              AUTH_CONFIG.clientId +
-              '&callback=' +
-              callback +
-              '&nonce=' +
-              nonce +
-              '&state=tAdInit'
-            }
-          ></a>
+      {isElectron && (
+        <div className={classes.container}>
+          <Paper className={classes.paper}>
+            <Typography variant="body1" className={classes.dialogHeader}>
+              {t.accessSilTranscriber}
+            </Typography>
+            <Grid container direction="row">
+              {users && users.length > 0 && (
+                <Grid item xs={12} md={6}>
+                  <div className={classes.actions}>
+                    <List>
+                      {users
+                        .sort((i, j) =>
+                          i.attributes.name < j.attributes.name ? -1 : 1
+                        )
+                        .map(u => (
+                          <ListItem key={u.id} onClick={handleSelect(u.id)}>
+                            <ListItemIcon>
+                              <UserAvatar
+                                {...props}
+                                users={users}
+                                userRec={u}
+                              />
+                            </ListItemIcon>
+                            <ListItemText primary={u.attributes.name} />
+                          </ListItem>
+                        ))}
+                    </List>
+                  </div>
+                </Grid>
+              )}
+              <Grid item xs={12} md={6}>
+                <div className={classes.actions}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleLogin}
+                    disabled={offline}
+                  >
+                    {t.login}
+                  </Button>
+                </div>
+                <div className={classes.actions}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleImport}
+                  >
+                    {t.importProject}
+                  </Button>
+                </div>
+              </Grid>
+            </Grid>
+          </Paper>
+          <SnackBar message={message} reset={handleResetMessage} />
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'access' }),
+  importStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -141,9 +294,14 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
+      importProject: action.importProject,
+      importComplete: action.importComplete,
     },
     dispatch
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Access) as any;
+export default (connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Access) as any) as any;

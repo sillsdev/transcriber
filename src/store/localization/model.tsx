@@ -2,10 +2,12 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAccess": string;
     "accessSilTranscriber": string;
-    "createAccount": string;
-    "accessExistingAccount": string;
+    "importProject": string;
+    "importPending": string;
+    "importComplete": string;
+    "importError": string;
+    "login": string;
 };
 
 export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
@@ -243,6 +245,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projectSummary": string;
     "addProject": string;
     "export": string;
+    "loadingTable": string;
     "logout": string;
     "myAccount": string;
     "orgRole": string;
@@ -521,7 +524,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submit": string;
     "reject": string;
     "save": string;
-    "close": string;
+    "next": string;
     "reopen": string;
     "settingsTip": string;
     "backTip": string;
@@ -531,6 +534,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "slowerTip": string;
     "fasterTip": string;
     "historyTip": string;
+    "timerTip": string;
     "comment": string;
     "makeComment": string;
     "rejectTranscriptionTip": string;
@@ -539,6 +543,27 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submitReviewTip": string;
     "saveTip": string;
     "saveReviewTip": string;
+    "noMedia": string;
+    "transcribeReady": string;
+    "transcribing": string;
+    "transcribed": string;
+    "reviewing": string;
+    "approved": string;
+    "needsNewTranscription": string;
+    "done": string;
+    "needsNewRecording": string;
+    "synced": string;
+};
+
+export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
+    "rejectTitle": string;
+    "rejectReason": string;
+    "needsAudio": string;
+    "needsCorrection": string;
+    "incomplete": string;
+    "comment": string;
+    "cancel": string;
+    "next": string;
 };
 
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
@@ -627,6 +652,7 @@ export interface ILocalizedStrings {
 	toDoTable: IToDoTableStrings;
 	integration: IIntegrationStrings;
 	transcriber: ITranscriberStrings;
+	transcribeReject: ITranscribeRejectStrings;
 	profile: IProfileStrings;
 	deleteExpansion: IDeleteExpansionStrings;
 	taskItem: ITaskItemStrings;

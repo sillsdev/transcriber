@@ -81,4 +81,4 @@ export const TaskFlag = (props: IProps) => {
   );
 };
 
-export default TaskFlag;
+export default React.memo(TaskFlag);

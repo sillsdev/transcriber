@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -137,7 +137,6 @@ export function InvitationTable(props: IProps) {
   const [dialogData, setDialogData] = useState(null as Invitation | null);
 
   const handleAdd = () => {
-    console.log(dialogVisible);
     setDialogData(null);
     setDialogVisible(true);
   };

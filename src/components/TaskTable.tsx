@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingLeft: 0,
         paddingRight: 0,
       },
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }),
+    }) as any,
     editIcon: {
       fontSize: 16,
     },
@@ -166,6 +166,7 @@ export function TaskTable(props: IProps) {
   const [busy] = useGlobal('remoteBusy');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
+  const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [project] = useGlobal('project');
   const [columns] = useState([
@@ -216,7 +217,6 @@ export function TaskTable(props: IProps) {
     { columnName: 'play', filteringEnabled: false },
     { columnName: 'action', filteringEnabled: false },
   ];
-  const [role, setRole] = useState('');
 
   const [rows, setRows] = useState(Array<IRow>());
   const [filter, setFilter] = useState(
@@ -228,6 +228,7 @@ export function TaskTable(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState('');
+  const [selRole, setSelRole] = useState('');
   const audioRef = useRef<any>();
 
   const handleMessageReset = () => {
@@ -237,6 +238,7 @@ export function TaskTable(props: IProps) {
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
   };
+
   const next: { [key: string]: string } = {
     needsNewTranscription: ActivityStates.Transcribing,
     transcribeReady: ActivityStates.Transcribing,
@@ -244,6 +246,7 @@ export function TaskTable(props: IProps) {
   };
   const processSelect = (mediaDescription: MediaDescription) => {
     setSelected(mediaDescription.passage.id);
+    setSelRole(mediaDescription.role);
     if (mediaDescription.role !== 'view') {
       const assignee = related(mediaDescription.section, mediaDescription.role);
       if (!assignee) {
@@ -280,7 +283,7 @@ export function TaskTable(props: IProps) {
     }
     setPlaying(false);
     if (id !== playItem) {
-      fetchMediaUrl(id, auth);
+      fetchMediaUrl(id, memory, offline, auth);
       setPlayItem(id);
     } else {
       setPlayItem('');
@@ -449,28 +452,28 @@ export function TaskTable(props: IProps) {
     }
   }, [filter]);
 
-  useEffect(() => {
+  const getUserRole = (user: string, project: string) => {
     const projectRecs = projects.filter(p => p.id === project);
     if (projectRecs.length === 0) {
-      setRole('');
-      return;
+      return '';
     }
     const groupId = related(projectRecs[0], 'group');
     const memberships = groupMemberships.filter(
       gm => related(gm, 'group') === groupId && related(gm, 'user') === user
     );
     if (memberships.length === 0) {
-      setRole('');
-      return;
+      return '';
     }
     const memberRole: string = related(memberships[0], 'role');
     const roleRecs = roles.filter(r => r.id === memberRole);
-    setRole(
-      roleRecs.length > 0 && roleRecs[0].attributes
-        ? roleRecs[0].attributes.roleName
-        : ''
-    );
-  }, [user, project, projects, groupMemberships, roles]);
+    return roleRecs.length > 0 && roleRecs[0].attributes
+      ? roleRecs[0].attributes.roleName
+      : '';
+  };
+  const role = React.useMemo(() => {
+    return getUserRole(user, project);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [user, project]);
 
   useEffect(() => {
     const rowList: IRow[] = [];
@@ -497,9 +500,17 @@ export function TaskTable(props: IProps) {
       addTasks('', 'view', rowList, playItem);
     }
     setRows(rowList);
-    if (rowList.length > 0 && selected === '') {
+
+    if (selected === '') {
       console.log('Select first task');
-      processSelect(rowList[0].media);
+      if (rowList.length > 0) processSelect(rowList[0].media);
+    } else {
+      const selectedRow = rowList.filter(r => r.media.passage.id === selected);
+      if (selectedRow.length === 0) {
+        processSelect(rowList[0].media);
+      } else if (selectedRow[0].media.role !== selRole) {
+        processSelect(selectedRow[0].media);
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -587,14 +598,14 @@ export function TaskTable(props: IProps) {
           : '';
       if (column.name === 'composite') {
         return (
-          <div
+          <td
             style={{
               width: TaskItemWidth,
               backgroundColor: curId === selected ? 'lightgray' : 'transparent',
             }}
           >
             {value}
-          </div>
+          </td>
         );
       }
       return <>{'\u00a0'}</>;

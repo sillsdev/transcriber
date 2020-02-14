@@ -13,11 +13,9 @@ export default function(
     case type.FETCH_AUDIO_URL_PENDING:
       return mediaCleanState;
     case type.FETCH_AUDIO_URL:
-      const attr: any = action.payload.data.data.attributes;
-      console.log(attr['audio-url']);
       return {
         loaded: true,
-        url: attr['audio-url'],
+        url: action.payload,
       };
     default:
       return { ...state };

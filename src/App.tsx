@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { hot } from 'react-hot-loader';
 import { Route, Redirect } from 'react-router-dom';
 import Access from './routes/Access';
 import Logout from './routes/Logout';
@@ -82,4 +83,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default hot(module)(App);

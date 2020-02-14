@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary';
-import { Router } from 'react-router-dom';
+import { Router, HashRouter } from 'react-router-dom';
 import { DataProvider } from 'react-orbitjs';
 import { Provider } from 'react-redux';
 import Memory from '@orbit/memory';
@@ -38,17 +38,34 @@ setGlobal({
   autoOpenAddMedia: false,
   editUserId: null,
   developer: false,
+  offline: process.env.REACT_APP_OFFLINE ? true : false,
 });
+
+console.log(`process.env: `, process.env);
+if (process.env.REACT_APP_MODE === 'electron') {
+  console.log(`Running in Electron: Filesystem access is enabled.`);
+} else {
+  console.log('Running on the Web, Filesystem access disabled.');
+}
+
+const router =
+  process.env.REACT_APP_MODE === 'electron' ? (
+    <HashRouter>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </HashRouter>
+  ) : (
+    <Router history={history}>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </Router>
+  );
 
 const Root = () => (
   <DataProvider dataStore={memory}>
-    <Provider store={store as any}>
-      <Router history={history}>
-        <ErrorBoundary>
-          <App />
-        </ErrorBoundary>
-      </Router>
-    </Provider>
+    <Provider store={store as any}>{router}</Provider>
   </DataProvider>
 );
 ReactDOM.render(<Root />, document.getElementById('root'));

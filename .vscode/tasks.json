@@ -17,6 +17,26 @@
         "background": {
           "activeOnStart": false,
           "beginsPattern": "Starting the development server\\.\\.\\.$",
+          "endsPattern": "(Compiled successfully|Compiled with warnings\\.|Failed to compile|To create a production build, use npm run build\\.)"
+        }
+      }
+    },
+    {
+      "label": "DebugMode",
+      "type": "npm",
+      "script": "electron-debug",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "____________"
+        },
+        "background": {
+          "activeOnStart": false,
+          "beginsPattern": "Starting the development server\\.\\.\\.$",
           "endsPattern": "(Compiled successfully|Compiled with warnings\\.|Failed to compile|To create a production build, use yarn build\\.)"
         }
       }

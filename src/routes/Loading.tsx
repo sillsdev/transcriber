@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.down('md')]: {
         width: '100%',
       },
-    }),
+    }) as any,
     button: {},
     icon: {
       alignSelf: 'center',
@@ -95,6 +95,7 @@ export function Loading(props: IProps) {
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
+  const [offline] = useGlobal('offline');
   const [bucket, setBucket] = useGlobal('bucket');
   const [remote, setRemote] = useGlobal('remote');
   const [user, setUser] = useGlobal('user');
@@ -105,6 +106,7 @@ export function Loading(props: IProps) {
   const [newOrgParams, setNewOrgParams] = useState(
     localStorage.getItem('newOrg')
   );
+  const [savedURL] = useState(localStorage.getItem('url') || '');
   const [view, setView] = useState('');
 
   const handleUserMenuAction = (what: string) => {
@@ -162,13 +164,14 @@ export function Loading(props: IProps) {
       memory,
       keyMap,
       auth,
+      offline,
       setUser,
       setBucket,
       setRemote,
       setCompleted,
       InviteUser
     );
-    if (!API_CONFIG.offline) {
+    if (!offline) {
       const decodedToken: any = jwtDecode(auth.getAccessToken());
       setExpireAt(decodedToken.exp);
     }
@@ -208,20 +211,16 @@ export function Loading(props: IProps) {
         }
         setNewOrgParams(null);
       }
-      if (localStorage.getItem('url') === '') setDefaultOrg();
+      if (savedURL.length <= '/main'.length) setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);
 
-  if (!isAuthenticated()) return <Redirect to="/" />;
+  if (!isAuthenticated(offline)) return <Redirect to="/" />;
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 
-  if (
-    orbitLoaded &&
-    (completed === 100 || API_CONFIG.offline) &&
-    newOrgParams === null
-  ) {
+  if (orbitLoaded && (completed === 100 || offline) && newOrgParams === null) {
     if (user && user !== '') {
       const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
         q.findRecords([{ type: 'user', id: user }])

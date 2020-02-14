@@ -1,8 +1,9 @@
 import { Record, RecordRelationship } from '@orbit/data';
+import { ActivityStates } from '.';
 
 export interface PassageStateChange extends Record {
   attributes: {
-    state: string;
+    state: ActivityStates;
     comments: string;
     dateCreated: Date;
     lastModifiedBy: number /* userid */;

@@ -52,7 +52,7 @@ import {
 } from '../utils';
 import eaf from './TranscriptionEaf';
 let Encoder = require('node-html-encoder').Encoder;
-let encoder = new Encoder('entity');
+let encoder = new Encoder('numerical');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -236,6 +236,7 @@ export function TranscriptionTab(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
+  const [offline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
@@ -310,7 +311,9 @@ export function TranscriptionTab(props: IProps) {
     const mediaAttr = mediaRec && mediaRec.attributes;
     const transcription =
       mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
-    const encTranscript = encoder.htmlEncode(transcription);
+    const encTranscript = encoder
+      .htmlEncode(transcription)
+      .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');
     const durationNum = mediaAttr && mediaAttr.duration;
     const duration = durationNum ? (durationNum * 1000).toString() : '0';
     const lang = getMediaLang(mediaRec, memory);
@@ -357,7 +360,7 @@ export function TranscriptionTab(props: IProps) {
     const mediaRec = getMediaRec(passageId, memory);
     const id = remoteId('mediafile', mediaRec ? mediaRec.id : '', keyMap);
     const name = getMediaName(mediaRec, memory);
-    fetchMediaUrl(id, auth);
+    fetchMediaUrl(id, memory, offline, auth);
     setAudName(name);
   };
 

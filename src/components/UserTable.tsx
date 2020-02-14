@@ -9,6 +9,8 @@ import {
   Role,
   OrganizationMembership,
   IUsertableStrings,
+  Group,
+  GroupMembership,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -38,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -62,7 +64,7 @@ interface IRow {
   name: string;
   email: string;
   locale: string;
-  phone: string;
+  // phone: string;
   timezone: string;
   role: string;
   action: string;
@@ -98,7 +100,7 @@ const getMedia = (
           name: u.attributes.name,
           email: u.attributes.email ? u.attributes.email : t.offline,
           locale: u.attributes.locale ? u.attributes.locale : '',
-          phone: u.attributes.phone ? u.attributes.phone : '',
+          // phone: u.attributes.phone ? u.attributes.phone : '',
           timezone: u.attributes.timezone ? u.attributes.timezone : '',
           role: role.length === 1 ? role[0].attributes.roleName : '',
           action: u.id,
@@ -147,7 +149,7 @@ export function UserTable(props: IProps) {
     { name: 'name', title: t.name },
     { name: 'email', title: t.email },
     { name: 'locale', title: t.locale },
-    { name: 'phone', title: t.phone },
+    // { name: 'phone', title: t.phone },
     { name: 'timezone', title: t.timezone },
     { name: 'role', title: t.role },
     {
@@ -159,7 +161,7 @@ export function UserTable(props: IProps) {
     { columnName: 'name', width: 200 },
     { columnName: 'email', width: 200 },
     { columnName: 'locale', width: 100 },
-    { columnName: 'phone', width: 100 },
+    // { columnName: 'phone', width: 100 },
     { columnName: 'timezone', width: 100 },
     { columnName: 'role', width: 100 },
     { columnName: 'action', width: 150 },
@@ -190,12 +192,34 @@ export function UserTable(props: IProps) {
     setDeleteItem(value);
   };
   const handleDeleteConfirmed = () => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({
-        type: 'user',
-        id: deleteItem,
-      })
+    const orgMemberRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('organizationmembership')
+    ) as OrganizationMembership[];
+    const userOrgRec = orgMemberRecs.filter(
+      o =>
+        related(o, 'user') === deleteItem &&
+        related(o, 'organization') === organization
     );
+    if (userOrgRec.length === 1) {
+      memory.update((t: TransformBuilder) => t.removeRecord(userOrgRec[0]));
+    }
+    const groupRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('group')
+    ) as Group[];
+    const orgGroups = groupRecs
+      .filter(g => related(g, 'owner') === organization)
+      .map(og => og.id);
+    const grpMbrRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('groupmembership')
+    ) as GroupMembership[];
+    const userGrpOrgRecs = grpMbrRecs.filter(
+      g =>
+        related(g, 'user') === deleteItem &&
+        orgGroups.includes(related(g, 'group'))
+    );
+    userGrpOrgRecs.forEach(g => {
+      memory.update((t: TransformBuilder) => t.removeRecord(g));
+    });
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');

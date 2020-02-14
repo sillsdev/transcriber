@@ -5,35 +5,49 @@
 
     <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
         <body>
-            <trans-unit id="access.silTranscriberAccess">
-                <source>SIL Transcriber Access</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="access.accessSilTranscriber">
-                <source>Access SIL Transcriber</source>
+                <source>Welcome to SIL Transcriber. Select how to get started.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="access.createAccount">
-                <source>Create an Account</source>
+            <trans-unit id="access.importProject">
+                <source>Import Portable Transcriber Data</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="access.accessExistingAccount">
-                <source>Access with existing Account</source>
+            <trans-unit id="access.importPending">
+                <source>Import In Progress...</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="snackbar.undo">
+            <trans-unit id="access.importComplete">
+                <source>Import Complete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.importError">
+                <source>Import Error</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="access.login">
+        		<source>Online Login</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Access.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="snackbar.undo">
                 <source>UNDO</source>
                 <target/>
                 <context-group>
@@ -1356,6 +1370,13 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="main.loadingTable">
+        		<source>Loading data</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.logout">
                 <source>Log Out</source>
                 <target/>
@@ -2085,7 +2106,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.noMedia">
-                <source>No Media</source>
+                <source>No Recording</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -2106,7 +2127,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.needsNewRecording">
-                <source>Recording Problem</source>
+                <source>Recording Needed</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -2127,14 +2148,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.needsNewTranscription">
-                <source>Needs Changes</source>
+                <source>Correction Needed</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="activityState.approved">
-                <source>Approved (not synced)</source>
+                <source>Approved</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -2922,8 +2943,8 @@
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriber.close">
-                <source>Close</source>
+            <trans-unit id="transcriber.next">
+                <source>Next</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
@@ -2992,6 +3013,13 @@
         			<context context-type="sourcefile">Transcriber.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriber.timerTip">
+        		<source>Timestamp ({0})</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcriber.comment">
         		<source>Comment</source>
         		<target/>
@@ -3021,33 +3049,159 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.submitTranscriptionTip">
-                <source>Mark this transcription as complete.</source>
+                <source>Submit for review</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.submitReviewTip">
-                <source>Mark this review as complete.</source>
+                <source>Submit as complete</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.saveTip">
-                <source>Save transcription changes without marking as complete.</source>
+                <source>Save changes and comment</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriber.saveReviewTip">
-                <source>Save position in recording without marking as complete.</source>
+                <source>Save position and comment</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
+        	<trans-unit id="transcriber.noMedia">
+        		<source>Created task</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.transcribeReady">
+        		<source>Attached recording</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.transcribing">
+        		<source>Started to transcribe</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.transcribed">
+        		<source>Submitted task for review</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.reviewing">
+        		<source>Started to review</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.approved">
+        		<source>Approved</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.needsNewTranscription">
+        		<source>Rejected task</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.done">
+        		<source>Completed</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.needsNewRecording">
+        		<source>Rejected task</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.synced">
+        		<source>Completed</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.rejectTitle">
+        		<source>Rejection</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.rejectReason">
+        		<source>Reject Reason</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.needsAudio">
+        		<source>Recording Needed</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.needsCorrection">
+        		<source>Correction Needed</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.incomplete">
+        		<source>Incomplete</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.comment">
+        		<source>Additional Comment</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcribeReject.next">
+        		<source>Next</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">transcribeReject.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="profile.name">
         		<source>Full Name</source>
         		<target/>
@@ -3217,21 +3371,21 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="taskItem.noMedia">
-        		<source>No Audio</source>
+        		<source>No Recording</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>
         		</context-group>
         	</trans-unit>
             <trans-unit id="taskItem.needsNewRecording">
-        		<source>Needs New Audio</source>
+        		<source>Recording Needed</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>
         		</context-group>
         	</trans-unit>
             <trans-unit id="taskItem.needsNewTranscription">
-        		<source>Needs Corrections</source>
+        		<source>Correction Needed</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>

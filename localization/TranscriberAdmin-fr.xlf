@@ -1,28 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
 	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
-		<unit id="access.silTranscriberAccess">
-			<segment>
-				<source>SIL Transcriber Access</source>
-				<target>Accès du SIL Transcriber</target>
-			</segment>
-		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
-				<source>Access SIL Transcriber</source>
-				<target>Accès au SIL Transcriber</target>
+				<source>Welcome to SIL Transcriber. Select how to get started.</source>
+				<target>Bienvenue à SIL Transcriber. Sélectionnez comment commencer.</target>
 			</segment>
 		</unit>
-		<unit id="access.createAccount">
+		<unit id="access.importProject">
 			<segment>
-				<source>Create an Account</source>
-				<target>Créer un compte</target>
+				<source>Import Portable Transcriber Data</source>
+				<target>Importation de données de transcripteurs portables</target>
 			</segment>
 		</unit>
-		<unit id="access.accessExistingAccount">
+       <unit id="access.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+            <target>Importation en cours ...</target>
+         </segment>
+      </unit>
+      <unit id="access.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target>Importation terminée</target>
+         </segment>
+      </unit>
+     <unit id="access.importError">
+         <segment>
+            <source>Import Error</source>
+            <target>Erreur d'importation</target>
+
+         </segment>
+      </unit>
+      		<unit id="access.login">
 			<segment>
-				<source>Access with existing Account</source>
-				<target>Accès avec compte existant</target>
+				<source>Online Login</source>
+				<target>Connexion en ligne</target>
 			</segment>
 		</unit>
 		<unit id="snackbar.undo">
@@ -1159,6 +1172,12 @@
 				<target>Exporter</target>
 			</segment>
 		</unit>
+		<unit id="main.loadingTable">
+			<segment>
+				<source>Loading data</source>
+				<target>Chargement des données</target>
+			</segment>
+		</unit>
 		<unit id="main.logout">
 			<segment>
 				<source>Log Out</source>
@@ -1786,8 +1805,8 @@
       </unit>
    <unit id="activityState.noMedia">
          <segment>
-            <source>No Media</source>
-         	<target>Non Média</target>
+            <source>No Recording</source>
+         	<target>Pas d'enregistrement</target>
          </segment>
       </unit>
       <unit id="activityState.transcribeReady">
@@ -1804,8 +1823,8 @@
       </unit>
 		<unit id="activityState.needsNewRecording">
 			<segment>
-				<source>Recording Problem</source>
-				<target>Problème d'enregistrement</target>
+				<source>Recording Needed</source>
+				<target>Enregistrement nécessaire</target>
 			</segment>
 		</unit>
 		<unit id="activityState.transcribed">
@@ -1822,14 +1841,14 @@
       </unit>
 		<unit id="activityState.needsNewTranscription">
 			<segment>
-				<source>Needs Changes</source>
-				<target>Besoin de changement</target>
+				<source>Correction Needed</source>
+				<target>Correction nécessairet</target>
 			</segment>
 		</unit>
 		<unit id="activityState.approved">
          <segment>
-            <source>Approved (not synced)</source>
-         	<target>Approuvé (non synchronisé)</target>
+            <source>Approved</source>
+         	<target>Approuvé</target>
          </segment>
       </unit>
 		<unit id="activityState.synced">
@@ -2505,10 +2524,10 @@
 				<target>Sauvegarde</target>
 			</segment>
 		</unit>
-		<unit id="transcriber.close">
+		<unit id="transcriber.next">
 			<segment>
-				<source>Close</source>
-				<target>Fermer</target>
+				<source>Next</source>
+				<target>Prochain</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.reopen">
@@ -2565,6 +2584,12 @@
 				<target>Histoire ({1})</target>
 			</segment>
 		</unit>
+		<unit id="transcriber.timerTip">
+			<segment>
+				<source>Timestamp ({0})</source>
+				<target>Horodatage ({1})</target>
+			</segment>
+		</unit>
 		<unit id="transcriber.comment">
 			<segment>
 				<source>Comment</source>
@@ -2591,29 +2616,137 @@
       </unit>
       <unit id="transcriber.submitTranscriptionTip">
          <segment>
-            <source>Mark this transcription as complete.</source>
-         	<target>Marquez cette transcription comme complète.</target>
+            <source>Submit for review</source>
+         	<target>Soumettre pour examen</target>
          </segment>
       </unit>
       <unit id="transcriber.submitReviewTip">
          <segment>
-            <source>Mark this review as complete.</source>
-         	<target>Cochez cette évaluation comme étant complète.</target>
+            <source>Submit as complete.</source>
+         	<target>Soumettre comme complet</target>
          </segment>
       </unit>
 		<unit id="transcriber.saveTip">
 			<segment>
-				<source>Save transcription changes without marking as complete.</source>
-				<target>Enregistrer les modifications de transcription sans les marquer comme complètes.</target>
+				<source>Save changes and comment</source>
+				<target>Enregistrer les modifications et les commentaires</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save position in recording without marking as complete.</source>
-            <target>Enregistrer la position dans l'enregistrement sans marquer comme complète.</target>
+            <source>Save position and comment</source>
+         	<target>Enregistrer la position et le commentaire</target>
          </segment>
       </unit>
-	<unit id="profile.name">
+      <unit id="transcriber.noMedia">
+         <segment>
+            <source>Created task</source>
+         	<target>Tâche créée</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribeReady">
+         <segment>
+            <source>Attached recording</source>
+         	<target>Enregistrement joint</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribing">
+         <segment>
+            <source>Started to transcribe</source>
+         	<target>A commencé à transcrire</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribed">
+         <segment>
+            <source>Submitted task for review</source>
+         	<target>Tâche soumise pour examen</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.reviewing">
+         <segment>
+            <source>Started to review</source>
+         	<target>A commencé à examiner</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.approved">
+         <segment>
+            <source>Approved</source>
+         	<target>Approuvé</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewTranscription">
+         <segment>
+            <source>Rejected task</source>
+         	<target>Tâche rejetée</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.done">
+         <segment>
+            <source>Completed</source>
+         	<target>Terminé</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewRecording">
+         <segment>
+            <source>Rejected task</source>
+         	<target>Tâche rejetée</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.synced">
+         <segment>
+            <source>Completed</source>
+         	<target>Terminé</target>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.rejectTitle">
+         <segment>
+            <source>Rejection</source>
+         	<target>Rejet</target>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.rejectReason">
+         <segment>
+            <source>Reject Reasons</source>
+         	<target>Raisons du rejet</target>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.needsAudio">
+         <segment>
+            <source>Needs New Audio</source>
+         	<target>Besoin d'un nouveau enregistrement</target>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.needsCorrection">
+         <segment>
+            <source>Needs Corrections</source>
+         	<target>Nécessite des corrections</target>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.incomplete">
+         <segment>
+            <source>Incomplete</source>
+         	<target>Incomplet</target>
+         </segment>
+      </unit>
+		<unit id="transcribeReject.comment">
+			<segment>
+				<source>Additional Comment</source>
+				<target>Commentaire supplémentaire</target>
+			</segment>
+		</unit>
+		<unit id="transcribeReject.cancel">
+         <segment>
+            <source>Cancel</source>
+         	<target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.next">
+         <segment>
+            <source>Next</source>
+         	<target>Suivant</target>
+         </segment>
+      </unit>
+      <unit id="profile.name">
          <segment>
             <source>Full Name</source>
          	<target>Nom et prénom</target>
@@ -2759,20 +2892,20 @@
 		</unit>
 		<unit id="taskItem.noMedia">
 			<segment>
-				<source>No Audio</source>
-				<target>Pas d'audio</target>
+				<source>No Recording</source>
+				<target>Pas d'enregistrement</target>
 			</segment>
 		</unit>
         <unit id="taskItem.needsNewRecording">
          <segment>
-            <source>Needs New Audio</source>
-			<target>Problème d'enregistrement</target>
+            <source>Recording Needed</source>
+         	<target>Enregistrement nécessaire</target>
          </segment>
       </unit>
       <unit id="taskItem.needsNewTranscription">
          <segment>
-            <source>Needs Corrections</source>
-			<target>Besoin de changement</target>
+            <source>Correction Needed</source>
+         	<target>Correction nécessaire</target>
          </segment>
       </unit>
 		<unit id="taskItem.inProgress">

@@ -1,44 +1,42 @@
 # web-transcriber-admin
 
-A `react` web app for Transcriber administration
+A `react` web/electron app for transcribing
 
 ## Installation
 
 Clone the app, go to the project directory, and execute:
 
-```
-npm install
-npm run stamp # this creates a file with the date to display in the version
-node src\components\LgPick\langPicker\makeIndexes.js # builds language indexes
-```
+1. `npm install`
+2. `npm run stamp` _# this creates a file with the date to display in the version_
+3. `node src\components\LgPick\langPicker\makeIndexes.js` _# builds language indexes_
 
 Make the font folder using fonts from [SIL Fonts](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=using_web_fonts) and [Google Noto fonts](https://www.google.com/get/noto/)
 
-```
-node src\components\LgPick\langPicker\fontList.js # builds font folder
-```
+4. `node src\components\LgPick\langPicker\fontList.js <folderName>` _# builds **/public/fonts** folder_
+
+> NB. For the web version, the **/public/fonts** folder has been moved to an S3 bucket which has involved changing the path in the .css file and in the code. (cf. `src/components/Transcriber.tsx`)
 
 Building the project to determine if all dependencies have been met:
 
-```
-npm run build
-```
+5. `npm run build`
 
 ### Visual Studio
 
 You can use Visual Studio to build `updateLocalization.sln` (in the localization folder). This file will process the `xliff` and `xlf` files to add the `strings.json` and the localizaiton reducer and model to the source tree. It requires `.NET Framework` to execute XSLT 2.0 stylesheets.
 
+6. `cd localization\bin\Debug;& updateLocalization.exe`
+
+> NB. You may want ot download the strings from the [crowdin site](https://crowdin.com/project/sil-transcriber) and untip the file in the localization folder before executing this command to get all the latest localization strings included.
+
 ## Running Locally
 
 ### Amplify
 
-Install `amplify-cli`:
+Install _amplify-cli_:
 
-```
-npm install -g @aws-amplify/cli
-```
+- `npm install -g @aws-amplify/cli`
 
-The deployment configuration commands (e.g., `npm run dev`) require a configured `amplify` environment. This will require an AWS keyset and two configuration files:
+The deployment configuration commands (e.g., `npm run dev`) require a configured _amplify_ environment. (See also: `npm run deploySetup`.) This will require an _AWS_ keyset and two configuration files:
 
 ```
 mkdir ~/.aws
@@ -46,7 +44,7 @@ touch ~/.aws/credentials
 touch ~/.aws/config
 ```
 
-Add your keyset to the `.aws/credentials` file as follows:
+Add your keyset to the _.aws/credentials_ file as follows:
 
 ```
 [default]
@@ -58,7 +56,7 @@ aws_access_key_id=AKIAIOSFODNN7EXAMPLE
 aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ```
 
-Then, paste the following into `~/.aws/config`:
+Then, paste the following into _~/.aws/config_:
 
 ```
 [default]
@@ -72,9 +70,7 @@ output=json
 
 Initialize Amplify:
 
-```
-amplify init
-```
+- `amplify init`
 
 Follow the prompts as appropriate. If the `~/.aws` folder is configured correctly, you'll eventually be presented with these two options:
 
@@ -85,12 +81,12 @@ Follow the prompts as appropriate. If the `~/.aws` folder is configured correctl
 
 ### Configuration
 
-Two files are needed to create `dev` environment configurations:
+Two files are needed to create _dev_ environment configurations:
 
-- `.env.dev.development.local`
-- `.env.dev.local`
+- _.env.dev.development.local_
+- _.env.dev.local_
 
-Example `.env.appdev.development.local`:
+Example _.env.appdev.development.local_:
 
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
@@ -103,12 +99,12 @@ REACT_APP_COMMUNITY= (url of site for community discussion)
 
 REACT_APP_OFFLINE_not=true
 BROWSER=none
-REACT_APP_CALLBACK=localhost:3000/callback
+REACT_APP_CALLBACK=http://localhost:3000/callback
 REACT_APP_APPMODE=true
-REACT_APP_SITE_TITLE=SIL Transcriber Admin
+REACT_APP_SITE_TITLE=SIL Transcriber Admin DEV
 ```
 
-Example `.env.dev.local`:
+Example _.env.dev.local_:
 
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
@@ -124,27 +120,70 @@ REACT_APP_SITE_TITLE= (title for browser tab)
 
 ### Generate dev configuration files
 
-Having created or obtained the `.env.*` files listed above, generate the environment-appropriate `.env.development.local` and `.env.local` files by executing the following:
+Having created or obtained the _.env.\*_ files listed above, generate the environment-appropriate _.env.development.local_ and _.env.local_ files by executing the following:
 
-```
-npm run dev
-```
+- `npm run dev`
+
+> NB. You can use _appdev_, _qa_, _appqa_, _prod_, or _appprod_ in place of _dev_ in the command above depending on which environment you want to test with although localhost is only setup by default on the _dev_ environment as a valid source and callback. If you want to add it to the qa channel or the prod channel, you will need to add it in the auth0 console before using it with `npm start`
 
 ## Execute app
 
-```
-npm start
-```
+- `npm start` _# break points can be set in *vscode*_
+
+> NB. From _VsCode_ you can launch the debugger with _F5_. The first time you will need to choose the option.
 
 ## Deployment
 
-The `npm run dev` and `npm run qa` commands configure the app to deploy to `dev` or `qa`, respectively. Once configuration files have been generated, execute the following to deploy the app:
+The `npm run dev`, `npm run qa` and `npm run prod` commands configure the admin app to deploy to _dev_, _qa_, or _prod_ respectively. The `npm run appdev`, `npm run apppqa` and `npm run appprod` commands configure the transcriber app to deploy to _dev_, _qa_, or _prod_ respectively. There are separate urls and separate _AWS S3_ buckets for each of these deployments. Once configuration files have been generated, execute the following to deploy the app:
 
-```
-npm run deploy
+1. `git checkout amplify/*` _# this command avoids errors related to amplify changes_
+2. `npm run deploy`
+
+As with the _dev_ configuration above (see the example _.env.development.local_), _qa_ (quality assuarance) deployment requires _.env.qa.development.local_ and _.env.qa.local_ in the root project directory. As above, the `npm run qa` command will use these two files to over write _.env.development.local_ and _.env.local_ so the `npm run deploy` command will properly deploy to the _qa_ environment.
+
+# Electron (Desktop) app
+
+The steps above regarding _installation_ and setting up the environments are also applicable to the _Electron (Desktop)_ app. The admin is not deployed to the desktop so only the _appdev_, _appqa_, and _appprod_ environments apply.
+
+## Electron Development
+
+Sometimes it is possible to include Chrome Extensions in the embedded Chrome browser in [Electron](www.electronjs.org/). If this works for you, you will need to include the `chromeExtensions.js` function in the `public` folder. This is the contents of that file:
+
+``` javascript
+const electronExtension = BrowserWindow => {
+  const path = require('path');
+  const os = require('os');
+  BrowserWindow.addDevToolsExtension(
+    path.join(
+      os.homedir(),
+      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.4.0_0'
+    )
+  );
+  BrowserWindow.addDevToolsExtension(
+    path.join(
+      os.homedir(),
+      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0'
+    )
+  );
+};
+module.exports = electronExtension;
 ```
 
-As with the _dev_ configuration above (see the example `.env.development.local`), _qa_ (quality assuarance) deployment requires `.env.qa.development.local` and `.env.qa.local` in the root project directory. As above, the `npm run qa` command will use these two files to over write `.env.development.local` and `.env.local` so the `npm run deploy` command will properly deploy to the _qa_ environment.
+- `npm run electron-dev` _# launches electron in developer mode_
+
+> NB. This `dev` mode uses two Chrome extensions: [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) and [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
+
+alternatively
+
+- `npm run electron-prod` _# launches electron in production mode (developer mode can be enabled with the key combination: CTRL-SHIFT-I)_
+
+## Creating installer
+
+1. `npm run clean` _# remove previous builds_
+2. `npm run electron-pack`
+3. `npm run dist`
+
+The _dist_ command creates a folder in the dist folder with an executable that can be launched directly by clicking on it. it also creates an installer in the _dist_ folder that can be distributed.
 
 ## Test suite
 
@@ -153,13 +192,3 @@ To execute the tests included with the program, use the standard test suite:
 ```
 npm test
 ```
-
-## Debugging
-
-After using
-
-```
-npm start
-```
-
-from code you can use the debugger if you set the `.vscode/launch.json configurations.url` to `http://localhost:3000`.

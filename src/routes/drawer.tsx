@@ -77,6 +77,7 @@ import IntegrationPanel from '../components/Integration';
 import PlanTable from '../components/PlanTable';
 import { IAddArgs } from '../components/ProjectSettings';
 import Busy from '../components/Busy';
+import SnackBar from '../components/SnackBar';
 import {
   related,
   hasRelated,
@@ -148,7 +149,7 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
-    toolbar: theme.mixins.toolbar,
+    toolbar: theme.mixins.toolbar as any,
     drawerPaper: {
       width: DrawerWidth,
     },
@@ -275,6 +276,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [user] = useGlobal('user');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [organization, setOrganization] = useGlobal('organization');
+  const [offline] = useGlobal('offline');
   const [orgRole, setOrgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [project, setProject] = useGlobal('project');
@@ -300,6 +302,7 @@ export function ResponsiveDrawer(props: IProps) {
     API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin
   );
   const [view, setView] = useState('');
+  const [message, setMessage] = useState(<></>);
   const [changed, setChanged] = useState(false);
   const [exitChoice, setExitChoice] = useState('');
   const [mediaDesc, setMediaDesc] = useState<MediaDescription>();
@@ -390,6 +393,8 @@ export function ResponsiveDrawer(props: IProps) {
     if (group !== '') setGroup('');
   };
 
+  const handleMessageReset = () => setMessage(<></>);
+
   const handlePlanType = (value: string | null) => {
     localStorage.removeItem('url');
     if (!value || value.toLocaleLowerCase() === 'scripture') {
@@ -443,6 +448,10 @@ export function ResponsiveDrawer(props: IProps) {
     checkSavedFn(method);
   };
   const checkSavedFn = (method: () => any) => {
+    if (busy) {
+      setMessage(<span>{t.loadingTable}</span>);
+      return;
+    }
     if (changed) {
       saveConfirm.current = method;
       setAlertOpen(true);
@@ -510,7 +519,21 @@ export function ResponsiveDrawer(props: IProps) {
       const orgRec = organizations.filter(o => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
+        console.log(
+          'org logo',
+          attr && attr.logoUrl
+            ? (process.env.REACT_APP_OFFLINEDATA
+                ? process.env.REACT_APP_OFFLINEDATA
+                : '') + attr.logoUrl
+            : ''
+        );
+        setOrgAvatar(
+          attr && attr.logoUrl
+            ? (process.env.REACT_APP_OFFLINEDATA
+                ? process.env.REACT_APP_OFFLINEDATA
+                : '') + attr.logoUrl
+            : ''
+        );
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -559,7 +582,7 @@ export function ResponsiveDrawer(props: IProps) {
       setProjOptions(projOpts);
       if (projOpts.length === 0) {
         setCurProj(null);
-        if (swapRef.current) {
+        if (!offline && swapRef.current) {
           Axios.get(API_CONFIG.host + '/api/projects/', {
             headers: {
               Authorization: 'Bearer ' + auth.accessToken,
@@ -717,7 +740,8 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.setItem('url', history.location.pathname);
   }
 
-  if (!auth.isAuthenticated() || !orbitLoaded) return <Redirect to="/" />;
+  if (!auth.isAuthenticated(offline) || !orbitLoaded)
+    return <Redirect to="/" />;
 
   // reset location based on deep link (saved url)
   const url = localStorage.getItem('url');
@@ -730,59 +754,54 @@ export function ResponsiveDrawer(props: IProps) {
     const parts = url.split('/');
     const base = 1;
     const UrlOrgPart = base + 1;
-    const orgId = remoteIdGuid('organization', parts[UrlOrgPart], keyMap);
-    if (parts.length > UrlOrgPart && organization !== orgId) {
+    if (parts.length > UrlOrgPart) {
+      const orgId = remoteIdGuid('organization', parts[UrlOrgPart], keyMap);
       setOrganization(orgId);
+    }
+    const UrlProjPart = base + 3;
+    if (parts.length > UrlProjPart) {
+      const projId = remoteIdGuid('project', parts[UrlProjPart], keyMap);
+      setProject(projId);
     }
     let urlChoice = '';
     const UrlChoicePart = base + 2;
-    if (parts.length > UrlChoicePart && content !== parts[UrlChoicePart]) {
-      const value = slug(parts[UrlChoicePart]);
-      urlChoice =
-        ['scripture-plan', 'other-plan'].indexOf(value) !== -1
-          ? t.plans
-          : 'transcriber'.indexOf(value) !== -1
-          ? t.tasks
-          : mixCase(value);
+    let pltype: string | null = null;
+    if (parts.length > UrlChoicePart) {
+      const value = parts[UrlChoicePart];
+      if (['scripture-plan', 'other-plan'].indexOf(value) !== -1) {
+        urlChoice = t.plans;
+        pltype = value.substr(0, value.indexOf('-'));
+      } else {
+        urlChoice =
+          'transcriber'.indexOf(value) !== -1 ? t.tasks : mixCase(value);
+      }
       handleChoice(urlChoice);
-    }
-    const UrlProjPart = base + 3;
-    const projId = remoteIdGuid('project', parts[UrlProjPart], keyMap);
-    if (parts.length > UrlProjPart && project !== projId) {
-      setProject(projId);
+      urlChoice = slug(urlChoice);
     }
     if (urlChoice === slug(t.plans)) {
       const UrlPlanPart = base + 4;
-      const planId = remoteIdGuid('plan', parts[UrlPlanPart], keyMap);
-      if (parts.length > UrlPlanPart && plan !== planId) {
+      if (parts.length > UrlPlanPart) {
+        const planId = remoteIdGuid('plan', parts[UrlPlanPart], keyMap);
         setPlan(planId);
+        handlePlanType(pltype);
       }
       const UrlPlanTabPart = base + 5;
-      if (
-        parts.length > UrlPlanTabPart &&
-        tab.toString() !== parts[UrlPlanTabPart]
-      ) {
+      if (parts.length > UrlPlanTabPart) {
         setTab(parseInt(parts[UrlPlanTabPart]));
       }
     } else if (urlChoice === slug(t.usersAndGroups)) {
       const UrlGroupTabPart = base + 4;
-      if (
-        parts.length > UrlGroupTabPart &&
-        tab.toString() !== parts[UrlGroupTabPart]
-      ) {
+      if (parts.length > UrlGroupTabPart) {
         setTab(parseInt(parts[UrlGroupTabPart]));
       }
       const UrlGroupPart = base + 5;
-      const groupId = remoteIdGuid('group', parts[UrlGroupPart], keyMap);
-      if (parts.length > UrlGroupPart && group !== groupId) {
+      if (parts.length > UrlGroupPart) {
+        const groupId = remoteIdGuid('group', parts[UrlGroupPart], keyMap);
         setGroup(groupId);
       }
     } else if (urlChoice === slug(t.myTasks)) {
       const UrlTaskTabPart = base + 4;
-      if (
-        parts.length > UrlTaskTabPart &&
-        tab.toString() !== parts[UrlTaskTabPart]
-      ) {
+      if (parts.length > UrlTaskTabPart) {
         setTab(parseInt(parts[UrlTaskTabPart]));
       }
     }
@@ -802,7 +821,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (API_CONFIG.isApp && swapTarget) {
     swapTarget =
       AUTH_CONFIG.adminEndpoint +
-      swapTarget.replace(slug(t.tasks), slug(t.plans));
+      swapTarget.replace('transcriber', slug(t.plans));
   } else if (swapTarget) {
     const part = swapTarget.split('/');
     part[3] = slug(t.tasks);
@@ -812,6 +831,7 @@ export function ResponsiveDrawer(props: IProps) {
       ? AUTH_CONFIG.adminEndpoint
       : AUTH_CONFIG.appEndpoint;
   }
+  console.log('swap target:' + swapTarget); //Leave this until TT-1146 is closed
 
   const transcriberIcons = API_CONFIG.isApp
     ? [<ListIcon />]
@@ -828,7 +848,7 @@ export function ResponsiveDrawer(props: IProps) {
       <div className={classes.toolbar}>
         <div className={classes.organization}>
           <div className={classes.avatar}>
-            {orgAvatar && orgAvatar.startsWith('http') ? (
+            {orgAvatar ? (
               <Avatar variant="square" src={orgAvatar} />
             ) : curOrg != null && orgOptions.length > 0 ? (
               <Avatar variant="square">
@@ -914,44 +934,42 @@ export function ResponsiveDrawer(props: IProps) {
               )}
             </div>
           )}
-          {curProj !== null && !busy && (
-            <div>
-              <List>
-                {(API_CONFIG.isApp
-                  ? [t.tasks]
-                  : [t.plans, t.team, t.media, t.reports]
-                ).map((text, index) => (
-                  <Tooltip title={text}>
-                    <ListItem
-                      button
-                      key={text}
-                      selected={slug(text) === choice}
-                      onClick={checkSavedEv(() => handleChoice(text))}
-                    >
-                      <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  </Tooltip>
-                ))}
-              </List>
-              <Divider />
-              <List>
-                {[t.settings, t.export, t.integrations].map((text, index) => (
-                  <Tooltip title={text}>
-                    <ListItem
-                      button
-                      key={text}
-                      selected={slug(text) === choice}
-                      onClick={checkSavedEv(() => handleChoice(text))}
-                    >
-                      <ListItemIcon>{projectIcons[index]}</ListItemIcon>
-                      <ListItemText primary={text} />
-                    </ListItem>
-                  </Tooltip>
-                ))}
-              </List>
-            </div>
-          )}
+          <List>
+            {(API_CONFIG.isApp
+              ? [t.tasks]
+              : [t.plans, t.team, t.media, t.reports]
+            ).map((text, index) => (
+              <Tooltip title={text}>
+                <ListItem
+                  button
+                  key={text}
+                  selected={slug(text) === choice}
+                  onClick={checkSavedEv(() => handleChoice(text))}
+                  disabled={curProj === null}
+                >
+                  <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              </Tooltip>
+            ))}
+          </List>
+          <Divider />
+          <List>
+            {[t.settings, t.export, t.integrations].map((text, index) => (
+              <Tooltip title={text}>
+                <ListItem
+                  button
+                  key={text}
+                  selected={slug(text) === choice}
+                  onClick={checkSavedEv(() => handleChoice(text))}
+                  disabled={curProj === null}
+                >
+                  <ListItemIcon>{projectIcons[index]}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItem>
+              </Tooltip>
+            ))}
+          </List>
         </>
       )}
     </div>
@@ -1197,6 +1215,7 @@ export function ResponsiveDrawer(props: IProps) {
           auth.accessToken
         }
       ></a>
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

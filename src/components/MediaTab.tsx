@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -238,6 +238,7 @@ export function MediaTab(props: IProps) {
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
+  const [offline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
@@ -365,7 +366,7 @@ export function MediaTab(props: IProps) {
     }
     setPlaying(false);
     if (id !== playItem) {
-      fetchMediaUrl(id, auth);
+      fetchMediaUrl(id, memory, offline, auth);
       setPlayItem(id);
     } else {
       setPlayItem('');

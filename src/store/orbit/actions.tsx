@@ -4,6 +4,7 @@ import {
   IApiError,
   RESET_ORBIT_ERROR,
   LOAD_TABLE,
+  ORBIT_SAVING,
 } from './types';
 import { KeyMap, Schema } from '@orbit/data';
 import { Bucket } from '@orbit/core';
@@ -32,11 +33,19 @@ export const tableLoaded = (name: string) => {
   };
 };
 
+export const orbitSaving = (val: boolean) => {
+  return {
+    type: ORBIT_SAVING,
+    payload: val,
+  };
+};
+
 export const fetchOrbitData = (
   schema: Schema,
   memory: Memory,
   keyMap: KeyMap,
   auth: Auth,
+  offline: boolean,
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
@@ -48,6 +57,7 @@ export const fetchOrbitData = (
     memory,
     keyMap,
     auth,
+    offline,
     setUser,
     setBucket,
     setRemote,

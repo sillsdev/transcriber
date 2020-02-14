@@ -13,6 +13,7 @@ export interface IOrbitState {
   status: number;
   message: string;
   tableLoad: string[];
+  saving: boolean;
 }
 
 // Describing the different ACTION NAMES available
@@ -20,6 +21,7 @@ export const FETCH_ORBIT_DATA = 'FETCH_ORBIT_DATA';
 export const ORBIT_ERROR = 'ORBIT_ERROR';
 export const RESET_ORBIT_ERROR = 'RESET_ORBIT_ERROR';
 export const LOAD_TABLE = 'LOAD_TABLE';
+export const ORBIT_SAVING = 'ORBIT_SAVING';
 
 interface OrbitMsg {
   type: typeof FETCH_ORBIT_DATA;
@@ -39,8 +41,14 @@ interface LoadTableMsg {
   payload: string;
 }
 
+interface SavingMsg {
+  type: typeof ORBIT_SAVING;
+  payload: boolean;
+}
+
 export type OrbitMsgs =
   | OrbitMsg
   | OrbitErrorMsg
   | ResetOrbitErrorMsg
-  | LoadTableMsg;
+  | LoadTableMsg
+  | SavingMsg;

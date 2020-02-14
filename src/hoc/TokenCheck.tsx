@@ -7,7 +7,7 @@ import TokenDialog from '../components/TokenDialog';
 import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
-import { API_CONFIG } from '../api-variable';
+import { useGlobal } from 'reactn';
 
 const Expires = 0; // Set to 7110 to test 1:30 token
 
@@ -28,11 +28,12 @@ function TokenCheck(props: IProps) {
   const { auth, children, expireAt, setExpireAt } = props;
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
+  const [offline] = useGlobal('offline');
   const view = React.useRef<any>('');
   const timer = React.useRef<NodeJS.Timeout>();
 
   React.useEffect(() => {
-    if (!API_CONFIG.offline) {
+    if (!offline) {
       if (localStorage.getItem('isLoggedIn') === 'true') {
         auth.renewSession().catch(err => {
           view.current = 'Logout';
@@ -43,7 +44,7 @@ function TokenCheck(props: IProps) {
   }, []);
 
   React.useEffect(() => {
-    if (expireAt && !API_CONFIG.offline) {
+    if (expireAt && !offline) {
       timer.current = setInterval(() => {
         const currentUnix = moment().format('X');
         const expires = moment.unix(expireAt).format('X');
@@ -54,7 +55,7 @@ function TokenCheck(props: IProps) {
         }
       }, 1000);
     }
-  }, [expireAt]);
+  }, [expireAt, offline]);
 
   const handleClose = (value: number) => {
     setModalOpen(false);

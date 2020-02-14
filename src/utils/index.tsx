@@ -21,3 +21,5 @@ export * from './media';
 export * from './relMouseCoords';
 export * from './createdBy';
 export * from './cleanFileName';
+export * from './appPath';
+export * from './insertAtCursor';

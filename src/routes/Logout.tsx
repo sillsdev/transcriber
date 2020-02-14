@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
-// import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IAccessStrings } from '../model';
-import localStrings from '../selector/localize';
+import { IState } from '../model';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-// import { Button } from '@material-ui/core';
-// import Paper from '@material-ui/core/Paper';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -27,16 +23,14 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       boxShadow: 'none',
-    }),
+    }) as any,
     version: {
       alignSelf: 'center',
     },
   })
 );
 
-interface IStateProps {
-  t: IAccessStrings;
-}
+interface IStateProps {}
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
@@ -49,7 +43,7 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Logout(props: IProps) {
-  const { auth, t } = props;
+  const { auth } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
 
@@ -69,7 +63,7 @@ export function Logout(props: IProps) {
       <AppBar className={classes.appBar} position="static" color="inherit">
         <Toolbar>
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            {t.silTranscriberAccess}
+            {process.env.REACT_APP_SITE_TITLE}
           </Typography>
         </Toolbar>
         <div className={classes.grow}>{'\u00A0'}</div>
@@ -83,9 +77,7 @@ export function Logout(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'access' }),
-});
+const mapStateToProps = (state: IState): IStateProps => ({});
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(

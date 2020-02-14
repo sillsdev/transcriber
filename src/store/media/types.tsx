@@ -1,6 +1,4 @@
-import { MediaFile } from '../../model';
-
-// Describing the shape of the book names's slice of state
+// Describing the shape of the media slice of state
 export interface IMediaState {
   url: string;
   loaded: boolean;
@@ -16,7 +14,7 @@ interface FetchMediaUrlPending {
 
 interface FetchAudioUrl {
   type: typeof FETCH_AUDIO_URL;
-  payload: { data: { data: MediaFile } };
+  payload: string;
 }
 
 export type MediaMsgs = FetchAudioUrl | FetchMediaUrlPending;

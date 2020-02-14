@@ -20,7 +20,7 @@ import PlanAdd from './PlanAdd';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { saveNewPlan } from '../crud';
-import { getCreatedBy } from '../utils';
+import { getCreatedBy, related } from '../utils';
 import Related from '../utils/related';
 import { numCompare } from '../utils/sort';
 
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
-    }),
+    }) as any,
     grow: {
       flexGrow: 1,
     },
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-    }),
+    }) as any,
     editIcon: {
       fontSize: 16,
     },
@@ -87,7 +87,6 @@ export function PlanTable(props: IProps) {
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
-  const [keyMap] = useGlobal('keyMap');
   const [projRole] = useGlobal('projRole');
   const [project] = useGlobal('project');
   const [columns] = useState([
@@ -198,7 +197,7 @@ export function PlanTable(props: IProps) {
           name: p.attributes.name,
           planType: getType(p),
           sections: sectionCount(p),
-          createdBy: getCreatedBy(p.attributes.lastModifiedBy, memory, keyMap),
+          createdBy: getCreatedBy(related(p, 'owner'), memory),
           action: p.id,
         } as IRow;
       })

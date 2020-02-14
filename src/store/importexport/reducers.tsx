@@ -3,9 +3,13 @@ import {
   EXPORT_SUCCESS,
   EXPORT_PENDING,
   EXPORT_ERROR,
-  IImportExportState,
-  ExportMsgs,
   EXPORT_COMPLETE,
+  ExportMsgs,
+  IMPORT_SUCCESS,
+  IMPORT_PENDING,
+  IMPORT_ERROR,
+  ImportMsgs,
+  IImportExportState,
 } from './types';
 
 export const exportCleanState = {
@@ -15,14 +19,14 @@ export const exportCleanState = {
 
 export default function(
   state = exportCleanState,
-  action: ExportMsgs
+  action: ExportMsgs | ImportMsgs
 ): IImportExportState {
   switch (action.type) {
     case EXPORT_PENDING:
       return {
         ...state,
         loaded: false,
-        importexportStatus: action.payload,
+        importexportStatus: pendingStatus(action.payload),
       };
     case EXPORT_SUCCESS:
       console.log('Export success');
@@ -40,6 +44,24 @@ export default function(
         importexportStatus: action.payload,
       };
     case EXPORT_COMPLETE:
+      return {
+        ...state,
+        importexportStatus: action.payload,
+      };
+    case IMPORT_PENDING:
+      return {
+        ...state,
+        loaded: false,
+        importexportStatus: pendingStatus(action.payload),
+      };
+    case IMPORT_SUCCESS:
+      console.log('Import success');
+      return {
+        ...state,
+        loaded: true,
+        importexportStatus: successStatus(action.payload),
+      };
+    case IMPORT_ERROR:
       return {
         ...state,
         importexportStatus: action.payload,

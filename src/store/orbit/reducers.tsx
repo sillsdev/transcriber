@@ -5,6 +5,7 @@ import {
   ORBIT_ERROR,
   RESET_ORBIT_ERROR,
   LOAD_TABLE,
+  ORBIT_SAVING,
 } from './types';
 
 export const orbitCleanState = {
@@ -12,6 +13,7 @@ export const orbitCleanState = {
   status: 0,
   message: '',
   tableLoad: [],
+  saving: false,
 } as IOrbitState;
 
 export default function(
@@ -44,6 +46,11 @@ export default function(
         tableLoad: state.tableLoad.includes(action.payload)
           ? state.tableLoad
           : state.tableLoad.map(s => s).concat([action.payload]),
+      };
+    case ORBIT_SAVING:
+      return {
+        ...state,
+        saving: action.payload,
       };
     default:
       return { ...state };

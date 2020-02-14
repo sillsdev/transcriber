@@ -4,27 +4,39 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.silTranscriberAccess">
-         <segment>
-            <source>SIL Transcriber Access</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>Access SIL Transcriber</source>
+            <source>Welcome to SIL Transcriber. Select how to get started.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.createAccount">
+      <unit id="access.importProject">
          <segment>
-            <source>Create an Account</source>
+            <source>Import Portable Transcriber Data</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.accessExistingAccount">
+      <unit id="access.importPending">
          <segment>
-            <source>Access with existing Account</source>
+            <source>Import In Progress...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.importError">
+         <segment>
+            <source>Import Error</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.login">
+         <segment>
+            <source>Online Login</source>
             <target/>
          </segment>
       </unit>
@@ -1162,6 +1174,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.loadingTable">
+         <segment>
+            <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.logout">
          <segment>
             <source>Log Out</source>
@@ -1788,7 +1806,7 @@
       </unit>
       <unit id="activityState.noMedia">
          <segment>
-            <source>No Media</source>
+            <source>No Recording</source>
             <target/>
          </segment>
       </unit>
@@ -1806,7 +1824,7 @@
       </unit>
       <unit id="activityState.needsNewRecording">
          <segment>
-            <source>Recording Problem</source>
+            <source>Recording Needed</source>
             <target/>
          </segment>
       </unit>
@@ -1824,13 +1842,13 @@
       </unit>
       <unit id="activityState.needsNewTranscription">
          <segment>
-            <source>Needs Changes</source>
+            <source>Correction Needed</source>
             <target/>
          </segment>
       </unit>
       <unit id="activityState.approved">
          <segment>
-            <source>Approved (not synced)</source>
+            <source>Approved</source>
             <target/>
          </segment>
       </unit>
@@ -2506,9 +2524,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.close">
+      <unit id="transcriber.next">
          <segment>
-            <source>Close</source>
+            <source>Next</source>
             <target/>
          </segment>
       </unit>
@@ -2566,6 +2584,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.timerTip">
+         <segment>
+            <source>Timestamp ({0})</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -2592,25 +2616,133 @@
       </unit>
       <unit id="transcriber.submitTranscriptionTip">
          <segment>
-            <source>Mark this transcription as complete.</source>
+            <source>Submit for review</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.submitReviewTip">
          <segment>
-            <source>Mark this review as complete.</source>
+            <source>Submit as complete</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.saveTip">
          <segment>
-            <source>Save transcription changes without marking as complete.</source>
+            <source>Save changes and comment</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriber.saveReviewTip">
          <segment>
-            <source>Save position in recording without marking as complete.</source>
+            <source>Save position and comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.noMedia">
+         <segment>
+            <source>Created task</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribeReady">
+         <segment>
+            <source>Attached recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribing">
+         <segment>
+            <source>Started to transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribed">
+         <segment>
+            <source>Submitted task for review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.reviewing">
+         <segment>
+            <source>Started to review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.approved">
+         <segment>
+            <source>Approved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewTranscription">
+         <segment>
+            <source>Rejected task</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.done">
+         <segment>
+            <source>Completed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewRecording">
+         <segment>
+            <source>Rejected task</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.synced">
+         <segment>
+            <source>Completed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.rejectTitle">
+         <segment>
+            <source>Rejection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.rejectReason">
+         <segment>
+            <source>Reject Reason</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.needsAudio">
+         <segment>
+            <source>Recording Needed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.needsCorrection">
+         <segment>
+            <source>Correction Needed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.incomplete">
+         <segment>
+            <source>Incomplete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.comment">
+         <segment>
+            <source>Additional Comment</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeReject.next">
+         <segment>
+            <source>Next</source>
             <target/>
          </segment>
       </unit>
@@ -2760,19 +2892,19 @@
       </unit>
       <unit id="taskItem.noMedia">
          <segment>
-            <source>No Audio</source>
+            <source>No Recording</source>
             <target/>
          </segment>
       </unit>
       <unit id="taskItem.needsNewRecording">
          <segment>
-            <source>Needs New Audio</source>
+            <source>Recording Needed</source>
             <target/>
          </segment>
       </unit>
       <unit id="taskItem.needsNewTranscription">
          <segment>
-            <source>Needs Corrections</source>
+            <source>Correction Needed</source>
             <target/>
          </segment>
       </unit>

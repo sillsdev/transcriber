@@ -54,7 +54,7 @@ const styles = (theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignContent: 'center',
-    }),
+    }) as any,
     size: {
       display: 'flex',
       flexGrow: 1,

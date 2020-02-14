@@ -17,6 +17,7 @@ import {
   Section,
   Plan,
   PlanType,
+  User,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -41,30 +42,35 @@ import {
   TextField,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-// import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import SkipAheadIcon from '@material-ui/icons/FastForward';
 import HistoryIcon from '@material-ui/icons/History';
+import TimerIcon from '@material-ui/icons/AccessTime';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import ReactPlayer from 'react-player';
-import Duration from './Duration';
+import Duration, { formatTime } from './Duration';
+import UserAvatar from './UserAvatar';
+import TranscribeReject from './TranscribeReject';
 import SnackBar from './SnackBar';
 import {
   sectionDescription,
   passageDescription,
   relMouseCoords,
   related,
+  insertAtCursor,
+  remoteIdGuid,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -75,6 +81,7 @@ const AHEAD_KEY = 'F3';
 const SLOWER_KEY = 'F4';
 const FASTER_KEY = 'F5';
 const HISTORY_KEY = 'F6';
+const TIMER_KEY = 'F7';
 const NON_BOX_HEIGHT = 304;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -85,6 +92,10 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       margin: 'auto',
+    },
+    description: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
     },
     progress: {
       flexGrow: 1,
@@ -103,6 +114,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,
+      overflow: 'auto',
+    },
+    history: {
+      overflow: 'auto',
     },
     button: {
       marginLeft: theme.spacing(1),
@@ -153,8 +168,10 @@ export function Transcriber(props: IProps) {
   const { mediaUrl, fetchMediaUrl, done } = props;
   const classes = useStyles();
   const theme = useTheme();
+  const [keyMap] = useGlobal('keyMap');
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [projRec, setProjRec] = React.useState<Project>();
   const [passRec, setPassRec] = React.useState<Passage>(passage);
@@ -180,6 +197,7 @@ export function Transcriber(props: IProps) {
   const [makeComment, setMakeComment] = React.useState(false);
   const [comment, setComment] = React.useState('');
   const [showHistory, setShowHistory] = React.useState(false);
+  const [rejectVisible, setRejectVisible] = React.useState(false);
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
@@ -232,16 +250,28 @@ export function Transcriber(props: IProps) {
     setComment(e.target.value);
   };
   const handleShowHistory = () => setShowHistory(!showHistory);
-  const handleReject = (transcribing: boolean) => async () => {
-    const newState = transcribing
-      ? ActivityStates.NeedsNewRecording
-      : ActivityStates.NeedsNewTranscription;
-    await memory.update((t: TransformBuilder) => [
-      t.replaceAttribute(passRec, 'lastComment', comment),
-      t.replaceAttribute(passRec, 'state', newState),
+  const handleTimer = () => {
+    if (transcriptionRef.current) {
+      transcriptionRef.current.firstChild.focus();
+      const timeStamp = '(' + formatTime(playedSeconds) + ')';
+      const textArea = transcriptionRef.current
+        .firstChild as HTMLTextAreaElement;
+      insertAtCursor(textArea, timeStamp);
+    }
+  };
+  const handleReject = () => {
+    setMakeComment(true);
+    setRejectVisible(true);
+  };
+  const handleRejected = (pass: Passage) => {
+    memory.update((t: TransformBuilder) => [
+      t.replaceAttribute(pass, 'lastComment', pass.attributes.lastComment),
+      t.replaceAttribute(pass, 'state', pass.attributes.state),
     ]);
     done();
   };
+  const handleRejectCancel = () => setRejectVisible(false);
+
   const next: { [key: string]: string } = {
     transcribing: ActivityStates.Transcribed,
     reviewing: ActivityStates.Approved,
@@ -318,7 +348,7 @@ export function Transcriber(props: IProps) {
     }
     done();
   };
-  const handleClose = () => done();
+  const handleNext = () => done();
   const previous: { [key: string]: string } = {
     transcribed: ActivityStates.TranscribeReady,
     transcribing: ActivityStates.TranscribeReady,
@@ -342,6 +372,7 @@ export function Transcriber(props: IProps) {
     const SlowerKey = keycode(SLOWER_KEY);
     const FasterKey = keycode(FASTER_KEY);
     const HistoryKey = keycode(HISTORY_KEY);
+    const TimerKey = keycode(TIMER_KEY);
     switch (e.keyCode) {
       case PlayPauseKey:
         setPlaying(!playing);
@@ -367,6 +398,9 @@ export function Transcriber(props: IProps) {
         handleShowHistory();
         e.preventDefault();
         return;
+      case TimerKey:
+        handleTimer();
+        e.preventDefault();
     }
   };
   const handleMessageReset = () => setMessage(<></>);
@@ -439,7 +473,7 @@ export function Transcriber(props: IProps) {
   }, [passRec]);
 
   React.useEffect(() => {
-    fetchMediaUrl(mediaRemoteId, auth);
+    fetchMediaUrl(mediaRemoteId, memory, offline, auth);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediaRemoteId]);
 
@@ -463,22 +497,99 @@ export function Transcriber(props: IProps) {
     },
   };
 
+  const textAreaStyle = {
+    overflow: 'auto',
+    backgroundColor: '#cfe8fc',
+    height: boxHeight,
+    width: '98hu',
+    fontFamily: fontFamily,
+    fontSize:
+      projRec && projRec.attributes && projRec.attributes.defaultFontSize
+        ? projRec.attributes.defaultFontSize
+        : 'large',
+    direction: (projRec && projRec.attributes && projRec.attributes.rtl
+      ? 'rtl'
+      : 'ltr') as any,
+  };
+
+  const paperStyle = { width: width - 24 };
+  const historyStyle = { height: boxHeight };
+
   moment.locale(lang);
+  const curZone = moment.tz.guess();
+  const userFromId = (remoteId: number) => {
+    const id = remoteIdGuid('user', remoteId.toString(), keyMap);
+    const user = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'user', id })
+    ) as User;
+    return user;
+  };
+  const nameFromId = (remoteId: number) => {
+    const user = userFromId(remoteId);
+    return user ? user.attributes.name : '';
+  };
+  const historyItem = (
+    psc: PassageStateChange,
+    comment: JSX.Element | string
+  ) => {
+    return (
+      <ListItem>
+        <ListItemIcon>
+          <UserAvatar
+            {...props}
+            userRec={userFromId(psc.attributes.lastModifiedBy)}
+          />
+        </ListItemIcon>
+        <ListItemText
+          primary={
+            <>
+              <Typography variant="h6" component="span">
+                {nameFromId(psc.attributes.lastModifiedBy)}
+              </Typography>
+              {'\u00A0\u00A0 '}
+              <Typography component="span">
+                {moment
+                  .tz(moment.tz(psc.attributes.dateCreated, 'utc'), curZone)
+                  .calendar()}
+              </Typography>
+            </>
+          }
+          secondary={comment}
+        />
+      </ListItem>
+    );
+  };
+
+  const historyList = (passageStateChanges: PassageStateChange[]) => {
+    const results: Array<JSX.Element> = [];
+    let curState: ActivityStates;
+    let curComment = '';
+    passageStateChanges
+      .sort((i, j) =>
+        i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
+      )
+      .forEach(psc => {
+        if (psc.attributes.state !== curState) {
+          curState = psc.attributes.state;
+          results.push(historyItem(psc, t.getString(curState)));
+        }
+        const comment = psc.attributes.comments;
+        if (comment && comment !== '' && comment !== curComment) {
+          curComment = comment;
+          results.push(
+            historyItem(psc, <span style={{ color: 'black' }}>{comment}</span>)
+          );
+        }
+      });
+    return results;
+  };
 
   return (
     <div className={classes.root}>
-      <Paper
-        className={classes.paper}
-        onKeyDown={handleKey}
-        style={{ width: width - 24 }}
-      >
+      <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
         <Grid container direction="column">
           <Grid container direction="row" className={classes.row}>
-            <Grid
-              item
-              xs={9}
-              style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-            >
+            <Grid item xs={9} className={classes.description}>
               {sectionDescription(section)}
             </Grid>
             <Grid item>{passageDescription(passRec)}</Grid>
@@ -503,48 +614,51 @@ export function Transcriber(props: IProps) {
             </Grid>
           </Grid>
           <Grid container direction="row" className={classes.row}>
-            <Grid container xs justify="center">
-              <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                <IconButton onClick={handleJumpEv(-1 * jump)}>
-                  <>
-                    <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip
-                title={(playing ? t.playTip : t.pauseTip).replace(
-                  '{0}',
-                  PLAY_PAUSE_KEY
-                )}
-              >
-                <IconButton onClick={handlePlayStatus(!playing)}>
-                  <>
-                    {playing ? <PauseIcon /> : <PlayIcon />}{' '}
-                    <Typography>{PLAY_PAUSE_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                <IconButton onClick={handleJumpEv(jump)}>
-                  <>
-                    <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                <IconButton onClick={handleSlower}>
-                  <>
-                    <FaAngleDoubleDown /> <Typography>{SLOWER_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                <IconButton onClick={handleFaster}>
-                  <>
-                    <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
+            <Grid item xs>
+              <Grid container justify="center">
+                <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
+                  <IconButton onClick={handleJumpEv(-1 * jump)}>
+                    <>
+                      <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  title={(playing ? t.playTip : t.pauseTip).replace(
+                    '{0}',
+                    PLAY_PAUSE_KEY
+                  )}
+                >
+                  <IconButton onClick={handlePlayStatus(!playing)}>
+                    <>
+                      {playing ? <PauseIcon /> : <PlayIcon />}{' '}
+                      <Typography>{PLAY_PAUSE_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
+                  <IconButton onClick={handleJumpEv(jump)}>
+                    <>
+                      <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
+                  <IconButton onClick={handleSlower}>
+                    <>
+                      <FaAngleDoubleDown />{' '}
+                      <Typography>{SLOWER_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
+                  <IconButton onClick={handleFaster}>
+                    <>
+                      <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+              </Grid>
             </Grid>
             <Grid item>
               <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
@@ -554,6 +668,17 @@ export function Transcriber(props: IProps) {
                 >
                   <>
                     <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
+                  </>
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
+                <IconButton
+                  onClick={handleTimer}
+                  disabled={role !== 'transcriber'}
+                >
+                  <>
+                    <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
                   </>
                 </IconButton>
               </Tooltip>
@@ -571,47 +696,14 @@ export function Transcriber(props: IProps) {
                 <TextareaAutosize
                   defaultValue={defaultValue}
                   readOnly={role !== 'transcriber'}
-                  style={{
-                    overflow: 'auto',
-                    backgroundColor: '#cfe8fc',
-                    height: boxHeight,
-                    width: '98hu',
-                    fontFamily: fontFamily,
-                    fontSize:
-                      projRec &&
-                      projRec.attributes &&
-                      projRec.attributes.defaultFontSize
-                        ? projRec.attributes.defaultFontSize
-                        : 'large',
-                    direction:
-                      projRec && projRec.attributes && projRec.attributes.rtl
-                        ? 'rtl'
-                        : 'ltr',
-                  }}
+                  style={textAreaStyle}
                 />
               </WebFontLoader>
             </Grid>
             {showHistory && (
               <Grid item xs={6} container direction="column">
-                <List style={{ overflow: 'auto', height: boxHeight }}>
-                  {passageStateChanges
-                    .sort((i, j) =>
-                      i.attributes.dateCreated < j.attributes.dateCreated
-                        ? -1
-                        : 1
-                    )
-                    .map(psc => (
-                      <ListItem>
-                        <ListItemText
-                          primary={
-                            moment(psc.attributes.dateCreated).calendar() +
-                            ' - ' +
-                            psc.attributes.state
-                          }
-                          secondary={psc.attributes.comments}
-                        />
-                      </ListItem>
-                    ))}
+                <List style={historyStyle} className={classes.history}>
+                  {historyList(passageStateChanges)}
                 </List>
               </Grid>
             )}
@@ -627,7 +719,6 @@ export function Transcriber(props: IProps) {
                 className={classes.comment}
                 value={comment}
                 onChange={handleCommentChange}
-                style={{ overflow: 'auto' }}
               />
             )}
           </Grid>
@@ -644,76 +735,76 @@ export function Transcriber(props: IProps) {
                 label={t.makeComment}
               />
             </Grid>
-            <Grid container xs justify="flex-end">
-              {role !== 'view' ? (
-                <>
-                  <Tooltip
-                    title={
-                      transcribing
-                        ? t.rejectTranscriptionTip
-                        : t.rejectReviewTip
-                    }
-                  >
+            <Grid item xs>
+              <Grid container justify="flex-end">
+                {role !== 'view' ? (
+                  <>
                     <Button
                       variant="outlined"
                       color="primary"
                       className={classes.button}
-                      onClick={handleReject(transcribing)}
+                      onClick={handleReject}
                     >
                       {t.reject}
                     </Button>
-                  </Tooltip>
-                  <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
+                    <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleSave}
+                      >
+                        {t.save}
+                      </Button>
+                    </Tooltip>
+                    <Tooltip
+                      title={
+                        transcribing
+                          ? t.submitTranscriptionTip
+                          : t.submitReviewTip
+                      }
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleSubmit}
+                      >
+                        {t.submit}
+                      </Button>
+                    </Tooltip>{' '}
+                  </>
+                ) : (
+                  <>
                     <Button
                       variant="outlined"
                       color="primary"
                       className={classes.button}
-                      onClick={handleSave}
+                      onClick={handleReopen}
+                      disabled={!previous.hasOwnProperty(state)}
                     >
-                      {t.save}
+                      {t.reopen}
                     </Button>
-                  </Tooltip>
-                  <Tooltip
-                    title={
-                      transcribing
-                        ? t.submitTranscriptionTip
-                        : t.submitReviewTip
-                    }
-                  >
                     <Button
                       variant="contained"
                       color="primary"
                       className={classes.button}
-                      onClick={handleSubmit}
+                      onClick={handleNext}
                     >
-                      {t.submit}
+                      {t.next}
                     </Button>
-                  </Tooltip>{' '}
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleReopen}
-                    disabled={!previous.hasOwnProperty(state)}
-                  >
-                    {t.reopen}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleClose}
-                  >
-                    {t.close}
-                  </Button>
-                </>
-              )}
+                  </>
+                )}
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
+        <TranscribeReject
+          visible={rejectVisible}
+          passageIn={passRec}
+          editMethod={handleRejected}
+          cancelMethod={handleRejectCancel}
+        />
       </Paper>
       <div className={classes.player}>
         <ReactPlayer
