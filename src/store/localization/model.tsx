@@ -543,6 +543,16 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submitReviewTip": string;
     "saveTip": string;
     "saveReviewTip": string;
+    "noMedia": string;
+    "transcribeReady": string;
+    "transcribing": string;
+    "transcribed": string;
+    "reviewing": string;
+    "approved": string;
+    "needsNewTranscription": string;
+    "done": string;
+    "needsNewRecording": string;
+    "synced": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {

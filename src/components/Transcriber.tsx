@@ -9,7 +9,6 @@ import {
   MediaFile,
   Project,
   ITranscriberStrings,
-  ITaskItemStrings,
   IState,
   ActivityStates,
   Passage,
@@ -46,7 +45,6 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-// import GearIcon from '@material-ui/icons/SettingsApplications';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
@@ -58,7 +56,6 @@ import ReactPlayer from 'react-player';
 import Duration, { formatTime } from './Duration';
 import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
-import TaskFlag from './TaskFlag';
 import SnackBar from './SnackBar';
 import {
   sectionDescription,
@@ -96,6 +93,10 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       margin: 'auto',
     },
+    description: {
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
     progress: {
       flexGrow: 1,
       margin: theme.spacing(2),
@@ -113,6 +114,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       flexGrow: 1,
+      overflow: 'auto',
+    },
+    history: {
+      overflow: 'auto',
     },
     button: {
       marginLeft: theme.spacing(1),
@@ -126,7 +131,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: ITranscriberStrings;
-  taskItemStrs: ITaskItemStrings;
   hasUrl: boolean;
   mediaUrl: string;
 }
@@ -151,7 +155,6 @@ interface IProps
 export function Transcriber(props: IProps) {
   const {
     t,
-    taskItemStrs,
     auth,
     section,
     passage,
@@ -494,6 +497,24 @@ export function Transcriber(props: IProps) {
     },
   };
 
+  const textAreaStyle = {
+    overflow: 'auto',
+    backgroundColor: '#cfe8fc',
+    height: boxHeight,
+    width: '98hu',
+    fontFamily: fontFamily,
+    fontSize:
+      projRec && projRec.attributes && projRec.attributes.defaultFontSize
+        ? projRec.attributes.defaultFontSize
+        : 'large',
+    direction: (projRec && projRec.attributes && projRec.attributes.rtl
+      ? 'rtl'
+      : 'ltr') as any,
+  };
+
+  const paperStyle = { width: width - 24 };
+  const historyStyle = { height: boxHeight };
+
   moment.locale(lang);
   const curZone = moment.tz.guess();
   const userFromId = (remoteId: number) => {
@@ -550,17 +571,14 @@ export function Transcriber(props: IProps) {
       .forEach(psc => {
         if (psc.attributes.state !== curState) {
           curState = psc.attributes.state;
-          results.push(
-            historyItem(
-              psc,
-              <TaskFlag {...props} t={taskItemStrs} state={curState} />
-            )
-          );
+          results.push(historyItem(psc, t.getString(curState)));
         }
         const comment = psc.attributes.comments;
         if (comment && comment !== '' && comment !== curComment) {
           curComment = comment;
-          results.push(historyItem(psc, comment));
+          results.push(
+            historyItem(psc, <span style={{ color: 'black' }}>{comment}</span>)
+          );
         }
       });
     return results;
@@ -568,18 +586,10 @@ export function Transcriber(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <Paper
-        className={classes.paper}
-        onKeyDown={handleKey}
-        style={{ width: width - 24 }}
-      >
+      <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
         <Grid container direction="column">
           <Grid container direction="row" className={classes.row}>
-            <Grid
-              item
-              xs={9}
-              style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-            >
+            <Grid item xs={9} className={classes.description}>
               {sectionDescription(section)}
             </Grid>
             <Grid item>{passageDescription(passRec)}</Grid>
@@ -686,29 +696,13 @@ export function Transcriber(props: IProps) {
                 <TextareaAutosize
                   defaultValue={defaultValue}
                   readOnly={role !== 'transcriber'}
-                  style={{
-                    overflow: 'auto',
-                    backgroundColor: '#cfe8fc',
-                    height: boxHeight,
-                    width: '98hu',
-                    fontFamily: fontFamily,
-                    fontSize:
-                      projRec &&
-                      projRec.attributes &&
-                      projRec.attributes.defaultFontSize
-                        ? projRec.attributes.defaultFontSize
-                        : 'large',
-                    direction:
-                      projRec && projRec.attributes && projRec.attributes.rtl
-                        ? 'rtl'
-                        : 'ltr',
-                  }}
+                  style={textAreaStyle}
                 />
               </WebFontLoader>
             </Grid>
             {showHistory && (
               <Grid item xs={6} container direction="column">
-                <List style={{ overflow: 'auto', height: boxHeight }}>
+                <List style={historyStyle} className={classes.history}>
                   {historyList(passageStateChanges)}
                 </List>
               </Grid>
@@ -725,7 +719,6 @@ export function Transcriber(props: IProps) {
                 className={classes.comment}
                 value={comment}
                 onChange={handleCommentChange}
-                style={{ overflow: 'auto' }}
               />
             )}
           </Grid>
@@ -832,7 +825,6 @@ export function Transcriber(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriber' }),
-  taskItemStrs: localStrings(state, { layout: 'taskItem' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
 });

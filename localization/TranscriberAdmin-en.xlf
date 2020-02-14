@@ -2638,6 +2638,66 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.noMedia">
+         <segment>
+            <source>Created task</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribeReady">
+         <segment>
+            <source>Attached recording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribing">
+         <segment>
+            <source>Started to transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribed">
+         <segment>
+            <source>Submitted task for review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.reviewing">
+         <segment>
+            <source>Started to review</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.approved">
+         <segment>
+            <source>Approved</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewTranscription">
+         <segment>
+            <source>Rejected task</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.done">
+         <segment>
+            <source>Completed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewRecording">
+         <segment>
+            <source>Rejected task</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.synced">
+         <segment>
+            <source>Completed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>

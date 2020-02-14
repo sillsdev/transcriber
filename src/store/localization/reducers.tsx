@@ -583,6 +583,16 @@ const initialState = {
 			"submitReviewTip": "Submit as complete",
 			"saveTip": "Save changes and comment",
 			"saveReviewTip": "Save position and comment",
+			"noMedia": "Created task",
+			"transcribeReady": "Attached recording",
+			"transcribing": "Started to transcribe",
+			"transcribed": "Submitted task for review",
+			"reviewing": "Started to review",
+			"approved": "Approved",
+			"needsNewTranscription": "Rejected task",
+			"done": "Completed",
+			"needsNewRecording": "Rejected task",
+			"synced": "Completed",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({

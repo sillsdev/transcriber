@@ -2638,6 +2638,66 @@
          	<target>Enregistrer la position et le commentaire</target>
          </segment>
       </unit>
+      <unit id="transcriber.noMedia">
+         <segment>
+            <source>Created task</source>
+         	<target>Tâche créée</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribeReady">
+         <segment>
+            <source>Attached recording</source>
+         	<target>Enregistrement joint</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribing">
+         <segment>
+            <source>Started to transcribe</source>
+         	<target>A commencé à transcrire</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.transcribed">
+         <segment>
+            <source>Submitted task for review</source>
+         	<target>Tâche soumise pour examen</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.reviewing">
+         <segment>
+            <source>Started to review</source>
+         	<target>A commencé à examiner</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.approved">
+         <segment>
+            <source>Approved</source>
+         	<target>Approuvé</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewTranscription">
+         <segment>
+            <source>Rejected task</source>
+         	<target>Tâche rejetée</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.done">
+         <segment>
+            <source>Completed</source>
+         	<target>Terminé</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.needsNewRecording">
+         <segment>
+            <source>Rejected task</source>
+         	<target>Tâche rejetée</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.synced">
+         <segment>
+            <source>Completed</source>
+         	<target>Terminé</target>
+         </segment>
+      </unit>
       <unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>
