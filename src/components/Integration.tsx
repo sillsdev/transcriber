@@ -151,7 +151,7 @@ export function IntegrationPanel(props: IProps) {
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
 
-  const [online] = React.useState(Online());
+  const [online, setOnline] = React.useState<boolean>();
   const [hasPtProj, setHasPtProj] = React.useState(false);
   const [ptProj, setPtProj] = React.useState(-1);
   const [ptProjName, setPtProjName] = React.useState('');
@@ -350,6 +350,10 @@ export function IntegrationPanel(props: IProps) {
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
     return beforeLang + ' ' + language + ' ' + afterLang + endPunct;
   };
+
+  useEffect(() => {
+    Online(result => setOnline(result));
+  }, []);
 
   useEffect(() => {
     if (project !== myProject) {

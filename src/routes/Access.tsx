@@ -175,7 +175,7 @@ export function Access(props: IProps) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
-    if (!offline && !(/*await*/ Online())) setOffline(true);
+    Online(online => setOffline(!online));
 
     const localAuth = localStorage.getItem('trAdminAuthResult');
     if (localAuth) {
