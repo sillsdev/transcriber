@@ -1,9 +1,9 @@
 import { KeyMap, Record } from '@orbit/data';
 
-export const remoteIdGuid = (table: string, localId: string, keyMap: KeyMap) =>
-  (keyMap as KeyMap).keyToId(table, 'remoteId', localId);
+export const remoteIdGuid = (table: string, remoteId: string, keyMap: KeyMap) =>
+  keyMap.keyToId(table, 'remoteId', remoteId);
 export const remoteId = (table: string, localId: string, keyMap: KeyMap) =>
-  (keyMap as KeyMap).idToKey(table, 'remoteId', localId);
+  keyMap.idToKey(table, 'remoteId', localId);
 export const remoteIdNum = (table: string, localId: string, keyMap: KeyMap) =>
   parseInt(remoteId(table, localId, keyMap));
 export const waitForRemoteId = async (

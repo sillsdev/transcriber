@@ -24,5 +24,6 @@ declare module 'reactn/default' {
     autoOpenAddMedia: boolean; // open a dialog
     editUserId: string | null;
     developer: boolean;
+    offline: boolean;
   }
 }

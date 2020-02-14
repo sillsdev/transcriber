@@ -236,6 +236,7 @@ export function TranscriptionTab(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
+  const [offline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
@@ -359,7 +360,7 @@ export function TranscriptionTab(props: IProps) {
     const mediaRec = getMediaRec(passageId, memory);
     const id = remoteId('mediafile', mediaRec ? mediaRec.id : '', keyMap);
     const name = getMediaName(mediaRec, memory);
-    fetchMediaUrl(id, auth);
+    fetchMediaUrl(id, memory, offline, auth);
     setAudName(name);
   };
 

@@ -23,10 +23,14 @@ export const EXPORT_PENDING = 'EXPORT_PENDING';
 export const EXPORT_SUCCESS = 'EXPORT_SUCCESS';
 export const EXPORT_ERROR = 'EXPORT_ERROR';
 export const EXPORT_COMPLETE = 'EXPORT_COMPLETE';
+export const IMPORT_PENDING = 'IMPORT_PENDING';
+export const IMPORT_SUCCESS = 'IMPORT_SUCCESS';
+export const IMPORT_ERROR = 'IMPORT_ERROR';
+export const IMPORT_COMPLETE = 'IMPORT_COMPLETE';
 
 interface ExportPendingMsg {
   type: typeof EXPORT_PENDING;
-  payload: IAxiosStatus;
+  payload: string;
 }
 
 interface ExportSucceededMsg {
@@ -48,3 +52,28 @@ export type ExportMsgs =
   | ExportSucceededMsg
   | ExportFailedMsg
   | ExportCompleteMsg;
+
+interface ImportPendingMsg {
+  type: typeof IMPORT_PENDING;
+  payload: string;
+}
+
+interface ImportSucceededMsg {
+  type: typeof IMPORT_SUCCESS;
+  payload: string;
+}
+
+interface ImportFailedMsg {
+  type: typeof IMPORT_ERROR;
+  payload: IAxiosStatus;
+}
+interface ImportCompleteMsg {
+  type: typeof IMPORT_COMPLETE;
+  payload: string;
+}
+
+export type ImportMsgs =
+  | ImportPendingMsg
+  | ImportSucceededMsg
+  | ImportFailedMsg
+  | ImportCompleteMsg;

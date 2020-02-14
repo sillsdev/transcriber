@@ -19,6 +19,27 @@
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="access.importPending">
+                <source>Import In Progress...</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.importComplete">
+                <source>Import Complete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.importError">
+                <source>Import Error</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
         	<trans-unit id="access.login">
         		<source>Online Login</source>
         		<target/>
@@ -2922,8 +2943,8 @@
                     <context context-type="sourcefile">Transcriber.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriber.close">
-                <source>Close</source>
+            <trans-unit id="transcriber.next">
+                <source>Next</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>

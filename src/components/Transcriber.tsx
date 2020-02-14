@@ -168,6 +168,7 @@ export function Transcriber(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [projRec, setProjRec] = React.useState<Project>();
   const [passRec, setPassRec] = React.useState<Passage>(passage);
@@ -344,7 +345,7 @@ export function Transcriber(props: IProps) {
     }
     done();
   };
-  const handleClose = () => done();
+  const handleNext = () => done();
   const previous: { [key: string]: string } = {
     transcribed: ActivityStates.TranscribeReady,
     transcribing: ActivityStates.TranscribeReady,
@@ -469,7 +470,7 @@ export function Transcriber(props: IProps) {
   }, [passRec]);
 
   React.useEffect(() => {
-    fetchMediaUrl(mediaRemoteId, auth);
+    fetchMediaUrl(mediaRemoteId, memory, offline, auth);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediaRemoteId]);
 
@@ -603,48 +604,51 @@ export function Transcriber(props: IProps) {
             </Grid>
           </Grid>
           <Grid container direction="row" className={classes.row}>
-            <Grid container xs justify="center">
-              <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                <IconButton onClick={handleJumpEv(-1 * jump)}>
-                  <>
-                    <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip
-                title={(playing ? t.playTip : t.pauseTip).replace(
-                  '{0}',
-                  PLAY_PAUSE_KEY
-                )}
-              >
-                <IconButton onClick={handlePlayStatus(!playing)}>
-                  <>
-                    {playing ? <PauseIcon /> : <PlayIcon />}{' '}
-                    <Typography>{PLAY_PAUSE_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                <IconButton onClick={handleJumpEv(jump)}>
-                  <>
-                    <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                <IconButton onClick={handleSlower}>
-                  <>
-                    <FaAngleDoubleDown /> <Typography>{SLOWER_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                <IconButton onClick={handleFaster}>
-                  <>
-                    <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
-                  </>
-                </IconButton>
-              </Tooltip>
+            <Grid item xs>
+              <Grid container justify="center">
+                <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
+                  <IconButton onClick={handleJumpEv(-1 * jump)}>
+                    <>
+                      <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  title={(playing ? t.playTip : t.pauseTip).replace(
+                    '{0}',
+                    PLAY_PAUSE_KEY
+                  )}
+                >
+                  <IconButton onClick={handlePlayStatus(!playing)}>
+                    <>
+                      {playing ? <PauseIcon /> : <PlayIcon />}{' '}
+                      <Typography>{PLAY_PAUSE_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
+                  <IconButton onClick={handleJumpEv(jump)}>
+                    <>
+                      <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
+                  <IconButton onClick={handleSlower}>
+                    <>
+                      <FaAngleDoubleDown />{' '}
+                      <Typography>{SLOWER_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
+                  <IconButton onClick={handleFaster}>
+                    <>
+                      <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </Tooltip>
+              </Grid>
             </Grid>
             <Grid item>
               <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
@@ -735,65 +739,67 @@ export function Transcriber(props: IProps) {
                 label={t.makeComment}
               />
             </Grid>
-            <Grid container xs justify="flex-end">
-              {role !== 'view' ? (
-                <>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleReject}
-                  >
-                    {t.reject}
-                  </Button>
-                  <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
+            <Grid item xs>
+              <Grid container justify="flex-end">
+                {role !== 'view' ? (
+                  <>
                     <Button
                       variant="outlined"
                       color="primary"
                       className={classes.button}
-                      onClick={handleSave}
+                      onClick={handleReject}
                     >
-                      {t.save}
+                      {t.reject}
                     </Button>
-                  </Tooltip>
-                  <Tooltip
-                    title={
-                      transcribing
-                        ? t.submitTranscriptionTip
-                        : t.submitReviewTip
-                    }
-                  >
+                    <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleSave}
+                      >
+                        {t.save}
+                      </Button>
+                    </Tooltip>
+                    <Tooltip
+                      title={
+                        transcribing
+                          ? t.submitTranscriptionTip
+                          : t.submitReviewTip
+                      }
+                    >
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleSubmit}
+                      >
+                        {t.submit}
+                      </Button>
+                    </Tooltip>{' '}
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleReopen}
+                      disabled={!previous.hasOwnProperty(state)}
+                    >
+                      {t.reopen}
+                    </Button>
                     <Button
                       variant="contained"
                       color="primary"
                       className={classes.button}
-                      onClick={handleSubmit}
+                      onClick={handleNext}
                     >
-                      {t.submit}
+                      {t.next}
                     </Button>
-                  </Tooltip>{' '}
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleReopen}
-                    disabled={!previous.hasOwnProperty(state)}
-                  >
-                    {t.reopen}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleClose}
-                  >
-                    {t.close}
-                  </Button>
-                </>
-              )}
+                  </>
+                )}
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

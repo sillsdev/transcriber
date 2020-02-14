@@ -95,6 +95,7 @@ export function Loading(props: IProps) {
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
+  const [offline] = useGlobal('offline');
   const [bucket, setBucket] = useGlobal('bucket');
   const [remote, setRemote] = useGlobal('remote');
   const [user, setUser] = useGlobal('user');
@@ -154,7 +155,6 @@ export function Loading(props: IProps) {
   };
 
   useEffect(() => {
-    console.log('Loading...savedURL:' + savedURL);
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
@@ -164,13 +164,14 @@ export function Loading(props: IProps) {
       memory,
       keyMap,
       auth,
+      offline,
       setUser,
       setBucket,
       setRemote,
       setCompleted,
       InviteUser
     );
-    if (!API_CONFIG.offline) {
+    if (!offline) {
       const decodedToken: any = jwtDecode(auth.getAccessToken());
       setExpireAt(decodedToken.exp);
     }
@@ -215,15 +216,11 @@ export function Loading(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);
 
-  if (!isAuthenticated()) return <Redirect to="/" />;
+  if (!isAuthenticated(offline)) return <Redirect to="/" />;
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 
-  if (
-    orbitLoaded &&
-    (completed === 100 || API_CONFIG.offline) &&
-    newOrgParams === null
-  ) {
+  if (orbitLoaded && (completed === 100 || offline) && newOrgParams === null) {
     if (user && user !== '') {
       const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
         q.findRecords([{ type: 'user', id: user }])

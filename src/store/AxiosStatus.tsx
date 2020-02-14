@@ -32,10 +32,16 @@ export const errStatus = (err: AxiosError): IAxiosStatus => {
     // Something happened in setting up the request that triggered an Error
     console.log('Error', err.message);
   }
+  return errorStatus(err.response ? err.response.status : -1, err.message);
+};
+export const errorStatus = (
+  errNo: number | undefined,
+  message: string
+): IAxiosStatus => {
   return {
     complete: true,
     statusMsg: 'Error',
-    errStatus: err.response ? err.response.status : -1,
-    errMsg: err.message,
+    errStatus: errNo ? errNo : -1,
+    errMsg: message,
   };
 };

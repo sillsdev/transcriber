@@ -10,6 +10,9 @@ const initialState = {
 		"en": {
 			"accessSilTranscriber": "Welcome to SIL Transcriber. Select how to get started.",
 			"importProject": "Import Portable Transcriber Data",
+			"importPending": "Import In Progress...",
+			"importComplete": "Import Complete",
+			"importError": "Import Error",
 			"login": "Online Login",
 		}
 	}),
@@ -561,7 +564,7 @@ const initialState = {
 			"submit": "Submit",
 			"reject": "Reject",
 			"save": "Save",
-			"close": "Close",
+			"next": "Next",
 			"reopen": "Reopen",
 			"settingsTip": "Settings",
 			"backTip": "Skip back ({0})",

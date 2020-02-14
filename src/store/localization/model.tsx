@@ -4,6 +4,9 @@ import * as Localize from 'react-localization';
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessSilTranscriber": string;
     "importProject": string;
+    "importPending": string;
+    "importComplete": string;
+    "importError": string;
     "login": string;
 };
 
@@ -521,7 +524,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submit": string;
     "reject": string;
     "save": string;
-    "close": string;
+    "next": string;
     "reopen": string;
     "settingsTip": string;
     "backTip": string;

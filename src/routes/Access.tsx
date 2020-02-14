@@ -20,11 +20,13 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { API_CONFIG } from '../api-variable';
 import { Online } from '../utils';
-import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import { UserAvatar } from '../components/UserAvatar';
 import SnackBar from '../components/SnackBar';
+import { IAxiosStatus } from '../store/AxiosStatus';
+import { QueryBuilder } from '@orbit/data';
+import handleElectronImport from './ElectronImport';
+
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -83,11 +85,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IAccessStrings;
+  importStatus: IAxiosStatus;
 }
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
+  importProject: typeof action.importProject;
+  importComplete: typeof action.importComplete;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -96,31 +101,82 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Access(props: IProps) {
-  const { auth, t } = props;
+  const { auth, t, importStatus } = props;
   const classes = useStyles();
-  const { fetchLocalization, setLanguage } = props;
+  const {
+    fetchLocalization,
+    setLanguage,
+    importProject,
+    importComplete,
+  } = props;
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
+  const [offline, setOffline] = useGlobal('offline');
   const [users, setUsers] = useState(Array<User>());
   const [message, setMessage] = useState(<></>);
 
   const handleLogin = () => auth.login();
 
-  const handleImport = () => setMessage(<span>Import PTF</span>);
-
   const handleSelect = (uId: string) => () => {
     const selected = users.filter(u => u.id === uId);
-    if (selected.length > 0)
-      setMessage(<span>{selected[0].attributes.name} selected</span>);
+    if (selected.length > 0) {
+      localStorage.setItem('user-id', selected[0].id);
+      setOffline(true);
+    }
   };
 
   const handleResetMessage = () => setMessage(<></>);
+
+  const handleImport = () => {
+    if (isElectron) {
+      if (
+        !handleElectronImport(
+          memory,
+          importProject,
+          t.importPending,
+          t.importComplete
+        )
+      ) {
+        setMessage(<span>t.importError</span>);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const showMessage = (title: string, msg: string) => {
+      setMessage(
+        <span>
+          {title}
+          <br />
+          {msg}
+        </span>
+      );
+    };
+    if (importStatus) {
+      if (importStatus.errStatus) {
+        showMessage(t.importError, importStatus.errMsg);
+      } else {
+        if (importStatus.statusMsg) {
+          showMessage(t.importProject, importStatus.statusMsg);
+        }
+        if (importStatus.complete) {
+          const curUsers = memory.cache.query((q: QueryBuilder) =>
+            q.findRecords('user')
+          ) as User[];
+          setUsers(curUsers);
+          importComplete();
+        }
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [importStatus]);
 
   useEffect(() => {
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
+    if (!offline && !(/*await*/ Online())) setOffline(true);
+
     const localAuth = localStorage.getItem('trAdminAuthResult');
     if (localAuth) {
       try {
@@ -129,61 +185,26 @@ export function Access(props: IProps) {
         localStorage.removeItem('trAdminAuthResult');
       }
     }
-    if (!auth.isAuthenticated()) {
+    if (!auth.isAuthenticated(offline)) {
       localStorage.removeItem('trAdminAuthResult');
-      if (Online() && !API_CONFIG.offline && !isElectron) {
+      if (!offline && !isElectron) {
         handleLogin();
       }
     }
+
     if (isElectron) {
       const curUsers = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('user')
       ) as User[];
-      console.log(curUsers);
-      if (curUsers.length === 0) {
-        const u1: User = {
-          type: 'user',
-          attributes: {
-            name: 'Sara Hentzel',
-            avatarUrl: null,
-          },
-        } as any;
-        schema.initializeRecord(u1);
-        const u2: User = {
-          type: 'user',
-          attributes: {
-            name: 'Greg Trihus',
-            avatarUrl: null,
-          },
-        } as any;
-        schema.initializeRecord(u2);
-        const u3: User = {
-          type: 'user',
-          attributes: {
-            name: 'Dale McCrory',
-            avatarUrl: null,
-          },
-        } as any;
-        schema.initializeRecord(u3);
-        memory
-          .update((t: TransformBuilder) => [
-            t.addRecord(u1),
-            t.addRecord(u2),
-            t.addRecord(u3),
-          ])
-          .then(() => {
-            setUsers(
-              memory.cache.query((q: QueryBuilder) =>
-                q.findRecords('user')
-              ) as User[]
-            );
-          });
-      } else setUsers(curUsers);
+      setUsers(curUsers);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-
-  if (auth.isAuthenticated() && !isElectron) return <Redirect to="/loading" />;
+  if (
+    (!isElectron && auth.isAuthenticated(offline)) ||
+    (isElectron && localStorage.getItem('user-id') !== null)
+  )
+    return <Redirect to="/loading" />;
 
   return (
     <div className={classes.root}>
@@ -207,7 +228,7 @@ export function Access(props: IProps) {
               {t.accessSilTranscriber}
             </Typography>
             <Grid container direction="row">
-              {users.length > 0 && (
+              {users && users.length > 0 && (
                 <Grid item xs={12} md={6}>
                   <div className={classes.actions}>
                     <List>
@@ -238,7 +259,7 @@ export function Access(props: IProps) {
                     color="primary"
                     className={classes.button}
                     onClick={handleLogin}
-                    disabled={!Online()}
+                    disabled={offline}
                   >
                     {t.login}
                   </Button>
@@ -265,6 +286,7 @@ export function Access(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'access' }),
+  importStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -272,9 +294,14 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
+      importProject: action.importProject,
+      importComplete: action.importComplete,
     },
     dispatch
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Access) as any;
+export default (connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Access) as any) as any;

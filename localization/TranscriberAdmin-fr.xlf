@@ -13,7 +13,26 @@
 				<target>Importation de données de transcripteurs portables</target>
 			</segment>
 		</unit>
-		<unit id="access.login">
+       <unit id="access.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+            <target>Importation en cours ...</target>
+         </segment>
+      </unit>
+      <unit id="access.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target>Importation terminée</target>
+         </segment>
+      </unit>
+     <unit id="access.importError">
+         <segment>
+            <source>Import Error</source>
+            <target>Erreur d'importation</target>
+
+         </segment>
+      </unit>
+      		<unit id="access.login">
 			<segment>
 				<source>Online Login</source>
 				<target>Connexion en ligne</target>
@@ -2505,10 +2524,10 @@
 				<target>Sauvegarde</target>
 			</segment>
 		</unit>
-		<unit id="transcriber.close">
+		<unit id="transcriber.next">
 			<segment>
-				<source>Close</source>
-				<target>Fermer</target>
+				<source>Next</source>
+				<target>Prochain</target>
 			</segment>
 		</unit>
 		<unit id="transcriber.reopen">

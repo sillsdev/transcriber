@@ -24,6 +24,7 @@ export const Sources = async (
   memory: Memory,
   keyMap: KeyMap,
   auth: Auth,
+  offline: boolean,
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
@@ -42,7 +43,6 @@ export const Sources = async (
     namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
   setBucket(bucket);
-
   const backup = new IndexedDBSource({
     schema,
     keyMap,
@@ -50,7 +50,7 @@ export const Sources = async (
     namespace: 'transcriber',
   });
 
-  if (tokData.sub === userToken || API_CONFIG.offline) {
+  if (tokData.sub === userToken || offline) {
     await backup
       .pull(q => q.findRecords())
       .then(transform => memory.sync(transform));
@@ -60,7 +60,7 @@ export const Sources = async (
 
   let remote: JSONAPISource = {} as JSONAPISource;
 
-  if (!API_CONFIG.offline) {
+  if (!offline) {
     remote = new JSONAPISource({
       schema,
       keyMap,
@@ -86,7 +86,7 @@ export const Sources = async (
   coordinator.addSource(memory);
   coordinator.addSource(backup);
 
-  if (!API_CONFIG.offline) {
+  if (!offline) {
     coordinator.addSource(remote);
   }
 
@@ -100,7 +100,7 @@ export const Sources = async (
     })
   );
 
-  if (!API_CONFIG.offline) {
+  if (!offline) {
     // Trap error querying data (token expired or offline)
     coordinator.addStrategy(
       new RequestStrategy({
@@ -228,12 +228,12 @@ export const Sources = async (
 
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
     console.log('Coordinator will log warnings');
-    if (userToken === tokData.sub || API_CONFIG.offline) {
+    if (userToken === tokData.sub || offline) {
       setUser(localStorage.getItem('user-id') as string);
     }
   });
 
-  if (!API_CONFIG.offline && userToken !== tokData.sub) {
+  if (!offline && userToken !== tokData.sub) {
     localStorage.setItem('lastTime', moment.utc().toISOString());
     await InviteUser(remote);
 

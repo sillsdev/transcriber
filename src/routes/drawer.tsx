@@ -276,6 +276,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [user] = useGlobal('user');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [organization, setOrganization] = useGlobal('organization');
+  const [offline] = useGlobal('offline');
   const [orgRole, setOrgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [project, setProject] = useGlobal('project');
@@ -518,7 +519,21 @@ export function ResponsiveDrawer(props: IProps) {
       const orgRec = organizations.filter(o => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        setOrgAvatar(attr && attr.logoUrl ? attr.logoUrl : '');
+        console.log(
+          'org logo',
+          attr && attr.logoUrl
+            ? (process.env.REACT_APP_OFFLINEDATA
+                ? process.env.REACT_APP_OFFLINEDATA
+                : '') + attr.logoUrl
+            : ''
+        );
+        setOrgAvatar(
+          attr && attr.logoUrl
+            ? (process.env.REACT_APP_OFFLINEDATA
+                ? process.env.REACT_APP_OFFLINEDATA
+                : '') + attr.logoUrl
+            : ''
+        );
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -567,7 +582,7 @@ export function ResponsiveDrawer(props: IProps) {
       setProjOptions(projOpts);
       if (projOpts.length === 0) {
         setCurProj(null);
-        if (swapRef.current) {
+        if (!offline && swapRef.current) {
           Axios.get(API_CONFIG.host + '/api/projects/', {
             headers: {
               Authorization: 'Bearer ' + auth.accessToken,
@@ -725,7 +740,8 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.setItem('url', history.location.pathname);
   }
 
-  if (!auth.isAuthenticated() || !orbitLoaded) return <Redirect to="/" />;
+  if (!auth.isAuthenticated(offline) || !orbitLoaded)
+    return <Redirect to="/" />;
 
   // reset location based on deep link (saved url)
   const url = localStorage.getItem('url');
@@ -832,7 +848,7 @@ export function ResponsiveDrawer(props: IProps) {
       <div className={classes.toolbar}>
         <div className={classes.organization}>
           <div className={classes.avatar}>
-            {orgAvatar && orgAvatar.startsWith('http') ? (
+            {orgAvatar ? (
               <Avatar variant="square" src={orgAvatar} />
             ) : curOrg != null && orgOptions.length > 0 ? (
               <Avatar variant="square">

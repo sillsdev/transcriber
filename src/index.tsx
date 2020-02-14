@@ -38,6 +38,7 @@ setGlobal({
   autoOpenAddMedia: false,
   editUserId: null,
   developer: false,
+  offline: process.env.REACT_APP_OFFLINE ? true : false,
 });
 
 console.log(`process.env: `, process.env);

@@ -166,6 +166,7 @@ export function TaskTable(props: IProps) {
   const [busy] = useGlobal('remoteBusy');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
+  const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [project] = useGlobal('project');
   const [columns] = useState([
@@ -237,6 +238,7 @@ export function TaskTable(props: IProps) {
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
   };
+
   const next: { [key: string]: string } = {
     needsNewTranscription: ActivityStates.Transcribing,
     transcribeReady: ActivityStates.Transcribing,
@@ -281,7 +283,7 @@ export function TaskTable(props: IProps) {
     }
     setPlaying(false);
     if (id !== playItem) {
-      fetchMediaUrl(id, auth);
+      fetchMediaUrl(id, memory, offline, auth);
       setPlayItem(id);
     } else {
       setPlayItem('');
@@ -596,14 +598,14 @@ export function TaskTable(props: IProps) {
           : '';
       if (column.name === 'composite') {
         return (
-          <div
+          <td
             style={{
               width: TaskItemWidth,
               backgroundColor: curId === selected ? 'lightgray' : 'transparent',
             }}
           >
             {value}
-          </div>
+          </td>
         );
       }
       return <>{'\u00a0'}</>;

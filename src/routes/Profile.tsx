@@ -177,6 +177,7 @@ export function Profile(props: IProps) {
   // const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
+  const [offline] = useGlobal('offline');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
@@ -513,7 +514,7 @@ export function Profile(props: IProps) {
     }
   }, [timezone]);
 
-  if (!isAuthenticated()) {
+  if (!isAuthenticated(offline)) {
     localStorage.setItem('url', history.location.pathname);
     return <Redirect to="/" />;
   }

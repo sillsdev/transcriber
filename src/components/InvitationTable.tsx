@@ -137,7 +137,6 @@ export function InvitationTable(props: IProps) {
   const [dialogData, setDialogData] = useState(null as Invitation | null);
 
   const handleAdd = () => {
-    console.log(dialogVisible);
     setDialogData(null);
     setDialogVisible(true);
   };
