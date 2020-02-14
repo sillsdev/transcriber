@@ -12,6 +12,7 @@ import Memory from '@orbit/memory';
 import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
 import JSONAPISource from '@orbit/jsonapi';
+import IndexedDBSource from '@orbit/indexeddb';
 
 export const orbitError = (ex: IApiError) => {
   return {
@@ -44,6 +45,7 @@ export const fetchOrbitData = (
   schema: Schema,
   memory: Memory,
   keyMap: KeyMap,
+  backup: IndexedDBSource,
   auth: Auth,
   offline: boolean,
   setUser: (id: string) => void,
@@ -56,6 +58,7 @@ export const fetchOrbitData = (
     schema,
     memory,
     keyMap,
+    backup,
     auth,
     offline,
     setUser,

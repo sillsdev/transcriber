@@ -387,14 +387,12 @@ export function TranscriptionTab(props: IProps) {
   useEffect(() => {
     if (exportUrl && exportName !== '') {
       if (exportAnchor && exportAnchor.current) {
-        console.log('ExportName: ' + exportName);
         exportAnchor.current.click();
         URL.revokeObjectURL(exportUrl);
         setExportUrl(undefined);
         showMessage(t.exportProject, exportName + ' ' + t.downloadComplete);
         setExportName('');
         exportComplete();
-        console.log('out ExportName: ' + exportName);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

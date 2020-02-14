@@ -12,13 +12,31 @@ import { schema, keyMap } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
 import history from './history';
+import IndexedDBSource from '@orbit/indexeddb';
 
 // Redux store
 const store = configureStore();
 
 // Orbit store
 const memory = new Memory({ schema, keyMap });
-
+const backup = new IndexedDBSource({
+  schema,
+  keyMap,
+  name: 'backup',
+  namespace: 'transcriber',
+});
+const isElectron = process.env.REACT_APP_MODE === 'electron';
+if (isElectron) {
+  localStorage.removeItem('user-id');
+  backup
+    .pull(q => q.findRecords())
+    .then(transform => {
+      memory.sync(transform).then(() => {
+        console.log('done');
+      });
+    })
+    .catch(err => console.log('IndexedDB Pull error: ', err));
+}
 setGlobal({
   organization: '',
   orgRole: '',
@@ -32,36 +50,35 @@ setGlobal({
   memory: memory,
   schema: schema,
   keyMap: keyMap,
+  backup: backup,
   bucket: undefined,
   remote: undefined,
   remoteBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,
   developer: false,
-  offline: process.env.REACT_APP_OFFLINE ? true : false,
+  offline: isElectron,
 });
 
-console.log(`process.env: `, process.env);
-if (process.env.REACT_APP_MODE === 'electron') {
+if (isElectron) {
   console.log(`Running in Electron: Filesystem access is enabled.`);
 } else {
   console.log('Running on the Web, Filesystem access disabled.');
 }
 
-const router =
-  process.env.REACT_APP_MODE === 'electron' ? (
-    <HashRouter>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </HashRouter>
-  ) : (
-    <Router history={history}>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </Router>
-  );
+const router = isElectron ? (
+  <HashRouter>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  </HashRouter>
+) : (
+  <Router history={history}>
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  </Router>
+);
 
 const Root = () => (
   <DataProvider dataStore={memory}>
