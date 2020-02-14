@@ -323,6 +323,10 @@ export const Sources = async (
       .pull(q => q.findRecords('activitystate'))
       .then(transform => memory.sync(transform))
       .then(() => tableLoaded('activitystate'));
+    remote
+      .pull(q => q.findRecords('passagestatechange'))
+      .then(transform => memory.sync(transform))
+      .then(() => tableLoaded('passagestatechange'));
   }
 
   setCompleted(100);
