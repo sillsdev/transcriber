@@ -663,7 +663,10 @@ export function Transcriber(props: IProps) {
               </Tooltip>
 
               <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
-                <IconButton onClick={handleTimer}>
+                <IconButton
+                  onClick={handleTimer}
+                  disabled={role !== 'transcriber'}
+                >
                   <>
                     <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
                   </>
