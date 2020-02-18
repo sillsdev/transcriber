@@ -92,16 +92,9 @@ const makeMap = (langTags, full, subtag) => {
     if (subtag || (lt.tag && lt.tag.indexOf('-') === -1)) {
       let thisTag = {};
       // Calls to addToMap should be ordered highes to lowest priority
-      if (lt.tag && lt.tag.indexOf('-') !== -1) {
-        addToMap(thisTag, lt.tag.split('-')[0], i, 9, full);
-      }
-      addToMap(thisTag, lt.tag, i, 9, full);
-      addToMap(thisTag, lt.iso639_3, i, 8, full);
-      addToMap(thisTag, lt.full, i, 7, full);
       addToMap(thisTag, lt.name, i, 6, full);
       addToMap(thisTag, lt.localname, i, 5, full);
       if (lt.names) lt.names.map(n => addToMap(thisTag, n, i, 4, full));
-      if (lt.tags) lt.tags.map(t => addToMap(thisTag, t, i, 3, full));
       addToMap(thisTag, lt.region, i, 2, full);
       addToMap(thisTag, lt.regionname, i, 1, full);
       mapMerge(thisTag, partial, full);
@@ -274,6 +267,36 @@ export const get${name} = (key: string) => {
   }
 }
 `;
+  code =
+    code +
+    `\nexport const hasPart = (key: string) => {
+if (!key || key.length === 0) return false;
+switch (key.slice(0,1).charCodeAt(0)) {
+`;
+  Object.keys(firstChar).forEach(letter => {
+    const firstCode = letter.charCodeAt(0).toString();
+    code = code + '    case ' + firstCode + ': return true;\n';
+  });
+  code =
+    code +
+    `    default: return false;
+}
+}
+
+export const getPart = (key: string) => {
+if (!key || key.length === 0) return [];
+switch (key.slice(0,1).charCodeAt(0)) {
+`;
+  Object.keys(firstChar).forEach(letter => {
+    const firstCode = letter.charCodeAt(0).toString();
+    code = code + '    case ' + firstCode + ': return f' + firstCode + ';\n';
+  });
+  code =
+    code +
+    `    default: return [];
+}
+}
+`;
   writeFile.sync(indexDir + '/Lg' + name + '.tsx', code);
 };
 
@@ -290,8 +313,6 @@ jsonData.push({
   sldr: false,
   tag: 'qaa',
 });
-makeFolder('Partial', 'LangTagMap', makeMap(jsonData, false, true));
-makeFolder('NoSubTag', 'LangTagMap', makeMap(jsonData, false, false));
 makeFolder('Exact', 'LangTagMap', makeMap(jsonData, true, true));
 var scripts = collectScripts(jsonData);
 // These three lines prevent null values from ending up in the lists

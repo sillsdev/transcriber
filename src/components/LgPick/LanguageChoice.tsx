@@ -33,14 +33,13 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps {
   list: number[];
   choose: (tag: LangTag) => void;
-  subtag?: boolean;
   secondary?: boolean;
   langTags: LangTag[];
   scriptName: ScriptName;
 }
 
 export function LanguageChoice(props: IProps) {
-  const { list, langTags, scriptName, secondary, choose, subtag } = props;
+  const { list, langTags, scriptName, secondary, choose } = props;
   const classes = useStyles();
   const t: ILanguagePickerStrings = LgPickI18nClean.languagePicker;
   const [dense] = React.useState(true);
@@ -89,10 +88,6 @@ export function LanguageChoice(props: IProps) {
   const langElems = (list: number[], langTags: LangTag[]) => {
     return list.map(r => {
       const tag = langTags[r];
-      const tagParts = tag.tag.split('-');
-      if (!subtag && tagParts.length > 1) {
-        if (tagParts[1].length !== 4 || tagParts.length > 2) return <></>;
-      }
       return (
         <ListItem
           button

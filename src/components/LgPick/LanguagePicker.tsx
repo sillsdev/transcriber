@@ -24,15 +24,14 @@ import { woBadChar } from './util';
 import LanguageChoice from './LanguageChoice';
 import './LanguagePicker.css';
 import clsx from 'clsx';
-import { hasExact, getExact } from './index/LgExact';
-import { hasPartial, getPartial } from './index/LgPartial';
-import { hasNoSubTag, getNoSubTag } from './index/LgNoSubTag';
+import { hasExact, getExact, hasPart, getPart } from './index/LgExact';
 import { getScripts } from './index/LgScripts';
 import { scriptName } from './index/LgScriptName';
 import { fontMap } from './index/LgFontMap';
+import { bcp47Find, bcp47Index } from './bcp47';
 import jsonData from './data/langtags.json';
 
-let langTags = jsonData as LangTag[];
+export let langTags = jsonData as LangTag[];
 langTags.push({
   full: 'qaa',
   iso639_3: 'qaa',
@@ -43,6 +42,8 @@ langTags.push({
   sldr: false,
   tag: 'qaa',
 });
+
+const MAXOPTIONS = 50;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -101,7 +102,6 @@ export const LanguagePicker = (props: IProps) => {
   const [curName, setCurName] = React.useState(name);
   const [curFont, setCurFont] = React.useState(font);
   const [secondary, setSecondary] = React.useState(true);
-  const [subtag, setSubtag] = React.useState(false);
   const [response, setResponse] = React.useState('');
   const [tag, setTag] = React.useState<LangTag>();
   const [defaultScript, setDefaultScript] = React.useState('');
@@ -109,22 +109,29 @@ export const LanguagePicker = (props: IProps) => {
   const [fontOpts, setFontOpts] = React.useState(Array<string>());
   const langEl = React.useRef<any>();
 
-  const ExtStr = '-x-';
-
   const handleClickOpen = (e: any) => {
     if (e.keyCode && e.keyCode === 9) return;
-    let key = curValue.toLocaleLowerCase();
-    const ext = key.indexOf(ExtStr);
-    if (ext !== -1) key = key.slice(0, ext);
-    if (hasExact(key) && key !== 'und') {
-      setResponse(curName + ' (' + curValue + ')');
-      const langTag = langTags[getExact(key)[0]];
-      setTag(langTag);
-      selectFont(langTag);
-      setDefaultScript(langTag.script);
-      setDefaultFont(curFont);
-    } else {
-      handleClear();
+    const found = bcp47Find(curValue);
+    if (curValue !== 'und') {
+      if (found && !Array.isArray(found)) {
+        setResponse(curName + ' (' + curValue + ')');
+        setTag(found);
+        selectFont(found);
+        setDefaultScript(found.script);
+        setDefaultFont(curFont);
+      } else {
+        const key = curValue.toLocaleLowerCase();
+        if (hasExact(key)) {
+          setResponse(curName + ' (' + curValue + ')');
+          const langTag = langTags[getExact(key)[0]];
+          setTag(langTag);
+          selectFont(langTag);
+          setDefaultScript(langTag.script);
+          setDefaultFont(curFont);
+        } else {
+          handleClear();
+        }
+      }
     }
     setOpen(true);
   };
@@ -229,11 +236,12 @@ export const LanguagePicker = (props: IProps) => {
     if (getScripts(lgTag).length !== 1) {
       if (tagParts.length > 1 && tagParts[1].length === 4) {
         selectFont(tag);
-        return;
       }
-      setDefaultScript(getScripts(lgTag)[0]);
+      setDefaultScript(tag.script ? tag.script : getScripts(lgTag)[0]);
     } else {
       selectFont(tag);
+      if (tag.script || getScripts(tag.tag).length > 0)
+        setDefaultScript(tag.script ? tag.script : getScripts(tag.tag)[0]);
     }
   };
 
@@ -248,12 +256,35 @@ export const LanguagePicker = (props: IProps) => {
   };
 
   const handleChoose = (tag: LangTag) => {
-    setTag(tag);
-    const ext = response.indexOf(ExtStr);
-    displayTag(
-      ext === -1 ? tag : { ...tag, tag: tag.tag + response.slice(ext) }
-    );
-    selectScript(tag);
+    let newTag = tag;
+    const found = bcp47Find(response);
+    let maxMatch = '';
+    if (tag.tags) {
+      tag.tags.forEach(t => {
+        const tLen = t.length;
+        if (tLen > maxMatch.length) {
+          if (t === response.slice(0, tLen)) {
+            maxMatch = t;
+          }
+        }
+      });
+      if (maxMatch !== '') {
+        newTag = { ...tag, tag: tag.tag + response.slice(maxMatch.length) };
+        displayTag(newTag);
+      }
+    }
+    setTag(newTag);
+    if (maxMatch === '') {
+      if (found === tag) {
+        displayTag({ ...tag, tag: response });
+      } else if (Array.isArray(found) && found.includes(tag)) {
+        displayTag({ ...tag, tag: response });
+      } else {
+        displayTag(tag);
+      }
+    }
+    selectScript(newTag);
+    selectFont(newTag);
   };
 
   const mergeList = (list: number[], adds: number[]) => {
@@ -270,35 +301,38 @@ export const LanguagePicker = (props: IProps) => {
     if (!tag) {
       let list = Array<number>();
       response.split(' ').forEach(w => {
-        const token = woBadChar(w).toLocaleLowerCase();
-        if (hasExact(token)) {
-          list = mergeList(list, getExact(token));
+        const wLangTags = bcp47Index(w);
+        if (wLangTags) {
+          list = mergeList(list, wLangTags);
+        } else {
+          const token = woBadChar(w).toLocaleLowerCase();
+          if (hasExact(token)) {
+            list = mergeList(list, getExact(token));
+          }
         }
       });
       response.split(' ').forEach(w => {
-        const token = woBadChar(w).toLocaleLowerCase();
-        if (subtag && hasPartial(token.slice(0, 3))) {
-          list = mergeList(list, getPartial(token.slice(0, 3)));
-        }
-        if (!subtag && hasNoSubTag(token.slice(0, 3))) {
-          list = mergeList(list, getNoSubTag(token.slice(0, 3)));
+        const lastDash = w.lastIndexOf('-');
+        if (lastDash !== -1) {
+          const wLangTags = bcp47Index(w.slice(0, lastDash));
+          if (wLangTags) list = mergeList(list, wLangTags);
+        } else {
+          const token = woBadChar(w).toLocaleLowerCase();
+          if (hasPart(token)) {
+            const tokLen = token.length;
+            Object.keys(getPart(token)).forEach(k => {
+              if (list.length < MAXOPTIONS) {
+                if (token === k.slice(0, tokLen))
+                  list = mergeList(list, getExact(k));
+              }
+            });
+          }
         }
       });
       if (list.length > 0) {
         return (
           <>
             <FormGroup row className={classes.check}>
-              <FormControlLabel
-                className={classes.label}
-                control={
-                  <Checkbox
-                    checked={subtag}
-                    onChange={event => setSubtag(event.target.checked)}
-                    value="secondary"
-                  />
-                }
-                label={t.subtags}
-              />
               <FormControlLabel
                 className={classes.label2}
                 control={
@@ -315,7 +349,6 @@ export const LanguagePicker = (props: IProps) => {
               list={list}
               secondary={secondary}
               choose={handleChoose}
-              subtag={subtag}
               langTags={langTags}
               scriptName={scriptName}
             />
@@ -386,7 +419,7 @@ export const LanguagePicker = (props: IProps) => {
                 label={t.script}
                 value={defaultScript}
                 onChange={handleScriptChange(tag)}
-                style={{ width: 300 }}
+                style={{ width: 400 }}
                 SelectProps={{
                   MenuProps: {
                     className: classes.menu,
