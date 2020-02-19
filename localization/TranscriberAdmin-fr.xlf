@@ -2386,17 +2386,12 @@
     		<target>Sélectionnez le projet Paratext</target>
 	     </segment>
       </unit>
+
       <unit id="integration.noProject">
          <segment>
-            <source>You are not a member of a</source>
-    		<target>Vous n'êtes membre d'un</target>
+            <source>You are not a member of a {lang0} Paratext Project.</source>
+    		<target>Vous n'êtes membre d'un {lang0} projet Paratext.</target>
 	     </segment>
-      </unit>
-      <unit id="integration.ParatextProject">
-         <segment>
-            <source>Paratext Project</source>
-            <target>projet Paratext</target>
-         </segment>
       </unit>
       <unit id="integration.projectsPending">
          <segment>
@@ -2460,8 +2455,8 @@
       </unit>
    <unit id="integration.questionProject">
          <segment>
-            <source>Are you connected to a</source>
-    		<target>Êtes-vous connecté à un</target>
+            <source>Are you connected to a {lang0} Paratext project?</source>
+    		<target>Êtes-vous connecté à un {lang0} projet Paratext?</target>
 	     </segment>
       </unit>
       <unit id="integration.removeProject">

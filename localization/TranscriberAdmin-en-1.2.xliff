@@ -2785,14 +2785,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.noProject">
-                <source>You are not a member of a</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">integration.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="integration.ParatextProject">
-                <source>Paratext Project</source>
+                <source>You are not a member of a {lang0} Paratext Project.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
@@ -2846,7 +2839,8 @@
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
-            </trans-unit>            <trans-unit id="integration.questionOnline">
+            </trans-unit>
+            <trans-unit id="integration.questionOnline">
                 <source>Are you connected to the Internet?</source>
                 <target/>
                 <context-group>
@@ -2868,7 +2862,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.questionProject">
-                <source>Are you connected to a</source>
+                <source>Are you connected to a {lang0} Paratext project?</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>

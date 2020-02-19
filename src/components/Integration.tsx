@@ -316,7 +316,7 @@ export function IntegrationPanel(props: IProps) {
         ? !paratext_projectsStatus.errStatus
           ? paratext_projects.length > 0
             ? t.selectProject
-            : formatWithLanguage(t.noProject, t.ParatextProject, '.')
+            : formatWithLanguage(t.noProject)
           : translateError(paratext_projectsStatus)
         : t.projectsPending
       : t.offline;
@@ -341,14 +341,10 @@ export function IntegrationPanel(props: IProps) {
   const canEditParatextText = (role: string): boolean => {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
-  const formatWithLanguage = (
-    beforeLang: string,
-    afterLang: string,
-    endPunct: string
-  ): string => {
+  const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
-    return beforeLang + ' ' + language + ' ' + afterLang + endPunct;
+    return replLang.replace('{lang0}', language || '');
   };
 
   useEffect(() => {
@@ -475,11 +471,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={formatWithLanguage(
-                  t.questionProject,
-                  t.ParatextProject,
-                  '?'
-                )}
+                primary={formatWithLanguage(t.questionProject)}
                 secondary={
                   <TextField
                     ref={pRef}
