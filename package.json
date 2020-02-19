@@ -143,6 +143,13 @@
     "win": {
       "icon": "public/favicon.bmp"
     },
+    "linux": {
+      "icon": "public/favicon.png",
+      "target": [
+        "deb",
+        "snap"
+      ]
+    },
     "mac": {
       "category": "public.app-category.utilities"
     },
