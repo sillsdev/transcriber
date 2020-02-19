@@ -13,6 +13,13 @@ const initialState = {
 			"importPending": "Import In Progress...",
 			"importComplete": "Import Complete",
 			"importError": "Import Error",
+			"ptfError": "Not a valid Portable Transcriber File",
+			"importCreated": "Import file was created: {date0}.",
+			"projectImported": "Project {name0} was previously imported with a newer file: {date1} ",
+			"allDataOverwritten": "All data will be overwritten.",
+			"neverExported": "Current data in project {name0} has never been exported.",
+			"lastExported": "Current data in project {name0} was last exported {date0}.",
+			"exportedLost": "Import file will not include latest exported data.",
 			"login": "Online Login",
 		}
 	}),

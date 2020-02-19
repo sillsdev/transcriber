@@ -29,10 +29,52 @@
          <segment>
             <source>Import Error</source>
             <target>Erreur d'importation</target>
-
          </segment>
       </unit>
-      		<unit id="access.login">
+      <unit id="access.ptfError">
+         <segment>
+            <source>Not a valid Portable Transcriber File</source>
+            <target>Pas un fichier de transcripteur portable valide</target>
+         </segment>
+      </unit>
+     <unit id="access.importCreated">
+         <segment>
+            <source>Import file was created: {date0}.</source>
+            <target>Le fichier d'importation a été créé: {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="access.projectImported">
+         <segment>
+            <source>Project {name0} was previously imported with a newer file: {date1} </source>
+            <target>Le projet {name0} a été précédemment importé avec un fichier plus récent: {date1}</target>
+         </segment>
+      </unit>
+      <unit id="access.allDataOverwritten">
+         <segment>
+            <source>All data will be overwritten.</source>
+            <target>Toutes les données seront écrasées.</target>
+         </segment>
+      </unit>
+      <unit id="access.neverExported">
+         <segment>
+            <source>Current data in project {name0} has never been exported.</source>
+            <target>Les données actuelles du projet {name0} n'ont jamais été exportées.</target>
+         </segment>
+      </unit>
+      <unit id="access.lastExported">
+         <segment>
+            <source>Current data in project {name0} was last exported {date0}.</source>
+            <target>Les données actuelles du projet {name0} ont été exportées pour la dernière fois {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="access.exportedLost">
+         <segment>
+            <source>Import file will not include latest exported data.</source>
+            <target>Le fichier d'importation n'inclura pas les dernières données exportées.</target>
+         </segment>
+      </unit>
+
+  	<unit id="access.login">
 			<segment>
 				<source>Online Login</source>
 				<target>Connexion en ligne</target>

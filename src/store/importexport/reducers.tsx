@@ -55,7 +55,6 @@ export default function(
         importexportStatus: pendingStatus(action.payload),
       };
     case IMPORT_SUCCESS:
-      console.log('Import success');
       return {
         ...state,
         loaded: true,

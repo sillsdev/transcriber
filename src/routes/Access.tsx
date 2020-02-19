@@ -25,8 +25,14 @@ import { UserAvatar } from '../components/UserAvatar';
 import SnackBar from '../components/SnackBar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
-import handleElectronImport from './ElectronImport';
+import {
+  IImportData,
+  handleElectronImport,
+  getElectronImportData,
+} from './ElectronImport';
 import { withData } from 'react-orbitjs';
+import AdmZip from 'adm-zip';
+import Confirm from '../components/AlertDialog';
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -114,8 +120,11 @@ export function Access(props: IProps) {
     importComplete,
   } = props;
   const [memory] = useGlobal('memory');
+  const [backup] = useGlobal('backup');
   const [offline, setOffline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
+  const [confirmAction, setConfirmAction] = useState('');
+  const [zipFile, setZipFile] = useState<AdmZip | null>(null);
 
   const handleLogin = () => auth.login();
 
@@ -129,17 +138,38 @@ export function Access(props: IProps) {
 
   const handleResetMessage = () => setMessage(<></>);
 
+  const handleActionConfirmed = () => {
+    if (!zipFile) {
+      console.log('No zip file yet...');
+      setTimeout(() => {
+        handleActionConfirmed();
+      }, 2000);
+    } else handleElectronImport(memory, backup, zipFile, importProject, t);
+    setConfirmAction('');
+  };
+  const handleActionRefused = () => {
+    setConfirmAction('');
+  };
   const handleImport = () => {
     if (isElectron) {
-      if (
-        !handleElectronImport(
-          memory,
-          importProject,
-          t.importPending,
-          t.importComplete
-        )
-      ) {
-        setMessage(<span>t.importError</span>);
+      var importData: IImportData = getElectronImportData(memory, t);
+      if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
+      else {
+        setZipFile(importData.zip);
+        if (importData.warnMsg) {
+          setConfirmAction(importData.warnMsg);
+        } else {
+          //no warning...so set confirmed
+          //zip file never got set here
+          //handleActionConfirmed();
+          handleElectronImport(
+            memory,
+            backup,
+            importData.zip,
+            importProject,
+            t
+          );
+        }
       }
     }
   };
@@ -270,6 +300,13 @@ export function Access(props: IProps) {
               </Grid>
             </Grid>
           </Paper>
+          {confirmAction === '' || (
+            <Confirm
+              text={confirmAction + '  Continue?'}
+              yesResponse={handleActionConfirmed}
+              noResponse={handleActionRefused}
+            />
+          )}
           <SnackBar message={message} reset={handleResetMessage} />
         </div>
       )}
