@@ -1,4 +1,5 @@
 import Axios, { AxiosError } from 'axios';
+import path from 'path';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import { JSONAPISerializerSettings, ResourceDocument } from '@orbit/jsonapi';
@@ -110,7 +111,7 @@ export const importProject = (
     }
   }
   function processFile(file: string, ser: JSONAPISerializerCustom) {
-    var data = fs.readFileSync(filepath + 'data/' + file);
+    var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
     if (isArray(json.data)) json.data.forEach(insertData);
     else insertData(json.data);
@@ -120,7 +121,7 @@ export const importProject = (
     payload: pendingmsg,
     type: IMPORT_PENDING,
   });
-  fs.readdir(filepath + 'data', async function(err, files) {
+  fs.readdir(filepath, async function(err, files) {
     if (err) {
       dispatch({
         payload: errorStatus(err.errno, err.message),
@@ -136,7 +137,7 @@ export const importProject = (
         return 'remoteId';
       };
       for (let index = 0; index < files.length; index++) {
-        processFile(files[index], ser);
+        processFile(path.join(filepath, files[index]), ser);
       }
       await memory
         .update(oparray)

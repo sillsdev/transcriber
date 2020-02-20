@@ -7,6 +7,8 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
+import path from 'path';
+import { OfflineDataPath } from '../utils/offlineDataPath';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,11 +51,7 @@ export function UserAvatar(props: IProps) {
   return curUser.attributes && curUser.attributes.avatarUrl ? (
     <Avatar
       alt={curUser.attributes.name}
-      src={
-        (process.env.REACT_APP_OFFLINEDATA
-          ? process.env.REACT_APP_OFFLINEDATA
-          : '') + curUser.attributes.avatarUrl
-      }
+      src={path.join(OfflineDataPath(), curUser.attributes.avatarUrl)}
       className={small ? classes.small : classes.medium}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (

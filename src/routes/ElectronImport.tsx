@@ -11,6 +11,9 @@ import { isArray } from 'util';
 import { remoteIdGuid } from '../utils';
 import moment, { Moment } from 'moment';
 import IndexedDBSource from '@orbit/indexeddb';
+import { OfflineDataPath } from '../utils/offlineDataPath';
+import fs from 'fs';
+import path from 'path';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 
@@ -154,16 +157,12 @@ if (isElectron) {
     t: IAccessStrings
   ): void => {
     if (zip) {
-      zip.extractAllTo(
-        process.env.REACT_APP_OFFLINEDATA
-          ? process.env.REACT_APP_OFFLINEDATA
-          : '/transcriber/',
-        true
-      );
+      const where = OfflineDataPath();
+      console.log(where);
+      fs.mkdirSync(where, { recursive: true });
+      zip.extractAllTo(where, true);
       importProject(
-        process.env.REACT_APP_OFFLINEDATA
-          ? process.env.REACT_APP_OFFLINEDATA
-          : '/transcriber/',
+        path.join(where, 'data'),
         memory,
         backup,
         t.importPending,

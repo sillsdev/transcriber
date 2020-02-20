@@ -92,6 +92,8 @@ import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
+import path from 'path';
+import { OfflineDataPath } from '../utils/offlineDataPath';
 
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
@@ -520,11 +522,7 @@ export function ResponsiveDrawer(props: IProps) {
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
         setOrgAvatar(
-          attr && attr.logoUrl
-            ? (process.env.REACT_APP_OFFLINEDATA
-                ? process.env.REACT_APP_OFFLINEDATA
-                : '') + attr.logoUrl
-            : ''
+          attr && attr.logoUrl ? path.join(OfflineDataPath(), attr.logoUrl) : ''
         );
       }
     });
