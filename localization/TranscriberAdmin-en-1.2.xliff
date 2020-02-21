@@ -3456,7 +3456,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="taskItem.sync">
-        		<source>Sync</source>
+        		<source>Sync Needed</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>

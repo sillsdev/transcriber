@@ -2964,7 +2964,7 @@
       </unit>
       <unit id="taskItem.sync">
          <segment>
-            <source>Sync</source>
+            <source>Sync Needed</source>
             <target/>
          </segment>
       </unit>

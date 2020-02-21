@@ -653,7 +653,7 @@ const initialState = {
 			"inProgress": "In Progress",
 			"transcribe": "Transcribe",
 			"review": "Review",
-			"sync": "Sync",
+			"sync": "Sync Needed",
 			"done": "Done",
 			"section": "Section {0}.{1}",
 		}

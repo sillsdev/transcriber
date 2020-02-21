@@ -14,7 +14,7 @@ import {
   Section,
   MediaFile,
   MediaDescription,
-  IActivityStateStrings,
+  ITaskItemStrings,
   IToDoTableStrings,
   ActivityStates,
   RoleNames,
@@ -33,6 +33,7 @@ import ShapingTable from './ShapingTable';
 import TaskItem from './TaskItem';
 import SnackBar from './SnackBar';
 import { formatTime } from './Duration';
+import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
 import {
   related,
@@ -101,12 +102,11 @@ interface IRow {
   length: string;
   duration: number;
   state: string;
-  action: string;
   assigned: string;
 }
 
 interface IStateProps {
-  activityState: IActivityStateStrings;
+  taskItemStrings: ITaskItemStrings;
   t: IToDoTableStrings;
   lang: string;
   hasUrl: boolean;
@@ -141,7 +141,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 export function TaskTable(props: IProps) {
   const {
     auth,
-    activityState,
+    taskItemStrings,
     groupMemberships,
     passageSections,
     passages,
@@ -180,7 +180,6 @@ export function TaskTable(props: IProps) {
     { name: 'length', title: t.length },
     { name: 'duration', title: t.duration },
     { name: 'state', title: t.state },
-    { name: 'action', title: t.action },
     { name: 'assigned', title: t.assigned },
   ]);
   const [columnFormatting, setColumnFormatting] = useState([
@@ -199,7 +198,6 @@ export function TaskTable(props: IProps) {
     { columnName: 'length', width: 100, align: 'left' },
     { columnName: 'duration', width: 100, align: 'right' },
     { columnName: 'state', width: 150, align: 'left' },
-    { columnName: 'action', width: 150, align: 'left' },
     { columnName: 'assigned', width: 150, align: 'left' },
   ]);
   const columnSorting = [
@@ -210,12 +208,10 @@ export function TaskTable(props: IProps) {
   const sortingEnabled = [
     { columnName: 'composite', sortingEnabled: false },
     { columnName: 'play', sortingEnabled: false },
-    { columnName: 'action', sortingEnabled: false },
   ];
   const filteringEnabled = [
     { columnName: 'composite', filteringEnabled: false },
     { columnName: 'play', filteringEnabled: false },
-    { columnName: 'action', filteringEnabled: false },
   ];
 
   const [rows, setRows] = useState(Array<IRow>());
@@ -332,7 +328,7 @@ export function TaskTable(props: IProps) {
                     );
                   }
                   if (role !== 'view' || already.length === 0) {
-                    const curState =
+                    const curState: ActivityStates | string =
                       role === 'view'
                         ? p.attributes && p.attributes.state
                           ? p.attributes.state
@@ -367,8 +363,7 @@ export function TaskTable(props: IProps) {
                       description: p.attributes.title,
                       length: formatTime(mediaRec.attributes.duration),
                       duration: mediaRec.attributes.duration,
-                      state: activityState.getString(curState),
-                      action: t.getString(role),
+                      state: ChipText({ state: curState, t: taskItemStrings }),
                       assigned: assignee === user ? t.yes : t.no,
                     });
                   }
@@ -421,7 +416,6 @@ export function TaskTable(props: IProps) {
         { columnName: 'length', width: 1, align: 'left' },
         { columnName: 'duration', width: 1, align: 'right' },
         { columnName: 'state', width: 1, align: 'left' },
-        { columnName: 'action', width: 1, align: 'left' },
         { columnName: 'assigned', width: 1, align: 'left' },
       ]);
     } else {
@@ -446,7 +440,6 @@ export function TaskTable(props: IProps) {
         { columnName: 'length', width: 100, align: 'left' },
         { columnName: 'duration', width: 100, align: 'right' },
         { columnName: 'state', width: 150, align: 'left' },
-        { columnName: 'action', width: 150, align: 'left' },
         { columnName: 'assigned', width: 150, align: 'left' },
       ]);
     }
@@ -570,21 +563,6 @@ export function TaskTable(props: IProps) {
     </Table.Cell>
   );
 
-  const LinkCell = ({ value, style, ...restProps }: ICell) => (
-    <Table.Cell {...restProps} style={{ ...style }} value>
-      <Button
-        key={value}
-        aria-label={value}
-        variant="contained"
-        color="primary"
-        className={classes.link}
-        onClick={handleSelect(restProps.row.media)}
-      >
-        {value}
-      </Button>
-    </Table.Cell>
-  );
-
   const Cell = (props: ICell) => {
     const { row, column, value } = props;
     if (!filter) {
@@ -614,9 +592,6 @@ export function TaskTable(props: IProps) {
         return <>{'\u00a0'}</>;
       } else if (column.name === 'play') {
         return <PlayCell {...props} mediaId={row.media.mediaRemoteId} />;
-      }
-      if (column.name === 'action') {
-        return <LinkCell {...props} />;
       }
       return <Table.Cell {...props} />;
     }
@@ -675,7 +650,7 @@ export function TaskTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'toDoTable' }),
-  activityState: localStrings(state, { layout: 'activityState' }),
+  taskItemStrings: localStrings(state, { layout: 'taskItem' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
   tableLoad: state.orbit.tableLoad,
