@@ -109,8 +109,13 @@ export const LanguagePicker = (props: IProps) => {
   const [fontOpts, setFontOpts] = React.useState(Array<string>());
   const langEl = React.useRef<any>();
 
+  const TAB = 9;
+  const SHIFT = 16;
+  const CTRL = 17;
+
   const handleClickOpen = (e: any) => {
-    if (e.keyCode && e.keyCode === 9) return;
+    if (disabled) return;
+    if (e.keyCode && [TAB, SHIFT, CTRL].includes(e.keyCode)) return;
     const found = bcp47Find(curValue);
     if (curValue !== 'und') {
       if (found && !Array.isArray(found)) {
