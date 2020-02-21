@@ -28,7 +28,7 @@ import { hasExact, getExact, hasPart, getPart } from './index/LgExact';
 import { getScripts } from './index/LgScripts';
 import { scriptName } from './index/LgScriptName';
 import { fontMap } from './index/LgFontMap';
-import { bcp47Find, bcp47Index } from './bcp47';
+import { bcp47Find, bcp47Index, bcp47Parse } from './bcp47';
 import jsonData from './data/langtags.json';
 
 export let langTags = jsonData as LangTag[];
@@ -184,17 +184,23 @@ export const LanguagePicker = (props: IProps) => {
   };
 
   const safeFonts = [
-    { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
-    { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
+    { value: 'NotoSansLatn', label: 'Noto Sans (Recommended)', rtl: false },
+    { value: 'AnnapurnaSIL', label: 'Annapurna SIL (Indic)', rtl: false },
     { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
     { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
   ];
 
   const selectFont = (tag: LangTag | undefined) => {
     if (!tag || tag.tag === 'und') return;
-    let code = tag.script + '-' + tag.region;
-    if (!fontMap.hasOwnProperty(code)) {
-      code = tag.script;
+    const parse = bcp47Parse(tag.tag);
+    let script = parse.script ? parse.script : tag.script;
+    let region = parse.region ? parse.region : tag.region;
+    let code = script;
+    if (region) {
+      code = script + '-' + region;
+      if (!fontMap.hasOwnProperty(code)) {
+        code = script;
+      }
     }
     if (!fontMap.hasOwnProperty(code)) {
       setDefaultFont(safeFonts[0].value);
@@ -222,32 +228,31 @@ export const LanguagePicker = (props: IProps) => {
   const handleScriptChange = (tag: LangTag | undefined) => (e: any) => {
     const val = e.target.value;
     setDefaultScript(val);
-    if (tag && tag.script !== val) {
-      const lgTag = tag.tag.split('-')[0];
-      const newTag = langTags.filter(
-        t => t.tag.split('-')[0] === lgTag && t.script === val
-      );
-      if (newTag.length > 0) {
-        setTag(newTag[0]);
+    const parse = bcp47Parse(curValue);
+    const script = parse.script ? parse.script : tag?.script;
+    if (script !== val) {
+      let newTag = parse.language + '-' + val;
+      if (parse.region) newTag += '-' + parse.region;
+      const found = bcp47Find(newTag);
+      if (found) {
+        const firstFind = Array.isArray(found) ? found[0] : found;
+        setTag(firstFind);
+        let myTag = firstFind.tag;
+        if (parse.variant) myTag += '-' + parse.variant;
+        if (parse.extension) myTag += '-' + parse.extension;
+        parse.privateUse.forEach(i => {
+          myTag += '-x-' + i;
+        });
+        displayTag({ ...firstFind, tag: myTag });
+        selectFont(firstFind);
       }
-      displayTag(newTag[0]);
-      selectFont(newTag[0]);
-    } else selectFont(tag);
+    }
   };
 
   const selectScript = (tag: LangTag) => {
-    const tagParts = tag.tag.split('-');
-    const lgTag = tagParts[0];
-    if (getScripts(lgTag).length !== 1) {
-      if (tagParts.length > 1 && tagParts[1].length === 4) {
-        selectFont(tag);
-      }
-      setDefaultScript(tag.script ? tag.script : getScripts(lgTag)[0]);
-    } else {
-      selectFont(tag);
-      if (tag.script || getScripts(tag.tag).length > 0)
-        setDefaultScript(tag.script ? tag.script : getScripts(tag.tag)[0]);
-    }
+    const tagParts = bcp47Parse(tag.tag);
+    selectFont(tag);
+    setDefaultScript(tagParts.script ? tagParts.script : tag.script);
   };
 
   const scriptList = (tag: LangTag | undefined) => {
@@ -291,13 +296,12 @@ export const LanguagePicker = (props: IProps) => {
     setTag(newTag);
     if (maxMatch === '') {
       if (found === tag) {
-        displayTag({ ...tag, tag: response });
+        newTag = { ...tag, tag: response };
       } else if (Array.isArray(found) && found.includes(tag)) {
-        displayTag({ ...tag, tag: response });
-      } else {
-        displayTag(tag);
+        newTag = { ...tag, tag: response };
       }
     }
+    displayTag(newTag);
     selectScript(newTag);
     selectFont(newTag);
   };
