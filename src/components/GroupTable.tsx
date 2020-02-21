@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IRow {
   name: string;
-  abbr: string;
   owner: string;
   projects: number;
   members: number;
@@ -88,7 +87,6 @@ const getMedia = (
     );
     return {
       name: g.attributes.name,
-      abbr: g.attributes.abbreviation,
       projects: selectedProjects.length,
       members: members.length,
       action: g.id,
@@ -132,7 +130,6 @@ export function GroupTable(props: IProps) {
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
-    { name: 'abbr', title: t.abbr },
     { name: 'projects', title: t.projects },
     { name: 'members', title: t.members },
     {
@@ -142,7 +139,6 @@ export function GroupTable(props: IProps) {
   ];
   const columnWidths = [
     { columnName: 'name', width: 150 },
-    { columnName: 'abbr', width: 150 },
     { columnName: 'projects', width: 100 },
     { columnName: 'members', width: 100 },
     { columnName: 'action', width: 150 },
@@ -164,13 +160,12 @@ export function GroupTable(props: IProps) {
     setDialogData(null);
     setDialogVisible(true);
   };
-  const handleAddMethod = async (name: string, abbr: string) => {
+  const handleAddMethod = async (name: string) => {
     setDialogVisible(false);
     let group: Group = {
       type: 'group',
       attributes: {
         name: name,
-        abbreviation: abbr,
         ownerId: remoteIdNum('organization', organization, keyMap),
       },
     } as any;
