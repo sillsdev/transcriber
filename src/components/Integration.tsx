@@ -151,7 +151,7 @@ export function IntegrationPanel(props: IProps) {
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
 
-  const [online] = React.useState(Online());
+  const [online, setOnline] = React.useState<boolean>();
   const [hasPtProj, setHasPtProj] = React.useState(false);
   const [ptProj, setPtProj] = React.useState(-1);
   const [ptProjName, setPtProjName] = React.useState('');
@@ -316,7 +316,7 @@ export function IntegrationPanel(props: IProps) {
         ? !paratext_projectsStatus.errStatus
           ? paratext_projects.length > 0
             ? t.selectProject
-            : formatWithLanguage(t.noProject, t.ParatextProject, '.')
+            : formatWithLanguage(t.noProject)
           : translateError(paratext_projectsStatus)
         : t.projectsPending
       : t.offline;
@@ -341,15 +341,15 @@ export function IntegrationPanel(props: IProps) {
   const canEditParatextText = (role: string): boolean => {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
-  const formatWithLanguage = (
-    beforeLang: string,
-    afterLang: string,
-    endPunct: string
-  ): string => {
+  const formatWithLanguage = (replLang: string): string => {
     let proj = getProject();
     let language = proj && proj.attributes ? proj.attributes.languageName : '';
-    return beforeLang + ' ' + language + ' ' + afterLang + endPunct;
+    return replLang.replace('{lang0}', language || '');
   };
+
+  useEffect(() => {
+    Online(result => setOnline(result));
+  }, []);
 
   useEffect(() => {
     if (project !== myProject) {
@@ -471,11 +471,7 @@ export function IntegrationPanel(props: IProps) {
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={formatWithLanguage(
-                  t.questionProject,
-                  t.ParatextProject,
-                  '?'
-                )}
+                primary={formatWithLanguage(t.questionProject)}
                 secondary={
                   <TextField
                     ref={pRef}

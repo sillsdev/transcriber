@@ -24,15 +24,14 @@ import { woBadChar } from './util';
 import LanguageChoice from './LanguageChoice';
 import './LanguagePicker.css';
 import clsx from 'clsx';
-import { hasExact, getExact } from './index/LgExact';
-import { hasPartial, getPartial } from './index/LgPartial';
-import { hasNoSubTag, getNoSubTag } from './index/LgNoSubTag';
+import { hasExact, getExact, hasPart, getPart } from './index/LgExact';
 import { getScripts } from './index/LgScripts';
 import { scriptName } from './index/LgScriptName';
 import { fontMap } from './index/LgFontMap';
+import { bcp47Find, bcp47Index, bcp47Parse } from './bcp47';
 import jsonData from './data/langtags.json';
 
-let langTags = jsonData as LangTag[];
+export let langTags = jsonData as LangTag[];
 langTags.push({
   full: 'qaa',
   iso639_3: 'qaa',
@@ -43,6 +42,8 @@ langTags.push({
   sldr: false,
   tag: 'qaa',
 });
+
+const MAXOPTIONS = 50;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -101,7 +102,6 @@ export const LanguagePicker = (props: IProps) => {
   const [curName, setCurName] = React.useState(name);
   const [curFont, setCurFont] = React.useState(font);
   const [secondary, setSecondary] = React.useState(true);
-  const [subtag, setSubtag] = React.useState(false);
   const [response, setResponse] = React.useState('');
   const [tag, setTag] = React.useState<LangTag>();
   const [defaultScript, setDefaultScript] = React.useState('');
@@ -109,22 +109,34 @@ export const LanguagePicker = (props: IProps) => {
   const [fontOpts, setFontOpts] = React.useState(Array<string>());
   const langEl = React.useRef<any>();
 
-  const ExtStr = '-x-';
+  const TAB = 9;
+  const SHIFT = 16;
+  const CTRL = 17;
 
   const handleClickOpen = (e: any) => {
-    if (e.keyCode && e.keyCode === 9) return;
-    let key = curValue.toLocaleLowerCase();
-    const ext = key.indexOf(ExtStr);
-    if (ext !== -1) key = key.slice(0, ext);
-    if (hasExact(key) && key !== 'und') {
-      setResponse(curName + ' (' + curValue + ')');
-      const langTag = langTags[getExact(key)[0]];
-      setTag(langTag);
-      selectFont(langTag);
-      setDefaultScript(langTag.script);
-      setDefaultFont(curFont);
-    } else {
-      handleClear();
+    if (disabled) return;
+    if (e.keyCode && [TAB, SHIFT, CTRL].includes(e.keyCode)) return;
+    const found = bcp47Find(curValue);
+    if (curValue !== 'und') {
+      if (found && !Array.isArray(found)) {
+        setResponse(curName + ' (' + curValue + ')');
+        setTag(found);
+        selectFont(found);
+        setDefaultScript(found.script);
+        setDefaultFont(curFont);
+      } else {
+        const key = curValue.toLocaleLowerCase();
+        if (hasExact(key)) {
+          setResponse(curName + ' (' + curValue + ')');
+          const langTag = langTags[getExact(key)[0]];
+          setTag(langTag);
+          selectFont(langTag);
+          setDefaultScript(langTag.script);
+          setDefaultFont(curFont);
+        } else {
+          handleClear();
+        }
+      }
     }
     setOpen(true);
   };
@@ -172,17 +184,23 @@ export const LanguagePicker = (props: IProps) => {
   };
 
   const safeFonts = [
-    { value: 'Noto Sans', label: 'Noto Sans (Recommended)', rtl: false },
-    { value: 'Annapurna SIL', label: 'Annapurna SIL (Indic)', rtl: false },
+    { value: 'NotoSansLatn', label: 'Noto Sans (Recommended)', rtl: false },
+    { value: 'AnnapurnaSIL', label: 'Annapurna SIL (Indic)', rtl: false },
     { value: 'Scheherazade', label: 'Scheherazade (Arabic)', rtl: true },
     { value: 'SimSun', label: 'SimSun (Chinese)', rtl: false },
   ];
 
   const selectFont = (tag: LangTag | undefined) => {
     if (!tag || tag.tag === 'und') return;
-    let code = tag.script + '-' + tag.region;
-    if (!fontMap.hasOwnProperty(code)) {
-      code = tag.script;
+    const parse = bcp47Parse(tag.tag);
+    let script = parse.script ? parse.script : tag.script;
+    let region = parse.region ? parse.region : tag.region;
+    let code = script;
+    if (region) {
+      code = script + '-' + region;
+      if (!fontMap.hasOwnProperty(code)) {
+        code = script;
+      }
     }
     if (!fontMap.hasOwnProperty(code)) {
       setDefaultFont(safeFonts[0].value);
@@ -210,31 +228,31 @@ export const LanguagePicker = (props: IProps) => {
   const handleScriptChange = (tag: LangTag | undefined) => (e: any) => {
     const val = e.target.value;
     setDefaultScript(val);
-    if (tag && tag.script !== val) {
-      const lgTag = tag.tag.split('-')[0];
-      const newTag = langTags.filter(
-        t => t.tag.split('-')[0] === lgTag && t.script === val
-      );
-      if (newTag.length > 0) {
-        setTag(newTag[0]);
+    const parse = bcp47Parse(curValue);
+    const script = parse.script ? parse.script : tag?.script;
+    if (script !== val) {
+      let newTag = parse.language + '-' + val;
+      if (parse.region) newTag += '-' + parse.region;
+      const found = bcp47Find(newTag);
+      if (found) {
+        const firstFind = Array.isArray(found) ? found[0] : found;
+        setTag(firstFind);
+        let myTag = firstFind.tag;
+        if (parse.variant) myTag += '-' + parse.variant;
+        if (parse.extension) myTag += '-' + parse.extension;
+        parse.privateUse.forEach(i => {
+          myTag += '-x-' + i;
+        });
+        displayTag({ ...firstFind, tag: myTag });
+        selectFont(firstFind);
       }
-      displayTag(newTag[0]);
-      selectFont(newTag[0]);
-    } else selectFont(tag);
+    }
   };
 
   const selectScript = (tag: LangTag) => {
-    const tagParts = tag.tag.split('-');
-    const lgTag = tagParts[0];
-    if (getScripts(lgTag).length !== 1) {
-      if (tagParts.length > 1 && tagParts[1].length === 4) {
-        selectFont(tag);
-        return;
-      }
-      setDefaultScript(getScripts(lgTag)[0]);
-    } else {
-      selectFont(tag);
-    }
+    const tagParts = bcp47Parse(tag.tag);
+    selectFont(tag);
+    setDefaultScript(tagParts.script ? tagParts.script : tag.script);
   };
 
   const scriptList = (tag: LangTag | undefined) => {
@@ -248,12 +266,44 @@ export const LanguagePicker = (props: IProps) => {
   };
 
   const handleChoose = (tag: LangTag) => {
-    setTag(tag);
-    const ext = response.indexOf(ExtStr);
-    displayTag(
-      ext === -1 ? tag : { ...tag, tag: tag.tag + response.slice(ext) }
-    );
-    selectScript(tag);
+    let newTag = tag;
+    const found = bcp47Find(response);
+    let maxMatch = '';
+    let tagList = [tag.full];
+    if (tag.iso639_3) {
+      tagList.push(tag.iso639_3);
+      tagList.push(tag.iso639_3 + '-' + tag.script);
+      if (tag.region) {
+        tagList.push(tag.iso639_3 + '-' + tag.region);
+        tagList.push(tag.iso639_3 + '-' + tag.script + '-' + tag.region);
+      }
+    }
+    if (tag.tags) {
+      tagList = tagList.concat(tag.tags.map(t => t));
+    }
+    tagList.forEach(t => {
+      const tLen = t.length;
+      if (tLen > maxMatch.length) {
+        if (t === response.slice(0, tLen)) {
+          maxMatch = t;
+        }
+      }
+    });
+    if (maxMatch !== '') {
+      newTag = { ...tag, tag: tag.tag + response.slice(maxMatch.length) };
+      displayTag(newTag);
+    }
+    setTag(newTag);
+    if (maxMatch === '') {
+      if (found === tag) {
+        newTag = { ...tag, tag: response };
+      } else if (Array.isArray(found) && found.includes(tag)) {
+        newTag = { ...tag, tag: response };
+      }
+    }
+    displayTag(newTag);
+    selectScript(newTag);
+    selectFont(newTag);
   };
 
   const mergeList = (list: number[], adds: number[]) => {
@@ -270,35 +320,42 @@ export const LanguagePicker = (props: IProps) => {
     if (!tag) {
       let list = Array<number>();
       response.split(' ').forEach(w => {
-        const token = woBadChar(w).toLocaleLowerCase();
-        if (hasExact(token)) {
-          list = mergeList(list, getExact(token));
+        if (w.length > 1) {
+          const wLangTags = bcp47Index(w);
+          if (wLangTags) {
+            list = mergeList(list, wLangTags);
+          } else {
+            const token = woBadChar(w).toLocaleLowerCase();
+            if (hasExact(token)) {
+              list = mergeList(list, getExact(token));
+            }
+          }
         }
       });
       response.split(' ').forEach(w => {
-        const token = woBadChar(w).toLocaleLowerCase();
-        if (subtag && hasPartial(token.slice(0, 3))) {
-          list = mergeList(list, getPartial(token.slice(0, 3)));
-        }
-        if (!subtag && hasNoSubTag(token.slice(0, 3))) {
-          list = mergeList(list, getNoSubTag(token.slice(0, 3)));
+        if (w.length > 1) {
+          const lastDash = w.lastIndexOf('-');
+          if (lastDash !== -1) {
+            const wLangTags = bcp47Index(w.slice(0, lastDash));
+            if (wLangTags) list = mergeList(list, wLangTags);
+          } else {
+            const token = woBadChar(w).toLocaleLowerCase();
+            if (hasPart(token)) {
+              const tokLen = token.length;
+              Object.keys(getPart(token)).forEach(k => {
+                if (list.length < MAXOPTIONS) {
+                  if (token === k.slice(0, tokLen))
+                    list = mergeList(list, getExact(k));
+                }
+              });
+            }
+          }
         }
       });
       if (list.length > 0) {
         return (
           <>
             <FormGroup row className={classes.check}>
-              <FormControlLabel
-                className={classes.label}
-                control={
-                  <Checkbox
-                    checked={subtag}
-                    onChange={event => setSubtag(event.target.checked)}
-                    value="secondary"
-                  />
-                }
-                label={t.subtags}
-              />
               <FormControlLabel
                 className={classes.label2}
                 control={
@@ -315,7 +372,6 @@ export const LanguagePicker = (props: IProps) => {
               list={list}
               secondary={secondary}
               choose={handleChoose}
-              subtag={subtag}
               langTags={langTags}
               scriptName={scriptName}
             />
@@ -386,7 +442,7 @@ export const LanguagePicker = (props: IProps) => {
                 label={t.script}
                 value={defaultScript}
                 onChange={handleScriptChange(tag)}
-                style={{ width: 300 }}
+                style={{ width: 400 }}
                 SelectProps={{
                   MenuProps: {
                     className: classes.menu,

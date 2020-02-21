@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -67,7 +67,7 @@
     "electron-debug": "node edPackage.js -dev && env-cmd -f .env.electron craco start",
     "electron-prod": "node edPackage.js && set NODE_ENV=production && env-cmd -f .env.electron concurrently \"npm run start \" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
-    "electron-pack": "node edPackage.js && env-cmd -f .env.electron craco build -w --config craco.config.electron.js",
+    "electron-pack": "npm run stamp && node edPackage.js && env-cmd -f .env.electron craco build -w --config craco.config.electron.js",
     "stamp": "node writeDate.js",
     "deploy": "npm run stamp && amplify publish",
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
@@ -138,10 +138,17 @@
   },
   "build": {
     "appId": "sil.lsdev.sil-transcriber-electron",
-    "productName": "SIL Transcriber Desktop",
+    "productName": "SIL Transcriber Desktop Extension",
     "copyright": "Copyright © 2020 ${author}",
     "win": {
       "icon": "public/favicon.bmp"
+    },
+    "linux": {
+      "icon": "public/favicon.png",
+      "target": [
+        "deb",
+        "snap"
+      ]
     },
     "mac": {
       "category": "public.app-category.utilities"

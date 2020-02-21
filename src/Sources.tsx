@@ -23,6 +23,7 @@ export const Sources = async (
   schema: Schema,
   memory: Memory,
   keyMap: KeyMap,
+  backup: IndexedDBSource,
   auth: Auth,
   offline: boolean,
   setUser: (id: string) => void,
@@ -43,19 +44,16 @@ export const Sources = async (
     namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
   setBucket(bucket);
-  const backup = new IndexedDBSource({
-    schema,
-    keyMap,
-    name: 'backup',
-    namespace: 'transcriber',
-  });
 
-  if (tokData.sub === userToken || offline) {
-    await backup
-      .pull(q => q.findRecords())
-      .then(transform => memory.sync(transform));
-  } else {
-    backup.reset();
+  if (process.env.REACT_APP_MODE !== 'electron') {
+    //already did this if electron...
+    if (tokData.sub === userToken) {
+      await backup
+        .pull(q => q.findRecords())
+        .then(transform => memory.sync(transform));
+    } else {
+      backup.reset();
+    }
   }
 
   let remote: JSONAPISource = {} as JSONAPISource;

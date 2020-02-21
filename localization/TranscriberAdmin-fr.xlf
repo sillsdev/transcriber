@@ -29,10 +29,52 @@
          <segment>
             <source>Import Error</source>
             <target>Erreur d'importation</target>
-
          </segment>
       </unit>
-      		<unit id="access.login">
+      <unit id="access.ptfError">
+         <segment>
+            <source>Not a valid Portable Transcriber File</source>
+            <target>Pas un fichier de transcripteur portable valide</target>
+         </segment>
+      </unit>
+     <unit id="access.importCreated">
+         <segment>
+            <source>Import file was created: {date0}.</source>
+            <target>Le fichier d'importation a été créé: {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="access.projectImported">
+         <segment>
+            <source>Project {name0} was previously imported with a newer file: {date1} </source>
+            <target>Le projet {name0} a été précédemment importé avec un fichier plus récent: {date1}</target>
+         </segment>
+      </unit>
+      <unit id="access.allDataOverwritten">
+         <segment>
+            <source>All data will be overwritten.</source>
+            <target>Toutes les données seront écrasées.</target>
+         </segment>
+      </unit>
+      <unit id="access.neverExported">
+         <segment>
+            <source>Current data in project {name0} has never been exported.</source>
+            <target>Les données actuelles du projet {name0} n'ont jamais été exportées.</target>
+         </segment>
+      </unit>
+      <unit id="access.lastExported">
+         <segment>
+            <source>Current data in project {name0} was last exported {date0}.</source>
+            <target>Les données actuelles du projet {name0} ont été exportées pour la dernière fois {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="access.exportedLost">
+         <segment>
+            <source>Import file will not include latest exported data.</source>
+            <target>Le fichier d'importation n'inclura pas les dernières données exportées.</target>
+         </segment>
+      </unit>
+
+  	<unit id="access.login">
 			<segment>
 				<source>Online Login</source>
 				<target>Connexion en ligne</target>
@@ -2344,17 +2386,12 @@
     		<target>Sélectionnez le projet Paratext</target>
 	     </segment>
       </unit>
+
       <unit id="integration.noProject">
          <segment>
-            <source>You are not a member of a</source>
-    		<target>Vous n'êtes membre d'un</target>
+            <source>You are not a member of a {lang0} Paratext Project.</source>
+    		<target>Vous n'êtes membre d'un {lang0} projet Paratext.</target>
 	     </segment>
-      </unit>
-      <unit id="integration.ParatextProject">
-         <segment>
-            <source>Paratext Project</source>
-            <target>projet Paratext</target>
-         </segment>
       </unit>
       <unit id="integration.projectsPending">
          <segment>
@@ -2418,8 +2455,8 @@
       </unit>
    <unit id="integration.questionProject">
          <segment>
-            <source>Are you connected to a</source>
-    		<target>Êtes-vous connecté à un</target>
+            <source>Are you connected to a {lang0} Paratext project?</source>
+    		<target>Êtes-vous connecté à un {lang0} projet Paratext?</target>
 	     </segment>
       </unit>
       <unit id="integration.removeProject">
@@ -2928,8 +2965,8 @@
 		</unit>
 		<unit id="taskItem.sync">
 			<segment>
-				<source>Sync</source>
-				<target>Synchroniser</target>
+				<source>Sync Needed</source>
+				<target>Synchroniser nécessaire</target>
 			</segment>
 		</unit>
 		<unit id="taskItem.done">

@@ -7,6 +7,13 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "importPending": string;
     "importComplete": string;
     "importError": string;
+    "ptfError": string;
+    "importCreated": string;
+    "projectImported": string;
+    "allDataOverwritten": string;
+    "neverExported": string;
+    "lastExported": string;
+    "exportedLost": string;
     "login": string;
 };
 
@@ -492,7 +499,6 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "paratextAssociation": string;
     "selectProject": string;
     "noProject": string;
-    "ParatextProject": string;
     "projectsPending": string;
     "countPending": string;
     "usernamePending": string;

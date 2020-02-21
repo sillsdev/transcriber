@@ -34,6 +34,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.ptfError">
+         <segment>
+            <source>Not a valid Portable Transcriber File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.importCreated">
+         <segment>
+            <source>Import file was created: {date0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.projectImported">
+         <segment>
+            <source>Project {name0} was previously imported with a newer file: {date1} </source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.allDataOverwritten">
+         <segment>
+            <source>All data will be overwritten.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.neverExported">
+         <segment>
+            <source>Current data in project {name0} has never been exported.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.lastExported">
+         <segment>
+            <source>Current data in project {name0} was last exported {date0}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.exportedLost">
+         <segment>
+            <source>Import file will not include latest exported data.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.login">
          <segment>
             <source>Online Login</source>
@@ -2346,13 +2388,7 @@
       </unit>
       <unit id="integration.noProject">
          <segment>
-            <source>You are not a member of a</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.ParatextProject">
-         <segment>
-            <source>Paratext Project</source>
+            <source>You are not a member of a {lang0} Paratext Project.</source>
             <target/>
          </segment>
       </unit>
@@ -2418,7 +2454,7 @@
       </unit>
       <unit id="integration.questionProject">
          <segment>
-            <source>Are you connected to a</source>
+            <source>Are you connected to a {lang0} Paratext project?</source>
             <target/>
          </segment>
       </unit>
@@ -2928,7 +2964,7 @@
       </unit>
       <unit id="taskItem.sync">
          <segment>
-            <source>Sync</source>
+            <source>Sync Needed</source>
             <target/>
          </segment>
       </unit>

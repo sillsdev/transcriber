@@ -17,6 +17,8 @@ export interface Project extends Record {
     dateUpdated: string | null;
     dateArchived: string | null;
     lastModifiedBy: number;
+    dateExported: string | null;
+    dateImported: string | null;
   };
   relationships?: {
     projecttype: RecordRelationship;

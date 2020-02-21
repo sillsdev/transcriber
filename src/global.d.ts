@@ -3,6 +3,7 @@ import Memory from '@orbit/memory';
 import { Schema, KeyMap } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import JSONAPISource from '@orbit/jsonapi';
+import IndexedDBSource from '@orbit/indexeddb';
 
 declare module 'reactn/default' {
   export interface State {
@@ -16,6 +17,7 @@ declare module 'reactn/default' {
     user: string;
     lang: string;
     memory: Memory;
+    backup: IndexedDBSource;
     schema: Schema;
     keyMap: KeyMap;
     bucket: Bucket;

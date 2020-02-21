@@ -40,7 +40,56 @@
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="access.login">
+            <trans-unit id="access.ptfError">
+                <source>Not a valid Portable Transcriber File</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.importCreated">
+                <source>Import file was created: {date0}.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.projectImported">
+                <source>Project {name0} was previously imported with a newer file: {date1} </source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.allDataOverwritten">
+                <source>All data will be overwritten.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="access.neverExported">
+                <source>Current data in project {name0} has never been exported.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.lastExported">
+                <source>Current data in project {name0} was last exported {date0}.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.exportedLost">
+                <source>Import file will not include latest exported data.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="access.login">
         		<source>Online Login</source>
         		<target/>
         		<context-group>
@@ -2736,14 +2785,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.noProject">
-                <source>You are not a member of a</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">integration.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="integration.ParatextProject">
-                <source>Paratext Project</source>
+                <source>You are not a member of a {lang0} Paratext Project.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
@@ -2797,7 +2839,8 @@
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
-            </trans-unit>            <trans-unit id="integration.questionOnline">
+            </trans-unit>
+            <trans-unit id="integration.questionOnline">
                 <source>Are you connected to the Internet?</source>
                 <target/>
                 <context-group>
@@ -2819,7 +2862,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.questionProject">
-                <source>Are you connected to a</source>
+                <source>Are you connected to a {lang0} Paratext project?</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
@@ -3413,7 +3456,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="taskItem.sync">
-        		<source>Sync</source>
+        		<source>Sync Needed</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>

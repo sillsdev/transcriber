@@ -25,7 +25,14 @@ import { UserAvatar } from '../components/UserAvatar';
 import SnackBar from '../components/SnackBar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
-import handleElectronImport from './ElectronImport';
+import {
+  IImportData,
+  handleElectronImport,
+  getElectronImportData,
+} from './ElectronImport';
+import { withData } from 'react-orbitjs';
+import AdmZip from 'adm-zip';
+import Confirm from '../components/AlertDialog';
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -82,6 +89,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+interface IRecordProps {
+  users: Array<User>;
+}
 
 interface IStateProps {
   t: IAccessStrings;
@@ -95,13 +105,13 @@ interface IDispatchProps {
   importComplete: typeof action.importComplete;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   history: any;
   auth: Auth;
 }
 
 export function Access(props: IProps) {
-  const { auth, t, importStatus } = props;
+  const { auth, t, importStatus, users } = props;
   const classes = useStyles();
   const {
     fetchLocalization,
@@ -110,9 +120,11 @@ export function Access(props: IProps) {
     importComplete,
   } = props;
   const [memory] = useGlobal('memory');
+  const [backup] = useGlobal('backup');
   const [offline, setOffline] = useGlobal('offline');
-  const [users, setUsers] = useState(Array<User>());
   const [message, setMessage] = useState(<></>);
+  const [confirmAction, setConfirmAction] = useState('');
+  const [zipFile, setZipFile] = useState<AdmZip | null>(null);
 
   const handleLogin = () => auth.login();
 
@@ -126,17 +138,38 @@ export function Access(props: IProps) {
 
   const handleResetMessage = () => setMessage(<></>);
 
+  const handleActionConfirmed = () => {
+    if (!zipFile) {
+      console.log('No zip file yet...');
+      setTimeout(() => {
+        handleActionConfirmed();
+      }, 2000);
+    } else handleElectronImport(memory, backup, zipFile, importProject, t);
+    setConfirmAction('');
+  };
+  const handleActionRefused = () => {
+    setConfirmAction('');
+  };
   const handleImport = () => {
     if (isElectron) {
-      if (
-        !handleElectronImport(
-          memory,
-          importProject,
-          t.importPending,
-          t.importComplete
-        )
-      ) {
-        setMessage(<span>t.importError</span>);
+      var importData: IImportData = getElectronImportData(memory, t);
+      if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
+      else {
+        setZipFile(importData.zip);
+        if (importData.warnMsg) {
+          setConfirmAction(importData.warnMsg);
+        } else {
+          //no warning...so set confirmed
+          //zip file never got set here
+          //handleActionConfirmed();
+          handleElectronImport(
+            memory,
+            backup,
+            importData.zip,
+            importProject,
+            t
+          );
+        }
       }
     }
   };
@@ -159,10 +192,6 @@ export function Access(props: IProps) {
           showMessage(t.importProject, importStatus.statusMsg);
         }
         if (importStatus.complete) {
-          const curUsers = memory.cache.query((q: QueryBuilder) =>
-            q.findRecords('user')
-          ) as User[];
-          setUsers(curUsers);
           importComplete();
         }
       }
@@ -175,7 +204,7 @@ export function Access(props: IProps) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
-    if (!offline && !(/*await*/ Online())) setOffline(true);
+    Online(online => setOffline(!online));
 
     const localAuth = localStorage.getItem('trAdminAuthResult');
     if (localAuth) {
@@ -191,15 +220,9 @@ export function Access(props: IProps) {
         handleLogin();
       }
     }
-
-    if (isElectron) {
-      const curUsers = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('user')
-      ) as User[];
-      setUsers(curUsers);
-    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
   if (
     (!isElectron && auth.isAuthenticated(offline)) ||
     (isElectron && localStorage.getItem('user-id') !== null)
@@ -277,6 +300,13 @@ export function Access(props: IProps) {
               </Grid>
             </Grid>
           </Paper>
+          {confirmAction === '' || (
+            <Confirm
+              text={confirmAction + '  Continue?'}
+              yesResponse={handleActionConfirmed}
+              noResponse={handleActionRefused}
+            />
+          )}
           <SnackBar message={message} reset={handleResetMessage} />
         </div>
       )}
@@ -300,8 +330,10 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     dispatch
   ),
 });
+const mapRecordsToProps = {
+  users: (q: QueryBuilder) => q.findRecords('user'),
+};
 
-export default (connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Access) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(Access) as any
+) as any;

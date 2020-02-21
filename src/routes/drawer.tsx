@@ -92,6 +92,8 @@ import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
+import path from 'path';
+import { OfflineDataPath } from '../utils/offlineDataPath';
 
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
@@ -519,20 +521,8 @@ export function ResponsiveDrawer(props: IProps) {
       const orgRec = organizations.filter(o => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        console.log(
-          'org logo',
-          attr && attr.logoUrl
-            ? (process.env.REACT_APP_OFFLINEDATA
-                ? process.env.REACT_APP_OFFLINEDATA
-                : '') + attr.logoUrl
-            : ''
-        );
         setOrgAvatar(
-          attr && attr.logoUrl
-            ? (process.env.REACT_APP_OFFLINEDATA
-                ? process.env.REACT_APP_OFFLINEDATA
-                : '') + attr.logoUrl
-            : ''
+          attr && attr.logoUrl ? path.join(OfflineDataPath(), attr.logoUrl) : ''
         );
       }
     });
@@ -721,10 +711,14 @@ export function ResponsiveDrawer(props: IProps) {
 
   useEffect(() => {
     const media = mediafiles.filter(m => {
-      const plan = memory.cache.query((q: QueryBuilder) =>
-        q.findRecord({ type: 'plan', id: related(m, 'plan') })
-      );
-      return related(plan, 'project') === project && related(m, 'passage');
+      const planid = related(m, 'plan');
+      if (planid !== null) {
+        const plan = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'plan', id: related(m, 'plan') })
+        );
+        return related(plan, 'project') === project && related(m, 'passage');
+      }
+      return false;
     });
     const propsal = media.length > 0 && !busy;
     if (propsal !== transcribe) setTranscribe(propsal);

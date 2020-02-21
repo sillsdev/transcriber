@@ -345,7 +345,7 @@ export function ProjectSettings(props: IProps) {
   };
 
   useEffect(() => {
-    let proj: Project = {
+    let proj = {
       type: 'project',
       id: '',
       attributes: {
@@ -365,7 +365,7 @@ export function ProjectSettings(props: IProps) {
         dateArchived: '',
         lastModifiedBy: 0,
       },
-    };
+    } as Project;
     if (add) {
       setCurrentProject(undefined);
       const allUsers = groups.filter(

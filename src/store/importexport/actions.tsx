@@ -1,4 +1,5 @@
 import Axios, { AxiosError } from 'axios';
+import path from 'path';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import { JSONAPISerializerSettings, ResourceDocument } from '@orbit/jsonapi';
@@ -20,6 +21,8 @@ import Memory from '@orbit/memory';
 import { Record, TransformBuilder, Operation } from '@orbit/data';
 import { isArray } from 'util';
 import IndexedDBSource from '@orbit/indexeddb';
+import { Project } from '../../model';
+import { remoteIdGuid } from '../../utils';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -69,28 +72,56 @@ export const importComplete = () => (dispatch: any) => {
 export const importProject = (
   filepath: string,
   memory: Memory,
+  backup: IndexedDBSource,
   pendingmsg: string,
   completemsg: string
 ) => (dispatch: any) => {
   var tb: TransformBuilder = new TransformBuilder();
   var oparray: Operation[] = [];
-  const backup = new IndexedDBSource({
-    schema: memory.schema,
-    keyMap: memory.keyMap,
-    name: 'backup',
-    namespace: 'transcriber',
-  });
-  backup.reset();
 
-  async function insertData(item: Record) {
-    memory.schema.initializeRecord(item);
-    oparray.push(tb.addRecord(item));
+  function insertData(item: Record) {
+    if (item.type === 'project') {
+      const project: Project = item as Project;
+      project.attributes.dateImported = project.attributes.dateExported;
+      project.attributes.dateExported = null;
+    }
+    var rec: Record | Record[] | null = null;
+    try {
+      if (item.keys) {
+        var id = remoteIdGuid(item.type, item.keys['remoteId'], memory.keyMap);
+        rec = memory.cache.query(q =>
+          q.findRecord({ type: item.type, id: id })
+        );
+      }
+    } catch (err) {
+      if (err.constructor.name !== 'RecordNotFoundException') console.log(err);
+    } finally {
+      if (rec) {
+        if (isArray(rec)) rec = rec[0]; //won't be...
+        item.id = rec.id;
+        oparray.push(tb.updateRecord(item));
+      } else {
+        try {
+          memory.schema.initializeRecord(item);
+          oparray.push(tb.addRecord(item));
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    }
   }
+  function processFile(file: string, ser: JSONAPISerializerCustom) {
+    var data = fs.readFileSync(file);
+    var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
+    if (isArray(json.data)) json.data.forEach(insertData);
+    else insertData(json.data);
+  }
+
   dispatch({
     payload: pendingmsg,
     type: IMPORT_PENDING,
   });
-  fs.readdir(filepath + 'data', async function(err, files) {
+  fs.readdir(filepath, async function(err, files) {
     if (err) {
       dispatch({
         payload: errorStatus(err.errno, err.message),
@@ -105,19 +136,13 @@ export const importProject = (
       ser.resourceKey = () => {
         return 'remoteId';
       };
-      files.forEach(function(file) {
-        var data = fs.readFileSync(filepath + 'data/' + file);
-        var json = ser.deserialize(
-          JSON.parse(data.toString()) as ResourceDocument
-        );
-        if (isArray(json.data)) json.data.forEach(insertData);
-        else insertData(json.data);
-      });
-
-      memory
+      for (let index = 0; index < files.length; index++) {
+        processFile(path.join(filepath, files[index]), ser);
+      }
+      await memory
         .update(oparray)
-        .then(response => {
-          backup
+        .then(async response => {
+          await backup
             .push(oparray)
             .then(res => {
               dispatch({

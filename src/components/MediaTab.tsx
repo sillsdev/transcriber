@@ -280,7 +280,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'version', compare: numCompare },
     { columnName: 'date', compare: dateCompare },
   ];
-
+  const sortingEnabled = [{ columnName: 'playIcon', sortingEnabled: false }];
   const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -602,6 +602,7 @@ export function MediaTab(props: IProps) {
           columns={columnDefs}
           columnWidths={columnWidths}
           columnSorting={columnSorting}
+          sortingEnabled={sortingEnabled}
           dataCell={Cell}
           sorting={[
             { columnName: 'planName', direction: 'asc' },

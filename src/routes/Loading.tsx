@@ -95,6 +95,7 @@ export function Loading(props: IProps) {
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
+  const [backup] = useGlobal('backup');
   const [offline] = useGlobal('offline');
   const [bucket, setBucket] = useGlobal('bucket');
   const [remote, setRemote] = useGlobal('remote');
@@ -163,6 +164,7 @@ export function Loading(props: IProps) {
       schema,
       memory,
       keyMap,
+      backup,
       auth,
       offline,
       setUser,

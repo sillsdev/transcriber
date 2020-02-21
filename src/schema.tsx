@@ -188,6 +188,8 @@ const schemaDefinition: SchemaSettings = {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
+        dateExported: { type: 'date-time' },
+        dateImported: { type: 'date-time' },
       },
       relationships: {
         projecttype: {
