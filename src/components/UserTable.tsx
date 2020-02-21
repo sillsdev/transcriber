@@ -138,7 +138,6 @@ export function UserTable(props: IProps) {
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
-  const [developer] = useGlobal('developer');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [editId, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
@@ -304,19 +303,17 @@ export function UserTable(props: IProps) {
                 {t.invite}
                 <AddIcon className={classes.buttonIcon} />
               </Button>
-              {developer && (
-                <Button
-                  key="offline"
-                  aria-label={t.offline}
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleEdit('Add')}
-                >
-                  {t.offline}
-                  <AddIcon className={classes.buttonIcon} />
-                </Button>
-              )}
+              <Button
+                key="offline"
+                aria-label={t.offline}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleEdit('Add')}
+              >
+                {t.offline}
+                <AddIcon className={classes.buttonIcon} />
+              </Button>
             </>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
