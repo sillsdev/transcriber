@@ -466,7 +466,7 @@ export function TaskTable(props: IProps) {
   const role = React.useMemo(() => {
     return getUserRole(user, project);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [user, project]);
+  }, [user, project, projects.length, groupMemberships.length, roles.length]);
 
   useEffect(() => {
     const rowList: IRow[] = [];
