@@ -264,19 +264,29 @@ export const LanguagePicker = (props: IProps) => {
     let newTag = tag;
     const found = bcp47Find(response);
     let maxMatch = '';
-    if (tag.tags) {
-      tag.tags.forEach(t => {
-        const tLen = t.length;
-        if (tLen > maxMatch.length) {
-          if (t === response.slice(0, tLen)) {
-            maxMatch = t;
-          }
-        }
-      });
-      if (maxMatch !== '') {
-        newTag = { ...tag, tag: tag.tag + response.slice(maxMatch.length) };
-        displayTag(newTag);
+    let tagList = [tag.full];
+    if (tag.iso639_3) {
+      tagList.push(tag.iso639_3);
+      tagList.push(tag.iso639_3 + '-' + tag.script);
+      if (tag.region) {
+        tagList.push(tag.iso639_3 + '-' + tag.region);
+        tagList.push(tag.iso639_3 + '-' + tag.script + '-' + tag.region);
       }
+    }
+    if (tag.tags) {
+      tagList = tagList.concat(tag.tags.map(t => t));
+    }
+    tagList.forEach(t => {
+      const tLen = t.length;
+      if (tLen > maxMatch.length) {
+        if (t === response.slice(0, tLen)) {
+          maxMatch = t;
+        }
+      }
+    });
+    if (maxMatch !== '') {
+      newTag = { ...tag, tag: tag.tag + response.slice(maxMatch.length) };
+      displayTag(newTag);
     }
     setTag(newTag);
     if (maxMatch === '') {
@@ -306,31 +316,35 @@ export const LanguagePicker = (props: IProps) => {
     if (!tag) {
       let list = Array<number>();
       response.split(' ').forEach(w => {
-        const wLangTags = bcp47Index(w);
-        if (wLangTags) {
-          list = mergeList(list, wLangTags);
-        } else {
-          const token = woBadChar(w).toLocaleLowerCase();
-          if (hasExact(token)) {
-            list = mergeList(list, getExact(token));
+        if (w.length > 1) {
+          const wLangTags = bcp47Index(w);
+          if (wLangTags) {
+            list = mergeList(list, wLangTags);
+          } else {
+            const token = woBadChar(w).toLocaleLowerCase();
+            if (hasExact(token)) {
+              list = mergeList(list, getExact(token));
+            }
           }
         }
       });
       response.split(' ').forEach(w => {
-        const lastDash = w.lastIndexOf('-');
-        if (lastDash !== -1) {
-          const wLangTags = bcp47Index(w.slice(0, lastDash));
-          if (wLangTags) list = mergeList(list, wLangTags);
-        } else {
-          const token = woBadChar(w).toLocaleLowerCase();
-          if (hasPart(token)) {
-            const tokLen = token.length;
-            Object.keys(getPart(token)).forEach(k => {
-              if (list.length < MAXOPTIONS) {
-                if (token === k.slice(0, tokLen))
-                  list = mergeList(list, getExact(k));
-              }
-            });
+        if (w.length > 1) {
+          const lastDash = w.lastIndexOf('-');
+          if (lastDash !== -1) {
+            const wLangTags = bcp47Index(w.slice(0, lastDash));
+            if (wLangTags) list = mergeList(list, wLangTags);
+          } else {
+            const token = woBadChar(w).toLocaleLowerCase();
+            if (hasPart(token)) {
+              const tokLen = token.length;
+              Object.keys(getPart(token)).forEach(k => {
+                if (list.length < MAXOPTIONS) {
+                  if (token === k.slice(0, tokLen))
+                    list = mergeList(list, getExact(k));
+                }
+              });
+            }
           }
         }
       });
