@@ -353,6 +353,7 @@ export function Transcriber(props: IProps) {
     transcribing: ActivityStates.TranscribeReady,
     reviewing: ActivityStates.TranscribeReady,
     approved: ActivityStates.TranscribeReady,
+    done: ActivityStates.TranscribeReady,
   };
   const handleReopen = async () => {
     if (previous.hasOwnProperty(state)) {
