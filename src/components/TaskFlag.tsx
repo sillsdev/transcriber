@@ -18,6 +18,7 @@ export const NextAction = (props: IProps) => {
     case ActivityStates.Transcribing:
     case ActivityStates.NeedsNewTranscription:
     case ActivityStates.NeedsNewRecording:
+    case ActivityStates.Incomplete:
       return t.transcribe;
     case ActivityStates.Transcribed:
     case ActivityStates.Reviewing:
@@ -38,6 +39,8 @@ const FlagText = (props: IProps) => {
       return t.needsNewRecording;
     case ActivityStates.NeedsNewTranscription:
       return t.needsNewTranscription;
+    case ActivityStates.Incomplete:
+      return t.incomplete;
     case ActivityStates.Approved:
       return t.sync;
     case ActivityStates.Transcribing:

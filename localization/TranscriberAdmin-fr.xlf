@@ -2933,7 +2933,13 @@
          	<target>Enregistrement nécessaire</target>
          </segment>
       </unit>
-      <unit id="taskItem.needsNewTranscription">
+		<unit id="taskItem.incomplete">
+			<segment>
+				<source>Incomplete</source>
+				<target>Incomplet</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.needsNewTranscription">
          <segment>
             <source>Correction Needed</source>
          	<target>Correction nécessaire</target>

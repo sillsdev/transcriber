@@ -3420,7 +3420,14 @@
         			<context context-type="sourcefile">TaskFlag.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="taskItem.needsNewTranscription">
+        	<trans-unit id="taskItem.incomplete">
+        		<source>Incomplete</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.needsNewTranscription">
         		<source>Correction Needed</source>
         		<target/>
         		<context-group>

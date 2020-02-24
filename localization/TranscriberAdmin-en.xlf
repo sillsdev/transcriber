@@ -2932,6 +2932,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="taskItem.incomplete">
+         <segment>
+            <source>Incomplete</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="taskItem.needsNewTranscription">
          <segment>
             <source>Correction Needed</source>

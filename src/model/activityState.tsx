@@ -11,6 +11,7 @@ export enum ActivityStates {
   Done = 'done',
   NeedsNewRecording = 'needsNewRecording',
   Synced = 'synced',
+  Incomplete = 'incomplete',
 }
 export interface ActivityState extends Record {
   attributes: {

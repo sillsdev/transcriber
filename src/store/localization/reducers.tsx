@@ -648,6 +648,7 @@ const initialState = {
 		"en": {
 			"noMedia": "No Recording",
 			"needsNewRecording": "Recording Needed",
+			"incomplete": "Incomplete",
 			"needsNewTranscription": "Correction Needed",
 			"inProgress": "In Progress",
 			"transcribe": "Transcribe",

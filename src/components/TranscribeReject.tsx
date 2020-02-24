@@ -147,7 +147,7 @@ function TranscribeReject(props: IProps) {
                 label={t.needsCorrection}
               />
               <FormControlLabel
-                value={ActivityStates.TranscribeReady}
+                value={ActivityStates.Incomplete}
                 control={<Radio color="primary" />}
                 label={t.incomplete}
               />
