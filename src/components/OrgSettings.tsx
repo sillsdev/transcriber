@@ -26,6 +26,7 @@ import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { API_CONFIG } from '../api-variable';
 import { CreateOrg } from '../utils';
+import { currentDateTime } from '../utils/currentDateTime';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -139,7 +140,7 @@ export function OrgSettings(props: IProps) {
           websiteUrl: website,
           logoUrl: orgAvatar,
           publicByDefault,
-          dateUpdated: new Date().toISOString(),
+          dateUpdated: currentDateTime(),
         },
       }),
       // we aren't allowing them to change owner oraganization currently

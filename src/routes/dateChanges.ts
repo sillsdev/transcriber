@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import moment from 'moment';
 import {
   KeyMap,
   QueryBuilder,
@@ -13,6 +12,7 @@ import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
 import { remoteIdGuid } from '../utils';
 import JSONAPISource from '@orbit/jsonapi';
+import { currentDateTime } from '../utils/currentDateTime';
 
 export const dateChanges = (
   auth: Auth,
@@ -22,8 +22,8 @@ export const dateChanges = (
   schema: Schema
 ) => {
   let lastTime = localStorage.getItem('lastTime');
-  if (!lastTime) lastTime = moment.utc().toISOString(); // should not happen
-  let nextTime = moment.utc().toISOString();
+  if (!lastTime) lastTime = currentDateTime(); // should not happen
+  let nextTime = currentDateTime();
   Axios.get(
     API_CONFIG.host +
       '/api/datachanges/since/' +

@@ -15,6 +15,7 @@ interface IProps {
   schema: Schema;
   memory: Memory;
   keyMap: KeyMap;
+  user: string;
 }
 
 export const projectShortcut = async (props: IProps) => {
@@ -29,6 +30,7 @@ export const projectShortcut = async (props: IProps) => {
     schema,
     memory,
     keyMap,
+    user,
   } = props;
 
   const plan = await saveNewPlan({
@@ -51,6 +53,7 @@ export const projectShortcut = async (props: IProps) => {
     section,
     schema,
     memory,
+    user,
   });
   const planId = await waitForRemoteId(plan, keyMap);
   const projId = await waitForRemoteId(

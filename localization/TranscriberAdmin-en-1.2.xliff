@@ -1223,6 +1223,20 @@
                     <context context-type="sourcefile">MediaTab.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="passageMedia.mediaAttached">
+                <source>Media Attached</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="passageMedia.mediaDetached">
+                <source>Media Removed</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaTab.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="passageMedia.attachAvailableMedia">
                 <source>Attach available media files to passages (with no current media).</source>
                 <target/>

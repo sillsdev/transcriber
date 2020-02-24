@@ -1,7 +1,13 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/data';
+import { BaseModel } from './baseModel';
 
-export interface ProjectIntegration extends Record {
-  attributes: { settings: string };
+export interface ProjectIntegration extends BaseModel {
+  attributes: {
+    settings: string;
+    dateCreated: string;
+    dateUpdated: string;
+    lastModifiedBy: number;
+  };
   relationships?: {
     project: RecordRelationship;
     integration: RecordRelationship;

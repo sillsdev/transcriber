@@ -48,10 +48,8 @@ export const saveNewProject = async (props: IProps) => {
       rtl,
       allowClaim: true,
       isPublic: true,
-      dateCreated: new Date().toISOString(),
-      dateUpdated: null,
     },
-  } as any;
+  } as Project;
   schema.initializeRecord(project);
   await memory.update((t: TransformBuilder) => [
     t.addRecord(project),

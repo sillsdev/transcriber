@@ -876,7 +876,7 @@ export function ResponsiveDrawer(props: IProps) {
               ? [t.organization]
               : [t.usersAndGroups, t.organization]
             ).map((text, index) => (
-              <Tooltip title={text}>
+              <Tooltip key={text} title={text}>
                 <ListItem
                   button
                   key={text}
@@ -933,7 +933,7 @@ export function ResponsiveDrawer(props: IProps) {
               ? [t.tasks]
               : [t.plans, t.team, t.media, t.reports]
             ).map((text, index) => (
-              <Tooltip title={text}>
+              <Tooltip key={text} title={text}>
                 <ListItem
                   button
                   key={text}
@@ -950,7 +950,7 @@ export function ResponsiveDrawer(props: IProps) {
           <Divider />
           <List>
             {[t.settings, t.export, t.integrations].map((text, index) => (
-              <Tooltip title={text}>
+              <Tooltip key={text} title={text}>
                 <ListItem
                   button
                   key={text}

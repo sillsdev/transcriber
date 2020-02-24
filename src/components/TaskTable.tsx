@@ -42,9 +42,11 @@ import {
   sectionNumber,
   passageNumber,
   numCompare,
+  remoteIdNum,
 } from '../utils';
 import { debounce } from 'lodash';
 import './TaskTable.css';
+import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
 
 export const TaskItemWidth = 370;
 
@@ -254,14 +256,18 @@ export function TaskTable(props: IProps) {
             { type: 'user', id: user }
           )
         );
+        if (next[mediaDescription.state] !== undefined)
+          memory.update(
+            UpdatePassageStateOps(
+              mediaDescription.passage.id,
+              next[mediaDescription.state],
+              '',
+              remoteIdNum('user', user, keyMap),
+              new TransformBuilder(),
+              []
+            )
+          );
       }
-      memory.update((t: TransformBuilder) =>
-        t.replaceAttribute(
-          { type: 'passage', id: mediaDescription.passage.id },
-          'state',
-          next[mediaDescription.state]
-        )
-      );
     }
     transcriber(mediaDescription);
   };

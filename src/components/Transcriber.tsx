@@ -21,7 +21,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   makeStyles,
   createStyles,
@@ -64,6 +64,7 @@ import {
   related,
   insertAtCursor,
   remoteIdGuid,
+  remoteIdNum,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -71,6 +72,11 @@ import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
 import moment from 'moment-timezone';
+import { UpdateRecord } from '../model/baseModel';
+import {
+  UpdatePassageStateOps,
+  AddPassageStateCommentOps,
+} from '../utils/UpdatePassageState';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -173,6 +179,7 @@ export function Transcriber(props: IProps) {
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
+  const [user] = useGlobal('user');
   const [projRec, setProjRec] = React.useState<Project>();
   const [passRec, setPassRec] = React.useState<Passage>(passage);
   const [passageStateChanges, setPassageStateChanges] = React.useState<
@@ -264,10 +271,17 @@ export function Transcriber(props: IProps) {
     setRejectVisible(true);
   };
   const handleRejected = (pass: Passage) => {
-    memory.update((t: TransformBuilder) => [
-      t.replaceAttribute(pass, 'lastComment', pass.attributes.lastComment),
-      t.replaceAttribute(pass, 'state', pass.attributes.state),
-    ]);
+    memory.update(
+      UpdatePassageStateOps(
+        pass.id,
+        pass.attributes.state,
+        pass.attributes.lastComment,
+        remoteIdNum('user', user, memory.keyMap),
+        new TransformBuilder(),
+        []
+      )
+    );
+    pass.attributes.lastComment = '';
     done();
   };
   const handleRejectCancel = () => setRejectVisible(false);
@@ -313,18 +327,30 @@ export function Transcriber(props: IProps) {
         let nextState = next[state];
         if (nextState === ActivityStates.Approved && getType() !== 'scripture')
           nextState = ActivityStates.Done;
-        await memory.update((t: TransformBuilder) => [
-          t.replaceAttribute(passRec, 'lastComment', comment),
-          t.replaceAttribute(passRec, 'state', nextState),
-          t.updateRecord({
-            type: 'mediafile',
-            id: mediaId,
-            attributes: {
-              transcription: transcription,
-              position: 0,
-            },
-          }),
-        ]);
+        var tb = new TransformBuilder();
+        var ops = UpdatePassageStateOps(
+          passRec.id,
+          nextState,
+          comment,
+          remoteIdNum('user', user, memory.keyMap),
+          tb,
+          []
+        );
+        ops.push(
+          UpdateRecord(
+            tb,
+            {
+              type: 'mediafile',
+              id: mediaId,
+              attributes: {
+                transcription: transcription,
+                position: 0,
+              },
+            } as MediaFile,
+            remoteIdNum('user', user, keyMap)
+          )
+        );
+        await memory.update(ops);
       } else {
         console.log('Unhandled state', state);
       }
@@ -334,17 +360,34 @@ export function Transcriber(props: IProps) {
   const handleSave = async () => {
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
-      memory.update((t: TransformBuilder) => [
-        t.replaceAttribute(passRec, 'lastComment', comment),
-        t.updateRecord({
-          type: 'mediafile',
-          id: mediaId,
-          attributes: {
-            transcription: transcription,
-            position: playedSeconds,
-          },
-        }),
-      ]);
+      const userid = remoteIdNum('user', user, keyMap);
+      const tb = new TransformBuilder();
+      let ops: Operation[] = [];
+      if (comment !== '') {
+        ops = AddPassageStateCommentOps(
+          passRec.id,
+          state,
+          comment,
+          userid,
+          tb,
+          ops
+        );
+      }
+      ops.push(
+        UpdateRecord(
+          tb,
+          {
+            type: 'mediafile',
+            id: mediaId,
+            attributes: {
+              transcription: transcription,
+              position: playedSeconds,
+            },
+          } as MediaFile,
+          userid
+        )
+      );
+      memory.update(ops);
     }
     done();
   };
@@ -357,10 +400,16 @@ export function Transcriber(props: IProps) {
   };
   const handleReopen = async () => {
     if (previous.hasOwnProperty(state)) {
-      await memory.update((t: TransformBuilder) => [
-        t.replaceAttribute(passRec, 'lastComment', comment),
-        t.replaceAttribute(passRec, 'state', previous[state]),
-      ]);
+      await memory.update(
+        UpdatePassageStateOps(
+          passRec.id,
+          previous[state],
+          comment,
+          remoteIdNum('user', user, keyMap),
+          new TransformBuilder(),
+          []
+        )
+      );
     }
     done();
   };

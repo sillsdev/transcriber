@@ -406,7 +406,12 @@ export function TranscriptionTab(props: IProps) {
         if (exportStatus.statusMsg) {
           showMessage(t.exportProject, exportStatus.statusMsg);
         }
-        if (exportStatus.complete && exportName === '') {
+        if (
+          exportStatus.complete &&
+          exportName === '' &&
+          exportFile &&
+          exportFile.data
+        ) {
           setExportName(exportFile.data.attributes.message);
           setExportUrl(exportFile.data.attributes.fileurl);
         }

@@ -1048,6 +1048,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageMedia.mediaAttached">
+         <segment>
+            <source>Media Attached</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.mediaDetached">
+         <segment>
+            <source>Media Removed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.attachAvailableMedia">
          <segment>
             <source>Attach available media files to passages (with no current media).</source>

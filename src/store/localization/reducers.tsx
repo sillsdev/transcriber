@@ -242,6 +242,8 @@ const initialState = {
 	}),
 	"passageMedia": new LocalizedStrings({
 		"en": {
+			"mediaAttached": "Media Attached",
+			"mediaDetached": "Media Removed",
 			"attachAvailableMedia": "Attach available media files to passages (with no current media).",
 			"attachMediaToPassages": "Attach Media to Passages",
 			"choosePassage": "Choose Your Passage ({0} without attachments)",

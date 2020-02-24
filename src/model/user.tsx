@@ -1,9 +1,10 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/data';
+import { BaseModel } from './baseModel';
 export enum DigestPreference {
   noDigest = 0,
   dailyDigest = 1,
 }
-export interface User extends Record {
+export interface User extends BaseModel {
   attributes: {
     name: string;
     givenName: string | null;
@@ -24,9 +25,9 @@ export interface User extends Record {
     hotKeys: string | null;
     digestPreference: DigestPreference | null;
     newsPreference: boolean | null;
-    dateCreated: string | null;
-    dateUpdated: string | null;
-    lastModifiedBy: string | null;
+    dateCreated: string;
+    dateUpdated: string;
+    lastModifiedBy: number;
   };
   relationships?: {
     organizationMemberships: RecordRelationship;
@@ -34,11 +35,11 @@ export interface User extends Record {
   };
 }
 
-export interface CurrentUser extends Record {
+export interface CurrentUser extends User {
   attributes: {
     name: string;
-    givenName: string;
-    familyName: string;
+    givenName: string | null;
+    familyName: string | null;
     email: string;
     phone: string | null;
     timezone: string | null;
@@ -53,9 +54,11 @@ export interface CurrentUser extends Record {
     progressbarTypeid: string | null;
     avatarUrl: string | null;
     hotKeys: string | null;
-    dateCreated: string | null;
-    dateUpdated: string | null;
-    lastModifiedBy: string | null;
+    digestPreference: DigestPreference | null;
+    newsPreference: boolean | null;
+    dateCreated: string;
+    dateUpdated: string;
+    lastModifiedBy: number;
   };
   relationships?: {
     organizationMemberships: RecordRelationship;

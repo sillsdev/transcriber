@@ -44,12 +44,14 @@ import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { remoteId, makeAbbr, uiLang, related } from '../utils';
+import { remoteId, makeAbbr, uiLang, related, remoteIdNum } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
+import { UpdateRecord } from '../model/baseModel';
+import { currentDateTime } from '../utils/currentDateTime';
 
 interface ILangDes {
   type: string;
@@ -279,29 +281,36 @@ export function Profile(props: IProps) {
   const handleSave = () => {
     if (changed) {
       memory.update((t: TransformBuilder) => [
-        t.updateRecord({
-          type: 'user',
-          id: currentUser === undefined ? user : currentUser.id, //currentuser will not be undefined here
-          attributes: {
-            name,
-            givenName: given,
-            familyName: family,
-            email,
-            phone,
-            timezone,
-            locale,
-            isLocked: locked,
-            uilanguagebcp47: bcp47,
-            timercountUp: timerDir,
-            playbackSpeed: speed,
-            progressbarTypeid: progBar,
-            digestPreference: digest,
-            newsPreference: news,
-            hotKeys,
-            avatarUrl,
-            dateUpdated: new Date().toISOString(),
-          },
-        }),
+        UpdateRecord(
+          t,
+          {
+            type: 'user',
+            id: currentUser === undefined ? user : currentUser.id, //currentuser will not be undefined here
+            attributes: {
+              name,
+              givenName: given,
+              familyName: family,
+              email,
+              phone,
+              timezone,
+              locale,
+              isLocked: locked,
+              uilanguagebcp47: bcp47,
+              timercountUp: timerDir,
+              playbackSpeed: speed,
+              progressbarTypeid: progBar,
+              digestPreference: digest,
+              newsPreference: news,
+              hotKeys,
+              avatarUrl,
+            },
+          } as User,
+          remoteIdNum(
+            'user',
+            currentUser !== undefined ? currentUser.id : '',
+            keyMap
+          )
+        ),
         // we aren't allowing them to change owner oraganization currently
       ]);
       setLanguage(locale);
@@ -391,8 +400,8 @@ export function Profile(props: IProps) {
           newsPreference: news,
           hotKeys,
           avatarUrl,
-          dateCreated: new Date().toISOString(),
-          dateUpdated: null,
+          dateCreated: currentDateTime(),
+          dateUpdated: currentDateTime(),
           lastModifiedBy: remoteId('user', user, keyMap),
         },
       } as any;
@@ -474,9 +483,9 @@ export function Profile(props: IProps) {
         newsPreference: false,
         hotKeys,
         avatarUrl,
-        dateCreated: null,
-        dateUpdated: null,
-        lastModifiedBy: remoteId('user', user, keyMap),
+        dateCreated: currentDateTime(),
+        dateUpdated: currentDateTime(),
+        lastModifiedBy: remoteIdNum('user', user, keyMap),
       },
     };
     if (!editId || !/Add/i.test(editId)) {

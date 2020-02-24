@@ -8,6 +8,7 @@ import { withData, WithDataProps } from 'react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { UpdateRecord } from '../model/baseModel';
 import Confirm from './AlertDialog';
 import {
   ExpansionPanel,
@@ -161,6 +162,8 @@ export function IntegrationPanel(props: IProps) {
   const [myProject, setMyProject] = React.useState('');
   const [project] = useGlobal('project');
   const [keyMap] = useGlobal('keyMap');
+  const [user] = useGlobal('user');
+
   const [paratextIntegration, setParatextIntegration] = React.useState();
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
@@ -235,13 +238,17 @@ export function IntegrationPanel(props: IProps) {
     setting: string
   ): string => {
     memory.update((t: TransformBuilder) =>
-      t.updateRecord({
-        type: 'projectintegration',
-        id: projInt,
-        attributes: {
-          settings: setting,
-        },
-      })
+      UpdateRecord(
+        t,
+        {
+          type: 'projectintegration',
+          id: projInt,
+          attributes: {
+            settings: setting,
+          },
+        } as ProjectIntegration,
+        remoteIdNum('user', user, keyMap)
+      )
     );
     return projInt;
   };

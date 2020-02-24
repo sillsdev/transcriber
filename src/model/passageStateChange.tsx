@@ -1,12 +1,14 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/data';
 import { ActivityStates } from '.';
+import { BaseModel } from './baseModel';
 
-export interface PassageStateChange extends Record {
+export interface PassageStateChange extends BaseModel {
   attributes: {
     state: ActivityStates;
     comments: string;
-    dateCreated: Date;
-    lastModifiedBy: number /* userid */;
+    dateCreated: string;
+    dateUpdated: string;
+    lastModifiedBy: number;
   };
   relationships?: {
     passage: RecordRelationship;

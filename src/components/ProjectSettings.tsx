@@ -337,6 +337,7 @@ export function ProjectSettings(props: IProps) {
         schema,
         memory,
         keyMap,
+        user,
       }).then(({ url, planId }) => {
         if (finishAdd) finishAdd({ to: url, projectId: project.id, planId });
         orbitSaving(false);

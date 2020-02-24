@@ -320,6 +320,7 @@ const schemaDefinition: SchemaSettings = {
         state: { type: 'string' },
         comments: { type: 'string' },
         dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
         lastModifiedBy: { type: 'number' },
       },
       relationships: {

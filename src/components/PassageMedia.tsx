@@ -12,7 +12,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -33,6 +33,8 @@ import {
 import SnackBar from './SnackBar';
 import related from '../utils/related';
 import { passageRefCompare, passageReference } from '../utils/passage';
+import { remoteIdNum } from '../utils';
+import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,6 +79,7 @@ function PassageMedia(props: IProps) {
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [open, setOpen] = useState(visible);
   const [selectedPassage, setSelectedPassage] = useState('');
   const [selectedMedia, setSelectedMedia] = useState('');
@@ -92,32 +95,46 @@ function PassageMedia(props: IProps) {
     setMessage(<></>);
   };
   const attach = async (passage: string, mediaFile: string) => {
-    await memory.update((t: TransformBuilder) => [
-      t.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
+    var tb = new TransformBuilder();
+    var ops: Operation[] = [];
+    ops.push(
+      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
         type: 'passage',
         id: passage,
-      }),
-      t.replaceAttribute(
-        { type: 'passage', id: passage },
-        'state',
-        ActivityStates.TranscribeReady
-      ),
-    ]);
+      })
+    );
+    ops = UpdatePassageStateOps(
+      passage,
+      ActivityStates.TranscribeReady,
+      t.mediaAttached,
+      remoteIdNum('user', user, memory.keyMap),
+      tb,
+      ops
+    );
+    await memory.update(ops);
   };
+
   const detach = async (passage: string, mediaFile: string) => {
-    await memory.update((t: TransformBuilder) => [
-      t.replaceRelatedRecord(
+    var tb = new TransformBuilder();
+    var ops: Operation[] = [];
+    ops.push(
+      tb.replaceRelatedRecord(
         { type: 'mediafile', id: mediaFile },
         'passage',
         null
-      ),
-      t.replaceAttribute(
-        { type: 'passage', id: passage },
-        'state',
-        ActivityStates.NoMedia
-      ),
-    ]);
+      )
+    );
+    ops = UpdatePassageStateOps(
+      passage,
+      ActivityStates.NoMedia,
+      t.mediaDetached,
+      remoteIdNum('user', user, memory.keyMap),
+      tb,
+      ops
+    );
+    await memory.update(ops);
   };
+
   const handleSelectPassage = (id: string) => () => {
     if (selectedMedia !== '') {
       setSelectedPassage('');

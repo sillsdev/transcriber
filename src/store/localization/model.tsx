@@ -221,6 +221,8 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
+    "mediaAttached": string;
+    "mediaDetached": string;
     "attachAvailableMedia": string;
     "attachMediaToPassages": string;
     "choosePassage": string;

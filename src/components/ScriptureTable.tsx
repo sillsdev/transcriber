@@ -111,6 +111,7 @@ export function ScriptureTable(props: IProps) {
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
+  const [user] = useGlobal('user');
   const [message, setMessage] = useState(<></>);
   const [rowId, setRowId] = useState(Array<ISequencedRecordIdentity>());
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -496,6 +497,7 @@ export function ScriptureTable(props: IProps) {
               section,
               schema,
               memory,
+              user,
             });
             newRowId(rowIndex, passage.id);
           } else {

@@ -1,5 +1,4 @@
 import { Base64 } from 'js-base64';
-import moment from 'moment';
 import { IApiError } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -16,6 +15,7 @@ import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
+import { currentDateTime } from './utils/currentDateTime';
 
 // import { Online } from './utils';
 
@@ -232,7 +232,7 @@ export const Sources = async (
   });
 
   if (!offline && userToken !== tokData.sub) {
-    localStorage.setItem('lastTime', moment.utc().toISOString());
+    localStorage.setItem('lastTime', currentDateTime());
     await InviteUser(remote);
 
     await remote

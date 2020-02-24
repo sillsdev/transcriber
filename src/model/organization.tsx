@@ -9,8 +9,8 @@ export interface Organization extends Record {
     websiteUrl: string | null;
     logoUrl: string | null;
     publicByDefault: boolean;
-    dateCreated: string | null;
-    dateUpdated: string | null;
+    dateCreated: string;
+    dateUpdated: string;
     lastModifiedBy: number;
   };
   relationships?: {

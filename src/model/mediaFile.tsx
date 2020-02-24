@@ -1,6 +1,7 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/data';
+import { BaseModel } from './baseModel';
 
-export interface MediaFile extends Record {
+export interface MediaFile extends BaseModel {
   attributes: {
     planId: number; //allow this because we use axios to create a mediafile
     versionNumber: number;
@@ -15,8 +16,9 @@ export interface MediaFile extends Record {
     originalFile: string;
     filesize: number;
     position: number;
-    dateCreated: string | null;
-    dateUpdated: string | null;
+    dateCreated: string;
+    dateUpdated: string;
+    lastModifiedBy: number;
   };
   relationships?: {
     passage: RecordRelationship;
