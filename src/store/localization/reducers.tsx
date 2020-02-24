@@ -570,7 +570,6 @@ const initialState = {
 			"submit": "Submit",
 			"reject": "Reject",
 			"save": "Save",
-			"next": "Next",
 			"reopen": "Reopen",
 			"settingsTip": "Settings",
 			"backTip": "Skip back ({0})",

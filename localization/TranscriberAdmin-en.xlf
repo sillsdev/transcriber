@@ -2560,12 +2560,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.next">
-         <segment>
-            <source>Next</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.reopen">
          <segment>
             <source>Reopen</source>

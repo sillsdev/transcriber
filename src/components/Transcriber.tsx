@@ -348,7 +348,6 @@ export function Transcriber(props: IProps) {
     }
     done();
   };
-  const handleNext = () => done();
   const previous: { [key: string]: string } = {
     transcribed: ActivityStates.TranscribeReady,
     transcribing: ActivityStates.TranscribeReady,
@@ -784,14 +783,6 @@ export function Transcriber(props: IProps) {
                       disabled={!previous.hasOwnProperty(state)}
                     >
                       {t.reopen}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleNext}
-                    >
-                      {t.next}
                     </Button>
                   </>
                 )}

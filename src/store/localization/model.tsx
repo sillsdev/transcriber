@@ -530,7 +530,6 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submit": string;
     "reject": string;
     "save": string;
-    "next": string;
     "reopen": string;
     "settingsTip": string;
     "backTip": string;
