@@ -285,7 +285,9 @@ export const LanguagePicker = (props: IProps) => {
       const tLen = t.length;
       if (tLen > maxMatch.length) {
         if (t === response.slice(0, tLen)) {
-          maxMatch = t;
+          if (response.length === tLen || response[tLen] === '-') {
+            maxMatch = t;
+          }
         }
       }
     });
