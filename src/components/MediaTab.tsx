@@ -29,7 +29,7 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import MediaUpload from './MediaUpload';
+import MediaUpload, { UploadType } from './MediaUpload';
 import PassageMedia from './PassageMedia';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
@@ -617,6 +617,7 @@ export function MediaTab(props: IProps) {
       </div>
       <MediaUpload
         visible={uploadVisible}
+        uploadType={UploadType.Media}
         uploadMethod={uploadMedia}
         cancelMethod={uploadCancel}
       />

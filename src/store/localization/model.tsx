@@ -8,6 +8,7 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "importComplete": string;
     "importError": string;
     "ptfError": string;
+    "itfError": string;
     "importCreated": string;
     "projectImported": string;
     "allDataOverwritten": string;
@@ -283,6 +284,10 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
+    "onlineChangeReport": string;
+    "noFile": string;
+    "importPending": string;
+    "importComplete": string;
     "section": string;
     "sectionstate": string;
     "passages": string;
@@ -293,7 +298,8 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "elan": string;
     "export": string;
     "exportProject": string;
-    "exportError": string;
+    "exportingProject": string;
+    "error": string;
     "downloadComplete": string;
     "expiredToken": string;
 };
@@ -465,7 +471,11 @@ export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "title": string;
+    "PTFtitle": string;
+    "ITFtitle": string;
     "task": string;
+    "PTFtask": string;
+    "ITFtask": string;
     "dragDrop": string;
     "cancel": string;
     "upload": string;

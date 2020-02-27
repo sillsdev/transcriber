@@ -40,6 +40,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.itfError">
+         <segment>
+            <source>Not a valid Incremental Transcriber File</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.importCreated">
          <segment>
             <source>Import file was created: {date0}.</source>
@@ -54,7 +60,7 @@
       </unit>
       <unit id="access.allDataOverwritten">
          <segment>
-            <source>All data will be overwritten.</source>
+            <source>All {name0} data will be overwritten.</source>
             <target/>
          </segment>
       </unit>
@@ -1384,6 +1390,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.onlineChangeReport">
+         <segment>
+            <source>Online changes made since data provided to offline user.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.noFile">
+         <segment>
+            <source>Please select file to be uploaded.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>
@@ -1444,9 +1474,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportError">
+      <unit id="transcriptionTab.exportingProject">
          <segment>
-            <source>Export Error</source>
+            <source>Exporting Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.error">
+         <segment>
+            <source>Error</source>
             <target/>
          </segment>
       </unit>
@@ -2242,9 +2278,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.PTFtitle">
+         <segment>
+            <source>Upload complete Project Data from PTF</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtitle">
+         <segment>
+            <source>Upload Change Data from Offline Extension</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.task">
          <segment>
             <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.PTFtask">
+         <segment>
+            <source>Upload a Portable Transcriber File (ptf file).</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtask">
+         <segment>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
             <target/>
          </segment>
       </unit>

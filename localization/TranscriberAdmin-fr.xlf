@@ -37,6 +37,12 @@
             <target>Pas un fichier de transcripteur portable valide</target>
          </segment>
       </unit>
+      <unit id="access.itfError">
+         <segment>
+            <source>Not a valid Incremental Transcriber File</source>
+            <target>Pas un fichier de transcripteur incrémentiel valide</target>
+         </segment>
+      </unit>
      <unit id="access.importCreated">
          <segment>
             <source>Import file was created: {date0}.</source>
@@ -51,8 +57,8 @@
       </unit>
       <unit id="access.allDataOverwritten">
          <segment>
-            <source>All data will be overwritten.</source>
-            <target>Toutes les données seront écrasées.</target>
+            <source>All {name0} data will be overwritten.</source>
+            <target>Toutes les données {name0} seront écrasées.</target>
          </segment>
       </unit>
       <unit id="access.neverExported">
@@ -1382,6 +1388,30 @@
 				<target>Mon Atelier</target>
 			</segment>
 		</unit>
+        <unit id="transcriptionTab.onlineChangeReport">
+         <segment>
+            <source>Online changes made since data provided to offline user.</source>
+            <target>Modifications apportées en ligne depuis les données fournies à l'utilisateur hors ligne.</target>
+         </segment>
+      </unit>
+        <unit id="transcriptionTab.noFile">
+         <segment>
+            <source>Please select file to be uploaded.</source>
+            <target>Veuillez sélectionner le fichier à télécharger.</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+             <target>Importation en cours ...</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.importComplete">
+         <segment>
+            <source>Import Complete</source>
+             <target>Importation terminée</target>
+         </segment>
+      </unit>
 		<unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>
@@ -1443,10 +1473,16 @@
             <target>Exporter une projet</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportError">
+      <unit id="transcriptionTab.exportingProject">
          <segment>
-            <source>Export Error</source>
-            <target>Erreur d'exportation</target>
+            <source>Exporting Project</source>
+            <target>Projet d'exportation</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.error">
+         <segment>
+            <source>Error</source>
+            <target>Erreur</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.downloadComplete">
@@ -2242,10 +2278,34 @@
          	<target>Télécharger des fichiers audio</target>
          </segment>
       </unit>
+      <unit id="mediaUpload.PTFtitle">
+         <segment>
+            <source>Upload complete Project Data from PTF</source>
+            <target>Télécharger des données de projet complètes depuis PTF</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtitle">
+         <segment>
+            <source>Upload Change Data from Offline Extension</source>
+            <target>Télécharger les données de modification depuis l'extension hors ligne</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.task">
          <segment>
             <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
          	<target>Vous pouvez télécharger des fichiers audio au format .mp3, .m4a ou .wav.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.PTFtask">
+         <segment>
+            <source>Upload a Portable Transcriber File (ptf file).</source>
+            <target>Téléchargez un fichier transcripteur portable (fichier ptf).</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtask">
+         <segment>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
+            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'extension hors ligne.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDrop">

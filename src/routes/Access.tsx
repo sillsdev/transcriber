@@ -101,7 +101,7 @@ interface IStateProps {
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
-  importProject: typeof action.importProject;
+  importProject: typeof action.importProjectToElectron;
   importComplete: typeof action.importComplete;
 }
 
@@ -324,7 +324,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
-      importProject: action.importProject,
+      importProject: action.importProjectToElectron,
       importComplete: action.importComplete,
     },
     dispatch

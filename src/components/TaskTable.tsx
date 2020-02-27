@@ -47,6 +47,7 @@ import {
 import { debounce } from 'lodash';
 import './TaskTable.css';
 import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 export const TaskItemWidth = 370;
 
@@ -220,7 +221,10 @@ export function TaskTable(props: IProps) {
   const [filter, setFilter] = useState(
     filtering === undefined ? false : filtering
   );
-  const [height, setHeight] = React.useState(window.innerHeight);
+  const [style, setStyle] = React.useState<CSSProperties>({
+    height: window.innerHeight - 100,
+    overflowY: 'auto',
+  });
   const [message, setMessage] = useState(<></>);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -384,7 +388,7 @@ export function TaskTable(props: IProps) {
   };
 
   const setDimensions = () => {
-    setHeight(window.innerHeight);
+    setStyle({ height: window.innerHeight - 100, overflowY: 'auto' });
   };
 
   React.useEffect(() => {
@@ -609,7 +613,7 @@ export function TaskTable(props: IProps) {
     <div
       id="TaskTable"
       className={classes.root}
-      style={{ height: height - 100, overflowY: 'auto' }}
+      style={style}
       data-list={!filter ? 'true' : ''}
     >
       <div className={classes.container}>

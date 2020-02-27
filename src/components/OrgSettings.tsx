@@ -221,7 +221,7 @@ export function OrgSettings(props: IProps) {
   }, [add, organization, organizations]);
 
   if (/Main/i.test(view)) return <Redirect to="/main" />;
-
+  const textStyle = { width: 400 };
   return (
     <div
       className={clsx(classes.container, {
@@ -240,7 +240,7 @@ export function OrgSettings(props: IProps) {
                   value={name || ''}
                   onChange={handleNameChange}
                   margin="normal"
-                  style={{ width: 400 }}
+                  style={textStyle}
                   variant="filled"
                   required={true}
                 />
@@ -268,7 +268,7 @@ export function OrgSettings(props: IProps) {
                   value={description || ''}
                   onChange={handleDescriptionChange}
                   margin="normal"
-                  style={{ width: 400 }}
+                  style={textStyle}
                   variant="filled"
                   required={false}
                 />
@@ -285,7 +285,7 @@ export function OrgSettings(props: IProps) {
                     value={website || ''}
                     onChange={handleWebsiteChange}
                     margin="normal"
-                    style={{ width: 400 }}
+                    style={textStyle}
                     variant="filled"
                     required={false}
                   />

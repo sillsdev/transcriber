@@ -47,6 +47,13 @@
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="access.itfError">
+                <source>Not a valid Incremental Transcriber File</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="access.importCreated">
                 <source>Import file was created: {date0}.</source>
                 <target/>
@@ -62,7 +69,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="access.allDataOverwritten">
-                <source>All data will be overwritten.</source>
+                <source>All {name0} data will be overwritten.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Access.tsx</context>
@@ -1615,7 +1622,36 @@
         			<context context-type="sourcefile">Loading.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="transcriptionTab.section">
+
+        	<trans-unit id="transcriptionTab.onlineChangeReport">
+                <source>Online changes made since data provided to offline user.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="transcriptionTab.noFile">
+                <source>Please select file to be uploaded.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="transcriptionTab.importPending">
+                <source>Import In Progress...</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="transcriptionTab.importComplete">
+                <source>Import Complete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="transcriptionTab.section">
                 <source>Section</source>
                 <target/>
                 <context-group>
@@ -1685,8 +1721,15 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.exportError">
-        		<source>Export Error</source>
+            <trans-unit id="transcriptionTab.exportingProject">
+        		<source>Exporting Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.error">
+        		<source>Error</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
@@ -2616,8 +2659,36 @@
                     <context context-type="sourcefile">MediaUpload.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="mediaUpload.PTFtitle">
+                <source>Upload complete Project Data from PTF</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="mediaUpload.ITFtitle">
+                <source>Upload Change Data from Offline Extension</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="mediaUpload.task">
                 <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="mediaUpload.PTFtask">
+                <source>Upload a Portable Transcriber File (ptf file).</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="mediaUpload.ITFtask">
+                <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>

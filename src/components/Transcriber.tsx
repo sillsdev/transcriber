@@ -77,6 +77,8 @@ import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
 } from '../utils/UpdatePassageState';
+import path from 'path';
+import { OfflineDataPath } from '../utils/offlineDataPath';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -291,6 +293,7 @@ export function Transcriber(props: IProps) {
     reviewing: ActivityStates.Approved,
     transcribeReady: ActivityStates.Transcribed,
     transcribed: ActivityStates.Approved,
+    needsNewTranscription: ActivityStates.Transcribed,
   };
   const getType = () => {
     const passageSectionId = related(passRec, 'sections');
@@ -542,7 +545,11 @@ export function Transcriber(props: IProps) {
   const fontConfig = {
     custom: {
       families: [fontFamily],
-      urls: ['https://fonts.siltranscriber.org/' + fontFamily + '.css'],
+      urls: [
+        offline
+          ? path.join(OfflineDataPath(), 'fonts', fontFamily + '.css')
+          : 'https://fonts.siltranscriber.org/' + fontFamily + '.css',
+      ],
     },
   };
 

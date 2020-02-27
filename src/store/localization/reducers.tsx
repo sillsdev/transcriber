@@ -14,9 +14,10 @@ const initialState = {
 			"importComplete": "Import Complete",
 			"importError": "Import Error",
 			"ptfError": "Not a valid Portable Transcriber File",
+			"itfError": "Not a valid Incremental Transcriber File",
 			"importCreated": "Import file was created: {date0}.",
 			"projectImported": "Project {name0} was previously imported with a newer file: {date1} ",
-			"allDataOverwritten": "All data will be overwritten.",
+			"allDataOverwritten": "All {name0} data will be overwritten.",
 			"neverExported": "Current data in project {name0} has never been exported.",
 			"lastExported": "Current data in project {name0} was last exported {date0}.",
 			"exportedLost": "Import file will not include latest exported data.",
@@ -306,6 +307,10 @@ const initialState = {
 	}),
 	"transcriptionTab": new LocalizedStrings({
 		"en": {
+			"onlineChangeReport": "Online changes made since data provided to offline user.",
+			"noFile": "Please select file to be uploaded.",
+			"importPending": "Import In Progress...",
+			"importComplete": "Import Complete",
 			"section": "Section",
 			"sectionstate": "State",
 			"passages": "Passages",
@@ -316,7 +321,8 @@ const initialState = {
 			"elan": "Elan",
 			"export": "Export",
 			"exportProject": "Export Project",
-			"exportError": "Export Error",
+			"exportingProject": "Exporting Project",
+			"error": "Error",
 			"downloadComplete": "Download complete",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
 		}
@@ -501,7 +507,11 @@ const initialState = {
 	"mediaUpload": new LocalizedStrings({
 		"en": {
 			"title": "Upload Media",
+			"PTFtitle": "Upload complete Project Data from PTF",
+			"ITFtitle": "Upload Change Data from Offline Extension",
 			"task": "You can upload audio files in .mp3, .m4a or .wav format.",
+			"PTFtask": "Upload a Portable Transcriber File (ptf file).",
+			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the offline extension.",
 			"dragDrop": "Drag and drop files here, or click here to browse for the files.",
 			"cancel": "Cancel",
 			"upload": "Upload",

@@ -41,17 +41,40 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   visible: boolean;
+  uploadType: UploadType;
   uploadMethod?: (files: FileList) => void;
   cancelMethod?: () => void;
 }
+export enum UploadType {
+  Media = 0,
+  ITF = 1,
+  PTF = 2,
+  LOGO = 3 /* do we need separate ones for org and avatar? */,
+}
 
 function MediaUpload(props: IProps) {
-  const { t, visible, uploadMethod, cancelMethod } = props;
+  const { t, visible, uploadType, uploadMethod, cancelMethod } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
   const [files, setFiles] = useState();
   const [message, setMessage] = useState(<></>);
+
+  const acceptextension = [
+    '.mp3, .m4a, .wav',
+    '.itf',
+    '.ptf',
+    '.jpg, .svg, .png',
+  ];
+  const acceptmime = [
+    'audio/mpeg, audio/wav, audio/m4a',
+    'application/zip',
+    'application/zip',
+    'image/jpeg, image/svg+xml, image/png',
+  ];
+  const multiple = [true, false, false, false];
+  const title = [t.title, t.ITFtitle, t.PTFtitle, 'FUTURE TODO'];
+  const text = [t.task, t.ITFtask, t.PTFtask, 'FUTURE TODO'];
 
   const handleAddOrSave = () => {
     if (uploadMethod) {
@@ -95,7 +118,7 @@ function MediaUpload(props: IProps) {
   useEffect(() => {
     setOpen(visible);
   }, [visible]);
-
+  const inputStyle = { display: 'none' };
   const dropTarget =
     process.env.NODE_ENV !== 'test' ? (
       <FileDrop onDrop={handleDrop}>
@@ -109,10 +132,10 @@ function MediaUpload(props: IProps) {
         </label>
         <input
           id="upload"
-          style={{ display: 'none' }}
+          style={inputStyle}
           type="file"
-          accept=".mp3, .m4a, .wav"
-          multiple={true}
+          accept={acceptextension[uploadType]}
+          multiple={multiple[uploadType]}
           onChange={handleNameChange}
         />
       </FileDrop>
@@ -128,10 +151,10 @@ function MediaUpload(props: IProps) {
         </label>
         <input
           id="upload"
-          style={{ display: 'none' }}
+          style={inputStyle}
           type="file"
-          accept="audio/mpeg, audio/wav"
-          multiple={true}
+          accept={acceptmime[uploadType]}
+          multiple={multiple[uploadType]}
           onChange={handleNameChange}
         />
       </div>
@@ -144,9 +167,9 @@ function MediaUpload(props: IProps) {
         onClose={handleCancel}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">{t.title}</DialogTitle>
+        <DialogTitle id="form-dialog-title">{title[uploadType]}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{t.task}</DialogContentText>
+          <DialogContentText>{text[uploadType]}</DialogContentText>
           <div className={classes.drop}>{dropTarget}</div>
         </DialogContent>
         <DialogActions>

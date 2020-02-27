@@ -1,5 +1,4 @@
 import { RecordRelationship, RecordHasManyRelationship } from '@orbit/data';
-import { ActivityStates } from '.';
 import { BaseModel } from './baseModel';
 
 export interface Passage extends BaseModel {
@@ -7,7 +6,7 @@ export interface Passage extends BaseModel {
     sequencenum: number;
     book: string;
     reference: string;
-    state: ActivityStates;
+    state: string; //ActivityStates
     hold: boolean;
     title: string;
     lastComment: string;

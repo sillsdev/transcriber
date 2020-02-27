@@ -23,7 +23,15 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, IconButton } from '@material-ui/core';
+import {
+  Button,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import SoundIcon from '@material-ui/icons/Audiotrack';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -51,6 +59,7 @@ import {
   remoteIdNum,
 } from '../utils';
 import eaf from './TranscriptionEaf';
+import MediaUpload, { UploadType } from './MediaUpload';
 let Encoder = require('node-html-encoder').Encoder;
 let encoder = new Encoder('numerical');
 
@@ -184,13 +193,15 @@ interface IStateProps {
   hasUrl: boolean;
   mediaUrl: string;
   exportFile: FileResponse;
-  exportStatus: IAxiosStatus;
+  importexportStatus: IAxiosStatus;
 }
 
 interface IDispatchProps {
   fetchMediaUrl: typeof actions.fetchMediaUrl;
   exportProject: typeof actions.exportProject;
   exportComplete: typeof actions.exportComplete;
+  importProjectFromElectron: typeof actions.importProjectFromElectron;
+  importComplete: typeof actions.importComplete;
 }
 
 interface IRecordProps {
@@ -229,8 +240,10 @@ export function TranscriptionTab(props: IProps) {
     fetchMediaUrl,
     exportProject,
     exportComplete,
-    exportStatus,
+    importexportStatus,
     exportFile,
+    importProjectFromElectron,
+    importComplete,
   } = props;
   const classes = useStyles();
   const [plan, setPlan] = useGlobal('plan');
@@ -238,6 +251,8 @@ export function TranscriptionTab(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [offline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
+  const [importMessage, setImportMessage] = useState('');
+  const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
@@ -250,6 +265,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportUrl, setExportUrl] = useState();
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
+  const [user] = useGlobal('user');
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -272,7 +288,25 @@ export function TranscriptionTab(props: IProps) {
     string[]
   >([]);
   const [filter, setFilter] = useState(false);
+  const isElectron = process.env.REACT_APP_MODE === 'electron';
+  //#region Upload
+  const [uploadVisible, setUploadVisible] = useState(false);
 
+  const handleProjectImport = () => {
+    setUploadVisible(true);
+  };
+  const uploadITF = (files: FileList) => {
+    if (!files || files.length === 0) {
+      setMessage(<span>{t.noFile}</span>);
+    } else {
+      importProjectFromElectron(files, auth, t.importPending, t.importComplete);
+    }
+    setUploadVisible(false);
+  };
+  const uploadCancel = () => {
+    setUploadVisible(false);
+  };
+  //#endregion
   const handleMessageReset = () => {
     setMessage(<></>);
   };
@@ -283,13 +317,21 @@ export function TranscriptionTab(props: IProps) {
 
     return err.errMsg;
   };
-  const handleProjectExport = () => {
+  const doProjectExport = (exportType: string) => {
     exportProject(
+      exportType,
+      memory,
       remoteIdNum('project', project, keyMap),
+      remoteIdNum('user', user, keyMap),
       auth,
-      'exporting project'
+      t.exportingProject
     );
   };
+  const handleProjectExport = () => {
+    if (isElectron) setOpenExport(true);
+    else doProjectExport('ptf');
+  };
+
   const handleSelect = (passageId: string) => () => {
     setPassageId(passageId);
   };
@@ -318,8 +360,8 @@ export function TranscriptionTab(props: IProps) {
     const duration = durationNum ? (durationNum * 1000).toString() : '0';
     const lang = getMediaLang(mediaRec, memory);
     const name = getMediaName(mediaRec, memory);
-    const mime = mediaAttr && mediaAttr.contentType;
-    const ext = /mpeg/.test(mime ? mime : '') ? '.mp3' : '.wav';
+    const mime = (mediaAttr && mediaAttr.contentType) || '';
+    const ext = /mpeg/.test(mime) ? '.mp3' : /m4a/.test(mime) ? '.m4a' : '.wav';
     const audioUrl = mediaAttr && mediaAttr.audioUrl;
     const audioBase = audioUrl && audioUrl.split('?')[0];
     const audioName = audioBase && audioBase.split('/').pop();
@@ -399,26 +441,27 @@ export function TranscriptionTab(props: IProps) {
   }, [exportUrl, exportName, exportAnchor]);
 
   useEffect(() => {
-    if (exportStatus) {
-      if (exportStatus.errStatus) {
-        showMessage(t.exportError, translateError(exportStatus));
+    if (importexportStatus) {
+      if (importexportStatus.errStatus) {
+        showMessage(t.error, translateError(importexportStatus));
       } else {
-        if (exportStatus.statusMsg) {
-          showMessage(t.exportProject, exportStatus.statusMsg);
+        if (importexportStatus.statusMsg) {
+          showMessage('', importexportStatus.statusMsg);
         }
-        if (
-          exportStatus.complete &&
-          exportName === '' &&
-          exportFile &&
-          exportFile.data
-        ) {
-          setExportName(exportFile.data.attributes.message);
-          setExportUrl(exportFile.data.attributes.fileurl);
+        if (importexportStatus.complete) {
+          if (exportFile && exportName === '') {
+            setExportName(exportFile.data.attributes.message);
+            setExportUrl(exportFile.data.attributes.fileurl);
+          } else {
+            //import completed ok but might have message
+            setImportMessage(importexportStatus.errMsg);
+            importComplete();
+          }
         }
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [exportStatus]);
+  }, [importexportStatus]);
 
   useEffect(() => {
     if (audUrl && audName !== '') {
@@ -556,6 +599,68 @@ export function TranscriptionTab(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
+  const WhichExportDlg = () => {
+    const doPTF = () => {
+      setOpenExport(false);
+      doProjectExport('ptf');
+    };
+    const doITF = () => {
+      setOpenExport(false);
+      doProjectExport('itf');
+    };
+    const closeNoChoice = () => setOpenExport(false);
+
+    return (
+      <Dialog
+        open={openExport}
+        onClose={closeNoChoice}
+        aria-labelledby="which-export-title"
+        aria-describedby="which-export-description"
+      >
+        <DialogTitle id="which-export-title">
+          {'Which export type?'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Export a full backup to store locally. Export incremental file to
+            import into online app.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={doPTF} color="primary">
+            Full Backup (ptf)
+          </Button>
+          <Button onClick={doITF} color="primary" autoFocus>
+            Incremental Changes (itf)
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  const ImportMessageDlg = () => {
+    const handleClose = () => {
+      console.log('close', importMessage);
+      setImportMessage('');
+    };
+    return (
+      <Dialog
+        open={importMessage !== ''}
+        onClose={handleClose}
+        scroll="body"
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
+      >
+        <DialogTitle id="scroll-dialog-title">t.onlineChangeReport</DialogTitle>
+        <DialogContent dividers={false}>
+          <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
+            {importMessage}
+          </DialogContentText>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
   return (
     <div id="TranscriptionTab" className={classes.container}>
       <div className={classes.paper}>
@@ -571,6 +676,19 @@ export function TranscriptionTab(props: IProps) {
               title={t.exportProject}
             >
               {t.exportProject}
+            </Button>
+          )}
+          {planColumn && !isElectron && (
+            <Button
+              key="import"
+              aria-label="Import Project"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleProjectImport}
+              title="Import Project"
+            >
+              Import Project
             </Button>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
@@ -639,7 +757,15 @@ export function TranscriptionTab(props: IProps) {
         target="_blank"
         rel="noopener noreferrer"
       />
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
+      <MediaUpload
+        visible={uploadVisible}
+        uploadType={UploadType.ITF}
+        uploadMethod={uploadITF}
+        cancelMethod={uploadCancel}
+      />
+      <WhichExportDlg />
+      <ImportMessageDlg />
+      <SnackBar message={message} reset={handleMessageReset} />
     </div>
   );
 }
@@ -650,7 +776,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
   exportFile: state.importexport.exportFile,
-  exportStatus: state.importexport.importexportStatus,
+  importexportStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -659,6 +785,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchMediaUrl: actions.fetchMediaUrl,
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
+      importProjectFromElectron: actions.importProjectFromElectron,
+      importComplete: actions.importComplete,
     },
     dispatch
   ),

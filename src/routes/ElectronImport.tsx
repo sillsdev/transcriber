@@ -38,7 +38,7 @@ export var handleElectronImport = (
   memory: MemorySource,
   backup: IndexedDBSource,
   zip: AdmZip | null,
-  importProject: typeof action.importProject,
+  importProject: typeof action.importProjectToElectron,
   t: IAccessStrings
 ): void => {};
 
@@ -112,37 +112,40 @@ if (isElectron) {
                     moment.utc(proj.attributes.dateImported).toLocaleString()
                   ) +
                 '  ' +
-                t.allDataOverwritten;
+                t.allDataOverwritten.replace('{name0}', p.attributes.name);
             }
             //has our current data never been exported, or exported after incoming?
             if (!proj.attributes.dateExported) {
               ret.warnMsg +=
                 t.neverExported.replace('{name0}', p.attributes.name) +
                 '  ' +
-                t.allDataOverwritten;
-            } else if (moment.utc(proj.attributes.dateExported) > exportTime) {
-              ret.warnMsg +=
-                t.importCreated.replace(
-                  '{date0}',
-                  exportTime.toLocaleString()
-                ) +
-                ' ' +
-                t.lastExported
-                  .replace('{name0}', p.attributes.name)
-                  .replace(
+                t.allDataOverwritten.replace('{name0}', p.attributes.name);
+            } else {
+              var myLastExport = moment.utc(proj.attributes.dateExported);
+              if (myLastExport > exportTime) {
+                console.log(exportTime.toLocaleString());
+                console.log(myLastExport.toLocaleString());
+                ret.warnMsg +=
+                  t.importCreated.replace(
                     '{date0}',
-                    moment.utc(proj.attributes.dateExported).toLocaleString
+                    exportTime.toLocaleString()
                   ) +
-                '  ' +
-                t.exportedLost;
+                  ' ' +
+                  t.lastExported
+                    .replace('{name0}', p.attributes.name)
+                    .replace('{date0}', myLastExport.toLocaleString()) +
+                  '  ' +
+                  t.exportedLost;
+              }
             }
           }
         });
-        if (ret.warnMsg === '') {
+        if (ret.warnMsg === '' && projectNames !== '') {
           //general warning
-          ret.warnMsg =
-            projectNames.substring(0, projectNames.length - 1) +
-            ' data will be overwritten.';
+          ret.warnMsg = t.allDataOverwritten.replace(
+            '{name0}',
+            projectNames.substring(0, projectNames.length - 1)
+          );
         }
       }
     }
@@ -153,7 +156,7 @@ if (isElectron) {
     memory: MemorySource,
     backup: IndexedDBSource,
     zip: AdmZip | null,
-    importProject: typeof action.importProject,
+    importProject: typeof action.importProjectToElectron,
     t: IAccessStrings
   ): void => {
     if (zip) {
