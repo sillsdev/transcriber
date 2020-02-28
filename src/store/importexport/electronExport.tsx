@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { OfflineDataPath } from '../../utils/offlineDataPath';
 import { Project, User, MediaFile, Organization } from '../../model';
-import { cleanFileName, remoteIdGuid } from '../../utils';
+import { cleanFileName, remoteIdGuid, getMediaEaf } from '../../utils';
 import Memory from '@orbit/memory';
 import { JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
@@ -97,6 +97,17 @@ export async function electronExport(
           path.join(OfflineDataPath(), mf.attributes.audioUrl),
           mf.attributes.audioUrl
         );
+      const eafCode = getMediaEaf(mf, memory);
+      const name =
+        path.basename(
+          mf.attributes.audioUrl,
+          path.extname(mf.attributes.audioUrl)
+        ) + '.eaf';
+      zip.addFile(
+        'media/' + name,
+        Buffer.alloc(eafCode.length, eafCode),
+        'EAF'
+      );
     });
   };
 

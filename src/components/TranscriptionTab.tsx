@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -50,18 +49,15 @@ import {
 } from '../utils/section';
 import { passageCompare, passageDescription } from '../utils/passage';
 import {
-  updateXml,
   getMediaRec,
-  getMediaLang,
-  getMediaName,
+  getMediaEaf,
   remoteId,
   related,
   remoteIdNum,
+  getMediaName,
 } from '../utils';
-import eaf from './TranscriptionEaf';
+
 import MediaUpload, { UploadType } from './MediaUpload';
-let Encoder = require('node-html-encoder').Encoder;
-let encoder = new Encoder('numerical');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -350,48 +346,9 @@ export function TranscriptionTab(props: IProps) {
 
   const handleEaf = (passageId: string) => () => {
     const mediaRec = getMediaRec(passageId, memory);
-    const mediaAttr = mediaRec && mediaRec.attributes;
-    const transcription =
-      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
-    const encTranscript = encoder
-      .htmlEncode(transcription)
-      .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');
-    const durationNum = mediaAttr && mediaAttr.duration;
-    const duration = durationNum ? (durationNum * 1000).toString() : '0';
-    const lang = getMediaLang(mediaRec, memory);
+    if (!mediaRec) return;
+    const eafCode = btoa(getMediaEaf(mediaRec, memory));
     const name = getMediaName(mediaRec, memory);
-    const mime = (mediaAttr && mediaAttr.contentType) || '';
-    const ext = /mpeg/.test(mime) ? '.mp3' : /m4a/.test(mime) ? '.m4a' : '.wav';
-    const audioUrl = mediaAttr && mediaAttr.audioUrl;
-    const audioBase = audioUrl && audioUrl.split('?')[0];
-    const audioName = audioBase && audioBase.split('/').pop();
-
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(eaf(), 'text/xml');
-    updateXml('@DATE', xmlDoc, moment().format('YYYY-MM-DDTHH:MM:SSZ'));
-    // updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, encTranscript);
-    updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');
-    updateXml('@LANGUAGE_CODE', xmlDoc, lang ? lang : 'en');
-    updateXml("*[@TIME_SLOT_ID='ts2']/@TIME_VALUE", xmlDoc, duration);
-    updateXml('@MEDIA_FILE', xmlDoc, audioName ? audioName : name + ext);
-    updateXml('@MEDIA_URL', xmlDoc, audioName ? audioName : name + ext);
-    updateXml('@MIME_TYPE', xmlDoc, mime ? mime : 'audio/*');
-    const annotationValue = 'ANNOTATION_VALUE';
-    const serializer = new XMLSerializer();
-    const eafCode = btoa(
-      serializer
-        .serializeToString(xmlDoc)
-        .replace(
-          '<' + annotationValue + '/>',
-          '<' +
-            annotationValue +
-            '>' +
-            encTranscript +
-            '</' +
-            annotationValue +
-            '>'
-        )
-    );
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
     handleAudioFn(passageId);
