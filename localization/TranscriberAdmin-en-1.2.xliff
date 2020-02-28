@@ -2932,7 +2932,14 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="integration.yes">
+        	<trans-unit id="integration.questionInstalled">
+        		<source>Is Paratext installed locally?</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">integration.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="integration.yes">
                 <source>Yes</source>
                 <target/>
                 <context-group>
@@ -3036,7 +3043,14 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="integration.render">
+        	<trans-unit id="integration.paratextLocal">
+        		<source>Paratext Local</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">integration.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="integration.render">
                 <source>Render</source>
                 <target/>
                 <context-group>

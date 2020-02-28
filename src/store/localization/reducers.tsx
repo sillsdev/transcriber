@@ -558,6 +558,7 @@ const initialState = {
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please logout and login again.",
 			"invalidParatextLogin": "You must login with a valid paratext login to sync projects.",
 			"questionOnline": "Are you connected to the Internet?",
+			"questionInstalled": "Is Paratext installed locally?",
 			"yes": "Yes",
 			"no": "No",
 			"questionProject": "Are you connected to a {lang0} Paratext project?",
@@ -573,6 +574,7 @@ const initialState = {
 			"countError": "Count query error: ",
 			"countReady": "Passages ready to sync: ",
 			"paratext": "Paratext",
+			"paratextLocal": "Paratext Local",
 			"render": "Render",
 			"onestory": "One Story",
 		}

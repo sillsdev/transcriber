@@ -2512,6 +2512,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.questionInstalled">
+         <segment>
+            <source>Is Paratext installed locally?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.yes">
          <segment>
             <source>Yes</source>
@@ -2599,6 +2605,12 @@
       <unit id="integration.paratext">
          <segment>
             <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.paratextLocal">
+         <segment>
+            <source>Paratext Local</source>
             <target/>
          </segment>
       </unit>

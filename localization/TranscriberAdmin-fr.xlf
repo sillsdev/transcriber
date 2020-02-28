@@ -2513,7 +2513,13 @@
     		<target>Êtes-vous connecté à Internet?</target>
 	     </segment>
       </unit>
-      <unit id="integration.yes">
+		<unit id="integration.questionInstalled">
+			<segment>
+				<source>Is Paratext installed locally?</source>
+				<target>Est-ce que Paratext est installé localement?</target>
+			</segment>
+		</unit>
+		<unit id="integration.yes">
          <segment>
             <source>Yes</source>
 			<target>Oui</target>
@@ -2600,10 +2606,16 @@
       <unit id="integration.paratext">
          <segment>
             <source>Paratext</source>
-    		<target>Non</target>
+    		<target>Paratext</target>
 	     </segment>
       </unit>
-      <unit id="integration.render">
+		<unit id="integration.paratextLocal">
+			<segment>
+				<source>Paratext Local</source>
+				<target>Paratext local</target>
+			</segment>
+		</unit>
+		<unit id="integration.render">
          <segment>
             <source>Render</source>
     		<target>Rendre</target>

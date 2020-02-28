@@ -66,6 +66,8 @@ function createWindow() {
   });
 }
 
+global['temp'] = app.getPath('temp');
+
 app.on('ready', async () => {
   electronExtensions(BrowserWindow);
   createWindow();

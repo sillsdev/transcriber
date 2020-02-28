@@ -1,6 +1,7 @@
 import Axios, { AxiosError } from 'axios';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
+import { Passage, ActivityStates } from '../../model';
 import {
   USERNAME_PENDING,
   USERNAME_SUCCESS,
@@ -17,6 +18,8 @@ import {
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus } from '../AxiosStatus';
+import { getMediaProjRec, getMediaRec, fileJson } from '../../utils';
+import MemorySource from '@orbit/memory';
 
 export const getUserName = (auth: Auth, pendingmsg: string) => (
   dispatch: any
@@ -70,6 +73,7 @@ export const getProjects = (
       for (let ix = 0; ix < response.data.length; ix++) {
         let o: ParatextProject = {
           Name: response.data[ix].Name,
+          ShortName: 'unused',
           ParatextId: response.data[ix].ParatextId,
           LanguageName: response.data[ix].LanguageName,
           LanguageTag: response.data[ix].LanguageTag,
@@ -87,6 +91,45 @@ export const getProjects = (
       console.log(err);
       dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
     });
+};
+
+export const getLocalProjects = (
+  ptPath: string,
+  pendingmsg: string,
+  languageTag?: string
+) => (dispatch: any) => {
+  dispatch({
+    payload: pendingStatus(pendingmsg),
+    type: PROJECTS_PENDING,
+  });
+  if (ptPath === '') return;
+  const fs = require('fs');
+  const path = require('path');
+  let pt: ParatextProject[] = [];
+  fs.readdirSync(ptPath)
+    .filter((n: string) => n.indexOf('.') === -1 && n[0] !== '_')
+    .forEach((n: string) => {
+      const settingsPath = path.join(ptPath, n, 'settings.xml');
+      const settingsJson = fileJson(settingsPath);
+      if (settingsJson) {
+        const setting = settingsJson.ScriptureText;
+        const langIso = setting.LanguageIsoCode._text.split(':')[0];
+        if (!languageTag || langIso === languageTag) {
+          pt.push({
+            Name: setting.FullName._text,
+            ShortName: setting.Name._text,
+            LanguageName: setting.Language._text,
+            LanguageTag: langIso,
+            CurrentUserRole:
+              setting.Editable._text === 'T' ? 'pt_translator' : '',
+            ProjectIds: Array<number>(),
+            IsConnected: true,
+            IsConnectable: true,
+          } as ParatextProject);
+        }
+      }
+    });
+  dispatch({ payload: pt, type: PROJECTS_SUCCESS });
 };
 
 export const resetCount = () => (dispatch: any) => {
@@ -118,6 +161,26 @@ export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
       dispatch({ payload: errStatus(err), type: COUNT_ERROR });
     });
 };
+
+export const getLocalCount = (
+  passages: Passage[],
+  project: string,
+  memory: MemorySource,
+  pendingmsg: string
+) => (dispatch: any) => {
+  dispatch({
+    payload: pendingStatus(pendingmsg),
+    type: COUNT_PENDING,
+  });
+  const ready = passages
+    .filter(p => p.attributes.state === ActivityStates.Approved)
+    .filter(p => {
+      const projRec = getMediaProjRec(getMediaRec(p.id, memory), memory);
+      return projRec && projRec.id === project;
+    });
+  dispatch({ payload: ready.length, type: COUNT_SUCCESS });
+};
+
 export const resetSync = () => (dispatch: any) => {
   dispatch({ payload: undefined, type: SYNC_PENDING });
 };

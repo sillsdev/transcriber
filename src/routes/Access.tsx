@@ -34,6 +34,8 @@ import { withData } from 'react-orbitjs';
 import AdmZip from 'adm-zip';
 import Confirm from '../components/AlertDialog';
 
+// var ptPath = require('electron').remote.getGlobal('ptPath');
+
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -299,6 +301,7 @@ export function Access(props: IProps) {
                 </div>
               </Grid>
             </Grid>
+            {/* <Typography>{'Paratext Path: ' + ptPath}</Typography> */}
           </Paper>
           {confirmAction === '' || (
             <Confirm

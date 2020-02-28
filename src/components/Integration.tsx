@@ -32,7 +32,13 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SyncIcon from '@material-ui/icons/Sync';
 import CheckIcon from '@material-ui/icons/Check';
 import SnackBar from '../components/SnackBar';
-import { remoteIdNum, related, Online } from '../utils';
+import {
+  remoteIdNum,
+  related,
+  Online,
+  localSync,
+  getParatextDataPath,
+} from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
@@ -42,6 +48,8 @@ import Integration from '../model/integration';
 import { schema } from '../schema';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
+
+const isElectron = process.env.REACT_APP_MODE === 'electron';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,7 +116,9 @@ interface IStateProps {
 interface IDispatchProps {
   getUserName: typeof actions.getUserName;
   getProjects: typeof actions.getProjects;
+  getLocalProjects: typeof actions.getLocalProjects;
   getCount: typeof actions.getCount;
+  getLocalCount: typeof actions.getLocalCount;
   syncProject: typeof actions.syncProject;
   resetSync: typeof actions.resetSync;
   resetCount: typeof actions.resetCount;
@@ -143,7 +153,9 @@ export function IntegrationPanel(props: IProps) {
   const {
     getUserName,
     getCount,
+    getLocalCount,
     getProjects,
+    getLocalProjects,
     syncProject,
     resetSync,
     resetCount,
@@ -156,6 +168,7 @@ export function IntegrationPanel(props: IProps) {
   const [hasPtProj, setHasPtProj] = React.useState(false);
   const [ptProj, setPtProj] = React.useState(-1);
   const [ptProjName, setPtProjName] = React.useState('');
+  const [ptShortName, setPtShortName] = React.useState('');
   const [hasParatext, setHasParatext] = React.useState(false);
   const [hasPermission, setHasPermission] = React.useState(false);
   const [ptPermission, setPtPermission] = React.useState('None');
@@ -169,6 +182,7 @@ export function IntegrationPanel(props: IProps) {
   const [memory] = useGlobal('memory');
   const [message, setMessage] = React.useState(<></>);
   const [busy] = useGlobal('remoteBusy');
+  const [ptPath, setPtPath] = React.useState('');
 
   const showMessage = (title: string, msg: string) => {
     setMessage(
@@ -198,9 +212,9 @@ export function IntegrationPanel(props: IProps) {
     await memory.update((t: TransformBuilder) => t.addRecord(int));
     return int.id;
   };
-  const getParatextIntegration = () => {
+  const getParatextIntegration = (local: string) => {
     const intfind: Integration[] = integrations.filter(
-      i => i.attributes && i.attributes.name === 'paratext'
+      i => i.attributes && i.attributes.name === local
     );
     if (intfind.length === 0)
       addParatextIntegration().then(res => setParatextIntegration(res));
@@ -278,6 +292,7 @@ export function IntegrationPanel(props: IProps) {
     if (ptProj >= 0) removeProjectFromParatextList(ptProj);
     setPtProj(index);
     setPtProjName(e.target.value);
+    setPtShortName(paratext_projects[index].ShortName);
     if (index >= 0) {
       const paratextProject: ParatextProject = paratext_projects[index];
       const setting = {
@@ -300,6 +315,11 @@ export function IntegrationPanel(props: IProps) {
   const handleSync = () =>
     syncProject(auth, remoteIdNum('project', project, keyMap), t.syncPending);
 
+  const handleLocalSync = async () => {
+    await localSync(project, ptShortName, passages, memory);
+    resetCount();
+  };
+
   const handleRemoveIntegration = () => {
     setConfirmItem(t.paratextAssociation);
   };
@@ -315,9 +335,11 @@ export function IntegrationPanel(props: IProps) {
     removeProjectFromParatextList(ptProj);
     setPtProj(-1);
     setPtProjName('');
+    setPtShortName('');
   };
   const handleDeleteRefused = () => setConfirmItem(null);
   const getProjectLabel = (): string => {
+    if (isElectron) return t.selectProject;
     return online
       ? paratext_projectsStatus && paratext_projectsStatus.complete
         ? !paratext_projectsStatus.errStatus
@@ -356,12 +378,14 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     Online(result => setOnline(result));
+    if (isElectron) getParatextDataPath().then(val => setPtPath(val));
   }, []);
 
   useEffect(() => {
     if (project !== myProject) {
       setPtProj(-1);
       setPtProjName('');
+      setPtShortName('');
       resetProjects();
       resetCount();
       setMyProject(project);
@@ -370,34 +394,40 @@ export function IntegrationPanel(props: IProps) {
   }, [project]);
 
   useEffect(() => {
-    resetCount();
+    if (!paratext_countStatus) {
+      resetCount();
+      if (isElectron) getLocalCount(passages, project, memory, t.countPending);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passages]);
+  }, [passages, paratext_countStatus]);
 
   /* do this once */
   useEffect(() => {
     if (integrations.length > 0 && !paratextIntegration) {
       resetSync();
-      getParatextIntegration();
+      getParatextIntegration(isElectron ? 'paratextLocal' : 'paratext');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [integrations, paratextIntegration]);
 
   useEffect(() => {
     if (!paratext_countStatus) {
-      getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
+      if (!isElectron)
+        getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
     } else if (paratext_countStatus.errStatus)
       showMessage(t.countError, translateError(paratext_countStatus));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_count, paratext_countStatus]);
 
   useEffect(() => {
-    if (!paratext_usernameStatus) {
-      getUserName(auth, t.usernamePending);
-    } else if (paratext_usernameStatus.errStatus)
-      showMessage(t.usernameError, translateError(paratext_usernameStatus));
+    if (!isElectron) {
+      if (!paratext_usernameStatus) {
+        getUserName(auth, t.usernamePending);
+      } else if (paratext_usernameStatus.errStatus)
+        showMessage(t.usernameError, translateError(paratext_usernameStatus));
 
-    setHasParatext(paratext_username !== '');
+      setHasParatext(paratext_username !== '');
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_username, paratext_usernameStatus]);
 
@@ -405,11 +435,15 @@ export function IntegrationPanel(props: IProps) {
     if (!busy) {
       if (!paratext_projectsStatus) {
         let proj = getProject();
-        getProjects(
-          auth,
-          t.projectsPending,
-          proj && proj.attributes ? proj.attributes.language : undefined
-        );
+        const langTag =
+          proj && proj.attributes ? proj.attributes.language : undefined;
+        if (isElectron) {
+          getParatextDataPath().then(ptPath =>
+            getLocalProjects(ptPath, t.projectsPending, langTag)
+          );
+        } else {
+          getProjects(auth, t.projectsPending, langTag);
+        }
       } else {
         if (paratext_projectsStatus.errStatus) {
           showMessage(t.projectError, translateError(paratext_projectsStatus));
@@ -422,7 +456,7 @@ export function IntegrationPanel(props: IProps) {
   }, [busy, paratext_projects, paratext_projectsStatus]);
 
   useEffect(() => {
-    if (paratext_syncStatus)
+    if (paratext_syncStatus && !isElectron)
       if (paratext_syncStatus.errStatus)
         showMessage(t.syncError, translateError(paratext_syncStatus));
       else if (paratext_syncStatus.statusMsg !== '') {
@@ -450,13 +484,13 @@ export function IntegrationPanel(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel defaultExpanded>
+      <ExpansionPanel defaultExpanded={!isElectron} disabled={isElectron}>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls={t.paratext}
+          id={t.paratext}
         >
-          <Typography className={classes.heading}>{'Paratext'}</Typography>
+          <Typography className={classes.heading}>{t.paratext}</Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.panel}>
           <List dense component="div">
@@ -533,7 +567,6 @@ export function IntegrationPanel(props: IProps) {
                 }
               />
             </ListItem>
-
             <ListItem key="hasParatext">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
@@ -618,6 +651,129 @@ export function IntegrationPanel(props: IProps) {
           </FormControl>
         </ExpansionPanelDetails>
       </ExpansionPanel>
+      <ExpansionPanel defaultExpanded={isElectron} disabled={!isElectron}>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls={t.paratextLocal}
+          id={t.paratextLocal}
+        >
+          <Typography className={classes.heading}>{t.paratextLocal}</Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails className={classes.panel}>
+          <List dense component="div">
+            <ListItem key="installed">
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  {!ptPath || <CheckIcon />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={t.questionInstalled}
+                secondary={ptPath ? t.yes : t.no}
+              />
+            </ListItem>
+            <ListItem key="hasLocalProj" className={classes.listItem}>
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  {!hasPtProj || <CheckIcon />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={formatWithLanguage(t.questionProject)}
+                secondary={
+                  <TextField
+                    ref={pRef}
+                    id="select-project"
+                    select
+                    label={getProjectLabel()}
+                    className={classes.textField}
+                    value={ptProjName}
+                    onChange={handleParatextProjectChange}
+                    SelectProps={{
+                      MenuProps: {
+                        className: classes.menu,
+                      },
+                    }}
+                    InputProps={{
+                      classes: {
+                        input: classes.formTextInput,
+                      },
+                    }}
+                    InputLabelProps={{
+                      classes: {
+                        root: classes.formTextLabel,
+                      },
+                    }}
+                    margin="normal"
+                    variant="filled"
+                    required={true}
+                  >
+                    {paratext_projects
+                      .sort((i, j) => (i.Name < j.Name ? -1 : 1))
+                      .map((option: ParatextProject) => (
+                        <MenuItem key={option.ParatextId} value={option.Name}>
+                          {option.Name +
+                            ' (' +
+                            option.LanguageName +
+                            '-' +
+                            option.LanguageTag +
+                            ')'}
+                        </MenuItem>
+                      ))
+                      .concat(
+                        <MenuItem
+                          key={t.removeProject}
+                          value={t.removeProject}
+                          disabled={!hasPtProj}
+                        >
+                          {t.removeProject + '\u00A0\u00A0'}
+                          <DeleteIcon />
+                        </MenuItem>
+                      )}
+                  </TextField>
+                }
+              />
+            </ListItem>
+            <ListItem key="localReady">
+              <ListItemAvatar>
+                <Avatar className={classes.avatar}>
+                  {paratext_count === 0 || <CheckIcon />}
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={t.countReady}
+                secondary={
+                  paratext_countStatus && paratext_countStatus.complete
+                    ? paratext_count
+                    : t.countPending
+                }
+              />
+            </ListItem>
+          </List>
+          <FormControl component="fieldset" className={classes.formControl}>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Button
+                    key="localSync"
+                    aria-label={t.sync}
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    disabled={!ptPath || !hasPtProj || !paratext_count}
+                    onClick={handleLocalSync}
+                  >
+                    {t.sync}
+                    <SyncIcon className={classes.icon} />
+                  </Button>
+                }
+                label=""
+              />
+              <FormHelperText>{t.allCriteria}</FormHelperText>
+            </FormGroup>
+          </FormControl>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
       <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
@@ -668,7 +824,9 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       getUserName: actions.getUserName,
       getProjects: actions.getProjects,
+      getLocalProjects: actions.getLocalProjects,
       getCount: actions.getCount,
+      getLocalCount: actions.getLocalCount,
       syncProject: actions.syncProject,
       resetSync: actions.resetSync,
       resetCount: actions.resetCount,

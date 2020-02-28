@@ -519,6 +519,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "expiredParatextToken": string;
     "invalidParatextLogin": string;
     "questionOnline": string;
+    "questionInstalled": string;
     "yes": string;
     "no": string;
     "questionProject": string;
@@ -534,6 +535,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "countError": string;
     "countReady": string;
     "paratext": string;
+    "paratextLocal": string;
     "render": string;
     "onestory": string;
 };

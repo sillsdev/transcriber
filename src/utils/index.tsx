@@ -23,3 +23,6 @@ export * from './createdBy';
 export * from './cleanFileName';
 export * from './appPath';
 export * from './insertAtCursor';
+export * from './localSync';
+export * from './fileJson';
+export * from './paratextPath';
