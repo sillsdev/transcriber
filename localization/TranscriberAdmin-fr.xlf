@@ -1274,6 +1274,18 @@
          	<target>Effacer le cache</target>
          </segment>
       </unit>
+      <unit id="main.inviteError">
+         <segment>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <target>Invitation non acceptée. Vous devez vous connecter avec l'e-mail auquel l'invitation a été envoyée.</target>
+         </segment>
+      </unit>
+      <unit id="main.deletedInvitation">
+         <segment>
+            <source>Invitation is no longer valid.</source>
+            <target>L'invitation n'est plus valide.</target>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>

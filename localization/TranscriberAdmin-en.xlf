@@ -1276,6 +1276,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.inviteError">
+         <segment>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.deletedInvitation">
+         <segment>
+            <source>Invitation is no longer valid.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>

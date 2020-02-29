@@ -1489,6 +1489,20 @@
                     <context context-type="sourcefile">Loading.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="main.inviteError">
+                <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Loading.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="main.deletedInvitation">
+                <source>Invitation is no longer valid.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Loading.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="main.helpCenter">
                 <source>Help Center</source>
                 <target/>

@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { IApiError } from './model';
+import { IApiError, User } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -30,7 +30,7 @@ export const Sources = async (
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
   setCompleted: (valud: number) => void,
-  InviteUser: (remote: JSONAPISource) => Promise<void>,
+  InviteUser: (remote: JSONAPISource, userEmail: string) => Promise<void>,
   tableLoaded: (name: string) => void,
   orbitError: (ex: IApiError) => void
 ) => {
@@ -58,6 +58,10 @@ export const Sources = async (
 
   let remote: JSONAPISource = {} as JSONAPISource;
 
+  const coordinator = new Coordinator();
+  coordinator.addSource(memory);
+  coordinator.addSource(backup);
+
   if (!offline) {
     remote = new JSONAPISource({
       schema,
@@ -77,15 +81,8 @@ export const Sources = async (
     remote.requestProcessor.serializer.resourceKey = () => {
       return 'remoteId';
     };
-    setRemote(remote);
-  }
-
-  const coordinator = new Coordinator();
-  coordinator.addSource(memory);
-  coordinator.addSource(backup);
-
-  if (!offline) {
     coordinator.addSource(remote);
+    setRemote(remote);
   }
 
   // Update indexedDb when memory updated
@@ -231,10 +228,12 @@ export const Sources = async (
     }
   });
 
-  if (!offline && userToken !== tokData.sub) {
+  if (
+    !offline &&
+    (userToken !== tokData.sub || localStorage.getItem('inviteId'))
+  ) {
     localStorage.setItem('lastTime', currentDateTime());
-    await InviteUser(remote);
-
+    let currentuser: User | undefined;
     await remote
       .pull(q => q.findRecords('currentuser'))
       .then((transform: Transform[]) => {
@@ -242,7 +241,16 @@ export const Sources = async (
         const user = (transform[0].operations[0] as any).record;
         setUser(user.id);
         localStorage.setItem('user-id', user.id);
+        currentuser = user;
       });
+
+    await InviteUser(
+      remote,
+      currentuser && currentuser.attributes
+        ? currentuser.attributes.email
+        : 'neverhere'
+    );
+
     await remote
       .pull(q => q.findRecords('user'))
       .then(transform => memory.sync(transform))

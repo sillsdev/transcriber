@@ -262,6 +262,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projRole": string;
     "owner": string;
     "clearCache": string;
+    "inviteError": string;
+    "deletedInvitation": string;
     "helpCenter": string;
     "reportIssue": string;
     "developer": string;

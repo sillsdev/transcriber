@@ -29,6 +29,7 @@ import {
   setDefaultProj,
   CreateOrg,
   uiLang,
+  remoteId,
 } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     message: {
       alignSelf: 'center',
+      textAlign: 'center',
     },
   })
 );
@@ -120,21 +122,50 @@ export function Loading(props: IProps) {
   };
 
   //remote is passed in because it wasn't always available in global
-  const InviteUser = async (newremote: JSONAPISource) => {
+  const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
-    if (!inviteId) return;
     localStorage.removeItem('inviteId');
-    const invite: Invitation[] = (await newremote.query((q: QueryBuilder) =>
+    const allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
       q
         .findRecords('invitation')
-        .filter({ attribute: 'silId', value: parseInt(inviteId) })
+        .filter(
+          { attribute: 'email', value: userEmail },
+          { attribute: 'accepted', value: false }
+        )
     )) as any;
-    if (invite.length > 0) {
+    allinvites.forEach(async invitation => {
       await newremote.update((t: TransformBuilder) =>
-        t.replaceAttribute(invite[0], 'accepted', true)
+        t.replaceAttribute(invitation, 'accepted', true)
       );
-      const orgId = related(invite[0], 'organization');
-      setOrganization(orgId);
+    });
+    if (inviteId) {
+      const invite = allinvites.find(
+        i => i.attributes.silId === parseInt(inviteId)
+      );
+      if (invite) {
+        const orgId = related(invite, 'organization');
+        setOrganization(orgId);
+        localStorage.setItem(
+          'lastOrg',
+          remoteId('organization', orgId, keyMap)
+        );
+      } else {
+        const thisinvite: Invitation[] = (await newremote.query(
+          (q: QueryBuilder) =>
+            q
+              .findRecords('invitation')
+              .filter({ attribute: 'silId', value: parseInt(inviteId) })
+        )) as any;
+        if (thisinvite.length === 0)
+          localStorage.setItem('inviteError', t.deletedInvitation);
+        else {
+          //if previously accepted just roll with it
+          if (thisinvite[0].attributes.email !== userEmail) {
+            /* they must have logged in with another email */
+            localStorage.setItem('inviteError', t.inviteError);
+          }
+        }
+      }
     }
   };
 
@@ -159,6 +190,7 @@ export function Loading(props: IProps) {
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
+    localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData(
       schema,
@@ -276,11 +308,16 @@ export function Loading(props: IProps) {
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <img src={logo} className={classes.icon} alt="logo" />
-          <Typography variant="h6" className={classes.message}>
-            {API_CONFIG.isApp
-              ? t.loadingTranscriber
-              : t.loadingTranscriberAdmin}
-          </Typography>
+          <div>
+            <Typography variant="h6" className={classes.message}>
+              {localStorage.getItem('inviteError') || ''}
+            </Typography>
+            <Typography variant="h6" className={classes.message}>
+              {API_CONFIG.isApp
+                ? t.loadingTranscriber
+                : t.loadingTranscriberAdmin}
+            </Typography>
+          </div>
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
