@@ -14,6 +14,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { OfflineDataPath } from '../utils/offlineDataPath';
 import fs from 'fs';
 import path from 'path';
+import { OpenDialogSyncOptions } from 'electron';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 
@@ -52,7 +53,7 @@ if (isElectron) {
       //: OpenDialogSyncOptions
       filters: [{ name: 'zip', extensions: ['zip'] }],
       properties: ['openFile'],
-    };
+    } as OpenDialogSyncOptions;
     const filePaths = electron.remote.dialog.showOpenDialogSync(options);
     if (!filePaths || filePaths.length === 0) {
       //they didn't pick a file

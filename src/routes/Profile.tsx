@@ -53,6 +53,7 @@ import en from '../assets/en.json';
 import fr from '../assets/fr.json';
 import { UpdateRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
+const isElectron = process.env.REACT_APP_MODE === 'electron';
 
 interface ILangDes {
   type: string;
@@ -271,6 +272,11 @@ export function Profile(props: IProps) {
   const handleMessageReset = () => setMessage(<></>);
 
   const handleUserMenuAction = (what: string) => {
+    if (isElectron && /logout/i.test(what)) {
+      localStorage.removeItem('user-id');
+      setView('Access');
+      return;
+    }
     if (!/Close/i.test(what)) {
       if (/Clear/i.test(what)) {
         bucket.setItem('remote-requests', []);
@@ -541,6 +547,7 @@ export function Profile(props: IProps) {
     return <Redirect to="/" />;
   }
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
+  if (/Access/i.test(view)) return <Redirect to="/" />;
   if (/Main/i.test(view)) return <Redirect to="/main" />;
 
   return (

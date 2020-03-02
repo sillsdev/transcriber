@@ -8,8 +8,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
+import { Redirect } from 'react-router-dom';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
+const isElectron = process.env.REACT_APP_MODE === 'electron';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,18 +48,25 @@ export function Logout(props: IProps) {
   const { auth } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
+  const [view, setView] = React.useState('');
 
   useEffect(() => {
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
-    auth.logout();
+    if (!isElectron) {
+      auth.logout();
+    } else {
+      localStorage.removeItem('user-id');
+      setView('Access');
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   // if (auth.isAuthenticated()) return <Redirect to="/loading" />;
 
+  if (/Access/i.test(view)) return <Redirect to="/" />;
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static" color="inherit">

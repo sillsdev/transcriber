@@ -86,6 +86,7 @@ import {
   remoteId,
   remoteIdGuid,
   makeAbbr,
+  Online,
 } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -94,6 +95,10 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 import path from 'path';
 import { OfflineDataPath } from '../utils/offlineDataPath';
+
+const isElectron = process.env.REACT_APP_MODE === 'electron';
+const noop = { openExternal: () => {} };
+const { shell } = isElectron ? require('electron') : { shell: noop };
 
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
@@ -278,7 +283,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [user] = useGlobal('user');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [organization, setOrganization] = useGlobal('organization');
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); // true if Electron
+  const [online, setOnline] = useState(false); // true if Internet
   const [orgRole, setOrgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [project, setProject] = useGlobal('project');
@@ -437,6 +443,11 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleUserMenuAction = (what: string) => {
+    if (isElectron && /logout/i.test(what)) {
+      localStorage.removeItem('user-id');
+      setView('Access');
+      return;
+    }
     localStorage.setItem('url', history.location.pathname);
     if (!/Close/i.test(what)) {
       if (/Clear/i.test(what)) {
@@ -445,6 +456,8 @@ export function ResponsiveDrawer(props: IProps) {
       setView(what);
     }
   };
+
+  const handleAdmin = (where: string) => () => shell.openExternal(where);
 
   const checkSavedEv = (method: () => any) => () => {
     checkSavedFn(method);
@@ -497,6 +510,10 @@ export function ResponsiveDrawer(props: IProps) {
       q.findRecords('project')
     )) as Project[];
   };
+
+  useEffect(() => {
+    Online(val => setOnline(val));
+  }, []);
 
   useEffect(() => {
     getOrgs().then(organizations => {
@@ -728,6 +745,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
+  if (view === 'Access') return <Redirect to="/" />;
 
   // When the user uses the back button or directly naviagets to a page
   if (history.action === 'POP') {
@@ -1112,18 +1130,29 @@ export function ResponsiveDrawer(props: IProps) {
                 </Button>
               </a>
             </div>
+          ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
+            <div className={classes.navButton}>
+              <a
+                href={swapTarget}
+                style={{ textDecoration: 'none' }}
+                title={t.switchToAdmin}
+              >
+                <Button variant="contained" color="primary" disabled={busy}>
+                  {t.admin}
+                </Button>
+              </a>
+            </div>
           ) : (
-            (projRole === 'admin' || orgRole === 'admin') && (
+            isElectron &&
+            online && (
               <div className={classes.navButton}>
-                <a
-                  href={swapTarget}
-                  style={{ textDecoration: 'none' }}
-                  title={t.switchToAdmin}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAdmin(swapTarget)}
                 >
-                  <Button variant="contained" color="primary" disabled={busy}>
-                    {t.admin}
-                  </Button>
-                </a>
+                  {t.admin}
+                </Button>
               </div>
             )
           )}

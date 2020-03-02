@@ -278,7 +278,7 @@ export function Access(props: IProps) {
                 </Grid>
               )}
               <Grid item xs={12} md={6}>
-                <div className={classes.actions}>
+                {/* <div className={classes.actions}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -288,7 +288,7 @@ export function Access(props: IProps) {
                   >
                     {t.login}
                   </Button>
-                </div>
+                </div> */}
                 <div className={classes.actions}>
                   <Button
                     variant="contained"
