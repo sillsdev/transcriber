@@ -13,11 +13,12 @@ import {
   Role,
   Group,
   GroupMembership,
+  Invitation,
 } from '../model';
 import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   withStyles,
   makeStyles,
@@ -428,10 +429,22 @@ export function Profile(props: IProps) {
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
   };
-  const handleDeleteConfirmed = () => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({ type: 'user', id: deleteItem })
+  const handleDeleteConfirmed = async () => {
+    const tb: TransformBuilder = new TransformBuilder();
+    const ops: Operation[] = [];
+    const current = users.filter(u => u.id === deleteItem)[0];
+    /* delete any invitations for this user
+    so they can't rejoin orgs without a new invite */
+    const invites: Invitation[] = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('invitation')
+        .filter({ attribute: 'email', value: current.attributes.email })
+    ) as any;
+    invites.forEach(i =>
+      ops.push(tb.removeRecord({ type: 'invitation', id: i.id }))
     );
+    ops.push(tb.removeRecord({ type: 'user', id: deleteItem }));
+    await memory.update(ops);
     setView('Logout');
   };
   const handleDeleteRefused = () => {
