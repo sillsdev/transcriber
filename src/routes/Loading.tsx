@@ -31,6 +31,7 @@ import {
   uiLang,
   remoteId,
 } from '../utils';
+import SnackBar from '../components/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -111,6 +112,7 @@ export function Loading(props: IProps) {
   );
   const [savedURL] = useState(localStorage.getItem('url') || '');
   const [view, setView] = useState('');
+  const [message, setMessage] = useState(<></>);
 
   const handleUserMenuAction = (what: string) => {
     if (!/Close/i.test(what)) {
@@ -121,18 +123,24 @@ export function Loading(props: IProps) {
     }
   };
 
+  const handleMessageReset = () => {
+    setMessage(<></>);
+  };
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
     localStorage.removeItem('inviteId');
-    const allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
-      q
-        .findRecords('invitation')
-        .filter(
-          { attribute: 'email', value: userEmail },
-          { attribute: 'accepted', value: false }
-        )
+    var inviteError = '';
+
+    var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
+      q.findRecords('invitation').filter(
+        /*this didn't work sometimes { attribute: 'email', value: userEmail },*/
+        { attribute: 'accepted', value: false }
+      )
     )) as any;
+    /* filter it by email now... */
+    allinvites = allinvites.filter(i => i.attributes.email === userEmail);
+
     allinvites.forEach(async invitation => {
       await newremote.update((t: TransformBuilder) =>
         t.replaceAttribute(invitation, 'accepted', true)
@@ -150,21 +158,26 @@ export function Loading(props: IProps) {
           remoteId('organization', orgId, keyMap)
         );
       } else {
-        const thisinvite: Invitation[] = (await newremote.query(
-          (q: QueryBuilder) =>
-            q
-              .findRecords('invitation')
-              .filter({ attribute: 'silId', value: parseInt(inviteId) })
-        )) as any;
-        if (thisinvite.length === 0)
-          localStorage.setItem('inviteError', t.deletedInvitation);
-        else {
+        try {
+          const thisinvite: Invitation[] = (await newremote.query(
+            (q: QueryBuilder) =>
+              q
+                .findRecords('invitation')
+                .filter({ attribute: 'silId', value: parseInt(inviteId) })
+          )) as any;
+
           //if previously accepted just roll with it
           if (thisinvite[0].attributes.email !== userEmail) {
             /* they must have logged in with another email */
-            localStorage.setItem('inviteError', t.inviteError);
+            inviteError = t.inviteError;
           }
+        } catch {
+          inviteError = t.deletedInvitation;
         }
+      }
+      if (inviteError !== '') {
+        localStorage.setItem('inviteError', inviteError);
+        setMessage(<span>{localStorage.getItem('inviteError') || ''}</span>);
       }
     }
   };
@@ -321,6 +334,7 @@ export function Loading(props: IProps) {
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }
