@@ -77,6 +77,7 @@ export function ImportTab(props: IProps) {
 
   const [message, setMessage] = useState(<></>);
   const [importMessage, setImportMessage] = useState('');
+  const [importTitle, setImportTitle] = useState('');
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
   const [confirmAction, setConfirmAction] = useState('');
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -116,6 +117,8 @@ export function ImportTab(props: IProps) {
   const classes = useStyles();
 
   const handleProjectImport = () => {
+    setImportTitle('');
+    setImportMessage('');
     if (isElectron) electronImport();
     else setUploadVisible(true);
   };
@@ -140,6 +143,7 @@ export function ImportTab(props: IProps) {
   };
   const handleActionRefused = () => {
     setConfirmAction('');
+    setBusy(false);
   };
 
   const electronImport = () => {
@@ -212,15 +216,21 @@ export function ImportTab(props: IProps) {
   useEffect(() => {
     if (importStatus) {
       if (importStatus.errStatus) {
+        setImportTitle(translateError(importStatus));
+        setImportMessage(importStatus.errMsg);
         showMessage(t.error, translateError(importStatus));
         importComplete();
         setBusy(false);
       } else {
         if (importStatus.statusMsg) {
+          setImportTitle(importStatus.statusMsg);
           showMessage(t.import, importStatus.statusMsg);
         }
         if (importStatus.complete) {
           //import completed ok but might have message
+          setImportTitle(
+            importStatus.errMsg !== '' ? t.onlineChangeReport : t.importComplete
+          );
           setImportMessage(importStatus.errMsg);
           importComplete();
           setBusy(false);
@@ -237,6 +247,7 @@ export function ImportTab(props: IProps) {
         }
       }
     }
+
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [importStatus]);
 
@@ -259,9 +270,7 @@ export function ImportTab(props: IProps) {
 
         <FormControl>
           <FormLabel className={classes.label}>
-            <Typography variant="h5">
-              {importMessage !== '' ? t.onlineChangeReport : ''}
-            </Typography>
+            <Typography variant="h5">{importTitle}</Typography>
             <TextareaAutosize
               className={classes.textarea}
               id="standard-multiline-flexible"
