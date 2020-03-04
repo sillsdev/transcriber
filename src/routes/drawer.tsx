@@ -504,14 +504,31 @@ export function ResponsiveDrawer(props: IProps) {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getOrgs = async () => {
-    return (await memory.query((q: QueryBuilder) =>
+    //on desktop orgmems might have more than just current user
+    var orgs: Organization[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('organization')
-    )) as Organization[];
+    );
+    if (isElectron) {
+      const orgids = organizationMemberships
+        .filter(om => related(om, 'user') === user)
+        .map(om => related(om, 'organization'));
+
+      orgs = orgs.filter(o => orgids.includes(o.id));
+    }
+    return orgs;
   };
   const getProjs = async () => {
-    return (await memory.query((q: QueryBuilder) =>
+    var projs: Project[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('project')
-    )) as Project[];
+    );
+    if (isElectron) {
+      const groupids = groupMemberships
+        .filter(gm => related(gm, 'user') === user)
+        .map(gm => related(gm, 'group'));
+
+      projs = projs.filter(p => groupids.includes(related(p, 'group')));
+    }
+    return projs;
   };
 
   useEffect(() => {
