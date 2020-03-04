@@ -13,79 +13,79 @@
 				<target>Importation de données de transcripteurs portables</target>
 			</segment>
 		</unit>
-       <unit id="access.importPending">
-         <segment>
-            <source>Import In Progress...</source>
-            <target>Importation en cours ...</target>
-         </segment>
-      </unit>
-      <unit id="access.importComplete">
-         <segment>
-            <source>Import Complete</source>
-            <target>Importation terminée</target>
-         </segment>
-      </unit>
      <unit id="access.importError">
          <segment>
             <source>Import Error</source>
             <target>Erreur d'importation</target>
          </segment>
       </unit>
-      <unit id="access.ptfError">
-         <segment>
-            <source>Not a valid Portable Transcriber File</source>
-            <target>Pas un fichier de transcripteur portable valide</target>
-         </segment>
-      </unit>
-      <unit id="access.itfError">
-         <segment>
-            <source>Not a valid Incremental Transcriber File</source>
-            <target>Pas un fichier de transcripteur incrémentiel valide</target>
-         </segment>
-      </unit>
-     <unit id="access.importCreated">
-         <segment>
-            <source>Import file was created: {date0}.</source>
-            <target>Le fichier d'importation a été créé: {date0}.</target>
-         </segment>
-      </unit>
-      <unit id="access.projectImported">
-         <segment>
-            <source>Project {name0} was previously imported with a newer file: {date1} </source>
-            <target>Le projet {name0} a été précédemment importé avec un fichier plus récent: {date1}</target>
-         </segment>
-      </unit>
-      <unit id="access.allDataOverwritten">
-         <segment>
-            <source>All {name0} data will be overwritten.</source>
-            <target>Toutes les données {name0} seront écrasées.</target>
-         </segment>
-      </unit>
-      <unit id="access.neverExported">
-         <segment>
-            <source>Current data in project {name0} has never been exported.</source>
-            <target>Les données actuelles du projet {name0} n'ont jamais été exportées.</target>
-         </segment>
-      </unit>
-      <unit id="access.lastExported">
-         <segment>
-            <source>Current data in project {name0} was last exported {date0}.</source>
-            <target>Les données actuelles du projet {name0} ont été exportées pour la dernière fois {date0}.</target>
-         </segment>
-      </unit>
-      <unit id="access.exportedLost">
-         <segment>
-            <source>Import file will not include latest exported data.</source>
-            <target>Le fichier d'importation n'inclura pas les dernières données exportées.</target>
-         </segment>
-      </unit>
-
   	<unit id="access.login">
 			<segment>
 				<source>Online Login</source>
 				<target>Connexion en ligne</target>
 			</segment>
 		</unit>
+        <unit id="electronImport.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+            <target>Importation en cours ...</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target>Importation terminée</target>
+         </segment>
+      </unit>
+
+      <unit id="electronImport.ptfError">
+         <segment>
+            <source>Not a valid Portable Transcriber File</source>
+            <target>Pas un fichier de transcripteur portable valide</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.itfError">
+         <segment>
+            <source>Not a valid Incremental Transcriber File</source>
+            <target>Pas un fichier de transcripteur incrémentiel valide</target>
+         </segment>
+      </unit>
+     <unit id="electronImport.importCreated">
+         <segment>
+            <source>Import file was created: {date0}.</source>
+            <target>Le fichier d'importation a été créé: {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.projectImported">
+         <segment>
+            <source>Project {name0} was previously imported with a newer file: {date1} </source>
+            <target>Le projet {name0} a été précédemment importé avec un fichier plus récent: {date1}</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.allDataOverwritten">
+         <segment>
+            <source>All {name0} data will be overwritten.</source>
+            <target>Toutes les données {name0} seront écrasées.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.neverExported">
+         <segment>
+            <source>Current data in project {name0} has never been exported.</source>
+            <target>Les données actuelles du projet {name0} n'ont jamais été exportées.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.lastExported">
+         <segment>
+            <source>Current data in project {name0} was last exported {date0}.</source>
+            <target>Les données actuelles du projet {name0} ont été exportées pour la dernière fois {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.exportedLost">
+         <segment>
+            <source>Import file will not include latest exported data.</source>
+            <target>Le fichier d'importation n'inclura pas les dernières données exportées.</target>
+         </segment>
+      </unit>
 		<unit id="snackbar.undo">
 			<segment>
 				<source>UNDO</source>
@@ -1232,7 +1232,13 @@
 				<target>Exporter</target>
 			</segment>
 		</unit>
-		<unit id="main.loadingTable">
+      <unit id="main.import">
+         <segment>
+            <source>Import</source>
+            <target>Importation</target>
+         </segment>
+      </unit>
+      <unit id="main.loadingTable">
 			<segment>
 				<source>Loading data</source>
 				<target>Chargement des données</target>
@@ -1400,25 +1406,61 @@
 				<target>Mon Atelier</target>
 			</segment>
 		</unit>
-        <unit id="transcriptionTab.onlineChangeReport">
+        <unit id="import.import">
          <segment>
-            <source>Online changes made since data provided to offline user.</source>
-            <target>Modifications apportées en ligne depuis les données fournies à l'utilisateur hors ligne.</target>
+            <source>Import</source>
+            <target>Importation</target>
          </segment>
       </unit>
-        <unit id="transcriptionTab.noFile">
+      <unit id="import.importProject">
+         <segment>
+            <source>Import Project</source>
+            <target>Importer un projet</target>
+         </segment>
+      </unit>
+      <unit id="import.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+        </segment>
+      </unit>
+      <unit id="import.error">
+         <segment>
+            <source>Import Error</source>
+            <target>Erreur d'importation</target>
+         </segment>
+      </unit>
+        <unit id="import.onlineChangeReport">
+         <segment>
+            <source>Online changes made since data provided to offline user:</source>
+            <target>Modifications apportées en ligne depuis les données fournies à l'utilisateur hors ligne:</target>
+         </segment>
+      </unit>
+        <unit id="import.noFile">
          <segment>
             <source>Please select file to be uploaded.</source>
             <target>Veuillez sélectionner le fichier à télécharger.</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.importPending">
+      <unit id="import.importPending">
          <segment>
             <source>Import In Progress...</source>
              <target>Importation en cours ...</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.importComplete">
+      <unit id="import.invalidITF">
+         <segment>
+            <source>Not a valid Incremental Transcriber File (ITF).</source>
+            <target>Pas un fichier de transcripteur incrémentiel valide (ITF).</target>
+         </segment>
+      </unit>
+      <unit id="import.invalidProject">
+         <segment>
+            <source>ITF File does not contain current project.</source>
+            <target>Le fichier ITF ne contient pas le projet en cours.</target>
+         </segment>
+      </unit>
+      <unit id="import.importComplete">
          <segment>
             <source>Import Complete</source>
              <target>Importation terminée</target>
@@ -1483,6 +1525,30 @@
          <segment>
             <source>Export Project</source>
             <target>Exporter une projet</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportType">
+         <segment>
+            <source>Which export type?</source>
+            <target>Quel type d'exportation?</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportExplanation">
+         <segment>
+            <source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+            <target>Exportez une sauvegarde complète pour la stocker localement. Exportez le fichier incrémentiel pour l'importer dans l'application en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportPTFtype">
+         <segment>
+            <source>Full Backup (ptf)</source>
+            <target>Sauvegarde complète (ptf)</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportITFtype">
+         <segment>
+            <source>Incremental Changes (itf)</source>
+            <target>Modifications incrémentielles (itf)</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportingProject">

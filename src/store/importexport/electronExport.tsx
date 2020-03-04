@@ -28,7 +28,7 @@ export async function electronExport(
         attributes: {
           message: fileName,
           fileurl: 'file:////' + fullpath,
-          contenttype: 'application/zip',
+          contenttype: 'application/itf',
         },
         type: 'file-responses',
         id: '1',
@@ -45,6 +45,7 @@ export async function electronExport(
     );
     return dt;
   };
+
   const AddSourceEntry = (dt: string): string => {
     zip.addFile('SILTranscriber', Buffer.alloc(dt.length, dt), 'Imported Date');
     return dt;
@@ -54,7 +55,7 @@ export async function electronExport(
     var json = JSON.stringify(ser.serializeRecords(recs));
     zip.addFile(
       'data/' + sort + '_' + table + '.json',
-      Buffer.alloc(json.length, json),
+      Buffer.from(json),
       table
     );
   };
@@ -181,6 +182,10 @@ export async function electronExport(
     '.' +
     exportType;
 
+  const AddProjectEntry = () => {
+    AddJsonEntry('projects', [projRec], 'D');
+  };
+
   interface fileInfo {
     table: string;
     sort: string;
@@ -214,6 +219,7 @@ export async function electronExport(
   AddSourceEntry(projRec.attributes.dateImported || '');
   if (exportType === 'itf') {
     const exported = AddCheckEntry();
+    AddProjectEntry();
     updateableFiles.forEach(AddChanged);
     projRec.attributes.dateExported = exported;
     memory.update((t: TransformBuilder) => t.updateRecord(projRec));
@@ -223,7 +229,6 @@ export async function electronExport(
     AddFonts();
   }
   var where = path.join(OfflineDataPath(), fileName);
-  console.log('writing zip');
   zip.writeZip(where);
   return BuildFileResponse(where, fileName);
 }

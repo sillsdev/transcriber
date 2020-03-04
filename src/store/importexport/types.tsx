@@ -15,7 +15,7 @@ export interface FileResponse {
 export interface IImportExportState {
   loaded: boolean;
   exportFile: FileResponse;
-  importexportStatus: IAxiosStatus;
+  importexportStatus: IAxiosStatus | undefined;
 }
 
 // Describing the different ACTION NAMES available

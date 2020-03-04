@@ -4,9 +4,13 @@ import * as Localize from 'react-localization';
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessSilTranscriber": string;
     "importProject": string;
+    "importError": string;
+    "login": string;
+};
+
+export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
     "importPending": string;
     "importComplete": string;
-    "importError": string;
     "ptfError": string;
     "itfError": string;
     "importCreated": string;
@@ -15,7 +19,6 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "neverExported": string;
     "lastExported": string;
     "exportedLost": string;
-    "login": string;
 };
 
 export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
@@ -255,6 +258,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projectSummary": string;
     "addProject": string;
     "export": string;
+    "import": string;
     "loadingTable": string;
     "logout": string;
     "myAccount": string;
@@ -285,11 +289,20 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "myWorkbench": string;
 };
 
-export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
+export interface IImportStrings extends Localize.LocalizedStringsMethods {
+    "import": string;
+    "importProject": string;
+    "expiredToken": string;
+    "error": string;
     "onlineChangeReport": string;
     "noFile": string;
     "importPending": string;
+    "invalidITF": string;
+    "invalidProject": string;
     "importComplete": string;
+};
+
+export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
     "section": string;
     "sectionstate": string;
     "passages": string;
@@ -300,6 +313,10 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "elan": string;
     "export": string;
     "exportProject": string;
+    "exportType": string;
+    "exportExplanation": string;
+    "exportPTFtype": string;
+    "exportITFtype": string;
     "exportingProject": string;
     "error": string;
     "downloadComplete": string;
@@ -640,6 +657,7 @@ export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
 	access: IAccessStrings;
+	electronImport: IElectronImportStrings;
 	snackbar: ISnackbarStrings;
 	usertable: IUsertableStrings;
 	alert: IAlertStrings;
@@ -656,6 +674,7 @@ export interface ILocalizedStrings {
 	mediaTab: IMediaTabStrings;
 	passageMedia: IPassageMediaStrings;
 	main: IMainStrings;
+	import: IImportStrings;
 	transcriptionTab: ITranscriptionTabStrings;
 	transcriptionShow: ITranscriptionShowStrings;
 	groupTabs: IGroupTabsStrings;

@@ -10,9 +10,14 @@ const initialState = {
 		"en": {
 			"accessSilTranscriber": "Welcome to SIL Transcriber. Select how to get started.",
 			"importProject": "Import Portable Transcriber Data",
+			"importError": "Import Error",
+			"login": "Online Login",
+		}
+	}),
+	"electronImport": new LocalizedStrings({
+		"en": {
 			"importPending": "Import In Progress...",
 			"importComplete": "Import Complete",
-			"importError": "Import Error",
 			"ptfError": "Not a valid Portable Transcriber File",
 			"itfError": "Not a valid Incremental Transcriber File",
 			"importCreated": "Import file was created: {date0}.",
@@ -21,7 +26,6 @@ const initialState = {
 			"neverExported": "Current data in project {name0} has never been exported.",
 			"lastExported": "Current data in project {name0} was last exported {date0}.",
 			"exportedLost": "Import file will not include latest exported data.",
-			"login": "Online Login",
 		}
 	}),
 	"snackbar": new LocalizedStrings({
@@ -277,6 +281,7 @@ const initialState = {
 			"projectSummary": "Project Summary",
 			"addProject": "Add Project",
 			"export": "Export",
+			"import": "Import",
 			"loadingTable": "Loading data",
 			"logout": "Log Out",
 			"myAccount": "My Account",
@@ -307,12 +312,22 @@ const initialState = {
 			"myWorkbench": "My Workbench",
 		}
 	}),
-	"transcriptionTab": new LocalizedStrings({
+	"import": new LocalizedStrings({
 		"en": {
-			"onlineChangeReport": "Online changes made since data provided to offline user.",
+			"import": "Import",
+			"importProject": "Import Project",
+			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
+			"error": "Import Error",
+			"onlineChangeReport": "Online changes made since data provided to offline user:",
 			"noFile": "Please select file to be uploaded.",
 			"importPending": "Import In Progress...",
+			"invalidITF": "Not a valid Incremental Transcriber File (ITF).",
+			"invalidProject": "ITF File does not contain current project.",
 			"importComplete": "Import Complete",
+		}
+	}),
+	"transcriptionTab": new LocalizedStrings({
+		"en": {
 			"section": "Section",
 			"sectionstate": "State",
 			"passages": "Passages",
@@ -323,8 +338,12 @@ const initialState = {
 			"elan": "Elan",
 			"export": "Export",
 			"exportProject": "Export Project",
+			"exportType": "Which export type?",
+			"exportExplanation": "Export a full backup to store locally. Export incremental file to import into online app.",
+			"exportPTFtype": "Full Backup (ptf)",
+			"exportITFtype": "Incremental Changes (itf)",
 			"exportingProject": "Exporting Project",
-			"error": "Error",
+			"error": "Export Error",
 			"downloadComplete": "Download complete",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
 		}
@@ -690,6 +709,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				...state,
 				"loaded": true,
 				"access" : new LocalizedStrings(action.payload.data.access),
+				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"snackbar" : new LocalizedStrings(action.payload.data.snackbar),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
@@ -706,6 +726,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"main" : new LocalizedStrings(action.payload.data.main),
+				"import" : new LocalizedStrings(action.payload.data.import),
 				"transcriptionTab" : new LocalizedStrings(action.payload.data.transcriptionTab),
 				"transcriptionShow" : new LocalizedStrings(action.payload.data.transcriptionShow),
 				"groupTabs" : new LocalizedStrings(action.payload.data.groupTabs),

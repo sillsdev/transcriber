@@ -31,8 +31,6 @@ export const nextUpload = (
     },
   })
     .then(response => {
-      console.log('upload item created' + files[n].name + ' succeeded.');
-      console.log(response);
       dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', response.data.audioUrl, true);
@@ -40,8 +38,6 @@ export const nextUpload = (
       xhr.send(files[n].slice());
       xhr.onload = () => {
         if (xhr.status < 300) {
-          console.log('upload item ' + files[n].name + ' succeeded.');
-          // console.log(JSON.stringify(xhr.response));
           dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
         } else {
           console.log('upload ' + files[n].name + ' failed.');

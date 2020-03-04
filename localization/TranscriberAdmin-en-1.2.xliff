@@ -19,81 +19,11 @@
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="access.importPending">
-                <source>Import In Progress...</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.importComplete">
-                <source>Import Complete</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="access.importError">
                 <source>Import Error</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.ptfError">
-                <source>Not a valid Portable Transcriber File</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.itfError">
-                <source>Not a valid Incremental Transcriber File</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.importCreated">
-                <source>Import file was created: {date0}.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.projectImported">
-                <source>Project {name0} was previously imported with a newer file: {date1} </source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.allDataOverwritten">
-                <source>All {name0} data will be overwritten.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-             <trans-unit id="access.neverExported">
-                <source>Current data in project {name0} has never been exported.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.lastExported">
-                <source>Current data in project {name0} was last exported {date0}.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.exportedLost">
-                <source>Import file will not include latest exported data.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
+                    <context context-type="sourcefile">electronImport.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="access.login">
@@ -103,6 +33,76 @@
         			<context context-type="sourcefile">Access.tsx</context>
         		</context-group>
         	</trans-unit>
+            <trans-unit id="electronImport.importPending">
+                <source>Import In Progress...</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.importComplete">
+                <source>Import Complete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.ptfError">
+                <source>Not a valid Portable Transcriber File</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.itfError">
+                <source>Not a valid Incremental Transcriber File</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.importCreated">
+                <source>Import file was created: {date0}.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.projectImported">
+                <source>Project {name0} was previously imported with a newer file: {date1} </source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.allDataOverwritten">
+                <source>All {name0} data will be overwritten.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="electronImport.neverExported">
+                <source>Current data in project {name0} has never been exported.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.lastExported">
+                <source>Current data in project {name0} was last exported {date0}.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.exportedLost">
+                <source>Import file will not include latest exported data.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
         	<trans-unit id="snackbar.undo">
                 <source>UNDO</source>
                 <target/>
@@ -1440,6 +1440,13 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="main.import">
+        		<source>Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.loadingTable">
         		<source>Loading data</source>
         		<target/>
@@ -1636,33 +1643,74 @@
         			<context context-type="sourcefile">Loading.tsx</context>
         		</context-group>
         	</trans-unit>
-
-        	<trans-unit id="transcriptionTab.onlineChangeReport">
-                <source>Online changes made since data provided to offline user.</source>
+            <trans-unit id="import.import">
+        		<source>Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+             <trans-unit id="import.importProject">
+        		<source>Import Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="import.expiredToken">
+                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                    <context context-type="sourcefile">ExportTab.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="transcriptionTab.noFile">
+            <trans-unit id="import.error">
+        		<source>Import Error</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.onlineChangeReport">
+                <source>Online changes made since data provided to offline user:</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="import.noFile">
                 <source>Please select file to be uploaded.</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                    <context context-type="sourcefile">import.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriptionTab.importPending">
+            <trans-unit id="import.importPending">
                 <source>Import In Progress...</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                    <context context-type="sourcefile">import.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriptionTab.importComplete">
+             <trans-unit id="import.invalidITF">
+                <source>Not a valid Incremental Transcriber File (ITF).</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="import.invalidProject">
+                <source>ITF File does not contain current project.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.importComplete">
                 <source>Import Complete</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
+                    <context context-type="sourcefile">import.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriptionTab.section">
@@ -1735,6 +1783,34 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
+            <trans-unit id="transcriptionTab.exportType">
+        		<source>Which export type?</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportExplanation">
+        		<source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportPTFtype">
+        		<source>Full Backup (ptf)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportITFtype">
+        		<source>Incremental Changes (itf)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
             <trans-unit id="transcriptionTab.exportingProject">
         		<source>Exporting Project</source>
         		<target/>
@@ -1743,7 +1819,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="transcriptionTab.error">
-        		<source>Error</source>
+        		<source>Export Error</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>

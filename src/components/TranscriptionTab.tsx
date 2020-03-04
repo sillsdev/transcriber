@@ -57,8 +57,6 @@ import {
   getMediaName,
 } from '../utils';
 
-import MediaUpload, { UploadType } from './MediaUpload';
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -189,15 +187,13 @@ interface IStateProps {
   hasUrl: boolean;
   mediaUrl: string;
   exportFile: FileResponse;
-  importexportStatus: IAxiosStatus;
+  exportStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
   fetchMediaUrl: typeof actions.fetchMediaUrl;
   exportProject: typeof actions.exportProject;
   exportComplete: typeof actions.exportComplete;
-  importProjectFromElectron: typeof actions.importProjectFromElectron;
-  importComplete: typeof actions.importComplete;
 }
 
 interface IRecordProps {
@@ -236,18 +232,17 @@ export function TranscriptionTab(props: IProps) {
     fetchMediaUrl,
     exportProject,
     exportComplete,
-    importexportStatus,
+    exportStatus,
     exportFile,
-    importProjectFromElectron,
-    importComplete,
   } = props;
   const classes = useStyles();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [offline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
-  const [importMessage, setImportMessage] = useState('');
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
@@ -285,24 +280,7 @@ export function TranscriptionTab(props: IProps) {
   >([]);
   const [filter, setFilter] = useState(false);
   const isElectron = process.env.REACT_APP_MODE === 'electron';
-  //#region Upload
-  const [uploadVisible, setUploadVisible] = useState(false);
 
-  const handleProjectImport = () => {
-    setUploadVisible(true);
-  };
-  const uploadITF = (files: FileList) => {
-    if (!files || files.length === 0) {
-      setMessage(<span>{t.noFile}</span>);
-    } else {
-      importProjectFromElectron(files, auth, t.importPending, t.importComplete);
-    }
-    setUploadVisible(false);
-  };
-  const uploadCancel = () => {
-    setUploadVisible(false);
-  };
-  //#endregion
   const handleMessageReset = () => {
     setMessage(<></>);
   };
@@ -392,33 +370,31 @@ export function TranscriptionTab(props: IProps) {
         showMessage(t.exportProject, exportName + ' ' + t.downloadComplete);
         setExportName('');
         exportComplete();
+        setBusy(false);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [exportUrl, exportName, exportAnchor]);
 
   useEffect(() => {
-    if (importexportStatus) {
-      if (importexportStatus.errStatus) {
-        showMessage(t.error, translateError(importexportStatus));
+    if (exportStatus) {
+      if (exportStatus.errStatus) {
+        showMessage(t.error, translateError(exportStatus));
+        exportComplete();
+        setBusy(false);
       } else {
-        if (importexportStatus.statusMsg) {
-          showMessage('', importexportStatus.statusMsg);
+        if (exportStatus.statusMsg) {
+          setBusy(true);
+          showMessage('', exportStatus.statusMsg);
         }
-        if (importexportStatus.complete) {
-          if (exportFile && exportName === '') {
-            setExportName(exportFile.data.attributes.message);
-            setExportUrl(exportFile.data.attributes.fileurl);
-          } else {
-            //import completed ok but might have message
-            setImportMessage(importexportStatus.errMsg);
-            importComplete();
-          }
+        if (exportStatus.complete && exportFile && exportName === '') {
+          setExportName(exportFile.data.attributes.message);
+          setExportUrl(exportFile.data.attributes.fileurl);
         }
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [importexportStatus]);
+  }, [exportStatus]);
 
   useEffect(() => {
     if (audUrl && audName !== '') {
@@ -595,29 +571,6 @@ export function TranscriptionTab(props: IProps) {
     );
   };
 
-  const ImportMessageDlg = () => {
-    const handleClose = () => {
-      console.log('close', importMessage);
-      setImportMessage('');
-    };
-    return (
-      <Dialog
-        open={importMessage !== ''}
-        onClose={handleClose}
-        scroll="body"
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <DialogTitle id="scroll-dialog-title">t.onlineChangeReport</DialogTitle>
-        <DialogContent dividers={false}>
-          <DialogContentText id="scroll-dialog-description" tabIndex={-1}>
-            {importMessage}
-          </DialogContentText>
-        </DialogContent>
-      </Dialog>
-    );
-  };
-
   return (
     <div id="TranscriptionTab" className={classes.container}>
       <div className={classes.paper}>
@@ -633,19 +586,6 @@ export function TranscriptionTab(props: IProps) {
               title={t.exportProject}
             >
               {t.exportProject}
-            </Button>
-          )}
-          {planColumn && !isElectron && (
-            <Button
-              key="import"
-              aria-label="Import Project"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleProjectImport}
-              title="Import Project"
-            >
-              Import Project
             </Button>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
@@ -714,14 +654,7 @@ export function TranscriptionTab(props: IProps) {
         target="_blank"
         rel="noopener noreferrer"
       />
-      <MediaUpload
-        visible={uploadVisible}
-        uploadType={UploadType.ITF}
-        uploadMethod={uploadITF}
-        cancelMethod={uploadCancel}
-      />
       <WhichExportDlg />
-      <ImportMessageDlg />
       <SnackBar message={message} reset={handleMessageReset} />
     </div>
   );
@@ -733,7 +666,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
   exportFile: state.importexport.exportFile,
-  importexportStatus: state.importexport.importexportStatus,
+  exportStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

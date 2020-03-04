@@ -68,8 +68,8 @@ function MediaUpload(props: IProps) {
   ];
   const acceptmime = [
     'audio/mpeg, audio/wav, audio/m4a',
-    'application/zip',
-    'application/zip',
+    'application/itf',
+    'application/ptf',
     'image/jpeg, image/svg+xml, image/png',
   ];
   const multiple = [true, false, false, false];

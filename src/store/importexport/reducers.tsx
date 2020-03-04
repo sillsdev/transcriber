@@ -15,7 +15,7 @@ import {
 
 export const exportCleanState = {
   loaded: false,
-  importexportStatus: pendingStatus(''),
+  importexportStatus: undefined,
 } as IImportExportState;
 
 export default function(

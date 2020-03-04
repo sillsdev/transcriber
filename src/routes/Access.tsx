@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IAccessStrings, User } from '../model';
+import { IState, IAccessStrings, User, IElectronImportStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -97,7 +97,8 @@ interface IRecordProps {
 
 interface IStateProps {
   t: IAccessStrings;
-  importStatus: IAxiosStatus;
+  ei: IElectronImportStrings;
+  importStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
@@ -113,7 +114,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function Access(props: IProps) {
-  const { auth, t, importStatus, users } = props;
+  const { auth, t, ei, importStatus, users } = props;
   const classes = useStyles();
   const {
     fetchLocalization,
@@ -146,7 +147,7 @@ export function Access(props: IProps) {
       setTimeout(() => {
         handleActionConfirmed();
       }, 2000);
-    } else handleElectronImport(memory, backup, zipFile, importProject, t);
+    } else handleElectronImport(memory, backup, zipFile, importProject, ei);
     setConfirmAction('');
   };
   const handleActionRefused = () => {
@@ -154,7 +155,7 @@ export function Access(props: IProps) {
   };
   const handleImport = () => {
     if (isElectron) {
-      var importData: IImportData = getElectronImportData(memory, t);
+      var importData: IImportData = getElectronImportData(memory, ei);
       if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
       else {
         setZipFile(importData.zip);
@@ -169,7 +170,7 @@ export function Access(props: IProps) {
             backup,
             importData.zip,
             importProject,
-            t
+            ei
           );
         }
       }
@@ -253,13 +254,16 @@ export function Access(props: IProps) {
               {t.accessSilTranscriber}
             </Typography>
             <Grid container direction="row">
-              {users && users.length > 0 && (
+              {!importStatus && users && users.length > 0 && (
                 <Grid item xs={12} md={6}>
                   <div className={classes.actions}>
                     <List>
                       {users
                         .sort((i, j) =>
-                          i.attributes.name < j.attributes.name ? -1 : 1
+                          (i.attributes ? i.attributes.name : '') <
+                          (j.attributes ? j.attributes.name : '')
+                            ? -1
+                            : 1
                         )
                         .map(u => (
                           <ListItem key={u.id} onClick={handleSelect(u.id)}>
@@ -270,7 +274,9 @@ export function Access(props: IProps) {
                                 userRec={u}
                               />
                             </ListItemIcon>
-                            <ListItemText primary={u.attributes.name} />
+                            <ListItemText
+                              primary={u.attributes ? u.attributes.name : ''}
+                            />
                           </ListItem>
                         ))}
                     </List>
@@ -319,6 +325,7 @@ export function Access(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'access' }),
+  ei: localStrings(state, { layout: 'electronImport' }),
   importStatus: state.importexport.importexportStatus,
 });
 

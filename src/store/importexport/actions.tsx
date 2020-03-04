@@ -75,9 +75,10 @@ export const exportProject = (
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,
       },
-      timeout: 30000,
+      timeout: 0, //wait forever
     })
       .then(response => {
+        console.log(response);
         dispatch({
           payload: response.data,
           type: EXPORT_SUCCESS,
@@ -101,11 +102,11 @@ export const importComplete = () => (dispatch: any) => {
 };
 export const importProjectFromElectron = (
   files: FileList,
+  projectid: number,
   auth: Auth,
   pendingmsg: string,
   completemsg: string
 ) => (dispatch: any) => {
-  console.log('here');
   dispatch({
     payload: pendingmsg,
     type: IMPORT_PENDING,
@@ -131,7 +132,12 @@ export const importProjectFromElectron = (
         if (xhr.status < 300) {
           console.log('upload item ' + files[0].name + ' succeeded.');
           /* tell it to process the file now */
-          url = API_CONFIG.host + '/api/offlineData/project/import/' + filename;
+          url =
+            API_CONFIG.host +
+            '/api/offlineData/project/import/' +
+            projectid.toString() +
+            '/' +
+            filename;
           Axios.put(url, null, {
             headers: {
               Authorization: 'Bearer ' + auth.accessToken,

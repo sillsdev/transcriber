@@ -6,7 +6,7 @@ import AdmZip from 'adm-zip';
 import MemorySource from '@orbit/memory';
 import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
-import { Project, IAccessStrings } from '../model';
+import { Project, IElectronImportStrings } from '../model';
 import { isArray } from 'util';
 import { remoteIdGuid } from '../utils';
 import moment, { Moment } from 'moment';
@@ -26,7 +26,7 @@ export interface IImportData {
 }
 export var getElectronImportData = (
   memory: MemorySource,
-  t: IAccessStrings
+  t: IElectronImportStrings
 ): IImportData => {
   return {
     valid: false,
@@ -35,23 +35,24 @@ export var getElectronImportData = (
     zip: null,
   };
 };
+
 export var handleElectronImport = (
   memory: MemorySource,
   backup: IndexedDBSource,
   zip: AdmZip | null,
   importProject: typeof action.importProjectToElectron,
-  t: IAccessStrings
+  t: IElectronImportStrings
 ): void => {};
 
 if (isElectron) {
   getElectronImportData = (
     memory: MemorySource,
-    t: IAccessStrings
+    t: IElectronImportStrings
   ): IImportData => {
     var electron = require('electron');
     const options = {
       //: OpenDialogSyncOptions
-      filters: [{ name: 'zip', extensions: ['zip'] }],
+      filters: [{ name: 'ptf', extensions: ['ptf'] }],
       properties: ['openFile'],
     } as OpenDialogSyncOptions;
     const filePaths = electron.remote.dialog.showOpenDialogSync(options);
@@ -158,7 +159,7 @@ if (isElectron) {
     backup: IndexedDBSource,
     zip: AdmZip | null,
     importProject: typeof action.importProjectToElectron,
-    t: IAccessStrings
+    t: IElectronImportStrings
   ): void => {
     if (zip) {
       const where = OfflineDataPath();

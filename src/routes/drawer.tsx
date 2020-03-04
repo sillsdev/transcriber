@@ -55,6 +55,7 @@ import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
+import UploadIcon from '@material-ui/icons/CloudUpload';
 import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
@@ -68,6 +69,7 @@ import LazyLoad from '../hoc/LazyLoad';
 import PlanTabs from '../components/PlanTabs';
 import MediaTab from '../components/MediaTab';
 import TranscriptionTab from '../components/TranscriptionTab';
+import ImportTab from '../components/ImportTab';
 import Team from '../components/GroupSettings/Team';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
@@ -282,6 +284,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [schema] = useGlobal('schema');
   const [user] = useGlobal('user');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const [importexportBusy] = useGlobal('importexportBusy');
   const [organization, setOrganization] = useGlobal('organization');
   const [offline] = useGlobal('offline'); // true if Electron
   const [online, setOnline] = useState(false); // true if Internet
@@ -544,7 +547,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, user]);
+  }, [organization, user, organizationMemberships]);
 
   useEffect(() => {
     if (orgOptions) {
@@ -852,6 +855,7 @@ export function ResponsiveDrawer(props: IProps) {
   const projectIcons = [
     <SettingsIcon />,
     <DownloadIcon />,
+    <UploadIcon />,
     <IntegrationIcon />,
   ];
 
@@ -967,20 +971,22 @@ export function ResponsiveDrawer(props: IProps) {
           </List>
           <Divider />
           <List>
-            {[t.settings, t.export, t.integrations].map((text, index) => (
-              <Tooltip key={text} title={text}>
-                <ListItem
-                  button
-                  key={text}
-                  selected={slug(text) === choice}
-                  onClick={checkSavedEv(() => handleChoice(text))}
-                  disabled={curProj === null}
-                >
-                  <ListItemIcon>{projectIcons[index]}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              </Tooltip>
-            ))}
+            {[t.settings, t.export, t.import, t.integrations].map(
+              (text, index) => (
+                <Tooltip key={text} title={text}>
+                  <ListItem
+                    button
+                    key={text}
+                    selected={slug(text) === choice}
+                    onClick={checkSavedEv(() => handleChoice(text))}
+                    disabled={curProj === null}
+                  >
+                    <ListItemIcon>{projectIcons[index]}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                </Tooltip>
+              )
+            )}
           </List>
         </>
       )}
@@ -1014,6 +1020,7 @@ export function ResponsiveDrawer(props: IProps) {
       planColumn={true}
     />
   );
+  components[slug(t.import)] = <ImportTab {...props} />;
   components[slug(t.plans)] = (
     <PlanTable {...props} displaySet={handlePlanType} />
   );
@@ -1206,7 +1213,7 @@ export function ResponsiveDrawer(props: IProps) {
         </Hidden>
       </nav>
       <main className={classes.content}>
-        {!busy || (
+        {(!busy && !importexportBusy) || (
           <div className={classes.progress}>
             <LinearProgress variant="indeterminate" />
           </div>

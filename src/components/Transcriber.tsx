@@ -272,8 +272,8 @@ export function Transcriber(props: IProps) {
     setMakeComment(true);
     setRejectVisible(true);
   };
-  const handleRejected = (pass: Passage) => {
-    memory.update(
+  const handleRejected = async (pass: Passage) => {
+    await memory.update(
       UpdatePassageStateOps(
         pass.id,
         pass.attributes.state,
@@ -390,7 +390,7 @@ export function Transcriber(props: IProps) {
           userid
         )
       );
-      memory.update(ops);
+      await memory.update(ops);
     }
     done();
   };
