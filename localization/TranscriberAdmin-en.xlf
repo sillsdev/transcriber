@@ -2092,6 +2092,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.allUsersProjects">
+         <segment>
+            <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.additionalgroup">
          <segment>
             <source>Optional additional Group</source>
@@ -2101,6 +2107,18 @@
       <unit id="invite.groupRole">
          <segment>
             <source>Group Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.otherGroupProjects">
+         <segment>
+            <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.noProjects">
+         <segment>
+            <source>No Projects are associated with this group.</source>
             <target/>
          </segment>
       </unit>

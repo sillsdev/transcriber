@@ -2441,6 +2441,13 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
+            <trans-unit id="invite.allUsersProjects">
+                <source>Projects</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Invite.tsx</context>
+                </context-group>
+            </trans-unit>
 			<trans-unit id="invite.additionalgroup">
 				<source>Optional additional Group</source>
 				<target/>
@@ -2455,7 +2462,21 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="invite.selectGroupRole">
+            <trans-unit id="invite.otherGroupProjects">
+                <source>Projects</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Invite.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="invite.noProjects">
+                <source>No Projects are associated with this group.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Invite.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="invite.selectGroupRole">
 				<source>Select Group Role</source>
 				<target/>
 				<context-group>
