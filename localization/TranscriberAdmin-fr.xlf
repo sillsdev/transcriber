@@ -3125,10 +3125,16 @@
          	<target>Correction nécessaire</target>
          </segment>
       </unit>
-		<unit id="taskItem.inProgress">
+		<unit id="taskItem.transcribing">
 			<segment>
-				<source>In Progress</source>
-				<target>En cours</target>
+				<source>Transcribing</source>
+				<target>Transcrire</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.reviewing">
+			<segment>
+				<source>Reviewing</source>
+				<target>Révision</target>
 			</segment>
 		</unit>
 		<unit id="taskItem.transcribe">

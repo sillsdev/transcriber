@@ -3644,8 +3644,15 @@
         			<context context-type="sourcefile">TaskFlag.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="taskItem.inProgress">
-        		<source>In Progress</source>
+        	<trans-unit id="taskItem.transcribing">
+        		<source>Transcribing</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.reviewing">
+        		<source>Reviewing</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>

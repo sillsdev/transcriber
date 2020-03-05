@@ -642,7 +642,8 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "needsNewRecording": string;
     "incomplete": string;
     "needsNewTranscription": string;
-    "inProgress": string;
+    "transcribing": string;
+    "reviewing": string;
     "transcribe": string;
     "review": string;
     "sync": string;

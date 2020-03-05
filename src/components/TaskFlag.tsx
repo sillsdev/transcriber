@@ -44,16 +44,18 @@ const FlagText = (props: IProps) => {
     case ActivityStates.Approved:
       return t.sync;
     case ActivityStates.Transcribing:
+      return t.transcribing;
     case ActivityStates.Reviewing:
-      return t.inProgress;
+      return t.reviewing;
   }
 };
 
 export const ChipText = (props: IProps) => FlagText(props) || NextAction(props);
 
 const ChipColor = (props: IProps) => {
+  const { t } = props;
   const flagText = FlagText(props);
-  if (flagText === props.t.inProgress) {
+  if (flagText && [t.transcribing, t.reviewing].includes(flagText)) {
     return { backgroundColor: 'green', color: 'white' };
   } else return flagText ? 'secondary' : 'primary';
 };
