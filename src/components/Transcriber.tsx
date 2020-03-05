@@ -375,15 +375,13 @@ export function Transcriber(props: IProps) {
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
       if (nextOnSave[state] !== undefined)
-        memory.update(
-          UpdatePassageStateOps(
-            passRec.id,
-            nextOnSave[state],
-            '',
-            remoteIdNum('user', user, keyMap),
-            new TransformBuilder(),
-            ops
-          )
+        ops = UpdatePassageStateOps(
+          passRec.id,
+          nextOnSave[state],
+          '',
+          remoteIdNum('user', user, keyMap),
+          new TransformBuilder(),
+          ops
         );
       if (comment !== '') {
         ops = AddPassageStateCommentOps(
