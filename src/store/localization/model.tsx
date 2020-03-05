@@ -277,6 +277,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "newOrganization": string;
     "admin": string;
     "transcribe": string;
+    "switchTo": string;
     "switchToAdmin": string;
     "switchToApp": string;
     "crashMessage": string;

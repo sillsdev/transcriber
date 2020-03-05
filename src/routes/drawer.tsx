@@ -162,6 +162,9 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: DrawerWidth,
     },
+    appName: {
+      lineHeight: 0,
+    },
     content: {
       flexGrow: 1,
       paddingTop: theme.spacing(10),
@@ -194,6 +197,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logo: {
       paddingRight: theme.spacing(2),
+      height: '48px',
+      width: '64px',
     },
     panel2: {
       display: 'flex',
@@ -225,7 +230,7 @@ const useStyles = makeStyles((theme: Theme) =>
     navButton: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center',
+      alignItems: 'center',
     },
   })
 );
@@ -1134,12 +1139,20 @@ export function ResponsiveDrawer(props: IProps) {
             <MenuIcon />
           </IconButton>
           <img src={logo} className={classes.logo} alt="logo" />
-          <Typography variant="h6" noWrap>
-            {title}
-          </Typography>
+          <div>
+            <Typography variant="overline" className={classes.appName}>
+              {API_CONFIG.isApp ? t.transcribe : t.admin}
+            </Typography>
+            <br />
+            <Typography variant="h6" noWrap>
+              {title}
+            </Typography>
+          </div>
           <div className={classes.grow}>{'\u00A0'}</div>
+
           {!API_CONFIG.isApp ? (
             <div className={classes.navButton}>
+              <Typography>{t.switchTo + '\u00A0'}</Typography>
               <a
                 href={transcribe ? swapTarget : ''}
                 style={{ textDecoration: 'none' }}
@@ -1156,6 +1169,7 @@ export function ResponsiveDrawer(props: IProps) {
             </div>
           ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
             <div className={classes.navButton}>
+              <Typography>{t.switchTo + '\u00A0'}</Typography>
               <a
                 href={swapTarget}
                 style={{ textDecoration: 'none' }}
@@ -1170,6 +1184,7 @@ export function ResponsiveDrawer(props: IProps) {
             isElectron &&
             online && (
               <div className={classes.navButton}>
+                <Typography>{t.switchTo + '\u00A0'}</Typography>
                 <Button
                   variant="contained"
                   color="primary"

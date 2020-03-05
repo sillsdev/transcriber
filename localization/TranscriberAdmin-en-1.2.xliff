@@ -1573,6 +1573,13 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="main.switchTo">
+        		<source>Switch to:</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.switchToAdmin">
                 <source>Open project in Admin</source>
                 <target/>

@@ -1348,6 +1348,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.switchTo">
+         <segment>
+            <source>Switch to:</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.switchToAdmin">
          <segment>
             <source>Open project in Admin</source>

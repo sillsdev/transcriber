@@ -300,6 +300,7 @@ const initialState = {
 			"newOrganization": "Add Organization",
 			"admin": "Admin",
 			"transcribe": "Transcribe",
+			"switchTo": "Switch to:",
 			"switchToAdmin": "Open project in Admin",
 			"switchToApp": "Open project in App",
 			"crashMessage": "Something went wrong. The developers need to address this issue.",
