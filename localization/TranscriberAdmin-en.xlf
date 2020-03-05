@@ -2530,9 +2530,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="toDoTable.duration">
+      <unit id="toDoTable.showHide">
          <segment>
-            <source>Duration</source>
+            <source>Show or Hide filter rows</source>
             <target/>
          </segment>
       </unit>
@@ -3157,6 +3157,30 @@
       <unit id="taskItem.section">
          <segment>
             <source>Section {0}.{1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.assign">
+         <segment>
+            <source>Assign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.unassign">
+         <segment>
+            <source>Unassign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.reviewer">
+         <segment>
+            <source>Reviewer</source>
             <target/>
          </segment>
       </unit>

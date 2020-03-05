@@ -21,7 +21,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
@@ -30,6 +30,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import ShapingTable from './ShapingTable';
+import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
 import SnackBar from './SnackBar';
 import { formatTime } from './Duration';
@@ -42,11 +43,9 @@ import {
   sectionNumber,
   passageNumber,
   numCompare,
-  remoteIdNum,
 } from '../utils';
 import { debounce } from 'lodash';
 import './TaskTable.css';
-import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 export const TaskItemWidth = 370;
@@ -103,10 +102,13 @@ interface IRow {
   title: string;
   description: string;
   length: string;
-  duration: number;
   state: string;
   assigned: string;
 }
+
+export const getPlanName = (plan: Plan) => {
+  return plan.attributes ? plan.attributes.name : '';
+};
 
 interface IStateProps {
   taskItemStrings: ITaskItemStrings;
@@ -181,14 +183,13 @@ export function TaskTable(props: IProps) {
     { name: 'sectPass', title: t.passage },
     { name: 'description', title: t.description },
     { name: 'length', title: t.length },
-    { name: 'duration', title: t.duration },
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
   ]);
   const [columnFormatting, setColumnFormatting] = useState([
     { columnName: 'composite', width: TaskItemWidth, align: 'left' },
     { columnName: 'play', width: 65, align: 'left' },
-    { columnName: 'plan', width: 100, align: 'left' },
+    { columnName: 'plan', width: 100, align: 'left', wordWrapEnabled: true },
     { columnName: 'section', width: 65, align: 'right' },
     { columnName: 'title', width: 150, align: 'left', wordWrapEnabled: true },
     { columnName: 'sectPass', width: 65, align: 'left' },
@@ -199,14 +200,11 @@ export function TaskTable(props: IProps) {
       wordWrapEnabled: true,
     },
     { columnName: 'length', width: 100, align: 'left' },
-    { columnName: 'duration', width: 100, align: 'right' },
     { columnName: 'state', width: 150, align: 'left' },
     { columnName: 'assigned', width: 150, align: 'left' },
   ]);
-  const columnSorting = [
-    { columnName: 'section', compare: numCompare },
-    { columnName: 'duration', compare: numCompare },
-  ];
+  const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
+  const columnSorting = [{ columnName: 'section', compare: numCompare }];
   const numCols = ['section', 'duration'];
   const sortingEnabled = [
     { columnName: 'composite', sortingEnabled: false },
@@ -216,6 +214,7 @@ export function TaskTable(props: IProps) {
     { columnName: 'composite', filteringEnabled: false },
     { columnName: 'play', filteringEnabled: false },
   ];
+  const defaultGrouping = [{ columnName: 'plan' }];
 
   const [rows, setRows] = useState(Array<IRow>());
   const [filter, setFilter] = useState(
@@ -241,45 +240,13 @@ export function TaskTable(props: IProps) {
     setFilter(!filter);
   };
 
-  const next: { [key: string]: string } = {
-    incomplete: ActivityStates.Transcribing,
-    needsNewTranscription: ActivityStates.Transcribing,
-    transcribeReady: ActivityStates.Transcribing,
-    transcribed: ActivityStates.Reviewing,
-  };
   const processSelect = (mediaDescription: MediaDescription) => {
     setSelected(mediaDescription.passage.id);
     setSelRole(mediaDescription.role);
-    if (mediaDescription.role !== 'view') {
-      const assignee = related(mediaDescription.section, mediaDescription.role);
-      if (!assignee) {
-        memory.update((t: TransformBuilder) =>
-          t.replaceRelatedRecord(
-            mediaDescription.section,
-            mediaDescription.role,
-            { type: 'user', id: user }
-          )
-        );
-        if (next[mediaDescription.state] !== undefined)
-          memory.update(
-            UpdatePassageStateOps(
-              mediaDescription.passage.id,
-              next[mediaDescription.state],
-              '',
-              remoteIdNum('user', user, keyMap),
-              new TransformBuilder(),
-              []
-            )
-          );
-      }
-    }
     transcriber(mediaDescription);
   };
   const handleSelect = (mediaDescription: MediaDescription) => (e: any) => {
     processSelect(mediaDescription);
-  };
-  const getPlanName = (plan: Plan) => {
-    return plan.attributes ? plan.attributes.name : '';
   };
   const handlePlay = (id: string) => () => {
     if (playing) {
@@ -296,6 +263,9 @@ export function TaskTable(props: IProps) {
       setPlayItem('');
     }
   };
+
+  let curSec = '';
+
   const addTasks = (
     state: string,
     role: string,
@@ -346,6 +316,7 @@ export function TaskTable(props: IProps) {
                           : state
                         : state;
                     const mediaDescription: MediaDescription = {
+                      plan: planRecs[0],
                       section: secRecs[0],
                       passage: p,
                       mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
@@ -354,6 +325,34 @@ export function TaskTable(props: IProps) {
                       state: curState,
                       role,
                     };
+                    const planName = getPlanName(planRecs[0]);
+                    const secNum = sectionNumber(secRecs[0]);
+                    const secTitle = secRecs[0].attributes.name;
+                    const nextSecId = secRecs[0].id;
+                    if (
+                      nextSecId !== curSec &&
+                      passageNumber(p).trim() === '1'
+                    ) {
+                      curSec = nextSecId;
+                      rowList.push({
+                        composite: (
+                          <TaskHead
+                            mediaDesc={mediaDescription}
+                            passageSections={passageSections}
+                          />
+                        ),
+                        media: mediaDescription,
+                        play: '',
+                        plan: planName,
+                        section: Number(secNum),
+                        sectPass: sectionNumber(secRecs[0]) + '.',
+                        title: secTitle,
+                        description: '',
+                        length: '',
+                        state: '',
+                        assigned: assignee === user ? t.yes : t.no,
+                      });
+                    }
                     rowList.push({
                       composite: (
                         <TaskItem
@@ -364,18 +363,14 @@ export function TaskTable(props: IProps) {
                       ),
                       media: mediaDescription,
                       play: playItem,
-                      plan: getPlanName(planRecs[0]),
-                      section: Number(sectionNumber(secRecs[0])),
-                      sectPass:
-                        sectionNumber(secRecs[0]) +
-                        '.' +
-                        passageNumber(p).trim(),
-                      title: secRecs[0].attributes.name,
+                      plan: planName,
+                      section: Number(secNum),
+                      sectPass: secNum + '.' + passageNumber(p).trim(),
+                      title: secTitle,
                       description: p.attributes.title,
                       length: formatTime(mediaRec.attributes.duration),
-                      duration: mediaRec.attributes.duration,
                       state: ChipText({ state: curState, t: taskItemStrings }),
-                      assigned: assignee === user ? t.yes : t.no,
+                      assigned: '',
                     });
                   }
                 }
@@ -416,7 +411,7 @@ export function TaskTable(props: IProps) {
         { columnName: 'play', width: 1, align: 'left' },
         { columnName: 'plan', width: 1, align: 'left' },
         { columnName: 'section', width: 1, align: 'right' },
-        { columnName: 'title', width: 1, align: 'left', wordWrapEnabled: true },
+        { columnName: 'title', width: 1, align: 'left' },
         { columnName: 'sectPass', width: 1, align: 'left' },
         {
           columnName: 'description',
@@ -433,7 +428,12 @@ export function TaskTable(props: IProps) {
       setColumnFormatting([
         { columnName: 'composite', width: 1, align: 'left' },
         { columnName: 'play', width: 65, align: 'left' },
-        { columnName: 'plan', width: 100, align: 'left' },
+        {
+          columnName: 'plan',
+          width: 100,
+          align: 'left',
+          wordWrapEnabled: true,
+        },
         { columnName: 'section', width: 65, align: 'right' },
         {
           columnName: 'title',
@@ -505,6 +505,11 @@ export function TaskTable(props: IProps) {
       addTasks('', 'view', rowList, playItem);
     }
     setRows(rowList);
+    const exGrp: string[] = [];
+    rowList.forEach(r => {
+      if (!exGrp.includes(r.plan)) exGrp.push(r.plan);
+    });
+    setExpandedGroups(exGrp);
 
     if (selected === '') {
       console.log('Select first task');
@@ -575,6 +580,9 @@ export function TaskTable(props: IProps) {
     </Table.Cell>
   );
 
+  const selBacking: CSSProperties = { background: 'lightgrey' };
+  const noSelBacking: CSSProperties = { background: 'transparent' };
+
   const Cell = (props: ICell) => {
     const { row, column, value } = props;
     if (!filter) {
@@ -589,10 +597,11 @@ export function TaskTable(props: IProps) {
       if (column.name === 'composite') {
         return (
           <td
-            style={{
-              width: TaskItemWidth,
-              backgroundColor: curId === selected ? 'lightgray' : 'transparent',
-            }}
+            style={
+              curId === selected && row.length !== ''
+                ? selBacking
+                : noSelBacking
+            }
           >
             {value}
           </td>
@@ -602,7 +611,7 @@ export function TaskTable(props: IProps) {
     } else {
       if (column.name === 'composite') {
         return <>{'\u00a0'}</>;
-      } else if (column.name === 'play') {
+      } else if (column.name === 'play' && row.length !== '') {
         return <PlayCell {...props} mediaId={row.media.mediaRemoteId} />;
       }
       return <Table.Cell {...props} />;
@@ -627,7 +636,7 @@ export function TaskTable(props: IProps) {
               color="primary"
               className={classes.button}
               onClick={handleFilter}
-              title={'Show/Hide filter rows'}
+              title={t.showHide}
             >
               {t.filter}
               {filter ? (
@@ -646,6 +655,8 @@ export function TaskTable(props: IProps) {
               { columnName: 'sectPass', direction: 'asc' },
             ]}
             sortingEnabled={sortingEnabled}
+            defaultGrouping={defaultGrouping}
+            expandedGroups={expandedGroups}
             filteringEnabled={filteringEnabled}
             columnSorting={columnSorting}
             numCols={numCols}

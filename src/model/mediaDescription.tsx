@@ -1,6 +1,7 @@
-import { Section, Passage } from '.';
+import { Plan, Section, Passage } from '.';
 
 export interface MediaDescription {
+  plan: Plan;
   section: Section;
   passage: Passage;
   mediaRemoteId: string;

@@ -360,12 +360,31 @@ export function Transcriber(props: IProps) {
     }
     done();
   };
+
+  const nextOnSave: { [key: string]: string } = {
+    incomplete: ActivityStates.Transcribing,
+    needsNewTranscription: ActivityStates.Transcribing,
+    transcribeReady: ActivityStates.Transcribing,
+    transcribed: ActivityStates.Reviewing,
+  };
+
   const handleSave = async () => {
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
       const userid = remoteIdNum('user', user, keyMap);
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
+      if (nextOnSave[state] !== undefined)
+        memory.update(
+          UpdatePassageStateOps(
+            passRec.id,
+            nextOnSave[state],
+            '',
+            remoteIdNum('user', user, keyMap),
+            new TransformBuilder(),
+            ops
+          )
+        );
       if (comment !== '') {
         ops = AddPassageStateCommentOps(
           passRec.id,

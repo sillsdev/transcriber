@@ -525,7 +525,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "loadingTable": string;
     "title": string;
     "description": string;
-    "duration": string;
+    "showHide": string;
 };
 
 export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
@@ -648,6 +648,10 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "sync": string;
     "done": string;
     "section": string;
+    "assign": string;
+    "unassign": string;
+    "transcriber": string;
+    "reviewer": string;
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {

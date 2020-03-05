@@ -565,7 +565,7 @@ const initialState = {
 			"loadingTable": "Loading data",
 			"title": "Title",
 			"description": "Description",
-			"duration": "Duration",
+			"showHide": "Show or Hide filter rows",
 		}
 	}),
 	"integration": new LocalizedStrings({
@@ -694,6 +694,10 @@ const initialState = {
 			"sync": "Sync Needed",
 			"done": "Done",
 			"section": "Section {0}.{1}",
+			"assign": "Assign {0}",
+			"unassign": "Unassign {0}",
+			"transcriber": "Transcriber",
+			"reviewer": "Reviewer",
 		}
 	}),
 	"control": new LocalizedStrings({

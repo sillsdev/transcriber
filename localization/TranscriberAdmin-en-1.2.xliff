@@ -2952,8 +2952,8 @@
         			<context context-type="sourcefile">TaskItem.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="toDoTable.duration">
-        		<source>Duration</source>
+        	<trans-unit id="toDoTable.showHide">
+        		<source>Show or Hide filter rows</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskItem.tsx</context>
@@ -3684,6 +3684,34 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskItem.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.assign">
+        		<source>Assign {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.unassign">
+        		<source>Unassign {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.transcriber">
+        		<source>Transcriber</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.reviewer">
+        		<source>Reviewer</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="control.contentType">

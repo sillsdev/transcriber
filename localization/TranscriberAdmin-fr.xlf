@@ -2530,10 +2530,10 @@
 				<target>Description</target>
 			</segment>
 		</unit>
-		<unit id="toDoTable.duration">
+		<unit id="toDoTable.showHide">
 			<segment>
-				<source>Duration</source>
-				<target>Durée</target>
+				<source>Show or Hide filter rows</source>
+				<target>Afficher ou Masquer les lignes de filtre</target>
 			</segment>
 		</unit>
 		<unit id="integration.sync">
@@ -3159,6 +3159,30 @@
 			<segment>
 				<source>Section {0}.{1}</source>
 				<target>Section {0}.{1}</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.assign">
+			<segment>
+				<source>Assign {0}</source>
+				<target>Assigner {0}</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.unassign">
+			<segment>
+				<source>Unassign {0}</source>
+				<target>Désassigner {0}</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.transcriber">
+			<segment>
+				<source>Transcriber</source>
+				<target>Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.reviewer">
+			<segment>
+				<source>Reviewer</source>
+				<target>Examinateur</target>
 			</segment>
 		</unit>
 		<unit id="control.contentType">
