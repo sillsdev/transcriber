@@ -44,6 +44,7 @@ import { getRoleId, getCreatedBy } from '../utils';
 import { SelectPlanType } from '../control';
 import { projectShortcut } from './ProjectShortcut';
 import { saveNewProject } from '../crud/saveNewProject';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -224,6 +225,15 @@ export function ProjectSettings(props: IProps) {
   };
   const handleRtlChange = () => {
     setRtl(!rtl);
+  };
+
+  const TAB = 9;
+  const SHIFT = 16;
+  const CTRL = 17;
+
+  const handleDefaultFont = (e: any) => {
+    if (e.keyCode && [TAB, SHIFT, CTRL].includes(e.keyCode)) return;
+    langEl.current.click();
   };
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -410,6 +420,16 @@ export function ProjectSettings(props: IProps) {
 
   if (saving) return <></>;
 
+  const widthStyle: CSSProperties = { width: 400 };
+  const previewStyle: CSSProperties = {
+    fontSize: defaultFontSize,
+    fontFamily: defaultFont,
+    width: 400,
+  };
+  const selectProps = { MenuProps: { className: classes.menu } };
+  const adminOnly =
+    API_CONFIG.isApp || (orgRole !== 'admin' && projRole !== 'admin');
+
   return (
     <div
       className={clsx(classes.container, {
@@ -434,10 +454,7 @@ export function ProjectSettings(props: IProps) {
                       variant="filled"
                       required={true}
                       helperText={t.createdBy.replace('{0}', createdBy)}
-                      disabled={
-                        API_CONFIG.isApp ||
-                        (orgRole !== 'admin' && projRole !== 'admin')
-                      }
+                      disabled={adminOnly}
                     />
                   }
                   label=""
@@ -451,13 +468,10 @@ export function ProjectSettings(props: IProps) {
                       value={description}
                       onChange={handleDescriptionChange}
                       margin="normal"
-                      style={{ width: 400 }}
+                      style={widthStyle}
                       variant="filled"
                       required={false}
-                      disabled={
-                        API_CONFIG.isApp ||
-                        (orgRole !== 'admin' && projRole !== 'admin')
-                      }
+                      disabled={adminOnly}
                     />
                   }
                   label=""
@@ -471,19 +485,12 @@ export function ProjectSettings(props: IProps) {
                       className={classes.textField}
                       value={projectGroup}
                       onChange={handleGroupChange}
-                      SelectProps={{
-                        MenuProps: {
-                          className: classes.menu,
-                        },
-                      }}
+                      SelectProps={selectProps}
                       helperText={t.selectProjectGroup}
                       margin="normal"
                       variant="filled"
                       required={true}
-                      disabled={
-                        API_CONFIG.isApp ||
-                        (orgRole !== 'admin' && projRole !== 'admin')
-                      }
+                      disabled={adminOnly}
                     >
                       {groups
                         .filter(g => related(g, 'owner') === organization)
@@ -514,10 +521,7 @@ export function ProjectSettings(props: IProps) {
                         setCode={setBcp47}
                         setName={handleLanguageName}
                         setFont={setDefaultFont}
-                        disabled={
-                          API_CONFIG.isApp ||
-                          (orgRole !== 'admin' && projRole !== 'admin')
-                        }
+                        disabled={adminOnly}
                       />
                     }
                     label=""
@@ -529,10 +533,7 @@ export function ProjectSettings(props: IProps) {
                         id="checkbox-rtl"
                         checked={rtl}
                         onChange={handleRtlChange}
-                        disabled={
-                          API_CONFIG.isApp ||
-                          (orgRole !== 'admin' && projRole !== 'admin')
-                        }
+                        disabled={adminOnly}
                       />
                     }
                     label={t.rightToLeft}
@@ -547,18 +548,13 @@ export function ProjectSettings(props: IProps) {
                           label={t.defaultFont}
                           className={classes.textField}
                           value={defaultFont}
-                          onClick={() => langEl.current.click()}
-                          onKeyDown={(e: any) => {
-                            if (e.keyCode !== 9) langEl.current.click();
-                          }}
+                          onClick={handleDefaultFont}
+                          onKeyDown={handleDefaultFont}
                           margin="normal"
-                          style={{ width: 400 }}
+                          style={widthStyle}
                           variant="filled"
                           required={false}
-                          disabled={
-                            API_CONFIG.isApp ||
-                            (orgRole !== 'admin' && projRole !== 'admin')
-                          }
+                          disabled={adminOnly}
                         />
                       }
                       label=""
@@ -572,10 +568,7 @@ export function ProjectSettings(props: IProps) {
                           value={defaultFontSize}
                           font={defaultFont}
                           setSize={handleSize}
-                          disabled={
-                            API_CONFIG.isApp ||
-                            (orgRole !== 'admin' && projRole !== 'admin')
-                          }
+                          disabled={adminOnly}
                         />
                       }
                       label=""
@@ -583,13 +576,7 @@ export function ProjectSettings(props: IProps) {
                   </div>
                   <div className={classes.previewCol}>
                     <FormLabel className={classes.label}>{t.preview}</FormLabel>
-                    <div
-                      style={{
-                        fontSize: defaultFontSize,
-                        fontFamily: defaultFont,
-                        width: 400,
-                      }}
-                    >
+                    <div style={previewStyle}>
                       The quick, brown fox jumped over the lazy dog.
                     </div>
                   </div>
