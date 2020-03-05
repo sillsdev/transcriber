@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   IState,
-  PassageSection,
   Section,
   Passage,
   IPlanSheetStrings,
@@ -75,7 +74,6 @@ interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
 }
 interface IRecordProps {
-  passageSections: Array<PassageSection>;
   passages: Array<Passage>;
   sections: Array<Section>;
 }
@@ -102,7 +100,6 @@ export function ScriptureTable(props: IProps) {
     queryStore,
     changed,
     setChanged,
-    passageSections,
     passages,
     sections,
     tableLoad,
@@ -246,16 +243,6 @@ export function ScriptureTable(props: IProps) {
   const handleAction = (what: string, where: number[]) => {
     if (what === 'Delete') {
       const deleteRow = async (id: RecordIdentity) => {
-        if (id.type === 'passage' && id.id !== '') {
-          const ids = passageSections
-            .filter(ps => related(ps, 'passage') === id.id)
-            .map(ps => ps.id);
-          ids.forEach(ps => {
-            memory.update((t: TransformBuilder) =>
-              t.removeRecord({ type: 'passagesection', id: ps })
-            );
-          });
-        }
         if (id.id !== '') {
           memory.update((t: TransformBuilder) =>
             t.removeRecord({ type: id.type, id: id.id })
@@ -567,44 +554,41 @@ export function ScriptureTable(props: IProps) {
     let initData = Array<Array<any>>();
     let rowIds = Array<ISequencedRecordIdentity>();
     const getPassage = async (
-      pId: string,
+      passage: Passage,
       list: (string | number)[][],
       ids: Array<ISequencedRecordIdentity>
     ) => {
-      let passage = passages.find(p => p.id === pId);
-      if (passage != null) {
-        if (!passage.attributes) return;
-        let newRow;
-        if (showBook(cols)) {
-          newRow = [
-            '',
-            '',
-            passage.attributes.sequencenum,
-            passage.attributes.book,
-            passage.attributes.reference,
-            passage.attributes.title,
-          ];
-        } else {
-          newRow = [
-            '',
-            '',
-            passage.attributes.sequencenum,
-            passage.attributes.reference,
-            passage.attributes.title,
-          ];
-        }
-        list.push(newRow);
-        ids.push({
-          type: 'passage',
-          id: passage.id,
-          sequencenum: passage.attributes.sequencenum,
-        });
+      if (!passage.attributes) return;
+      let newRow;
+      if (showBook(cols)) {
+        newRow = [
+          '',
+          '',
+          passage.attributes.sequencenum,
+          passage.attributes.book,
+          passage.attributes.reference,
+          passage.attributes.title,
+        ];
+      } else {
+        newRow = [
+          '',
+          '',
+          passage.attributes.sequencenum,
+          passage.attributes.reference,
+          passage.attributes.title,
+        ];
       }
+      list.push(newRow);
+      ids.push({
+        type: 'passage',
+        id: passage.id,
+        sequencenum: passage.attributes.sequencenum,
+      });
     };
-    const getPassageSection = async (sec: Section) => {
+    const getSectionPassages = async (sec: Section) => {
       // query filter doesn't work with JsonApi since id not translated
-      let sectionpassages = passageSections.filter(
-        ps => Related(ps, 'section') === sec.id
+      let sectionpassages = passages.filter(
+        p => Related(p, 'section') === sec.id
       );
       if (sectionpassages != null) {
         let passageids = Array<Array<string | number>>();
@@ -614,8 +598,7 @@ export function ScriptureTable(props: IProps) {
           psgIndex < sectionpassages.length;
           psgIndex += 1
         ) {
-          let ps = sectionpassages[psgIndex] as PassageSection;
-          await getPassage(Related(ps, 'passage'), passageids, ids);
+          await getPassage(sectionpassages[psgIndex], passageids, ids);
         }
         passageids = passageids.sort((i, j) => {
           return (
@@ -665,7 +648,7 @@ export function ScriptureTable(props: IProps) {
             ];
           }
           initData.push(newRow);
-          await getPassageSection(sec);
+          await getSectionPassages(sec);
         }
       }
     };
@@ -698,9 +681,7 @@ export function ScriptureTable(props: IProps) {
   useEffect(() => {
     if (
       tableLoad.length > 0 &&
-      (!tableLoad.includes('section') ||
-        !tableLoad.includes('passagesection') ||
-        !tableLoad.includes('passage')) &&
+      (!tableLoad.includes('section') || !tableLoad.includes('passage')) &&
       !loading
     ) {
       setMessage(<span>{t.loadingTable}</span>);
@@ -763,7 +744,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
 };
 
 export default withData(mapRecordsToProps)(

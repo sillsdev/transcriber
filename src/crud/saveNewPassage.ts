@@ -1,5 +1,5 @@
-import { Passage, PassageSection, ActivityStates } from '../model';
-import { TransformBuilder, Schema, RecordIdentity } from '@orbit/data';
+import { Passage, ActivityStates } from '../model';
+import { Schema, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { remoteIdNum } from '../utils';
 import { AddPassage } from '../utils/UpdatePassageState';
@@ -40,20 +40,8 @@ export const saveNewPassage = async (props: IProps) => {
     },
   } as any;
   schema.initializeRecord(passage);
-  const passageSection: PassageSection = {
-    type: 'passagesection',
-    attributes: {
-      sectionId: 0,
-      passageId: 0,
-    },
-  } as any;
   await memory.update(
-    AddPassage(passage, remoteIdNum('user', user, memory.keyMap))
+    AddPassage(passage, section, remoteIdNum('user', user, memory.keyMap))
   );
-  await memory.update((t: TransformBuilder) => [
-    t.addRecord(passageSection),
-    t.replaceRelatedRecord(passageSection, 'section', section),
-    t.replaceRelatedRecord(passageSection, 'passage', passage),
-  ]);
   return passage;
 };

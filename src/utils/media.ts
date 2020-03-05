@@ -1,12 +1,5 @@
-import {
-  MediaFile,
-  Plan,
-  Project,
-  Passage,
-  Section,
-  PassageSection,
-} from '../model';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
+import { MediaFile, Plan, Project, Passage, Section } from '../model';
+import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { related, cleanFileName, updateXml } from '.';
 import moment from 'moment';
@@ -58,17 +51,9 @@ export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
     passageRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'passage', id: passageId })
     ) as Passage;
-  const passageSectionIds = related(passageRec, 'sections') as Array<
-    RecordIdentity
-  >;
-  const secIds = passageSectionIds.map(psId => {
-    const psRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord(psId)
-    ) as PassageSection;
-    return related(psRec, 'section');
-  });
+  const secId = related(passageRec, 'section');
   const secRec = memory.cache.query((q: QueryBuilder) =>
-    q.findRecord({ type: 'section', id: secIds[0] })
+    q.findRecord({ type: 'section', id: secId })
   ) as Section;
   const secAttr = secRec && secRec.attributes;
   const secSeq =

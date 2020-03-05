@@ -7,7 +7,6 @@ import {
   IState,
   GroupMembership,
   Passage,
-  PassageSection,
   Plan,
   Project,
   Role,
@@ -38,7 +37,6 @@ import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
 import {
   related,
-  hasRelated,
   remoteId,
   sectionNumber,
   passageNumber,
@@ -126,7 +124,6 @@ interface IDispatchProps {
 
 interface IRecordProps {
   groupMemberships: GroupMembership[];
-  passageSections: Array<PassageSection>;
   passages: Array<Passage>;
   plans: Array<Plan>;
   projects: Project[];
@@ -148,7 +145,6 @@ export function TaskTable(props: IProps) {
     auth,
     taskItemStrings,
     groupMemberships,
-    passageSections,
     passages,
     plans,
     projects,
@@ -276,9 +272,6 @@ export function TaskTable(props: IProps) {
       p => (p.attributes && p.attributes.state === state) || role === 'view'
     );
     readyRecs.forEach(p => {
-      const passSecRecs = passageSections.filter(
-        s => hasRelated(p, 'sections', s.id).length !== 0
-      );
       const mediaRecs = mediafiles
         .filter(m => related(m, 'passage') === p.id)
         .sort((i: MediaFile, j: MediaFile) =>
@@ -287,92 +280,82 @@ export function TaskTable(props: IProps) {
         );
       if (mediaRecs.length > 0) {
         const mediaRec = mediaRecs[0];
-        if (passSecRecs.length > 0) {
-          const secId = related(passSecRecs[0], 'section');
-          const secRecs = sections.filter(sr => sr.id === secId);
-          if (secRecs.length > 0) {
-            const planId = related(secRecs[0], 'plan');
-            const planRecs = plans.filter(pl => pl.id === planId);
-            if (planRecs.length > 0) {
-              if (related(planRecs[0], 'project') === project) {
-                const assignee = related(secRecs[0], role);
-                if (
-                  !assignee ||
-                  assignee === '' ||
-                  assignee === user ||
-                  role === 'view'
-                ) {
-                  let already: IRow[] = [];
-                  if (role === 'view') {
-                    already = rowList.filter(
-                      r => r.media.mediaId === mediaRec.id
-                    );
-                  }
-                  if (role !== 'view' || already.length === 0) {
-                    const curState: ActivityStates | string =
-                      role === 'view'
-                        ? p.attributes && p.attributes.state
-                          ? p.attributes.state
-                          : state
-                        : state;
-                    const mediaDescription: MediaDescription = {
-                      plan: planRecs[0],
-                      section: secRecs[0],
-                      passage: p,
-                      mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
-                      mediaId: mediaRec.id,
-                      duration: mediaRec.attributes.duration,
-                      state: curState,
-                      role,
-                    };
-                    const planName = getPlanName(planRecs[0]);
-                    const secNum = sectionNumber(secRecs[0]);
-                    const secTitle = secRecs[0].attributes.name;
-                    const nextSecId = secRecs[0].id;
-                    if (
-                      nextSecId !== curSec &&
-                      passageNumber(p).trim() === '1'
-                    ) {
-                      curSec = nextSecId;
-                      rowList.push({
-                        composite: (
-                          <TaskHead
-                            mediaDesc={mediaDescription}
-                            passageSections={passageSections}
-                          />
-                        ),
-                        media: mediaDescription,
-                        play: '',
-                        plan: planName,
-                        section: Number(secNum),
-                        sectPass: sectionNumber(secRecs[0]) + '.',
-                        title: secTitle,
-                        description: '',
-                        length: '',
-                        state: '',
-                        assigned: assignee === user ? t.yes : t.no,
-                      });
-                    }
+        const secId = related(p, 'section');
+        const secRecs = sections.filter(sr => sr.id === secId);
+        if (secRecs.length > 0) {
+          const planId = related(secRecs[0], 'plan');
+          const planRecs = plans.filter(pl => pl.id === planId);
+          if (planRecs.length > 0) {
+            if (related(planRecs[0], 'project') === project) {
+              const assignee = related(secRecs[0], role);
+              if (
+                !assignee ||
+                assignee === '' ||
+                assignee === user ||
+                role === 'view'
+              ) {
+                let already: IRow[] = [];
+                if (role === 'view') {
+                  already = rowList.filter(
+                    r => r.media.mediaId === mediaRec.id
+                  );
+                }
+                if (role !== 'view' || already.length === 0) {
+                  const curState: ActivityStates | string =
+                    role === 'view'
+                      ? p.attributes && p.attributes.state
+                        ? p.attributes.state
+                        : state
+                      : state;
+                  const mediaDescription: MediaDescription = {
+                    plan: planRecs[0],
+                    section: secRecs[0],
+                    passage: p,
+                    mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
+                    mediaId: mediaRec.id,
+                    duration: mediaRec.attributes.duration,
+                    state: curState,
+                    role,
+                  };
+                  const planName = getPlanName(planRecs[0]);
+                  const secNum = sectionNumber(secRecs[0]);
+                  const secTitle = secRecs[0].attributes.name;
+                  const nextSecId = secRecs[0].id;
+                  if (nextSecId !== curSec && passageNumber(p).trim() === '1') {
+                    curSec = nextSecId;
                     rowList.push({
-                      composite: (
-                        <TaskItem
-                          mediaDesc={mediaDescription}
-                          mediaRec={mediaRec}
-                          select={handleSelect}
-                        />
-                      ),
+                      composite: <TaskHead mediaDesc={mediaDescription} />,
                       media: mediaDescription,
-                      play: playItem,
+                      play: '',
                       plan: planName,
                       section: Number(secNum),
-                      sectPass: secNum + '.' + passageNumber(p).trim(),
+                      sectPass: sectionNumber(secRecs[0]) + '.',
                       title: secTitle,
-                      description: p.attributes.title,
-                      length: formatTime(mediaRec.attributes.duration),
-                      state: ChipText({ state: curState, t: taskItemStrings }),
-                      assigned: '',
+                      description: '',
+                      length: '',
+                      state: '',
+                      assigned: assignee === user ? t.yes : t.no,
                     });
                   }
+                  rowList.push({
+                    composite: (
+                      <TaskItem
+                        mediaDesc={mediaDescription}
+                        mediaRec={mediaRec}
+                        select={handleSelect}
+                      />
+                    ),
+                    media: mediaDescription,
+                    play: playItem,
+                    plan: planName,
+                    section: Number(secNum),
+                    sectPass: secNum + '.' + passageNumber(p).trim(),
+                    title: secTitle,
+                    description: p.attributes.title,
+                    length: formatTime(mediaRec.attributes.duration),
+                    state: ChipText({ state: curState, t: taskItemStrings }),
+                    assigned: '',
+                  });
                 }
               }
             }
@@ -539,7 +522,6 @@ export function TaskTable(props: IProps) {
       (!tableLoad.includes('mediafile') ||
         !tableLoad.includes('passage') ||
         !tableLoad.includes('section') ||
-        !tableLoad.includes('passagesection') ||
         !tableLoad.includes('role')) &&
       !loading
     ) {
@@ -691,7 +673,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   projects: (q: QueryBuilder) => q.findRecords('project'),

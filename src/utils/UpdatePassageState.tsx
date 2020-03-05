@@ -1,4 +1,4 @@
-import { TransformBuilder, Operation } from '@orbit/data';
+import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import { PassageStateChange, ActivityStates, Passage } from '../model';
 import { AddRecord } from '../model/baseModel';
 import { currentDateTime } from './currentDateTime';
@@ -33,10 +33,17 @@ const AddPassageStateChangeToOps = (
   );
 };
 
-export const AddPassage = (rec: Passage, user: number): Operation[] => {
+export const AddPassage = (
+  rec: Passage,
+  section: RecordIdentity,
+  user: number
+): Operation[] => {
   var t = new TransformBuilder();
   var ops: Operation[] = [];
   ops.push(AddRecord(t, rec, user));
+  ops.push(
+    t.replaceRelatedRecord({ type: 'passage', id: rec.id }, 'section', section)
+  );
   AddPassageStateChangeToOps(t, ops, rec.id, ActivityStates.NoMedia, '', user);
   return ops;
 };

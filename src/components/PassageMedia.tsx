@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import {
   IState,
   Section,
-  PassageSection,
   MediaFile,
   Passage,
   IPassageMediaStrings,
@@ -57,7 +56,6 @@ interface IStateProps {
 interface IRecordProps {
   mediaFiles: Array<MediaFile>;
   passages: Array<Passage>;
-  passageSections: Array<PassageSection>;
   sections: Array<Section>;
 }
 
@@ -67,15 +65,7 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 function PassageMedia(props: IProps) {
-  const {
-    passages,
-    mediaFiles,
-    passageSections,
-    sections,
-    t,
-    visible,
-    closeMethod,
-  } = props;
+  const { passages, mediaFiles, sections, t, visible, closeMethod } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
@@ -216,12 +206,8 @@ function PassageMedia(props: IProps) {
     .filter(s => related(s, 'plan') === plan)
     .map(s => s.id);
 
-  const selectedPassageIds = passageSections
-    .filter(ps => selectedSections.indexOf(related(ps, 'section')) !== -1)
-    .map(ps => related(ps, 'passage'));
-
   const selectedPassages = passages
-    .filter(p => selectedPassageIds.indexOf(p.id) !== -1)
+    .filter(p => selectedSections.indexOf(related(p, 'section')) !== -1)
     .sort(passageRefCompare);
 
   const passageList = selectedPassages
@@ -326,7 +312,7 @@ function PassageMedia(props: IProps) {
                   <ListItem key="head">
                     {t.choosePassage.replace(
                       '{0}',
-                      selectedPassageIds.length.toString()
+                      selectedPassages.length.toString()
                     )}
                   </ListItem>
                   {passageList}
@@ -381,7 +367,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 

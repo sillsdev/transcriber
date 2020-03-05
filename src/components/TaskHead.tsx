@@ -1,12 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import {
-  IState,
-  ITaskItemStrings,
-  MediaDescription,
-  PassageSection,
-} from '../model';
+import { IState, ITaskItemStrings, MediaDescription } from '../model';
 import localStrings from '../selector/localize';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import {
@@ -49,7 +44,6 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   mediaDesc: MediaDescription;
-  passageSections: PassageSection[];
 }
 
 export function TaskHead(props: IProps) {

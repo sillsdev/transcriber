@@ -13,7 +13,6 @@ import {
   ActivityStates,
   Passage,
   PassageStateChange,
-  PassageSection,
   Section,
   Plan,
   PlanType,
@@ -296,12 +295,7 @@ export function Transcriber(props: IProps) {
     needsNewTranscription: ActivityStates.Transcribed,
   };
   const getType = () => {
-    const passageSectionId = related(passRec, 'sections');
-    if (!passageSectionId || passageSectionId.length < 1) return null;
-    const passSecRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord(passageSectionId[0])
-    ) as PassageSection;
-    const sectionId = related(passSecRec, 'section');
+    const sectionId = related(passRec, 'section');
     if (!sectionId) return null;
     const secRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'section', id: sectionId })

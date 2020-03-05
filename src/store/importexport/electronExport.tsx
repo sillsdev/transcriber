@@ -212,7 +212,6 @@ export async function electronExport(
     { table: 'project', sort: 'D' },
     { table: 'plan', sort: 'E' },
     { table: 'projectintegration', sort: 'E' }, //do we care that they synced locally??
-    { table: 'passagesection', sort: 'H' },
   ];
   const zip = new AdmZip();
   const imported = moment.utc(projRec.attributes.dateImported || '01/01/1900');

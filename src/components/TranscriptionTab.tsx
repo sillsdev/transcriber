@@ -6,7 +6,6 @@ import * as actions from '../store';
 import {
   IState,
   Passage,
-  PassageSection,
   Section,
   User,
   ITranscriptionTabStrings,
@@ -116,33 +115,26 @@ const getSection = (section: Section) => {
 };
 
 /* build the passage name = sequence + book + reference */
-const getReference = (passage: Passage[]) => {
-  if (passage.length === 0) return '';
-  return passageDescription(passage[0]);
+const getReference = (passage: Passage) => {
+  return passageDescription(passage);
 };
 
 const getAssignments = (
   projectPlans: Plan[],
   passages: Array<Passage>,
-  passageSections: Array<PassageSection>,
   sections: Array<Section>,
   users: Array<User>,
   activityState: IActivityStateStrings
 ) => {
-  function passageSectionCompare(a: PassageSection, b: PassageSection) {
-    const pa = passages.filter(p => p.id === related(a, 'passage'));
-    const pb = passages.filter(p => p.id === related(b, 'passage'));
-    return passageCompare(pa[0], pb[0]);
-  }
   const rowData: IRow[] = [];
   projectPlans.forEach(planRec => {
     sections
       .filter(s => related(s, 'plan') === planRec.id && s.attributes)
       .sort(sectionCompare)
       .forEach(section => {
-        const sectionps = passageSections
+        const sectionpassages = passages
           .filter(ps => related(ps, 'section') === section.id)
-          .sort(passageSectionCompare);
+          .sort(passageCompare);
         rowData.push({
           id: section.id,
           name: getSection(section),
@@ -150,28 +142,24 @@ const getAssignments = (
           planName: planRec.attributes.name,
           reviewer: sectionReviewerName(section, users),
           transcriber: sectionTranscriberName(section, users),
-          passages: sectionps.length.toString(),
+          passages: sectionpassages.length.toString(),
           action: '',
           parentId: '',
         });
-        sectionps.forEach((ps: PassageSection) => {
-          const passageId = related(ps, 'passage');
-          const passage = passages.filter(p => p.id === passageId);
+        sectionpassages.forEach((passage: Passage) => {
           const state =
-            passage.length > 0 &&
-            passage[0].attributes &&
-            passage[0].attributes.state
-              ? activityState.getString(passage[0].attributes.state)
+            passage.attributes && passage.attributes.state
+              ? activityState.getString(passage.attributes.state)
               : '';
           rowData.push({
-            id: passageId,
+            id: passage.id,
             name: getReference(passage),
             state: state,
             planName: planRec.attributes.name,
             reviewer: '',
             transcriber: '',
             passages: '',
-            action: passageId,
+            action: passage.id,
             parentId: section.id,
           } as IRow);
         });
@@ -198,7 +186,6 @@ interface IDispatchProps {
 
 interface IRecordProps {
   passages: Array<Passage>;
-  passageSections: Array<PassageSection>;
   sections: Array<Section>;
   users: Array<User>;
   roles: Array<Role>;
@@ -221,7 +208,6 @@ export function TranscriptionTab(props: IProps) {
     activityState,
     t,
     passages,
-    passageSections,
     sections,
     users,
     roles,
@@ -426,25 +412,9 @@ export function TranscriptionTab(props: IProps) {
 
   useEffect(() => {
     setData(
-      getAssignments(
-        projectPlans,
-        passages,
-        passageSections,
-        sections,
-        users,
-        activityState
-      )
+      getAssignments(projectPlans, passages, sections, users, activityState)
     );
-  }, [
-    plan,
-    projectPlans,
-    passages,
-    passageSections,
-    sections,
-    users,
-    roles,
-    activityState,
-  ]);
+  }, [plan, projectPlans, passages, sections, users, roles, activityState]);
 
   interface ICell {
     value: string;
@@ -684,7 +654,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   users: (q: QueryBuilder) => q.findRecords('user'),
   roles: (q: QueryBuilder) => q.findRecords('role'),

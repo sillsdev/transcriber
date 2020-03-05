@@ -272,7 +272,7 @@ const schemaDefinition: SchemaSettings = {
         plan: { type: 'hasOne', model: 'plan', inverse: 'sections' },
         passages: {
           type: 'hasMany',
-          model: 'passagesection',
+          model: 'passage',
           inverse: 'section',
         },
         reviewer: { type: 'hasOne', model: 'user' },
@@ -295,23 +295,11 @@ const schemaDefinition: SchemaSettings = {
       },
       relationships: {
         mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'passage' },
-        sections: {
-          type: 'hasMany',
-          model: 'passagesection',
-          inverse: 'passage',
+        section: {
+          type: 'hasOne',
+          model: 'section',
+          inverse: 'passages',
         },
-      },
-    },
-    passagesection: {
-      keys: { remoteId: {} },
-      attributes: {
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
-      },
-      relationships: {
-        passage: { type: 'hasOne', model: 'passage', inverse: 'sections' },
-        section: { type: 'hasOne', model: 'section', inverse: 'passages' },
       },
     },
     passagestatechange: {

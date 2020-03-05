@@ -294,10 +294,6 @@ export const Sources = async (
       .then(transform => memory.sync(transform))
       .then(() => tableLoaded('section'));
     remote
-      .pull(q => q.findRecords('passagesection'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('passagesection'));
-    remote
       .pull(q => q.findRecords('passage'))
       .then(transform => memory.sync(transform))
       .then(() => tableLoaded('passage'));

@@ -1,10 +1,4 @@
-import {
-  Passage,
-  ActivityStates,
-  MediaFile,
-  PassageSection,
-  Section,
-} from '../model';
+import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
 import { getMediaProjRec, getMediaRec } from '.';
 import { DOMParser, XMLSerializer } from 'xmldom';
@@ -44,15 +38,8 @@ const newEl = (doc: Document, tag: string, style: string, vNum?: string) => {
   return el;
 };
 
-const getSection = (p: Passage, memory: Memory) => {
-  const passageSections = memory.cache.query((q: QueryBuilder) =>
-    q.findRecords('passagesection')
-  ) as PassageSection[];
-  const passageSection = passageSections.filter(
-    ps => related(ps, 'passage') === p.id
-  );
-  const sectionId =
-    passageSection.length > 0 ? related(passageSection[0], 'section') : '';
+const getSection = (passage: Passage, memory: Memory) => {
+  const sectionId = related(passage, 'section');
   const sections = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('section')
   ) as Section[];
