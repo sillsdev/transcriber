@@ -329,7 +329,7 @@ export function OrgSettings(props: IProps) {
             </Button>
           </div>
         )}
-        {curOrg !== undefined && orgRole === 'admin' && (
+        {!API_CONFIG.isApp && curOrg !== undefined && orgRole === 'admin' && (
           <DeleteExpansion
             title={t.deleteOrg}
             explain={t.deleteExplained}
@@ -350,13 +350,11 @@ export function OrgSettings(props: IProps) {
         target="_blank"
         rel="noopener noreferrer"
       ></a>
-      {deleteItem !== '' ? (
+      {deleteItem !== '' && (
         <Confirm
           yesResponse={handleDeleteConfirmed}
           noResponse={handleDeleteRefused}
         />
-      ) : (
-        <></>
       )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
