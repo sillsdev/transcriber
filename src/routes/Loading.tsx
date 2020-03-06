@@ -5,7 +5,14 @@ import jwtDecode from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings, Organization, Invitation, User } from '../model';
+import {
+  IState,
+  IMainStrings,
+  Organization,
+  Invitation,
+  User,
+  OrganizationMembership,
+} from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
@@ -24,7 +31,6 @@ import JSONAPISource from '@orbit/jsonapi';
 import { parseQuery } from '../utils/parseQuery';
 import {
   related,
-  hasRelated,
   hasAnyRelated,
   setDefaultProj,
   CreateOrg,
@@ -181,14 +187,26 @@ export function Loading(props: IProps) {
       }
     }
   };
+  const isElectron = process.env.REACT_APP_MODE === 'electron';
 
   const setDefaultOrg = async () => {
     let orgs: Organization[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
     ) as any;
+    if (isElectron) {
+      let oms: OrganizationMembership[] = memory.cache.query(
+        (q: QueryBuilder) => q.findRecords('organizationmembership')
+      ) as any;
+      orgs = orgs.filter(o =>
+        oms
+          .filter(om => related(om, 'user') === user)
+          .map(om => related(om, 'organization'))
+          .includes(o.id)
+      );
+    }
     if (organization === '') {
       orgs = orgs
-        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .filter(o => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
       if (orgs.length > 0) {
         setOrganization(orgs[0].id);

@@ -82,7 +82,6 @@ import Busy from '../components/Busy';
 import SnackBar from '../components/SnackBar';
 import {
   related,
-  hasRelated,
   slug,
   deepLink,
   remoteId,
@@ -513,13 +512,13 @@ export function ResponsiveDrawer(props: IProps) {
     var orgs: Organization[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('organization')
     );
-    if (isElectron) {
-      const orgids = organizationMemberships
-        .filter(om => related(om, 'user') === user)
-        .map(om => related(om, 'organization'));
-
-      orgs = orgs.filter(o => orgids.includes(o.id));
-    }
+    if (isElectron)
+      orgs = orgs.filter(o =>
+        organizationMemberships
+          .filter(om => related(om, 'user') === user)
+          .map(om => related(om, 'organization'))
+          .includes(o.id)
+      );
     return orgs;
   };
   const getProjs = async () => {
@@ -543,7 +542,7 @@ export function ResponsiveDrawer(props: IProps) {
   useEffect(() => {
     getOrgs().then(organizations => {
       const orgOpts = organizations
-        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .filter(o => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
         .map((o: Organization) => {
           return {
@@ -899,6 +898,7 @@ export function ResponsiveDrawer(props: IProps) {
           {!mini && (
             <div className={classes.select}>
               <ReactSelect
+                key="orgs"
                 suggestions={orgOptions}
                 current={curOrg}
                 onCommit={(v: string, e: any, callback: () => void) =>
@@ -958,6 +958,7 @@ export function ResponsiveDrawer(props: IProps) {
                 <div className={classes.contained}>
                   <div className={classes.select}>
                     <ReactSelect
+                      key="projects"
                       suggestions={projOptions}
                       current={curProj}
                       onCommit={(v: string, e: any, callback: () => void) =>
