@@ -44,9 +44,9 @@ function TranscriptionShow(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [message, setMessage] = useState(<></>);
   const [transcription, setTranscription] = useState('');
-  const [fontName, setFontName] = useState();
-  const [fontSize, setFontSize] = useState();
-  const [rtl, setRtl] = useState();
+  const [fontName, setFontName] = useState('');
+  const [fontSize, setFontSize] = useState('');
+  const [rtl, setRtl] = useState(false);
 
   const handleChange = () => {};
 
@@ -72,8 +72,8 @@ function TranscriptionShow(props: IProps) {
       const projRec = getMediaProjRec(mediaRec, memory);
       const projAttr = projRec && projRec.attributes;
       if (projAttr) {
-        setFontName(projAttr.defaultFont);
-        setFontSize(projAttr.defaultFontSize);
+        setFontName(projAttr.defaultFont ? projAttr.defaultFont : '');
+        setFontSize(projAttr.defaultFontSize ? projAttr.defaultFontSize : '');
         setRtl(projAttr.rtl);
       }
     }
