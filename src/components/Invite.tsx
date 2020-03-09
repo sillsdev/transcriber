@@ -30,7 +30,6 @@ import {
   FormControlLabel,
   ListItem,
   ListItemText,
-  TextareaAutosize,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import {
@@ -122,7 +121,7 @@ function Invite(props: IProps) {
   const [groupRole, setGroupRole] = useState('');
   const [allUsersGroup, setAllUsersGroup] = useState('');
   const [allUsersRole, setAllUsersRole] = useState('');
-  const [groupsAllonly, setGroupsAllonly] = useState();
+  const [groupsAllonly, setGroupsAllonly] = useState<Group[]>();
   const [groupsNoAll, setGroupsNoAll] = useState();
   const [allUsersProjects, setAllUsersProjects] = useState('');
   const [otherProjects, setOtherProjects] = useState('');
