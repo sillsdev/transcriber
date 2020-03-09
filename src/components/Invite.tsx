@@ -264,8 +264,12 @@ function Invite(props: IProps) {
       .filter(p => related(p, 'group') === e.target.value)
       .map(p => p.attributes.name);
     var list = '';
-    assocProjects.forEach(p => (list += p + '\r\n'));
-    setOtherProjects(assocProjects.length > 0 ? list : t.noProjects);
+    assocProjects.forEach(p => (list += p + ', '));
+    setOtherProjects(
+      assocProjects.length > 0
+        ? list.substring(0, list.length - 2)
+        : t.noProjects
+    );
   };
   const handleGroupRoleChange = (e: any) => {
     setGroupRole(e.target.value);
@@ -307,8 +311,12 @@ function Invite(props: IProps) {
       .filter(p => related(p, 'group') === allusersgroup[0].id)
       .map(p => p.attributes.name);
     var list = '';
-    assocProjects.forEach(p => (list += p + '\r\n'));
-    setAllUsersProjects(assocProjects.length > 0 ? list : t.noProjects);
+    assocProjects.forEach(p => (list += p + ', '));
+    setAllUsersProjects(
+      assocProjects.length > 0
+        ? list.substring(0, list.length - 2)
+        : t.noProjects
+    );
     const noallgroups = groups
       .filter(
         g =>
@@ -356,6 +364,7 @@ function Invite(props: IProps) {
         open={open}
         onClose={handleCancel}
         aria-labelledby="form-dialog-title"
+        maxWidth="lg"
       >
         <DialogTitle id="form-dialog-title">
           {inviteIn ? t.editInvite : t.addInvite}
@@ -496,11 +505,8 @@ function Invite(props: IProps) {
               <label id="projectsAll" className={classes.label}>
                 {t.allUsersProjects}
               </label>
-              <TextareaAutosize
-                className={classes.textarea}
-                id="standard-multiline-flexible"
-                value={allUsersProjects}
-              />
+              <div>{allUsersProjects}</div>
+              <br />
             </Grid>
             {groupsNoAll && groupsNoAll.length > 0 && (
               <>
@@ -570,11 +576,7 @@ function Invite(props: IProps) {
                   <label id="projectsAllOther" className={classes.label}>
                     {t.otherGroupProjects}
                   </label>
-                  <TextareaAutosize
-                    className={classes.textarea}
-                    id="standard-multiline-flexible"
-                    value={otherProjects}
-                  />
+                  <div>{otherProjects}</div>
                 </Grid>
               </>
             )}
