@@ -177,7 +177,7 @@ export function IntegrationPanel(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [user] = useGlobal('user');
 
-  const [paratextIntegration, setParatextIntegration] = React.useState();
+  const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
   const [message, setMessage] = React.useState(<></>);
