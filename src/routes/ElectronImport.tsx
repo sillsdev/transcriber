@@ -11,7 +11,7 @@ import { isArray } from 'util';
 import { remoteIdGuid } from '../utils';
 import moment, { Moment } from 'moment';
 import IndexedDBSource from '@orbit/indexeddb';
-import { OfflineDataPath } from '../utils/offlineDataPath';
+import { DataPath } from '../utils/offlineDataPath';
 import fs from 'fs';
 import path from 'path';
 import { OpenDialogSyncOptions } from 'electron';
@@ -162,7 +162,7 @@ if (isElectron) {
     t: IElectronImportStrings
   ): void => {
     if (zip) {
-      const where = OfflineDataPath();
+      const where = DataPath();
       console.log(where);
       fs.mkdirSync(where, { recursive: true });
       zip.extractAllTo(where, true);

@@ -77,7 +77,7 @@ import {
   AddPassageStateCommentOps,
 } from '../utils/UpdatePassageState';
 import path from 'path';
-import { OfflineDataPath } from '../utils/offlineDataPath';
+import { DataPath } from '../utils/offlineDataPath';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -558,7 +558,7 @@ export function Transcriber(props: IProps) {
       families: [fontFamily],
       urls: [
         offline
-          ? path.join(OfflineDataPath(), 'fonts', fontFamily + '.css')
+          ? DataPath(path.join('fonts', fontFamily + '.css'))
           : 'https://fonts.siltranscriber.org/' + fontFamily + '.css',
       ],
     },

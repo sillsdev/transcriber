@@ -94,8 +94,7 @@ import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
-import path from 'path';
-import { OfflineDataPath } from '../utils/offlineDataPath';
+import { DataPath } from '../utils/offlineDataPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };
@@ -562,9 +561,7 @@ export function ResponsiveDrawer(props: IProps) {
       const orgRec = organizations.filter(o => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        setOrgAvatar(
-          attr && attr.logoUrl ? path.join(OfflineDataPath(), attr.logoUrl) : ''
-        );
+        setOrgAvatar(DataPath(attr?.logoUrl || ''));
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
