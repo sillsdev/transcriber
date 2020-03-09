@@ -52,12 +52,14 @@ export enum UploadType {
   LOGO = 3 /* do we need separate ones for org and avatar? */,
 }
 
+const emptyFileList = new FileList();
+
 function MediaUpload(props: IProps) {
   const { t, visible, uploadType, uploadMethod, cancelMethod } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
-  const [files, setFiles] = useState();
+  const [files, setFiles] = useState<FileList>(emptyFileList);
   const [message, setMessage] = useState(<></>);
 
   const acceptextension = [
@@ -85,7 +87,7 @@ function MediaUpload(props: IProps) {
   };
   const handleCancel = () => {
     if (cancelMethod) {
-      setFiles(null);
+      setFiles(emptyFileList);
       setName('');
       cancelMethod();
     }

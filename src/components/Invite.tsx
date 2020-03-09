@@ -122,7 +122,7 @@ function Invite(props: IProps) {
   const [allUsersGroup, setAllUsersGroup] = useState('');
   const [allUsersRole, setAllUsersRole] = useState('');
   const [groupsAllonly, setGroupsAllonly] = useState<Group[]>();
-  const [groupsNoAll, setGroupsNoAll] = useState();
+  const [groupsNoAll, setGroupsNoAll] = useState<Group[]>();
   const [allUsersProjects, setAllUsersProjects] = useState('');
   const [otherProjects, setOtherProjects] = useState('');
   const [message, setMessage] = useState(<></>);

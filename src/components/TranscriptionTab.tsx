@@ -233,13 +233,13 @@ export function TranscriptionTab(props: IProps) {
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
-  const [dataUrl, setDataUrl] = useState();
+  const [dataUrl, setDataUrl] = useState<string | undefined>();
   const [dataName, setDataName] = useState('');
   const audAnchor = React.useRef<HTMLAnchorElement>(null);
-  const [audUrl, setAudUrl] = useState();
+  const [audUrl, setAudUrl] = useState<string | undefined>();
   const [audName, setAudName] = useState('');
   const exportAnchor = React.useRef<HTMLAnchorElement>(null);
-  const [exportUrl, setExportUrl] = useState();
+  const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
