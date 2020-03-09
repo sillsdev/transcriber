@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -25,6 +25,7 @@
     "aws-amplify": "^2.2.2",
     "axios": "^0.19.2",
     "electron-is-dev": "^1.1.0",
+    "execa": "^4.0.0",
     "fs-extra": "^8.1.0",
     "js-base64": "^2.5.1",
     "jwt-decode": "^2.2.0",
@@ -52,7 +53,10 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "xml-js": "^1.6.11",
+    "xmldom": "^0.2.1",
+    "xpath": "0.0.27"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

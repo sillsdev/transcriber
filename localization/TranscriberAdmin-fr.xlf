@@ -13,73 +13,79 @@
 				<target>Importation de données de transcripteurs portables</target>
 			</segment>
 		</unit>
-       <unit id="access.importPending">
-         <segment>
-            <source>Import In Progress...</source>
-            <target>Importation en cours ...</target>
-         </segment>
-      </unit>
-      <unit id="access.importComplete">
-         <segment>
-            <source>Import Complete</source>
-            <target>Importation terminée</target>
-         </segment>
-      </unit>
      <unit id="access.importError">
          <segment>
             <source>Import Error</source>
             <target>Erreur d'importation</target>
          </segment>
       </unit>
-      <unit id="access.ptfError">
-         <segment>
-            <source>Not a valid Portable Transcriber File</source>
-            <target>Pas un fichier de transcripteur portable valide</target>
-         </segment>
-      </unit>
-     <unit id="access.importCreated">
-         <segment>
-            <source>Import file was created: {date0}.</source>
-            <target>Le fichier d'importation a été créé: {date0}.</target>
-         </segment>
-      </unit>
-      <unit id="access.projectImported">
-         <segment>
-            <source>Project {name0} was previously imported with a newer file: {date1} </source>
-            <target>Le projet {name0} a été précédemment importé avec un fichier plus récent: {date1}</target>
-         </segment>
-      </unit>
-      <unit id="access.allDataOverwritten">
-         <segment>
-            <source>All data will be overwritten.</source>
-            <target>Toutes les données seront écrasées.</target>
-         </segment>
-      </unit>
-      <unit id="access.neverExported">
-         <segment>
-            <source>Current data in project {name0} has never been exported.</source>
-            <target>Les données actuelles du projet {name0} n'ont jamais été exportées.</target>
-         </segment>
-      </unit>
-      <unit id="access.lastExported">
-         <segment>
-            <source>Current data in project {name0} was last exported {date0}.</source>
-            <target>Les données actuelles du projet {name0} ont été exportées pour la dernière fois {date0}.</target>
-         </segment>
-      </unit>
-      <unit id="access.exportedLost">
-         <segment>
-            <source>Import file will not include latest exported data.</source>
-            <target>Le fichier d'importation n'inclura pas les dernières données exportées.</target>
-         </segment>
-      </unit>
-
   	<unit id="access.login">
 			<segment>
 				<source>Online Login</source>
 				<target>Connexion en ligne</target>
 			</segment>
 		</unit>
+        <unit id="electronImport.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+            <target>Importation en cours ...</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target>Importation terminée</target>
+         </segment>
+      </unit>
+
+      <unit id="electronImport.ptfError">
+         <segment>
+            <source>Not a valid Portable Transcriber File</source>
+            <target>Pas un fichier de transcripteur portable valide</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.itfError">
+         <segment>
+            <source>Not a valid Incremental Transcriber File</source>
+            <target>Pas un fichier de transcripteur incrémentiel valide</target>
+         </segment>
+      </unit>
+     <unit id="electronImport.importCreated">
+         <segment>
+            <source>Import file was created: {date0}.</source>
+            <target>Le fichier d'importation a été créé: {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.projectImported">
+         <segment>
+            <source>Project {name0} was previously imported with a newer file: {date1} </source>
+            <target>Le projet {name0} a été précédemment importé avec un fichier plus récent: {date1}</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.allDataOverwritten">
+         <segment>
+            <source>All {name0} data will be overwritten.</source>
+            <target>Toutes les données {name0} seront écrasées.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.neverExported">
+         <segment>
+            <source>Current data in project {name0} has never been exported.</source>
+            <target>Les données actuelles du projet {name0} n'ont jamais été exportées.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.lastExported">
+         <segment>
+            <source>Current data in project {name0} was last exported {date0}.</source>
+            <target>Les données actuelles du projet {name0} ont été exportées pour la dernière fois {date0}.</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.exportedLost">
+         <segment>
+            <source>Import file will not include latest exported data.</source>
+            <target>Le fichier d'importation n'inclura pas les dernières données exportées.</target>
+         </segment>
+      </unit>
 		<unit id="snackbar.undo">
 			<segment>
 				<source>UNDO</source>
@@ -370,20 +376,20 @@
 		</unit>
 		<unit id="projectSettings.add">
 			<segment>
-				<source>Add a Plan</source>
-				<target>Ajouter un plan</target>
+				<source>Save</source>
+				<target>Enregistrer</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.upload">
 			<segment>
-				<source>Upload Media and Transcribe</source>
-				<target>Télécharger les médias et les transcrire</target>
+				<source>Save and Upload Media</source>
+				<target>Enregistrer et télécharger un enregistrement</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.nextSteps">
 			<segment>
-				<source>Select Next Step</source>
-				<target>Sélectionnez l'étape suivante</target>
+				<source>Select Next Step and Save</source>
+				<target>Sélectionnez l'étape suivante et enregistrez</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.configure">
@@ -394,8 +400,8 @@
 		</unit>
 		<unit id="projectSettings.startNow">
 			<segment>
-				<source>Start Transcribing Now</source>
-				<target>Commencez à transcrire maintenant</target>
+				<source>Use Defaults and Start Transcribing</source>
+				<target>Utiliser les valeurs par défaut et commencer la transcription</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.dangerZone">
@@ -1046,6 +1052,18 @@
 				<target>Chargement des données</target>
 			</segment>
 		</unit>
+       <unit id="passageMedia.mediaAttached">
+         <segment>
+            <source>Media Attached</source>
+            <target>Médias attachés</target>
+         </segment>
+      </unit>
+      <unit id="passageMedia.mediaDetached">
+         <segment>
+            <source>Media Removed</source>
+            <target>Médias supprimés</target>
+         </segment>
+      </unit>
 		<unit id="passageMedia.attachAvailableMedia">
 			<segment>
 				<source>Attach available media files to passages (with no current media).</source>
@@ -1214,7 +1232,13 @@
 				<target>Exporter</target>
 			</segment>
 		</unit>
-		<unit id="main.loadingTable">
+      <unit id="main.import">
+         <segment>
+            <source>Import</source>
+            <target>Importation</target>
+         </segment>
+      </unit>
+      <unit id="main.loadingTable">
 			<segment>
 				<source>Loading data</source>
 				<target>Chargement des données</target>
@@ -1254,6 +1278,18 @@
          <segment>
             <source>Clear cache</source>
          	<target>Effacer le cache</target>
+         </segment>
+      </unit>
+      <unit id="main.inviteError">
+         <segment>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <target>Invitation non acceptée. Vous devez vous connecter avec l'e-mail auquel l'invitation a été envoyée.</target>
+         </segment>
+      </unit>
+      <unit id="main.deletedInvitation">
+         <segment>
+            <source>Invitation is no longer valid.</source>
+            <target>L'invitation n'est plus valide.</target>
          </segment>
       </unit>
       <unit id="main.helpCenter">
@@ -1308,6 +1344,12 @@
 			<segment>
 				<source>Transcribe</source>
 				<target>Transcrires</target>
+			</segment>
+		</unit>
+		<unit id="main.switchTo">
+			<segment>
+				<source>Switch to:</source>
+				<target>Passez à :</target>
 			</segment>
 		</unit>
 		<unit id="main.switchToAdmin">
@@ -1370,6 +1412,66 @@
 				<target>Mon Atelier</target>
 			</segment>
 		</unit>
+        <unit id="import.import">
+         <segment>
+            <source>Import</source>
+            <target>Importation</target>
+         </segment>
+      </unit>
+      <unit id="import.importProject">
+         <segment>
+            <source>Import Project</source>
+            <target>Importer un projet</target>
+         </segment>
+      </unit>
+      <unit id="import.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+        </segment>
+      </unit>
+      <unit id="import.error">
+         <segment>
+            <source>Import Error</source>
+            <target>Erreur d'importation</target>
+         </segment>
+      </unit>
+        <unit id="import.onlineChangeReport">
+         <segment>
+            <source>Online changes made since data provided to offline user:</source>
+            <target>Modifications apportées en ligne depuis les données fournies à l'utilisateur hors ligne:</target>
+         </segment>
+      </unit>
+        <unit id="import.noFile">
+         <segment>
+            <source>Please select file to be uploaded.</source>
+            <target>Veuillez sélectionner le fichier à télécharger.</target>
+         </segment>
+      </unit>
+      <unit id="import.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+             <target>Importation en cours ...</target>
+         </segment>
+      </unit>
+      <unit id="import.invalidITF">
+         <segment>
+            <source>Not a valid Incremental Transcriber File (ITF).</source>
+            <target>Pas un fichier de transcripteur incrémentiel valide (ITF).</target>
+         </segment>
+      </unit>
+      <unit id="import.invalidProject">
+         <segment>
+            <source>ITF File does not contain current project.</source>
+            <target>Le fichier ITF ne contient pas le projet en cours.</target>
+         </segment>
+      </unit>
+      <unit id="import.importComplete">
+         <segment>
+            <source>Import Complete</source>
+             <target>Importation terminée</target>
+         </segment>
+      </unit>
 		<unit id="transcriptionTab.section">
 			<segment>
 				<source>Section</source>
@@ -1431,10 +1533,40 @@
             <target>Exporter une projet</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportError">
+      <unit id="transcriptionTab.exportType">
          <segment>
-            <source>Export Error</source>
-            <target>Erreur d'exportation</target>
+            <source>Which export type?</source>
+            <target>Quel type d'exportation?</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportExplanation">
+         <segment>
+            <source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+            <target>Exportez une sauvegarde complète pour la stocker localement. Exportez le fichier incrémentiel pour l'importer dans l'application en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportPTFtype">
+         <segment>
+            <source>Full Backup (ptf)</source>
+            <target>Sauvegarde complète (ptf)</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportITFtype">
+         <segment>
+            <source>Incremental Changes (itf)</source>
+            <target>Modifications incrémentielles (itf)</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportingProject">
+         <segment>
+            <source>Exporting Project</source>
+            <target>Projet d'exportation</target>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.error">
+         <segment>
+            <source>Error</source>
+            <target>Erreur</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.downloadComplete">
@@ -1965,6 +2097,12 @@
             <target>Groupe</target>
          </segment>
       </unit>
+    <unit id="invite.allUsersProjects">
+         <segment>
+            <source>Projects</source>
+            <target>Projets</target>
+         </segment>
+      </unit>
       <unit id="invite.additionalgroup">
          <segment>
             <source>Optional additional Group</source>
@@ -1975,6 +2113,18 @@
          <segment>
             <source>Group Role</source>
             <target>Rôle Groupe</target>
+         </segment>
+      </unit>
+    <unit id="invite.otherGroupProjects">
+         <segment>
+            <source>Projects</source>
+           <target>Projets</target>
+         </segment>
+      </unit>
+      <unit id="invite.noProjects">
+         <segment>
+            <source>No Projects are associated with this group.</source>
+            <target>Aucun projet n'est associé à ce groupe.</target>
          </segment>
       </unit>
       <unit id="invite.selectGroupRole">
@@ -2230,10 +2380,34 @@
          	<target>Télécharger des fichiers audio</target>
          </segment>
       </unit>
+      <unit id="mediaUpload.PTFtitle">
+         <segment>
+            <source>Upload complete Project Data from PTF</source>
+            <target>Télécharger des données de projet complètes depuis PTF</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtitle">
+         <segment>
+            <source>Upload Change Data from Offline Extension</source>
+            <target>Télécharger les données de modification depuis l'extension hors ligne</target>
+         </segment>
+      </unit>
       <unit id="mediaUpload.task">
          <segment>
             <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
          	<target>Vous pouvez télécharger des fichiers audio au format .mp3, .m4a ou .wav.</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.PTFtask">
+         <segment>
+            <source>Upload a Portable Transcriber File (ptf file).</source>
+            <target>Téléchargez un fichier transcripteur portable (fichier ptf).</target>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtask">
+         <segment>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
+            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'extension hors ligne.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDrop">
@@ -2362,10 +2536,10 @@
 				<target>Description</target>
 			</segment>
 		</unit>
-		<unit id="toDoTable.duration">
+		<unit id="toDoTable.showHide">
 			<segment>
-				<source>Duration</source>
-				<target>Durée</target>
+				<source>Show or Hide filter rows</source>
+				<target>Afficher ou Masquer les lignes de filtre</target>
 			</segment>
 		</unit>
 		<unit id="integration.sync">
@@ -2441,7 +2615,13 @@
     		<target>Êtes-vous connecté à Internet?</target>
 	     </segment>
       </unit>
-      <unit id="integration.yes">
+		<unit id="integration.questionInstalled">
+			<segment>
+				<source>Is Paratext installed locally?</source>
+				<target>Est-ce que Paratext est installé localement?</target>
+			</segment>
+		</unit>
+		<unit id="integration.yes">
          <segment>
             <source>Yes</source>
 			<target>Oui</target>
@@ -2528,10 +2708,16 @@
       <unit id="integration.paratext">
          <segment>
             <source>Paratext</source>
-    		<target>Non</target>
+    		<target>Paratext</target>
 	     </segment>
       </unit>
-      <unit id="integration.render">
+		<unit id="integration.paratextLocal">
+			<segment>
+				<source>Paratext Local</source>
+				<target>Paratext local</target>
+			</segment>
+		</unit>
+		<unit id="integration.render">
          <segment>
             <source>Render</source>
     		<target>Rendre</target>
@@ -2945,10 +3131,16 @@
          	<target>Correction nécessaire</target>
          </segment>
       </unit>
-		<unit id="taskItem.inProgress">
+		<unit id="taskItem.transcribing">
 			<segment>
-				<source>In Progress</source>
-				<target>En cours</target>
+				<source>Transcribing</source>
+				<target>Transcrire</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.reviewing">
+			<segment>
+				<source>Reviewing</source>
+				<target>Révision</target>
 			</segment>
 		</unit>
 		<unit id="taskItem.transcribe">
@@ -2979,6 +3171,30 @@
 			<segment>
 				<source>Section {0}.{1}</source>
 				<target>Section {0}.{1}</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.assign">
+			<segment>
+				<source>Assign {0}</source>
+				<target>Assigner {0}</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.unassign">
+			<segment>
+				<source>Unassign {0}</source>
+				<target>Désassigner {0}</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.transcriber">
+			<segment>
+				<source>Transcriber</source>
+				<target>Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="taskItem.reviewer">
+			<segment>
+				<source>Reviewer</source>
+				<target>Examinateur</target>
 			</segment>
 		</unit>
 		<unit id="control.contentType">

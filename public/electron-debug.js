@@ -4,6 +4,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const isDev = require('electron-is-dev');
+
 //ToDo: Remove this and follow instructions here:
 //https://github.com/electron/electron/blob/master/docs/tutorial/security.md#electron-security-warnings
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
@@ -61,6 +62,8 @@ function createWindow() {
     settingsWindow.hide();
   });
 }
+
+global['temp'] = app.getPath('temp');
 
 app.on('ready', createWindow);
 

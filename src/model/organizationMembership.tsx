@@ -2,9 +2,9 @@ import { Record, RecordRelationship } from '@orbit/data';
 
 export interface OrganizationMembership extends Record {
   attributes: {
-    dateCreated: string | null;
-    dateUpdated: string | null;
-    lastModifiedBy: string | null;
+    dateCreated: string;
+    dateUpdated: string;
+    lastModifiedBy: string;
   };
   relationships?: {
     user: RecordRelationship;

@@ -1,14 +1,10 @@
-import {
-  MediaFile,
-  Plan,
-  Project,
-  Passage,
-  Section,
-  PassageSection,
-} from '../model';
-import { QueryBuilder, RecordIdentity } from '@orbit/data';
+import { MediaFile, Plan, Project, Passage, Section } from '../model';
+import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { related, cleanFileName } from '.';
+import { related, cleanFileName, updateXml } from '.';
+import moment from 'moment';
+import eaf from './TranscriptionEaf';
+import path from 'path';
 
 export const getMediaRec = (passageId: string, memory: Memory) => {
   const mediaRecs = memory.cache.query((q: QueryBuilder) =>
@@ -55,17 +51,9 @@ export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
     passageRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'passage', id: passageId })
     ) as Passage;
-  const passageSectionIds = related(passageRec, 'sections') as Array<
-    RecordIdentity
-  >;
-  const secIds = passageSectionIds.map(psId => {
-    const psRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord(psId)
-    ) as PassageSection;
-    return related(psRec, 'section');
-  });
+  const secId = related(passageRec, 'section');
   const secRec = memory.cache.query((q: QueryBuilder) =>
-    q.findRecord({ type: 'section', id: secIds[0] })
+    q.findRecord({ type: 'section', id: secId })
   ) as Section;
   const secAttr = secRec && secRec.attributes;
   const secSeq =
@@ -87,4 +75,49 @@ export const getMediaName = (rec: MediaFile | null, memory: Memory) => {
   if (book && book !== '') val = val + book + '_';
   val = val + secSeq + '-' + seq + '_' + ref + 'v' + ver;
   return cleanFileName(val);
+};
+
+export const getMediaEaf = (mediaRec: MediaFile, memory: Memory): string => {
+  let Encoder = require('node-html-encoder').Encoder;
+  let encoder = new Encoder('numerical');
+
+  const mediaAttr = mediaRec && mediaRec.attributes;
+  const transcription =
+    mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
+  const encTranscript = encoder
+    .htmlEncode(transcription)
+    .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');
+  const durationNum = mediaAttr && mediaAttr.duration;
+  const duration = durationNum ? (durationNum * 1000).toString() : '0';
+  const lang = getMediaLang(mediaRec, memory);
+  const mime = (mediaAttr && mediaAttr.contentType) || '';
+  const ext = /mpeg/.test(mime) ? '.mp3' : /m4a/.test(mime) ? '.m4a' : '.wav';
+  const audioUrl = mediaAttr && mediaAttr.audioUrl;
+  const audioBase = audioUrl && audioUrl.split('?')[0];
+  const audioName = audioBase && audioBase.split('/').pop();
+  const filename = audioName
+    ? audioName
+    : path.basename(
+        mediaAttr.originalFile,
+        path.extname(mediaAttr.originalFile)
+      ) + ext;
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(eaf(), 'text/xml');
+  updateXml('@DATE', xmlDoc, moment().format('YYYY-MM-DDTHH:MM:SSZ'));
+  // updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, encTranscript);
+  updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');
+  updateXml('@LANGUAGE_CODE', xmlDoc, lang ? lang : 'en');
+  updateXml("*[@TIME_SLOT_ID='ts2']/@TIME_VALUE", xmlDoc, duration);
+  updateXml('@MEDIA_FILE', xmlDoc, filename);
+  updateXml('@MEDIA_URL', xmlDoc, filename);
+  updateXml('@MIME_TYPE', xmlDoc, mime ? mime : 'audio/*');
+  const annotationValue = 'ANNOTATION_VALUE';
+  const serializer = new XMLSerializer();
+  const str = serializer
+    .serializeToString(xmlDoc)
+    .replace(
+      '<' + annotationValue + '/>',
+      '<' + annotationValue + '>' + encTranscript + '</' + annotationValue + '>'
+    );
+  return str;
 };

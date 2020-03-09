@@ -1,4 +1,4 @@
-import { pendingStatus, successStatus } from '../AxiosStatus';
+import { pendingStatus, successStatus, successStatusMsg } from '../AxiosStatus';
 import {
   EXPORT_SUCCESS,
   EXPORT_PENDING,
@@ -8,13 +8,14 @@ import {
   IMPORT_SUCCESS,
   IMPORT_PENDING,
   IMPORT_ERROR,
+  IMPORT_COMPLETE,
   ImportMsgs,
   IImportExportState,
 } from './types';
 
 export const exportCleanState = {
   loaded: false,
-  importexportStatus: pendingStatus(''),
+  importexportStatus: undefined,
 } as IImportExportState;
 
 export default function(
@@ -29,7 +30,6 @@ export default function(
         importexportStatus: pendingStatus(action.payload),
       };
     case EXPORT_SUCCESS:
-      console.log('Export success');
       return {
         ...state,
         loaded: true,
@@ -58,9 +58,17 @@ export default function(
       return {
         ...state,
         loaded: true,
-        importexportStatus: successStatus(action.payload),
+        importexportStatus: successStatusMsg(
+          action.payload.status,
+          action.payload.msg
+        ),
       };
     case IMPORT_ERROR:
+      return {
+        ...state,
+        importexportStatus: action.payload,
+      };
+    case IMPORT_COMPLETE:
       return {
         ...state,
         importexportStatus: action.payload,

@@ -28,7 +28,6 @@ import {
   FormControlLabel,
   Button,
   Checkbox,
-  Grid,
   RadioGroup,
   Radio,
 } from '@material-ui/core';
@@ -44,6 +43,7 @@ import { getRoleId, getCreatedBy } from '../utils';
 import { SelectPlanType } from '../control';
 import { projectShortcut } from './ProjectShortcut';
 import { saveNewProject } from '../crud/saveNewProject';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,8 +80,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
     }) as any,
     next: {
-      display: 'flex',
-      flexDirection: 'column',
+      display: 'block',
+      paddingBottom: theme.spacing(3),
     },
     subHead: {
       marginTop: theme.spacing(2),
@@ -225,6 +225,15 @@ export function ProjectSettings(props: IProps) {
   const handleRtlChange = () => {
     setRtl(!rtl);
   };
+
+  const TAB = 9;
+  const SHIFT = 16;
+  const CTRL = 17;
+
+  const handleDefaultFont = (e: any) => {
+    if (e.keyCode && [TAB, SHIFT, CTRL].includes(e.keyCode)) return;
+    langEl.current.click();
+  };
   const handleMessageReset = () => {
     setMessage(<></>);
   };
@@ -337,6 +346,7 @@ export function ProjectSettings(props: IProps) {
         schema,
         memory,
         keyMap,
+        user,
       }).then(({ url, planId }) => {
         if (finishAdd) finishAdd({ to: url, projectId: project.id, planId });
         orbitSaving(false);
@@ -409,6 +419,16 @@ export function ProjectSettings(props: IProps) {
 
   if (saving) return <></>;
 
+  const widthStyle: CSSProperties = { width: 400 };
+  const previewStyle: CSSProperties = {
+    fontSize: defaultFontSize,
+    fontFamily: defaultFont,
+    width: 400,
+  };
+  const selectProps = { MenuProps: { className: classes.menu } };
+  const adminOnly =
+    API_CONFIG.isApp || (orgRole !== 'admin' && projRole !== 'admin');
+
   return (
     <div
       className={clsx(classes.container, {
@@ -416,284 +436,244 @@ export function ProjectSettings(props: IProps) {
       })}
     >
       <div className={classes.paper}>
-        <Grid container>
-          <Grid item>
-            <FormControl>
-              <FormLabel className={classes.label}>{t.general}</FormLabel>
-              <FormGroup className={classes.group}>
-                <FormControlLabel
-                  control={
-                    <TextField
-                      id="name"
-                      label={t.name}
-                      className={classes.textField}
-                      value={name}
-                      onChange={handleNameChange}
-                      margin="normal"
-                      variant="filled"
-                      required={true}
-                      helperText={t.createdBy.replace('{0}', createdBy)}
-                      disabled={
-                        API_CONFIG.isApp ||
-                        (orgRole !== 'admin' && projRole !== 'admin')
-                      }
-                    />
-                  }
-                  label=""
+        <FormControl>
+          <FormLabel className={classes.label}>{t.general}</FormLabel>
+          <FormGroup className={classes.group}>
+            <FormControlLabel
+              control={
+                <TextField
+                  id="name"
+                  label={t.name}
+                  className={classes.textField}
+                  value={name}
+                  onChange={handleNameChange}
+                  margin="normal"
+                  variant="filled"
+                  required={true}
+                  helperText={t.createdBy.replace('{0}', createdBy)}
+                  disabled={adminOnly}
                 />
+              }
+              label=""
+            />
+            <FormControlLabel
+              control={
+                <TextField
+                  id="description"
+                  label={t.description}
+                  className={classes.textField}
+                  value={description}
+                  onChange={handleDescriptionChange}
+                  margin="normal"
+                  style={widthStyle}
+                  variant="filled"
+                  required={false}
+                  disabled={adminOnly}
+                />
+              }
+              label=""
+            />
+            <FormControlLabel
+              control={
+                <TextField
+                  id="select-group"
+                  select
+                  label={t.group}
+                  className={classes.textField}
+                  value={projectGroup}
+                  onChange={handleGroupChange}
+                  SelectProps={selectProps}
+                  helperText={t.selectProjectGroup}
+                  margin="normal"
+                  variant="filled"
+                  required={true}
+                  disabled={adminOnly}
+                >
+                  {groups
+                    .filter(g => related(g, 'owner') === organization)
+                    .sort((i, j) =>
+                      i.attributes.name < j.attributes.name ? -1 : 1
+                    )
+                    .map((option: Group) => (
+                      <MenuItem key={option.id} value={option.id}>
+                        {option.attributes.name}
+                      </MenuItem>
+                    ))}
+                </TextField>
+              }
+              label=""
+            />
+          </FormGroup>
+          <FormLabel className={classes.label}>{t.language}</FormLabel>
+          <FormGroup className={classes.group}>
+            <div className={classes.sameLine}>
+              <FormControlLabel
+                ref={langEl}
+                className={classes.languageField}
+                control={
+                  <LanguagePicker
+                    value={bcp47}
+                    name={languageName}
+                    font={defaultFont}
+                    setCode={setBcp47}
+                    setName={handleLanguageName}
+                    setFont={setDefaultFont}
+                    disabled={adminOnly}
+                  />
+                }
+                label=""
+              />
+              <FormControlLabel
+                className={classes.textField}
+                control={
+                  <Checkbox
+                    id="checkbox-rtl"
+                    checked={rtl}
+                    onChange={handleRtlChange}
+                    disabled={adminOnly}
+                  />
+                }
+                label={t.rightToLeft}
+              />
+            </div>
+            <div className={classes.sameLine}>
+              <div className={classes.sameCol}>
                 <FormControlLabel
                   control={
                     <TextField
-                      id="description"
-                      label={t.description}
+                      id="default-font"
+                      label={t.defaultFont}
                       className={classes.textField}
-                      value={description}
-                      onChange={handleDescriptionChange}
+                      value={defaultFont}
+                      onClick={handleDefaultFont}
+                      onKeyDown={handleDefaultFont}
                       margin="normal"
-                      style={{ width: 400 }}
+                      style={widthStyle}
                       variant="filled"
                       required={false}
-                      disabled={
-                        API_CONFIG.isApp ||
-                        (orgRole !== 'admin' && projRole !== 'admin')
-                      }
+                      disabled={adminOnly}
                     />
                   }
                   label=""
                 />
+                <br />
                 <FormControlLabel
+                  className={classes.textField}
                   control={
-                    <TextField
-                      id="select-group"
-                      select
-                      label={t.group}
-                      className={classes.textField}
-                      value={projectGroup}
-                      onChange={handleGroupChange}
-                      SelectProps={{
-                        MenuProps: {
-                          className: classes.menu,
-                        },
-                      }}
-                      helperText={t.selectProjectGroup}
-                      margin="normal"
-                      variant="filled"
-                      required={true}
-                      disabled={
-                        API_CONFIG.isApp ||
-                        (orgRole !== 'admin' && projRole !== 'admin')
-                      }
-                    >
-                      {groups
-                        .filter(g => related(g, 'owner') === organization)
-                        .sort((i, j) =>
-                          i.attributes.name < j.attributes.name ? -1 : 1
-                        )
-                        .map((option: Group) => (
-                          <MenuItem key={option.id} value={option.id}>
-                            {option.attributes.name}
-                          </MenuItem>
-                        ))}
-                    </TextField>
+                    <FontSize
+                      label={t.defaultFontSize}
+                      value={defaultFontSize}
+                      font={defaultFont}
+                      setSize={handleSize}
+                      disabled={adminOnly}
+                    />
                   }
                   label=""
                 />
-              </FormGroup>
-              <FormLabel className={classes.label}>{t.language}</FormLabel>
-              <FormGroup className={classes.group}>
-                <div className={classes.sameLine}>
-                  <FormControlLabel
-                    ref={langEl}
-                    className={classes.languageField}
-                    control={
-                      <LanguagePicker
-                        value={bcp47}
-                        name={languageName}
-                        font={defaultFont}
-                        setCode={setBcp47}
-                        setName={handleLanguageName}
-                        setFont={setDefaultFont}
-                        disabled={
-                          API_CONFIG.isApp ||
-                          (orgRole !== 'admin' && projRole !== 'admin')
-                        }
-                      />
-                    }
-                    label=""
-                  />
-                  <FormControlLabel
-                    className={classes.textField}
-                    control={
-                      <Checkbox
-                        id="checkbox-rtl"
-                        checked={rtl}
-                        onChange={handleRtlChange}
-                        disabled={
-                          API_CONFIG.isApp ||
-                          (orgRole !== 'admin' && projRole !== 'admin')
-                        }
-                      />
-                    }
-                    label={t.rightToLeft}
-                  />
+              </div>
+              <div className={classes.previewCol}>
+                <FormLabel className={classes.label}>{t.preview}</FormLabel>
+                <div style={previewStyle}>
+                  The quick, brown fox jumped over the lazy dog.
                 </div>
-                <div className={classes.sameLine}>
-                  <div className={classes.sameCol}>
-                    <FormControlLabel
-                      control={
-                        <TextField
-                          id="default-font"
-                          label={t.defaultFont}
-                          className={classes.textField}
-                          value={defaultFont}
-                          onClick={() => langEl.current.click()}
-                          onKeyDown={(e: any) => {
-                            if (e.keyCode !== 9) langEl.current.click();
-                          }}
-                          margin="normal"
-                          style={{ width: 400 }}
-                          variant="filled"
-                          required={false}
-                          disabled={
-                            API_CONFIG.isApp ||
-                            (orgRole !== 'admin' && projRole !== 'admin')
-                          }
-                        />
-                      }
-                      label=""
-                    />
-                    <br />
-                    <FormControlLabel
-                      className={classes.textField}
-                      control={
-                        <FontSize
-                          label={t.defaultFontSize}
-                          value={defaultFontSize}
-                          font={defaultFont}
-                          setSize={handleSize}
-                          disabled={
-                            API_CONFIG.isApp ||
-                            (orgRole !== 'admin' && projRole !== 'admin')
-                          }
-                        />
-                      }
-                      label=""
+              </div>
+            </div>
+          </FormGroup>
+        </FormControl>
+        {!API_CONFIG.isApp && (orgRole === 'admin' || projRole === 'admin') && (
+          <div className={classes.next}>
+            {currentProject === undefined ? (
+              <FormControl>
+                <FormLabel className={classes.label}>{t.nextSteps}</FormLabel>
+                <RadioGroup
+                  aria-label={t.nextSteps}
+                  value={nextOption}
+                  onChange={handleNextChange}
+                >
+                  <FormControlLabel
+                    value={NextOptions.Start}
+                    control={<Radio color="primary" />}
+                    label={t.startNow}
+                  />
+                  <div className={classes.typeSelect}>
+                    <SelectPlanType
+                      planType={planType}
+                      planTypes={planTypes}
+                      disable={nextOption !== NextOptions.Start}
+                      handleTypeChange={handleTypeChange}
                     />
                   </div>
-                  <div className={classes.previewCol}>
-                    <FormLabel className={classes.label}>{t.preview}</FormLabel>
-                    <div
-                      style={{
-                        fontSize: defaultFontSize,
-                        fontFamily: defaultFont,
-                        width: 400,
-                      }}
-                    >
-                      The quick, brown fox jumped over the lazy dog.
-                    </div>
-                  </div>
-                </div>
-              </FormGroup>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            {!API_CONFIG.isApp &&
-              (orgRole === 'admin' || projRole === 'admin') && (
-                <div className={classes.next}>
-                  {currentProject === undefined ? (
-                    <FormControl>
-                      <FormLabel className={classes.label}>
-                        {t.nextSteps}
-                      </FormLabel>
-                      <RadioGroup
-                        aria-label={t.nextSteps}
-                        value={nextOption}
-                        onChange={handleNextChange}
-                      >
-                        <FormControlLabel
-                          value={NextOptions.Start}
-                          control={<Radio color="primary" />}
-                          label={t.startNow}
-                        />
-                        <div className={classes.typeSelect}>
-                          <SelectPlanType
-                            planType={planType}
-                            planTypes={planTypes}
-                            disable={nextOption !== NextOptions.Start}
-                            handleTypeChange={handleTypeChange}
-                          />
-                        </div>
-                        <Button
-                          key="upload"
-                          aria-label={t.add}
-                          variant="contained"
-                          color="primary"
-                          className={classes.button}
-                          disabled={
-                            nextOption !== NextOptions.Start ||
-                            name === '' ||
-                            projectType === '' ||
-                            projectGroup === '' ||
-                            bcp47 === '' ||
-                            bcp47 === 'und' ||
-                            defaultFont === '' ||
-                            planType === ''
-                          }
-                          onClick={handleUpload}
-                        >
-                          {t.upload}
-                        </Button>
-                        <FormControlLabel
-                          value={NextOptions.Configure}
-                          control={<Radio color="primary" />}
-                          label={t.configure}
-                        />
-                        <Button
-                          key="add"
-                          aria-label={t.add}
-                          variant="contained"
-                          color="primary"
-                          className={classes.button}
-                          disabled={
-                            nextOption !== NextOptions.Configure ||
-                            name === '' ||
-                            projectType === '' ||
-                            projectGroup === '' ||
-                            bcp47 === '' ||
-                            bcp47 === 'und' ||
-                            defaultFont === ''
-                          }
-                          onClick={handleAdd}
-                        >
-                          {t.add}
-                        </Button>
-                      </RadioGroup>
-                    </FormControl>
-                  ) : (
-                    <Button
-                      key="save"
-                      aria-label={t.save}
-                      variant="contained"
-                      color="primary"
-                      className={classes.button}
-                      disabled={
-                        name === '' ||
-                        projectType === '' ||
-                        projectGroup === '' ||
-                        bcp47 === '' ||
-                        bcp47 === 'und' ||
-                        defaultFont === ''
-                      }
-                      onClick={handleSave}
-                    >
-                      {t.save}
-                      <SaveIcon className={classes.icon} />
-                    </Button>
-                  )}
-                </div>
-              )}
-          </Grid>
-        </Grid>
+                  <Button
+                    key="upload"
+                    aria-label={t.add}
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    disabled={
+                      nextOption !== NextOptions.Start ||
+                      name === '' ||
+                      projectType === '' ||
+                      projectGroup === '' ||
+                      bcp47 === '' ||
+                      bcp47 === 'und' ||
+                      defaultFont === '' ||
+                      planType === ''
+                    }
+                    onClick={handleUpload}
+                  >
+                    {t.upload}
+                    <SaveIcon className={classes.icon} />
+                  </Button>
+                  <FormControlLabel
+                    value={NextOptions.Configure}
+                    control={<Radio color="primary" />}
+                    label={t.configure}
+                  />
+                  <Button
+                    key="add"
+                    aria-label={t.add}
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    disabled={
+                      nextOption !== NextOptions.Configure ||
+                      name === '' ||
+                      projectType === '' ||
+                      projectGroup === '' ||
+                      bcp47 === '' ||
+                      bcp47 === 'und' ||
+                      defaultFont === ''
+                    }
+                    onClick={handleAdd}
+                  >
+                    {t.add}
+                    <SaveIcon className={classes.icon} />
+                  </Button>
+                </RadioGroup>
+              </FormControl>
+            ) : (
+              <Button
+                key="save"
+                aria-label={t.save}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={
+                  name === '' ||
+                  projectType === '' ||
+                  projectGroup === '' ||
+                  bcp47 === '' ||
+                  bcp47 === 'und' ||
+                  defaultFont === ''
+                }
+                onClick={handleSave}
+              >
+                {t.save}
+                <SaveIcon className={classes.icon} />
+              </Button>
+            )}
+          </div>
+        )}
         {!API_CONFIG.isApp &&
           (orgRole === 'admin' || projRole === 'admin') &&
           currentProject !== undefined && (
@@ -704,13 +684,11 @@ export function ProjectSettings(props: IProps) {
             />
           )}
       </div>
-      {deleteItem !== '' ? (
+      {deleteItem !== '' && (
         <Confirm
           yesResponse={handleDeleteConfirmed}
           noResponse={handleDeleteRefused}
         />
-      ) : (
-        <></>
       )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>

@@ -4,17 +4,21 @@ import * as Localize from 'react-localization';
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessSilTranscriber": string;
     "importProject": string;
+    "importError": string;
+    "login": string;
+};
+
+export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
     "importPending": string;
     "importComplete": string;
-    "importError": string;
     "ptfError": string;
+    "itfError": string;
     "importCreated": string;
     "projectImported": string;
     "allDataOverwritten": string;
     "neverExported": string;
     "lastExported": string;
     "exportedLost": string;
-    "login": string;
 };
 
 export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
@@ -221,6 +225,8 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
+    "mediaAttached": string;
+    "mediaDetached": string;
     "attachAvailableMedia": string;
     "attachMediaToPassages": string;
     "choosePassage": string;
@@ -252,6 +258,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projectSummary": string;
     "addProject": string;
     "export": string;
+    "import": string;
     "loadingTable": string;
     "logout": string;
     "myAccount": string;
@@ -259,6 +266,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "projRole": string;
     "owner": string;
     "clearCache": string;
+    "inviteError": string;
+    "deletedInvitation": string;
     "helpCenter": string;
     "reportIssue": string;
     "developer": string;
@@ -268,6 +277,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "newOrganization": string;
     "admin": string;
     "transcribe": string;
+    "switchTo": string;
     "switchToAdmin": string;
     "switchToApp": string;
     "crashMessage": string;
@@ -278,6 +288,19 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "exit": string;
     "continue": string;
     "myWorkbench": string;
+};
+
+export interface IImportStrings extends Localize.LocalizedStringsMethods {
+    "import": string;
+    "importProject": string;
+    "expiredToken": string;
+    "error": string;
+    "onlineChangeReport": string;
+    "noFile": string;
+    "importPending": string;
+    "invalidITF": string;
+    "invalidProject": string;
+    "importComplete": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
@@ -291,7 +314,12 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "elan": string;
     "export": string;
     "exportProject": string;
-    "exportError": string;
+    "exportType": string;
+    "exportExplanation": string;
+    "exportPTFtype": string;
+    "exportITFtype": string;
+    "exportingProject": string;
+    "error": string;
     "downloadComplete": string;
     "expiredToken": string;
 };
@@ -410,8 +438,11 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "allusersgroup": string;
     "groups": string;
     "group": string;
+    "allUsersProjects": string;
     "additionalgroup": string;
     "groupRole": string;
+    "otherGroupProjects": string;
+    "noProjects": string;
     "selectGroupRole": string;
     "cancel": string;
     "send": string;
@@ -463,7 +494,11 @@ export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "title": string;
+    "PTFtitle": string;
+    "ITFtitle": string;
     "task": string;
+    "PTFtask": string;
+    "ITFtask": string;
     "dragDrop": string;
     "cancel": string;
     "upload": string;
@@ -491,7 +526,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "loadingTable": string;
     "title": string;
     "description": string;
-    "duration": string;
+    "showHide": string;
 };
 
 export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
@@ -507,6 +542,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "expiredParatextToken": string;
     "invalidParatextLogin": string;
     "questionOnline": string;
+    "questionInstalled": string;
     "yes": string;
     "no": string;
     "questionProject": string;
@@ -522,6 +558,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "countError": string;
     "countReady": string;
     "paratext": string;
+    "paratextLocal": string;
     "render": string;
     "onestory": string;
 };
@@ -606,12 +643,17 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "needsNewRecording": string;
     "incomplete": string;
     "needsNewTranscription": string;
-    "inProgress": string;
+    "transcribing": string;
+    "reviewing": string;
     "transcribe": string;
     "review": string;
     "sync": string;
     "done": string;
     "section": string;
+    "assign": string;
+    "unassign": string;
+    "transcriber": string;
+    "reviewer": string;
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
@@ -624,6 +666,7 @@ export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
 	access: IAccessStrings;
+	electronImport: IElectronImportStrings;
 	snackbar: ISnackbarStrings;
 	usertable: IUsertableStrings;
 	alert: IAlertStrings;
@@ -640,6 +683,7 @@ export interface ILocalizedStrings {
 	mediaTab: IMediaTabStrings;
 	passageMedia: IPassageMediaStrings;
 	main: IMainStrings;
+	import: IImportStrings;
 	transcriptionTab: ITranscriptionTabStrings;
 	transcriptionShow: ITranscriptionShowStrings;
 	groupTabs: IGroupTabsStrings;

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
 import {
   IState,
   Passage,
-  PassageSection,
   Section,
   User,
   ITranscriptionTabStrings,
@@ -23,7 +21,15 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, IconButton } from '@material-ui/core';
+import {
+  Button,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import SoundIcon from '@material-ui/icons/Audiotrack';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -42,17 +48,13 @@ import {
 } from '../utils/section';
 import { passageCompare, passageDescription } from '../utils/passage';
 import {
-  updateXml,
   getMediaRec,
-  getMediaLang,
-  getMediaName,
+  getMediaEaf,
   remoteId,
   related,
   remoteIdNum,
+  getMediaName,
 } from '../utils';
-import eaf from './TranscriptionEaf';
-let Encoder = require('node-html-encoder').Encoder;
-let encoder = new Encoder('numerical');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -113,33 +115,26 @@ const getSection = (section: Section) => {
 };
 
 /* build the passage name = sequence + book + reference */
-const getReference = (passage: Passage[]) => {
-  if (passage.length === 0) return '';
-  return passageDescription(passage[0]);
+const getReference = (passage: Passage) => {
+  return passageDescription(passage);
 };
 
 const getAssignments = (
   projectPlans: Plan[],
   passages: Array<Passage>,
-  passageSections: Array<PassageSection>,
   sections: Array<Section>,
   users: Array<User>,
   activityState: IActivityStateStrings
 ) => {
-  function passageSectionCompare(a: PassageSection, b: PassageSection) {
-    const pa = passages.filter(p => p.id === related(a, 'passage'));
-    const pb = passages.filter(p => p.id === related(b, 'passage'));
-    return passageCompare(pa[0], pb[0]);
-  }
   const rowData: IRow[] = [];
   projectPlans.forEach(planRec => {
     sections
       .filter(s => related(s, 'plan') === planRec.id && s.attributes)
       .sort(sectionCompare)
       .forEach(section => {
-        const sectionps = passageSections
+        const sectionpassages = passages
           .filter(ps => related(ps, 'section') === section.id)
-          .sort(passageSectionCompare);
+          .sort(passageCompare);
         rowData.push({
           id: section.id,
           name: getSection(section),
@@ -147,28 +142,24 @@ const getAssignments = (
           planName: planRec.attributes.name,
           reviewer: sectionReviewerName(section, users),
           transcriber: sectionTranscriberName(section, users),
-          passages: sectionps.length.toString(),
+          passages: sectionpassages.length.toString(),
           action: '',
           parentId: '',
         });
-        sectionps.forEach((ps: PassageSection) => {
-          const passageId = related(ps, 'passage');
-          const passage = passages.filter(p => p.id === passageId);
+        sectionpassages.forEach((passage: Passage) => {
           const state =
-            passage.length > 0 &&
-            passage[0].attributes &&
-            passage[0].attributes.state
-              ? activityState.getString(passage[0].attributes.state)
+            passage.attributes && passage.attributes.state
+              ? activityState.getString(passage.attributes.state)
               : '';
           rowData.push({
-            id: passageId,
+            id: passage.id,
             name: getReference(passage),
             state: state,
             planName: planRec.attributes.name,
             reviewer: '',
             transcriber: '',
             passages: '',
-            action: passageId,
+            action: passage.id,
             parentId: section.id,
           } as IRow);
         });
@@ -184,7 +175,7 @@ interface IStateProps {
   hasUrl: boolean;
   mediaUrl: string;
   exportFile: FileResponse;
-  exportStatus: IAxiosStatus;
+  exportStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
@@ -195,7 +186,6 @@ interface IDispatchProps {
 
 interface IRecordProps {
   passages: Array<Passage>;
-  passageSections: Array<PassageSection>;
   sections: Array<Section>;
   users: Array<User>;
   roles: Array<Role>;
@@ -218,7 +208,6 @@ export function TranscriptionTab(props: IProps) {
     activityState,
     t,
     passages,
-    passageSections,
     sections,
     users,
     roles,
@@ -233,11 +222,14 @@ export function TranscriptionTab(props: IProps) {
     exportFile,
   } = props;
   const classes = useStyles();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [offline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
+  const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
@@ -250,6 +242,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportUrl, setExportUrl] = useState();
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
+  const [user] = useGlobal('user');
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -272,6 +265,7 @@ export function TranscriptionTab(props: IProps) {
     string[]
   >([]);
   const [filter, setFilter] = useState(false);
+  const isElectron = process.env.REACT_APP_MODE === 'electron';
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -283,13 +277,21 @@ export function TranscriptionTab(props: IProps) {
 
     return err.errMsg;
   };
-  const handleProjectExport = () => {
+  const doProjectExport = (exportType: string) => {
     exportProject(
+      exportType,
+      memory,
       remoteIdNum('project', project, keyMap),
+      remoteIdNum('user', user, keyMap),
       auth,
-      'exporting project'
+      t.exportingProject
     );
   };
+  const handleProjectExport = () => {
+    if (isElectron) setOpenExport(true);
+    else doProjectExport('ptf');
+  };
+
   const handleSelect = (passageId: string) => () => {
     setPassageId(passageId);
   };
@@ -308,48 +310,9 @@ export function TranscriptionTab(props: IProps) {
 
   const handleEaf = (passageId: string) => () => {
     const mediaRec = getMediaRec(passageId, memory);
-    const mediaAttr = mediaRec && mediaRec.attributes;
-    const transcription =
-      mediaAttr && mediaAttr.transcription ? mediaAttr.transcription : '';
-    const encTranscript = encoder
-      .htmlEncode(transcription)
-      .replace(/\([0-9]{1,2}:[0-9]{2}(:[0-9]{2})?\)/g, '');
-    const durationNum = mediaAttr && mediaAttr.duration;
-    const duration = durationNum ? (durationNum * 1000).toString() : '0';
-    const lang = getMediaLang(mediaRec, memory);
+    if (!mediaRec) return;
+    const eafCode = btoa(getMediaEaf(mediaRec, memory));
     const name = getMediaName(mediaRec, memory);
-    const mime = mediaAttr && mediaAttr.contentType;
-    const ext = /mpeg/.test(mime ? mime : '') ? '.mp3' : '.wav';
-    const audioUrl = mediaAttr && mediaAttr.audioUrl;
-    const audioBase = audioUrl && audioUrl.split('?')[0];
-    const audioName = audioBase && audioBase.split('/').pop();
-
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(eaf(), 'text/xml');
-    updateXml('@DATE', xmlDoc, moment().format('YYYY-MM-DDTHH:MM:SSZ'));
-    // updateXml("*[local-name()='ANNOTATION_VALUE']", xmlDoc, encTranscript);
-    updateXml('@DEFAULT_LOCALE', xmlDoc, lang ? lang : 'en');
-    updateXml('@LANGUAGE_CODE', xmlDoc, lang ? lang : 'en');
-    updateXml("*[@TIME_SLOT_ID='ts2']/@TIME_VALUE", xmlDoc, duration);
-    updateXml('@MEDIA_FILE', xmlDoc, audioName ? audioName : name + ext);
-    updateXml('@MEDIA_URL', xmlDoc, audioName ? audioName : name + ext);
-    updateXml('@MIME_TYPE', xmlDoc, mime ? mime : 'audio/*');
-    const annotationValue = 'ANNOTATION_VALUE';
-    const serializer = new XMLSerializer();
-    const eafCode = btoa(
-      serializer
-        .serializeToString(xmlDoc)
-        .replace(
-          '<' + annotationValue + '/>',
-          '<' +
-            annotationValue +
-            '>' +
-            encTranscript +
-            '</' +
-            annotationValue +
-            '>'
-        )
-    );
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
     handleAudioFn(passageId);
@@ -393,6 +356,7 @@ export function TranscriptionTab(props: IProps) {
         showMessage(t.exportProject, exportName + ' ' + t.downloadComplete);
         setExportName('');
         exportComplete();
+        setBusy(false);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -401,12 +365,15 @@ export function TranscriptionTab(props: IProps) {
   useEffect(() => {
     if (exportStatus) {
       if (exportStatus.errStatus) {
-        showMessage(t.exportError, translateError(exportStatus));
+        showMessage(t.error, translateError(exportStatus));
+        exportComplete();
+        setBusy(false);
       } else {
         if (exportStatus.statusMsg) {
-          showMessage(t.exportProject, exportStatus.statusMsg);
+          setBusy(true);
+          showMessage('', exportStatus.statusMsg);
         }
-        if (exportStatus.complete && exportName === '') {
+        if (exportStatus.complete && exportFile && exportName === '') {
           setExportName(exportFile.data.attributes.message);
           setExportUrl(exportFile.data.attributes.fileurl);
         }
@@ -445,25 +412,9 @@ export function TranscriptionTab(props: IProps) {
 
   useEffect(() => {
     setData(
-      getAssignments(
-        projectPlans,
-        passages,
-        passageSections,
-        sections,
-        users,
-        activityState
-      )
+      getAssignments(projectPlans, passages, sections, users, activityState)
     );
-  }, [
-    plan,
-    projectPlans,
-    passages,
-    passageSections,
-    sections,
-    users,
-    roles,
-    activityState,
-  ]);
+  }, [plan, projectPlans, passages, sections, users, roles, activityState]);
 
   interface ICell {
     value: string;
@@ -551,6 +502,45 @@ export function TranscriptionTab(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
+  const WhichExportDlg = () => {
+    const doPTF = () => {
+      setOpenExport(false);
+      doProjectExport('ptf');
+    };
+    const doITF = () => {
+      setOpenExport(false);
+      doProjectExport('itf');
+    };
+    const closeNoChoice = () => setOpenExport(false);
+
+    return (
+      <Dialog
+        open={openExport}
+        onClose={closeNoChoice}
+        aria-labelledby="which-export-title"
+        aria-describedby="which-export-description"
+      >
+        <DialogTitle id="which-export-title">
+          {'Which export type?'}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Export a full backup to store locally. Export incremental file to
+            import into online app.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={doPTF} color="primary">
+            Full Backup (ptf)
+          </Button>
+          <Button onClick={doITF} color="primary" autoFocus>
+            Incremental Changes (itf)
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
   return (
     <div id="TranscriptionTab" className={classes.container}>
       <div className={classes.paper}>
@@ -634,7 +624,8 @@ export function TranscriptionTab(props: IProps) {
         target="_blank"
         rel="noopener noreferrer"
       />
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
+      <WhichExportDlg />
+      <SnackBar message={message} reset={handleMessageReset} />
     </div>
   );
 }
@@ -654,6 +645,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchMediaUrl: actions.fetchMediaUrl,
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
+      importProjectFromElectron: actions.importProjectFromElectron,
+      importComplete: actions.importComplete,
     },
     dispatch
   ),
@@ -661,7 +654,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   users: (q: QueryBuilder) => q.findRecords('user'),
   roles: (q: QueryBuilder) => q.findRecords('role'),

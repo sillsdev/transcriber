@@ -6,7 +6,7 @@ import AdmZip from 'adm-zip';
 import MemorySource from '@orbit/memory';
 import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
-import { Project, IAccessStrings } from '../model';
+import { Project, IElectronImportStrings } from '../model';
 import { isArray } from 'util';
 import { remoteIdGuid } from '../utils';
 import moment, { Moment } from 'moment';
@@ -14,6 +14,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { OfflineDataPath } from '../utils/offlineDataPath';
 import fs from 'fs';
 import path from 'path';
+import { OpenDialogSyncOptions } from 'electron';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 
@@ -25,7 +26,7 @@ export interface IImportData {
 }
 export var getElectronImportData = (
   memory: MemorySource,
-  t: IAccessStrings
+  t: IElectronImportStrings
 ): IImportData => {
   return {
     valid: false,
@@ -34,25 +35,26 @@ export var getElectronImportData = (
     zip: null,
   };
 };
+
 export var handleElectronImport = (
   memory: MemorySource,
   backup: IndexedDBSource,
   zip: AdmZip | null,
-  importProject: typeof action.importProject,
-  t: IAccessStrings
+  importProject: typeof action.importProjectToElectron,
+  t: IElectronImportStrings
 ): void => {};
 
 if (isElectron) {
   getElectronImportData = (
     memory: MemorySource,
-    t: IAccessStrings
+    t: IElectronImportStrings
   ): IImportData => {
     var electron = require('electron');
     const options = {
       //: OpenDialogSyncOptions
-      filters: [{ name: 'zip', extensions: ['zip'] }],
+      filters: [{ name: 'ptf', extensions: ['ptf'] }],
       properties: ['openFile'],
-    };
+    } as OpenDialogSyncOptions;
     const filePaths = electron.remote.dialog.showOpenDialogSync(options);
     if (!filePaths || filePaths.length === 0) {
       //they didn't pick a file
@@ -112,37 +114,40 @@ if (isElectron) {
                     moment.utc(proj.attributes.dateImported).toLocaleString()
                   ) +
                 '  ' +
-                t.allDataOverwritten;
+                t.allDataOverwritten.replace('{name0}', p.attributes.name);
             }
             //has our current data never been exported, or exported after incoming?
             if (!proj.attributes.dateExported) {
               ret.warnMsg +=
                 t.neverExported.replace('{name0}', p.attributes.name) +
                 '  ' +
-                t.allDataOverwritten;
-            } else if (moment.utc(proj.attributes.dateExported) > exportTime) {
-              ret.warnMsg +=
-                t.importCreated.replace(
-                  '{date0}',
-                  exportTime.toLocaleString()
-                ) +
-                ' ' +
-                t.lastExported
-                  .replace('{name0}', p.attributes.name)
-                  .replace(
+                t.allDataOverwritten.replace('{name0}', p.attributes.name);
+            } else {
+              var myLastExport = moment.utc(proj.attributes.dateExported);
+              if (myLastExport > exportTime) {
+                console.log(exportTime.toLocaleString());
+                console.log(myLastExport.toLocaleString());
+                ret.warnMsg +=
+                  t.importCreated.replace(
                     '{date0}',
-                    moment.utc(proj.attributes.dateExported).toLocaleString
+                    exportTime.toLocaleString()
                   ) +
-                '  ' +
-                t.exportedLost;
+                  ' ' +
+                  t.lastExported
+                    .replace('{name0}', p.attributes.name)
+                    .replace('{date0}', myLastExport.toLocaleString()) +
+                  '  ' +
+                  t.exportedLost;
+              }
             }
           }
         });
-        if (ret.warnMsg === '') {
+        if (ret.warnMsg === '' && projectNames !== '') {
           //general warning
-          ret.warnMsg =
-            projectNames.substring(0, projectNames.length - 1) +
-            ' data will be overwritten.';
+          ret.warnMsg = t.allDataOverwritten.replace(
+            '{name0}',
+            projectNames.substring(0, projectNames.length - 1)
+          );
         }
       }
     }
@@ -153,8 +158,8 @@ if (isElectron) {
     memory: MemorySource,
     backup: IndexedDBSource,
     zip: AdmZip | null,
-    importProject: typeof action.importProject,
-    t: IAccessStrings
+    importProject: typeof action.importProjectToElectron,
+    t: IElectronImportStrings
   ): void => {
     if (zip) {
       const where = OfflineDataPath();

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import {
   IState,
   Passage,
-  PassageSection,
   Section,
   User,
   IAssignmentTableStrings,
@@ -76,16 +75,10 @@ const getChildRows = (row: any, rootRows: any[]) => {
 const getAssignments = (
   plan: string,
   passages: Array<Passage>,
-  passageSections: Array<PassageSection>,
   sections: Array<Section>,
   users: Array<User>,
   activityState: IActivityStateStrings
 ) => {
-  function passageSectionCompare(a: PassageSection, b: PassageSection) {
-    const pa = passages.filter(p => p.id === related(a, 'passage'));
-    const pb = passages.filter(p => p.id === related(b, 'passage'));
-    return passageCompare(pa[0], pb[0]);
-  }
   let sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
@@ -103,20 +96,17 @@ const getAssignments = (
       parentId: '',
     };
     rowData.push(sectionRow);
-    //const passageSections: PassageSection[] = related(section, 'passages');
-    const sectionps = passageSections
-      .filter(ps => related(ps, 'section') === section.id)
-      .sort(passageSectionCompare);
+    const sectionps = passages
+      .filter(p => related(p, 'section') === section.id)
+      .sort(passageCompare);
     sectionRow.passages = sectionps.length.toString();
-    sectionps.forEach(function(ps: PassageSection) {
-      const passageId = related(ps, 'passage');
-      const passage = passages.filter(p => p.id === passageId);
-      const state = passage[0].attributes
-        ? activityState.getString(passage[0].attributes.state)
+    sectionps.forEach(function(passage: Passage) {
+      const state = passage.attributes
+        ? activityState.getString(passage.attributes.state)
         : '';
       rowData.push({
-        id: passageId,
-        name: passage.length > 0 ? passageDescription(passage[0]) : '',
+        id: passage.id,
+        name: passageDescription(passage),
         state: state,
         reviewer: '',
         transcriber: '',
@@ -135,7 +125,6 @@ interface IStateProps {
 
 interface IRecordProps {
   passages: Array<Passage>;
-  passageSections: Array<PassageSection>;
   sections: Array<Section>;
   users: Array<User>;
   roles: Array<Role>;
@@ -147,15 +136,7 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function AssignmentTable(props: IProps) {
-  const {
-    activityState,
-    t,
-    passages,
-    passageSections,
-    sections,
-    users,
-    roles,
-  } = props;
+  const { activityState, t, passages, sections, users, roles } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -250,17 +231,8 @@ export function AssignmentTable(props: IProps) {
   const handleFilter = () => setFilter(!filter);
 
   useEffect(() => {
-    setData(
-      getAssignments(
-        plan,
-        passages,
-        passageSections,
-        sections,
-        users,
-        activityState
-      )
-    );
-  }, [plan, passages, passageSections, sections, users, roles, activityState]);
+    setData(getAssignments(plan, passages, sections, users, activityState));
+  }, [plan, passages, sections, users, roles, activityState]);
 
   return (
     <div id="AssignmentTable" className={classes.container}>
@@ -358,7 +330,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   users: (q: QueryBuilder) => q.findRecords('user'),
   roles: (q: QueryBuilder) => q.findRecords('role'),

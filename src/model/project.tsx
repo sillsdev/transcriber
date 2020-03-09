@@ -13,9 +13,9 @@ export interface Project extends Record {
     rtl: boolean;
     allowClaim: boolean;
     isPublic: boolean;
-    dateCreated: string | null;
-    dateUpdated: string | null;
-    dateArchived: string | null;
+    dateCreated: string;
+    dateUpdated: string;
+    dateArchived: string;
     lastModifiedBy: number;
     dateExported: string | null;
     dateImported: string | null;

@@ -1,21 +1,18 @@
-import {
-  Record,
-  RecordRelationship,
-  RecordHasManyRelationship,
-} from '@orbit/data';
-import { ActivityStates } from '.';
+import { RecordRelationship, RecordHasManyRelationship } from '@orbit/data';
+import { BaseModel } from './baseModel';
 
-export interface Passage extends Record {
+export interface Passage extends BaseModel {
   attributes: {
     sequencenum: number;
     book: string;
     reference: string;
-    state: ActivityStates;
+    state: string; //ActivityStates
     hold: boolean;
     title: string;
     lastComment: string;
-    dateCreated: string | null;
-    dateUpdated: string | null;
+    dateCreated: string;
+    dateUpdated: string;
+    lastModifiedBy: number;
   };
   relationships?: {
     sections: RecordHasManyRelationship;

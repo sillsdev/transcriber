@@ -52,7 +52,7 @@ export const fetchOrbitData = (
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
   setCompleted: (value: number) => void,
-  InviteUser: (remote: JSONAPISource) => Promise<void>
+  InviteUser: (remote: JSONAPISource, email: string) => Promise<void>
 ) => (dispatch: any) => {
   Sources(
     schema,

@@ -103,26 +103,13 @@ const addPassageToSection = async (sectionId: string) => {
     },
   } as any;
   schema.initializeRecord(passage);
-  await memory.update(t => t.addRecord(passage));
-  const passageSection = {
-    type: 'passagesection',
-  } as any;
-  schema.initializeRecord(passageSection);
-  await memory.update(t => t.addRecord(passageSection));
-  await memory.update(t =>
-    t.replaceRelatedRecord(
-      { type: 'passagesection', id: passageSection.id },
-      'section',
-      { type: 'section', id: sectionId }
-    )
-  );
-  await memory.update(t =>
-    t.replaceRelatedRecord(
-      { type: 'passagesection', id: passageSection.id },
-      'passage',
-      { type: 'passage', id: passage.id }
-    )
-  );
+  await memory.update(t => [
+    t.addRecord(passage),
+    t.replaceRelatedRecord({ type: 'passage', id: passage.id }, 'section', {
+      type: 'section',
+      id: sectionId,
+    }),
+  ]);
   return passage.id;
 };
 

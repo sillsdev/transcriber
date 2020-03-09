@@ -55,6 +55,7 @@ import PlanIcon from '@material-ui/icons/WidgetsTwoTone';
 import MediaIcon from '@material-ui/icons/AudiotrackTwoTone';
 import IntegrationIcon from '@material-ui/icons/PowerTwoTone';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
+import UploadIcon from '@material-ui/icons/CloudUpload';
 import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
@@ -68,6 +69,7 @@ import LazyLoad from '../hoc/LazyLoad';
 import PlanTabs from '../components/PlanTabs';
 import MediaTab from '../components/MediaTab';
 import TranscriptionTab from '../components/TranscriptionTab';
+import ImportTab from '../components/ImportTab';
 import Team from '../components/GroupSettings/Team';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
@@ -80,12 +82,12 @@ import Busy from '../components/Busy';
 import SnackBar from '../components/SnackBar';
 import {
   related,
-  hasRelated,
   slug,
   deepLink,
   remoteId,
   remoteIdGuid,
   makeAbbr,
+  Online,
 } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -94,6 +96,10 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 import path from 'path';
 import { OfflineDataPath } from '../utils/offlineDataPath';
+
+const isElectron = process.env.REACT_APP_MODE === 'electron';
+const noop = { openExternal: () => {} };
+const { shell } = isElectron ? require('electron') : { shell: noop };
 
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
@@ -155,6 +161,9 @@ const useStyles = makeStyles((theme: Theme) =>
     drawerPaper: {
       width: DrawerWidth,
     },
+    appName: {
+      lineHeight: 0,
+    },
     content: {
       flexGrow: 1,
       paddingTop: theme.spacing(10),
@@ -187,6 +196,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logo: {
       paddingRight: theme.spacing(2),
+      height: '48px',
+      width: '64px',
     },
     panel2: {
       display: 'flex',
@@ -218,7 +229,7 @@ const useStyles = makeStyles((theme: Theme) =>
     navButton: {
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center',
+      alignItems: 'center',
     },
   })
 );
@@ -277,8 +288,10 @@ export function ResponsiveDrawer(props: IProps) {
   const [schema] = useGlobal('schema');
   const [user] = useGlobal('user');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const [importexportBusy] = useGlobal('importexportBusy');
   const [organization, setOrganization] = useGlobal('organization');
-  const [offline] = useGlobal('offline');
+  const [offline] = useGlobal('offline'); // true if Electron
+  const [online, setOnline] = useState(false); // true if Internet
   const [orgRole, setOrgRole] = useGlobal('orgRole');
   const [group, setGroup] = useGlobal('group');
   const [project, setProject] = useGlobal('project');
@@ -437,6 +450,11 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleUserMenuAction = (what: string) => {
+    if (isElectron && /logout/i.test(what)) {
+      localStorage.removeItem('user-id');
+      setView('Access');
+      return;
+    }
     localStorage.setItem('url', history.location.pathname);
     if (!/Close/i.test(what)) {
       if (/Clear/i.test(what)) {
@@ -445,6 +463,8 @@ export function ResponsiveDrawer(props: IProps) {
       setView(what);
     }
   };
+
+  const handleAdmin = (where: string) => () => shell.openExternal(where);
 
   const checkSavedEv = (method: () => any) => () => {
     checkSavedFn(method);
@@ -488,20 +508,41 @@ export function ResponsiveDrawer(props: IProps) {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getOrgs = async () => {
-    return (await memory.query((q: QueryBuilder) =>
+    //on desktop orgmems might have more than just current user
+    var orgs: Organization[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('organization')
-    )) as Organization[];
+    );
+    if (isElectron)
+      orgs = orgs.filter(o =>
+        organizationMemberships
+          .filter(om => related(om, 'user') === user)
+          .map(om => related(om, 'organization'))
+          .includes(o.id)
+      );
+    return orgs;
   };
   const getProjs = async () => {
-    return (await memory.query((q: QueryBuilder) =>
+    var projs: Project[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('project')
-    )) as Project[];
+    );
+    if (isElectron) {
+      const groupids = groupMemberships
+        .filter(gm => related(gm, 'user') === user)
+        .map(gm => related(gm, 'group'));
+
+      projs = projs.filter(p => groupids.includes(related(p, 'group')));
+    }
+    return projs;
   };
+
+  useEffect(() => {
+    Online(val => setOnline(val));
+  }, []);
 
   useEffect(() => {
     getOrgs().then(organizations => {
       const orgOpts = organizations
-        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .filter(o => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
         .map((o: Organization) => {
           return {
@@ -527,7 +568,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, user]);
+  }, [organization, user, organizationMemberships]);
 
   useEffect(() => {
     if (orgOptions) {
@@ -728,6 +769,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
+  if (view === 'Access') return <Redirect to="/" />;
 
   // When the user uses the back button or directly naviagets to a page
   if (history.action === 'POP') {
@@ -834,6 +876,7 @@ export function ResponsiveDrawer(props: IProps) {
   const projectIcons = [
     <SettingsIcon />,
     <DownloadIcon />,
+    <UploadIcon />,
     <IntegrationIcon />,
   ];
 
@@ -855,6 +898,7 @@ export function ResponsiveDrawer(props: IProps) {
           {!mini && (
             <div className={classes.select}>
               <ReactSelect
+                key="orgs"
                 suggestions={orgOptions}
                 current={curOrg}
                 onCommit={(v: string, e: any, callback: () => void) =>
@@ -876,7 +920,7 @@ export function ResponsiveDrawer(props: IProps) {
               ? [t.organization]
               : [t.usersAndGroups, t.organization]
             ).map((text, index) => (
-              <Tooltip title={text}>
+              <Tooltip key={text} title={text}>
                 <ListItem
                   button
                   key={text}
@@ -914,6 +958,7 @@ export function ResponsiveDrawer(props: IProps) {
                 <div className={classes.contained}>
                   <div className={classes.select}>
                     <ReactSelect
+                      key="projects"
                       suggestions={projOptions}
                       current={curProj}
                       onCommit={(v: string, e: any, callback: () => void) =>
@@ -933,7 +978,7 @@ export function ResponsiveDrawer(props: IProps) {
               ? [t.tasks]
               : [t.plans, t.team, t.media, t.reports]
             ).map((text, index) => (
-              <Tooltip title={text}>
+              <Tooltip key={text} title={text}>
                 <ListItem
                   button
                   key={text}
@@ -949,20 +994,22 @@ export function ResponsiveDrawer(props: IProps) {
           </List>
           <Divider />
           <List>
-            {[t.settings, t.export, t.integrations].map((text, index) => (
-              <Tooltip title={text}>
-                <ListItem
-                  button
-                  key={text}
-                  selected={slug(text) === choice}
-                  onClick={checkSavedEv(() => handleChoice(text))}
-                  disabled={curProj === null}
-                >
-                  <ListItemIcon>{projectIcons[index]}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
-              </Tooltip>
-            ))}
+            {[t.settings, t.export, t.import, t.integrations].map(
+              (text, index) => (
+                <Tooltip key={text} title={text}>
+                  <ListItem
+                    button
+                    key={text}
+                    selected={slug(text) === choice}
+                    onClick={checkSavedEv(() => handleChoice(text))}
+                    disabled={curProj === null}
+                  >
+                    <ListItemIcon>{projectIcons[index]}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                </Tooltip>
+              )
+            )}
           </List>
         </>
       )}
@@ -996,6 +1043,7 @@ export function ResponsiveDrawer(props: IProps) {
       planColumn={true}
     />
   );
+  components[slug(t.import)] = <ImportTab {...props} />;
   components[slug(t.plans)] = (
     <PlanTable {...props} displaySet={handlePlanType} />
   );
@@ -1092,12 +1140,20 @@ export function ResponsiveDrawer(props: IProps) {
             <MenuIcon />
           </IconButton>
           <img src={logo} className={classes.logo} alt="logo" />
-          <Typography variant="h6" noWrap>
-            {title}
-          </Typography>
+          <div>
+            <Typography variant="overline" className={classes.appName}>
+              {API_CONFIG.isApp ? t.transcribe : t.admin}
+            </Typography>
+            <br />
+            <Typography variant="h6" noWrap>
+              {title}
+            </Typography>
+          </div>
           <div className={classes.grow}>{'\u00A0'}</div>
+
           {!API_CONFIG.isApp ? (
             <div className={classes.navButton}>
+              <Typography>{t.switchTo + '\u00A0'}</Typography>
               <a
                 href={transcribe ? swapTarget : ''}
                 style={{ textDecoration: 'none' }}
@@ -1112,18 +1168,31 @@ export function ResponsiveDrawer(props: IProps) {
                 </Button>
               </a>
             </div>
+          ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
+            <div className={classes.navButton}>
+              <Typography>{t.switchTo + '\u00A0'}</Typography>
+              <a
+                href={swapTarget}
+                style={{ textDecoration: 'none' }}
+                title={t.switchToAdmin}
+              >
+                <Button variant="contained" color="primary" disabled={busy}>
+                  {t.admin}
+                </Button>
+              </a>
+            </div>
           ) : (
-            (projRole === 'admin' || orgRole === 'admin') && (
+            isElectron &&
+            online && (
               <div className={classes.navButton}>
-                <a
-                  href={swapTarget}
-                  style={{ textDecoration: 'none' }}
-                  title={t.switchToAdmin}
+                <Typography>{t.switchTo + '\u00A0'}</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAdmin(swapTarget)}
                 >
-                  <Button variant="contained" color="primary" disabled={busy}>
-                    {t.admin}
-                  </Button>
-                </a>
+                  {t.admin}
+                </Button>
               </div>
             )
           )}
@@ -1177,7 +1246,7 @@ export function ResponsiveDrawer(props: IProps) {
         </Hidden>
       </nav>
       <main className={classes.content}>
-        {!busy || (
+        {(!busy && !importexportBusy) || (
           <div className={classes.progress}>
             <LinearProgress variant="indeterminate" />
           </div>

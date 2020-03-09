@@ -13,11 +13,12 @@ import {
   Role,
   Group,
   GroupMembership,
+  Invitation,
 } from '../model';
 import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   withStyles,
   makeStyles,
@@ -44,12 +45,15 @@ import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { remoteId, makeAbbr, uiLang, related } from '../utils';
+import { remoteId, makeAbbr, uiLang, related, remoteIdNum } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
+import { UpdateRecord } from '../model/baseModel';
+import { currentDateTime } from '../utils/currentDateTime';
+const isElectron = process.env.REACT_APP_MODE === 'electron';
 
 interface ILangDes {
   type: string;
@@ -268,6 +272,11 @@ export function Profile(props: IProps) {
   const handleMessageReset = () => setMessage(<></>);
 
   const handleUserMenuAction = (what: string) => {
+    if (isElectron && /logout/i.test(what)) {
+      localStorage.removeItem('user-id');
+      setView('Access');
+      return;
+    }
     if (!/Close/i.test(what)) {
       if (/Clear/i.test(what)) {
         bucket.setItem('remote-requests', []);
@@ -279,29 +288,36 @@ export function Profile(props: IProps) {
   const handleSave = () => {
     if (changed) {
       memory.update((t: TransformBuilder) => [
-        t.updateRecord({
-          type: 'user',
-          id: currentUser === undefined ? user : currentUser.id, //currentuser will not be undefined here
-          attributes: {
-            name,
-            givenName: given,
-            familyName: family,
-            email,
-            phone,
-            timezone,
-            locale,
-            isLocked: locked,
-            uilanguagebcp47: bcp47,
-            timercountUp: timerDir,
-            playbackSpeed: speed,
-            progressbarTypeid: progBar,
-            digestPreference: digest,
-            newsPreference: news,
-            hotKeys,
-            avatarUrl,
-            dateUpdated: new Date().toISOString(),
-          },
-        }),
+        UpdateRecord(
+          t,
+          {
+            type: 'user',
+            id: currentUser === undefined ? user : currentUser.id, //currentuser will not be undefined here
+            attributes: {
+              name,
+              givenName: given,
+              familyName: family,
+              email,
+              phone,
+              timezone,
+              locale,
+              isLocked: locked,
+              uilanguagebcp47: bcp47,
+              timercountUp: timerDir,
+              playbackSpeed: speed,
+              progressbarTypeid: progBar,
+              digestPreference: digest,
+              newsPreference: news,
+              hotKeys,
+              avatarUrl,
+            },
+          } as User,
+          remoteIdNum(
+            'user',
+            currentUser !== undefined ? currentUser.id : '',
+            keyMap
+          )
+        ),
         // we aren't allowing them to change owner oraganization currently
       ]);
       setLanguage(locale);
@@ -391,8 +407,8 @@ export function Profile(props: IProps) {
           newsPreference: news,
           hotKeys,
           avatarUrl,
-          dateCreated: new Date().toISOString(),
-          dateUpdated: null,
+          dateCreated: currentDateTime(),
+          dateUpdated: currentDateTime(),
           lastModifiedBy: remoteId('user', user, keyMap),
         },
       } as any;
@@ -419,10 +435,22 @@ export function Profile(props: IProps) {
   const handleDelete = () => {
     if (currentUser) setDeleteItem(currentUser.id);
   };
-  const handleDeleteConfirmed = () => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({ type: 'user', id: deleteItem })
+  const handleDeleteConfirmed = async () => {
+    const tb: TransformBuilder = new TransformBuilder();
+    const ops: Operation[] = [];
+    const current = users.filter(u => u.id === deleteItem)[0];
+    /* delete any invitations for this user
+    so they can't rejoin orgs without a new invite */
+    const invites: Invitation[] = memory.cache.query((q: QueryBuilder) =>
+      q
+        .findRecords('invitation')
+        .filter({ attribute: 'email', value: current.attributes.email })
+    ) as any;
+    invites.forEach(i =>
+      ops.push(tb.removeRecord({ type: 'invitation', id: i.id }))
     );
+    ops.push(tb.removeRecord({ type: 'user', id: deleteItem }));
+    await memory.update(ops);
     setView('Logout');
   };
   const handleDeleteRefused = () => {
@@ -474,9 +502,9 @@ export function Profile(props: IProps) {
         newsPreference: false,
         hotKeys,
         avatarUrl,
-        dateCreated: null,
-        dateUpdated: null,
-        lastModifiedBy: remoteId('user', user, keyMap),
+        dateCreated: currentDateTime(),
+        dateUpdated: currentDateTime(),
+        lastModifiedBy: remoteIdNum('user', user, keyMap),
       },
     };
     if (!editId || !/Add/i.test(editId)) {
@@ -519,6 +547,7 @@ export function Profile(props: IProps) {
     return <Redirect to="/" />;
   }
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
+  if (/Access/i.test(view)) return <Redirect to="/" />;
   if (/Main/i.test(view)) return <Redirect to="/main" />;
 
   return (

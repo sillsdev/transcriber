@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import {
   IState,
   Section,
-  PassageSection,
   MediaFile,
   Passage,
   IPassageMediaStrings,
@@ -12,7 +11,7 @@ import {
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Button,
@@ -33,6 +32,8 @@ import {
 import SnackBar from './SnackBar';
 import related from '../utils/related';
 import { passageRefCompare, passageReference } from '../utils/passage';
+import { remoteIdNum } from '../utils';
+import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,7 +56,6 @@ interface IStateProps {
 interface IRecordProps {
   mediaFiles: Array<MediaFile>;
   passages: Array<Passage>;
-  passageSections: Array<PassageSection>;
   sections: Array<Section>;
 }
 
@@ -65,18 +65,11 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 function PassageMedia(props: IProps) {
-  const {
-    passages,
-    mediaFiles,
-    passageSections,
-    sections,
-    t,
-    visible,
-    closeMethod,
-  } = props;
+  const { passages, mediaFiles, sections, t, visible, closeMethod } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [open, setOpen] = useState(visible);
   const [selectedPassage, setSelectedPassage] = useState('');
   const [selectedMedia, setSelectedMedia] = useState('');
@@ -92,32 +85,46 @@ function PassageMedia(props: IProps) {
     setMessage(<></>);
   };
   const attach = async (passage: string, mediaFile: string) => {
-    await memory.update((t: TransformBuilder) => [
-      t.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
+    var tb = new TransformBuilder();
+    var ops: Operation[] = [];
+    ops.push(
+      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
         type: 'passage',
         id: passage,
-      }),
-      t.replaceAttribute(
-        { type: 'passage', id: passage },
-        'state',
-        ActivityStates.TranscribeReady
-      ),
-    ]);
+      })
+    );
+    ops = UpdatePassageStateOps(
+      passage,
+      ActivityStates.TranscribeReady,
+      t.mediaAttached,
+      remoteIdNum('user', user, memory.keyMap),
+      tb,
+      ops
+    );
+    await memory.update(ops);
   };
+
   const detach = async (passage: string, mediaFile: string) => {
-    await memory.update((t: TransformBuilder) => [
-      t.replaceRelatedRecord(
+    var tb = new TransformBuilder();
+    var ops: Operation[] = [];
+    ops.push(
+      tb.replaceRelatedRecord(
         { type: 'mediafile', id: mediaFile },
         'passage',
         null
-      ),
-      t.replaceAttribute(
-        { type: 'passage', id: passage },
-        'state',
-        ActivityStates.NoMedia
-      ),
-    ]);
+      )
+    );
+    ops = UpdatePassageStateOps(
+      passage,
+      ActivityStates.NoMedia,
+      t.mediaDetached,
+      remoteIdNum('user', user, memory.keyMap),
+      tb,
+      ops
+    );
+    await memory.update(ops);
   };
+
   const handleSelectPassage = (id: string) => () => {
     if (selectedMedia !== '') {
       setSelectedPassage('');
@@ -199,12 +206,8 @@ function PassageMedia(props: IProps) {
     .filter(s => related(s, 'plan') === plan)
     .map(s => s.id);
 
-  const selectedPassageIds = passageSections
-    .filter(ps => selectedSections.indexOf(related(ps, 'section')) !== -1)
-    .map(ps => related(ps, 'passage'));
-
   const selectedPassages = passages
-    .filter(p => selectedPassageIds.indexOf(p.id) !== -1)
+    .filter(p => selectedSections.indexOf(related(p, 'section')) !== -1)
     .sort(passageRefCompare);
 
   const passageList = selectedPassages
@@ -309,7 +312,7 @@ function PassageMedia(props: IProps) {
                   <ListItem key="head">
                     {t.choosePassage.replace(
                       '{0}',
-                      selectedPassageIds.length.toString()
+                      selectedPassages.length.toString()
                     )}
                   </ListItem>
                   {passageList}
@@ -364,7 +367,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 

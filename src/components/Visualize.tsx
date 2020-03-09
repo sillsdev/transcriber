@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import {
-  IState,
-  Plan,
-  Section,
-  PassageSection,
-  Role,
-  Passage,
-  User,
-} from '../model';
+import { IState, Plan, Section, Role, Passage, User } from '../model';
 import { withData, WithDataProps } from 'react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import TreeChart, {
@@ -24,7 +16,6 @@ interface IStateProps {}
 interface IRecordProps {
   plans: Array<Plan>;
   sections: Array<Section>;
-  passageSections: Array<PassageSection>;
   roles: Array<Role>;
   passages: Array<Passage>;
   users: Array<User>;
@@ -33,7 +24,7 @@ interface IRecordProps {
 interface IProps extends IStateProps, IRecordProps, WithDataProps {}
 
 export function Visualize(props: IProps) {
-  const { plans, sections, passageSections, roles, passages, users } = props;
+  const { plans, sections, roles, passages, users } = props;
   const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
@@ -77,7 +68,7 @@ export function Visualize(props: IProps) {
       const planName = pl.attributes.name;
       const selSections = sections.filter(s => related(s, 'plan') === pl.id);
       selSections.forEach(s => {
-        const selPassages = passageSections.filter(
+        const selPassages = passages.filter(
           ps => related(ps, 'section') === s.id
         );
         let roleName = 'transcriber';
@@ -112,19 +103,14 @@ export function Visualize(props: IProps) {
             ? personTot[personKey] + selPassages.length
             : selPassages.length;
         }
-        selPassages.forEach(pa => {
-          const selPassage = passages.filter(
-            p => p.id === related(pa, 'passage')
-          );
-          if (selPassage.length > 0) {
-            const stateName = selPassage[0].attributes
-              ? selPassage[0].attributes.state
-              : '';
-            const statusKey = stateName + ':' + planName + ':' + roleName;
-            statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
-              ? statusTot[statusKey] + 1
-              : 1;
-          }
+        selPassages.forEach(selPassage => {
+          const stateName = selPassage.attributes
+            ? selPassage.attributes.state
+            : '';
+          const statusKey = stateName + ':' + planName + ':' + roleName;
+          statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
+            ? statusTot[statusKey] + 1
+            : 1;
         });
       });
     });
@@ -150,7 +136,7 @@ export function Visualize(props: IProps) {
     );
     setData1(getData(personTot));
     setData2(getData(statusTot));
-  }, [project, passageSections, passages, plans, roles, sections, users]);
+  }, [project, passages, plans, roles, sections, users]);
 
   return <TreeChart rows={rows} data1={data1} data2={data2} />;
 }
@@ -160,7 +146,6 @@ const mapStateToProps = (state: IState): IStateProps => ({});
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   users: (q: QueryBuilder) => q.findRecords('user'),

@@ -9,6 +9,7 @@ import {
   Group,
   RoleNames,
   User,
+  Project,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from 'react-orbitjs';
@@ -29,6 +30,7 @@ import {
   FormControlLabel,
   ListItem,
   ListItemText,
+  TextareaAutosize,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import {
@@ -44,7 +46,7 @@ import { AUTH_CONFIG } from '../auth/auth0-variables';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     menu: {},
-    label: {},
+    label: { marginTop: theme.spacing(1) },
     container: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -60,10 +62,10 @@ const useStyles = makeStyles((theme: Theme) =>
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      padding: 5,
       display: 'flex',
       flexGrow: 1,
     },
+    textarea: {},
   })
 );
 
@@ -75,6 +77,7 @@ interface IRecordProps {
   roles: Array<Role>;
   groups: Array<Group>;
   users: Array<User>;
+  projects: Array<Project>;
 }
 
 export interface IInviteData {
@@ -100,6 +103,7 @@ function Invite(props: IProps) {
     roles,
     groups,
     users,
+    projects,
     addCompleteMethod,
     editCompleteMethod,
     cancelMethod,
@@ -120,6 +124,8 @@ function Invite(props: IProps) {
   const [allUsersRole, setAllUsersRole] = useState('');
   const [groupsAllonly, setGroupsAllonly] = useState();
   const [groupsNoAll, setGroupsNoAll] = useState();
+  const [allUsersProjects, setAllUsersProjects] = useState('');
+  const [otherProjects, setOtherProjects] = useState('');
   const [message, setMessage] = useState(<></>);
   const [allowMultiple, setallowMultiple] = useState(false);
 
@@ -254,6 +260,16 @@ function Invite(props: IProps) {
   };
   const handleGroupChange = (e: any) => {
     setGroup(e.target.value);
+    var assocProjects = projects
+      .filter(p => related(p, 'group') === e.target.value)
+      .map(p => p.attributes.name);
+    var list = '';
+    assocProjects.forEach(p => (list += p + ', '));
+    setOtherProjects(
+      assocProjects.length > 0
+        ? list.substring(0, list.length - 2)
+        : t.noProjects
+    );
   };
   const handleGroupRoleChange = (e: any) => {
     setGroupRole(e.target.value);
@@ -291,7 +307,16 @@ function Invite(props: IProps) {
     );
     setGroupsAllonly(allusersgroup);
     setAllUsersGroup(allusersgroup.length > 0 ? allusersgroup[0].id : '');
-
+    var assocProjects = projects
+      .filter(p => related(p, 'group') === allusersgroup[0].id)
+      .map(p => p.attributes.name);
+    var list = '';
+    assocProjects.forEach(p => (list += p + ', '));
+    setAllUsersProjects(
+      assocProjects.length > 0
+        ? list.substring(0, list.length - 2)
+        : t.noProjects
+    );
     const noallgroups = groups
       .filter(
         g =>
@@ -339,6 +364,7 @@ function Invite(props: IProps) {
         open={open}
         onClose={handleCancel}
         aria-labelledby="form-dialog-title"
+        maxWidth="lg"
       >
         <DialogTitle id="form-dialog-title">
           {inviteIn ? t.editInvite : t.addInvite}
@@ -412,7 +438,7 @@ function Invite(props: IProps) {
             <Grid item xs={12}>
               <FormLabel>{t.groups}</FormLabel>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 id="select-allgroup"
                 className={classes.textField}
@@ -438,7 +464,7 @@ function Invite(props: IProps) {
                   : ''}
               </TextField>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={4}>
               <TextField
                 id="select-allusersrole"
                 className={classes.textField}
@@ -475,9 +501,16 @@ function Invite(props: IProps) {
                   ))}
               </TextField>
             </Grid>
+            <Grid item xs={6} sm={4}>
+              <label id="projectsAll" className={classes.label}>
+                {t.allUsersProjects}
+              </label>
+              <div>{allUsersProjects}</div>
+              <br />
+            </Grid>
             {groupsNoAll && groupsNoAll.length > 0 && (
               <>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <TextField
                     id="select-group"
                     className={classes.textField}
@@ -501,7 +534,7 @@ function Invite(props: IProps) {
                     ))}
                   </TextField>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={6} sm={4}>
                   <TextField
                     id="select-grouprole"
                     className={classes.textField}
@@ -539,6 +572,12 @@ function Invite(props: IProps) {
                       ))}
                   </TextField>
                 </Grid>
+                <Grid item xs={6} sm={4}>
+                  <label id="projectsAllOther" className={classes.label}>
+                    {t.otherGroupProjects}
+                  </label>
+                  <div>{otherProjects}</div>
+                </Grid>
               </>
             )}
           </Grid>
@@ -575,6 +614,7 @@ const mapRecordsToProps = {
   roles: (q: QueryBuilder) => q.findRecords('role'),
   groups: (q: QueryBuilder) => q.findRecords('group'),
   users: (q: QueryBuilder) => q.findRecords('user'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
 export default withData(mapRecordsToProps)(

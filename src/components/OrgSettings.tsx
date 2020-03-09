@@ -26,6 +26,7 @@ import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { API_CONFIG } from '../api-variable';
 import { CreateOrg } from '../utils';
+import { currentDateTime } from '../utils/currentDateTime';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -139,7 +140,7 @@ export function OrgSettings(props: IProps) {
           websiteUrl: website,
           logoUrl: orgAvatar,
           publicByDefault,
-          dateUpdated: new Date().toISOString(),
+          dateUpdated: currentDateTime(),
         },
       }),
       // we aren't allowing them to change owner oraganization currently
@@ -220,7 +221,7 @@ export function OrgSettings(props: IProps) {
   }, [add, organization, organizations]);
 
   if (/Main/i.test(view)) return <Redirect to="/main" />;
-
+  const textStyle = { width: 400 };
   return (
     <div
       className={clsx(classes.container, {
@@ -239,7 +240,7 @@ export function OrgSettings(props: IProps) {
                   value={name || ''}
                   onChange={handleNameChange}
                   margin="normal"
-                  style={{ width: 400 }}
+                  style={textStyle}
                   variant="filled"
                   required={true}
                 />
@@ -267,7 +268,7 @@ export function OrgSettings(props: IProps) {
                   value={description || ''}
                   onChange={handleDescriptionChange}
                   margin="normal"
-                  style={{ width: 400 }}
+                  style={textStyle}
                   variant="filled"
                   required={false}
                 />
@@ -284,7 +285,7 @@ export function OrgSettings(props: IProps) {
                     value={website || ''}
                     onChange={handleWebsiteChange}
                     margin="normal"
-                    style={{ width: 400 }}
+                    style={textStyle}
                     variant="filled"
                     required={false}
                   />
@@ -328,7 +329,7 @@ export function OrgSettings(props: IProps) {
             </Button>
           </div>
         )}
-        {curOrg !== undefined && orgRole === 'admin' && (
+        {!API_CONFIG.isApp && curOrg !== undefined && orgRole === 'admin' && (
           <DeleteExpansion
             title={t.deleteOrg}
             explain={t.deleteExplained}
@@ -349,13 +350,11 @@ export function OrgSettings(props: IProps) {
         target="_blank"
         rel="noopener noreferrer"
       ></a>
-      {deleteItem !== '' ? (
+      {deleteItem !== '' && (
         <Confirm
           yesResponse={handleDeleteConfirmed}
           noResponse={handleDeleteRefused}
         />
-      ) : (
-        <></>
       )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>

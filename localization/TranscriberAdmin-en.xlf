@@ -16,69 +16,75 @@
             <target/>
          </segment>
       </unit>
-      <unit id="access.importPending">
-         <segment>
-            <source>Import In Progress...</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.importComplete">
-         <segment>
-            <source>Import Complete</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="access.importError">
          <segment>
             <source>Import Error</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.ptfError">
+      <unit id="access.login">
+         <segment>
+            <source>Online Login</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.ptfError">
          <segment>
             <source>Not a valid Portable Transcriber File</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.importCreated">
+      <unit id="electronImport.itfError">
+         <segment>
+            <source>Not a valid Incremental Transcriber File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.importCreated">
          <segment>
             <source>Import file was created: {date0}.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.projectImported">
+      <unit id="electronImport.projectImported">
          <segment>
             <source>Project {name0} was previously imported with a newer file: {date1} </source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.allDataOverwritten">
+      <unit id="electronImport.allDataOverwritten">
          <segment>
-            <source>All data will be overwritten.</source>
+            <source>All {name0} data will be overwritten.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.neverExported">
+      <unit id="electronImport.neverExported">
          <segment>
             <source>Current data in project {name0} has never been exported.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.lastExported">
+      <unit id="electronImport.lastExported">
          <segment>
             <source>Current data in project {name0} was last exported {date0}.</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.exportedLost">
+      <unit id="electronImport.exportedLost">
          <segment>
             <source>Import file will not include latest exported data.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.login">
-         <segment>
-            <source>Online Login</source>
             <target/>
          </segment>
       </unit>
@@ -372,19 +378,19 @@
       </unit>
       <unit id="projectSettings.add">
          <segment>
-            <source>Add a Plan</source>
+            <source>Save</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSettings.upload">
          <segment>
-            <source>Upload Media and Transcribe</source>
+            <source>Save and Upload Media</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSettings.nextSteps">
          <segment>
-            <source>Select Next Step</source>
+            <source>Select Next Step and Save</source>
             <target/>
          </segment>
       </unit>
@@ -396,7 +402,7 @@
       </unit>
       <unit id="projectSettings.startNow">
          <segment>
-            <source>Start Transcribing Now</source>
+            <source>Use Defaults to Start Transcribing</source>
             <target/>
          </segment>
       </unit>
@@ -1048,6 +1054,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="passageMedia.mediaAttached">
+         <segment>
+            <source>Media Attached</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="passageMedia.mediaDetached">
+         <segment>
+            <source>Media Removed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageMedia.attachAvailableMedia">
          <segment>
             <source>Attach available media files to passages (with no current media).</source>
@@ -1216,6 +1234,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.import">
+         <segment>
+            <source>Import</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.loadingTable">
          <segment>
             <source>Loading data</source>
@@ -1255,6 +1279,18 @@
       <unit id="main.clearCache">
          <segment>
             <source>Clear cache</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.inviteError">
+         <segment>
+            <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.deletedInvitation">
+         <segment>
+            <source>Invitation is no longer valid.</source>
             <target/>
          </segment>
       </unit>
@@ -1309,6 +1345,12 @@
       <unit id="main.transcribe">
          <segment>
             <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.switchTo">
+         <segment>
+            <source>Switch to:</source>
             <target/>
          </segment>
       </unit>
@@ -1372,6 +1414,66 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.import">
+         <segment>
+            <source>Import</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.importProject">
+         <segment>
+            <source>Import Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.error">
+         <segment>
+            <source>Import Error</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.onlineChangeReport">
+         <segment>
+            <source>Online changes made since data provided to offline user:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.noFile">
+         <segment>
+            <source>Please select file to be uploaded.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.importPending">
+         <segment>
+            <source>Import In Progress...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.invalidITF">
+         <segment>
+            <source>Not a valid Incremental Transcriber File (ITF).</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.invalidProject">
+         <segment>
+            <source>ITF File does not contain current project.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.importComplete">
+         <segment>
+            <source>Import Complete</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>
@@ -1432,7 +1534,37 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportError">
+      <unit id="transcriptionTab.exportType">
+         <segment>
+            <source>Which export type?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportExplanation">
+         <segment>
+            <source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportPTFtype">
+         <segment>
+            <source>Full Backup (ptf)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportITFtype">
+         <segment>
+            <source>Incremental Changes (itf)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportingProject">
+         <segment>
+            <source>Exporting Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.error">
          <segment>
             <source>Export Error</source>
             <target/>
@@ -1966,6 +2098,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.allUsersProjects">
+         <segment>
+            <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.additionalgroup">
          <segment>
             <source>Optional additional Group</source>
@@ -1975,6 +2113,18 @@
       <unit id="invite.groupRole">
          <segment>
             <source>Group Role</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.otherGroupProjects">
+         <segment>
+            <source>Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.noProjects">
+         <segment>
+            <source>No Projects are associated with this group.</source>
             <target/>
          </segment>
       </unit>
@@ -2230,9 +2380,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.PTFtitle">
+         <segment>
+            <source>Upload complete Project Data from PTF</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtitle">
+         <segment>
+            <source>Upload Change Data from Offline Extension</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.task">
          <segment>
             <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.PTFtask">
+         <segment>
+            <source>Upload a Portable Transcriber File (ptf file).</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.ITFtask">
+         <segment>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
             <target/>
          </segment>
       </unit>
@@ -2362,9 +2536,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="toDoTable.duration">
+      <unit id="toDoTable.showHide">
          <segment>
-            <source>Duration</source>
+            <source>Show or Hide filter rows</source>
             <target/>
          </segment>
       </unit>
@@ -2437,6 +2611,12 @@
       <unit id="integration.questionOnline">
          <segment>
             <source>Are you connected to the Internet?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.questionInstalled">
+         <segment>
+            <source>Is Paratext installed locally?</source>
             <target/>
          </segment>
       </unit>
@@ -2527,6 +2707,12 @@
       <unit id="integration.paratext">
          <segment>
             <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.paratextLocal">
+         <segment>
+            <source>Paratext Local</source>
             <target/>
          </segment>
       </unit>
@@ -2944,9 +3130,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="taskItem.inProgress">
+      <unit id="taskItem.transcribing">
          <segment>
-            <source>In Progress</source>
+            <source>Transcribing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.reviewing">
+         <segment>
+            <source>Reviewing</source>
             <target/>
          </segment>
       </unit>
@@ -2977,6 +3169,30 @@
       <unit id="taskItem.section">
          <segment>
             <source>Section {0}.{1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.assign">
+         <segment>
+            <source>Assign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.unassign">
+         <segment>
+            <source>Unassign {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="taskItem.reviewer">
+         <segment>
+            <source>Reviewer</source>
             <target/>
          </segment>
       </unit>

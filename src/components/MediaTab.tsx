@@ -6,7 +6,6 @@ import {
   IState,
   MediaFile,
   Passage,
-  PassageSection,
   Section,
   IMediaTabStrings,
   Plan,
@@ -29,7 +28,7 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import MediaUpload from './MediaUpload';
+import MediaUpload, { UploadType } from './MediaUpload';
 import PassageMedia from './PassageMedia';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
@@ -113,7 +112,6 @@ const getMedia = (
   projectplans: Array<Plan>,
   mediaFiles: Array<MediaFile>,
   passages: Array<Passage>,
-  passageSections: Array<PassageSection>,
   sections: Array<Section>,
   playItem: string
 ) => {
@@ -138,12 +136,7 @@ const getMedia = (
   const rowData = media.map(f => {
     const passageId = related(f, 'passage');
     const passage = passageId ? passages.filter(p => p.id === passageId) : [];
-    const passageSection = passageId
-      ? passageSections.filter(ps => related(ps, 'passage') === passageId)
-      : [];
-    const sectionId =
-      passageSection.length > 0 ? related(passageSection[0], 'section') : '';
-    const section = sections.filter(s => s.id === sectionId);
+    const section = sections.filter(s => s.id === related(passage, 'section'));
     const updated =
       f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
     const date = updated ? updated.format('YYYY-MM-DD') : '';
@@ -194,7 +187,6 @@ interface IDispatchProps {
 interface IRecordProps {
   mediaFiles: Array<MediaFile>;
   passages: Array<Passage>;
-  passageSections: Array<PassageSection>;
   sections: Array<Section>;
 }
 
@@ -221,7 +213,6 @@ export function MediaTab(props: IProps) {
     uploadComplete,
     mediaFiles,
     passages,
-    passageSections,
     sections,
     queryStore,
     auth,
@@ -396,17 +387,8 @@ export function MediaTab(props: IProps) {
   }, [projectplans, plan, planColumn]);
 
   useEffect(() => {
-    setData(
-      getMedia(
-        projectplans,
-        mediaFiles,
-        passages,
-        passageSections,
-        sections,
-        playItem
-      )
-    );
-  }, [projectplans, mediaFiles, passages, passageSections, sections, playItem]);
+    setData(getMedia(projectplans, mediaFiles, passages, sections, playItem));
+  }, [projectplans, mediaFiles, passages, sections, playItem]);
 
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
@@ -469,8 +451,7 @@ export function MediaTab(props: IProps) {
       tableLoad.length > 0 &&
       (!tableLoad.includes('mediafile') ||
         !tableLoad.includes('passage') ||
-        !tableLoad.includes('section') ||
-        !tableLoad.includes('passagesection')) &&
+        !tableLoad.includes('section')) &&
       !loading
     ) {
       setMessage(<span>{t.loadingTable}</span>);
@@ -617,6 +598,7 @@ export function MediaTab(props: IProps) {
       </div>
       <MediaUpload
         visible={uploadVisible}
+        uploadType={UploadType.Media}
         uploadMethod={uploadMedia}
         cancelMethod={uploadCancel}
       />
@@ -662,7 +644,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 const mapRecordsToProps = {
   mediaFiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
-  passageSections: (q: QueryBuilder) => q.findRecords('passagesection'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 

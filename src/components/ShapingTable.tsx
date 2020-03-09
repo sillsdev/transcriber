@@ -20,6 +20,7 @@ import {
   SelectionState,
   SortingState,
   Sorting,
+  Grouping,
   DataTypeProvider,
   DataTypeProviderProps,
   TableColumnVisibility,
@@ -153,6 +154,8 @@ interface IProps extends IStateProps {
   sortingEnabled?: Array<SortingState.ColumnExtension>;
   filteringEnabled?: Array<FilteringState.ColumnExtension>;
   defaultHiddenColumnNames?: Array<string>;
+  defaultGrouping?: Grouping[];
+  expandedGroups?: string[];
   dataCell?: any;
   noDataCell?: any;
   numCols?: Array<string>;
@@ -172,6 +175,8 @@ export function ShapingTable(props: IProps) {
     sortingEnabled /* whether sorting is enabled for each column */,
     filteringEnabled /* whether filtering is enabled for each column */,
     defaultHiddenColumnNames,
+    defaultGrouping,
+    expandedGroups,
     dataCell,
     noDataCell,
     numCols,
@@ -180,6 +185,11 @@ export function ShapingTable(props: IProps) {
     select,
     shaping,
   } = props;
+  const [myGroups, setMyGroups] = React.useState<string[]>();
+
+  const handleExpGrp = (groups: string[]) => {
+    setMyGroups(groups);
+  };
 
   const handleSelect = (checks: Array<string | number>) => {
     if (select) {
@@ -203,8 +213,9 @@ export function ShapingTable(props: IProps) {
 
       <GroupingState
         columnGroupingEnabled={shaping !== null ? shaping : true}
-        // defaultGrouping={[{ columnName: 'product' }]}
-        // defaultExpandedGroups={['Piano']}
+        defaultGrouping={defaultGrouping}
+        expandedGroups={!myGroups ? expandedGroups : myGroups}
+        onExpandedGroupsChange={handleExpGrp}
       />
       {/* <PagingState /> */}
 

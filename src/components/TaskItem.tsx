@@ -1,5 +1,4 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -18,17 +17,17 @@ import {
   ListItemAvatar,
   ListItemSecondaryAction,
 } from '@material-ui/core';
-import TaskFlag, { NextAction } from './TaskFlag';
-import UserAvatar from './UserAvatar';
+import TaskFlag from './TaskFlag';
 import Duration from './Duration';
 import { related, sectionNumber, passageNumber } from '../utils';
-import { QueryBuilder } from '@orbit/data';
+import { NextAction } from './TaskFlag';
+import TaskAvatar from './TaskAvatar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      maxWidth: 360,
+      minWidth: 360,
     },
     detail: {
       display: 'flex',
@@ -59,18 +58,6 @@ interface IProps extends IStateProps {
   select: (media: MediaDescription) => (e: any) => void;
 }
 
-const TaskAvatar = React.memo(({ assigned }: { assigned: string | null }) => {
-  const [memory] = useGlobal('memory');
-
-  if (!assigned) return <></>;
-  const userRec: User = assigned
-    ? (memory.cache.query((q: QueryBuilder) =>
-        q.findRecord({ type: 'user', id: assigned as string })
-      ) as User)
-    : ({} as User);
-  return <UserAvatar userRec={userRec} small={true} />;
-});
-
 export function TaskItem(props: IProps) {
   const { allBookData, t, mediaRec, select } = props;
   const { passage, section } = props.mediaDesc;
@@ -78,6 +65,7 @@ export function TaskItem(props: IProps) {
 
   let book = '';
   let ref = '';
+  let assigned: string | null = null;
   const attr = passage.attributes;
   if (attr) {
     ref = attr.reference;
@@ -87,12 +75,10 @@ export function TaskItem(props: IProps) {
       if (bookItem.length > 0) book = bookItem[0].long;
       book = book + ' ';
     } else book = '';
+    const next = NextAction({ ...props, state: attr.state });
+    if (next === t.transcribe) assigned = related(section, 'transcriber');
+    if (next === t.review) assigned = related(section, 'reviewer');
   }
-
-  const next = NextAction({ ...props, state: attr.state });
-  let assigned: string | null = null;
-  if (next === t.transcribe) assigned = related(section, 'transcriber');
-  if (next === t.review) assigned = related(section, 'reviewer');
 
   return (
     <List className={classes.root}>

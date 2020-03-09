@@ -5,7 +5,14 @@ import jwtDecode from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings, Organization, Invitation, User } from '../model';
+import {
+  IState,
+  IMainStrings,
+  Organization,
+  Invitation,
+  User,
+  OrganizationMembership,
+} from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
@@ -24,12 +31,13 @@ import JSONAPISource from '@orbit/jsonapi';
 import { parseQuery } from '../utils/parseQuery';
 import {
   related,
-  hasRelated,
   hasAnyRelated,
   setDefaultProj,
   CreateOrg,
   uiLang,
+  remoteId,
 } from '../utils';
+import SnackBar from '../components/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,6 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     message: {
       alignSelf: 'center',
+      textAlign: 'center',
     },
   })
 );
@@ -109,6 +118,7 @@ export function Loading(props: IProps) {
   );
   const [savedURL] = useState(localStorage.getItem('url') || '');
   const [view, setView] = useState('');
+  const [message, setMessage] = useState(<></>);
 
   const handleUserMenuAction = (what: string) => {
     if (!/Close/i.test(what)) {
@@ -119,32 +129,84 @@ export function Loading(props: IProps) {
     }
   };
 
+  const handleMessageReset = () => {
+    setMessage(<></>);
+  };
   //remote is passed in because it wasn't always available in global
-  const InviteUser = async (newremote: JSONAPISource) => {
+  const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
-    if (!inviteId) return;
     localStorage.removeItem('inviteId');
-    const invite: Invitation[] = (await newremote.query((q: QueryBuilder) =>
-      q
-        .findRecords('invitation')
-        .filter({ attribute: 'silId', value: parseInt(inviteId) })
+    var inviteError = '';
+
+    var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
+      q.findRecords('invitation').filter(
+        /*this didn't work sometimes { attribute: 'email', value: userEmail },*/
+        { attribute: 'accepted', value: false }
+      )
     )) as any;
-    if (invite.length > 0) {
+    /* filter it by email now... */
+    allinvites = allinvites.filter(i => i.attributes.email === userEmail);
+
+    allinvites.forEach(async invitation => {
       await newremote.update((t: TransformBuilder) =>
-        t.replaceAttribute(invite[0], 'accepted', true)
+        t.replaceAttribute(invitation, 'accepted', true)
       );
-      const orgId = related(invite[0], 'organization');
-      setOrganization(orgId);
+    });
+    if (inviteId) {
+      const invite = allinvites.find(
+        i => i.attributes.silId === parseInt(inviteId)
+      );
+      if (invite) {
+        const orgId = related(invite, 'organization');
+        setOrganization(orgId);
+        localStorage.setItem(
+          'lastOrg',
+          remoteId('organization', orgId, keyMap)
+        );
+      } else {
+        try {
+          const thisinvite: Invitation[] = (await newremote.query(
+            (q: QueryBuilder) =>
+              q
+                .findRecords('invitation')
+                .filter({ attribute: 'silId', value: parseInt(inviteId) })
+          )) as any;
+
+          //if previously accepted just roll with it
+          if (thisinvite[0].attributes.email !== userEmail) {
+            /* they must have logged in with another email */
+            inviteError = t.inviteError;
+          }
+        } catch {
+          inviteError = t.deletedInvitation;
+        }
+      }
+      if (inviteError !== '') {
+        localStorage.setItem('inviteError', inviteError);
+        setMessage(<span>{localStorage.getItem('inviteError') || ''}</span>);
+      }
     }
   };
+  const isElectron = process.env.REACT_APP_MODE === 'electron';
 
   const setDefaultOrg = async () => {
     let orgs: Organization[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
     ) as any;
+    if (isElectron) {
+      let oms: OrganizationMembership[] = memory.cache.query(
+        (q: QueryBuilder) => q.findRecords('organizationmembership')
+      ) as any;
+      orgs = orgs.filter(o =>
+        oms
+          .filter(om => related(om, 'user') === user)
+          .map(om => related(om, 'organization'))
+          .includes(o.id)
+      );
+    }
     if (organization === '') {
       orgs = orgs
-        .filter(o => hasRelated(o, 'users', user) && o.attributes)
+        .filter(o => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
       if (orgs.length > 0) {
         setOrganization(orgs[0].id);
@@ -159,6 +221,7 @@ export function Loading(props: IProps) {
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
+    localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData(
       schema,
@@ -276,14 +339,20 @@ export function Loading(props: IProps) {
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <img src={logo} className={classes.icon} alt="logo" />
-          <Typography variant="h6" className={classes.message}>
-            {API_CONFIG.isApp
-              ? t.loadingTranscriber
-              : t.loadingTranscriberAdmin}
-          </Typography>
+          <div>
+            <Typography variant="h6" className={classes.message}>
+              {localStorage.getItem('inviteError') || ''}
+            </Typography>
+            <Typography variant="h6" className={classes.message}>
+              {API_CONFIG.isApp
+                ? t.loadingTranscriber
+                : t.loadingTranscriberAdmin}
+            </Typography>
+          </div>
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

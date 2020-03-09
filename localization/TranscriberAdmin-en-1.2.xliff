@@ -19,74 +19,11 @@
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="access.importPending">
-                <source>Import In Progress...</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.importComplete">
-                <source>Import Complete</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="access.importError">
                 <source>Import Error</source>
                 <target/>
                 <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.ptfError">
-                <source>Not a valid Portable Transcriber File</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.importCreated">
-                <source>Import file was created: {date0}.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.projectImported">
-                <source>Project {name0} was previously imported with a newer file: {date1} </source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.allDataOverwritten">
-                <source>All data will be overwritten.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-             <trans-unit id="access.neverExported">
-                <source>Current data in project {name0} has never been exported.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.lastExported">
-                <source>Current data in project {name0} was last exported {date0}.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.exportedLost">
-                <source>Import file will not include latest exported data.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
+                    <context context-type="sourcefile">electronImport.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="access.login">
@@ -96,6 +33,76 @@
         			<context context-type="sourcefile">Access.tsx</context>
         		</context-group>
         	</trans-unit>
+            <trans-unit id="electronImport.importPending">
+                <source>Import In Progress...</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.importComplete">
+                <source>Import Complete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.ptfError">
+                <source>Not a valid Portable Transcriber File</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.itfError">
+                <source>Not a valid Incremental Transcriber File</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.importCreated">
+                <source>Import file was created: {date0}.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.projectImported">
+                <source>Project {name0} was previously imported with a newer file: {date1} </source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.allDataOverwritten">
+                <source>All {name0} data will be overwritten.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="electronImport.neverExported">
+                <source>Current data in project {name0} has never been exported.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.lastExported">
+                <source>Current data in project {name0} was last exported {date0}.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.exportedLost">
+                <source>Import file will not include latest exported data.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
         	<trans-unit id="snackbar.undo">
                 <source>UNDO</source>
                 <target/>
@@ -433,21 +440,21 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="projectSettings.add">
-                <source>Add a Plan</source>
+                <source>Save</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ProjectSettings.tsx</context>
                 </context-group>
             </trans-unit>
         	<trans-unit id="projectSettings.upload">
-        		<source>Upload Media and Transcribe</source>
+        		<source>Save and Upload Media</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.nextSteps">
-        		<source>Select Next Step</source>
+        		<source>Select Next Step and Save</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
@@ -461,7 +468,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.startNow">
-        		<source>Start Transcribing Now</source>
+        		<source>Use Defaults to Start Transcribing</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
@@ -1223,6 +1230,20 @@
                     <context context-type="sourcefile">MediaTab.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="passageMedia.mediaAttached">
+                <source>Media Attached</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="passageMedia.mediaDetached">
+                <source>Media Removed</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaTab.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="passageMedia.attachAvailableMedia">
                 <source>Attach available media files to passages (with no current media).</source>
                 <target/>
@@ -1419,6 +1440,13 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="main.import">
+        		<source>Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.loadingTable">
         		<source>Loading data</source>
         		<target/>
@@ -1463,6 +1491,20 @@
         	</trans-unit>
         	<trans-unit id="main.clearCache">
                 <source>Clear cache</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Loading.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="main.inviteError">
+                <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Loading.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="main.deletedInvitation">
+                <source>Invitation is no longer valid.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Loading.tsx</context>
@@ -1526,6 +1568,13 @@
         	</trans-unit>
         	<trans-unit id="main.transcribe">
         		<source>Transcribe</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.switchTo">
+        		<source>Switch to:</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">drawer.tsx</context>
@@ -1601,7 +1650,77 @@
         			<context context-type="sourcefile">Loading.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="transcriptionTab.section">
+            <trans-unit id="import.import">
+        		<source>Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+             <trans-unit id="import.importProject">
+        		<source>Import Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="import.expiredToken">
+                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ExportTab.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.error">
+        		<source>Import Error</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.onlineChangeReport">
+                <source>Online changes made since data provided to offline user:</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="import.noFile">
+                <source>Please select file to be uploaded.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.importPending">
+                <source>Import In Progress...</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="import.invalidITF">
+                <source>Not a valid Incremental Transcriber File (ITF).</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="import.invalidProject">
+                <source>ITF File does not contain current project.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.importComplete">
+                <source>Import Complete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="transcriptionTab.section">
                 <source>Section</source>
                 <target/>
                 <context-group>
@@ -1671,7 +1790,42 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.exportError">
+            <trans-unit id="transcriptionTab.exportType">
+        		<source>Which export type?</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportExplanation">
+        		<source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportPTFtype">
+        		<source>Full Backup (ptf)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportITFtype">
+        		<source>Incremental Changes (itf)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.exportingProject">
+        		<source>Exporting Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.error">
         		<source>Export Error</source>
         		<target/>
         		<context-group>
@@ -2294,6 +2448,13 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
+            <trans-unit id="invite.allUsersProjects">
+                <source>Projects</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Invite.tsx</context>
+                </context-group>
+            </trans-unit>
 			<trans-unit id="invite.additionalgroup">
 				<source>Optional additional Group</source>
 				<target/>
@@ -2308,7 +2469,21 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
-			<trans-unit id="invite.selectGroupRole">
+            <trans-unit id="invite.otherGroupProjects">
+                <source>Projects</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Invite.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="invite.noProjects">
+                <source>No Projects are associated with this group.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Invite.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="invite.selectGroupRole">
 				<source>Select Group Role</source>
 				<target/>
 				<context-group>
@@ -2602,8 +2777,36 @@
                     <context context-type="sourcefile">MediaUpload.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="mediaUpload.PTFtitle">
+                <source>Upload complete Project Data from PTF</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="mediaUpload.ITFtitle">
+                <source>Upload Change Data from Offline Extension</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="mediaUpload.task">
                 <source>You can upload audio files in .mp3, .m4a or .wav format.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="mediaUpload.PTFtask">
+                <source>Upload a Portable Transcriber File (ptf file).</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="mediaUpload.ITFtask">
+                <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -2756,8 +2959,8 @@
         			<context context-type="sourcefile">TaskItem.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="toDoTable.duration">
-        		<source>Duration</source>
+        	<trans-unit id="toDoTable.showHide">
+        		<source>Show or Hide filter rows</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskItem.tsx</context>
@@ -2847,7 +3050,14 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="integration.yes">
+        	<trans-unit id="integration.questionInstalled">
+        		<source>Is Paratext installed locally?</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">integration.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="integration.yes">
                 <source>Yes</source>
                 <target/>
                 <context-group>
@@ -2951,7 +3161,14 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="integration.render">
+        	<trans-unit id="integration.paratextLocal">
+        		<source>Paratext Local</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">integration.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="integration.render">
                 <source>Render</source>
                 <target/>
                 <context-group>
@@ -3434,8 +3651,15 @@
         			<context context-type="sourcefile">TaskFlag.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="taskItem.inProgress">
-        		<source>In Progress</source>
+        	<trans-unit id="taskItem.transcribing">
+        		<source>Transcribing</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskFlag.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.reviewing">
+        		<source>Reviewing</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskFlag.tsx</context>
@@ -3474,6 +3698,34 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskItem.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.assign">
+        		<source>Assign {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.unassign">
+        		<source>Unassign {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.transcriber">
+        		<source>Transcriber</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="taskItem.reviewer">
+        		<source>Reviewer</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TaskHead.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="control.contentType">

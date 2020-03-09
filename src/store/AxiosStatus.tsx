@@ -13,6 +13,9 @@ export const pendingStatus = (status: string): IAxiosStatus => {
 export const successStatus = (status: string): IAxiosStatus => {
   return { complete: true, statusMsg: status, errStatus: 0, errMsg: '' };
 };
+export const successStatusMsg = (status: string, msg: string): IAxiosStatus => {
+  return { complete: true, statusMsg: status, errStatus: 0, errMsg: msg };
+};
 export const errStatus = (err: AxiosError): IAxiosStatus => {
   if (err.response) {
     // Request made and server responded

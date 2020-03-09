@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IAccessStrings, User } from '../model';
+import { IState, IAccessStrings, User, IElectronImportStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -33,6 +33,8 @@ import {
 import { withData } from 'react-orbitjs';
 import AdmZip from 'adm-zip';
 import Confirm from '../components/AlertDialog';
+
+// var ptPath = require('electron').remote.getGlobal('ptPath');
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -95,13 +97,14 @@ interface IRecordProps {
 
 interface IStateProps {
   t: IAccessStrings;
-  importStatus: IAxiosStatus;
+  ei: IElectronImportStrings;
+  importStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
-  importProject: typeof action.importProject;
+  importProject: typeof action.importProjectToElectron;
   importComplete: typeof action.importComplete;
 }
 
@@ -111,7 +114,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function Access(props: IProps) {
-  const { auth, t, importStatus, users } = props;
+  const { auth, t, ei, importStatus, users } = props;
   const classes = useStyles();
   const {
     fetchLocalization,
@@ -144,7 +147,7 @@ export function Access(props: IProps) {
       setTimeout(() => {
         handleActionConfirmed();
       }, 2000);
-    } else handleElectronImport(memory, backup, zipFile, importProject, t);
+    } else handleElectronImport(memory, backup, zipFile, importProject, ei);
     setConfirmAction('');
   };
   const handleActionRefused = () => {
@@ -152,7 +155,7 @@ export function Access(props: IProps) {
   };
   const handleImport = () => {
     if (isElectron) {
-      var importData: IImportData = getElectronImportData(memory, t);
+      var importData: IImportData = getElectronImportData(memory, ei);
       if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
       else {
         setZipFile(importData.zip);
@@ -167,7 +170,7 @@ export function Access(props: IProps) {
             backup,
             importData.zip,
             importProject,
-            t
+            ei
           );
         }
       }
@@ -251,13 +254,16 @@ export function Access(props: IProps) {
               {t.accessSilTranscriber}
             </Typography>
             <Grid container direction="row">
-              {users && users.length > 0 && (
+              {!importStatus && users && users.length > 0 && (
                 <Grid item xs={12} md={6}>
                   <div className={classes.actions}>
                     <List>
                       {users
                         .sort((i, j) =>
-                          i.attributes.name < j.attributes.name ? -1 : 1
+                          (i.attributes ? i.attributes.name : '') <
+                          (j.attributes ? j.attributes.name : '')
+                            ? -1
+                            : 1
                         )
                         .map(u => (
                           <ListItem key={u.id} onClick={handleSelect(u.id)}>
@@ -268,7 +274,9 @@ export function Access(props: IProps) {
                                 userRec={u}
                               />
                             </ListItemIcon>
-                            <ListItemText primary={u.attributes.name} />
+                            <ListItemText
+                              primary={u.attributes ? u.attributes.name : ''}
+                            />
                           </ListItem>
                         ))}
                     </List>
@@ -276,7 +284,7 @@ export function Access(props: IProps) {
                 </Grid>
               )}
               <Grid item xs={12} md={6}>
-                <div className={classes.actions}>
+                {/* <div className={classes.actions}>
                   <Button
                     variant="contained"
                     color="primary"
@@ -286,7 +294,7 @@ export function Access(props: IProps) {
                   >
                     {t.login}
                   </Button>
-                </div>
+                </div> */}
                 <div className={classes.actions}>
                   <Button
                     variant="contained"
@@ -299,6 +307,7 @@ export function Access(props: IProps) {
                 </div>
               </Grid>
             </Grid>
+            {/* <Typography>{'Paratext Path: ' + ptPath}</Typography> */}
           </Paper>
           {confirmAction === '' || (
             <Confirm
@@ -316,6 +325,7 @@ export function Access(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'access' }),
+  ei: localStrings(state, { layout: 'electronImport' }),
   importStatus: state.importexport.importexportStatus,
 });
 
@@ -324,7 +334,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
-      importProject: action.importProject,
+      importProject: action.importProjectToElectron,
       importComplete: action.importComplete,
     },
     dispatch

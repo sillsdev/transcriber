@@ -59,6 +59,8 @@ function createWindow() {
   });
 }
 
+global['temp'] = app.getPath('temp');
+
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {

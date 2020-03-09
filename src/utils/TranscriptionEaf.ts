@@ -1,5 +1,4 @@
-const transcriptionEaf = () =>
-  `<?xml version="1.0" encoding="utf-8"?>
+const transcriptionEaf = () => `<?xml version="1.0" encoding="utf-8"?>
 <ANNOTATION_DOCUMENT AUTHOR="" DATE="2011-06-24T16:18:11-08:00" FORMAT="3.0" VERSION="3.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="../../../EAFv3.0gt.xsd">

@@ -6,6 +6,7 @@ export interface IParatextState {
   count: number;
   countStatus?: IAxiosStatus;
   username: string;
+  shortName: string;
   usernameStatus?: IAxiosStatus;
   projects: ParatextProject[];
   projectsStatus?: IAxiosStatus;

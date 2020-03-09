@@ -13,3 +13,11 @@
 #TaskTable .MuiList-root {
   padding: 0;
 }
+
+#TaskTable colgroup col:first-child {
+  width: 1px !important;
+}
+
+#TaskTable[data-list='true'] colgroup col:nth-child(2) {
+  width: 370px !important;
+}

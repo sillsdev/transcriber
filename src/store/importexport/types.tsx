@@ -15,7 +15,7 @@ export interface FileResponse {
 export interface IImportExportState {
   loaded: boolean;
   exportFile: FileResponse;
-  importexportStatus: IAxiosStatus;
+  importexportStatus: IAxiosStatus | undefined;
 }
 
 // Describing the different ACTION NAMES available
@@ -60,7 +60,7 @@ interface ImportPendingMsg {
 
 interface ImportSucceededMsg {
   type: typeof IMPORT_SUCCESS;
-  payload: string;
+  payload: { status: string; msg: string };
 }
 
 interface ImportFailedMsg {
@@ -69,7 +69,7 @@ interface ImportFailedMsg {
 }
 interface ImportCompleteMsg {
   type: typeof IMPORT_COMPLETE;
-  payload: string;
+  payload: IAxiosStatus;
 }
 
 export type ImportMsgs =
