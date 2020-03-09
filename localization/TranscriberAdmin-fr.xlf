@@ -376,20 +376,20 @@
 		</unit>
 		<unit id="projectSettings.add">
 			<segment>
-				<source>Add a Plan</source>
-				<target>Ajouter un plan</target>
+				<source>Save</source>
+				<target>Enregistrer</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.upload">
 			<segment>
-				<source>Upload Media and Transcribe</source>
-				<target>Télécharger les médias et les transcrire</target>
+				<source>Save and Upload Media</source>
+				<target>Enregistrer et télécharger un enregistrement</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.nextSteps">
 			<segment>
-				<source>Select Next Step</source>
-				<target>Sélectionnez l'étape suivante</target>
+				<source>Select Next Step and Save</source>
+				<target>Sélectionnez l'étape suivante et enregistrez</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.configure">
@@ -400,8 +400,8 @@
 		</unit>
 		<unit id="projectSettings.startNow">
 			<segment>
-				<source>Start Transcribing Now</source>
-				<target>Commencez à transcrire maintenant</target>
+				<source>Use Defaults and Start Transcribing</source>
+				<target>Utiliser les valeurs par défaut et commencer la transcription</target>
 			</segment>
 		</unit>
 		<unit id="projectSettings.dangerZone">

@@ -378,19 +378,19 @@
       </unit>
       <unit id="projectSettings.add">
          <segment>
-            <source>Add a Plan</source>
+            <source>Save</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSettings.upload">
          <segment>
-            <source>Upload Media and Transcribe</source>
+            <source>Save and Upload Media</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSettings.nextSteps">
          <segment>
-            <source>Select Next Step</source>
+            <source>Select Next Step and Save</source>
             <target/>
          </segment>
       </unit>
@@ -402,7 +402,7 @@
       </unit>
       <unit id="projectSettings.startNow">
          <segment>
-            <source>Start Transcribing Now</source>
+            <source>Use Defaults to Start Transcribing</source>
             <target/>
          </segment>
       </unit>

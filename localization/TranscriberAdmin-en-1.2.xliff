@@ -440,21 +440,21 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="projectSettings.add">
-                <source>Add a Plan</source>
+                <source>Save</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ProjectSettings.tsx</context>
                 </context-group>
             </trans-unit>
         	<trans-unit id="projectSettings.upload">
-        		<source>Upload Media and Transcribe</source>
+        		<source>Save and Upload Media</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.nextSteps">
-        		<source>Select Next Step</source>
+        		<source>Select Next Step and Save</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
@@ -468,7 +468,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="projectSettings.startNow">
-        		<source>Start Transcribing Now</source>
+        		<source>Use Defaults to Start Transcribing</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjectSettings.tsx</context>
