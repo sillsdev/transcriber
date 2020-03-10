@@ -16,6 +16,7 @@ import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
+import { LoadData } from './utils/loadData';
 
 // import { Online } from './utils';
 
@@ -31,7 +32,6 @@ export const Sources = async (
   setRemote: (remote: JSONAPISource) => void,
   setCompleted: (valud: number) => void,
   InviteUser: (remote: JSONAPISource, userEmail: string) => Promise<void>,
-  tableLoaded: (name: string) => void,
   orbitError: (ex: IApiError) => void
 ) => {
   const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
@@ -44,17 +44,6 @@ export const Sources = async (
     namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
   setBucket(bucket);
-
-  if (process.env.REACT_APP_MODE !== 'electron') {
-    //already did this if electron...
-    if (tokData.sub === userToken) {
-      await backup
-        .pull(q => q.findRecords())
-        .then(transform => memory.sync(transform));
-    } else {
-      backup.reset();
-    }
-  }
 
   let remote: JSONAPISource = {} as JSONAPISource;
 
@@ -84,6 +73,45 @@ export const Sources = async (
     coordinator.addSource(remote);
     setRemote(remote);
   }
+  if (
+    (userToken === tokData.sub && !localStorage.getItem('inviteId')) ||
+    offline
+  ) {
+    setUser(localStorage.getItem('user-id') as string);
+    console.log('using backup');
+    if (process.env.REACT_APP_MODE !== 'electron') {
+      //already did this if electron...
+      await backup
+        .pull(q => q.findRecords())
+        .then(transform => {
+          memory.sync(transform).then(x => setCompleted(100));
+        });
+    }
+  } else {
+    localStorage.setItem('lastTime', currentDateTime());
+    backup.reset();
+    var currentuser: User | undefined;
+    await remote
+      .pull(q => q.findRecords('currentuser'))
+      .then((transform: Transform[]) => {
+        const user = (transform[0].operations[0] as any).record;
+        setUser(user.id);
+        localStorage.setItem('user-id', user.id);
+        currentuser = user;
+      });
+    console.log(currentuser);
+    await InviteUser(
+      remote,
+      currentuser && currentuser.attributes
+        ? currentuser.attributes.email
+        : 'neverhere'
+    );
+    localStorage.setItem('lastTime', currentDateTime());
+    setCompleted(10);
+    let x = await LoadData(memory, backup, remote, setCompleted);
+    console.log('LoadData', x);
+    setCompleted(100);
+  }
 
   // Update indexedDb when memory updated
   // TODO: error if we can't read and write the indexedDB
@@ -96,6 +124,9 @@ export const Sources = async (
   );
 
   if (!offline) {
+    if (tokData.sub !== '') {
+      localStorage.setItem('user-token', tokData.sub);
+    }
     // Trap error querying data (token expired or offline)
     coordinator.addStrategy(
       new RequestStrategy({
@@ -220,118 +251,9 @@ export const Sources = async (
   }
 
   coordinator.addStrategy(new EventLoggingStrategy());
-
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
     console.log('Coordinator will log warnings');
-    if (userToken === tokData.sub || offline) {
-      setUser(localStorage.getItem('user-id') as string);
-    }
   });
-
-  if (
-    !offline &&
-    (userToken !== tokData.sub || localStorage.getItem('inviteId'))
-  ) {
-    localStorage.setItem('lastTime', currentDateTime());
-    let currentuser: User | undefined;
-    await remote
-      .pull(q => q.findRecords('currentuser'))
-      .then((transform: Transform[]) => {
-        memory.sync(transform);
-        const user = (transform[0].operations[0] as any).record;
-        setUser(user.id);
-        localStorage.setItem('user-id', user.id);
-        currentuser = user;
-      });
-
-    await InviteUser(
-      remote,
-      currentuser && currentuser.attributes
-        ? currentuser.attributes.email
-        : 'neverhere'
-    );
-
-    await remote
-      .pull(q => q.findRecords('user'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(5));
-    await remote
-      .pull(q => q.findRecords('organization'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(14));
-    await remote
-      .pull(q => q.findRecords('organizationmembership'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(28));
-    await remote
-      .pull(q => q.findRecords('group'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(42));
-    await remote
-      .pull(q => q.findRecords('groupmembership'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(56));
-    await remote
-      .pull(q => q.findRecords('project'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(70));
-    await remote
-      .pull(q => q.findRecords('role'))
-      .then(transform => memory.sync(transform))
-      .then(() => setCompleted(84));
-    await remote
-      .pull(q => q.findRecords('plan'))
-      .then(transform => {
-        memory.sync(transform);
-        if (tokData.sub !== '') {
-          localStorage.setItem('user-token', tokData.sub);
-        }
-        tableLoaded('plan'); // If we are loading, length of tableLoad > 0
-      })
-      .then(() => setCompleted(95));
-    remote
-      .pull(q => q.findRecords('section'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('section'));
-    remote
-      .pull(q => q.findRecords('passage'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('passage'));
-    remote
-      .pull(q => q.findRecords('mediafile'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('mediafile'));
-    remote
-      .pull(q => q.findRecords('plantype'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('plantype'));
-    remote
-      .pull(q => q.findRecords('integration'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('integration'));
-    remote
-      .pull(q => q.findRecords('projectintegration'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('projectintegration'));
-    remote
-      .pull(q => q.findRecords('invitation'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('invitation'));
-    remote
-      .pull(q => q.findRecords('projecttype'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('projecttype'));
-    remote
-      .pull(q => q.findRecords('activitystate'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('activitystate'));
-    remote
-      .pull(q => q.findRecords('passagestatechange'))
-      .then(transform => memory.sync(transform))
-      .then(() => tableLoaded('passagestatechange'));
-  }
-
-  setCompleted(100);
 };
 
 export default Sources;

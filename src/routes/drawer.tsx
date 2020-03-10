@@ -95,6 +95,7 @@ import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 import { DataPath } from '../utils/offlineDataPath';
+import { getOrgs } from '../utils/getOrgs';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };
@@ -506,20 +507,6 @@ export function ResponsiveDrawer(props: IProps) {
   };
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
-  const getOrgs = async () => {
-    //on desktop orgmems might have more than just current user
-    var orgs: Organization[] = await memory.query((q: QueryBuilder) =>
-      q.findRecords('organization')
-    );
-    if (isElectron)
-      orgs = orgs.filter(o =>
-        organizationMemberships
-          .filter(om => related(om, 'user') === user)
-          .map(om => related(om, 'organization'))
-          .includes(o.id)
-      );
-    return orgs;
-  };
   const getProjs = async () => {
     var projs: Project[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('project')
@@ -539,31 +526,31 @@ export function ResponsiveDrawer(props: IProps) {
   }, []);
 
   useEffect(() => {
-    getOrgs().then(organizations => {
-      const orgOpts = organizations
-        .filter(o => o.attributes)
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map((o: Organization) => {
-          return {
-            value: o.id,
-            label: o.attributes.name,
-          };
-        });
-      setOrgOptions(
-        API_CONFIG.isApp
-          ? orgOpts
-          : orgOpts.concat({
-              value: t.newOrganization,
-              label: t.newOrganization + '    \uFF0B',
-              // or \u2795
-            })
-      );
-      const orgRec = organizations.filter(o => o.id === organization);
-      if (orgRec.length > 0) {
-        const attr = orgRec[0].attributes;
-        setOrgAvatar(DataPath(attr?.logoUrl || ''));
-      }
-    });
+    const organizations = getOrgs(memory, user);
+    const orgOpts = organizations
+      .filter(o => o.attributes)
+      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+      .map((o: Organization) => {
+        return {
+          value: o.id,
+          label: o.attributes.name,
+        };
+      });
+    setOrgOptions(
+      API_CONFIG.isApp
+        ? orgOpts
+        : orgOpts.concat({
+            value: t.newOrganization,
+            label: t.newOrganization + '    \uFF0B',
+            // or \u2795
+          })
+    );
+
+    const orgRec = organizations.filter(o => o.id === organization);
+    if (orgRec.length > 0) {
+      const attr = orgRec[0].attributes;
+      setOrgAvatar(DataPath(attr?.logoUrl || ''));
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organization, user, organizationMemberships]);
 

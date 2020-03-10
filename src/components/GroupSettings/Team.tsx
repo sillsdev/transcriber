@@ -29,7 +29,6 @@ import SnackBar from '../SnackBar';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
-  tableLoad: string[];
 }
 
 interface IRecordProps {
@@ -52,9 +51,7 @@ function Team(props: IProps) {
     groupMemberships,
     users,
     orgMemberships,
-    tableLoad,
     t,
-    detail,
     selectedGroup,
   } = props;
   const [memory] = useGlobal('memory');
@@ -66,7 +63,6 @@ function Team(props: IProps) {
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
   const [confirmItem, setConfirmItem] = useState<IDeleteItem | null>(null);
   const [message, setMessage] = useState(<></>);
-  const [loading, setLoading] = useState(false);
   const [allUsers, setAllUsers] = useState(false);
 
   const handleRemove = (id: string, name: string) => {
@@ -152,19 +148,6 @@ function Team(props: IProps) {
   const handleMessageReset = () => setMessage(<></>);
 
   useEffect(() => {
-    if (detail) {
-      if (tableLoad.length > 0 && !tableLoad.includes('section') && !loading) {
-        setMessage(<span>{t.loadingTable}</span>);
-        setLoading(true);
-      } else if (loading) {
-        setMessage(<></>);
-        setLoading(false);
-      }
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [tableLoad]);
-
-  useEffect(() => {
     const groupAll = groups
       .filter(g => g.id === group && g.attributes)
       .map(g => g.attributes.allUsers);
@@ -243,7 +226,6 @@ function Team(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'groupSettings' }),
-  tableLoad: state.orbit.tableLoad,
 });
 
 const mapRecordsToProps = {

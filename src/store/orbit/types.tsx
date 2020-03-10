@@ -12,7 +12,6 @@ export interface IOrbitState {
   loaded: boolean;
   status: number;
   message: string;
-  tableLoad: string[];
   saving: boolean;
 }
 

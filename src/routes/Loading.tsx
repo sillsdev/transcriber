@@ -5,14 +5,7 @@ import jwtDecode from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  IState,
-  IMainStrings,
-  Organization,
-  Invitation,
-  User,
-  OrganizationMembership,
-} from '../model';
+import { IState, IMainStrings, Organization, Invitation, User } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
@@ -36,8 +29,10 @@ import {
   CreateOrg,
   uiLang,
   remoteId,
+  GetUser,
 } from '../utils';
 import SnackBar from '../components/SnackBar';
+import { getOrgs } from '../utils/getOrgs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -187,23 +182,9 @@ export function Loading(props: IProps) {
       }
     }
   };
-  const isElectron = process.env.REACT_APP_MODE === 'electron';
 
   const setDefaultOrg = async () => {
-    let orgs: Organization[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organization')
-    ) as any;
-    if (isElectron) {
-      let oms: OrganizationMembership[] = memory.cache.query(
-        (q: QueryBuilder) => q.findRecords('organizationmembership')
-      ) as any;
-      orgs = orgs.filter(o =>
-        oms
-          .filter(om => related(om, 'user') === user)
-          .map(om => related(om, 'organization'))
-          .includes(o.id)
-      );
-    }
+    let orgs: Organization[] = getOrgs(memory, user);
     if (organization === '') {
       orgs = orgs
         .filter(o => o.attributes)
@@ -244,12 +225,10 @@ export function Loading(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (completed >= 70 && organization === '') {
+    if (completed === 100 && organization === '') {
       if (user && user !== '') {
-        const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
-          q.findRecords([{ type: 'user', id: user }])
-        ) as any;
-        const locale = userRec[0].attributes.locale;
+        const userRec: User = GetUser(memory, user);
+        const locale = userRec.attributes.locale;
         if (locale) setLanguage(locale);
       }
       if (newOrgParams) {
@@ -287,38 +266,33 @@ export function Loading(props: IProps) {
 
   if (orbitLoaded && (completed === 100 || offline) && newOrgParams === null) {
     if (user && user !== '') {
-      const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords([{ type: 'user', id: user }])
-      ) as any;
-      if (userRec.length === 1) {
-        if (!hasAnyRelated(userRec[0], 'groupMemberships')) {
-          const orgRec: Organization = {
-            type: 'organization',
-            attributes: {
-              name: t.myWorkbench,
-              description:
-                'Default organization of ' + userRec[0].attributes.name,
-              publicByDefault: true,
-            },
-          } as any;
-          CreateOrg({
-            orgRec,
-            user,
-            schema,
-            memory,
-            remote,
-            setOrganization,
-            setProject,
-          });
-        }
-        if (
-          !userRec[0].attributes.givenName ||
-          !userRec[0].attributes.timezone ||
-          !userRec[0].attributes.locale ||
-          !uiLang.includes(userRec[0].attributes.locale)
-        ) {
-          return <Redirect to="/profile" />;
-        }
+      const userRec: User = GetUser(memory, user);
+      if (!hasAnyRelated(userRec, 'groupMemberships')) {
+        const orgRec: Organization = {
+          type: 'organization',
+          attributes: {
+            name: t.myWorkbench,
+            description: 'Default organization of ' + userRec.attributes.name,
+            publicByDefault: true,
+          },
+        } as any;
+        CreateOrg({
+          orgRec,
+          user,
+          schema,
+          memory,
+          remote,
+          setOrganization,
+          setProject,
+        });
+      }
+      if (
+        !userRec.attributes.givenName ||
+        !userRec.attributes.timezone ||
+        !userRec.attributes.locale ||
+        !uiLang.includes(userRec.attributes.locale)
+      ) {
+        return <Redirect to="/profile" />;
       }
     }
     const deepLink = localStorage.getItem('url');

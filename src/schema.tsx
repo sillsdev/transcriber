@@ -410,6 +410,13 @@ const schemaDefinition: SchemaSettings = {
         groupMemberships: { type: 'hasMany', model: 'groupmembership' },
       },
     },
+    orgData: {
+      keys: { remoteId: {} },
+      attributes: {
+        json: { type: 'string' },
+      },
+      relationships: {},
+    },
   },
 };
 

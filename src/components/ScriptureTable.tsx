@@ -67,7 +67,6 @@ interface IStateProps {
   bookSuggestions: OptionType[];
   bookMap: BookNameMap;
   allBookData: BookName[];
-  tableLoad: string[];
 }
 
 interface IDispatchProps {
@@ -102,7 +101,6 @@ export function ScriptureTable(props: IProps) {
     setChanged,
     passages,
     sections,
-    tableLoad,
   } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
@@ -131,7 +129,6 @@ export function ScriptureTable(props: IProps) {
   );
   const [inData, setInData] = useState(Array<Array<any>>());
   const [complete, setComplete] = useState(0);
-  const [loading, setLoading] = useState(false);
 
   const showBook = (cols: ICols) => cols.Book >= 0;
 
@@ -678,21 +675,6 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [plan]);
 
-  useEffect(() => {
-    if (
-      tableLoad.length > 0 &&
-      (!tableLoad.includes('section') || !tableLoad.includes('passage')) &&
-      !loading
-    ) {
-      setMessage(<span>{t.loadingTable}</span>);
-      setLoading(true);
-    } else if (loading) {
-      setMessage(<></>);
-      setLoading(false);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [tableLoad]);
-
   return (
     <div className={classes.container}>
       {complete === 0 || (
@@ -729,7 +711,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
   bookSuggestions: state.books.suggestions,
   bookMap: state.books.map,
   allBookData: state.books.bookData,
-  tableLoad: state.orbit.tableLoad,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

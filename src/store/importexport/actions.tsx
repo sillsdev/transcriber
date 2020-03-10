@@ -18,12 +18,11 @@ import { errStatus, errorStatus } from '../AxiosStatus';
 import fs from 'fs';
 import Memory from '@orbit/memory';
 
-import { Record, TransformBuilder, Operation } from '@orbit/data';
+import { TransformBuilder, Operation } from '@orbit/data';
 import { isArray } from 'util';
 import IndexedDBSource from '@orbit/indexeddb';
-import { Project } from '../../model';
-import { remoteIdGuid } from '../../utils';
 import { electronExport } from './electronExport';
+import { insertData } from '../../utils/loadData';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -196,45 +195,14 @@ export const importProjectToElectron = (
   var tb: TransformBuilder = new TransformBuilder();
   var oparray: Operation[] = [];
 
-  function insertData(item: Record) {
-    if (item.type === 'project') {
-      var project = item as Project;
-      project.attributes.dateImported = project.attributes.dateExported;
-      project.attributes.dateExported = null;
-    }
-    var rec: Record | Record[] | null = null;
-    try {
-      if (item.keys) {
-        var id = remoteIdGuid(item.type, item.keys['remoteId'], memory.keyMap);
-        rec = memory.cache.query(q =>
-          q.findRecord({ type: item.type, id: id })
-        );
-      }
-    } catch (err) {
-      if (err.constructor.name !== 'RecordNotFoundException') console.log(err);
-    } finally {
-      if (rec) {
-        if (isArray(rec)) rec = rec[0]; //won't be...
-        item.id = rec.id;
-        oparray.push(tb.updateRecord(item));
-      } else {
-        try {
-          memory.schema.initializeRecord(item);
-          if (item.id === undefined) {
-            console.log('id is null', item);
-          }
-          oparray.push(tb.addRecord(item));
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    }
-  }
   function processFile(file: string, ser: JSONAPISerializerCustom) {
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
-    if (isArray(json.data)) json.data.forEach(insertData);
-    else insertData(json.data);
+    if (isArray(json.data))
+      json.data.forEach(item =>
+        insertData(item, memory, tb, oparray, true, true)
+      );
+    else insertData(json.data, memory, tb, oparray, true, true);
   }
   if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
     dispatch({

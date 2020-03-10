@@ -373,8 +373,8 @@ export function Transcriber(props: IProps) {
           passRec.id,
           nextOnSave[state],
           '',
-          remoteIdNum('user', user, keyMap),
-          new TransformBuilder(),
+          userid,
+          tb,
           ops
         );
       if (comment !== '') {
