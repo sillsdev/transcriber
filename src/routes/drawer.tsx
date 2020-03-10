@@ -94,8 +94,8 @@ import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
-import { DataPath } from '../utils/offlineDataPath';
 import { getOrgs } from '../utils/getOrgs';
+import { DataPath } from '../utils/DataPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };

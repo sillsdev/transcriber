@@ -2,7 +2,7 @@ import { FileResponse } from './types';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import path from 'path';
-import { DataPath } from '../../utils/offlineDataPath';
+import { DataPath } from '../../utils/DataPath';
 import { Project, User, MediaFile, Organization } from '../../model';
 import { cleanFileName, remoteIdGuid, getMediaEaf } from '../../utils';
 import Memory from '@orbit/memory';

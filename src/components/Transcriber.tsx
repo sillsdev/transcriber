@@ -77,7 +77,7 @@ import {
   AddPassageStateCommentOps,
 } from '../utils/UpdatePassageState';
 import path from 'path';
-import { DataPath } from '../utils/offlineDataPath';
+import { DataPath } from '../utils/DataPath';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;

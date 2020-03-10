@@ -11,7 +11,7 @@ import { isArray } from 'util';
 import { remoteIdGuid } from '../utils';
 import moment, { Moment } from 'moment';
 import IndexedDBSource from '@orbit/indexeddb';
-import { DataPath } from '../utils/offlineDataPath';
+import { DataPath } from '../utils/DataPath';
 import fs from 'fs';
 import path from 'path';
 import { OpenDialogSyncOptions } from 'electron';

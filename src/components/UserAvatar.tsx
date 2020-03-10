@@ -7,7 +7,7 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from 'react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
-import { DataPath } from '../utils/offlineDataPath';
+import { DataPath } from '../utils/DataPath';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

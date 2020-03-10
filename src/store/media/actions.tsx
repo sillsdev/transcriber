@@ -5,7 +5,7 @@ import * as type from './types';
 import MemorySource from '@orbit/memory';
 import { remoteIdGuid } from '../../utils';
 import { isArray } from 'util';
-import { DataPath } from '../../utils/offlineDataPath';
+import { DataPath } from '../../utils/DataPath';
 
 export const fetchMediaUrl = (
   id: string,
