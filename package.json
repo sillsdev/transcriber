@@ -36,7 +36,7 @@
     "node-html-encoder": "0.0.2",
     "original-fs": "^1.1.0",
     "react": "^16.13.0",
-    "react-datasheet": "^1.4.1",
+    "react-datasheet": "^1.4.0",
     "react-dom": "^16.13.0",
     "react-file-drop": "^0.2.8",
     "react-hot-loader": "^4.12.19",
