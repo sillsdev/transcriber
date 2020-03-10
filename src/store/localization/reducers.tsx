@@ -18,6 +18,7 @@ const initialState = {
 		"en": {
 			"importPending": "Import In Progress...",
 			"importComplete": "Import Complete",
+			"importOldFile": "This file was not exported from the latest version.  Reexport your PTF file from the online version.",
 			"ptfError": "Not a valid Portable Transcriber File",
 			"itfError": "Not a valid Incremental Transcriber File",
 			"importCreated": "Import file was created: {date0}.",

@@ -190,7 +190,8 @@ export const importProjectToElectron = (
   memory: Memory,
   backup: IndexedDBSource,
   pendingmsg: string,
-  completemsg: string
+  completemsg: string,
+  oldfilemsg: string
 ) => (dispatch: any) => {
   var tb: TransformBuilder = new TransformBuilder();
   var oparray: Operation[] = [];
@@ -235,7 +236,13 @@ export const importProjectToElectron = (
     if (isArray(json.data)) json.data.forEach(insertData);
     else insertData(json.data);
   }
-
+  if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
+    dispatch({
+      payload: errorStatus(-1, oldfilemsg),
+      type: IMPORT_ERROR,
+    });
+    return;
+  }
   dispatch({
     payload: pendingmsg,
     type: IMPORT_PENDING,

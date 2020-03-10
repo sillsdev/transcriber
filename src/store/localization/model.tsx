@@ -11,6 +11,7 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
 export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
     "importPending": string;
     "importComplete": string;
+    "importOldFile": string;
     "ptfError": string;
     "itfError": string;
     "importCreated": string;

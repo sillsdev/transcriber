@@ -37,7 +37,12 @@
             <target>Importation terminée</target>
          </segment>
       </unit>
-
+      <unit id="electronImport.importOldFile">
+         <segment>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <target>Ce fichier n'a pas été exporté à partir de la dernière version. Réexportez votre fichier PTF à partir de la version en ligne.</target>
+         </segment>
+      </unit>
       <unit id="electronImport.ptfError">
          <segment>
             <source>Not a valid Portable Transcriber File</source>

@@ -165,13 +165,21 @@ if (isElectron) {
       const where = DataPath();
       console.log(where);
       fs.mkdirSync(where, { recursive: true });
+      //delete any old passagesection files
+      try {
+        fs.unlinkSync(path.join(where, 'data', 'H_passagesections.json'));
+      } catch (err) {
+        console.log(err);
+      }
       zip.extractAllTo(where, true);
+
       importProject(
         path.join(where, 'data'),
         memory,
         backup,
         t.importPending,
-        t.importComplete
+        t.importComplete,
+        t.importOldFile
       );
     }
   };

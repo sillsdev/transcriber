@@ -47,6 +47,13 @@
                     <context context-type="sourcefile">electronImport.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="electronImport.importOldFile">
+                <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">electronImport.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="electronImport.ptfError">
                 <source>Not a valid Portable Transcriber File</source>
                 <target/>
