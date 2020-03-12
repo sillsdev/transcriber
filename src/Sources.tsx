@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { IApiError, User } from './model';
+import { IApiError, User, Role } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -9,7 +9,13 @@ import Coordinator, {
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
-import { Schema, KeyMap, Transform, NetworkError } from '@orbit/data';
+import {
+  Schema,
+  KeyMap,
+  Transform,
+  NetworkError,
+  QueryBuilder,
+} from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
@@ -39,7 +45,9 @@ export const Sources = async (
     tokenPart.length > 1 ? Base64.decode(tokenPart[1]) : '{"sub":""}'
   );
   const userToken = localStorage.getItem('user-token');
-
+  if (tokData.sub !== '') {
+    localStorage.setItem('user-token', tokData.sub);
+  }
   const bucket: Bucket = new IndexedDBBucket({
     namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
@@ -73,46 +81,44 @@ export const Sources = async (
     coordinator.addSource(remote);
     setRemote(remote);
   }
-  if (
-    (userToken === tokData.sub && !localStorage.getItem('inviteId')) ||
-    offline
-  ) {
+  let goRemote =
+    !offline &&
+    (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
+  if (!goRemote) {
     setUser(localStorage.getItem('user-id') as string);
     console.log('using backup');
     if (process.env.REACT_APP_MODE !== 'electron') {
       //already did this if electron...
-      await backup
-        .pull(q => q.findRecords())
-        .then(transform => {
-          memory.sync(transform).then(x => setCompleted(100));
-        });
+      var transform = await backup.pull(q => q.findRecords());
+      await memory.sync(transform);
+      const recs: Role[] = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('role')
+      ) as any;
+      if (recs.length === 0) {
+        console.log('Indexed DB corrupt or missing.');
+        goRemote = true;
+      }
     }
-  } else {
+  }
+  if (goRemote) {
     localStorage.setItem('lastTime', currentDateTime());
-    backup.reset();
+    await backup.reset();
     var currentuser: User | undefined;
-    await remote
-      .pull(q => q.findRecords('currentuser'))
-      .then((transform: Transform[]) => {
-        const user = (transform[0].operations[0] as any).record;
-        setUser(user.id);
-        localStorage.setItem('user-id', user.id);
-        currentuser = user;
-      });
-    console.log(currentuser);
+    var tr = await remote.pull(q => q.findRecords('currentuser'));
+    const user = (tr[0].operations[0] as any).record;
+    setUser(user.id);
+    localStorage.setItem('user-id', user.id);
+    currentuser = user;
     await InviteUser(
       remote,
       currentuser && currentuser.attributes
         ? currentuser.attributes.email
         : 'neverhere'
     );
-    localStorage.setItem('lastTime', currentDateTime());
     setCompleted(10);
     let x = await LoadData(memory, backup, remote, setCompleted);
     console.log('LoadData', x);
-    setCompleted(100);
   }
-
   // Update indexedDb when memory updated
   // TODO: error if we can't read and write the indexedDB
   coordinator.addStrategy(
@@ -124,9 +130,6 @@ export const Sources = async (
   );
 
   if (!offline) {
-    if (tokData.sub !== '') {
-      localStorage.setItem('user-token', tokData.sub);
-    }
     // Trap error querying data (token expired or offline)
     coordinator.addStrategy(
       new RequestStrategy({
@@ -253,6 +256,7 @@ export const Sources = async (
   coordinator.addStrategy(new EventLoggingStrategy());
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
     console.log('Coordinator will log warnings');
+    setCompleted(100);
   });
 };
 

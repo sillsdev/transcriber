@@ -383,7 +383,9 @@ export function ProjectSettings(props: IProps) {
       );
       setGroup(allUsers.length > 0 ? allUsers[0].id : '');
     } else {
-      const curProj = projects.filter((p: Project) => p.id === project);
+      const curProj = projects.filter(
+        (p: Project) => p.attributes && p.id === project
+      );
       if (curProj.length === 1) {
         proj = curProj[0];
         setGroup(related(proj, 'group'));

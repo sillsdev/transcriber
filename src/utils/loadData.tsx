@@ -27,7 +27,6 @@ export function insertData(
   var rec: Record | Record[] | null = null;
   try {
     if (item.keys && checkExisting) {
-      //if all inserts don't pass in memory
       var id = remoteIdGuid(item.type, item.keys['remoteId'], memory.keyMap);
       rec = memory.cache.query(q => q.findRecord({ type: item.type, id: id }));
     }
@@ -48,7 +47,16 @@ export function insertData(
     }
   }
 }
-
+/*
+  async function asyncForEach(
+    array: any[],
+    callback: (arg0: any, arg1: number, arg2: any[]) => any
+  ) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  }
+*/
 export async function LoadData(
   memory: Memory,
   backup: IndexedDBSource,
@@ -56,22 +64,46 @@ export async function LoadData(
   setCompleted: (valud: number) => void
 ): Promise<boolean> {
   var tb: TransformBuilder = new TransformBuilder();
-  var oparray: Operation[] = [];
 
-  function processData(data: string, ser: JSONAPISerializerCustom) {
+  async function processData(data: string, ser: JSONAPISerializerCustom) {
     var x = JSON.parse(data);
     var tables: ResourceDocument[] = x.data;
     var completed = 15;
+    var oparray: Operation[] = [];
+
     tables.forEach(t => {
       var json = ser.deserialize(t);
-      if (isArray(json.data))
+      if (isArray(json.data)) {
+        //console.log(json.data[0].type, json.data.length);
         json.data.forEach(item =>
           insertData(item, memory, tb, oparray, false, false)
         );
-      else insertData(json.data, memory, tb, oparray, false, false);
+      } else {
+        insertData(json.data, memory, tb, oparray, false, false);
+      }
       completed += 3;
       setCompleted(completed);
     });
+    try {
+      //this was slower than just waiting for them both separately
+      //await Promise.all([memory.update(oparray), backup.push(oparray)]);
+      var transform = {
+        id: 'xyz' + Date.now().toString(),
+        operations: oparray,
+      };
+      await memory
+        .sync(transform)
+        .then(() => console.log('memory synced'))
+        .catch(err => {
+          console.log(err);
+        });
+      await backup
+        .sync(transform)
+        .then(x => console.log('backup sync complete'))
+        .catch(err => console.log('backup sync failed', err));
+    } catch (err) {
+      console.log('backup update err', err);
+    }
   }
 
   const s: JSONAPISerializerSettings = {
@@ -89,14 +121,8 @@ export async function LoadData(
     setCompleted(15);
     if (transform.length > 0 && transform[0].operations.length > 0) {
       var r: OrgData = (transform[0].operations[0] as any).record;
-      processData(r.attributes.json, ser);
-      try {
-        await memory.update(oparray);
-        backup.push(oparray);
-        return true;
-      } catch (err) {
-        console.log('backup update err', err);
-      }
+      await processData(r.attributes.json, ser);
+      return true;
     }
   } catch (rejected) {
     console.log(rejected);

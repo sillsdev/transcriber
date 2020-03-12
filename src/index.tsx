@@ -31,9 +31,15 @@ if (isElectron) {
   backup
     .pull(q => q.findRecords())
     .then(transform => {
-      memory.sync(transform).then(() => {
-        console.log('done');
-      });
+      memory
+        .sync(transform)
+        .then(() => {
+          console.log('done');
+        })
+        .catch(async () => {
+          await backup.reset();
+          console.log('reset');
+        });
     })
     .catch(err => console.log('IndexedDB Pull error: ', err));
 }
