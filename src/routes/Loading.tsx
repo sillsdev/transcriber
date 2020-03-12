@@ -30,6 +30,7 @@ import {
   uiLang,
   remoteId,
   GetUser,
+  remoteIdGuid,
 } from '../utils';
 import SnackBar from '../components/SnackBar';
 import { getOrgs } from '../utils/getOrgs';
@@ -185,17 +186,25 @@ export function Loading(props: IProps) {
 
   const setDefaultOrg = async () => {
     let orgs: Organization[] = getOrgs(memory, user);
-    if (organization === '') {
+    var org = organization;
+    if (org === '') {
+      org =
+        remoteIdGuid(
+          'organization',
+          localStorage.getItem('lastOrg') || '',
+          keyMap
+        ) || '';
+    }
+    if (org === '') {
       orgs = orgs
         .filter(o => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
       if (orgs.length > 0) {
-        setOrganization(orgs[0].id);
-        setDefaultProj(orgs[0].id, memory, setProject);
+        org = orgs[0].id;
       }
-    } else {
-      setDefaultProj(organization, memory, setProject);
     }
+    setOrganization(org);
+    if (org !== '') setDefaultProj(org, memory, setProject);
   };
 
   useEffect(() => {
@@ -225,10 +234,10 @@ export function Loading(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (completed === 100 && organization === '') {
+    if (orbitLoaded && completed === 100 && organization === '') {
       if (user && user !== '') {
         const userRec: User = GetUser(memory, user);
-        const locale = userRec.attributes.locale;
+        const locale = userRec.attributes ? userRec.attributes.locale : 'en';
         if (locale) setLanguage(locale);
       }
       if (newOrgParams) {
@@ -267,32 +276,34 @@ export function Loading(props: IProps) {
   if (orbitLoaded && (completed === 100 || offline) && newOrgParams === null) {
     if (user && user !== '') {
       const userRec: User = GetUser(memory, user);
-      if (!hasAnyRelated(userRec, 'groupMemberships')) {
-        const orgRec: Organization = {
-          type: 'organization',
-          attributes: {
-            name: t.myWorkbench,
-            description: 'Default organization of ' + userRec.attributes.name,
-            publicByDefault: true,
-          },
-        } as any;
-        CreateOrg({
-          orgRec,
-          user,
-          schema,
-          memory,
-          remote,
-          setOrganization,
-          setProject,
-        });
-      }
-      if (
-        !userRec.attributes.givenName ||
-        !userRec.attributes.timezone ||
-        !userRec.attributes.locale ||
-        !uiLang.includes(userRec.attributes.locale)
-      ) {
-        return <Redirect to="/profile" />;
+      if (userRec.attributes) {
+        if (!hasAnyRelated(userRec, 'groupMemberships')) {
+          const orgRec: Organization = {
+            type: 'organization',
+            attributes: {
+              name: t.myWorkbench,
+              description: t.defaultOrgDesc + userRec.attributes.name,
+              publicByDefault: true,
+            },
+          } as any;
+          CreateOrg({
+            orgRec,
+            user,
+            schema,
+            memory,
+            remote,
+            setOrganization,
+            setProject,
+          });
+        }
+        if (
+          !userRec.attributes.givenName ||
+          !userRec.attributes.timezone ||
+          !userRec.attributes.locale ||
+          !uiLang.includes(userRec.attributes.locale)
+        ) {
+          return <Redirect to="/profile" />;
+        }
       }
     }
     const deepLink = localStorage.getItem('url');

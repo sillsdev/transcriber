@@ -364,17 +364,6 @@ export function ResponsiveDrawer(props: IProps) {
       setGroup('');
       setProjOptions([]);
       setCurProj(null);
-      const projRecs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('project').filter({
-          relation: 'organization',
-          record: { type: 'organization', id: value },
-        })
-      ) as Project[];
-      const sortedProjRecs = projRecs.sort((i, j) =>
-        i.attributes.name < j.attributes.name ? -1 : 1
-      );
-      if (projRecs.length !== 0) handleCommitProj(sortedProjRecs[0].id);
-      else setContent('none');
     }
   };
 
@@ -526,31 +515,37 @@ export function ResponsiveDrawer(props: IProps) {
   }, []);
 
   useEffect(() => {
-    const organizations = getOrgs(memory, user);
-    const orgOpts = organizations
-      .filter(o => o.attributes)
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-      .map((o: Organization) => {
-        return {
-          value: o.id,
-          label: o.attributes.name,
-        };
-      });
-    setOrgOptions(
-      API_CONFIG.isApp
-        ? orgOpts
-        : orgOpts.concat({
-            value: t.newOrganization,
-            label: t.newOrganization + '    \uFF0B',
-            // or \u2795
-          })
-    );
+    if (orbitLoaded) {
+      const organizations = getOrgs(memory, user);
+      const orgOpts = organizations
+        .filter(o => o.attributes)
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .map((o: Organization) => {
+          return {
+            value: o.id,
+            label: o.attributes.name,
+          };
+        });
+      setOrgOptions(
+        API_CONFIG.isApp
+          ? orgOpts
+          : orgOpts.concat({
+              value: t.newOrganization,
+              label: t.newOrganization + '    \uFF0B',
+              // or \u2795
+            })
+      );
 
-    const orgRec = organizations.filter(o => o.id === organization);
-    if (orgRec.length > 0) {
-      const attr = orgRec[0].attributes;
-      setOrgAvatar(DataPath(attr?.logoUrl || ''));
+      const orgRec = organizations.filter(o => o.id === organization);
+      if (orgRec.length > 0) {
+        const attr = orgRec[0].attributes;
+        setOrgAvatar(DataPath(attr?.logoUrl || ''));
+      }
+      setOrgRole(
+        getRole(organizationMemberships, 'organization', organization)
+      );
     }
+
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organization, user, organizationMemberships]);
 
@@ -573,7 +568,6 @@ export function ResponsiveDrawer(props: IProps) {
       )
         handleCommitOrg(orgOptions[0].value);
     }
-    setOrgRole(getRole(organizationMemberships, 'organization', organization));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orgOptions, organization]);
 
@@ -597,22 +591,27 @@ export function ResponsiveDrawer(props: IProps) {
       setProjOptions(projOpts);
       if (projOpts.length === 0) {
         setCurProj(null);
-        if (!offline && swapRef.current) {
-          Axios.get(API_CONFIG.host + '/api/projects/', {
-            headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
-            },
-          }).then(strings => {
-            const data = strings.data.data as Record[];
-            const orgRemId = localStorage.getItem('lastOrg');
-            const filtered = data.filter(
-              r => related(r, 'organization') === orgRemId
-            );
-            if (filtered.length === 0) {
-              if (API_CONFIG.isApp) swapRef.current.click();
-              else handleAddProject();
-            }
-          });
+        if (
+          content !== slug(t.usersAndGroups) &&
+          content !== slug(t.organization)
+        ) {
+          if (!offline && swapRef.current) {
+            Axios.get(API_CONFIG.host + '/api/projects/', {
+              headers: {
+                Authorization: 'Bearer ' + auth.accessToken,
+              },
+            }).then(strings => {
+              const data = strings.data.data as Record[];
+              const orgRemId = localStorage.getItem('lastOrg');
+              const filtered = data.filter(
+                r => related(r, 'organization') === orgRemId
+              );
+              if (filtered.length === 0) {
+                if (API_CONFIG.isApp) swapRef.current.click();
+                else handleAddProject();
+              }
+            });
+          }
         }
       }
     });
@@ -642,7 +641,7 @@ export function ResponsiveDrawer(props: IProps) {
       handleCommitProj(projKeys[0]);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject, organization, busy]);
+  }, [projOptions, project, addProject, busy]);
 
   useEffect(() => {
     try {

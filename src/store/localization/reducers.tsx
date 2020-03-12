@@ -312,6 +312,7 @@ const initialState = {
 			"exit": "Exit",
 			"continue": "Continue",
 			"myWorkbench": "My Workbench",
+			"defaultOrgDesc": "Default organization of ",
 		}
 	}),
 	"import": new LocalizedStrings({

@@ -1417,6 +1417,12 @@
 				<target>Mon Atelier</target>
 			</segment>
 		</unit>
+      <unit id="main.defaultOrgDesc">
+         <segment>
+            <source>Default organization of </source>
+            <target>Organisation par défaut de </target>
+         </segment>
+      </unit>
         <unit id="import.import">
          <segment>
             <source>Import</source>

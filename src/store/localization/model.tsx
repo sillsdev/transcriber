@@ -289,6 +289,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "exit": string;
     "continue": string;
     "myWorkbench": string;
+    "defaultOrgDesc": string;
 };
 
 export interface IImportStrings extends Localize.LocalizedStringsMethods {
