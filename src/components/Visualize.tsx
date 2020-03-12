@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, Plan, Section, Role, Passage, User } from '../model';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import TreeChart, {
   IPlanRow,

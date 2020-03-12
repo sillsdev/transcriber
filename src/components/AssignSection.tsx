@@ -12,7 +12,7 @@ import {
   RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {

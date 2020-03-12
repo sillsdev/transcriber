@@ -5,7 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import ErrorBoundary from './hoc/ErrorBoundary';
 import { Router, HashRouter } from 'react-router-dom';
-import { DataProvider } from 'react-orbitjs';
+import { DataProvider } from './mods/react-orbitjs';
 import { Provider } from 'react-redux';
 import Memory from '@orbit/memory';
 import { schema, keyMap } from './schema';

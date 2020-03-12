@@ -14,7 +14,7 @@ import {
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';

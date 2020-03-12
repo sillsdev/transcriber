@@ -133,7 +133,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 cell="[object Object]"
                 class="cell read-only"
                 col="0"
-                editing="false"
                 row="0"
               >
                 <span
@@ -144,7 +143,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 cell="[object Object]"
                 class="cell read-only"
                 col="1"
-                editing="false"
                 row="0"
                 style="width: 80px;"
               >
@@ -158,7 +156,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 cell="[object Object]"
                 class="cell read-only"
                 col="2"
-                editing="false"
                 row="0"
                 style="width: 280px;"
               >
@@ -172,7 +169,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 cell="[object Object]"
                 class="cell read-only"
                 col="3"
-                editing="false"
                 row="0"
                 style="width: 80px;"
               >
@@ -186,7 +182,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 cell="[object Object]"
                 class="cell read-only"
                 col="4"
-                editing="false"
                 row="0"
                 style="width: 170px;"
               >
@@ -200,7 +195,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 cell="[object Object]"
                 class="cell read-only"
                 col="5"
-                editing="false"
                 row="0"
                 style="width: 180px;"
               >
@@ -214,7 +208,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 cell="[object Object]"
                 class="cell read-only"
                 col="6"
-                editing="false"
                 row="0"
                 style="width: 280px;"
               >

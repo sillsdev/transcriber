@@ -264,9 +264,14 @@ export function PlanSheet(props: IProps) {
     }
   };
 
-  const cellRender = (props: any) => (
-    <td {...props} editing="false" onMouseUp={handleUp} />
-  );
+  const myCell = (props: any) => {
+    let myProps = { ...props };
+    delete myProps.editing;
+    delete myProps.updated;
+    delete myProps.attributesRenderer;
+    // console.log(myProps);
+    return <td {...myProps} onMouseUp={handleUp} />;
+  };
 
   const bookEditor = (props: any) => {
     if (projRole !== 'admin') return <></>;
@@ -426,7 +431,7 @@ export function PlanSheet(props: IProps) {
           onContextMenu={handleContextMenu}
           onCellsChanged={handleCellsChanged}
           parsePaste={handlePaste}
-          cellRenderer={cellRender}
+          cellRenderer={myCell}
         />
         <Menu
           keepMounted

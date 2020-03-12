@@ -21,7 +21,7 @@ import {
 } from '../model';
 import * as actions from '../store';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, Record } from '@orbit/data';
 import {
   AppBar,

@@ -30,7 +30,7 @@ import {
   handleElectronImport,
   getElectronImportData,
 } from './ElectronImport';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import AdmZip from 'adm-zip';
 import Confirm from '../components/AlertDialog';
 

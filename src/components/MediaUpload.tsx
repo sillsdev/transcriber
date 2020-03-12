@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 const FileDrop =
-  process.env.NODE_ENV !== 'test' ? require('react-file-drop').default : <></>;
+  process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

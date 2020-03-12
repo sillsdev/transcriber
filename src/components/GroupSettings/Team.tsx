@@ -14,7 +14,7 @@ import {
   Project,
 } from '../../model';
 import localStrings from '../../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { Grid } from '@material-ui/core';
 import useOwnerIds from './useOwnerIds';

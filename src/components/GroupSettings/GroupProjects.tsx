@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, Project, IGroupSettingsStrings } from '../../model';
 import localStrings from '../../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { List, ListItem, ListItemText } from '@material-ui/core';
 import useStyles from './GroupSettingsStyles';
@@ -64,6 +64,6 @@ const mapRecordsToProps = {
   projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  GroupProjects
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(GroupProjects) as any
+) as any;

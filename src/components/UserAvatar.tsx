@@ -4,7 +4,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IState, User } from '../model';
 import { connect } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
 import { DataPath } from '../utils/DataPath';

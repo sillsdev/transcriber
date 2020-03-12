@@ -17,7 +17,7 @@ import {
 } from '../model';
 import * as action from '../store';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   withStyles,

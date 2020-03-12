@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { IState, Section, Plan, IGroupSettingsStrings } from '../../model';
 import localStrings from '../../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import { related } from '../../utils';
@@ -91,6 +91,6 @@ const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
 };
 
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(
-  Involvement
-) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(Involvement) as any
+) as any;
