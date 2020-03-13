@@ -453,6 +453,10 @@ export function ResponsiveDrawer(props: IProps) {
     }
   };
 
+  const handleSwitch = () => {
+    localStorage.setItem('url', history.location.pathname);
+    if (swapRef.current) swapRef.current.click();
+  };
   const handleAdmin = (where: string) => () => shell.openExternal(where);
 
   const checkSavedFn = (method: () => any) => {
@@ -1148,32 +1152,26 @@ export function ResponsiveDrawer(props: IProps) {
           {!API_CONFIG.isApp ? (
             <div className={classes.navButton}>
               <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <a
-                href={transcribe ? swapTarget : ''}
-                style={{ textDecoration: 'none' }}
-                title={t.switchToApp}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSwitch}
+                disabled={!transcribe}
               >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={!transcribe}
-                >
-                  {t.transcribe}
-                </Button>
-              </a>
+                {t.transcribe}
+              </Button>
             </div>
           ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
             <div className={classes.navButton}>
               <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <a
-                href={swapTarget}
-                style={{ textDecoration: 'none' }}
-                title={t.switchToAdmin}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSwitch}
+                disabled={busy}
               >
-                <Button variant="contained" color="primary" disabled={busy}>
-                  {t.admin}
-                </Button>
-              </a>
+                {t.admin}
+              </Button>
             </div>
           ) : (
             isElectron &&
