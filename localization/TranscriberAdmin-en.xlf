@@ -4,9 +4,15 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
+      <unit id="access.accessFirst">
+         <segment>
+            <source>Welcome to SIL Transcriber. A project is created online at the {0} Admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>Welcome to SIL Transcriber. Select how to get started.</source>
+            <source>Choose your user to transcriber or review.</source>
             <target/>
          </segment>
       </unit>

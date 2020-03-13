@@ -8,7 +8,8 @@ const initialState = {
 	"lang": 'en',
 	"access": new LocalizedStrings({
 		"en": {
-			"accessSilTranscriber": "Welcome to SIL Transcriber. Select how to get started.",
+			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} Admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
+			"accessSilTranscriber": "Choose your user to transcriber or review.",
 			"importProject": "Import Portable Transcriber Data",
 			"importError": "Import Error",
 			"login": "Online Login",

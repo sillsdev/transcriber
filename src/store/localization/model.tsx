@@ -2,6 +2,7 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
+    "accessFirst": string;
     "accessSilTranscriber": string;
     "importProject": string;
     "importError": string;

@@ -5,14 +5,21 @@
 
     <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
         <body>
-            <trans-unit id="access.accessSilTranscriber">
-                <source>Welcome to SIL Transcriber. Select how to get started.</source>
+            <trans-unit id="access.accessFirst">
+            	<source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="access.importProject">
+        	<trans-unit id="access.accessSilTranscriber">
+        		<source>Choose your user to transcriber or review.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Access.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="access.importProject">
                 <source>Import Portable Transcriber Data</source>
                 <target/>
                 <context-group>

@@ -1,10 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
 	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
+		<unit id="access.accessFirst">
+			<segment>
+				<source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
+				<target>Bienvenue à SIL Transcriber. Un projet est créé en ligne sur le site de l'administration de SIL Transcriber. Exportez un fichier au format Portable Transcriber Format (PTF) et importez-le ici.</target>
+			</segment>
+		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
-				<source>Welcome to SIL Transcriber. Select how to get started.</source>
-				<target>Bienvenue à SIL Transcriber. Sélectionnez comment commencer.</target>
+				<source>Choose your user to transcriber or review.</source>
+				<target>Choisissez votre utilisateur pour transcrire ou réviser.</target>
 			</segment>
 		</unit>
 		<unit id="access.importProject">
