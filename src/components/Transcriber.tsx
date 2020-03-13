@@ -181,6 +181,7 @@ export function Transcriber(props: IProps) {
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [assigned, setAssigned] = React.useState('');
   const [projRec, setProjRec] = React.useState<Project>();
   const [passRec, setPassRec] = React.useState<Passage>(passage);
   const [passageStateChanges, setPassageStateChanges] = React.useState<
@@ -406,6 +407,7 @@ export function Transcriber(props: IProps) {
     done();
   };
   const previous: { [key: string]: string } = {
+    incomplete: ActivityStates.TranscribeReady,
     transcribed: ActivityStates.TranscribeReady,
     transcribing: ActivityStates.TranscribeReady,
     reviewing: ActivityStates.TranscribeReady,
@@ -533,6 +535,16 @@ export function Transcriber(props: IProps) {
     if (passRec && passRec.attributes && passRec.attributes.lastComment) {
       setComment(passRec.attributes.lastComment);
     } else setComment('');
+    if (passRec) {
+      const sectionId = related(passRec, 'section');
+      if (sectionId) {
+        const secRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'section', id: sectionId })
+        ) as Section;
+        setAssigned(role !== 'view' ? related(secRec, role) : '');
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [passRec]);
 
   React.useEffect(() => {
@@ -742,7 +754,7 @@ export function Transcriber(props: IProps) {
               <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
                 <IconButton
                   onClick={handleTimer}
-                  disabled={role !== 'transcriber'}
+                  disabled={role !== 'transcriber' || assigned !== 'user'}
                 >
                   <>
                     <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -762,7 +774,7 @@ export function Transcriber(props: IProps) {
               <WebFontLoader config={fontConfig}>
                 <TextareaAutosize
                   defaultValue={defaultValue}
-                  readOnly={role !== 'transcriber'}
+                  readOnly={role !== 'transcriber' || assigned !== user}
                   style={textAreaStyle}
                 />
               </WebFontLoader>
@@ -804,7 +816,7 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
-                {role !== 'view' ? (
+                {role !== 'view' && assigned === user ? (
                   <>
                     <Button
                       variant="outlined"
