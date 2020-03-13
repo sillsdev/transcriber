@@ -455,9 +455,6 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleAdmin = (where: string) => () => shell.openExternal(where);
 
-  const checkSavedEv = (method: () => any) => () => {
-    checkSavedFn(method);
-  };
   const checkSavedFn = (method: () => any) => {
     if (busy) {
       setMessage(<span>{t.loadingTable}</span>);
@@ -469,6 +466,30 @@ export function ResponsiveDrawer(props: IProps) {
     } else {
       method();
     }
+  };
+  let clickVal = '';
+  const choiceClick = (text: string) => () => {
+    clickVal = text;
+    checkSavedFn(() => handleChoice(clickVal));
+  };
+  const menuAction = (v: string) => {
+    clickVal = v;
+    if (/Clear/i.test(v)) handleUserMenuAction(v);
+    else checkSavedFn(() => handleUserMenuAction(clickVal));
+  };
+  const commitOrg = (v: string, e: any, callback: () => void) => {
+    clickVal = v;
+    checkSavedFn(() => {
+      handleCommitOrg(clickVal);
+      callback();
+    });
+  };
+  const commitProj = (v: string, e: any, callback: () => void) => {
+    clickVal = v;
+    checkSavedFn(() => {
+      handleCommitProj(clickVal);
+      callback();
+    });
   };
   const handleUnsaveConfirmed = () => {
     if (saveConfirm.current) saveConfirm.current();
@@ -863,7 +884,7 @@ export function ResponsiveDrawer(props: IProps) {
     <IntegrationIcon />,
   ];
 
-  const drawer = (
+  const drawer = (drawerId: string) => (
     <div>
       <div className={classes.toolbar}>
         <div className={classes.organization}>
@@ -881,15 +902,10 @@ export function ResponsiveDrawer(props: IProps) {
           {!mini && (
             <div className={classes.select}>
               <ReactSelect
-                key="orgs"
+                id={'orgs' + drawerId}
                 suggestions={orgOptions}
                 current={curOrg}
-                onCommit={(v: string, e: any, callback: () => void) =>
-                  checkSavedFn(() => {
-                    handleCommitOrg(v);
-                    callback();
-                  })
-                }
+                onCommit={commitOrg}
               />
             </div>
           )}
@@ -908,7 +924,7 @@ export function ResponsiveDrawer(props: IProps) {
                   button
                   key={text}
                   selected={slug(text) === choice}
-                  onClick={checkSavedEv(() => handleChoice(text))}
+                  onClick={choiceClick(text)}
                 >
                   <ListItemIcon>
                     {index === 0 && !API_CONFIG.isApp ? (
@@ -941,15 +957,10 @@ export function ResponsiveDrawer(props: IProps) {
                 <div className={classes.contained}>
                   <div className={classes.select}>
                     <ReactSelect
-                      key="projects"
+                      id={'projects' + drawerId}
                       suggestions={projOptions}
                       current={curProj}
-                      onCommit={(v: string, e: any, callback: () => void) =>
-                        checkSavedFn(() => {
-                          handleCommitProj(v);
-                          callback();
-                        })
-                      }
+                      onCommit={commitProj}
                     />
                   </div>
                 </div>
@@ -966,7 +977,7 @@ export function ResponsiveDrawer(props: IProps) {
                   button
                   key={text}
                   selected={slug(text) === choice}
-                  onClick={checkSavedEv(() => handleChoice(text))}
+                  onClick={choiceClick(text)}
                   disabled={curProj === null}
                 >
                   <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
@@ -984,7 +995,7 @@ export function ResponsiveDrawer(props: IProps) {
                     button
                     key={text}
                     selected={slug(text) === choice}
-                    onClick={checkSavedEv(() => handleChoice(text))}
+                    onClick={choiceClick(text)}
                     disabled={curProj === null}
                   >
                     <ListItemIcon>{projectIcons[index]}</ListItemIcon>
@@ -1181,10 +1192,7 @@ export function ResponsiveDrawer(props: IProps) {
           )}
           {'\u00A0'}
           <HelpMenu />
-          <UserMenu
-            action={(v: string) => checkSavedFn(() => handleUserMenuAction(v))}
-            auth={auth}
-          />
+          <UserMenu action={menuAction} />
         </Toolbar>
       </AppBar>
       <nav
@@ -1209,7 +1217,7 @@ export function ResponsiveDrawer(props: IProps) {
               keepMounted: true, // Better open performance on mobile.
             }}
           >
-            {drawer}
+            {drawer('1')}
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -1224,7 +1232,7 @@ export function ResponsiveDrawer(props: IProps) {
             variant="permanent"
             open
           >
-            {drawer}
+            {drawer('2')}
           </Drawer>
         </Hidden>
       </nav>
@@ -1236,15 +1244,13 @@ export function ResponsiveDrawer(props: IProps) {
         )}
         {components[content]}
       </main>
-      {alertOpen ? (
+      {alertOpen && (
         <Confirm
           title={t.planUnsaved}
           text={t.loseData}
           yesResponse={handleUnsaveConfirmed}
           noResponse={handleUnsaveRefused}
         />
-      ) : (
-        <></>
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={swapRef} href={swapTarget} />

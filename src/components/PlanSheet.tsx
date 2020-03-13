@@ -278,6 +278,7 @@ export function PlanSheet(props: IProps) {
     if (setChanged) setChanged(true);
     return (
       <BookSelect
+        id="book"
         suggestions={suggestionRef.current ? suggestionRef.current : []}
         {...props}
         current={(listRef.current ? listRef.current : []).indexOf(props.value)}
