@@ -256,7 +256,7 @@ export const Sources = async (
   coordinator.addStrategy(new EventLoggingStrategy());
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
     console.log('Coordinator will log warnings');
-    setCompleted(100);
+    setCompleted(90);
   });
 };
 

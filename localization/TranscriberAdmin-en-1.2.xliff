@@ -2833,8 +2833,15 @@
                     <context context-type="sourcefile">MediaUpload.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="mediaUpload.dragDrop">
+            <trans-unit id="mediaUpload.dragDropMultiple">
                 <source>Drag and drop files here, or click here to browse for the files.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">MediaUpload.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="mediaUpload.dragDropSingle">
+                <source>Drag and drop a file here, or click here to browse for the file.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>

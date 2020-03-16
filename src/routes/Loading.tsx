@@ -134,32 +134,25 @@ export function Loading(props: IProps) {
     localStorage.removeItem('inviteId');
     var inviteError = '';
 
+    //filter will be passed to api which will lowercase the email before comparison
     var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
-      q.findRecords('invitation').filter(
-        /*this didn't work sometimes { attribute: 'email', value: userEmail },*/
-        { attribute: 'accepted', value: false }
-      )
+      q
+        .findRecords('invitation')
+        .filter(
+          { attribute: 'email', value: userEmail },
+          { attribute: 'accepted', value: false }
+        )
     )) as any;
-    /* filter it by email now... */
-    allinvites = allinvites.filter(i => i.attributes.email === userEmail);
-
     allinvites.forEach(async invitation => {
       await newremote.update((t: TransformBuilder) =>
         t.replaceAttribute(invitation, 'accepted', true)
       );
     });
     if (inviteId) {
-      const invite = allinvites.find(
+      let invite = allinvites.find(
         i => i.attributes.silId === parseInt(inviteId)
       );
-      if (invite) {
-        const orgId = related(invite, 'organization');
-        setOrganization(orgId);
-        localStorage.setItem(
-          'lastOrg',
-          remoteId('organization', orgId, keyMap)
-        );
-      } else {
+      if (!invite) {
         try {
           const thisinvite: Invitation[] = (await newremote.query(
             (q: QueryBuilder) =>
@@ -169,9 +162,14 @@ export function Loading(props: IProps) {
           )) as any;
 
           //if previously accepted just roll with it
-          if (thisinvite[0].attributes.email !== userEmail) {
+          if (
+            thisinvite[0].attributes.email.toLowerCase() !==
+            userEmail.toLowerCase()
+          ) {
             /* they must have logged in with another email */
             inviteError = t.inviteError;
+          } else {
+            invite = thisinvite[0];
           }
         } catch {
           inviteError = t.deletedInvitation;
@@ -180,6 +178,13 @@ export function Loading(props: IProps) {
       if (inviteError !== '') {
         localStorage.setItem('inviteError', inviteError);
         setMessage(<span>{localStorage.getItem('inviteError') || ''}</span>);
+      } else if (invite) {
+        const orgId = related(invite, 'organization');
+        setOrganization(orgId);
+        localStorage.setItem(
+          'lastOrg',
+          remoteId('organization', orgId, keyMap)
+        );
       }
     }
   };
@@ -234,24 +239,38 @@ export function Loading(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (orbitLoaded && completed === 100 && organization === '') {
+    if (orbitLoaded && completed === 90) {
       if (user && user !== '') {
         const userRec: User = GetUser(memory, user);
         const locale = userRec.attributes ? userRec.attributes.locale : 'en';
         if (locale) setLanguage(locale);
-      }
-      if (newOrgParams) {
-        if (localStorage.getItem('newOrg')) {
-          localStorage.removeItem('newOrg');
-          const { orgId, orgName } = parseQuery(newOrgParams);
-          let orgRec: Organization = {
-            type: 'organization',
-            attributes: {
-              name: orgName,
-              SilId: orgId,
-              publicByDefault: true,
-            },
-          } as any;
+
+        if (
+          organization === '' &&
+          (newOrgParams !== null || !hasAnyRelated(userRec, 'groupMemberships'))
+        ) {
+          let orgRec: Organization;
+          if (newOrgParams) {
+            localStorage.removeItem('newOrg');
+            const { orgId, orgName } = parseQuery(newOrgParams);
+            orgRec = {
+              type: 'organization',
+              attributes: {
+                name: orgName,
+                SilId: orgId,
+                publicByDefault: true,
+              },
+            } as any;
+          } else {
+            orgRec = {
+              type: 'organization',
+              attributes: {
+                name: t.myWorkbench,
+                description: t.defaultOrgDesc + userRec.attributes.name,
+                publicByDefault: true,
+              },
+            } as any;
+          }
           CreateOrg({
             orgRec,
             user,
@@ -260,11 +279,13 @@ export function Loading(props: IProps) {
             remote,
             setOrganization,
             setProject,
-          });
+          }).then(() => setCompleted(100));
+          setNewOrgParams(null);
+        } else {
+          setCompleted(100);
         }
-        setNewOrgParams(null);
+        if (savedURL.length <= '/main'.length) setDefaultOrg();
       }
-      if (savedURL.length <= '/main'.length) setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);
@@ -273,38 +294,15 @@ export function Loading(props: IProps) {
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 
-  if (orbitLoaded && (completed === 100 || offline) && newOrgParams === null) {
-    if (user && user !== '') {
-      const userRec: User = GetUser(memory, user);
-      if (userRec.attributes) {
-        if (!hasAnyRelated(userRec, 'groupMemberships')) {
-          const orgRec: Organization = {
-            type: 'organization',
-            attributes: {
-              name: t.myWorkbench,
-              description: t.defaultOrgDesc + userRec.attributes.name,
-              publicByDefault: true,
-            },
-          } as any;
-          CreateOrg({
-            orgRec,
-            user,
-            schema,
-            memory,
-            remote,
-            setOrganization,
-            setProject,
-          });
-        }
-        if (
-          !userRec.attributes.givenName ||
-          !userRec.attributes.timezone ||
-          !userRec.attributes.locale ||
-          !uiLang.includes(userRec.attributes.locale)
-        ) {
-          return <Redirect to="/profile" />;
-        }
-      }
+  if (orbitLoaded && completed === 100) {
+    const userRec: User = GetUser(memory, user);
+    if (
+      !userRec.attributes.givenName ||
+      !userRec.attributes.timezone ||
+      !userRec.attributes.locale ||
+      !uiLang.includes(userRec.attributes.locale)
+    ) {
+      return <Redirect to="/profile" />;
     }
     const deepLink = localStorage.getItem('url');
     return <Redirect to={deepLink ? deepLink : '/main'} />;

@@ -6,7 +6,7 @@
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.accessFirst">
          <segment>
-            <source>Welcome to SIL Transcriber. A project is created online at the {0} Admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
+            <source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
             <target/>
          </segment>
       </unit>
@@ -2428,9 +2428,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaUpload.dragDrop">
+      <unit id="mediaUpload.dragDropMultiple">
          <segment>
             <source>Drag and drop files here, or click here to browse for the files.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.dragDropSingle">
+         <segment>
+            <source>Drag and drop a file here, or click here to browse for the file.</source>
             <target/>
          </segment>
       </unit>

@@ -128,7 +128,11 @@ function MediaUpload(props: IProps) {
           htmlFor="upload"
           onChange={handleNameChange}
         >
-          {name === '' ? t.dragDrop : name}
+          {name === ''
+            ? multiple[uploadType]
+              ? t.dragDropMultiple
+              : t.dragDropSingle
+            : name}
         </label>
         <input
           id="upload"
@@ -147,7 +151,11 @@ function MediaUpload(props: IProps) {
           htmlFor="upload"
           onChange={handleNameChange}
         >
-          {name === '' ? t.dragDrop : name}
+          {name === ''
+            ? multiple[uploadType]
+              ? t.dragDropMultiple
+              : t.dragDropSingle
+            : name}
         </label>
         <input
           id="upload"

@@ -8,7 +8,7 @@ const initialState = {
 	"lang": 'en',
 	"access": new LocalizedStrings({
 		"en": {
-			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} Admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
+			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
 			"accessSilTranscriber": "Choose your user to transcriber or review.",
 			"importProject": "Import Portable Transcriber Data",
 			"importError": "Import Error",
@@ -540,7 +540,8 @@ const initialState = {
 			"task": "You can upload audio files in .mp3, .m4a or .wav format.",
 			"PTFtask": "Upload a Portable Transcriber File (ptf file).",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the offline extension.",
-			"dragDrop": "Drag and drop files here, or click here to browse for the files.",
+			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
+			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
 			"cancel": "Cancel",
 			"upload": "Upload",
 		}
