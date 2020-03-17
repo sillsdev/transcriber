@@ -1,6 +1,8 @@
 Dear <new user>,
 
-Thank you so much for trying out the beta version of SIL Transcriber. As we are still in active development, we are very interested in your first impressions. In order to help us finalize the product, would you help us by answering a few questions?
+Thank you so much for trying out the beta version of SIL Transcriber.
+
+As we are still in active development, we are very interested in your first impressions. In order to help us finalize the product, would you help us by answering a few questions?
 
 1. Were you experimenting with the program or trying to apply it to a real transcription problem?
 
@@ -8,4 +10,20 @@ Thank you so much for trying out the beta version of SIL Transcriber. As we are 
 
 3. Did you encounter any problems that prevented you from getting started with your project?
 
-If you are just getting started and would like to try transcribing, you may find these slides helpful: https://docs.google.com/presentation/d/1U5TwS1BOzc5t0-slnvQeKFcQEkUkOU8BJrDdY-HyR7o/edit?usp=sharing
+If you are just getting started and would like to try transcribing, you may find these slides helpful: https://docs.google.com/presentation/d/1mmlQKDCtUcNW-LLdwIvsuQb59jDVvz9u-hxxixR01D0/edit?usp=sharing
+
+In addition to the web version, we also have a Desktop Extension which will allow transcribers to work without an Internet Connection. Let us know if that would help with your desired work flow.
+
+I just finished updating the production version to 0.6.6. You will see the following changes since 0.6.5:
+- TT-1235 Change Reviewer to Editor
+- TT-1233 Enable reviewers to Editor
+- TT-1224 Improve signup
+- TT-1217 Require assignment to work
+- TT-1121 Welcome screen improvements
+- TT-890 Swith to same project
+- Improve drawer navigation
+- Allow users & Groups and Org Details with no projects
+- Update dependencies
+- Load data from a single API call
+- Change relationship of passages-sections to 1-1
+- Fix path for offline media 
