@@ -294,6 +294,7 @@ export function Transcriber(props: IProps) {
   const handleRejectCancel = () => setRejectVisible(false);
 
   const next: { [key: string]: string } = {
+    incomplete: ActivityStates.Transcribed,
     transcribing: ActivityStates.Transcribed,
     reviewing: ActivityStates.Approved,
     transcribeReady: ActivityStates.Transcribed,
