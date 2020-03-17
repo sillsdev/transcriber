@@ -62,7 +62,7 @@ export function TaskHead(props: IProps) {
   const planName = section.attributes.name;
 
   const trans = related(section, 'transcriber');
-  const rev = related(section, 'reviewer');
+  const rev = related(section, 'editor');
   const assignAction = t.assign;
   const unassignAction = t.unassign;
   const tranAction = trans && trans !== '' ? unassignAction : assignAction;
@@ -130,7 +130,7 @@ export function TaskHead(props: IProps) {
             }
           </MenuItem>
           <MenuItem
-            onClick={handleAction(revAction, 'reviewer')}
+            onClick={handleAction(revAction, 'editor')}
             disabled={
               revAction === unassignAction &&
               rev !== user &&
@@ -140,7 +140,7 @@ export function TaskHead(props: IProps) {
           >
             {
               <div className={classes.menuItem}>
-                <>{revAction.replace('{0}', t.reviewer) + '\u00A0'}</>
+                <>{revAction.replace('{0}', t.editor) + '\u00A0'}</>
                 <TaskAvatar assigned={rev && rev !== '' ? rev : user} />
               </div>
             }

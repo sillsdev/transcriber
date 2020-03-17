@@ -3,10 +3,10 @@ import { related } from '.';
 import { numCompare } from './sort';
 
 export function sectionReviewer(s: Section, users: Array<User>) {
-  let user = users.filter(u => u.id === related(s, 'reviewer'));
+  let user = users.filter(u => u.id === related(s, 'editor'));
   return user.length > 0 ? user[0] : null;
 }
-export function sectionReviewerName(s: Section, users: Array<User>) {
+export function sectionEditorName(s: Section, users: Array<User>) {
   let user = sectionReviewer(s, users);
   return user == null || !user.attributes ? '' : user.attributes.name;
 }

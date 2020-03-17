@@ -463,11 +463,11 @@ export function TaskTable(props: IProps) {
     const rowList: IRow[] = [];
     if (role !== '') {
       if (role !== RoleNames.Transcriber) {
-        addTasks(ActivityStates.Reviewing, 'reviewer', rowList, playItem);
+        addTasks(ActivityStates.Reviewing, 'editor', rowList, playItem);
       }
       addTasks(ActivityStates.Transcribing, 'transcriber', rowList, playItem);
       if (role !== RoleNames.Transcriber) {
-        addTasks(ActivityStates.Transcribed, 'reviewer', rowList, playItem);
+        addTasks(ActivityStates.Transcribed, 'editor', rowList, playItem);
       }
       addTasks(
         ActivityStates.TranscribeReady,

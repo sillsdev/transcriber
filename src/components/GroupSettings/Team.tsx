@@ -182,8 +182,8 @@ function Team(props: IProps) {
         />
         <TeamCol
           {...props}
-          title={t.reviewers}
-          titledetail={t.reviewersDetail}
+          title={t.editors}
+          titledetail={t.editorsDetail}
           people={useReviewerIds(props)}
           add={() => handleAdd(RoleNames.Reviewer)}
           del={(id: string, name: string) =>

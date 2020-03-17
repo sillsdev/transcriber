@@ -161,7 +161,7 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "delete": string;
     "filter": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
     "selectRowsToAssign": string;
     "selectRowsToRemove": string;
 };
@@ -170,7 +170,7 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "title": string;
     "sections": string;
     "users": string;
-    "reviewer": string;
+    "editor": string;
     "transcriber": string;
     "role": string;
     "assignAs": string;
@@ -312,7 +312,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "passages": string;
     "filter": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
     "plan": string;
     "elan": string;
     "export": string;
@@ -371,10 +371,10 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "save": string;
     "projects": string;
     "owners": string;
-    "reviewers": string;
+    "editors": string;
     "transcribers": string;
     "ownersDetail": string;
-    "reviewersDetail": string;
+    "editorsDetail": string;
     "transcribersDetail": string;
     "addGroupMember": string;
     "addMemberInstruction": string;
@@ -464,8 +464,8 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "adminDetail": string;
     "transcriber": string;
     "transcriberDetail": string;
-    "reviewer": string;
-    "reviewerDetail": string;
+    "editor": string;
+    "editorDetail": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
@@ -521,7 +521,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "state": string;
     "action": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
     "view": string;
     "length": string;
     "assigned": string;
@@ -657,7 +657,7 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "unassign": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {

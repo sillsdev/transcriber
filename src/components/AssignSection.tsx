@@ -40,7 +40,7 @@ import SnackBar from './SnackBar';
 import UserAvatar from './UserAvatar';
 import {
   sectionTranscriberName,
-  sectionReviewerName,
+  sectionEditorName,
   sectionNumber,
 } from '../utils/section';
 import { related, getRoleId } from '../utils';
@@ -168,15 +168,15 @@ function AssignSection(props: IProps) {
       );
     });
 
-  const reviewerIds = groupMemberships
+  const editorIds = groupMemberships
     .filter(
       gm =>
         related(gm, 'group') === groupId &&
         related(gm, 'role') !== transcriberRoleId
     )
     .map(gm => related(gm, 'user'));
-  const reviewerUserList = users
-    .filter(u => u.attributes && reviewerIds.indexOf(u.id) !== -1)
+  const editorUserList = users
+    .filter(u => u.attributes && editorIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -206,7 +206,7 @@ function AssignSection(props: IProps) {
         <TableCell component="th" scope="row">
           {sectionNumber(p) + ' ' + p.attributes.name}
         </TableCell>
-        <TableCell align="right">{sectionReviewerName(p, users)} </TableCell>
+        <TableCell align="right">{sectionEditorName(p, users)} </TableCell>
         <TableCell align="right">{sectionTranscriberName(p, users)}</TableCell>
       </TableRow>
     );
@@ -234,7 +234,7 @@ function AssignSection(props: IProps) {
                 <TableHead>
                   <TableRow>
                     <TableCell>{t.sections}</TableCell>
-                    <TableCell align="right">{t.reviewer}</TableCell>
+                    <TableCell align="right">{t.editor}</TableCell>
                     <TableCell align="right">{t.transcriber}</TableCell>
                   </TableRow>
                 </TableHead>
@@ -252,8 +252,8 @@ function AssignSection(props: IProps) {
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
-                  <ListItem key="head">{t.reviewer}</ListItem>
-                  {reviewerUserList}
+                  <ListItem key="head">{t.editor}</ListItem>
+                  {editorUserList}
                 </List>
               </Paper>
             </Grid>

@@ -757,10 +757,10 @@
 				<target>Transcripteur</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.reviewer">
+		<unit id="assignmentTable.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Réviseur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.selectRowsToAssign">
@@ -793,10 +793,10 @@
 				<target>Utilisatrices</target>
 			</segment>
 		</unit>
-		<unit id="assignSection.reviewer">
+		<unit id="assignSection.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Réviseur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="assignSection.transcriber">
@@ -1520,10 +1520,10 @@
 				<target>Transcripteur</target>
 			</segment>
 		</unit>
-		<unit id="transcriptionTab.reviewer">
+		<unit id="transcriptionTab.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Réviseur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.plan">
@@ -1784,10 +1784,10 @@
          	<target>Maître(s)</target>
          </segment>
       </unit>
-		<unit id="groupSettings.reviewers">
+		<unit id="groupSettings.editors">
 			<segment>
-				<source>Reviewers</source>
-				<target>Réviseur</target>
+				<source>Editors</source>
+				<target>Éditeurs</target>
 			</segment>
 		</unit>
 		<unit id="groupSettings.transcribers">
@@ -1802,7 +1802,7 @@
             <target>(Gérer + Réviser + Transcrire)</target>
          </segment>
       </unit>
-      <unit id="groupSettings.reviewersDetail">
+      <unit id="groupSettings.editorsDetail">
          <segment>
             <source>(Review + Transcribe)</source>
             <target>(Réviser + Transcrire)</target>
@@ -1852,8 +1852,8 @@
 		</unit>
 		<unit id="groupSettings.allReviewersCanTranscribe">
 		<segment>
-			<source>All Reviewers are allowed to transcribe.</source>
-			<target>Tous les réviseurs sont autorisés à transcrire.</target>
+			<source>All Editors are allowed to transcribe.</source>
+			<target>Tous les éditeurs sont autorisés à transcrire.</target>
 		</segment>
 	</unit>
 	<unit id="groupSettings.groupExplain">
@@ -2253,13 +2253,13 @@
          	<target>(Transcription)</target>
          </segment>
       </unit>
-		<unit id="invite.reviewer">
+		<unit id="invite.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Examinateur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
-     <unit id="invite.reviewerDetail">
+     <unit id="invite.editorDetail">
          <segment>
             <source>(Review + Transcribe)</source>
          	<target>(Révision + transcription)</target>
@@ -2499,7 +2499,7 @@
 				<target>Transcrire</target>
 			</segment>
 		</unit>
-		<unit id="toDoTable.reviewer">
+		<unit id="toDoTable.editor">
 			<segment>
 				<source>Review</source>
 				<target>Controler</target>
@@ -3208,10 +3208,10 @@
 				<target>Transcriber</target>
 			</segment>
 		</unit>
-		<unit id="taskItem.reviewer">
+		<unit id="taskItem.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Examinateur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="control.contentType">

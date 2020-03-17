@@ -887,8 +887,8 @@
                     <context context-type="sourcefile">assignmentTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="assignmentTable.reviewer">
-                <source>Reviewer</source>
+            <trans-unit id="assignmentTable.editor">
+                <source>Editor</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -929,8 +929,8 @@
                     <context context-type="sourcefile">AssignSection.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="assignSection.reviewer">
-                <source>Reviewer</source>
+            <trans-unit id="assignSection.editor">
+                <source>Editor</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">AssignSection.tsx</context>
@@ -1776,8 +1776,8 @@
                     <context context-type="sourcefile">TranscriptionTab.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriptionTab.reviewer">
-                <source>Reviewer</source>
+            <trans-unit id="transcriptionTab.editor">
+                <source>Editor</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -2084,8 +2084,8 @@
                     <context context-type="sourcefile">GroupSettings.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupSettings.reviewers">
-                <source>Reviewers</source>
+            <trans-unit id="groupSettings.editors">
+                <source>Editors</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2105,7 +2105,7 @@
                     <context context-type="sourcefile">GroupSettings.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupSettings.reviewersDetail">
+            <trans-unit id="groupSettings.editorsDetail">
                 <source>(Review + Transcribe)</source>
                 <target/>
                 <context-group>
@@ -2162,7 +2162,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupSettings.allReviewersCanTranscribe">
-                <source>All Reviewers are allowed to transcribe.</source>
+                <source>All Editors are allowed to transcribe.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2630,14 +2630,14 @@
         			<context context-type="sourcefile">Invite.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="invite.reviewer">
-        		<source>Reviewer</source>
+        	<trans-unit id="invite.editor">
+        		<source>Editor</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Invite.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="invite.reviewerDetail">
+        	<trans-unit id="invite.editorDetail">
         		<source>(Review + Transcribe)</source>
         		<target/>
         		<context-group>
@@ -2924,7 +2924,7 @@
                     <context context-type="sourcefile">ToDoTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="toDoTable.reviewer">
+            <trans-unit id="toDoTable.editor">
                 <source>Review</source>
                 <target/>
                 <context-group>
@@ -3749,8 +3749,8 @@
         			<context context-type="sourcefile">TaskHead.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="taskItem.reviewer">
-        		<source>Reviewer</source>
+        	<trans-unit id="taskItem.editor">
+        		<source>Editor</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskHead.tsx</context>

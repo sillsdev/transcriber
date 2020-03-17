@@ -36,7 +36,7 @@ function Involvement(props: IProps) {
   sections
     .filter(
       s =>
-        (rev && related(s, 'reviewer') === user) ||
+        (rev && related(s, 'editor') === user) ||
         (!rev && related(s, 'transcriber') === user)
     )
     .forEach(s => {

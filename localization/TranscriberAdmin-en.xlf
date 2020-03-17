@@ -760,9 +760,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.reviewer">
+      <unit id="assignmentTable.editor">
          <segment>
-            <source>Reviewer</source>
+            <source>Editor</source>
             <target/>
          </segment>
       </unit>
@@ -796,9 +796,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignSection.reviewer">
+      <unit id="assignSection.editor">
          <segment>
-            <source>Reviewer</source>
+            <source>Editor</source>
             <target/>
          </segment>
       </unit>
@@ -1522,9 +1522,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionTab.reviewer">
+      <unit id="transcriptionTab.editor">
          <segment>
-            <source>Reviewer</source>
+            <source>Editor</source>
             <target/>
          </segment>
       </unit>
@@ -1786,9 +1786,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.reviewers">
+      <unit id="groupSettings.editors">
          <segment>
-            <source>Reviewers</source>
+            <source>Editors</source>
             <target/>
          </segment>
       </unit>
@@ -1804,7 +1804,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.reviewersDetail">
+      <unit id="groupSettings.editorsDetail">
          <segment>
             <source>(Review + Transcribe)</source>
             <target/>
@@ -1854,7 +1854,7 @@
       </unit>
       <unit id="groupSettings.allReviewersCanTranscribe">
          <segment>
-            <source>All Reviewers are allowed to transcribe.</source>
+            <source>All Editors are allowed to transcribe.</source>
             <target/>
          </segment>
       </unit>
@@ -2254,13 +2254,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.reviewer">
+      <unit id="invite.editor">
          <segment>
-            <source>Reviewer</source>
+            <source>Editor</source>
             <target/>
          </segment>
       </unit>
-      <unit id="invite.reviewerDetail">
+      <unit id="invite.editorDetail">
          <segment>
             <source>(Review + Transcribe)</source>
             <target/>
@@ -2506,7 +2506,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="toDoTable.reviewer">
+      <unit id="toDoTable.editor">
          <segment>
             <source>Review</source>
             <target/>
@@ -3214,9 +3214,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="taskItem.reviewer">
+      <unit id="taskItem.editor">
          <segment>
-            <source>Reviewer</source>
+            <source>Editor</source>
             <target/>
          </segment>
       </unit>

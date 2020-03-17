@@ -275,7 +275,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'passage',
           inverse: 'section',
         },
-        reviewer: { type: 'hasOne', model: 'user' },
+        editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
       },
     },
