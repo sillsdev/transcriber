@@ -30,16 +30,19 @@ import {
   handleElectronImport,
   getElectronImportData,
 } from './ElectronImport';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import AdmZip from 'adm-zip';
 import Confirm from '../components/AlertDialog';
 
-// var ptPath = require('electron').remote.getGlobal('ptPath');
+import { AUTH_CONFIG } from '../auth/auth0-variables';
+const reactStringReplace = require('react-string-replace');
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
+const noop = { openExternal: () => {} };
+const { shell } = isElectron ? require('electron') : { shell: noop };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -128,6 +131,7 @@ export function Access(props: IProps) {
   const [message, setMessage] = useState(<></>);
   const [confirmAction, setConfirmAction] = useState('');
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
+  const [online, setOnline] = useState(false);
 
   const handleLogin = () => auth.login();
 
@@ -176,6 +180,11 @@ export function Access(props: IProps) {
       }
     }
   };
+  const handleAdmin = () => shell.openExternal(AUTH_CONFIG.adminEndpoint);
+
+  useEffect(() => {
+    Online(isOnline => setOnline(isOnline));
+  }, []);
 
   useEffect(() => {
     const showMessage = (title: string, msg: string) => {
@@ -251,7 +260,21 @@ export function Access(props: IProps) {
         <div className={classes.container}>
           <Paper className={classes.paper}>
             <Typography variant="body1" className={classes.dialogHeader}>
-              {t.accessSilTranscriber}
+              {users.length > 0 ? (
+                t.accessSilTranscriber
+              ) : (
+                <span>
+                  {reactStringReplace(t.accessFirst, '{0}', () => {
+                    return online ? (
+                      <Button key="launch" onClick={handleAdmin}>
+                        SIL Transcriber
+                      </Button>
+                    ) : (
+                      'SIL Transcriber'
+                    );
+                  })}
+                </span>
+              )}
             </Typography>
             <Grid container direction="row">
               {!importStatus && users && users.length > 0 && (
@@ -284,17 +307,6 @@ export function Access(props: IProps) {
                 </Grid>
               )}
               <Grid item xs={12} md={6}>
-                {/* <div className={classes.actions}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleLogin}
-                    disabled={offline}
-                  >
-                    {t.login}
-                  </Button>
-                </div> */}
                 <div className={classes.actions}>
                   <Button
                     variant="contained"

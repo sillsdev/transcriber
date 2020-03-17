@@ -19,7 +19,7 @@ import {
   User,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   makeStyles,
@@ -64,6 +64,8 @@ import {
   insertAtCursor,
   remoteIdGuid,
   remoteIdNum,
+  FontData,
+  getFontData,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -76,8 +78,6 @@ import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
 } from '../utils/UpdatePassageState';
-import path from 'path';
-import { OfflineDataPath } from '../utils/offlineDataPath';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -181,7 +181,9 @@ export function Transcriber(props: IProps) {
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [projRec, setProjRec] = React.useState<Project>();
+  const [assigned, setAssigned] = React.useState('');
+  const [projData, setProjData] = React.useState<FontData>();
+  const [fontStatus, setFontStatus] = React.useState<string>();
   const [passRec, setPassRec] = React.useState<Passage>(passage);
   const [passageStateChanges, setPassageStateChanges] = React.useState<
     PassageStateChange[]
@@ -212,6 +214,10 @@ export function Transcriber(props: IProps) {
   const commentRef = React.useRef<any>();
 
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
+  const loadStatus = (status: string) => {
+    console.log('Font status: current=', fontStatus, ' new=', status);
+    setFontStatus(status);
+  };
   const handleReady = () => {
     if (defaultPosition > 0) {
       playerRef.current.seekTo(defaultPosition);
@@ -288,6 +294,7 @@ export function Transcriber(props: IProps) {
   const handleRejectCancel = () => setRejectVisible(false);
 
   const next: { [key: string]: string } = {
+    incomplete: ActivityStates.Transcribed,
     transcribing: ActivityStates.Transcribed,
     reviewing: ActivityStates.Approved,
     transcribeReady: ActivityStates.Transcribed,
@@ -373,8 +380,8 @@ export function Transcriber(props: IProps) {
           passRec.id,
           nextOnSave[state],
           '',
-          remoteIdNum('user', user, keyMap),
-          new TransformBuilder(),
+          userid,
+          tb,
           ops
         );
       if (comment !== '') {
@@ -406,6 +413,7 @@ export function Transcriber(props: IProps) {
     done();
   };
   const previous: { [key: string]: string } = {
+    incomplete: ActivityStates.TranscribeReady,
     transcribed: ActivityStates.TranscribeReady,
     transcribing: ActivityStates.TranscribeReady,
     reviewing: ActivityStates.TranscribeReady,
@@ -533,6 +541,16 @@ export function Transcriber(props: IProps) {
     if (passRec && passRec.attributes && passRec.attributes.lastComment) {
       setComment(passRec.attributes.lastComment);
     } else setComment('');
+    if (passRec) {
+      const sectionId = related(passRec, 'section');
+      if (sectionId) {
+        const secRec = memory.cache.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'section', id: sectionId })
+        ) as Section;
+        setAssigned(role !== 'view' ? related(secRec, role) : '');
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [passRec]);
 
   React.useEffect(() => {
@@ -543,40 +561,20 @@ export function Transcriber(props: IProps) {
   React.useEffect(() => {
     memory
       .query(q => q.findRecord({ type: 'project', id: project }))
-      .then(r => setProjRec(r));
+      .then((r: Project) => {
+        setProjData(getFontData(r, offline));
+      });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
-
-  const fontFamily =
-    projRec && projRec.attributes && projRec.attributes.defaultFont
-      ? projRec.attributes.defaultFont.split(',')[0].replace(/ /g, '')
-      : 'CharisSIL';
-
-  // See: https://github.com/typekit/webfontloader#custom
-  const fontConfig = {
-    custom: {
-      families: [fontFamily],
-      urls: [
-        offline
-          ? path.join(OfflineDataPath(), 'fonts', fontFamily + '.css')
-          : 'https://fonts.siltranscriber.org/' + fontFamily + '.css',
-      ],
-    },
-  };
 
   const textAreaStyle = {
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
     height: boxHeight,
     width: '98hu',
-    fontFamily: fontFamily,
-    fontSize:
-      projRec && projRec.attributes && projRec.attributes.defaultFontSize
-        ? projRec.attributes.defaultFontSize
-        : 'large',
-    direction: (projRec && projRec.attributes && projRec.attributes.rtl
-      ? 'rtl'
-      : 'ltr') as any,
+    fontFamily: projData?.fontFamily,
+    fontSize: projData?.fontSize,
+    direction: projData?.fontDir as any,
   };
 
   const paperStyle = { width: width - 24 };
@@ -742,7 +740,7 @@ export function Transcriber(props: IProps) {
               <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
                 <IconButton
                   onClick={handleTimer}
-                  disabled={role !== 'transcriber'}
+                  disabled={role === 'view' || assigned !== user}
                 >
                   <>
                     <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -759,13 +757,24 @@ export function Transcriber(props: IProps) {
               container
               direction="column"
             >
-              <WebFontLoader config={fontConfig}>
+              {projData && !fontStatus ? (
+                <WebFontLoader
+                  config={projData.fontConfig}
+                  onStatus={loadStatus}
+                >
+                  <TextareaAutosize
+                    defaultValue={defaultValue}
+                    readOnly={role === 'view' || assigned !== user}
+                    style={textAreaStyle}
+                  />
+                </WebFontLoader>
+              ) : (
                 <TextareaAutosize
                   defaultValue={defaultValue}
-                  readOnly={role !== 'transcriber'}
+                  readOnly={role === 'view' || assigned !== user}
                   style={textAreaStyle}
                 />
-              </WebFontLoader>
+              )}
             </Grid>
             {showHistory && (
               <Grid item xs={6} container direction="column">
@@ -804,7 +813,7 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
-                {role !== 'view' ? (
+                {role !== 'view' && assigned === user ? (
                   <>
                     <Button
                       variant="outlined"

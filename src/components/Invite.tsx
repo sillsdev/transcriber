@@ -12,7 +12,7 @@ import {
   Project,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -262,12 +262,8 @@ function Invite(props: IProps) {
     var assocProjects = projects
       .filter(p => related(p, 'group') === e.target.value)
       .map(p => p.attributes.name);
-    var list = '';
-    assocProjects.forEach(p => (list += p + ', '));
     setOtherProjects(
-      assocProjects.length > 0
-        ? list.substring(0, list.length - 2)
-        : t.noProjects
+      assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects
     );
   };
   const handleGroupRoleChange = (e: any) => {
@@ -305,17 +301,15 @@ function Invite(props: IProps) {
         related(g, 'owner') === organization
     );
     setGroupsAllonly(allusersgroup);
-    setAllUsersGroup(allusersgroup.length > 0 ? allusersgroup[0].id : '');
-    var assocProjects = projects
-      .filter(p => related(p, 'group') === allusersgroup[0].id)
-      .map(p => p.attributes.name);
-    var list = '';
-    assocProjects.forEach(p => (list += p + ', '));
-    setAllUsersProjects(
-      assocProjects.length > 0
-        ? list.substring(0, list.length - 2)
-        : t.noProjects
-    );
+    if (allusersgroup.length > 0) {
+      setAllUsersGroup(allusersgroup[0].id);
+      var assocProjects = projects
+        .filter(p => related(p, 'group') === allusersgroup[0].id)
+        .map(p => p.attributes.name);
+      setAllUsersProjects(
+        assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects
+      );
+    }
     const noallgroups = groups
       .filter(
         g =>

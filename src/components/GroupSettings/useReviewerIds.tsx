@@ -13,7 +13,7 @@ function useReviewerIds(props: IProps): IPerson[] {
   const [group] = useGlobal('group');
 
   const transcriberId = getRoleId(roles, RoleNames.Transcriber);
-  const reviewerId = getRoleId(roles, RoleNames.Reviewer);
+  const editorId = getRoleId(roles, RoleNames.Reviewer);
 
   return groupMemberships
     .filter(
@@ -21,7 +21,7 @@ function useReviewerIds(props: IProps): IPerson[] {
         related(gm, 'group') === group && related(gm, 'role') !== transcriberId
     )
     .map(gm => ({
-      canDelete: related(gm, 'role') === reviewerId,
+      canDelete: related(gm, 'role') === editorId,
       user: related(gm, 'user'),
     }));
 }

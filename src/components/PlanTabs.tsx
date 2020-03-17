@@ -10,7 +10,7 @@ import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

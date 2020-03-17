@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "0.6.4c",
+  "version": "0.6.6",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -36,7 +36,7 @@
     "node-html-encoder": "0.0.2",
     "original-fs": "^1.1.0",
     "react": "^16.13.0",
-    "react-datasheet": "^1.4.1",
+    "react-datasheet": "1.4.0",
     "react-dom": "^16.13.0",
     "react-file-drop": "^0.2.8",
     "react-hot-loader": "^4.12.19",
@@ -46,7 +46,7 @@
     "react-player": "^1.15.2",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "3.4.0",
     "react-select": "^3.0.8",
     "react-string-replace": "^0.4.4",
     "reactn": "^2.2.6",
@@ -129,9 +129,11 @@
     "electron-react-devtools": "^0.5.3",
     "env-cmd": "^10.1.0",
     "npm-watch": "^0.6.0",
+    "react-test-renderer": "^16.13.0",
     "redux-devtools-extension": "^2.13.8",
     "rimraf": "^3.0.2",
     "source-map-explorer": "^2.3.1",
+    "typescript": "^3.7.5",
     "wait-on": "^4.0.1",
     "write": "^2.0.0"
   },

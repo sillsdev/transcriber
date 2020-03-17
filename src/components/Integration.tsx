@@ -4,7 +4,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IIntegrationStrings, Project, Passage } from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';

@@ -15,7 +15,7 @@ export interface Section extends BaseModel {
     plan: RecordRelationship;
     passages: RecordRelationship;
     transcriber: RecordRelationship;
-    reviewer: RecordRelationship;
+    editor: RecordRelationship;
   };
 }
 export default Section;

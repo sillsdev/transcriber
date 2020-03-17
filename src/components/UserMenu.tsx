@@ -17,8 +17,6 @@ import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccountIcon from '@material-ui/icons/AccountCircle';
 import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
-// import { AUTH_CONFIG } from '../auth/auth0-variables';
-import Auth from '../auth/Auth';
 
 const StyledMenu = withStyles({
   paper: {
@@ -51,13 +49,17 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
+const roleStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+} as React.CSSProperties;
+
 interface IStateProps {
   t: IMainStrings;
 }
 
 interface IProps extends IStateProps {
   action: (what: string) => void;
-  auth?: Auth;
 }
 
 export function UserMenu(props: IProps) {
@@ -73,33 +75,31 @@ export function UserMenu(props: IProps) {
     setAnchorEl(event.currentTarget);
   };
 
-  const handle = (what: string) => () => {
+  const handleAction = (what: string) => () => {
     setAnchorEl(null);
-    action(what);
+    if (action) action(what);
   };
 
   return (
     <div>
       <Button
-        aria-controls="customized-menu"
+        aria-controls="custom-user-menu"
         aria-haspopup="true"
-        // variant="contained"
-        color="primary"
         onClick={handleClick}
       >
         <UserAvatar />
       </Button>
       <StyledMenu
-        id="customized-menu"
+        id="custom-user-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handle('Close')}
+        onClose={handleAction('Close')}
       >
         <StyledMenuItem>
           <ListItemText
             primary={
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={roleStyle}>
                 <Typography>{t.orgRole + ' ' + orgRole}</Typography>
                 <Typography>
                   {t.projRole +
@@ -110,39 +110,24 @@ export function UserMenu(props: IProps) {
             }
           />
         </StyledMenuItem>
-        {/* <a
-          href={
-            AUTH_CONFIG.myAccountApp +
-            '/callback#access_token=' +
-            auth.accessToken +
-            '&expires_in=' +
-            auth.expiresAt +
-            '&token_type=Bearer&state=tAdInit&id_token=' +
-            auth.idToken +
-            '&nonce=test'
-          }
-          style={{ textDecoration: 'none' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        > */}
-        <StyledMenuItem onClick={handle('Profile')}>
+
+        <StyledMenuItem onClick={handleAction('Profile')}>
           <ListItemIcon>
-            <AccountIcon />
+            <AccountIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary={t.myAccount} />
         </StyledMenuItem>
-        {/* </a> */}
-        {!shift || (
-          <StyledMenuItem onClick={handle('Clear')}>
+        {shift && (
+          <StyledMenuItem onClick={handleAction('Clear')}>
             <ListItemIcon>
-              <ClearIcon />
+              <ClearIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={t.clearCache} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem onClick={handle('Logout')}>
+        <StyledMenuItem onClick={handleAction('Logout')}>
           <ListItemIcon>
-            <ExitIcon />
+            <ExitIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary={t.logout} />
         </StyledMenuItem>

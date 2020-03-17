@@ -21,7 +21,7 @@ import {
 } from '../model';
 import * as actions from '../store';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, Record } from '@orbit/data';
 import {
   AppBar,
@@ -94,8 +94,8 @@ import { AUTH_CONFIG } from '../auth/auth0-variables';
 import { API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
-import path from 'path';
-import { OfflineDataPath } from '../utils/offlineDataPath';
+import { getOrgs } from '../utils/getOrgs';
+import { DataPath } from '../utils/DataPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };
@@ -364,17 +364,6 @@ export function ResponsiveDrawer(props: IProps) {
       setGroup('');
       setProjOptions([]);
       setCurProj(null);
-      const projRecs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('project').filter({
-          relation: 'organization',
-          record: { type: 'organization', id: value },
-        })
-      ) as Project[];
-      const sortedProjRecs = projRecs.sort((i, j) =>
-        i.attributes.name < j.attributes.name ? -1 : 1
-      );
-      if (projRecs.length !== 0) handleCommitProj(sortedProjRecs[0].id);
-      else setContent('none');
     }
   };
 
@@ -464,11 +453,12 @@ export function ResponsiveDrawer(props: IProps) {
     }
   };
 
+  const handleSwitch = () => {
+    localStorage.setItem('url', history.location.pathname);
+    if (swapRef.current) swapRef.current.click();
+  };
   const handleAdmin = (where: string) => () => shell.openExternal(where);
 
-  const checkSavedEv = (method: () => any) => () => {
-    checkSavedFn(method);
-  };
   const checkSavedFn = (method: () => any) => {
     if (busy) {
       setMessage(<span>{t.loadingTable}</span>);
@@ -480,6 +470,30 @@ export function ResponsiveDrawer(props: IProps) {
     } else {
       method();
     }
+  };
+  let clickVal = '';
+  const choiceClick = (text: string) => () => {
+    clickVal = text;
+    checkSavedFn(() => handleChoice(clickVal));
+  };
+  const menuAction = (v: string) => {
+    clickVal = v;
+    if (/Clear/i.test(v)) handleUserMenuAction(v);
+    else checkSavedFn(() => handleUserMenuAction(clickVal));
+  };
+  const commitOrg = (v: string, e: any, callback: () => void) => {
+    clickVal = v;
+    checkSavedFn(() => {
+      handleCommitOrg(clickVal);
+      callback();
+    });
+  };
+  const commitProj = (v: string, e: any, callback: () => void) => {
+    clickVal = v;
+    checkSavedFn(() => {
+      handleCommitProj(clickVal);
+      callback();
+    });
   };
   const handleUnsaveConfirmed = () => {
     if (saveConfirm.current) saveConfirm.current();
@@ -507,20 +521,6 @@ export function ResponsiveDrawer(props: IProps) {
   };
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
-  const getOrgs = async () => {
-    //on desktop orgmems might have more than just current user
-    var orgs: Organization[] = await memory.query((q: QueryBuilder) =>
-      q.findRecords('organization')
-    );
-    if (isElectron)
-      orgs = orgs.filter(o =>
-        organizationMemberships
-          .filter(om => related(om, 'user') === user)
-          .map(om => related(om, 'organization'))
-          .includes(o.id)
-      );
-    return orgs;
-  };
   const getProjs = async () => {
     var projs: Project[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('project')
@@ -540,7 +540,8 @@ export function ResponsiveDrawer(props: IProps) {
   }, []);
 
   useEffect(() => {
-    getOrgs().then(organizations => {
+    if (orbitLoaded) {
+      const organizations = getOrgs(memory, user);
       const orgOpts = organizations
         .filter(o => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
@@ -559,14 +560,17 @@ export function ResponsiveDrawer(props: IProps) {
               // or \u2795
             })
       );
+
       const orgRec = organizations.filter(o => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        setOrgAvatar(
-          attr && attr.logoUrl ? path.join(OfflineDataPath(), attr.logoUrl) : ''
-        );
+        setOrgAvatar(DataPath(attr?.logoUrl || ''));
       }
-    });
+      setOrgRole(
+        getRole(organizationMemberships, 'organization', organization)
+      );
+    }
+
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [organization, user, organizationMemberships]);
 
@@ -589,7 +593,6 @@ export function ResponsiveDrawer(props: IProps) {
       )
         handleCommitOrg(orgOptions[0].value);
     }
-    setOrgRole(getRole(organizationMemberships, 'organization', organization));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orgOptions, organization]);
 
@@ -613,22 +616,27 @@ export function ResponsiveDrawer(props: IProps) {
       setProjOptions(projOpts);
       if (projOpts.length === 0) {
         setCurProj(null);
-        if (!offline && swapRef.current) {
-          Axios.get(API_CONFIG.host + '/api/projects/', {
-            headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
-            },
-          }).then(strings => {
-            const data = strings.data.data as Record[];
-            const orgRemId = localStorage.getItem('lastOrg');
-            const filtered = data.filter(
-              r => related(r, 'organization') === orgRemId
-            );
-            if (filtered.length === 0) {
-              if (API_CONFIG.isApp) swapRef.current.click();
-              else handleAddProject();
-            }
-          });
+        if (
+          content !== slug(t.usersAndGroups) &&
+          content !== slug(t.organization)
+        ) {
+          if (!offline && swapRef.current) {
+            Axios.get(API_CONFIG.host + '/api/projects/', {
+              headers: {
+                Authorization: 'Bearer ' + auth.accessToken,
+              },
+            }).then(strings => {
+              const data = strings.data.data as Record[];
+              const orgRemId = localStorage.getItem('lastOrg');
+              const filtered = data.filter(
+                r => related(r, 'organization') === orgRemId
+              );
+              if (filtered.length === 0) {
+                if (API_CONFIG.isApp) swapRef.current.click();
+                else handleAddProject();
+              }
+            });
+          }
         }
       }
     });
@@ -658,7 +666,7 @@ export function ResponsiveDrawer(props: IProps) {
       handleCommitProj(projKeys[0]);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projOptions, project, addProject, organization, busy]);
+  }, [projOptions, project, addProject, busy]);
 
   useEffect(() => {
     try {
@@ -880,7 +888,7 @@ export function ResponsiveDrawer(props: IProps) {
     <IntegrationIcon />,
   ];
 
-  const drawer = (
+  const drawer = (drawerId: string) => (
     <div>
       <div className={classes.toolbar}>
         <div className={classes.organization}>
@@ -898,15 +906,10 @@ export function ResponsiveDrawer(props: IProps) {
           {!mini && (
             <div className={classes.select}>
               <ReactSelect
-                key="orgs"
+                id={'orgs' + drawerId}
                 suggestions={orgOptions}
                 current={curOrg}
-                onCommit={(v: string, e: any, callback: () => void) =>
-                  checkSavedFn(() => {
-                    handleCommitOrg(v);
-                    callback();
-                  })
-                }
+                onCommit={commitOrg}
               />
             </div>
           )}
@@ -925,7 +928,7 @@ export function ResponsiveDrawer(props: IProps) {
                   button
                   key={text}
                   selected={slug(text) === choice}
-                  onClick={checkSavedEv(() => handleChoice(text))}
+                  onClick={choiceClick(text)}
                 >
                   <ListItemIcon>
                     {index === 0 && !API_CONFIG.isApp ? (
@@ -958,15 +961,10 @@ export function ResponsiveDrawer(props: IProps) {
                 <div className={classes.contained}>
                   <div className={classes.select}>
                     <ReactSelect
-                      key="projects"
+                      id={'projects' + drawerId}
                       suggestions={projOptions}
                       current={curProj}
-                      onCommit={(v: string, e: any, callback: () => void) =>
-                        checkSavedFn(() => {
-                          handleCommitProj(v);
-                          callback();
-                        })
-                      }
+                      onCommit={commitProj}
                     />
                   </div>
                 </div>
@@ -983,7 +981,7 @@ export function ResponsiveDrawer(props: IProps) {
                   button
                   key={text}
                   selected={slug(text) === choice}
-                  onClick={checkSavedEv(() => handleChoice(text))}
+                  onClick={choiceClick(text)}
                   disabled={curProj === null}
                 >
                   <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
@@ -1001,7 +999,7 @@ export function ResponsiveDrawer(props: IProps) {
                     button
                     key={text}
                     selected={slug(text) === choice}
-                    onClick={checkSavedEv(() => handleChoice(text))}
+                    onClick={choiceClick(text)}
                     disabled={curProj === null}
                   >
                     <ListItemIcon>{projectIcons[index]}</ListItemIcon>
@@ -1154,32 +1152,26 @@ export function ResponsiveDrawer(props: IProps) {
           {!API_CONFIG.isApp ? (
             <div className={classes.navButton}>
               <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <a
-                href={transcribe ? swapTarget : ''}
-                style={{ textDecoration: 'none' }}
-                title={t.switchToApp}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSwitch}
+                disabled={!transcribe}
               >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  disabled={!transcribe}
-                >
-                  {t.transcribe}
-                </Button>
-              </a>
+                {t.transcribe}
+              </Button>
             </div>
           ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
             <div className={classes.navButton}>
               <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <a
-                href={swapTarget}
-                style={{ textDecoration: 'none' }}
-                title={t.switchToAdmin}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSwitch}
+                disabled={busy}
               >
-                <Button variant="contained" color="primary" disabled={busy}>
-                  {t.admin}
-                </Button>
-              </a>
+                {t.admin}
+              </Button>
             </div>
           ) : (
             isElectron &&
@@ -1198,10 +1190,7 @@ export function ResponsiveDrawer(props: IProps) {
           )}
           {'\u00A0'}
           <HelpMenu />
-          <UserMenu
-            action={(v: string) => checkSavedFn(() => handleUserMenuAction(v))}
-            auth={auth}
-          />
+          <UserMenu action={menuAction} />
         </Toolbar>
       </AppBar>
       <nav
@@ -1226,7 +1215,7 @@ export function ResponsiveDrawer(props: IProps) {
               keepMounted: true, // Better open performance on mobile.
             }}
           >
-            {drawer}
+            {drawer('1')}
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -1241,7 +1230,7 @@ export function ResponsiveDrawer(props: IProps) {
             variant="permanent"
             open
           >
-            {drawer}
+            {drawer('2')}
           </Drawer>
         </Hidden>
       </nav>
@@ -1253,15 +1242,13 @@ export function ResponsiveDrawer(props: IProps) {
         )}
         {components[content]}
       </main>
-      {alertOpen ? (
+      {alertOpen && (
         <Confirm
           title={t.planUnsaved}
           text={t.loseData}
           yesResponse={handleUnsaveConfirmed}
           noResponse={handleUnsaveRefused}
         />
-      ) : (
-        <></>
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={swapRef} href={swapTarget} />

@@ -16,7 +16,7 @@ import {
   IProjectSettingsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -383,7 +383,9 @@ export function ProjectSettings(props: IProps) {
       );
       setGroup(allUsers.length > 0 ? allUsers[0].id : '');
     } else {
-      const curProj = projects.filter((p: Project) => p.id === project);
+      const curProj = projects.filter(
+        (p: Project) => p.attributes && p.id === project
+      );
       if (curProj.length === 1) {
         proj = curProj[0];
         setGroup(related(proj, 'group'));

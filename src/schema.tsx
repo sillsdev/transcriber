@@ -275,7 +275,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'passage',
           inverse: 'section',
         },
-        reviewer: { type: 'hasOne', model: 'user' },
+        editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
       },
     },
@@ -409,6 +409,13 @@ const schemaDefinition: SchemaSettings = {
         },
         groupMemberships: { type: 'hasMany', model: 'groupmembership' },
       },
+    },
+    orgData: {
+      keys: { remoteId: {} },
+      attributes: {
+        json: { type: 'string' },
+      },
+      relationships: {},
     },
   },
 };

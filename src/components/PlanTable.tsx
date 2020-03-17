@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { IState, Plan, PlanType, Section, IPlanTableStrings } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
@@ -69,7 +69,6 @@ interface IRow {
 
 interface IStateProps {
   t: IPlanTableStrings;
-  tableLoad: string[];
 }
 
 interface IRecordProps {
@@ -83,7 +82,7 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function PlanTable(props: IProps) {
-  const { plans, planTypes, sections, t, displaySet, tableLoad } = props;
+  const { plans, planTypes, sections, t, displaySet } = props;
   const classes = useStyles();
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
@@ -118,7 +117,6 @@ export function PlanTable(props: IProps) {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [dialogData, setDialogData] = useState(null as Plan | null);
   const [message, setMessage] = useState(<></>);
-  const [loading, setLoading] = useState(false);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -204,21 +202,6 @@ export function PlanTable(props: IProps) {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plans, project]);
-
-  useEffect(() => {
-    if (
-      tableLoad.length > 0 &&
-      (!tableLoad.includes('plantype') || !tableLoad.includes('section')) &&
-      !loading
-    ) {
-      setMessage(<span>{t.loadingTable}</span>);
-      setLoading(true);
-    } else if (loading) {
-      setMessage(<></>);
-      setLoading(false);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [tableLoad]);
 
   interface ICell {
     value: string;
@@ -360,7 +343,6 @@ export function PlanTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'planTable' }),
-  tableLoad: state.orbit.tableLoad,
 });
 
 const mapRecordsToProps = {

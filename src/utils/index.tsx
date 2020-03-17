@@ -26,3 +26,5 @@ export * from './insertAtCursor';
 export * from './localSync';
 export * from './fileJson';
 export * from './paratextPath';
+export * from './DataPath';
+export * from './fontChoice';

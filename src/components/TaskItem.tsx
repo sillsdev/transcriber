@@ -77,7 +77,7 @@ export function TaskItem(props: IProps) {
     } else book = '';
     const next = NextAction({ ...props, state: attr.state });
     if (next === t.transcribe) assigned = related(section, 'transcriber');
-    if (next === t.review) assigned = related(section, 'reviewer');
+    if (next === t.review) assigned = related(section, 'editor');
   }
 
   return (

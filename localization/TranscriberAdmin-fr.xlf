@@ -1,10 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
 	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
+		<unit id="access.accessFirst">
+			<segment>
+				<source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
+				<target>Bienvenue à SIL Transcriber. Un projet est créé en ligne sur le site de l'administration de SIL Transcriber. Exportez un fichier au format Portable Transcriber Format (PTF) et importez-le ici.</target>
+			</segment>
+		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
-				<source>Welcome to SIL Transcriber. Select how to get started.</source>
-				<target>Bienvenue à SIL Transcriber. Sélectionnez comment commencer.</target>
+				<source>Click your avatar to transcriber or review.</source>
+				<target>Cliquez sur votre avatar pour transcrire ou réviser.</target>
 			</segment>
 		</unit>
 		<unit id="access.importProject">
@@ -37,7 +43,12 @@
             <target>Importation terminée</target>
          </segment>
       </unit>
-
+      <unit id="electronImport.importOldFile">
+         <segment>
+            <source>This file was not exported from the latest version.  Reexport your PTF file from the online version.</source>
+            <target>Ce fichier n'a pas été exporté à partir de la dernière version. Réexportez votre fichier PTF à partir de la version en ligne.</target>
+         </segment>
+      </unit>
       <unit id="electronImport.ptfError">
          <segment>
             <source>Not a valid Portable Transcriber File</source>
@@ -746,10 +757,10 @@
 				<target>Transcripteur</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.reviewer">
+		<unit id="assignmentTable.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Réviseur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="assignmentTable.selectRowsToAssign">
@@ -782,10 +793,10 @@
 				<target>Utilisatrices</target>
 			</segment>
 		</unit>
-		<unit id="assignSection.reviewer">
+		<unit id="assignSection.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Réviseur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="assignSection.transcriber">
@@ -1412,6 +1423,12 @@
 				<target>Mon Atelier</target>
 			</segment>
 		</unit>
+      <unit id="main.defaultOrgDesc">
+         <segment>
+            <source>Default organization of </source>
+            <target>Organisation par défaut de </target>
+         </segment>
+      </unit>
         <unit id="import.import">
          <segment>
             <source>Import</source>
@@ -1503,10 +1520,10 @@
 				<target>Transcripteur</target>
 			</segment>
 		</unit>
-		<unit id="transcriptionTab.reviewer">
+		<unit id="transcriptionTab.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Réviseur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.plan">
@@ -1767,10 +1784,10 @@
          	<target>Maître(s)</target>
          </segment>
       </unit>
-		<unit id="groupSettings.reviewers">
+		<unit id="groupSettings.editors">
 			<segment>
-				<source>Reviewers</source>
-				<target>Réviseur</target>
+				<source>Editors</source>
+				<target>Éditeurs</target>
 			</segment>
 		</unit>
 		<unit id="groupSettings.transcribers">
@@ -1785,7 +1802,7 @@
             <target>(Gérer + Réviser + Transcrire)</target>
          </segment>
       </unit>
-      <unit id="groupSettings.reviewersDetail">
+      <unit id="groupSettings.editorsDetail">
          <segment>
             <source>(Review + Transcribe)</source>
             <target>(Réviser + Transcrire)</target>
@@ -1835,8 +1852,8 @@
 		</unit>
 		<unit id="groupSettings.allReviewersCanTranscribe">
 		<segment>
-			<source>All Reviewers are allowed to transcribe.</source>
-			<target>Tous les réviseurs sont autorisés à transcrire.</target>
+			<source>All Editors are allowed to transcribe.</source>
+			<target>Tous les éditeurs sont autorisés à transcrire.</target>
 		</segment>
 	</unit>
 	<unit id="groupSettings.groupExplain">
@@ -2236,13 +2253,13 @@
          	<target>(Transcription)</target>
          </segment>
       </unit>
-		<unit id="invite.reviewer">
+		<unit id="invite.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Examinateur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
-     <unit id="invite.reviewerDetail">
+     <unit id="invite.editorDetail">
          <segment>
             <source>(Review + Transcribe)</source>
          	<target>(Révision + transcription)</target>
@@ -2482,7 +2499,7 @@
 				<target>Transcrire</target>
 			</segment>
 		</unit>
-		<unit id="toDoTable.reviewer">
+		<unit id="toDoTable.editor">
 			<segment>
 				<source>Review</source>
 				<target>Controler</target>
@@ -3191,10 +3208,10 @@
 				<target>Transcriber</target>
 			</segment>
 		</unit>
-		<unit id="taskItem.reviewer">
+		<unit id="taskItem.editor">
 			<segment>
-				<source>Reviewer</source>
-				<target>Examinateur</target>
+				<source>Editor</source>
+				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="control.contentType">

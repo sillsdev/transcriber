@@ -11,7 +11,7 @@ import {
   Role,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
@@ -26,7 +26,7 @@ import './AssignmentTable.css';
 import AssignSection from './AssignSection';
 import {
   sectionDescription,
-  sectionReviewerName,
+  sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
 } from '../utils';
@@ -63,7 +63,7 @@ interface IRow {
   name: string;
   state: string;
   transcriber: string;
-  reviewer: string;
+  editor: string;
   passages: string;
   parentId: string;
 }
@@ -90,7 +90,7 @@ const getAssignments = (
       id: section.id,
       name: sectionDescription(section),
       state: '',
-      reviewer: sectionReviewerName(section, users),
+      editor: sectionEditorName(section, users),
       transcriber: sectionTranscriberName(section, users),
       passages: '0', //string so we can have blank, alternatively we could format in the tree to not show on passage rows
       parentId: '',
@@ -108,7 +108,7 @@ const getAssignments = (
         id: passage.id,
         name: passageDescription(passage),
         state: state,
-        reviewer: '',
+        editor: '',
         transcriber: '',
         passages: '',
         parentId: section.id,
@@ -151,14 +151,14 @@ export function AssignmentTable(props: IProps) {
     { name: 'state', title: t.sectionstate },
     { name: 'passages', title: t.passages },
     { name: 'transcriber', title: t.transcriber },
-    { name: 'reviewer', title: t.reviewer },
+    { name: 'editor', title: t.editor },
   ];
   const columnWidths = [
     { columnName: 'name', width: 300 },
     { columnName: 'state', width: 150 },
     { columnName: 'passages', width: 100 },
     { columnName: 'transcriber', width: 200 },
-    { columnName: 'reviewer', width: 200 },
+    { columnName: 'editor', width: 200 },
   ];
 
   const [filter, setFilter] = useState(false);
@@ -182,12 +182,10 @@ export function AssignmentTable(props: IProps) {
       let work = false;
       check.forEach(i => {
         const row = data[i];
-        if (row.reviewer !== '' || row.transcriber !== '') work = true;
+        if (row.editor !== '' || row.transcriber !== '') work = true;
       });
       if (!work) {
-        setMessage(
-          <span>Select Row(s) with transcribers or reviewers to remove.</span>
-        );
+        setMessage(<span>{t.selectRowsToRemove}</span>);
       } else {
         setConfirmAction(t.delete + '? (' + check.length + ')');
       }
@@ -215,7 +213,7 @@ export function AssignmentTable(props: IProps) {
           type: 'user',
           id: '',
         }),
-        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'reviewer', {
+        t.replaceRelatedRecord({ type: 'section', id: s.id }, 'editor', {
           type: 'user',
           id: '',
         }),

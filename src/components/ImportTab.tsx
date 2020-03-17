@@ -6,7 +6,7 @@ import {
   IState,
   IElectronImportStrings,
 } from '../model';
-import { WithDataProps, withData } from 'react-orbitjs';
+import { WithDataProps, withData } from '../mods/react-orbitjs';
 import Confirm from './AlertDialog';
 import {
   Button,

@@ -2,6 +2,7 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
+    "accessFirst": string;
     "accessSilTranscriber": string;
     "importProject": string;
     "importError": string;
@@ -11,6 +12,7 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
 export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
     "importPending": string;
     "importComplete": string;
+    "importOldFile": string;
     "ptfError": string;
     "itfError": string;
     "importCreated": string;
@@ -159,7 +161,7 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "delete": string;
     "filter": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
     "selectRowsToAssign": string;
     "selectRowsToRemove": string;
 };
@@ -168,7 +170,7 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "title": string;
     "sections": string;
     "users": string;
-    "reviewer": string;
+    "editor": string;
     "transcriber": string;
     "role": string;
     "assignAs": string;
@@ -288,6 +290,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "exit": string;
     "continue": string;
     "myWorkbench": string;
+    "defaultOrgDesc": string;
 };
 
 export interface IImportStrings extends Localize.LocalizedStringsMethods {
@@ -309,7 +312,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "passages": string;
     "filter": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
     "plan": string;
     "elan": string;
     "export": string;
@@ -368,10 +371,10 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "save": string;
     "projects": string;
     "owners": string;
-    "reviewers": string;
+    "editors": string;
     "transcribers": string;
     "ownersDetail": string;
-    "reviewersDetail": string;
+    "editorsDetail": string;
     "transcribersDetail": string;
     "addGroupMember": string;
     "addMemberInstruction": string;
@@ -461,8 +464,8 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "adminDetail": string;
     "transcriber": string;
     "transcriberDetail": string;
-    "reviewer": string;
-    "reviewerDetail": string;
+    "editor": string;
+    "editorDetail": string;
 };
 
 export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
@@ -499,7 +502,8 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "task": string;
     "PTFtask": string;
     "ITFtask": string;
-    "dragDrop": string;
+    "dragDropMultiple": string;
+    "dragDropSingle": string;
     "cancel": string;
     "upload": string;
 };
@@ -517,7 +521,7 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "state": string;
     "action": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
     "view": string;
     "length": string;
     "assigned": string;
@@ -653,7 +657,7 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "unassign": string;
     "transcriber": string;
-    "reviewer": string;
+    "editor": string;
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {

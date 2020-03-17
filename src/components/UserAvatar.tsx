@@ -4,11 +4,10 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { IState, User } from '../model';
 import { connect } from 'react-redux';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
-import path from 'path';
-import { OfflineDataPath } from '../utils/offlineDataPath';
+import { DataPath } from '../utils/DataPath';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,7 +50,7 @@ export function UserAvatar(props: IProps) {
   return curUser.attributes && curUser.attributes.avatarUrl ? (
     <Avatar
       alt={curUser.attributes.name}
-      src={path.join(OfflineDataPath(), curUser.attributes.avatarUrl)}
+      src={DataPath(curUser.attributes.avatarUrl)}
       className={small ? classes.small : classes.medium}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (

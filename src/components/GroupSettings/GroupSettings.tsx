@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, Group, IGroupSettingsStrings } from '../../model';
 import localStrings from '../../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { FormLabel, FormControl, FormGroup } from '@material-ui/core';
 import useStyles from './GroupSettingsStyles';

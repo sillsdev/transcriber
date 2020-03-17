@@ -1,4 +1,4 @@
-import { Record, RecordRelationship, RecordIdentity } from '@orbit/data';
+import { Record, RecordIdentity } from '@orbit/data';
 
 export interface DataChange extends Record {
   attributes: {

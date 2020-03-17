@@ -5,14 +5,7 @@ import jwtDecode from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {
-  IState,
-  IMainStrings,
-  Organization,
-  Invitation,
-  User,
-  OrganizationMembership,
-} from '../model';
+import { IState, IMainStrings, Organization, Invitation, User } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { API_CONFIG } from '../api-variable';
@@ -36,8 +29,11 @@ import {
   CreateOrg,
   uiLang,
   remoteId,
+  GetUser,
+  remoteIdGuid,
 } from '../utils';
 import SnackBar from '../components/SnackBar';
+import { getOrgs } from '../utils/getOrgs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -138,32 +134,25 @@ export function Loading(props: IProps) {
     localStorage.removeItem('inviteId');
     var inviteError = '';
 
+    //filter will be passed to api which will lowercase the email before comparison
     var allinvites: Invitation[] = (await newremote.query((q: QueryBuilder) =>
-      q.findRecords('invitation').filter(
-        /*this didn't work sometimes { attribute: 'email', value: userEmail },*/
-        { attribute: 'accepted', value: false }
-      )
+      q
+        .findRecords('invitation')
+        .filter(
+          { attribute: 'email', value: userEmail },
+          { attribute: 'accepted', value: false }
+        )
     )) as any;
-    /* filter it by email now... */
-    allinvites = allinvites.filter(i => i.attributes.email === userEmail);
-
     allinvites.forEach(async invitation => {
       await newremote.update((t: TransformBuilder) =>
         t.replaceAttribute(invitation, 'accepted', true)
       );
     });
     if (inviteId) {
-      const invite = allinvites.find(
+      let invite = allinvites.find(
         i => i.attributes.silId === parseInt(inviteId)
       );
-      if (invite) {
-        const orgId = related(invite, 'organization');
-        setOrganization(orgId);
-        localStorage.setItem(
-          'lastOrg',
-          remoteId('organization', orgId, keyMap)
-        );
-      } else {
+      if (!invite) {
         try {
           const thisinvite: Invitation[] = (await newremote.query(
             (q: QueryBuilder) =>
@@ -173,9 +162,14 @@ export function Loading(props: IProps) {
           )) as any;
 
           //if previously accepted just roll with it
-          if (thisinvite[0].attributes.email !== userEmail) {
+          if (
+            thisinvite[0].attributes.email.toLowerCase() !==
+            userEmail.toLowerCase()
+          ) {
             /* they must have logged in with another email */
             inviteError = t.inviteError;
+          } else {
+            invite = thisinvite[0];
           }
         } catch {
           inviteError = t.deletedInvitation;
@@ -184,37 +178,38 @@ export function Loading(props: IProps) {
       if (inviteError !== '') {
         localStorage.setItem('inviteError', inviteError);
         setMessage(<span>{localStorage.getItem('inviteError') || ''}</span>);
+      } else if (invite) {
+        const orgId = related(invite, 'organization');
+        setOrganization(orgId);
+        localStorage.setItem(
+          'lastOrg',
+          remoteId('organization', orgId, keyMap)
+        );
       }
     }
   };
-  const isElectron = process.env.REACT_APP_MODE === 'electron';
 
   const setDefaultOrg = async () => {
-    let orgs: Organization[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organization')
-    ) as any;
-    if (isElectron) {
-      let oms: OrganizationMembership[] = memory.cache.query(
-        (q: QueryBuilder) => q.findRecords('organizationmembership')
-      ) as any;
-      orgs = orgs.filter(o =>
-        oms
-          .filter(om => related(om, 'user') === user)
-          .map(om => related(om, 'organization'))
-          .includes(o.id)
-      );
+    let orgs: Organization[] = getOrgs(memory, user);
+    var org = organization;
+    if (org === '') {
+      org =
+        remoteIdGuid(
+          'organization',
+          localStorage.getItem('lastOrg') || '',
+          keyMap
+        ) || '';
     }
-    if (organization === '') {
+    if (org === '') {
       orgs = orgs
         .filter(o => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
       if (orgs.length > 0) {
-        setOrganization(orgs[0].id);
-        setDefaultProj(orgs[0].id, memory, setProject);
+        org = orgs[0].id;
       }
-    } else {
-      setDefaultProj(organization, memory, setProject);
     }
+    setOrganization(org);
+    if (org !== '') setDefaultProj(org, memory, setProject);
   };
 
   useEffect(() => {
@@ -244,26 +239,38 @@ export function Loading(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (completed >= 70 && organization === '') {
+    if (orbitLoaded && completed === 90) {
       if (user && user !== '') {
-        const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
-          q.findRecords([{ type: 'user', id: user }])
-        ) as any;
-        const locale = userRec[0].attributes.locale;
+        const userRec: User = GetUser(memory, user);
+        const locale = userRec.attributes ? userRec.attributes.locale : 'en';
         if (locale) setLanguage(locale);
-      }
-      if (newOrgParams) {
-        if (localStorage.getItem('newOrg')) {
-          localStorage.removeItem('newOrg');
-          const { orgId, orgName } = parseQuery(newOrgParams);
-          let orgRec: Organization = {
-            type: 'organization',
-            attributes: {
-              name: orgName,
-              SilId: orgId,
-              publicByDefault: true,
-            },
-          } as any;
+
+        if (
+          organization === '' &&
+          (newOrgParams !== null || !hasAnyRelated(userRec, 'groupMemberships'))
+        ) {
+          let orgRec: Organization;
+          if (newOrgParams) {
+            localStorage.removeItem('newOrg');
+            const { orgId, orgName } = parseQuery(newOrgParams);
+            orgRec = {
+              type: 'organization',
+              attributes: {
+                name: orgName,
+                SilId: orgId,
+                publicByDefault: true,
+              },
+            } as any;
+          } else {
+            orgRec = {
+              type: 'organization',
+              attributes: {
+                name: t.myWorkbench,
+                description: t.defaultOrgDesc + userRec.attributes.name,
+                publicByDefault: true,
+              },
+            } as any;
+          }
           CreateOrg({
             orgRec,
             user,
@@ -272,11 +279,13 @@ export function Loading(props: IProps) {
             remote,
             setOrganization,
             setProject,
-          });
+          }).then(() => setCompleted(100));
+          setNewOrgParams(null);
+        } else {
+          setCompleted(100);
         }
-        setNewOrgParams(null);
+        if (savedURL.length <= '/main'.length) setDefaultOrg();
       }
-      if (savedURL.length <= '/main'.length) setDefaultOrg();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);
@@ -285,41 +294,15 @@ export function Loading(props: IProps) {
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 
-  if (orbitLoaded && (completed === 100 || offline) && newOrgParams === null) {
-    if (user && user !== '') {
-      const userRec: User[] = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords([{ type: 'user', id: user }])
-      ) as any;
-      if (userRec.length === 1) {
-        if (!hasAnyRelated(userRec[0], 'groupMemberships')) {
-          const orgRec: Organization = {
-            type: 'organization',
-            attributes: {
-              name: t.myWorkbench,
-              description:
-                'Default organization of ' + userRec[0].attributes.name,
-              publicByDefault: true,
-            },
-          } as any;
-          CreateOrg({
-            orgRec,
-            user,
-            schema,
-            memory,
-            remote,
-            setOrganization,
-            setProject,
-          });
-        }
-        if (
-          !userRec[0].attributes.givenName ||
-          !userRec[0].attributes.timezone ||
-          !userRec[0].attributes.locale ||
-          !uiLang.includes(userRec[0].attributes.locale)
-        ) {
-          return <Redirect to="/profile" />;
-        }
-      }
+  if (orbitLoaded && completed === 100) {
+    const userRec: User = GetUser(memory, user);
+    if (
+      !userRec.attributes.givenName ||
+      !userRec.attributes.timezone ||
+      !userRec.attributes.locale ||
+      !uiLang.includes(userRec.attributes.locale)
+    ) {
+      return <Redirect to="/profile" />;
     }
     const deepLink = localStorage.getItem('url');
     return <Redirect to={deepLink ? deepLink : '/main'} />;

@@ -19,7 +19,7 @@ import {
   RoleNames,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, IconButton } from '@material-ui/core';
@@ -114,7 +114,6 @@ interface IStateProps {
   lang: string;
   hasUrl: boolean;
   mediaUrl: string;
-  tableLoad: string[];
 }
 
 interface IDispatchProps {
@@ -158,7 +157,6 @@ export function TaskTable(props: IProps) {
     fetchMediaUrl,
     hasUrl,
     mediaUrl,
-    tableLoad,
     filtering,
     onFilter,
     curDesc,
@@ -223,7 +221,6 @@ export function TaskTable(props: IProps) {
   const [message, setMessage] = useState(<></>);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
-  const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState('');
   const [selRole, setSelRole] = useState('');
   const audioRef = useRef<any>();
@@ -466,11 +463,11 @@ export function TaskTable(props: IProps) {
     const rowList: IRow[] = [];
     if (role !== '') {
       if (role !== RoleNames.Transcriber) {
-        addTasks(ActivityStates.Reviewing, 'reviewer', rowList, playItem);
+        addTasks(ActivityStates.Reviewing, 'editor', rowList, playItem);
       }
       addTasks(ActivityStates.Transcribing, 'transcriber', rowList, playItem);
       if (role !== RoleNames.Transcriber) {
-        addTasks(ActivityStates.Transcribed, 'reviewer', rowList, playItem);
+        addTasks(ActivityStates.Transcribed, 'editor', rowList, playItem);
       }
       addTasks(
         ActivityStates.TranscribeReady,
@@ -515,24 +512,6 @@ export function TaskTable(props: IProps) {
       audioRef.current.play();
     }
   }, [hasUrl, mediaUrl, playing, playItem]);
-
-  useEffect(() => {
-    if (
-      tableLoad.length > 0 &&
-      (!tableLoad.includes('mediafile') ||
-        !tableLoad.includes('passage') ||
-        !tableLoad.includes('section') ||
-        !tableLoad.includes('role')) &&
-      !loading
-    ) {
-      setMessage(<span>{t.loadingTable}</span>);
-      setLoading(true);
-    } else if (loading) {
-      setMessage(<></>);
-      setLoading(false);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [tableLoad]);
 
   interface ICell {
     value: any;
@@ -658,7 +637,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
   taskItemStrings: localStrings(state, { layout: 'taskItem' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
-  tableLoad: state.orbit.tableLoad,
   lang: state.strings.lang,
 });
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, Plan, Section, Role, Passage, User } from '../model';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import TreeChart, {
   IPlanRow,
@@ -35,12 +35,12 @@ export function Visualize(props: IProps) {
   }
 
   const getData = (tot: ITotal) => {
-    let review = Array<ITargetWork>();
+    let edit = Array<ITargetWork>();
     let transcribe = Array<ITargetWork>();
     for (let [key, value] of Object.entries(tot)) {
       const part = key.split(':');
-      if (part[2] === 'reviewer') {
-        review.push({
+      if (part[2] === 'editor') {
+        edit.push({
           name: part[0],
           plan: part[1],
           count: value,
@@ -54,7 +54,7 @@ export function Visualize(props: IProps) {
       }
     }
     return [
-      { task: 'Review', work: review },
+      { task: 'Edit', work: edit },
       { task: 'Transcribe', work: transcribe },
     ];
   };
@@ -88,7 +88,7 @@ export function Visualize(props: IProps) {
             : selPassages.length;
         }
 
-        roleName = 'reviewer';
+        roleName = 'editor';
         rowKey = pl.id + ':' + roleName;
         rowTot[rowKey] = rowTot.hasOwnProperty(rowKey)
           ? rowTot[rowKey] + selPassages.length
@@ -117,7 +117,7 @@ export function Visualize(props: IProps) {
     setRows(
       selPlans
         .filter(pl => {
-          const reviewKey = pl.id + ':reviewer';
+          const reviewKey = pl.id + ':editor';
           const transKey = pl.id + ':transcriber';
           const reviewTot = rowTot.hasOwnProperty(reviewKey)
             ? rowTot[reviewKey]

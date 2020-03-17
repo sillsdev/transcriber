@@ -8,7 +8,8 @@ const initialState = {
 	"lang": 'en',
 	"access": new LocalizedStrings({
 		"en": {
-			"accessSilTranscriber": "Welcome to SIL Transcriber. Select how to get started.",
+			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
+			"accessSilTranscriber": "Click your avatar to transcriber or review.",
 			"importProject": "Import Portable Transcriber Data",
 			"importError": "Import Error",
 			"login": "Online Login",
@@ -18,6 +19,7 @@ const initialState = {
 		"en": {
 			"importPending": "Import In Progress...",
 			"importComplete": "Import Complete",
+			"importOldFile": "This file was not exported from the latest version.  Reexport your PTF file from the online version.",
 			"ptfError": "Not a valid Portable Transcriber File",
 			"itfError": "Not a valid Incremental Transcriber File",
 			"importCreated": "Import file was created: {date0}.",
@@ -176,7 +178,7 @@ const initialState = {
 			"delete": "Delete",
 			"filter": "Filter",
 			"transcriber": "Transcriber",
-			"reviewer": "Reviewer",
+			"editor": "Editor",
 			"selectRowsToAssign": "Please select row(s) to assign.",
 			"selectRowsToRemove": "Please select row(s) to remove assignment.",
 		}
@@ -186,7 +188,7 @@ const initialState = {
 			"title": "Assign Sections to Users",
 			"sections": "Sections",
 			"users": "Users",
-			"reviewer": "Reviewer",
+			"editor": "Editor",
 			"transcriber": "Transcriber",
 			"role": "Role",
 			"assignAs": "Assign As",
@@ -311,6 +313,7 @@ const initialState = {
 			"exit": "Exit",
 			"continue": "Continue",
 			"myWorkbench": "My Workbench",
+			"defaultOrgDesc": "Default organization of ",
 		}
 	}),
 	"import": new LocalizedStrings({
@@ -334,7 +337,7 @@ const initialState = {
 			"passages": "Passages",
 			"filter": "Filter",
 			"transcriber": "Transcriber",
-			"reviewer": "Reviewer",
+			"editor": "Editor",
 			"plan": "Plan",
 			"elan": "Elan",
 			"export": "Export",
@@ -398,10 +401,10 @@ const initialState = {
 			"save": "Save",
 			"projects": "Projects",
 			"owners": "Owners",
-			"reviewers": "Reviewers",
+			"editors": "Editors",
 			"transcribers": "Transcribers",
 			"ownersDetail": "(Manage + Review + Transcribe)",
-			"reviewersDetail": "(Review + Transcribe)",
+			"editorsDetail": "(Review + Transcribe)",
 			"transcribersDetail": "(Transcribe)",
 			"addGroupMember": "Choose {0}",
 			"addMemberInstruction": "Choose a person who will act as a {0} for projects in this group.",
@@ -409,7 +412,7 @@ const initialState = {
 			"add": "Ok",
 			"delete": "Delete",
 			"choose": "Choose...",
-			"allReviewersCanTranscribe": "All Reviewers are allowed to transcribe.",
+			"allReviewersCanTranscribe": "All Editors are allowed to transcribe.",
 			"groupExplain": "Groups connect organization members to a project.",
 			"case1": "If the project does not exist, click the plus button in the Navigation pane to create it.",
 			"case2": "Existing projects can be associated with this group in Settings.",
@@ -496,8 +499,8 @@ const initialState = {
 			"adminDetail": "(Manage + Review + Transcribe)",
 			"transcriber": "Transcriber",
 			"transcriberDetail": "(Transcribe)",
-			"reviewer": "Reviewer",
-			"reviewerDetail": "(Review + Transcribe)",
+			"editor": "Editor",
+			"editorDetail": "(Review + Transcribe)",
 		}
 	}),
 	"invitationTable": new LocalizedStrings({
@@ -537,7 +540,8 @@ const initialState = {
 			"task": "You can upload audio files in .mp3, .m4a or .wav format.",
 			"PTFtask": "Upload a Portable Transcriber File (ptf file).",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the offline extension.",
-			"dragDrop": "Drag and drop files here, or click here to browse for the files.",
+			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
+			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
 			"cancel": "Cancel",
 			"upload": "Upload",
 		}
@@ -557,7 +561,7 @@ const initialState = {
 			"state": "State",
 			"action": "Action",
 			"transcriber": "Transcribe",
-			"reviewer": "Review",
+			"editor": "Review",
 			"view": "View",
 			"length": "Duration",
 			"assigned": "Assigned",
@@ -699,7 +703,7 @@ const initialState = {
 			"assign": "Assign {0}",
 			"unassign": "Unassign {0}",
 			"transcriber": "Transcriber",
-			"reviewer": "Reviewer",
+			"editor": "Editor",
 		}
 	}),
 	"control": new LocalizedStrings({

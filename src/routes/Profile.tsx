@@ -17,7 +17,7 @@ import {
 } from '../model';
 import * as action from '../store';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   withStyles,
@@ -360,7 +360,7 @@ export function Profile(props: IProps) {
     const allUsersGroup = groups.filter(
       g => related(g, 'owner') === organization && g.attributes.allUsers
     );
-    const reviewerRec = roleRec(roleRecs, 'reviewer', false);
+    const editorRec = roleRec(roleRecs, 'editor', false);
     let groupMbr: GroupMembership = {
       type: 'groupmembership',
     } as any;
@@ -381,7 +381,7 @@ export function Profile(props: IProps) {
           t.addRecord(groupMbr),
           t.replaceRelatedRecord(groupMbr, 'user', userRec),
           t.replaceRelatedRecord(groupMbr, 'group', allUsersGroup[0]),
-          t.replaceRelatedRecord(groupMbr, 'role', reviewerRec[0]),
+          t.replaceRelatedRecord(groupMbr, 'role', editorRec[0]),
         ]);
       });
   };

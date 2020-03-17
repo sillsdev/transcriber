@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
 const FileDrop =
-  process.env.NODE_ENV !== 'test' ? require('react-file-drop').default : <></>;
+  process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,14 +52,12 @@ export enum UploadType {
   LOGO = 3 /* do we need separate ones for org and avatar? */,
 }
 
-const emptyFileList = new FileList();
-
 function MediaUpload(props: IProps) {
   const { t, visible, uploadType, uploadMethod, cancelMethod } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
-  const [files, setFiles] = useState<FileList>(emptyFileList);
+  const [files, setFiles] = useState<FileList>();
   const [message, setMessage] = useState(<></>);
 
   const acceptextension = [
@@ -79,7 +77,7 @@ function MediaUpload(props: IProps) {
   const text = [t.task, t.ITFtask, t.PTFtask, 'FUTURE TODO'];
 
   const handleAddOrSave = () => {
-    if (uploadMethod) {
+    if (uploadMethod && files) {
       uploadMethod(files);
     }
     setName('');
@@ -87,7 +85,7 @@ function MediaUpload(props: IProps) {
   };
   const handleCancel = () => {
     if (cancelMethod) {
-      setFiles(emptyFileList);
+      setFiles(undefined);
       setName('');
       cancelMethod();
     }
@@ -130,7 +128,11 @@ function MediaUpload(props: IProps) {
           htmlFor="upload"
           onChange={handleNameChange}
         >
-          {name === '' ? t.dragDrop : name}
+          {name === ''
+            ? multiple[uploadType]
+              ? t.dragDropMultiple
+              : t.dragDropSingle
+            : name}
         </label>
         <input
           id="upload"
@@ -149,7 +151,11 @@ function MediaUpload(props: IProps) {
           htmlFor="upload"
           onChange={handleNameChange}
         >
-          {name === '' ? t.dragDrop : name}
+          {name === ''
+            ? multiple[uploadType]
+              ? t.dragDropMultiple
+              : t.dragDropSingle
+            : name}
         </label>
         <input
           id="upload"

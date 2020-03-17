@@ -18,7 +18,7 @@ import {
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-import { withData, WithDataProps } from 'react-orbitjs';
+import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -42,7 +42,7 @@ import TranscriptionShow from './TranscriptionShow';
 import Auth from '../auth/Auth';
 import {
   sectionNumber,
-  sectionReviewerName,
+  sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
 } from '../utils/section';
@@ -95,7 +95,7 @@ interface IRow {
   state: string;
   planName: string;
   transcriber: string;
-  reviewer: string;
+  editor: string;
   passages: string;
   action: string;
   parentId: string;
@@ -140,7 +140,7 @@ const getAssignments = (
           name: getSection(section),
           state: '',
           planName: planRec.attributes.name,
-          reviewer: sectionReviewerName(section, users),
+          editor: sectionEditorName(section, users),
           transcriber: sectionTranscriberName(section, users),
           passages: sectionpassages.length.toString(),
           action: '',
@@ -156,7 +156,7 @@ const getAssignments = (
             name: getReference(passage),
             state: state,
             planName: planRec.attributes.name,
-            reviewer: '',
+            editor: '',
             transcriber: '',
             passages: '',
             action: passage.id,
@@ -249,7 +249,7 @@ export function TranscriptionTab(props: IProps) {
     { name: 'planName', title: t.plan },
     { name: 'passages', title: t.passages },
     { name: 'transcriber', title: t.transcriber },
-    { name: 'reviewer', title: t.reviewer },
+    { name: 'editor', title: t.editor },
     { name: 'action', title: '\u00A0' },
   ];
   const columnWidths = [
@@ -258,7 +258,7 @@ export function TranscriptionTab(props: IProps) {
     { columnName: 'planName', width: 150 },
     { columnName: 'passages', width: 120 },
     { columnName: 'transcriber', width: 120 },
-    { columnName: 'reviewer', width: 120 },
+    { columnName: 'editor', width: 120 },
     { columnName: 'action', width: 150 },
   ];
   const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<

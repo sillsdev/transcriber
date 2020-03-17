@@ -279,6 +279,7 @@ const components = {
 };
 
 interface IProps {
+  id: string;
   suggestions: OptionType[];
   label?: string;
   placeholder?: string;
@@ -289,6 +290,7 @@ interface IProps {
 
 export function SingleReactSelect(props: IProps) {
   const {
+    id,
     suggestions,
     label,
     placeholder,
@@ -342,12 +344,12 @@ export function SingleReactSelect(props: IProps) {
         <Select
           classes={classes}
           styles={selectStyles}
-          inputId="react-select-single"
+          inputId={id + '-select-single'}
           autoFocus
           TextFieldProps={{
             label,
             InputLabelProps: {
-              htmlFor: 'react-select-single',
+              htmlFor: id + '-select-single',
               shrink: true,
             },
             placeholder,
@@ -363,7 +365,7 @@ export function SingleReactSelect(props: IProps) {
 }
 
 export function MultiReactSelect(props: IProps) {
-  const { suggestions, label, placeholder } = props;
+  const { id, suggestions, label, placeholder } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [multi, setMulti] = React.useState<ValueType<OptionType>>(null);
@@ -388,12 +390,12 @@ export function MultiReactSelect(props: IProps) {
         <Select
           classes={classes}
           styles={selectStyles}
-          inputId="react-select-multiple"
+          inputId={id + '-select-multiple'}
           autoFocus
           TextFieldProps={{
             label,
             InputLabelProps: {
-              htmlFor: 'react-select-multiple',
+              htmlFor: id + '-select-multiple',
               shrink: true,
             },
             placeholder,

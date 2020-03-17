@@ -2,7 +2,7 @@ import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { User } from '../../model';
-import { withData } from 'react-orbitjs';
+import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
   ListItem,

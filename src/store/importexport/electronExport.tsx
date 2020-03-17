@@ -2,7 +2,7 @@ import { FileResponse } from './types';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import path from 'path';
-import { OfflineDataPath } from '../../utils/offlineDataPath';
+import { DataPath } from '../../utils/DataPath';
 import { Project, User, MediaFile, Organization } from '../../model';
 import { cleanFileName, remoteIdGuid, getMediaEaf } from '../../utils';
 import Memory from '@orbit/memory';
@@ -71,7 +71,7 @@ export async function electronExport(
         user.attributes.avatarUrl !== ''
       )
         AddStreamEntry(
-          path.join(OfflineDataPath(), user.attributes.avatarUrl),
+          DataPath(user.attributes.avatarUrl),
           user.attributes.avatarUrl
         );
     });
@@ -85,7 +85,7 @@ export async function electronExport(
         org.attributes.logoUrl !== ''
       )
         AddStreamEntry(
-          path.join(OfflineDataPath(), org.attributes.logoUrl),
+          DataPath(org.attributes.logoUrl),
           org.attributes.logoUrl
         );
     });
@@ -95,7 +95,7 @@ export async function electronExport(
       var mf = m as MediaFile;
       if (mf.attributes)
         AddStreamEntry(
-          path.join(OfflineDataPath(), mf.attributes.audioUrl),
+          DataPath(mf.attributes.audioUrl),
           mf.attributes.audioUrl
         );
       const eafCode = getMediaEaf(mf, memory);
@@ -113,7 +113,7 @@ export async function electronExport(
   };
 
   const AddFonts = () => {
-    const dir = path.join(OfflineDataPath(), 'fonts');
+    const dir = DataPath('fonts');
     var items = fs.readdirSync(dir);
     for (var i = 0; i < items.length; i++) {
       zip.addLocalFile(path.join(dir, items[i]), 'fonts', items[i]);
@@ -227,7 +227,7 @@ export async function electronExport(
     staticFiles.forEach(AddAll);
     AddFonts();
   }
-  var where = path.join(OfflineDataPath(), fileName);
+  var where = DataPath(fileName);
   zip.writeZip(where);
   return BuildFileResponse(where, fileName);
 }

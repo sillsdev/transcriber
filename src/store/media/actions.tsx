@@ -5,8 +5,7 @@ import * as type from './types';
 import MemorySource from '@orbit/memory';
 import { remoteIdGuid } from '../../utils';
 import { isArray } from 'util';
-import { OfflineDataPath } from '../../utils/offlineDataPath';
-import path from 'path';
+import { DataPath } from '../../utils/DataPath';
 
 export const fetchMediaUrl = (
   id: string,
@@ -25,7 +24,7 @@ export const fetchMediaUrl = (
     if (isArray(mediarec)) mediarec = mediarec[0];
     if (mediarec && mediarec.attributes) {
       dispatch({
-        payload: path.join(OfflineDataPath(), mediarec.attributes.audioUrl),
+        payload: DataPath(mediarec.attributes.audioUrl),
         type: type.FETCH_AUDIO_URL,
       });
     }
