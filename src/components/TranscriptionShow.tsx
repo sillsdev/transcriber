@@ -17,7 +17,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
-import { getMediaProjRec, getMediaRec } from '../utils';
+import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../utils';
 
 // const useStyles = makeStyles((theme: Theme) =>
 //   createStyles({})
@@ -41,12 +41,17 @@ function TranscriptionShow(props: IProps) {
   const { passageId, t, visible, closeMethod } = props;
   // const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [offline] = useGlobal('offline');
   const [open, setOpen] = useState(visible);
   const [message, setMessage] = useState(<></>);
   const [transcription, setTranscription] = useState('');
-  const [fontName, setFontName] = useState('');
-  const [fontSize, setFontSize] = useState('');
-  const [rtl, setRtl] = useState(false);
+  const [fontData, setFontData] = useState<FontData>();
+  const [fontStatus, setFontStatus] = useState<string>();
+
+  const loadStatus = (status: string) => {
+    console.log('Font status: current=', fontStatus, ' new=', status);
+    setFontStatus(status);
+  };
 
   const handleChange = () => {};
 
@@ -70,27 +75,16 @@ function TranscriptionShow(props: IProps) {
       const attr = mediaRec && mediaRec.attributes;
       setTranscription(attr && attr.transcription ? attr.transcription : '');
       const projRec = getMediaProjRec(mediaRec, memory);
-      const projAttr = projRec && projRec.attributes;
-      if (projAttr) {
-        setFontName(projAttr.defaultFont ? projAttr.defaultFont : '');
-        setFontSize(projAttr.defaultFontSize ? projAttr.defaultFontSize : '');
-        setRtl(projAttr.rtl);
-      }
+      if (projRec) setFontData(getFontData(projRec, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [passageId]);
 
-  const fontFamily = fontName
-    ? fontName.split(',')[0].replace(/ /g, '')
-    : 'CharisSIL';
-
-  // See: https://github.com/typekit/webfontloader#custom
-  const fontConfig = {
-    custom: {
-      families: [fontFamily],
-      urls: ['https://fonts.siltranscriber.org/' + fontFamily + '.css'],
-    },
-  };
+  const textStyle = {
+    fontFamily: fontData?.fontFamily || 'CharisSIL',
+    fontSize: fontData?.fontSize || 'large',
+    direction: fontData?.fontDir || 'ltr',
+  } as React.CSSProperties;
 
   return (
     <div>
@@ -102,7 +96,22 @@ function TranscriptionShow(props: IProps) {
         <DialogTitle id="form-dialog-title">{t.transcription}</DialogTitle>
         <DialogContent>
           <DialogContentText>{t.transcriptionDisplay}</DialogContentText>
-          <WebFontLoader config={fontConfig}>
+          {fontData && fontStatus !== 'active' ? (
+            <WebFontLoader config={fontData.fontConfig} onStatus={loadStatus}>
+              <TextField
+                autoFocus
+                margin="dense"
+                variant="filled"
+                multiline
+                id="transcription"
+                label={t.transcription}
+                value={transcription}
+                onChange={handleChange}
+                inputProps={{ style: textStyle }}
+                fullWidth
+              />
+            </WebFontLoader>
+          ) : (
             <TextField
               autoFocus
               margin="dense"
@@ -112,14 +121,10 @@ function TranscriptionShow(props: IProps) {
               label={t.transcription}
               value={transcription}
               onChange={handleChange}
-              style={{
-                fontFamily,
-                fontSize: fontSize ? fontSize : 'large',
-                direction: rtl ? 'rtl' : 'ltr',
-              }}
+              inputProps={{ style: textStyle }}
               fullWidth
             />
-          </WebFontLoader>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="contained" color="primary">

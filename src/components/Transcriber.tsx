@@ -64,6 +64,8 @@ import {
   insertAtCursor,
   remoteIdGuid,
   remoteIdNum,
+  FontData,
+  getFontData,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -76,8 +78,6 @@ import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
 } from '../utils/UpdatePassageState';
-import path from 'path';
-import { DataPath } from '../utils/DataPath';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -182,7 +182,8 @@ export function Transcriber(props: IProps) {
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
   const [assigned, setAssigned] = React.useState('');
-  const [projRec, setProjRec] = React.useState<Project>();
+  const [projData, setProjData] = React.useState<FontData>();
+  const [fontStatus, setFontStatus] = React.useState<string>();
   const [passRec, setPassRec] = React.useState<Passage>(passage);
   const [passageStateChanges, setPassageStateChanges] = React.useState<
     PassageStateChange[]
@@ -213,6 +214,10 @@ export function Transcriber(props: IProps) {
   const commentRef = React.useRef<any>();
 
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
+  const loadStatus = (status: string) => {
+    console.log('Font status: current=', fontStatus, ' new=', status);
+    setFontStatus(status);
+  };
   const handleReady = () => {
     if (defaultPosition > 0) {
       playerRef.current.seekTo(defaultPosition);
@@ -555,40 +560,20 @@ export function Transcriber(props: IProps) {
   React.useEffect(() => {
     memory
       .query(q => q.findRecord({ type: 'project', id: project }))
-      .then(r => setProjRec(r));
+      .then((r: Project) => {
+        setProjData(getFontData(r, offline));
+      });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
-
-  const fontFamily =
-    projRec && projRec.attributes && projRec.attributes.defaultFont
-      ? projRec.attributes.defaultFont.split(',')[0].replace(/ /g, '')
-      : 'CharisSIL';
-
-  // See: https://github.com/typekit/webfontloader#custom
-  const fontConfig = {
-    custom: {
-      families: [fontFamily],
-      urls: [
-        offline
-          ? DataPath(path.join('fonts', fontFamily + '.css'))
-          : 'https://fonts.siltranscriber.org/' + fontFamily + '.css',
-      ],
-    },
-  };
 
   const textAreaStyle = {
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
     height: boxHeight,
     width: '98hu',
-    fontFamily: fontFamily,
-    fontSize:
-      projRec && projRec.attributes && projRec.attributes.defaultFontSize
-        ? projRec.attributes.defaultFontSize
-        : 'large',
-    direction: (projRec && projRec.attributes && projRec.attributes.rtl
-      ? 'rtl'
-      : 'ltr') as any,
+    fontFamily: projData?.fontFamily,
+    fontSize: projData?.fontSize,
+    direction: projData?.fontDir as any,
   };
 
   const paperStyle = { width: width - 24 };
@@ -754,7 +739,7 @@ export function Transcriber(props: IProps) {
               <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
                 <IconButton
                   onClick={handleTimer}
-                  disabled={role !== 'transcriber' || assigned !== 'user'}
+                  disabled={role === 'view' || assigned !== user}
                 >
                   <>
                     <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -771,13 +756,24 @@ export function Transcriber(props: IProps) {
               container
               direction="column"
             >
-              <WebFontLoader config={fontConfig}>
+              {projData && !fontStatus ? (
+                <WebFontLoader
+                  config={projData.fontConfig}
+                  onStatus={loadStatus}
+                >
+                  <TextareaAutosize
+                    defaultValue={defaultValue}
+                    readOnly={role === 'view' || assigned !== user}
+                    style={textAreaStyle}
+                  />
+                </WebFontLoader>
+              ) : (
                 <TextareaAutosize
                   defaultValue={defaultValue}
-                  readOnly={role !== 'transcriber' || assigned !== user}
+                  readOnly={role === 'view' || assigned !== user}
                   style={textAreaStyle}
                 />
-              </WebFontLoader>
+              )}
             </Grid>
             {showHistory && (
               <Grid item xs={6} container direction="column">
