@@ -9,8 +9,8 @@
 		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
-				<source>Choose your user to transcriber or review.</source>
-				<target>Choisissez votre utilisateur pour transcrire ou réviser.</target>
+				<source>Click your avatar to transcriber or review.</source>
+				<target>Cliquez sur votre avatar pour transcrire ou réviser.</target>
 			</segment>
 		</unit>
 		<unit id="access.importProject">
