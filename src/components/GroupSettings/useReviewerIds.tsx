@@ -13,7 +13,7 @@ function useReviewerIds(props: IProps): IPerson[] {
   const [group] = useGlobal('group');
 
   const transcriberId = getRoleId(roles, RoleNames.Transcriber);
-  const editorId = getRoleId(roles, RoleNames.Reviewer);
+  const editorId = getRoleId(roles, RoleNames.Editor);
 
   return groupMemberships
     .filter(

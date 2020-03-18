@@ -106,7 +106,7 @@ function Team(props: IProps) {
   const roleCheck = (userId: string, role: RoleNames) => {
     const groupRoles = [
       RoleNames.Admin,
-      RoleNames.Reviewer,
+      RoleNames.Editor,
       RoleNames.Transcriber,
     ];
     const roleIndex = groupRoles.indexOf(role);
@@ -176,16 +176,14 @@ function Team(props: IProps) {
           titledetail={t.ownersDetail}
           people={useOwnerIds(props)}
           add={() => handleAdd(RoleNames.Admin)}
-          del={(id: string, name: string) =>
-            handleUpdate(id, RoleNames.Reviewer)
-          }
+          del={(id: string, name: string) => handleUpdate(id, RoleNames.Editor)}
         />
         <TeamCol
           {...props}
           title={t.editors}
           titledetail={t.editorsDetail}
           people={useReviewerIds(props)}
-          add={() => handleAdd(RoleNames.Reviewer)}
+          add={() => handleAdd(RoleNames.Editor)}
           del={(id: string, name: string) =>
             handleUpdate(id, RoleNames.Transcriber)
           }

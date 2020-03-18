@@ -96,7 +96,7 @@ function GroupMemberAdd(props: IProps) {
         roleId
       );
     }
-    if (role === RoleNames.Reviewer) {
+    if (role === RoleNames.Editor) {
       setMessage(<span>{t.allReviewersCanTranscribe}</span>);
     }
   };
