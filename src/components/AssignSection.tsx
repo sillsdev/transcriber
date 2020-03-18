@@ -126,7 +126,7 @@ function AssignSection(props: IProps) {
   const handleSelectReviewer = (id: string) => () => {
     setSelectedReviewer(id);
     sections.forEach(function(s) {
-      assign(s, id, RoleNames.Reviewer);
+      assign(s, id, RoleNames.Editor);
     });
   };
 

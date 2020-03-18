@@ -2,7 +2,7 @@ import { Record, RecordRelationship } from '@orbit/data';
 
 export enum RoleNames {
   Transcriber = 'Transcriber',
-  Reviewer = 'Reviewer',
+  Editor = 'Editor',
   Admin = 'Admin',
   Member = 'Member',
   SuperAdmin = 'SuperAdmin',
