@@ -547,7 +547,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   useEffect(() => {
-    if (showBook(cols)) fetchBooks(lang);
+    if (showBook(cols) && allBookData.length === 0) fetchBooks(lang);
     let initData = Array<Array<any>>();
     let rowIds = Array<ISequencedRecordIdentity>();
     const getPassage = async (

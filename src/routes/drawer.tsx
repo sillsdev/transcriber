@@ -1077,16 +1077,18 @@ export function ResponsiveDrawer(props: IProps) {
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
   components['none'] = <Busy />;
+
+  const handleTranscriber = (desc: MediaDescription) => {
+    setMediaDesc(desc);
+    setExitChoice(t.tasks);
+    handleChoice(RoleNames.Transcriber);
+  };
+
   components[slug(t.tasks)] = (
-    <TaskTable
-      {...props}
-      transcriber={(desc: MediaDescription) => {
-        setMediaDesc(desc);
-        setExitChoice(t.tasks);
-        handleChoice(RoleNames.Transcriber);
-      }}
-    />
+    <TaskTable {...props} transcriber={handleTranscriber} />
   );
+
+  const handleDoChoice = () => handleChoice(slug(exitChoice));
 
   if (mediaDesc) {
     components['transcriber'] = (
@@ -1096,20 +1098,12 @@ export function ResponsiveDrawer(props: IProps) {
             {...props}
             onFilter={handleTopFilter}
             curDesc={mediaDesc}
-            transcriber={(desc: MediaDescription) => {
-              setMediaDesc(desc);
-              setExitChoice(t.tasks);
-              handleChoice(RoleNames.Transcriber);
-            }}
+            transcriber={handleTranscriber}
           />
         </div>
         {!topFilter && (
           <div className={classes.topTranscriber}>
-            <Transcriber
-              {...mediaDesc}
-              auth={auth}
-              done={() => handleChoice(slug(exitChoice))}
-            />
+            <Transcriber {...mediaDesc} auth={auth} done={handleDoChoice} />
           </div>
         )}
       </div>
