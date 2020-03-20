@@ -201,7 +201,7 @@ export function Transcriber(props: IProps) {
   const [height, setHeight] = React.useState(window.innerHeight);
   const [width, setWidth] = React.useState(window.innerWidth);
   const [boxHeight, setBoxHeight] = React.useState(height - NON_BOX_HEIGHT);
-  const [defaultValue, setDefaultValue] = React.useState('');
+  const [textValue, setTextValue] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
   const [message, setMessage] = React.useState(<></>);
   const [makeComment, setMakeComment] = React.useState(false);
@@ -213,6 +213,7 @@ export function Transcriber(props: IProps) {
   const transcriptionRef = React.useRef<any>();
   const commentRef = React.useRef<any>();
 
+  const handleChange = (e: any) => setTextValue(e.target.value);
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
     console.log('Font status: current=', fontStatus, ' new=', status);
@@ -522,7 +523,7 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
-      setDefaultValue(attr.transcription ? attr.transcription : '');
+      setTextValue(attr.transcription ? attr.transcription : '');
       setDefaultPosition(attr.position);
       setPlaying(false);
       //focus on player
@@ -763,16 +764,18 @@ export function Transcriber(props: IProps) {
                   onStatus={loadStatus}
                 >
                   <TextareaAutosize
-                    defaultValue={defaultValue}
+                    value={textValue}
                     readOnly={role === 'view' || assigned !== user}
                     style={textAreaStyle}
+                    onChange={handleChange}
                   />
                 </WebFontLoader>
               ) : (
                 <TextareaAutosize
-                  defaultValue={defaultValue}
+                  value={textValue}
                   readOnly={role === 'view' || assigned !== user}
                   style={textAreaStyle}
+                  onChange={handleChange}
                 />
               )}
             </Grid>
