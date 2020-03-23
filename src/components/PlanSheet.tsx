@@ -332,6 +332,7 @@ export function PlanSheet(props: IProps) {
               return cellIndex !== bookCol || isSection
                 ? {
                     value: e,
+                    readOnly: isSection ? cellIndex > 1 : cellIndex <= 1,
                     dataEditor: textEditor,
                     className:
                       (isNum(e) ? 'num' : 'pass') + (isSection ? ' set' : ''),

@@ -42,8 +42,10 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
+  const [busy] = useGlobal('remoteBusy');
 
   const handleChange = (event: any, value: number) => {
+    if (busy) return;
     setTab(value);
     if (changeTab) {
       changeTab(value);
