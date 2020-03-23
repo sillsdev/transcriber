@@ -6,10 +6,12 @@ import JSONAPISource, {
   JSONAPISerializerSettings,
 } from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
-import { Record, TransformBuilder, Operation, Transform } from '@orbit/data';
+import { Record, TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import OrgData from '../model/orgData';
 import { Project } from '../model';
+
+const completePerTable = 3;
 
 export function insertData(
   item: Record,
@@ -65,11 +67,15 @@ export async function LoadData(
 ): Promise<boolean> {
   var tb: TransformBuilder = new TransformBuilder();
 
-  async function processData(data: string, ser: JSONAPISerializerCustom) {
+  async function processData(
+    start: number,
+    data: string,
+    ser: JSONAPISerializerCustom
+  ) {
     var x = JSON.parse(data);
     var tables: ResourceDocument[] = x.data;
-    var completed = 15;
     var oparray: Operation[] = [];
+    var completed: number = 15 + start * completePerTable;
 
     tables.forEach(t => {
       var json = ser.deserialize(t);
@@ -81,7 +87,7 @@ export async function LoadData(
       } else {
         insertData(json.data, memory, tb, oparray, false, false);
       }
-      completed += 3;
+      completed += completePerTable;
       setCompleted(completed);
     });
     try {
@@ -114,16 +120,36 @@ export async function LoadData(
   ser.resourceKey = () => {
     return 'remoteId';
   };
+
   try {
-    let transform: Transform[] = await remote.pull(q =>
-      q.findRecords('orgdata')
-    );
+    let start = 0;
     setCompleted(15);
-    if (transform.length > 0 && transform[0].operations.length > 0) {
-      var r: OrgData = (transform[0].operations[0] as any).record;
-      await processData(r.attributes.json, ser);
-      return true;
-    }
+    do {
+      var transform: OrgData[] = (await remote.query(
+        // eslint-disable-next-line no-loop-func
+        (q: QueryBuilder) =>
+          q
+            .findRecords('orgdata')
+            .filter({ attribute: 'start-index', value: start }),
+        {
+          label: 'Get Data',
+          sources: {
+            remote: {
+              timeout: 35000,
+            },
+          },
+        }
+      )) as any;
+
+      if (transform.length > 0) {
+        var r: OrgData = transform[0];
+        await processData(start, r.attributes.json, ser);
+        start = r.attributes.startnext;
+      } else {
+        //bail - never expect to be here
+        start = -1;
+      }
+    } while (start > -1);
   } catch (rejected) {
     console.log(rejected);
   }
