@@ -125,6 +125,14 @@ export function UserMenu(props: IProps) {
             <ListItemText primary={t.clearCache} />
           </StyledMenuItem>
         )}
+        {shift && (
+          <StyledMenuItem onClick={handleAction('ClearLogout')}>
+            <ListItemIcon>
+              <ClearIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary={t.clearLogout} />
+          </StyledMenuItem>
+        )}
         <StyledMenuItem onClick={handleAction('Logout')}>
           <ListItemIcon>
             <ExitIcon fontSize="small" />

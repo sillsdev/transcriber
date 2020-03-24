@@ -1510,6 +1510,13 @@
                     <context context-type="sourcefile">Loading.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="main.clearLogout">
+                <source>Logout and Force Data Reload</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Loading.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="main.inviteError">
                 <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>
                 <target/>

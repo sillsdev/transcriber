@@ -243,7 +243,6 @@ export const importProjectToElectron = (
                 payload: { status: completemsg, msg: '' },
                 type: IMPORT_SUCCESS,
               });
-              console.log(memory.cache.query(q => q.findRecords('project')));
             })
             .catch(err => {
               console.log('backup update err', err);

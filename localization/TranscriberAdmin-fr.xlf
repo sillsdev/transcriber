@@ -1291,6 +1291,12 @@
          	<target>Effacer le cache</target>
          </segment>
       </unit>
+      <unit id="main.clearLogout">
+         <segment>
+            <source>Logout and Force Data Reload</source>
+            <target>Déconnexion et forcer le rechargement des données</target>
+         </segment>
+      </unit>
       <unit id="main.inviteError">
          <segment>
             <source>Invitation not accepted.  You must login with the email that the invitation was sent to.</source>

@@ -446,6 +446,11 @@ export function ResponsiveDrawer(props: IProps) {
     }
     localStorage.setItem('url', history.location.pathname);
     if (!/Close/i.test(what)) {
+      if (/ClearLogout/i.test(what)) {
+        localStorage.removeItem('user-token');
+        localStorage.removeItem('user-id');
+        what = 'Logout';
+      }
       if (/Clear/i.test(what)) {
         bucket.setItem('remote-requests', []);
       }

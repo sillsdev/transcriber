@@ -222,6 +222,9 @@ export function Access(props: IProps) {
     if (localAuth) {
       try {
         auth.setSession(JSON.parse(localAuth));
+        auth
+          .renewSession()
+          .catch(() => localStorage.removeItem('trAdminAuthResult'));
       } catch (error) {
         localStorage.removeItem('trAdminAuthResult');
       }
