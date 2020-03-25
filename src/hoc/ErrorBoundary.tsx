@@ -160,6 +160,8 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
 
   private logout() {
     this.props.resetOrbitError();
+    localStorage.removeItem('user-token');
+    localStorage.removeItem('user-id');
     this.setState({ ...initState });
     history.replace('/logout');
   }
