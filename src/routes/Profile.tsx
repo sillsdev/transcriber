@@ -177,8 +177,6 @@ export function Profile(props: IProps) {
   const [bucket] = useGlobal('bucket');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
-  const { isAuthenticated } = auth;
-  // const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
   const [offline] = useGlobal('offline');
@@ -542,7 +540,7 @@ export function Profile(props: IProps) {
     }
   }, [timezone]);
 
-  if (!isAuthenticated(offline)) {
+  if (!auth || !auth.isAuthenticated(offline)) {
     localStorage.setItem('url', history.location.pathname);
     return <Redirect to="/" />;
   }

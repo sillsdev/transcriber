@@ -4,6 +4,8 @@
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
+    "@bugsnag/js": "^6.5.2",
+    "@bugsnag/plugin-react": "^6.5.0",
     "@devexpress/dx-react-chart": "^2.5.0",
     "@devexpress/dx-react-chart-material-ui": "^2.5.0",
     "@devexpress/dx-react-core": "^2.5.0",

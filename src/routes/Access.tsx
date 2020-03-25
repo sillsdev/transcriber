@@ -109,6 +109,7 @@ interface IDispatchProps {
   setLanguage: typeof action.setLanguage;
   importProject: typeof action.importProjectToElectron;
   importComplete: typeof action.importComplete;
+  orbitError: typeof action.doOrbitError;
 }
 
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
@@ -124,6 +125,7 @@ export function Access(props: IProps) {
     setLanguage,
     importProject,
     importComplete,
+    orbitError,
   } = props;
   const [memory] = useGlobal('memory');
   const [backup] = useGlobal('backup');
@@ -151,7 +153,15 @@ export function Access(props: IProps) {
       setTimeout(() => {
         handleActionConfirmed();
       }, 2000);
-    } else handleElectronImport(memory, backup, zipFile, importProject, ei);
+    } else
+      handleElectronImport(
+        memory,
+        backup,
+        zipFile,
+        importProject,
+        orbitError,
+        ei
+      );
     setConfirmAction('');
   };
   const handleActionRefused = () => {
@@ -174,6 +184,7 @@ export function Access(props: IProps) {
             backup,
             importData.zip,
             importProject,
+            orbitError,
             ei
           );
         }
@@ -229,7 +240,7 @@ export function Access(props: IProps) {
         localStorage.removeItem('trAdminAuthResult');
       }
     }
-    if (!auth.isAuthenticated(offline)) {
+    if (!auth || !auth.isAuthenticated(offline)) {
       localStorage.removeItem('trAdminAuthResult');
       if (!offline && !isElectron) {
         handleLogin();
@@ -239,7 +250,7 @@ export function Access(props: IProps) {
   }, []);
 
   if (
-    (!isElectron && auth.isAuthenticated(offline)) ||
+    (!isElectron && auth && auth.isAuthenticated(offline)) ||
     (isElectron && localStorage.getItem('user-id') !== null)
   )
     return <Redirect to="/loading" />;
@@ -351,6 +362,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       setLanguage: action.setLanguage,
       importProject: action.importProjectToElectron,
       importComplete: action.importComplete,
+      orbitError: action.doOrbitError,
     },
     dispatch
   ),

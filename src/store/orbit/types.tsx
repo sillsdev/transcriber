@@ -10,7 +10,7 @@ export interface IApiError extends Exception {
 
 export interface IOrbitState {
   loaded: boolean;
-  status: number;
+  status: number | undefined;
   message: string;
   saving: boolean;
 }

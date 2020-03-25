@@ -180,6 +180,7 @@ export function IntegrationPanel(props: IProps) {
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
+  const [errorReporter] = useGlobal('errorReporter');
   const [message, setMessage] = React.useState(<></>);
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
@@ -313,7 +314,12 @@ export function IntegrationPanel(props: IProps) {
     }
   };
   const handleSync = () =>
-    syncProject(auth, remoteIdNum('project', project, keyMap), t.syncPending);
+    syncProject(
+      auth,
+      remoteIdNum('project', project, keyMap),
+      errorReporter,
+      t.syncPending
+    );
 
   const handleLocalSync = async () => {
     await localSync(project, ptShortName, passages, memory);
@@ -413,7 +419,12 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (!paratext_countStatus) {
       if (!isElectron)
-        getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
+        getCount(
+          auth,
+          remoteIdNum('project', project, keyMap),
+          errorReporter,
+          t.countPending
+        );
     } else if (paratext_countStatus.errStatus)
       showMessage(t.countError, translateError(paratext_countStatus));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -422,7 +433,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (!isElectron) {
       if (!paratext_usernameStatus) {
-        getUserName(auth, t.usernamePending);
+        getUserName(auth, errorReporter, t.usernamePending);
       } else if (paratext_usernameStatus.errStatus)
         showMessage(t.usernameError, translateError(paratext_usernameStatus));
 
@@ -442,7 +453,7 @@ export function IntegrationPanel(props: IProps) {
             getLocalProjects(ptPath, t.projectsPending, langTag)
           );
         } else {
-          getProjects(auth, t.projectsPending, langTag);
+          getProjects(auth, t.projectsPending, errorReporter, langTag);
         }
       } else {
         if (paratext_projectsStatus.errStatus) {
@@ -461,7 +472,12 @@ export function IntegrationPanel(props: IProps) {
         showMessage(t.syncError, translateError(paratext_syncStatus));
       else if (paratext_syncStatus.statusMsg !== '') {
         showMessage('', paratext_syncStatus.statusMsg);
-        getCount(auth, remoteIdNum('project', project, keyMap), t.countPending);
+        getCount(
+          auth,
+          remoteIdNum('project', project, keyMap),
+          errorReporter,
+          t.countPending
+        );
       }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);

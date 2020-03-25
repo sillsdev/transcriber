@@ -18,12 +18,15 @@ import {
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus } from '../AxiosStatus';
-import { getMediaProjRec, getMediaRec, fileJson } from '../../utils';
+import { logError, Severity } from '../../components/logErrorService';
+import { getMediaProjRec, getMediaRec, fileJson, infoMsg } from '../../utils';
 import MemorySource from '@orbit/memory';
 
-export const getUserName = (auth: Auth, pendingmsg: string) => (
-  dispatch: any
-) => {
+export const getUserName = (
+  auth: Auth,
+  errorReporter: any,
+  pendingmsg: string
+) => (dispatch: any) => {
   dispatch({
     payload: pendingStatus(pendingmsg),
     type: USERNAME_PENDING,
@@ -37,8 +40,7 @@ export const getUserName = (auth: Auth, pendingmsg: string) => (
       dispatch({ payload: response.data, type: USERNAME_SUCCESS });
     })
     .catch((err: AxiosError) => {
-      console.log('username failed.');
-      console.log(err);
+      logError(Severity.info, errorReporter, infoMsg(err, 'Username failed'));
       dispatch({
         payload: errStatus(err),
         type: USERNAME_ERROR,
@@ -55,6 +57,7 @@ export const resetProjects = () => (dispatch: any) => {
 export const getProjects = (
   auth: Auth,
   pendingmsg: string,
+  errorReporter: any,
   languageTag?: string
 ) => (dispatch: any) => {
   dispatch({
@@ -87,8 +90,7 @@ export const getProjects = (
       dispatch({ payload: pt, type: PROJECTS_SUCCESS });
     })
     .catch(err => {
-      console.log('projects failed.');
-      console.log(err);
+      logError(Severity.info, errorReporter, infoMsg(err, 'Projects failed'));
       dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
     });
 };
@@ -139,9 +141,12 @@ export const resetCount = () => (dispatch: any) => {
   });
 };
 
-export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
-  dispatch: any
-) => {
+export const getCount = (
+  auth: Auth,
+  projectId: number,
+  errorReporter: any,
+  pendingmsg: string
+) => (dispatch: any) => {
   dispatch({
     payload: pendingStatus(pendingmsg),
     type: COUNT_PENDING,
@@ -156,8 +161,7 @@ export const getCount = (auth: Auth, projectId: number, pendingmsg: string) => (
       dispatch({ payload: response.data, type: COUNT_SUCCESS });
     })
     .catch(err => {
-      console.log('count failed.');
-      console.log(err);
+      logError(Severity.info, errorReporter, infoMsg(err, 'Count failed'));
       dispatch({ payload: errStatus(err), type: COUNT_ERROR });
     });
 };
@@ -187,6 +191,7 @@ export const resetSync = () => (dispatch: any) => {
 export const syncProject = (
   auth: Auth,
   projectId: number,
+  errorReporter: any,
   pendingmsg: string
 ) => (dispatch: any) => {
   dispatch({ payload: pendingStatus(pendingmsg), type: SYNC_PENDING });
@@ -198,11 +203,10 @@ export const syncProject = (
   })
     .then(response => {
       dispatch({ payload: response.data, type: SYNC_SUCCESS });
-      getCount(auth, projectId, '');
+      getCount(auth, projectId, errorReporter, '');
     })
     .catch(err => {
-      console.log('Sync failed.');
-      console.log(err);
+      logError(Severity.info, errorReporter, infoMsg(err, 'Sync Failed'));
       dispatch({ payload: errStatus(err), type: SYNC_ERROR });
     });
 };

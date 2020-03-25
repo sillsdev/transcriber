@@ -49,7 +49,7 @@ function TranscriptionShow(props: IProps) {
   const [fontStatus, setFontStatus] = useState<string>();
 
   const loadStatus = (status: string) => {
-    console.log('Font status: current=', fontStatus, ' new=', status);
+    // console.log('Font status: current=', fontStatus, ' new=', status);
     setFontStatus(status);
   };
 

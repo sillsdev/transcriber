@@ -9,7 +9,8 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { Record, TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import OrgData from '../model/orgData';
-import { Project } from '../model';
+import { Project, IApiError } from '../model';
+import { orbitInfo } from './infoMsg';
 
 const completePerTable = 3;
 
@@ -18,6 +19,7 @@ export function insertData(
   memory: Memory,
   tb: TransformBuilder,
   oparray: Operation[],
+  orbitError: (ex: IApiError) => void,
   checkExisting: boolean,
   isImport: boolean
 ) {
@@ -33,7 +35,9 @@ export function insertData(
       rec = memory.cache.query(q => q.findRecord({ type: item.type, id: id }));
     }
   } catch (err) {
-    if (err.constructor.name !== 'RecordNotFoundException') console.log(err);
+    if (err.constructor.name !== 'RecordNotFoundException') {
+      orbitError(orbitInfo(err, item.keys ? item.keys['remoteId'] : ''));
+    }
   } finally {
     if (rec) {
       if (isArray(rec)) rec = rec[0]; //won't be...
@@ -44,7 +48,7 @@ export function insertData(
         memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
       } catch (err) {
-        console.log(err);
+        orbitError(orbitInfo(err, 'Add record error'));
       }
     }
   }
@@ -63,7 +67,8 @@ export async function LoadData(
   memory: Memory,
   backup: IndexedDBSource,
   remote: JSONAPISource,
-  setCompleted: (valud: number) => void
+  setCompleted: (valud: number) => void,
+  orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
   var tb: TransformBuilder = new TransformBuilder();
 
@@ -82,10 +87,10 @@ export async function LoadData(
       if (isArray(json.data)) {
         //console.log(json.data[0].type, json.data.length);
         json.data.forEach(item =>
-          insertData(item, memory, tb, oparray, false, false)
+          insertData(item, memory, tb, oparray, orbitError, false, false)
         );
       } else {
-        insertData(json.data, memory, tb, oparray, false, false);
+        insertData(json.data, memory, tb, oparray, orbitError, false, false);
       }
       completed += completePerTable;
       setCompleted(completed);
@@ -100,15 +105,13 @@ export async function LoadData(
       await memory
         .sync(transform)
         .then(() => console.log('memory synced'))
-        .catch(err => {
-          console.log(err);
-        });
+        .catch(err => orbitError(orbitInfo(err, 'Sync error')));
       await backup
         .sync(transform)
         .then(x => console.log('backup sync complete'))
-        .catch(err => console.log('backup sync failed', err));
+        .catch(err => orbitError(orbitInfo(err, 'Backup sync failed')));
     } catch (err) {
-      console.log('backup update err', err);
+      orbitError(orbitInfo(err, 'Backup update error'));
     }
   }
 

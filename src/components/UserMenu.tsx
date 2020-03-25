@@ -66,6 +66,7 @@ export function UserMenu(props: IProps) {
   const { action, t } = props;
   const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
+  const [developer] = useGlobal('developer');
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
@@ -131,6 +132,14 @@ export function UserMenu(props: IProps) {
               <ClearIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText primary={t.clearLogout} />
+          </StyledMenuItem>
+        )}
+        {shift && developer && (
+          <StyledMenuItem onClick={handleAction('Error')}>
+            <ListItemIcon>
+              <ClearIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary={'Error'} />
           </StyledMenuItem>
         )}
         <StyledMenuItem onClick={handleAction('Logout')}>

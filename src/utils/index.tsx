@@ -28,3 +28,4 @@ export * from './fileJson';
 export * from './paratextPath';
 export * from './DataPath';
 export * from './fontChoice';
+export * from './infoMsg';

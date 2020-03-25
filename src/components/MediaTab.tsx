@@ -228,6 +228,7 @@ export function MediaTab(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [offline] = useGlobal('offline');
+  const [errorReporter] = useGlobal('errorReporter');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   // [
@@ -410,7 +411,13 @@ export function MediaTab(props: IProps) {
             originalFile: uploadList[currentlyLoading + 1].name,
             contentType: uploadList[currentlyLoading + 1].type,
           } as any;
-          nextUpload(mediaFile, uploadList, currentlyLoading + 1, auth);
+          nextUpload(
+            mediaFile,
+            uploadList,
+            currentlyLoading + 1,
+            auth,
+            errorReporter
+          );
         } else {
           setMessage(
             <span className={classes.unsupported}>

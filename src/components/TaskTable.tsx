@@ -505,7 +505,7 @@ export function TaskTable(props: IProps) {
       if (rowList.length > 0) {
         processSelect(rowList[0].media);
       }
-    } else {
+    } else if (rowList.length > 0) {
       const selectedRow = rowList.filter(r => r.media.passage.id === selected);
       if (selectedRow.length === 0) {
         processSelect(rowList[0].media);

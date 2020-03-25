@@ -78,6 +78,7 @@ import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
 } from '../utils/UpdatePassageState';
+import { logError, Severity } from '../components/logErrorService';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -181,6 +182,7 @@ export function Transcriber(props: IProps) {
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [errorReporter] = useGlobal('errorReporter');
   const [assigned, setAssigned] = React.useState('');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
@@ -216,7 +218,7 @@ export function Transcriber(props: IProps) {
   const handleChange = (e: any) => setTextValue(e.target.value);
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
-    console.log('Font status: current=', fontStatus, ' new=', status);
+    // console.log('Font status: current=', fontStatus, ' new=', status);
     setFontStatus(status);
   };
   const handleReady = () => {
@@ -357,7 +359,7 @@ export function Transcriber(props: IProps) {
         );
         await memory.update(ops);
       } else {
-        console.log('Unhandled state', state);
+        logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
       }
     }
     done();

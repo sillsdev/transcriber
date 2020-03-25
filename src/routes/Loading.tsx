@@ -96,7 +96,6 @@ export function Loading(props: IProps) {
   const { orbitLoaded, auth, setExpireAt, t } = props;
   const classes = useStyles();
   const { fetchOrbitData, fetchLocalization, setLanguage } = props;
-  const { isAuthenticated } = auth;
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
@@ -290,7 +289,7 @@ export function Loading(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);
 
-  if (!isAuthenticated(offline)) return <Redirect to="/" />;
+  if (!auth || !auth.isAuthenticated(offline)) return <Redirect to="/" />;
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 

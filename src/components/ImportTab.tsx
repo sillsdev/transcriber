@@ -34,6 +34,8 @@ import {
 import { useGlobal } from 'reactn';
 import AdmZip from 'adm-zip';
 import { remoteIdNum } from '../utils';
+import { logError, Severity } from '../components/logErrorService';
+import { infoMsg } from '../utils';
 
 interface IStateProps {
   t: IImportStrings;
@@ -45,6 +47,7 @@ interface IDispatchProps {
   importProjectToElectron: typeof actions.importProjectToElectron;
   importProjectFromElectron: typeof actions.importProjectFromElectron;
   importComplete: typeof actions.importComplete;
+  orbitError: typeof actions.doOrbitError;
 }
 
 interface IRecordProps {
@@ -66,6 +69,7 @@ export function ImportTab(props: IProps) {
     importStatus,
     importProjectToElectron,
     importProjectFromElectron,
+    orbitError,
   } = props;
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -74,6 +78,7 @@ export function ImportTab(props: IProps) {
   const [backup] = useGlobal('backup');
   const [keyMap] = useGlobal('keyMap');
   const [project] = useGlobal('project');
+  const [errorReporter] = useGlobal('errorReporter');
 
   const [message, setMessage] = useState(<></>);
   const [importMessage, setImportMessage] = useState('');
@@ -136,6 +141,7 @@ export function ImportTab(props: IProps) {
         backup,
         zipFile,
         importProjectToElectron,
+        orbitError,
         ei
       );
     }
@@ -163,6 +169,7 @@ export function ImportTab(props: IProps) {
           backup,
           importData.zip,
           importProjectToElectron,
+          orbitError,
           ei
         );
       }
@@ -177,6 +184,7 @@ export function ImportTab(props: IProps) {
         files,
         remoteIdNum('project', project, keyMap),
         auth,
+        orbitError,
         t.importPending,
         t.importComplete
       );
@@ -242,7 +250,13 @@ export function ImportTab(props: IProps) {
                   console.log('done');
                 });
               })
-              .catch(err => console.log('IndexedDB Pull error: ', err));
+              .catch(err => {
+                logError(
+                  Severity.info,
+                  errorReporter,
+                  infoMsg(err, 'IndexedDB Pull error: ')
+                );
+              });
           }
         }
       }
@@ -309,6 +323,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       importProjectToElectron: actions.importProjectToElectron,
       importProjectFromElectron: actions.importProjectFromElectron,
       importComplete: actions.importComplete,
+      orbitError: actions.doOrbitError,
     },
     dispatch
   ),

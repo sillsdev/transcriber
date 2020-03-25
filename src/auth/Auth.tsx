@@ -48,7 +48,9 @@ export default class Auth {
         history.replace('/');
         console.log(err);
         if (err.error !== 'invalid_token')
-          alert(`Error: ${err.error}. Check the console for further details.`);
+          throw new Error(
+            `Error: ${err.error}. Check the console for further details.`
+          );
       }
     });
   }

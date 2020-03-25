@@ -64,8 +64,6 @@ export function Logout(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  // if (auth.isAuthenticated()) return <Redirect to="/loading" />;
-
   if (/Access/i.test(view)) return <Redirect to="/" />;
   return (
     <div className={classes.root}>

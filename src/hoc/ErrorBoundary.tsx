@@ -1,8 +1,10 @@
 import React, { ReactElement } from 'react';
-import { Link } from 'react-router-dom';
+import history from '../history';
 import { IMainStrings, IState } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
+import { bindActionCreators } from 'redux';
+import * as actions from '../store';
 import {
   withStyles,
   WithStyles,
@@ -10,7 +12,7 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import { logError } from '../components/logErrorService';
+import { logError, Severity } from '../components/logErrorService';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,70 +38,130 @@ const styles = (theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
+    modalActions: {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    button: {
+      margin: theme.spacing(1),
+    },
   });
 
 interface IStateProps {
   t: IMainStrings;
-  orbitStatus: number;
+  orbitStatus: number | undefined;
   orbitMessage: string;
 }
 
-interface IProps extends IStateProps, WithStyles<typeof styles> {
+interface IDispatchProps {
+  resetOrbitError: typeof actions.resetOrbitError;
+}
+
+interface IProps
+  extends IStateProps,
+    IDispatchProps,
+    WithStyles<typeof styles> {
+  errorReporter: any;
   children: JSX.Element;
 }
 
-interface ErrorBoundaryProps {
-  hasError: boolean;
-  error: string;
-}
+const initState = {
+  errCount: 0,
+  error: '',
+};
 
-export class ErrorBoundary extends React.Component<IProps, ErrorBoundaryProps> {
+export class ErrorBoundary extends React.Component<IProps, typeof initState> {
   constructor(props: IProps) {
     super(props);
-    this.state = { hasError: false, error: '' };
-  }
-
-  static getDerivedStateFromError(error: any) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true, error: error.toString() };
+    this.continue = this.continue.bind(this);
+    this.logout = this.logout.bind(this);
+    this.state = { ...initState };
   }
 
   componentDidCatch(error: any, info: any) {
-    // You can also log the error to an error reporting service
-    logError(error, info);
+    const { errorReporter } = this.props;
+
+    if (!this.state.errCount) {
+      logError(Severity.error, errorReporter, {
+        message: error.message,
+        name: 'Caught error',
+        opts: {
+          stack: error.stack,
+          componentStack: info.componentStack,
+        },
+      } as any);
+    }
+    this.setState({
+      errCount: this.state.errCount + 1,
+      error: error.toString(),
+    });
   }
 
   render() {
-    const { classes, t, orbitStatus, orbitMessage } = this.props;
+    const { classes, t, orbitStatus, orbitMessage, errorReporter } = this.props;
 
     const modalMessage = (message: ReactElement | string) => {
       return (
-        <div id="myModal" className={classes.modal}>
+        <div id="myModal" className={classes.modal} key={this.state.errCount}>
           <div className={classes.modalContent}>
             <Typography>{t.crashMessage}</Typography>
             {message}
-            <Link to="/logout">
-              <Button variant="contained">{t.logout}</Button>
-            </Link>
+            <div className={classes.modalActions}>
+              <Button
+                variant="contained"
+                className={classes.button}
+                onClick={this.continue}
+              >
+                {t.continue}
+              </Button>
+              <Button
+                variant="contained"
+                className={classes.button}
+                onClick={this.logout}
+              >
+                {t.logout}
+              </Button>
+            </div>
           </div>
         </div>
       );
     };
 
-    if (orbitStatus >= 400)
-      modalMessage(
+    if (this.state.errCount && localStorage.getItem('isLoggedIn')) {
+      return modalMessage(this.state.error);
+    }
+
+    if (orbitStatus && orbitStatus >= 400) {
+      logError(Severity.error, errorReporter, {
+        message: orbitMessage,
+        name: orbitStatus.toString(),
+      });
+      return modalMessage(
         <>
           {t.apiError + ' ' + orbitStatus.toString()}
           <br />
           {orbitMessage}
         </>
       );
-
-    if (this.state.hasError && localStorage.getItem('isLoggedIn'))
-      modalMessage(this.state.error);
+    } else if (orbitStatus === Severity.info) {
+      logError(Severity.info, errorReporter, orbitMessage);
+    }
 
     // If there is no error just render the children component.
     return this.props.children;
+  }
+
+  private continue() {
+    this.props.resetOrbitError();
+    this.setState({ ...initState });
+    history.replace(localStorage.getItem('url') || '/');
+  }
+
+  private logout() {
+    this.props.resetOrbitError();
+    this.setState({ ...initState });
+    history.replace('/logout');
   }
 }
 
@@ -109,4 +171,15 @@ const mapStateToProps = (state: IState): IStateProps => ({
   orbitMessage: state.orbit.message,
 });
 
-export default withStyles(styles)(connect(mapStateToProps)(ErrorBoundary));
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      resetOrbitError: actions.resetOrbitError,
+    },
+    dispatch
+  ),
+});
+
+export default withStyles(styles)(
+  connect(mapStateToProps, mapDispatchToProps)(ErrorBoundary)
+);

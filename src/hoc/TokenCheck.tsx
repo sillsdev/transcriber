@@ -8,6 +8,7 @@ import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
 import { useGlobal } from 'reactn';
+import { logError, Severity } from '../components/logErrorService';
 
 const Expires = 0; // Set to 7110 to test 1:30 token
 
@@ -29,6 +30,7 @@ function TokenCheck(props: IProps) {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [secondsToExpire, setSecondsToExpire] = React.useState(0);
   const [offline] = useGlobal('offline');
+  const [errorReporter] = useGlobal('errorReporter');
   const view = React.useRef<any>('');
   const timer = React.useRef<NodeJS.Timeout>();
 
@@ -71,7 +73,7 @@ function TokenCheck(props: IProps) {
         })
         .catch((e: any) => {
           view.current = 'Logout';
-          console.log(e);
+          logError(Severity.error, errorReporter, e);
         });
     }
   };

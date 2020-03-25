@@ -228,6 +228,7 @@ export function TranscriptionTab(props: IProps) {
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [offline] = useGlobal('offline');
+  const [errorReporter] = useGlobal('errorReporter');
   const [message, setMessage] = useState(<></>);
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
@@ -284,6 +285,7 @@ export function TranscriptionTab(props: IProps) {
       remoteIdNum('project', project, keyMap),
       remoteIdNum('user', user, keyMap),
       auth,
+      errorReporter,
       t.exportingProject
     );
   };

@@ -11,8 +11,28 @@ import Memory from '@orbit/memory';
 import { schema, keyMap } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
+import bugsnag from '@bugsnag/js';
+import bugsnagReact from '@bugsnag/plugin-react';
 import history from './history';
 import IndexedDBSource from '@orbit/indexeddb';
+import { logError, Severity } from './components/logErrorService';
+import { infoMsg } from './utils';
+const appVersion = require('../package.json').version;
+
+const isElectron = process.env.REACT_APP_MODE === 'electron';
+
+const host = process.env.REACT_APP_HOST;
+const prodOrQa = host && !host.endsWith('dev') && !isElectron;
+const prod = host && host.endsWith('prod');
+const bugsnagClient = prodOrQa
+  ? bugsnag({
+      apiKey: 'c9b8e249d3d596dcc39d84ebae62e3da',
+      appVersion,
+      releaseStage: prod ? 'production' : 'staging',
+    })
+  : undefined;
+bugsnagClient?.use(bugsnagReact, React);
+const SnagBoundary = bugsnagClient?.getPlugin('react');
 
 // Redux store
 const store = configureStore();
@@ -25,7 +45,7 @@ const backup = new IndexedDBSource({
   name: 'backup',
   namespace: 'transcriber',
 });
-const isElectron = process.env.REACT_APP_MODE === 'electron';
+
 if (isElectron) {
   localStorage.removeItem('user-id');
   backup
@@ -41,7 +61,13 @@ if (isElectron) {
           console.log('reset');
         });
     })
-    .catch(err => console.log('IndexedDB Pull error: ', err));
+    .catch(err =>
+      logError(
+        Severity.error,
+        bugsnagClient,
+        infoMsg(err, 'IndexedDB Pull error')
+      )
+    );
 }
 setGlobal({
   organization: '',
@@ -65,6 +91,7 @@ setGlobal({
   editUserId: null,
   developer: false,
   offline: isElectron,
+  errorReporter: bugsnagClient,
 });
 
 if (isElectron) {
@@ -73,18 +100,22 @@ if (isElectron) {
   console.log('Running on the Web, Filesystem access disabled.');
 }
 
-const router = isElectron ? (
-  <HashRouter>
-    <ErrorBoundary>
+const errorManagedApp = bugsnagClient ? (
+  <SnagBoundary>
+    <ErrorBoundary errorReporter={bugsnagClient}>
       <App />
     </ErrorBoundary>
-  </HashRouter>
+  </SnagBoundary>
 ) : (
-  <Router history={history}>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
-  </Router>
+  <ErrorBoundary errorReporter={bugsnagClient}>
+    <App />
+  </ErrorBoundary>
+);
+
+const router = isElectron ? (
+  <HashRouter>{errorManagedApp}</HashRouter>
+) : (
+  <Router history={history}>{errorManagedApp}</Router>
 );
 
 const Root = () => (

@@ -30,10 +30,11 @@ export const errStatus = (err: AxiosError): IAxiosStatus => {
     console.log(err.response.headers);
   } else if (err.request) {
     // The request was made but no response was received
+
     console.log(err.request);
   } else {
     // Something happened in setting up the request that triggered an Error
-    console.log('Error', err.message);
+    console.log(err);
   }
   return errorStatus(err.response ? err.response.status : -1, err.message);
 };

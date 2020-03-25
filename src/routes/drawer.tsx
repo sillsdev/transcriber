@@ -88,6 +88,7 @@ import {
   remoteIdGuid,
   makeAbbr,
   Online,
+  remoteIdNum,
 } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -287,6 +288,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [bucket] = useGlobal('bucket');
   const [schema] = useGlobal('schema');
   const [user] = useGlobal('user');
+  const [errorReporter] = useGlobal('errorReporter');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [importexportBusy] = useGlobal('importexportBusy');
   const [organization, setOrganization] = useGlobal('organization');
@@ -545,6 +547,12 @@ export function ResponsiveDrawer(props: IProps) {
   }, []);
 
   useEffect(() => {
+    if (errorReporter && user && user !== '') {
+      errorReporter.user = {
+        id: remoteIdNum('user', user, keyMap),
+        authId: localStorage.getItem('user-token'),
+      };
+    }
     if (orbitLoaded) {
       const organizations = getOrgs(memory, user);
       const orgOpts = organizations
@@ -779,6 +787,7 @@ export function ResponsiveDrawer(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles, project, busy]);
 
+  if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
@@ -789,7 +798,7 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.setItem('url', history.location.pathname);
   }
 
-  if (!auth.isAuthenticated(offline) || !orbitLoaded)
+  if (!auth || !auth.isAuthenticated(offline) || !orbitLoaded)
     return <Redirect to="/" />;
 
   // reset location based on deep link (saved url)

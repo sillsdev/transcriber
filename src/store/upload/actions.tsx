@@ -10,6 +10,8 @@ import {
   UPLOAD_ITEM_FAILED,
   UPLOAD_COMPLETE,
 } from './types';
+import logError, { Severity } from '../../components/logErrorService';
+import { infoMsg } from '../../utils';
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
   dispatch({
@@ -22,7 +24,8 @@ export const nextUpload = (
   record: MediaFile,
   files: FileList,
   n: number,
-  auth: Auth
+  auth: Auth,
+  errorReporter: any
 ) => (dispatch: any) => {
   dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
   Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
@@ -40,15 +43,21 @@ export const nextUpload = (
         if (xhr.status < 300) {
           dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
         } else {
-          console.log('upload ' + files[n].name + ' failed.');
-          console.log(JSON.stringify(xhr.response));
+          logError(
+            Severity.info,
+            errorReporter,
+            `upload ${files[n].name}: (${xhr.status}) ${xhr.responseText}`
+          );
           dispatch({ payload: n, type: UPLOAD_ITEM_FAILED });
         }
       };
     })
     .catch(err => {
-      console.log('upload ' + files[n].name + ' failed.');
-      console.log(err);
+      logError(
+        Severity.info,
+        errorReporter,
+        infoMsg(err, `Upload ${files[n].name} failed.`)
+      );
       dispatch({ payload: n, type: UPLOAD_ITEM_FAILED });
     });
 };
