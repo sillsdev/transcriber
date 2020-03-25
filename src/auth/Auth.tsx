@@ -48,7 +48,9 @@ export default class Auth {
         history.replace('/');
         console.log(err);
         if (err.error !== 'invalid_token')
-          alert(`Error: ${err.error}. Check the console for further details.`);
+          throw new Error(
+            `Error: ${err.error}. Check the console for further details.`
+          );
       }
     });
   }
@@ -96,8 +98,8 @@ export default class Auth {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('trAdminAuthResult');
     localStorage.removeItem('nonce');
-    localStorage.removeItem('user-token');
-    localStorage.removeItem('user-id');
+    //localStorage.removeItem('user-token');  even if we logout, remember who we were last logged in as
+    //localStorage.removeItem('user-id');
 
     this.auth0.logout({
       returnTo: window.location.origin,

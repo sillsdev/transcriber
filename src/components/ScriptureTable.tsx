@@ -452,7 +452,7 @@ export function ScriptureTable(props: IProps) {
     };
 
     const newRowId = async (rowIndex: number, id: string) => {
-      console.log('Set id on new row', rowIndex, id, rowId.length);
+      // console.log('Set id on new row', rowIndex, id, rowId.length);
       let inpRow = rowId[rowIndex];
       inpRow.id = id;
       await setRowId(
@@ -499,7 +499,7 @@ export function ScriptureTable(props: IProps) {
         sectionRow[cols.SectionSeq] !== inpRow[cols.SectionSeq] ||
         sectionRow[cols.SectionnName] !== inpRow[cols.SectionnName]
       ) {
-        console.log('saving section');
+        // console.log('saving section');
         let section = (await queryStore(q =>
           q.findRecord(rowId[rowIndex])
         )) as Section;
@@ -547,7 +547,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   useEffect(() => {
-    if (showBook(cols)) fetchBooks(lang);
+    if (showBook(cols) && allBookData.length === 0) fetchBooks(lang);
     let initData = Array<Array<any>>();
     let rowIds = Array<ISequencedRecordIdentity>();
     const getPassage = async (

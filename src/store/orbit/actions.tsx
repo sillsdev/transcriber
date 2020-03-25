@@ -20,6 +20,10 @@ export const orbitError = (ex: IApiError) => {
   };
 };
 
+export const doOrbitError = (ex: IApiError) => (dispatch: any) => {
+  dispatch(orbitError(ex));
+};
+
 export const resetOrbitError = () => {
   return {
     type: RESET_ORBIT_ERROR,

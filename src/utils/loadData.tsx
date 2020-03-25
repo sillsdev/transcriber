@@ -6,16 +6,20 @@ import JSONAPISource, {
   JSONAPISerializerSettings,
 } from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
-import { Record, TransformBuilder, Operation, Transform } from '@orbit/data';
+import { Record, TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import OrgData from '../model/orgData';
-import { Project } from '../model';
+import { Project, IApiError } from '../model';
+import { orbitInfo } from './infoMsg';
+
+const completePerTable = 3;
 
 export function insertData(
   item: Record,
   memory: Memory,
   tb: TransformBuilder,
   oparray: Operation[],
+  orbitError: (ex: IApiError) => void,
   checkExisting: boolean,
   isImport: boolean
 ) {
@@ -31,7 +35,9 @@ export function insertData(
       rec = memory.cache.query(q => q.findRecord({ type: item.type, id: id }));
     }
   } catch (err) {
-    if (err.constructor.name !== 'RecordNotFoundException') console.log(err);
+    if (err.constructor.name !== 'RecordNotFoundException') {
+      orbitError(orbitInfo(err, item.keys ? item.keys['remoteId'] : ''));
+    }
   } finally {
     if (rec) {
       if (isArray(rec)) rec = rec[0]; //won't be...
@@ -42,7 +48,7 @@ export function insertData(
         memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
       } catch (err) {
-        console.log(err);
+        orbitError(orbitInfo(err, 'Add record error'));
       }
     }
   }
@@ -61,27 +67,32 @@ export async function LoadData(
   memory: Memory,
   backup: IndexedDBSource,
   remote: JSONAPISource,
-  setCompleted: (valud: number) => void
+  setCompleted: (valud: number) => void,
+  orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
   var tb: TransformBuilder = new TransformBuilder();
 
-  async function processData(data: string, ser: JSONAPISerializerCustom) {
+  async function processData(
+    start: number,
+    data: string,
+    ser: JSONAPISerializerCustom
+  ) {
     var x = JSON.parse(data);
     var tables: ResourceDocument[] = x.data;
-    var completed = 15;
     var oparray: Operation[] = [];
+    var completed: number = 15 + start * completePerTable;
 
     tables.forEach(t => {
       var json = ser.deserialize(t);
       if (isArray(json.data)) {
         //console.log(json.data[0].type, json.data.length);
         json.data.forEach(item =>
-          insertData(item, memory, tb, oparray, false, false)
+          insertData(item, memory, tb, oparray, orbitError, false, false)
         );
       } else {
-        insertData(json.data, memory, tb, oparray, false, false);
+        insertData(json.data, memory, tb, oparray, orbitError, false, false);
       }
-      completed += 3;
+      completed += completePerTable;
       setCompleted(completed);
     });
     try {
@@ -94,15 +105,13 @@ export async function LoadData(
       await memory
         .sync(transform)
         .then(() => console.log('memory synced'))
-        .catch(err => {
-          console.log(err);
-        });
+        .catch(err => orbitError(orbitInfo(err, 'Sync error')));
       await backup
         .sync(transform)
         .then(x => console.log('backup sync complete'))
-        .catch(err => console.log('backup sync failed', err));
+        .catch(err => orbitError(orbitInfo(err, 'Backup sync failed')));
     } catch (err) {
-      console.log('backup update err', err);
+      orbitError(orbitInfo(err, 'Backup update error'));
     }
   }
 
@@ -114,16 +123,36 @@ export async function LoadData(
   ser.resourceKey = () => {
     return 'remoteId';
   };
+
   try {
-    let transform: Transform[] = await remote.pull(q =>
-      q.findRecords('orgdata')
-    );
+    let start = 0;
     setCompleted(15);
-    if (transform.length > 0 && transform[0].operations.length > 0) {
-      var r: OrgData = (transform[0].operations[0] as any).record;
-      await processData(r.attributes.json, ser);
-      return true;
-    }
+    do {
+      var transform: OrgData[] = (await remote.query(
+        // eslint-disable-next-line no-loop-func
+        (q: QueryBuilder) =>
+          q
+            .findRecords('orgdata')
+            .filter({ attribute: 'start-index', value: start }),
+        {
+          label: 'Get Data',
+          sources: {
+            remote: {
+              timeout: 35000,
+            },
+          },
+        }
+      )) as any;
+
+      if (transform.length > 0) {
+        var r: OrgData = transform[0];
+        await processData(start, r.attributes.json, ser);
+        start = r.attributes.startnext;
+      } else {
+        //bail - never expect to be here
+        start = -1;
+      }
+    } while (start > -1);
   } catch (rejected) {
     console.log(rejected);
   }

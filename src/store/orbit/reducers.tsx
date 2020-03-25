@@ -9,7 +9,7 @@ import {
 
 export const orbitCleanState = {
   loaded: false,
-  status: 0,
+  status: undefined,
   message: '',
   saving: false,
 } as IOrbitState;
@@ -36,7 +36,7 @@ export default function(
     case RESET_ORBIT_ERROR:
       return {
         ...state,
-        status: 0,
+        status: undefined,
       };
     case ORBIT_SAVING:
       return {

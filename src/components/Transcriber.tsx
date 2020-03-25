@@ -78,6 +78,7 @@ import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
 } from '../utils/UpdatePassageState';
+import { logError, Severity } from '../components/logErrorService';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -181,6 +182,7 @@ export function Transcriber(props: IProps) {
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [errorReporter] = useGlobal('errorReporter');
   const [assigned, setAssigned] = React.useState('');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
@@ -201,7 +203,7 @@ export function Transcriber(props: IProps) {
   const [height, setHeight] = React.useState(window.innerHeight);
   const [width, setWidth] = React.useState(window.innerWidth);
   const [boxHeight, setBoxHeight] = React.useState(height - NON_BOX_HEIGHT);
-  const [defaultValue, setDefaultValue] = React.useState('');
+  const [textValue, setTextValue] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
   const [message, setMessage] = React.useState(<></>);
   const [makeComment, setMakeComment] = React.useState(false);
@@ -213,9 +215,10 @@ export function Transcriber(props: IProps) {
   const transcriptionRef = React.useRef<any>();
   const commentRef = React.useRef<any>();
 
+  const handleChange = (e: any) => setTextValue(e.target.value);
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
-    console.log('Font status: current=', fontStatus, ' new=', status);
+    // console.log('Font status: current=', fontStatus, ' new=', status);
     setFontStatus(status);
   };
   const handleReady = () => {
@@ -356,7 +359,7 @@ export function Transcriber(props: IProps) {
         );
         await memory.update(ops);
       } else {
-        console.log('Unhandled state', state);
+        logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
       }
     }
     done();
@@ -522,7 +525,7 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
-      setDefaultValue(attr.transcription ? attr.transcription : '');
+      setTextValue(attr.transcription ? attr.transcription : '');
       setDefaultPosition(attr.position);
       setPlaying(false);
       //focus on player
@@ -763,16 +766,18 @@ export function Transcriber(props: IProps) {
                   onStatus={loadStatus}
                 >
                   <TextareaAutosize
-                    defaultValue={defaultValue}
+                    value={textValue}
                     readOnly={role === 'view' || assigned !== user}
                     style={textAreaStyle}
+                    onChange={handleChange}
                   />
                 </WebFontLoader>
               ) : (
                 <TextareaAutosize
-                  defaultValue={defaultValue}
+                  value={textValue}
                   readOnly={role === 'view' || assigned !== user}
                   style={textAreaStyle}
+                  onChange={handleChange}
                 />
               )}
             </Grid>

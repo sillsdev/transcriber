@@ -20,7 +20,7 @@ const AddPassageStateChangeToOps = (
   } as PassageStateChange;
 
   ops.push(AddRecord(t, psc, userid));
-  console.log(psc, passage, state, comment);
+  // console.log(psc, passage, state, comment);
   ops.push(
     t.replaceRelatedRecord(
       { type: 'passagestatechange', id: psc.id },

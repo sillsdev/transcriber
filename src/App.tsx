@@ -6,6 +6,7 @@ import Logout from './routes/Logout';
 import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
+import Buggy from './routes/Buggy';
 import Callback from './callback/Callback';
 import TokenCheck from './hoc/TokenCheck';
 import Auth from './auth/Auth';
@@ -52,6 +53,7 @@ class App extends React.Component {
               return <Access auth={auth} {...props} />;
             }}
           />
+          <Route path="/error" exact render={props => <Buggy />} />
           <Route
             path="/logout"
             exact={true}

@@ -291,6 +291,7 @@ const initialState = {
 			"projRole": "Role in Project:",
 			"owner": "Owner",
 			"clearCache": "Clear cache",
+			"clearLogout": "Logout and Force Data Reload",
 			"inviteError": "Invitation not accepted.  You must login with the email that the invitation was sent to.",
 			"deletedInvitation": "Invitation is no longer valid.",
 			"helpCenter": "Help Center",

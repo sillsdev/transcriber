@@ -28,5 +28,6 @@ declare module 'reactn/default' {
     editUserId: string | null;
     developer: boolean;
     offline: boolean;
+    errorReporter: any; // bugsnagClient
   }
 }

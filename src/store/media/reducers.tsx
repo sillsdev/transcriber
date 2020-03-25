@@ -1,8 +1,9 @@
 import * as type from './types';
 
-export const mediaCleanState = {
+export const mediaCleanState: type.IMediaState = {
   loaded: false,
   url: '',
+  selected: '',
 };
 
 export default function(
@@ -11,11 +12,21 @@ export default function(
 ): type.IMediaState {
   switch (action.type) {
     case type.FETCH_AUDIO_URL_PENDING:
-      return mediaCleanState;
+      return {
+        ...state,
+        loaded: false,
+        url: '',
+      };
     case type.FETCH_AUDIO_URL:
       return {
+        ...state,
         loaded: true,
         url: action.payload,
+      };
+    case type.SET_SELECTED:
+      return {
+        ...state,
+        selected: action.payload,
       };
     default:
       return { ...state };

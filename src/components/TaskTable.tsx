@@ -17,6 +17,7 @@ import {
   IToDoTableStrings,
   ActivityStates,
   RoleNames,
+  BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -113,12 +114,15 @@ interface IStateProps {
   t: IToDoTableStrings;
   lang: string;
   hasUrl: boolean;
+  selected: string;
   mediaUrl: string;
+  allBookData: BookName[];
 }
 
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
   fetchMediaUrl: typeof actions.fetchMediaUrl;
+  setSelected: typeof actions.setSelected;
 }
 
 interface IRecordProps {
@@ -153,6 +157,7 @@ export function TaskTable(props: IProps) {
     t,
     lang,
     transcriber,
+    allBookData,
     fetchBooks,
     fetchMediaUrl,
     hasUrl,
@@ -160,6 +165,8 @@ export function TaskTable(props: IProps) {
     filtering,
     onFilter,
     curDesc,
+    selected,
+    setSelected,
   } = props;
   const classes = useStyles();
   const [busy] = useGlobal('remoteBusy');
@@ -221,7 +228,6 @@ export function TaskTable(props: IProps) {
   const [message, setMessage] = useState(<></>);
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
-  const [selected, setSelected] = useState('');
   const [selRole, setSelRole] = useState('');
   const audioRef = useRef<any>();
 
@@ -268,6 +274,7 @@ export function TaskTable(props: IProps) {
     const readyRecs = passages.filter(
       p => (p.attributes && p.attributes.state === state) || role === 'view'
     );
+    let addRows = Array<IRow>();
     readyRecs.forEach(p => {
       const mediaRecs = mediafiles
         .filter(m => related(m, 'passage') === p.id)
@@ -320,7 +327,7 @@ export function TaskTable(props: IProps) {
                   const nextSecId = secRecs[0].id;
                   if (nextSecId !== curSec && passageNumber(p).trim() === '1') {
                     curSec = nextSecId;
-                    rowList.push({
+                    addRows.push({
                       composite: <TaskHead mediaDesc={mediaDescription} />,
                       media: mediaDescription,
                       play: '',
@@ -334,7 +341,7 @@ export function TaskTable(props: IProps) {
                       assigned: assignee === user ? t.yes : t.no,
                     });
                   }
-                  rowList.push({
+                  addRows.push({
                     composite: (
                       <TaskItem
                         mediaDesc={mediaDescription}
@@ -360,6 +367,9 @@ export function TaskTable(props: IProps) {
         }
       }
     });
+    addRows
+      .sort((i, j) => (i.sectPass < j.sectPass ? -1 : 1))
+      .forEach(r => rowList.push(r));
   };
 
   const setDimensions = () => {
@@ -380,7 +390,7 @@ export function TaskTable(props: IProps) {
   }, []);
 
   React.useEffect(() => {
-    fetchBooks(lang);
+    if (allBookData.length === 0) fetchBooks(lang);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [lang]);
 
@@ -492,9 +502,10 @@ export function TaskTable(props: IProps) {
     setExpandedGroups(exGrp);
 
     if (selected === '') {
-      console.log('Select first task');
-      if (rowList.length > 0) processSelect(rowList[0].media);
-    } else {
+      if (rowList.length > 0) {
+        processSelect(rowList[0].media);
+      }
+    } else if (rowList.length > 0) {
       const selectedRow = rowList.filter(r => r.media.passage.id === selected);
       if (selectedRow.length === 0) {
         processSelect(rowList[0].media);
@@ -637,13 +648,16 @@ const mapStateToProps = (state: IState): IStateProps => ({
   taskItemStrings: localStrings(state, { layout: 'taskItem' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  selected: state.media.selected,
   lang: state.strings.lang,
+  allBookData: state.books.bookData,
 });
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
       fetchMediaUrl: actions.fetchMediaUrl,
+      setSelected: actions.setSelected,
     },
     dispatch
   ),

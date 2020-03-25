@@ -23,8 +23,7 @@ import { API_CONFIG } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { LoadData } from './utils/loadData';
-
-// import { Online } from './utils';
+import { orbitInfo } from './utils';
 
 export const Sources = async (
   schema: Schema,
@@ -48,6 +47,7 @@ export const Sources = async (
   if (tokData.sub !== '') {
     localStorage.setItem('user-token', tokData.sub);
   }
+
   const bucket: Bucket = new IndexedDBBucket({
     namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
@@ -95,7 +95,7 @@ export const Sources = async (
         q.findRecords('role')
       ) as any;
       if (recs.length === 0) {
-        console.log('Indexed DB corrupt or missing.');
+        orbitError(orbitInfo(null, 'Indexed DB corrupt or missing.'));
         goRemote = true;
       }
     }
@@ -116,7 +116,7 @@ export const Sources = async (
         : 'neverhere'
     );
     setCompleted(10);
-    let x = await LoadData(memory, backup, remote, setCompleted);
+    let x = await LoadData(memory, backup, remote, setCompleted, orbitError);
     console.log('LoadData', x);
   }
   // Update indexedDb when memory updated
@@ -177,7 +177,7 @@ export const Sources = async (
 
           if (ex instanceof NetworkError) {
             // When network errors are encountered, try again in 3s
-            console.log('NetworkError - will try again soon');
+            orbitError(orbitInfo(null, 'NetworkError - will try again soon'));
             setTimeout(() => {
               remote.requestQueue.retry();
             }, 3000);
@@ -213,7 +213,9 @@ export const Sources = async (
 
             // Roll back memory to position before transform
             if (memory.transformLog.contains(transform.id)) {
-              console.log('Rolling back - transform:', transform.id);
+              orbitError(
+                orbitInfo(null, 'Rolling back - transform:' + transform.id)
+              );
               memory.rollback(transform.id, -1);
             }
 

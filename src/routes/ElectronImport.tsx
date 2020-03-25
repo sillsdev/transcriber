@@ -4,6 +4,7 @@ import { remote, OpenDialogSyncOptions } from 'electron';
 import AdmZip from 'adm-zip';
 
 import MemorySource from '@orbit/memory';
+import { IApiError } from '../model';
 import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
 import { Project, IElectronImportStrings } from '../model';
@@ -15,6 +16,7 @@ import { DataPath } from '../utils/DataPath';
 import fs from 'fs';
 import path from 'path';
 import { OpenDialogSyncOptions } from 'electron';
+import { orbitInfo } from '../utils';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 
@@ -41,6 +43,7 @@ export var handleElectronImport = (
   backup: IndexedDBSource,
   zip: AdmZip | null,
   importProject: typeof action.importProjectToElectron,
+  orbitError: (ex: IApiError) => void,
   t: IElectronImportStrings
 ): void => {};
 
@@ -125,8 +128,8 @@ if (isElectron) {
             } else {
               var myLastExport = moment.utc(proj.attributes.dateExported);
               if (myLastExport > exportTime) {
-                console.log(exportTime.toLocaleString());
-                console.log(myLastExport.toLocaleString());
+                // console.log(exportTime.toLocaleString());
+                // console.log(myLastExport.toLocaleString());
                 ret.warnMsg +=
                   t.importCreated.replace(
                     '{date0}',
@@ -159,17 +162,20 @@ if (isElectron) {
     backup: IndexedDBSource,
     zip: AdmZip | null,
     importProject: typeof action.importProjectToElectron,
+    orbitError: (ex: IApiError) => void,
     t: IElectronImportStrings
   ): void => {
     if (zip) {
       const where = DataPath();
-      console.log(where);
+      // console.log(where);
       fs.mkdirSync(where, { recursive: true });
       //delete any old passagesection files
       try {
         fs.unlinkSync(path.join(where, 'data', 'H_passagesections.json'));
       } catch (err) {
-        console.log(err);
+        orbitError(
+          orbitInfo(err, `Delete failed for ${where} passage sections`)
+        );
       }
       zip.extractAllTo(where, true);
 
@@ -177,6 +183,7 @@ if (isElectron) {
         path.join(where, 'data'),
         memory,
         backup,
+        orbitError,
         t.importPending,
         t.importComplete,
         t.importOldFile
