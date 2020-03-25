@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -67,7 +67,7 @@
     "build": "npm run clean && react-scripts build",
     "test": "craco test",
     "eject": "craco eject",
-    "dist": "electron-builder",
+    "dist": "electron-builder --publish never",
     "electron-dev-mac": "concurrently \"BROWSER=none craco start\" \"wait-on http://localhost:3000 && electron .\"",
     "electron-dev": "node edPackage.js -dev && env-cmd -f .env.electron concurrently \"craco start \" \"wait-on http://localhost:3000 && electron .\"",
     "electron-debug": "node edPackage.js -dev && env-cmd -f .env.electron craco start",
