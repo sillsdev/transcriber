@@ -194,7 +194,8 @@ export function Access(props: IProps) {
   const handleAdmin = () => shell.openExternal(AUTH_CONFIG.adminEndpoint);
 
   useEffect(() => {
-    Online(isOnline => setOnline(isOnline));
+    Online(isOnline => setOnline(isOnline), auth);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {
@@ -227,7 +228,7 @@ export function Access(props: IProps) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
-    Online(online => setOffline(!online));
+    Online(online => setOffline(!online), auth);
 
     const localAuth = localStorage.getItem('trAdminAuthResult');
     if (localAuth) {
