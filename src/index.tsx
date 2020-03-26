@@ -17,6 +17,7 @@ import history from './history';
 import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from './components/logErrorService';
 import { infoMsg } from './utils';
+import { API_CONFIG } from './api-variable';
 const appVersion = require('../package.json').version;
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
@@ -26,7 +27,7 @@ const prodOrQa = host && !host.endsWith('dev') && !isElectron;
 const prod = host && host.endsWith('prod');
 const bugsnagClient = prodOrQa
   ? bugsnag({
-      apiKey: 'c9b8e249d3d596dcc39d84ebae62e3da',
+      apiKey: API_CONFIG.snagId,
       appVersion,
       releaseStage: prod ? 'production' : 'staging',
     })

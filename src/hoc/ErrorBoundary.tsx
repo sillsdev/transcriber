@@ -13,6 +13,8 @@ import {
 } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
 import { logError, Severity } from '../components/logErrorService';
+import { forceLogin } from '../utils';
+import { withBucket } from './withBucket';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -63,6 +65,7 @@ interface IProps
     IDispatchProps,
     WithStyles<typeof styles> {
   errorReporter: any;
+  resetRequests: () => void;
   children: JSX.Element;
 }
 
@@ -154,14 +157,15 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
 
   private continue() {
     this.props.resetOrbitError();
+    this.props.resetRequests();
     this.setState({ ...initState });
     history.replace(localStorage.getItem('url') || '/');
   }
 
   private logout() {
     this.props.resetOrbitError();
-    localStorage.removeItem('user-token');
-    localStorage.removeItem('user-id');
+    this.props.resetRequests();
+    forceLogin();
     this.setState({ ...initState });
     history.replace('/logout');
   }
@@ -183,5 +187,5 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(ErrorBoundary)
+  connect(mapStateToProps, mapDispatchToProps)(withBucket(ErrorBoundary))
 );

@@ -383,8 +383,9 @@ export function IntegrationPanel(props: IProps) {
   };
 
   useEffect(() => {
-    Online(result => setOnline(result));
+    Online(result => setOnline(result), auth);
     if (isElectron) getParatextDataPath().then(val => setPtPath(val));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {

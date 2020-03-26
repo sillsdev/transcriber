@@ -89,6 +89,7 @@ import {
   makeAbbr,
   Online,
   remoteIdNum,
+  forceLogin,
 } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -258,6 +259,7 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
+  resetRequests: () => void;
   history: {
     action: string;
     location: {
@@ -271,6 +273,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 export function ResponsiveDrawer(props: IProps) {
   const {
     auth,
+    resetRequests,
     t,
     history,
     plans,
@@ -285,7 +288,6 @@ export function ResponsiveDrawer(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
-  const [bucket] = useGlobal('bucket');
   const [schema] = useGlobal('schema');
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
@@ -449,12 +451,11 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.setItem('url', history.location.pathname);
     if (!/Close/i.test(what)) {
       if (/ClearLogout/i.test(what)) {
-        localStorage.removeItem('user-token');
-        localStorage.removeItem('user-id');
+        forceLogin();
         what = 'Logout';
       }
       if (/Clear/i.test(what)) {
-        bucket.setItem('remote-requests', []);
+        resetRequests();
       }
       setView(what);
     }
@@ -543,7 +544,8 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   useEffect(() => {
-    Online(val => setOnline(val));
+    Online(val => setOnline(val), auth);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {
