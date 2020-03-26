@@ -16,6 +16,7 @@ import {
   ListItemText,
   ListItemAvatar,
   ListItemSecondaryAction,
+  Typography,
 } from '@material-ui/core';
 import TaskFlag from './TaskFlag';
 import Duration from './Duration';
@@ -87,7 +88,8 @@ export function TaskItem(props: IProps) {
           <TaskAvatar assigned={assigned} />
         </ListItemAvatar>
         <ListItemText
-          primary={book + ref}
+          disableTypography
+          primary={<Typography>{book + ref}</Typography>}
           secondary={<TaskFlag {...props} state={attr.state} />}
         />
         <ListItemSecondaryAction>

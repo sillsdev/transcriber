@@ -98,15 +98,6 @@ export function TaskHead(props: IProps) {
             </Tooltip>
           }
         />
-        <ListItemSecondaryAction>
-          <IconButton
-            size="small"
-            onClick={handleMenu}
-            aria-owns={menuItem !== '' ? 'action-menu' : undefined}
-          >
-            <PeopleIcon />
-          </IconButton>
-        </ListItemSecondaryAction>
         <Menu
           id="action-menu"
           anchorEl={menuItem}
@@ -146,6 +137,15 @@ export function TaskHead(props: IProps) {
             }
           </MenuItem>
         </Menu>
+        <ListItemSecondaryAction>
+          <IconButton
+            size="small"
+            onClick={handleMenu}
+            aria-owns={menuItem !== '' ? 'action-menu' : undefined}
+          >
+            <PeopleIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
       </ListItem>
     </List>
   );

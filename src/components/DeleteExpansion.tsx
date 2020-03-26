@@ -87,7 +87,7 @@ export function DeleteExpansion(props: IProps) {
                 <Typography variant="h6">{title}</Typography>
               </FormLabel>
               <FormLabel className={classes.label}>
-                <p>{explain}</p>
+                <div>{explain}</div>
               </FormLabel>
             </div>
             <div className={classes.grow}>{'\u00A0'}</div>

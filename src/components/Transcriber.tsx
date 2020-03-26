@@ -730,25 +730,29 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item>
               <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
-                <IconButton
-                  onClick={handleShowHistory}
-                  disabled={passageStateChanges.length === 0}
-                >
-                  <>
-                    <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
-                  </>
-                </IconButton>
+                <span>
+                  <IconButton
+                    onClick={handleShowHistory}
+                    disabled={passageStateChanges.length === 0}
+                  >
+                    <>
+                      <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </span>
               </Tooltip>
 
               <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
-                <IconButton
-                  onClick={handleTimer}
-                  disabled={role === 'view' || assigned !== user}
-                >
-                  <>
-                    <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
-                  </>
-                </IconButton>
+                <span>
+                  <IconButton
+                    onClick={handleTimer}
+                    disabled={role === 'view' || assigned !== user}
+                  >
+                    <>
+                      <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
+                    </>
+                  </IconButton>
+                </span>
               </Tooltip>
             </Grid>
           </Grid>
@@ -760,7 +764,7 @@ export function Transcriber(props: IProps) {
               container
               direction="column"
             >
-              {projData && !fontStatus ? (
+              {projData && !fontStatus?.endsWith('active') ? (
                 <WebFontLoader
                   config={projData.fontConfig}
                   onStatus={loadStatus}

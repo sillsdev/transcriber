@@ -993,16 +993,18 @@ export function ResponsiveDrawer(props: IProps) {
               : [t.plans, t.team, t.media, t.reports]
             ).map((text, index) => (
               <Tooltip key={text} title={text}>
-                <ListItem
-                  button
-                  key={text}
-                  selected={slug(text) === choice}
-                  onClick={choiceClick(text)}
-                  disabled={curProj === null}
-                >
-                  <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
+                <span>
+                  <ListItem
+                    button
+                    key={text}
+                    selected={slug(text) === choice}
+                    onClick={choiceClick(text)}
+                    disabled={curProj === null}
+                  >
+                    <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                </span>
               </Tooltip>
             ))}
           </List>
@@ -1011,16 +1013,18 @@ export function ResponsiveDrawer(props: IProps) {
             {[t.settings, t.export, t.import, t.integrations].map(
               (text, index) => (
                 <Tooltip key={text} title={text}>
-                  <ListItem
-                    button
-                    key={text}
-                    selected={slug(text) === choice}
-                    onClick={choiceClick(text)}
-                    disabled={curProj === null}
-                  >
-                    <ListItemIcon>{projectIcons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
+                  <span>
+                    <ListItem
+                      button
+                      key={text}
+                      selected={slug(text) === choice}
+                      onClick={choiceClick(text)}
+                      disabled={curProj === null}
+                    >
+                      <ListItemIcon>{projectIcons[index]}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                  </span>
                 </Tooltip>
               )
             )}

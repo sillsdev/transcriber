@@ -579,10 +579,10 @@ export function TaskTable(props: IProps) {
           </td>
         );
       }
-      return <>{'\u00a0'}</>;
+      return <td>{'\u00a0'}</td>;
     } else {
       if (column.name === 'composite') {
-        return <>{'\u00a0'}</>;
+        return <td>{'\u00a0'}</td>;
       } else if (column.name === 'play' && row.length !== '') {
         return <PlayCell {...props} mediaId={row.media.mediaRemoteId} />;
       }
