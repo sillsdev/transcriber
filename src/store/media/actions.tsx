@@ -33,13 +33,17 @@ export const fetchMediaUrl = (
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,
       },
-    }).then(strings => {
-      const attr: any = strings.data.data.attributes;
-      dispatch({
-        payload: attr['audio-url'],
-        type: type.FETCH_AUDIO_URL,
+    })
+      .then(strings => {
+        const attr: any = strings.data.data.attributes;
+        dispatch({
+          payload: attr['audio-url'],
+          type: type.FETCH_AUDIO_URL,
+        });
+      })
+      .catch(e => {
+        console.log('media fetch failure: ' + e.message);
       });
-    });
   }
 };
 

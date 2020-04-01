@@ -1,8 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { connect } from 'react-redux';
-import { IState, ITaskItemStrings, MediaDescription } from '../model';
-import localStrings from '../selector/localize';
+import useTodo from '../context/useTodo';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -18,7 +16,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { TransformBuilder } from '@orbit/data';
-import { related, sectionNumber } from '../utils';
+import { sectionNumber, sectionDescription } from '../utils';
 import PeopleIcon from '@material-ui/icons/PeopleAlt';
 import { TaskAvatar } from './TaskAvatar';
 
@@ -38,35 +36,35 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IStateProps {
-  t: ITaskItemStrings;
-}
-
-interface IProps extends IStateProps {
-  mediaDesc: MediaDescription;
+interface IProps {
+  item: number;
 }
 
 export function TaskHead(props: IProps) {
-  const { t } = props;
-  const { section } = props.mediaDesc;
+  const { item } = props;
+  const { rowData, taskItemStr } = useTodo();
+  const { transcriber, editor } = rowData[item] || {
+    transcriber: '',
+    editor: '',
+  };
+  const { section } = rowData[props.item];
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [menuItem, setMenuItem] = React.useState(null);
+  const t = taskItemStr;
 
   const planHead = t.section
     .replace('{0}', sectionNumber(section))
     .replace('{1}', '');
-  const planName = section.attributes.name;
 
-  const trans = related(section, 'transcriber');
-  const rev = related(section, 'editor');
   const assignAction = t.assign;
   const unassignAction = t.unassign;
-  const tranAction = trans && trans !== '' ? unassignAction : assignAction;
-  const revAction = rev && rev !== '' ? unassignAction : assignAction;
+  const tranAction =
+    transcriber && transcriber !== '' ? unassignAction : assignAction;
+  const editAction = editor && editor !== '' ? unassignAction : assignAction;
 
   const handleMenu = (e: any) => setMenuItem(e.currentTarget);
   const handleAction = (action: string, role?: string) => () => {
@@ -93,7 +91,10 @@ export function TaskHead(props: IProps) {
         </ListItemAvatar>
         <ListItemText
           primary={
-            <Tooltip title={planName} placement="right-start">
+            <Tooltip
+              title={sectionDescription(section)}
+              placement="right-start"
+            >
               <Typography>{planHead}</Typography>
             </Tooltip>
           }
@@ -108,7 +109,7 @@ export function TaskHead(props: IProps) {
             onClick={handleAction(tranAction, 'transcriber')}
             disabled={
               tranAction === unassignAction &&
-              trans !== user &&
+              transcriber !== user &&
               !/admin/i.test(orgRole) &&
               !/admin/i.test(projRole)
             }
@@ -116,23 +117,29 @@ export function TaskHead(props: IProps) {
             {
               <div className={classes.menuItem}>
                 <>{tranAction.replace('{0}', t.transcriber) + '\u00A0'}</>
-                <TaskAvatar assigned={trans && trans !== '' ? trans : user} />
+                <TaskAvatar
+                  assigned={
+                    transcriber && transcriber !== '' ? transcriber : user
+                  }
+                />
               </div>
             }
           </MenuItem>
           <MenuItem
-            onClick={handleAction(revAction, 'editor')}
+            onClick={handleAction(editAction, 'editor')}
             disabled={
-              revAction === unassignAction &&
-              rev !== user &&
+              editAction === unassignAction &&
+              editor !== user &&
               !/admin/i.test(orgRole) &&
               !/admin/i.test(projRole)
             }
           >
             {
               <div className={classes.menuItem}>
-                <>{revAction.replace('{0}', t.editor) + '\u00A0'}</>
-                <TaskAvatar assigned={rev && rev !== '' ? rev : user} />
+                <>{editAction.replace('{0}', t.editor) + '\u00A0'}</>
+                <TaskAvatar
+                  assigned={editor && editor !== '' ? editor : user}
+                />
               </div>
             }
           </MenuItem>
@@ -151,8 +158,4 @@ export function TaskHead(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'taskItem' }),
-});
-
-export default connect(mapStateToProps)(TaskHead) as any;
+export default TaskHead;

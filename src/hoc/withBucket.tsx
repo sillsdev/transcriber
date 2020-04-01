@@ -6,7 +6,9 @@ export const withBucket = (Component: any) => {
     const [bucket] = useGlobal('bucket');
 
     const resetRequests = () => {
-      if (bucket) bucket.setItem('remote-requests', []);
+      if (bucket) {
+        bucket.setItem('remote-requests', []);
+      }
     };
 
     return <Component resetRequests={resetRequests} {...props} />;

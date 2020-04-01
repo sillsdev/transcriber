@@ -9,6 +9,7 @@ import {
   IAssignmentTableStrings,
   IActivityStateStrings,
   Role,
+  BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -77,7 +78,8 @@ const getAssignments = (
   passages: Array<Passage>,
   sections: Array<Section>,
   users: Array<User>,
-  activityState: IActivityStateStrings
+  activityState: IActivityStateStrings,
+  bookData: BookName[]
 ) => {
   let sectionRow: IRow;
   const rowData: IRow[] = [];
@@ -106,7 +108,7 @@ const getAssignments = (
         : '';
       rowData.push({
         id: passage.id,
-        name: passageDescription(passage),
+        name: passageDescription(passage, bookData),
         state: state,
         editor: '',
         transcriber: '',
@@ -121,6 +123,7 @@ const getAssignments = (
 interface IStateProps {
   activityState: IActivityStateStrings;
   t: IAssignmentTableStrings;
+  allBookData: BookName[];
 }
 
 interface IRecordProps {
@@ -136,7 +139,15 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function AssignmentTable(props: IProps) {
-  const { activityState, t, passages, sections, users, roles } = props;
+  const {
+    activityState,
+    t,
+    passages,
+    sections,
+    users,
+    roles,
+    allBookData,
+  } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -229,8 +240,17 @@ export function AssignmentTable(props: IProps) {
   const handleFilter = () => setFilter(!filter);
 
   useEffect(() => {
-    setData(getAssignments(plan, passages, sections, users, activityState));
-  }, [plan, passages, sections, users, roles, activityState]);
+    setData(
+      getAssignments(
+        plan,
+        passages,
+        sections,
+        users,
+        activityState,
+        allBookData
+      )
+    );
+  }, [plan, passages, sections, users, roles, activityState, allBookData]);
 
   return (
     <div id="AssignmentTable" className={classes.container}>
@@ -324,6 +344,7 @@ export function AssignmentTable(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'assignmentTable' }),
   activityState: localStrings(state, { layout: 'activityState' }),
+  allBookData: state.books.bookData,
 });
 
 const mapRecordsToProps = {

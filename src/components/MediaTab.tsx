@@ -9,6 +9,7 @@ import {
   Section,
   IMediaTabStrings,
   Plan,
+  BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -99,9 +100,9 @@ const getSection = (section: Section[]) => {
   return sectionDescription(section[0]);
 };
 
-const getReference = (passage: Passage[]) => {
+const getReference = (passage: Passage[], bookData: BookName[] = []) => {
   if (passage.length === 0) return '';
-  return passageReference(passage[0]);
+  return passageReference(passage[0], bookData);
 };
 
 interface ILatest {
@@ -113,7 +114,8 @@ const getMedia = (
   mediaFiles: Array<MediaFile>,
   passages: Array<Passage>,
   sections: Array<Section>,
-  playItem: string
+  playItem: string,
+  allBookData: BookName[]
 ) => {
   const latest: ILatest = {};
   mediaFiles.forEach(f => {
@@ -155,7 +157,7 @@ const getMedia = (
       playIcon: playItem,
       fileName: f.attributes.originalFile,
       section: getSection(section),
-      reference: getReference(passage),
+      reference: getReference(passage, allBookData),
       duration: f.attributes.duration ? f.attributes.duration.toString() : '',
       size: f.attributes.filesize,
       version: f.attributes.versionNumber
@@ -174,6 +176,7 @@ interface IStateProps {
   currentlyLoading: number;
   hasUrl: boolean;
   mediaUrl: string;
+  allBookData: BookName[];
 }
 
 interface IDispatchProps {
@@ -220,6 +223,7 @@ export function MediaTab(props: IProps) {
     fetchMediaUrl,
     hasUrl,
     mediaUrl,
+    allBookData,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -385,8 +389,17 @@ export function MediaTab(props: IProps) {
   }, [projectplans, plan, planColumn]);
 
   useEffect(() => {
-    setData(getMedia(projectplans, mediaFiles, passages, sections, playItem));
-  }, [projectplans, mediaFiles, passages, sections, playItem]);
+    setData(
+      getMedia(
+        projectplans,
+        mediaFiles,
+        passages,
+        sections,
+        playItem,
+        allBookData
+      )
+    );
+  }, [projectplans, mediaFiles, passages, sections, playItem, allBookData]);
 
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
@@ -613,6 +626,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   loaded: state.upload.loaded,
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

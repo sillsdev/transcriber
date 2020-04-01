@@ -1,15 +1,9 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
-import * as actions from '../store';
 import {
-  MediaDescription,
   MediaFile,
   Project,
-  ITranscriberStrings,
-  IState,
   ActivityStates,
   Passage,
   PassageStateChange,
@@ -18,8 +12,6 @@ import {
   PlanType,
   User,
 } from '../model';
-import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import {
   makeStyles,
@@ -44,6 +36,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
+import useTodo from '../context/useTodo';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
@@ -137,33 +130,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IStateProps {
-  t: ITranscriberStrings;
-  hasUrl: boolean;
-  mediaUrl: string;
-}
-
-interface IDispatchProps {
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
-}
-
-interface IRecordProps {
-  mediafiles: Array<MediaFile>;
-}
-
-interface IProps
-  extends MediaDescription,
-    IStateProps,
-    IDispatchProps,
-    IRecordProps {
+interface IProps {
   auth: Auth;
-  done: () => void;
 }
 
 export function Transcriber(props: IProps) {
+  const { auth } = props;
   const {
-    t,
-    auth,
+    rowData,
+    index,
+    transcriberStr,
+    mediaUrl,
+    fetchMediaUrl,
+    allBookData,
+  } = useTodo();
+  const {
     section,
     passage,
     duration,
@@ -171,9 +152,17 @@ export function Transcriber(props: IProps) {
     mediaId,
     state,
     role,
-    mediafiles,
-  } = props;
-  const { mediaUrl, fetchMediaUrl, done } = props;
+    assigned,
+  } = rowData[index] || {
+    section: {} as Section,
+    passage: {} as Passage,
+    duration: 0,
+    mediaRemoteId: '',
+    mediaId: '',
+    state: '',
+    role: '',
+    assigned: '',
+  };
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal('keyMap');
@@ -183,10 +172,8 @@ export function Transcriber(props: IProps) {
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
-  const [assigned, setAssigned] = React.useState('');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
-  const [passRec, setPassRec] = React.useState<Passage>(passage);
   const [passageStateChanges, setPassageStateChanges] = React.useState<
     PassageStateChange[]
   >([]);
@@ -214,6 +201,7 @@ export function Transcriber(props: IProps) {
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
   const commentRef = React.useRef<any>();
+  const t = transcriberStr;
 
   const handleChange = (e: any) => setTextValue(e.target.value);
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
@@ -237,7 +225,9 @@ export function Transcriber(props: IProps) {
       setPlayedSeconds(ctrl.playedSeconds);
     }
   };
-  const handleMouseDown = () => setSeeking(true);
+  const handleMouseDown = () => {
+    setSeeking(true);
+  };
   const handleMouseUp = (e: React.MouseEvent) => {
     setSeeking(false);
     if (progressRef.current && playerRef.current) {
@@ -292,7 +282,6 @@ export function Transcriber(props: IProps) {
       )
     );
     pass.attributes.lastComment = '';
-    done();
   };
   const handleRejectCancel = () => setRejectVisible(false);
 
@@ -305,7 +294,7 @@ export function Transcriber(props: IProps) {
     needsNewTranscription: ActivityStates.Transcribed,
   };
   const getType = () => {
-    const sectionId = related(passRec, 'section');
+    const sectionId = related(passage, 'section');
     if (!sectionId) return null;
     const secRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'section', id: sectionId })
@@ -336,7 +325,7 @@ export function Transcriber(props: IProps) {
           nextState = ActivityStates.Done;
         var tb = new TransformBuilder();
         var ops = UpdatePassageStateOps(
-          passRec.id,
+          passage.id,
           nextState,
           comment,
           remoteIdNum('user', user, memory.keyMap),
@@ -362,7 +351,6 @@ export function Transcriber(props: IProps) {
         logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
       }
     }
-    done();
   };
 
   const nextOnSave: { [key: string]: string } = {
@@ -380,7 +368,7 @@ export function Transcriber(props: IProps) {
       let ops: Operation[] = [];
       if (nextOnSave[state] !== undefined)
         ops = UpdatePassageStateOps(
-          passRec.id,
+          passage.id,
           nextOnSave[state],
           '',
           userid,
@@ -389,7 +377,7 @@ export function Transcriber(props: IProps) {
         );
       if (comment !== '') {
         ops = AddPassageStateCommentOps(
-          passRec.id,
+          passage.id,
           state,
           comment,
           userid,
@@ -413,7 +401,6 @@ export function Transcriber(props: IProps) {
       );
       await memory.update(ops);
     }
-    done();
   };
   const previous: { [key: string]: string } = {
     incomplete: ActivityStates.TranscribeReady,
@@ -427,7 +414,7 @@ export function Transcriber(props: IProps) {
     if (previous.hasOwnProperty(state)) {
       await memory.update(
         UpdatePassageStateOps(
-          passRec.id,
+          passage.id,
           previous[state],
           comment,
           remoteIdNum('user', user, keyMap),
@@ -436,7 +423,6 @@ export function Transcriber(props: IProps) {
         )
       );
     }
-    done();
   };
   const handleKey = (e: React.KeyboardEvent) => {
     // setMessage(<span>{e.keyCode} pressed</span>);
@@ -498,22 +484,6 @@ export function Transcriber(props: IProps) {
   }, []);
 
   React.useEffect(() => {
-    const loadStateChange = async () => {
-      const recs = (await memory.query((q: QueryBuilder) =>
-        q.findRecords('passagestatechange')
-      )) as PassageStateChange[];
-      if (recs) {
-        const curStateChanges = recs.filter(
-          r => related(r, 'passage') === passage.id
-        );
-        setPassageStateChanges(curStateChanges);
-      }
-    };
-    loadStateChange();
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passage]);
-
-  React.useEffect(() => {
     const commentHeight =
       commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
     const newBoxHeight = height - NON_BOX_HEIGHT - commentHeight;
@@ -522,6 +492,23 @@ export function Transcriber(props: IProps) {
   }, [height, makeComment, comment, commentRef.current]);
 
   React.useEffect(() => {
+    const loadStateChange = async () => {
+      const recs = (await memory.query((q: QueryBuilder) =>
+        q.findRecords('passagestatechange')
+      )) as PassageStateChange[];
+      if (recs && passage?.id) {
+        const curStateChanges = recs.filter(
+          r => related(r, 'passage') === passage.id
+        );
+        setPassageStateChanges(curStateChanges);
+      }
+    };
+    if (passage?.id) {
+      loadStateChange();
+    }
+    const mediafiles = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('mediafile')
+    ) as MediaFile[];
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
@@ -531,42 +518,24 @@ export function Transcriber(props: IProps) {
       //focus on player
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
-  }, [mediaId, mediafiles]);
-
-  React.useEffect(() => {
-    setPassRec(
-      memory.cache.query((q: QueryBuilder) => q.findRecord(passage)) as Passage
-    );
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passage]);
-
-  React.useEffect(() => {
-    if (passRec && passRec.attributes && passRec.attributes.lastComment) {
-      setComment(passRec.attributes.lastComment);
+    if (passage && passage.attributes && passage.attributes.lastComment) {
+      setComment(passage.attributes.lastComment);
     } else setComment('');
-    if (passRec) {
-      const sectionId = related(passRec, 'section');
-      if (sectionId) {
-        const secRec = memory.cache.query((q: QueryBuilder) =>
-          q.findRecord({ type: 'section', id: sectionId })
-        ) as Section;
-        setAssigned(role !== 'view' ? related(secRec, role) : '');
-      }
+    setTotalSeconds(duration);
+    if (mediaRemoteId && mediaRemoteId !== '') {
+      fetchMediaUrl(mediaRemoteId, memory, offline, auth);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passRec]);
+  }, [index]);
 
   React.useEffect(() => {
-    fetchMediaUrl(mediaRemoteId, memory, offline, auth);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediaRemoteId]);
-
-  React.useEffect(() => {
-    memory
-      .query(q => q.findRecord({ type: 'project', id: project }))
-      .then((r: Project) => {
-        setProjData(getFontData(r, offline));
-      });
+    if (project && project !== '') {
+      memory
+        .query(q => q.findRecord({ type: 'project', id: project }))
+        .then((r: Project) => {
+          setProjData(getFontData(r, offline));
+        });
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
@@ -660,7 +629,7 @@ export function Transcriber(props: IProps) {
             <Grid item xs={9} className={classes.description}>
               {sectionDescription(section)}
             </Grid>
-            <Grid item>{passageDescription(passRec)}</Grid>
+            <Grid item>{passageDescription(passage, allBookData)}</Grid>
           </Grid>
           <Grid container direction="row" className={classes.row}>
             <Grid item>
@@ -860,17 +829,15 @@ export function Transcriber(props: IProps) {
                     </Tooltip>{' '}
                   </>
                 ) : (
-                  <>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleReopen}
-                      disabled={!previous.hasOwnProperty(state)}
-                    >
-                      {t.reopen}
-                    </Button>
-                  </>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleReopen}
+                    disabled={!previous.hasOwnProperty(state)}
+                  >
+                    {t.reopen}
+                  </Button>
                 )}
               </Grid>
             </Grid>
@@ -878,7 +845,7 @@ export function Transcriber(props: IProps) {
         </Grid>
         <TranscribeReject
           visible={rejectVisible}
-          passageIn={passRec}
+          passageIn={passage}
           editMethod={handleRejected}
           cancelMethod={handleRejectCancel}
         />
@@ -900,24 +867,4 @@ export function Transcriber(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'transcriber' }),
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
-});
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchMediaUrl: actions.fetchMediaUrl,
-    },
-    dispatch
-  ),
-});
-
-const mapRecordsToProps = {
-  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(Transcriber) as any
-) as any;
+export default Transcriber;

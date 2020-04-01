@@ -1,5 +1,6 @@
 import { KeyMap } from '@orbit/data';
-import { remoteId, slug } from '.';
+import { remoteId } from '.';
+import { NavChoice } from '../routes/drawer';
 
 export interface IDeepLinkProps {
   organization: string;
@@ -12,12 +13,6 @@ export interface IDeepLinkProps {
   keyMap: KeyMap;
   setPlan?: (val: string) => void;
   setTab?: (val: number) => void;
-  t: {
-    usersAndGroups: string;
-    myTasks: string;
-    plans: string;
-    media: string;
-  };
 }
 
 export const deepLink = (props: IDeepLinkProps): string | null => {
@@ -30,47 +25,39 @@ export const deepLink = (props: IDeepLinkProps): string | null => {
     choice,
     content,
     keyMap,
-    t,
   } = props;
 
   if (!organization || !project || !choice) return null;
   const orgId = remoteId('organization', organization, keyMap);
   const projId = remoteId('project', project, keyMap);
   if (orgId !== undefined && projId !== undefined) {
-    if (choice === slug(t.usersAndGroups)) {
+    if (choice === NavChoice.UsersAndGroups) {
       const groupId = remoteId('group', group, keyMap);
       const groupPart = groupId ? '/' + groupId : '';
       return (
         '/main/' +
         orgId +
         '/' +
-        slug(choice) +
+        choice +
         '/' +
         projId +
         '/' +
         tab.toString() +
         groupPart
       );
-    } else if (choice === slug(t.myTasks)) {
+    } else if (choice === NavChoice.Tasks) {
       return (
-        '/main/' +
-        orgId +
-        '/' +
-        slug(content) +
-        '/' +
-        projId +
-        '/' +
-        tab.toString()
+        '/main/' + orgId + '/' + content + '/' + projId + '/' + tab.toString()
       );
-    } else if (choice !== slug(t.plans) || !plan) {
-      return '/main/' + orgId + '/' + slug(choice) + '/' + projId;
+    } else if (choice !== 'plans' || !plan) {
+      return '/main/' + orgId + '/' + choice + '/' + projId;
     } else {
       const planId = remoteId('plan', plan, keyMap);
       return (
         '/main/' +
         orgId +
         '/' +
-        slug(content) +
+        content +
         '/' +
         projId +
         '/' +

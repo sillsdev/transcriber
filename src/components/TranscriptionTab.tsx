@@ -15,6 +15,7 @@ import {
   MediaFile,
   ActivityStates,
   FileResponse,
+  BookName,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -115,8 +116,8 @@ const getSection = (section: Section) => {
 };
 
 /* build the passage name = sequence + book + reference */
-const getReference = (passage: Passage) => {
-  return passageDescription(passage);
+const getReference = (passage: Passage, bookData: BookName[] = []) => {
+  return passageDescription(passage, bookData);
 };
 
 const getAssignments = (
@@ -124,7 +125,8 @@ const getAssignments = (
   passages: Array<Passage>,
   sections: Array<Section>,
   users: Array<User>,
-  activityState: IActivityStateStrings
+  activityState: IActivityStateStrings,
+  bookData: BookName[]
 ) => {
   const rowData: IRow[] = [];
   projectPlans.forEach(planRec => {
@@ -153,7 +155,7 @@ const getAssignments = (
               : '';
           rowData.push({
             id: passage.id,
-            name: getReference(passage),
+            name: getReference(passage, bookData),
             state: state,
             planName: planRec.attributes.name,
             editor: '',
@@ -176,6 +178,7 @@ interface IStateProps {
   mediaUrl: string;
   exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
+  allBookData: BookName[];
 }
 
 interface IDispatchProps {
@@ -220,6 +223,7 @@ export function TranscriptionTab(props: IProps) {
     exportComplete,
     exportStatus,
     exportFile,
+    allBookData,
   } = props;
   const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -414,9 +418,25 @@ export function TranscriptionTab(props: IProps) {
 
   useEffect(() => {
     setData(
-      getAssignments(projectPlans, passages, sections, users, activityState)
+      getAssignments(
+        projectPlans,
+        passages,
+        sections,
+        users,
+        activityState,
+        allBookData
+      )
     );
-  }, [plan, projectPlans, passages, sections, users, roles, activityState]);
+  }, [
+    plan,
+    projectPlans,
+    passages,
+    sections,
+    users,
+    roles,
+    activityState,
+    allBookData,
+  ]);
 
   interface ICell {
     value: string;
@@ -639,6 +659,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   mediaUrl: state.media.url,
   exportFile: state.importexport.exportFile,
   exportStatus: state.importexport.importexportStatus,
+  allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

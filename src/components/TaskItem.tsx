@@ -1,14 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import {
-  IState,
-  User,
-  ITaskItemStrings,
-  BookName,
-  MediaDescription,
-  MediaFile,
-} from '../model';
-import localStrings from '../selector/localize';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -18,9 +8,15 @@ import {
   ListItemSecondaryAction,
   Typography,
 } from '@material-ui/core';
+import useTodo from '../context/useTodo';
 import TaskFlag from './TaskFlag';
 import Duration from './Duration';
-import { related, sectionNumber, passageNumber } from '../utils';
+import {
+  related,
+  sectionNumber,
+  passageNumber,
+  passageReference,
+} from '../utils';
 import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
 
@@ -44,58 +40,45 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IStateProps {
-  t: ITaskItemStrings;
-  allBookData: BookName[];
-}
-
-interface IRecordProps {
-  users: Array<User>;
-}
-
-interface IProps extends IStateProps {
-  mediaDesc: MediaDescription;
-  mediaRec: MediaFile;
-  select: (media: MediaDescription) => (e: any) => void;
+interface IProps {
+  item: number;
 }
 
 export function TaskItem(props: IProps) {
-  const { allBookData, t, mediaRec, select } = props;
-  const { passage, section } = props.mediaDesc;
+  const { rowData, taskItemStr, setSelected, allBookData } = useTodo();
+  const { passage, section, duration } = rowData[props.item];
   const classes = useStyles();
+  const t = taskItemStr;
 
-  let book = '';
-  let ref = '';
+  const handleSelect = (selected: string) => () => {
+    setSelected(selected);
+  };
+
   let assigned: string | null = null;
   const attr = passage.attributes;
   if (attr) {
-    ref = attr.reference;
-    book = attr.book;
-    if (book) {
-      const bookItem = allBookData.filter(b => b.code === book);
-      if (bookItem.length > 0) book = bookItem[0].long;
-      book = book + ' ';
-    } else book = '';
-    const next = NextAction({ ...props, state: attr.state });
+    const next = NextAction({ t: taskItemStr, state: attr.state });
     if (next === t.transcribe) assigned = related(section, 'transcriber');
     if (next === t.review) assigned = related(section, 'editor');
   }
 
   return (
     <List className={classes.root}>
-      <ListItem alignItems="flex-start" onClick={select(props.mediaDesc)}>
+      <ListItem alignItems="flex-start" onClick={handleSelect(passage.id)}>
         <ListItemAvatar className={classes.listAvatar}>
           <TaskAvatar assigned={assigned} />
         </ListItemAvatar>
         <ListItemText
           disableTypography
-          primary={<Typography>{book + ref}</Typography>}
-          secondary={<TaskFlag {...props} state={attr.state} />}
+          primary={
+            <Typography>{passageReference(passage, allBookData)}</Typography>
+          }
+          secondary={<TaskFlag t={t} state={attr?.state} />}
         />
         <ListItemSecondaryAction>
           <div className={classes.detail}>
             <div className={classes.detailAlign}>
-              <Duration seconds={mediaRec.attributes.duration} />
+              <Duration seconds={duration} />
             </div>
             <div className={classes.detailAlign}>
               {t.section
@@ -110,9 +93,4 @@ export function TaskItem(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'taskItem' }),
-  allBookData: state.books.bookData,
-});
-
-export default connect(mapStateToProps)(TaskItem) as any;
+export default TaskItem;
