@@ -14,8 +14,12 @@ export function Online(cb: (result: boolean) => void, auth?: Auth) {
         timeout: 5000,
       };
 
-  Axios.get(API_CONFIG.host + '/api/roles/', opts).catch(reason => {
-    cb(reason.response !== undefined);
-  });
+  Axios.get(API_CONFIG.host + '/api/roles/', opts)
+    .then(() => {
+      cb(true);
+    })
+    .catch(reason => {
+      cb(reason.response !== undefined);
+    });
 }
 export default Online;

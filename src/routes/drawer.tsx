@@ -58,6 +58,8 @@ import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
+import CheckBox from '@material-ui/icons/CheckBox';
+import NoCheckBox from '@material-ui/icons/CheckBoxOutlineBlank';
 import { withBucket } from '../hoc/withBucket';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
@@ -1176,6 +1178,10 @@ export function ResponsiveDrawer(props: IProps) {
           </div>
           <div className={classes.grow}>{'\u00A0'}</div>
 
+          <Tooltip title={t.online}>
+            {online ? <CheckBox /> : <NoCheckBox />}
+          </Tooltip>
+          {'\u00A0'}
           {!API_CONFIG.isApp ? (
             <div className={classes.navButton}>
               <Typography>{t.switchTo + '\u00A0'}</Typography>

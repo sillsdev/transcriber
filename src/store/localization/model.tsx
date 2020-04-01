@@ -240,6 +240,7 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "silTranscriber": string;
+    "online": string;
     "search": string;
     "organization": string;
     "usersAndGroups": string;

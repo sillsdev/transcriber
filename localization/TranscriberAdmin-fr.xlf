@@ -1123,6 +1123,12 @@
 				<target>SIL Transcriber</target>
 			</segment>
 		</unit>
+		<unit id="main.online">
+			<segment>
+				<source>Online</source>
+				<target>En ligne</target>
+			</segment>
+		</unit>
 		<unit id="main.search">
 			<segment>
 				<source>Search…</source>

@@ -1126,6 +1126,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.online">
+         <segment>
+            <source>Online</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.search">
          <segment>
             <source>Search…</source>

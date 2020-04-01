@@ -1314,14 +1314,21 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.search">
-                <source>Search…</source>
+            <trans-unit id="main.online">
+                <source>Online</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.organization">
+        	<trans-unit id="main.search">
+        		<source>Search…</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.organization">
                 <source>Org Details</source>
                 <target/>
                 <context-group>
