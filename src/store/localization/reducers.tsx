@@ -299,7 +299,7 @@ const initialState = {
 			"reportIssue": "Report an Issue",
 			"developer": "Developer mode",
 			"version": "Version: ",
-			"planUnsaved": "Plan Unsaved",
+			"unsaved": "Unsaved",
 			"loseData": "Do you want to leave this page and lose your changes?",
 			"newOrganization": "Add Organization",
 			"admin": "Admin",

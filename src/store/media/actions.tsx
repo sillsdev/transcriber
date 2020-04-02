@@ -47,6 +47,6 @@ export const fetchMediaUrl = (
   }
 };
 
-export const setSelected = (val: string) => (dispatch: any) => {
+export const setTrackedTask = (val: string) => (dispatch: any) => {
   dispatch({ payload: val, type: type.SET_SELECTED });
 };

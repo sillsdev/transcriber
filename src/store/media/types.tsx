@@ -2,7 +2,7 @@
 export interface IMediaState {
   url: string;
   loaded: boolean;
-  selected: string;
+  trackedTask: string;
 }
 
 // Describing the different ACTION NAMES available

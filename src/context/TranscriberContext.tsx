@@ -39,6 +39,7 @@ interface IStateProps {
   lang: string;
   hasUrl: boolean;
   mediaUrl: string;
+  trackedTask: string;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
@@ -49,17 +50,20 @@ const mapStateToProps = (state: IState): IStateProps => ({
   lang: state.strings.lang,
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  trackedTask: state.media.trackedTask,
 });
 
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
   fetchMediaUrl: typeof actions.fetchMediaUrl;
+  setTrackedTask: typeof actions.setTrackedTask;
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       fetchBooks: actions.fetchBooks,
       fetchMediaUrl: actions.fetchMediaUrl,
+      setTrackedTask: actions.setTrackedTask,
     },
     dispatch
   ),
@@ -142,6 +146,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
     const { todoStr, taskItemStr, transcriberStr } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
+    const { trackedTask, setTrackedTask } = props;
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [keyMap] = useGlobal('keyMap');
@@ -176,14 +181,17 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       for (let i = 0; i < rowLen; i++) {
         const r = rowData[i];
         if (r.passage?.id === selected && r.mediaRemoteId !== '') {
-          setState((state: ICtxState) => {
-            return {
-              ...state,
-              index: i,
-              selected,
-              playItem: r.mediaId,
-            };
-          });
+          if (state.index !== i) {
+            setTrackedTask(selected);
+            setState((state: ICtxState) => {
+              return {
+                ...state,
+                index: i,
+                selected,
+                playItem: r.mediaId,
+              };
+            });
+          }
           break;
         }
       }
@@ -387,14 +395,17 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
       setExpandedGroups(exGrp);
 
-      const selected = state.selected;
-      if (selected === '') {
-        if (rowList.length > 0) {
-          setSelected(rowList[0].passage.id, rowList);
+      if (rowList.length > 0) {
+        let selected = state.selected !== '' ? state.selected : trackedTask;
+        if (selected !== '') {
+          const selectedRow = rowList.filter(r => r.passage.id === selected);
+          if (selectedRow.length > 0) {
+            setSelected(selected, rowList);
+          } else {
+            selected = '';
+          }
         }
-      } else if (rowList.length > 0) {
-        const selectedRow = rowList.filter(r => r.passage.id === selected);
-        if (selectedRow.length === 0) {
+        if (selected === '') {
           setSelected(rowList[0].passage.id, rowList);
         }
       }
@@ -430,6 +441,22 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       if (changed) setState({ ...state, rowData });
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [sections]);
+
+    useEffect(() => {
+      let changed = false;
+      const rowData: IRowData[] = [];
+      state.rowData.forEach(r => {
+        const passRecs = passages.filter(p => p.id === r.passage.id);
+        if (passRecs.length > 0) {
+          const passage = { ...passRecs[0] };
+          if (passage.attributes.state !== r.passage.attributes.state)
+            changed = true;
+          rowData.push({ ...r, passage });
+        }
+      });
+      if (changed) setState({ ...state, rowData });
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    }, [passages]);
 
     useEffect(() => {
       if (!booksLoaded) {

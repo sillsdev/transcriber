@@ -1138,7 +1138,7 @@ export function ResponsiveDrawer(props: IProps) {
         </div>
         {!topFilter && (
           <div className={classes.topTranscriber}>
-            <Transcriber auth={auth} />
+            <Transcriber auth={auth} setChanged={setChanged} />
           </div>
         )}
       </div>
@@ -1277,7 +1277,7 @@ export function ResponsiveDrawer(props: IProps) {
       </main>
       {alertOpen && (
         <Confirm
-          title={t.planUnsaved}
+          title={t.unsaved}
           text={t.loseData}
           yesResponse={handleUnsaveConfirmed}
           noResponse={handleUnsaveRefused}

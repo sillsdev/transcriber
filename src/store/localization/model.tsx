@@ -276,7 +276,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "reportIssue": string;
     "developer": string;
     "version": string;
-    "planUnsaved": string;
+    "unsaved": string;
     "loseData": string;
     "newOrganization": string;
     "admin": string;

@@ -1342,9 +1342,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.planUnsaved">
+      <unit id="main.unsaved">
          <segment>
-            <source>Plan Unsaved</source>
+            <source>Unsaved</source>
             <target/>
          </segment>
       </unit>

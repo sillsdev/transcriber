@@ -132,10 +132,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps {
   auth: Auth;
+  setChanged: (status: boolean) => void;
 }
 
 export function Transcriber(props: IProps) {
-  const { auth } = props;
+  const { auth, setChanged } = props;
   const {
     rowData,
     index,
@@ -172,6 +173,7 @@ export function Transcriber(props: IProps) {
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
+  const [busy] = useGlobal('remoteBusy');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
   const [passageStateChanges, setPassageStateChanges] = React.useState<
@@ -179,7 +181,10 @@ export function Transcriber(props: IProps) {
   >([]);
   const [playing, setPlaying] = React.useState(false);
   const [playSpeed, setPlaySpeed] = React.useState(1);
+  // playedSeconds is needed to update progress bar
   const [playedSeconds, setPlayedSeconds] = React.useState(0);
+  // playedSecsRef is needed for autosave
+  const playedSecsRef = React.useRef<number>(0);
   const [totalSeconds, setTotalSeconds] = React.useState(duration);
   const [seeking, setSeeking] = React.useState(false);
   const [jump] = React.useState(2);
@@ -197,13 +202,18 @@ export function Transcriber(props: IProps) {
   const [comment, setComment] = React.useState('');
   const [showHistory, setShowHistory] = React.useState(false);
   const [rejectVisible, setRejectVisible] = React.useState(false);
+  const [transcriptionIn, setTranscriptionIn] = React.useState('');
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
   const commentRef = React.useRef<any>();
+  const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const t = transcriberStr;
 
-  const handleChange = (e: any) => setTextValue(e.target.value);
+  const handleChange = (e: any) => {
+    setTextValue(e.target.value);
+    setChanged(true);
+  };
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
     // console.log('Font status: current=', fontStatus, ' new=', status);
@@ -223,6 +233,7 @@ export function Transcriber(props: IProps) {
         setTotalSeconds(duration);
       }
       setPlayedSeconds(ctrl.playedSeconds);
+      playedSecsRef.current = ctrl.playedSeconds;
     }
   };
   const handleMouseDown = () => {
@@ -347,6 +358,7 @@ export function Transcriber(props: IProps) {
           )
         );
         await memory.update(ops);
+        setChanged(false);
       } else {
         logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
       }
@@ -393,13 +405,14 @@ export function Transcriber(props: IProps) {
             id: mediaId,
             attributes: {
               transcription: transcription,
-              position: playedSeconds,
+              position: playedSecsRef.current,
             },
           } as MediaFile,
           userid
         )
       );
       await memory.update(ops);
+      setChanged(false);
     }
   };
   const previous: { [key: string]: string } = {
@@ -512,7 +525,9 @@ export function Transcriber(props: IProps) {
     const mediaRec = mediafiles.filter(m => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
-      setTextValue(attr.transcription ? attr.transcription : '');
+      const transcription = attr.transcription ? attr.transcription : '';
+      setTranscriptionIn(transcription);
+      setTextValue(transcription);
       setDefaultPosition(attr.position);
       setPlaying(false);
       //focus on player
@@ -538,6 +553,42 @@ export function Transcriber(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
+
+  const handleAutosave = () => {
+    const transcription = transcriptionRef.current.firstChild.value;
+    if (transcriptionIn !== transcription) {
+      if (!busy) {
+        handleSave().finally(() => {
+          setTranscriptionIn(transcription);
+          launchTimer();
+        });
+      }
+      return;
+    }
+    launchTimer();
+  };
+
+  const launchTimer = () => {
+    autosaveTimer.current = setTimeout(() => {
+      handleAutosave();
+    }, 1000 * 30);
+  };
+
+  React.useEffect(() => {
+    if (autosaveTimer.current === undefined) {
+      launchTimer();
+    } else {
+      clearTimeout(autosaveTimer.current);
+      launchTimer();
+    }
+    return () => {
+      if (autosaveTimer.current) {
+        clearTimeout(autosaveTimer.current);
+        autosaveTimer.current = undefined;
+      }
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [transcriptionIn, mediaId]);
 
   const textAreaStyle = {
     overflow: 'auto',
