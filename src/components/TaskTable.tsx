@@ -76,6 +76,7 @@ interface IRow {
   state: string;
   assigned: string;
   mediaRemoteId: string;
+  selection: string;
 }
 
 interface IProps {
@@ -113,6 +114,7 @@ export function TaskTable(props: IProps) {
     { name: 'length', title: t.length },
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
+    { name: 'selection', title: '\u00A0' },
   ]);
   const [columnFormatting, setColumnFormatting] = useState([
     { columnName: 'composite', width: TaskItemWidth, align: 'left' },
@@ -259,6 +261,7 @@ export function TaskTable(props: IProps) {
       state: r.state !== '' ? ChipText({ state: r.state, t: taskItemStr }) : '',
       assigned: r.assigned === user ? t.yes : t.no,
       mediaRemoteId: r.mediaRemoteId,
+      selection: r.passage.id === selected ? 'P' : 'S',
     }));
     setRows(newRows);
 
@@ -361,6 +364,7 @@ export function TaskTable(props: IProps) {
             columnFormatting={filter ? columnFormatting : []}
             dataCell={Cell}
             sorting={[
+              { columnName: 'selection', direction: 'asc' },
               { columnName: 'plan', direction: 'asc' },
               { columnName: 'sectPass', direction: 'asc' },
             ]}
