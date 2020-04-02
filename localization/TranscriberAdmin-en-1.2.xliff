@@ -1315,7 +1315,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="main.online">
-                <source>Online</source>
+                <source>Online Status</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>

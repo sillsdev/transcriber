@@ -1125,8 +1125,8 @@
 		</unit>
 		<unit id="main.online">
 			<segment>
-				<source>Online</source>
-				<target>En ligne</target>
+				<source>Online Status</source>
+				<target>Statut en ligne</target>
 			</segment>
 		</unit>
 		<unit id="main.search">

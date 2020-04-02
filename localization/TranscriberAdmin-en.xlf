@@ -1128,7 +1128,7 @@
       </unit>
       <unit id="main.online">
          <segment>
-            <source>Online</source>
+            <source>Online Status</source>
             <target/>
          </segment>
       </unit>

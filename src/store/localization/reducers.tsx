@@ -263,7 +263,7 @@ const initialState = {
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"silTranscriber": "SIL Transcriber",
-			"online": "Online",
+			"online": "Online Status",
 			"search": "Search…",
 			"organization": "Org Details",
 			"usersAndGroups": "Users and Groups",
