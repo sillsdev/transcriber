@@ -453,6 +453,7 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     setAddProject(true);
     setProject('');
+    setPlan('');
     setContent(NavChoice.Settings);
     setTitle(t.addProject);
   };
