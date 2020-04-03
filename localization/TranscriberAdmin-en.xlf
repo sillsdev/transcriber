@@ -2950,6 +2950,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.incomplete">
+         <segment>
+            <source>Incomplete transcripiton</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>

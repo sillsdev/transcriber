@@ -601,6 +601,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "done": string;
     "needsNewRecording": string;
     "synced": string;
+    "incomplete": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {

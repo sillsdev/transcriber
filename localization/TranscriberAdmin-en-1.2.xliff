@@ -3441,6 +3441,13 @@
         			<context context-type="sourcefile">Transcriber.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriber.incomplete">
+        		<source>Incomplete transcripiton</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcribeReject.rejectTitle">
         		<source>Rejection</source>
         		<target/>

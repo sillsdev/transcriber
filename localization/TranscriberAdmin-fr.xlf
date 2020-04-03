@@ -2944,7 +2944,13 @@
          	<target>Terminé</target>
          </segment>
       </unit>
-      <unit id="transcribeReject.rejectTitle">
+		<unit id="transcriber.incomplete">
+			<segment>
+				<source>Incomplete transcription</source>
+				<target>Transcription incomplètes</target>
+			</segment>
+		</unit>
+		<unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>
          	<target>Rejet</target>

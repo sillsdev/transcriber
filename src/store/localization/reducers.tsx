@@ -643,6 +643,7 @@ const initialState = {
 			"done": "Completed",
 			"needsNewRecording": "Rejected task",
 			"synced": "Completed",
+			"incomplete": "Incomplete transcripiton",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({
