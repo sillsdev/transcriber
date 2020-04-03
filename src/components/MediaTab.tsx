@@ -34,6 +34,7 @@ import PassageMedia from './PassageMedia';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
+import Busy from './Busy';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
@@ -504,9 +505,12 @@ export function MediaTab(props: IProps) {
     <div className={classes.container}>
       <div className={classes.paper}>
         {complete === 0 || (
-          <div className={classes.progress}>
-            <LinearProgress variant="determinate" value={complete} />
-          </div>
+          <>
+            <div className={classes.progress}>
+              <LinearProgress variant="determinate" value={complete} />
+            </div>
+            <Busy />
+          </>
         )}
         <div className={classes.actions}>
           {projRole === 'admin' && (
