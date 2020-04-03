@@ -348,6 +348,7 @@ const initialState = {
 			"exportExplanation": "Export a full backup to store locally. Export incremental file to import into online app.",
 			"exportPTFtype": "Full Backup (ptf)",
 			"exportITFtype": "Incremental Changes (itf)",
+			"cancel": "Cancel",
 			"exportingProject": "Exporting Project",
 			"error": "Export Error",
 			"downloadComplete": "Download complete",

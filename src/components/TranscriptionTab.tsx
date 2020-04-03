@@ -542,21 +542,21 @@ export function TranscriptionTab(props: IProps) {
         aria-labelledby="which-export-title"
         aria-describedby="which-export-description"
       >
-        <DialogTitle id="which-export-title">
-          {'Which export type?'}
-        </DialogTitle>
+        <DialogTitle id="which-export-title">{t.exportType}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Export a full backup to store locally. Export incremental file to
-            import into online app.
+            {t.exportExplanation}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button onClick={closeNoChoice} color="default">
+            {t.cancel}
+          </Button>
           <Button onClick={doPTF} color="primary">
-            Full Backup (ptf)
+            {t.exportPTFtype}
           </Button>
           <Button onClick={doITF} color="primary" autoFocus>
-            Incremental Changes (itf)
+            {t.exportITFtype}
           </Button>
         </DialogActions>
       </Dialog>

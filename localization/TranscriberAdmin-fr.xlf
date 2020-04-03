@@ -1586,7 +1586,13 @@
             <target>Modifications incrémentielles (itf)</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportingProject">
+		<unit id="transcriptionTab.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportingProject">
          <segment>
             <source>Exporting Project</source>
             <target>Projet d'exportation</target>

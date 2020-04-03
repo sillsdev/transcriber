@@ -1588,6 +1588,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportingProject">
          <segment>
             <source>Exporting Project</source>

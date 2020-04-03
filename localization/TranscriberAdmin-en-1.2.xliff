@@ -1853,7 +1853,14 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.exportingProject">
+        	<trans-unit id="transcriptionTab.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.exportingProject">
         		<source>Exporting Project</source>
         		<target/>
         		<context-group>
