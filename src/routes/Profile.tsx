@@ -202,6 +202,7 @@ export function Profile(props: IProps) {
   const [locked, setLocked] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [message, setMessage] = useState(<></>);
+  const [dupName, setDupName] = useState(false);
   const [view, setView] = useState('');
   const [changed, setChanged] = useState(false);
 
@@ -222,6 +223,11 @@ export function Profile(props: IProps) {
       if (parts.length > 1) {
         setFamily(parts[parts.length - 1]);
       }
+    }
+    if (editId) {
+      const userRecs = users.filter(u => u.attributes.name === e.target.value);
+      const newDupName = userRecs.length > 0;
+      if (newDupName !== dupName) setDupName(newDupName);
     }
   };
 
@@ -599,6 +605,13 @@ export function Profile(props: IProps) {
                         value={name}
                         onChange={handleNameChange}
                         onClick={handleNameClick}
+                        helperText={
+                          dupName && (
+                            <Typography color="secondary" variant="caption">
+                              {t.userExists}
+                            </Typography>
+                          )
+                        }
                         margin="normal"
                         variant="filled"
                         required
@@ -772,7 +785,7 @@ export function Profile(props: IProps) {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  disabled={name === '' || !changed}
+                  disabled={name === '' || !changed || dupName}
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
                   {editId && /Add/i.test(editId)

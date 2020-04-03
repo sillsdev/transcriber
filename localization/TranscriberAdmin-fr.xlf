@@ -3010,7 +3010,13 @@
          	<target>Nom et prénom</target>
          </segment>
       </unit>
-      <unit id="profile.given">
+		<unit id="profile.userExists">
+			<segment>
+				<source>This offline user exists.</source>
+				<target>Cet utilisateur hors ligne existe.</target>
+			</segment>
+		</unit>
+		<unit id="profile.given">
          <segment>
             <source>Given Name</source>
          	<target>Prénom</target>

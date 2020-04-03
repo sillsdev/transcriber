@@ -618,6 +618,7 @@ export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMetho
 
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "name": string;
+    "userExists": string;
     "given": string;
     "family": string;
     "email": string;

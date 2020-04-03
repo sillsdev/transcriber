@@ -3016,6 +3016,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.userExists">
+         <segment>
+            <source>This offline user exists.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.given">
          <segment>
             <source>Given Name</source>

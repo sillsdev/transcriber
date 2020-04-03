@@ -662,6 +662,7 @@ const initialState = {
 	"profile": new LocalizedStrings({
 		"en": {
 			"name": "Full Name",
+			"userExists": "This offline user exists.",
 			"given": "Given Name",
 			"family": "Family Name",
 			"email": "Email",
