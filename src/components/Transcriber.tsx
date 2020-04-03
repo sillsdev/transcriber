@@ -176,9 +176,6 @@ export function Transcriber(props: IProps) {
   const [busy] = useGlobal('remoteBusy');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
-  const [passageStateChanges, setPassageStateChanges] = React.useState<
-    PassageStateChange[]
-  >([]);
   const [playing, setPlaying] = React.useState(false);
   const [playSpeed, setPlaySpeed] = React.useState(1);
   // playedSeconds is needed to update progress bar
@@ -201,6 +198,7 @@ export function Transcriber(props: IProps) {
   const [makeComment, setMakeComment] = React.useState(false);
   const [comment, setComment] = React.useState('');
   const [showHistory, setShowHistory] = React.useState(false);
+  const [historyContent, setHistoryContent] = React.useState<any[]>();
   const [rejectVisible, setRejectVisible] = React.useState(false);
   const [transcriptionIn, setTranscriptionIn] = React.useState('');
   const playerRef = React.useRef<any>();
@@ -358,6 +356,8 @@ export function Transcriber(props: IProps) {
           )
         );
         await memory.update(ops);
+        setComment('');
+        loadHistory();
         setChanged(false);
       } else {
         logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
@@ -412,6 +412,8 @@ export function Transcriber(props: IProps) {
         )
       );
       await memory.update(ops);
+      setComment('');
+      loadHistory();
       setChanged(false);
     }
   };
@@ -505,20 +507,6 @@ export function Transcriber(props: IProps) {
   }, [height, makeComment, comment, commentRef.current]);
 
   React.useEffect(() => {
-    const loadStateChange = async () => {
-      const recs = (await memory.query((q: QueryBuilder) =>
-        q.findRecords('passagestatechange')
-      )) as PassageStateChange[];
-      if (recs && passage?.id) {
-        const curStateChanges = recs.filter(
-          r => related(r, 'passage') === passage.id
-        );
-        setPassageStateChanges(curStateChanges);
-      }
-    };
-    if (passage?.id) {
-      loadStateChange();
-    }
     const mediafiles = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile')
     ) as MediaFile[];
@@ -672,6 +660,25 @@ export function Transcriber(props: IProps) {
     return results;
   };
 
+  const loadHistory = async () => {
+    const recs = (await memory.query((q: QueryBuilder) =>
+      q.findRecords('passagestatechange')
+    )) as PassageStateChange[];
+    if (recs && passage?.id) {
+      const curStateChanges = recs.filter(
+        r => related(r, 'passage') === passage.id
+      );
+      setHistoryContent(historyList(curStateChanges));
+    }
+  };
+
+  React.useEffect(() => {
+    if (passage?.id) {
+      loadHistory();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [index, rowData]);
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
@@ -753,7 +760,7 @@ export function Transcriber(props: IProps) {
                 <span>
                   <IconButton
                     onClick={handleShowHistory}
-                    disabled={passageStateChanges.length === 0}
+                    disabled={historyContent === undefined}
                   >
                     <>
                       <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
@@ -808,7 +815,7 @@ export function Transcriber(props: IProps) {
             {showHistory && (
               <Grid item xs={6} container direction="column">
                 <List style={historyStyle} className={classes.history}>
-                  {historyList(passageStateChanges)}
+                  {historyContent}
                 </List>
               </Grid>
             )}
