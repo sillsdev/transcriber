@@ -3,8 +3,7 @@ import { useGlobal } from 'reactn';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem } from '@material-ui/core';
-import CheckBox from '@material-ui/core/Checkbox';
+import { Button, Menu, MenuItem, AppBar, Checkbox } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
@@ -17,6 +16,10 @@ import 'react-datasheet/lib/react-datasheet.css';
 import './PlanSheet.css';
 import { isNumber } from 'util';
 import SheetText from './SheetText';
+import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { TabHeight } from './PlanTabs';
+
+const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,6 +27,15 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
+    bar: {
+      top: `calc(${HeadHeight}px + ${TabHeight}px)`,
+      left: `${DrawerWidth}px`,
+      height: `${ActionHeight}px`,
+      width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    content: {
+      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+    },
     actions: theme.mixins.gutters({
       paddingBottom: 16,
       display: 'flex',
@@ -319,7 +331,7 @@ export function PlanSheet(props: IProps) {
           return [
             {
               value: (
-                <CheckBox
+                <Checkbox
                   data-testid={check.includes(rowIndex) ? 'checked' : 'check'}
                   checked={check.includes(rowIndex)}
                   onChange={handleCheck(rowIndex)}
@@ -358,83 +370,86 @@ export function PlanSheet(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        <div className={classes.actions}>
-          {projRole === 'admin' && (
-            <>
-              <Button
-                key="addSection"
-                aria-label={t.addSection}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleAddSection}
-              >
-                {t.addSection}
-                <AddIcon className={classes.icon} />
-              </Button>
-              <Button
-                key="addPassage"
-                aria-label={t.addPassage}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleAddPassage}
-                disabled={data.length < 2}
-              >
-                {t.addPassage}
-                <AddIcon className={classes.icon} />
-              </Button>
-              <Button
-                key="action"
-                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-                aria-label={t.action}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleMenu}
-              >
-                {t.action}
-                <DropDownIcon className={classes.icon} />
-              </Button>
-              <Menu
-                id="action-menu"
-                anchorEl={actionMenuItem}
-                open={Boolean(actionMenuItem)}
-                onClose={handleConfirmAction('Close')}
-              >
-                <MenuItem onClick={handleConfirmAction('Delete')}>
-                  {t.delete}
-                </MenuItem>
-                <MenuItem onClick={handlePassageMedia(true)}>
-                  {t.attachMedia}
-                </MenuItem>
-              </Menu>
-              <div className={classes.grow}>{'\u00A0'}</div>
-              <Button
-                key="save"
-                aria-label={t.save}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleSave}
-                disabled={!changed}
-              >
-                {t.save}
-                <SaveIcon className={classes.icon} />
-              </Button>
-            </>
-          )}
+        <AppBar position="fixed" className={classes.bar} color="default">
+          <div className={classes.actions}>
+            {projRole === 'admin' && (
+              <>
+                <Button
+                  key="addSection"
+                  aria-label={t.addSection}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAddSection}
+                >
+                  {t.addSection}
+                  <AddIcon className={classes.icon} />
+                </Button>
+                <Button
+                  key="addPassage"
+                  aria-label={t.addPassage}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAddPassage}
+                  disabled={data.length < 2}
+                >
+                  {t.addPassage}
+                  <AddIcon className={classes.icon} />
+                </Button>
+                <Button
+                  key="action"
+                  aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                  aria-label={t.action}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleMenu}
+                >
+                  {t.action}
+                  <DropDownIcon className={classes.icon} />
+                </Button>
+                <Menu
+                  id="action-menu"
+                  anchorEl={actionMenuItem}
+                  open={Boolean(actionMenuItem)}
+                  onClose={handleConfirmAction('Close')}
+                >
+                  <MenuItem onClick={handleConfirmAction('Delete')}>
+                    {t.delete}
+                  </MenuItem>
+                  <MenuItem onClick={handlePassageMedia(true)}>
+                    {t.attachMedia}
+                  </MenuItem>
+                </Menu>
+                <div className={classes.grow}>{'\u00A0'}</div>
+                <Button
+                  key="save"
+                  aria-label={t.save}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleSave}
+                  disabled={!changed}
+                >
+                  {t.save}
+                  <SaveIcon className={classes.icon} />
+                </Button>
+              </>
+            )}
+          </div>
+        </AppBar>
+        <div className={classes.content}>
+          <DataSheet
+            data={data as any[][]}
+            valueRenderer={handleValueRender}
+            // dataRenderer={handleDataRender}
+            onContextMenu={handleContextMenu}
+            onCellsChanged={handleCellsChanged}
+            parsePaste={handlePaste}
+            cellRenderer={myCell}
+          />
         </div>
-
-        <DataSheet
-          data={data as any[][]}
-          valueRenderer={handleValueRender}
-          // dataRenderer={handleDataRender}
-          onContextMenu={handleContextMenu}
-          onCellsChanged={handleCellsChanged}
-          parsePaste={handlePaste}
-          cellRenderer={myCell}
-        />
         <Menu
           keepMounted
           open={position.mouseY !== null && projRole === 'admin'}

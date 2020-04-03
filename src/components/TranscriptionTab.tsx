@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -30,6 +31,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  AppBar,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import SoundIcon from '@material-ui/icons/Audiotrack';
@@ -56,6 +58,10 @@ import {
   remoteIdNum,
   getMediaName,
 } from '../utils';
+import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { TabHeight } from './PlanTabs';
+
+const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,6 +69,18 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
+    bar: {
+      top: `calc(${TabHeight}px + ${HeadHeight}px)`,
+      left: `${DrawerWidth}px`,
+      height: `${ActionHeight}px`,
+      width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    highBar: {
+      top: `${HeadHeight}px`,
+    },
+    content: {
+      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+    },
     actions: theme.mixins.gutters({
       paddingBottom: 16,
       display: 'flex',
@@ -566,65 +584,74 @@ export function TranscriptionTab(props: IProps) {
   return (
     <div id="TranscriptionTab" className={classes.container}>
       <div className={classes.paper}>
-        <div className={classes.actions}>
-          {planColumn && (
+        <AppBar
+          position="fixed"
+          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          color="default"
+        >
+          <div className={classes.actions}>
+            {planColumn && (
+              <Button
+                key="export"
+                aria-label={t.exportProject}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleProjectExport}
+                title={t.exportProject}
+              >
+                {t.exportProject}
+              </Button>
+            )}
+            <div className={classes.grow}>{'\u00A0'}</div>
             <Button
-              key="export"
-              aria-label={t.exportProject}
-              variant="contained"
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
               color="primary"
               className={classes.button}
-              onClick={handleProjectExport}
-              title={t.exportProject}
+              onClick={handleFilter}
+              title={'Show/Hide filter rows'}
             >
-              {t.exportProject}
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
             </Button>
-          )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
-            key="filter"
-            aria-label={t.filter}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleFilter}
-            title={'Show/Hide filter rows'}
-          >
-            {t.filter}
-            {filter ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
-            )}
-          </Button>
+          </div>
+        </AppBar>
+        <div className={classes.content}>
+          <TreeGrid
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            rows={data}
+            getChildRows={getChildRows}
+            cellComponent={TreeCell}
+            dataCell={DataCell}
+            pageSizes={[]}
+            tableColumnExtensions={[
+              { columnName: 'passages', align: 'right' },
+              { columnName: 'name', wordWrapEnabled: true },
+            ]}
+            groupingStateColumnExtensions={[
+              { columnName: 'name', groupingEnabled: false },
+              { columnName: 'passages', groupingEnabled: false },
+            ]}
+            sorting={[
+              { columnName: 'planName', direction: 'asc' },
+              { columnName: 'name', direction: 'asc' },
+            ]}
+            treeColumn={'name'}
+            showfilters={filter}
+            showgroups={filter}
+            showSelection={false}
+            defaultHiddenColumnNames={defaultHiddenColumnNames}
+          />
         </div>
-        <TreeGrid
-          columns={columnDefs}
-          columnWidths={columnWidths}
-          rows={data}
-          getChildRows={getChildRows}
-          cellComponent={TreeCell}
-          dataCell={DataCell}
-          pageSizes={[]}
-          tableColumnExtensions={[
-            { columnName: 'passages', align: 'right' },
-            { columnName: 'name', wordWrapEnabled: true },
-          ]}
-          groupingStateColumnExtensions={[
-            { columnName: 'name', groupingEnabled: false },
-            { columnName: 'passages', groupingEnabled: false },
-          ]}
-          sorting={[
-            { columnName: 'planName', direction: 'asc' },
-            { columnName: 'name', direction: 'asc' },
-          ]}
-          treeColumn={'name'}
-          showfilters={filter}
-          showgroups={filter}
-          showSelection={false}
-          defaultHiddenColumnNames={defaultHiddenColumnNames}
-        />{' '}
       </div>
+
       {passageId !== '' ? (
         <TranscriptionShow
           passageId={passageId}

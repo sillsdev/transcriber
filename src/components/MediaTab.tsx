@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -21,6 +22,7 @@ import {
   MenuItem,
   IconButton,
   LinearProgress,
+  AppBar,
 } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
@@ -47,6 +49,10 @@ import {
 } from '../utils';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare } from '../utils/sort';
+import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { TabHeight } from './PlanTabs';
+
+const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +60,18 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
+    bar: {
+      top: `calc(${HeadHeight}px + ${TabHeight}px)`,
+      left: `${DrawerWidth}px`,
+      height: `${ActionHeight}px`,
+      width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    highBar: {
+      top: `${HeadHeight}px`,
+    },
+    content: {
+      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+    },
     progress: {
       width: '100%',
     },
@@ -504,101 +522,110 @@ export function MediaTab(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        {complete === 0 || (
-          <>
-            <div className={classes.progress}>
-              <LinearProgress variant="determinate" value={complete} />
-            </div>
-            <Busy />
-          </>
-        )}
-        <div className={classes.actions}>
-          {projRole === 'admin' && (
+        <AppBar
+          position="fixed"
+          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          color="default"
+        >
+          <div className={classes.actions}>
+            {projRole === 'admin' && (
+              <>
+                {planColumn || (
+                  <Button
+                    key="upload"
+                    aria-label={t.uploadMedia}
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleUpload}
+                  >
+                    {t.uploadMedia}
+                    <AddIcon className={classes.icon} />
+                  </Button>
+                )}
+                {planColumn || (
+                  <Button
+                    key="Attach"
+                    aria-label={t.attachPassage}
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handlePassageMedia(true)}
+                  >
+                    {t.attachPassage}
+                    <AddIcon className={classes.icon} />
+                  </Button>
+                )}
+                <Button
+                  key="action"
+                  aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                  aria-label={t.action}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleMenu}
+                >
+                  {t.action}
+                  <DropDownIcon className={classes.icon} />
+                </Button>
+                <Menu
+                  id="action-menu"
+                  anchorEl={actionMenuItem}
+                  open={Boolean(actionMenuItem)}
+                  onClose={handleConfirmAction('Close')}
+                >
+                  <MenuItem onClick={handleConfirmAction('Delete')}>
+                    {t.delete}
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+            <div className={classes.grow}>{'\u00A0'}</div>
+            <Button
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleFilter}
+              title={'Show/Hide filter rows'}
+            >
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
+            </Button>
+          </div>
+        </AppBar>
+        <div className={classes.content}>
+          {complete === 0 || (
             <>
-              {planColumn || (
-                <Button
-                  key="upload"
-                  aria-label={t.uploadMedia}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleUpload}
-                >
-                  {t.uploadMedia}
-                  <AddIcon className={classes.icon} />
-                </Button>
-              )}
-              {planColumn || (
-                <Button
-                  key="Attach"
-                  aria-label={t.attachPassage}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handlePassageMedia(true)}
-                >
-                  {t.attachPassage}
-                  <AddIcon className={classes.icon} />
-                </Button>
-              )}
-              <Button
-                key="action"
-                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-                aria-label={t.action}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleMenu}
-              >
-                {t.action}
-                <DropDownIcon className={classes.icon} />
-              </Button>
-              <Menu
-                id="action-menu"
-                anchorEl={actionMenuItem}
-                open={Boolean(actionMenuItem)}
-                onClose={handleConfirmAction('Close')}
-              >
-                <MenuItem onClick={handleConfirmAction('Delete')}>
-                  {t.delete}
-                </MenuItem>
-              </Menu>
+              <div className={classes.progress}>
+                <LinearProgress variant="determinate" value={complete} />
+              </div>
+              <Busy />
             </>
           )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
-            key="filter"
-            aria-label={t.filter}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleFilter}
-            title={'Show/Hide filter rows'}
-          >
-            {t.filter}
-            {filter ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
-            )}
-          </Button>
+
+          <ShapingTable
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            columnSorting={columnSorting}
+            sortingEnabled={sortingEnabled}
+            dataCell={Cell}
+            sorting={[
+              { columnName: 'planName', direction: 'asc' },
+              { columnName: 'fileName', direction: 'asc' },
+            ]}
+            numCols={numCols}
+            rows={data}
+            select={handleCheck}
+            shaping={filter}
+            defaultHiddenColumnNames={defaultHiddenColumnNames}
+          />
         </div>
-        <ShapingTable
-          columns={columnDefs}
-          columnWidths={columnWidths}
-          columnSorting={columnSorting}
-          sortingEnabled={sortingEnabled}
-          dataCell={Cell}
-          sorting={[
-            { columnName: 'planName', direction: 'asc' },
-            { columnName: 'fileName', direction: 'asc' },
-          ]}
-          numCols={numCols}
-          rows={data}
-          select={handleCheck}
-          shaping={filter}
-          defaultHiddenColumnNames={defaultHiddenColumnNames}
-        />
       </div>
       <MediaUpload
         visible={uploadVisible}

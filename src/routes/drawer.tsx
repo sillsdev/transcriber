@@ -107,6 +107,7 @@ const { shell } = isElectron ? require('electron') : { shell: noop };
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
 export const DrawerMin = 7;
+export const HeadHeight = 64;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -169,7 +170,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       flexGrow: 1,
-      paddingTop: theme.spacing(10),
+      paddingTop: `${HeadHeight}px`,
     },
     organization: {
       display: 'flex',
@@ -224,6 +225,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     progress: {
+      top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
+      zIndex: 100,
       width: '100%',
     },
     busy: {
@@ -1226,6 +1229,11 @@ export function ResponsiveDrawer(props: IProps) {
           <HelpMenu />
           <UserMenu action={menuAction} />
         </Toolbar>
+        {(!busy && !importexportBusy) || (
+          <AppBar position="fixed" className={classes.progress} color="inherit">
+            <LinearProgress variant="indeterminate" />
+          </AppBar>
+        )}
       </AppBar>
       <nav
         className={clsx(classes.drawer, { [classes.drawerMini]: mini })}
@@ -1268,14 +1276,7 @@ export function ResponsiveDrawer(props: IProps) {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>
-        {(!busy && !importexportBusy) || (
-          <div className={classes.progress}>
-            <LinearProgress variant="indeterminate" />
-          </div>
-        )}
-        {components[content]}
-      </main>
+      <main className={classes.content}>{components[content]}</main>
       {alertOpen && (
         <Confirm
           title={t.unsaved}
