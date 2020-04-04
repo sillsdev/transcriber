@@ -377,7 +377,7 @@ export function TranscriptionTab(props: IProps) {
         exportAnchor.current.click();
         URL.revokeObjectURL(exportUrl);
         setExportUrl(undefined);
-        showMessage(t.exportProject, exportName + ' ' + t.downloadComplete);
+        showMessage(t.exportProject, t.downloading.replace('{0}', exportName));
         setExportName('');
         exportComplete();
         setBusy(false);

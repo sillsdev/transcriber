@@ -1596,7 +1596,7 @@
       </unit>
       <unit id="transcriptionTab.exportingProject">
          <segment>
-            <source>Exporting Project</source>
+            <source>Creating export file</source>
             <target/>
          </segment>
       </unit>
@@ -1606,9 +1606,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionTab.downloadComplete">
+      <unit id="transcriptionTab.downloading">
          <segment>
-            <source>Download complete</source>
+            <source>Creation complete. Downloading {0}</source>
             <target/>
          </segment>
       </unit>

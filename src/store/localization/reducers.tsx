@@ -349,9 +349,9 @@ const initialState = {
 			"exportPTFtype": "Full Backup (ptf)",
 			"exportITFtype": "Incremental Changes (itf)",
 			"cancel": "Cancel",
-			"exportingProject": "Exporting Project",
+			"exportingProject": "Creating export file",
 			"error": "Export Error",
-			"downloadComplete": "Download complete",
+			"downloading": "Creation complete. Downloading {0}",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
 		}
 	}),

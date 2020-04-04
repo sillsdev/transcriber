@@ -326,7 +326,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "cancel": string;
     "exportingProject": string;
     "error": string;
-    "downloadComplete": string;
+    "downloading": string;
     "expiredToken": string;
 };
 

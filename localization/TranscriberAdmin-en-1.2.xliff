@@ -1861,7 +1861,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriptionTab.exportingProject">
-        		<source>Exporting Project</source>
+        		<source>Creating export file</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
@@ -1874,8 +1874,8 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.downloadComplete">
-                <source>Download complete</source>
+            <trans-unit id="transcriptionTab.downloading">
+                <source>Creation complete. Downloading {0}</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ExportTab.tsx</context>

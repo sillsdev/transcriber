@@ -1594,8 +1594,8 @@
 		</unit>
 		<unit id="transcriptionTab.exportingProject">
          <segment>
-            <source>Exporting Project</source>
-            <target>Projet d'exportation</target>
+            <source>Creating export file</source>
+         	<target>Création d'un fichier d'exportation</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.error">
@@ -1604,10 +1604,10 @@
             <target>Erreur</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.downloadComplete">
+      <unit id="transcriptionTab.downloading">
          <segment>
-            <source>Download complete</source>
-            <target>Téléchargement complet</target>
+            <source>Creation complete. Downloading {0}</source>
+         	<target>Création terminée. Téléchargement {0}</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.expiredToken">
