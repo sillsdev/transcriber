@@ -22,9 +22,9 @@ const appVersion = require('../package.json').version;
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 
-const host = process.env.REACT_APP_HOST;
-const prodOrQa = host && !host.endsWith('dev') && !isElectron;
-const prod = host && host.endsWith('prod');
+const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
+const adminEndpoint = process.env.REACT_APP_ADMIN_ENDPOINT;
+const prod = adminEndpoint && adminEndpoint.indexOf('admin.') !== -1;
 const bugsnagClient = prodOrQa
   ? bugsnag({
       apiKey: API_CONFIG.snagId,
@@ -50,8 +50,8 @@ const backup = new IndexedDBSource({
 if (isElectron) {
   localStorage.removeItem('user-id');
   backup
-    .pull(q => q.findRecords())
-    .then(transform => {
+    .pull((q) => q.findRecords())
+    .then((transform) => {
       memory
         .sync(transform)
         .then(() => {
@@ -62,7 +62,7 @@ if (isElectron) {
           console.log('reset');
         });
     })
-    .catch(err =>
+    .catch((err) =>
       logError(
         Severity.error,
         bugsnagClient,

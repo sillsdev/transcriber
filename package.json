@@ -171,7 +171,5 @@
         "filter": "*.json"
       }
     ]
-  },
-  "main": "public/electron.js",
-  "homepage": "./"
+  }
 }
