@@ -138,7 +138,7 @@ export function Access(props: IProps) {
   const handleLogin = () => auth.login();
 
   const handleSelect = (uId: string) => () => {
-    const selected = users.filter(u => u.id === uId);
+    const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
       localStorage.setItem('user-id', selected[0].id);
       setOffline(true);
@@ -194,7 +194,7 @@ export function Access(props: IProps) {
   const handleAdmin = () => shell.openExternal(AUTH_CONFIG.adminEndpoint);
 
   useEffect(() => {
-    Online(isOnline => setOnline(isOnline), auth);
+    Online((isOnline) => setOnline(isOnline), auth);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -228,9 +228,12 @@ export function Access(props: IProps) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
-    Online(online => setOffline(!online), auth);
+    Online((online) => setOffline(!online), auth);
 
-    const localAuth = localStorage.getItem('trAdminAuthResult');
+    const localAuth =
+      !auth || !auth.isAuthenticated(offline)
+        ? localStorage.getItem('trAdminAuthResult')
+        : null;
     if (localAuth) {
       try {
         auth.setSession(JSON.parse(localAuth));
@@ -303,7 +306,7 @@ export function Access(props: IProps) {
                             ? -1
                             : 1
                         )
-                        .map(u => (
+                        .map((u) => (
                           <ListItem key={u.id} onClick={handleSelect(u.id)}>
                             <ListItemIcon>
                               <UserAvatar
