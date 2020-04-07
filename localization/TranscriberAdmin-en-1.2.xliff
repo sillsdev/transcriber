@@ -1518,7 +1518,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="main.clearLogout">
-                <source>Logout and Force Data Reload</source>
+                <source>Log Out and Force Data Reload</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Loading.tsx</context>
@@ -1700,7 +1700,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="import.expiredToken">
-                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ExportTab.tsx</context>
@@ -1882,7 +1882,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriptionTab.expiredToken">
-                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ExportTab.tsx</context>
@@ -3072,14 +3072,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.expiredToken">
-                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.expiredParatextToken">
-                <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>

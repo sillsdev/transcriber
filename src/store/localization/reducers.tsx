@@ -292,7 +292,7 @@ const initialState = {
 			"projRole": "Role in Project:",
 			"owner": "Owner",
 			"clearCache": "Clear cache",
-			"clearLogout": "Logout and Force Data Reload",
+			"clearLogout": "Log Out and Force Data Reload",
 			"inviteError": "Invitation not accepted.  You must login with the email that the invitation was sent to.",
 			"deletedInvitation": "Invitation is no longer valid.",
 			"helpCenter": "Help Center",
@@ -322,7 +322,7 @@ const initialState = {
 		"en": {
 			"import": "Import",
 			"importProject": "Import Project",
-			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
+			"expiredToken": "Your log in token has expired and can't be automatically renewed.  Please log out and login again.",
 			"error": "Import Error",
 			"onlineChangeReport": "Online changes made since data provided to offline user:",
 			"noFile": "Please select file to be uploaded.",
@@ -352,7 +352,7 @@ const initialState = {
 			"exportingProject": "Creating export file",
 			"error": "Export Error",
 			"downloading": "Creation complete. Downloading {0}",
-			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
+			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
 		}
 	}),
 	"transcriptionShow": new LocalizedStrings({
@@ -586,8 +586,8 @@ const initialState = {
 			"countPending": "Querying count...",
 			"usernamePending": "Querying username...",
 			"offline": "Offline",
-			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
-			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please logout and login again.",
+			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
+			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please log out and login again.",
 			"invalidParatextLogin": "You must login with a valid paratext login to sync projects.",
 			"questionOnline": "Are you connected to the Internet?",
 			"questionInstalled": "Is Paratext installed locally?",

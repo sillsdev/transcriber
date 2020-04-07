@@ -1302,7 +1302,7 @@
       </unit>
       <unit id="main.clearLogout">
          <segment>
-            <source>Logout and Force Data Reload</source>
+            <source>Log Out and Force Data Reload</source>
             <target/>
          </segment>
       </unit>
@@ -1458,7 +1458,7 @@
       </unit>
       <unit id="import.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -1614,7 +1614,7 @@
       </unit>
       <unit id="transcriptionTab.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -2634,13 +2634,13 @@
       </unit>
       <unit id="integration.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
