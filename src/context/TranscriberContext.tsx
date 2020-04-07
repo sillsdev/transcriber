@@ -181,7 +181,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       for (let i = 0; i < rowLen; i++) {
         const r = rowData[i];
         if (r.passage?.id === selected && r.mediaRemoteId !== '') {
-          if (state.index !== i) {
+          if (state.index !== i || trackedTask !== selected) {
             setTrackedTask(selected);
             setState((state: ICtxState) => {
               return {
@@ -207,12 +207,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       playItem: string
     ) => {
       const readyRecs = passages.filter(
-        p => (p.attributes && p.attributes.state === state) || role === 'view'
+        (p) => (p.attributes && p.attributes.state === state) || role === 'view'
       );
       let addRows = Array<IRowData>();
-      readyRecs.forEach(p => {
+      readyRecs.forEach((p) => {
         const mediaRecs = mediafiles
-          .filter(m => related(m, 'passage') === p.id)
+          .filter((m) => related(m, 'passage') === p.id)
           .sort((i: MediaFile, j: MediaFile) =>
             // Sort descending
             i.attributes.versionNumber < j.attributes.versionNumber ? 1 : -1
@@ -220,10 +220,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         if (mediaRecs.length > 0) {
           const mediaRec = mediaRecs[0];
           const secId = related(p, 'section');
-          const secRecs = sections.filter(sr => sr.id === secId);
+          const secRecs = sections.filter((sr) => sr.id === secId);
           if (secRecs.length > 0) {
             const planId = related(secRecs[0], 'plan');
-            const planRecs = plans.filter(pl => pl.id === planId);
+            const planRecs = plans.filter((pl) => pl.id === planId);
             if (planRecs.length > 0) {
               if (related(planRecs[0], 'project') === project) {
                 const assigned = related(secRecs[0], role);
@@ -233,7 +233,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                 if (allowed) {
                   let already: IRowData[] = [];
                   if (role === 'view') {
-                    already = rowList.filter(r => r.mediaId === mediaRec.id);
+                    already = rowList.filter((r) => r.mediaId === mediaRec.id);
                   }
                   if (role !== 'view' || already.length === 0) {
                     const curState: ActivityStates | string =
@@ -244,7 +244,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                         : state;
                     const planName = getPlanName(planRecs[0]);
                     const planTypeRecs = planTypes.filter(
-                      pt => pt.id === related(planRecs[0], 'plantype')
+                      (pt) => pt.id === related(planRecs[0], 'plantype')
                     );
                     const planType =
                       planTypeRecs.length > 0
@@ -301,23 +301,23 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
       addRows
         .sort((i, j) => (i.sectPass < j.sectPass ? -1 : 1))
-        .forEach(r => rowList.push(r));
+        .forEach((r) => rowList.push(r));
     };
 
     const getUserRole = (user: string, project: string) => {
-      const projectRecs = projects.filter(p => p.id === project);
+      const projectRecs = projects.filter((p) => p.id === project);
       if (projectRecs.length === 0) {
         return '';
       }
       const groupId = related(projectRecs[0], 'group');
       const memberships = groupMemberships.filter(
-        gm => related(gm, 'group') === groupId && related(gm, 'user') === user
+        (gm) => related(gm, 'group') === groupId && related(gm, 'user') === user
       );
       if (memberships.length === 0) {
         return '';
       }
       const memberRole: string = related(memberships[0], 'role');
-      const roleRecs = roles.filter(r => r.id === memberRole);
+      const roleRecs = roles.filter((r) => r.id === memberRole);
       return roleRecs.length > 0 && roleRecs[0].attributes
         ? roleRecs[0].attributes.roleName
         : '';
@@ -388,9 +388,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         // ALL OTHERS
         addTasks('', 'view', rowList, false, playItem);
       }
-      setRows(rowList.map(r => r));
+      setRows(rowList.map((r) => r));
       const exGrp: string[] = [];
-      rowList.forEach(r => {
+      rowList.forEach((r) => {
         if (!exGrp.includes(r.planName)) exGrp.push(r.planName);
       });
       setExpandedGroups(exGrp);
@@ -398,7 +398,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       if (rowList.length > 0) {
         let selected = state.selected !== '' ? state.selected : trackedTask;
         if (selected !== '') {
-          const selectedRow = rowList.filter(r => r.passage.id === selected);
+          const selectedRow = rowList.filter((r) => r.passage.id === selected);
           if (selectedRow.length > 0) {
             setSelected(selected, rowList);
           } else {
@@ -411,7 +411,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, state.selected]);
+    }, [role, project, trackedTask]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.Reviewing]: 'editor',
@@ -424,8 +424,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     useEffect(() => {
       let changed = false;
       const rowData: IRowData[] = [];
-      state.rowData.forEach(r => {
-        const secRecs = sections.filter(s => s.id === r.section.id);
+      state.rowData.forEach((r) => {
+        const secRecs = sections.filter((s) => s.id === r.section.id);
         if (secRecs.length > 0) {
           const section = { ...secRecs[0] };
           const transcriber = related(section, 'transcriber');
@@ -444,17 +444,24 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     useEffect(() => {
       let changed = false;
+      let selected = state.selected;
       const rowData: IRowData[] = [];
-      state.rowData.forEach(r => {
-        const passRecs = passages.filter(p => p.id === r.passage.id);
+      state.rowData.forEach((r) => {
+        const passRecs = passages.filter((p) => p.id === r.passage.id);
         if (passRecs.length > 0) {
           const passage = { ...passRecs[0] };
-          if (passage.attributes.state !== r.passage.attributes.state)
+          const newState = passage.attributes.state;
+          if (newState !== r.passage.attributes.state) {
             changed = true;
+            if (newState !== ActivityStates.TranscribeReady) selected = '';
+          }
           rowData.push({ ...r, passage });
         }
       });
-      if (changed) setState({ ...state, rowData });
+      if (changed) {
+        setState({ ...state, rowData, selected });
+        setTrackedTask('');
+      }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [passages]);
 
