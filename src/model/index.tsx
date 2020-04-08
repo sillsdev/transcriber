@@ -12,6 +12,7 @@ export * from './plan';
 export * from './planType';
 export * from './section';
 export * from './passage';
+export * from './sectionPassage';
 export * from './passageStateChange';
 export * from './user';
 export * from './role';

@@ -96,6 +96,8 @@ REACT_APP_APP_ENDPOINT= (url of app)
 REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
 REACT_APP_COMMUNITY= (url of site for community discussion)
+REACT_APP_SNAGID=(bugsnag client id)
+REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
 
 REACT_APP_OFFLINE_not=true
 BROWSER=none
@@ -116,6 +118,8 @@ REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
 REACT_APP_COMMUNITY= (url of site for community discussion)
 REACT_APP_SITE_TITLE= (title for browser tab)
+REACT_APP_SNAGID=(bugsnag client id)
+REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
 ```
 
 ### Generate dev configuration files
@@ -149,20 +153,20 @@ The steps above regarding _installation_ and setting up the environments are als
 
 Sometimes it is possible to include Chrome Extensions in the embedded Chrome browser in [Electron](www.electronjs.org/). If this works for you, you will need to include the `chromeExtensions.js` function in the `public` folder. This is the contents of that file:
 
-``` javascript
-const electronExtension = BrowserWindow => {
-  const path = require('path');
-  const os = require('os');
+```javascript
+const electronExtension = (BrowserWindow) => {
+  const path = require("path");
+  const os = require("os");
   BrowserWindow.addDevToolsExtension(
     path.join(
       os.homedir(),
-      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.4.0_0'
+      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.4.0_0"
     )
   );
   BrowserWindow.addDevToolsExtension(
     path.join(
       os.homedir(),
-      '/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0'
+      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0"
     )
   );
 };

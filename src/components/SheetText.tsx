@@ -13,9 +13,12 @@ export function SheetText(props: IProps) {
 
   const handleChange = (e: any) => setValue(e.currentTarget.value);
   const handleKeyDown = (e: any) => {
-    if (e.keyCode === 27) {
+    const KEY_ESCAPE = 27;
+    const KEY_RETURN = 13;
+    const KEY_TAB = 9;
+    if (e.keyCode === KEY_ESCAPE) {
       onCommit(initValue);
-    } else if (e.keyCode === 13 || e.keyCode === 9) {
+    } else if (e.keyCode === KEY_RETURN || e.keyCode === KEY_TAB) {
       onCommit(value);
     }
   };

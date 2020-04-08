@@ -323,6 +323,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [projRole, setProjRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
+  const [changed, setChanged] = useGlobal('changed');
+  const [doSave, setDoSave] = useGlobal('doSave');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
     'autoOpenAddMedia'
@@ -343,7 +345,6 @@ export function ResponsiveDrawer(props: IProps) {
   );
   const [view, setView] = useState('');
   const [message, setMessage] = useState(<></>);
-  const [changed, setChanged] = useState(false);
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
@@ -496,7 +497,8 @@ export function ResponsiveDrawer(props: IProps) {
         what = 'Logout';
       }
       if (/Clear/i.test(what)) {
-        resetRequests();
+        if (resetRequests) resetRequests();
+        else console.log('ResetRequests not set in props');
       }
       setView(what);
     }
@@ -504,9 +506,13 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleSwitch = () => {
     localStorage.setItem('url', history.location.pathname);
-    if (swapRef.current) swapRef.current.click();
+    if (swapRef.current) {
+      checkSavedFn(() => handleChoice(swapRef.current.click()));
+    }
   };
-  const handleAdmin = (where: string) => () => shell.openExternal(where);
+  const handleAdmin = (where: string) => () => {
+    checkSavedFn(() => shell.openExternal(where));
+  };
 
   const checkSavedFn = (method: () => any) => {
     if (busy) {
@@ -544,23 +550,25 @@ export function ResponsiveDrawer(props: IProps) {
       callback();
     });
   };
-  const handleUnsaveConfirmed = () => {
+  const handleSaveRefused = () => {
     if (saveConfirm.current) saveConfirm.current();
     saveConfirm.current = undefined;
     setAlertOpen(false);
     setChanged(false);
   };
-  const handleUnsaveRefused = () => {
-    saveConfirm.current = undefined;
+  const handleSaveConfirmed = () => {
+    setMessage(<span>{t.saving}</span>);
+    setChanged(false);
+    setDoSave(true);
     setAlertOpen(false);
   };
   const getRole = (table: Record[], relate: string, id: string) => {
     const memberRecs = table.filter(
-      tbl => related(tbl, 'user') === user && related(tbl, relate) === id
+      (tbl) => related(tbl, 'user') === user && related(tbl, relate) === id
     );
     if (memberRecs.length === 1) {
       const roleId = related(memberRecs[0], 'role');
-      const roleRecs = roles.filter(r => r.id === roleId);
+      const roleRecs = roles.filter((r) => r.id === roleId);
       if (roleRecs.length === 1) {
         const attr = roleRecs[0].attributes;
         if (attr && attr.roleName) return attr.roleName.toLocaleLowerCase();
@@ -576,18 +584,25 @@ export function ResponsiveDrawer(props: IProps) {
     );
     if (isElectron) {
       const groupids = groupMemberships
-        .filter(gm => related(gm, 'user') === user)
-        .map(gm => related(gm, 'group'));
+        .filter((gm) => related(gm, 'user') === user)
+        .map((gm) => related(gm, 'group'));
 
-      projs = projs.filter(p => groupids.includes(related(p, 'group')));
+      projs = projs.filter((p) => groupids.includes(related(p, 'group')));
     }
     return projs;
   };
 
   useEffect(() => {
-    Online(val => setOnline(val), auth);
+    Online((val) => setOnline(val), auth);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (!doSave && saveConfirm.current) {
+      saveConfirm.current();
+      saveConfirm.current = undefined;
+    }
+  }, [doSave]);
 
   useEffect(() => {
     if (errorReporter && user && user !== '') {
@@ -599,7 +614,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (orbitLoaded) {
       const organizations = getOrgs(memory, user);
       const orgOpts = organizations
-        .filter(o => o.attributes)
+        .filter((o) => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
         .map((o: Organization) => {
           return {
@@ -617,7 +632,7 @@ export function ResponsiveDrawer(props: IProps) {
             })
       );
 
-      const orgRec = organizations.filter(o => o.id === organization);
+      const orgRec = organizations.filter((o) => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
         setOrgAvatar(DataPath(attr?.logoUrl || ''));
@@ -640,7 +655,7 @@ export function ResponsiveDrawer(props: IProps) {
               localStorage.getItem('lastOrg') || '',
               keyMap
             ) || '';
-      const cur = orgOptions.map(oo => oo.value).indexOf(orgKey);
+      const cur = orgOptions.map((oo) => oo.value).indexOf(orgKey);
       if (cur !== -1) setCurOrg(cur);
       else if (
         !busy &&
@@ -657,13 +672,13 @@ export function ResponsiveDrawer(props: IProps) {
       setDelProject(false);
       return;
     }
-    getProjs().then(projects => {
+    getProjs().then((projects) => {
       const projOpts = projects
         .filter(
-          p => related(p, 'organization') === organization && p.attributes
+          (p) => related(p, 'organization') === organization && p.attributes
         )
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map(p => {
+        .map((p) => {
           return {
             value: p.id,
             label: p.attributes.name,
@@ -681,11 +696,11 @@ export function ResponsiveDrawer(props: IProps) {
               headers: {
                 Authorization: 'Bearer ' + auth.accessToken,
               },
-            }).then(strings => {
+            }).then((strings) => {
               const data = strings.data.data as Record[];
               const orgRemId = localStorage.getItem('lastOrg');
               const filtered = data.filter(
-                r => related(r, 'organization') === orgRemId
+                (r) => related(r, 'organization') === orgRemId
               );
               if (filtered.length === 0) {
                 if (API_CONFIG.isApp) swapRef.current.click();
@@ -700,7 +715,7 @@ export function ResponsiveDrawer(props: IProps) {
   }, [organization, addProject, delProject, swapRef.current]);
 
   useEffect(() => {
-    const projKeys = projOptions.map(o => o.value);
+    const projKeys = projOptions.map((o) => o.value);
     const projKey =
       project !== ''
         ? project
@@ -736,7 +751,7 @@ export function ResponsiveDrawer(props: IProps) {
   }, [project, addProject, curProj, user]);
 
   useEffect(() => {
-    const curPlan = plans.filter(p => p.id === plan);
+    const curPlan = plans.filter((p) => p.id === plan);
     if (curPlan.length > 0) {
       const attr = curPlan[0].attributes;
       setTitle(attr ? attr.name : '');
@@ -790,11 +805,11 @@ export function ResponsiveDrawer(props: IProps) {
           if (busy !== isBusy) setBusy(isBusy);
         }, 1000);
       if (syncTimer.current === undefined) {
-        if (!busy) {
+        if (!busy && !doSave) {
           dateChanges(auth, keyMap, remote, memory, schema);
         }
         syncTimer.current = setInterval(() => {
-          if (!busy) {
+          if (!busy && !doSave) {
             dateChanges(auth, keyMap, remote, memory, schema);
           }
         }, 1000 * 10);
@@ -811,10 +826,10 @@ export function ResponsiveDrawer(props: IProps) {
       };
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [remote, busy, curOrg]);
+  }, [remote, busy, doSave, curOrg]);
 
   useEffect(() => {
-    const media = mediafiles.filter(m => {
+    const media = mediafiles.filter((m) => {
       const planid = related(m, 'plan');
       if (planid !== null) {
         const plan = memory.cache.query((q: QueryBuilder) =>
@@ -1086,14 +1101,14 @@ export function ResponsiveDrawer(props: IProps) {
   components[NavChoice.Media] = (
     <MediaTab
       {...props}
-      projectplans={plans.filter(p => related(p, 'project') === project)}
+      projectplans={plans.filter((p) => related(p, 'project') === project)}
       planColumn={true}
     />
   );
   components[NavChoice.Export] = (
     <TranscriptionTab
       {...props}
-      projectPlans={plans.filter(p => related(p, 'project') === project)}
+      projectPlans={plans.filter((p) => related(p, 'project') === project)}
       planColumn={true}
     />
   );
@@ -1142,7 +1157,7 @@ export function ResponsiveDrawer(props: IProps) {
         </div>
         {!topFilter && (
           <div className={classes.topTranscriber}>
-            <Transcriber auth={auth} setChanged={setChanged} />
+            <Transcriber auth={auth} />
           </div>
         )}
       </div>
@@ -1201,7 +1216,7 @@ export function ResponsiveDrawer(props: IProps) {
                 variant="contained"
                 color="primary"
                 onClick={handleSwitch}
-                disabled={busy}
+                disabled={busy || doSave}
               >
                 {t.admin}
               </Button>
@@ -1229,7 +1244,7 @@ export function ResponsiveDrawer(props: IProps) {
           <HelpMenu />
           <UserMenu action={menuAction} />
         </Toolbar>
-        {(!busy && !importexportBusy) || (
+        {(!busy && !importexportBusy && !doSave) || (
           <AppBar position="fixed" className={classes.progress} color="inherit">
             <LinearProgress variant="indeterminate" />
           </AppBar>
@@ -1279,10 +1294,10 @@ export function ResponsiveDrawer(props: IProps) {
       <main className={classes.content}>{components[content]}</main>
       {alertOpen && (
         <Confirm
-          title={t.unsaved}
-          text={t.loseData}
-          yesResponse={handleUnsaveConfirmed}
-          noResponse={handleUnsaveRefused}
+          title={t.UnsavedData}
+          text={t.saveFirst}
+          yesResponse={handleSaveConfirmed}
+          noResponse={handleSaveRefused}
         />
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}

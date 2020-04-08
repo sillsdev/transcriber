@@ -618,7 +618,7 @@
       </unit>
       <unit id="planSheet.saving">
          <segment>
-            <source>Saving</source>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
@@ -643,6 +643,12 @@
       <unit id="planSheet.passageAbove">
          <segment>
             <source>Insert passage above</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.tablePaste">
+         <segment>
+            <source>Paste Table</source>
             <target/>
          </segment>
       </unit>
@@ -685,6 +691,42 @@
       <unit id="scriptureTable.loadingTable">
          <segment>
             <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteNoRows">
+         <segment>
+            <source>No Rows in clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidColumnsScripture">
+         <segment>
+            <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidColumnsGeneral">
+         <segment>
+            <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidSections">
+         <segment>
+            <source>Invalid section number(s):</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidPassages">
+         <segment>
+            <source>Invalid passage numbers:</source>
             <target/>
          </segment>
       </unit>
@@ -1342,15 +1384,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.unsaved">
+      <unit id="main.UnsavedData">
          <segment>
-            <source>Unsaved</source>
+            <source>Unsaved Data</source>
             <target/>
          </segment>
       </unit>
-      <unit id="main.loseData">
+      <unit id="main.saveFirst">
          <segment>
-            <source>Do you want to leave this page and lose your changes?</source>
+            <source>Do you want to save before leaving this page?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.saving">
+         <segment>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>

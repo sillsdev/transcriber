@@ -136,6 +136,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "confirm": string;
     "sectionAbove": string;
     "passageAbove": string;
+    "tablePaste": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -146,6 +147,12 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "reference": string;
     "description": string;
     "loadingTable": string;
+    "saving": string;
+    "pasteNoRows": string;
+    "pasteInvalidColumnsScripture": string;
+    "pasteInvalidColumnsGeneral": string;
+    "pasteInvalidSections": string;
+    "pasteInvalidPassages": string;
 };
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
@@ -276,8 +283,9 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "reportIssue": string;
     "developer": string;
     "version": string;
-    "unsaved": string;
-    "loseData": string;
+    "UnsavedData": string;
+    "saveFirst": string;
+    "saving": string;
     "newOrganization": string;
     "admin": string;
     "transcribe": string;

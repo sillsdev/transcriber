@@ -146,11 +146,12 @@ const initialState = {
 			"addSection": "Add Section",
 			"addPassage": "Add Passage",
 			"save": "Save",
-			"saving": "Saving",
+			"saving": "Saving...",
 			"selectRows": "Please select row(s) to {0}.",
 			"confirm": "{0} {1} Item(s). Are you sure?",
 			"sectionAbove": "Insert section above",
 			"passageAbove": "Insert passage above",
+			"tablePaste": "Paste Table",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -162,6 +163,12 @@ const initialState = {
 			"reference": "Reference",
 			"description": "Description",
 			"loadingTable": "Loading data",
+			"saving": "Saving...",
+			"pasteNoRows": "No Rows in clipboard.",
+			"pasteInvalidColumnsScripture": "Invalid number of columns ({0}). Expecting 6 columns.",
+			"pasteInvalidColumnsGeneral": "Invalid number of columns ({0}). Expecting 5 columns.",
+			"pasteInvalidSections": "Invalid section number(s):",
+			"pasteInvalidPassages": "Invalid passage numbers:",
 		}
 	}),
 	"assignmentTable": new LocalizedStrings({
@@ -299,8 +306,9 @@ const initialState = {
 			"reportIssue": "Report an Issue",
 			"developer": "Developer mode",
 			"version": "Version: ",
-			"unsaved": "Unsaved",
-			"loseData": "Do you want to leave this page and lose your changes?",
+			"UnsavedData": "Unsaved Data",
+			"saveFirst": "Do you want to save before leaving this page?",
+			"saving": "Saving...",
 			"newOrganization": "Add Organization",
 			"admin": "Admin",
 			"transcribe": "Transcribe",

@@ -418,6 +418,15 @@ const schemaDefinition: SchemaSettings = {
       },
       relationships: {},
     },
+    sectionpassage: {
+      keys: { remoteId: {} },
+      attributes: {
+        data: { type: 'string' },
+        planId: { type: 'number' },
+        uuid: { type: 'string' },
+      },
+      relationships: {},
+    },
   },
 };
 

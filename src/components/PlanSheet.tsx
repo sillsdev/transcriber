@@ -87,14 +87,11 @@ interface IProps extends IStateProps {
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
   updateData: (rows: string[][]) => void;
-  save: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
   addPassage: (i?: number) => void;
   addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
-  changed: boolean;
-  setChanged?: (v: boolean) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -107,13 +104,10 @@ export function PlanSheet(props: IProps) {
     bookMap,
     lookupBook,
     updateData,
-    save,
     action,
     addPassage,
     addSection,
     paste,
-    changed,
-    setChanged,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -132,6 +126,10 @@ export function PlanSheet(props: IProps) {
   const suggestionRef = useRef<Array<OptionType>>();
   const listRef = useRef<Array<string>>();
   const blurRef = useRef<() => void>();
+  const saveTimer = React.useRef<NodeJS.Timeout>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [doSave, setDoSave] = useGlobal('doSave');
+  const [changed, setChanged] = useGlobal('changed');
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -139,13 +137,11 @@ export function PlanSheet(props: IProps) {
   const handleCheck = (row: number) => (e: any) => {
     if (e.target.checked) {
       check.push(row);
-      if (/^[0-9]+$/.test(rowData[row][0].toString())) {
+      const isSection = (row: Array<any>) => /^[0-9]+$/.test(row[0].toString());
+      if (isSection(rowData[row])) {
         do {
           row += 1;
-          if (
-            row === rowData.length ||
-            /^[0-9]+$/.test(rowData[row][0].toString())
-          ) {
+          if (row === rowData.length || isSection(rowData[row])) {
             break;
           }
           check.push(row);
@@ -153,7 +149,7 @@ export function PlanSheet(props: IProps) {
       }
       setCheck([...check]);
     } else {
-      setCheck(check.filter(listIndex => listIndex !== row));
+      setCheck(check.filter((listIndex) => listIndex !== row));
     }
   };
   const handleAddSection = () => {
@@ -165,16 +161,16 @@ export function PlanSheet(props: IProps) {
   const justData = (data: Array<Array<ICell>>) => {
     return data
       .filter((row, rowIndex) => rowIndex > 0)
-      .map(row =>
-        row.filter((row, rowIndex) => rowIndex > 0).map(col => col.value)
+      .map((row) =>
+        row.filter((row, rowIndex) => rowIndex > 0).map((col) => col.value)
       );
   };
   const handleSave = () => {
+    setChanged(false);
     setMessage(<span>{t.saving}</span>);
-    if (save != null) {
-      save(justData(data));
-    }
+    setDoSave(true);
   };
+
   const handleValueRender = (cell: ICell) =>
     cell.className === 'book' && bookMap ? bookMap[cell.value] : cell.value;
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
@@ -206,7 +202,7 @@ export function PlanSheet(props: IProps) {
 
   const doUpdate = (grid: ICell[][]) => {
     updateData(
-      justData(grid).map(row =>
+      justData(grid).map((row) =>
         row.map((cell, cellIndex) =>
           cellIndex !== bookCol && lookupBook !== null
             ? cell
@@ -222,6 +218,7 @@ export function PlanSheet(props: IProps) {
       grid[row][col] = { ...grid[row][col], value };
     });
     if (changes.length > 0) {
+      setChanged(true);
       doUpdate(grid);
     }
   };
@@ -233,7 +230,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (!cell.readOnly) {
+    if (i > 0) {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -250,23 +247,28 @@ export function PlanSheet(props: IProps) {
     setPosition(initialPosition);
   };
 
-  const handlePaste = (clipBoard: string) => {
-    if (projRole !== 'admin') return Array<Array<string>>();
+  const removeBlanks = (clipBoard: string) => {
     const blankLines = /\r?\n\t*\r?\n/;
     const chunks = clipBoard.split(blankLines);
-    const lines = chunks
+    return chunks
       .join('\n')
       .replace(/\r?\n$/, '')
       .split('\n');
-    if (paste)
-      return paste(
-        lines.map(clipBoard =>
-          clipBoard.split('\t').map(v => (typeof v === 'string' ? v.trim() : v))
-        )
+  };
+  const splitAndTrim = (clipBoard: string): string[] =>
+    clipBoard.split('\t').map((v) => (typeof v === 'string' ? v.trim() : v));
+
+  const parsePaste = (clipBoard: string) => {
+    if (projRole !== 'admin') return Array<Array<string>>();
+    return removeBlanks(clipBoard).map((line: string) => splitAndTrim(line));
+  };
+  const handleTablePaste = () => {
+    setMessage(<span>Pasting</span>);
+    navigator.clipboard
+      .readText()
+      .then((clipText) =>
+        paste(removeBlanks(clipText).map((line) => splitAndTrim(line)))
       );
-    return lines.map(clipBoard =>
-      clipBoard.split('\t').map(v => (typeof v === 'string' ? v.trim() : v))
-    );
   };
 
   const handleUp = () => {
@@ -281,13 +283,11 @@ export function PlanSheet(props: IProps) {
     delete myProps.editing;
     delete myProps.updated;
     delete myProps.attributesRenderer;
-    // console.log(myProps);
     return <td {...myProps} onMouseUp={handleUp} />;
   };
 
   const bookEditor = (props: any) => {
     if (projRole !== 'admin') return <></>;
-    if (setChanged) setChanged(true);
     return (
       <BookSelect
         id="book"
@@ -304,7 +304,6 @@ export function PlanSheet(props: IProps) {
 
   const textEditor = (props: any) => {
     if (projRole !== 'admin') return <></>;
-    if (setChanged) setChanged(true);
     return (
       <SheetText
         {...props}
@@ -316,12 +315,39 @@ export function PlanSheet(props: IProps) {
 
   const isNum = (value: string | number) =>
     isNumber(value) || /^[0-9]$/.test(value);
+  const handleAutoSave = () => {
+    if (changed) {
+      handleSave();
+    } else {
+      startSaveTimer();
+    }
+  };
+  const startSaveTimer = () => {
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      handleAutoSave();
+    }, 1000 * 30);
+  };
+  useEffect(() => {
+    if (changed && saveTimer.current === undefined) startSaveTimer();
+    else {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      saveTimer.current = undefined;
+    }
+    return () => {
+      if (saveTimer.current) {
+        clearTimeout(saveTimer.current);
+        saveTimer.current = undefined;
+      }
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [changed]);
 
   useEffect(() => {
     setData(
       [
         [{ value: '', readOnly: true } as ICell].concat(
-          columns.map(col => {
+          columns.map((col) => {
             return { ...col, readOnly: true };
           })
         ),
@@ -364,9 +390,11 @@ export function PlanSheet(props: IProps) {
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
-    listRef.current = bookSuggestions ? bookSuggestions.map(v => v.label) : [];
+    listRef.current = bookSuggestions
+      ? bookSuggestions.map((v) => v.label)
+      : [];
   }, [bookSuggestions]);
-
+  //console.log('plansheet render', new Date().toLocaleTimeString());
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -395,6 +423,17 @@ export function PlanSheet(props: IProps) {
                   disabled={data.length < 2}
                 >
                   {t.addPassage}
+                  <AddIcon className={classes.icon} />
+                </Button>
+                <Button
+                  key="importExcel"
+                  aria-label={t.tablePaste}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleTablePaste}
+                >
+                  {t.tablePaste}
                   <AddIcon className={classes.icon} />
                 </Button>
                 <Button
@@ -446,7 +485,7 @@ export function PlanSheet(props: IProps) {
             // dataRenderer={handleDataRender}
             onContextMenu={handleContextMenu}
             onCellsChanged={handleCellsChanged}
-            parsePaste={handlePaste}
+            parsePaste={parsePaste}
             cellRenderer={myCell}
           />
         </div>

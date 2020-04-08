@@ -132,11 +132,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps {
   auth: Auth;
-  setChanged: (status: boolean) => void;
 }
 
 export function Transcriber(props: IProps) {
-  const { auth, setChanged } = props;
+  const { auth } = props;
   const {
     rowData,
     index,
@@ -173,6 +172,9 @@ export function Transcriber(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = React.useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_changed, setChanged] = useGlobal('changed');
+  const [doSave, setDoSave] = useGlobal('doSave');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
   const [playing, setPlaying] = React.useState(false);
@@ -496,6 +498,14 @@ export function Transcriber(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  React.useEffect(() => {
+    if (doSave) {
+      handleSave();
+      setDoSave(false);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [doSave]);
 
   React.useEffect(() => {
     const commentHeight =

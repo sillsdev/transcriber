@@ -87,6 +87,8 @@ setGlobal({
   bucket: undefined,
   remote: undefined,
   remoteBusy: false,
+  doSave: false,
+  changed: false,
   importexportBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,

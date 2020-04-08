@@ -43,13 +43,12 @@ interface IRecordProps {
 interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
   changeTab?: (v: number) => void;
-  setChanged?: (v: boolean) => void;
   checkSaved: (method: () => void) => void;
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const { t, changeTab, bookCol, setChanged, checkSaved, plans } = props;
+  const { t, changeTab, bookCol, checkSaved, plans } = props;
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
