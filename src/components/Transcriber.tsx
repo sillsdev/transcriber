@@ -153,7 +153,6 @@ export function Transcriber(props: IProps) {
     mediaId,
     state,
     role,
-    assigned,
   } = rowData[index] || {
     section: {} as Section,
     passage: {} as Passage,
@@ -162,7 +161,6 @@ export function Transcriber(props: IProps) {
     mediaId: '',
     state: '',
     role: '',
-    assigned: '',
   };
   const classes = useStyles();
   const theme = useTheme();
@@ -174,6 +172,7 @@ export function Transcriber(props: IProps) {
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
   const [busy] = useGlobal('remoteBusy');
+  const [assigned, setAssigned] = React.useState('');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
   const [playing, setPlaying] = React.useState(false);
@@ -510,7 +509,7 @@ export function Transcriber(props: IProps) {
     const mediafiles = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile')
     ) as MediaFile[];
-    const mediaRec = mediafiles.filter(m => m.id === mediaId);
+    const mediaRec = mediafiles.filter((m) => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
       const transcription = attr.transcription ? attr.transcription : '';
@@ -534,7 +533,7 @@ export function Transcriber(props: IProps) {
   React.useEffect(() => {
     if (project && project !== '') {
       memory
-        .query(q => q.findRecord({ type: 'project', id: project }))
+        .query((q) => q.findRecord({ type: 'project', id: project }))
         .then((r: Project) => {
           setProjData(getFontData(r, offline));
         });
@@ -644,7 +643,7 @@ export function Transcriber(props: IProps) {
       .sort((i, j) =>
         i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
       )
-      .forEach(psc => {
+      .forEach((psc) => {
         if (psc.attributes.state !== curState) {
           curState = psc.attributes.state;
           results.push(historyItem(psc, t.getString(curState)));
@@ -666,7 +665,7 @@ export function Transcriber(props: IProps) {
     )) as PassageStateChange[];
     if (recs && passage?.id) {
       const curStateChanges = recs.filter(
-        r => related(r, 'passage') === passage.id
+        (r) => related(r, 'passage') === passage.id
       );
       setHistoryContent(historyList(curStateChanges));
     }
@@ -676,6 +675,8 @@ export function Transcriber(props: IProps) {
     if (passage?.id) {
       loadHistory();
     }
+    const newAssigned = rowData[index]?.assigned;
+    if (newAssigned !== assigned) setAssigned(newAssigned);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData]);
 

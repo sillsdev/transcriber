@@ -422,6 +422,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     }, [role, project, trackedTask]);
 
     const actor: { [key: string]: string } = {
+      [ActivityStates.TranscribeReady]: 'transcriber',
       [ActivityStates.Reviewing]: 'editor',
       [ActivityStates.Transcribing]: 'transcriber',
       [ActivityStates.Transcribed]: 'editor',
