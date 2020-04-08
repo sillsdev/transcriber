@@ -774,7 +774,7 @@ export function Transcriber(props: IProps) {
                 <span>
                   <IconButton
                     onClick={handleTimer}
-                    disabled={role === 'view' || assigned !== user}
+                    disabled={role === 'view' || assigned !== user || playing}
                   >
                     <>
                       <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -857,6 +857,7 @@ export function Transcriber(props: IProps) {
                       color="primary"
                       className={classes.button}
                       onClick={handleReject}
+                      disabled={playing}
                     >
                       {t.reject}
                     </Button>
@@ -866,6 +867,7 @@ export function Transcriber(props: IProps) {
                         color="primary"
                         className={classes.button}
                         onClick={handleSave}
+                        disabled={playing}
                       >
                         {t.save}
                       </Button>
@@ -882,6 +884,7 @@ export function Transcriber(props: IProps) {
                         color="primary"
                         className={classes.button}
                         onClick={handleSubmit}
+                        disabled={playing}
                       >
                         {t.submit}
                       </Button>
@@ -893,7 +896,7 @@ export function Transcriber(props: IProps) {
                     color="primary"
                     className={classes.button}
                     onClick={handleReopen}
-                    disabled={!previous.hasOwnProperty(state)}
+                    disabled={!previous.hasOwnProperty(state) || playing}
                   >
                     {t.reopen}
                   </Button>
