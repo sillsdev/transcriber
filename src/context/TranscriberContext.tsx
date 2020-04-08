@@ -300,7 +300,15 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         }
       });
       addRows
-        .sort((i, j) => (i.sectPass < j.sectPass ? -1 : 1))
+        .sort((i, j) =>
+          i.planName < j.planName
+            ? -1
+            : i.planName > j.planName
+            ? 1
+            : i.sectPass < j.sectPass
+            ? -1
+            : 1
+        )
         .forEach((r) => rowList.push(r));
     };
 
