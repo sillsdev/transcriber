@@ -100,6 +100,7 @@ export function HelpMenu(props: IProps) {
       const target = !online
         ? path.join(process.cwd(), process.env.REACT_APP_CHM_HELP || '')
         : API_CONFIG.help + '/' + helpLanguage() + '/index.htm';
+      console.log('launching', target);
       shell.openExternal(target);
     } else if (helpRef.current) {
       helpRef.current.click();
