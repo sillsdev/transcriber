@@ -1241,7 +1241,7 @@ export function ResponsiveDrawer(props: IProps) {
             {online ? <Linked /> : <Unlinked />}
           </Tooltip>
           {'\u00A0'}
-          <HelpMenu />
+          <HelpMenu auth={auth} />
           <UserMenu action={menuAction} />
         </Toolbar>
         {(!busy && !importexportBusy && !doSave) || (

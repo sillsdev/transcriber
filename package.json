@@ -169,6 +169,11 @@
         "from": "public/localization",
         "to": "localization",
         "filter": "*.json"
+      },
+      {
+        "from": "help",
+        "to": "help",
+        "filter": "*.chm"
       }
     ]
   }
