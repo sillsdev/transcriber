@@ -884,10 +884,10 @@ export function ResponsiveDrawer(props: IProps) {
     const UrlChoicePart = base + 2;
     let pltype: string | null = null;
     if (parts.length > UrlChoicePart) {
-      const value = parts[UrlChoicePart];
-      if (planChoices.indexOf(value) !== -1) {
+      urlChoice = parts[UrlChoicePart];
+      if (planChoices.indexOf(urlChoice) !== -1) {
         urlChoice = NavChoice.Plans;
-        pltype = value.substr(0, value.indexOf('-'));
+        pltype = urlChoice.substr(0, urlChoice.indexOf('-'));
       } else handleChoice(urlChoice);
     }
     if (urlChoice === NavChoice.Plans) {
