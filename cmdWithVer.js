@@ -23,7 +23,9 @@ var result = cmd
   .replace(/{version}/gi, json.version)
   .replace(/\\n/g, ' >>result.rep 2>>error.rep\n');
 fs.writeFileSync(name, result + ' >>result.rep 2>>error.rep\n');
-var res = spawnSync(name, [], { shell: true });
+var res = !name.endsWith('.ps1')
+  ? spawnSync(name, [], { shell: true })
+  : spawnSync('powershell', ['-File', name], { shell: true });
 fs.unlinkSync(name);
 const decoder = new StringDecoder('utf8');
 if (res.status) {
