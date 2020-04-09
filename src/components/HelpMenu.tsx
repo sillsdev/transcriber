@@ -17,8 +17,6 @@ import ReportIcon from '@material-ui/icons/Report';
 import HelpIcon from '@material-ui/icons/Help';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import Auth from '../auth/Auth';
-import { Online } from '../utils';
 import path from 'path';
 import { API_CONFIG } from '../api-variable';
 const version = require('../../package.json').version;
@@ -74,16 +72,15 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  auth: Auth;
+  online: boolean;
   action?: (what: string) => void;
 }
 
 export function HelpMenu(props: IProps) {
-  const { auth, action, t } = props;
+  const { online, action, t } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
-  const [online, setOnline] = React.useState(false);
   const [developer, setDeveloper] = useGlobal('developer');
   const helpRef = React.useRef<any>();
 
@@ -121,11 +118,6 @@ export function HelpMenu(props: IProps) {
       action(what);
     }
   };
-
-  React.useEffect(() => {
-    Online((isOnline) => setOnline(isOnline), auth);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
 
   return (
     <div>

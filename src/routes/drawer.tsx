@@ -58,8 +58,6 @@ import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
-import Linked from '@material-ui/icons/Link';
-import Unlinked from '@material-ui/icons/LinkOff';
 import { withBucket } from '../hoc/withBucket';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
@@ -1237,11 +1235,7 @@ export function ResponsiveDrawer(props: IProps) {
             )
           )}
           {'\u00A0'}
-          <Tooltip title={t.online}>
-            {online ? <Linked /> : <Unlinked />}
-          </Tooltip>
-          {'\u00A0'}
-          <HelpMenu auth={auth} />
+          <HelpMenu online={online} />
           <UserMenu action={menuAction} />
         </Toolbar>
         {(!busy && !importexportBusy && !doSave) || (
