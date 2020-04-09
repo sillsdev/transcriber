@@ -62,13 +62,13 @@ function TranscribeReject(props: IProps) {
 
   const handleSave = () => {
     doAddOrSave();
-    setInProcess(true);
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNext((event.target as HTMLInputElement).value as ActivityStates);
   };
   const handleCommentChange = (e: any) => setComment(e.target.value);
   const doAddOrSave = async () => {
+    setInProcess(true);
     if (
       next !== passageIn.attributes.state ||
       comment !== passageIn.attributes.lastComment

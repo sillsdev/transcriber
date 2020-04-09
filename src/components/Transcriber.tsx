@@ -281,6 +281,7 @@ export function Transcriber(props: IProps) {
     setRejectVisible(true);
   };
   const handleRejected = async (pass: Passage) => {
+    setRejectVisible(false);
     await memory.update(
       UpdatePassageStateOps(
         pass.id,
