@@ -143,6 +143,7 @@ export function Transcriber(props: IProps) {
     mediaUrl,
     fetchMediaUrl,
     allBookData,
+    selected,
   } = useTodo();
   const {
     section,
@@ -172,8 +173,7 @@ export function Transcriber(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = React.useState('');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_changed, setChanged] = useGlobal('changed');
+  const [changed, setChanged] = useGlobal('changed');
   const [doSave, setDoSave] = useGlobal('doSave');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
@@ -211,7 +211,7 @@ export function Transcriber(props: IProps) {
 
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
-    setChanged(true);
+    if (!changed) setChanged(true);
   };
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
@@ -539,7 +539,7 @@ export function Transcriber(props: IProps) {
       fetchMediaUrl(mediaRemoteId, memory, offline, auth);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [index]);
+  }, [index, selected]);
 
   React.useEffect(() => {
     if (project && project !== '') {
