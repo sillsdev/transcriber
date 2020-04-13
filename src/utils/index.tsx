@@ -1,7 +1,6 @@
 export * from './related';
 export * from './hasRelated';
 export * from './remoteId';
-export * from './slug';
 export * from './online';
 export * from './randomString';
 export * from './setDefaultProj';
@@ -29,3 +28,4 @@ export * from './paratextPath';
 export * from './DataPath';
 export * from './fontChoice';
 export * from './infoMsg';
+export * from './forceLogin';

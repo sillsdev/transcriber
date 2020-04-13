@@ -11,6 +11,9 @@ import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
+import { DrawerWidth, HeadHeight } from '../routes/drawer';
+
+export const TabHeight = 48;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,6 +23,14 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.paper,
       flexDirection: 'column',
     }) as any,
+    bar: {
+      top: `${HeadHeight}px`,
+      left: `${DrawerWidth}px`,
+      width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    content: {
+      paddingTop: `${TabHeight}px`,
+    },
   })
 );
 
@@ -32,13 +43,12 @@ interface IRecordProps {
 interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
   changeTab?: (v: number) => void;
-  setChanged?: (v: boolean) => void;
   checkSaved: (method: () => void) => void;
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const { t, changeTab, bookCol, setChanged, checkSaved, plans } = props;
+  const { t, changeTab, bookCol, checkSaved, plans } = props;
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
@@ -54,7 +64,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
+      <AppBar position="fixed" className={classes.bar} color="default">
         <Tabs
           value={tab}
           onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}
@@ -69,45 +79,50 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           <Tab label={t.transcriptions} />
         </Tabs>
       </AppBar>
-      {tab === 0 && (
-        <>
-          {bookCol !== -1 ? (
-            <ScriptureTable
-              {...props}
-              cols={{
-                SectionSeq: 0,
-                SectionnName: 1,
-                PassageSeq: 2,
-                Book: 3,
-                Reference: 4,
-                Title: 5,
-              }}
-            />
-          ) : (
-            <ScriptureTable
-              {...props}
-              cols={{
-                SectionSeq: 0,
-                SectionnName: 1,
-                PassageSeq: 2,
-                Book: -1,
-                Reference: 3,
-                Title: 4,
-              }}
-            />
-          )}
-        </>
-      )}
-      {tab === 1 && (
-        <MediaTab {...props} projectplans={plans.filter(p => p.id === plan)} />
-      )}
-      {tab === 2 && <AssignmentTable {...props} />}
-      {tab === 3 && (
-        <TranscriptionTab
-          {...props}
-          projectPlans={plans.filter(p => p.id === plan)}
-        />
-      )}
+      <div className={classes.content}>
+        {tab === 0 && (
+          <>
+            {bookCol !== -1 ? (
+              <ScriptureTable
+                {...props}
+                cols={{
+                  SectionSeq: 0,
+                  SectionnName: 1,
+                  PassageSeq: 2,
+                  Book: 3,
+                  Reference: 4,
+                  Title: 5,
+                }}
+              />
+            ) : (
+              <ScriptureTable
+                {...props}
+                cols={{
+                  SectionSeq: 0,
+                  SectionnName: 1,
+                  PassageSeq: 2,
+                  Book: -1,
+                  Reference: 3,
+                  Title: 4,
+                }}
+              />
+            )}
+          </>
+        )}
+        {tab === 1 && (
+          <MediaTab
+            {...props}
+            projectplans={plans.filter(p => p.id === plan)}
+          />
+        )}
+        {tab === 2 && <AssignmentTable {...props} />}
+        {tab === 3 && (
+          <TranscriptionTab
+            {...props}
+            projectPlans={plans.filter(p => p.id === plan)}
+          />
+        )}
+      </div>
     </div>
   );
 };

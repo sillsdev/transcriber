@@ -136,6 +136,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "confirm": string;
     "sectionAbove": string;
     "passageAbove": string;
+    "tablePaste": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -146,6 +147,12 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "reference": string;
     "description": string;
     "loadingTable": string;
+    "saving": string;
+    "pasteNoRows": string;
+    "pasteInvalidColumnsScripture": string;
+    "pasteInvalidColumnsGeneral": string;
+    "pasteInvalidSections": string;
+    "pasteInvalidPassages": string;
 };
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
@@ -240,6 +247,7 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "silTranscriber": string;
+    "online": string;
     "search": string;
     "organization": string;
     "usersAndGroups": string;
@@ -275,8 +283,9 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "reportIssue": string;
     "developer": string;
     "version": string;
-    "planUnsaved": string;
-    "loseData": string;
+    "UnsavedData": string;
+    "saveFirst": string;
+    "saving": string;
     "newOrganization": string;
     "admin": string;
     "transcribe": string;
@@ -322,9 +331,10 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "exportExplanation": string;
     "exportPTFtype": string;
     "exportITFtype": string;
+    "cancel": string;
     "exportingProject": string;
     "error": string;
-    "downloadComplete": string;
+    "downloading": string;
     "expiredToken": string;
 };
 
@@ -600,6 +610,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "done": string;
     "needsNewRecording": string;
     "synced": string;
+    "incomplete": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
@@ -615,6 +626,7 @@ export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMetho
 
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "name": string;
+    "userExists": string;
     "given": string;
     "family": string;
     "email": string;

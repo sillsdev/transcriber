@@ -17,9 +17,14 @@ import ReportIcon from '@material-ui/icons/Report';
 import HelpIcon from '@material-ui/icons/Help';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import path from 'path';
 import { API_CONFIG } from '../api-variable';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
+
+const isElectron = process.env.REACT_APP_MODE === 'electron';
+const noop = { openExternal: () => {} };
+const { shell } = isElectron ? require('electron') : { shell: noop };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,7 +56,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const StyledMenuItem = withStyles(theme => ({
+const StyledMenuItem = withStyles((theme) => ({
   root: {
     '&:focus': {
       backgroundColor: theme.palette.primary.main,
@@ -67,22 +72,43 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
+  online: boolean;
   action?: (what: string) => void;
 }
 
 export function HelpMenu(props: IProps) {
-  const { action, t } = props;
+  const { online, action, t } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
   const [developer, setDeveloper] = useGlobal('developer');
+  const helpRef = React.useRef<any>();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleDeveloper = (event: React.MouseEvent<HTMLElement>) => {
+  const helpLanguage = () => {
+    let language = navigator.language.split('-')[0];
+    if (!['fr', 'es'].includes(language)) language = 'en';
+    return language;
+  };
+
+  const handleHelp = () => {
+    if (isElectron) {
+      const target = !online
+        ? path.join(process.cwd(), process.env.REACT_APP_CHM_HELP || '')
+        : API_CONFIG.help + '/' + helpLanguage() + '/index.htm';
+      console.log('launching', target);
+      shell.openExternal(target);
+    } else if (helpRef.current) {
+      helpRef.current.click();
+    }
+    setAnchorEl(null);
+  };
+
+  const handleDeveloper = () => {
     setDeveloper(!developer);
     setAnchorEl(null);
   };
@@ -93,9 +119,6 @@ export function HelpMenu(props: IProps) {
       action(what);
     }
   };
-
-  let language = navigator.language.split('-')[0];
-  if (!['fr', 'es'].includes(language)) language = 'en';
 
   return (
     <div>
@@ -114,19 +137,12 @@ export function HelpMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <a
-          href={API_CONFIG.help + '/' + language}
-          style={{ textDecoration: 'none' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <StyledMenuItem>
-            <ListItemIcon>
-              <HelpIcon />
-            </ListItemIcon>
-            <ListItemText primary={t.helpCenter} />
-          </StyledMenuItem>
-        </a>
+        <StyledMenuItem onClick={handleHelp}>
+          <ListItemIcon>
+            <HelpIcon />
+          </ListItemIcon>
+          <ListItemText primary={t.helpCenter} />
+        </StyledMenuItem>
         <a
           href={API_CONFIG.community}
           style={{ textDecoration: 'none' }}
@@ -160,6 +176,13 @@ export function HelpMenu(props: IProps) {
           />
         </StyledMenuItem>
       </StyledMenu>
+      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
+      <a
+        ref={helpRef}
+        href={API_CONFIG.help + '/' + helpLanguage()}
+        target="_blank"
+        rel="noopener noreferrer"
+      ></a>
     </div>
   );
 }

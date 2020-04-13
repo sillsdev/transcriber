@@ -5,6 +5,7 @@ import {
   BookNameMap,
   BookNameMsgs,
 } from './types';
+import { SET_LANGUAGE, LocalizationMsgs } from '../localization/types';
 import { OptionType } from '../../components/ReactSelect';
 
 export const bookCleanState = {
@@ -26,7 +27,7 @@ const makeMap = (books: BookName[]) => {
 
 export default function(
   state = bookCleanState,
-  action: BookNameMsgs
+  action: BookNameMsgs | LocalizationMsgs
 ): IBookNameData {
   switch (action.type) {
     case FETCH_BOOKS:
@@ -40,6 +41,11 @@ export default function(
           }),
         map: makeMap(action.payload.data),
         bookData: action.payload.data,
+      };
+    case SET_LANGUAGE:
+      return {
+        ...state,
+        loaded: false,
       };
     default:
       return state;

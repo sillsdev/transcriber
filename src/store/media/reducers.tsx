@@ -3,7 +3,7 @@ import * as type from './types';
 export const mediaCleanState: type.IMediaState = {
   loaded: false,
   url: '',
-  selected: '',
+  trackedTask: '',
 };
 
 export default function(
@@ -26,7 +26,7 @@ export default function(
     case type.SET_SELECTED:
       return {
         ...state,
-        selected: action.payload,
+        trackedTask: action.payload,
       };
     default:
       return { ...state };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -15,6 +16,7 @@ import {
   MediaFile,
   ActivityStates,
   FileResponse,
+  BookName,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -29,6 +31,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  AppBar,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
 import SoundIcon from '@material-ui/icons/Audiotrack';
@@ -55,6 +58,10 @@ import {
   remoteIdNum,
   getMediaName,
 } from '../utils';
+import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { TabHeight } from './PlanTabs';
+
+const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,6 +69,18 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
+    bar: {
+      top: `calc(${TabHeight}px + ${HeadHeight}px)`,
+      left: `${DrawerWidth}px`,
+      height: `${ActionHeight}px`,
+      width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    highBar: {
+      top: `${HeadHeight}px`,
+    },
+    content: {
+      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+    },
     actions: theme.mixins.gutters({
       paddingBottom: 16,
       display: 'flex',
@@ -115,8 +134,8 @@ const getSection = (section: Section) => {
 };
 
 /* build the passage name = sequence + book + reference */
-const getReference = (passage: Passage) => {
-  return passageDescription(passage);
+const getReference = (passage: Passage, bookData: BookName[] = []) => {
+  return passageDescription(passage, bookData);
 };
 
 const getAssignments = (
@@ -124,7 +143,8 @@ const getAssignments = (
   passages: Array<Passage>,
   sections: Array<Section>,
   users: Array<User>,
-  activityState: IActivityStateStrings
+  activityState: IActivityStateStrings,
+  bookData: BookName[]
 ) => {
   const rowData: IRow[] = [];
   projectPlans.forEach(planRec => {
@@ -153,7 +173,7 @@ const getAssignments = (
               : '';
           rowData.push({
             id: passage.id,
-            name: getReference(passage),
+            name: getReference(passage, bookData),
             state: state,
             planName: planRec.attributes.name,
             editor: '',
@@ -176,6 +196,7 @@ interface IStateProps {
   mediaUrl: string;
   exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
+  allBookData: BookName[];
 }
 
 interface IDispatchProps {
@@ -220,6 +241,7 @@ export function TranscriptionTab(props: IProps) {
     exportComplete,
     exportStatus,
     exportFile,
+    allBookData,
   } = props;
   const classes = useStyles();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -355,7 +377,7 @@ export function TranscriptionTab(props: IProps) {
         exportAnchor.current.click();
         URL.revokeObjectURL(exportUrl);
         setExportUrl(undefined);
-        showMessage(t.exportProject, exportName + ' ' + t.downloadComplete);
+        showMessage(t.exportProject, t.downloading.replace('{0}', exportName));
         setExportName('');
         exportComplete();
         setBusy(false);
@@ -414,9 +436,25 @@ export function TranscriptionTab(props: IProps) {
 
   useEffect(() => {
     setData(
-      getAssignments(projectPlans, passages, sections, users, activityState)
+      getAssignments(
+        projectPlans,
+        passages,
+        sections,
+        users,
+        activityState,
+        allBookData
+      )
     );
-  }, [plan, projectPlans, passages, sections, users, roles, activityState]);
+  }, [
+    plan,
+    projectPlans,
+    passages,
+    sections,
+    users,
+    roles,
+    activityState,
+    allBookData,
+  ]);
 
   interface ICell {
     value: string;
@@ -522,21 +560,21 @@ export function TranscriptionTab(props: IProps) {
         aria-labelledby="which-export-title"
         aria-describedby="which-export-description"
       >
-        <DialogTitle id="which-export-title">
-          {'Which export type?'}
-        </DialogTitle>
+        <DialogTitle id="which-export-title">{t.exportType}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Export a full backup to store locally. Export incremental file to
-            import into online app.
+            {t.exportExplanation}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button onClick={closeNoChoice} color="default">
+            {t.cancel}
+          </Button>
           <Button onClick={doPTF} color="primary">
-            Full Backup (ptf)
+            {t.exportPTFtype}
           </Button>
           <Button onClick={doITF} color="primary" autoFocus>
-            Incremental Changes (itf)
+            {t.exportITFtype}
           </Button>
         </DialogActions>
       </Dialog>
@@ -546,65 +584,74 @@ export function TranscriptionTab(props: IProps) {
   return (
     <div id="TranscriptionTab" className={classes.container}>
       <div className={classes.paper}>
-        <div className={classes.actions}>
-          {planColumn && (
+        <AppBar
+          position="fixed"
+          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          color="default"
+        >
+          <div className={classes.actions}>
+            {planColumn && (
+              <Button
+                key="export"
+                aria-label={t.exportProject}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleProjectExport}
+                title={t.exportProject}
+              >
+                {t.exportProject}
+              </Button>
+            )}
+            <div className={classes.grow}>{'\u00A0'}</div>
             <Button
-              key="export"
-              aria-label={t.exportProject}
-              variant="contained"
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
               color="primary"
               className={classes.button}
-              onClick={handleProjectExport}
-              title={t.exportProject}
+              onClick={handleFilter}
+              title={'Show/Hide filter rows'}
             >
-              {t.exportProject}
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
             </Button>
-          )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
-            key="filter"
-            aria-label={t.filter}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleFilter}
-            title={'Show/Hide filter rows'}
-          >
-            {t.filter}
-            {filter ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
-            )}
-          </Button>
+          </div>
+        </AppBar>
+        <div className={classes.content}>
+          <TreeGrid
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            rows={data}
+            getChildRows={getChildRows}
+            cellComponent={TreeCell}
+            dataCell={DataCell}
+            pageSizes={[]}
+            tableColumnExtensions={[
+              { columnName: 'passages', align: 'right' },
+              { columnName: 'name', wordWrapEnabled: true },
+            ]}
+            groupingStateColumnExtensions={[
+              { columnName: 'name', groupingEnabled: false },
+              { columnName: 'passages', groupingEnabled: false },
+            ]}
+            sorting={[
+              { columnName: 'planName', direction: 'asc' },
+              { columnName: 'name', direction: 'asc' },
+            ]}
+            treeColumn={'name'}
+            showfilters={filter}
+            showgroups={filter}
+            showSelection={false}
+            defaultHiddenColumnNames={defaultHiddenColumnNames}
+          />
         </div>
-        <TreeGrid
-          columns={columnDefs}
-          columnWidths={columnWidths}
-          rows={data}
-          getChildRows={getChildRows}
-          cellComponent={TreeCell}
-          dataCell={DataCell}
-          pageSizes={[]}
-          tableColumnExtensions={[
-            { columnName: 'passages', align: 'right' },
-            { columnName: 'name', wordWrapEnabled: true },
-          ]}
-          groupingStateColumnExtensions={[
-            { columnName: 'name', groupingEnabled: false },
-            { columnName: 'passages', groupingEnabled: false },
-          ]}
-          sorting={[
-            { columnName: 'planName', direction: 'asc' },
-            { columnName: 'name', direction: 'asc' },
-          ]}
-          treeColumn={'name'}
-          showfilters={filter}
-          showgroups={filter}
-          showSelection={false}
-          defaultHiddenColumnNames={defaultHiddenColumnNames}
-        />{' '}
       </div>
+
       {passageId !== '' ? (
         <TranscriptionShow
           passageId={passageId}
@@ -639,6 +686,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   mediaUrl: state.media.url,
   exportFile: state.importexport.exportFile,
   exportStatus: state.importexport.importexportStatus,
+  allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

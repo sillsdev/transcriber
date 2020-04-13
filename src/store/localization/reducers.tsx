@@ -146,11 +146,12 @@ const initialState = {
 			"addSection": "Add Section",
 			"addPassage": "Add Passage",
 			"save": "Save",
-			"saving": "Saving",
+			"saving": "Saving...",
 			"selectRows": "Please select row(s) to {0}.",
 			"confirm": "{0} {1} Item(s). Are you sure?",
 			"sectionAbove": "Insert section above",
 			"passageAbove": "Insert passage above",
+			"tablePaste": "Paste Table",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -162,6 +163,12 @@ const initialState = {
 			"reference": "Reference",
 			"description": "Description",
 			"loadingTable": "Loading data",
+			"saving": "Saving...",
+			"pasteNoRows": "No Rows in clipboard.",
+			"pasteInvalidColumnsScripture": "Invalid number of columns ({0}). Expecting 6 columns.",
+			"pasteInvalidColumnsGeneral": "Invalid number of columns ({0}). Expecting 5 columns.",
+			"pasteInvalidSections": "Invalid section number(s):",
+			"pasteInvalidPassages": "Invalid passage numbers:",
 		}
 	}),
 	"assignmentTable": new LocalizedStrings({
@@ -263,6 +270,7 @@ const initialState = {
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"silTranscriber": "SIL Transcriber",
+			"online": "Online Status",
 			"search": "Search…",
 			"organization": "Org Details",
 			"usersAndGroups": "Users and Groups",
@@ -291,15 +299,16 @@ const initialState = {
 			"projRole": "Role in Project:",
 			"owner": "Owner",
 			"clearCache": "Clear cache",
-			"clearLogout": "Logout and Force Data Reload",
+			"clearLogout": "Log Out and Force Data Reload",
 			"inviteError": "Invitation not accepted.  You must login with the email that the invitation was sent to.",
 			"deletedInvitation": "Invitation is no longer valid.",
 			"helpCenter": "Help Center",
 			"reportIssue": "Report an Issue",
 			"developer": "Developer mode",
 			"version": "Version: ",
-			"planUnsaved": "Plan Unsaved",
-			"loseData": "Do you want to leave this page and lose your changes?",
+			"UnsavedData": "Unsaved Data",
+			"saveFirst": "Do you want to save before leaving this page?",
+			"saving": "Saving...",
 			"newOrganization": "Add Organization",
 			"admin": "Admin",
 			"transcribe": "Transcribe",
@@ -321,7 +330,7 @@ const initialState = {
 		"en": {
 			"import": "Import",
 			"importProject": "Import Project",
-			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
+			"expiredToken": "Your log in token has expired and can't be automatically renewed.  Please log out and login again.",
 			"error": "Import Error",
 			"onlineChangeReport": "Online changes made since data provided to offline user:",
 			"noFile": "Please select file to be uploaded.",
@@ -347,10 +356,11 @@ const initialState = {
 			"exportExplanation": "Export a full backup to store locally. Export incremental file to import into online app.",
 			"exportPTFtype": "Full Backup (ptf)",
 			"exportITFtype": "Incremental Changes (itf)",
-			"exportingProject": "Exporting Project",
+			"cancel": "Cancel",
+			"exportingProject": "Creating export file",
 			"error": "Export Error",
-			"downloadComplete": "Download complete",
-			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
+			"downloading": "Creation complete. Downloading {0}",
+			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
 		}
 	}),
 	"transcriptionShow": new LocalizedStrings({
@@ -584,8 +594,8 @@ const initialState = {
 			"countPending": "Querying count...",
 			"usernamePending": "Querying username...",
 			"offline": "Offline",
-			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please logout and login again.",
-			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please logout and login again.",
+			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
+			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please log out and login again.",
 			"invalidParatextLogin": "You must login with a valid paratext login to sync projects.",
 			"questionOnline": "Are you connected to the Internet?",
 			"questionInstalled": "Is Paratext installed locally?",
@@ -642,6 +652,7 @@ const initialState = {
 			"done": "Completed",
 			"needsNewRecording": "Rejected task",
 			"synced": "Completed",
+			"incomplete": "Incomplete transcripiton",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({
@@ -659,6 +670,7 @@ const initialState = {
 	"profile": new LocalizedStrings({
 		"en": {
 			"name": "Full Name",
+			"userExists": "This offline user exists.",
 			"given": "Given Name",
 			"family": "Family Name",
 			"email": "Email",

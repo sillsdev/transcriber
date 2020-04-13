@@ -8,6 +8,7 @@ import {
   Passage,
   IPassageMediaStrings,
   ActivityStates,
+  BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -51,6 +52,7 @@ interface ILatest {
 
 interface IStateProps {
   t: IPassageMediaStrings;
+  allBookData: BookName[];
 }
 
 interface IRecordProps {
@@ -65,7 +67,15 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 function PassageMedia(props: IProps) {
-  const { passages, mediaFiles, sections, t, visible, closeMethod } = props;
+  const {
+    passages,
+    mediaFiles,
+    sections,
+    t,
+    visible,
+    closeMethod,
+    allBookData,
+  } = props;
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
@@ -231,7 +241,10 @@ function PassageMedia(props: IProps) {
               inputProps={{ 'aria-labelledby': labelId }}
             />
           </ListItemIcon>
-          <ListItemText id={labelId} primary={passageReference(p)} />
+          <ListItemText
+            id={labelId}
+            primary={passageReference(p, allBookData)}
+          />
         </ListItem>
       );
     });
@@ -274,7 +287,7 @@ function PassageMedia(props: IProps) {
           id={labelId}
           primary={
             <span>
-              {passageReference(passage as Passage)}
+              {passageReference(passage as Passage, allBookData)}
               {/* <ArrowForwardIcon fontSize="small" /> */}
               {'\u00A0\u2192\u00A0' /* Foward arrow */}
               {m.attributes.originalFile}
@@ -362,6 +375,7 @@ function PassageMedia(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageMedia' }),
+  allBookData: state.books.bookData,
 });
 
 const mapRecordsToProps = {

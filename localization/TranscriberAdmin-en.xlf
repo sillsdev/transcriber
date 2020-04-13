@@ -618,7 +618,7 @@
       </unit>
       <unit id="planSheet.saving">
          <segment>
-            <source>Saving</source>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
@@ -643,6 +643,12 @@
       <unit id="planSheet.passageAbove">
          <segment>
             <source>Insert passage above</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.tablePaste">
+         <segment>
+            <source>Paste Table</source>
             <target/>
          </segment>
       </unit>
@@ -685,6 +691,42 @@
       <unit id="scriptureTable.loadingTable">
          <segment>
             <source>Loading data</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteNoRows">
+         <segment>
+            <source>No Rows in clipboard.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidColumnsScripture">
+         <segment>
+            <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidColumnsGeneral">
+         <segment>
+            <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidSections">
+         <segment>
+            <source>Invalid section number(s):</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidPassages">
+         <segment>
+            <source>Invalid passage numbers:</source>
             <target/>
          </segment>
       </unit>
@@ -1126,6 +1168,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.online">
+         <segment>
+            <source>Online Status</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.search">
          <segment>
             <source>Search…</source>
@@ -1296,7 +1344,7 @@
       </unit>
       <unit id="main.clearLogout">
          <segment>
-            <source>Logout and Force Data Reload</source>
+            <source>Log Out and Force Data Reload</source>
             <target/>
          </segment>
       </unit>
@@ -1336,15 +1384,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.planUnsaved">
+      <unit id="main.UnsavedData">
          <segment>
-            <source>Plan Unsaved</source>
+            <source>Unsaved Data</source>
             <target/>
          </segment>
       </unit>
-      <unit id="main.loseData">
+      <unit id="main.saveFirst">
          <segment>
-            <source>Do you want to leave this page and lose your changes?</source>
+            <source>Do you want to save before leaving this page?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.saving">
+         <segment>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
@@ -1452,7 +1506,7 @@
       </unit>
       <unit id="import.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -1582,9 +1636,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportingProject">
          <segment>
-            <source>Exporting Project</source>
+            <source>Creating export file</source>
             <target/>
          </segment>
       </unit>
@@ -1594,15 +1654,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionTab.downloadComplete">
+      <unit id="transcriptionTab.downloading">
          <segment>
-            <source>Download complete</source>
+            <source>Creation complete. Downloading {0}</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -2622,13 +2682,13 @@
       </unit>
       <unit id="integration.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
       <unit id="integration.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -2944,6 +3004,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.incomplete">
+         <segment>
+            <source>Incomplete transcripiton</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>
@@ -2995,6 +3061,12 @@
       <unit id="profile.name">
          <segment>
             <source>Full Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.userExists">
+         <segment>
+            <source>This offline user exists.</source>
             <target/>
          </segment>
       </unit>

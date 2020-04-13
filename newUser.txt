@@ -14,16 +14,4 @@ If you are just getting started and would like to try transcribing, you may find
 
 In addition to the web version, we also have a Desktop Extension which will allow transcribers to work without an Internet Connection. Let us know if that would help with your desired work flow.
 
-I just finished updating the production version to 0.6.6. You will see the following changes since 0.6.5:
-- TT-1235 Change Reviewer to Editor
-- TT-1233 Enable reviewers to Editor
-- TT-1224 Improve signup
-- TT-1217 Require assignment to work
-- TT-1121 Welcome screen improvements
-- TT-890 Swith to same project
-- Improve drawer navigation
-- Allow users & Groups and Org Details with no projects
-- Update dependencies
-- Load data from a single API call
-- Change relationship of passages-sections to 1-1
-- Fix path for offline media 
+The latest version is 0.7.4 but I plan to deploy 0.7.5 later this week.

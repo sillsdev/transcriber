@@ -243,6 +243,7 @@ export function OrgSettings(props: IProps) {
                   style={textStyle}
                   variant="filled"
                   required={true}
+                  disabled={API_CONFIG.isApp}
                 />
               }
               label=""
@@ -271,6 +272,7 @@ export function OrgSettings(props: IProps) {
                   style={textStyle}
                   variant="filled"
                   required={false}
+                  disabled={API_CONFIG.isApp}
                 />
               }
               label=""
@@ -288,6 +290,7 @@ export function OrgSettings(props: IProps) {
                     style={textStyle}
                     variant="filled"
                     required={false}
+                    disabled={API_CONFIG.isApp}
                   />
                   <IconButton
                     color="primary"

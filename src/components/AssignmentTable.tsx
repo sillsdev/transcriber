@@ -9,12 +9,13 @@ import {
   IAssignmentTableStrings,
   IActivityStateStrings,
   Role,
+  BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, AppBar } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import SnackBar from './SnackBar';
@@ -31,6 +32,10 @@ import {
   sectionCompare,
 } from '../utils';
 import { passageDescription, passageCompare } from '../utils';
+import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { TabHeight } from './PlanTabs';
+
+const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,6 +43,15 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
+    bar: {
+      top: `calc(${HeadHeight}px + ${TabHeight}px)`,
+      left: `${DrawerWidth}px`,
+      height: `${ActionHeight}px`,
+      width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    content: {
+      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+    },
     actions: theme.mixins.gutters({
       paddingBottom: 16,
       display: 'flex',
@@ -77,7 +91,8 @@ const getAssignments = (
   passages: Array<Passage>,
   sections: Array<Section>,
   users: Array<User>,
-  activityState: IActivityStateStrings
+  activityState: IActivityStateStrings,
+  bookData: BookName[]
 ) => {
   let sectionRow: IRow;
   const rowData: IRow[] = [];
@@ -106,7 +121,7 @@ const getAssignments = (
         : '';
       rowData.push({
         id: passage.id,
-        name: passageDescription(passage),
+        name: passageDescription(passage, bookData),
         state: state,
         editor: '',
         transcriber: '',
@@ -121,6 +136,7 @@ const getAssignments = (
 interface IStateProps {
   activityState: IActivityStateStrings;
   t: IAssignmentTableStrings;
+  allBookData: BookName[];
 }
 
 interface IRecordProps {
@@ -136,7 +152,15 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function AssignmentTable(props: IProps) {
-  const { activityState, t, passages, sections, users, roles } = props;
+  const {
+    activityState,
+    t,
+    passages,
+    sections,
+    users,
+    roles,
+    allBookData,
+  } = props;
   const [memory] = useGlobal('memory');
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -229,77 +253,90 @@ export function AssignmentTable(props: IProps) {
   const handleFilter = () => setFilter(!filter);
 
   useEffect(() => {
-    setData(getAssignments(plan, passages, sections, users, activityState));
-  }, [plan, passages, sections, users, roles, activityState]);
+    setData(
+      getAssignments(
+        plan,
+        passages,
+        sections,
+        users,
+        activityState,
+        allBookData
+      )
+    );
+  }, [plan, passages, sections, users, roles, activityState, allBookData]);
 
   return (
     <div id="AssignmentTable" className={classes.container}>
       <div className={classes.paper}>
-        <div className={classes.actions}>
-          {projRole === 'admin' && (
-            <>
-              <Button
-                key="assign"
-                aria-label={t.assignSec}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleAssignSection(true)}
-                title={t.assignSec}
-              >
-                {t.assignSec}
-              </Button>
-              <Button
-                key="remove"
-                aria-label={t.removeSec}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleRemoveAssignments}
-                title={t.removeSec}
-              >
-                {t.removeSec}
-              </Button>
-            </>
-          )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
-            key="filter"
-            aria-label={t.filter}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleFilter}
-            title={'Show/Hide filter rows'}
-          >
-            {t.filter}
-            {filter ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
+        <AppBar position="fixed" className={classes.bar} color="default">
+          <div className={classes.actions}>
+            {projRole === 'admin' && (
+              <>
+                <Button
+                  key="assign"
+                  aria-label={t.assignSec}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAssignSection(true)}
+                  title={t.assignSec}
+                >
+                  {t.assignSec}
+                </Button>
+                <Button
+                  key="remove"
+                  aria-label={t.removeSec}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleRemoveAssignments}
+                  title={t.removeSec}
+                >
+                  {t.removeSec}
+                </Button>
+              </>
             )}
-          </Button>
+            <div className={classes.grow}>{'\u00A0'}</div>
+            <Button
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleFilter}
+              title={'Show/Hide filter rows'}
+            >
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
+            </Button>
+          </div>
+        </AppBar>
+        <div className={classes.content}>
+          <TreeGrid
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            rows={data}
+            getChildRows={getChildRows}
+            pageSizes={[]}
+            tableColumnExtensions={[
+              { columnName: 'passages', align: 'right' },
+              { columnName: 'name', wordWrapEnabled: true },
+            ]}
+            groupingStateColumnExtensions={[
+              { columnName: 'name', groupingEnabled: false },
+              { columnName: 'passages', groupingEnabled: false },
+            ]}
+            sorting={[{ columnName: 'name', direction: 'asc' }]}
+            treeColumn={'name'}
+            showfilters={filter}
+            showgroups={filter}
+            select={handleCheck}
+          />
         </div>
-        <TreeGrid
-          columns={columnDefs}
-          columnWidths={columnWidths}
-          rows={data}
-          getChildRows={getChildRows}
-          pageSizes={[]}
-          tableColumnExtensions={[
-            { columnName: 'passages', align: 'right' },
-            { columnName: 'name', wordWrapEnabled: true },
-          ]}
-          groupingStateColumnExtensions={[
-            { columnName: 'name', groupingEnabled: false },
-            { columnName: 'passages', groupingEnabled: false },
-          ]}
-          sorting={[{ columnName: 'name', direction: 'asc' }]}
-          treeColumn={'name'}
-          showfilters={filter}
-          showgroups={filter}
-          select={handleCheck}
-        />{' '}
       </div>
       <AssignSection
         sections={getSelectedSections()}
@@ -324,6 +361,7 @@ export function AssignmentTable(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'assignmentTable' }),
   activityState: localStrings(state, { layout: 'activityState' }),
+  allBookData: state.books.bookData,
 });
 
 const mapRecordsToProps = {

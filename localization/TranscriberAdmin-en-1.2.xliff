@@ -720,7 +720,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="planSheet.saving">
-                <source>Saving</source>
+                <source>Saving...</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -749,6 +749,13 @@
         	</trans-unit>
         	<trans-unit id="planSheet.passageAbove">
         		<source>Insert passage above</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.tablePaste">
+        		<source>Paste Table</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -798,6 +805,48 @@
             </trans-unit>
             <trans-unit id="scriptureTable.loadingTable">
                 <source>Loading data</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ScriptureTable.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="scriptureTable.saving">
+                <source>Saving...</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ScriptureTable.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="scriptureTable.pasteNoRows">
+                <source>No Rows in clipboard.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ScriptureTable.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="scriptureTable.pasteInvalidColumnsScripture">
+                <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ScriptureTable.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="scriptureTable.pasteInvalidColumnsGeneral">
+                <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ScriptureTable.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="scriptureTable.pasteInvalidSections">
+                <source>Invalid section number(s):</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ScriptureTable.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="scriptureTable.pasteInvalidPassages">
+                <source>Invalid passage numbers:</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -1314,14 +1363,21 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.search">
-                <source>Search…</source>
+            <trans-unit id="main.online">
+                <source>Online Status</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.organization">
+        	<trans-unit id="main.search">
+        		<source>Search…</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.organization">
                 <source>Org Details</source>
                 <target/>
                 <context-group>
@@ -1511,7 +1567,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="main.clearLogout">
-                <source>Logout and Force Data Reload</source>
+                <source>Log Out and Force Data Reload</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Loading.tsx</context>
@@ -1559,15 +1615,22 @@
                     <context context-type="sourcefile">HelpMenu.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.planUnsaved">
-                <source>Plan Unsaved</source>
+            <trans-unit id="main.UnsavedData">
+                <source>Unsaved Data</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.loseData">
-                <source>Do you want to leave this page and lose your changes?</source>
+            <trans-unit id="main.saveFirst">
+                <source>Do you want to save before leaving this page?</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">drawer.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="main.saving">
+                <source>Saving...</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>
@@ -1693,7 +1756,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="import.expiredToken">
-                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ExportTab.tsx</context>
@@ -1846,8 +1909,15 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.exportingProject">
-        		<source>Exporting Project</source>
+        	<trans-unit id="transcriptionTab.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.exportingProject">
+        		<source>Creating export file</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
@@ -1860,15 +1930,15 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.downloadComplete">
-                <source>Download complete</source>
+            <trans-unit id="transcriptionTab.downloading">
+                <source>Creation complete. Downloading {0}</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ExportTab.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="transcriptionTab.expiredToken">
-                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ExportTab.tsx</context>
@@ -3058,14 +3128,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.expiredToken">
-                <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="integration.expiredParatextToken">
-                <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+                <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
@@ -3434,6 +3504,13 @@
         			<context context-type="sourcefile">Transcriber.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriber.incomplete">
+        		<source>Incomplete transcripiton</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcribeReject.rejectTitle">
         		<source>Rejection</source>
         		<target/>
@@ -3492,6 +3569,13 @@
         	</trans-unit>
         	<trans-unit id="profile.name">
         		<source>Full Name</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.userExists">
+        		<source>This offline user exists.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>

@@ -616,7 +616,7 @@
 		<unit id="planSheet.saving">
          <segment>
             <source>Saving</source>
-         	<target>Épargner</target>
+         	<target>Épargner...</target>
          </segment>
       </unit>
       <unit id="planSheet.selectRows">
@@ -643,6 +643,12 @@
 				<target>Insérer passage ci-dessus</target>
 			</segment>
 		</unit>
+      <unit id="planSheet.tablePaste">
+         <segment>
+            <source>Paste Table</source>
+				<target>Coller la table</target>
+         </segment>
+      </unit>
 		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
@@ -685,7 +691,43 @@
 				<target>Chargement des données</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.title">
+      <unit id="scriptureTable.saving">
+         <segment>
+            <source>Saving...</source>
+         	<target>Épargner...</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteNoRows">
+         <segment>
+            <source>No Rows in clipboard.</source>
+         	<target>Aucune ligne dans le presse-papiers.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidColumnsScripture">
+         <segment>
+            <source>Invalid number of columns ({0}). Expecting 6 columns.</source>
+         	<target>Nombre de colonnes non valide ({0}). Attend 6 colonnes.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidColumnsGeneral">
+         <segment>
+            <source>Invalid number of columns ({0}). Expecting 5 columns.</source>
+         	<target>Nombre de colonnes non valide ({0}). Attend 5 colonnes.</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidSections">
+         <segment>
+            <source>Invalid section number(s):</source>
+          	<target>Numéros de section non valides:</target>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.pasteInvalidPassages">
+         <segment>
+            <source>Invalid passage numbers:</source>
+         	<target>Numéros de passage non valides:</target>
+         </segment>
+      </unit>
+        <unit id="assignmentTable.title">
          <segment>
             <source>Assignments</source>
          	<target>Affectations</target>
@@ -1123,6 +1165,12 @@
 				<target>SIL Transcriber</target>
 			</segment>
 		</unit>
+		<unit id="main.online">
+			<segment>
+				<source>Online Status</source>
+				<target>Statut en ligne</target>
+			</segment>
+		</unit>
 		<unit id="main.search">
 			<segment>
 				<source>Search…</source>
@@ -1293,7 +1341,7 @@
       </unit>
       <unit id="main.clearLogout">
          <segment>
-            <source>Logout and Force Data Reload</source>
+            <source>Log Out and Force Data Reload</source>
             <target>Déconnexion et forcer le rechargement des données</target>
          </segment>
       </unit>
@@ -1333,16 +1381,22 @@
          	<target>Version: </target>
          </segment>
       </unit>
-      <unit id="main.planUnsaved">
+      <unit id="main.UnsavedData">
          <segment>
-			<source>Plan Unsaved</source>
-			<target>Programme Non Sauvegardé</target>
+            <source>Unsaved Data</source>
+         	<target>Données non enregistrées</target>
          </segment>
       </unit>
-      <unit id="main.loseData">
+      <unit id="main.saveFirst">
          <segment>
-			<source>Do you want to leave this page and lose your changes?</source>
-			<target>Voulez-vous quitter cette page et perdre vos modifications ?</target>
+            <source>Do you want to save before leaving this page?</source>
+         	<target>Voulez-vous enregistrer avant de quitter cette page?</target>
+         </segment>
+      </unit>
+      <unit id="main.saving">
+         <segment>
+            <source>Saving...</source>
+         	<target>Épargner...</target>
          </segment>
       </unit>
       <unit id="main.newOrganization">
@@ -1449,7 +1503,7 @@
       </unit>
       <unit id="import.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
         </segment>
       </unit>
@@ -1580,10 +1634,16 @@
             <target>Modifications incrémentielles (itf)</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportingProject">
+		<unit id="transcriptionTab.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportingProject">
          <segment>
-            <source>Exporting Project</source>
-            <target>Projet d'exportation</target>
+            <source>Creating export file</source>
+         	<target>Création d'un fichier d'exportation</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.error">
@@ -1592,15 +1652,15 @@
             <target>Erreur</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.downloadComplete">
+      <unit id="transcriptionTab.downloading">
          <segment>
-            <source>Download complete</source>
-            <target>Téléchargement complet</target>
+            <source>Creation complete. Downloading {0}</source>
+         	<target>Création terminée. Téléchargement {0}</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.expiredToken">
          <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
@@ -2616,13 +2676,13 @@
       </unit>
       <unit id="integration.expiredToken">
          <segment>
-            <source>Your login has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your login has expired and can't be automatically renewed.  Please log out and login again.</source>
     		<target>Votre identifiant a expiré et ne peut pas être automatiquement renouvelé. Veuillez vous déconnecter et vous reconnecter.</target>
 	     </segment>
       </unit>
       <unit id="integration.expiredParatextToken">
          <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please logout and login again.</source>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
     		<target>Votre connexion paratext a expiré et ne peut pas être automatiquement renouvelée. Veuillez vous déconnecter et vous reconnecter.</target>
 	     </segment>
       </unit>
@@ -2938,7 +2998,13 @@
          	<target>Terminé</target>
          </segment>
       </unit>
-      <unit id="transcribeReject.rejectTitle">
+		<unit id="transcriber.incomplete">
+			<segment>
+				<source>Incomplete transcription</source>
+				<target>Transcription incomplètes</target>
+			</segment>
+		</unit>
+		<unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>
          	<target>Rejet</target>
@@ -2992,7 +3058,13 @@
          	<target>Nom et prénom</target>
          </segment>
       </unit>
-      <unit id="profile.given">
+		<unit id="profile.userExists">
+			<segment>
+				<source>This offline user exists.</source>
+				<target>Cet utilisateur hors ligne existe.</target>
+			</segment>
+		</unit>
+		<unit id="profile.given">
          <segment>
             <source>Given Name</source>
          	<target>Prénom</target>

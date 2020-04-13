@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -9,6 +10,7 @@ import {
   Section,
   IMediaTabStrings,
   Plan,
+  BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -20,6 +22,7 @@ import {
   MenuItem,
   IconButton,
   LinearProgress,
+  AppBar,
 } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
@@ -33,6 +36,7 @@ import PassageMedia from './PassageMedia';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
+import Busy from './Busy';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
@@ -45,6 +49,10 @@ import {
 } from '../utils';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare } from '../utils/sort';
+import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { TabHeight } from './PlanTabs';
+
+const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,6 +60,18 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
+    bar: {
+      top: `calc(${HeadHeight}px + ${TabHeight}px)`,
+      left: `${DrawerWidth}px`,
+      height: `${ActionHeight}px`,
+      width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    highBar: {
+      top: `${HeadHeight}px`,
+    },
+    content: {
+      paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+    },
     progress: {
       width: '100%',
     },
@@ -99,9 +119,9 @@ const getSection = (section: Section[]) => {
   return sectionDescription(section[0]);
 };
 
-const getReference = (passage: Passage[]) => {
+const getReference = (passage: Passage[], bookData: BookName[] = []) => {
   if (passage.length === 0) return '';
-  return passageReference(passage[0]);
+  return passageReference(passage[0], bookData);
 };
 
 interface ILatest {
@@ -113,7 +133,8 @@ const getMedia = (
   mediaFiles: Array<MediaFile>,
   passages: Array<Passage>,
   sections: Array<Section>,
-  playItem: string
+  playItem: string,
+  allBookData: BookName[]
 ) => {
   const latest: ILatest = {};
   mediaFiles.forEach(f => {
@@ -155,7 +176,7 @@ const getMedia = (
       playIcon: playItem,
       fileName: f.attributes.originalFile,
       section: getSection(section),
-      reference: getReference(passage),
+      reference: getReference(passage, allBookData),
       duration: f.attributes.duration ? f.attributes.duration.toString() : '',
       size: f.attributes.filesize,
       version: f.attributes.versionNumber
@@ -174,6 +195,7 @@ interface IStateProps {
   currentlyLoading: number;
   hasUrl: boolean;
   mediaUrl: string;
+  allBookData: BookName[];
 }
 
 interface IDispatchProps {
@@ -220,6 +242,7 @@ export function MediaTab(props: IProps) {
     fetchMediaUrl,
     hasUrl,
     mediaUrl,
+    allBookData,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -385,8 +408,17 @@ export function MediaTab(props: IProps) {
   }, [projectplans, plan, planColumn]);
 
   useEffect(() => {
-    setData(getMedia(projectplans, mediaFiles, passages, sections, playItem));
-  }, [projectplans, mediaFiles, passages, sections, playItem]);
+    setData(
+      getMedia(
+        projectplans,
+        mediaFiles,
+        passages,
+        sections,
+        playItem,
+        allBookData
+      )
+    );
+  }, [projectplans, mediaFiles, passages, sections, playItem, allBookData]);
 
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
@@ -490,98 +522,110 @@ export function MediaTab(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        {complete === 0 || (
-          <div className={classes.progress}>
-            <LinearProgress variant="determinate" value={complete} />
+        <AppBar
+          position="fixed"
+          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          color="default"
+        >
+          <div className={classes.actions}>
+            {projRole === 'admin' && (
+              <>
+                {planColumn || (
+                  <Button
+                    key="upload"
+                    aria-label={t.uploadMedia}
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleUpload}
+                  >
+                    {t.uploadMedia}
+                    <AddIcon className={classes.icon} />
+                  </Button>
+                )}
+                {planColumn || (
+                  <Button
+                    key="Attach"
+                    aria-label={t.attachPassage}
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handlePassageMedia(true)}
+                  >
+                    {t.attachPassage}
+                    <AddIcon className={classes.icon} />
+                  </Button>
+                )}
+                <Button
+                  key="action"
+                  aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
+                  aria-label={t.action}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleMenu}
+                >
+                  {t.action}
+                  <DropDownIcon className={classes.icon} />
+                </Button>
+                <Menu
+                  id="action-menu"
+                  anchorEl={actionMenuItem}
+                  open={Boolean(actionMenuItem)}
+                  onClose={handleConfirmAction('Close')}
+                >
+                  <MenuItem onClick={handleConfirmAction('Delete')}>
+                    {t.delete}
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+            <div className={classes.grow}>{'\u00A0'}</div>
+            <Button
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleFilter}
+              title={'Show/Hide filter rows'}
+            >
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
+            </Button>
           </div>
-        )}
-        <div className={classes.actions}>
-          {projRole === 'admin' && (
+        </AppBar>
+        <div className={classes.content}>
+          {complete === 0 || (
             <>
-              {planColumn || (
-                <Button
-                  key="upload"
-                  aria-label={t.uploadMedia}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleUpload}
-                >
-                  {t.uploadMedia}
-                  <AddIcon className={classes.icon} />
-                </Button>
-              )}
-              {planColumn || (
-                <Button
-                  key="Attach"
-                  aria-label={t.attachPassage}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handlePassageMedia(true)}
-                >
-                  {t.attachPassage}
-                  <AddIcon className={classes.icon} />
-                </Button>
-              )}
-              <Button
-                key="action"
-                aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-                aria-label={t.action}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleMenu}
-              >
-                {t.action}
-                <DropDownIcon className={classes.icon} />
-              </Button>
-              <Menu
-                id="action-menu"
-                anchorEl={actionMenuItem}
-                open={Boolean(actionMenuItem)}
-                onClose={handleConfirmAction('Close')}
-              >
-                <MenuItem onClick={handleConfirmAction('Delete')}>
-                  {t.delete}
-                </MenuItem>
-              </Menu>
+              <div className={classes.progress}>
+                <LinearProgress variant="determinate" value={complete} />
+              </div>
+              <Busy />
             </>
           )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Button
-            key="filter"
-            aria-label={t.filter}
-            variant="outlined"
-            color="primary"
-            className={classes.button}
-            onClick={handleFilter}
-            title={'Show/Hide filter rows'}
-          >
-            {t.filter}
-            {filter ? (
-              <SelectAllIcon className={classes.icon} />
-            ) : (
-              <FilterIcon className={classes.icon} />
-            )}
-          </Button>
+
+          <ShapingTable
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            columnSorting={columnSorting}
+            sortingEnabled={sortingEnabled}
+            dataCell={Cell}
+            sorting={[
+              { columnName: 'planName', direction: 'asc' },
+              { columnName: 'fileName', direction: 'asc' },
+            ]}
+            numCols={numCols}
+            rows={data}
+            select={handleCheck}
+            shaping={filter}
+            defaultHiddenColumnNames={defaultHiddenColumnNames}
+          />
         </div>
-        <ShapingTable
-          columns={columnDefs}
-          columnWidths={columnWidths}
-          columnSorting={columnSorting}
-          sortingEnabled={sortingEnabled}
-          dataCell={Cell}
-          sorting={[
-            { columnName: 'planName', direction: 'asc' },
-            { columnName: 'fileName', direction: 'asc' },
-          ]}
-          numCols={numCols}
-          rows={data}
-          select={handleCheck}
-          shaping={filter}
-          defaultHiddenColumnNames={defaultHiddenColumnNames}
-        />
       </div>
       <MediaUpload
         visible={uploadVisible}
@@ -613,6 +657,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   loaded: state.upload.loaded,
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

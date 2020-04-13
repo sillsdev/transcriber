@@ -23,6 +23,8 @@ declare module 'reactn/default' {
     bucket: Bucket;
     remote: JSONAPISource;
     remoteBusy: boolean;
+    doSave: boolean;
+    changed: boolean;
     importexportBusy: boolean;
     autoOpenAddMedia: boolean; // open a dialog
     editUserId: string | null;

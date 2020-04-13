@@ -3,13 +3,10 @@ import { connect } from 'react-redux';
 import {
   IState,
   Passage,
-  PlanType,
   ITranscribeRejectStrings,
   ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
-import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -47,11 +44,7 @@ interface IStateProps {
   t: ITranscribeRejectStrings;
 }
 
-interface IRecordProps {
-  planTypes: Array<PlanType>;
-}
-
-interface IProps extends IRecordProps, IStateProps {
+interface IProps extends IStateProps {
   passageIn: Passage;
   visible: boolean;
   editMethod?: (passageRec: Passage) => void;
@@ -63,19 +56,19 @@ function TranscribeReject(props: IProps) {
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [next, setNext] = useState<ActivityStates>();
-  const [comment, setComment] = useState(passageIn?.attributes.lastComment);
+  const [comment, setComment] = useState(passageIn?.attributes?.lastComment);
   const [message, setMessage] = useState(<></>);
   const [inProcess, setInProcess] = useState(false);
 
   const handleSave = () => {
     doAddOrSave();
-    setInProcess(true);
   };
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNext((event.target as HTMLInputElement).value as ActivityStates);
   };
   const handleCommentChange = (e: any) => setComment(e.target.value);
   const doAddOrSave = async () => {
+    setInProcess(true);
     if (
       next !== passageIn.attributes.state ||
       comment !== passageIn.attributes.lastComment
@@ -107,11 +100,11 @@ function TranscribeReject(props: IProps) {
 
   useEffect(() => {
     setNext(
-      passageIn.attributes.state === ActivityStates.Transcribing
+      passageIn?.attributes?.state === ActivityStates.Transcribing
         ? ActivityStates.NeedsNewRecording
         : ActivityStates.NeedsNewTranscription
     );
-    setComment(passageIn.attributes.lastComment);
+    setComment(passageIn?.attributes?.lastComment);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [passageIn]);
 
@@ -175,7 +168,7 @@ function TranscribeReject(props: IProps) {
             color="primary"
             disabled={
               next === undefined ||
-              next === passageIn.attributes.state ||
+              next === passageIn?.attributes?.state ||
               comment === '' ||
               inProcess
             }
@@ -193,10 +186,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcribeReject' }),
 });
 
-const mapRecordsToProps = {
-  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(TranscribeReject) as any
-) as any;
+export default connect(mapStateToProps)(TranscribeReject) as any;

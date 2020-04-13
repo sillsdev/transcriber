@@ -1,4 +1,4 @@
-import { Passage } from '../model';
+import { Passage, BookName } from '../model';
 import { numCompare } from './sort';
 
 export function passageNumber(passage: Passage) {
@@ -82,20 +82,30 @@ export function passageRefCompare(a: Passage, b: Passage) {
     : 1;
 }
 
-/* build the passage name = sequence + book + reference */
-export function passageDescription(passage: Passage) {
-  const attr = passage.attributes;
-  if (!attr) return '';
-  const book = attr.book ? attr.book + ' ' : '';
-  const reference = attr.reference ? attr.reference : '';
-  return passageNumber(passage) + '\u00A0\u00A0' + book + reference;
-}
-
 /* build the passage ref = book + reference */
-export function passageReference(passage: Passage) {
+export function passageReference(passage: Passage, bookData: BookName[] = []) {
   const attr = passage.attributes;
   if (!attr) return '';
-  const book = attr.book ? attr.book + ' ' : '';
+  let book = attr.book || '';
+  if (book !== '') {
+    const bookItem = bookData.filter(b => b.code === book);
+    if (bookItem.length > 0) {
+      book = bookItem[0].long;
+    }
+    book += ' ';
+  }
   const reference = attr.reference ? attr.reference : '';
   return book + reference;
+}
+
+/* build the passage name = sequence + book + reference */
+export function passageDescription(
+  passage: Passage,
+  bookData: BookName[] = []
+) {
+  return (
+    passageNumber(passage) +
+    '\u00A0\u00A0' +
+    passageReference(passage, bookData)
+  );
 }

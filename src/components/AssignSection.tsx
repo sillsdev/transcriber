@@ -132,6 +132,8 @@ function AssignSection(props: IProps) {
 
   useEffect(() => {
     setOpen(visible);
+    setSelectedTranscriber('');
+    setSelectedReviewer('');
   }, [visible]);
 
   const projectRec = projects.filter(p => p.id === project);

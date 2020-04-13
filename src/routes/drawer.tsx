@@ -12,11 +12,9 @@ import {
   Project,
   Plan,
   Group,
-  MediaDescription,
   OrganizationMembership,
   GroupMembership,
   Role,
-  RoleNames,
   MediaFile,
 } from '../model';
 import * as actions from '../store';
@@ -60,6 +58,7 @@ import ReportIcon from '@material-ui/icons/Assessment';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import ListIcon from '@material-ui/icons/List';
+import { withBucket } from '../hoc/withBucket';
 import ReactSelect, { OptionType } from '../components/ReactSelect';
 import Auth from '../auth/Auth';
 import UserMenu from '../components/UserMenu';
@@ -74,6 +73,7 @@ import Team from '../components/GroupSettings/Team';
 import GroupSettings from '../components/GroupSettings/GroupSettings';
 import Confirm from '../components/AlertDialog';
 import TaskTable from '../components/TaskTable';
+import { TranscriberProvider } from '../context/TranscriberContext';
 import Transcriber from '../components/Transcriber';
 import IntegrationPanel from '../components/Integration';
 import PlanTable from '../components/PlanTable';
@@ -82,13 +82,13 @@ import Busy from '../components/Busy';
 import SnackBar from '../components/SnackBar';
 import {
   related,
-  slug,
   deepLink,
   remoteId,
   remoteIdGuid,
   makeAbbr,
   Online,
   remoteIdNum,
+  forceLogin,
 } from '../utils';
 import logo from './transcriber10.png';
 import { AUTH_CONFIG } from '../auth/auth0-variables';
@@ -105,6 +105,7 @@ const { shell } = isElectron ? require('electron') : { shell: noop };
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
 export const DrawerMin = 7;
+export const HeadHeight = 64;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -167,7 +168,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       flexGrow: 1,
-      paddingTop: theme.spacing(10),
+      paddingTop: `${HeadHeight}px`,
     },
     organization: {
       display: 'flex',
@@ -222,6 +223,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     progress: {
+      top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
+      zIndex: 100,
       width: '100%',
     },
     busy: {
@@ -234,6 +237,23 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
+export enum NavChoice {
+  UsersAndGroups = 'usersandgroups',
+  Organization = 'organization',
+  Tasks = 'tasks',
+  Plans = 'plans',
+  Team = 'team',
+  Media = 'media',
+  Reports = 'reports',
+  Settings = 'settings',
+  Export = 'export',
+  Import = 'import',
+  Integrations = 'integrations',
+  Scripture = 'scripture-plan',
+  General = 'other-plan',
+  None = 'none',
+}
 
 interface componentType {
   [key: string]: JSX.Element | string;
@@ -258,6 +278,7 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
+  resetRequests: () => void;
   history: {
     action: string;
     location: {
@@ -271,6 +292,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 export function ResponsiveDrawer(props: IProps) {
   const {
     auth,
+    resetRequests,
     t,
     history,
     plans,
@@ -285,7 +307,6 @@ export function ResponsiveDrawer(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
-  const [bucket] = useGlobal('bucket');
   const [schema] = useGlobal('schema');
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
@@ -300,6 +321,8 @@ export function ResponsiveDrawer(props: IProps) {
   const [projRole, setProjRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
+  const [changed, setChanged] = useGlobal('changed');
+  const [doSave, setDoSave] = useGlobal('doSave');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
     'autoOpenAddMedia'
@@ -320,9 +343,6 @@ export function ResponsiveDrawer(props: IProps) {
   );
   const [view, setView] = useState('');
   const [message, setMessage] = useState(<></>);
-  const [changed, setChanged] = useState(false);
-  const [exitChoice, setExitChoice] = useState('');
-  const [mediaDesc, setMediaDesc] = useState<MediaDescription>();
   const saveConfirm = useRef<() => any>();
   const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
@@ -333,6 +353,28 @@ export function ResponsiveDrawer(props: IProps) {
   const timer = React.useRef<NodeJS.Timeout>();
   const syncTimer = React.useRef<NodeJS.Timeout>();
 
+  const slugMap: { [key: string]: string } = {
+    [NavChoice.UsersAndGroups]: t.usersAndGroups,
+    [NavChoice.Organization]: t.organization,
+    [NavChoice.Tasks]: t.tasks,
+    [NavChoice.Plans]: t.plans,
+    [NavChoice.Team]: t.team,
+    [NavChoice.Media]: t.media,
+    [NavChoice.Reports]: t.reports,
+    [NavChoice.Settings]: t.settings,
+    [NavChoice.Export]: t.export,
+    [NavChoice.Import]: t.import,
+    [NavChoice.Integrations]: t.integrations,
+  };
+  const frSlug = (slug: string) => {
+    return slugMap[slug];
+  };
+  const toSlug = (choice: string) => {
+    for (let i of Object.keys(slugMap)) {
+      if (slugMap[i] === choice) return i;
+    }
+  };
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -340,12 +382,12 @@ export function ResponsiveDrawer(props: IProps) {
   const handleChoice = (choice: string) => {
     localStorage.removeItem('url');
     setAddProject(false);
-    setChoice(slug(choice));
-    setContent(slug(choice));
-    setTitle(choice);
+    setChoice(choice);
+    setContent(choice);
+    setTitle(frSlug(choice));
     setPlan('');
-    setMini(['transcriber', 'tasks'].includes(slug(choice)));
-    if (choice === t.usersAndGroups) {
+    setMini(choice === NavChoice.Tasks);
+    if (choice === NavChoice.UsersAndGroups) {
       if (tab > 1) {
         setTab(0);
       }
@@ -355,10 +397,13 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleCommitOrg = (value: string) => {
     localStorage.removeItem('url');
-    localStorage.setItem('lastOrg', remoteId('organization', value, keyMap));
+    localStorage.setItem(
+      'lastOrg',
+      remoteId(NavChoice.Organization, value, keyMap)
+    );
     if (value === t.newOrganization) {
       setAddOrg(true);
-      setContent(slug(t.organization));
+      setContent(NavChoice.Organization);
       setTitle(t.addOrganization);
     } else if (value !== organization) {
       setOrganization(value);
@@ -374,26 +419,22 @@ export function ResponsiveDrawer(props: IProps) {
     setTimeout(() => handleAddProject(), 1000);
   };
 
-  const mixCase = (s: string) => {
-    if (!s) return '';
-    return s.substr(0, 1).toLocaleUpperCase() + s.substring(1);
-  };
-
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
     localStorage.setItem('lastProj', remoteId('project', value, keyMap));
     if (addProject) setAddProject(false); // for exiting from add project
     if (choice === '') {
-      const newTitle = API_CONFIG.isApp ? t.tasks : t.plans;
-      setContent(slug(newTitle));
-      setChoice(slug(newTitle));
-      setTitle(newTitle);
+      const newChoice = API_CONFIG.isApp ? NavChoice.Tasks : NavChoice.Plans;
+      setContent(newChoice);
+      setChoice(newChoice);
+      setTitle(frSlug(newChoice));
+      setMini(newChoice === NavChoice.Tasks);
     }
     //on deep linking we will have already set the project
     if (value !== project) {
       setProject(value);
       setContent(choice); //bring us out of plan details if down there
-      setTitle(mixCase(choice));
+      setTitle(frSlug(choice));
       setPlan('');
     }
     if (group !== '') setGroup('');
@@ -404,9 +445,9 @@ export function ResponsiveDrawer(props: IProps) {
   const handlePlanType = (value: string | null) => {
     localStorage.removeItem('url');
     if (!value || value.toLocaleLowerCase() === 'scripture') {
-      setContent('scripture-plan');
+      setContent(NavChoice.Scripture);
     } else {
-      setContent('other-plan');
+      setContent(NavChoice.General);
     }
   };
 
@@ -414,7 +455,8 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     setAddProject(true);
     setProject('');
-    setContent(slug(t.settings));
+    setPlan('');
+    setContent(NavChoice.Settings);
     setTitle(t.addProject);
   };
 
@@ -430,8 +472,8 @@ export function ResponsiveDrawer(props: IProps) {
         setAutoOpenAddMedia(true);
       }, 2000);
     } else {
-      setContent(slug(t.plans));
-      setChoice(slug(t.plans));
+      setContent(NavChoice.Plans);
+      setChoice(NavChoice.Plans);
       setTitle(t.plans);
       setPlan('');
       if (addProject) setAddProject(false);
@@ -449,12 +491,12 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.setItem('url', history.location.pathname);
     if (!/Close/i.test(what)) {
       if (/ClearLogout/i.test(what)) {
-        localStorage.removeItem('user-token');
-        localStorage.removeItem('user-id');
+        forceLogin();
         what = 'Logout';
       }
       if (/Clear/i.test(what)) {
-        bucket.setItem('remote-requests', []);
+        if (resetRequests) resetRequests();
+        else console.log('ResetRequests not set in props');
       }
       setView(what);
     }
@@ -462,9 +504,13 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleSwitch = () => {
     localStorage.setItem('url', history.location.pathname);
-    if (swapRef.current) swapRef.current.click();
+    if (swapRef.current) {
+      checkSavedFn(() => handleChoice(swapRef.current.click()));
+    }
   };
-  const handleAdmin = (where: string) => () => shell.openExternal(where);
+  const handleAdmin = (where: string) => () => {
+    checkSavedFn(() => shell.openExternal(where));
+  };
 
   const checkSavedFn = (method: () => any) => {
     if (busy) {
@@ -480,7 +526,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
   let clickVal = '';
   const choiceClick = (text: string) => () => {
-    clickVal = text;
+    clickVal = toSlug(text) || NavChoice.None;
     checkSavedFn(() => handleChoice(clickVal));
   };
   const menuAction = (v: string) => {
@@ -502,23 +548,25 @@ export function ResponsiveDrawer(props: IProps) {
       callback();
     });
   };
-  const handleUnsaveConfirmed = () => {
+  const handleSaveRefused = () => {
     if (saveConfirm.current) saveConfirm.current();
     saveConfirm.current = undefined;
     setAlertOpen(false);
     setChanged(false);
   };
-  const handleUnsaveRefused = () => {
-    saveConfirm.current = undefined;
+  const handleSaveConfirmed = () => {
+    setMessage(<span>{t.saving}</span>);
+    setChanged(false);
+    setDoSave(true);
     setAlertOpen(false);
   };
   const getRole = (table: Record[], relate: string, id: string) => {
     const memberRecs = table.filter(
-      tbl => related(tbl, 'user') === user && related(tbl, relate) === id
+      (tbl) => related(tbl, 'user') === user && related(tbl, relate) === id
     );
     if (memberRecs.length === 1) {
       const roleId = related(memberRecs[0], 'role');
-      const roleRecs = roles.filter(r => r.id === roleId);
+      const roleRecs = roles.filter((r) => r.id === roleId);
       if (roleRecs.length === 1) {
         const attr = roleRecs[0].attributes;
         if (attr && attr.roleName) return attr.roleName.toLocaleLowerCase();
@@ -534,17 +582,25 @@ export function ResponsiveDrawer(props: IProps) {
     );
     if (isElectron) {
       const groupids = groupMemberships
-        .filter(gm => related(gm, 'user') === user)
-        .map(gm => related(gm, 'group'));
+        .filter((gm) => related(gm, 'user') === user)
+        .map((gm) => related(gm, 'group'));
 
-      projs = projs.filter(p => groupids.includes(related(p, 'group')));
+      projs = projs.filter((p) => groupids.includes(related(p, 'group')));
     }
     return projs;
   };
 
   useEffect(() => {
-    Online(val => setOnline(val));
+    Online((val) => setOnline(val), auth);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (!doSave && saveConfirm.current) {
+      saveConfirm.current();
+      saveConfirm.current = undefined;
+    }
+  }, [doSave]);
 
   useEffect(() => {
     if (errorReporter && user && user !== '') {
@@ -556,7 +612,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (orbitLoaded) {
       const organizations = getOrgs(memory, user);
       const orgOpts = organizations
-        .filter(o => o.attributes)
+        .filter((o) => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
         .map((o: Organization) => {
           return {
@@ -574,7 +630,7 @@ export function ResponsiveDrawer(props: IProps) {
             })
       );
 
-      const orgRec = organizations.filter(o => o.id === organization);
+      const orgRec = organizations.filter((o) => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
         setOrgAvatar(DataPath(attr?.logoUrl || ''));
@@ -597,7 +653,7 @@ export function ResponsiveDrawer(props: IProps) {
               localStorage.getItem('lastOrg') || '',
               keyMap
             ) || '';
-      const cur = orgOptions.map(oo => oo.value).indexOf(orgKey);
+      const cur = orgOptions.map((oo) => oo.value).indexOf(orgKey);
       if (cur !== -1) setCurOrg(cur);
       else if (
         !busy &&
@@ -614,13 +670,13 @@ export function ResponsiveDrawer(props: IProps) {
       setDelProject(false);
       return;
     }
-    getProjs().then(projects => {
+    getProjs().then((projects) => {
       const projOpts = projects
         .filter(
-          p => related(p, 'organization') === organization && p.attributes
+          (p) => related(p, 'organization') === organization && p.attributes
         )
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map(p => {
+        .map((p) => {
           return {
             value: p.id,
             label: p.attributes.name,
@@ -630,19 +686,19 @@ export function ResponsiveDrawer(props: IProps) {
       if (projOpts.length === 0) {
         setCurProj(null);
         if (
-          content !== slug(t.usersAndGroups) &&
-          content !== slug(t.organization)
+          content !== NavChoice.UsersAndGroups &&
+          content !== NavChoice.Organization
         ) {
           if (!offline && swapRef.current) {
             Axios.get(API_CONFIG.host + '/api/projects/', {
               headers: {
                 Authorization: 'Bearer ' + auth.accessToken,
               },
-            }).then(strings => {
+            }).then((strings) => {
               const data = strings.data.data as Record[];
               const orgRemId = localStorage.getItem('lastOrg');
               const filtered = data.filter(
-                r => related(r, 'organization') === orgRemId
+                (r) => related(r, 'organization') === orgRemId
               );
               if (filtered.length === 0) {
                 if (API_CONFIG.isApp) swapRef.current.click();
@@ -657,7 +713,7 @@ export function ResponsiveDrawer(props: IProps) {
   }, [organization, addProject, delProject, swapRef.current]);
 
   useEffect(() => {
-    const projKeys = projOptions.map(o => o.value);
+    const projKeys = projOptions.map((o) => o.value);
     const projKey =
       project !== ''
         ? project
@@ -693,7 +749,7 @@ export function ResponsiveDrawer(props: IProps) {
   }, [project, addProject, curProj, user]);
 
   useEffect(() => {
-    const curPlan = plans.filter(p => p.id === plan);
+    const curPlan = plans.filter((p) => p.id === plan);
     if (curPlan.length > 0) {
       const attr = curPlan[0].attributes;
       setTitle(attr ? attr.name : '');
@@ -708,7 +764,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (groupRec) {
       const attr = groupRec.attributes;
       setTitle(attr ? attr.name : '');
-      if (content === slug(t.usersAndGroups)) setContent('group');
+      if (content === NavChoice.UsersAndGroups) setContent('group');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [group]);
@@ -723,7 +779,6 @@ export function ResponsiveDrawer(props: IProps) {
       choice,
       content,
       keyMap,
-      t,
     });
     if (target) history.push(target);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -748,11 +803,11 @@ export function ResponsiveDrawer(props: IProps) {
           if (busy !== isBusy) setBusy(isBusy);
         }, 1000);
       if (syncTimer.current === undefined) {
-        if (!busy) {
+        if (!busy && !doSave) {
           dateChanges(auth, keyMap, remote, memory, schema);
         }
         syncTimer.current = setInterval(() => {
-          if (!busy) {
+          if (!busy && !doSave) {
             dateChanges(auth, keyMap, remote, memory, schema);
           }
         }, 1000 * 10);
@@ -769,10 +824,10 @@ export function ResponsiveDrawer(props: IProps) {
       };
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [remote, busy, curOrg]);
+  }, [remote, busy, doSave, curOrg]);
 
   useEffect(() => {
-    const media = mediafiles.filter(m => {
+    const media = mediafiles.filter((m) => {
       const planid = related(m, 'plan');
       if (planid !== null) {
         const plan = memory.cache.query((q: QueryBuilder) =>
@@ -801,6 +856,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (!auth || !auth.isAuthenticated(offline) || !orbitLoaded)
     return <Redirect to="/" />;
 
+  const planChoices: string[] = [NavChoice.Scripture, NavChoice.General];
   // reset location based on deep link (saved url)
   const url = localStorage.getItem('url');
   if (
@@ -809,6 +865,7 @@ export function ResponsiveDrawer(props: IProps) {
     view === '' &&
     localStorage.getItem('isLoggedIn') === 'true'
   ) {
+    console.log('url: ' + url);
     const parts = url.split('/');
     const base = 1;
     const UrlOrgPart = base + 1;
@@ -825,18 +882,13 @@ export function ResponsiveDrawer(props: IProps) {
     const UrlChoicePart = base + 2;
     let pltype: string | null = null;
     if (parts.length > UrlChoicePart) {
-      const value = parts[UrlChoicePart];
-      if (['scripture-plan', 'other-plan'].indexOf(value) !== -1) {
-        urlChoice = t.plans;
-        pltype = value.substr(0, value.indexOf('-'));
-      } else {
-        urlChoice =
-          'transcriber'.indexOf(value) !== -1 ? t.tasks : mixCase(value);
-      }
-      handleChoice(urlChoice);
-      urlChoice = slug(urlChoice);
+      urlChoice = parts[UrlChoicePart];
+      if (planChoices.indexOf(urlChoice) !== -1) {
+        urlChoice = NavChoice.Plans;
+        pltype = urlChoice.substr(0, urlChoice.indexOf('-'));
+      } else handleChoice(urlChoice);
     }
-    if (urlChoice === slug(t.plans)) {
+    if (urlChoice === NavChoice.Plans) {
       const UrlPlanPart = base + 4;
       if (parts.length > UrlPlanPart) {
         const planId = remoteIdGuid('plan', parts[UrlPlanPart], keyMap);
@@ -847,7 +899,7 @@ export function ResponsiveDrawer(props: IProps) {
       if (parts.length > UrlPlanTabPart) {
         setTab(parseInt(parts[UrlPlanTabPart]));
       }
-    } else if (urlChoice === slug(t.usersAndGroups)) {
+    } else if (urlChoice === NavChoice.UsersAndGroups) {
       const UrlGroupTabPart = base + 4;
       if (parts.length > UrlGroupTabPart) {
         setTab(parseInt(parts[UrlGroupTabPart]));
@@ -857,7 +909,7 @@ export function ResponsiveDrawer(props: IProps) {
         const groupId = remoteIdGuid('group', parts[UrlGroupPart], keyMap);
         setGroup(groupId);
       }
-    } else if (urlChoice === slug(t.myTasks)) {
+    } else if (urlChoice === NavChoice.Tasks) {
       const UrlTaskTabPart = base + 4;
       if (parts.length > UrlTaskTabPart) {
         setTab(parseInt(parts[UrlTaskTabPart]));
@@ -874,15 +926,14 @@ export function ResponsiveDrawer(props: IProps) {
     choice,
     content,
     keyMap,
-    t,
   });
   if (API_CONFIG.isApp && swapTarget) {
     swapTarget =
       AUTH_CONFIG.adminEndpoint +
-      swapTarget.replace('transcriber', slug(t.plans));
+      swapTarget.replace(NavChoice.Tasks, NavChoice.Tasks);
   } else if (swapTarget) {
     const part = swapTarget.split('/');
-    part[3] = slug(t.tasks);
+    part[3] = NavChoice.Tasks;
     swapTarget = AUTH_CONFIG.appEndpoint + part.join('/');
   } else {
     swapTarget = API_CONFIG.isApp
@@ -941,7 +992,7 @@ export function ResponsiveDrawer(props: IProps) {
                 <ListItem
                   button
                   key={text}
-                  selected={slug(text) === choice}
+                  selected={toSlug(text) === choice}
                   onClick={choiceClick(text)}
                 >
                   <ListItemIcon>
@@ -991,16 +1042,18 @@ export function ResponsiveDrawer(props: IProps) {
               : [t.plans, t.team, t.media, t.reports]
             ).map((text, index) => (
               <Tooltip key={text} title={text}>
-                <ListItem
-                  button
-                  key={text}
-                  selected={slug(text) === choice}
-                  onClick={choiceClick(text)}
-                  disabled={curProj === null}
-                >
-                  <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItem>
+                <span>
+                  <ListItem
+                    button
+                    key={text}
+                    selected={toSlug(text) === choice}
+                    onClick={choiceClick(text)}
+                    disabled={curProj === null}
+                  >
+                    <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItem>
+                </span>
               </Tooltip>
             ))}
           </List>
@@ -1009,16 +1062,18 @@ export function ResponsiveDrawer(props: IProps) {
             {[t.settings, t.export, t.import, t.integrations].map(
               (text, index) => (
                 <Tooltip key={text} title={text}>
-                  <ListItem
-                    button
-                    key={text}
-                    selected={slug(text) === choice}
-                    onClick={choiceClick(text)}
-                    disabled={curProj === null}
-                  >
-                    <ListItemIcon>{projectIcons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
+                  <span>
+                    <ListItem
+                      button
+                      key={text}
+                      selected={toSlug(text) === choice}
+                      onClick={choiceClick(text)}
+                      disabled={curProj === null}
+                    >
+                      <ListItemIcon>{projectIcons[index]}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                  </span>
                 </Tooltip>
               )
             )}
@@ -1031,7 +1086,7 @@ export function ResponsiveDrawer(props: IProps) {
   if (!orbitLoaded) return <Redirect to="/loading" />;
 
   let components: componentType = {};
-  components[slug(t.organization)] = (
+  components[NavChoice.Organization] = (
     <OrgSettings
       noMargin={true}
       {...props}
@@ -1040,26 +1095,26 @@ export function ResponsiveDrawer(props: IProps) {
     />
   );
   const GroupTabs = React.lazy(() => import('../components/GroupTabs'));
-  components[slug(t.usersAndGroups)] = LazyLoad({ ...props })(GroupTabs);
-  components[slug(t.media)] = (
+  components[NavChoice.UsersAndGroups] = LazyLoad({ ...props })(GroupTabs);
+  components[NavChoice.Media] = (
     <MediaTab
       {...props}
-      projectplans={plans.filter(p => related(p, 'project') === project)}
+      projectplans={plans.filter((p) => related(p, 'project') === project)}
       planColumn={true}
     />
   );
-  components[slug(t.export)] = (
+  components[NavChoice.Export] = (
     <TranscriptionTab
       {...props}
-      projectPlans={plans.filter(p => related(p, 'project') === project)}
+      projectPlans={plans.filter((p) => related(p, 'project') === project)}
       planColumn={true}
     />
   );
-  components[slug(t.import)] = <ImportTab {...props} />;
-  components[slug(t.plans)] = (
+  components[NavChoice.Import] = <ImportTab {...props} />;
+  components[NavChoice.Plans] = (
     <PlanTable {...props} displaySet={handlePlanType} />
   );
-  components['scripture-plan'] = (
+  components[NavChoice.Scripture] = (
     <PlanTabs
       {...props}
       changed={changed}
@@ -1067,7 +1122,7 @@ export function ResponsiveDrawer(props: IProps) {
       checkSaved={checkSavedFn}
     />
   );
-  components['other-plan'] = (
+  components[NavChoice.General] = (
     <PlanTabs
       {...props}
       bookCol={-1}
@@ -1076,53 +1131,36 @@ export function ResponsiveDrawer(props: IProps) {
       checkSaved={checkSavedFn}
     />
   );
-  components[slug(t.team)] = <Team {...props} detail={true} />;
+  components[NavChoice.Team] = <Team {...props} detail={true} />;
   const ProjectSettings = React.lazy(() =>
     import('../components/ProjectSettings')
   );
-  components[slug(t.settings)] = LazyLoad({
+  components[NavChoice.Settings] = LazyLoad({
     ...props,
     noMargin: true,
     add: addProject,
     finishAdd: handleFinishAdd,
   })(ProjectSettings);
-  components[slug(t.integrations)] = <IntegrationPanel {...props} />; // Don't lazy load this...it causes problems
+  components[NavChoice.Integrations] = <IntegrationPanel {...props} />; // Don't lazy load this...it causes problems
   components['group'] = <GroupSettings {...props} />;
   const Visualize = React.lazy(() => import('../components/Visualize'));
-  components[slug(t.reports)] = LazyLoad({ ...props })(Visualize);
-  components['none'] = <Busy />;
+  components[NavChoice.Reports] = LazyLoad({ ...props })(Visualize);
+  components[NavChoice.None] = <Busy />;
 
-  const handleTranscriber = (desc: MediaDescription) => {
-    setMediaDesc(desc);
-    setExitChoice(t.tasks);
-    handleChoice(RoleNames.Transcriber);
-  };
-
-  components[slug(t.tasks)] = (
-    <TaskTable {...props} transcriber={handleTranscriber} />
-  );
-
-  const handleDoChoice = () => handleChoice(slug(exitChoice));
-
-  if (mediaDesc) {
-    components['transcriber'] = (
+  components[NavChoice.Tasks] = (
+    <TranscriberProvider {...props}>
       <div className={classes.panel2}>
         <div className={clsx({ [classes.topFilter]: topFilter })}>
-          <TaskTable
-            {...props}
-            onFilter={handleTopFilter}
-            curDesc={mediaDesc}
-            transcriber={handleTranscriber}
-          />
+          <TaskTable auth={auth} onFilter={handleTopFilter} />
         </div>
         {!topFilter && (
           <div className={classes.topTranscriber}>
-            <Transcriber {...mediaDesc} auth={auth} done={handleDoChoice} />
+            <Transcriber auth={auth} />
           </div>
         )}
       </div>
-    );
-  }
+    </TranscriberProvider>
+  );
 
   return (
     <div className={classes.root}>
@@ -1176,7 +1214,7 @@ export function ResponsiveDrawer(props: IProps) {
                 variant="contained"
                 color="primary"
                 onClick={handleSwitch}
-                disabled={busy}
+                disabled={busy || doSave}
               >
                 {t.admin}
               </Button>
@@ -1197,9 +1235,14 @@ export function ResponsiveDrawer(props: IProps) {
             )
           )}
           {'\u00A0'}
-          <HelpMenu />
+          <HelpMenu online={online} />
           <UserMenu action={menuAction} />
         </Toolbar>
+        {(!busy && !importexportBusy && !doSave) || (
+          <AppBar position="fixed" className={classes.progress} color="inherit">
+            <LinearProgress variant="indeterminate" />
+          </AppBar>
+        )}
       </AppBar>
       <nav
         className={clsx(classes.drawer, { [classes.drawerMini]: mini })}
@@ -1242,20 +1285,13 @@ export function ResponsiveDrawer(props: IProps) {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>
-        {(!busy && !importexportBusy) || (
-          <div className={classes.progress}>
-            <LinearProgress variant="indeterminate" />
-          </div>
-        )}
-        {components[content]}
-      </main>
+      <main className={classes.content}>{components[content]}</main>
       {alertOpen && (
         <Confirm
-          title={t.planUnsaved}
-          text={t.loseData}
-          yesResponse={handleUnsaveConfirmed}
-          noResponse={handleUnsaveRefused}
+          title={t.UnsavedData}
+          text={t.saveFirst}
+          yesResponse={handleSaveConfirmed}
+          noResponse={handleSaveRefused}
         />
       )}
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
@@ -1301,5 +1337,8 @@ const mapRecordsToProps = {
 };
 
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps, mapDispatchToProps)(ResponsiveDrawer) as any
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withBucket(ResponsiveDrawer)) as any
 ) as any;

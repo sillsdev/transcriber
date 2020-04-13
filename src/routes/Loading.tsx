@@ -142,14 +142,14 @@ export function Loading(props: IProps) {
           { attribute: 'accepted', value: false }
         )
     )) as any;
-    allinvites.forEach(async invitation => {
+    allinvites.forEach(async (invitation) => {
       await newremote.update((t: TransformBuilder) =>
         t.replaceAttribute(invitation, 'accepted', true)
       );
     });
     if (inviteId) {
       let invite = allinvites.find(
-        i => i.attributes.silId === parseInt(inviteId)
+        (i) => i.attributes.silId === parseInt(inviteId)
       );
       if (!invite) {
         try {
@@ -201,7 +201,7 @@ export function Loading(props: IProps) {
     }
     if (org === '') {
       orgs = orgs
-        .filter(o => o.attributes)
+        .filter((o) => o.attributes)
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
       if (orgs.length > 0) {
         org = orgs[0].id;
@@ -241,7 +241,10 @@ export function Loading(props: IProps) {
     if (orbitLoaded && completed === 90) {
       if (user && user !== '') {
         const userRec: User = GetUser(memory, user);
-        const locale = userRec.attributes ? userRec.attributes.locale : 'en';
+        if (userRec.attributes === null) {
+          console.log('No user information.  Never expect to get here.');
+        }
+        const locale = userRec.attributes?.locale || 'en';
         if (locale) setLanguage(locale);
 
         if (
@@ -265,7 +268,7 @@ export function Loading(props: IProps) {
               type: 'organization',
               attributes: {
                 name: t.myWorkbench,
-                description: t.defaultOrgDesc + userRec.attributes.name,
+                description: t.defaultOrgDesc + userRec.attributes?.name || '',
                 publicByDefault: true,
               },
             } as any;
