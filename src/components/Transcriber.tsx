@@ -374,7 +374,9 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Reviewing,
   };
 
-  const handleSave = async () => {
+  const handleSaveButton = () => handleSave(true);
+
+  const handleSave = async (postComment: boolean = false) => {
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
       const userid = remoteIdNum('user', user, keyMap);
@@ -389,7 +391,7 @@ export function Transcriber(props: IProps) {
           tb,
           ops
         );
-      if (comment !== '') {
+      if (postComment && comment !== '') {
         ops = AddPassageStateCommentOps(
           passage.id,
           state,
@@ -414,7 +416,7 @@ export function Transcriber(props: IProps) {
         )
       );
       await memory.update(ops);
-      setComment('');
+      if (postComment) setComment('');
       loadHistory();
       setChanged(false);
     }
@@ -877,7 +879,7 @@ export function Transcriber(props: IProps) {
                         variant="outlined"
                         color="primary"
                         className={classes.button}
-                        onClick={handleSave}
+                        onClick={handleSaveButton}
                         disabled={playing}
                       >
                         {t.save}
