@@ -18,11 +18,10 @@ import HelpIcon from '@material-ui/icons/Help';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
-import { API_CONFIG } from '../api-variable';
+import { isElectron, API_CONFIG } from '../api-variable';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
-const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
 
@@ -81,6 +80,7 @@ export function HelpMenu(props: IProps) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
+  const [isApp] = useGlobal('appView');
   const [developer, setDeveloper] = useGlobal('developer');
   const helpRef = React.useRef<any>();
 
@@ -98,8 +98,10 @@ export function HelpMenu(props: IProps) {
   const handleHelp = () => {
     if (isElectron) {
       const target = !online
-        ? path.join(process.cwd(), process.env.REACT_APP_CHM_HELP || '')
-        : API_CONFIG.help + '/' + helpLanguage() + '/index.htm';
+        ? path.join(process.cwd(), API_CONFIG.chmHelp)
+        : isApp
+        ? API_CONFIG.help + '/' + helpLanguage() + '/index.htm'
+        : API_CONFIG.adminHelp + '/' + helpLanguage() + '/index.htm';
       console.log('launching', target);
       shell.openExternal(target);
     } else if (helpRef.current) {
@@ -179,7 +181,11 @@ export function HelpMenu(props: IProps) {
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a
         ref={helpRef}
-        href={API_CONFIG.help + '/' + helpLanguage()}
+        href={
+          isApp
+            ? API_CONFIG.help + '/' + helpLanguage()
+            : API_CONFIG.adminHelp + '/' + helpLanguage()
+        }
         target="_blank"
         rel="noopener noreferrer"
       ></a>

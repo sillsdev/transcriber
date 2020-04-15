@@ -17,14 +17,11 @@ import history from './history';
 import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from './components/logErrorService';
 import { infoMsg } from './utils';
-import { API_CONFIG } from './api-variable';
+import { isElectron, API_CONFIG } from './api-variable';
 const appVersion = require('../package.json').version;
 
-const isElectron = process.env.REACT_APP_MODE === 'electron';
-
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
-const adminEndpoint = process.env.REACT_APP_ADMIN_ENDPOINT;
-const prod = adminEndpoint && adminEndpoint.indexOf('admin.') !== -1;
+const prod = API_CONFIG.endpoint.indexOf('admin.') !== -1;
 const bugsnagClient = prodOrQa
   ? bugsnag({
       apiKey: API_CONFIG.snagId,
@@ -92,6 +89,7 @@ setGlobal({
   importexportBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,
+  appView: true,
   developer: false,
   offline: isElectron,
   errorReporter: bugsnagClient,

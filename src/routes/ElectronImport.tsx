@@ -17,8 +17,7 @@ import fs from 'fs';
 import path from 'path';
 import { OpenDialogSyncOptions } from 'electron';
 import { orbitInfo } from '../utils';
-
-const isElectron = process.env.REACT_APP_MODE === 'electron';
+import { isElectron } from '../api-variable';
 
 export interface IImportData {
   valid: boolean;
@@ -95,7 +94,7 @@ if (isElectron) {
         x.data.forEach((p: any) => {
           var id = p.id;
           const proj = projectRecs.find(
-            pr => (pr.id = remoteIdGuid('project', id, memory.keyMap))
+            (pr) => (pr.id = remoteIdGuid('project', id, memory.keyMap))
           );
           //was this one exported before our current data?
           if (proj && proj.attributes) {

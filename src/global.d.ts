@@ -28,6 +28,7 @@ declare module 'reactn/default' {
     importexportBusy: boolean;
     autoOpenAddMedia: boolean; // open a dialog
     editUserId: string | null;
+    appView: boolean;
     developer: boolean;
     offline: boolean;
     errorReporter: any; // bugsnagClient

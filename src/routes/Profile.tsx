@@ -46,14 +46,13 @@ import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
 import { remoteId, makeAbbr, uiLang, related, remoteIdNum } from '../utils';
-import { API_CONFIG } from '../api-variable';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
 import { UpdateRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
-const isElectron = process.env.REACT_APP_MODE === 'electron';
+import { isElectron } from '../api-variable';
 
 interface ILangDes {
   type: string;
@@ -225,7 +224,9 @@ export function Profile(props: IProps) {
       }
     }
     if (editId) {
-      const userRecs = users.filter(u => u.attributes.name === e.target.value);
+      const userRecs = users.filter(
+        (u) => u.attributes.name === e.target.value
+      );
       const newDupName = userRecs.length > 0;
       if (newDupName !== dupName) setDupName(newDupName);
     }
@@ -336,13 +337,13 @@ export function Profile(props: IProps) {
     const lcKind = kind.toLowerCase();
     return orgRole
       ? roleRecs.filter(
-          r =>
+          (r) =>
             r.attributes.orgRole &&
             r.attributes.roleName &&
             r.attributes.roleName.toLowerCase() === lcKind
         )
       : roleRecs.filter(
-          r =>
+          (r) =>
             r.attributes.groupRole &&
             r.attributes.roleName &&
             r.attributes.roleName.toLowerCase() === lcKind
@@ -362,7 +363,7 @@ export function Profile(props: IProps) {
       q.findRecords('group')
     ) as Group[];
     const allUsersGroup = groups.filter(
-      g => related(g, 'owner') === organization && g.attributes.allUsers
+      (g) => related(g, 'owner') === organization && g.attributes.allUsers
     );
     const editorRec = roleRec(roleRecs, 'editor', false);
     let groupMbr: GroupMembership = {
@@ -442,7 +443,7 @@ export function Profile(props: IProps) {
   const handleDeleteConfirmed = async () => {
     const tb: TransformBuilder = new TransformBuilder();
     const ops: Operation[] = [];
-    const current = users.filter(u => u.id === deleteItem)[0];
+    const current = users.filter((u) => u.id === deleteItem)[0];
     /* delete any invitations for this user
     so they can't rejoin orgs without a new invite */
     const invites: Invitation[] = memory.cache.query((q: QueryBuilder) =>
@@ -450,7 +451,7 @@ export function Profile(props: IProps) {
         .findRecords('invitation')
         .filter({ attribute: 'email', value: current.attributes.email })
     ) as any;
-    invites.forEach(i =>
+    invites.forEach((i) =>
       ops.push(tb.removeRecord({ type: 'invitation', id: i.id }))
     );
     ops.push(tb.removeRecord({ type: 'user', id: deleteItem }));
@@ -463,8 +464,8 @@ export function Profile(props: IProps) {
 
   const langName = (loc: string, opt: string): string => {
     return ldml[loc].ldml.localeDisplayNames.languages.language
-      .filter(d => d.type === opt)
-      .map(d => d.content)[0];
+      .filter((d) => d.type === opt)
+      .map((d) => d.content)[0];
   };
 
   interface IBigAvatarProps {
@@ -512,7 +513,7 @@ export function Profile(props: IProps) {
       },
     };
     if (!editId || !/Add/i.test(editId)) {
-      const current = users.filter(u => u.id === (editId ? editId : user));
+      const current = users.filter((u) => u.id === (editId ? editId : user));
       if (current.length === 1) {
         userRec = current[0];
         setCurrentUser(userRec);
@@ -559,9 +560,7 @@ export function Profile(props: IProps) {
       <AppBar position="fixed" className={classes.appBar} color="inherit">
         <Toolbar>
           <Typography variant="h6" noWrap>
-            {(API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin) +
-              ' - ' +
-              t.userProfile}
+            {t.silTranscriber + ' - ' + t.userProfile}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
           <UserMenu action={handleUserMenuAction} />

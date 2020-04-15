@@ -26,6 +26,7 @@ import { electronExport } from './electronExport';
 import { insertData } from '../../utils/loadData';
 import { logError, Severity } from '../../components/logErrorService';
 import { infoMsg, orbitInfo } from '../../utils';
+import { isElectron } from '../../api-variable';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -33,7 +34,6 @@ export const exportComplete = () => (dispatch: any) => {
     type: EXPORT_COMPLETE,
   });
 };
-const isElectron = process.env.REACT_APP_MODE === 'electron';
 
 export const exportProject = (
   exportType: string,
@@ -58,7 +58,7 @@ export const exportProject = (
       return 'remoteId';
     };
     electronExport(exportType, memory, projectid, userid, ser)
-      .then(response => {
+      .then((response) => {
         dispatch({
           payload: response,
           type: EXPORT_SUCCESS,
@@ -79,7 +79,7 @@ export const exportProject = (
       },
       timeout: 0, //wait forever
     })
-      .then(response => {
+      .then((response) => {
         // console.log(response);
         dispatch({
           payload: response.data,
@@ -120,7 +120,7 @@ export const importProjectFromElectron = (
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
-    .then(response => {
+    .then((response) => {
       const filename = response.data.data.attributes.message;
       const xhr = new XMLHttpRequest();
       /* FUTURE TODO Limit is 5G, but it's recommended to use a multipart upload > 100M */
@@ -145,7 +145,7 @@ export const importProjectFromElectron = (
               Authorization: 'Bearer ' + auth.accessToken,
             },
           })
-            .then(response => {
+            .then((response) => {
               // console.log(response);
               if (response.data.status === 200)
                 dispatch({
@@ -167,7 +167,7 @@ export const importProjectFromElectron = (
                 });
               }
             })
-            .catch(reason => {
+            .catch((reason) => {
               logError(
                 Severity.info,
                 errorReporter,
@@ -191,7 +191,7 @@ export const importProjectFromElectron = (
         }
       };
     })
-    .catch(reason => {
+    .catch((reason) => {
       logError(Severity.info, errorReporter, infoMsg(reason, 'Import Error'));
       dispatch({
         payload: errorStatus(-1, reason.toString()),
@@ -216,7 +216,7 @@ export const importProjectToElectron = (
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
     if (isArray(json.data))
-      json.data.forEach(item =>
+      json.data.forEach((item) =>
         insertData(item, memory, tb, oparray, orbitError, true, true)
       );
     else insertData(json.data, memory, tb, oparray, orbitError, true, true);
@@ -232,7 +232,7 @@ export const importProjectToElectron = (
     payload: pendingmsg,
     type: IMPORT_PENDING,
   });
-  fs.readdir(filepath, async function(err, files) {
+  fs.readdir(filepath, async function (err, files) {
     if (err) {
       dispatch({
         payload: errorStatus(err.errno, err.message),
@@ -252,16 +252,16 @@ export const importProjectToElectron = (
       }
       await memory
         .update(oparray)
-        .then(async response => {
+        .then(async (response) => {
           await backup
             .push(oparray)
-            .then(res => {
+            .then((res) => {
               dispatch({
                 payload: { status: completemsg, msg: '' },
                 type: IMPORT_SUCCESS,
               });
             })
-            .catch(err => {
+            .catch((err) => {
               orbitError(orbitInfo(err, 'Backup update error'));
               dispatch({
                 payload: errorStatus(undefined, err.toString()),
@@ -269,7 +269,7 @@ export const importProjectToElectron = (
               });
             });
         })
-        .catch(err => {
+        .catch((err) => {
           orbitError(orbitInfo(err, 'Memory sync error'));
           dispatch({
             payload: errorStatus(undefined, err.toString()),

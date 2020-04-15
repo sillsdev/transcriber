@@ -1,14 +1,14 @@
 {
 	"providers": {
 		"awscloudformation": {
-			"AuthRoleName": "webtranscriberadmin-prod-20191028142350-authRole",
-			"UnauthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-prod-20191028142350-unauthRole",
-			"AuthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-prod-20191028142350-authRole",
+			"AuthRoleName": "webtranscriberadmin-appprod-20191028144629-authRole",
+			"UnauthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-appprod-20191028144629-unauthRole",
+			"AuthRoleArn": "arn:aws:iam::620141372223:role/webtranscriberadmin-appprod-20191028144629-authRole",
 			"Region": "us-east-1",
-			"DeploymentBucketName": "webtranscriberadmin-prod-20191028142350-deployment",
-			"UnauthRoleName": "webtranscriberadmin-prod-20191028142350-unauthRole",
-			"StackName": "webtranscriberadmin-prod-20191028142350",
-			"StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-prod-20191028142350/79065e70-f9b8-11e9-9861-0a325fb8c980"
+			"DeploymentBucketName": "webtranscriberadmin-appprod-20191028144629-deployment",
+			"UnauthRoleName": "webtranscriberadmin-appprod-20191028144629-unauthRole",
+			"StackName": "webtranscriberadmin-appprod-20191028144629",
+			"StackId": "arn:aws:cloudformation:us-east-1:620141372223:stack/webtranscriberadmin-appprod-20191028144629/a29f4be0-f9bb-11e9-9e71-0ec11b444504"
 		}
 	},
 	"hosting": {
@@ -16,17 +16,17 @@
 			"service": "S3AndCloudFront",
 			"providerPlugin": "awscloudformation",
 			"providerMetadata": {
-				"s3TemplateURL": "https://s3.amazonaws.com/webtranscriberadmin-prod-20191028142350-deployment/amplify-cfn-templates/hosting/template.json",
+				"s3TemplateURL": "https://s3.amazonaws.com/webtranscriberadmin-appprod-20191028144629-deployment/amplify-cfn-templates/hosting/template.json",
 				"logicalId": "hostingS3AndCloudFront"
 			},
-			"lastPushTimeStamp": "2019-10-28T19:30:37.884Z",
+			"lastPushTimeStamp": "2019-10-28T19:50:27.492Z",
 			"output": {
-				"S3BucketSecureURL": "https://admin.siltranscriber.org.s3.amazonaws.com",
-				"WebsiteURL": "http://admin.siltranscriber.org.s3-website-us-east-1.amazonaws.com",
+				"S3BucketSecureURL": "https://app.siltranscriber.org.s3.amazonaws.com",
+				"WebsiteURL": "http://app.siltranscriber.org.s3-website-us-east-1.amazonaws.com",
 				"Region": "us-east-1",
-				"HostingBucketName": "admin.siltranscriber.org"
+				"HostingBucketName": "app.siltranscriber.org"
 			},
-			"lastPushDirHash": "VoNu3crjGct4iIXt/NtE/9Qnr38="
+			"lastPushDirHash": "/H3vD2jYQiw3G/BgktO+wgJYXp8="
 		}
 	}
 }

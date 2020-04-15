@@ -36,6 +36,7 @@ import AdmZip from 'adm-zip';
 import { remoteIdNum } from '../utils';
 import { logError, Severity } from '../components/logErrorService';
 import { infoMsg } from '../utils';
+import { isElectron } from '../api-variable';
 
 interface IStateProps {
   t: IImportStrings;
@@ -87,7 +88,6 @@ export function ImportTab(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const [uploadVisible, setUploadVisible] = useState(false);
 
-  const isElectron = process.env.REACT_APP_MODE === 'electron';
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
@@ -244,13 +244,13 @@ export function ImportTab(props: IProps) {
           setBusy(false);
           if (isElectron) {
             backup
-              .pull(q => q.findRecords())
-              .then(transform => {
+              .pull((q) => q.findRecords())
+              .then((transform) => {
                 memory.sync(transform).then(() => {
                   console.log('done');
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 logError(
                   Severity.info,
                   errorReporter,

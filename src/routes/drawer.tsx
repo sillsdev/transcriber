@@ -91,14 +91,12 @@ import {
   forceLogin,
 } from '../utils';
 import logo from './transcriber10.png';
-import { AUTH_CONFIG } from '../auth/auth0-variables';
-import { API_CONFIG } from '../api-variable';
+import { isElectron, API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 import { getOrgs } from '../utils/getOrgs';
 import { DataPath } from '../utils/DataPath';
 
-const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
 
@@ -308,6 +306,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [schema] = useGlobal('schema');
+  const [isApp, setAppView] = useGlobal('appView');
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
   const [busy, setBusy] = useGlobal('remoteBusy');
@@ -338,9 +337,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [mini, setMini] = useState(false);
   const [addProject, setAddProject] = useState(false);
   const [addOrg, setAddOrg] = useState(false);
-  const [title, setTitle] = useState(
-    API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin
-  );
+  const [title, setTitle] = useState(t.silTranscriber);
   const [view, setView] = useState('');
   const [message, setMessage] = useState(<></>);
   const saveConfirm = useRef<() => any>();
@@ -348,8 +345,6 @@ export function ResponsiveDrawer(props: IProps) {
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
   const [delProject, setDelProject] = useState(false);
-  const swapRef = useRef<any>();
-  const newOrgRef = useRef<any>();
   const timer = React.useRef<NodeJS.Timeout>();
   const syncTimer = React.useRef<NodeJS.Timeout>();
 
@@ -419,16 +414,21 @@ export function ResponsiveDrawer(props: IProps) {
     setTimeout(() => handleAddProject(), 1000);
   };
 
+  const defaultView = () => {
+    const newChoice =
+      isApp || projRole !== 'admin' ? NavChoice.Tasks : NavChoice.Plans;
+    setContent(newChoice);
+    setChoice(newChoice);
+    setTitle(frSlug(newChoice));
+    setMini(newChoice === NavChoice.Tasks);
+  };
+
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
     localStorage.setItem('lastProj', remoteId('project', value, keyMap));
     if (addProject) setAddProject(false); // for exiting from add project
     if (choice === '') {
-      const newChoice = API_CONFIG.isApp ? NavChoice.Tasks : NavChoice.Plans;
-      setContent(newChoice);
-      setChoice(newChoice);
-      setTitle(frSlug(newChoice));
-      setMini(newChoice === NavChoice.Tasks);
+      defaultView();
     }
     //on deep linking we will have already set the project
     if (value !== project) {
@@ -454,6 +454,7 @@ export function ResponsiveDrawer(props: IProps) {
   const handleAddProject = () => {
     localStorage.removeItem('url');
     setAddProject(true);
+    if (isApp) setAppView(false);
     setProject('');
     setPlan('');
     setContent(NavChoice.Settings);
@@ -467,6 +468,7 @@ export function ResponsiveDrawer(props: IProps) {
       setPlan(planId || '');
       const parts = to.split('/');
       setContent(parts[3]);
+      if (mini) setMini(false);
       setTab(parseInt(parts[6]));
       setTimeout(() => {
         setAutoOpenAddMedia(true);
@@ -475,6 +477,7 @@ export function ResponsiveDrawer(props: IProps) {
       setContent(NavChoice.Plans);
       setChoice(NavChoice.Plans);
       setTitle(t.plans);
+      if (mini) setMini(false);
       setPlan('');
       if (addProject) setAddProject(false);
       else setDelProject(true);
@@ -503,11 +506,9 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleSwitch = () => {
-    localStorage.setItem('url', history.location.pathname);
-    if (swapRef.current) {
-      checkSavedFn(() => handleChoice(swapRef.current.click()));
-    }
+    checkSavedFn(() => setAppView(!isApp));
   };
+
   const handleAdmin = (where: string) => () => {
     checkSavedFn(() => shell.openExternal(where));
   };
@@ -577,10 +578,10 @@ export function ResponsiveDrawer(props: IProps) {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getProjs = async () => {
-    var projs: Project[] = await memory.query((q: QueryBuilder) =>
+    let projs: Project[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('project')
     );
-    if (isElectron) {
+    if (isApp) {
       const groupids = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
         .map((gm) => related(gm, 'group'));
@@ -621,7 +622,7 @@ export function ResponsiveDrawer(props: IProps) {
           };
         });
       setOrgOptions(
-        API_CONFIG.isApp
+        isApp
           ? orgOpts
           : orgOpts.concat({
               value: t.newOrganization,
@@ -641,7 +642,7 @@ export function ResponsiveDrawer(props: IProps) {
     }
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, user, organizationMemberships]);
+  }, [organization, user, organizationMemberships, orgRole, isApp]);
 
   useEffect(() => {
     if (orgOptions) {
@@ -655,15 +656,11 @@ export function ResponsiveDrawer(props: IProps) {
             ) || '';
       const cur = orgOptions.map((oo) => oo.value).indexOf(orgKey);
       if (cur !== -1) setCurOrg(cur);
-      else if (
-        !busy &&
-        orgOptions.length > (API_CONFIG.isApp ? 0 : 1) &&
-        curOrg === null
-      )
+      else if (!busy && orgOptions.length > (isApp ? 0 : 1) && curOrg === null)
         handleCommitOrg(orgOptions[0].value);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [orgOptions, organization]);
+  }, [orgOptions, organization, isApp]);
 
   useEffect(() => {
     if (delProject) {
@@ -689,7 +686,7 @@ export function ResponsiveDrawer(props: IProps) {
           content !== NavChoice.UsersAndGroups &&
           content !== NavChoice.Organization
         ) {
-          if (!offline && swapRef.current) {
+          if (!offline) {
             Axios.get(API_CONFIG.host + '/api/projects/', {
               headers: {
                 Authorization: 'Bearer ' + auth.accessToken,
@@ -701,8 +698,7 @@ export function ResponsiveDrawer(props: IProps) {
                 (r) => related(r, 'organization') === orgRemId
               );
               if (filtered.length === 0) {
-                if (API_CONFIG.isApp) swapRef.current.click();
-                else handleAddProject();
+                handleAddProject();
               }
             });
           }
@@ -710,7 +706,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject, delProject, swapRef.current]);
+  }, [organization, addProject, delProject]);
 
   useEffect(() => {
     const projKeys = projOptions.map((o) => o.value);
@@ -736,6 +732,11 @@ export function ResponsiveDrawer(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projOptions, project, addProject, busy]);
+
+  useEffect(() => {
+    defaultView();
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [isApp]);
 
   useEffect(() => {
     try {
@@ -865,7 +866,6 @@ export function ResponsiveDrawer(props: IProps) {
     view === '' &&
     localStorage.getItem('isLoggedIn') === 'true'
   ) {
-    console.log('url: ' + url);
     const parts = url.split('/');
     const base = 1;
     const UrlOrgPart = base + 1;
@@ -917,32 +917,7 @@ export function ResponsiveDrawer(props: IProps) {
     }
   }
 
-  let swapTarget = deepLink({
-    organization,
-    project,
-    plan,
-    group,
-    tab,
-    choice,
-    content,
-    keyMap,
-  });
-  if (API_CONFIG.isApp && swapTarget) {
-    swapTarget =
-      AUTH_CONFIG.adminEndpoint +
-      swapTarget.replace(NavChoice.Tasks, NavChoice.Tasks);
-  } else if (swapTarget) {
-    const part = swapTarget.split('/');
-    part[3] = NavChoice.Tasks;
-    swapTarget = AUTH_CONFIG.appEndpoint + part.join('/');
-  } else {
-    swapTarget = API_CONFIG.isApp
-      ? AUTH_CONFIG.adminEndpoint
-      : AUTH_CONFIG.appEndpoint;
-  }
-  console.log('swap target:' + swapTarget); //Leave this until TT-1146 is closed
-
-  const transcriberIcons = API_CONFIG.isApp
+  const transcriberIcons = isApp
     ? [<ListIcon />]
     : [<PlanIcon />, <TeamIcon />, <MediaIcon />, <ReportIcon />];
 
@@ -984,7 +959,7 @@ export function ResponsiveDrawer(props: IProps) {
         <>
           <Divider />
           <List>
-            {(API_CONFIG.isApp
+            {(isApp
               ? [t.organization]
               : [t.usersAndGroups, t.organization]
             ).map((text, index) => (
@@ -996,7 +971,7 @@ export function ResponsiveDrawer(props: IProps) {
                   onClick={choiceClick(text)}
                 >
                   <ListItemIcon>
-                    {index === 0 && !API_CONFIG.isApp ? (
+                    {index === 0 && !isApp ? (
                       <GroupIcon />
                     ) : (
                       <OrganizationIcon />
@@ -1012,15 +987,14 @@ export function ResponsiveDrawer(props: IProps) {
             <div className={classes.project}>
               <div className={classes.header}>
                 <Typography variant="h6">{t.project}</Typography>
-                {!API_CONFIG.isApp &&
-                  (orgRole === 'admin' || projRole === 'admin') && (
-                    <>
-                      <div className={classes.grow}>{'\u00A0'}</div>
-                      <IconButton size="small" onClick={handleAddProject}>
-                        <AddIcon />
-                      </IconButton>
-                    </>
-                  )}
+                {!isApp && (orgRole === 'admin' || projRole === 'admin') && (
+                  <>
+                    <div className={classes.grow}>{'\u00A0'}</div>
+                    <IconButton size="small" onClick={handleAddProject}>
+                      <AddIcon />
+                    </IconButton>
+                  </>
+                )}
               </div>
               {projOptions.length > 0 && (
                 <div className={classes.contained}>
@@ -1037,25 +1011,24 @@ export function ResponsiveDrawer(props: IProps) {
             </div>
           )}
           <List>
-            {(API_CONFIG.isApp
-              ? [t.tasks]
-              : [t.plans, t.team, t.media, t.reports]
-            ).map((text, index) => (
-              <Tooltip key={text} title={text}>
-                <span>
-                  <ListItem
-                    button
-                    key={text}
-                    selected={toSlug(text) === choice}
-                    onClick={choiceClick(text)}
-                    disabled={curProj === null}
-                  >
-                    <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItem>
-                </span>
-              </Tooltip>
-            ))}
+            {(isApp ? [t.tasks] : [t.plans, t.team, t.media, t.reports]).map(
+              (text, index) => (
+                <Tooltip key={text} title={text}>
+                  <span>
+                    <ListItem
+                      button
+                      key={text}
+                      selected={toSlug(text) === choice}
+                      onClick={choiceClick(text)}
+                      disabled={curProj === null}
+                    >
+                      <ListItemIcon>{transcriberIcons[index]}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItem>
+                  </span>
+                </Tooltip>
+              )
+            )}
           </List>
           <Divider />
           <List>
@@ -1186,7 +1159,7 @@ export function ResponsiveDrawer(props: IProps) {
           <img src={logo} className={classes.logo} alt="logo" />
           <div>
             <Typography variant="overline" className={classes.appName}>
-              {API_CONFIG.isApp ? t.transcribe : t.admin}
+              {t.transcribe}
             </Typography>
             <br />
             <Typography variant="h6" noWrap>
@@ -1195,7 +1168,7 @@ export function ResponsiveDrawer(props: IProps) {
           </div>
           <div className={classes.grow}>{'\u00A0'}</div>
 
-          {!API_CONFIG.isApp ? (
+          {!isApp ? (
             <div className={classes.navButton}>
               <Typography>{t.switchTo + '\u00A0'}</Typography>
               <Button
@@ -1220,14 +1193,15 @@ export function ResponsiveDrawer(props: IProps) {
               </Button>
             </div>
           ) : (
-            isElectron &&
-            online && (
+            isApp &&
+            online &&
+            (projRole === 'admin' || orgRole === 'admin') && (
               <div className={classes.navButton}>
                 <Typography>{t.switchTo + '\u00A0'}</Typography>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleAdmin(swapTarget)}
+                  onClick={handleAdmin(API_CONFIG.endpoint)}
                 >
                   {t.admin}
                 </Button>
@@ -1294,21 +1268,6 @@ export function ResponsiveDrawer(props: IProps) {
           noResponse={handleSaveRefused}
         />
       )}
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a ref={swapRef} href={swapTarget} />
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a
-        ref={newOrgRef}
-        href={
-          AUTH_CONFIG.newOrgApp +
-          '/?callback=' +
-          AUTH_CONFIG.callbackUrl
-            .replace('https://', '')
-            .replace('/callback', '') +
-          '#access_token=' +
-          auth.accessToken
-        }
-      ></a>
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );

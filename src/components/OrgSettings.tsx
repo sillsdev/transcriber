@@ -24,7 +24,6 @@ import OrgIcon from '@material-ui/icons/AccountBalance';
 import DeleteExpansion from './DeleteExpansion';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
-import { API_CONFIG } from '../api-variable';
 import { CreateOrg } from '../utils';
 import { currentDateTime } from '../utils/currentDateTime';
 
@@ -89,6 +88,7 @@ export function OrgSettings(props: IProps) {
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
+  const [isApp] = useGlobal('appView');
   const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
@@ -243,7 +243,7 @@ export function OrgSettings(props: IProps) {
                   style={textStyle}
                   variant="filled"
                   required={true}
-                  disabled={API_CONFIG.isApp}
+                  disabled={isApp}
                 />
               }
               label=""
@@ -272,7 +272,7 @@ export function OrgSettings(props: IProps) {
                   style={textStyle}
                   variant="filled"
                   required={false}
-                  disabled={API_CONFIG.isApp}
+                  disabled={isApp}
                 />
               }
               label=""
@@ -290,7 +290,7 @@ export function OrgSettings(props: IProps) {
                     style={textStyle}
                     variant="filled"
                     required={false}
-                    disabled={API_CONFIG.isApp}
+                    disabled={isApp}
                   />
                   <IconButton
                     color="primary"
@@ -306,7 +306,7 @@ export function OrgSettings(props: IProps) {
             />
           </FormGroup>
         </FormControl>
-        {!API_CONFIG.isApp && (curOrg === undefined || orgRole === 'admin') && (
+        {!isApp && (curOrg === undefined || orgRole === 'admin') && (
           <div className={classes.actions}>
             <Button
               key="cancel"
@@ -332,7 +332,7 @@ export function OrgSettings(props: IProps) {
             </Button>
           </div>
         )}
-        {!API_CONFIG.isApp && curOrg !== undefined && orgRole === 'admin' && (
+        {!isApp && curOrg !== undefined && orgRole === 'admin' && (
           <DeleteExpansion
             title={t.deleteOrg}
             explain={t.deleteExplained}

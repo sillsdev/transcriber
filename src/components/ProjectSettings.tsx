@@ -38,7 +38,6 @@ import Confirm from './AlertDialog';
 import { related } from '../utils';
 import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
-import { API_CONFIG } from '../api-variable';
 import { getRoleId, getCreatedBy } from '../utils';
 import { SelectPlanType } from '../control';
 import { projectShortcut } from './ProjectShortcut';
@@ -172,6 +171,7 @@ export function ProjectSettings(props: IProps) {
   const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
+  const [isApp] = useGlobal('appView');
   const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [project, setProject] = useGlobal('project');
@@ -209,7 +209,7 @@ export function ProjectSettings(props: IProps) {
     setProjectGroup(value);
     if (value !== '') {
       let gms = groupmemberships.filter(
-        gm => related(gm, 'group') === value && related(gm, 'user') === user
+        (gm) => related(gm, 'group') === value && related(gm, 'user') === user
       );
       if (gms.length === 0 || related(gms[0], 'role') !== AdminRoleId) {
         setMessage(<span>{t.notAdminInGroup}</span>);
@@ -287,7 +287,7 @@ export function ProjectSettings(props: IProps) {
       user,
       schema,
       memory,
-    }).then(project => {
+    }).then((project) => {
       if (finishAdd) finishAdd({ projectId: project.id });
       orbitSaving(false);
     });
@@ -334,7 +334,7 @@ export function ProjectSettings(props: IProps) {
       user,
       schema,
       memory,
-    }).then(project => {
+    }).then((project) => {
       projectShortcut({
         organization,
         project: project.id,
@@ -379,7 +379,7 @@ export function ProjectSettings(props: IProps) {
     if (add) {
       setCurrentProject(undefined);
       const allUsers = groups.filter(
-        g => related(g, 'owner') === organization && g.attributes.allUsers
+        (g) => related(g, 'owner') === organization && g.attributes.allUsers
       );
       setGroup(allUsers.length > 0 ? allUsers[0].id : '');
     } else {
@@ -409,7 +409,7 @@ export function ProjectSettings(props: IProps) {
   useEffect(() => {
     if (planType === '') {
       const general = planTypes.filter(
-        pt =>
+        (pt) =>
           pt.attributes &&
           pt.attributes.name &&
           /other/i.test(pt.attributes.name)
@@ -428,8 +428,7 @@ export function ProjectSettings(props: IProps) {
     width: 400,
   };
   const selectProps = { MenuProps: { className: classes.menu } };
-  const adminOnly =
-    API_CONFIG.isApp || (orgRole !== 'admin' && projRole !== 'admin');
+  const adminOnly = isApp || (orgRole !== 'admin' && projRole !== 'admin');
 
   return (
     <div
@@ -492,7 +491,7 @@ export function ProjectSettings(props: IProps) {
                   disabled={adminOnly}
                 >
                   {groups
-                    .filter(g => related(g, 'owner') === organization)
+                    .filter((g) => related(g, 'owner') === organization)
                     .sort((i, j) =>
                       i.attributes.name < j.attributes.name ? -1 : 1
                     )
@@ -582,7 +581,7 @@ export function ProjectSettings(props: IProps) {
             </div>
           </FormGroup>
         </FormControl>
-        {!API_CONFIG.isApp && (orgRole === 'admin' || projRole === 'admin') && (
+        {!isApp && (orgRole === 'admin' || projRole === 'admin') && (
           <div className={classes.next}>
             {currentProject === undefined ? (
               <FormControl>
@@ -676,7 +675,7 @@ export function ProjectSettings(props: IProps) {
             )}
           </div>
         )}
-        {!API_CONFIG.isApp &&
+        {!isApp &&
           (orgRole === 'admin' || projRole === 'admin') &&
           currentProject !== undefined && (
             <DeleteExpansion

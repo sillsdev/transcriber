@@ -48,8 +48,7 @@ import Integration from '../model/integration';
 import { schema } from '../schema';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-
-const isElectron = process.env.REACT_APP_MODE === 'electron';
+import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -198,7 +197,7 @@ export function IntegrationPanel(props: IProps) {
     setMessage(<></>);
   };
   const getProject = () => {
-    const projfind: Project[] = projects.filter(p => p.id === project);
+    const projfind: Project[] = projects.filter((p) => p.id === project);
     return projfind.length > 0 ? projfind[0] : undefined;
   };
   const addParatextIntegration = async (): Promise<string> => {
@@ -215,10 +214,10 @@ export function IntegrationPanel(props: IProps) {
   };
   const getParatextIntegration = (local: string) => {
     const intfind: Integration[] = integrations.filter(
-      i => i.attributes && i.attributes.name === local
+      (i) => i.attributes && i.attributes.name === local
     );
     if (intfind.length === 0)
-      addParatextIntegration().then(res => setParatextIntegration(res));
+      addParatextIntegration().then((res) => setParatextIntegration(res));
     else setParatextIntegration(intfind[0].id);
   };
 
@@ -269,7 +268,7 @@ export function IntegrationPanel(props: IProps) {
   };
   const getProjectIntegration = (integration: string): string => {
     const projint: ProjectIntegration[] = projectintegrations.filter(
-      pi =>
+      (pi) =>
         related(pi, 'project') === project &&
         related(pi, 'integration') === integration &&
         pi.attributes
@@ -280,7 +279,7 @@ export function IntegrationPanel(props: IProps) {
   const removeProjectFromParatextList = (index: number) => {
     paratext_projects[index].ProjectIds = paratext_projects[
       index
-    ].ProjectIds.filter(p => p !== remoteIdNum('project', project, keyMap));
+    ].ProjectIds.filter((p) => p !== remoteIdNum('project', project, keyMap));
   };
   const handleParatextProjectChange = (e: any) => {
     if (e.target.value === t.removeProject) {
@@ -288,7 +287,7 @@ export function IntegrationPanel(props: IProps) {
       return;
     }
     let index: number = paratext_projects.findIndex(
-      p => p.Name === e.target.value
+      (p) => p.Name === e.target.value
     );
     if (ptProj >= 0) removeProjectFromParatextList(ptProj);
     setPtProj(index);
@@ -358,7 +357,7 @@ export function IntegrationPanel(props: IProps) {
   };
   const findConnectedProject = () => {
     let index = paratext_projects.findIndex(
-      p => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
+      (p) => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
     );
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
@@ -383,8 +382,8 @@ export function IntegrationPanel(props: IProps) {
   };
 
   useEffect(() => {
-    Online(result => setOnline(result), auth);
-    if (isElectron) getParatextDataPath().then(val => setPtPath(val));
+    Online((result) => setOnline(result), auth);
+    if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -450,7 +449,7 @@ export function IntegrationPanel(props: IProps) {
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
         if (isElectron) {
-          getParatextDataPath().then(ptPath =>
+          getParatextDataPath().then((ptPath) =>
             getLocalProjects(ptPath, t.projectsPending, langTag)
           );
         } else {
