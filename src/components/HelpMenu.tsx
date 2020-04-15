@@ -84,6 +84,8 @@ export function HelpMenu(props: IProps) {
   const [developer, setDeveloper] = useGlobal('developer');
   const helpRef = React.useRef<any>();
 
+  const indexName = '/index.htm';
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
@@ -100,8 +102,8 @@ export function HelpMenu(props: IProps) {
       const target = !online
         ? path.join(process.cwd(), API_CONFIG.chmHelp)
         : isApp
-        ? API_CONFIG.help + '/' + helpLanguage() + '/index.htm'
-        : API_CONFIG.adminHelp + '/' + helpLanguage() + '/index.htm';
+        ? API_CONFIG.help + '/' + helpLanguage() + indexName
+        : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName;
       console.log('launching', target);
       shell.openExternal(target);
     } else if (helpRef.current) {
@@ -183,8 +185,8 @@ export function HelpMenu(props: IProps) {
         ref={helpRef}
         href={
           isApp
-            ? API_CONFIG.help + '/' + helpLanguage()
-            : API_CONFIG.adminHelp + '/' + helpLanguage()
+            ? API_CONFIG.help + '/' + helpLanguage() + indexName
+            : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName
         }
         target="_blank"
         rel="noopener noreferrer"
