@@ -1159,7 +1159,7 @@ export function ResponsiveDrawer(props: IProps) {
           <img src={logo} className={classes.logo} alt="logo" />
           <div>
             <Typography variant="overline" className={classes.appName}>
-              {t.transcribe}
+              {isApp ? t.transcribe : t.admin}
             </Typography>
             <br />
             <Typography variant="h6" noWrap>
