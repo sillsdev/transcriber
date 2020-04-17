@@ -726,6 +726,22 @@ const initialState = {
 			"other": "General Transcription",
 		}
 	}),
+	"setup": new LocalizedStrings({
+		"en": {
+			"gettingStarted": "Getting Started",
+			"addPlan": "Add a plan",
+			"upload": "Upload media files",
+			"attach": "Attach media to passages",
+			"assign": "Optionally assign sections to transcribers",
+			"offlineNote": "(Especially if transcribers are working offline)",
+		}
+	}),
+	"notSetup": new LocalizedStrings({
+		"en": {
+			"welcome": "Welcome to SIL Transcriber",
+			"notReady": "This organization and project are not setup and ready for work yet.",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -776,6 +792,8 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
 				"control" : new LocalizedStrings(action.payload.data.control),
+				"setup" : new LocalizedStrings(action.payload.data.setup),
+				"notSetup" : new LocalizedStrings(action.payload.data.notSetup),
 			};
 		case SET_LANGUAGE:
 			return {

@@ -164,7 +164,6 @@ export function Transcriber(props: IProps) {
   };
   const classes = useStyles();
   const theme = useTheme();
-  const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');

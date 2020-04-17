@@ -3316,5 +3316,53 @@
             <target/>
          </segment>
       </unit>
+      <unit id="setup.gettingStarted">
+         <segment>
+            <source>Getting Started</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="setup.addPlan">
+         <segment>
+            <source>Add a plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="setup.upload">
+         <segment>
+            <source>Upload media files</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="setup.attach">
+         <segment>
+            <source>Attach media to passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="setup.assign">
+         <segment>
+            <source>Optionally assign sections to transcribers</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="setup.offlineNote">
+         <segment>
+            <source>(Especially if transcribers are working offline)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="notSetup.welcome">
+         <segment>
+            <source>Welcome to SIL Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="notSetup.notReady">
+         <segment>
+            <source>This organization and project are not setup and ready for work yet.</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

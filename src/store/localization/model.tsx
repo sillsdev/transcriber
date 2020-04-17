@@ -679,6 +679,20 @@ export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "other": string;
 };
 
+export interface ISetupStrings extends Localize.LocalizedStringsMethods {
+    "gettingStarted": string;
+    "addPlan": string;
+    "upload": string;
+    "attach": string;
+    "assign": string;
+    "offlineNote": string;
+};
+
+export interface INotSetupStrings extends Localize.LocalizedStringsMethods {
+    "welcome": string;
+    "notReady": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -724,5 +738,7 @@ export interface ILocalizedStrings {
 	deleteExpansion: IDeleteExpansionStrings;
 	taskItem: ITaskItemStrings;
 	control: IControlStrings;
+	setup: ISetupStrings;
+	notSetup: INotSetupStrings;
 	[key: string]: any;
 };

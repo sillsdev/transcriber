@@ -3868,7 +3868,62 @@
         			<context context-type="sourcefile">selectPlanType.tsx</context>
         		</context-group>
         	</trans-unit>
-
+        	<trans-unit id="setup.gettingStarted">
+        		<source>Getting Started</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.addPlan">
+        		<source>Add a plan</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.upload">
+        		<source>Upload media files</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.attach">
+        		<source>Attach media to passages</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.assign">
+        		<source>Optionally assign sections to transcribers</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.offlineNote">
+        		<source>(Especially if transcribers are working offline)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="notSetup.welcome">
+        		<source>Welcome to SIL Transcriber</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="notSetup.notReady">
+        		<source>This organization and project are not setup and ready for work yet.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
         </body>
     </file>
 </xliff>

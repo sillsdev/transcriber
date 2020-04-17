@@ -79,6 +79,8 @@ import IntegrationPanel from '../components/Integration';
 import PlanTable from '../components/PlanTable';
 import { IAddArgs } from '../components/ProjectSettings';
 import Busy from '../components/Busy';
+import Setup from '../components/Setup';
+import NotSetup from '../components/NotSetup';
 import SnackBar from '../components/SnackBar';
 import {
   related,
@@ -251,6 +253,8 @@ export enum NavChoice {
   Scripture = 'scripture-plan',
   General = 'other-plan',
   None = 'none',
+  Setup = 'setup',
+  NotSetup = 'notsetup',
 }
 
 interface componentType {
@@ -406,6 +410,8 @@ export function ResponsiveDrawer(props: IProps) {
       setGroup('');
       setProjOptions([]);
       setCurProj(null);
+      setTranscribe(false);
+      setChoice('');
     }
   };
 
@@ -415,12 +421,18 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const defaultView = () => {
-    const newChoice =
-      isApp || projRole !== 'admin' ? NavChoice.Tasks : NavChoice.Plans;
-    setContent(newChoice);
-    setChoice(newChoice);
-    setTitle(frSlug(newChoice));
-    setMini(newChoice === NavChoice.Tasks);
+    let newChoice = NavChoice.Tasks;
+    if (!isApp && projRole === 'admin') newChoice = NavChoice.Plans;
+    if (projOptions.length === 0 || !transcribe) {
+      newChoice = projRole === 'admin' ? NavChoice.Setup : NavChoice.NotSetup;
+      if (projRole === 'admin') setAppView(false);
+    }
+    if (newChoice !== content) {
+      setContent(newChoice);
+      setChoice(newChoice);
+      setTitle(frSlug(newChoice));
+      setMini(newChoice === NavChoice.Tasks);
+    }
   };
 
   const handleCommitProj = (value: string) => {
@@ -697,7 +709,7 @@ export function ResponsiveDrawer(props: IProps) {
               const filtered = data.filter(
                 (r) => related(r, 'organization') === orgRemId
               );
-              if (filtered.length === 0) {
+              if (filtered.length === 0 && orgRole === 'admin') {
                 handleAddProject();
               }
             });
@@ -706,7 +718,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject, delProject]);
+  }, [organization, addProject, delProject, orgRole]);
 
   useEffect(() => {
     const projKeys = projOptions.map((o) => o.value);
@@ -734,11 +746,6 @@ export function ResponsiveDrawer(props: IProps) {
   }, [projOptions, project, addProject, busy]);
 
   useEffect(() => {
-    defaultView();
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [isApp]);
-
-  useEffect(() => {
     try {
       const projRec: Project = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: project })
@@ -756,6 +763,26 @@ export function ResponsiveDrawer(props: IProps) {
       setTitle(attr ? attr.name : '');
     }
   }, [plan, plans]);
+
+  const defaultViewActions = ['', NavChoice.Setup, NavChoice.NotSetup];
+  const nonAdminView: string[] = [
+    NavChoice.Organization,
+    NavChoice.Tasks,
+    NavChoice.Settings,
+    NavChoice.Export,
+    NavChoice.Import,
+    NavChoice.Integrations,
+  ];
+
+  useEffect(() => {
+    if (
+      defaultViewActions.indexOf(content) !== -1 ||
+      (projRole !== 'admin' && nonAdminView.indexOf(content) === -1)
+    ) {
+      defaultView();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [isApp, orgRole, projRole, projOptions, transcribe, content]);
 
   useEffect(() => {
     if (!group || group === '') return;
@@ -1119,6 +1146,8 @@ export function ResponsiveDrawer(props: IProps) {
   const Visualize = React.lazy(() => import('../components/Visualize'));
   components[NavChoice.Reports] = LazyLoad({ ...props })(Visualize);
   components[NavChoice.None] = <Busy />;
+  components[NavChoice.Setup] = <Setup />;
+  components[NavChoice.NotSetup] = <NotSetup />;
 
   components[NavChoice.Tasks] = (
     <TranscriberProvider {...props}>
