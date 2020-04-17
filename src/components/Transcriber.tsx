@@ -66,7 +66,7 @@ import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
 import moment from 'moment-timezone';
-import { UpdateRecord } from '../model/baseModel';
+import { UpdateRecord, AddRecord } from '../model/baseModel';
 import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
@@ -164,6 +164,7 @@ export function Transcriber(props: IProps) {
   };
   const classes = useStyles();
   const theme = useTheme();
+  const [schema] = useGlobal('schema');
   const [keyMap] = useGlobal('keyMap');
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
@@ -430,8 +431,37 @@ export function Transcriber(props: IProps) {
     done: ActivityStates.TranscribeReady,
     synced: ActivityStates.TranscribeReady,
   };
+  const reopenSynced = async () => {
+    const mediaRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'mediafile', id: mediaId })
+    ) as MediaFile;
+    const planId = related(mediaRec, 'plan');
+    const newMedia = {
+      attributes: { ...mediaRec.attributes },
+      type: 'mediafile',
+    } as MediaFile;
+    newMedia.attributes.versionNumber += 1;
+    await memory.update((t) => [
+      AddRecord(t, newMedia, remoteIdNum('user', user, memory.keyMap)),
+      t.replaceRelatedRecord(
+        { type: 'mediafile', id: newMedia.id },
+        'passage',
+        {
+          type: 'passage',
+          id: passage.id,
+        }
+      ),
+      t.replaceRelatedRecord({ type: 'mediafile', id: newMedia.id }, 'plan', {
+        type: 'plan',
+        id: planId,
+      }),
+    ]);
+  };
   const handleReopen = async () => {
     if (previous.hasOwnProperty(state)) {
+      if (state === ActivityStates.Synced || state === ActivityStates.Done) {
+        await reopenSynced();
+      }
       await memory.update(
         UpdatePassageStateOps(
           passage.id,
