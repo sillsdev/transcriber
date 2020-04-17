@@ -689,8 +689,8 @@ const initialState = {
 			"userProfile": "User profile",
 			"completeProfile": "Complete User Profile",
 			"addOfflineUser": "Add Offline User",
-			"sendNews": "Recieve SIL Transcriber and Language Technology news",
-			"sendDigest": "Recieve daily digests",
+			"sendNews": "Receive SIL Transcriber and Language Technology news",
+			"sendDigest": "Receive daily digests",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({

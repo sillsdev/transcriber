@@ -11,6 +11,7 @@ import {
   IUsertableStrings,
   Group,
   GroupMembership,
+  Invitation,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -72,7 +73,7 @@ interface IRow {
 }
 
 const getUser = (om: OrganizationMembership, users: User[]) => {
-  return users.filter(u => u.id === related(om, 'user'));
+  return users.filter((u) => u.id === related(om, 'user'));
 };
 const getName = (om: OrganizationMembership, users: User[]) => {
   const u = getUser(om, users);
@@ -87,12 +88,12 @@ const getMedia = (
   t: IUsertableStrings
 ) => {
   const members = organizationMemberships
-    .filter(om => related(om, 'organization') === organization)
+    .filter((om) => related(om, 'organization') === organization)
     .sort((i, j) => (getName(i, users) < getName(j, users) ? -1 : 1));
   const rowData: IRow[] = [];
-  members.forEach(m => {
+  members.forEach((m) => {
     const user = getUser(m, users);
-    const role = roles.filter(r => r.id === related(m, 'role'));
+    const role = roles.filter((r) => r.id === related(m, 'role'));
     if (user.length === 1) {
       const u = user[0];
       if (u.attributes) {
@@ -195,28 +196,42 @@ export function UserTable(props: IProps) {
       q.findRecords('organizationmembership')
     ) as OrganizationMembership[];
     const userOrgRec = orgMemberRecs.filter(
-      o =>
+      (o) =>
         related(o, 'user') === deleteItem &&
         related(o, 'organization') === organization
     );
     if (userOrgRec.length === 1) {
       memory.update((t: TransformBuilder) => t.removeRecord(userOrgRec[0]));
     }
+    const invites = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('invitation')
+    ) as Invitation[];
+    const user = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'user', id: deleteItem })
+    ) as User;
+    const inviteRec = invites.filter(
+      (i) =>
+        i.attributes.email === user.attributes.email &&
+        related(i, 'organization') === organization
+    );
+    inviteRec.forEach((i) => {
+      memory.update((t: TransformBuilder) => t.removeRecord(i));
+    });
     const groupRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('group')
     ) as Group[];
     const orgGroups = groupRecs
-      .filter(g => related(g, 'owner') === organization)
-      .map(og => og.id);
+      .filter((g) => related(g, 'owner') === organization)
+      .map((og) => og.id);
     const grpMbrRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('groupmembership')
     ) as GroupMembership[];
     const userGrpOrgRecs = grpMbrRecs.filter(
-      g =>
+      (g) =>
         related(g, 'user') === deleteItem &&
         orgGroups.includes(related(g, 'group'))
     );
-    userGrpOrgRecs.forEach(g => {
+    userGrpOrgRecs.forEach((g) => {
       memory.update((t: TransformBuilder) => t.removeRecord(g));
     });
   };

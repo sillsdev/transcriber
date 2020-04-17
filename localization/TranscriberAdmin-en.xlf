@@ -3180,13 +3180,13 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Recieve SIL Transcriber and Language Technology news</source>
+            <source>Receive SIL Transcriber and Language Technology news</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.sendDigest">
          <segment>
-            <source>Recieve daily digests</source>
+            <source>Receive daily digests</source>
             <target/>
          </segment>
       </unit>

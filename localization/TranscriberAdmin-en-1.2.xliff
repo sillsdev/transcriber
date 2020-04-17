@@ -3708,14 +3708,14 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.sendNews">
-        		<source>Recieve SIL Transcriber and Language Technology news</source>
+        		<source>Receive SIL Transcriber and Language Technology news</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.sendDigest">
-        		<source>Recieve daily digests</source>
+        		<source>Receive daily digests</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
