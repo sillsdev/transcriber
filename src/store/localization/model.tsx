@@ -288,6 +288,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "saving": string;
     "newOrganization": string;
     "admin": string;
+    "goOnline": string;
     "transcribe": string;
     "switchTo": string;
     "switchToAdmin": string;

@@ -311,6 +311,7 @@ const initialState = {
 			"saving": "Saving...",
 			"newOrganization": "Add Organization",
 			"admin": "Admin",
+			"goOnline": "SIL Transcriber Online",
 			"transcribe": "Transcribe",
 			"switchTo": "Switch to:",
 			"switchToAdmin": "Open project in Admin",

@@ -1232,7 +1232,7 @@ export function ResponsiveDrawer(props: IProps) {
                   color="primary"
                   onClick={handleAdmin(API_CONFIG.endpoint)}
                 >
-                  {t.admin}
+                  {t.goOnline}
                 </Button>
               </div>
             )

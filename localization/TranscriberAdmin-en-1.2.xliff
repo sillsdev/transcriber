@@ -1650,6 +1650,13 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="main.goOnline">
+        		<source>SIL Transcriber Online</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.transcribe">
         		<source>Transcribe</source>
         		<target/>

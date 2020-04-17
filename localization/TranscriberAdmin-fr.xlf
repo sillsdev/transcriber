@@ -1411,6 +1411,12 @@
 				<target>Admin</target>
 			</segment>
 		</unit>
+		<unit id="main.goOnline">
+			<segment>
+				<source>SIL Transcriber Online</source>
+				<target>SIL Transcriber en ligne</target>
+			</segment>
+		</unit>
 		<unit id="main.transcribe">
 			<segment>
 				<source>Transcribe</source>
