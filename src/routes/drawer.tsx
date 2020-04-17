@@ -381,8 +381,12 @@ export function ResponsiveDrawer(props: IProps) {
   const handleChoice = (choice: string) => {
     localStorage.removeItem('url');
     setAddProject(false);
+    let nextContent = choice;
+    if (choice === NavChoice.Tasks && !transcribe) {
+      nextContent = projRole === 'admin' ? NavChoice.Setup : NavChoice.NotSetup;
+    }
     setChoice(choice);
-    setContent(choice);
+    setContent(nextContent);
     setTitle(frSlug(choice));
     setPlan('');
     setMini(choice === NavChoice.Tasks);
@@ -425,8 +429,9 @@ export function ResponsiveDrawer(props: IProps) {
     if (!isApp && projRole === 'admin') newChoice = NavChoice.Plans;
     if (projOptions.length === 0 || !transcribe) {
       newChoice = projRole === 'admin' ? NavChoice.Setup : NavChoice.NotSetup;
-      if (projRole === 'admin') setAppView(false);
+      if (projRole === 'admin' && isApp) setAppView(false);
     }
+    if (newChoice === NavChoice.Tasks && !isApp) setAppView(true);
     if (newChoice !== content) {
       setContent(newChoice);
       setChoice(newChoice);
@@ -777,7 +782,7 @@ export function ResponsiveDrawer(props: IProps) {
   useEffect(() => {
     if (
       defaultViewActions.indexOf(content) !== -1 ||
-      (projRole !== 'admin' && nonAdminView.indexOf(content) === -1)
+      ((projRole !== 'admin' || isApp) && nonAdminView.indexOf(content) === -1)
     ) {
       defaultView();
     }
