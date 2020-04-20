@@ -128,10 +128,11 @@ export function TaskHead(props: IProps) {
           <MenuItem
             onClick={handleAction(editAction, 'editor')}
             disabled={
-              editAction === unassignAction &&
-              editor !== user &&
-              !/admin/i.test(orgRole) &&
-              !/admin/i.test(projRole)
+              (editAction === unassignAction &&
+                editor !== user &&
+                !/admin/i.test(orgRole) &&
+                !/admin/i.test(projRole)) ||
+              (editAction === assignAction && /transcriber/i.test(projRole))
             }
           >
             {
