@@ -649,9 +649,13 @@ export function ScriptureTable(props: IProps) {
           )) as any;
           if (rec !== undefined) {
             var outrecs = JSON.parse(rec.attributes.data);
-            //currently not waiting for these
-            memory.sync(await remote.pull((q) => q.findRecords('section')));
-            memory.sync(await remote.pull((q) => q.findRecords('passage')));
+            //not waiting for these...that doesn't work if they navigate away
+            await memory.sync(
+              await remote.pull((q) => q.findRecords('section'))
+            );
+            await memory.sync(
+              await remote.pull((q) => q.findRecords('passage'))
+            );
             if (anyNew) {
               var newrowid = rowId.map((r) => r);
               newrowid.forEach((row, index) => {
@@ -664,14 +668,8 @@ export function ScriptureTable(props: IProps) {
                   newrowid[index].id = id;
                 }
               });
-              console.log('setting newrowid');
               setRowId(newrowid);
-              console.log('setting indata', new Date().toLocaleTimeString());
               setInData(data.map((row: Array<any>) => [...row]));
-              console.log(
-                'done setting indata',
-                new Date().toLocaleTimeString()
-              );
             }
           }
         }

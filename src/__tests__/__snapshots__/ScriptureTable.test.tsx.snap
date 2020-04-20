@@ -10,217 +10,246 @@ exports[`can render ScriptureTable snapshot 1`] = `
     <div
       class="makeStyles-paper-8"
     >
-      <div
-        class="makeStyles-actions-9"
+      <header
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorDefault makeStyles-bar-9 mui-fixed MuiPaper-elevation4"
       >
-        <button
-          aria-label="Add Section"
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-12 MuiButton-outlinedPrimary"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="MuiButton-label"
-          >
-            Add Section
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root makeStyles-icon-13"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-              />
-            </svg>
-          </span>
-          <span
-            class="MuiTouchRipple-root"
-          />
-        </button>
-        <button
-          aria-label="Add Passage"
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-12 MuiButton-outlinedPrimary Mui-disabled Mui-disabled"
-          disabled=""
-          tabindex="-1"
-          type="button"
-        >
-          <span
-            class="MuiButton-label"
-          >
-            Add Passage
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root makeStyles-icon-13"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
-              />
-            </svg>
-          </span>
-        </button>
-        <button
-          aria-label="Action"
-          aria-owns="action-menu"
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-12 MuiButton-outlinedPrimary"
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="MuiButton-label"
-          >
-            Action
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root makeStyles-icon-13"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-          </span>
-          <span
-            class="MuiTouchRipple-root"
-          />
-        </button>
         <div
-          class="makeStyles-grow-11"
+          class="makeStyles-actions-11"
         >
-           
-        </div>
-        <button
-          aria-label="Save"
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-button-12 MuiButton-containedPrimary Mui-disabled Mui-disabled"
-          disabled=""
-          tabindex="-1"
-          type="button"
-        >
-          <span
-            class="MuiButton-label"
+          <button
+            aria-label="Add Section"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary"
+            tabindex="0"
+            type="button"
           >
-            Save
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root makeStyles-icon-13"
-              focusable="false"
-              role="presentation"
-              viewBox="0 0 24 24"
+            <span
+              class="MuiButton-label"
             >
-              <path
-                d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
-              />
-            </svg>
-          </span>
-        </button>
-      </div>
-      <span
-        class="data-grid-container"
-        tabindex="0"
-      >
-        <table
-          class="data-grid"
-        >
-          <tbody>
-            <tr>
-              <td
-                cell="[object Object]"
-                class="cell read-only"
-                col="0"
-                row="0"
+              Add Section
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root makeStyles-icon-15"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <span
-                  class="value-viewer"
+                <path
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
                 />
-              </td>
-              <td
-                cell="[object Object]"
-                class="cell read-only"
-                col="1"
-                row="0"
-                style="width: 80px;"
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <button
+            aria-label="Add Passage"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary Mui-disabled Mui-disabled"
+            disabled=""
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Add Passage
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root makeStyles-icon-15"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <span
-                  class="value-viewer"
-                >
-                  Section
-                </span>
-              </td>
-              <td
-                cell="[object Object]"
-                class="cell read-only"
-                col="2"
-                row="0"
-                style="width: 280px;"
+                <path
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                />
+              </svg>
+            </span>
+          </button>
+          <button
+            aria-label="Paste Table"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Paste Table
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root makeStyles-icon-15"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <span
-                  class="value-viewer"
-                >
-                  Title
-                </span>
-              </td>
-              <td
-                cell="[object Object]"
-                class="cell read-only"
-                col="3"
-                row="0"
-                style="width: 80px;"
+                <path
+                  d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <button
+            aria-label="Action"
+            aria-owns="action-menu"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Action
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root makeStyles-icon-15"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <span
-                  class="value-viewer"
-                >
-                  Passage
-                </span>
-              </td>
-              <td
-                cell="[object Object]"
-                class="cell read-only"
-                col="4"
-                row="0"
-                style="width: 170px;"
+                <path
+                  d="M7 10l5 5 5-5z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <div
+            class="makeStyles-grow-13"
+          >
+             
+          </div>
+          <button
+            aria-label="Save"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-button-14 MuiButton-containedPrimary Mui-disabled Mui-disabled"
+            disabled=""
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Save
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root makeStyles-icon-15"
+                focusable="false"
+                viewBox="0 0 24 24"
               >
-                <span
-                  class="value-viewer"
+                <path
+                  d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </header>
+      <div
+        class="makeStyles-content-10"
+      >
+        <span
+          class="data-grid-container"
+          tabindex="0"
+        >
+          <table
+            class="data-grid"
+          >
+            <tbody>
+              <tr>
+                <td
+                  cell="[object Object]"
+                  class="cell read-only"
+                  col="0"
+                  row="0"
                 >
-                  Book
-                </span>
-              </td>
-              <td
-                cell="[object Object]"
-                class="cell read-only"
-                col="5"
-                row="0"
-                style="width: 180px;"
-              >
-                <span
-                  class="value-viewer"
+                  <span
+                    class="value-viewer"
+                  />
+                </td>
+                <td
+                  cell="[object Object]"
+                  class="cell read-only"
+                  col="1"
+                  row="0"
+                  style="width: 80px;"
                 >
-                  Reference
-                </span>
-              </td>
-              <td
-                cell="[object Object]"
-                class="cell read-only"
-                col="6"
-                row="0"
-                style="width: 280px;"
-              >
-                <span
-                  class="value-viewer"
+                  <span
+                    class="value-viewer"
+                  >
+                    Section
+                  </span>
+                </td>
+                <td
+                  cell="[object Object]"
+                  class="cell read-only"
+                  col="2"
+                  row="0"
+                  style="width: 280px;"
                 >
-                  Description
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </span>
+                  <span
+                    class="value-viewer"
+                  >
+                    Title
+                  </span>
+                </td>
+                <td
+                  cell="[object Object]"
+                  class="cell read-only"
+                  col="3"
+                  row="0"
+                  style="width: 80px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                    Passage
+                  </span>
+                </td>
+                <td
+                  cell="[object Object]"
+                  class="cell read-only"
+                  col="4"
+                  row="0"
+                  style="width: 170px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                    Book
+                  </span>
+                </td>
+                <td
+                  cell="[object Object]"
+                  class="cell read-only"
+                  col="5"
+                  row="0"
+                  style="width: 180px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                    Reference
+                  </span>
+                </td>
+                <td
+                  cell="[object Object]"
+                  class="cell read-only"
+                  col="6"
+                  row="0"
+                  style="width: 280px;"
+                >
+                  <span
+                    class="value-viewer"
+                  >
+                    Description
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </span>
+      </div>
     </div>
     <div />
   </div>

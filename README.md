@@ -91,12 +91,10 @@ Example _.env.appdev.development.local_:
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
 REACT_APP_CLIENTID= (auth0 client id)
-REACT_APP_ADMIN_ENDPOINT= (url of admin app)
-REACT_APP_APP_ENDPOINT= (url of app)
+REACT_APP_ENDPOINT= (url of app)
 REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
-REACT_APP_DESKTOP_HELP= (desktop extension app help)
-REACT_APP_CHM_HELP= (desktop extension offline chm help file path)
+REACT_APP_ADMIN_HELP= (url of admin help online)
 REACT_APP_COMMUNITY= (url of site for community discussion)
 REACT_APP_SNAGID=(bugsnag client id)
 REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
@@ -104,8 +102,7 @@ REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by ro
 REACT_APP_OFFLINE_not=true
 BROWSER=none
 REACT_APP_CALLBACK=http://localhost:3000/callback
-REACT_APP_APPMODE=true
-REACT_APP_SITE_TITLE=SIL Transcriber Admin DEV
+REACT_APP_SITE_TITLE=SIL Transcriber DEV
 ```
 
 Example _.env.dev.local_:
@@ -113,11 +110,11 @@ Example _.env.dev.local_:
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
 REACT_APP_CLIENTID= (auth0 client id)
-REACT_APP_ADMIN_ENDPOINT= (url of admin app)
-REACT_APP_APP_ENDPOINT= (url of app)
-REACT_APP_CALLBACK=localhost:3000/callback
+REACT_APP_CALLBACK= (url of app followed by /callback)
+REACT_APP_ENDPOINT= (url of app)
 REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
+REACT_APP_ADMIN_HELP= (url of admin help online)
 REACT_APP_COMMUNITY= (url of site for community discussion)
 REACT_APP_SITE_TITLE= (title for browser tab)
 REACT_APP_SNAGID=(bugsnag client id)
@@ -140,16 +137,15 @@ Having created or obtained the _.env.\*_ files listed above, generate the enviro
 
 ## Deployment
 
-The `npm run dev`, `npm run qa` and `npm run prod` commands configure the admin app to deploy to _dev_, _qa_, or _prod_ respectively. The `npm run appdev`, `npm run apppqa` and `npm run appprod` commands configure the transcriber app to deploy to _dev_, _qa_, or _prod_ respectively. There are separate urls and separate _AWS S3_ buckets for each of these deployments. Once configuration files have been generated, execute the following to deploy the app:
+The `npm run dev`, `npm run qa` and `npm run prod` commands configure the app to deploy to _dev_, _qa_, or _prod_ respectively. There are separate urls and separate _AWS S3_ buckets for each of these deployments. Once configuration files have been generated, execute the following to deploy the app:
 
-1. `git checkout amplify/*` _# this command avoids errors related to amplify changes_
-2. `npm run deploy`
+`npm run deploy`
 
 As with the _dev_ configuration above (see the example _.env.development.local_), _qa_ (quality assuarance) deployment requires _.env.qa.development.local_ and _.env.qa.local_ in the root project directory. As above, the `npm run qa` command will use these two files to over write _.env.development.local_ and _.env.local_ so the `npm run deploy` command will properly deploy to the _qa_ environment.
 
 # Electron (Desktop) app
 
-The steps above regarding _installation_ and setting up the environments are also applicable to the _Electron (Desktop)_ app. The admin is not deployed to the desktop so only the _appdev_, _appqa_, and _appprod_ environments apply.
+The steps above regarding _installation_ and setting up the environments are also applicable to the _Electron (Desktop)_ app.
 
 ## Electron Development
 

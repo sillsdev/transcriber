@@ -13,7 +13,11 @@ export const getMediaRec = (passageId: string, memory: Memory) => {
       record: { type: 'passage', id: passageId },
     })
   ) as MediaFile[];
-  return mediaRecs.length > 0 ? mediaRecs[0] : null;
+  return mediaRecs.length > 0
+    ? mediaRecs.sort(
+        (a, b) => b.attributes.versionNumber - a.attributes.versionNumber
+      )[0]
+    : null;
 };
 
 export const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {

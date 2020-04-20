@@ -33,14 +33,13 @@ import {
 import { withData } from '../mods/react-orbitjs';
 import AdmZip from 'adm-zip';
 import Confirm from '../components/AlertDialog';
+import { isElectron, API_CONFIG } from '../api-variable';
 
-import { AUTH_CONFIG } from '../auth/auth0-variables';
 const reactStringReplace = require('react-string-replace');
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
-const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
 
@@ -191,7 +190,7 @@ export function Access(props: IProps) {
       }
     }
   };
-  const handleAdmin = () => shell.openExternal(AUTH_CONFIG.adminEndpoint);
+  const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
   useEffect(() => {
     Online((isOnline) => setOnline(isOnline), auth);

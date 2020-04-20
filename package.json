@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "0.7.5",
+  "version": "0.8.0",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -77,12 +77,9 @@
     "stamp": "node writeDate.js",
     "deploy": "npm run stamp && amplify publish",
     "deploySetup": "amplify init && git checkout amplify && git checkout .gitignore",
-    "appdev": "amplify env checkout appdev && node changeEnv.js appdev && git checkout amplify/*",
-    "appqa": "amplify env checkout appqa && node changeEnv.js appqa && git checkout amplify/*",
-    "appprod": "amplify env checkout appprod && node changeEnv.js appprod && git checkout amplify/*",
-    "dev": "amplify env checkout dev && node changeEnv.js dev && git checkout amplify/*",
-    "qa": "amplify env checkout qa && node changeEnv.js qa && git checkout amplify/*",
-    "prod": "amplify env checkout prod && node changeEnv.js prod && git checkout amplify/*"
+    "dev": "amplify env checkout appdev && node changeEnv.js dev && git checkout amplify\\#current-cloud-backend",
+    "qa": "amplify env checkout appqa && node changeEnv.js qa && git checkout amplify\\#current-cloud-backend",
+    "prod": "amplify env checkout appprod && node changeEnv.js prod && git checkout amplify\\#current-cloud-backend"
   },
   "prettier": {
     "trailingComma": "es5"

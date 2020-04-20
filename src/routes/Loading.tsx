@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { IState, IMainStrings, Organization, Invitation, User } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
-import { API_CONFIG } from '../api-variable';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -315,7 +314,7 @@ export function Loading(props: IProps) {
       <AppBar position="fixed" className={classes.appBar} color="inherit">
         <Toolbar>
           <Typography variant="h6" noWrap>
-            {API_CONFIG.isApp ? t.silTranscriber : t.silTranscriberAdmin}
+            {t.silTranscriber}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
           <UserMenu action={handleUserMenuAction} auth={auth} />
@@ -329,9 +328,7 @@ export function Loading(props: IProps) {
               {localStorage.getItem('inviteError') || ''}
             </Typography>
             <Typography variant="h6" className={classes.message}>
-              {API_CONFIG.isApp
-                ? t.loadingTranscriber
-                : t.loadingTranscriberAdmin}
+              {t.loadingTranscriber}
             </Typography>
           </div>
           <LinearProgress variant="determinate" value={completed} />

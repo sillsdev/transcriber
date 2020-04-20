@@ -32,15 +32,9 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
-import {
-  validateEmail,
-  related,
-  getRoleId,
-  IsAdmin,
-  getUserById,
-} from '../utils';
+import { validateEmail, related, getRoleId, getUserById } from '../utils';
 import { schema } from '../schema';
-import { AUTH_CONFIG } from '../auth/auth0-variables';
+import { API_CONFIG } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -145,19 +139,13 @@ function Invite(props: IProps) {
       Questions: t.questions,
       Join: t.join,
     };
-    const link =
-      IsAdmin(roles, role) ||
-      IsAdmin(roles, allUsersRole) ||
-      IsAdmin(roles, groupRole)
-        ? AUTH_CONFIG.adminEndpoint
-        : AUTH_CONFIG.appEndpoint;
     const invitedBy = currentUser;
     let invitation: Invitation = {
       type: 'invitation',
       attributes: {
         email: email,
         accepted: false,
-        loginLink: link,
+        loginLink: API_CONFIG.endpoint,
         invitedBy: invitedBy,
         strings: JSON.stringify(strings),
       },
@@ -260,8 +248,8 @@ function Invite(props: IProps) {
   const handleGroupChange = (e: any) => {
     setGroup(e.target.value);
     var assocProjects = projects
-      .filter(p => related(p, 'group') === e.target.value)
-      .map(p => p.attributes.name);
+      .filter((p) => related(p, 'group') === e.target.value)
+      .map((p) => p.attributes.name);
     setOtherProjects(
       assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects
     );
@@ -278,7 +266,7 @@ function Invite(props: IProps) {
     ) as any;
     const checkOrg =
       selectInvite &&
-      selectInvite.filter(i => related(i, 'organization') === organization);
+      selectInvite.filter((i) => related(i, 'organization') === organization);
     return checkOrg && checkOrg.length > 0;
   };
 
@@ -295,7 +283,7 @@ function Invite(props: IProps) {
 
   useEffect(() => {
     const allusersgroup = groups.filter(
-      g =>
+      (g) =>
         g.attributes &&
         g.attributes.allUsers &&
         related(g, 'owner') === organization
@@ -304,15 +292,15 @@ function Invite(props: IProps) {
     if (allusersgroup.length > 0) {
       setAllUsersGroup(allusersgroup[0].id);
       var assocProjects = projects
-        .filter(p => related(p, 'group') === allusersgroup[0].id)
-        .map(p => p.attributes.name);
+        .filter((p) => related(p, 'group') === allusersgroup[0].id)
+        .map((p) => p.attributes.name);
       setAllUsersProjects(
         assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects
       );
     }
     const noallgroups = groups
       .filter(
-        g =>
+        (g) =>
           g.attributes &&
           !g.attributes.allUsers &&
           related(g, 'owner') === organization
@@ -387,7 +375,9 @@ function Invite(props: IProps) {
                   control={
                     <Checkbox
                       checked={allowMultiple}
-                      onChange={event => setallowMultiple(event.target.checked)}
+                      onChange={(event) =>
+                        setallowMultiple(event.target.checked)
+                      }
                       value="allowMultiple"
                     />
                   }
@@ -417,7 +407,7 @@ function Invite(props: IProps) {
                 required
               >
                 {roles
-                  .filter(r => r.attributes && r.attributes.orgRole)
+                  .filter((r) => r.attributes && r.attributes.orgRole)
                   .sort((i, j) =>
                     i.attributes.roleName < j.attributes.roleName ? -1 : 1
                   )
@@ -476,7 +466,7 @@ function Invite(props: IProps) {
                 required
               >
                 {roles
-                  .filter(r => r.attributes && r.attributes.groupRole)
+                  .filter((r) => r.attributes && r.attributes.groupRole)
                   .sort((i, j) =>
                     i.attributes.roleName < j.attributes.roleName ? -1 : 1
                   )
@@ -546,7 +536,7 @@ function Invite(props: IProps) {
                     disabled={group === ''}
                   >
                     {roles
-                      .filter(r => r.attributes && r.attributes.groupRole)
+                      .filter((r) => r.attributes && r.attributes.groupRole)
                       .sort((i, j) =>
                         i.attributes.roleName < j.attributes.roleName ? -1 : 1
                       )

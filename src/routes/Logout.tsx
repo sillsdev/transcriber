@@ -8,10 +8,10 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
+import { isElectron } from '../api-variable';
 import { Redirect } from 'react-router-dom';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
-const isElectron = process.env.REACT_APP_MODE === 'electron';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

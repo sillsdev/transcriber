@@ -18,11 +18,10 @@ import HelpIcon from '@material-ui/icons/Help';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
-import { API_CONFIG } from '../api-variable';
+import { isElectron, API_CONFIG } from '../api-variable';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
-const isElectron = process.env.REACT_APP_MODE === 'electron';
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
 
@@ -81,8 +80,11 @@ export function HelpMenu(props: IProps) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
+  const [isApp] = useGlobal('appView');
   const [developer, setDeveloper] = useGlobal('developer');
   const helpRef = React.useRef<any>();
+
+  const indexName = '/index.htm';
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
@@ -90,16 +92,19 @@ export function HelpMenu(props: IProps) {
   };
 
   const helpLanguage = () => {
-    let language = navigator.language.split('-')[0];
-    if (!['fr', 'es'].includes(language)) language = 'en';
-    return language;
+    // let language = navigator.language.split('-')[0];
+    // if (!['fr', 'es'].includes(language)) language = 'en';
+    // return language;
+    return 'en';
   };
 
   const handleHelp = () => {
     if (isElectron) {
       const target = !online
-        ? path.join(process.cwd(), process.env.REACT_APP_CHM_HELP || '')
-        : API_CONFIG.help + '/' + helpLanguage() + '/index.htm';
+        ? path.join(process.cwd(), API_CONFIG.chmHelp)
+        : isApp
+        ? API_CONFIG.help + '/' + helpLanguage() + indexName
+        : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName;
       console.log('launching', target);
       shell.openExternal(target);
     } else if (helpRef.current) {
@@ -179,7 +184,11 @@ export function HelpMenu(props: IProps) {
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a
         ref={helpRef}
-        href={API_CONFIG.help + '/' + helpLanguage()}
+        href={
+          isApp
+            ? API_CONFIG.help + '/' + helpLanguage() + indexName
+            : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName
+        }
         target="_blank"
         rel="noopener noreferrer"
       ></a>

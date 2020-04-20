@@ -60,6 +60,7 @@ import {
 } from '../utils';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
+import { isElectron } from '../api-variable';
 
 const ActionHeight = 52;
 
@@ -120,7 +121,7 @@ interface IRow {
   parentId: string;
 }
 const getChildRows = (row: any, rootRows: any[]) => {
-  const childRows = rootRows.filter(r => r.parentId === (row ? row.id : ''));
+  const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : ''));
   return childRows.length ? childRows : null;
 };
 
@@ -147,13 +148,13 @@ const getAssignments = (
   bookData: BookName[]
 ) => {
   const rowData: IRow[] = [];
-  projectPlans.forEach(planRec => {
+  projectPlans.forEach((planRec) => {
     sections
-      .filter(s => related(s, 'plan') === planRec.id && s.attributes)
+      .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
       .sort(sectionCompare)
-      .forEach(section => {
+      .forEach((section) => {
         const sectionpassages = passages
-          .filter(ps => related(ps, 'section') === section.id)
+          .filter((ps) => related(ps, 'section') === section.id)
           .sort(passageCompare);
         rowData.push({
           id: section.id,
@@ -288,7 +289,6 @@ export function TranscriptionTab(props: IProps) {
     string[]
   >([]);
   const [filter, setFilter] = useState(false);
-  const isElectron = process.env.REACT_APP_MODE === 'electron';
 
   const handleMessageReset = () => {
     setMessage(<></>);

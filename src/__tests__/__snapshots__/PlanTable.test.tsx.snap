@@ -27,7 +27,6 @@ exports[`can render PlanTable snapshot 1`] = `
               aria-hidden="true"
               class="MuiSvgIcon-root makeStyles-buttonIcon-11"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -59,7 +58,6 @@ exports[`can render PlanTable snapshot 1`] = `
               aria-hidden="true"
               class="MuiSvgIcon-root makeStyles-icon-10"
               focusable="false"
-              role="presentation"
               viewBox="0 0 24 24"
             >
               <path
@@ -137,7 +135,6 @@ exports[`can render PlanTable snapshot 1`] = `
                               aria-hidden="true"
                               class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionAsc"
                               focusable="false"
-                              role="presentation"
                               viewBox="0 0 24 24"
                             >
                               <path
@@ -189,7 +186,6 @@ exports[`can render PlanTable snapshot 1`] = `
                               aria-hidden="true"
                               class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionAsc"
                               focusable="false"
-                              role="presentation"
                               viewBox="0 0 24 24"
                             >
                               <path
@@ -241,7 +237,6 @@ exports[`can render PlanTable snapshot 1`] = `
                               aria-hidden="true"
                               class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionAsc"
                               focusable="false"
-                              role="presentation"
                               viewBox="0 0 24 24"
                             >
                               <path
@@ -293,7 +288,6 @@ exports[`can render PlanTable snapshot 1`] = `
                               aria-hidden="true"
                               class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionAsc"
                               focusable="false"
-                              role="presentation"
                               viewBox="0 0 24 24"
                             >
                               <path
@@ -345,7 +339,6 @@ exports[`can render PlanTable snapshot 1`] = `
                               aria-hidden="true"
                               class="MuiSvgIcon-root MuiTableSortLabel-icon MuiTableSortLabel-iconDirectionAsc"
                               focusable="false"
-                              role="presentation"
                               viewBox="0 0 24 24"
                             >
                               <path

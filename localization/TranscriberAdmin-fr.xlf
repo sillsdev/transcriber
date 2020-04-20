@@ -1411,6 +1411,12 @@
 				<target>Admin</target>
 			</segment>
 		</unit>
+		<unit id="main.goOnline">
+			<segment>
+				<source>SIL Transcriber Online</source>
+				<target>SIL Transcriber en ligne</target>
+			</segment>
+		</unit>
 		<unit id="main.transcribe">
 			<segment>
 				<source>Transcribe</source>
@@ -3174,7 +3180,7 @@
 		</unit>
 		<unit id="profile.sendNews">
 			<segment>
-				<source>Recieve SIL Transcriber and Language Technology news</source>
+				<source>Receive SIL Transcriber and Language Technology news</source>
 				<target>Recevez les nouvelles de SIL Transcriber et de Language Technology</target>
 			</segment>
 		</unit>
@@ -3308,6 +3314,54 @@
 			<segment>
 				<source>General Transcription</source>
 				<target>Transcription générale</target>
+			</segment>
+		</unit>
+		<unit id="setup.gettingStarted">
+			<segment>
+				<source>Getting Started</source>
+				<target>Démarrage</target>
+			</segment>
+		</unit>
+		<unit id="setup.addPlan">
+			<segment>
+				<source>Add a plan</source>
+				<target>Ajouter un plan</target>
+			</segment>
+		</unit>
+		<unit id="setup.upload">
+			<segment>
+				<source>Upload media files</source>
+				<target>Télécharger des fichiers audio</target>
+			</segment>
+		</unit>
+		<unit id="setup.attach">
+			<segment>
+				<source>Attach media to passages</source>
+				<target>Joindre des fichiers audio aux passages</target>
+			</segment>
+		</unit>
+		<unit id="setup.assign">
+			<segment>
+				<source>Optionally assign sections to transcribers</source>
+				<target>Attribuer éventuellement des sections aux transcripteurs</target>
+			</segment>
+		</unit>
+		<unit id="setup.offlineNote">
+			<segment>
+				<source>(Especially if transcribers are working offline)</source>
+				<target>(Surtout si les transcripteurs travaillent hors ligne)</target>
+			</segment>
+		</unit>
+		<unit id="notSetup.welcome">
+			<segment>
+				<source>Welcome to SIL Transcriber</source>
+				<target>Bienvenue à SIL Transcriber</target>
+			</segment>
+		</unit>
+		<unit id="notSetup.notReady">
+			<segment>
+				<source>This organization and project are not setup and ready for work yet.</source>
+				<target>Cette organisation et ce projet ne sont pas encore mis en place et prêts à fonctionner.</target>
 			</segment>
 		</unit>
 	</file>

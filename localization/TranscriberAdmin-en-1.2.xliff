@@ -1650,6 +1650,13 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="main.goOnline">
+        		<source>SIL Transcriber Online</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">drawer.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="main.transcribe">
         		<source>Transcribe</source>
         		<target/>
@@ -3708,14 +3715,14 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.sendNews">
-        		<source>Recieve SIL Transcriber and Language Technology news</source>
+        		<source>Receive SIL Transcriber and Language Technology news</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.sendDigest">
-        		<source>Recieve daily digests</source>
+        		<source>Receive daily digests</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
@@ -3868,7 +3875,62 @@
         			<context context-type="sourcefile">selectPlanType.tsx</context>
         		</context-group>
         	</trans-unit>
-
+        	<trans-unit id="setup.gettingStarted">
+        		<source>Getting Started</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.addPlan">
+        		<source>Add a plan</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.upload">
+        		<source>Upload media files</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.attach">
+        		<source>Attach media to passages</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.assign">
+        		<source>Optionally assign sections to transcribers</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="setup.offlineNote">
+        		<source>(Especially if transcribers are working offline)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="notSetup.welcome">
+        		<source>Welcome to SIL Transcriber</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="notSetup.notReady">
+        		<source>This organization and project are not setup and ready for work yet.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
         </body>
     </file>
 </xliff>

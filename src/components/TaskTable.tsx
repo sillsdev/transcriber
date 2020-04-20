@@ -260,6 +260,7 @@ export function TaskTable(props: IProps) {
       length: r.duration ? formatTime(r.duration) : '',
       state: r.state !== '' ? ChipText({ state: r.state, t: taskItemStr }) : '',
       assigned: r.assigned === user ? t.yes : t.no,
+      mediaId: r.mediaId,
       mediaRemoteId: r.mediaRemoteId,
       selection: r.passage.id === selected ? 'P' : 'S',
     }));

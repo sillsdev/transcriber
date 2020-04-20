@@ -66,7 +66,7 @@ import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
 import moment from 'moment-timezone';
-import { UpdateRecord } from '../model/baseModel';
+import { UpdateRecord, AddRecord } from '../model/baseModel';
 import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
@@ -170,6 +170,7 @@ export function Transcriber(props: IProps) {
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = React.useState('');
@@ -428,9 +429,39 @@ export function Transcriber(props: IProps) {
     reviewing: ActivityStates.TranscribeReady,
     approved: ActivityStates.TranscribeReady,
     done: ActivityStates.TranscribeReady,
+    synced: ActivityStates.TranscribeReady,
+  };
+  const reopenSynced = async () => {
+    const mediaRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'mediafile', id: mediaId })
+    ) as MediaFile;
+    const planId = related(mediaRec, 'plan');
+    const newMedia = {
+      attributes: { ...mediaRec.attributes },
+      type: 'mediafile',
+    } as MediaFile;
+    newMedia.attributes.versionNumber += 1;
+    await memory.update((t) => [
+      AddRecord(t, newMedia, remoteIdNum('user', user, memory.keyMap)),
+      t.replaceRelatedRecord(
+        { type: 'mediafile', id: newMedia.id },
+        'passage',
+        {
+          type: 'passage',
+          id: passage.id,
+        }
+      ),
+      t.replaceRelatedRecord({ type: 'mediafile', id: newMedia.id }, 'plan', {
+        type: 'plan',
+        id: planId,
+      }),
+    ]);
   };
   const handleReopen = async () => {
     if (previous.hasOwnProperty(state)) {
+      if (state === ActivityStates.Synced || state === ActivityStates.Done) {
+        await reopenSynced();
+      }
       await memory.update(
         UpdatePassageStateOps(
           passage.id,
@@ -909,7 +940,12 @@ export function Transcriber(props: IProps) {
                     color="primary"
                     className={classes.button}
                     onClick={handleReopen}
-                    disabled={!previous.hasOwnProperty(state) || playing}
+                    disabled={
+                      !previous.hasOwnProperty(state) ||
+                      playing ||
+                      (user !== related(section, 'transcriber') &&
+                        !/admin/i.test(projRole))
+                    }
                   >
                     {t.reopen}
                   </Button>
