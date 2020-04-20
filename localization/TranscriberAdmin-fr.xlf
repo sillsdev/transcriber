@@ -2345,8 +2345,8 @@
       </unit>
       <unit id="invitationTable.role">
          <segment>
-            <source>Role</source>
-         	<target>Rôle</target>
+            <source>Organization Role</source>
+         	<target>Rôle organisationnel</target>
          </segment>
       </unit>
       <unit id="invitationTable.allUsers">

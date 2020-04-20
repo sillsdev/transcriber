@@ -518,7 +518,7 @@ const initialState = {
 	"invitationTable": new LocalizedStrings({
 		"en": {
 			"email": "Email",
-			"role": "Role",
+			"role": "Organization Role",
 			"allUsers": "All Users",
 			"group": "Group",
 			"accepted": "Accepted",

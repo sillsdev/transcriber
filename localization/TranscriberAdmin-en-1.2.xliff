@@ -2736,7 +2736,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invitationTable.role">
-                <source>Role</source>
+                <source>Organization Role</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">InvitationTable.tsx</context>
