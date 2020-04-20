@@ -92,9 +92,10 @@ export function HelpMenu(props: IProps) {
   };
 
   const helpLanguage = () => {
-    let language = navigator.language.split('-')[0];
-    if (!['fr', 'es'].includes(language)) language = 'en';
-    return language;
+    // let language = navigator.language.split('-')[0];
+    // if (!['fr', 'es'].includes(language)) language = 'en';
+    // return language;
+    return 'en';
   };
 
   const handleHelp = () => {
