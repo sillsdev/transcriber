@@ -170,6 +170,7 @@ export function Transcriber(props: IProps) {
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = React.useState('');
@@ -939,7 +940,12 @@ export function Transcriber(props: IProps) {
                     color="primary"
                     className={classes.button}
                     onClick={handleReopen}
-                    disabled={!previous.hasOwnProperty(state) || playing}
+                    disabled={
+                      !previous.hasOwnProperty(state) ||
+                      playing ||
+                      (user !== related(section, 'transcriber') &&
+                        !/admin/i.test(projRole))
+                    }
                   >
                     {t.reopen}
                   </Button>
