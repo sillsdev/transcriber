@@ -414,6 +414,8 @@ export function ResponsiveDrawer(props: IProps) {
       setGroup('');
       setProjOptions([]);
       setCurProj(null);
+      localStorage.removeItem('lastProj');
+      setProject('');
       setTranscribe(false);
       setChoice('');
     }
@@ -470,6 +472,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleAddProject = () => {
     localStorage.removeItem('url');
+    localStorage.removeItem('lastProj');
     setAddProject(true);
     if (isApp) setAppView(false);
     setProject('');
@@ -480,8 +483,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
     if (to) {
-      setAddProject(false);
+      setAddProject(false); //this will cause requery of projects
       setProject(projectId || '');
+      localStorage.setItem(
+        'lastProj',
+        remoteId('project', projectId || '', keyMap)
+      );
       setPlan(planId || '');
       const parts = to.split('/');
       setContent(parts[3]);
@@ -499,6 +506,10 @@ export function ResponsiveDrawer(props: IProps) {
       if (addProject) setAddProject(false);
       else setDelProject(true);
       if (projectId) setProject(projectId);
+      localStorage.setItem(
+        'lastProj',
+        remoteId('project', projectId || '', keyMap)
+      );
     }
   };
 
@@ -595,10 +606,11 @@ export function ResponsiveDrawer(props: IProps) {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getProjs = async () => {
-    let projs: Project[] = await memory.query((q: QueryBuilder) =>
+    let projs: Project[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')
-    );
+    ) as Project[];
     if (isApp) {
+      //electron app we may have more than just current user's info
       const groupids = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
         .map((gm) => related(gm, 'group'));
@@ -673,8 +685,10 @@ export function ResponsiveDrawer(props: IProps) {
             ) || '';
       const cur = orgOptions.map((oo) => oo.value).indexOf(orgKey);
       if (cur !== -1) setCurOrg(cur);
-      else if (!busy && orgOptions.length > (isApp ? 0 : 1) && curOrg === null)
+      else if (orgOptions.length > (isApp ? 0 : 1) && curOrg === null) {
         handleCommitOrg(orgOptions[0].value);
+      }
+      setProject('');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [orgOptions, organization, isApp]);
@@ -726,26 +740,28 @@ export function ResponsiveDrawer(props: IProps) {
   }, [organization, addProject, delProject, orgRole]);
 
   useEffect(() => {
-    const projKeys = projOptions.map((o) => o.value);
-    const projKey =
-      project !== ''
-        ? project
-        : remoteIdGuid(
-            'project',
-            localStorage.getItem('lastProj') || '',
-            keyMap
-          ) || '';
-    const cur = projKeys.indexOf(projKey);
-
-    if (addProject || cur === -1) {
-      setCurProj(null);
-    } else if (!busy && curProj !== cur) {
-      setCurProj(cur);
-      handleCommitProj(projKeys[cur]);
-    }
-    if (!busy && projKeys.length > 0 && !addProject && cur < 0) {
-      setCurProj(0);
-      handleCommitProj(projKeys[0]);
+    if (!busy) {
+      const projKeys = projOptions.map((o) => o.value);
+      const projKey =
+        project !== ''
+          ? project
+          : remoteIdGuid(
+              'project',
+              localStorage.getItem('lastProj') || '',
+              keyMap
+            ) || '';
+      const cur = projKeys.indexOf(projKey);
+      if (projKeys.length === 0 || addProject) {
+        //go to add project
+        setCurProj(null);
+      } else if ((projKey || '') === '') {
+        //switch org, no project set yet
+        setCurProj(0);
+        handleCommitProj(projKeys[0]);
+      } else if (curProj !== cur && cur >= 0) {
+        setCurProj(cur);
+        handleCommitProj(projKeys[cur]);
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projOptions, project, addProject, busy]);
