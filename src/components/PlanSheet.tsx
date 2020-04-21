@@ -130,7 +130,7 @@ export function PlanSheet(props: IProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [doSave, setDoSave] = useGlobal('doSave');
   const [changed, setChanged] = useGlobal('changed');
-
+  const [pasting, setPasting] = useState(false);
   const handleMessageReset = () => {
     setMessage(<></>);
   };
@@ -263,12 +263,12 @@ export function PlanSheet(props: IProps) {
     return removeBlanks(clipBoard).map((line: string) => splitAndTrim(line));
   };
   const handleTablePaste = () => {
+    setPasting(true);
     setMessage(<span>Pasting</span>);
-    navigator.clipboard
-      .readText()
-      .then((clipText) =>
-        paste(removeBlanks(clipText).map((line) => splitAndTrim(line)))
-      );
+    navigator.clipboard.readText().then((clipText) => {
+      paste(removeBlanks(clipText).map((line) => splitAndTrim(line)));
+      setPasting(false);
+    });
   };
 
   const handleUp = () => {
@@ -431,6 +431,7 @@ export function PlanSheet(props: IProps) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
+                  disabled={pasting}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
