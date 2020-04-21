@@ -127,6 +127,7 @@
     "electron-devtools-installer": "^2.2.4",
     "electron-react-devtools": "^0.5.3",
     "env-cmd": "^10.1.0",
+    "md5-file": "^5.0.0",
     "npm-watch": "^0.6.0",
     "react-test-renderer": "^16.13.0",
     "redux-devtools-extension": "^2.13.8",
