@@ -113,7 +113,9 @@ export function ScriptureTable(props: IProps) {
   const [schema] = useGlobal('schema');
   const [remote] = useGlobal('remote');
   const [user] = useGlobal('user');
+  const userId = remoteIdNum('user', user, memory.keyMap);
   const [doSave, setDoSave] = useGlobal('doSave');
+  const [saving, setSaving] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [changed, setChanged] = useGlobal('changed');
   const [message, setMessage] = useState(<></>);
@@ -511,8 +513,6 @@ export function ScriptureTable(props: IProps) {
           section: RecordIdentity
         ) => {
           rowIndex += 1;
-          if (data.length !== rowId.length)
-            console.log('rows', data.length, 'rowId', rowId.length);
           while (rowIndex < data.length && isPassageRow(rowId[rowIndex])) {
             if (changedRows[rowIndex]) {
               if (rowId[rowIndex].id === '') {
@@ -527,9 +527,8 @@ export function ScriptureTable(props: IProps) {
                   reference,
                   title,
                   section,
-                  schema,
                   memory,
-                  user,
+                  userId,
                 });
                 newRowId(rowIndex, passage.id);
               } else {
@@ -578,8 +577,8 @@ export function ScriptureTable(props: IProps) {
                 sequencenum,
                 name,
                 plan: planRecId,
-                schema,
                 memory,
+                userId,
               })) as Section;
               newRowId(rowIndex, section.id);
               await doPassages(rowIndex, section);
@@ -628,7 +627,6 @@ export function ScriptureTable(props: IProps) {
         } as SectionPassage;
         schema.initializeRecord(sp);
         setComplete(20);
-        console.log('telling orbit to post sectionpassage');
         var dumbrec = await memory.update(
           (t: TransformBuilder) => t.addRecord(sp),
           {
@@ -704,14 +702,16 @@ export function ScriptureTable(props: IProps) {
       setComplete(0);
     };
 
-    if (doSave) {
+    if (doSave && !saving) {
+      setSaving(true);
       setMessage(<span>{t.saving}</span>);
       handleSave().then(() => {
         setDoSave(false);
+        setSaving(false);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [doSave, data]);
+  }, [doSave, saving, data, inData, rowId]);
 
   useEffect(() => {
     if (showBook(cols) && allBookData.length === 0) fetchBooks(lang);

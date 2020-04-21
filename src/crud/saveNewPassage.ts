@@ -1,18 +1,16 @@
 import { Passage, ActivityStates } from '../model';
-import { Schema, RecordIdentity } from '@orbit/data';
+import { RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { remoteIdNum } from '../utils';
 import { AddPassage } from '../utils/UpdatePassageState';
 
 interface IProps {
   sequencenum: number;
   reference: string;
   section: RecordIdentity;
-  schema: Schema;
   memory: Memory;
   book?: string;
   title?: string;
-  user: string;
+  userId: number;
 }
 
 export const saveNewPassage = async (props: IProps) => {
@@ -20,11 +18,10 @@ export const saveNewPassage = async (props: IProps) => {
     sequencenum,
     reference,
     section,
-    schema,
     memory,
     book,
     title,
-    user,
+    userId,
   } = props;
 
   const passage: Passage = {
@@ -39,9 +36,6 @@ export const saveNewPassage = async (props: IProps) => {
       state: ActivityStates.NoMedia,
     },
   } as any;
-  schema.initializeRecord(passage);
-  await memory.update(
-    AddPassage(passage, section, remoteIdNum('user', user, memory.keyMap))
-  );
+  await memory.update(AddPassage(passage, section, userId));
   return passage;
 };

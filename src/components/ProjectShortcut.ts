@@ -1,7 +1,7 @@
 import { PlanType } from '../model';
 import { Schema, KeyMap } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { remoteId, waitForRemoteId } from '../utils';
+import { remoteId, waitForRemoteId, remoteIdNum } from '../utils';
 import { saveNewPlan, saveNewSection, saveNewPassage } from '../crud';
 
 interface IProps {
@@ -40,27 +40,27 @@ export const projectShortcut = async (props: IProps) => {
     schema,
     memory,
   });
+  const userId = remoteIdNum('user', user, memory.keyMap);
   const section = await saveNewSection({
     sequencenum: 1,
     name: sectionName,
     plan,
-    schema,
     memory,
+    userId,
   });
   await saveNewPassage({
     sequencenum: 1,
     reference,
     section,
-    schema,
     memory,
-    user,
+    userId,
   });
   const planId = await waitForRemoteId(plan, keyMap);
   const projId = await waitForRemoteId(
     { type: 'project', id: project },
     keyMap
   );
-  const rec = planTypes.filter(pt => pt.id === planType);
+  const rec = planTypes.filter((pt) => pt.id === planType);
   const typeName = rec.length > 0 ? rec[0].attributes.name : 'other';
   return {
     url: '/main/{0}/{1}-plan/{2}/{3}/1/'
