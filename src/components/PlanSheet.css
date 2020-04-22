@@ -10,3 +10,17 @@
 .data-grid-container .data-grid .cell.num {
   text-align: center;
 }
+
+.data-grid-container .data-grid .cell.num > input {
+  text-align: center;
+  padding: 10px;
+}
+
+.data-grid-container .data-grid .cell.pass {
+  text-align: left;
+}
+
+.data-grid-container .data-grid .cell.pass > input {
+  text-align: left;
+  padding: 10px;
+}

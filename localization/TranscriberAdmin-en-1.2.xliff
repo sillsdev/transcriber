@@ -761,6 +761,13 @@
         			<context context-type="sourcefile">PlanSheet.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="planSheet.bookSelect">
+        		<source>Select Book...</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="scriptureTable.section">
                 <source>Section</source>
                 <target/>
@@ -775,7 +782,7 @@
                     <context context-type="sourcefile">ScriptureTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="scriptureTable.passage">
+        	<trans-unit id="scriptureTable.passage">
                 <source>Passage</source>
                 <target/>
                 <context-group>

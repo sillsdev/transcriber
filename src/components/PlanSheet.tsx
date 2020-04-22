@@ -11,11 +11,10 @@ import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import PassageMedia from './PassageMedia';
 import Confirm from './AlertDialog';
-import BookSelect from './ReactSelect';
+import BookSelect from './BookSelect';
 import 'react-datasheet/lib/react-datasheet.css';
 import './PlanSheet.css';
 import { isNumber } from 'util';
-import SheetText from './SheetText';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 
@@ -131,6 +130,8 @@ export function PlanSheet(props: IProps) {
   const [doSave, setDoSave] = useGlobal('doSave');
   const [changed, setChanged] = useGlobal('changed');
   const [pasting, setPasting] = useState(false);
+  const preventSave = useRef<boolean>(false);
+
   const handleMessageReset = () => {
     setMessage(<></>);
   };
@@ -286,37 +287,26 @@ export function PlanSheet(props: IProps) {
     return <td {...myProps} onMouseUp={handleUp} />;
   };
 
+  const handleSetPreventSave = (val: boolean) => {
+    preventSave.current = val;
+  };
+
   const bookEditor = (props: any) => {
     if (projRole !== 'admin') return <></>;
     return (
       <BookSelect
         id="book"
         suggestions={suggestionRef.current ? suggestionRef.current : []}
+        placeHolder={t.bookSelect}
+        setPreventSave={handleSetPreventSave}
         {...props}
-        current={(listRef.current ? listRef.current : []).indexOf(props.value)}
       />
     );
   };
-
-  const handleSetCommit = (method: () => void) => {
-    blurRef.current = method;
-  };
-
-  const textEditor = (props: any) => {
-    if (projRole !== 'admin') return <></>;
-    return (
-      <SheetText
-        {...props}
-        initValue={props.value}
-        setCommit={handleSetCommit}
-      />
-    );
-  };
-
   const isNum = (value: string | number) =>
     isNumber(value) || /^[0-9]$/.test(value);
   const handleAutoSave = () => {
-    if (changed) {
+    if (changed && !preventSave.current) {
       handleSave();
     } else {
       startSaveTimer();
@@ -371,7 +361,6 @@ export function PlanSheet(props: IProps) {
                 ? {
                     value: e,
                     readOnly: isSection ? cellIndex > 1 : cellIndex <= 1,
-                    dataEditor: textEditor,
                     className:
                       (isNum(e) ? 'num' : 'pass') + (isSection ? ' set' : ''),
                   }

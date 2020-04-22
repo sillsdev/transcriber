@@ -652,6 +652,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.bookSelect">
+         <segment>
+            <source>Select Book...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.section">
          <segment>
             <source>Section</source>

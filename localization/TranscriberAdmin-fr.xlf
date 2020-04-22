@@ -649,6 +649,12 @@
 				<target>Coller la table</target>
          </segment>
       </unit>
+		<unit id="planSheet.bookSelect">
+			<segment>
+				<source>Select Book...</source>
+				<target>Choisir un livre...</target>
+			</segment>
+		</unit>
 		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
