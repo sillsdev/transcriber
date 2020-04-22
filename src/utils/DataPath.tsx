@@ -6,7 +6,9 @@ export const DataPath = (relPath?: string): string => {
     ? relPath
       ? path.join(os.homedir(), process.env.REACT_APP_OFFLINEDATA, relPath)
       : path.join(os.homedir(), process.env.REACT_APP_OFFLINEDATA)
-    : relPath || '';
+    : relPath && relPath.startsWith('http')
+    ? relPath
+    : '';
 };
 
 export default DataPath;

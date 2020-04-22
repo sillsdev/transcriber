@@ -24,7 +24,7 @@ import OrgIcon from '@material-ui/icons/AccountBalance';
 import DeleteExpansion from './DeleteExpansion';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
-import { CreateOrg } from '../utils';
+import { CreateOrg, DataPath } from '../utils';
 import { currentDateTime } from '../utils/currentDateTime';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -213,7 +213,7 @@ export function OrgSettings(props: IProps) {
     const attr = org.attributes;
     setName(attr.name);
     setDescription(attr.description || '');
-    setOrgAvatar(attr.logoUrl);
+    setOrgAvatar(DataPath(attr?.logoUrl || ''));
     setWebsite(attr.websiteUrl || '');
     setPublic(attr.publicByDefault);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -250,8 +250,8 @@ export function OrgSettings(props: IProps) {
             <FormControlLabel
               control={
                 <div className={classes.avatar}>
-                  {orgAvatar && orgAvatar.startsWith('http') ? (
-                    <Avatar src={orgAvatar} />
+                  {orgAvatar ? (
+                    <Avatar variant="square" src={orgAvatar} />
                   ) : (
                     <OrgIcon />
                   )}
