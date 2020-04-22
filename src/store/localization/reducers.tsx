@@ -730,17 +730,22 @@ const initialState = {
 	"setup": new LocalizedStrings({
 		"en": {
 			"gettingStarted": "Getting Started",
+			"electronTitle": "No Tasks Available",
 			"addPlan": "Add a plan",
 			"upload": "Upload media files",
 			"attach": "Attach media to passages",
 			"assign": "Optionally assign sections to transcribers",
 			"offlineNote": "(Especially if transcribers are working offline)",
+			"electronStep1": "Setup must be done online:",
+			"electronStep2": "Configure the plan, upload media and attach passages",
+			"electronStep4": "Re-export ptf file online and re-import here",
 		}
 	}),
 	"notSetup": new LocalizedStrings({
 		"en": {
 			"welcome": "Welcome to SIL Transcriber",
 			"notReady": "This organization and project are not setup and ready for work yet.",
+			"electronNotReady": "This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.",
 		}
 	}),
 };

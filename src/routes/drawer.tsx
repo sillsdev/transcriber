@@ -431,7 +431,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (!isApp && projRole === 'admin') newChoice = NavChoice.Plans;
     if (projOptions.length === 0 || !transcribe) {
       newChoice = projRole === 'admin' ? NavChoice.Setup : NavChoice.NotSetup;
-      if (projRole === 'admin' && isApp) setAppView(false);
+      if (!isElectron && projRole === 'admin' && isApp) setAppView(false);
     }
     if (newChoice === NavChoice.Tasks && !isApp) setAppView(true);
     if (newChoice !== content) {

@@ -4,6 +4,7 @@ import { IState, INotSetupStrings } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
+import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,7 +32,9 @@ export const NotSetup = (props: IProps) => {
       <Typography align="center" variant="h3">
         {t.welcome}
       </Typography>
-      <Typography align="center">{t.notReady}</Typography>
+      <Typography align="center">
+        {isElectron ? t.electronNotReady : t.notReady}
+      </Typography>
     </div>
   );
 };

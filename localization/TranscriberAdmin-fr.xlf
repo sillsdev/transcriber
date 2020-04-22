@@ -3322,7 +3322,13 @@
 				<target>Démarrage</target>
 			</segment>
 		</unit>
-		<unit id="setup.addPlan">
+      <unit id="setup.electronTitle">
+         <segment>
+            <source>No Tasks Available</source>
+			<target>Aucune tâche disponible</target>
+         </segment>
+      </unit>
+      <unit id="setup.addPlan">
 			<segment>
 				<source>Add a plan</source>
 				<target>Ajouter un plan</target>
@@ -3352,7 +3358,25 @@
 				<target>(Surtout si les transcripteurs travaillent hors ligne)</target>
 			</segment>
 		</unit>
-		<unit id="notSetup.welcome">
+      <unit id="setup.electronStep1">
+         <segment>
+            <source>Setup must be done online:</source>
+            <target>La configuration doit être effectuée en ligne:</target>
+         </segment>
+      </unit>
+      <unit id="setup.electronStep2">
+         <segment>
+            <source>Configure the plan, upload media and attach passages</source>
+            <target>Configurer le plan, télécharger des médias et joindre passages</target>
+         </segment>
+      </unit>
+      <unit id="setup.electronStep4">
+         <segment>
+            <source>Re-export ptf file online and re-import here</source>
+            <target>Réexportez le fichier ptf en ligne et réimportez ici</target>
+         </segment>
+      </unit>
+      <unit id="notSetup.welcome">
 			<segment>
 				<source>Welcome to SIL Transcriber</source>
 				<target>Bienvenue à SIL Transcriber</target>
@@ -3364,5 +3388,11 @@
 				<target>Cette organisation et ce projet ne sont pas encore mis en place et prêts à fonctionner.</target>
 			</segment>
 		</unit>
-	</file>
+      <unit id="notSetup.electronNotReady">
+         <segment>
+            <source>This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.</source>
+            <target>Ce projet doit être mis en place en ligne. Veuillez contacter votre administrateur de projet pour un fichier ptf comprenant des tâches.</target>
+         </segment>
+      </unit>
+    </file>
 </xliff>

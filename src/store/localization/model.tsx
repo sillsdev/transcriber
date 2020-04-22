@@ -682,16 +682,21 @@ export interface IControlStrings extends Localize.LocalizedStringsMethods {
 
 export interface ISetupStrings extends Localize.LocalizedStringsMethods {
     "gettingStarted": string;
+    "electronTitle": string;
     "addPlan": string;
     "upload": string;
     "attach": string;
     "assign": string;
     "offlineNote": string;
+    "electronStep1": string;
+    "electronStep2": string;
+    "electronStep4": string;
 };
 
 export interface INotSetupStrings extends Localize.LocalizedStringsMethods {
     "welcome": string;
     "notReady": string;
+    "electronNotReady": string;
 };
 
 export interface ILocalizedStrings {

@@ -215,7 +215,6 @@ export function OrgSettings(props: IProps) {
     setDescription(attr.description || '');
     setOrgAvatar(attr.logoUrl);
     setWebsite(attr.websiteUrl || '');
-    setOrgAvatar(attr.logoUrl);
     setPublic(attr.publicByDefault);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [add, organization, organizations]);

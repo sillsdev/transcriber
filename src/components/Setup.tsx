@@ -11,6 +11,7 @@ import {
   ListItemText,
   Avatar,
 } from '@material-ui/core';
+import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,32 +40,38 @@ export const Setup = (props: IProps) => {
   return (
     <div className={classes.fullScreen}>
       <Typography align="center" variant="h3">
-        {t.gettingStarted}
+        {isElectron ? t.electronTitle : t.gettingStarted}
       </Typography>
       <List className={classes.list}>
         <ListItem>
           <ListItemAvatar>
             <Avatar>1.</Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t.addPlan} />
+          <ListItemText primary={isElectron ? t.electronStep1 : t.addPlan} />
         </ListItem>
         <ListItem>
           <ListItemAvatar>
             <Avatar>2.</Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t.upload} />
+          <ListItemText primary={isElectron ? t.electronStep2 : t.upload} />
         </ListItem>
         <ListItem>
           <ListItemAvatar>
             <Avatar>3.</Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t.attach} />
+          <ListItemText
+            primary={isElectron ? t.assign : t.attach}
+            secondary={isElectron ? t.offlineNote : ''}
+          />
         </ListItem>
         <ListItem>
           <ListItemAvatar>
             <Avatar>4.</Avatar>
           </ListItemAvatar>
-          <ListItemText primary={t.assign} secondary={t.offlineNote} />
+          <ListItemText
+            primary={isElectron ? t.electronStep4 : t.assign}
+            secondary={isElectron ? '' : t.offlineNote}
+          />
         </ListItem>
       </List>
     </div>
