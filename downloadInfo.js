@@ -28,20 +28,20 @@ async function makeInfo(path) {
           version: json.version,
           date: stat.ctime.toISOString().split('T')[0],
           edition: '',
-          patform: isWin ? 'win' : 'linux',
-          platform_version: isWin ? '10' : '',
-          architecture: '',
+          platform: isWin ? 'win' : 'linux',
+          platform_version: isWin ? '10' : ext.toUpperCase(),
+          architecture: isWin ? 'x86_32' : 'x86_64',
           stability: 'stable',
-          nature: isWin ? 'installer' : 'package',
+          nature: 'ver2',
           file: dirent.name,
           md5: hash.toUpperCase(),
-          type: ext.toUpperCase(),
+          type: ext,
           build: '',
           compatible: 'Paratext>=8.x',
         };
         // console.log(info);
         fs.writeFileSync(
-          filePath.replace('.' + ext, '.download_info'),
+          filePath.replace('.' + ext, '_' + ext + '.download_info'),
           JSON.stringify(info, null, 2)
         );
         fs.close(fd, (err) => {
