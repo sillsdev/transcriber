@@ -72,7 +72,7 @@ export const exportProject = (
         });
       });
   } else {
-    /* ignore export type for now -- online is always full backup */
+    /* ignore export type for now -- online is always ptf */
     Axios.get(API_CONFIG.host + '/api/offlineData/project/' + projectid, {
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,
@@ -95,7 +95,27 @@ export const exportProject = (
       });
   }
 };
-export const importComplete = () => (dispatch: any) => {
+export const importComplete = (
+  memory: Memory,
+  backup: IndexedDBSource,
+  errorReporter: any
+) => (dispatch: any) => {
+  if (isElectron) {
+    backup
+      .pull((q) => q.findRecords())
+      .then((transform) => {
+        memory.sync(transform).then(() => {
+          console.log('done');
+        });
+      })
+      .catch((err) => {
+        logError(
+          Severity.error,
+          errorReporter,
+          infoMsg(err, 'IndexedDB Pull error: ')
+        );
+      });
+  }
   dispatch({
     payload: undefined,
     type: IMPORT_COMPLETE,
@@ -250,27 +270,16 @@ export const importProjectToElectron = (
       for (let index = 0; index < files.length; index++) {
         processFile(path.join(filepath, files[index]), ser);
       }
-      await memory
-        .update(oparray)
-        .then(async (response) => {
-          await backup
-            .push(oparray)
-            .then((res) => {
-              dispatch({
-                payload: { status: completemsg, msg: '' },
-                type: IMPORT_SUCCESS,
-              });
-            })
-            .catch((err) => {
-              orbitError(orbitInfo(err, 'Backup update error'));
-              dispatch({
-                payload: errorStatus(undefined, err.toString()),
-                type: IMPORT_ERROR,
-              });
-            });
+      await backup
+        .push(oparray)
+        .then((res) => {
+          dispatch({
+            payload: { status: completemsg, msg: '' },
+            type: IMPORT_SUCCESS,
+          });
         })
         .catch((err) => {
-          orbitError(orbitInfo(err, 'Memory sync error'));
+          orbitError(orbitInfo(err, 'Backup update error'));
           dispatch({
             payload: errorStatus(undefined, err.toString()),
             type: IMPORT_ERROR,

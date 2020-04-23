@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 
 export interface IAxiosStatus {
   complete: boolean;
-  statusMsg: string; //not sure we need this...
+  statusMsg: string;
   errStatus: number; //0 no error?
   errMsg: string;
 }

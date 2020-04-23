@@ -34,8 +34,7 @@ import {
 import { useGlobal } from 'reactn';
 import AdmZip from 'adm-zip';
 import { remoteIdNum } from '../utils';
-import { logError, Severity } from '../components/logErrorService';
-import { infoMsg } from '../utils';
+
 import { isElectron } from '../api-variable';
 
 interface IStateProps {
@@ -227,7 +226,7 @@ export function ImportTab(props: IProps) {
         setImportTitle(translateError(importStatus));
         setImportMessage(importStatus.errMsg);
         showMessage(t.error, translateError(importStatus));
-        importComplete();
+        importComplete(memory, backup, errorReporter);
         setBusy(false);
       } else {
         if (importStatus.statusMsg) {
@@ -240,28 +239,11 @@ export function ImportTab(props: IProps) {
             importStatus.errMsg !== '' ? t.onlineChangeReport : t.importComplete
           );
           setImportMessage(importStatus.errMsg);
-          importComplete();
+          importComplete(memory, backup, errorReporter);
           setBusy(false);
-          if (isElectron) {
-            backup
-              .pull((q) => q.findRecords())
-              .then((transform) => {
-                memory.sync(transform).then(() => {
-                  console.log('done');
-                });
-              })
-              .catch((err) => {
-                logError(
-                  Severity.info,
-                  errorReporter,
-                  infoMsg(err, 'IndexedDB Pull error: ')
-                );
-              });
-          }
         }
       }
     }
-
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [importStatus]);
 

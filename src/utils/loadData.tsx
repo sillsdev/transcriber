@@ -32,7 +32,9 @@ export function insertData(
   try {
     if (item.keys && checkExisting) {
       var id = remoteIdGuid(item.type, item.keys['remoteId'], memory.keyMap);
-      rec = memory.cache.query(q => q.findRecord({ type: item.type, id: id }));
+      rec = memory.cache.query((q) =>
+        q.findRecord({ type: item.type, id: id })
+      );
     }
   } catch (err) {
     if (err.constructor.name !== 'RecordNotFoundException') {
@@ -41,8 +43,11 @@ export function insertData(
   } finally {
     if (rec) {
       if (isArray(rec)) rec = rec[0]; //won't be...
-      item.id = rec.id;
-      oparray.push(tb.updateRecord(item));
+      //ah if only it were that simple
+      //item.id = rec.id;
+      rec.attributes = { ...item.attributes };
+      rec.relationships = { ...item.relationships };
+      oparray.push(tb.updateRecord(rec));
     } else {
       try {
         memory.schema.initializeRecord(item);
@@ -82,11 +87,11 @@ export async function LoadData(
     var oparray: Operation[] = [];
     var completed: number = 15 + start * completePerTable;
 
-    tables.forEach(t => {
+    tables.forEach((t) => {
       var json = ser.deserialize(t);
       if (isArray(json.data)) {
         //console.log(json.data[0].type, json.data.length);
-        json.data.forEach(item =>
+        json.data.forEach((item) =>
           insertData(item, memory, tb, oparray, orbitError, false, false)
         );
       } else {
@@ -105,11 +110,11 @@ export async function LoadData(
       await memory
         .sync(transform)
         .then(() => console.log('memory synced'))
-        .catch(err => orbitError(orbitInfo(err, 'Sync error')));
+        .catch((err) => orbitError(orbitInfo(err, 'Sync error')));
       await backup
         .sync(transform)
-        .then(x => console.log('backup sync complete'))
-        .catch(err => orbitError(orbitInfo(err, 'Backup sync failed')));
+        .then((x) => console.log('backup sync complete'))
+        .catch((err) => orbitError(orbitInfo(err, 'Backup sync failed')));
     } catch (err) {
       orbitError(orbitInfo(err, 'Backup update error'));
     }
