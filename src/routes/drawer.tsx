@@ -479,6 +479,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
+    setProjOptions([]);
     if (to) {
       setAddProject(false);
       setProject(projectId || '');
