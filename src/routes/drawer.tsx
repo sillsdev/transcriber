@@ -98,6 +98,7 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 import { getOrgs } from '../utils/getOrgs';
 import { DataPath } from '../utils/DataPath';
+import { IAxiosStatus } from '../store/AxiosStatus';
 
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
@@ -264,6 +265,7 @@ interface componentType {
 interface IStateProps {
   t: IMainStrings;
   orbitLoaded: boolean;
+  importStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
@@ -299,6 +301,7 @@ export function ResponsiveDrawer(props: IProps) {
     history,
     plans,
     orbitLoaded,
+    importStatus,
     organizationMemberships,
     groupMemberships,
     roles,
@@ -769,6 +772,13 @@ export function ResponsiveDrawer(props: IProps) {
       setTitle(attr ? attr.name : '');
     }
   }, [plan, plans]);
+
+  useEffect(() => {
+    if (isElectron && importStatus) {
+      setAddProject(!importStatus.complete);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [importStatus]);
 
   const defaultViewActions = ['', NavChoice.Setup, NavChoice.NotSetup];
   const nonAdminView: string[] = [
@@ -1312,6 +1322,7 @@ export function ResponsiveDrawer(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitLoaded: state.orbit.loaded,
+  importStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

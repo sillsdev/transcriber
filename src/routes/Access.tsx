@@ -133,7 +133,6 @@ export function Access(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
   const [online, setOnline] = useState(false);
-  const [errorReporter] = useGlobal('errorReporter');
   const handleLogin = () => auth.login();
 
   const handleSelect = (uId: string) => () => {
@@ -215,7 +214,7 @@ export function Access(props: IProps) {
           showMessage(t.importProject, importStatus.statusMsg);
         }
         if (importStatus.complete) {
-          importComplete(memory, backup, errorReporter);
+          importComplete();
         }
       }
     }

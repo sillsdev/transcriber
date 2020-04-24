@@ -95,27 +95,7 @@ export const exportProject = (
       });
   }
 };
-export const importComplete = (
-  memory: Memory,
-  backup: IndexedDBSource,
-  errorReporter: any
-) => (dispatch: any) => {
-  if (isElectron) {
-    backup
-      .pull((q) => q.findRecords())
-      .then((transform) => {
-        memory.sync(transform).then(() => {
-          console.log('done');
-        });
-      })
-      .catch((err) => {
-        logError(
-          Severity.error,
-          errorReporter,
-          infoMsg(err, 'IndexedDB Pull error: ')
-        );
-      });
-  }
+export const importComplete = () => (dispatch: any) => {
   dispatch({
     payload: undefined,
     type: IMPORT_COMPLETE,
@@ -270,16 +250,27 @@ export const importProjectToElectron = (
       for (let index = 0; index < files.length; index++) {
         processFile(path.join(filepath, files[index]), ser);
       }
-      await backup
-        .push(oparray)
-        .then((res) => {
-          dispatch({
-            payload: { status: completemsg, msg: '' },
-            type: IMPORT_SUCCESS,
-          });
+      await memory
+        .update(oparray)
+        .then(async (response) => {
+          await backup
+            .push(oparray)
+            .then((res) => {
+              dispatch({
+                payload: { status: completemsg, msg: '' },
+                type: IMPORT_SUCCESS,
+              });
+            })
+            .catch((err) => {
+              orbitError(orbitInfo(err, 'Backup update error'));
+              dispatch({
+                payload: errorStatus(undefined, err.toString()),
+                type: IMPORT_ERROR,
+              });
+            });
         })
         .catch((err) => {
-          orbitError(orbitInfo(err, 'Backup update error'));
+          orbitError(orbitInfo(err, 'Memory sync error'));
           dispatch({
             payload: errorStatus(undefined, err.toString()),
             type: IMPORT_ERROR,

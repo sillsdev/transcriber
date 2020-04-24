@@ -78,7 +78,6 @@ export function ImportTab(props: IProps) {
   const [backup] = useGlobal('backup');
   const [keyMap] = useGlobal('keyMap');
   const [project] = useGlobal('project');
-  const [errorReporter] = useGlobal('errorReporter');
 
   const [message, setMessage] = useState(<></>);
   const [importMessage, setImportMessage] = useState('');
@@ -226,7 +225,7 @@ export function ImportTab(props: IProps) {
         setImportTitle(translateError(importStatus));
         setImportMessage(importStatus.errMsg);
         showMessage(t.error, translateError(importStatus));
-        importComplete(memory, backup, errorReporter);
+        importComplete();
         setBusy(false);
       } else {
         if (importStatus.statusMsg) {
@@ -239,7 +238,7 @@ export function ImportTab(props: IProps) {
             importStatus.errMsg !== '' ? t.onlineChangeReport : t.importComplete
           );
           setImportMessage(importStatus.errMsg);
-          importComplete(memory, backup, errorReporter);
+          importComplete();
           setBusy(false);
         }
       }
