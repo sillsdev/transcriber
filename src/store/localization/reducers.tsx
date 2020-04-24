@@ -655,6 +655,7 @@ const initialState = {
 			"needsNewRecording": "Rejected recording",
 			"synced": "Completed",
 			"incomplete": "Incomplete transcripiton",
+			"saving": "Saving...",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({

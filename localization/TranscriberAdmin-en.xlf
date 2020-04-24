@@ -3022,6 +3022,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.saving">
+         <segment>
+            <source>Saving...</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>

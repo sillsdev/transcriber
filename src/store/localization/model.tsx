@@ -613,6 +613,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "needsNewRecording": string;
     "synced": string;
     "incomplete": string;
+    "saving": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {

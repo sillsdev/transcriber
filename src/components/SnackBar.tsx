@@ -49,7 +49,7 @@ function SimpleSnackbar(props: IProps) {
     <Snackbar
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'left',
+        horizontal: 'center',
       }}
       open={open}
       autoHideDuration={6000}

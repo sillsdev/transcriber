@@ -278,6 +278,10 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleReject = () => {
+    if (busy) {
+      setMessage(<span>{t.saving}</span>);
+      return;
+    }
     setMakeComment(true);
     setRejectVisible(true);
   };
@@ -329,6 +333,10 @@ export function Transcriber(props: IProps) {
     return planType;
   };
   const handleSubmit = async () => {
+    if (busy) {
+      setMessage(<span>{t.saving}</span>);
+      return;
+    }
     if (transcriptionRef.current) {
       if (next.hasOwnProperty(state)) {
         const transcription = transcriptionRef.current.firstChild.value;
@@ -375,7 +383,13 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Reviewing,
   };
 
-  const handleSaveButton = () => handleSave(true);
+  const handleSaveButton = () => {
+    if (busy) {
+      setMessage(<span>{t.saving}</span>);
+      return;
+    }
+    handleSave(true);
+  };
 
   const handleSave = async (postComment: boolean = false) => {
     if (transcriptionRef.current) {
@@ -458,6 +472,10 @@ export function Transcriber(props: IProps) {
     ]);
   };
   const handleReopen = async () => {
+    if (busy) {
+      setMessage(<span>{t.saving}</span>);
+      return;
+    }
     if (previous.hasOwnProperty(state)) {
       if (state === ActivityStates.Synced || state === ActivityStates.Done) {
         await reopenSynced();

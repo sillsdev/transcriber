@@ -3525,6 +3525,13 @@
         			<context context-type="sourcefile">Transcriber.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriber.saving">
+        		<source>Saving...</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcribeReject.rejectTitle">
         		<source>Rejection</source>
         		<target/>
