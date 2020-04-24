@@ -193,7 +193,7 @@ export function ShapingTable(props: IProps) {
 
   const handleSelect = (checks: Array<string | number>) => {
     if (select) {
-      select(checks.map(c => (typeof c === 'string' ? parseInt(c) : c)));
+      select(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
     }
   };
   const noRow = () => <></>;
@@ -277,7 +277,7 @@ export function ShapingTable(props: IProps) {
       )}
       {/* <PagingPanel pageSizes={pageSizes} /> */}
 
-      <TableGroupRow />
+      {!expandedGroups && <TableGroupRow />}
       {shaping !== null && !shaping ? (
         <Toolbar rootComponent={noRow} />
       ) : (
