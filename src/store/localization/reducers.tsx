@@ -650,9 +650,9 @@ const initialState = {
 			"transcribed": "Submitted task for review",
 			"reviewing": "Started to review",
 			"approved": "Approved",
-			"needsNewTranscription": "Rejected task",
+			"needsNewTranscription": "Rejected transcription",
 			"done": "Completed",
-			"needsNewRecording": "Rejected task",
+			"needsNewRecording": "Rejected recording",
 			"synced": "Completed",
 			"incomplete": "Incomplete transcripiton",
 		}

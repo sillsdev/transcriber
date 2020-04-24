@@ -3491,7 +3491,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.needsNewTranscription">
-        		<source>Rejected task</source>
+        		<source>Rejected transcription</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>
@@ -3505,7 +3505,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.needsNewRecording">
-        		<source>Rejected task</source>
+        		<source>Rejected recording</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>

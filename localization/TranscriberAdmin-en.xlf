@@ -2994,7 +2994,7 @@
       </unit>
       <unit id="transcriber.needsNewTranscription">
          <segment>
-            <source>Rejected task</source>
+            <source>Rejected transcription</source>
             <target/>
          </segment>
       </unit>
@@ -3006,7 +3006,7 @@
       </unit>
       <unit id="transcriber.needsNewRecording">
          <segment>
-            <source>Rejected task</source>
+            <source>Rejected recording</source>
             <target/>
          </segment>
       </unit>

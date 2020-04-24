@@ -2988,8 +2988,8 @@
       </unit>
       <unit id="transcriber.needsNewTranscription">
          <segment>
-            <source>Rejected task</source>
-         	<target>Tâche rejetée</target>
+            <source>Rejected transcription</source>
+         	<target>Transcription refusée</target>
          </segment>
       </unit>
       <unit id="transcriber.done">
@@ -3000,8 +3000,8 @@
       </unit>
       <unit id="transcriber.needsNewRecording">
          <segment>
-            <source>Rejected task</source>
-         	<target>Tâche rejetée</target>
+            <source>Rejected recording</source>
+         	<target>Enregistrement rejeté</target>
          </segment>
       </unit>
       <unit id="transcriber.synced">
