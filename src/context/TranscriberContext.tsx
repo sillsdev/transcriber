@@ -451,6 +451,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [sections]);
 
+    const noNewSelection: string[] = [
+      ActivityStates.TranscribeReady,
+      ActivityStates.Transcribing,
+      ActivityStates.Reviewing,
+    ];
+
     useEffect(() => {
       let changed = false;
       let selected = state.selected;
@@ -462,14 +468,14 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const newState = passage.attributes.state;
           if (newState !== r.passage.attributes.state) {
             changed = true;
-            if (newState !== ActivityStates.TranscribeReady) selected = '';
+            if (noNewSelection.indexOf(newState) === -1) selected = '';
           }
           rowData.push({ ...r, passage });
         }
       });
       if (changed) {
         setState({ ...state, rowData, selected });
-        setTrackedTask('');
+        if (trackedTask !== selected) setTrackedTask('');
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [passages]);
