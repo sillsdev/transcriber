@@ -124,7 +124,6 @@ export function PlanSheet(props: IProps) {
   const [passageMediaVisible, setPassageMediaVisible] = useState(false);
   const suggestionRef = useRef<Array<OptionType>>();
   const listRef = useRef<Array<string>>();
-  const blurRef = useRef<() => void>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [doSave, setDoSave] = useGlobal('doSave');
@@ -270,21 +269,6 @@ export function PlanSheet(props: IProps) {
       paste(removeBlanks(clipText).map((line) => splitAndTrim(line)));
       setPasting(false);
     });
-  };
-
-  const handleUp = () => {
-    if (blurRef.current) {
-      blurRef.current();
-      blurRef.current = undefined;
-    }
-  };
-
-  const myCell = (props: any) => {
-    let myProps = { ...props };
-    delete myProps.editing;
-    delete myProps.updated;
-    delete myProps.attributesRenderer;
-    return <td {...myProps} onMouseUp={handleUp} />;
   };
 
   const handleSetPreventSave = (val: boolean) => {
@@ -476,7 +460,6 @@ export function PlanSheet(props: IProps) {
             onContextMenu={handleContextMenu}
             onCellsChanged={handleCellsChanged}
             parsePaste={parsePaste}
-            cellRenderer={myCell}
           />
         </div>
         <Menu

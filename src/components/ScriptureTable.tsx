@@ -21,7 +21,6 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
-import { saveNewPassage, saveNewSection } from '../crud';
 import { remoteId, remoteIdNum, remoteIdGuid, related } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -112,8 +111,6 @@ export function ScriptureTable(props: IProps) {
   const [memory] = useGlobal('memory');
   const [schema] = useGlobal('schema');
   const [remote] = useGlobal('remote');
-  const [user] = useGlobal('user');
-  const userId = remoteIdNum('user', user, memory.keyMap);
   const [doSave, setDoSave] = useGlobal('doSave');
   const [saving, setSaving] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -147,7 +144,6 @@ export function ScriptureTable(props: IProps) {
   };
 
   const isSectionRow = (r: ISequencedRecordIdentity) => r.type === 'section';
-  const isPassageRow = (r: ISequencedRecordIdentity) => r.type === 'passage';
 
   const newSectionId = (sequenceNum: number) => {
     return {
@@ -464,132 +460,7 @@ export function ScriptureTable(props: IProps) {
   }
   useEffect(() => {
     const handleSave = async () => {
-      const newRowId = (rowIndex: number, id: string) => {
-        let inpRow = rowId[rowIndex];
-        inpRow.id = id;
-        setRowId(
-          rowId
-            .slice(0, rowIndex)
-            .concat([inpRow])
-            .concat(rowId.slice(rowIndex + 1))
-        );
-      };
-
-      const smallSave = async (changedRows: boolean[]) => {
-        const updatePassage = (rowIndex: number, sectionid: RecordIdentity) => {
-          const passageRow = data[rowIndex];
-          const inpRow = [...inData[rowIndex]];
-          let passage = memory.cache.query((q) =>
-            q.findRecord(rowId[rowIndex])
-          ) as Passage;
-          passage.attributes.sequencenum = parseInt(
-            passageRow[cols.PassageSeq]
-          );
-          if (showBook(cols)) passage.attributes.book = passageRow[cols.Book];
-          passage.attributes.reference = passageRow[cols.Reference];
-          passage.attributes.title = passageRow[cols.Title];
-          memory.update((t: TransformBuilder) => [
-            t.updateRecord(passage),
-            t.replaceRelatedRecord(
-              { type: 'passage', id: passage.id },
-              'section',
-              sectionid
-            ),
-          ]);
-          inpRow[cols.PassageSeq] = passage.attributes.sequencenum;
-          if (showBook(cols)) inpRow[cols.Book] = passage.attributes.book;
-          inpRow[cols.Reference] = passage.attributes.reference;
-          inpRow[cols.Title] = passage.attributes.title;
-          setInData(
-            inData
-              .slice(0, rowIndex)
-              .concat([inpRow])
-              .concat(inData.slice(rowIndex + 1))
-          );
-        };
-
-        const doPassages = async (
-          rowIndex: number,
-          section: RecordIdentity
-        ) => {
-          rowIndex += 1;
-          while (rowIndex < data.length && isPassageRow(rowId[rowIndex])) {
-            if (changedRows[rowIndex]) {
-              if (rowId[rowIndex].id === '') {
-                const passageRow = data[rowIndex];
-                const sequencenum = parseInt(passageRow[cols.PassageSeq]);
-                const book = showBook(cols) ? passageRow[cols.Book] : '';
-                const reference = passageRow[cols.Reference];
-                const title = passageRow[cols.Title];
-                let passage = await saveNewPassage({
-                  sequencenum,
-                  book,
-                  reference,
-                  title,
-                  section,
-                  memory,
-                  userId,
-                });
-                newRowId(rowIndex, passage.id);
-              } else {
-                updatePassage(rowIndex, section);
-              }
-            }
-            rowIndex += 1;
-          }
-        };
-
-        const updateSection = (rowIndex: number) => {
-          if (changedRows[rowIndex]) {
-            const sectionRow = data[rowIndex];
-            const inpRow = [...inData[rowIndex]];
-            let section = memory.cache.query((q) =>
-              q.findRecord(rowId[rowIndex])
-            ) as Section;
-            section.attributes.sequencenum = parseInt(
-              sectionRow[cols.SectionSeq]
-            );
-            section.attributes.name = sectionRow[cols.SectionnName];
-            delete section.relationships;
-            memory.update((t: TransformBuilder) => t.updateRecord(section));
-            //update inData
-            inpRow[cols.SectionSeq] = section.attributes.sequencenum;
-            inpRow[cols.SectionnName] = section.attributes.name;
-            setInData(
-              inData
-                .slice(0, rowIndex)
-                .concat([inpRow])
-                .concat(inData.slice(rowIndex + 1))
-            );
-          }
-          return rowId[rowIndex];
-        };
-
-        for (let rowIndex = 0; rowIndex < data.length; rowIndex += 1) {
-          if (isSectionRow(rowId[rowIndex])) {
-            setComplete(Math.min((rowIndex * 100) / data.length, 100));
-            if (!rowId[rowIndex].id) {
-              const sectionRow = data[rowIndex];
-              const sequencenum = parseInt(sectionRow[cols.SectionSeq]);
-              const name = sectionRow[cols.SectionnName];
-              const planRecId = { type: 'plan', id: plan };
-              let section = (await saveNewSection({
-                sequencenum,
-                name,
-                plan: planRecId,
-                memory,
-                userId,
-              })) as Section;
-              newRowId(rowIndex, section.id);
-              await doPassages(rowIndex, section);
-            } else {
-              let section = updateSection(rowIndex);
-              await doPassages(rowIndex, section);
-            }
-          }
-        }
-      };
-      const bigSave = async (changedRows: boolean[]) => {
+      const doSave = async (changedRows: boolean[]) => {
         setComplete(10);
         let planid = remoteIdNum('plan', plan, memory.keyMap);
         var anyNew = changedRows.includes(true);
@@ -633,7 +504,9 @@ export function ScriptureTable(props: IProps) {
             label: 'Update Plan Section and Passages',
             sources: {
               remote: {
-                timeout: 2000000,
+                settings: {
+                  timeout: 2000000,
+                },
               },
             },
           }
@@ -689,16 +562,7 @@ export function ScriptureTable(props: IProps) {
       if (numChanges === 0) {
         return;
       }
-      let threshold: number =
-        process.env.REACT_APP_BIGSAVE_THRESHOLD === undefined
-          ? 10
-          : +process.env.REACT_APP_BIGSAVE_THRESHOLD;
-
-      if (numChanges > threshold) {
-        await bigSave(changedRows);
-      } else {
-        await smallSave(changedRows);
-      }
+      await doSave(changedRows);
       setComplete(0);
     };
 
@@ -816,31 +680,33 @@ export function ScriptureTable(props: IProps) {
         }
       }
     };
-    getSections(plan as string).then(() => {
-      setData(initData);
-      setInData(initData.map((row: Array<any>) => [...row]));
-      setRowId(rowIds);
-    });
-    if (showBook(cols)) {
-      setColumns([
-        { value: t.section, readOnly: true, width: 80 },
-        { value: t.title, readOnly: true, width: 280 },
-        { value: t.passage, readOnly: true, width: 80 },
-        { value: t.book, readOnly: true, width: 170 },
-        { value: t.reference, readOnly: true, width: 180 },
-        { value: t.description, readOnly: true, width: 280 },
-      ]);
-    } else {
-      setColumns([
-        { value: t.section, readOnly: true, width: 80 },
-        { value: t.title, readOnly: true, width: 280 },
-        { value: t.passage, readOnly: true, width: 80 },
-        { value: t.reference, readOnly: true, width: 180 },
-        { value: t.description, readOnly: true, width: 280 },
-      ]);
+    if (!saving) {
+      getSections(plan as string).then(() => {
+        setData(initData);
+        setInData(initData.map((row: Array<any>) => [...row]));
+        setRowId(rowIds);
+      });
+      if (showBook(cols)) {
+        setColumns([
+          { value: t.section, readOnly: true, width: 80 },
+          { value: t.title, readOnly: true, width: 280 },
+          { value: t.passage, readOnly: true, width: 80 },
+          { value: t.book, readOnly: true, width: 170 },
+          { value: t.reference, readOnly: true, width: 180 },
+          { value: t.description, readOnly: true, width: 280 },
+        ]);
+      } else {
+        setColumns([
+          { value: t.section, readOnly: true, width: 80 },
+          { value: t.title, readOnly: true, width: 280 },
+          { value: t.passage, readOnly: true, width: 80 },
+          { value: t.reference, readOnly: true, width: 180 },
+          { value: t.description, readOnly: true, width: 280 },
+        ]);
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [plan]);
+  }, [plan, sections, passages, saving]);
 
   return (
     <div className={classes.container}>
