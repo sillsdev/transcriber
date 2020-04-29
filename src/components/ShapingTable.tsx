@@ -277,19 +277,19 @@ export function ShapingTable(props: IProps) {
       )}
       {/* <PagingPanel pageSizes={pageSizes} /> */}
 
-      {!expandedGroups && <TableGroupRow />}
+      <TableGroupRow />
       {shaping !== null && !shaping ? (
         <Toolbar rootComponent={noRow} />
       ) : (
         <Toolbar />
       )}
-      {shaping !== null && !shaping ? (
+      {shaping !== null && !shaping && !expandedGroups ? (
         <GroupingPanel
           showSortingControls={true}
           emptyMessageComponent={noRow}
         />
       ) : (
-        <GroupingPanel showSortingControls={true} />
+        !expandedGroups && <GroupingPanel showSortingControls={true} />
       )}
     </Grid>
   );
