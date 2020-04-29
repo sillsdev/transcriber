@@ -1366,6 +1366,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.logoutRequired">
+         <segment>
+            <source>Log out of other tab required</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>

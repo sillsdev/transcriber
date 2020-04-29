@@ -280,6 +280,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "clearLogout": string;
     "inviteError": string;
     "deletedInvitation": string;
+    "logoutRequired": string;
     "helpCenter": string;
     "reportIssue": string;
     "developer": string;

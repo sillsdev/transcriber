@@ -1363,13 +1363,19 @@
             <target>L'invitation n'est plus valide.</target>
          </segment>
       </unit>
-      <unit id="main.helpCenter">
+      <unit id="main.logoutRequired">
          <segment>
-            <source>Help Center</source>
-         	<target>Centre d'aide</target>
+            <source>Log out of other tab required</source>
+         	<target>Déconnexion de l'autre onglet nécessaire</target>
          </segment>
       </unit>
-      <unit id="main.reportIssue">
+		<unit id="main.helpCenter">
+			<segment>
+				<source>Help Center</source>
+				<target>Centre d'aide</target>
+			</segment>
+		</unit>
+		<unit id="main.reportIssue">
          <segment>
             <source>Report an Issue</source>
          	<target>Signaler un problème</target>

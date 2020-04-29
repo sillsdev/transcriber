@@ -1538,7 +1538,7 @@
                     <context context-type="sourcefile">UserMenu.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.myAccount">
+        	<trans-unit id="main.myAccount">
                 <source>My Account</source>
                 <target/>
                 <context-group>
@@ -1594,7 +1594,14 @@
                     <context context-type="sourcefile">Loading.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.helpCenter">
+        	<trans-unit id="main.logoutRequired">
+        		<source>Log out of other tab required</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Loading.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.helpCenter">
                 <source>Help Center</source>
                 <target/>
                 <context-group>

@@ -303,6 +303,7 @@ const initialState = {
 			"clearLogout": "Log Out and Force Data Reload",
 			"inviteError": "Invitation not accepted.  You must login with the email that the invitation was sent to.",
 			"deletedInvitation": "Invitation is no longer valid.",
+			"logoutRequired": "Log out of other tab required",
 			"helpCenter": "Help Center",
 			"reportIssue": "Report an Issue",
 			"developer": "Developer mode",

@@ -143,7 +143,9 @@ export async function LoadData(
           label: 'Get Data',
           sources: {
             remote: {
-              timeout: 35000,
+              settings: {
+                timeout: 35000,
+              },
             },
           },
         }
