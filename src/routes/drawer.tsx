@@ -826,7 +826,9 @@ export function ResponsiveDrawer(props: IProps) {
       content,
       keyMap,
     });
-    if (target) history.push(target);
+    if (target && target !== history.location.pathname) {
+      history.push(target);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [
     project,
@@ -896,7 +898,18 @@ export function ResponsiveDrawer(props: IProps) {
 
   // When the user uses the back button or directly naviagets to a page
   if (history.action === 'POP') {
-    localStorage.setItem('url', history.location.pathname);
+    const target = deepLink({
+      organization,
+      project,
+      group,
+      plan,
+      tab,
+      choice,
+      content,
+      keyMap,
+    });
+    if (target && target !== history.location.pathname)
+      localStorage.setItem('url', history.location.pathname);
   }
 
   if (!auth || !auth.isAuthenticated(offline) || !orbitLoaded)
