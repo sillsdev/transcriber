@@ -130,6 +130,8 @@ export function PlanSheet(props: IProps) {
   const [changed, setChanged] = useGlobal('changed');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
+  const sheetRef = useRef<any>();
+  const [showRow, setShowRow] = useState(0);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -220,6 +222,7 @@ export function PlanSheet(props: IProps) {
     if (changes.length > 0) {
       setChanged(true);
       doUpdate(grid);
+      setShowRow(changes[0].row);
     }
   };
 
@@ -362,6 +365,16 @@ export function PlanSheet(props: IProps) {
   }, [rowData, check, bookCol]);
 
   useEffect(() => {
+    if (sheetRef.current && showRow) {
+      const tbodyRef =
+        sheetRef.current?.firstChild?.firstChild?.firstChild?.childNodes[
+          showRow
+        ];
+      if (tbodyRef) window.scrollTo(0, tbodyRef.offsetTop);
+    }
+  });
+
+  useEffect(() => {
     suggestionRef.current = bookSuggestions;
     listRef.current = bookSuggestions
       ? bookSuggestions.map((v) => v.label)
@@ -452,7 +465,7 @@ export function PlanSheet(props: IProps) {
             )}
           </div>
         </AppBar>
-        <div className={classes.content}>
+        <div id="PlanSheet" ref={sheetRef} className={classes.content}>
           <DataSheet
             data={data as any[][]}
             valueRenderer={handleValueRender}
