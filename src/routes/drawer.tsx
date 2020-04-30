@@ -290,6 +290,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
       pathname: string;
     };
     push: (path: string) => void;
+    replace: (path: string) => void;
   };
 }
 
@@ -908,8 +909,10 @@ export function ResponsiveDrawer(props: IProps) {
       content,
       keyMap,
     });
-    if (target && target !== history.location.pathname)
+    if (target && target !== history.location.pathname) {
       localStorage.setItem('url', history.location.pathname);
+      history.replace(history.location.pathname);
+    }
   }
 
   if (!auth || !auth.isAuthenticated(offline) || !orbitLoaded)
