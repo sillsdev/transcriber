@@ -209,6 +209,8 @@ export function OrgSettings(props: IProps) {
         org = orgRecords[0];
         setCurOrg(org);
       }
+    } else {
+      setCurOrg(undefined);
     }
     const attr = org.attributes;
     setName(attr.name);
