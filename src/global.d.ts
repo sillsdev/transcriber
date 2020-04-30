@@ -32,5 +32,6 @@ declare module 'reactn/default' {
     developer: boolean;
     offline: boolean;
     errorReporter: any; // bugsnagClient
+    alertOpen: boolean;
   }
 }

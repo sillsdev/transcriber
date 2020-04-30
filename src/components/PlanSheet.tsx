@@ -110,6 +110,7 @@ export function PlanSheet(props: IProps) {
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
+  const [global] = useGlobal();
   const [message, setMessage] = useState(<></>);
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -296,8 +297,9 @@ export function PlanSheet(props: IProps) {
   };
   const isNum = (value: string | number) =>
     isNumber(value) || /^[0-9]$/.test(value);
+
   const handleAutoSave = () => {
-    if (changed && !preventSave.current) {
+    if (changed && !preventSave.current && !global.alertOpen) {
       handleSave();
     } else {
       startSaveTimer();

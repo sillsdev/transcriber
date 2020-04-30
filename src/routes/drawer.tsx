@@ -329,6 +329,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [tab, setTab] = useGlobal('tab');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave, setDoSave] = useGlobal('doSave');
+  const [alertOpen, setAlertOpen] = useGlobal('alertOpen');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
     'autoOpenAddMedia'
@@ -348,7 +349,6 @@ export function ResponsiveDrawer(props: IProps) {
   const [view, setView] = useState('');
   const [message, setMessage] = useState(<></>);
   const saveConfirm = useRef<() => any>();
-  const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
   const [delProject, setDelProject] = useState(false);
