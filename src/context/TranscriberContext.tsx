@@ -111,6 +111,8 @@ const initState = {
   index: 0,
   selected: '',
   setSelected: (selected: string) => {},
+  playing: false,
+  setPlaying: (playing: boolean) => {},
   rowData: Array<IRowData>(),
   expandedGroups: Array<string>(),
   playItem: '',
@@ -170,6 +172,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const setExpandedGroups = (expandedGroups: string[]) => {
       setState((state: ICtxState) => {
         return { ...state, expandedGroups };
+      });
+    };
+
+    const setPlaying = (playing: boolean) => {
+      setState((state: ICtxState) => {
+        return { ...state, playing };
       });
     };
 
@@ -475,7 +483,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       });
       if (changed) {
         setState({ ...state, rowData, selected });
-        if (trackedTask !== selected) setTrackedTask('');
+        if (!state.playing) setTrackedTask('');
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [passages]);
@@ -493,7 +501,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     return (
       <TranscriberContext.Provider
-        value={{ state: { ...state, hasUrl, mediaUrl, setSelected }, setState }}
+        value={{
+          state: { ...state, hasUrl, mediaUrl, setSelected, setPlaying },
+          setState,
+        }}
       >
         {props.children}
       </TranscriberContext.Provider>

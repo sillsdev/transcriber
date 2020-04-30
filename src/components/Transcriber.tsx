@@ -144,6 +144,8 @@ export function Transcriber(props: IProps) {
     fetchMediaUrl,
     allBookData,
     selected,
+    playing,
+    setPlaying,
   } = useTodo();
   const {
     section,
@@ -178,7 +180,6 @@ export function Transcriber(props: IProps) {
   const [doSave, setDoSave] = useGlobal('doSave');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
-  const [playing, setPlaying] = React.useState(false);
   const [playSpeed, setPlaySpeed] = React.useState(1);
   // playedSeconds is needed to update progress bar
   const [playedSeconds, setPlayedSeconds] = React.useState(0);
