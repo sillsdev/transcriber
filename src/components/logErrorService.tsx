@@ -10,14 +10,16 @@ export function logError(
 ) {
   if (reporter) {
     if (level === Severity.error) {
-      reporter.notify(typeof error === 'string' ? new Error(error) : error);
+      if (reporter.notify)
+        reporter.notify(typeof error === 'string' ? new Error(error) : error);
     } else if (level === Severity.info) {
       if (typeof error === 'string') {
-        if (error !== '') {
+        if (error !== '' && reporter.leaveBreadcrumb) {
           reporter.leaveBreadcrumb(error);
         }
       } else {
-        reporter.leaveBreadcrumb(error.message, { name: error.name });
+        if (reporter.leaveBreadcrumb)
+          reporter.leaveBreadcrumb(error.message, { name: error.name });
       }
     }
   }

@@ -331,6 +331,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "elan": string;
     "export": string;
     "exportProject": string;
+    "electronBackup": string;
     "exportType": string;
     "exportExplanation": string;
     "exportPTFtype": string;

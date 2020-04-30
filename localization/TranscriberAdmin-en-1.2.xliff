@@ -1909,6 +1909,13 @@
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
+            <trans-unit id="transcriptionTab.electronBackup">
+        		<source>Backup All Projects</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
             <trans-unit id="transcriptionTab.exportType">
         		<source>Which export type?</source>
         		<target/>
@@ -1917,14 +1924,14 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="transcriptionTab.exportExplanation">
-        		<source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+        		<source>Export the full project to store locally or share with another offline user. Export incremental file to import changes into online app.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
             <trans-unit id="transcriptionTab.exportPTFtype">
-        		<source>Full Backup (ptf)</source>
+        		<source>Export Project (ptf)</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>

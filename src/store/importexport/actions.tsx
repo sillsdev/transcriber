@@ -153,11 +153,7 @@ export const importProjectFromElectron = (
                   type: IMPORT_SUCCESS,
                 });
               else {
-                logError(
-                  Severity.info,
-                  errorReporter,
-                  infoMsg(response.data.message, 'Import Error')
-                );
+                logError(Severity.info, errorReporter, response.data.message);
                 dispatch({
                   payload: errorStatus(
                     response.data.status,
@@ -168,11 +164,7 @@ export const importProjectFromElectron = (
               }
             })
             .catch((reason) => {
-              logError(
-                Severity.info,
-                errorReporter,
-                infoMsg(reason.data.message, 'Import error')
-              );
+              logError(Severity.error, errorReporter, reason.toString());
               dispatch({
                 payload: errorStatus(-1, reason.toString()),
                 type: IMPORT_ERROR,
@@ -192,7 +184,11 @@ export const importProjectFromElectron = (
       };
     })
     .catch((reason) => {
-      logError(Severity.info, errorReporter, infoMsg(reason, 'Import Error'));
+      logError(
+        Severity.info,
+        errorReporter,
+        infoMsg(new Error(reason.toString()), 'Import Error')
+      );
       dispatch({
         payload: errorStatus(-1, reason.toString()),
         type: IMPORT_ERROR,

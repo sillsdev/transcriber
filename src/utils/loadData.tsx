@@ -6,7 +6,13 @@ import JSONAPISource, {
   JSONAPISerializerSettings,
 } from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
-import { Record, TransformBuilder, Operation, QueryBuilder } from '@orbit/data';
+import {
+  Record,
+  TransformBuilder,
+  Operation,
+  QueryBuilder,
+  RecordIdentity,
+} from '@orbit/data';
 import Memory from '@orbit/memory';
 import OrgData from '../model/orgData';
 import { Project, IApiError } from '../model';
@@ -43,11 +49,25 @@ export function insertData(
   } finally {
     if (rec) {
       if (isArray(rec)) rec = rec[0]; //won't be...
-      //ah if only it were that simple
-      //item.id = rec.id;
       rec.attributes = { ...item.attributes };
-      rec.relationships = { ...item.relationships };
       oparray.push(tb.updateRecord(rec));
+      for (var rel in item.relationships) {
+        if (
+          item.relationships[rel].data &&
+          !isArray(item.relationships[rel].data) &&
+          (!rec.relationships ||
+            !rec.relationships[rel] ||
+            (item.relationships[rel].data as RecordIdentity).id !==
+              (rec.relationships[rel].data as RecordIdentity).id)
+        )
+          oparray.push(
+            tb.replaceRelatedRecord(
+              rec,
+              rel,
+              item.relationships[rel].data as RecordIdentity
+            )
+          );
+      }
     } else {
       try {
         memory.schema.initializeRecord(item);

@@ -1634,6 +1634,12 @@
             <target>Exporter une projet</target>
          </segment>
       </unit>
+      <unit id="transcriptionTab.electronBackup">
+         <segment>
+            <source>Backup All Projects</source>
+            <target>Sauvegarder tous les projets</target>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportType">
          <segment>
             <source>Which export type?</source>
@@ -1642,14 +1648,14 @@
       </unit>
       <unit id="transcriptionTab.exportExplanation">
          <segment>
-            <source>Export a full backup to store locally. Export incremental file to import into online app.</source>
-            <target>Exportez une sauvegarde complète pour la stocker localement. Exportez le fichier incrémentiel pour l'importer dans l'application en ligne.</target>
+            <source>Export the full project to store locally or share with another offline user. Export incremental file to import changes into online app.</source>
+            <target>Exportez le projet complet pour le stocker localement ou le partager avec un autre utilisateur hors ligne. Exportez le fichier incrémentiel pour importer les modifications dans l'application en ligne.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
-            <source>Full Backup (ptf)</source>
-            <target>Sauvegarde complète (ptf)</target>
+            <source>Export Project (ptf)</source>
+            <target>Projet d'exportation (ptf)</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportITFtype">

@@ -17,6 +17,7 @@ import {
   ActivityStates,
   FileResponse,
   BookName,
+  Project,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -207,6 +208,7 @@ interface IDispatchProps {
 }
 
 interface IRecordProps {
+  projects: Array<Project>;
   passages: Array<Passage>;
   sections: Array<Section>;
   users: Array<User>;
@@ -229,6 +231,7 @@ export function TranscriptionTab(props: IProps) {
     auth,
     activityState,
     t,
+    projects,
     passages,
     sections,
     users,
@@ -314,6 +317,10 @@ export function TranscriptionTab(props: IProps) {
   const handleProjectExport = () => {
     if (isElectron) setOpenExport(true);
     else doProjectExport('ptf');
+  };
+
+  const handleBackup = () => {
+    doProjectExport('zip');
   };
 
   const handleSelect = (passageId: string) => () => {
@@ -603,6 +610,19 @@ export function TranscriptionTab(props: IProps) {
                 {t.exportProject}
               </Button>
             )}
+            {planColumn && isElectron && projects.length > 1 && (
+              <Button
+                key="backup"
+                aria-label={t.electronBackup}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleBackup}
+                title={t.electronBackup}
+              >
+                {t.electronBackup}
+              </Button>
+            )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Button
               key="filter"
@@ -703,6 +723,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 const mapRecordsToProps = {
+  projects: (q: QueryBuilder) => q.findRecords('project'),
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
   users: (q: QueryBuilder) => q.findRecords('user'),
