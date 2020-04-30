@@ -372,6 +372,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleTablePaste = (rows: string[][]) => {
     if (validTable(rows)) {
+      rows = resequence(rows);
       //setMessage(<span>Pasting...</span>); this doesn't actually ever show up
       const startRow = isBlankOrValidNumber(rows[0][cols.SectionSeq]) ? 0 : 1;
       while (
