@@ -768,6 +768,13 @@
         			<context context-type="sourcefile">PlanSheet.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="planSheet.nonNumber">
+        		<source>Do not change to non-number.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="scriptureTable.section">
                 <source>Section</source>
                 <target/>

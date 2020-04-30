@@ -655,6 +655,12 @@
 				<target>Choisir un livre...</target>
 			</segment>
 		</unit>
+		<unit id="planSheet.nonNumber">
+			<segment>
+				<source>Do not change to non-number.</source>
+				<target>Ne passez pas au non-numéro.</target>
+			</segment>
+		</unit>
 		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>

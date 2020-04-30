@@ -217,7 +217,11 @@ export function PlanSheet(props: IProps) {
   const handleCellsChanged = (changes: Array<IChange>) => {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
-      grid[row][col] = { ...grid[row][col], value };
+      if (value && !isNum(value) && isNum(cell.value)) {
+        setMessage(<span>{t.nonNumber}</span>);
+      } else {
+        grid[row][col] = { ...grid[row][col], value };
+      }
     });
     if (changes.length > 0) {
       setChanged(true);

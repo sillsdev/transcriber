@@ -138,6 +138,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "passageAbove": string;
     "tablePaste": string;
     "bookSelect": string;
+    "nonNumber": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {

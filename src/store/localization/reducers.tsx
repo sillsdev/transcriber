@@ -153,6 +153,7 @@ const initialState = {
 			"passageAbove": "Insert passage above",
 			"tablePaste": "Paste Table",
 			"bookSelect": "Select Book...",
+			"nonNumber": "Do not change to non-number.",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
