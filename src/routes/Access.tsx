@@ -18,6 +18,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  LinearProgress,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online } from '../utils';
@@ -34,6 +35,7 @@ import { withData } from '../mods/react-orbitjs';
 import AdmZip from 'adm-zip';
 import Confirm from '../components/AlertDialog';
 import { isElectron, API_CONFIG } from '../api-variable';
+import { HeadHeight } from './drawer';
 
 const reactStringReplace = require('react-string-replace');
 
@@ -90,6 +92,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }) as any,
     button: {
       marginRight: theme.spacing(1),
+    },
+    progress: {
+      top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
+      zIndex: 100,
+      width: '100%',
     },
   })
 );
@@ -271,12 +278,19 @@ export function Access(props: IProps) {
           <br />
           {buildDate}
         </div>
+        {!importStatus || (
+          <AppBar position="fixed" className={classes.progress} color="inherit">
+            <LinearProgress variant="indeterminate" />
+          </AppBar>
+        )}{' '}
       </AppBar>
       {isElectron && (
         <div className={classes.container}>
           <Paper className={classes.paper}>
             <Typography variant="body1" className={classes.dialogHeader}>
-              {users.length > 0 ? (
+              {importStatus ? (
+                importStatus.statusMsg
+              ) : users.length > 0 ? (
                 t.accessSilTranscriber
               ) : (
                 <span>

@@ -603,7 +603,7 @@ export function ResponsiveDrawer(props: IProps) {
     let projs: Project[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('project')
     );
-    if (isApp) {
+    if (isElectron) {
       const groupids = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
         .map((gm) => related(gm, 'group'));
@@ -728,7 +728,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject, delProject, orgRole]);
+  }, [organization, addProject, delProject, orgRole, user]);
 
   useEffect(() => {
     const projKeys = projOptions.map((o) => o.value);
@@ -859,7 +859,7 @@ export function ResponsiveDrawer(props: IProps) {
           if (!busy && !doSave) {
             dateChanges(auth, keyMap, remote, memory, schema);
           }
-        }, 1000 * 10);
+        }, 1000 * 100);
       }
       return () => {
         if (timer.current) {
@@ -925,7 +925,7 @@ export function ResponsiveDrawer(props: IProps) {
     orbitLoaded &&
     url &&
     view === '' &&
-    localStorage.getItem('isLoggedIn') === 'true'
+    (localStorage.getItem('isLoggedIn') === 'true' || isElectron)
   ) {
     const parts = url.split('/');
     const base = 1;

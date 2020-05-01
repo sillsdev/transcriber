@@ -13,7 +13,7 @@
                 </context-group>
             </trans-unit>
         	<trans-unit id="access.accessSilTranscriber">
-        		<source>Click your avatar to transcriber or review.</source>
+        		<source>Click your avatar to transcriber or edit.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Access.tsx</context>

@@ -190,7 +190,7 @@ export function Loading(props: IProps) {
   const setDefaultOrg = async () => {
     let orgs: Organization[] = getOrgs(memory, user);
     var org = organization;
-    if (org === '') {
+    if (org === '' || orgs.findIndex((o) => o.id === org) < 0) {
       org =
         remoteIdGuid(
           'organization',

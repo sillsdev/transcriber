@@ -12,7 +12,7 @@
       </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>Click your avatar to transcriber or review.</source>
+            <source>Click your avatar to transcriber or edit.</source>
             <target/>
          </segment>
       </unit>
