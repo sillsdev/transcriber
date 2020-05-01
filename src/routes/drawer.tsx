@@ -656,7 +656,7 @@ export function ResponsiveDrawer(props: IProps) {
       const orgRec = organizations.filter((o) => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        setOrgAvatar(DataPath(attr?.logoUrl || ''));
+        setOrgAvatar(attr?.logoUrl ? DataPath(attr.logoUrl) : '');
       }
       setOrgRole(
         getRole(organizationMemberships, 'organization', organization)
@@ -988,7 +988,6 @@ export function ResponsiveDrawer(props: IProps) {
     <UploadIcon />,
     <IntegrationIcon />,
   ];
-
   const drawer = (drawerId: string) => (
     <div>
       <div className={classes.toolbar}>
