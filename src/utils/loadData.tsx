@@ -47,6 +47,13 @@ export function insertData(
       orbitError(orbitInfo(err, item.keys ? item.keys['remoteId'] : ''));
     }
   } finally {
+    for (var hasMany in item.relationships) {
+      if (
+        item.relationships[hasMany].data &&
+        isArray(item.relationships[hasMany].data)
+      )
+        delete item.relationships[hasMany];
+    }
     if (rec) {
       if (isArray(rec)) rec = rec[0]; //won't be...
       rec.attributes = { ...item.attributes };
@@ -54,7 +61,6 @@ export function insertData(
       for (var rel in item.relationships) {
         if (
           item.relationships[rel].data &&
-          !isArray(item.relationships[rel].data) &&
           (!rec.relationships ||
             !rec.relationships[rel] ||
             (item.relationships[rel].data as RecordIdentity).id !==
