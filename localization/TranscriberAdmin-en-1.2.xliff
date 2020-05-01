@@ -117,13 +117,6 @@
                     <context context-type="sourcefile">electronImport.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="snackbar.undo">
-                <source>UNDO</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">SnackBar.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="usertable.silTranscriberAdmin">
                 <source>SIL Transcriber Admin</source>
                 <target/>

@@ -23,10 +23,6 @@ export interface IElectronImportStrings extends Localize.LocalizedStringsMethods
     "exportedLost": string;
 };
 
-export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
-    "undo": string;
-};
-
 export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "chooseUser": string;
@@ -709,7 +705,6 @@ export interface ILocalizedStrings {
 	lang: string;
 	access: IAccessStrings;
 	electronImport: IElectronImportStrings;
-	snackbar: ISnackbarStrings;
 	usertable: IUsertableStrings;
 	alert: IAlertStrings;
 	projectTable: IProjectTableStrings;

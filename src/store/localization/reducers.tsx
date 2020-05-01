@@ -30,11 +30,6 @@ const initialState = {
 			"exportedLost": "Import file will not include latest exported data.",
 		}
 	}),
-	"snackbar": new LocalizedStrings({
-		"en": {
-			"undo": "UNDO",
-		}
-	}),
 	"usertable": new LocalizedStrings({
 		"en": {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
@@ -763,7 +758,6 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"loaded": true,
 				"access" : new LocalizedStrings(action.payload.data.access),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
-				"snackbar" : new LocalizedStrings(action.payload.data.snackbar),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),

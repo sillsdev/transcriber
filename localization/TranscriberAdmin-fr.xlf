@@ -97,12 +97,6 @@
             <target>Le fichier d'importation n'inclura pas les dernières données exportées.</target>
          </segment>
       </unit>
-		<unit id="snackbar.undo">
-			<segment>
-				<source>UNDO</source>
-				<target>Annuler</target>
-			</segment>
-		</unit>
 		<unit id="usertable.silTranscriberAdmin">
 			<segment>
 				<source>SIL Transcriber Admin</source>
