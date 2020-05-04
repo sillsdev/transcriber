@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { IState, ISnackbarStrings } from '../model';
-import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,11 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IStateProps {
-  t: ISnackbarStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   message: JSX.Element;
   reset: () => {};
 }
@@ -74,8 +67,4 @@ function SimpleSnackbar(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'snackbar' }),
-});
-
-export default connect(mapStateToProps)(SimpleSnackbar) as any;
+export default SimpleSnackbar;
