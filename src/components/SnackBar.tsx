@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps {
   message: JSX.Element;
-  reset: () => {};
+  reset: () => void;
 }
 
 function SimpleSnackbar(props: IProps) {
