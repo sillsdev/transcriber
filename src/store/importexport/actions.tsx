@@ -252,15 +252,74 @@ export const importProjectToElectron = (
           await backup
             .push(oparray)
             .then((res) => {
-              dispatch({
-                payload: { status: completemsg, msg: '' },
-                type: IMPORT_SUCCESS,
-              });
+              //remove records with no attributes...i.e. groups created from user's groupmemberships that we didn't import
+              oparray = [];
+              backup
+                .pull((q) => q.findRecords())
+                .then((allrecs) => {
+                  allrecs[0].operations.forEach((r: any) => {
+                    if (r.record.attributes === undefined) {
+                      oparray.push(
+                        tb.removeRecord({
+                          type: r.record.type,
+                          id: r.record.id,
+                        })
+                      );
+                    }
+                  });
+                  if (oparray.length > 0) {
+                    memory
+                      .update(oparray)
+                      .then(() =>
+                        backup
+                          .push(oparray)
+                          .then(() => {
+                            dispatch({
+                              payload: { status: completemsg, msg: '' },
+                              type: IMPORT_SUCCESS,
+                            });
+                          })
+                          .catch((err) => {
+                            orbitError(
+                              orbitInfo(
+                                err,
+                                'Backup error removing extra records'
+                              )
+                            );
+                            dispatch({
+                              payload: errorStatus(undefined, err.message),
+                              type: IMPORT_ERROR,
+                            });
+                          })
+                      )
+                      .catch((err) => {
+                        orbitError(
+                          orbitInfo(err, 'memory error removing extra records')
+                        );
+                        dispatch({
+                          payload: errorStatus(undefined, err.message),
+                          type: IMPORT_ERROR,
+                        });
+                      });
+                  } else {
+                    dispatch({
+                      payload: { status: completemsg, msg: '' },
+                      type: IMPORT_SUCCESS,
+                    });
+                  }
+                })
+                .catch((err) => {
+                  orbitError(orbitInfo(err, 'Backup pull error'));
+                  dispatch({
+                    payload: errorStatus(undefined, err.message),
+                    type: IMPORT_ERROR,
+                  });
+                });
             })
             .catch((err) => {
               orbitError(orbitInfo(err, 'Backup update error'));
               dispatch({
-                payload: errorStatus(undefined, err.toString()),
+                payload: errorStatus(undefined, err.message),
                 type: IMPORT_ERROR,
               });
             });
@@ -268,7 +327,7 @@ export const importProjectToElectron = (
         .catch((err) => {
           orbitError(orbitInfo(err, 'Memory sync error'));
           dispatch({
-            payload: errorStatus(undefined, err.toString()),
+            payload: errorStatus(undefined, err.message),
             type: IMPORT_ERROR,
           });
         });
