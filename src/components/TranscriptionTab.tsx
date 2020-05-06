@@ -319,6 +319,56 @@ export function TranscriptionTab(props: IProps) {
     else doProjectExport('ptf');
   };
 
+  const getTranscription = (passageId: string) => {
+    const mediaRec = getMediaRec(passageId, memory);
+    return mediaRec?.attributes?.transcription || '';
+  };
+
+  const getCopy = (
+    projectPlans: Plan[],
+    passages: Array<Passage>,
+    sections: Array<Section>,
+    bookData: BookName[]
+  ) => {
+    const copyData: string[] = [];
+    projectPlans.forEach((planRec) => {
+      sections
+        .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
+        .sort(sectionCompare)
+        .forEach((section) => {
+          const sectionpassages = passages
+            .filter((ps) => related(ps, 'section') === section.id)
+            .sort(passageCompare);
+          let sectionHead = '-----\n' + getSection(section) + '\n';
+          sectionpassages.forEach((passage: Passage) => {
+            // const state = passage?.attributes?.state ||'';
+            const ref = getReference(passage, bookData);
+            const transcription = getTranscription(passage.id);
+            if (transcription !== '') {
+              if (sectionHead !== '') {
+                copyData.push(sectionHead);
+                sectionHead = '';
+              }
+              if (ref && ref !== '') copyData.push(ref);
+              copyData.push(transcription + '\n');
+            }
+          });
+        });
+    });
+
+    return copyData;
+  };
+
+  const handleCopyPlan = () => {
+    navigator.clipboard
+      .writeText(
+        getCopy(projectPlans, passages, sections, allBookData).join('\n')
+      )
+      .catch((err) => {
+        setMessage(<span>{t.cantCopy}</span>);
+      });
+  };
+
   const handleBackup = () => {
     doProjectExport('zip');
   };
@@ -597,7 +647,7 @@ export function TranscriptionTab(props: IProps) {
           color="default"
         >
           <div className={classes.actions}>
-            {planColumn && (
+            {planColumn ? (
               <Button
                 key="export"
                 aria-label={t.exportProject}
@@ -608,6 +658,18 @@ export function TranscriptionTab(props: IProps) {
                 title={t.exportProject}
               >
                 {t.exportProject}
+              </Button>
+            ) : (
+              <Button
+                key="copy"
+                aria-label={'Copy Plan'}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleCopyPlan}
+                title={'Copy Transcription(s) to Clipboard'}
+              >
+                {'Copy Transcription(s)'}
               </Button>
             )}
             {planColumn && isElectron && projects.length > 1 && (

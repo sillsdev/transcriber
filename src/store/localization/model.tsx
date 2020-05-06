@@ -326,6 +326,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "plan": string;
     "elan": string;
     "export": string;
+    "cantCopy": string;
     "exportProject": string;
     "electronBackup": string;
     "exportType": string;
@@ -343,6 +344,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
     "transcription": string;
     "transcriptionDisplay": string;
     "close": string;
+    "cantCopy": string;
 };
 
 export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {

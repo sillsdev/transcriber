@@ -1624,6 +1624,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
@@ -1705,6 +1711,12 @@
       <unit id="transcriptionShow.close">
          <segment>
             <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
