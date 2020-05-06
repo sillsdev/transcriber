@@ -161,9 +161,8 @@ export function ScriptureTable(props: IProps) {
     };
   };
 
-  const resequence = (data: any[][]) => {
+  const resequence = (data: any[][], sec = 1) => {
     let change = false;
-    let sec = 1;
     let pas = 1;
     for (let i = 0; i < data.length; i += 1) {
       let r = data[i];
@@ -370,9 +369,12 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
+  const getTotalSections = (total: number, row: string[]) => {
+    return total + (isValidNumber(row[cols.SectionSeq]) ? 1 : 0);
+  };
+
   const handleTablePaste = (rows: string[][]) => {
     if (validTable(rows)) {
-      rows = resequence(rows);
       //setMessage(<span>Pasting...</span>); this doesn't actually ever show up
       const startRow = isBlankOrValidNumber(rows[0][cols.SectionSeq]) ? 0 : 1;
       while (
@@ -385,6 +387,8 @@ export function ScriptureTable(props: IProps) {
       ) {
         rows.forEach(splitSectionPassage);
       }
+      const secCount = data.reduce(getTotalSections, 1);
+      rows = resequence(rows, secCount);
       /* Make it clear which columns can be imported by blanking others */
       setData([
         ...data.concat(
