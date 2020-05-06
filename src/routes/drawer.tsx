@@ -490,6 +490,7 @@ export function ResponsiveDrawer(props: IProps) {
       setPlan(planId || '');
       const parts = to.split('/');
       setContent(parts[3]);
+      setChoice(NavChoice.Plans);
       if (mini) setMini(false);
       setTab(parseInt(parts[6]));
       setTimeout(() => {
