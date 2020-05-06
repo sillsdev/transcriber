@@ -25,6 +25,7 @@ declare module 'reactn/default' {
     remoteBusy: boolean;
     doSave: boolean;
     changed: boolean;
+    projectsLoaded: string[];
     importexportBusy: boolean;
     autoOpenAddMedia: boolean; // open a dialog
     editUserId: string | null;

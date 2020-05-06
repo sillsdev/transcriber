@@ -418,6 +418,16 @@ const schemaDefinition: SchemaSettings = {
       },
       relationships: {},
     },
+    projdata: {
+      keys: { remoteId: {} },
+      attributes: {
+        json: { type: 'string' },
+        startnext: { type: 'number' },
+        projectid: { type: 'number' },
+      },
+      relationships: {},
+    },
+
     sectionpassage: {
       keys: { remoteId: {} },
       attributes: {

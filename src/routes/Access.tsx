@@ -289,7 +289,8 @@ export function Access(props: IProps) {
           <Paper className={classes.paper}>
             <Typography variant="body1" className={classes.dialogHeader}>
               {importStatus ? (
-                importStatus.statusMsg
+                importStatus.statusMsg +
+                (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
               ) : users.length > 0 ? (
                 t.accessSilTranscriber
               ) : (
