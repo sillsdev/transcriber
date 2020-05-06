@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, ITranscriptionShowStrings } from '../model';
 import localStrings from '../selector/localize';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -15,13 +16,20 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  IconButton,
 } from '@material-ui/core';
+import { FaCopy } from 'react-icons/fa';
 import SnackBar from './SnackBar';
 import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../utils';
 
-// const useStyles = makeStyles((theme: Theme) =>
-//   createStyles({})
-// );
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    actions: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+  })
+);
 
 interface IStateProps {
   t: ITranscriptionShowStrings;
@@ -39,7 +47,7 @@ interface IProps extends IRecordProps, IStateProps {
 
 function TranscriptionShow(props: IProps) {
   const { passageId, t, visible, closeMethod } = props;
-  // const classes = useStyles();
+  const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [open, setOpen] = useState(visible);
@@ -63,6 +71,12 @@ function TranscriptionShow(props: IProps) {
   };
   const handleMessageReset = () => {
     setMessage(<></>);
+  };
+
+  const handleCopy = (text: string) => () => {
+    navigator.clipboard.writeText(text).catch((err) => {
+      setMessage(<span>{t.cantCopy}</span>);
+    });
   };
 
   useEffect(() => {
@@ -126,7 +140,10 @@ function TranscriptionShow(props: IProps) {
             />
           )}
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={classes.actions}>
+          <IconButton onClick={handleCopy(transcription)}>
+            <FaCopy />
+          </IconButton>
           <Button onClick={handleClose} variant="contained" color="primary">
             {t.close}
           </Button>

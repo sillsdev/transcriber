@@ -1895,7 +1895,14 @@
         			<context context-type="sourcefile">TranscriptionTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.exportProject">
+        	<trans-unit id="transcriptionTab.cantCopy">
+        		<source>Unable to copy to clipboard</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.exportProject">
         		<source>Export Project</source>
         		<target/>
         		<context-group>
@@ -1993,7 +2000,14 @@
                     <context context-type="sourcefile">TranscriptionShow.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupTabs.users">
+        	<trans-unit id="transcriptionShow.cantCopy">
+        		<source>Unable to copy to clipboard</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionShow.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="groupTabs.users">
                 <source>Users</source>
                 <target/>
                 <context-group>

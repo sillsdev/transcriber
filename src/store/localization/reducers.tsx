@@ -350,6 +350,7 @@ const initialState = {
 			"plan": "Plan",
 			"elan": "Elan",
 			"export": "Export",
+			"cantCopy": "Unable to copy to clipboard",
 			"exportProject": "Export Project",
 			"electronBackup": "Backup All Projects",
 			"exportType": "Which export type?",
@@ -368,6 +369,7 @@ const initialState = {
 			"transcription": "Transcription",
 			"transcriptionDisplay": "This display allows you to review the transcription that is stored.",
 			"close": "Close",
+			"cantCopy": "Unable to copy to clipboard",
 		}
 	}),
 	"groupTabs": new LocalizedStrings({

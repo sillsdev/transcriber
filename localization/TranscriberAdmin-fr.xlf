@@ -1622,7 +1622,13 @@
          	<target>Exporter</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportProject">
+		<unit id="transcriptionTab.cantCopy">
+			<segment>
+				<source>Unable to copy to clipboard</source>
+				<target>Impossible de copier dans le presse-papiers</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
             <target>Exporter une projet</target>
@@ -1706,6 +1712,12 @@
          	<target>Fermer</target>
          </segment>
       </unit>
+		<unit id="transcriptionShow.cantCopy">
+			<segment>
+				<source>Unable to copy to clipboard</source>
+				<target>Impossible de copier dans le presse-papiers</target>
+			</segment>
+		</unit>
 		<unit id="groupTabs.users">
 			<segment>
 				<source>Users</source>
