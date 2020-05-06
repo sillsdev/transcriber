@@ -86,6 +86,7 @@ setGlobal({
   remoteBusy: false,
   doSave: false,
   changed: false,
+  projectsLoaded: [],
   importexportBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,

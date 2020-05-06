@@ -516,19 +516,23 @@ export function ScriptureTable(props: IProps) {
         if (dumbrec) {
           setComplete(50);
           //dumbrec does not contain the new data...just the new id so go get it
-          var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
-          )) as any;
-          if (rec !== undefined) {
-            var outrecs = JSON.parse(rec.attributes.data);
-            //not waiting for these...that doesn't work if they navigate away
-            await memory.sync(
-              await remote.pull((q) => q.findRecords('section'))
-            );
-            await memory.sync(
-              await remote.pull((q) => q.findRecords('passage'))
-            );
-            if (anyNew) {
+          var filterrec = {
+            attribute: 'plan-id',
+            value: remoteId('plan', plan, memory.keyMap),
+          };
+          //not waiting for these...that doesn't work if they navigate away
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('section').filter(filterrec))
+          );
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('passage').filter(filterrec))
+          );
+          if (anyNew) {
+            var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
+              q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
+            )) as any;
+            if (rec !== undefined) {
+              var outrecs = JSON.parse(rec.attributes.data);
               var newrowid = rowId.map((r) => r);
               newrowid.forEach((row, index) => {
                 if (row.id === '') {

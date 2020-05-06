@@ -106,6 +106,8 @@ export function Loading(props: IProps) {
   const [organization, setOrganization] = useGlobal('organization');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_project, setProject] = useGlobal('project');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [completed, setCompleted] = useState(0);
   const [newOrgParams, setNewOrgParams] = useState(
     localStorage.getItem('newOrg')
@@ -227,6 +229,7 @@ export function Loading(props: IProps) {
       setBucket,
       setRemote,
       setCompleted,
+      setProjectsLoaded,
       InviteUser
     );
     if (!offline) {
