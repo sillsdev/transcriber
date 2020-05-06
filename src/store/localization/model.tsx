@@ -23,10 +23,6 @@ export interface IElectronImportStrings extends Localize.LocalizedStringsMethods
     "exportedLost": string;
 };
 
-export interface ISnackbarStrings extends Localize.LocalizedStringsMethods {
-    "undo": string;
-};
-
 export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "chooseUser": string;
@@ -137,6 +133,8 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "sectionAbove": string;
     "passageAbove": string;
     "tablePaste": string;
+    "bookSelect": string;
+    "nonNumber": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -279,6 +277,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "clearLogout": string;
     "inviteError": string;
     "deletedInvitation": string;
+    "logoutRequired": string;
     "helpCenter": string;
     "reportIssue": string;
     "developer": string;
@@ -327,7 +326,9 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "plan": string;
     "elan": string;
     "export": string;
+    "cantCopy": string;
     "exportProject": string;
+    "electronBackup": string;
     "exportType": string;
     "exportExplanation": string;
     "exportPTFtype": string;
@@ -343,6 +344,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
     "transcription": string;
     "transcriptionDisplay": string;
     "close": string;
+    "cantCopy": string;
 };
 
 export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
@@ -612,6 +614,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "needsNewRecording": string;
     "synced": string;
     "incomplete": string;
+    "saving": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
@@ -682,16 +685,21 @@ export interface IControlStrings extends Localize.LocalizedStringsMethods {
 
 export interface ISetupStrings extends Localize.LocalizedStringsMethods {
     "gettingStarted": string;
+    "electronTitle": string;
     "addPlan": string;
     "upload": string;
     "attach": string;
     "assign": string;
     "offlineNote": string;
+    "electronStep1": string;
+    "electronStep2": string;
+    "electronStep4": string;
 };
 
 export interface INotSetupStrings extends Localize.LocalizedStringsMethods {
     "welcome": string;
     "notReady": string;
+    "electronNotReady": string;
 };
 
 export interface ILocalizedStrings {
@@ -699,7 +707,6 @@ export interface ILocalizedStrings {
 	lang: string;
 	access: IAccessStrings;
 	electronImport: IElectronImportStrings;
-	snackbar: ISnackbarStrings;
 	usertable: IUsertableStrings;
 	alert: IAlertStrings;
 	projectTable: IProjectTableStrings;

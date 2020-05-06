@@ -93,6 +93,7 @@ setGlobal({
   developer: false,
   offline: isElectron,
   errorReporter: bugsnagClient,
+  alertOpen: false,
 });
 
 if (isElectron) {

@@ -4,7 +4,6 @@
 
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
-    "ms-vscode.csharp",
     "formulahendry.dotnet-test-explorer",
     "msjsdiag.debugger-for-chrome",
     "jinsihou.diff-tool",

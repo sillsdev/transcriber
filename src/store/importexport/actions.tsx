@@ -72,7 +72,7 @@ export const exportProject = (
         });
       });
   } else {
-    /* ignore export type for now -- online is always full backup */
+    /* ignore export type for now -- online is always ptf */
     Axios.get(API_CONFIG.host + '/api/offlineData/project/' + projectid, {
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,
@@ -153,11 +153,7 @@ export const importProjectFromElectron = (
                   type: IMPORT_SUCCESS,
                 });
               else {
-                logError(
-                  Severity.info,
-                  errorReporter,
-                  infoMsg(response.data.message, 'Import Error')
-                );
+                logError(Severity.info, errorReporter, response.data.message);
                 dispatch({
                   payload: errorStatus(
                     response.data.status,
@@ -168,11 +164,7 @@ export const importProjectFromElectron = (
               }
             })
             .catch((reason) => {
-              logError(
-                Severity.info,
-                errorReporter,
-                infoMsg(reason.data.message, 'Import error')
-              );
+              logError(Severity.error, errorReporter, reason.toString());
               dispatch({
                 payload: errorStatus(-1, reason.toString()),
                 type: IMPORT_ERROR,
@@ -192,7 +184,11 @@ export const importProjectFromElectron = (
       };
     })
     .catch((reason) => {
-      logError(Severity.info, errorReporter, infoMsg(reason, 'Import Error'));
+      logError(
+        Severity.info,
+        errorReporter,
+        infoMsg(new Error(reason.toString()), 'Import Error')
+      );
       dispatch({
         payload: errorStatus(-1, reason.toString()),
         type: IMPORT_ERROR,
@@ -256,15 +252,74 @@ export const importProjectToElectron = (
           await backup
             .push(oparray)
             .then((res) => {
-              dispatch({
-                payload: { status: completemsg, msg: '' },
-                type: IMPORT_SUCCESS,
-              });
+              //remove records with no attributes...i.e. groups created from user's groupmemberships that we didn't import
+              oparray = [];
+              backup
+                .pull((q) => q.findRecords())
+                .then((allrecs) => {
+                  allrecs[0].operations.forEach((r: any) => {
+                    if (r.record.attributes === undefined) {
+                      oparray.push(
+                        tb.removeRecord({
+                          type: r.record.type,
+                          id: r.record.id,
+                        })
+                      );
+                    }
+                  });
+                  if (oparray.length > 0) {
+                    memory
+                      .update(oparray)
+                      .then(() =>
+                        backup
+                          .push(oparray)
+                          .then(() => {
+                            dispatch({
+                              payload: { status: completemsg, msg: '' },
+                              type: IMPORT_SUCCESS,
+                            });
+                          })
+                          .catch((err) => {
+                            orbitError(
+                              orbitInfo(
+                                err,
+                                'Backup error removing extra records'
+                              )
+                            );
+                            dispatch({
+                              payload: errorStatus(undefined, err.message),
+                              type: IMPORT_ERROR,
+                            });
+                          })
+                      )
+                      .catch((err) => {
+                        orbitError(
+                          orbitInfo(err, 'memory error removing extra records')
+                        );
+                        dispatch({
+                          payload: errorStatus(undefined, err.message),
+                          type: IMPORT_ERROR,
+                        });
+                      });
+                  } else {
+                    dispatch({
+                      payload: { status: completemsg, msg: '' },
+                      type: IMPORT_SUCCESS,
+                    });
+                  }
+                })
+                .catch((err) => {
+                  orbitError(orbitInfo(err, 'Backup pull error'));
+                  dispatch({
+                    payload: errorStatus(undefined, err.message),
+                    type: IMPORT_ERROR,
+                  });
+                });
             })
             .catch((err) => {
               orbitError(orbitInfo(err, 'Backup update error'));
               dispatch({
-                payload: errorStatus(undefined, err.toString()),
+                payload: errorStatus(undefined, err.message),
                 type: IMPORT_ERROR,
               });
             });
@@ -272,7 +327,7 @@ export const importProjectToElectron = (
         .catch((err) => {
           orbitError(orbitInfo(err, 'Memory sync error'));
           dispatch({
-            payload: errorStatus(undefined, err.toString()),
+            payload: errorStatus(undefined, err.message),
             type: IMPORT_ERROR,
           });
         });

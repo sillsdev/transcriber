@@ -11,11 +11,10 @@ import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import PassageMedia from './PassageMedia';
 import Confirm from './AlertDialog';
-import BookSelect from './ReactSelect';
+import BookSelect from './BookSelect';
 import 'react-datasheet/lib/react-datasheet.css';
 import './PlanSheet.css';
 import { isNumber } from 'util';
-import SheetText from './SheetText';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 
@@ -111,6 +110,7 @@ export function PlanSheet(props: IProps) {
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
+  const [global] = useGlobal();
   const [message, setMessage] = useState(<></>);
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -125,11 +125,14 @@ export function PlanSheet(props: IProps) {
   const [passageMediaVisible, setPassageMediaVisible] = useState(false);
   const suggestionRef = useRef<Array<OptionType>>();
   const listRef = useRef<Array<string>>();
-  const blurRef = useRef<() => void>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [doSave, setDoSave] = useGlobal('doSave');
   const [changed, setChanged] = useGlobal('changed');
+  const [pasting, setPasting] = useState(false);
+  const preventSave = useRef<boolean>(false);
+  const sheetRef = useRef<any>();
+  const [showRow, setShowRow] = useState(0);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -215,11 +218,16 @@ export function PlanSheet(props: IProps) {
   const handleCellsChanged = (changes: Array<IChange>) => {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
-      grid[row][col] = { ...grid[row][col], value };
+      if (value && !isNum(value) && isNum(cell.value)) {
+        setMessage(<span>{t.nonNumber}</span>);
+      } else {
+        grid[row][col] = { ...grid[row][col], value };
+      }
     });
     if (changes.length > 0) {
       setChanged(true);
       doUpdate(grid);
+      setShowRow(changes[0].row);
     }
   };
 
@@ -263,27 +271,16 @@ export function PlanSheet(props: IProps) {
     return removeBlanks(clipBoard).map((line: string) => splitAndTrim(line));
   };
   const handleTablePaste = () => {
+    setPasting(true);
     setMessage(<span>Pasting</span>);
-    navigator.clipboard
-      .readText()
-      .then((clipText) =>
-        paste(removeBlanks(clipText).map((line) => splitAndTrim(line)))
-      );
+    navigator.clipboard.readText().then((clipText) => {
+      paste(removeBlanks(clipText).map((line) => splitAndTrim(line)));
+      setPasting(false);
+    });
   };
 
-  const handleUp = () => {
-    if (blurRef.current) {
-      blurRef.current();
-      blurRef.current = undefined;
-    }
-  };
-
-  const myCell = (props: any) => {
-    let myProps = { ...props };
-    delete myProps.editing;
-    delete myProps.updated;
-    delete myProps.attributesRenderer;
-    return <td {...myProps} onMouseUp={handleUp} />;
+  const handleSetPreventSave = (val: boolean) => {
+    preventSave.current = val;
   };
 
   const bookEditor = (props: any) => {
@@ -292,31 +289,17 @@ export function PlanSheet(props: IProps) {
       <BookSelect
         id="book"
         suggestions={suggestionRef.current ? suggestionRef.current : []}
+        placeHolder={t.bookSelect}
+        setPreventSave={handleSetPreventSave}
         {...props}
-        current={(listRef.current ? listRef.current : []).indexOf(props.value)}
       />
     );
   };
-
-  const handleSetCommit = (method: () => void) => {
-    blurRef.current = method;
-  };
-
-  const textEditor = (props: any) => {
-    if (projRole !== 'admin') return <></>;
-    return (
-      <SheetText
-        {...props}
-        initValue={props.value}
-        setCommit={handleSetCommit}
-      />
-    );
-  };
-
   const isNum = (value: string | number) =>
     isNumber(value) || /^[0-9]$/.test(value);
+
   const handleAutoSave = () => {
-    if (changed) {
+    if (changed && !preventSave.current && !global.alertOpen) {
       handleSave();
     } else {
       startSaveTimer();
@@ -371,7 +354,6 @@ export function PlanSheet(props: IProps) {
                 ? {
                     value: e,
                     readOnly: isSection ? cellIndex > 1 : cellIndex <= 1,
-                    dataEditor: textEditor,
                     className:
                       (isNum(e) ? 'num' : 'pass') + (isSection ? ' set' : ''),
                   }
@@ -387,6 +369,16 @@ export function PlanSheet(props: IProps) {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, check, bookCol]);
+
+  useEffect(() => {
+    if (sheetRef.current && showRow) {
+      const tbodyRef =
+        sheetRef.current?.firstChild?.firstChild?.firstChild?.childNodes[
+          showRow
+        ];
+      if (tbodyRef) window.scrollTo(0, tbodyRef.offsetTop);
+    }
+  });
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
@@ -431,6 +423,7 @@ export function PlanSheet(props: IProps) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
+                  disabled={pasting}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
@@ -478,7 +471,7 @@ export function PlanSheet(props: IProps) {
             )}
           </div>
         </AppBar>
-        <div className={classes.content}>
+        <div id="PlanSheet" ref={sheetRef} className={classes.content}>
           <DataSheet
             data={data as any[][]}
             valueRenderer={handleValueRender}
@@ -486,7 +479,6 @@ export function PlanSheet(props: IProps) {
             onContextMenu={handleContextMenu}
             onCellsChanged={handleCellsChanged}
             parsePaste={parsePaste}
-            cellRenderer={myCell}
           />
         </div>
         <Menu

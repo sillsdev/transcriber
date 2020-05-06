@@ -111,6 +111,8 @@ const initState = {
   index: 0,
   selected: '',
   setSelected: (selected: string) => {},
+  playing: false,
+  setPlaying: (playing: boolean) => {},
   rowData: Array<IRowData>(),
   expandedGroups: Array<string>(),
   playItem: '',
@@ -170,6 +172,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const setExpandedGroups = (expandedGroups: string[]) => {
       setState((state: ICtxState) => {
         return { ...state, expandedGroups };
+      });
+    };
+
+    const setPlaying = (playing: boolean) => {
+      setState((state: ICtxState) => {
+        return { ...state, playing };
       });
     };
 
@@ -451,6 +459,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [sections]);
 
+    const noNewSelection: string[] = [
+      ActivityStates.TranscribeReady,
+      ActivityStates.Transcribing,
+      ActivityStates.Reviewing,
+    ];
+
     useEffect(() => {
       let changed = false;
       let selected = state.selected;
@@ -462,14 +476,14 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const newState = passage.attributes.state;
           if (newState !== r.passage.attributes.state) {
             changed = true;
-            if (newState !== ActivityStates.TranscribeReady) selected = '';
+            if (noNewSelection.indexOf(newState) === -1) selected = '';
           }
           rowData.push({ ...r, passage });
         }
       });
       if (changed) {
         setState({ ...state, rowData, selected });
-        setTrackedTask('');
+        if (!state.playing) setTrackedTask('');
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [passages]);
@@ -487,7 +501,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
 
     return (
       <TranscriberContext.Provider
-        value={{ state: { ...state, hasUrl, mediaUrl, setSelected }, setState }}
+        value={{
+          state: { ...state, hasUrl, mediaUrl, setSelected, setPlaying },
+          setState,
+        }}
       >
         {props.children}
       </TranscriberContext.Provider>

@@ -57,34 +57,23 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IRow {
   email: string;
   orgRole: string;
-  allUsersRole: string;
-  group: string;
-  groupRole: string;
   accepted: string;
   id: RecordIdentity;
 }
 
-const getMedia = (
+const getInvites = (
   organization: string,
   roles: Array<Role>,
-  groups: Array<Group>,
   invitations: Array<Invitation>
 ) => {
   const invites = invitations.filter(
-    i => related(i, 'organization') === organization
+    (i) => related(i, 'organization') === organization
   );
-  return invites.map(i => {
-    const role = roles.filter(r => r.id === related(i, 'role'));
-    const allusersrole = roles.filter(r => r.id === related(i, 'allUsersRole'));
-    const grouprole = roles.filter(r => r.id === related(i, 'groupRole'));
-    const group = groups.filter(r => r.id === related(i, 'group'));
+  return invites.map((i) => {
+    const role = roles.filter((r) => r.id === related(i, 'role'));
     return {
       email: i.attributes.email ? i.attributes.email : '',
       orgRole: role.length === 1 ? role[0].attributes.roleName : 'xx',
-      allUsersRole:
-        allusersrole.length === 1 ? allusersrole[0].attributes.roleName : 'x',
-      group: group.length === 1 ? group[0].attributes.name : '',
-      groupRole: grouprole.length === 1 ? grouprole[0].attributes.roleName : '',
       accepted: i.attributes.accepted ? 'true' : 'false',
       id: { type: 'invitation', id: i.id },
     } as IRow;
@@ -106,7 +95,7 @@ interface IRecordProps {
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function InvitationTable(props: IProps) {
-  const { t, roles, groups, invitations } = props;
+  const { t, roles, invitations } = props;
   const classes = useStyles();
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
@@ -119,18 +108,12 @@ export function InvitationTable(props: IProps) {
   const columnDefs = [
     { name: 'email', title: t.email },
     { name: 'orgRole', title: t.role },
-    { name: 'allUsersRole', title: t.allUsers },
-    { name: 'group', title: t.group },
-    { name: 'groupRole', title: t.role },
     { name: 'accepted', title: t.accepted },
   ];
   const columnWidths = [
     { columnName: 'email', width: 200 },
-    { columnName: 'orgRole', width: 100 },
-    { columnName: 'allUsersRole', width: 100 },
-    { columnName: 'group', width: 150 },
-    { columnName: 'groupRole', width: 100 },
-    { columnName: 'accepted', width: 100 },
+    { columnName: 'orgRole', width: 200 },
+    { columnName: 'accepted', width: 120 },
   ];
   const [filter, setFilter] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -168,7 +151,7 @@ export function InvitationTable(props: IProps) {
   const handleActionConfirmed = () => {
     if (confirmAction === 'Delete') {
       setCheck(Array<number>());
-      check.forEach(i => {
+      check.forEach((i) => {
         memory.update((t: TransformBuilder) => t.removeRecord(data[i].id));
       });
     }
@@ -191,8 +174,8 @@ export function InvitationTable(props: IProps) {
   ) as any;
 
   useEffect(() => {
-    setData(getMedia(organization, roles, groups, invitations));
-  }, [organization, roles, groups, invitations, confirmAction]);
+    setData(getInvites(organization, roles, invitations));
+  }, [organization, roles, invitations, confirmAction]);
 
   return (
     <div className={classes.container}>

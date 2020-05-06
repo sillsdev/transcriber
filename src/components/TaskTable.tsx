@@ -76,7 +76,6 @@ interface IRow {
   state: string;
   assigned: string;
   mediaRemoteId: string;
-  selection: string;
 }
 
 interface IProps {
@@ -114,7 +113,6 @@ export function TaskTable(props: IProps) {
     { name: 'length', title: t.length },
     { name: 'state', title: t.state },
     { name: 'assigned', title: t.assigned },
-    { name: 'selection', title: '\u00A0' },
   ]);
   const [columnFormatting, setColumnFormatting] = useState([
     { columnName: 'composite', width: TaskItemWidth, align: 'left' },
@@ -154,6 +152,9 @@ export function TaskTable(props: IProps) {
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const audioRef = useRef<any>();
+  const formRef = useRef<any>();
+  const selectedRef = useRef<any>();
+  const notSelectedRef = useRef<any>();
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -195,6 +196,12 @@ export function TaskTable(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (formRef.current && selectedRef.current) {
+      formRef.current.scrollTo(0, selectedRef.current.offsetTop);
+    }
+  });
 
   useEffect(() => {
     if (!filter) {
@@ -262,7 +269,6 @@ export function TaskTable(props: IProps) {
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediaId,
       mediaRemoteId: r.mediaRemoteId,
-      selection: r.passage.id === selected ? 'P' : 'S',
     }));
     setRows(newRows);
 
@@ -316,7 +322,10 @@ export function TaskTable(props: IProps) {
             ? rowData[value.props.item]?.passage?.id
             : '';
         return (
-          <td style={curId === selected ? selBacking : noSelBacking}>
+          <td
+            ref={curId === selected ? selectedRef : notSelectedRef}
+            style={curId === selected ? selBacking : noSelBacking}
+          >
             {value}
           </td>
         );
@@ -335,6 +344,7 @@ export function TaskTable(props: IProps) {
   return (
     <div
       id="TaskTable"
+      ref={formRef}
       className={classes.root}
       style={style}
       data-list={!filter ? 'true' : ''}
@@ -365,7 +375,6 @@ export function TaskTable(props: IProps) {
             columnFormatting={filter ? columnFormatting : []}
             dataCell={Cell}
             sorting={[
-              { columnName: 'selection', direction: 'asc' },
               { columnName: 'plan', direction: 'asc' },
               { columnName: 'sectPass', direction: 'asc' },
             ]}

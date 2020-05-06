@@ -12,7 +12,7 @@
       </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>Click your avatar to transcriber or review.</source>
+            <source>Click your avatar to transcriber or edit.</source>
             <target/>
          </segment>
       </unit>
@@ -97,12 +97,6 @@
       <unit id="electronImport.exportedLost">
          <segment>
             <source>Import file will not include latest exported data.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="snackbar.undo">
-         <segment>
-            <source>UNDO</source>
             <target/>
          </segment>
       </unit>
@@ -649,6 +643,18 @@
       <unit id="planSheet.tablePaste">
          <segment>
             <source>Paste Table</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.bookSelect">
+         <segment>
+            <source>Select Book...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.nonNumber">
+         <segment>
+            <source>Do not change to non-number.</source>
             <target/>
          </segment>
       </unit>
@@ -1360,6 +1366,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.logoutRequired">
+         <segment>
+            <source>Log out of other tab required</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
@@ -1612,9 +1624,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.electronBackup">
+         <segment>
+            <source>Backup All Projects</source>
             <target/>
          </segment>
       </unit>
@@ -1626,13 +1650,13 @@
       </unit>
       <unit id="transcriptionTab.exportExplanation">
          <segment>
-            <source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+            <source>Export the full project to store locally or share with another offline user. Export incremental file to import changes into online app.</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
          <segment>
-            <source>Full Backup (ptf)</source>
+            <source>Export Project (ptf)</source>
             <target/>
          </segment>
       </unit>
@@ -1687,6 +1711,12 @@
       <unit id="transcriptionShow.close">
          <segment>
             <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionShow.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
@@ -2346,7 +2376,7 @@
       </unit>
       <unit id="invitationTable.role">
          <segment>
-            <source>Role</source>
+            <source>Organization Role</source>
             <target/>
          </segment>
       </unit>
@@ -2988,7 +3018,7 @@
       </unit>
       <unit id="transcriber.needsNewTranscription">
          <segment>
-            <source>Rejected task</source>
+            <source>Rejected transcription</source>
             <target/>
          </segment>
       </unit>
@@ -3000,7 +3030,7 @@
       </unit>
       <unit id="transcriber.needsNewRecording">
          <segment>
-            <source>Rejected task</source>
+            <source>Rejected recording</source>
             <target/>
          </segment>
       </unit>
@@ -3013,6 +3043,12 @@
       <unit id="transcriber.incomplete">
          <segment>
             <source>Incomplete transcripiton</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.saving">
+         <segment>
+            <source>Saving...</source>
             <target/>
          </segment>
       </unit>
@@ -3328,6 +3364,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="setup.electronTitle">
+         <segment>
+            <source>No Tasks Available</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="setup.addPlan">
          <segment>
             <source>Add a plan</source>
@@ -3358,6 +3400,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="setup.electronStep1">
+         <segment>
+            <source>Setup must be done online:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="setup.electronStep2">
+         <segment>
+            <source>Configure the plan, upload media and attach passages</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="setup.electronStep4">
+         <segment>
+            <source>Re-export ptf file online and re-import here</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="notSetup.welcome">
          <segment>
             <source>Welcome to SIL Transcriber</source>
@@ -3367,6 +3427,12 @@
       <unit id="notSetup.notReady">
          <segment>
             <source>This organization and project are not setup and ready for work yet.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="notSetup.electronNotReady">
+         <segment>
+            <source>This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.</source>
             <target/>
          </segment>
       </unit>

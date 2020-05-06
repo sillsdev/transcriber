@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import { IState, ISnackbarStrings } from '../model';
-import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -16,17 +12,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface IStateProps {
-  t: ISnackbarStrings;
-}
-
-interface IProps extends IStateProps {
+interface IProps {
   message: JSX.Element;
-  reset: () => {};
+  reset: () => void;
 }
 
 function SimpleSnackbar(props: IProps) {
-  const { message, reset = null, t } = props;
+  const { message, reset = null } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(true);
 
@@ -49,7 +41,7 @@ function SimpleSnackbar(props: IProps) {
     <Snackbar
       anchorOrigin={{
         vertical: 'bottom',
-        horizontal: 'left',
+        horizontal: 'center',
       }}
       open={open}
       autoHideDuration={6000}
@@ -59,9 +51,6 @@ function SimpleSnackbar(props: IProps) {
       }}
       message={<span id="message-id">{message}</span>}
       action={[
-        <Button key="undo" color="inherit" size="small" onClick={handleClose}>
-          {t.undo}
-        </Button>,
         <IconButton
           key="close"
           aria-label="Close"
@@ -78,8 +67,4 @@ function SimpleSnackbar(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'snackbar' }),
-});
-
-export default connect(mapStateToProps)(SimpleSnackbar) as any;
+export default SimpleSnackbar;

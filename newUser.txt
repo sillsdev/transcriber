@@ -14,4 +14,4 @@ If you are just getting started and would like to try transcribing, you may find
 
 In addition to the web version, we also have a Desktop Extension which will allow transcribers to work without an Internet Connection. Let us know if that would help with your desired work flow.
 
-The latest version is 0.7.4 but I plan to deploy 0.7.5 later this week.
+The latest version is 0.8.1 although we have a new version we would like to release.

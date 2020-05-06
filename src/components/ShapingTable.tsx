@@ -193,7 +193,7 @@ export function ShapingTable(props: IProps) {
 
   const handleSelect = (checks: Array<string | number>) => {
     if (select) {
-      select(checks.map(c => (typeof c === 'string' ? parseInt(c) : c)));
+      select(checks.map((c) => (typeof c === 'string' ? parseInt(c) : c)));
     }
   };
   const noRow = () => <></>;
@@ -283,13 +283,13 @@ export function ShapingTable(props: IProps) {
       ) : (
         <Toolbar />
       )}
-      {shaping !== null && !shaping ? (
+      {shaping !== null && !shaping && !expandedGroups ? (
         <GroupingPanel
           showSortingControls={true}
           emptyMessageComponent={noRow}
         />
       ) : (
-        <GroupingPanel showSortingControls={true} />
+        !expandedGroups && <GroupingPanel showSortingControls={true} />
       )}
     </Grid>
   );

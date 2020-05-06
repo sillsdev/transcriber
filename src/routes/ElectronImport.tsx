@@ -89,12 +89,16 @@ if (isElectron) {
     ) as Project[];
     if (projectRecs && projectRecs.length > 0) {
       var projectNames: string = '';
-      var x = JSON.parse(zip.readAsText('data/D_projects.json'));
-      if (x && isArray(x.data) && x.data.length > 0) {
-        x.data.forEach((p: any) => {
+      var importProjs = JSON.parse(zip.readAsText('data/D_projects.json'));
+      if (
+        importProjs &&
+        isArray(importProjs.data) &&
+        importProjs.data.length > 0
+      ) {
+        importProjs.data.forEach((p: any) => {
           var id = p.id;
           const proj = projectRecs.find(
-            (pr) => (pr.id = remoteIdGuid('project', id, memory.keyMap))
+            (pr) => pr.id === remoteIdGuid('project', id, memory.keyMap)
           );
           //was this one exported before our current data?
           if (proj && proj.attributes) {
@@ -172,12 +176,12 @@ if (isElectron) {
       try {
         fs.unlinkSync(path.join(where, 'data', 'H_passagesections.json'));
       } catch (err) {
-        orbitError(
-          orbitInfo(err, `Delete failed for ${where} passage sections`)
-        );
+        if (err.errno !== -4058)
+          orbitError(
+            orbitInfo(err, `Delete failed for ${where} passage sections`)
+          );
       }
       zip.extractAllTo(where, true);
-
       importProject(
         path.join(where, 'data'),
         memory,

@@ -7,6 +7,7 @@ import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
 import Buggy from './routes/Buggy';
+import LogoutRequired from './routes/LogoutRequired';
 import Callback from './callback/Callback';
 import TokenCheck from './hoc/TokenCheck';
 import Auth from './auth/Auth';
@@ -48,37 +49,44 @@ class App extends React.Component {
           <Route
             path="/"
             exact={true}
-            render={props => {
+            render={(props) => {
               handleParameters(props);
+              if (
+                localStorage.getItem('inviteId') &&
+                localStorage.getItem('isLoggedIn')
+              ) {
+                localStorage.removeItem('inviteId');
+                return <LogoutRequired />;
+              }
               return <Access auth={auth} {...props} />;
             }}
           />
-          <Route path="/error" exact render={props => <Buggy />} />
+          <Route path="/error" exact render={(props) => <Buggy />} />
           <Route
             path="/logout"
             exact={true}
-            render={props => <Logout auth={auth} {...props} />}
+            render={(props) => <Logout auth={auth} {...props} />}
           />
           <Route
             path="/loading"
-            render={props => <Loading auth={auth} {...props} />}
+            render={(props) => <Loading auth={auth} {...props} />}
           />
           <Route
             path="/main"
-            render={props => <Drawer auth={auth} {...props} />}
+            render={(props) => <Drawer auth={auth} {...props} />}
           />
           <Route
             path="/profile"
-            render={props => <Profile auth={auth} {...props} />}
+            render={(props) => <Profile auth={auth} {...props} />}
           />
           <Route
             path="/callback"
-            render={props => {
+            render={(props) => {
               handleParameters(props);
               return <Callback {...props} />;
             }}
           />
-          <Route path="/neworg" render={props => handleNewOrg(props)} />
+          <Route path="/neworg" render={(props) => handleNewOrg(props)} />
         </>
       </TokenCheck>
     );

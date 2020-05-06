@@ -13,7 +13,7 @@
                 </context-group>
             </trans-unit>
         	<trans-unit id="access.accessSilTranscriber">
-        		<source>Click your avatar to transcriber or review.</source>
+        		<source>Click your avatar to transcriber or edit.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Access.tsx</context>
@@ -115,13 +115,6 @@
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">electronImport.tsx</context>
-                </context-group>
-            </trans-unit>
-        	<trans-unit id="snackbar.undo">
-                <source>UNDO</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">SnackBar.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="usertable.silTranscriberAdmin">
@@ -761,6 +754,20 @@
         			<context context-type="sourcefile">PlanSheet.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="planSheet.bookSelect">
+        		<source>Select Book...</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.nonNumber">
+        		<source>Do not change to non-number.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="scriptureTable.section">
                 <source>Section</source>
                 <target/>
@@ -775,7 +782,7 @@
                     <context context-type="sourcefile">ScriptureTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="scriptureTable.passage">
+        	<trans-unit id="scriptureTable.passage">
                 <source>Passage</source>
                 <target/>
                 <context-group>
@@ -1531,7 +1538,7 @@
                     <context context-type="sourcefile">UserMenu.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.myAccount">
+        	<trans-unit id="main.myAccount">
                 <source>My Account</source>
                 <target/>
                 <context-group>
@@ -1587,7 +1594,14 @@
                     <context context-type="sourcefile">Loading.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.helpCenter">
+        	<trans-unit id="main.logoutRequired">
+        		<source>Log out of other tab required</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Loading.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.helpCenter">
                 <source>Help Center</source>
                 <target/>
                 <context-group>
@@ -1881,8 +1895,22 @@
         			<context context-type="sourcefile">TranscriptionTab.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.exportProject">
+        	<trans-unit id="transcriptionTab.cantCopy">
+        		<source>Unable to copy to clipboard</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.exportProject">
         		<source>Export Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ExportTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="transcriptionTab.electronBackup">
+        		<source>Backup All Projects</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
@@ -1896,14 +1924,14 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="transcriptionTab.exportExplanation">
-        		<source>Export a full backup to store locally. Export incremental file to import into online app.</source>
+        		<source>Export the full project to store locally or share with another offline user. Export incremental file to import changes into online app.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
         		</context-group>
         	</trans-unit>
             <trans-unit id="transcriptionTab.exportPTFtype">
-        		<source>Full Backup (ptf)</source>
+        		<source>Export Project (ptf)</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
@@ -1972,7 +2000,14 @@
                     <context context-type="sourcefile">TranscriptionShow.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupTabs.users">
+        	<trans-unit id="transcriptionShow.cantCopy">
+        		<source>Unable to copy to clipboard</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionShow.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="groupTabs.users">
                 <source>Users</source>
                 <target/>
                 <context-group>
@@ -2736,7 +2771,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invitationTable.role">
-                <source>Role</source>
+                <source>Organization Role</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">InvitationTable.tsx</context>
@@ -3484,7 +3519,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.needsNewTranscription">
-        		<source>Rejected task</source>
+        		<source>Rejected transcription</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>
@@ -3498,7 +3533,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.needsNewRecording">
-        		<source>Rejected task</source>
+        		<source>Rejected recording</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>
@@ -3513,6 +3548,13 @@
         	</trans-unit>
         	<trans-unit id="transcriber.incomplete">
         		<source>Incomplete transcripiton</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.saving">
+        		<source>Saving...</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>
@@ -3882,7 +3924,14 @@
         			<context context-type="sourcefile">Setup.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="setup.addPlan">
+            <trans-unit id="setup.electronTitle">
+        		<source>No Tasks Available</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="setup.addPlan">
         		<source>Add a plan</source>
         		<target/>
         		<context-group>
@@ -3917,6 +3966,27 @@
         			<context context-type="sourcefile">Setup.tsx</context>
         		</context-group>
         	</trans-unit>
+            <trans-unit id="setup.electronStep1">
+        		<source>Setup must be done online:</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="setup.electronStep2">
+        		<source>Configure the plan, upload media and attach passages</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="setup.electronStep4">
+        		<source>Re-export ptf file online and re-import here</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="notSetup.welcome">
         		<source>Welcome to SIL Transcriber</source>
         		<target/>
@@ -3926,6 +3996,13 @@
         	</trans-unit>
         	<trans-unit id="notSetup.notReady">
         		<source>This organization and project are not setup and ready for work yet.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="notSetup.electronNotReady">
+        		<source>This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Setup.tsx</context>

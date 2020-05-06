@@ -9,7 +9,7 @@ const initialState = {
 	"access": new LocalizedStrings({
 		"en": {
 			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
-			"accessSilTranscriber": "Click your avatar to transcriber or review.",
+			"accessSilTranscriber": "Click your avatar to transcriber or edit.",
 			"importProject": "Import Portable Transcriber Data",
 			"importError": "Import Error",
 			"login": "Online Login",
@@ -28,11 +28,6 @@ const initialState = {
 			"neverExported": "Current data in project {name0} has never been exported.",
 			"lastExported": "Current data in project {name0} was last exported {date0}.",
 			"exportedLost": "Import file will not include latest exported data.",
-		}
-	}),
-	"snackbar": new LocalizedStrings({
-		"en": {
-			"undo": "UNDO",
 		}
 	}),
 	"usertable": new LocalizedStrings({
@@ -152,6 +147,8 @@ const initialState = {
 			"sectionAbove": "Insert section above",
 			"passageAbove": "Insert passage above",
 			"tablePaste": "Paste Table",
+			"bookSelect": "Select Book...",
+			"nonNumber": "Do not change to non-number.",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -302,6 +299,7 @@ const initialState = {
 			"clearLogout": "Log Out and Force Data Reload",
 			"inviteError": "Invitation not accepted.  You must login with the email that the invitation was sent to.",
 			"deletedInvitation": "Invitation is no longer valid.",
+			"logoutRequired": "Log out of other tab required",
 			"helpCenter": "Help Center",
 			"reportIssue": "Report an Issue",
 			"developer": "Developer mode",
@@ -352,10 +350,12 @@ const initialState = {
 			"plan": "Plan",
 			"elan": "Elan",
 			"export": "Export",
+			"cantCopy": "Unable to copy to clipboard",
 			"exportProject": "Export Project",
+			"electronBackup": "Backup All Projects",
 			"exportType": "Which export type?",
-			"exportExplanation": "Export a full backup to store locally. Export incremental file to import into online app.",
-			"exportPTFtype": "Full Backup (ptf)",
+			"exportExplanation": "Export the full project to store locally or share with another offline user. Export incremental file to import changes into online app.",
+			"exportPTFtype": "Export Project (ptf)",
 			"exportITFtype": "Incremental Changes (itf)",
 			"cancel": "Cancel",
 			"exportingProject": "Creating export file",
@@ -369,6 +369,7 @@ const initialState = {
 			"transcription": "Transcription",
 			"transcriptionDisplay": "This display allows you to review the transcription that is stored.",
 			"close": "Close",
+			"cantCopy": "Unable to copy to clipboard",
 		}
 	}),
 	"groupTabs": new LocalizedStrings({
@@ -518,7 +519,7 @@ const initialState = {
 	"invitationTable": new LocalizedStrings({
 		"en": {
 			"email": "Email",
-			"role": "Role",
+			"role": "Organization Role",
 			"allUsers": "All Users",
 			"group": "Group",
 			"accepted": "Accepted",
@@ -649,11 +650,12 @@ const initialState = {
 			"transcribed": "Submitted task for review",
 			"reviewing": "Started to review",
 			"approved": "Approved",
-			"needsNewTranscription": "Rejected task",
+			"needsNewTranscription": "Rejected transcription",
 			"done": "Completed",
-			"needsNewRecording": "Rejected task",
+			"needsNewRecording": "Rejected recording",
 			"synced": "Completed",
 			"incomplete": "Incomplete transcripiton",
+			"saving": "Saving...",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({
@@ -730,17 +732,22 @@ const initialState = {
 	"setup": new LocalizedStrings({
 		"en": {
 			"gettingStarted": "Getting Started",
+			"electronTitle": "No Tasks Available",
 			"addPlan": "Add a plan",
 			"upload": "Upload media files",
 			"attach": "Attach media to passages",
 			"assign": "Optionally assign sections to transcribers",
 			"offlineNote": "(Especially if transcribers are working offline)",
+			"electronStep1": "Setup must be done online:",
+			"electronStep2": "Configure the plan, upload media and attach passages",
+			"electronStep4": "Re-export ptf file online and re-import here",
 		}
 	}),
 	"notSetup": new LocalizedStrings({
 		"en": {
 			"welcome": "Welcome to SIL Transcriber",
 			"notReady": "This organization and project are not setup and ready for work yet.",
+			"electronNotReady": "This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.",
 		}
 	}),
 };
@@ -753,7 +760,6 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"loaded": true,
 				"access" : new LocalizedStrings(action.payload.data.access),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
-				"snackbar" : new LocalizedStrings(action.payload.data.snackbar),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),

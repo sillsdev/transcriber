@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { IState, INotSetupStrings } from '../model';
+import { IState, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,32 +14,32 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       height: `calc(100vh - 120px)`,
     },
+    list: {
+      alignSelf: 'center',
+    },
   })
 );
 
 interface IStateProps {
-  t: INotSetupStrings;
+  t: IMainStrings;
 }
 
 interface IProps extends IStateProps {}
 
-export const NotSetup = (props: IProps) => {
+export const LogoutRequired = (props: IProps) => {
   const { t } = props;
   const classes = useStyles();
   return (
     <div className={classes.fullScreen}>
       <Typography align="center" variant="h3">
-        {t.welcome}
-      </Typography>
-      <Typography align="center">
-        {isElectron ? t.electronNotReady : t.notReady}
+        {t.logoutRequired}
       </Typography>
     </div>
   );
 };
 
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'notSetup' }),
+  t: localStrings(state, { layout: 'main' }),
 });
 
-export default connect(mapStateToProps)(NotSetup) as any;
+export default connect(mapStateToProps)(LogoutRequired) as any;

@@ -98,6 +98,7 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 import { getOrgs } from '../utils/getOrgs';
 import { DataPath } from '../utils/DataPath';
+import { IAxiosStatus } from '../store/AxiosStatus';
 
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
@@ -264,6 +265,7 @@ interface componentType {
 interface IStateProps {
   t: IMainStrings;
   orbitLoaded: boolean;
+  importStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
@@ -288,6 +290,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
       pathname: string;
     };
     push: (path: string) => void;
+    replace: (path: string) => void;
   };
 }
 
@@ -299,6 +302,7 @@ export function ResponsiveDrawer(props: IProps) {
     history,
     plans,
     orbitLoaded,
+    importStatus,
     organizationMemberships,
     groupMemberships,
     roles,
@@ -326,6 +330,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [tab, setTab] = useGlobal('tab');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave, setDoSave] = useGlobal('doSave');
+  const [alertOpen, setAlertOpen] = useGlobal('alertOpen');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
     'autoOpenAddMedia'
@@ -345,7 +350,6 @@ export function ResponsiveDrawer(props: IProps) {
   const [view, setView] = useState('');
   const [message, setMessage] = useState(<></>);
   const saveConfirm = useRef<() => any>();
-  const [alertOpen, setAlertOpen] = useState(false);
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
   const [delProject, setDelProject] = useState(false);
@@ -429,7 +433,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (!isApp && projRole === 'admin') newChoice = NavChoice.Plans;
     if (projOptions.length === 0 || !transcribe) {
       newChoice = projRole === 'admin' ? NavChoice.Setup : NavChoice.NotSetup;
-      if (projRole === 'admin' && isApp) setAppView(false);
+      if (!isElectron && projRole === 'admin' && isApp) setAppView(false);
     }
     if (newChoice === NavChoice.Tasks && !isApp) setAppView(true);
     if (newChoice !== content) {
@@ -479,6 +483,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
+    setProjOptions([]);
     if (to) {
       setAddProject(false);
       setProject(projectId || '');
@@ -598,7 +603,7 @@ export function ResponsiveDrawer(props: IProps) {
     let projs: Project[] = await memory.query((q: QueryBuilder) =>
       q.findRecords('project')
     );
-    if (isApp) {
+    if (isElectron) {
       const groupids = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
         .map((gm) => related(gm, 'group'));
@@ -651,7 +656,7 @@ export function ResponsiveDrawer(props: IProps) {
       const orgRec = organizations.filter((o) => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        setOrgAvatar(DataPath(attr?.logoUrl || ''));
+        setOrgAvatar(attr?.logoUrl ? DataPath(attr.logoUrl) : '');
       }
       setOrgRole(
         getRole(organizationMemberships, 'organization', organization)
@@ -723,7 +728,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject, delProject, orgRole]);
+  }, [organization, addProject, delProject, orgRole, user]);
 
   useEffect(() => {
     const projKeys = projOptions.map((o) => o.value);
@@ -768,6 +773,13 @@ export function ResponsiveDrawer(props: IProps) {
       setTitle(attr ? attr.name : '');
     }
   }, [plan, plans]);
+
+  useEffect(() => {
+    if (isElectron && importStatus) {
+      setAddProject(!importStatus.complete);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [importStatus]);
 
   const defaultViewActions = ['', NavChoice.Setup, NavChoice.NotSetup];
   const nonAdminView: string[] = [
@@ -815,7 +827,9 @@ export function ResponsiveDrawer(props: IProps) {
       content,
       keyMap,
     });
-    if (target) history.push(target);
+    if (target && target !== history.location.pathname) {
+      history.push(target);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [
     project,
@@ -845,7 +859,7 @@ export function ResponsiveDrawer(props: IProps) {
           if (!busy && !doSave) {
             dateChanges(auth, keyMap, remote, memory, schema);
           }
-        }, 1000 * 10);
+        }, 1000 * 100);
       }
       return () => {
         if (timer.current) {
@@ -885,7 +899,20 @@ export function ResponsiveDrawer(props: IProps) {
 
   // When the user uses the back button or directly naviagets to a page
   if (history.action === 'POP') {
-    localStorage.setItem('url', history.location.pathname);
+    const target = deepLink({
+      organization,
+      project,
+      group,
+      plan,
+      tab,
+      choice,
+      content,
+      keyMap,
+    });
+    if (target && target !== history.location.pathname) {
+      localStorage.setItem('url', history.location.pathname);
+      history.replace(history.location.pathname);
+    }
   }
 
   if (!auth || !auth.isAuthenticated(offline) || !orbitLoaded)
@@ -898,7 +925,7 @@ export function ResponsiveDrawer(props: IProps) {
     orbitLoaded &&
     url &&
     view === '' &&
-    localStorage.getItem('isLoggedIn') === 'true'
+    (localStorage.getItem('isLoggedIn') === 'true' || isElectron)
   ) {
     const parts = url.split('/');
     const base = 1;
@@ -961,7 +988,6 @@ export function ResponsiveDrawer(props: IProps) {
     <UploadIcon />,
     <IntegrationIcon />,
   ];
-
   const drawer = (drawerId: string) => (
     <div>
       <div className={classes.toolbar}>
@@ -1311,6 +1337,7 @@ export function ResponsiveDrawer(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitLoaded: state.orbit.loaded,
+  importStatus: state.importexport.importexportStatus,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
