@@ -149,6 +149,8 @@ const initialState = {
 			"tablePaste": "Paste Table",
 			"bookSelect": "Select Book...",
 			"nonNumber": "Do not change to non-number.",
+			"pasting": "Pasting",
+			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({

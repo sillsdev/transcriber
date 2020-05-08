@@ -655,6 +655,18 @@
 				<target>Ne passez pas au non-numéro.</target>
 			</segment>
 		</unit>
+		<unit id="planSheet.pasting">
+			<segment>
+				<source>Pasting</source>
+				<target>Coller</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.useCtrlV">
+			<segment>
+				<source>Select a column head and use CTRL-V to append table rows.</source>
+				<target>Sélectionnez un en-tête de colonne et utilisez CTRL-V pour ajouter des lignes au tableau.</target>
+			</segment>
+		</unit>
 		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>

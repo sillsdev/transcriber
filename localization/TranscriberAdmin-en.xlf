@@ -658,6 +658,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.pasting">
+         <segment>
+            <source>Pasting</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.useCtrlV">
+         <segment>
+            <source>Select a column head and use CTRL-V to append table rows.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.section">
          <segment>
             <source>Section</source>

@@ -266,17 +266,31 @@ export function PlanSheet(props: IProps) {
   const splitAndTrim = (clipBoard: string): string[] =>
     clipBoard.split('\t').map((v) => (typeof v === 'string' ? v.trim() : v));
 
+  const cleanClipboard = (clipText: string) => {
+    return removeBlanks(clipText).map((line: string) => splitAndTrim(line));
+  };
+
   const parsePaste = (clipBoard: string) => {
     if (projRole !== 'admin') return Array<Array<string>>();
-    return removeBlanks(clipBoard).map((line: string) => splitAndTrim(line));
+    if (position.i === 0) {
+      setPasting(true);
+      setMessage(<span>{t.pasting}</span>);
+      paste(cleanClipboard(clipBoard));
+      setPasting(false);
+    }
+    return cleanClipboard(clipBoard);
   };
   const handleTablePaste = () => {
-    setPasting(true);
-    setMessage(<span>Pasting</span>);
-    navigator.clipboard.readText().then((clipText) => {
-      paste(removeBlanks(clipText).map((line) => splitAndTrim(line)));
-      setPasting(false);
-    });
+    if (typeof navigator.clipboard.readText === 'function') {
+      setPasting(true);
+      setMessage(<span>{t.pasting}</span>);
+      navigator.clipboard.readText().then((clipText) => {
+        paste(cleanClipboard(clipText));
+        setPasting(false);
+      });
+    } else {
+      setMessage(<span>{t.useCtrlV}</span>);
+    }
   };
 
   const handleSetPreventSave = (val: boolean) => {

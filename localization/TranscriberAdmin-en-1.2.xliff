@@ -768,6 +768,20 @@
         			<context context-type="sourcefile">PlanSheet.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="planSheet.pasting">
+        		<source>Pasting</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.useCtrlV">
+        		<source>Select a column head and use CTRL-V to append table rows.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="scriptureTable.section">
                 <source>Section</source>
                 <target/>

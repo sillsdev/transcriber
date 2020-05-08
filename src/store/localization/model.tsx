@@ -135,6 +135,8 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "tablePaste": string;
     "bookSelect": string;
     "nonNumber": string;
+    "pasting": string;
+    "useCtrlV": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
