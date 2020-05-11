@@ -429,6 +429,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleFinishOrgAdd = () => {
     setAddOrg(false);
+    setProjRole('admin');
     setTimeout(() => handleAddProject(), 1000);
   };
 
