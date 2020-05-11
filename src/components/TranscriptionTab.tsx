@@ -581,7 +581,7 @@ export function TranscriptionTab(props: IProps) {
   const DataCell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'action') {
-      if (row.parentId !== '') {
+      if (row.parentId && row.parentId !== '') {
         const passRec = memory.cache.query((q: QueryBuilder) =>
           q.findRecord({ type: 'passage', id: row.id })
         ) as Passage;
