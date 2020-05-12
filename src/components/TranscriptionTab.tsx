@@ -332,6 +332,7 @@ export function TranscriptionTab(props: IProps) {
   ) => {
     const copyData: string[] = [];
     projectPlans.forEach((planRec) => {
+      let planName = planColumn ? planRec?.attributes?.name : '';
       sections
         .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
         .sort(sectionCompare)
@@ -345,6 +346,10 @@ export function TranscriptionTab(props: IProps) {
             const ref = getReference(passage, bookData);
             const transcription = getTranscription(passage.id);
             if (transcription !== '') {
+              if (planName && planName !== '') {
+                copyData.push(`*****\n${planName}\n`);
+                planName = '';
+              }
               if (sectionHead !== '') {
                 copyData.push(sectionHead);
                 sectionHead = '';
@@ -647,7 +652,7 @@ export function TranscriptionTab(props: IProps) {
           color="default"
         >
           <div className={classes.actions}>
-            {planColumn ? (
+            {planColumn && (
               <Button
                 key="export"
                 aria-label={t.exportProject}
@@ -659,19 +664,18 @@ export function TranscriptionTab(props: IProps) {
               >
                 {t.exportProject}
               </Button>
-            ) : (
-              <Button
-                key="copy"
-                aria-label={'Copy Plan'}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleCopyPlan}
-                title={'Copy Transcription(s) to Clipboard'}
-              >
-                {'Copy Transcription(s)'}
-              </Button>
             )}
+            <Button
+              key="copy"
+              aria-label={t.copyTranscriptions}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleCopyPlan}
+              title={t.copyTip}
+            >
+              {t.copyTranscriptions}
+            </Button>
             {planColumn && isElectron && projects.length > 1 && (
               <Button
                 key="backup"
@@ -693,7 +697,7 @@ export function TranscriptionTab(props: IProps) {
               color="primary"
               className={classes.button}
               onClick={handleFilter}
-              title={'Show/Hide filter rows'}
+              title={t.showHideFilter}
             >
               {t.filter}
               {filter ? (

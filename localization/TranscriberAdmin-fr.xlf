@@ -1634,6 +1634,24 @@
          	<target>Exporter</target>
          </segment>
       </unit>
+		<unit id="transcriptionTab.copyTranscriptions">
+			<segment>
+				<source>Copy Transcriptions</source>
+				<target>Copie des transcriptions</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.copyTip">
+			<segment>
+				<source>Copy transcriptions to Clipboard</source>
+				<target>Copier les transcriptions dans le presse-papiers</target>
+			</segment>
+		</unit>
+		<unit id="transcriptionTab.showHideFilter">
+			<segment>
+				<source>Show/Hide filter rows</source>
+				<target>Afficher/masquer les lignes de filtre</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.cantCopy">
 			<segment>
 				<source>Unable to copy to clipboard</source>

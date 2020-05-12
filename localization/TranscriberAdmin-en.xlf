@@ -1636,6 +1636,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.copyTranscriptions">
+         <segment>
+            <source>Copy Transcriptions</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.copyTip">
+         <segment>
+            <source>Copy transcriptions to Clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.showHideFilter">
+         <segment>
+            <source>Show/Hide filter rows</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.cantCopy">
          <segment>
             <source>Unable to copy to clipboard</source>

@@ -1909,6 +1909,27 @@
         			<context context-type="sourcefile">TranscriptionTab.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriptionTab.copyTranscriptions">
+        		<source>Copy Transcriptions</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.copyTip">
+        		<source>Copy transcriptions to Clipboard</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcriptionTab.cantCopy">
         		<source>Unable to copy to clipboard</source>
         		<target/>
