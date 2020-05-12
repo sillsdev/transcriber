@@ -174,6 +174,10 @@ export function PlanSheet(props: IProps) {
     setDoSave(true);
   };
 
+  const handleSelect = (loc: DataSheet.Selection) => {
+    if (loc.start.i === loc.end.i) setShowRow(loc.start.i);
+  };
+
   const handleValueRender = (cell: ICell) =>
     cell.className === 'book' && bookMap ? bookMap[cell.value] : cell.value;
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
@@ -493,6 +497,7 @@ export function PlanSheet(props: IProps) {
             onContextMenu={handleContextMenu}
             onCellsChanged={handleCellsChanged}
             parsePaste={parsePaste}
+            onSelect={handleSelect}
           />
         </div>
         <Menu
