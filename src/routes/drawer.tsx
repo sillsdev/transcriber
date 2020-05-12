@@ -585,11 +585,23 @@ export function ResponsiveDrawer(props: IProps) {
     setAlertOpen(false);
     setChanged(false);
   };
+  const finishConfirmed = (savedMethod: (() => any) | undefined) => {
+    setTimeout(() => {
+      if (remote.requestQueue.length === 0) {
+        if (savedMethod) savedMethod();
+      } else {
+        finishConfirmed(savedMethod);
+      }
+    }, 1000);
+  };
   const handleSaveConfirmed = () => {
+    const savedMethod = saveConfirm.current;
+    saveConfirm.current = undefined;
     setMessage(<span>{t.saving}</span>);
     setChanged(false);
     setDoSave(true);
     setAlertOpen(false);
+    finishConfirmed(savedMethod);
   };
   const getRole = (table: Record[], relate: string, id: string) => {
     const memberRecs = table.filter(
