@@ -3519,7 +3519,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.transcribeReady">
-        		<source>Attached recording</source>
+        		<source>Ready For Transcription</git stsource>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>

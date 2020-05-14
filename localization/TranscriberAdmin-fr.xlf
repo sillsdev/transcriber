@@ -3012,8 +3012,8 @@
       </unit>
       <unit id="transcriber.transcribeReady">
          <segment>
-            <source>Attached recording</source>
-         	<target>Enregistrement joint</target>
+            <source>Ready For Transcription</source>
+         	<target>Prêt pour la transcription</target>
          </segment>
       </unit>
       <unit id="transcriber.transcribing">

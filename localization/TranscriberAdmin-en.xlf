@@ -3018,7 +3018,7 @@
       </unit>
       <unit id="transcriber.transcribeReady">
          <segment>
-            <source>Attached recording</source>
+            <source>Ready For Transcription</source>
             <target/>
          </segment>
       </unit>

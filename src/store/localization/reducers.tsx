@@ -650,7 +650,7 @@ const initialState = {
 			"saveTip": "Save changes and comment",
 			"saveReviewTip": "Save position and comment",
 			"noMedia": "Created task",
-			"transcribeReady": "Attached recording",
+			"transcribeReady": "Ready For Transcription",
 			"transcribing": "Started to transcribe",
 			"transcribed": "Submitted task for review",
 			"reviewing": "Started to review",
