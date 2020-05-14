@@ -1,7 +1,14 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IPlanTabsStrings, Plan } from '../model';
+import {
+  IState,
+  IPlanTabsStrings,
+  Plan,
+  Section,
+  Passage,
+  MediaFile,
+} from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
@@ -12,6 +19,7 @@ import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { related } from '../utils';
 
 export const TabHeight = 48;
 
@@ -31,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       paddingTop: `${TabHeight}px`,
     },
+    status: {
+      fontSize: 'x-small',
+    },
   })
 );
 
@@ -38,7 +49,10 @@ interface IStateProps {
   t: IPlanTabsStrings;
 }
 interface IRecordProps {
-  plans: Array<Plan>;
+  plans: Plan[];
+  sections: Section[];
+  passages: Passage[];
+  mediafiles: MediaFile[];
 }
 interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
@@ -48,7 +62,16 @@ interface IProps extends IStateProps, IRecordProps {
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const { t, changeTab, bookCol, checkSaved, plans } = props;
+  const {
+    t,
+    changeTab,
+    bookCol,
+    checkSaved,
+    plans,
+    sections,
+    passages,
+    mediafiles,
+  } = props;
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
@@ -61,6 +84,48 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
       changeTab(value);
     }
   };
+
+  const planSections = sections.filter((s) => related(s, 'plan') === plan);
+  const planSectionIds = planSections.map((p) => p.id);
+  const planPassages = passages.filter((p) =>
+    planSectionIds.includes(related(p, 'section'))
+  );
+  const planMedia = mediafiles.filter(
+    (m) => related(m, 'plan') === plan && m.attributes.versionNumber === 1
+  );
+  const attached = planMedia
+    .map((m) => related(m, 'passage'))
+    .filter((p) => p && p !== '');
+  const assigned = planSections.filter(
+    (s) => related(s, 'transcriber') || related(s, 'editor')
+  );
+  const trans = planMedia
+    .map((m) => m.attributes.transcription)
+    .filter((t) => t && t !== '');
+
+  interface ITitle {
+    text: string;
+    status: string;
+  }
+  const Title = ({ text, status }: ITitle) => {
+    return (
+      <>
+        {text}
+        <div className={classes.status}>{status}</div>
+      </>
+    );
+  };
+
+  const statusMessage = (msg: string, val1: number, val2: number) =>
+    msg.replace('{1}', val1.toString()).replace('{2}', val2.toString());
+
+  enum tabs {
+    sectionPassage = 0,
+    media = 1,
+    associate = 2,
+    assignment = 3,
+    transcription = 4,
+  }
 
   return (
     <div className={classes.root}>
@@ -75,12 +140,46 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
         >
           <Tab label={t.sectionsPassages} />
           <Tab label={t.media} />
-          <Tab label={t.assignments} />
-          <Tab label={t.transcriptions} />
+          <Tab
+            label={
+              <Title
+                text={t.associations}
+                status={statusMessage(
+                  t.mediaStatus,
+                  attached.length,
+                  planMedia.length
+                )}
+              />
+            }
+          />
+          <Tab
+            label={
+              <Title
+                text={t.assignments}
+                status={statusMessage(
+                  t.sectionStatus,
+                  assigned.length,
+                  planSectionIds.length
+                )}
+              />
+            }
+          />
+          <Tab
+            label={
+              <Title
+                text={t.transcriptions}
+                status={statusMessage(
+                  t.passageStatus,
+                  trans.length,
+                  planPassages.length
+                )}
+              />
+            }
+          />
         </Tabs>
       </AppBar>
       <div className={classes.content}>
-        {tab === 0 && (
+        {tab === tabs.sectionPassage && (
           <>
             {bookCol !== -1 ? (
               <ScriptureTable
@@ -109,17 +208,24 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
             )}
           </>
         )}
-        {tab === 1 && (
+        {tab === tabs.media && (
           <MediaTab
             {...props}
-            projectplans={plans.filter(p => p.id === plan)}
+            projectplans={plans.filter((p) => p.id === plan)}
           />
         )}
-        {tab === 2 && <AssignmentTable {...props} />}
-        {tab === 3 && (
+        {tab === tabs.associate && (
+          <MediaTab
+            {...props}
+            projectplans={plans.filter((p) => p.id === plan)}
+            attachTool={true}
+          />
+        )}
+        {tab === tabs.assignment && <AssignmentTable {...props} />}
+        {tab === tabs.transcription && (
           <TranscriptionTab
             {...props}
-            projectPlans={plans.filter(p => p.id === plan)}
+            projectPlans={plans.filter((p) => p.id === plan)}
           />
         )}
       </div>
@@ -128,6 +234,9 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 };
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
+  passages: (q: QueryBuilder) => q.findRecords('passage'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
 const mapStateToProps = (state: IState): IStateProps => ({

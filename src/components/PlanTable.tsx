@@ -139,7 +139,7 @@ export function PlanTable(props: IProps) {
   };
   const handleAddMethod = async (name: string, planType: string) => {
     setDialogVisible(false);
-    saveNewPlan({ project, name, planType, schema, memory }).then(plan =>
+    saveNewPlan({ project, name, planType, schema, memory }).then((plan) =>
       handleSelect(plan.id)
     );
   };
@@ -147,7 +147,7 @@ export function PlanTable(props: IProps) {
     setDialogVisible(false);
   };
   const handleEdit = (planId: string) => (e: any) => {
-    const planRec = plans.filter(p => p.id === planId);
+    const planRec = plans.filter((p) => p.id === planId);
     setDialogData(planRec && planRec.length === 1 ? planRec[0] : null);
     setDialogVisible(true);
   };
@@ -178,17 +178,19 @@ export function PlanTable(props: IProps) {
   };
   const getType = (p: Plan) => {
     const typeId = Related(p, 'plantype');
-    const typeRec = planTypes.filter(pt => pt.id === typeId);
+    const typeRec = planTypes.filter((pt) => pt.id === typeId);
     return typeRec && typeRec.length === 1 && typeRec[0].attributes
       ? t.getString(typeRec[0].attributes.name.toLowerCase())
       : '--';
   };
   const sectionCount = (p: Plan) => {
-    return sections.filter(s => Related(s, 'plan') === p.id).length.toString();
+    return sections
+      .filter((s) => Related(s, 'plan') === p.id)
+      .length.toString();
   };
 
   useEffect(() => {
-    const projectPlans = plans.filter(p => Related(p, 'project') === project);
+    const projectPlans = plans.filter((p) => Related(p, 'project') === project);
     setRows(
       projectPlans.map((p: Plan) => {
         return {
@@ -297,7 +299,7 @@ export function PlanTable(props: IProps) {
               color="primary"
               className={classes.button}
               onClick={handleFilter}
-              title={'Show/Hide filter rows'}
+              title={t.showHideFilter}
             >
               {t.filter}
               {filter ? (

@@ -339,7 +339,7 @@ export function UserTable(props: IProps) {
             color="primary"
             className={classes.button}
             onClick={handleFilter}
-            title={'Show/Hide filter rows'}
+            title={t.showHideFilter}
           >
             {t.filter}
             {filter ? (

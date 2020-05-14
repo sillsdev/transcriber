@@ -82,7 +82,7 @@ interface IRow {
   parentId: string;
 }
 const getChildRows = (row: any, rootRows: any[]) => {
-  const childRows = rootRows.filter(r => r.parentId === (row ? row.id : ''));
+  const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : ''));
   return childRows.length ? childRows : null;
 };
 
@@ -97,10 +97,10 @@ const getAssignments = (
   let sectionRow: IRow;
   const rowData: IRow[] = [];
   const plansections = sections
-    .filter(s => related(s, 'plan') === plan && s.attributes)
+    .filter((s) => related(s, 'plan') === plan && s.attributes)
     .sort(sectionCompare);
 
-  plansections.forEach(function(section) {
+  plansections.forEach(function (section) {
     sectionRow = {
       id: section.id,
       name: sectionDescription(section),
@@ -112,10 +112,10 @@ const getAssignments = (
     };
     rowData.push(sectionRow);
     const sectionps = passages
-      .filter(p => related(p, 'section') === section.id)
+      .filter((p) => related(p, 'section') === section.id)
       .sort(passageCompare);
     sectionRow.passages = sectionps.length.toString();
-    sectionps.forEach(function(passage: Passage) {
+    sectionps.forEach(function (passage: Passage) {
       const state = passage.attributes
         ? activityState.getString(passage.attributes.state)
         : '';
@@ -204,7 +204,7 @@ export function AssignmentTable(props: IProps) {
       setMessage(<span>{t.selectRowsToRemove}</span>);
     } else {
       let work = false;
-      check.forEach(i => {
+      check.forEach((i) => {
         const row = data[i];
         if (row.editor !== '' || row.transcriber !== '') work = true;
       });
@@ -218,8 +218,8 @@ export function AssignmentTable(props: IProps) {
   const getSelectedSections = () => {
     let selected = Array<Section>();
     let one: any;
-    check.forEach(c => {
-      one = sections.find(function(s) {
+    check.forEach((c) => {
+      one = sections.find(function (s) {
         return c <= data.length ? s.id === data[c].id : undefined;
       });
       if (one !== undefined) selected.push(one);
@@ -231,7 +231,7 @@ export function AssignmentTable(props: IProps) {
   const handleRemoveAssignmentsConfirmed = () => {
     setConfirmAction('');
     let sections = getSelectedSections();
-    sections.forEach(async s => {
+    sections.forEach(async (s) => {
       await memory.update((t: TransformBuilder) => [
         t.replaceRelatedRecord({ type: 'section', id: s.id }, 'transcriber', {
           type: 'user',
@@ -304,7 +304,7 @@ export function AssignmentTable(props: IProps) {
               color="primary"
               className={classes.button}
               onClick={handleFilter}
-              title={'Show/Hide filter rows'}
+              title={t.showHideFilter}
             >
               {t.filter}
               {filter ? (

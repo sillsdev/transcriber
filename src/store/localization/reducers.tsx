@@ -48,6 +48,7 @@ const initialState = {
 			"delete": "Delete",
 			"filter": "Filter",
 			"selectRows": "Please select row(s) to {0}.",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"alert": new LocalizedStrings({
@@ -129,6 +130,7 @@ const initialState = {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
 			"loadingTable": "Loading data",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"planSheet": new LocalizedStrings({
@@ -187,6 +189,7 @@ const initialState = {
 			"editor": "Editor",
 			"selectRowsToAssign": "Please select row(s) to assign.",
 			"selectRowsToRemove": "Please select row(s) to remove assignment.",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"assignSection": new LocalizedStrings({
@@ -204,9 +207,13 @@ const initialState = {
 	"planTabs": new LocalizedStrings({
 		"en": {
 			"sectionsPassages": "Sections & Passages",
+			"passageStatus": "{1} of {2} passages",
+			"sectionStatus": "{1} of {2} sections",
+			"mediaStatus": "{1} of {2} media files",
 			"media": "Media",
 			"assignments": "Assignments",
 			"transcriptions": "Transcriptions",
+			"associations": "Associations",
 		}
 	}),
 	"planAdd": new LocalizedStrings({
@@ -251,6 +258,24 @@ const initialState = {
 			"selectRows": "Please select row(s) to {0}.",
 			"unsupported": "File {0} is an unsupported file type.",
 			"loadingTable": "Loading data",
+			"mediaAttachments": "Media Attachments",
+			"availablePassages": "Available Passages",
+			"noMediaAttached": "No media files are checked",
+			"noPassageDetach": "Passages are not used for detach",
+			"noPassageAttached": "{0} has no passage attached",
+			"fileAttached": "File already attached",
+			"passageAttached": "Passage already attached",
+			"save": "Save",
+			"detach": "Detach",
+			"autoMatch": "Auto Match",
+			"showHideFilter": "Show/Hide filter rows",
+			"matchAdded": "Match complete: {0} new associations",
+			"noMatch": "Match complete: no new associations",
+			"no": "No",
+			"proposed": "Prop",
+			"yes": "Yes",
+			"saving": "Saving...",
+			"savingComplete": "Saving complete.",
 		}
 	}),
 	"passageMedia": new LocalizedStrings({
@@ -397,6 +422,7 @@ const initialState = {
 			"removeSelected": "{0} active projects depend on this group. Assign each project to some other group before deleting this group.",
 			"addGroup": "Add Group",
 			"selectRows": "Please select row(s) to {0}.",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"groupAdd": new LocalizedStrings({
@@ -534,6 +560,7 @@ const initialState = {
 			"filter": "Filter",
 			"selectRows": "Please select row(s) to {0}.",
 			"noData": "No invitations",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"orgSettings": new LocalizedStrings({
@@ -624,6 +651,7 @@ const initialState = {
 			"paratextLocal": "Paratext Local",
 			"render": "Render",
 			"onestory": "One Story",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"transcriber": new LocalizedStrings({
@@ -755,6 +783,21 @@ const initialState = {
 			"electronNotReady": "This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.",
 		}
 	}),
+	"template": new LocalizedStrings({
+		"en": {
+			"projectCode": "Project Code",
+			"language": "Language BCP47 code",
+			"book": "Paratext book identifier",
+			"section": "Section number",
+			"passage": "Passage number(within section)",
+			"chapter": "Chapter number",
+			"beginning": "Starting verse number",
+			"end": "Ending verse number",
+			"fileTemplate": "File Name Template",
+			"apply": "Apply",
+			"templateCodes": "Template Codes",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -806,6 +849,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"setup" : new LocalizedStrings(action.payload.data.setup),
 				"notSetup" : new LocalizedStrings(action.payload.data.notSetup),
+				"template" : new LocalizedStrings(action.payload.data.template),
 			};
 		case SET_LANGUAGE:
 			return {

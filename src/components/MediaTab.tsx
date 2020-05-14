@@ -9,12 +9,13 @@ import {
   Passage,
   Section,
   IMediaTabStrings,
+  ActivityStates,
   Plan,
   BookName,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -23,6 +24,9 @@ import {
   IconButton,
   LinearProgress,
   AppBar,
+  Typography,
+  Radio,
+  Slider,
 } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
@@ -30,13 +34,15 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
+import ClearIcon from '@material-ui/icons/Clear';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
+import { Filter } from '@devexpress/dx-react-grid';
 import MediaUpload, { UploadType } from './MediaUpload';
-import PassageMedia from './PassageMedia';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import Busy from './Busy';
+import Template from '../control/template';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
@@ -52,6 +58,7 @@ import { dateCompare, numCompare } from '../utils/sort';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { getMediaInPlans } from '../utils/getMediaInPlans';
+import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
 
 const ActionHeight = 52;
 
@@ -98,11 +105,29 @@ const useStyles = makeStyles((theme: Theme) =>
     unsupported: {
       color: theme.palette.secondary.light,
     },
+    row: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
+    template: {
+      marginBottom: theme.spacing(2),
+    },
+    slider: {
+      marginLeft: theme.spacing(2),
+      width: '80%',
+    },
   })
 );
 
+enum StatusL {
+  No = 'N',
+  Proposed = 'P',
+  Yes = 'Y',
+}
+
 interface IRow {
   planid: string;
+  passId: string;
   id: string;
   planName: string;
   playIcon: string;
@@ -113,8 +138,29 @@ interface IRow {
   size: number;
   version: string;
   date: string;
-  parentId?: string;
+  isAttaching?: boolean;
+  status: StatusL.No | StatusL.Proposed | StatusL.Yes;
 }
+
+interface IPRow {
+  id: string;
+  section: string;
+  reference: string;
+  attached: string;
+  isAttaching?: boolean;
+  sort: string;
+  book: string;
+  chap: number;
+  beg: number;
+  end: number;
+  secNum: number;
+  pasNum: number;
+}
+
+interface IAttachMap {
+  [key: number]: number;
+}
+
 const getSection = (section: Section[]) => {
   if (section.length === 0) return '';
   return sectionDescription(section[0]);
@@ -138,9 +184,8 @@ const getMedia = (
   const rowData = media.map((f) => {
     const passageId = related(f, 'passage');
     const passage = passageId ? passages.filter((p) => p.id === passageId) : [];
-    const section = sections.filter(
-      (s) => s.id === related(passage, 'section')
-    );
+    const sectionId = related(passage[0], 'section');
+    const section = sections.filter((s) => s.id === sectionId);
     const updated =
       f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
     const date = updated ? updated.format('YYYY-MM-DD') : '';
@@ -153,6 +198,7 @@ const getMedia = (
     const today = moment().format('YYYY-MM-DD');
     return {
       planid: related(f, 'plan'),
+      passId: passageId,
       planName: projectplans.filter((p) => p.id === related(f, 'plan'))[0]
         .attributes.name,
       id: f.id,
@@ -160,6 +206,7 @@ const getMedia = (
       fileName: f.attributes.originalFile,
       section: getSection(section),
       reference: getReference(passage, allBookData),
+      status: passage.length > 0 ? StatusL.Yes : StatusL.No,
       duration: f.attributes.duration ? f.attributes.duration.toString() : '',
       size: f.attributes.filesize,
       version: f.attributes.versionNumber
@@ -169,6 +216,54 @@ const getMedia = (
     } as IRow;
   });
   return rowData as Array<IRow>;
+};
+
+const isAttached = (p: Passage, media: MediaFile[]) => {
+  return media.filter((m) => related(m, 'passage') === p.id).length > 0;
+};
+
+const pad = (text: number) => ('00' + text).slice(-2);
+
+const getPassages = (
+  projectplans: Array<Plan>,
+  mediaFiles: Array<MediaFile>,
+  passages: Array<Passage>,
+  sections: Array<Section>,
+  allBookData: BookName[]
+) => {
+  const prowData: IPRow[] = [];
+  projectplans.forEach((plan) => {
+    const planId = plan.id;
+    const selSects = sections.filter((s) => related(s, 'plan') === planId);
+    selSects.forEach((section) => {
+      const sectionId = section.id;
+      passages
+        .filter((p) => related(p, 'section') === sectionId)
+        .forEach((passage) => {
+          const refMat = /([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/g.exec(
+            passage.attributes.reference
+          );
+          prowData.push({
+            id: passage.id,
+            section: getSection([section]),
+            reference: getReference([passage], allBookData),
+            attached: isAttached(passage, mediaFiles)
+              ? StatusL.Yes
+              : StatusL.No,
+            sort: `${pad(section.attributes.sequencenum)}.${pad(
+              passage.attributes.sequencenum
+            )}`,
+            book: passage.attributes.book,
+            chap: (refMat && parseInt(refMat[1])) || -1,
+            beg: (refMat && refMat.length > 2 && parseInt(refMat[2])) || -1,
+            end: (refMat && refMat.length > 3 && parseInt(refMat[3])) || -1,
+            pasNum: passage.attributes.sequencenum,
+            secNum: section.attributes.sequencenum,
+          });
+        });
+    });
+  });
+  return prowData;
 };
 
 interface IStateProps {
@@ -203,6 +298,7 @@ interface IProps
   auth: Auth;
   projectplans: Plan[];
   planColumn?: boolean;
+  attachTool?: boolean;
 }
 
 export function MediaTab(props: IProps) {
@@ -226,23 +322,24 @@ export function MediaTab(props: IProps) {
     hasUrl,
     mediaUrl,
     allBookData,
+    attachTool,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
+  const [user] = useGlobal('user');
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
-  // [
-  //   {fileName: 'GEN-001-001025.mp3', sectionId: '1', sectionName: 'Creation Story', book: 'Genesis', reference: '1:1-25a', duration: '30 seconds', size: 250, version: '1' },
-  //   {fileName: 'GEN-001-002631.mp3', sectionId: '', sectionName: '', book: '', reference: '', duration: '45 seconds', size: 445, version: '1' },
-  // ]);
+  const [pdata, setPData] = useState(Array<IPRow>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
+  const [mcheck, setMCheck] = useState(-1);
+  const [pcheck, setPCheck] = useState(-1);
   const [confirmAction, setConfirmAction] = useState('');
   const columnDefs = [
     { name: 'planName', title: t.planName },
@@ -254,6 +351,7 @@ export function MediaTab(props: IProps) {
     { name: 'size', title: t.size },
     { name: 'version', title: t.version },
     { name: 'date', title: t.date },
+    { name: 'detach', title: '\u00A0' },
   ];
   const columnWidths = [
     { columnName: 'planName', width: 150 },
@@ -265,26 +363,99 @@ export function MediaTab(props: IProps) {
     { columnName: 'size', width: 100 },
     { columnName: 'version', width: 100 },
     { columnName: 'date', width: 100 },
+    { columnName: 'detach', width: 50 },
   ];
-  const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<
-    string[]
-  >([]);
-
+  const columnFormatting = [
+    { columnName: 'section', aligh: 'left', wordWrapEnabled: true },
+  ];
+  const mSorting = [
+    { columnName: 'planName', direction: 'asc' },
+    { columnName: 'fileName', direction: 'asc' },
+  ];
   const columnSorting = [
     { columnName: 'duration', compare: numCompare },
     { columnName: 'size', compare: numCompare },
     { columnName: 'version', compare: numCompare },
     { columnName: 'date', compare: dateCompare },
   ];
-  const sortingEnabled = [{ columnName: 'playIcon', sortingEnabled: false }];
+  const sortingEnabled = [
+    { columnName: 'playIcon', sortingEnabled: false },
+    { columnName: 'detach', sortingEnabled: false },
+  ];
   const numCols = ['duration', 'size', 'version'];
   const [filter, setFilter] = useState(false);
+  const mBandHead = [
+    {
+      title: <Typography variant="h6">{t.mediaAttachments}</Typography>,
+      children: [
+        { columnName: 'fileName' },
+        { columnName: 'section' },
+        { columnName: 'reference' },
+        { columnName: 'detach' },
+      ],
+    },
+  ];
+  const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
+  const pColumnDefs = [
+    { name: 'section', title: t.section },
+    { name: 'reference', title: t.reference },
+    { name: 'attached', title: 'Attached' },
+    { name: 'sort', title: '\u00A0' },
+  ];
+  const pColumnWidths = [
+    { columnName: 'section', width: 150 },
+    { columnName: 'reference', width: 150 },
+    { columnName: 'attached', width: 105 },
+  ];
+  const pColumnFormatting = [
+    { columnName: 'section', aligh: 'left', wordWrapEnabled: true },
+    { columnName: 'reference', aligh: 'left', wordWrapEnabled: true },
+  ];
+  const pFilters = [{ columnName: 'attached', operation: 'equal', value: 'N' }];
+  const pSorting = [{ columnName: 'sort', direction: 'asc' }];
+  const pHiddenColumnNames = ['sort'];
+  const pBandHead = [
+    {
+      title: <Typography variant="h6">{t.availablePassages}</Typography>,
+      children: [
+        { columnName: 'section' },
+        { columnName: 'reference' },
+        { columnName: 'attached' },
+      ],
+    },
+  ];
+  const pSummaryItems = [{ columnName: 'reference', type: 'count' }];
+  const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
+  const [filteringEnabled, setFilteringEnabled] = useState([
+    { columnName: 'playIcon', filteringEnabled: false },
+  ]);
+  enum StatusN {
+    No = 0,
+    Proposed = 1,
+    Yes = 2,
+  }
+  const [slider, setSlider] = useState<StatusN>(StatusN.Proposed);
+  const [filters, setFilters] = useState<Filter[]>([
+    { columnName: 'status', operation: 'lessThanOrEqual', value: 'P' },
+  ]);
+  const [pageSizes, setPageSizes] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [complete, setComplete] = useState(0);
-  const [passageMediaVisible, setPassageMediaVisible] = useState(false);
+  const [attachVisible, setAttachVisible] = useState(attachTool);
+  const [autoMatch, setAutoMatch] = useState(false);
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
+  const [attachMap, setAttachMap] = useState<IAttachMap>({});
+  const [dataAttach, setDataAttach] = useState(new Set<number>());
+  const [passAttach, setPassAttach] = useState(new Set<number>());
+
+  const hasPassage = (pRow: number) => {
+    for (let i of Object.keys(attachMap)) {
+      if (attachMap[parseInt(i)] === pRow) return true;
+    }
+    return false;
+  };
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -344,14 +515,119 @@ export function MediaTab(props: IProps) {
   const handleActionRefused = () => {
     setConfirmAction('');
   };
-  const handlePassageMedia = (status: boolean) => (e: any) => {
-    setActionMenuItem(null);
-    setPassageMediaVisible(status);
+  // const handleAttach = () => setAttachVisible(!attachVisible);
+  const handleAutoMatch = () => setAutoMatch(!autoMatch);
+
+  const attach = async (passage: string, mediaFile: string) => {
+    var tb = new TransformBuilder();
+    var ops: Operation[] = [];
+    ops.push(
+      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
+        type: 'passage',
+        id: passage,
+      })
+    );
+    ops = UpdatePassageStateOps(
+      passage,
+      ActivityStates.TranscribeReady,
+      'Media Attached',
+      remoteIdNum('user', user, memory.keyMap),
+      tb,
+      ops
+    );
+    await memory.update(ops);
   };
-  const handleCheck = (checks: Array<number>) => {
-    setCheck(checks);
+
+  const handleSave = async () => {
+    setMessage(<span>{t.saving}</span>);
+    const handleRow = async (mRow: string) => {
+      const row = parseInt(mRow);
+      const pRow = attachMap[row];
+      await attach(pdata[pRow].id, data[row].id);
+    };
+    for (let mRow of Object.keys(attachMap)) {
+      await handleRow(mRow);
+    }
+    setAttachMap({});
+    setMessage(<span>{t.savingComplete}</span>);
+  };
+
+  const detach = async (passage: string, mediaFile: string) => {
+    var tb = new TransformBuilder();
+    var ops: Operation[] = [];
+    ops.push(
+      tb.replaceRelatedRecord(
+        { type: 'mediafile', id: mediaFile },
+        'passage',
+        null
+      )
+    );
+    ops = UpdatePassageStateOps(
+      passage,
+      ActivityStates.NoMedia,
+      'Media Detached',
+      remoteIdNum('user', user, memory.keyMap),
+      tb,
+      ops
+    );
+    await memory.update(ops);
+  };
+
+  const handleDetach = (mediaId: string) => () => {
+    const mRow = data.reduce((m, r, j) => {
+      return r.id === mediaId ? j : m;
+    }, -1);
+    if (attachMap.hasOwnProperty(mRow)) {
+      const newMap = { ...attachMap };
+      delete newMap[mRow];
+      setAttachMap(newMap);
+    } else {
+      const passId = data[mRow].passId;
+      if (passId && passId !== '') {
+        detach(passId, data[mRow].id);
+      } else {
+        setMessage(
+          <span>{t.noPassageAttached.replace('{0}', data[mRow].fileName)}</span>
+        );
+      }
+    }
+  };
+
+  const doAttach = (mRow: number, pRow: number) => {
+    if (attachMap.hasOwnProperty(mRow) || dataAttach.has(mRow)) {
+      setMessage(<span>{t.fileAttached}</span>);
+      return;
+    } else if (hasPassage(pRow) || passAttach.has(pRow)) {
+      setMessage(<span>{t.passageAttached}</span>);
+      return;
+    }
+    setAttachMap({ ...attachMap, [mRow]: pRow });
+    setMCheck(-1);
+    setPCheck(-1);
+    setCheck([]);
+  };
+
+  const handleMCheck = (checks: Array<number>) => {
+    if (attachVisible) {
+      const newCheck = checks[0] === mcheck ? checks[1] : checks[0];
+      if (checks.length === 1 && pcheck >= 0) {
+        doAttach(checks[0], pcheck);
+        return;
+      }
+      setCheck([newCheck]);
+      setMCheck(newCheck);
+    } else {
+      setCheck(checks);
+    }
   };
   const handleFilter = () => setFilter(!filter);
+  const handlePCheck = (checks: Array<number>) => {
+    if (attachVisible && checks.length === 1 && mcheck >= 0) {
+      doAttach(mcheck, checks[0]);
+      return;
+    }
+    setPCheck(checks[0] === pcheck ? checks[1] : checks[0]);
+  };
   const handleSelect = (id: string) => () => {
     if (playing) {
       if (audioRef.current) {
@@ -367,6 +643,9 @@ export function MediaTab(props: IProps) {
       setPlayItem('');
     }
   };
+  const handleFilterChange = (filters: Filter[]) => {
+    setFilters(filters);
+  };
 
   useEffect(() => {
     if (urlOpen) {
@@ -376,32 +655,107 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlOpen]);
 
+  const planNoFilt: string[] = ['detach'];
+  const planFilt = ['duration', 'size', 'version', 'date', 'detach'];
+  const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
+  const noPlanNoFilt = ['planName', 'detach'];
+  const noPlayFilt = [
+    { columnName: 'playIcon', filteringEnabled: false },
+    { columnName: 'detach', filteringEnabled: false },
+  ];
+  const attachFilt = [
+    { columnName: 'playIcon', filteringEnabled: false },
+    { columnName: 'section', filteringEnabled: false },
+    { columnName: 'reference', filteringEnabled: false },
+    { columnName: 'detach', filteringEnabled: false },
+  ];
+  const noPaging: number[] = [];
+  const paging = [4, 10, 40];
   useEffect(() => {
-    if (planColumn) {
-      if (defaultHiddenColumnNames.length > 0)
-        //assume planName is only one
-        setDefaultHiddenColumnNames([]);
-    } else if (projectplans.length === 1) {
-      if (plan === '') {
+    let newHide = planNoFilt;
+    let newFilt = noPlayFilt;
+    if (planColumn && attachVisible) {
+      newHide = planFilt;
+    } else if (!planColumn) {
+      if (projectplans.length === 1 && plan === '') {
         setPlan(projectplans[0].id); //set the global plan
       }
-      setDefaultHiddenColumnNames(['planName']);
+      newHide = attachVisible ? noPlanFilt : noPlanNoFilt;
+      if (attachFilt) newFilt = attachFilt;
     }
+    const newPages =
+      attachVisible && (data.length > 40 || pdata.length > 40)
+        ? paging
+        : noPaging;
+    if (hiddenColumnNames !== newHide) setHiddenColumnNames(newHide);
+    if (filteringEnabled !== newFilt) setFilteringEnabled(newFilt);
+    if (pageSizes !== newPages) setPageSizes(newPages);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projectplans, plan, planColumn]);
+  }, [projectplans, plan, planColumn, attachVisible]);
 
   useEffect(() => {
-    setData(
-      getMedia(
-        projectplans,
-        mediaFiles,
-        passages,
-        sections,
-        playItem,
-        allBookData
-      )
+    const newData = getMedia(
+      projectplans,
+      mediaFiles,
+      passages,
+      sections,
+      playItem,
+      allBookData
     );
+    setData(newData);
+    const medAttach = new Set<number>();
+    newData.forEach((r, i) => {
+      if (r.section !== '') medAttach.add(i);
+    });
+    setDataAttach(medAttach);
+    const newPassData = getPassages(
+      projectplans,
+      mediaFiles,
+      passages,
+      sections,
+      allBookData
+    );
+    setPData(newPassData);
+    const pasAttach = new Set<number>();
+    newPassData.forEach((r, i) => {
+      if (r.attached === 'Y') pasAttach.add(i);
+    });
+    setPassAttach(pasAttach);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projectplans, mediaFiles, passages, sections, playItem, allBookData]);
+
+  useEffect(() => {
+    setData((data) =>
+      data.map((r, i) => {
+        const isAttached = attachMap.hasOwnProperty(i);
+        return isAttached
+          ? {
+              ...r,
+              section: pdata[attachMap[i]].section,
+              reference: pdata[attachMap[i]].reference,
+              isAttaching: true,
+              status: StatusL.Proposed,
+            }
+          : r.isAttaching
+          ? {
+              ...r,
+              section: '',
+              reference: '',
+              isAttaching: false,
+              status: StatusL.No,
+            }
+          : { ...r };
+      })
+    );
+    setPData((pdata) =>
+      pdata.map((r, i) => {
+        return hasPassage(i)
+          ? { ...r, attached: 'Y', isAttaching: true }
+          : { ...r, attached: 'N', isAttaching: false };
+      })
+    );
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [attachMap]);
 
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
@@ -410,7 +764,7 @@ export function MediaTab(props: IProps) {
         setMessage(<span>{t.uploadComplete}</span>);
         uploadComplete();
         setComplete(0);
-        setPassageMediaVisible(true);
+        setAttachVisible(true);
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
@@ -476,14 +830,66 @@ export function MediaTab(props: IProps) {
     }
   }, [hasUrl, mediaUrl, playing, playItem]);
 
+  const matchMap = (pat: string, terms?: string[]) => {
+    if (pdata.length === 0 || data.length === 0) return;
+    const rpat = new RegExp(pat);
+    const newMap = { ...attachMap };
+    let found = 0;
+    data.forEach((r, dn) => {
+      if (!r.isAttaching && r.reference === '') {
+        const m = rpat.exec(r.fileName);
+        if (m) {
+          for (let i = 0; i < pdata.length; i++) {
+            const r = pdata[i];
+            let fail = false;
+            if (terms) {
+              for (let j = 0; j < terms.length; j++) {
+                const t = terms[j];
+                const val = m[j + 1];
+                if (t === 'SECT') {
+                  if (parseInt(val) !== r.secNum) fail = true;
+                } else if (t === 'PASS') {
+                  if (parseInt(val) !== r.pasNum) fail = true;
+                } else if (t === 'BOOK') {
+                  if (val !== r.book) fail = true;
+                } else if (t === 'CHAP') {
+                  if (parseInt(val) !== r.chap) fail = true;
+                } else if (t === 'BEG') {
+                  if (parseInt(val) !== r.beg) fail = true;
+                } else if (t === 'END') {
+                  if (parseInt(val) !== r.end) fail = true;
+                }
+                if (fail) break;
+              }
+            }
+            if (!fail) {
+              newMap[dn] = i;
+              found += 1;
+              break;
+            }
+          }
+        }
+      }
+    });
+    if (found) {
+      setAttachMap(newMap);
+      setMessage(<span>{t.matchAdded.replace('{0}', found.toString())}</span>);
+    } else {
+      setMessage(<span>{t.noMatch}</span>);
+    }
+  };
+
   interface ICell {
     value: string;
     style?: React.CSSProperties;
     mediaId?: string;
+    selected?: boolean;
+    onToggle?: () => void;
     row: IRow;
     column: any;
     tableRow: any;
     tableColumn: any;
+    children?: Array<any>;
   }
 
   const PlayCell = ({ value, style, mediaId, ...restProps }: ICell) => (
@@ -504,13 +910,137 @@ export function MediaTab(props: IProps) {
     </Table.Cell>
   );
 
+  const DetachCell = (props: ICell) => {
+    const { row } = props;
+    return (
+      <Table.Cell {...props}>
+        {row.reference !== '' || row.isAttaching ? (
+          <IconButton
+            key={'detach-' + row.id}
+            aria-label={'detach-' + row.id}
+            color="primary"
+            className={classes.link}
+            onClick={handleDetach(row.id)}
+            title={t.detach}
+          >
+            <ClearIcon />
+          </IconButton>
+        ) : (
+          <></>
+        )}
+      </Table.Cell>
+    );
+  };
+
+  const HighlightCell = (props: Table.DataCellProps) => {
+    return (
+      <Table.Cell {...props}>
+        <strong>{props.value}</strong>
+      </Table.Cell>
+    );
+  };
+
   const Cell = (props: ICell) => {
     const { column, row } = props;
-    if (column.name === 'playIcon' && row.parentId !== '') {
+    if (column.name === 'playIcon') {
       const mediaId = remoteId('mediafile', row.id, keyMap);
       return <PlayCell {...props} mediaId={mediaId} />;
     }
+    if (column.name === 'detach') {
+      return <DetachCell {...props} />;
+    }
+    if (['reference', 'section'].includes(column.name) && row.isAttaching) {
+      return <HighlightCell {...props} />;
+    }
     return <Table.Cell {...props} />;
+  };
+
+  const PCell = (props: ICell) => {
+    const { column, row } = props;
+    if (column.name === 'attached' && row.isAttaching) {
+      return <HighlightCell {...props} />;
+    }
+    return <Table.Cell {...props} />;
+  };
+
+  const SelectCell = (props: ICell) => {
+    const handleSelect = () => {
+      props.onToggle && props.onToggle();
+    };
+    return (
+      <Table.Cell {...props}>
+        {(!props.row.fileName || props.row.reference === '') && (
+          <Radio checked={props.selected} onChange={handleSelect} />
+        )}
+      </Table.Cell>
+    );
+  };
+
+  const marks = [
+    {
+      value: 0,
+      label: t.no,
+    },
+    {
+      value: 1,
+      label: t.proposed,
+    },
+    {
+      value: 2,
+      label: t.yes,
+    },
+  ];
+
+  const handleSlider = (e: any, val: number | number[]) => {
+    const newVal =
+      val === StatusN.No || val === StatusN.Proposed || val === StatusN.Yes
+        ? val
+        : 1;
+    setSlider(newVal);
+    setFilters(
+      filters.map((f) => {
+        if (f.columnName === 'status') {
+          return {
+            columnName: 'status',
+            operation: 'lessThanOrEqual',
+            value:
+              val === StatusN.No
+                ? StatusL.No
+                : val === StatusN.Proposed
+                ? StatusL.Proposed
+                : StatusL.Yes,
+          };
+        } else {
+          return f;
+        }
+      })
+    );
+  };
+
+  const FilterCell = (props: ICell) => {
+    const { children, ...restProps } = props;
+    const { column } = restProps;
+    let filtered = filteringEnabled.reduce((v, i) => {
+      return i.columnName === column.name || v;
+    }, false);
+    return !filtered ? (
+      <Table.StubCell {...restProps}>
+        <div className={classes.row}>{children}</div>
+      </Table.StubCell>
+    ) : column.name === 'reference' ? (
+      <Table.StubCell {...restProps}>
+        <Slider
+          className={classes.slider}
+          value={slider}
+          onChange={handleSlider}
+          valueLabelDisplay="off"
+          max={2}
+          marks={marks}
+        />
+      </Table.StubCell>
+    ) : (
+      <Table.StubCell {...restProps}>{'\u00A0'}</Table.StubCell>
+    );
   };
 
   return (
@@ -524,7 +1054,7 @@ export function MediaTab(props: IProps) {
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {planColumn || (
+                {!planColumn && !attachVisible && (
                   <Button
                     key="upload"
                     aria-label={t.uploadMedia}
@@ -537,60 +1067,84 @@ export function MediaTab(props: IProps) {
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {planColumn || (
+                {!attachVisible && (
+                  <>
+                    <Button
+                      key="action"
+                      aria-owns={
+                        actionMenuItem !== '' ? 'action-menu' : undefined
+                      }
+                      aria-label={t.action}
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleMenu}
+                    >
+                      {t.action}
+                      <DropDownIcon className={classes.icon} />
+                    </Button>
+                    <Menu
+                      id="action-menu"
+                      anchorEl={actionMenuItem}
+                      open={Boolean(actionMenuItem)}
+                      onClose={handleConfirmAction('Close')}
+                    >
+                      <MenuItem onClick={handleConfirmAction('Delete')}>
+                        {t.delete}
+                      </MenuItem>
+                    </Menu>
+                  </>
+                )}
+                {attachVisible && (
                   <Button
-                    key="Attach"
-                    aria-label={t.attachPassage}
+                    key={t.autoMatch}
+                    aria-label={t.autoMatch}
                     variant="outlined"
                     color="primary"
                     className={classes.button}
-                    onClick={handlePassageMedia(true)}
+                    onClick={handleAutoMatch}
                   >
-                    {t.attachPassage}
-                    <AddIcon className={classes.icon} />
+                    {t.autoMatch}
                   </Button>
                 )}
-                <Button
-                  key="action"
-                  aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-                  aria-label={t.action}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleMenu}
-                >
-                  {t.action}
-                  <DropDownIcon className={classes.icon} />
-                </Button>
-                <Menu
-                  id="action-menu"
-                  anchorEl={actionMenuItem}
-                  open={Boolean(actionMenuItem)}
-                  onClose={handleConfirmAction('Close')}
-                >
-                  <MenuItem onClick={handleConfirmAction('Delete')}>
-                    {t.delete}
-                  </MenuItem>
-                </Menu>
               </>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
-            <Button
-              key="filter"
-              aria-label={t.filter}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleFilter}
-              title={'Show/Hide filter rows'}
-            >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon className={classes.icon} />
-              ) : (
-                <FilterIcon className={classes.icon} />
-              )}
-            </Button>
+            {planColumn && (
+              <Button
+                key="filter"
+                aria-label={t.filter}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleFilter}
+                title={t.showHideFilter}
+              >
+                {t.filter}
+                {filter ? (
+                  <SelectAllIcon className={classes.icon} />
+                ) : (
+                  <FilterIcon className={classes.icon} />
+                )}
+              </Button>
+            )}
+            {attachVisible && (
+              <>
+                <Button
+                  key="save"
+                  aria-label={t.save}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleSave}
+                  disabled={
+                    check.length > 1 || Object.keys(attachMap).length === 0
+                  }
+                >
+                  {t.save}
+                </Button>
+              </>
+            )}
           </div>
         </AppBar>
         <div className={classes.content}>
@@ -603,22 +1157,57 @@ export function MediaTab(props: IProps) {
             </>
           )}
 
-          <ShapingTable
-            columns={columnDefs}
-            columnWidths={columnWidths}
-            columnSorting={columnSorting}
-            sortingEnabled={sortingEnabled}
-            dataCell={Cell}
-            sorting={[
-              { columnName: 'planName', direction: 'asc' },
-              { columnName: 'fileName', direction: 'asc' },
-            ]}
-            numCols={numCols}
-            rows={data}
-            select={handleCheck}
-            shaping={filter}
-            defaultHiddenColumnNames={defaultHiddenColumnNames}
-          />
+          {attachVisible && autoMatch && !planColumn && (
+            <div className={classes.template}>
+              <Template matchMap={matchMap} />
+            </div>
+          )}
+          <div className={classes.row}>
+            <ShapingTable
+              columns={columnDefs}
+              columnWidths={columnWidths}
+              columnFormatting={columnFormatting}
+              columnSorting={columnSorting}
+              sortingEnabled={sortingEnabled}
+              pageSizes={pageSizes}
+              filters={attachVisible ? filters : []}
+              onFiltersChange={handleFilterChange}
+              filteringEnabled={filteringEnabled}
+              filterCell={FilterCell}
+              dataCell={Cell}
+              sorting={mSorting}
+              numCols={numCols}
+              rows={data}
+              select={handleMCheck}
+              selectCell={attachVisible ? SelectCell : undefined}
+              checks={check}
+              shaping={attachVisible || filter}
+              hiddenColumnNames={hiddenColumnNames}
+              expandedGroups={!filter ? [] : undefined} // shuts off toolbar row
+              bandHeader={attachVisible ? mBandHead : null}
+              summaryItems={mSummaryItems}
+            />
+            {attachVisible && mcheck !== -1 && !planColumn && (
+              <ShapingTable
+                columns={pColumnDefs}
+                columnWidths={pColumnWidths}
+                columnFormatting={pColumnFormatting}
+                filters={pFilters}
+                dataCell={PCell}
+                sorting={pSorting}
+                pageSizes={pageSizes}
+                rows={pdata}
+                select={handlePCheck}
+                selectCell={SelectCell}
+                checks={pcheck >= 0 ? [pcheck] : []}
+                shaping={true}
+                hiddenColumnNames={pHiddenColumnNames}
+                expandedGroups={[]} // shuts off toolbar row
+                bandHeader={pBandHead}
+                summaryItems={pSummaryItems}
+              />
+            )}
+          </div>
         </div>
       </div>
       <MediaUpload
@@ -626,10 +1215,6 @@ export function MediaTab(props: IProps) {
         uploadType={UploadType.Media}
         uploadMethod={uploadMedia}
         cancelMethod={uploadCancel}
-      />
-      <PassageMedia
-        visible={passageMediaVisible}
-        closeMethod={handlePassageMedia(false)}
       />
       {confirmAction === '' || (
         <Confirm

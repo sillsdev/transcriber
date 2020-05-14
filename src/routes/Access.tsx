@@ -285,7 +285,7 @@ export function Access(props: IProps) {
           <AppBar position="fixed" className={classes.progress} color="inherit">
             <LinearProgress variant="indeterminate" />
           </AppBar>
-        )}{' '}
+        )}
       </AppBar>
       {isElectron && (
         <div className={classes.container}>
@@ -353,7 +353,6 @@ export function Access(props: IProps) {
                 </div>
               </Grid>
             </Grid>
-            {/* <Typography>{'Paratext Path: ' + ptPath}</Typography> */}
           </Paper>
           {confirmAction === '' || (
             <Confirm

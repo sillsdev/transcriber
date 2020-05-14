@@ -9,14 +9,18 @@ import {
 import {
   Column,
   FilteringState,
+  Filter,
   GroupingState,
+  SummaryState,
+  SummaryItem,
   IntegratedFiltering,
   IntegratedGrouping,
-  // IntegratedPaging,
+  IntegratedPaging,
   IntegratedSelection,
   IntegratedSorting,
+  IntegratedSummary,
   TableColumnWidthInfo,
-  // PagingState,
+  PagingState,
   SelectionState,
   SortingState,
   Sorting,
@@ -29,13 +33,15 @@ import {
   DragDropProvider,
   Grid,
   GroupingPanel,
-  // PagingPanel,
+  PagingPanel,
   Table,
   TableFilterRow,
   TableGroupRow,
   TableHeaderRow,
+  TableBandHeader,
   TableColumnResizing,
   TableSelection,
+  TableSummaryRow,
   Toolbar,
 } from '@devexpress/dx-react-grid-material-ui';
 import { IState, IShapingTableStrings } from '../model';
@@ -151,9 +157,13 @@ interface IProps extends IStateProps {
   columnWidths?: Array<TableColumnWidthInfo>;
   columnFormatting?: Table.ColumnExtension[];
   columnSorting?: Array<IntegratedSorting.ColumnExtension>;
+  pageSizes?: Array<number>;
   sortingEnabled?: Array<SortingState.ColumnExtension>;
   filteringEnabled?: Array<FilteringState.ColumnExtension>;
-  defaultHiddenColumnNames?: Array<string>;
+  filterCell: any;
+  filters?: Filter[];
+  onFiltersChange?: (filters: Filter[]) => void;
+  hiddenColumnNames?: Array<string>;
   defaultGrouping?: Grouping[];
   expandedGroups?: string[];
   dataCell?: any;
@@ -162,7 +172,11 @@ interface IProps extends IStateProps {
   rows: Array<any>;
   sorting?: Array<Sorting>;
   shaping?: boolean;
+  checks?: Array<number | string>;
   select?: (checks: Array<number>) => void;
+  selectCell?: any;
+  bandHeader?: TableBandHeader.ColumnBands[];
+  summaryItems?: SummaryItem[];
 }
 
 export function ShapingTable(props: IProps) {
@@ -172,9 +186,13 @@ export function ShapingTable(props: IProps) {
     columnWidths,
     columnFormatting,
     columnSorting /* special sort function for each column as needed */,
+    pageSizes,
     sortingEnabled /* whether sorting is enabled for each column */,
     filteringEnabled /* whether filtering is enabled for each column */,
-    defaultHiddenColumnNames,
+    filterCell,
+    filters /* start with these filters */,
+    onFiltersChange,
+    hiddenColumnNames,
     defaultGrouping,
     expandedGroups,
     dataCell,
@@ -182,8 +200,12 @@ export function ShapingTable(props: IProps) {
     numCols,
     rows,
     sorting,
+    checks,
     select,
+    selectCell,
     shaping,
+    bandHeader,
+    summaryItems,
   } = props;
   const [myGroups, setMyGroups] = React.useState<string[]>();
 
@@ -200,16 +222,26 @@ export function ShapingTable(props: IProps) {
   const noCols = () => <span>{t.NoColumns}</span>;
   return (
     <Grid rows={rows} columns={columns}>
-      <FilteringState
-        columnExtensions={filteringEnabled ? filteringEnabled : []}
-        // defaultFilters={[{ columnName: 'sectionId', operation: 'equal', value: '' }]}
-      />
+      {onFiltersChange ? (
+        <FilteringState
+          columnExtensions={filteringEnabled || []}
+          filters={filters || []}
+          onFiltersChange={onFiltersChange}
+        />
+      ) : (
+        <FilteringState
+          columnExtensions={filteringEnabled || []}
+          defaultFilters={filters || []}
+        />
+      )}
+
       <SortingState
         defaultSorting={sorting ? sorting : Array<Sorting>()}
-        columnExtensions={sortingEnabled ? sortingEnabled : []}
+        columnExtensions={sortingEnabled || []}
       />
+      {pageSizes && pageSizes.length > 0 && <PagingState />}
 
-      <SelectionState onSelectionChange={handleSelect} />
+      <SelectionState selection={checks} onSelectionChange={handleSelect} />
 
       <GroupingState
         columnGroupingEnabled={shaping !== null ? shaping : true}
@@ -217,6 +249,8 @@ export function ShapingTable(props: IProps) {
         expandedGroups={!myGroups ? expandedGroups : myGroups}
         onExpandedGroupsChange={handleExpGrp}
       />
+      {summaryItems && <SummaryState totalItems={summaryItems} />}
+
       {/* <PagingState /> */}
 
       <IntegratedGrouping />
@@ -224,10 +258,11 @@ export function ShapingTable(props: IProps) {
       <IntegratedSorting
         columnExtensions={columnSorting ? columnSorting : undefined}
       />
-      {/* <IntegratedPaging /> */}
+      {pageSizes && pageSizes.length > 0 && <IntegratedPaging />}
       <IntegratedSelection />
+      {summaryItems && <IntegratedSummary />}
 
-      <SizeTypeProvider for={numCols ? numCols : Array<string>()} />
+      <SizeTypeProvider for={numCols || []} />
 
       <DragDropProvider />
 
@@ -256,9 +291,7 @@ export function ShapingTable(props: IProps) {
         <Table />
       )}
       <TableColumnVisibility
-        hiddenColumnNames={
-          defaultHiddenColumnNames ? defaultHiddenColumnNames : []
-        }
+        hiddenColumnNames={hiddenColumnNames || []}
         emptyMessageComponent={noCols}
       />
       {columnWidths && (
@@ -267,18 +300,32 @@ export function ShapingTable(props: IProps) {
           defaultColumnWidths={columnWidths}
         />
       )}
-      {!select || <TableSelection showSelectAll={true} />}
+      {select && !selectCell ? (
+        <TableSelection showSelectAll={true} />
+      ) : (
+        select &&
+        selectCell && (
+          <TableSelection showSelectAll={false} cellComponent={selectCell} />
+        )
+      )}
 
       <TableHeaderRow showSortingControls={true} />
+
       {shaping !== null && !shaping ? (
         <TableFilterRow showFilterSelector={true} rowComponent={noRow} />
+      ) : filterCell ? (
+        <TableFilterRow showFilterSelector={true} cellComponent={filterCell} />
       ) : (
         <TableFilterRow showFilterSelector={true} />
       )}
-      {/* <PagingPanel pageSizes={pageSizes} /> */}
+      {pageSizes && pageSizes.length > 0 && (
+        <PagingPanel pageSizes={pageSizes} />
+      )}
 
       <TableGroupRow />
-      {shaping !== null && !shaping ? (
+      {summaryItems && <TableSummaryRow />}
+      {bandHeader && <TableBandHeader columnBands={bandHeader} />}
+      {(shaping !== null && !shaping) || expandedGroups ? (
         <Toolbar rootComponent={noRow} />
       ) : (
         <Toolbar />

@@ -40,6 +40,7 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
     "filter": string;
     "selectRows": string;
+    "showHideFilter": string;
 };
 
 export interface IAlertStrings extends Localize.LocalizedStringsMethods {
@@ -116,6 +117,7 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
     "silTranscriberAdmin": string;
     "choosePlan": string;
     "loadingTable": string;
+    "showHideFilter": string;
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
@@ -171,6 +173,7 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "editor": string;
     "selectRowsToAssign": string;
     "selectRowsToRemove": string;
+    "showHideFilter": string;
 };
 
 export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {
@@ -186,9 +189,13 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
 
 export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
     "sectionsPassages": string;
+    "passageStatus": string;
+    "sectionStatus": string;
+    "mediaStatus": string;
     "media": string;
     "assignments": string;
     "transcriptions": string;
+    "associations": string;
 };
 
 export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
@@ -231,6 +238,24 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "selectRows": string;
     "unsupported": string;
     "loadingTable": string;
+    "mediaAttachments": string;
+    "availablePassages": string;
+    "noMediaAttached": string;
+    "noPassageDetach": string;
+    "noPassageAttached": string;
+    "fileAttached": string;
+    "passageAttached": string;
+    "save": string;
+    "detach": string;
+    "autoMatch": string;
+    "showHideFilter": string;
+    "matchAdded": string;
+    "noMatch": string;
+    "no": string;
+    "proposed": string;
+    "yes": string;
+    "saving": string;
+    "savingComplete": string;
 };
 
 export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
@@ -370,6 +395,7 @@ export interface IGroupTableStrings extends Localize.LocalizedStringsMethods {
     "removeSelected": string;
     "addGroup": string;
     "selectRows": string;
+    "showHideFilter": string;
 };
 
 export interface IGroupAddStrings extends Localize.LocalizedStringsMethods {
@@ -499,6 +525,7 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
     "filter": string;
     "selectRows": string;
     "noData": string;
+    "showHideFilter": string;
 };
 
 export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
@@ -584,6 +611,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "paratextLocal": string;
     "render": string;
     "onestory": string;
+    "showHideFilter": string;
 };
 
 export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
@@ -707,6 +735,20 @@ export interface INotSetupStrings extends Localize.LocalizedStringsMethods {
     "electronNotReady": string;
 };
 
+export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
+    "projectCode": string;
+    "language": string;
+    "book": string;
+    "section": string;
+    "passage": string;
+    "chapter": string;
+    "beginning": string;
+    "end": string;
+    "fileTemplate": string;
+    "apply": string;
+    "templateCodes": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -753,5 +795,6 @@ export interface ILocalizedStrings {
 	control: IControlStrings;
 	setup: ISetupStrings;
 	notSetup: INotSetupStrings;
+	template: ITemplateStrings;
 	[key: string]: any;
 };
