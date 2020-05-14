@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  useTheme,
+} from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { Button, IconButton } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
@@ -18,6 +23,7 @@ import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
 import { sectionNumber, numCompare, sectionDescription } from '../utils';
 import { debounce } from 'lodash';
+import { DrawerTask } from '../routes/drawer';
 import './TaskTable.css';
 
 export const TaskItemWidth = 370;
@@ -99,9 +105,11 @@ export function TaskTable(props: IProps) {
   } = useTodo();
   const t = todoStr;
   const classes = useStyles();
+  const theme = useTheme();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
+  const [width, setWidth] = React.useState(window.innerWidth);
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
@@ -182,6 +190,7 @@ export function TaskTable(props: IProps) {
 
   const setDimensions = () => {
     setStyle({ height: window.innerHeight - 100, overflowY: 'auto' });
+    setWidth(window.innerWidth - theme.spacing(DrawerTask));
   };
 
   useEffect(() => {
@@ -224,26 +233,31 @@ export function TaskTable(props: IProps) {
         { columnName: 'assigned', width: 1, align: 'left' },
       ]);
     } else {
+      let addHead = 50;
+      let addWid = (width - 1037) / 3;
+      if (width < 1283) {
+        addHead = addWid = width > 1037 ? (width - 1037) / 5 : 0;
+      }
       setColumnFormatting([
         { columnName: 'composite', width: 1, align: 'left' },
         { columnName: 'play', width: 65, align: 'left' },
         {
           columnName: 'plan',
-          width: 100,
+          width: 100 + addWid,
           align: 'left',
           wordWrapEnabled: true,
         },
-        { columnName: 'section', width: 65, align: 'right' },
+        { columnName: 'section', width: 65 + addHead, align: 'right' },
         {
           columnName: 'title',
-          width: 150,
+          width: 150 + addWid,
           align: 'left',
           wordWrapEnabled: true,
         },
-        { columnName: 'sectPass', width: 65, align: 'left' },
+        { columnName: 'sectPass', width: 65 + addHead, align: 'left' },
         {
           columnName: 'description',
-          width: 150,
+          width: 150 + addWid,
           align: 'left',
           wordWrapEnabled: true,
         },
@@ -253,7 +267,7 @@ export function TaskTable(props: IProps) {
         { columnName: 'assigned', width: 150, align: 'left' },
       ]);
     }
-  }, [filter]);
+  }, [filter, width]);
 
   useEffect(() => {
     const newRows = rowData.map((r, i) => ({
