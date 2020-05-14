@@ -363,7 +363,7 @@ const initialState = {
 			"exportPTFtype": "Export Project (ptf)",
 			"exportITFtype": "Incremental Changes (itf)",
 			"cancel": "Cancel",
-			"exportingProject": "Creating export file",
+			"exportingProject": "Exporting...{0}%",
 			"error": "Export Error",
 			"downloading": "Creation complete. Downloading {0}",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",

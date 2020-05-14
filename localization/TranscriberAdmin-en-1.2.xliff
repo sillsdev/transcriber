@@ -1987,7 +1987,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriptionTab.exportingProject">
-        		<source>Creating export file</source>
+        		<source>Exporting...{0}%</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>

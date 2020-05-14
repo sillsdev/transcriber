@@ -51,6 +51,7 @@ import { useGlobal } from 'reactn';
 import { dateCompare, numCompare } from '../utils/sort';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
+import { getMediaInPlans } from '../utils/getMediaInPlans';
 
 const ActionHeight = 52;
 
@@ -124,10 +125,6 @@ const getReference = (passage: Passage[], bookData: BookName[] = []) => {
   return passageReference(passage[0], bookData);
 };
 
-interface ILatest {
-  [planName: string]: number;
-}
-
 const getMedia = (
   projectplans: Array<Plan>,
   mediaFiles: Array<MediaFile>,
@@ -136,28 +133,14 @@ const getMedia = (
   playItem: string,
   allBookData: BookName[]
 ) => {
-  const latest: ILatest = {};
-  mediaFiles.forEach(f => {
-    const name = related(f, 'plan') + f.attributes.originalFile;
-    latest[name] = latest[name]
-      ? Math.max(latest[name], f.attributes.versionNumber)
-      : f.attributes.versionNumber;
-  });
-  let media: MediaFile[];
-  if (projectplans && projectplans.length > 0) {
-    //all plans in current project
-    media = mediaFiles.filter(
-      f =>
-        projectplans.filter(p => p.id === related(f, 'plan')).length > 0 &&
-        latest[related(f, 'plan') + f.attributes.originalFile] ===
-          f.attributes.versionNumber
-    );
-  } else media = [];
+  let media: MediaFile[] = getMediaInPlans(projectplans, mediaFiles);
 
-  const rowData = media.map(f => {
+  const rowData = media.map((f) => {
     const passageId = related(f, 'passage');
-    const passage = passageId ? passages.filter(p => p.id === passageId) : [];
-    const section = sections.filter(s => s.id === related(passage, 'section'));
+    const passage = passageId ? passages.filter((p) => p.id === passageId) : [];
+    const section = sections.filter(
+      (s) => s.id === related(passage, 'section')
+    );
     const updated =
       f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
     const date = updated ? updated.format('YYYY-MM-DD') : '';
@@ -170,7 +153,7 @@ const getMedia = (
     const today = moment().format('YYYY-MM-DD');
     return {
       planid: related(f, 'plan'),
-      planName: projectplans.filter(p => p.id === related(f, 'plan'))[0]
+      planName: projectplans.filter((p) => p.id === related(f, 'plan'))[0]
         .attributes.name,
       id: f.id,
       playIcon: playItem,
@@ -338,13 +321,13 @@ export function MediaTab(props: IProps) {
       }
     }
     if (confirmAction === 'Delete') {
-      check.forEach(i => {
+      check.forEach((i) => {
         let versions = mediaFiles.filter(
-          f =>
+          (f) =>
             related(f, 'plan') === data[i].planid &&
             f.attributes.originalFile === data[i].fileName
         );
-        versions.forEach(v => {
+        versions.forEach((v) => {
           //console.log('Delete media ' + v.id);
           memory.update((t: TransformBuilder) =>
             t.removeRecord({
@@ -466,14 +449,22 @@ export function MediaTab(props: IProps) {
   }, [uploadList, loaded, currentlyLoading, projectplans, auth]);
 
   useEffect(() => {
-    if (
-      loaded /* new item done */ ||
-      currentlyLoading === 0 /* all are done */
-    ) {
-      queryStore(q => q.findRecords('mediafile'));
+    if (currentlyLoading === 0 /* all are done */) {
+      var filterrec = {
+        attribute: projectplans.length === 1 ? 'plan-id' : 'project-id',
+        value:
+          projectplans.length === 1
+            ? remoteId('plan', plan, memory.keyMap)
+            : remoteId(
+                'project',
+                related(projectplans[0], 'project'),
+                memory.keyMap
+              ),
+      };
+      queryStore((q) => q.findRecords('mediafile').filter(filterrec));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [loaded]);
+  }, [currentlyLoading]);
 
   useEffect(() => {
     if (hasUrl && audioRef.current && !playing && playItem !== '') {

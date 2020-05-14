@@ -14,6 +14,7 @@ import {
   IMPORT_SUCCESS,
   IMPORT_ERROR,
   IMPORT_COMPLETE,
+  FileResponse,
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
 import fs from 'fs';
@@ -40,12 +41,13 @@ export const exportProject = (
   memory: Memory,
   projectid: number,
   userid: number,
+  numberOfMedia: number,
   auth: Auth,
   errorReporter: any,
   pendingmsg: string
-) => (dispatch: any) => {
+) => async (dispatch: any) => {
   dispatch({
-    payload: pendingmsg,
+    payload: pendingmsg.replace('{0}%', ''),
     type: EXPORT_PENDING,
   });
   if (isElectron) {
@@ -73,26 +75,55 @@ export const exportProject = (
       });
   } else {
     /* ignore export type for now -- online is always ptf */
-    Axios.get(API_CONFIG.host + '/api/offlineData/project/' + projectid, {
-      headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
-      },
-      timeout: 0, //wait forever
-    })
-      .then((response) => {
-        // console.log(response);
-        dispatch({
-          payload: response.data,
-          type: EXPORT_SUCCESS,
+    let start = 0;
+    do {
+      await Axios.get(
+        API_CONFIG.host +
+          '/api/offlineData/project/export/' +
+          projectid +
+          '/' +
+          start,
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.accessToken,
+          },
+          timeout: 0, //wait forever
+        }
+      )
+        // eslint-disable-next-line no-loop-func
+        .then((response) => {
+          // console.log(response);
+          var fr = response.data as FileResponse;
+          start = Number(fr.data.id);
+          if (start === -1) {
+            dispatch({
+              payload: response.data,
+              type: EXPORT_SUCCESS,
+            });
+          } else {
+            dispatch({
+              payload: pendingmsg.replace(
+                '{0}',
+                Math.round((start / (numberOfMedia + 10)) * 100).toString()
+              ),
+              type: EXPORT_PENDING,
+            });
+          }
+        })
+        // eslint-disable-next-line no-loop-func
+        .catch((err: AxiosError) => {
+          logError(
+            Severity.info,
+            errorReporter,
+            infoMsg(err, 'Export failed: ')
+          );
+          start = -1;
+          dispatch({
+            payload: errStatus(err),
+            type: EXPORT_ERROR,
+          });
         });
-      })
-      .catch((err: AxiosError) => {
-        logError(Severity.info, errorReporter, infoMsg(err, 'Export failed: '));
-        dispatch({
-          payload: errStatus(err),
-          type: EXPORT_ERROR,
-        });
-      });
+    } while (start > -1);
   }
 };
 export const importComplete = () => (dispatch: any) => {

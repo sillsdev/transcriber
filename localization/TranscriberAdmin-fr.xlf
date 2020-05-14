@@ -1702,8 +1702,8 @@
 		</unit>
 		<unit id="transcriptionTab.exportingProject">
          <segment>
-            <source>Creating export file</source>
-         	<target>Création d'un fichier d'exportation</target>
+            <source>Exporting...{0}%</source>
+         	<target>Exportation...{0}%</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.error">

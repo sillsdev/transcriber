@@ -62,6 +62,7 @@ import {
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
+import { getMediaInPlans } from '../utils/getMediaInPlans';
 
 const ActionHeight = 52;
 
@@ -270,6 +271,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [exporting, setExporting] = useState(false);
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -304,17 +306,28 @@ export function TranscriptionTab(props: IProps) {
     return err.errMsg;
   };
   const doProjectExport = (exportType: string) => {
+    const mediaFiles = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('mediafile')
+    ) as MediaFile[];
+    const plans = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('plan')
+    ) as Plan[];
+
+    var projectplans = plans.filter((pl) => related(pl, 'project') === project);
+    let media: MediaFile[] = getMediaInPlans(projectplans, mediaFiles);
     exportProject(
       exportType,
       memory,
       remoteIdNum('project', project, keyMap),
       remoteIdNum('user', user, keyMap),
+      media.length,
       auth,
       errorReporter,
       t.exportingProject
     );
   };
   const handleProjectExport = () => {
+    setExporting(true);
     if (isElectron) setOpenExport(true);
     else doProjectExport('ptf');
   };
@@ -454,14 +467,18 @@ export function TranscriptionTab(props: IProps) {
         showMessage(t.error, translateError(exportStatus));
         exportComplete();
         setBusy(false);
+        setExporting(false);
       } else {
         if (exportStatus.statusMsg) {
           setBusy(true);
           showMessage('', exportStatus.statusMsg);
         }
-        if (exportStatus.complete && exportFile && exportName === '') {
-          setExportName(exportFile.data.attributes.message);
-          setExportUrl(exportFile.data.attributes.fileurl);
+        if (exportStatus.complete) {
+          setExporting(false);
+          if (exportFile && exportName === '') {
+            setExportName(exportFile.data.attributes.message);
+            setExportUrl(exportFile.data.attributes.fileurl);
+          }
         }
       }
     }
@@ -613,7 +630,10 @@ export function TranscriptionTab(props: IProps) {
       setOpenExport(false);
       doProjectExport('itf');
     };
-    const closeNoChoice = () => setOpenExport(false);
+    const closeNoChoice = () => {
+      setOpenExport(false);
+      setExporting(false);
+    };
 
     return (
       <Dialog
@@ -661,6 +681,7 @@ export function TranscriptionTab(props: IProps) {
                 className={classes.button}
                 onClick={handleProjectExport}
                 title={t.exportProject}
+                disabled={exporting}
               >
                 {t.exportProject}
               </Button>
