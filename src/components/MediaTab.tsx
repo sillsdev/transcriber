@@ -450,18 +450,21 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     if (currentlyLoading === 0 /* all are done */) {
-      var filterrec = {
-        attribute: projectplans.length === 1 ? 'plan-id' : 'project-id',
-        value:
-          projectplans.length === 1
-            ? remoteId('plan', plan, memory.keyMap)
-            : remoteId(
-                'project',
-                related(projectplans[0], 'project'),
-                memory.keyMap
-              ),
-      };
-      queryStore((q) => q.findRecords('mediafile').filter(filterrec));
+      var remoteid =
+        projectplans.length === 1
+          ? remoteId('plan', plan, memory.keyMap)
+          : remoteId(
+              'project',
+              related(projectplans[0], 'project'),
+              memory.keyMap
+            );
+      if (remoteid !== undefined) {
+        var filterrec = {
+          attribute: projectplans.length === 1 ? 'plan-id' : 'project-id',
+          value: remoteid,
+        };
+        queryStore((q) => q.findRecords('mediafile').filter(filterrec));
+      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [currentlyLoading]);
