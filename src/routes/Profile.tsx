@@ -799,7 +799,8 @@ export function Profile(props: IProps) {
               </div>
             </Grid>
           </Grid>
-          {!editId &&
+          {!isElectron &&
+            !editId &&
             currentUser &&
             currentUser.attributes.name !== currentUser.attributes.email && (
               <DeleteExpansion
