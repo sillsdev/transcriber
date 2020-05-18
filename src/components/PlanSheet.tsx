@@ -175,7 +175,9 @@ export function PlanSheet(props: IProps) {
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {
-    if (loc.start.i === loc.end.i) setShowRow(loc.start.i);
+    // this autoscroll causes issues TT-1393
+    //don't mess with it if we're selecting the checkbox
+    //if (loc.start.j > 0 && loc.start.i === loc.end.i) setShowRow(loc.start.i);
   };
 
   const handleValueRender = (cell: ICell) =>
@@ -394,9 +396,18 @@ export function PlanSheet(props: IProps) {
         sheetRef.current?.firstChild?.firstChild?.firstChild?.childNodes[
           showRow
         ];
-      if (tbodyRef) window.scrollTo(0, tbodyRef.offsetTop);
+      //only scroll if it's not already visible
+      if (
+        tbodyRef &&
+        (tbodyRef.offsetTop < document.documentElement.scrollTop ||
+          tbodyRef.offsetTop >
+            document.documentElement.scrollTop +
+              document.documentElement.clientHeight)
+      ) {
+        window.scrollTo(0, tbodyRef.offsetTop - 10);
+      }
     }
-  });
+  }, [showRow]);
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
@@ -404,6 +415,7 @@ export function PlanSheet(props: IProps) {
       ? bookSuggestions.map((v) => v.label)
       : [];
   }, [bookSuggestions]);
+
   //console.log('plansheet render', new Date().toLocaleTimeString());
   return (
     <div className={classes.container}>
