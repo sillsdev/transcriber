@@ -36,7 +36,7 @@
       </unit>
       <unit id="electronImport.importPending">
          <segment>
-            <source>Import In Progress...</source>
+            <source>Import In Progress...{0}%</source>
             <target/>
          </segment>
       </unit>

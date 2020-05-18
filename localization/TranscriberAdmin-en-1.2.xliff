@@ -41,7 +41,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="electronImport.importPending">
-                <source>Import In Progress...</source>
+                <source>Import In Progress...{0}%</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">electronImport.tsx</context>
@@ -3519,7 +3519,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.transcribeReady">
-        		<source>Ready For Transcription</git stsource>
+        		<source>Ready For Transcription</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>

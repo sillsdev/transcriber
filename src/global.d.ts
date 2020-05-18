@@ -34,5 +34,6 @@ declare module 'reactn/default' {
     offline: boolean;
     errorReporter: any; // bugsnagClient
     alertOpen: boolean;
+    coordinatorActivated: boolean;
   }
 }

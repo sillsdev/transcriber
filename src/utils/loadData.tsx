@@ -58,6 +58,7 @@ export function insertData(
           !isArray(item.relationships[rel].data) &&
           (!rec.relationships ||
             !rec.relationships[rel] ||
+            !rec.relationships[rel].data ||
             (item.relationships[rel].data as RecordIdentity).id !==
               (rec.relationships[rel].data as RecordIdentity).id)
         )

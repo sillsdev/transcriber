@@ -37,6 +37,7 @@ export const Sources = async (
   setRemote: (remote: JSONAPISource) => void,
   setCompleted: (valud: number) => void,
   setProjectsLoaded: (valud: string[]) => void,
+  setCoordinatorActivated: (valud: boolean) => void,
   InviteUser: (remote: JSONAPISource, userEmail: string) => Promise<void>,
   orbitError: (ex: IApiError) => void
 ) => {
@@ -263,6 +264,7 @@ export const Sources = async (
 
   coordinator.addStrategy(new EventLoggingStrategy());
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
+    setCoordinatorActivated(true);
     console.log('Coordinator will log warnings');
     if (goRemote)
       LoadData(memory, backup, remote, setCompleted, orbitError).then(() =>

@@ -17,7 +17,7 @@ const initialState = {
 	}),
 	"electronImport": new LocalizedStrings({
 		"en": {
-			"importPending": "Import In Progress...",
+			"importPending": "Import In Progress...{0}%",
 			"importComplete": "Import Complete",
 			"importOldFile": "This file was not exported from the latest version.  Reexport your PTF file from the online version.",
 			"ptfError": "Not a valid Portable Transcriber File",

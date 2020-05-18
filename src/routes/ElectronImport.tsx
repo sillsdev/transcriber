@@ -40,6 +40,7 @@ export var getElectronImportData = (
 export var handleElectronImport = (
   memory: MemorySource,
   backup: IndexedDBSource,
+  coordinatorActivated: boolean,
   zip: AdmZip | null,
   importProject: typeof action.importProjectToElectron,
   orbitError: (ex: IApiError) => void,
@@ -163,6 +164,7 @@ if (isElectron) {
   handleElectronImport = (
     memory: MemorySource,
     backup: IndexedDBSource,
+    coordinatorActivated: boolean,
     zip: AdmZip | null,
     importProject: typeof action.importProjectToElectron,
     orbitError: (ex: IApiError) => void,
@@ -186,6 +188,7 @@ if (isElectron) {
         path.join(where, 'data'),
         memory,
         backup,
+        coordinatorActivated,
         orbitError,
         t.importPending,
         t.importComplete,

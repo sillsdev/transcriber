@@ -49,6 +49,7 @@ export const fetchOrbitData = (
   setRemote: (remote: JSONAPISource) => void,
   setCompleted: (value: number) => void,
   setProjectsLoaded: (value: string[]) => void,
+  setCoordinatorActivated: (value: boolean) => void,
   InviteUser: (remote: JSONAPISource, email: string) => Promise<void>
 ) => (dispatch: any) => {
   Sources(
@@ -63,6 +64,7 @@ export const fetchOrbitData = (
     setRemote,
     setCompleted,
     setProjectsLoaded,
+    setCoordinatorActivated,
     InviteUser,
     (ex: IApiError) => dispatch(orbitError(ex))
   ).then(dispatch({ type: FETCH_ORBIT_DATA }));

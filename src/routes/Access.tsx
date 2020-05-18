@@ -135,6 +135,7 @@ export function Access(props: IProps) {
   } = props;
   const [memory] = useGlobal('memory');
   const [backup] = useGlobal('backup');
+  const [coordinatorActivated] = useGlobal('coordinatorActivated');
   const [offline, setOffline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
   const [confirmAction, setConfirmAction] = useState('');
@@ -162,6 +163,7 @@ export function Access(props: IProps) {
       handleElectronImport(
         memory,
         backup,
+        coordinatorActivated,
         zipFile,
         importProject,
         orbitError,
@@ -187,6 +189,7 @@ export function Access(props: IProps) {
           handleElectronImport(
             memory,
             backup,
+            coordinatorActivated,
             importData.zip,
             importProject,
             orbitError,

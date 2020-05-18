@@ -78,6 +78,7 @@ export function ImportTab(props: IProps) {
   const [backup] = useGlobal('backup');
   const [keyMap] = useGlobal('keyMap');
   const [project] = useGlobal('project');
+  const [coordinatorActivated] = useGlobal('coordinatorActivated');
 
   const [message, setMessage] = useState(<></>);
   const [importMessage, setImportMessage] = useState('');
@@ -137,6 +138,7 @@ export function ImportTab(props: IProps) {
       handleElectronImport(
         memory,
         backup,
+        coordinatorActivated,
         zipFile,
         importProjectToElectron,
         orbitError,
@@ -165,6 +167,7 @@ export function ImportTab(props: IProps) {
         handleElectronImport(
           memory,
           backup,
+          coordinatorActivated,
           importData.zip,
           importProjectToElectron,
           orbitError,
