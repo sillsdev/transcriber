@@ -35,5 +35,6 @@ declare module 'reactn/default' {
     errorReporter: any; // bugsnagClient
     alertOpen: boolean;
     coordinatorActivated: boolean;
+    fingerprint: string;
   }
 }

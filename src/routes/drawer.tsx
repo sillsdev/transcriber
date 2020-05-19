@@ -317,6 +317,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [remote] = useGlobal('remote');
   const [backup] = useGlobal('backup');
   const [schema] = useGlobal('schema');
+  const [fingerprint] = useGlobal('fingerprint');
   const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [isApp, setAppView] = useGlobal('appView');
   const [user] = useGlobal('user');
@@ -876,11 +877,11 @@ export function ResponsiveDrawer(props: IProps) {
         }, 1000);
       if (syncTimer.current === undefined) {
         if (!busy && !doSave) {
-          dateChanges(auth, keyMap, remote, memory, schema);
+          dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
         }
         syncTimer.current = setInterval(() => {
           if (!busy && !doSave) {
-            dateChanges(auth, keyMap, remote, memory, schema);
+            dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
           }
         }, 1000 * 100);
       }

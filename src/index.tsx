@@ -96,6 +96,7 @@ setGlobal({
   errorReporter: bugsnagClient,
   alertOpen: false,
   coordinatorActivated: false,
+  fingerprint: window.location.origin,
 });
 
 if (isElectron) {

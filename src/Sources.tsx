@@ -24,6 +24,7 @@ import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { LoadData } from './utils/loadData';
 import { orbitInfo, related } from './utils';
+import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
   schema: Schema,
@@ -35,6 +36,7 @@ export const Sources = async (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
+  setFingerprint: (fingerprint: string) => void,
   setCompleted: (valud: number) => void,
   setProjectsLoaded: (valud: string[]) => void,
   setCoordinatorActivated: (valud: boolean) => void,
@@ -63,6 +65,13 @@ export const Sources = async (
   coordinator.addSource(backup);
 
   if (!offline) {
+    var components: Component[] = await Fingerprint2.getPromise({});
+    var fp = Fingerprint2.x64hash128(
+      components.map((c) => c.value).join(''),
+      31
+    );
+    setFingerprint(fp);
+
     remote = new JSONAPISource({
       schema,
       keyMap,
@@ -74,6 +83,7 @@ export const Sources = async (
       defaultFetchSettings: {
         headers: {
           Authorization: 'Bearer ' + auth.accessToken,
+          'X-FP': fp,
         },
         timeout: 100000,
       },

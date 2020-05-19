@@ -103,6 +103,8 @@ export function Loading(props: IProps) {
   const [offline] = useGlobal('offline');
   const [bucket, setBucket] = useGlobal('bucket');
   const [remote, setRemote] = useGlobal('remote');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_fingerprint, setFingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -233,6 +235,7 @@ export function Loading(props: IProps) {
       setUser,
       setBucket,
       setRemote,
+      setFingerprint,
       setCompleted,
       setProjectsLoaded,
       setCoordinatorActivated,
