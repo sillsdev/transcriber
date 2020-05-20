@@ -817,10 +817,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   useEffect(() => {
     if (
-      defaultViewActions.indexOf(content) !== -1 ||
-      ((projRole !== 'admin' || isApp) &&
-        nonAdminView.indexOf(content) === -1) ||
-      (content === NavChoice.Tasks && !isApp)
+      content !== NavChoice.UsersAndGroups &&
+      content !== NavChoice.Organization &&
+      (defaultViewActions.indexOf(content) !== -1 ||
+        ((projRole !== 'admin' || isApp) &&
+          nonAdminView.indexOf(content) === -1) ||
+        (content === NavChoice.Tasks && !isApp))
     ) {
       defaultView();
     }
