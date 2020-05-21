@@ -802,8 +802,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchMediaUrl: actions.fetchMediaUrl,
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
-      importProjectFromElectron: actions.importProjectFromElectron,
-      importComplete: actions.importComplete,
     },
     dispatch
   ),

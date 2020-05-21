@@ -16,9 +16,10 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { TransformBuilder } from '@orbit/data';
-import { sectionNumber, sectionDescription } from '../utils';
+import { sectionNumber, sectionDescription, remoteIdNum } from '../utils';
 import PeopleIcon from '@material-ui/icons/PeopleAlt';
 import { TaskAvatar } from './TaskAvatar';
+import { UpdateRelatedRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,10 +74,14 @@ export function TaskHead(props: IProps) {
     } else {
       if (role) {
         memory.update((t: TransformBuilder) =>
-          t.replaceRelatedRecord(section, role, {
-            type: 'user',
-            id: action === assignAction ? user : '',
-          })
+          UpdateRelatedRecord(
+            t,
+            section,
+            role,
+            'user',
+            action === assignAction ? user : '',
+            remoteIdNum('user', user, memory.keyMap)
+          )
         );
       }
     }
