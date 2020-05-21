@@ -40,30 +40,16 @@ export const dateChanges = (
     const data = response.data.data as DataChange;
     const changes = data.attributes.changes;
     changes.forEach((table) => {
-      const localRecIds = table.map((r) => {
-        let localId = remoteIdGuid(r.type, r.id.toString(), keyMap);
-        if (!localId) {
-          const rec = { type: r.type, keys: { remoteId: r.id } } as any;
-          schema.initializeRecord(rec);
-          keyMap.pushRecord(rec);
-          localId = rec.id;
-        }
-        return {
-          type: r.type,
-          id: localId,
-        };
-      });
-      // pulling an Array from JsonApi fails and throws an error
-      // remote
-      //   .pull((q: QueryBuilder) => q.findRecords(localRecIds))
-      //   .then((t: Transform[]) => memory.sync(t));
-      localRecIds.forEach((r) => {
-        if (r.id) {
-          remote
-            .pull((q: QueryBuilder) => q.findRecord(r))
-            .then((t: Transform[]) => memory.sync(t));
-        }
-      });
+      if (table.length > 0) {
+        const list = table.map((t) => t.id);
+        remote
+          .pull((q: QueryBuilder) =>
+            q
+              .findRecords(table[0].type)
+              .filter({ attribute: 'id-list', value: list.join('|') })
+          )
+          .then((t: Transform[]) => memory.sync(t));
+      }
     });
     const deletes = data.attributes.deleted;
     deletes.forEach((table) => {

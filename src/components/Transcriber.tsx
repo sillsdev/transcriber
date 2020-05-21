@@ -722,9 +722,9 @@ export function Transcriber(props: IProps) {
   };
 
   const loadHistory = async () => {
-    const recs = (await memory.query((q: QueryBuilder) =>
+    const recs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('passagestatechange')
-    )) as PassageStateChange[];
+    ) as PassageStateChange[];
     if (recs && passage?.id) {
       const curStateChanges = recs.filter(
         (r) => related(r, 'passage') === passage.id
