@@ -679,6 +679,12 @@
 				<target>Sélectionnez un en-tête de colonne et utilisez CTRL-V pour ajouter des lignes au tableau.</target>
 			</segment>
 		</unit>
+		<unit id="planSheet.resequence">
+			<segment>
+				<source>Resequence</source>
+				<target>Resequene</target>
+			</segment>
+		</unit>
 		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>

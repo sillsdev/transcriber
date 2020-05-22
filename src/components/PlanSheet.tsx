@@ -91,6 +91,7 @@ interface IProps extends IStateProps {
   addPassage: (i?: number) => void;
   addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
+  resequence: () => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -107,6 +108,7 @@ export function PlanSheet(props: IProps) {
     addPassage,
     addSection,
     paste,
+    resequence,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -298,6 +300,9 @@ export function PlanSheet(props: IProps) {
       setMessage(<span>{t.useCtrlV}</span>);
     }
   };
+  const handleResequence = () => {
+    resequence();
+  };
 
   const handleSetPreventSave = (val: boolean) => {
     preventSave.current = val;
@@ -458,6 +463,17 @@ export function PlanSheet(props: IProps) {
                 >
                   {t.tablePaste}
                   <AddIcon className={classes.icon} />
+                </Button>
+                <Button
+                  key="resequence"
+                  aria-label={t.resequence}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  disabled={pasting || data.length < 2}
+                  onClick={handleResequence}
+                >
+                  {t.resequence}
                 </Button>
                 <Button
                   key="action"

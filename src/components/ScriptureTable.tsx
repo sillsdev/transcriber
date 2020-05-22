@@ -187,6 +187,10 @@ export function ScriptureTable(props: IProps) {
     return change ? [...data] : data;
   };
 
+  const handleResequence = () => {
+    setData(resequence(data));
+  };
+
   const insertAt = (arr: Array<any>, item: any, index?: number) => {
     const d2 = Array.isArray(item);
     const lastIndex = arr.length - 1;
@@ -369,9 +373,9 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
-  const getTotalSections = (total: number, row: string[]) => {
-    return total + (isValidNumber(row[cols.SectionSeq]) ? 1 : 0);
-  };
+  // const getTotalSections = (total: number, row: string[]) => {
+  //   return total + (isValidNumber(row[cols.SectionSeq]) ? 1 : 0);
+  // };
 
   const handleTablePaste = (rows: string[][]) => {
     if (validTable(rows)) {
@@ -387,8 +391,8 @@ export function ScriptureTable(props: IProps) {
       ) {
         rows.forEach(splitSectionPassage);
       }
-      const secCount = data.reduce(getTotalSections, 1);
-      rows = resequence(rows, secCount);
+      // const secCount = data.reduce(getTotalSections, 1);
+      // rows = resequence(rows, secCount);
       /* Make it clear which columns can be imported by blanking others */
       setData([
         ...data.concat(
@@ -736,6 +740,7 @@ export function ScriptureTable(props: IProps) {
         updateData={updateData}
         paste={handleTablePaste}
         lookupBook={lookupBook}
+        resequence={handleResequence}
         t={s}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />

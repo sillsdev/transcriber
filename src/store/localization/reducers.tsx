@@ -153,6 +153,7 @@ const initialState = {
 			"nonNumber": "Do not change to non-number.",
 			"pasting": "Pasting",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
+			"resequence": "Resequence",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
