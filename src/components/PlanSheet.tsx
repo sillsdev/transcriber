@@ -113,6 +113,7 @@ export function PlanSheet(props: IProps) {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
+  const [busy] = useGlobal('remoteBusy');
   const [message, setMessage] = useState(<></>);
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -135,6 +136,7 @@ export function PlanSheet(props: IProps) {
   const preventSave = useRef<boolean>(false);
   const sheetRef = useRef<any>();
   const [showRow, setShowRow] = useState(0);
+  const [savingGrid, setSavingGrid] = useState<ICell[][]>();
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -233,6 +235,9 @@ export function PlanSheet(props: IProps) {
       }
     });
     if (changes.length > 0) {
+      if (doSave) {
+        setSavingGrid(grid);
+      }
       setChanged(true);
       doUpdate(grid);
       setShowRow(changes[0].row);
@@ -420,6 +425,15 @@ export function PlanSheet(props: IProps) {
       ? bookSuggestions.map((v) => v.label)
       : [];
   }, [bookSuggestions]);
+
+  useEffect(() => {
+    if (!doSave && !busy && savingGrid) {
+      setChanged(true);
+      doUpdate(savingGrid);
+      setSavingGrid(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave, busy, savingGrid]);
 
   //console.log('plansheet render', new Date().toLocaleTimeString());
   return (
