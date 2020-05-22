@@ -1173,8 +1173,8 @@
 		</unit>
 		<unit id="mediaTab.mediaAttachments">
 			<segment>
-				<source>Media Attachments</source>
-				<target>Passage jointes pour les médias</target>
+				<source>Media Associations</source>
+				<target>Connexions aux fichiers médias</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.availablePassages">
@@ -1249,22 +1249,28 @@
 				<target>Match terminé : pas de nouvelles associations</target>
 			</segment>
 		</unit>
-		<unit id="mediaTab.no">
+		<unit id="mediaTab.none">
 			<segment>
-				<source>No</source>
-				<target>Non</target>
+				<source>None</source>
+				<target>Aucune</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.proposed">
 			<segment>
-				<source>Prop</source>
-				<target>Prop</target>
+				<source>Proposed</source>
+				<target>Proposé</target>
 			</segment>
 		</unit>
-		<unit id="mediaTab.yes">
+		<unit id="mediaTab.all">
 			<segment>
-				<source>Yes</source>
-				<target>Oui</target>
+				<source>All</source>
+				<target>Toutes</target>
+			</segment>
+		</unit>
+		<unit id="mediaTab.viewAssociations">
+			<segment>
+				<source>View Associations</source>
+				<target>Voir les associations</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.saving">
@@ -1282,7 +1288,7 @@
 		<unit id="passageMedia.mediaAttached">
          <segment>
             <source>Media Attached</source>
-            <target>Médias attachés</target>
+         	<target>Médias ci-joint</target>
          </segment>
       </unit>
       <unit id="passageMedia.mediaDetached">

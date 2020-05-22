@@ -239,7 +239,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "selectRows": string;
     "unsupported": string;
     "loadingTable": string;
-    "mediaAttachments": string;
+    "mediaAssociations": string;
     "availablePassages": string;
     "noMediaAttached": string;
     "noPassageDetach": string;
@@ -252,9 +252,10 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "showHideFilter": string;
     "matchAdded": string;
     "noMatch": string;
-    "no": string;
+    "none": string;
     "proposed": string;
-    "yes": string;
+    "all": string;
+    "viewAssociations": string;
     "saving": string;
     "savingComplete": string;
 };

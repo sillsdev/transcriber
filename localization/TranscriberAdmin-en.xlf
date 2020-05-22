@@ -1174,9 +1174,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.mediaAttachments">
+      <unit id="mediaTab.mediaAssociations">
          <segment>
-            <source>Media Attachments</source>
+            <source>Media Associations</source>
             <target/>
          </segment>
       </unit>
@@ -1252,21 +1252,27 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.no">
+      <unit id="mediaTab.none">
          <segment>
-            <source>No</source>
+            <source>None</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaTab.proposed">
          <segment>
-            <source>Prop</source>
+            <source>Proposed</source>
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.yes">
+      <unit id="mediaTab.all">
          <segment>
-            <source>Yes</source>
+            <source>All</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.viewAssociations">
+         <segment>
+            <source>View Associations</source>
             <target/>
          </segment>
       </unit>

@@ -1370,8 +1370,8 @@
                     <context context-type="sourcefile">MediaTab.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="mediaTab.mediaAttachments">
-        		<source>Media Attachments</source>
+        	<trans-unit id="mediaTab.mediaAssociations">
+        		<source>Media Associations</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">MediaTab.tsx</context>
@@ -1461,22 +1461,29 @@
         			<context context-type="sourcefile">MediaTab.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="mediaTab.no">
-        		<source>No</source>
+        	<trans-unit id="mediaTab.none">
+        		<source>None</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">MediaTab.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="mediaTab.proposed">
-        		<source>Prop</source>
+        		<source>Proposed</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">MediaTab.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="mediaTab.yes">
-        		<source>Yes</source>
+        	<trans-unit id="mediaTab.all">
+        		<source>All</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.viewAssociations">
+        		<source>View Associations</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">MediaTab.tsx</context>

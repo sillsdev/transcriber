@@ -340,6 +340,7 @@ export function MediaTab(props: IProps) {
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
+  const [attachVisible, setAttachVisible] = useState(attachTool);
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
   const [mcheck, setMCheck] = useState(-1);
@@ -350,7 +351,10 @@ export function MediaTab(props: IProps) {
     { name: 'playIcon', title: '\u00A0' },
     { name: 'fileName', title: t.fileName },
     { name: 'section', title: t.section },
-    { name: 'reference', title: t.reference },
+    {
+      name: 'reference',
+      title: attachVisible ? t.viewAssociations : t.reference,
+    },
     { name: 'duration', title: t.duration },
     { name: 'size', title: t.size },
     { name: 'version', title: t.version },
@@ -362,7 +366,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'playIcon', width: 50 },
     { columnName: 'fileName', width: 220 },
     { columnName: 'section', width: 150 },
-    { columnName: 'reference', width: 150 },
+    { columnName: 'reference', width: attachVisible ? 165 : 150 },
     { columnName: 'duration', width: 100 },
     { columnName: 'size', width: 100 },
     { columnName: 'version', width: 100 },
@@ -390,7 +394,7 @@ export function MediaTab(props: IProps) {
   const [filter, setFilter] = useState(false);
   const mBandHead = [
     {
-      title: <Typography variant="h6">{t.mediaAttachments}</Typography>,
+      title: <Typography variant="h6">{t.mediaAssociations}</Typography>,
       children: [
         { columnName: 'fileName' },
         { columnName: 'section' },
@@ -445,7 +449,6 @@ export function MediaTab(props: IProps) {
   const [pageSizes, setPageSizes] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [complete, setComplete] = useState(0);
-  const [attachVisible, setAttachVisible] = useState(attachTool);
   const [autoMatch, setAutoMatch] = useState(false);
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
@@ -984,7 +987,7 @@ export function MediaTab(props: IProps) {
   const marks = [
     {
       value: 0,
-      label: t.no,
+      label: t.none,
     },
     {
       value: 1,
@@ -992,7 +995,7 @@ export function MediaTab(props: IProps) {
     },
     {
       value: 2,
-      label: t.yes,
+      label: t.all,
     },
   ];
 

@@ -12,6 +12,7 @@ import {
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
+import grey from '@material-ui/core/colors/grey';
 import ScriptureTable from '../components/ScriptureTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     status: {
       fontSize: 'x-small',
+      color: grey[400],
     },
   })
 );
