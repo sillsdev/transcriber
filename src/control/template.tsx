@@ -99,7 +99,7 @@ export function Template(props: ITemplateProps) {
   const [templateInfo, setTemplateInfo] = React.useState(false);
 
   const handleTemplateChange = (e: any) => {
-    setTemplate(e.target.current);
+    setTemplate(e.target.value);
   };
 
   const handleTemplateInfo = () => {

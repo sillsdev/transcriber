@@ -37,6 +37,7 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import { Filter } from '@devexpress/dx-react-grid';
+import { tabs } from './PlanTabs';
 import MediaUpload, { UploadType } from './MediaUpload';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
@@ -330,6 +331,9 @@ export function MediaTab(props: IProps) {
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [user] = useGlobal('user');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_tab, setTab] = useGlobal('tab');
+
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
@@ -765,6 +769,7 @@ export function MediaTab(props: IProps) {
         uploadComplete();
         setComplete(0);
         setAttachVisible(true);
+        setTab(tabs.associate);
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {

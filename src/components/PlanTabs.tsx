@@ -22,6 +22,13 @@ import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { related } from '../utils';
 
 export const TabHeight = 48;
+export enum tabs {
+  sectionPassage = 0,
+  media = 1,
+  associate = 2,
+  assignment = 3,
+  transcription = 4,
+}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,7 +68,6 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const {
     t,
     changeTab,
@@ -118,14 +124,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 
   const statusMessage = (msg: string, val1: number, val2: number) =>
     msg.replace('{1}', val1.toString()).replace('{2}', val2.toString());
-
-  enum tabs {
-    sectionPassage = 0,
-    media = 1,
-    associate = 2,
-    assignment = 3,
-    transcription = 4,
-  }
 
   return (
     <div className={classes.root}>
