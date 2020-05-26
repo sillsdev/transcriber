@@ -1,4 +1,4 @@
-import { remoteIdGuid } from '.';
+import { remoteIdGuid, remoteIdNum } from '.';
 import { isArray } from 'util';
 import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
 import JSONAPISource, {
@@ -17,6 +17,7 @@ import Memory from '@orbit/memory';
 import OrgData from '../model/orgData';
 import { Project, IApiError } from '../model';
 import { orbitInfo } from './infoMsg';
+import ProjData from '../model/projData';
 
 const completePerTable = 3;
 
@@ -57,6 +58,7 @@ export function insertData(
           !isArray(item.relationships[rel].data) &&
           (!rec.relationships ||
             !rec.relationships[rel] ||
+            !rec.relationships[rel].data ||
             (item.relationships[rel].data as RecordIdentity).id !==
               (rec.relationships[rel].data as RecordIdentity).id)
         )
@@ -88,58 +90,60 @@ export function insertData(
     }
   }
 */
-export async function LoadData(
+async function processData(
+  start: number,
+  data: string,
+  ser: JSONAPISerializerCustom,
   memory: Memory,
-  backup: IndexedDBSource,
-  remote: JSONAPISource,
-  setCompleted: (valud: number) => void,
+  _backup: IndexedDBSource,
+  tb: TransformBuilder,
+  setCompleted: undefined | ((valud: number) => void),
   orbitError: (ex: IApiError) => void
-): Promise<boolean> {
-  var tb: TransformBuilder = new TransformBuilder();
+) {
+  var x = JSON.parse(data);
+  var tables: ResourceDocument[] = x.data;
+  var oparray: Operation[] = [];
+  var completed: number = 15 + start * completePerTable;
 
-  async function processData(
-    start: number,
-    data: string,
-    ser: JSONAPISerializerCustom
-  ) {
-    var x = JSON.parse(data);
-    var tables: ResourceDocument[] = x.data;
-    var oparray: Operation[] = [];
-    var completed: number = 15 + start * completePerTable;
-
-    tables.forEach((t) => {
-      var json = ser.deserialize(t);
-      if (isArray(json.data)) {
-        //console.log(json.data[0].type, json.data.length);
-        json.data.forEach((item) =>
-          insertData(item, memory, tb, oparray, orbitError, false, false)
-        );
-      } else {
-        insertData(json.data, memory, tb, oparray, orbitError, false, false);
-      }
-      completed += completePerTable;
-      setCompleted(completed);
-    });
-    try {
-      //this was slower than just waiting for them both separately
-      //await Promise.all([memory.update(oparray), backup.push(oparray)]);
-      var transform = {
-        id: 'xyz' + Date.now().toString(),
-        operations: oparray,
-      };
-      await memory
-        .sync(transform)
-        .then(() => console.log('memory synced'))
-        .catch((err) => orbitError(orbitInfo(err, 'Sync error')));
-      await backup
-        .sync(transform)
-        .then((x) => console.log('backup sync complete'))
-        .catch((err) => orbitError(orbitInfo(err, 'Backup sync failed')));
-    } catch (err) {
-      orbitError(orbitInfo(err, 'Backup update error'));
+  tables.forEach((t) => {
+    var json = ser.deserialize(t);
+    if (isArray(json.data)) {
+      //console.log(json.data[0].type, json.data.length);
+      json.data.forEach((item) =>
+        insertData(item, memory, tb, oparray, orbitError, false, false)
+      );
+    } else {
+      insertData(json.data, memory, tb, oparray, orbitError, false, false);
     }
+    completed += completePerTable;
+    if (setCompleted) setCompleted(completed);
+  });
+  try {
+    //this was slower than just waiting for them both separately
+    //await Promise.all([memory.update(oparray), backup.push(oparray)]);
+    var transform = {
+      id: 'xyz' + Date.now().toString(),
+      operations: oparray,
+    };
+    await memory
+      .sync(transform)
+      .then(() => {
+        console.log('memory synced');
+      })
+      .catch((err) => orbitError(orbitInfo(err, 'Sync error')));
+    /* don't think we need this because we're doing this after the coordinator now
+    ** but if we run into issues with the backup not being complete,
+    ** move loadData back up before the coordinator and put this back in
+    await backup
+      .sync(transform)
+      .then((x) => console.log('backup sync complete'))
+      .catch((err) => orbitError(orbitInfo(err, 'Backup sync failed'))); */
+  } catch (err) {
+    orbitError(orbitInfo(err, 'Backup update error'));
   }
+}
 
+function GetSerializer(memory: Memory) {
   const s: JSONAPISerializerSettings = {
     schema: memory.schema,
     keyMap: memory.keyMap,
@@ -148,6 +152,18 @@ export async function LoadData(
   ser.resourceKey = () => {
     return 'remoteId';
   };
+  return ser;
+}
+
+export async function LoadData(
+  memory: Memory,
+  backup: IndexedDBSource,
+  remote: JSONAPISource,
+  setCompleted: (valud: number) => void,
+  orbitError: (ex: IApiError) => void
+): Promise<boolean> {
+  var tb: TransformBuilder = new TransformBuilder();
+  const ser = GetSerializer(memory);
 
   try {
     let start = 0;
@@ -173,7 +189,16 @@ export async function LoadData(
 
       if (transform.length > 0) {
         var r: OrgData = transform[0];
-        await processData(start, r.attributes.json, ser);
+        await processData(
+          start,
+          r.attributes.json,
+          ser,
+          memory,
+          backup,
+          tb,
+          setCompleted,
+          orbitError
+        );
         start = r.attributes.startnext;
       } else {
         //bail - never expect to be here
@@ -184,4 +209,80 @@ export async function LoadData(
     console.log(rejected);
   }
   return false;
+}
+export async function LoadProjectData(
+  project: string,
+  memory: Memory,
+  remote: JSONAPISource,
+  backup: IndexedDBSource,
+  projectsLoaded: string[],
+  setProjectsLoaded: (valud: string[]) => void,
+  orbitError: (ex: IApiError) => void
+): Promise<boolean> {
+  if (projectsLoaded.includes(project)) return true;
+  if (!remote) return false;
+
+  const projectid = remoteIdNum('project', project, memory.keyMap);
+  var tb: TransformBuilder = new TransformBuilder();
+  const ser = GetSerializer(memory);
+
+  try {
+    let start = 0;
+    do {
+      var transform: ProjData[] = (await remote.query(
+        // eslint-disable-next-line no-loop-func
+        (q: QueryBuilder) =>
+          q
+            .findRecords('projdata')
+            .filter(
+              { attribute: 'start-index', value: start },
+              { attribute: 'project-id', value: projectid }
+            ),
+        {
+          label: 'Get Project Data',
+          sources: {
+            remote: {
+              settings: {
+                timeout: 35000,
+              },
+            },
+          },
+        }
+      )) as any;
+
+      if (transform.length > 0) {
+        var r: ProjData = transform[0];
+        await processData(
+          start,
+          r.attributes.json,
+          ser,
+          memory,
+          backup,
+          tb,
+          undefined,
+          orbitError
+        );
+        start = r.attributes.startnext;
+      } else {
+        //bail - never expect to be here
+        start = -1;
+      }
+    } while (start > -1);
+  } catch (rejected) {
+    console.log(rejected);
+    return false;
+  }
+  AddProjectLoaded(project, projectsLoaded, setProjectsLoaded);
+  return true;
+}
+
+export function AddProjectLoaded(
+  project: string,
+  projectsLoaded: string[],
+  setProjectsLoaded: (valud: string[]) => void
+) {
+  if (projectsLoaded.includes(project)) return;
+  var pl = [...projectsLoaded];
+  pl.push(project);
+  setProjectsLoaded(pl);
 }

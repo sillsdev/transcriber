@@ -19,7 +19,8 @@ export const dateChanges = (
   keyMap: KeyMap,
   remote: JSONAPISource,
   memory: Memory,
-  schema: Schema
+  schema: Schema,
+  fingerprint: string
 ) => {
   let lastTime = localStorage.getItem('lastTime');
   if (!lastTime) lastTime = currentDateTime(); // should not happen
@@ -29,45 +30,31 @@ export const dateChanges = (
       '/api/datachanges/since/' +
       lastTime +
       '?origin=' +
-      window.location.origin,
+      fingerprint,
     {
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,
       },
     }
-  ).then(response => {
+  ).then((response) => {
     const data = response.data.data as DataChange;
     const changes = data.attributes.changes;
-    changes.forEach(table => {
-      const localRecIds = table.map(r => {
-        let localId = remoteIdGuid(r.type, r.id.toString(), keyMap);
-        if (!localId) {
-          const rec = { type: r.type, keys: { remoteId: r.id } } as any;
-          schema.initializeRecord(rec);
-          keyMap.pushRecord(rec);
-          localId = rec.id;
-        }
-        return {
-          type: r.type,
-          id: localId,
-        };
-      });
-      // pulling an Array from JsonApi fails and throws an error
-      // remote
-      //   .pull((q: QueryBuilder) => q.findRecords(localRecIds))
-      //   .then((t: Transform[]) => memory.sync(t));
-      localRecIds.forEach(r => {
-        if (r.id) {
-          remote
-            .pull((q: QueryBuilder) => q.findRecord(r))
-            .then((t: Transform[]) => memory.sync(t));
-        }
-      });
+    changes.forEach((table) => {
+      if (table.length > 0) {
+        const list = table.map((t) => t.id);
+        remote
+          .pull((q: QueryBuilder) =>
+            q
+              .findRecords(table[0].type)
+              .filter({ attribute: 'id-list', value: list.join('|') })
+          )
+          .then((t: Transform[]) => memory.sync(t));
+      }
     });
     const deletes = data.attributes.deleted;
-    deletes.forEach(table => {
+    deletes.forEach((table) => {
       let operations: RemoveRecordOperation[] = [];
-      table.forEach(r => {
+      table.forEach((r) => {
         const localId = remoteIdGuid(r.type, r.id.toString(), keyMap);
         if (localId) {
           operations.push({

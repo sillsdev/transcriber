@@ -4,7 +4,6 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Axios from 'axios';
 import {
   IState,
   IMainStrings,
@@ -99,6 +98,7 @@ import { dateChanges } from './dateChanges';
 import { getOrgs } from '../utils/getOrgs';
 import { DataPath } from '../utils/DataPath';
 import { IAxiosStatus } from '../store/AxiosStatus';
+import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
@@ -270,6 +270,7 @@ interface IStateProps {
 
 interface IDispatchProps {
   resetOrbitError: typeof actions.resetOrbitError;
+  orbitError: typeof actions.doOrbitError;
 }
 
 interface IRecordProps {
@@ -307,13 +308,17 @@ export function ResponsiveDrawer(props: IProps) {
     groupMemberships,
     roles,
     mediafiles,
+    orbitError,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
   const [keyMap] = useGlobal('keyMap');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
+  const [backup] = useGlobal('backup');
   const [schema] = useGlobal('schema');
+  const [fingerprint] = useGlobal('fingerprint');
+  const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [isApp, setAppView] = useGlobal('appView');
   const [user] = useGlobal('user');
   const [errorReporter] = useGlobal('errorReporter');
@@ -425,6 +430,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleFinishOrgAdd = () => {
     setAddOrg(false);
+    setProjRole('admin');
     setTimeout(() => handleAddProject(), 1000);
   };
 
@@ -484,6 +490,8 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
     setProjOptions([]);
+    if (projectId)
+      AddProjectLoaded(projectId, projectsLoaded, setProjectsLoaded);
     if (to) {
       setAddProject(false);
       setProject(projectId || '');
@@ -578,11 +586,26 @@ export function ResponsiveDrawer(props: IProps) {
     setAlertOpen(false);
     setChanged(false);
   };
+  const finishConfirmed = (
+    savedMethod: (() => any) | undefined,
+    tryCount: number
+  ) => {
+    setTimeout(() => {
+      if (remote.requestQueue.length === 0) {
+        if (savedMethod) savedMethod();
+      } else {
+        if (tryCount > 0) finishConfirmed(savedMethod, tryCount - 1);
+      }
+    }, 2000);
+  };
   const handleSaveConfirmed = () => {
+    const savedMethod = saveConfirm.current;
+    saveConfirm.current = undefined;
     setMessage(<span>{t.saving}</span>);
     setChanged(false);
     setDoSave(true);
     setAlertOpen(false);
+    finishConfirmed(savedMethod, 8);
   };
   const getRole = (table: Record[], relate: string, id: string) => {
     const memberRecs = table.filter(
@@ -601,9 +624,9 @@ export function ResponsiveDrawer(props: IProps) {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getProjs = async () => {
-    let projs: Project[] = await memory.query((q: QueryBuilder) =>
+    let projs: Project[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')
-    );
+    ) as Project[];
     if (isElectron) {
       const groupids = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
@@ -709,21 +732,8 @@ export function ResponsiveDrawer(props: IProps) {
           content !== NavChoice.UsersAndGroups &&
           content !== NavChoice.Organization
         ) {
-          if (!offline) {
-            Axios.get(API_CONFIG.host + '/api/projects/', {
-              headers: {
-                Authorization: 'Bearer ' + auth.accessToken,
-              },
-            }).then((strings) => {
-              const data = strings.data.data as Record[];
-              const orgRemId = localStorage.getItem('lastOrg');
-              const filtered = data.filter(
-                (r) => related(r, 'organization') === orgRemId
-              );
-              if (filtered.length === 0 && orgRole === 'admin') {
-                handleAddProject();
-              }
-            });
+          if (!offline && orgRole === 'admin') {
+            handleAddProject();
           }
         }
       }
@@ -755,6 +765,19 @@ export function ResponsiveDrawer(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projOptions, project, addProject, busy]);
+
+  useEffect(() => {
+    LoadProjectData(
+      project,
+      memory,
+      remote,
+      backup,
+      projectsLoaded,
+      setProjectsLoaded,
+      orbitError
+    );
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [project]);
 
   useEffect(() => {
     try {
@@ -794,10 +817,12 @@ export function ResponsiveDrawer(props: IProps) {
 
   useEffect(() => {
     if (
-      defaultViewActions.indexOf(content) !== -1 ||
-      ((projRole !== 'admin' || isApp) &&
-        nonAdminView.indexOf(content) === -1) ||
-      (content === NavChoice.Tasks && !isApp)
+      content !== NavChoice.UsersAndGroups &&
+      content !== NavChoice.Organization &&
+      (defaultViewActions.indexOf(content) !== -1 ||
+        ((projRole !== 'admin' || isApp) &&
+          nonAdminView.indexOf(content) === -1) ||
+        (content === NavChoice.Tasks && !isApp))
     ) {
       defaultView();
     }
@@ -854,11 +879,11 @@ export function ResponsiveDrawer(props: IProps) {
         }, 1000);
       if (syncTimer.current === undefined) {
         if (!busy && !doSave) {
-          dateChanges(auth, keyMap, remote, memory, schema);
+          dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
         }
         syncTimer.current = setInterval(() => {
           if (!busy && !doSave) {
-            dateChanges(auth, keyMap, remote, memory, schema);
+            dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
           }
         }, 1000 * 100);
       }
@@ -1345,6 +1370,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       resetOrbitError: actions.resetOrbitError,
+      orbitError: actions.doOrbitError,
     },
     dispatch
   ),

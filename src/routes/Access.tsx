@@ -135,6 +135,7 @@ export function Access(props: IProps) {
   } = props;
   const [memory] = useGlobal('memory');
   const [backup] = useGlobal('backup');
+  const [coordinatorActivated] = useGlobal('coordinatorActivated');
   const [offline, setOffline] = useGlobal('offline');
   const [message, setMessage] = useState(<></>);
   const [confirmAction, setConfirmAction] = useState('');
@@ -162,6 +163,7 @@ export function Access(props: IProps) {
       handleElectronImport(
         memory,
         backup,
+        coordinatorActivated,
         zipFile,
         importProject,
         orbitError,
@@ -187,6 +189,7 @@ export function Access(props: IProps) {
           handleElectronImport(
             memory,
             backup,
+            coordinatorActivated,
             importData.zip,
             importProject,
             orbitError,
@@ -282,14 +285,15 @@ export function Access(props: IProps) {
           <AppBar position="fixed" className={classes.progress} color="inherit">
             <LinearProgress variant="indeterminate" />
           </AppBar>
-        )}{' '}
+        )}
       </AppBar>
       {isElectron && (
         <div className={classes.container}>
           <Paper className={classes.paper}>
             <Typography variant="body1" className={classes.dialogHeader}>
               {importStatus ? (
-                importStatus.statusMsg
+                importStatus.statusMsg +
+                (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
               ) : users.length > 0 ? (
                 t.accessSilTranscriber
               ) : (
@@ -349,7 +353,6 @@ export function Access(props: IProps) {
                 </div>
               </Grid>
             </Grid>
-            {/* <Typography>{'Paratext Path: ' + ptPath}</Typography> */}
           </Paper>
           {confirmAction === '' || (
             <Confirm

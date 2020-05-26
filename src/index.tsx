@@ -86,6 +86,7 @@ setGlobal({
   remoteBusy: false,
   doSave: false,
   changed: false,
+  projectsLoaded: [],
   importexportBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,
@@ -94,6 +95,8 @@ setGlobal({
   offline: isElectron,
   errorReporter: bugsnagClient,
   alertOpen: false,
+  coordinatorActivated: false,
+  fingerprint: window.location.origin,
 });
 
 if (isElectron) {

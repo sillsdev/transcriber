@@ -25,6 +25,7 @@ declare module 'reactn/default' {
     remoteBusy: boolean;
     doSave: boolean;
     changed: boolean;
+    projectsLoaded: string[];
     importexportBusy: boolean;
     autoOpenAddMedia: boolean; // open a dialog
     editUserId: string | null;
@@ -33,5 +34,7 @@ declare module 'reactn/default' {
     offline: boolean;
     errorReporter: any; // bugsnagClient
     alertOpen: boolean;
+    coordinatorActivated: boolean;
+    fingerprint: string;
   }
 }

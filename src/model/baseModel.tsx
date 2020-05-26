@@ -3,6 +3,7 @@ import {
   TransformBuilder,
   UpdateRecordOperation,
   AddRecordOperation,
+  ReplaceRelatedRecordOperation,
 } from '@orbit/data';
 import { schema } from '../schema';
 import { currentDateTime } from '../utils/currentDateTime';
@@ -36,4 +37,20 @@ export const AddRecord = (
   rec.attributes.dateUpdated = rec.attributes.dateCreated;
   rec.attributes.lastModifiedBy = user;
   return t.addRecord(rec);
+};
+
+export const UpdateRelatedRecord = (
+  t: TransformBuilder,
+  rec: BaseModel,
+  relationship: string,
+  relatedType: string,
+  newId: string,
+  user: number
+): ReplaceRelatedRecordOperation => {
+  rec.attributes.dateUpdated = currentDateTime();
+  rec.attributes.lastModifiedBy = user;
+  return t.replaceRelatedRecord(rec, relationship, {
+    type: relatedType,
+    id: newId,
+  });
 };

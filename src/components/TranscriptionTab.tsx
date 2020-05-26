@@ -62,6 +62,7 @@ import {
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
+import { getMediaInPlans } from '../utils/getMediaInPlans';
 
 const ActionHeight = 52;
 
@@ -270,6 +271,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [exporting, setExporting] = useState(false);
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -304,17 +306,28 @@ export function TranscriptionTab(props: IProps) {
     return err.errMsg;
   };
   const doProjectExport = (exportType: string) => {
+    const mediaFiles = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('mediafile')
+    ) as MediaFile[];
+    const plans = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('plan')
+    ) as Plan[];
+
+    var projectplans = plans.filter((pl) => related(pl, 'project') === project);
+    let media: MediaFile[] = getMediaInPlans(projectplans, mediaFiles);
     exportProject(
       exportType,
       memory,
       remoteIdNum('project', project, keyMap),
       remoteIdNum('user', user, keyMap),
+      media.length,
       auth,
       errorReporter,
       t.exportingProject
     );
   };
   const handleProjectExport = () => {
+    setExporting(true);
     if (isElectron) setOpenExport(true);
     else doProjectExport('ptf');
   };
@@ -332,6 +345,7 @@ export function TranscriptionTab(props: IProps) {
   ) => {
     const copyData: string[] = [];
     projectPlans.forEach((planRec) => {
+      let planName = planColumn ? planRec?.attributes?.name : '';
       sections
         .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
         .sort(sectionCompare)
@@ -345,6 +359,10 @@ export function TranscriptionTab(props: IProps) {
             const ref = getReference(passage, bookData);
             const transcription = getTranscription(passage.id);
             if (transcription !== '') {
+              if (planName && planName !== '') {
+                copyData.push(`*****\n${planName}\n`);
+                planName = '';
+              }
               if (sectionHead !== '') {
                 copyData.push(sectionHead);
                 sectionHead = '';
@@ -449,14 +467,18 @@ export function TranscriptionTab(props: IProps) {
         showMessage(t.error, translateError(exportStatus));
         exportComplete();
         setBusy(false);
+        setExporting(false);
       } else {
         if (exportStatus.statusMsg) {
           setBusy(true);
           showMessage('', exportStatus.statusMsg);
         }
-        if (exportStatus.complete && exportFile && exportName === '') {
-          setExportName(exportFile.data.attributes.message);
-          setExportUrl(exportFile.data.attributes.fileurl);
+        if (exportStatus.complete) {
+          setExporting(false);
+          if (exportFile && exportName === '') {
+            setExportName(exportFile.data.attributes.message);
+            setExportUrl(exportFile.data.attributes.fileurl);
+          }
         }
       }
     }
@@ -581,7 +603,7 @@ export function TranscriptionTab(props: IProps) {
   const DataCell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'action') {
-      if (row.parentId !== '') {
+      if (row.parentId && row.parentId !== '') {
         const passRec = memory.cache.query((q: QueryBuilder) =>
           q.findRecord({ type: 'passage', id: row.id })
         ) as Passage;
@@ -608,7 +630,10 @@ export function TranscriptionTab(props: IProps) {
       setOpenExport(false);
       doProjectExport('itf');
     };
-    const closeNoChoice = () => setOpenExport(false);
+    const closeNoChoice = () => {
+      setOpenExport(false);
+      setExporting(false);
+    };
 
     return (
       <Dialog
@@ -647,7 +672,7 @@ export function TranscriptionTab(props: IProps) {
           color="default"
         >
           <div className={classes.actions}>
-            {planColumn ? (
+            {planColumn && (
               <Button
                 key="export"
                 aria-label={t.exportProject}
@@ -656,22 +681,22 @@ export function TranscriptionTab(props: IProps) {
                 className={classes.button}
                 onClick={handleProjectExport}
                 title={t.exportProject}
+                disabled={exporting}
               >
                 {t.exportProject}
               </Button>
-            ) : (
-              <Button
-                key="copy"
-                aria-label={'Copy Plan'}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleCopyPlan}
-                title={'Copy Transcription(s) to Clipboard'}
-              >
-                {'Copy Transcription(s)'}
-              </Button>
             )}
+            <Button
+              key="copy"
+              aria-label={t.copyTranscriptions}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleCopyPlan}
+              title={t.copyTip}
+            >
+              {t.copyTranscriptions}
+            </Button>
             {planColumn && isElectron && projects.length > 1 && (
               <Button
                 key="backup"
@@ -693,7 +718,7 @@ export function TranscriptionTab(props: IProps) {
               color="primary"
               className={classes.button}
               onClick={handleFilter}
-              title={'Show/Hide filter rows'}
+              title={t.showHideFilter}
             >
               {t.filter}
               {filter ? (
@@ -777,8 +802,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchMediaUrl: actions.fetchMediaUrl,
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
-      importProjectFromElectron: actions.importProjectFromElectron,
-      importComplete: actions.importComplete,
     },
     dispatch
   ),

@@ -32,9 +32,16 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
-import { validateEmail, related, getRoleId, getUserById } from '../utils';
+import {
+  validateEmail,
+  related,
+  getRoleId,
+  getUserById,
+  remoteIdNum,
+} from '../utils';
 import { schema } from '../schema';
 import { API_CONFIG } from '../api-variable';
+import { AddRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -153,7 +160,7 @@ function Invite(props: IProps) {
     schema.initializeRecord(invitation);
 
     await memory.update((t: TransformBuilder) => [
-      t.addRecord(invitation),
+      AddRecord(t, invitation, remoteIdNum('user', user, memory.keyMap)),
       t.replaceRelatedRecord(
         { type: 'invitation', id: invitation.id },
         'organization',

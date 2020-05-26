@@ -17,7 +17,7 @@ const initialState = {
 	}),
 	"electronImport": new LocalizedStrings({
 		"en": {
-			"importPending": "Import In Progress...",
+			"importPending": "Import In Progress...{0}%",
 			"importComplete": "Import Complete",
 			"importOldFile": "This file was not exported from the latest version.  Reexport your PTF file from the online version.",
 			"ptfError": "Not a valid Portable Transcriber File",
@@ -48,6 +48,7 @@ const initialState = {
 			"delete": "Delete",
 			"filter": "Filter",
 			"selectRows": "Please select row(s) to {0}.",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"alert": new LocalizedStrings({
@@ -129,6 +130,7 @@ const initialState = {
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"choosePlan": "Choose a Project Plan",
 			"loadingTable": "Loading data",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"planSheet": new LocalizedStrings({
@@ -149,6 +151,9 @@ const initialState = {
 			"tablePaste": "Paste Table",
 			"bookSelect": "Select Book...",
 			"nonNumber": "Do not change to non-number.",
+			"pasting": "Pasting",
+			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
+			"resequence": "Resequence",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -185,6 +190,7 @@ const initialState = {
 			"editor": "Editor",
 			"selectRowsToAssign": "Please select row(s) to assign.",
 			"selectRowsToRemove": "Please select row(s) to remove assignment.",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"assignSection": new LocalizedStrings({
@@ -202,9 +208,13 @@ const initialState = {
 	"planTabs": new LocalizedStrings({
 		"en": {
 			"sectionsPassages": "Sections & Passages",
+			"passageStatus": "{1} of {2} passages",
+			"sectionStatus": "{1} of {2} sections",
+			"mediaStatus": "{1} of {2} media files",
 			"media": "Media",
 			"assignments": "Assignments",
 			"transcriptions": "Transcriptions",
+			"associations": "Associations",
 		}
 	}),
 	"planAdd": new LocalizedStrings({
@@ -249,6 +259,25 @@ const initialState = {
 			"selectRows": "Please select row(s) to {0}.",
 			"unsupported": "File {0} is an unsupported file type.",
 			"loadingTable": "Loading data",
+			"mediaAssociations": "Media Associations",
+			"availablePassages": "Available Passages",
+			"noMediaAttached": "No media files are checked",
+			"noPassageDetach": "Passages are not used for detach",
+			"noPassageAttached": "{0} has no passage attached",
+			"fileAttached": "File already attached",
+			"passageAttached": "Passage already attached",
+			"save": "Save",
+			"detach": "Detach",
+			"autoMatch": "Auto Match",
+			"showHideFilter": "Show/Hide filter rows",
+			"matchAdded": "Match complete: {0} new associations",
+			"noMatch": "Match complete: no new associations",
+			"none": "None",
+			"proposed": "Proposed",
+			"all": "All",
+			"viewAssociations": "View Associations",
+			"saving": "Saving...",
+			"savingComplete": "Saving complete.",
 		}
 	}),
 	"passageMedia": new LocalizedStrings({
@@ -337,6 +366,25 @@ const initialState = {
 			"invalidITF": "Not a valid Incremental Transcriber File (ITF).",
 			"invalidProject": "ITF File does not contain current project.",
 			"importComplete": "Import Complete",
+			"plan": "Plan",
+			"section": "Section",
+			"passage": "Passage",
+			"other": "Other",
+			"old": "Previous Value",
+			"imported": "Imported Value",
+			"transcription": "Transcription",
+			"state": "State",
+			"editor": "Editor",
+			"transcriber": "Transcriber",
+			"fontsize": "Font Size",
+			"username": "Name",
+			"given": "Given Name",
+			"family": "Family Name",
+			"phone": "Phone",
+			"timezone": "Time zone",
+			"locale": "Preferred Language",
+			"filter": "Filter",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"transcriptionTab": new LocalizedStrings({
@@ -350,6 +398,9 @@ const initialState = {
 			"plan": "Plan",
 			"elan": "Elan",
 			"export": "Export",
+			"copyTranscriptions": "Copy Transcriptions",
+			"copyTip": "Copy transcriptions to Clipboard",
+			"showHideFilter": "Show/Hide filter rows",
 			"cantCopy": "Unable to copy to clipboard",
 			"exportProject": "Export Project",
 			"electronBackup": "Backup All Projects",
@@ -358,7 +409,7 @@ const initialState = {
 			"exportPTFtype": "Export Project (ptf)",
 			"exportITFtype": "Incremental Changes (itf)",
 			"cancel": "Cancel",
-			"exportingProject": "Creating export file",
+			"exportingProject": "Exporting...{0}%",
 			"error": "Export Error",
 			"downloading": "Creation complete. Downloading {0}",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
@@ -392,6 +443,7 @@ const initialState = {
 			"removeSelected": "{0} active projects depend on this group. Assign each project to some other group before deleting this group.",
 			"addGroup": "Add Group",
 			"selectRows": "Please select row(s) to {0}.",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"groupAdd": new LocalizedStrings({
@@ -529,6 +581,7 @@ const initialState = {
 			"filter": "Filter",
 			"selectRows": "Please select row(s) to {0}.",
 			"noData": "No invitations",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"orgSettings": new LocalizedStrings({
@@ -619,6 +672,7 @@ const initialState = {
 			"paratextLocal": "Paratext Local",
 			"render": "Render",
 			"onestory": "One Story",
+			"showHideFilter": "Show/Hide filter rows",
 		}
 	}),
 	"transcriber": new LocalizedStrings({
@@ -645,7 +699,7 @@ const initialState = {
 			"saveTip": "Save changes and comment",
 			"saveReviewTip": "Save position and comment",
 			"noMedia": "Created task",
-			"transcribeReady": "Attached recording",
+			"transcribeReady": "Ready For Transcription",
 			"transcribing": "Started to transcribe",
 			"transcribed": "Submitted task for review",
 			"reviewing": "Started to review",
@@ -750,6 +804,21 @@ const initialState = {
 			"electronNotReady": "This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.",
 		}
 	}),
+	"template": new LocalizedStrings({
+		"en": {
+			"projectCode": "Project Code",
+			"language": "Language BCP47 code",
+			"book": "Paratext book identifier",
+			"section": "Section number",
+			"passage": "Passage number(within section)",
+			"chapter": "Chapter number",
+			"beginning": "Starting verse number",
+			"end": "Ending verse number",
+			"fileTemplate": "File Name Template",
+			"apply": "Apply",
+			"templateCodes": "Template Codes",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -801,6 +870,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"setup" : new LocalizedStrings(action.payload.data.setup),
 				"notSetup" : new LocalizedStrings(action.payload.data.notSetup),
+				"template" : new LocalizedStrings(action.payload.data.template),
 			};
 		case SET_LANGUAGE:
 			return {

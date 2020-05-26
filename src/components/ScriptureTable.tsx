@@ -161,9 +161,8 @@ export function ScriptureTable(props: IProps) {
     };
   };
 
-  const resequence = (data: any[][]) => {
+  const resequence = (data: any[][], sec = 1) => {
     let change = false;
-    let sec = 1;
     let pas = 1;
     for (let i = 0; i < data.length; i += 1) {
       let r = data[i];
@@ -186,6 +185,10 @@ export function ScriptureTable(props: IProps) {
     }
     if (change) setChanged(true);
     return change ? [...data] : data;
+  };
+
+  const handleResequence = () => {
+    setData(resequence(data));
   };
 
   const insertAt = (arr: Array<any>, item: any, index?: number) => {
@@ -370,9 +373,12 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
+  // const getTotalSections = (total: number, row: string[]) => {
+  //   return total + (isValidNumber(row[cols.SectionSeq]) ? 1 : 0);
+  // };
+
   const handleTablePaste = (rows: string[][]) => {
     if (validTable(rows)) {
-      rows = resequence(rows);
       //setMessage(<span>Pasting...</span>); this doesn't actually ever show up
       const startRow = isBlankOrValidNumber(rows[0][cols.SectionSeq]) ? 0 : 1;
       while (
@@ -385,6 +391,8 @@ export function ScriptureTable(props: IProps) {
       ) {
         rows.forEach(splitSectionPassage);
       }
+      // const secCount = data.reduce(getTotalSections, 1);
+      // rows = resequence(rows, secCount);
       /* Make it clear which columns can be imported by blanking others */
       setData([
         ...data.concat(
@@ -516,19 +524,23 @@ export function ScriptureTable(props: IProps) {
         if (dumbrec) {
           setComplete(50);
           //dumbrec does not contain the new data...just the new id so go get it
-          var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
-            q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
-          )) as any;
-          if (rec !== undefined) {
-            var outrecs = JSON.parse(rec.attributes.data);
-            //not waiting for these...that doesn't work if they navigate away
-            await memory.sync(
-              await remote.pull((q) => q.findRecords('section'))
-            );
-            await memory.sync(
-              await remote.pull((q) => q.findRecords('passage'))
-            );
-            if (anyNew) {
+          var filterrec = {
+            attribute: 'plan-id',
+            value: remoteId('plan', plan, memory.keyMap),
+          };
+          //not waiting for these...that doesn't work if they navigate away
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('section').filter(filterrec))
+          );
+          await memory.sync(
+            await remote.pull((q) => q.findRecords('passage').filter(filterrec))
+          );
+          if (anyNew) {
+            var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
+              q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
+            )) as any;
+            if (rec !== undefined) {
+              var outrecs = JSON.parse(rec.attributes.data);
               var newrowid = rowId.map((r) => r);
               newrowid.forEach((row, index) => {
                 if (row.id === '') {
@@ -728,6 +740,7 @@ export function ScriptureTable(props: IProps) {
         updateData={updateData}
         paste={handleTablePaste}
         lookupBook={lookupBook}
+        resequence={handleResequence}
         t={s}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />

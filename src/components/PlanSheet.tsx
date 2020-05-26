@@ -91,6 +91,7 @@ interface IProps extends IStateProps {
   addPassage: (i?: number) => void;
   addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
+  resequence: () => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -107,10 +108,12 @@ export function PlanSheet(props: IProps) {
     addPassage,
     addSection,
     paste,
+    resequence,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
+  const [busy] = useGlobal('remoteBusy');
   const [message, setMessage] = useState(<></>);
   const [position, setPosition] = useState<{
     mouseX: null | number;
@@ -133,6 +136,7 @@ export function PlanSheet(props: IProps) {
   const preventSave = useRef<boolean>(false);
   const sheetRef = useRef<any>();
   const [showRow, setShowRow] = useState(0);
+  const [savingGrid, setSavingGrid] = useState<ICell[][]>();
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -172,6 +176,12 @@ export function PlanSheet(props: IProps) {
     setChanged(false);
     setMessage(<span>{t.saving}</span>);
     setDoSave(true);
+  };
+
+  const handleSelect = (loc: DataSheet.Selection) => {
+    // this autoscroll causes issues TT-1393
+    //don't mess with it if we're selecting the checkbox
+    //if (loc.start.j > 0 && loc.start.i === loc.end.i) setShowRow(loc.start.i);
   };
 
   const handleValueRender = (cell: ICell) =>
@@ -225,6 +235,9 @@ export function PlanSheet(props: IProps) {
       }
     });
     if (changes.length > 0) {
+      if (doSave) {
+        setSavingGrid(grid);
+      }
       setChanged(true);
       doUpdate(grid);
       setShowRow(changes[0].row);
@@ -266,17 +279,34 @@ export function PlanSheet(props: IProps) {
   const splitAndTrim = (clipBoard: string): string[] =>
     clipBoard.split('\t').map((v) => (typeof v === 'string' ? v.trim() : v));
 
+  const cleanClipboard = (clipText: string) => {
+    return removeBlanks(clipText).map((line: string) => splitAndTrim(line));
+  };
+
   const parsePaste = (clipBoard: string) => {
     if (projRole !== 'admin') return Array<Array<string>>();
-    return removeBlanks(clipBoard).map((line: string) => splitAndTrim(line));
+    if (position.i === 0) {
+      setPasting(true);
+      setMessage(<span>{t.pasting}</span>);
+      paste(cleanClipboard(clipBoard));
+      setPasting(false);
+    }
+    return cleanClipboard(clipBoard);
   };
   const handleTablePaste = () => {
-    setPasting(true);
-    setMessage(<span>Pasting</span>);
-    navigator.clipboard.readText().then((clipText) => {
-      paste(removeBlanks(clipText).map((line) => splitAndTrim(line)));
-      setPasting(false);
-    });
+    if (typeof navigator.clipboard.readText === 'function') {
+      setPasting(true);
+      setMessage(<span>{t.pasting}</span>);
+      navigator.clipboard.readText().then((clipText) => {
+        paste(cleanClipboard(clipText));
+        setPasting(false);
+      });
+    } else {
+      setMessage(<span>{t.useCtrlV}</span>);
+    }
+  };
+  const handleResequence = () => {
+    resequence();
   };
 
   const handleSetPreventSave = (val: boolean) => {
@@ -376,9 +406,18 @@ export function PlanSheet(props: IProps) {
         sheetRef.current?.firstChild?.firstChild?.firstChild?.childNodes[
           showRow
         ];
-      if (tbodyRef) window.scrollTo(0, tbodyRef.offsetTop);
+      //only scroll if it's not already visible
+      if (
+        tbodyRef &&
+        (tbodyRef.offsetTop < document.documentElement.scrollTop ||
+          tbodyRef.offsetTop >
+            document.documentElement.scrollTop +
+              document.documentElement.clientHeight)
+      ) {
+        window.scrollTo(0, tbodyRef.offsetTop - 10);
+      }
     }
-  });
+  }, [showRow]);
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
@@ -386,6 +425,16 @@ export function PlanSheet(props: IProps) {
       ? bookSuggestions.map((v) => v.label)
       : [];
   }, [bookSuggestions]);
+
+  useEffect(() => {
+    if (!doSave && !busy && savingGrid) {
+      setChanged(true);
+      doUpdate(savingGrid);
+      setSavingGrid(undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave, busy, savingGrid]);
+
   //console.log('plansheet render', new Date().toLocaleTimeString());
   return (
     <div className={classes.container}>
@@ -428,6 +477,17 @@ export function PlanSheet(props: IProps) {
                 >
                   {t.tablePaste}
                   <AddIcon className={classes.icon} />
+                </Button>
+                <Button
+                  key="resequence"
+                  aria-label={t.resequence}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  disabled={pasting || data.length < 2}
+                  onClick={handleResequence}
+                >
+                  {t.resequence}
                 </Button>
                 <Button
                   key="action"
@@ -479,6 +539,7 @@ export function PlanSheet(props: IProps) {
             onContextMenu={handleContextMenu}
             onCellsChanged={handleCellsChanged}
             parsePaste={parsePaste}
+            onSelect={handleSelect}
           />
         </div>
         <Menu

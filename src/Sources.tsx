@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { IApiError, User, Role } from './model';
+import { IApiError, User, Role, Plan } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -23,7 +23,8 @@ import { API_CONFIG } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { LoadData } from './utils/loadData';
-import { orbitInfo } from './utils';
+import { orbitInfo, related } from './utils';
+import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
   schema: Schema,
@@ -35,7 +36,10 @@ export const Sources = async (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
+  setFingerprint: (fingerprint: string) => void,
   setCompleted: (valud: number) => void,
+  setProjectsLoaded: (valud: string[]) => void,
+  setCoordinatorActivated: (valud: boolean) => void,
   InviteUser: (remote: JSONAPISource, userEmail: string) => Promise<void>,
   orbitError: (ex: IApiError) => void
 ) => {
@@ -56,10 +60,18 @@ export const Sources = async (
   let remote: JSONAPISource = {} as JSONAPISource;
 
   const coordinator = new Coordinator();
+
   coordinator.addSource(memory);
   coordinator.addSource(backup);
 
   if (!offline) {
+    var components: Component[] = await Fingerprint2.getPromise({});
+    var fp = Fingerprint2.x64hash128(
+      components.map((c) => c.value).join(''),
+      31
+    );
+    setFingerprint(fp);
+
     remote = new JSONAPISource({
       schema,
       keyMap,
@@ -71,6 +83,7 @@ export const Sources = async (
       defaultFetchSettings: {
         headers: {
           Authorization: 'Bearer ' + auth.accessToken,
+          'X-FP': fp,
         },
         timeout: 100000,
       },
@@ -89,7 +102,7 @@ export const Sources = async (
     console.log('using backup');
     if (process.env.REACT_APP_MODE !== 'electron') {
       //already did this if electron...
-      var transform = await backup.pull(q => q.findRecords());
+      var transform = await backup.pull((q) => q.findRecords());
       await memory.sync(transform);
       const recs: Role[] = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('role')
@@ -99,12 +112,17 @@ export const Sources = async (
         goRemote = true;
       }
     }
+    const plans = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('plan')
+    ) as Plan[];
+    const projs = new Set(plans.map((p) => related(p, 'project') as string));
+    setProjectsLoaded(Array.from(projs));
   }
   if (goRemote) {
     localStorage.setItem('lastTime', currentDateTime());
     await backup.reset();
     var currentuser: User | undefined;
-    var tr = await remote.pull(q => q.findRecords('currentuser'));
+    var tr = await remote.pull((q) => q.findRecords('currentuser'));
     const user = (tr[0].operations[0] as any).record;
     setUser(user.id);
     localStorage.setItem('user-id', user.id);
@@ -115,9 +133,8 @@ export const Sources = async (
         ? currentuser.attributes.email
         : 'neverhere'
     );
+    setProjectsLoaded([]);
     setCompleted(10);
-    let x = await LoadData(memory, backup, remote, setCompleted, orbitError);
-    console.log('LoadData', x);
   }
   // Update indexedDb when memory updated
   // TODO: error if we can't read and write the indexedDB
@@ -257,8 +274,13 @@ export const Sources = async (
 
   coordinator.addStrategy(new EventLoggingStrategy());
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
+    setCoordinatorActivated(true);
     console.log('Coordinator will log warnings');
-    setCompleted(90);
+    if (goRemote)
+      LoadData(memory, backup, remote, setCompleted, orbitError).then(() =>
+        setCompleted(90)
+      );
+    else setCompleted(90);
   });
 };
 

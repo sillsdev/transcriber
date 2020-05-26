@@ -47,7 +47,10 @@ export const fetchOrbitData = (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
+  setFingerprint: (fingerprint: string) => void,
   setCompleted: (value: number) => void,
+  setProjectsLoaded: (value: string[]) => void,
+  setCoordinatorActivated: (value: boolean) => void,
   InviteUser: (remote: JSONAPISource, email: string) => Promise<void>
 ) => (dispatch: any) => {
   Sources(
@@ -60,7 +63,10 @@ export const fetchOrbitData = (
     setUser,
     setBucket,
     setRemote,
+    setFingerprint,
     setCompleted,
+    setProjectsLoaded,
+    setCoordinatorActivated,
     InviteUser,
     (ex: IApiError) => dispatch(orbitError(ex))
   ).then(dispatch({ type: FETCH_ORBIT_DATA }));

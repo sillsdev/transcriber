@@ -33,6 +33,7 @@ import {
 } from '../utils';
 import SnackBar from '../components/SnackBar';
 import { getOrgs } from '../utils/getOrgs';
+import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -102,10 +103,18 @@ export function Loading(props: IProps) {
   const [offline] = useGlobal('offline');
   const [bucket, setBucket] = useGlobal('bucket');
   const [remote, setRemote] = useGlobal('remote');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_fingerprint, setFingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_project, setProject] = useGlobal('project');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_coordinatorActivated, setCoordinatorActivated] = useGlobal(
+    'coordinatorActivated'
+  );
   const [completed, setCompleted] = useState(0);
   const [newOrgParams, setNewOrgParams] = useState(
     localStorage.getItem('newOrg')
@@ -222,14 +231,17 @@ export function Loading(props: IProps) {
       keyMap,
       backup,
       auth,
-      offline,
+      isElectron || offline,
       setUser,
       setBucket,
       setRemote,
+      setFingerprint,
       setCompleted,
+      setProjectsLoaded,
+      setCoordinatorActivated,
       InviteUser
     );
-    if (!offline) {
+    if (!isElectron && !offline) {
       const decodedToken: any = jwtDecode(auth.getAccessToken());
       setExpireAt(decodedToken.exp);
     }

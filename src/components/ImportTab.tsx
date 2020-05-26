@@ -5,6 +5,13 @@ import {
   IImportStrings,
   IState,
   IElectronImportStrings,
+  Passage,
+  MediaFile,
+  Section,
+  User,
+  GroupMembership,
+  Group,
+  BookName,
 } from '../model';
 import { WithDataProps, withData } from '../mods/react-orbitjs';
 import Confirm from './AlertDialog';
@@ -16,12 +23,11 @@ import {
   Typography,
   FormLabel,
   FormControl,
-  TextareaAutosize,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import localStrings from '../selector/localize';
 import { bindActionCreators } from 'redux';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { connect } from 'react-redux';
 import * as actions from '../store';
 import MediaUpload, { UploadType } from './MediaUpload';
@@ -33,14 +39,18 @@ import {
 } from '../routes/ElectronImport';
 import { useGlobal } from 'reactn';
 import AdmZip from 'adm-zip';
-import { remoteIdNum } from '../utils';
-
+import { remoteIdNum, passageDescription, remoteIdGuid } from '../utils';
+import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
+import { dateChanges } from '../routes/dateChanges';
+import FilterIcon from '@material-ui/icons/FilterList';
+import SelectAllIcon from '@material-ui/icons/SelectAll';
 
 interface IStateProps {
   t: IImportStrings;
   ei: IElectronImportStrings;
   importStatus: IAxiosStatus | undefined;
+  allBookData: BookName[];
 }
 
 interface IDispatchProps {
@@ -70,22 +80,57 @@ export function ImportTab(props: IProps) {
     importProjectToElectron,
     importProjectFromElectron,
     orbitError,
+    allBookData,
   } = props;
-
+  interface IRow {
+    plan: string;
+    section: string;
+    passage: string;
+    other: string;
+    old: string;
+    imported: string;
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_busy, setBusy] = useGlobal('importexportBusy');
   const [memory] = useGlobal('memory');
+  const [schema] = useGlobal('schema');
+  const [remote] = useGlobal('remote');
+  const [fingerprint] = useGlobal('fingerprint');
   const [backup] = useGlobal('backup');
   const [keyMap] = useGlobal('keyMap');
   const [project] = useGlobal('project');
+  const [coordinatorActivated] = useGlobal('coordinatorActivated');
 
   const [message, setMessage] = useState(<></>);
-  const [importMessage, setImportMessage] = useState('');
+  const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
   const [confirmAction, setConfirmAction] = useState('');
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [filter, setFilter] = useState(false);
+  const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
 
+  const handleFilter = () => setFilter(!filter);
+  const columnDefs = [
+    { name: 'plan', title: t.plan },
+    { name: 'section', title: t.section },
+    { name: 'passage', title: t.passage },
+    { name: 'other', title: t.other },
+    { name: 'old', title: t.old },
+    { name: 'imported', title: t.imported },
+  ];
+  const columnWidths = [
+    { columnName: 'plan', width: 200 },
+    { columnName: 'section', width: 100 },
+    { columnName: 'passage', width: 100 },
+    { columnName: 'other', width: 100 },
+    { columnName: 'old', width: 220 },
+    { columnName: 'imported', width: 220 },
+  ];
+  const columnFormatting = [
+    { columnName: 'old', aligh: 'left', wordWrapEnabled: true },
+    { columnName: 'imported', aligh: 'left', wordWrapEnabled: true },
+  ];
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
@@ -115,13 +160,19 @@ export function ImportTab(props: IProps) {
         resize: 'none',
         'background-color': 'transparent',
       },
+      icon: {
+        marginLeft: theme.spacing(1),
+      },
+      grow: {
+        flexGrow: 1,
+      },
     })
   );
   const classes = useStyles();
 
   const handleProjectImport = () => {
     setImportTitle('');
-    setImportMessage('');
+    setChangeData([]);
     if (isElectron) electronImport();
     else setUploadVisible(true);
   };
@@ -137,6 +188,7 @@ export function ImportTab(props: IProps) {
       handleElectronImport(
         memory,
         backup,
+        coordinatorActivated,
         zipFile,
         importProjectToElectron,
         orbitError,
@@ -165,6 +217,7 @@ export function ImportTab(props: IProps) {
         handleElectronImport(
           memory,
           backup,
+          coordinatorActivated,
           importData.zip,
           importProjectToElectron,
           orbitError,
@@ -218,12 +271,287 @@ export function ImportTab(props: IProps) {
     }
     return err.errMsg;
   };
+  const sectionFromPassage = (passage: Passage, remote: boolean) => {
+    var sectionid = passage.relationships?.section?.data as RecordIdentity;
+    if (sectionid) {
+      return memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({
+          type: 'section',
+          id: remote
+            ? remoteIdGuid('section', sectionid.id, memory.keyMap)
+            : sectionid.id,
+        })
+      ) as Section;
+    }
+    return undefined;
+  };
 
+  const planFromSection = (section: Section, remote: boolean) => {
+    var planid = section.relationships?.plan?.data as RecordIdentity;
+    if (planid) {
+      return memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({
+          type: 'plan',
+          id: remote
+            ? remoteIdGuid('plan', planid.id, memory.keyMap)
+            : planid.id,
+        })
+      ) as Section;
+    }
+    return undefined;
+  };
+
+  const getChangeData = (changeReport: string) => {
+    interface IData {
+      data: any;
+    }
+    interface IChanges {
+      type: string;
+      online: IData;
+      imported: IData;
+    }
+    var changes = JSON.parse(changeReport);
+    var data = [] as IRow[];
+    if (Array.isArray(changes)) {
+      changes.forEach((c: IChanges) => {
+        var passage;
+        var section: Section | undefined;
+        var old = '';
+        var imported = '';
+        var other = '';
+        var plan = '';
+        switch (c.type) {
+          case 'mediafile':
+            var mediafile = c.imported.data as MediaFile;
+            var passageid = mediafile.relationships?.passage
+              ?.data as RecordIdentity;
+            if (passageid) {
+              passage = memory.cache.query((q: QueryBuilder) =>
+                q.findRecord({
+                  type: 'passage',
+                  id: remoteIdGuid('passage', passageid.id, memory.keyMap),
+                })
+              ) as Passage;
+              section = sectionFromPassage(passage, false);
+              if (section)
+                plan = planFromSection(section, false)?.attributes.name || '';
+            }
+            imported =
+              t.transcription + ':' + mediafile.attributes.transcription;
+            old =
+              t.transcription +
+              ':' +
+              (c.online.data as MediaFile).attributes.transcription;
+            break;
+          case 'passage':
+            passage = c.imported.data as Passage;
+            section = sectionFromPassage(passage, true);
+            if (section)
+              plan = planFromSection(section, false)?.attributes.name || '';
+            imported = t.state + ':' + passage.attributes.state;
+            old = t.state + ':' + (c.online.data as Passage).attributes.state;
+            break;
+          case 'section':
+            var oldsection = c.online.data as Section;
+            section = c.imported.data as Section;
+            if (section) {
+              plan = planFromSection(section, true)?.attributes.name || '';
+              imported = '';
+              old = '';
+              if (
+                oldsection.relationships?.editor?.data &&
+                section.relationships?.editor?.data !==
+                  oldsection.relationships?.editor?.data
+              ) {
+                var editor = memory.cache.query((q: QueryBuilder) =>
+                  q.findRecord({
+                    type: 'user',
+                    id: remoteIdGuid(
+                      'user',
+                      (section?.relationships?.editor.data as RecordIdentity)
+                        .id,
+                      memory.keyMap
+                    ),
+                  })
+                ) as User;
+                var oldeditor = memory.cache.query((q: QueryBuilder) =>
+                  q.findRecord({
+                    type: 'user',
+                    id: remoteIdGuid(
+                      'user',
+                      (oldsection?.relationships?.editor.data as RecordIdentity)
+                        .id,
+                      memory.keyMap
+                    ),
+                  })
+                ) as User;
+                imported += t.editor + ':' + editor?.attributes.name + '   ';
+                old += t.editor + ':' + oldeditor?.attributes.name + '   ';
+              }
+              if (
+                oldsection.relationships?.transcriber?.data &&
+                section.relationships?.transcriber?.data !==
+                  oldsection.relationships?.transcriber
+              ) {
+                var transcriber = memory.cache.query((q: QueryBuilder) =>
+                  q.findRecord({
+                    type: 'user',
+                    id: remoteIdGuid(
+                      'user',
+                      (section?.relationships?.transcriber
+                        .data as RecordIdentity).id,
+                      memory.keyMap
+                    ),
+                  })
+                ) as User;
+                var oldtranscriber = memory.cache.query((q: QueryBuilder) =>
+                  q.findRecord({
+                    type: 'user',
+                    id: remoteIdGuid(
+                      'user',
+                      (oldsection?.relationships?.transcriber
+                        .data as RecordIdentity).id,
+                      memory.keyMap
+                    ),
+                  })
+                ) as User;
+                imported +=
+                  t.transcriber + ':' + transcriber.attributes.name + '   ';
+                old +=
+                  t.transcriber + ':' + oldtranscriber?.attributes.name + '   ';
+              } /*
+              if (section.attributes.state !== oldsection.attributes.state) {
+                imported += t.state + ':' + section.attributes.state;
+                old += t.state + ':' + oldsection.attributes.state;
+              } */
+            }
+            break;
+          case 'user':
+            var usr = c.imported.data as User;
+            usr.attributes.givenName = c.imported.data.attributes['given-name'];
+            usr.attributes.familyName =
+              c.imported.data.attributes['family-name'];
+            var olduser = c.online.data as User;
+            olduser.attributes.givenName =
+              c.online.data.attributes['given-name'];
+            olduser.attributes.familyName =
+              c.online.data.attributes['family-name'];
+            other = usr.attributes.email;
+            imported = '';
+            old = '';
+            if (usr.attributes.name !== olduser.attributes.name) {
+              imported +=
+                t.username.replace(' ', '_') +
+                ':' +
+                usr.attributes.name +
+                '   ';
+              old +=
+                t.username.replace(' ', '_') +
+                ':' +
+                olduser.attributes.name +
+                '   ';
+            }
+            if (usr.attributes.familyName !== olduser.attributes.familyName) {
+              imported +=
+                t.family.replace(' ', '_') +
+                ':' +
+                usr.attributes.familyName +
+                '   ';
+              old +=
+                t.family.replace(' ', '_') +
+                ':' +
+                olduser.attributes.familyName +
+                '   ';
+            }
+            if (usr.attributes.givenName !== olduser.attributes.givenName) {
+              imported +=
+                t.given.replace(' ', '_') +
+                ':' +
+                usr.attributes.givenName +
+                '   ';
+              old +=
+                t.given.replace(' ', '_') +
+                ':' +
+                olduser.attributes.givenName +
+                '   ';
+            }
+            if (usr.attributes.phone !== olduser.attributes.phone) {
+              imported +=
+                t.phone.replace(' ', '_') + ':' + usr.attributes.phone + '   ';
+              old +=
+                t.phone.replace(' ', '_') +
+                ':' +
+                olduser.attributes.phone +
+                '   ';
+            }
+            if (usr.attributes.locale !== olduser.attributes.locale) {
+              imported +=
+                t.locale.replace(' ', '_') +
+                ':' +
+                usr.attributes.locale +
+                '   ';
+              old +=
+                t.locale.replace(' ', '_') +
+                ':' +
+                olduser.attributes.locale +
+                '   ';
+            }
+            if (usr.attributes.timezone !== olduser.attributes.timezone) {
+              imported +=
+                t.timezone.replace(' ', '_') +
+                ':' +
+                usr.attributes.timezone +
+                '   ';
+              old +=
+                t.timezone.replace(' ', '_') +
+                ':' +
+                olduser.attributes.timezone +
+                '   ';
+            }
+            break;
+          case 'groupmembership':
+            var gm = c.imported.data as GroupMembership;
+            var group = memory.cache.query((q: QueryBuilder) =>
+              q.findRecord({
+                type: 'group',
+                id: remoteIdGuid(
+                  'group',
+                  (gm?.relationships?.group.data as RecordIdentity).id,
+                  memory.keyMap
+                ),
+              })
+            ) as Group;
+            other = group.attributes.name;
+            imported = t.fontsize + ':' + gm.attributes.fontSize;
+            old =
+              t.fontsize +
+              ':' +
+              (c.online.data as GroupMembership).attributes.fontSize;
+            break;
+          default:
+        }
+        if (imported.length > 0)
+          data.push({
+            plan: plan,
+            section: section
+              ? section.attributes.sequencenum + ' ' + section.attributes.name
+              : '',
+            passage: passage ? passageDescription(passage, allBookData) : '',
+            other: other,
+            old: old,
+            imported: imported,
+          } as IRow);
+      });
+    }
+
+    if (data.findIndex((r) => r.other !== '') > -1) setHiddenColumnNames([]);
+    else setHiddenColumnNames(['other']);
+    return data;
+  };
   useEffect(() => {
     if (importStatus) {
       if (importStatus.errStatus) {
         setImportTitle(translateError(importStatus));
-        setImportMessage(importStatus.errMsg);
         showMessage(t.error, translateError(importStatus));
         importComplete();
         setBusy(false);
@@ -234,11 +562,14 @@ export function ImportTab(props: IProps) {
         }
         if (importStatus.complete) {
           //import completed ok but might have message
+          var changeReport = importStatus.errMsg;
+          var chdata = getChangeData(changeReport);
+          setChangeData(chdata);
           setImportTitle(
-            importStatus.errMsg !== '' ? t.onlineChangeReport : t.importComplete
+            chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
-          setImportMessage(importStatus.errMsg);
           importComplete();
+          dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
           setBusy(false);
         }
       }
@@ -266,14 +597,44 @@ export function ImportTab(props: IProps) {
         <FormControl>
           <FormLabel className={classes.label}>
             <Typography variant="h5">{importTitle}</Typography>
-            <TextareaAutosize
-              className={classes.textarea}
-              id="standard-multiline-flexible"
-              value={importMessage}
-            />
           </FormLabel>
         </FormControl>
+        {changeData.length > 0 && (
+          <div className={classes.actions}>
+            <div className={classes.grow}>{'\u00A0'}</div>
 
+            <Button
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleFilter}
+              title={t.showHideFilter}
+            >
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
+            </Button>
+          </div>
+        )}
+        {changeData.length > 0 && (
+          <ShapingTable
+            columns={columnDefs}
+            columnWidths={columnWidths}
+            sorting={[
+              { columnName: 'plan', direction: 'asc' },
+              { columnName: 'section', direction: 'asc' },
+            ]}
+            rows={changeData}
+            shaping={filter}
+            hiddenColumnNames={hiddenColumnNames}
+            columnFormatting={columnFormatting}
+          />
+        )}
         <MediaUpload
           visible={uploadVisible}
           uploadType={UploadType.ITF}
@@ -296,6 +657,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'import' }),
   ei: localStrings(state, { layout: 'electronImport' }),
   importStatus: state.importexport.importexportStatus,
+  allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

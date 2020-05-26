@@ -41,7 +41,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="electronImport.importPending">
-                <source>Import In Progress...</source>
+                <source>Import In Progress...{0}%</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">electronImport.tsx</context>
@@ -229,7 +229,14 @@
                     <context context-type="sourcefile">UserTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="alert.confirmation">
+        	<trans-unit id="usertable.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UserTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="alert.confirmation">
                 <source>Confirmation</source>
                 <target/>
                 <context-group>
@@ -656,6 +663,13 @@
                     <context context-type="sourcefile">PlanTable.tsx</context>
                 </context-group>
             </trans-unit>
+        	<trans-unit id="planTable.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="planSheet.action">
                 <source>Action</source>
                 <target/>
@@ -763,6 +777,27 @@
         	</trans-unit>
         	<trans-unit id="planSheet.nonNumber">
         		<source>Do not change to non-number.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.pasting">
+        		<source>Pasting</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.useCtrlV">
+        		<source>Select a column head and use CTRL-V to append table rows.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.resequence">
+        		<source>Resequence</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -964,7 +999,14 @@
                     <context context-type="sourcefile">assignmentTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="assignSection.title">
+        	<trans-unit id="assignmentTable.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">assignmentTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="assignSection.title">
                 <source>Assign Sections to Users</source>
                 <target/>
                 <context-group>
@@ -1020,14 +1062,35 @@
                     <context context-type="sourcefile">AssignSection.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planTabs.sectionsPassages">
-                <source>Sections &#x26; Passages</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">PlanTabs.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="planTabs.media">
+        	<trans-unit id="planTabs.sectionsPassages">
+        		<source>Sections &#x26; Passages</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTabs.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTabs.passageStatus">
+        		<source>{1} of {2} passages</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTabs.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTabs.sectionStatus">
+        		<source>{1} of {2} sections</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTabs.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTabs.mediaStatus">
+        		<source>{1} of {2} media files</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTabs.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTabs.media">
                 <source>Media</source>
                 <target/>
                 <context-group>
@@ -1048,7 +1111,14 @@
                     <context context-type="sourcefile">PlanTabs.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planAdd.name">
+        	<trans-unit id="planTabs.associations">
+        		<source>Associations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTabs.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planAdd.name">
                 <source>Name</source>
                 <target/>
                 <context-group>
@@ -1300,7 +1370,140 @@
                     <context context-type="sourcefile">MediaTab.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="passageMedia.mediaAttached">
+        	<trans-unit id="mediaTab.mediaAssociations">
+        		<source>Media Associations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.availablePassages">
+        		<source>Available Passages</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.noMediaAttached">
+        		<source>No media files are checked</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.noPassageDetach">
+        		<source>Passages are not used for detach</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.noPassageAttached">
+        		<source>{0} has no passage attached</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.fileAttached">
+        		<source>File already attached</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.passageAttached">
+        		<source>Passage already attached</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.save">
+        		<source>Save</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.detach">
+        		<source>Detach</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.autoMatch">
+        		<source>Auto Match</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.matchAdded">
+        		<source>Match complete: {0} new associations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.noMatch">
+        		<source>Match complete: no new associations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.none">
+        		<source>None</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.proposed">
+        		<source>Proposed</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.all">
+        		<source>All</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.viewAssociations">
+        		<source>View Associations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.saving">
+        		<source>Saving...</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="mediaTab.savingComplete">
+        		<source>Saving complete.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">MediaTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="passageMedia.mediaAttached">
                 <source>Media Attached</source>
                 <target/>
                 <context-group>
@@ -1314,7 +1517,7 @@
                     <context context-type="sourcefile">MediaTab.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="passageMedia.attachAvailableMedia">
+        	<trans-unit id="passageMedia.attachAvailableMedia">
                 <source>Attach available media files to passages (with no current media).</source>
                 <target/>
                 <context-group>
@@ -1832,6 +2035,139 @@
                     <context context-type="sourcefile">import.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="import.plan">
+                <source>Plan</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.section">
+                <source>Section</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.passage">
+                <source>Passage</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.other">
+                <source>Other</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.old">
+                <source>Previous Value</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.imported">
+                <source>Imported Value</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.transcription">
+                <source>Transcription</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.state">
+                <source>State</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.editor">
+                <source>Editor</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.transcriber">
+                <source>Transcriber</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.fontsize">
+                <source>Font Size</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.username">
+                <source>Name</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="import.given">
+        		<source>Given Name</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.family">
+        		<source>Family Name</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.phone">
+        		<source>Phone</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.timezone">
+        		<source>Time zone</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.locale">
+        		<source>Preferred Language</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.filter">
+        		<source>Filter</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="import.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
             <trans-unit id="transcriptionTab.section">
                 <source>Section</source>
                 <target/>
@@ -1895,6 +2231,27 @@
         			<context context-type="sourcefile">TranscriptionTab.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriptionTab.copyTranscriptions">
+        		<source>Copy Transcriptions</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.copyTip">
+        		<source>Copy transcriptions to Clipboard</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriptionTab.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcriptionTab.cantCopy">
         		<source>Unable to copy to clipboard</source>
         		<target/>
@@ -1952,7 +2309,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriptionTab.exportingProject">
-        		<source>Creating export file</source>
+        		<source>Exporting...{0}%</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
@@ -2105,7 +2462,14 @@
                     <context context-type="sourcefile">GroupTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupAdd.newGroup">
+        	<trans-unit id="groupTable.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">GroupTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="groupAdd.newGroup">
                 <source>New Group</source>
                 <target/>
                 <context-group>
@@ -2840,7 +3204,14 @@
                     <context context-type="sourcefile">InvitationTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="orgSettings.add">
+        	<trans-unit id="invitationTable.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">InvitationTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="orgSettings.add">
                 <source>Add</source>
                 <target/>
                 <context-group>
@@ -3329,7 +3700,14 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="transcriber.submit">
+        	<trans-unit id="integration.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">integration.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="transcriber.submit">
                 <source>Submit</source>
                 <target/>
                 <context-group>
@@ -3484,7 +3862,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.transcribeReady">
-        		<source>Attached recording</source>
+        		<source>Ready For Transcription</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Transcriber.tsx</context>
@@ -4006,6 +4384,83 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Setup.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.projectCode">
+        		<source>Project Code</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.language">
+        		<source>Language BCP47 code</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.book">
+        		<source>Paratext book identifier</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.section">
+        		<source>Section number</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.passage">
+        		<source>Passage number(within section)</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.chapter">
+        		<source>Chapter number</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.beginning">
+        		<source>Starting verse number</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.end">
+        		<source>Ending verse number</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.fileTemplate">
+        		<source>File Name Template</source>
+        		<target>Modèle de nom de fichier</target>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.apply">
+        		<source>Apply</source>
+        		<target>Appliquer</target>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="template.templateCodes">
+        		<source>Template Codes</source>
+        		<target>Modèles de codes</target>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
         		</context-group>
         	</trans-unit>
         </body>

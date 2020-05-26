@@ -78,12 +78,14 @@ const getMedia = (
   groupMemberships: Array<GroupMembership>
 ) => {
   const selectedGroups = groups.filter(
-    g => related(g, 'owner') === organization
+    (g) => related(g, 'owner') === organization
   );
-  const rowData = selectedGroups.map(g => {
-    const selectedProjects = projects.filter(p => related(p, 'group') === g.id);
+  const rowData = selectedGroups.map((g) => {
+    const selectedProjects = projects.filter(
+      (p) => related(p, 'group') === g.id
+    );
     const members = groupMemberships.filter(
-      gm => related(gm, 'group') === g.id
+      (gm) => related(gm, 'group') === g.id
     );
     return {
       name: g.attributes.name,
@@ -193,7 +195,7 @@ export function GroupTable(props: IProps) {
   };
 
   const handleEdit = (groupId: string) => (e: any) => {
-    const groupRec = groups.filter(g => g.id === groupId);
+    const groupRec = groups.filter((g) => g.id === groupId);
     setDialogData(groupRec && groupRec.length === 1 ? groupRec[0] : null);
     setDialogVisible(true);
   };
@@ -211,7 +213,7 @@ export function GroupTable(props: IProps) {
 
   const handleDelete = (value: string) => () => {
     const selectedProjects = projects.filter(
-      p => related(p, 'group') === value
+      (p) => related(p, 'group') === value
     );
     if (selectedProjects.length > 0) {
       setMessage(
@@ -351,7 +353,7 @@ export function GroupTable(props: IProps) {
             color="primary"
             className={classes.button}
             onClick={handleFilter}
-            title={'Show/Hide filter rows'}
+            title={t.showHideFilter}
           >
             {t.filter}
             {filter ? (

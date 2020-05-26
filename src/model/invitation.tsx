@@ -1,6 +1,7 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/data';
+import { BaseModel } from './baseModel';
 
-export interface Invitation extends Record {
+export interface Invitation extends BaseModel {
   attributes: {
     email: string;
     silId: number;
@@ -10,7 +11,7 @@ export interface Invitation extends Record {
     invitedBy: string;
     dateCreated: string;
     dateUpdated: string;
-    lastModfiedBy: number;
+    lastModifiedBy: number;
   };
   relationships?: {
     organization: RecordRelationship;
