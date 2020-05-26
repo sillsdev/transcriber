@@ -15,7 +15,7 @@ export interface Passage extends BaseModel {
     lastModifiedBy: number;
   };
   relationships?: {
-    sections: RecordHasManyRelationship;
+    section: RecordRelationship;
     users: RecordHasManyRelationship;
     media: RecordRelationship;
   };

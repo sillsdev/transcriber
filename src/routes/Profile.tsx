@@ -225,7 +225,7 @@ export function Profile(props: IProps) {
     }
     if (editId) {
       const userRecs = users.filter(
-        (u) => u.attributes.name === e.target.value
+        (u) => u.attributes?.name === e.target.value
       );
       const newDupName = userRecs.length > 0;
       if (newDupName !== dupName) setDupName(newDupName);

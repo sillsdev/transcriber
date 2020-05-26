@@ -343,6 +343,25 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "invalidITF": string;
     "invalidProject": string;
     "importComplete": string;
+    "plan": string;
+    "section": string;
+    "passage": string;
+    "other": string;
+    "old": string;
+    "imported": string;
+    "transcription": string;
+    "state": string;
+    "editor": string;
+    "transcriber": string;
+    "fontsize": string;
+    "username": string;
+    "given": string;
+    "family": string;
+    "phone": string;
+    "timezone": string;
+    "locale": string;
+    "filter": string;
+    "showHideFilter": string;
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {

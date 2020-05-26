@@ -1744,6 +1744,120 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.plan">
+         <segment>
+            <source>Plan</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.section">
+         <segment>
+            <source>Section</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.passage">
+         <segment>
+            <source>Passage</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.other">
+         <segment>
+            <source>Other</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.old">
+         <segment>
+            <source>Previous Value</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.imported">
+         <segment>
+            <source>Imported Value</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.transcription">
+         <segment>
+            <source>Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.state">
+         <segment>
+            <source>State</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.editor">
+         <segment>
+            <source>Editor</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.fontsize">
+         <segment>
+            <source>Font Size</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.username">
+         <segment>
+            <source>Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.given">
+         <segment>
+            <source>Given Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.family">
+         <segment>
+            <source>Family Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.phone">
+         <segment>
+            <source>Phone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.timezone">
+         <segment>
+            <source>Time zone</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.locale">
+         <segment>
+            <source>Preferred Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.filter">
+         <segment>
+            <source>Filter</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.showHideFilter">
+         <segment>
+            <source>Show/Hide filter rows</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.section">
          <segment>
             <source>Section</source>

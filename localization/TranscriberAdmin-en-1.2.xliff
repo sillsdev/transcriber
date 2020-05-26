@@ -2035,6 +2035,139 @@
                     <context context-type="sourcefile">import.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="import.plan">
+                <source>Plan</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.section">
+                <source>Section</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.passage">
+                <source>Passage</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.other">
+                <source>Other</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.old">
+                <source>Previous Value</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.imported">
+                <source>Imported Value</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.transcription">
+                <source>Transcription</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.state">
+                <source>State</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.editor">
+                <source>Editor</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.transcriber">
+                <source>Transcriber</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.fontsize">
+                <source>Font Size</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="import.username">
+                <source>Name</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="import.given">
+        		<source>Given Name</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.family">
+        		<source>Family Name</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.phone">
+        		<source>Phone</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.timezone">
+        		<source>Time zone</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.locale">
+        		<source>Preferred Language</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="import.filter">
+        		<source>Filter</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="import.showHideFilter">
+        		<source>Show/Hide filter rows</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">import.tsx</context>
+        		</context-group>
+        	</trans-unit>
             <trans-unit id="transcriptionTab.section">
                 <source>Section</source>
                 <target/>
