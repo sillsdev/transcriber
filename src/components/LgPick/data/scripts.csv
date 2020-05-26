@@ -31,7 +31,7 @@ Cirt	291	Cirth	cirth			2004-05-01
 Copt	204	Coptic	copte	Coptic	4.1	2006-06-21	y								NotoSansCoptic		Sophia Nubian
 Cpmn	402	Cypro-Minoan	syllabaire chypro-minoen			2017-07-26											
 Cprt	403	Cypriot syllabary	syllabaire chypriote	Cypriot	4.0	2017-07-26	y								NotoSansCypriot		
-Cyrl	220	Cyrillic	cyrillique	Cyrillic	1.1	2004-05-01	y				Charis SIL				NotoSans	NotoSerif	
+Cyrl	220	Cyrillic	cyrillique	Cyrillic	1.1	2004-05-01	y				Charis SIL				NotoSansLatin	NotoSerifLatin	
 Cyrs	221	Cyrillic (Old Church Slavonic variant)	cyrillique (variante slavonne)		1.1	2004-05-01	y										
 Deva	315	Devanagari (Nagari)	dévanâgarî	Devanagari	1.1	2004-05-01	y				Annapurna SIL				NotoSansDevanagari	NotoSerifDevanagari	
 Dogr	328	Dogra	dogra	Dogra	11.0	2016-12-05											
@@ -50,7 +50,7 @@ Gong	312	Gunjala Gondi	gunjala gondî	Gunjala_Gondi	11.0	2016-12-05					Narnoor
 Gonm	313	Masaram Gondi	masaram gondî	Masaram_Gondi	10.0	2017-07-26											
 Goth	206	Gothic	gotique	Gothic	3.1	2004-05-01	y								NotoSansGothic		
 Gran	343	Grantha	grantha	Grantha	7.0	2014-11-15	y								NotoSansGrantha		
-Grek	200	Greek	grec	Greek	1.1	2004-05-01	y				Gentium Plus, Galatia				NotoSans	NotoSerif	
+Grek	200	Greek	grec	Greek	1.1	2004-05-01	y				Gentium Plus				NotoSansLatin	NotoSerifLatin	
 Gujr	320	Gujarati	goudjarâtî (gujrâtî)	Gujarati	1.1	2004-05-01	y								NotoSansGujarati	NotoSerifGujarati	
 Guru	310	Gurmukhi	gourmoukhî	Gurmukhi	1.1	2004-05-01	y								NotoSansGurmukhi	NotoSerifGurmukhi	
 Hanb	503	Han with Bopomofo (alias for Han + Bopomofo)	han avec bopomofo (alias pour han + bopomofo)		1.1	2016-01-19	y								Noto Sans CJK SC	Noto Serif CJK SC	
@@ -88,7 +88,7 @@ Lana	351	Tai Tham (Lanna)	taï tham (lanna)	Tai_Tham	5.2	2009-06-01	y								Not
 Laoo	356	Lao	laotien	Lao	1.1	2004-05-01	y						DokChampa	Saysettha MX	NotoSansLao	NotoSerifLao	
 Latf	217	Latin (Fraktur variant)	latin (variante brisée)		1.1	2004-05-01	y										
 Latg	216	Latin (Gaelic variant)	latin (variante gaélique)		1.1	2004-05-01	y										
-Latn	215	Latin	latin	Latin	1.1	2004-05-01	y				Charis SIL				NotoSansLatin		
+Latn	215	Latin	latin	Latin	1.1	2004-05-01	y				Charis SIL				NotoSansLatin	NotoSerifLatin	
 Leke	364	Leke	léké			2015-07-07	y								NotoSansLeke		
 Lepc	335	Lepcha (Róng)	lepcha (róng)	Lepcha	5.1	2007-07-02	y				Mingzat				NotoSansLepcha		
 Limb	336	Limbu	limbou	Limbu	4.0	2004-05-29	y				Namdhinggo SIL				NotoSansLimbu		
