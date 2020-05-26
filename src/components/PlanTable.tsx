@@ -121,7 +121,9 @@ export function PlanTable(props: IProps) {
   const handleMessageReset = () => {
     setMessage(<></>);
   };
-  const handleDelete = (value: string) => () => setDeleteItem(value);
+  const handleDelete = (value: string) => () => {
+    setDeleteItem(value);
+  };
   const handleDeleteConfirmed = () => {
     memory.update((t: TransformBuilder) =>
       t.removeRecord({
@@ -129,6 +131,7 @@ export function PlanTable(props: IProps) {
         id: deleteItem,
       })
     );
+    setDeleteItem('');
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
