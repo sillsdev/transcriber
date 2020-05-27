@@ -279,6 +279,7 @@ interface IRecordProps {
   groupMemberships: Array<GroupMembership>;
   roles: Array<Role>;
   mediafiles: Array<MediaFile>;
+  projects: Array<Project>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
@@ -308,6 +309,7 @@ export function ResponsiveDrawer(props: IProps) {
     groupMemberships,
     roles,
     mediafiles,
+    projects,
     orbitError,
   } = props;
   const classes = useStyles();
@@ -357,7 +359,6 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
-  const [delProject, setDelProject] = useState(false);
   const timer = React.useRef<NodeJS.Timeout>();
   const syncTimer = React.useRef<NodeJS.Timeout>();
 
@@ -511,7 +512,7 @@ export function ResponsiveDrawer(props: IProps) {
       if (mini) setMini(false);
       setPlan('');
       if (addProject) setAddProject(false);
-      else setDelProject(true);
+
       if (projectId) setProject(projectId);
     }
   };
@@ -624,17 +625,14 @@ export function ResponsiveDrawer(props: IProps) {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getProjs = async () => {
-    let projs: Project[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('project')
-    ) as Project[];
     if (isElectron) {
       const groupids = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
         .map((gm) => related(gm, 'group'));
 
-      projs = projs.filter((p) => groupids.includes(related(p, 'group')));
+      return projects.filter((p) => groupids.includes(related(p, 'group')));
     }
-    return projs;
+    return projects;
   };
 
   useEffect(() => {
@@ -709,10 +707,6 @@ export function ResponsiveDrawer(props: IProps) {
   }, [orgOptions, organization, isApp]);
 
   useEffect(() => {
-    if (delProject) {
-      setDelProject(false);
-      return;
-    }
     getProjs().then((projects) => {
       const projOpts = projects
         .filter(
@@ -739,7 +733,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject, delProject, orgRole, user]);
+  }, [organization, orgRole, user, projects]);
 
   useEffect(() => {
     const projKeys = projOptions.map((o) => o.value);
@@ -1383,6 +1377,7 @@ const mapRecordsToProps = {
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   roles: (q: QueryBuilder) => q.findRecords('role'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
 export default withData(mapRecordsToProps)(

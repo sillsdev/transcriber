@@ -604,15 +604,17 @@ export function Transcriber(props: IProps) {
   }, [project]);
 
   const handleAutosave = () => {
-    const transcription = transcriptionRef.current.firstChild.value;
-    if (transcriptionIn !== transcription) {
-      if (!busy) {
-        handleSave().finally(() => {
-          setTranscriptionIn(transcription);
-          launchTimer();
-        });
+    if (transcriptionRef.current) {
+      const transcription = transcriptionRef.current.firstChild.value;
+      if (transcriptionIn !== transcription) {
+        if (!busy) {
+          handleSave().finally(() => {
+            setTranscriptionIn(transcription);
+            launchTimer();
+          });
+        }
+        return;
       }
-      return;
     }
     launchTimer();
   };

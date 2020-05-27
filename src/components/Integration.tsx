@@ -400,12 +400,8 @@ export function IntegrationPanel(props: IProps) {
   }, [project]);
 
   useEffect(() => {
-    if (!paratext_countStatus) {
-      resetCount();
-      if (isElectron) getLocalCount(passages, project, memory, t.countPending);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passages, paratext_countStatus]);
+    resetCount();
+  }, [passages, resetCount]);
 
   /* do this once */
   useEffect(() => {
@@ -418,15 +414,17 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     if (!paratext_countStatus) {
-      if (!isElectron)
-        getCount(
-          auth,
-          remoteIdNum('project', project, keyMap),
-          errorReporter,
-          t.countPending
-        );
+      isElectron
+        ? getLocalCount(passages, project, memory, t.countPending)
+        : getCount(
+            auth,
+            remoteIdNum('project', project, keyMap),
+            errorReporter,
+            t.countPending
+          );
     } else if (paratext_countStatus.errStatus)
       showMessage(t.countError, translateError(paratext_countStatus));
+
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_count, paratext_countStatus]);
 
@@ -472,12 +470,6 @@ export function IntegrationPanel(props: IProps) {
         showMessage(t.syncError, translateError(paratext_syncStatus));
       else if (paratext_syncStatus.statusMsg !== '') {
         showMessage('', paratext_syncStatus.statusMsg);
-        getCount(
-          auth,
-          remoteIdNum('project', project, keyMap),
-          errorReporter,
-          t.countPending
-        );
       }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);

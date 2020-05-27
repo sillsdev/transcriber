@@ -3,8 +3,9 @@ import {
   KeyMap,
   QueryBuilder,
   Transform,
-  RemoveRecordOperation,
   Schema,
+  TransformBuilder,
+  Operation,
 } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { DataChange } from '../model/dataChange';
@@ -36,7 +37,7 @@ export const dateChanges = (
         Authorization: 'Bearer ' + auth.accessToken,
       },
     }
-  ).then((response) => {
+  ).then(async (response) => {
     const data = response.data.data as DataChange;
     const changes = data.attributes.changes;
     changes.forEach((table) => {
@@ -52,24 +53,21 @@ export const dateChanges = (
       }
     });
     const deletes = data.attributes.deleted;
-    deletes.forEach((table) => {
-      let operations: RemoveRecordOperation[] = [];
+    var tb: TransformBuilder = new TransformBuilder();
+
+    for (var ix = 0; ix < deletes.length; ix++) {
+      var table = deletes[ix];
+      let operations: Operation[] = [];
       table.forEach((r) => {
         const localId = remoteIdGuid(r.type, r.id.toString(), keyMap);
         if (localId) {
-          operations.push({
-            op: 'removeRecord',
-            record: {
-              type: r.type,
-              id: localId,
-            },
-          });
+          operations.push(tb.removeRecord({ type: r.type, id: localId }));
         }
       });
       if (operations.length > 0) {
-        memory.sync({ id: 'delete-changes', operations });
+        await memory.update(operations);
       }
-    });
+    }
     localStorage.setItem('lastTime', nextTime);
   });
 };
