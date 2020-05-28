@@ -3,9 +3,10 @@ import Memory from '@orbit/memory';
 import { getMediaProjRec, getMediaRec } from '.';
 import { DOMParser, XMLSerializer } from 'xmldom';
 import xpath from 'xpath';
-import { QueryBuilder, TransformBuilder, Record } from '@orbit/data';
+import { QueryBuilder, TransformBuilder, Record, Operation } from '@orbit/data';
 import related from './related';
 import { getParatextProgPath } from './paratextPath';
+import { UpdatePassageStateOps } from './UpdatePassageState';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 var temp = isElectron ? require('electron').remote.getGlobal('temp') : '';
@@ -43,7 +44,7 @@ const getSection = (passage: Passage, memory: Memory) => {
   const sections = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('section')
   ) as Section[];
-  const sectionRecs = sections.filter(s => s.id === sectionId);
+  const sectionRecs = sections.filter((s) => s.id === sectionId);
   return sectionRecs[0];
 };
 
@@ -64,7 +65,7 @@ const postPass = (doc: Document, p: Passage, memory: Memory) => {
   const end = vInt(mend);
   let verses = xpath.select('//verse', doc) as Element[];
   const existing = Array<Element>();
-  verses.forEach(v => {
+  verses.forEach((v) => {
     const [vstart, vend] = domVnum(v);
     if (vstart) {
       let result =
@@ -76,7 +77,7 @@ const postPass = (doc: Document, p: Passage, memory: Memory) => {
       if (result) existing.push(v);
     }
   });
-  existing.forEach(e => {
+  existing.forEach((e) => {
     const para = e.parentNode;
     if (para) {
       const vrs = xpath.select('.//verse', para) as Element[];
@@ -99,7 +100,8 @@ const postPass = (doc: Document, p: Passage, memory: Memory) => {
   const media = related(p, 'mediafiles') as Record[];
   const sortedMedia = media
     .map(
-      m => memory.cache.query((q: QueryBuilder) => q.findRecord(m)) as MediaFile
+      (m) =>
+        memory.cache.query((q: QueryBuilder) => q.findRecord(m)) as MediaFile
     )
     .sort((i, j) =>
       i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
@@ -123,7 +125,7 @@ const postPass = (doc: Document, p: Passage, memory: Memory) => {
   }
   let after: Element | undefined;
   let vaft: number = 9999;
-  verses.forEach(v => {
+  verses.forEach((v) => {
     const [vstart] = domVnum(v);
     if (vstart > start && vstart < vaft) {
       vaft = vstart;
@@ -164,7 +166,8 @@ const doPassage = async (
   chap: string,
   pass: Passage[],
   ptProjName: string,
-  memory: Memory
+  memory: Memory,
+  userid: number
 ) => {
   if (!temp) return;
   const tempName = path.join(temp, chap + '.usx');
@@ -182,7 +185,7 @@ const doPassage = async (
   if (stdout) console.log(stdout);
   const usx: string = fs.readFileSync(tempName, 'utf-8');
   let usxDom: Document = domParser.parseFromString(usx);
-  pass.forEach(p => {
+  pass.forEach((p) => {
     postPass(usxDom, p, memory);
   });
   const usxXml: string = xmlSerializer.serializeToString(usxDom);
@@ -196,11 +199,19 @@ const doPassage = async (
     '-x',
   ]);
   if (stdoutw) console.log(stdoutw);
+  var ops: Operation[] = [];
+  var tb = new TransformBuilder();
   for (let p of pass) {
-    await memory.update((t: TransformBuilder) =>
-      t.replaceAttribute(p, 'state', ActivityStates.Done)
+    UpdatePassageStateOps(
+      p.id,
+      ActivityStates.Done,
+      'Paratext',
+      userid,
+      tb,
+      ops
     );
   }
+  await memory.update(ops);
   fs.unlinkSync(tempName);
 };
 
@@ -208,16 +219,17 @@ export const localSync = async (
   project: string,
   ptProjName: string,
   passages: Passage[],
-  memory: Memory
+  memory: Memory,
+  userid: number
 ) => {
   let chapChg: { [key: string]: Passage[] } = {};
   passages
-    .filter(p => p.attributes.state === ActivityStates.Approved)
-    .filter(p => {
+    .filter((p) => p.attributes.state === ActivityStates.Approved)
+    .filter((p) => {
       const projRec = getMediaProjRec(getMediaRec(p.id, memory), memory);
       return projRec && projRec.id === project;
     })
-    .forEach(p => {
+    .forEach((p) => {
       let chap = /[0-9]+/.exec(p.attributes.reference);
       if (chap && chap.length > 0) {
         const k = p.attributes.book + '-' + chap[0];
@@ -229,7 +241,7 @@ export const localSync = async (
       }
     });
   for (let c of Object.keys(chapChg)) {
-    await doPassage(c, chapChg[c], ptProjName, memory);
+    await doPassage(c, chapChg[c], ptProjName, memory, userid);
   }
 };
 export default localSync;
