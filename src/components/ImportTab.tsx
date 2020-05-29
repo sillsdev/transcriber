@@ -360,8 +360,8 @@ export function ImportTab(props: IProps) {
               old = '';
               if (
                 oldsection.relationships?.editor?.data &&
-                section.relationships?.editor?.data !==
-                  oldsection.relationships?.editor?.data
+                (section?.relationships?.editor?.data as RecordIdentity)?.id !==
+                  (oldsection?.relationships?.editor.data as RecordIdentity).id
               ) {
                 var editor = memory.cache.query((q: QueryBuilder) =>
                   q.findRecord({
@@ -390,8 +390,10 @@ export function ImportTab(props: IProps) {
               }
               if (
                 oldsection.relationships?.transcriber?.data &&
-                section.relationships?.transcriber?.data !==
-                  oldsection.relationships?.transcriber
+                (section.relationships?.transcriber?.data as RecordIdentity)
+                  ?.id !==
+                  (oldsection.relationships?.transcriber
+                    ?.data as RecordIdentity)?.id
               ) {
                 var transcriber = memory.cache.query((q: QueryBuilder) =>
                   q.findRecord({
