@@ -183,6 +183,7 @@ export function IntegrationPanel(props: IProps) {
   const [message, setMessage] = React.useState(<></>);
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
+  const [syncing, setSyncing] = React.useState(false);
 
   const showMessage = (title: string, msg: string) => {
     setMessage(
@@ -312,17 +313,28 @@ export function IntegrationPanel(props: IProps) {
       );
     }
   };
-  const handleSync = () =>
+  const handleSync = () => {
+    setSyncing(true);
     syncProject(
       auth,
       remoteIdNum('project', project, keyMap),
       errorReporter,
       t.syncPending
     );
-
+  };
   const handleLocalSync = async () => {
-    await localSync(project, ptShortName, passages, memory);
+    setSyncing(true);
+    showMessage('', t.syncPending);
+    await localSync(
+      project,
+      ptShortName,
+      passages,
+      memory,
+      remoteIdNum('user', user, memory.keyMap)
+    );
+    showMessage('', t.syncComplete);
     resetCount();
+    setSyncing(false);
   };
 
   const handleRemoveIntegration = () => {
@@ -465,12 +477,18 @@ export function IntegrationPanel(props: IProps) {
   }, [busy, paratext_projects, paratext_projectsStatus]);
 
   useEffect(() => {
-    if (paratext_syncStatus && !isElectron)
-      if (paratext_syncStatus.errStatus)
+    if (paratext_syncStatus) {
+      if (paratext_syncStatus.errStatus) {
         showMessage(t.syncError, translateError(paratext_syncStatus));
-      else if (paratext_syncStatus.statusMsg !== '') {
+        setSyncing(false);
+      } else if (paratext_syncStatus.statusMsg !== '') {
         showMessage('', paratext_syncStatus.statusMsg);
       }
+      if (paratext_syncStatus.complete) {
+        resetCount();
+        setSyncing(false);
+      }
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);
 
@@ -640,6 +658,7 @@ export function IntegrationPanel(props: IProps) {
                     color="primary"
                     className={classes.button}
                     disabled={
+                      syncing ||
                       !online ||
                       !hasPtProj ||
                       !hasParatext ||
@@ -768,7 +787,9 @@ export function IntegrationPanel(props: IProps) {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    disabled={!ptPath || !hasPtProj || !paratext_count}
+                    disabled={
+                      syncing || !ptPath || !hasPtProj || !paratext_count
+                    }
                     onClick={handleLocalSync}
                   >
                     {t.sync}
