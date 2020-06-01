@@ -219,10 +219,11 @@ export function PlanSheet(props: IProps) {
     );
   };
 
+  const numCol = [1, 3]; // Section num = col 1, Passage num = col 3
   const handleCellsChanged = (changes: Array<IChange>) => {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
-      if (value && !isNum(value) && isNum(cell.value)) {
+      if (row !== 0 && numCol.includes(col) && value && !isNum(value)) {
         setMessage(<span>{t.nonNumber}</span>);
       } else {
         grid[row][col] = { ...grid[row][col], value };
@@ -282,8 +283,9 @@ export function PlanSheet(props: IProps) {
     if (position.i === 0) {
       setPasting(true);
       setMessage(<span>{t.pasting}</span>);
-      paste(cleanClipboard(clipBoard));
+      const retVal = paste(cleanClipboard(clipBoard));
       setPasting(false);
+      return retVal;
     }
     return cleanClipboard(clipBoard);
   };
