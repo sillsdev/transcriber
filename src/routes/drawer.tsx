@@ -1228,77 +1228,83 @@ export function ResponsiveDrawer(props: IProps) {
         })}
         color="inherit"
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <img src={logo} className={classes.logo} alt="logo" />
-          <div>
-            <Typography variant="overline" className={classes.appName}>
-              {isApp ? t.transcribe : t.admin}
-            </Typography>
-            <br />
-            <Typography variant="h6" noWrap>
-              {title}
-            </Typography>
-          </div>
-          <div className={classes.grow}>{'\u00A0'}</div>
+        <>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <img src={logo} className={classes.logo} alt="logo" />
+            <div>
+              <Typography variant="overline" className={classes.appName}>
+                {isApp ? t.transcribe : t.admin}
+              </Typography>
+              <br />
+              <Typography variant="h6" noWrap>
+                {title}
+              </Typography>
+            </div>
+            <div className={classes.grow}>{'\u00A0'}</div>
 
-          {!isApp ? (
-            <div className={classes.navButton}>
-              <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSwitch}
-                disabled={!transcribe}
-              >
-                {t.transcribe}
-              </Button>
-            </div>
-          ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
-            <div className={classes.navButton}>
-              <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSwitch}
-                disabled={busy || doSave}
-              >
-                {t.admin}
-              </Button>
-            </div>
-          ) : (
-            isApp &&
-            online &&
-            (projRole === 'admin' || orgRole === 'admin') && (
+            {!isApp ? (
               <div className={classes.navButton}>
                 <Typography>{t.switchTo + '\u00A0'}</Typography>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleAdmin(API_CONFIG.endpoint)}
+                  onClick={handleSwitch}
+                  disabled={!transcribe}
                 >
-                  {t.goOnline}
+                  {t.transcribe}
                 </Button>
               </div>
-            )
+            ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
+              <div className={classes.navButton}>
+                <Typography>{t.switchTo + '\u00A0'}</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSwitch}
+                  disabled={busy || doSave}
+                >
+                  {t.admin}
+                </Button>
+              </div>
+            ) : (
+              isApp &&
+              online &&
+              (projRole === 'admin' || orgRole === 'admin') && (
+                <div className={classes.navButton}>
+                  <Typography>{t.switchTo + '\u00A0'}</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAdmin(API_CONFIG.endpoint)}
+                  >
+                    {t.goOnline}
+                  </Button>
+                </div>
+              )
+            )}
+            {'\u00A0'}
+            <HelpMenu online={online} />
+            <UserMenu action={menuAction} />
+          </Toolbar>
+          {(!busy && !importexportBusy && !doSave) || (
+            <AppBar
+              position="fixed"
+              className={classes.progress}
+              color="inherit"
+            >
+              <LinearProgress variant="indeterminate" />
+            </AppBar>
           )}
-          {'\u00A0'}
-          <HelpMenu online={online} />
-          <UserMenu action={menuAction} />
-        </Toolbar>
-        {(!busy && !importexportBusy && !doSave) || (
-          <AppBar position="fixed" className={classes.progress} color="inherit">
-            <LinearProgress variant="indeterminate" />
-          </AppBar>
-        )}
+        </>
       </AppBar>
       <nav
         className={clsx(classes.drawer, { [classes.drawerMini]: mini })}

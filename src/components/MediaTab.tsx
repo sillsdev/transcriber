@@ -712,12 +712,14 @@ export function MediaTab(props: IProps) {
       playItem,
       allBookData
     );
-    setData(newData);
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
       if (r.section !== '') medAttach.add(i);
     });
-    setDataAttach(medAttach);
+    if (medAttach.size !== dataAttach.size || newData.length !== data.length) {
+      setDataAttach(medAttach);
+      setData(newData);
+    }
     const newPassData = getPassages(
       projectplans,
       mediaFiles,
@@ -725,45 +727,61 @@ export function MediaTab(props: IProps) {
       sections,
       allBookData
     );
-    setPData(newPassData);
     const pasAttach = new Set<number>();
     newPassData.forEach((r, i) => {
       if (r.attached === 'Y') pasAttach.add(i);
     });
-    setPassAttach(pasAttach);
+    if (
+      pasAttach.size !== passAttach.size ||
+      pdata.length !== newPassData.length
+    ) {
+      setPassAttach(pasAttach);
+      setPData(newPassData);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projectplans, mediaFiles, passages, sections, playItem, allBookData]);
 
   useEffect(() => {
-    setData((data) =>
-      data.map((r, i) => {
-        const isAttached = attachMap.hasOwnProperty(i);
-        return isAttached
-          ? {
-              ...r,
-              section: pdata[attachMap[i]].section,
-              reference: pdata[attachMap[i]].reference,
-              isAttaching: true,
-              status: StatusL.Proposed,
-            }
-          : r.isAttaching
-          ? {
-              ...r,
-              section: '',
-              reference: '',
-              isAttaching: false,
-              status: StatusL.No,
-            }
-          : { ...r };
-      })
-    );
-    setPData((pdata) =>
-      pdata.map((r, i) => {
-        return hasPassage(i)
-          ? { ...r, attached: 'Y', isAttaching: true }
-          : { ...r, attached: 'N', isAttaching: false };
-      })
-    );
+    let dataChange = false;
+    const newData = data.map((r, i) => {
+      const newRow = attachMap.hasOwnProperty(i)
+        ? {
+            ...r,
+            section: pdata[attachMap[i]].section,
+            reference: pdata[attachMap[i]].reference,
+            isAttaching: true,
+            status: StatusL.Proposed,
+          }
+        : r.isAttaching
+        ? {
+            ...r,
+            section: '',
+            reference: '',
+            isAttaching: false,
+            status: StatusL.No,
+          }
+        : null;
+      if (newRow) {
+        dataChange = true;
+        return newRow;
+      }
+      return { ...r };
+    });
+    if (dataChange) setData(newData);
+    dataChange = false;
+    const newPData = pdata.map((r, i) => {
+      const newRow = hasPassage(i)
+        ? { ...r, attached: 'Y', isAttaching: true }
+        : r.isAttaching
+        ? { ...r, attached: 'N', isAttaching: false }
+        : null;
+      if (newRow) {
+        dataChange = true;
+        return newRow;
+      }
+      return { ...r };
+    });
+    if (dataChange) setPData(newPData);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [attachMap]);
 

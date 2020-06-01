@@ -220,6 +220,7 @@ export function Loading(props: IProps) {
   };
 
   useEffect(() => {
+    if (!auth || !auth.isAuthenticated(offline)) return;
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
     }
@@ -310,10 +311,10 @@ export function Loading(props: IProps) {
   if (orbitLoaded && completed === 100) {
     const userRec: User = GetUser(memory, user);
     if (
-      !userRec.attributes.givenName ||
-      !userRec.attributes.timezone ||
-      !userRec.attributes.locale ||
-      !uiLang.includes(userRec.attributes.locale)
+      !userRec?.attributes?.givenName ||
+      !userRec?.attributes?.timezone ||
+      !userRec?.attributes?.locale ||
+      !uiLang.includes(userRec?.attributes?.locale)
     ) {
       return <Redirect to="/profile" />;
     }

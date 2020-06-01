@@ -14,7 +14,6 @@ export const getMediaInPlans = (
   //  console.log(related(m, 'plan'), planids.includes(related(m, 'plan')))
   //);
   var media = mediaFiles.filter((m) => planids.includes(related(m, 'plan')));
-  console.log('media in plan', media.length);
   media.forEach((f) => {
     const name = related(f, 'plan') + f.attributes.originalFile;
     latest[name] = latest[name]
