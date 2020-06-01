@@ -3,7 +3,8 @@ const path = require('path');
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const execa = isElectron ? require('execa') : null;
 
-const progVal = 'Program_Files_Directory_Ptw9';
+const progVal9 = 'Program_Files_Directory_Ptw9';
+const progVal8 = 'Program_Files_Directory_Ptw8';
 const dataVal = 'Settings_Directory';
 const regKey = 'HKLM\\SOFTWARE\\WOW6432Node\\Paratext\\8';
 interface Iexeca {
@@ -16,11 +17,11 @@ const getRegVal = async (key: string, name: string) => {
   // console.log(stdout);
   let val = stdout
     .split('\n')
-    .map(ln => {
+    .map((ln) => {
       const match = lnRe.exec(ln);
       return match && match[1] === name ? match[3] : undefined;
     })
-    .filter(r => r);
+    .filter((r) => r);
   return val.length > 0 ? val[0] : '';
 };
 
@@ -61,7 +62,9 @@ export const getParatextDataPath = async () => {
 
 export const getParatextProgPath = async () => {
   if (os.platform() === 'win32') {
-    return await getRegVal(regKey, progVal);
+    return (
+      (await getRegVal(regKey, progVal9)) || (await getRegVal(regKey, progVal8))
+    );
   } else {
     return '/usr/bin/paratext/';
   }
