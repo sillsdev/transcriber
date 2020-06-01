@@ -342,12 +342,7 @@ export function IntegrationPanel(props: IProps) {
   };
 
   const handleDeleteConfirmed = () => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({
-        type: 'projectintegration',
-        id: getProjectIntegration(paratextIntegration),
-      })
-    );
+    updateProjectIntegration(getProjectIntegration(paratextIntegration), '');
     setConfirmItem(null);
     removeProjectFromParatextList(ptProj);
     setPtProj(-1);
@@ -475,6 +470,11 @@ export function IntegrationPanel(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [busy, paratext_projects, paratext_projectsStatus]);
+
+  useEffect(() => {
+    findConnectedProject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectintegrations]);
 
   useEffect(() => {
     if (paratext_syncStatus) {
