@@ -9,7 +9,6 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
-import PassageMedia from './PassageMedia';
 import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import 'react-datasheet/lib/react-datasheet.css';
@@ -125,7 +124,6 @@ export function PlanSheet(props: IProps) {
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
-  const [passageMediaVisible, setPassageMediaVisible] = useState(false);
   const suggestionRef = useRef<Array<OptionType>>();
   const listRef = useRef<Array<string>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
@@ -207,10 +205,6 @@ export function PlanSheet(props: IProps) {
   };
   const handleActionRefused = () => {
     setConfirmAction('');
-  };
-  const handlePassageMedia = (status: boolean) => (e: any) => {
-    setActionMenuItem(null);
-    setPassageMediaVisible(status);
   };
 
   const doUpdate = (grid: ICell[][]) => {
@@ -510,9 +504,6 @@ export function PlanSheet(props: IProps) {
                   <MenuItem onClick={handleConfirmAction('Delete')}>
                     {t.delete}
                   </MenuItem>
-                  <MenuItem onClick={handlePassageMedia(true)}>
-                    {t.attachMedia}
-                  </MenuItem>
                 </Menu>
                 <div className={classes.grow}>{'\u00A0'}</div>
                 <Button
@@ -559,10 +550,6 @@ export function PlanSheet(props: IProps) {
           </MenuItem>
         </Menu>
       </div>
-      <PassageMedia
-        visible={passageMediaVisible}
-        closeMethod={handlePassageMedia(false)}
-      />
       {confirmAction !== '' ? (
         <Confirm
           text={t.confirm
