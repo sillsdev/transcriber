@@ -456,6 +456,7 @@ export function MediaTab(props: IProps) {
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
   const [passAttach, setPassAttach] = useState(new Set<number>());
+  const inProcess = React.useRef<boolean>(false);
 
   const hasPassage = (pRow: number) => {
     for (let i of Object.keys(attachMap)) {
@@ -546,6 +547,7 @@ export function MediaTab(props: IProps) {
   };
 
   const handleSave = async () => {
+    inProcess.current = true;
     setMessage(<span>{t.saving}</span>);
     const handleRow = async (mRow: string) => {
       const row = parseInt(mRow);
@@ -557,6 +559,7 @@ export function MediaTab(props: IProps) {
     }
     setAttachMap({});
     setMessage(<span>{t.savingComplete}</span>);
+    inProcess.current = false;
   };
 
   const detach = async (passage: string, mediaFile: string) => {
@@ -1146,7 +1149,9 @@ export function MediaTab(props: IProps) {
                   className={classes.button}
                   onClick={handleSave}
                   disabled={
-                    check.length > 1 || Object.keys(attachMap).length === 0
+                    check.length > 1 ||
+                    Object.keys(attachMap).length === 0 ||
+                    inProcess.current
                   }
                 >
                   {t.save}

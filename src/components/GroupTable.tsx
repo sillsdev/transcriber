@@ -145,7 +145,7 @@ export function GroupTable(props: IProps) {
     { columnName: 'members', width: 100 },
     { columnName: 'action', width: 150 },
   ];
-
+  const sorting = [{ columnName: 'name', direction: 'asc' }];
   const columnSorting = [
     { columnName: 'projects', compare: numCompare },
     { columnName: 'members', compare: numCompare },
@@ -366,6 +366,7 @@ export function GroupTable(props: IProps) {
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
+          sorting={sorting}
           sortingEnabled={sortingEnabled}
           filteringEnabled={filteringEnabled}
           columnSorting={columnSorting}
