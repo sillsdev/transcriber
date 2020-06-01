@@ -665,6 +665,7 @@ const initialState = {
 			"usernameError": "Username error:",
 			"syncPending": "Syncing...",
 			"syncError": "Sync error:",
+			"bookNotFound": "Book not included in this project",
 			"syncComplete": "Sync Complete!",
 			"countError": "Count query error: ",
 			"countReady": "Passages ready to sync: ",

@@ -3135,6 +3135,12 @@
     		<target>Erreur de synchronisation:</target>
 	     </segment>
       </unit>
+      <unit id="integration.bookNotFound">
+         <segment>
+            <source>Book not included in this project</source>
+            <target>Livre non inclus dans ce projet</target>
+         </segment>
+      </unit>
       <unit id="integration.syncComplete">
          <segment>
             <source>Sync Complete!</source>

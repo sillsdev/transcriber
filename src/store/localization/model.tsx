@@ -625,6 +625,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "usernameError": string;
     "syncPending": string;
     "syncError": string;
+    "bookNotFound": string;
     "syncComplete": string;
     "countError": string;
     "countReady": string;

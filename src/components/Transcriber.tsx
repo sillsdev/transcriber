@@ -708,16 +708,16 @@ export function Transcriber(props: IProps) {
         i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
       )
       .forEach((psc) => {
-        if (psc.attributes.state !== curState) {
-          curState = psc.attributes.state;
-          results.push(historyItem(psc, t.getString(curState)));
-        }
         const comment = psc.attributes.comments;
         if (comment && comment !== '' && comment !== curComment) {
           curComment = comment;
           results.push(
             historyItem(psc, <span style={{ color: 'black' }}>{comment}</span>)
           );
+        }
+        if (psc.attributes.state !== curState) {
+          curState = psc.attributes.state;
+          results.push(historyItem(psc, t.getString(curState)));
         }
       });
     return results;

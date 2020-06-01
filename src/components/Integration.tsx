@@ -49,6 +49,7 @@ import { schema } from '../schema';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { isElectron } from '../api-variable';
+import { dateChanges } from '../routes/dateChanges';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -179,11 +180,15 @@ export function IntegrationPanel(props: IProps) {
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
+  const [remote] = useGlobal('remote');
+  const [fingerprint] = useGlobal('fingerprint');
+
   const [errorReporter] = useGlobal('errorReporter');
   const [message, setMessage] = React.useState(<></>);
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
-  const [syncing, setSyncing] = React.useState(false);
+  const syncing = React.useRef<boolean>(false);
+  const setSyncing = (state: boolean) => (syncing.current = state);
 
   const showMessage = (title: string, msg: string) => {
     setMessage(
@@ -374,8 +379,9 @@ export function IntegrationPanel(props: IProps) {
     if (err.errStatus === 401) return t.expiredToken;
     if (err.errStatus === 500) {
       if (err.errMsg.includes('401')) return t.expiredParatextToken;
-
-      return t.invalidParatextLogin;
+      if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
+      if (err.errMsg.includes('Book not included'))
+        return t.bookNotFound + err.errMsg.substr(err.errMsg.lastIndexOf(':'));
     }
     return err.errMsg;
   };
@@ -487,6 +493,7 @@ export function IntegrationPanel(props: IProps) {
       if (paratext_syncStatus.complete) {
         resetCount();
         setSyncing(false);
+        dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -658,7 +665,7 @@ export function IntegrationPanel(props: IProps) {
                     color="primary"
                     className={classes.button}
                     disabled={
-                      syncing ||
+                      syncing.current ||
                       !online ||
                       !hasPtProj ||
                       !hasParatext ||
@@ -788,7 +795,10 @@ export function IntegrationPanel(props: IProps) {
                     color="primary"
                     className={classes.button}
                     disabled={
-                      syncing || !ptPath || !hasPtProj || !paratext_count
+                      syncing.current ||
+                      !ptPath ||
+                      !hasPtProj ||
+                      !paratext_count
                     }
                     onClick={handleLocalSync}
                   >

@@ -3644,8 +3644,16 @@
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
-            </trans-unit>            <trans-unit id="integration.syncError">
+            </trans-unit>
+            <trans-unit id="integration.syncError">
                 <source>Sync error:</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="integration.bookNotFound">
+                <source>Book not included in this project</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">integration.tsx</context>
