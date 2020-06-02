@@ -322,7 +322,7 @@ export function PlanSheet(props: IProps) {
     );
   };
   const isNum = (value: string | number) =>
-    isNumber(value) || /^[0-9]$/.test(value);
+    isNumber(value) || /^[0-9]+$/.test(value);
 
   const handleAutoSave = () => {
     if (changed && !preventSave.current && !global.alertOpen) {
