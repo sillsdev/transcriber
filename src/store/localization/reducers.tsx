@@ -413,6 +413,7 @@ const initialState = {
 			"error": "Export Error",
 			"downloading": "Creation complete. Downloading {0}",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
+			"exportTooLarge": "The project cannot be exported.  The export file is too large.",
 		}
 	}),
 	"transcriptionShow": new LocalizedStrings({

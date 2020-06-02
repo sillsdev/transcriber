@@ -389,6 +389,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "error": string;
     "downloading": string;
     "expiredToken": string;
+    "exportTooLarge": string;
 };
 
 export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {

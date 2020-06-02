@@ -2005,6 +2005,12 @@
             <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
+      <unit id="transcriptionTab.exportTooLarge">
+         <segment>
+            <source>The project cannot be exported.  The export file is too large.</source>
+            <target>Le projet ne peut pas être exporté. Le fichier d'exportation est trop volumineux.</target>
+         </segment>
+       </unit>
 		<unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>

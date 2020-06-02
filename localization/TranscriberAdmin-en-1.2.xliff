@@ -2336,6 +2336,13 @@
                     <context context-type="sourcefile">ExportTab.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="transcriptionTab.exportTooLarge">
+                <source>The project cannot be exported.  The export file is too large.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ExportTab.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="transcriptionShow.transcription">
                 <source>Transcription</source>
                 <target/>

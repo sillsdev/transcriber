@@ -2002,6 +2002,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.exportTooLarge">
+         <segment>
+            <source>The project cannot be exported.  The export file is too large.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>
