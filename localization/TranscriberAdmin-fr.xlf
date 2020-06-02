@@ -3573,6 +3573,12 @@
 				<target>Recevoir les résumés quotidiens</target>
 			</segment>
 		</unit>
+		<unit id="profile.role">
+			<segment>
+				<source>Role</source>
+				<target>Rôle</target>
+			</segment>
+		</unit>
 		<unit id="deleteExpansion.dangerZone">
 			<segment>
 				<source>Danger Zone</source>

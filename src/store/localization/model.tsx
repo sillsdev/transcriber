@@ -707,6 +707,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "addOfflineUser": string;
     "sendNews": string;
     "sendDigest": string;
+    "role": string;
 };
 
 export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {

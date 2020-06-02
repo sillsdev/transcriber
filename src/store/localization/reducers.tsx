@@ -750,6 +750,7 @@ const initialState = {
 			"addOfflineUser": "Add Offline User",
 			"sendNews": "Receive SIL Transcriber and Language Technology news",
 			"sendDigest": "Receive daily digests",
+			"role": "Role",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({
