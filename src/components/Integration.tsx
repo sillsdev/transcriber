@@ -347,7 +347,7 @@ export function IntegrationPanel(props: IProps) {
   };
 
   const handleDeleteConfirmed = () => {
-    updateProjectIntegration(getProjectIntegration(paratextIntegration), '');
+    updateProjectIntegration(getProjectIntegration(paratextIntegration), '{}');
     setConfirmItem(null);
     removeProjectFromParatextList(ptProj);
     setPtProj(-1);
