@@ -1,7 +1,9 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
-import { IState, ITemplateStrings } from '../model';
+import { IState, ITemplateStrings, Plan, PlanType } from '../model';
+import { QueryBuilder } from '@orbit/data';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import {
   Paper,
@@ -18,6 +20,7 @@ import {
 } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import InfoIcon from '@material-ui/icons/Info';
+import { related } from '../utils';
 
 interface IstrMap {
   [key: string]: string;
@@ -94,12 +97,15 @@ export interface ITemplateProps extends IStateProps {
 
 export function Template(props: ITemplateProps) {
   const { t, matchMap } = props;
+  const [plan] = useGlobal('plan');
+  const [memory] = useGlobal('memory');
   const classes = useStyles();
-  const [template, setTemplate] = React.useState('{BOOK}-{CHAP}-{BEG}{END}');
+  const [template, setTemplate] = React.useState<string>();
   const [templateInfo, setTemplateInfo] = React.useState(false);
 
   const handleTemplateChange = (e: any) => {
     setTemplate(e.target.value);
+    localStorage.setItem('template', e.target.value);
   };
 
   const handleTemplateInfo = () => {
@@ -111,6 +117,7 @@ export function Template(props: ITemplateProps) {
   };
 
   const handleApply = () => {
+    if (!template) return;
     const terms = template
       .match(/{([A-Za-z]{3,4})}/g)
       ?.map((v) => v.slice(1, -1));
@@ -130,6 +137,34 @@ export function Template(props: ITemplateProps) {
       }
     matchMap(sPat, terms);
   };
+
+  React.useEffect(() => {
+    if (!template) {
+      const lastTemplate = localStorage.getItem('template');
+      if (lastTemplate) {
+        setTemplate(lastTemplate);
+      } else {
+        const planRecs = memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('plan')
+        ) as Plan[];
+        const myPlan = planRecs.filter((p) => p.id === plan);
+        if (myPlan.length > 0) {
+          const planTypeRec = memory.cache.query((q: QueryBuilder) =>
+            q.findRecord({
+              type: 'plantype',
+              id: related(myPlan[0], 'plantype'),
+            })
+          ) as PlanType;
+          setTemplate(
+            planTypeRec?.attributes?.name.toLocaleLowerCase() !== 'other'
+              ? '{BOOK}-{CHAP}-{BEG}-{END}'
+              : '{CHAP}-{BEG}-{END}'
+          );
+        }
+      }
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   return (
     <Paper component="form" className={classes.root}>
