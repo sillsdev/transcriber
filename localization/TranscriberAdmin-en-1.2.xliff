@@ -1678,13 +1678,6 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.loadingTranscriberAdmin">
-                <source>Loading SIL Transcriber Admin</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">drawer.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="main.loadingTranscriber">
                 <source>Loading SIL Transcriber</source>
                 <target/>
@@ -1728,13 +1721,13 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="main.loadingTable">
-        		<source>Loading data</source>
+        		<source>Busy...please wait.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="main.logout">
+            <trans-unit id="main.logout">
                 <source>Log Out</source>
                 <target/>
                 <context-group>

@@ -1438,12 +1438,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.loadingTranscriberAdmin">
-         <segment>
-            <source>Loading SIL Transcriber Admin</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.loadingTranscriber">
          <segment>
             <source>Loading SIL Transcriber</source>
@@ -1482,7 +1476,7 @@
       </unit>
       <unit id="main.loadingTable">
          <segment>
-            <source>Loading data</source>
+            <source>Busy...please wait.</source>
             <target/>
          </segment>
       </unit>

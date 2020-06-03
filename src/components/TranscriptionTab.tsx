@@ -271,7 +271,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [exporting, setExporting] = useState(false);
+
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -306,6 +306,8 @@ export function TranscriptionTab(props: IProps) {
     return err.errMsg;
   };
   const doProjectExport = (exportType: string) => {
+    setBusy(true);
+
     const mediaFiles = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile')
     ) as MediaFile[];
@@ -327,7 +329,6 @@ export function TranscriptionTab(props: IProps) {
     );
   };
   const handleProjectExport = () => {
-    setExporting(true);
     if (isElectron) setOpenExport(true);
     else doProjectExport('ptf');
   };
@@ -467,14 +468,12 @@ export function TranscriptionTab(props: IProps) {
         showMessage(t.error, translateError(exportStatus));
         exportComplete();
         setBusy(false);
-        setExporting(false);
       } else {
         if (exportStatus.statusMsg) {
-          setBusy(true);
           showMessage('', exportStatus.statusMsg);
         }
         if (exportStatus.complete) {
-          setExporting(false);
+          setBusy(false);
           if (exportFile && exportName === '') {
             setExportName(exportFile.data.attributes.message);
             setExportUrl(exportFile.data.attributes.fileurl);
@@ -632,7 +631,6 @@ export function TranscriptionTab(props: IProps) {
     };
     const closeNoChoice = () => {
       setOpenExport(false);
-      setExporting(false);
     };
 
     return (
@@ -681,7 +679,7 @@ export function TranscriptionTab(props: IProps) {
                 className={classes.button}
                 onClick={handleProjectExport}
                 title={t.exportProject}
-                disabled={exporting}
+                disabled={busy}
               >
                 {t.exportProject}
               </Button>

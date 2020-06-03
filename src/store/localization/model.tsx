@@ -289,7 +289,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "settings": string;
     "integrations": string;
     "project": string;
-    "loadingTranscriberAdmin": string;
     "loadingTranscriber": string;
     "addOrganization": string;
     "projectSummary": string;

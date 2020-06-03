@@ -194,6 +194,7 @@ export function TaskTable(props: IProps) {
   };
 
   useEffect(() => {
+    if (onFilter) onFilter(false);
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();

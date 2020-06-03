@@ -546,7 +546,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const checkSavedFn = (method: () => any) => {
-    if (busy) {
+    if (busy || importexportBusy) {
       setMessage(<span>{t.loadingTable}</span>);
       return;
     }
@@ -1030,6 +1030,7 @@ export function ResponsiveDrawer(props: IProps) {
                 suggestions={orgOptions}
                 current={curOrg}
                 onCommit={commitOrg}
+                disabled={importexportBusy}
               />
             </div>
           )}
@@ -1084,6 +1085,7 @@ export function ResponsiveDrawer(props: IProps) {
                       suggestions={projOptions}
                       current={curProj}
                       onCommit={commitProj}
+                      disabled={importexportBusy}
                     />
                   </div>
                 </div>

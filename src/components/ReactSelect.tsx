@@ -285,6 +285,7 @@ interface IProps {
   placeholder?: string;
   current?: number | null;
   rightSize?: boolean;
+  disabled?: boolean;
   onCommit?: (newValue: string, e: any, callback: () => void) => void;
 }
 
@@ -297,6 +298,7 @@ export function SingleReactSelect(props: IProps) {
     current,
     onCommit,
     rightSize,
+    disabled,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -358,6 +360,7 @@ export function SingleReactSelect(props: IProps) {
           components={components}
           value={single}
           onChange={handleChangeSingle}
+          isDisabled={disabled}
         />
       </NoSsr>
     </div>
