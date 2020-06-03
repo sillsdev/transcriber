@@ -11,7 +11,6 @@ import {
   DigestPreference,
   OrganizationMembership,
   Role,
-  Group,
   GroupMembership,
   Invitation,
 } from '../model';
@@ -45,7 +44,16 @@ import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { remoteId, makeAbbr, uiLang, related, remoteIdNum } from '../utils';
+import {
+  remoteId,
+  makeAbbr,
+  uiLang,
+  related,
+  remoteIdNum,
+  getRoleRec,
+  getMbrRoleRec,
+  allUsersRec,
+} from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
@@ -296,34 +304,6 @@ export function Profile(props: IProps) {
     }
   };
 
-  const roleRec = (roleRecs: Role[], kind: string, orgRole: boolean) => {
-    const lcKind = kind.toLowerCase();
-    return orgRole
-      ? roleRecs.filter(
-          (r) =>
-            r.attributes.orgRole &&
-            r.attributes.roleName &&
-            r.attributes.roleName.toLowerCase() === lcKind
-        )
-      : roleRecs.filter(
-          (r) =>
-            r.attributes.groupRole &&
-            r.attributes.roleName &&
-            r.attributes.roleName.toLowerCase() === lcKind
-        );
-  };
-
-  const orgMbrRecs = (userId: string) => {
-    const orgMbrRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('organizationmembership')
-    ) as OrganizationMembership[];
-    return orgMbrRecs.filter(
-      (r) =>
-        related(r, 'user') === userId &&
-        related(r, 'organization') === organization
-    );
-  };
-
   const handleSave = () => {
     if (changed) {
       const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
@@ -363,8 +343,13 @@ export function Profile(props: IProps) {
       const roleRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('role')
       ) as Role[];
-      const newRoleRec = roleRec(roleRecs, role, true);
-      const mbrRec = orgMbrRecs(currentUserId);
+      const newRoleRec = getRoleRec(roleRecs, role, true);
+      const mbrRec = getMbrRoleRec(
+        memory,
+        'organization',
+        organization,
+        currentUserId
+      ) as OrganizationMembership[];
       if (newRoleRec.length > 0 && mbrRec.length > 0) {
         const curRoleId = related(mbrRec[0], 'role');
         if (curRoleId !== newRoleRec[0].id) {
@@ -389,15 +374,6 @@ export function Profile(props: IProps) {
     setView('Main');
   };
 
-  const allUserRec = () => {
-    const groups = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('group')
-    ) as Group[];
-    return groups.filter(
-      (g) => related(g, 'owner') === organization && g.attributes.allUsers
-    );
-  };
-
   const addToOrgAndGroup = (userRec: User) => {
     let orgMember: OrganizationMembership = {
       type: 'organizationmembership',
@@ -406,9 +382,9 @@ export function Profile(props: IProps) {
     const roleRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('role')
     ) as Role[];
-    const memberRec = roleRec(roleRecs, 'member', true);
-    const allUsersGroup = allUserRec();
-    const editorRec = roleRec(roleRecs, 'editor', false);
+    const memberRec = getRoleRec(roleRecs, 'member', true);
+    const allUsersGroup = allUsersRec(memory, organization);
+    const editorRec = getRoleRec(roleRecs, 'editor', false);
     let groupMbr: GroupMembership = {
       type: 'groupmembership',
     } as any;

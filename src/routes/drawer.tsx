@@ -19,7 +19,7 @@ import {
 import * as actions from '../store';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder, Record } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import {
   AppBar,
   Avatar,
@@ -90,6 +90,9 @@ import {
   Online,
   remoteIdNum,
   forceLogin,
+  getMbrRoleRec,
+  getMbrRole,
+  allUsersRec,
 } from '../utils';
 import logo from './transcriber10.png';
 import { isElectron, API_CONFIG } from '../api-variable';
@@ -307,7 +310,6 @@ export function ResponsiveDrawer(props: IProps) {
     importStatus,
     organizationMemberships,
     groupMemberships,
-    roles,
     mediafiles,
     projects,
     orbitError,
@@ -608,20 +610,6 @@ export function ResponsiveDrawer(props: IProps) {
     setAlertOpen(false);
     finishConfirmed(savedMethod, 8);
   };
-  const getRole = (table: Record[], relate: string, id: string) => {
-    const memberRecs = table.filter(
-      (tbl) => related(tbl, 'user') === user && related(tbl, relate) === id
-    );
-    if (memberRecs.length === 1) {
-      const roleId = related(memberRecs[0], 'role');
-      const roleRecs = roles.filter((r) => r.id === roleId);
-      if (roleRecs.length === 1) {
-        const attr = roleRecs[0].attributes;
-        if (attr && attr.roleName) return attr.roleName.toLocaleLowerCase();
-      }
-    }
-    return '';
-  };
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getProjs = async () => {
@@ -680,9 +668,8 @@ export function ResponsiveDrawer(props: IProps) {
         const attr = orgRec[0].attributes;
         setOrgAvatar(attr?.logoUrl ? DataPath(attr.logoUrl) : '');
       }
-      setOrgRole(
-        getRole(organizationMemberships, 'organization', organization)
-      );
+      const mbrRecs = getMbrRoleRec(memory, 'organization', organization, user);
+      setOrgRole(getMbrRole(memory, mbrRecs));
     }
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -779,8 +766,14 @@ export function ResponsiveDrawer(props: IProps) {
         q.findRecord({ type: 'project', id: project })
       ) as any;
       const groupId = related(projRec, 'group');
-      setProjRole(getRole(groupMemberships, 'group', groupId));
-    } catch {} // Ignore if project not found
+      const mbrRecs = getMbrRoleRec(memory, 'group', groupId, user);
+      setProjRole(getMbrRole(memory, mbrRecs));
+    } catch {
+      const allUsers = allUsersRec(memory, organization);
+      const gMbrRecs = getMbrRoleRec(memory, 'group', allUsers[0].id, user);
+      const role = getMbrRole(memory, gMbrRecs);
+      setProjRole(role); // role for new projects is all user role
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, addProject, curProj, user]);
 
@@ -1383,7 +1376,6 @@ const mapRecordsToProps = {
     q.findRecords('organizationmembership'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
 };
