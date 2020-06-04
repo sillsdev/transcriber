@@ -863,12 +863,15 @@ export function MediaTab(props: IProps) {
     if (pdata.length === 0 || data.length === 0) return;
     const rpat = new RegExp(pat);
     const newMap = { ...attachMap };
+    const usedPass = new Set<number>();
+    Object.keys(newMap).forEach((k) => usedPass.add(newMap[parseInt(k)]));
     let found = 0;
     data.forEach((r, dn) => {
       if (!r.isAttaching && r.reference === '') {
         const m = rpat.exec(r.fileName);
         if (m) {
           for (let i = 0; i < pdata.length; i++) {
+            if (usedPass.has(i)) continue;
             const r = pdata[i];
             let fail = false;
             if (terms) {
@@ -893,6 +896,7 @@ export function MediaTab(props: IProps) {
             }
             if (!fail) {
               newMap[dn] = i;
+              usedPass.add(i);
               found += 1;
               break;
             }
