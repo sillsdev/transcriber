@@ -768,7 +768,7 @@ export function ResponsiveDrawer(props: IProps) {
       setProjRole(getMbrRole(memory, mbrRecs));
     } catch {
       const allUsers = allUsersRec(memory, organization);
-      const gMbrRecs = getMbrRoleRec(memory, 'group', allUsers[0].id, user);
+      const gMbrRecs = getMbrRoleRec(memory, 'group', allUsers[0]?.id, user);
       const role = getMbrRole(memory, gMbrRecs);
       setProjRole(role); // role for new projects is all user role
     }

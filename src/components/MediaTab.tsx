@@ -27,6 +27,7 @@ import {
   Typography,
   Radio,
   Slider,
+  TableCell,
 } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
@@ -35,7 +36,7 @@ import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
-import { Table } from '@devexpress/dx-react-grid-material-ui';
+import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
 import { Filter } from '@devexpress/dx-react-grid';
 import { tabs } from './PlanTabs';
 import MediaUpload, { UploadType } from './MediaUpload';
@@ -116,6 +117,10 @@ const useStyles = makeStyles((theme: Theme) =>
     slider: {
       marginLeft: theme.spacing(2),
       width: '80%',
+    },
+    cell: {
+      width: '100%',
+      padding: theme.spacing(1),
     },
   })
 );
@@ -1050,18 +1055,16 @@ export function MediaTab(props: IProps) {
     );
   };
 
-  const FilterCell = (props: ICell) => {
-    const { children, ...restProps } = props;
-    const { column } = restProps;
+  // see https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/filtering/#customize-filter-row-appearance
+  const FilterCell = (props: TableFilterRow.CellProps) => {
+    const { column } = props;
     let filtered = filteringEnabled.reduce((v, i) => {
       return i.columnName === column.name || v;
     }, false);
     return !filtered ? (
-      <Table.StubCell {...restProps}>
-        <div className={classes.row}>{children}</div>
-      </Table.StubCell>
+      <TableFilterRow.Cell {...props} />
     ) : column.name === 'reference' ? (
-      <Table.StubCell {...restProps}>
+      <TableCell className={classes.cell}>
         <Slider
           className={classes.slider}
           value={slider}
@@ -1070,9 +1073,9 @@ export function MediaTab(props: IProps) {
           max={2}
           marks={marks}
         />
-      </Table.StubCell>
+      </TableCell>
     ) : (
-      <Table.StubCell {...restProps}>{'\u00A0'}</Table.StubCell>
+      <TableCell className={classes.cell} />
     );
   };
 
