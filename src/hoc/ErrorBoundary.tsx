@@ -54,6 +54,7 @@ interface IStateProps {
   t: IMainStrings;
   orbitStatus: number | undefined;
   orbitMessage: string;
+  orbitRetry: number;
 }
 
 interface IDispatchProps {
@@ -102,7 +103,14 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
   }
 
   render() {
-    const { classes, t, orbitStatus, orbitMessage, errorReporter } = this.props;
+    const {
+      classes,
+      t,
+      orbitStatus,
+      orbitMessage,
+      orbitRetry,
+      errorReporter,
+    } = this.props;
 
     const modalMessage = (message: ReactElement | string) => {
       return (
@@ -149,8 +157,13 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       );
     } else if (orbitStatus === Severity.info) {
       logError(Severity.info, errorReporter, orbitMessage);
+    } else if (orbitStatus === Severity.retry) {
+      logError(
+        orbitRetry > 0 ? Severity.info : Severity.error,
+        errorReporter,
+        orbitMessage
+      );
     }
-
     // If there is no error just render the children component.
     return this.props.children;
   }
@@ -175,6 +188,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   orbitStatus: state.orbit.status,
   orbitMessage: state.orbit.message,
+  orbitRetry: state.orbit.retry,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({

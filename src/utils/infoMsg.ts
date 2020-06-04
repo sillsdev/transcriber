@@ -11,3 +11,9 @@ export const orbitInfo = (err: Error | null, info: string) =>
     message: info + (err ? ': ' + err.message : ''),
     response: { status: Severity.info },
   } as IApiError);
+
+export const orbitRetry = (err: Error | null, info: string) =>
+  ({
+    message: info + (err ? ': ' + err.message : ''),
+    response: { status: Severity.retry },
+  } as IApiError);

@@ -1,6 +1,7 @@
 export enum Severity {
   info = 0,
   error = 1,
+  retry = 2,
 }
 
 export function logError(
@@ -12,7 +13,7 @@ export function logError(
     if (level === Severity.error) {
       if (reporter.notify)
         reporter.notify(typeof error === 'string' ? new Error(error) : error);
-    } else if (level === Severity.info) {
+    } else if (level === Severity.info || level === Severity.retry) {
       if (typeof error === 'string') {
         if (error !== '' && reporter.leaveBreadcrumb) {
           reporter.leaveBreadcrumb(error);

@@ -13,11 +13,13 @@ export interface IOrbitState {
   status: number | undefined;
   message: string;
   saving: boolean;
+  retry: number;
 }
 
 // Describing the different ACTION NAMES available
 export const FETCH_ORBIT_DATA = 'FETCH_ORBIT_DATA';
 export const ORBIT_ERROR = 'ORBIT_ERROR';
+export const ORBIT_RETRY = 'ORBIT_RETRY';
 export const RESET_ORBIT_ERROR = 'RESET_ORBIT_ERROR';
 export const LOAD_TABLE = 'LOAD_TABLE';
 export const ORBIT_SAVING = 'ORBIT_SAVING';
@@ -28,6 +30,11 @@ interface OrbitMsg {
 
 interface OrbitErrorMsg {
   type: typeof ORBIT_ERROR;
+  payload: IApiError;
+}
+
+interface OrbitRetryMsg {
+  type: typeof ORBIT_RETRY;
   payload: IApiError;
 }
 
@@ -48,6 +55,7 @@ interface SavingMsg {
 export type OrbitMsgs =
   | OrbitMsg
   | OrbitErrorMsg
+  | OrbitRetryMsg
   | ResetOrbitErrorMsg
   | LoadTableMsg
   | SavingMsg;

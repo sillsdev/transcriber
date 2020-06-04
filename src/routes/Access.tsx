@@ -202,7 +202,9 @@ export function Access(props: IProps) {
   const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
   useEffect(() => {
-    Online((isOnline) => setOnline(isOnline), auth);
+    if (isElectron) {
+      Online((isOnline) => setOnline(isOnline), auth);
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -270,22 +272,28 @@ export function Access(props: IProps) {
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static" color="inherit">
-        <Toolbar>
-          <Typography variant="h6" color="inherit" className={classes.grow}>
-            {process.env.REACT_APP_SITE_TITLE}
-          </Typography>
-        </Toolbar>
-        <div className={classes.grow}>{'\u00A0'}</div>
-        <div className={classes.version}>
-          {version}
-          <br />
-          {buildDate}
-        </div>
-        {!importStatus || (
-          <AppBar position="fixed" className={classes.progress} color="inherit">
-            <LinearProgress variant="indeterminate" />
-          </AppBar>
-        )}
+        <>
+          <Toolbar>
+            <Typography variant="h6" color="inherit" className={classes.grow}>
+              {process.env.REACT_APP_SITE_TITLE}
+            </Typography>
+          </Toolbar>
+          <div className={classes.grow}>{'\u00A0'}</div>
+          <div className={classes.version}>
+            {version}
+            <br />
+            {buildDate}
+          </div>
+          {!importStatus || (
+            <AppBar
+              position="fixed"
+              className={classes.progress}
+              color="inherit"
+            >
+              <LinearProgress variant="indeterminate" />
+            </AppBar>
+          )}
+        </>
       </AppBar>
       {isElectron && (
         <div className={classes.container}>
