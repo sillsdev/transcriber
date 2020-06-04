@@ -109,7 +109,7 @@ const initialState = {
 			"group": "Group",
 			"preview": "Preview",
 			"selectProjectGroup": "Select project group. Each project relates to a single group. Group members can work on the project.",
-			"notAdminInGroup": "You are not an admin in this group, so you will be unable to manage the project.",
+			"notAdminInGroup": "You are not an owner in this group, so you will be unable to manage the project.",
 			"defaultPlanName": "Simple Plan",
 			"defaultSectionName": "Section 1",
 			"defaultReference": "Text 1",

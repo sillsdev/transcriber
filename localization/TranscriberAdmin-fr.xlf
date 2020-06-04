@@ -465,8 +465,8 @@
       </unit>
       <unit id="projectSettings.notAdminInGroup">
          <segment>
-            <source>You are not an admin in this group, so you will be unable to manage the project.</source>
-            <target>Vous n'êtes pas administrateur de ce groupe, vous ne pourrez donc pas gérer le projet.</target>
+            <source>You are not an owner in this group, so you will be unable to manage the project.</source>
+         	<target>Vous n'êtes pas un propriétaire dans ce groupe, vous ne pourrez donc pas gérer le projet.</target>
          </segment>
       </unit>
 		<unit id="projectSettings.defaultPlanName">
