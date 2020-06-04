@@ -424,7 +424,6 @@ export function ResponsiveDrawer(props: IProps) {
       setOrganization(value);
       setAddProject(false);
       setGroup('');
-      setProjOptions([]);
       setCurProj(null);
       setTranscribe(false);
       setChoice('');
@@ -492,7 +491,6 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
-    setProjOptions([]);
     if (projectId)
       AddProjectLoaded(projectId, projectsLoaded, setProjectsLoaded);
     if (to) {
