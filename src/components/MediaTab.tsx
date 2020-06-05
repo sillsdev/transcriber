@@ -512,7 +512,6 @@ export function MediaTab(props: IProps) {
             f.attributes.originalFile === data[i].fileName
         );
         versions.forEach((v) => {
-          //console.log('Delete media ' + v.id);
           memory.update((t: TransformBuilder) =>
             t.removeRecord({
               type: 'mediafile',
@@ -709,6 +708,7 @@ export function MediaTab(props: IProps) {
   }, [projectplans, plan, planColumn, attachVisible]);
 
   useEffect(() => {
+    const playChange = data[0]?.playIcon !== playItem;
     const newData = getMedia(
       projectplans,
       mediaFiles,
@@ -721,7 +721,11 @@ export function MediaTab(props: IProps) {
     newData.forEach((r, i) => {
       if (r.section !== '') medAttach.add(i);
     });
-    if (medAttach.size !== dataAttach.size || newData.length !== data.length) {
+    if (
+      medAttach.size !== dataAttach.size ||
+      newData.length !== data.length ||
+      playChange
+    ) {
       setDataAttach(medAttach);
       setData(newData);
     }
