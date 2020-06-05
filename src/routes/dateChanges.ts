@@ -6,6 +6,7 @@ import {
   Schema,
   TransformBuilder,
   Operation,
+  UpdateRecordOperation,
 } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { DataChange } from '../model/dataChange';
@@ -49,7 +50,45 @@ export const dateChanges = (
               .findRecords(table[0].type)
               .filter({ attribute: 'id-list', value: list.join('|') })
           )
-          .then((t: Transform[]) => memory.sync(t));
+          .then((t: Transform[]) => {
+            memory.sync(t);
+            t.forEach((tr) => {
+              var tb = new TransformBuilder();
+              var newOps: Operation[] = [];
+              tr.operations.forEach((o) => {
+                if ((o.op = 'updateRecord')) {
+                  var upRec = o as UpdateRecordOperation;
+                  switch (upRec.record.type) {
+                    case 'section':
+                      if (upRec.record.relationships?.transcriber === undefined)
+                        newOps.push(
+                          tb.replaceRelatedRecord(upRec.record, 'transcriber', {
+                            type: 'user',
+                            id: '',
+                          })
+                        );
+                      if (upRec.record.relationships?.editor === undefined)
+                        newOps.push(
+                          tb.replaceRelatedRecord(upRec.record, 'editor', {
+                            type: 'user',
+                            id: '',
+                          })
+                        );
+                      break;
+                    case 'mediafile':
+                      if (upRec.record.relationships?.passage === undefined)
+                        newOps.push(
+                          tb.replaceRelatedRecord(upRec.record, 'passage', {
+                            type: 'passage',
+                            id: '',
+                          })
+                        );
+                  }
+                }
+              });
+              if (newOps.length > 0) memory.update(() => newOps);
+            });
+          });
       }
     });
     const deletes = data.attributes.deleted;

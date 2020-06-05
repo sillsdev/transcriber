@@ -1798,6 +1798,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.unassigned">
+         <segment>
+            <source>unassigned</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.fontsize">
          <segment>
             <source>Font Size</source>

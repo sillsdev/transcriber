@@ -375,6 +375,7 @@ const initialState = {
 			"state": "State",
 			"editor": "Editor",
 			"transcriber": "Transcriber",
+			"unassigned": "unassigned",
 			"fontsize": "Font Size",
 			"username": "Name",
 			"given": "Given Name",

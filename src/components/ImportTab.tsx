@@ -363,17 +363,19 @@ export function ImportTab(props: IProps) {
                 (section?.relationships?.editor?.data as RecordIdentity)?.id !==
                   (oldsection?.relationships?.editor.data as RecordIdentity).id
               ) {
-                var editor = memory.cache.query((q: QueryBuilder) =>
-                  q.findRecord({
-                    type: 'user',
-                    id: remoteIdGuid(
-                      'user',
-                      (section?.relationships?.editor.data as RecordIdentity)
-                        .id,
-                      memory.keyMap
-                    ),
-                  })
-                ) as User;
+                var editor = section?.relationships?.editor?.data
+                  ? (memory.cache.query((q: QueryBuilder) =>
+                      q.findRecord({
+                        type: 'user',
+                        id: remoteIdGuid(
+                          'user',
+                          (section?.relationships?.editor
+                            .data as RecordIdentity).id,
+                          memory.keyMap
+                        ),
+                      })
+                    ) as User)
+                  : undefined;
                 var oldeditor = memory.cache.query((q: QueryBuilder) =>
                   q.findRecord({
                     type: 'user',
@@ -385,7 +387,11 @@ export function ImportTab(props: IProps) {
                     ),
                   })
                 ) as User;
-                imported += t.editor + ':' + editor?.attributes.name + '   ';
+                imported +=
+                  t.editor +
+                  ':' +
+                  (editor ? editor.attributes.name : t.unassigned) +
+                  '   ';
                 old += t.editor + ':' + oldeditor?.attributes.name + '   ';
               }
               if (
@@ -395,17 +401,19 @@ export function ImportTab(props: IProps) {
                   (oldsection.relationships?.transcriber
                     ?.data as RecordIdentity)?.id
               ) {
-                var transcriber = memory.cache.query((q: QueryBuilder) =>
-                  q.findRecord({
-                    type: 'user',
-                    id: remoteIdGuid(
-                      'user',
-                      (section?.relationships?.transcriber
-                        .data as RecordIdentity).id,
-                      memory.keyMap
-                    ),
-                  })
-                ) as User;
+                var transcriber = section.relationships?.transcriber?.data
+                  ? (memory.cache.query((q: QueryBuilder) =>
+                      q.findRecord({
+                        type: 'user',
+                        id: remoteIdGuid(
+                          'user',
+                          (section?.relationships?.transcriber
+                            .data as RecordIdentity).id,
+                          memory.keyMap
+                        ),
+                      })
+                    ) as User)
+                  : undefined;
                 var oldtranscriber = memory.cache.query((q: QueryBuilder) =>
                   q.findRecord({
                     type: 'user',
@@ -418,7 +426,10 @@ export function ImportTab(props: IProps) {
                   })
                 ) as User;
                 imported +=
-                  t.transcriber + ':' + transcriber.attributes.name + '   ';
+                  t.transcriber +
+                  ':' +
+                  (transcriber ? transcriber.attributes.name : t.unassigned) +
+                  '   ';
                 old +=
                   t.transcriber + ':' + oldtranscriber?.attributes.name + '   ';
               } /*

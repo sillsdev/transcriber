@@ -352,6 +352,7 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "state": string;
     "editor": string;
     "transcriber": string;
+    "unassigned": string;
     "fontsize": string;
     "username": string;
     "given": string;

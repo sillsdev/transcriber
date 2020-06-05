@@ -2098,6 +2098,13 @@
                     <context context-type="sourcefile">import.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="import.unassigned">
+                <source>unassigned</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="import.fontsize">
                 <source>Font Size</source>
                 <target/>
