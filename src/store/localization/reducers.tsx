@@ -402,6 +402,7 @@ const initialState = {
 			"copyTip": "Copy transcriptions to Clipboard",
 			"showHideFilter": "Show/Hide filter rows",
 			"cantCopy": "Unable to copy to clipboard",
+			"updated": "Updated",
 			"exportProject": "Export Project",
 			"electronBackup": "Backup All Projects",
 			"exportType": "Which export type?",

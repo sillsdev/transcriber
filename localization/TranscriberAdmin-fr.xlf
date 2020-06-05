@@ -1939,6 +1939,12 @@
 				<target>Impossible de copier dans le presse-papiers</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.updated">
+			<segment>
+				<source>Updated</source>
+				<target>Mise à jour</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>

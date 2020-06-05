@@ -40,6 +40,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
+import moment from 'moment-timezone';
 import SnackBar from './SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
@@ -111,6 +112,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const curZone = moment.tz.guess();
+
 interface IRow {
   id: string;
   name: string;
@@ -119,6 +122,7 @@ interface IRow {
   transcriber: string;
   editor: string;
   passages: string;
+  updated: string;
   action: string;
   parentId: string;
 }
@@ -166,6 +170,7 @@ const getAssignments = (
           editor: sectionEditorName(section, users),
           transcriber: sectionTranscriberName(section, users),
           passages: sectionpassages.length.toString(),
+          updated: '',
           action: '',
           parentId: '',
         });
@@ -182,6 +187,9 @@ const getAssignments = (
             editor: '',
             transcriber: '',
             passages: '',
+            updated: moment
+              .tz(moment.tz(passage.attributes.dateUpdated, 'utc'), curZone)
+              .calendar(),
             action: passage.id,
             parentId: section.id,
           } as IRow);
@@ -256,6 +264,7 @@ export function TranscriptionTab(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
+  const [lang] = useGlobal('lang');
   const [message, setMessage] = useState(<></>);
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
@@ -280,6 +289,7 @@ export function TranscriptionTab(props: IProps) {
     { name: 'transcriber', title: t.transcriber },
     { name: 'editor', title: t.editor },
     { name: 'action', title: '\u00A0' },
+    { name: 'updated', title: t.updated },
   ];
   const columnWidths = [
     { columnName: 'name', width: 300 },
@@ -288,12 +298,15 @@ export function TranscriptionTab(props: IProps) {
     { columnName: 'passages', width: 120 },
     { columnName: 'transcriber', width: 120 },
     { columnName: 'editor', width: 120 },
+    { columnName: 'updated', width: 200 },
     { columnName: 'action', width: 150 },
   ];
   const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<
     string[]
   >([]);
   const [filter, setFilter] = useState(false);
+
+  moment.locale(lang);
 
   const handleMessageReset = () => {
     setMessage(<></>);

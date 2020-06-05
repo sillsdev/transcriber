@@ -2259,6 +2259,13 @@
         			<context context-type="sourcefile">TranscriptionTab.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriptionTab.updated">
+        		<source>Updated</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcriptionTab.exportProject">
         		<source>Export Project</source>
         		<target/>
