@@ -15,7 +15,7 @@ export function Online(cb: (result: boolean) => void, auth?: Auth) {
           timeout: 5000,
         };
 
-  Axios.get(API_CONFIG.host + '/api/roles/', opts)
+  Axios.get(API_CONFIG.host + '/api/dashboards/', opts)
     .then(() => {
       cb(true);
     })
