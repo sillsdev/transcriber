@@ -37,7 +37,6 @@ import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
-import { Filter } from '@devexpress/dx-react-grid';
 import { tabs } from './PlanTabs';
 import MediaUpload, { UploadType } from './MediaUpload';
 import SnackBar from './SnackBar';
@@ -131,6 +130,12 @@ enum StatusL {
   Yes = 'Y',
 }
 
+enum StatusN {
+  No = 0,
+  Proposed = 1,
+  Yes = 2,
+}
+
 interface IRow {
   planid: string;
   passId: string;
@@ -163,8 +168,9 @@ interface IPRow {
   pasNum: number;
 }
 
+// key is mediaId and value is row in pdata (passage data) table
 interface IAttachMap {
-  [key: number]: number;
+  [key: string]: number;
 }
 
 const getSection = (section: Section[]) => {
@@ -183,45 +189,60 @@ const getMedia = (
   passages: Array<Passage>,
   sections: Array<Section>,
   playItem: string,
-  allBookData: BookName[]
+  allBookData: BookName[],
+  slider: StatusN,
+  attachMap: IAttachMap,
+  pdata: IPRow[]
 ) => {
   let media: MediaFile[] = getMediaInPlans(projectplans, mediaFiles);
+  let rowData: IRow[] = [];
 
-  const rowData = media.map((f) => {
-    const passageId = related(f, 'passage');
+  media.forEach((f) => {
+    let status = attachMap.hasOwnProperty(f.id) ? StatusN.Proposed : -1;
+    const passageId =
+      status > 0 ? pdata[attachMap[f.id]].id : related(f, 'passage');
     const passage = passageId ? passages.filter((p) => p.id === passageId) : [];
-    const sectionId = related(passage[0], 'section');
-    const section = sections.filter((s) => s.id === sectionId);
-    const updated =
-      f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
-    const date = updated ? updated.format('YYYY-MM-DD') : '';
-    const displayDate = updated
-      ? updated.locale(navigator.language.split('-')[0]).format('L')
-      : '';
-    const displayTime = updated
-      ? updated.locale(navigator.language.split('-')[0]).format('LT')
-      : '';
-    const today = moment().format('YYYY-MM-DD');
-    return {
-      planid: related(f, 'plan'),
-      passId: passageId,
-      planName: projectplans.filter((p) => p.id === related(f, 'plan'))[0]
-        .attributes.name,
-      id: f.id,
-      playIcon: playItem,
-      fileName: f.attributes.originalFile,
-      section: getSection(section),
-      reference: getReference(passage, allBookData),
-      status: passage.length > 0 ? StatusL.Yes : StatusL.No,
-      duration: f.attributes.duration ? f.attributes.duration.toString() : '',
-      size: f.attributes.filesize,
-      version: f.attributes.versionNumber
-        ? f.attributes.versionNumber.toString()
-        : '',
-      date: date === today ? displayTime : displayDate,
-    } as IRow;
+    if (status < 0) status = passage.length > 0 ? StatusN.Yes : StatusN.No;
+    if (status <= slider) {
+      const sectionId = related(passage[0], 'section');
+      const section = sections.filter((s) => s.id === sectionId);
+      const updated =
+        f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
+      const date = updated ? updated.format('YYYY-MM-DD') : '';
+      const displayDate = updated
+        ? updated.locale(navigator.language.split('-')[0]).format('L')
+        : '';
+      const displayTime = updated
+        ? updated.locale(navigator.language.split('-')[0]).format('LT')
+        : '';
+      const today = moment().format('YYYY-MM-DD');
+      rowData.push({
+        planid: related(f, 'plan'),
+        passId: passageId,
+        planName: projectplans.filter((p) => p.id === related(f, 'plan'))[0]
+          .attributes.name,
+        id: f.id,
+        playIcon: playItem,
+        fileName: f.attributes.originalFile,
+        section: getSection(section),
+        reference: getReference(passage, allBookData),
+        status:
+          status === StatusN.Yes
+            ? StatusL.Yes
+            : status === StatusN.Proposed
+            ? StatusL.Proposed
+            : StatusL.No,
+        isAttaching: status === StatusN.Proposed,
+        duration: f.attributes.duration ? f.attributes.duration.toString() : '',
+        size: f.attributes.filesize,
+        version: f.attributes.versionNumber
+          ? f.attributes.versionNumber.toString()
+          : '',
+        date: date === today ? displayTime : displayDate,
+      } as IRow);
+    }
   });
-  return rowData as Array<IRow>;
+  return rowData;
 };
 
 const isAttached = (p: Passage, media: MediaFile[]) => {
@@ -442,15 +463,9 @@ export function MediaTab(props: IProps) {
   const [filteringEnabled, setFilteringEnabled] = useState([
     { columnName: 'playIcon', filteringEnabled: false },
   ]);
-  enum StatusN {
-    No = 0,
-    Proposed = 1,
-    Yes = 2,
-  }
-  const [slider, setSlider] = useState<StatusN>(StatusN.Proposed);
-  const [filters, setFilters] = useState<Filter[]>([
-    { columnName: 'status', operation: 'lessThanOrEqual', value: 'P' },
-  ]);
+  const [slider, setSlider] = useState<StatusN>(
+    attachTool ? StatusN.Proposed : StatusN.Yes
+  );
   const [pageSizes, setPageSizes] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [complete, setComplete] = useState(0);
@@ -464,8 +479,8 @@ export function MediaTab(props: IProps) {
   const inProcess = React.useRef<boolean>(false);
 
   const hasPassage = (pRow: number) => {
-    for (let i of Object.keys(attachMap)) {
-      if (attachMap[parseInt(i)] === pRow) return true;
+    for (let mediaId of Object.keys(attachMap)) {
+      if (attachMap[mediaId] === pRow) return true;
     }
     return false;
   };
@@ -530,11 +545,11 @@ export function MediaTab(props: IProps) {
   // const handleAttach = () => setAttachVisible(!attachVisible);
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
 
-  const attach = async (passage: string, mediaFile: string) => {
+  const attach = async (passage: string, mediaId: string) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     ops.push(
-      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaFile }, 'passage', {
+      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaId }, 'passage', {
         type: 'passage',
         id: passage,
       })
@@ -553,25 +568,24 @@ export function MediaTab(props: IProps) {
   const handleSave = async () => {
     inProcess.current = true;
     setMessage(<span>{t.saving}</span>);
-    const handleRow = async (mRow: string) => {
-      const row = parseInt(mRow);
-      const pRow = attachMap[row];
-      await attach(pdata[pRow].id, data[row].id);
+    const handleRow = async (mediaId: string) => {
+      const pRow = attachMap[mediaId];
+      await attach(pdata[pRow].id, mediaId);
     };
-    for (let mRow of Object.keys(attachMap)) {
-      await handleRow(mRow);
+    for (let mediaId of Object.keys(attachMap)) {
+      await handleRow(mediaId);
     }
     setAttachMap({});
     setMessage(<span>{t.savingComplete}</span>);
     inProcess.current = false;
   };
 
-  const detach = async (passage: string, mediaFile: string) => {
+  const detach = async (passage: string, mediaId: string) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     ops.push(
       tb.replaceRelatedRecord(
-        { type: 'mediafile', id: mediaFile },
+        { type: 'mediafile', id: mediaId },
         'passage',
         null
       )
@@ -591,14 +605,14 @@ export function MediaTab(props: IProps) {
     const mRow = data.reduce((m, r, j) => {
       return r.id === mediaId ? j : m;
     }, -1);
-    if (attachMap.hasOwnProperty(mRow)) {
+    if (attachMap.hasOwnProperty(mediaId)) {
       const newMap = { ...attachMap };
-      delete newMap[mRow];
+      delete newMap[mediaId];
       setAttachMap(newMap);
     } else {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
-        detach(passId, data[mRow].id);
+        detach(passId, mediaId);
       } else {
         setMessage(
           <span>{t.noPassageAttached.replace('{0}', data[mRow].fileName)}</span>
@@ -608,14 +622,14 @@ export function MediaTab(props: IProps) {
   };
 
   const doAttach = (mRow: number, pRow: number) => {
-    if (attachMap.hasOwnProperty(mRow) || dataAttach.has(mRow)) {
+    if (attachMap.hasOwnProperty(data[mRow].id) || dataAttach.has(mRow)) {
       setMessage(<span>{t.fileAttached}</span>);
       return;
     } else if (hasPassage(pRow) || passAttach.has(pRow)) {
       setMessage(<span>{t.passageAttached}</span>);
       return;
     }
-    setAttachMap({ ...attachMap, [mRow]: pRow });
+    setAttachMap({ ...attachMap, [data[mRow].id]: pRow });
     setMCheck(-1);
     setPCheck(-1);
     setCheck([]);
@@ -656,9 +670,6 @@ export function MediaTab(props: IProps) {
     } else {
       setPlayItem('');
     }
-  };
-  const handleFilterChange = (filters: Filter[]) => {
-    setFilters(filters);
   };
 
   useEffect(() => {
@@ -715,7 +726,10 @@ export function MediaTab(props: IProps) {
       passages,
       sections,
       playItem,
-      allBookData
+      allBookData,
+      slider,
+      attachMap,
+      pdata
     );
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
@@ -748,36 +762,47 @@ export function MediaTab(props: IProps) {
       setPData(newPassData);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projectplans, mediaFiles, passages, sections, playItem, allBookData]);
+  }, [
+    projectplans,
+    mediaFiles,
+    passages,
+    sections,
+    playItem,
+    allBookData,
+    slider,
+    attachMap,
+    pdata,
+  ]);
 
   useEffect(() => {
     let dataChange = false;
-    const newData = data.map((r, i) => {
-      const newRow = attachMap.hasOwnProperty(i)
-        ? {
-            ...r,
-            section: pdata[attachMap[i]].section,
-            reference: pdata[attachMap[i]].reference,
-            isAttaching: true,
-            status: StatusL.Proposed,
-          }
-        : r.isAttaching
-        ? {
-            ...r,
-            section: '',
-            reference: '',
-            isAttaching: false,
-            status: StatusL.No,
-          }
-        : null;
-      if (newRow) {
-        dataChange = true;
-        return newRow;
-      }
-      return { ...r };
-    });
-    if (dataChange) setData(newData);
-    dataChange = false;
+    // const newData = data.map((r, i) => {
+    //   const mediaId = r.id;
+    //   const newRow = attachMap.hasOwnProperty(mediaId)
+    //     ? {
+    //         ...r,
+    //         section: pdata[attachMap[mediaId]].section,
+    //         reference: pdata[attachMap[mediaId]].reference,
+    //         isAttaching: true,
+    //         status: StatusL.Proposed,
+    //       }
+    //     : r.isAttaching
+    //     ? {
+    //         ...r,
+    //         section: '',
+    //         reference: '',
+    //         isAttaching: false,
+    //         status: StatusL.No,
+    //       }
+    //     : null;
+    //   if (newRow) {
+    //     dataChange = true;
+    //     return newRow;
+    //   }
+    //   return { ...r };
+    // });
+    // if (dataChange) setData(newData);
+    // dataChange = false;
     const newPData = pdata.map((r, i) => {
       const newRow = hasPassage(i)
         ? { ...r, attached: 'Y', isAttaching: true }
@@ -873,11 +898,11 @@ export function MediaTab(props: IProps) {
     const rpat = new RegExp(pat);
     const newMap = { ...attachMap };
     const usedPass = new Set<number>();
-    Object.keys(newMap).forEach((k) => usedPass.add(newMap[parseInt(k)]));
+    Object.keys(newMap).forEach((k) => usedPass.add(newMap[k]));
     let found = 0;
-    data.forEach((r, dn) => {
-      if (!r.isAttaching && r.reference === '') {
-        const m = rpat.exec(r.fileName);
+    data.forEach((dr, dn) => {
+      if (!dr.isAttaching && dr.reference === '') {
+        const m = rpat.exec(dr.fileName);
         if (m) {
           for (let i = 0; i < pdata.length; i++) {
             if (usedPass.has(i)) continue;
@@ -904,7 +929,7 @@ export function MediaTab(props: IProps) {
               }
             }
             if (!fail) {
-              newMap[dn] = i;
+              newMap[dr.id] = i;
               usedPass.add(i);
               found += 1;
               break;
@@ -1039,24 +1064,6 @@ export function MediaTab(props: IProps) {
         ? val
         : 1;
     setSlider(newVal);
-    setFilters(
-      filters.map((f) => {
-        if (f.columnName === 'status') {
-          return {
-            columnName: 'status',
-            operation: 'lessThanOrEqual',
-            value:
-              val === StatusN.No
-                ? StatusL.No
-                : val === StatusN.Proposed
-                ? StatusL.Proposed
-                : StatusL.Yes,
-          };
-        } else {
-          return f;
-        }
-      })
-    );
   };
 
   // see https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/filtering/#customize-filter-row-appearance
@@ -1212,8 +1219,6 @@ export function MediaTab(props: IProps) {
               columnSorting={columnSorting}
               sortingEnabled={sortingEnabled}
               pageSizes={pageSizes}
-              filters={attachVisible ? filters : []}
-              onFiltersChange={handleFilterChange}
               filteringEnabled={filteringEnabled}
               filterCell={FilterCell}
               dataCell={Cell}

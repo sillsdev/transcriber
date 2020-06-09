@@ -162,7 +162,7 @@ interface IProps extends IStateProps {
   filteringEnabled?: Array<FilteringState.ColumnExtension>;
   filterCell: any;
   filters?: Filter[];
-  onFiltersChange?: (filters: Filter[]) => void;
+  onFiltersChange?: (filters: Filter[]) => void; // this caused problems
   hiddenColumnNames?: Array<string>;
   defaultGrouping?: Grouping[];
   expandedGroups?: string[];
@@ -191,7 +191,7 @@ export function ShapingTable(props: IProps) {
     filteringEnabled /* whether filtering is enabled for each column */,
     filterCell,
     filters /* start with these filters */,
-    onFiltersChange,
+    onFiltersChange /* when set, filter looses focus on typing */,
     hiddenColumnNames,
     defaultGrouping,
     expandedGroups,
@@ -222,7 +222,7 @@ export function ShapingTable(props: IProps) {
   const noCols = () => <span>{t.NoColumns}</span>;
   return (
     <Grid rows={rows} columns={columns}>
-      {onFiltersChange ? (
+      {onFiltersChange /* when set filter looses focus on typing */ ? (
         <FilteringState
           columnExtensions={filteringEnabled || []}
           filters={filters || []}
