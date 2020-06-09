@@ -794,6 +794,8 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [attachMap]);
 
+  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$/i;
+
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
       // wait to do this to give time for duration calc
@@ -809,9 +811,7 @@ export function MediaTab(props: IProps) {
         setComplete(
           Math.min((currentlyLoading * 100) / uploadList.length, 100)
         );
-        if (
-          /\.wav$|\.mp3$|\.m4a$/.test(uploadList[currentlyLoading + 1].name)
-        ) {
+        if (acceptExtPat.test(uploadList[currentlyLoading + 1].name)) {
           const planId = remoteIdNum('plan', plan, keyMap);
           const mediaFile = {
             planId: planId,
