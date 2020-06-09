@@ -93,6 +93,8 @@ import {
   getMbrRoleRec,
   getMbrRole,
   allUsersRec,
+  resetData,
+  exitElectronApp,
 } from '../utils';
 import logo from './transcriber10.png';
 import { isElectron, API_CONFIG } from '../api-variable';
@@ -103,8 +105,8 @@ import { DataPath } from '../utils/DataPath';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 
-const noop = { openExternal: () => {} };
-const { shell } = isElectron ? require('electron') : { shell: noop };
+const noop = { openExternal: () => {}, openItem: () => {} };
+const { shell } = isElectron ? require('electron') : { shell: noop as any };
 
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
@@ -518,6 +520,10 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleUserMenuAction = (what: string) => {
+    if (isElectron && /ClearLogout/i.test(what)) {
+      resetData();
+      exitElectronApp();
+    }
     if (isElectron && /logout/i.test(what)) {
       localStorage.removeItem('user-id');
       setView('Access');

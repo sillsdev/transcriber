@@ -173,6 +173,11 @@
         "from": "help",
         "to": "help",
         "filter": "*.chm"
+      },
+      {
+        "from": "src/script",
+        "to": "resources",
+        "filter": "resetData.*"
       }
     ]
   }
