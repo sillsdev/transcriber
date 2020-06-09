@@ -579,7 +579,6 @@ export function Transcriber(props: IProps) {
       setTranscriptionIn(transcription);
       setTextValue(transcription);
       setDefaultPosition(attr.position);
-      setPlaying(false);
       //focus on player
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
@@ -591,7 +590,7 @@ export function Transcriber(props: IProps) {
       fetchMediaUrl(mediaRemoteId, memory, offline, auth);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [index, selected]);
+  }, [selected]);
 
   React.useEffect(() => {
     if (project && project !== '') {
