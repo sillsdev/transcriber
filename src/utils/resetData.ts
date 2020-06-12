@@ -12,7 +12,7 @@ export const resetData = () => {
     if (os.platform() === 'win32') {
       shell.openItem(path.join(process.resourcesPath, 'resetData.bat'));
     } else {
-      execa('/bin/sh', [path.join(process.resourcesPath, 'resetData.sh')]);
+      execa(path.join(process.resourcesPath, 'resetData.sh'));
     }
   }
 };

@@ -1727,7 +1727,28 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="main.logout">
+        	<trans-unit id="main.resetTitle">
+        		<source>Remove All Local Data</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ResetAlert.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.resetDesc">
+        		<source>After the program exits, enter this command in a terminal window: {0}/resources/resetData.sh</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ResetAlert.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ResetAlert.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="main.logout">
                 <source>Log Out</source>
                 <target/>
                 <context-group>

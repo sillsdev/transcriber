@@ -296,6 +296,9 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "export": string;
     "import": string;
     "loadingTable": string;
+    "resetTitle": string;
+    "resetDesc": string;
+    "cancel": string;
     "logout": string;
     "myAccount": string;
     "orgRole": string;

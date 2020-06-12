@@ -148,12 +148,12 @@
     "productName": "SIL Transcriber Desktop Extension",
     "copyright": "Copyright © 2020 ${author}",
     "win": {
-      "icon": "public/favicon.bmp"
+      "icon": "public/favicon.png"
     },
     "linux": {
-      "icon": "public/favicon.png",
+      "icon": "debian/sil-transcriber.png",
+      "desktop": "debian/sil-transcriber.desktop",
       "target": [
-        "deb",
         "snap"
       ]
     },
