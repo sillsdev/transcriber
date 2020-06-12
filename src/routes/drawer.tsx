@@ -1374,7 +1374,12 @@ export function ResponsiveDrawer(props: IProps) {
         />
       )}
       {resetOpen && (
-        <ResetAlert open={resetOpen} path={linuxPath} action={handleReset} />
+        <ResetAlert
+          open={resetOpen}
+          path={linuxPath}
+          action={handleReset}
+          t={t}
+        />
       )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
