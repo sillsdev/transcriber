@@ -32,11 +32,11 @@ function GroupAdd(props: IProps) {
     (groupIn && groupIn.attributes.name) || t.newGroup
   );
   const [message, setMessage] = useState(<></>);
-  const [inProcess, setInProcess] = useState(false);
+  const inProcess = React.useRef<boolean>(false);
 
   const handleAddOrSave = () => {
+    inProcess.current = true;
     doAddOrSave();
-    setInProcess(true);
   };
   const doAddOrSave = async () => {
     if (!groupIn || name !== groupIn.attributes.name) {
@@ -56,8 +56,8 @@ function GroupAdd(props: IProps) {
         }
       }
     }
+    inProcess.current = false;
     setOpen(false);
-    setInProcess(false);
   };
   const handleCancel = () => {
     if (cancelMethod) {
@@ -114,7 +114,12 @@ function GroupAdd(props: IProps) {
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
-            disabled={name === '' || name === t.newGroup || inProcess}
+            disabled={
+              name === '' ||
+              name === t.newGroup ||
+              name === groupIn?.attributes?.name ||
+              inProcess.current
+            }
           >
             {!groupIn ? t.add : t.save}
           </Button>

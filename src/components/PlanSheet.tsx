@@ -9,7 +9,6 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
-import PassageMedia from './PassageMedia';
 import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import 'react-datasheet/lib/react-datasheet.css';
@@ -125,7 +124,6 @@ export function PlanSheet(props: IProps) {
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
-  const [passageMediaVisible, setPassageMediaVisible] = useState(false);
   const suggestionRef = useRef<Array<OptionType>>();
   const listRef = useRef<Array<string>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
@@ -208,10 +206,6 @@ export function PlanSheet(props: IProps) {
   const handleActionRefused = () => {
     setConfirmAction('');
   };
-  const handlePassageMedia = (status: boolean) => (e: any) => {
-    setActionMenuItem(null);
-    setPassageMediaVisible(status);
-  };
 
   const doUpdate = (grid: ICell[][]) => {
     updateData(
@@ -225,10 +219,11 @@ export function PlanSheet(props: IProps) {
     );
   };
 
+  const numCol = [1, 3]; // Section num = col 1, Passage num = col 3
   const handleCellsChanged = (changes: Array<IChange>) => {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
-      if (value && !isNum(value) && isNum(cell.value)) {
+      if (row !== 0 && numCol.includes(col) && value && !isNum(value)) {
         setMessage(<span>{t.nonNumber}</span>);
       } else {
         grid[row][col] = { ...grid[row][col], value };
@@ -288,8 +283,9 @@ export function PlanSheet(props: IProps) {
     if (position.i === 0) {
       setPasting(true);
       setMessage(<span>{t.pasting}</span>);
-      paste(cleanClipboard(clipBoard));
+      const retVal = paste(cleanClipboard(clipBoard));
       setPasting(false);
+      return retVal;
     }
     return cleanClipboard(clipBoard);
   };
@@ -326,7 +322,7 @@ export function PlanSheet(props: IProps) {
     );
   };
   const isNum = (value: string | number) =>
-    isNumber(value) || /^[0-9]$/.test(value);
+    isNumber(value) || /^[0-9]+$/.test(value);
 
   const handleAutoSave = () => {
     if (changed && !preventSave.current && !global.alertOpen) {
@@ -510,9 +506,6 @@ export function PlanSheet(props: IProps) {
                   <MenuItem onClick={handleConfirmAction('Delete')}>
                     {t.delete}
                   </MenuItem>
-                  <MenuItem onClick={handlePassageMedia(true)}>
-                    {t.attachMedia}
-                  </MenuItem>
                 </Menu>
                 <div className={classes.grow}>{'\u00A0'}</div>
                 <Button
@@ -559,10 +552,6 @@ export function PlanSheet(props: IProps) {
           </MenuItem>
         </Menu>
       </div>
-      <PassageMedia
-        visible={passageMediaVisible}
-        closeMethod={handlePassageMedia(false)}
-      />
       {confirmAction !== '' ? (
         <Confirm
           text={t.confirm

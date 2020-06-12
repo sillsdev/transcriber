@@ -579,7 +579,6 @@ export function Transcriber(props: IProps) {
       setTranscriptionIn(transcription);
       setTextValue(transcription);
       setDefaultPosition(attr.position);
-      setPlaying(false);
       //focus on player
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
@@ -591,7 +590,7 @@ export function Transcriber(props: IProps) {
       fetchMediaUrl(mediaRemoteId, memory, offline, auth);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [index, selected]);
+  }, [selected]);
 
   React.useEffect(() => {
     if (project && project !== '') {
@@ -604,15 +603,17 @@ export function Transcriber(props: IProps) {
   }, [project]);
 
   const handleAutosave = () => {
-    const transcription = transcriptionRef.current.firstChild.value;
-    if (transcriptionIn !== transcription) {
-      if (!busy) {
-        handleSave().finally(() => {
-          setTranscriptionIn(transcription);
-          launchTimer();
-        });
+    if (transcriptionRef.current) {
+      const transcription = transcriptionRef.current.firstChild.value;
+      if (transcriptionIn !== transcription) {
+        if (!busy) {
+          handleSave().finally(() => {
+            setTranscriptionIn(transcription);
+            launchTimer();
+          });
+        }
+        return;
       }
-      return;
     }
     launchTimer();
   };
@@ -706,16 +707,16 @@ export function Transcriber(props: IProps) {
         i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
       )
       .forEach((psc) => {
-        if (psc.attributes.state !== curState) {
-          curState = psc.attributes.state;
-          results.push(historyItem(psc, t.getString(curState)));
-        }
         const comment = psc.attributes.comments;
         if (comment && comment !== '' && comment !== curComment) {
           curComment = comment;
           results.push(
             historyItem(psc, <span style={{ color: 'black' }}>{comment}</span>)
           );
+        }
+        if (psc.attributes.state !== curState) {
+          curState = psc.attributes.state;
+          results.push(historyItem(psc, t.getString(curState)));
         }
       });
     return results;

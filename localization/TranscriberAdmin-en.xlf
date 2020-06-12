@@ -468,7 +468,7 @@
       </unit>
       <unit id="projectSettings.notAdminInGroup">
          <segment>
-            <source>You are not an admin in this group, so you will be unable to manage the project.</source>
+            <source>You are not an owner in this group, so you will be unable to manage the project.</source>
             <target/>
          </segment>
       </unit>
@@ -1438,12 +1438,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.loadingTranscriberAdmin">
-         <segment>
-            <source>Loading SIL Transcriber Admin</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.loadingTranscriber">
          <segment>
             <source>Loading SIL Transcriber</source>
@@ -1482,7 +1476,25 @@
       </unit>
       <unit id="main.loadingTable">
          <segment>
-            <source>Loading data</source>
+            <source>Busy...please wait.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.resetTitle">
+         <segment>
+            <source>Remove All Local Data</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.resetDesc">
+         <segment>
+            <source>After the program exits, enter this command in a terminal window: {0}/resources/resetData.sh</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.cancel">
+         <segment>
+            <source>Cancel</source>
             <target/>
          </segment>
       </unit>
@@ -1804,6 +1816,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.unassigned">
+         <segment>
+            <source>unassigned</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.fontsize">
          <segment>
             <source>Font Size</source>
@@ -1936,6 +1954,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.updated">
+         <segment>
+            <source>Updated</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
@@ -1999,6 +2023,12 @@
       <unit id="transcriptionTab.expiredToken">
          <segment>
             <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.exportTooLarge">
+         <segment>
+            <source>The project cannot be exported.  The export file is too large.</source>
             <target/>
          </segment>
       </unit>
@@ -3130,6 +3160,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.bookNotFound">
+         <segment>
+            <source>Book not included in this project</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.syncComplete">
          <segment>
             <source>Sync Complete!</source>
@@ -3553,6 +3589,12 @@
       <unit id="profile.sendDigest">
          <segment>
             <source>Receive daily digests</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.role">
+         <segment>
+            <source>Role</source>
             <target/>
          </segment>
       </unit>

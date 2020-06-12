@@ -1,6 +1,11 @@
 const electron = require('electron');
 const ipcMain = electron.ipcMain;
 const app = electron.app;
+
+if (!app.requestSingleInstanceLock()) {
+  app.quit();
+}
+
 const BrowserWindow = electron.BrowserWindow;
 
 const path = require('path');
@@ -48,12 +53,12 @@ function createWindow() {
 
   mainWindow.on('closed', () => (mainWindow = null));
 
-  imageWindow.on('close', e => {
+  imageWindow.on('close', (e) => {
     e.preventDefault();
     imageWindow.hide();
   });
 
-  settingsWindow.on('close', e => {
+  settingsWindow.on('close', (e) => {
     e.preventDefault();
     settingsWindow.hide();
   });

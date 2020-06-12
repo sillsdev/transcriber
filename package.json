@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -148,12 +148,12 @@
     "productName": "SIL Transcriber Desktop Extension",
     "copyright": "Copyright © 2020 ${author}",
     "win": {
-      "icon": "public/favicon.bmp"
+      "icon": "public/favicon.png"
     },
     "linux": {
-      "icon": "public/favicon.png",
+      "icon": "debian/sil-transcriber.png",
+      "desktop": "debian/sil-transcriber.desktop",
       "target": [
-        "deb",
         "snap"
       ]
     },
@@ -173,6 +173,11 @@
         "from": "help",
         "to": "help",
         "filter": "*.chm"
+      },
+      {
+        "from": "src/script",
+        "to": "resources",
+        "filter": "resetData.*"
       }
     ]
   }

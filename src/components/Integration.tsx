@@ -49,6 +49,7 @@ import { schema } from '../schema';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { isElectron } from '../api-variable';
+import { dateChanges } from '../routes/dateChanges';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -179,10 +180,15 @@ export function IntegrationPanel(props: IProps) {
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
+  const [remote] = useGlobal('remote');
+  const [fingerprint] = useGlobal('fingerprint');
+
   const [errorReporter] = useGlobal('errorReporter');
   const [message, setMessage] = React.useState(<></>);
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
+  const syncing = React.useRef<boolean>(false);
+  const setSyncing = (state: boolean) => (syncing.current = state);
 
   const showMessage = (title: string, msg: string) => {
     setMessage(
@@ -312,17 +318,28 @@ export function IntegrationPanel(props: IProps) {
       );
     }
   };
-  const handleSync = () =>
+  const handleSync = () => {
+    setSyncing(true);
     syncProject(
       auth,
       remoteIdNum('project', project, keyMap),
       errorReporter,
       t.syncPending
     );
-
+  };
   const handleLocalSync = async () => {
-    await localSync(project, ptShortName, passages, memory);
+    setSyncing(true);
+    showMessage('', t.syncPending);
+    await localSync(
+      project,
+      ptShortName,
+      passages,
+      memory,
+      remoteIdNum('user', user, memory.keyMap)
+    );
+    showMessage('', t.syncComplete);
     resetCount();
+    setSyncing(false);
   };
 
   const handleRemoveIntegration = () => {
@@ -330,12 +347,7 @@ export function IntegrationPanel(props: IProps) {
   };
 
   const handleDeleteConfirmed = () => {
-    memory.update((t: TransformBuilder) =>
-      t.removeRecord({
-        type: 'projectintegration',
-        id: getProjectIntegration(paratextIntegration),
-      })
-    );
+    updateProjectIntegration(getProjectIntegration(paratextIntegration), '{}');
     setConfirmItem(null);
     removeProjectFromParatextList(ptProj);
     setPtProj(-1);
@@ -367,8 +379,9 @@ export function IntegrationPanel(props: IProps) {
     if (err.errStatus === 401) return t.expiredToken;
     if (err.errStatus === 500) {
       if (err.errMsg.includes('401')) return t.expiredParatextToken;
-
-      return t.invalidParatextLogin;
+      if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
+      if (err.errMsg.includes('Book not included'))
+        return t.bookNotFound + err.errMsg.substr(err.errMsg.lastIndexOf(':'));
     }
     return err.errMsg;
   };
@@ -400,12 +413,8 @@ export function IntegrationPanel(props: IProps) {
   }, [project]);
 
   useEffect(() => {
-    if (!paratext_countStatus) {
-      resetCount();
-      if (isElectron) getLocalCount(passages, project, memory, t.countPending);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passages, paratext_countStatus]);
+    resetCount();
+  }, [passages, resetCount]);
 
   /* do this once */
   useEffect(() => {
@@ -418,15 +427,17 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     if (!paratext_countStatus) {
-      if (!isElectron)
-        getCount(
-          auth,
-          remoteIdNum('project', project, keyMap),
-          errorReporter,
-          t.countPending
-        );
+      isElectron
+        ? getLocalCount(passages, project, memory, t.countPending)
+        : getCount(
+            auth,
+            remoteIdNum('project', project, keyMap),
+            errorReporter,
+            t.countPending
+          );
     } else if (paratext_countStatus.errStatus)
       showMessage(t.countError, translateError(paratext_countStatus));
+
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_count, paratext_countStatus]);
 
@@ -467,18 +478,24 @@ export function IntegrationPanel(props: IProps) {
   }, [busy, paratext_projects, paratext_projectsStatus]);
 
   useEffect(() => {
-    if (paratext_syncStatus && !isElectron)
-      if (paratext_syncStatus.errStatus)
+    findConnectedProject();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectintegrations]);
+
+  useEffect(() => {
+    if (paratext_syncStatus) {
+      if (paratext_syncStatus.errStatus) {
         showMessage(t.syncError, translateError(paratext_syncStatus));
-      else if (paratext_syncStatus.statusMsg !== '') {
+        setSyncing(false);
+      } else if (paratext_syncStatus.statusMsg !== '') {
         showMessage('', paratext_syncStatus.statusMsg);
-        getCount(
-          auth,
-          remoteIdNum('project', project, keyMap),
-          errorReporter,
-          t.countPending
-        );
       }
+      if (paratext_syncStatus.complete) {
+        resetCount();
+        setSyncing(false);
+        dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
+      }
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_syncStatus]);
 
@@ -648,6 +665,7 @@ export function IntegrationPanel(props: IProps) {
                     color="primary"
                     className={classes.button}
                     disabled={
+                      syncing.current ||
                       !online ||
                       !hasPtProj ||
                       !hasParatext ||
@@ -776,7 +794,12 @@ export function IntegrationPanel(props: IProps) {
                     variant="contained"
                     color="primary"
                     className={classes.button}
-                    disabled={!ptPath || !hasPtProj || !paratext_count}
+                    disabled={
+                      syncing.current ||
+                      !ptPath ||
+                      !hasPtProj ||
+                      !paratext_count
+                    }
                     onClick={handleLocalSync}
                   >
                     {t.sync}

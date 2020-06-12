@@ -38,7 +38,7 @@ import Confirm from './AlertDialog';
 import { related } from '../utils';
 import LanguagePicker from './LgPick/LanguagePicker';
 import FontSize from './FontSize';
-import { getRoleId, getCreatedBy } from '../utils';
+import { getRoleId, getCreatedBy, allUsersRec } from '../utils';
 import { SelectPlanType } from '../control';
 import { projectShortcut } from './ProjectShortcut';
 import { saveNewProject } from '../crud/saveNewProject';
@@ -172,7 +172,6 @@ export function ProjectSettings(props: IProps) {
   const [memory] = useGlobal('memory');
   const [keyMap] = useGlobal('keyMap');
   const [isApp] = useGlobal('appView');
-  const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [project, setProject] = useGlobal('project');
   const [user] = useGlobal('user');
@@ -378,9 +377,7 @@ export function ProjectSettings(props: IProps) {
     } as Project;
     if (add) {
       setCurrentProject(undefined);
-      const allUsers = groups.filter(
-        (g) => related(g, 'owner') === organization && g.attributes.allUsers
-      );
+      const allUsers = allUsersRec(memory, organization);
       setGroup(allUsers.length > 0 ? allUsers[0].id : '');
     } else {
       const curProj = projects.filter(
@@ -428,7 +425,7 @@ export function ProjectSettings(props: IProps) {
     width: 400,
   };
   const selectProps = { MenuProps: { className: classes.menu } };
-  const adminOnly = isApp || (orgRole !== 'admin' && projRole !== 'admin');
+  const adminOnly = isApp || projRole !== 'admin';
 
   return (
     <div
@@ -581,7 +578,7 @@ export function ProjectSettings(props: IProps) {
             </div>
           </FormGroup>
         </FormControl>
-        {!isApp && (orgRole === 'admin' || projRole === 'admin') && (
+        {!isApp && projRole === 'admin' && (
           <div className={classes.next}>
             {currentProject === undefined ? (
               <FormControl>
@@ -675,15 +672,13 @@ export function ProjectSettings(props: IProps) {
             )}
           </div>
         )}
-        {!isApp &&
-          (orgRole === 'admin' || projRole === 'admin') &&
-          currentProject !== undefined && (
-            <DeleteExpansion
-              title={t.deleteProject}
-              explain={t.deleteExplained}
-              handleDelete={() => handleDelete()}
-            />
-          )}
+        {!isApp && projRole === 'admin' && currentProject !== undefined && (
+          <DeleteExpansion
+            title={t.deleteProject}
+            explain={t.deleteExplained}
+            handleDelete={() => handleDelete()}
+          />
+        )}
       </div>
       {deleteItem !== '' && (
         <Confirm

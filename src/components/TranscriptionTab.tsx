@@ -40,6 +40,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
+import moment from 'moment-timezone';
 import SnackBar from './SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
@@ -111,6 +112,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const curZone = moment.tz.guess();
+
 interface IRow {
   id: string;
   name: string;
@@ -119,6 +122,7 @@ interface IRow {
   transcriber: string;
   editor: string;
   passages: string;
+  updated: string;
   action: string;
   parentId: string;
 }
@@ -166,6 +170,7 @@ const getAssignments = (
           editor: sectionEditorName(section, users),
           transcriber: sectionTranscriberName(section, users),
           passages: sectionpassages.length.toString(),
+          updated: '',
           action: '',
           parentId: '',
         });
@@ -182,6 +187,9 @@ const getAssignments = (
             editor: '',
             transcriber: '',
             passages: '',
+            updated: moment
+              .tz(moment.tz(passage.attributes.dateUpdated, 'utc'), curZone)
+              .calendar(),
             action: passage.id,
             parentId: section.id,
           } as IRow);
@@ -256,6 +264,7 @@ export function TranscriptionTab(props: IProps) {
   const [keyMap] = useGlobal('keyMap');
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
+  const [lang] = useGlobal('lang');
   const [message, setMessage] = useState(<></>);
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
@@ -271,7 +280,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
-  const [exporting, setExporting] = useState(false);
+
   const columnDefs = [
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
@@ -280,6 +289,7 @@ export function TranscriptionTab(props: IProps) {
     { name: 'transcriber', title: t.transcriber },
     { name: 'editor', title: t.editor },
     { name: 'action', title: '\u00A0' },
+    { name: 'updated', title: t.updated },
   ];
   const columnWidths = [
     { columnName: 'name', width: 300 },
@@ -288,12 +298,15 @@ export function TranscriptionTab(props: IProps) {
     { columnName: 'passages', width: 120 },
     { columnName: 'transcriber', width: 120 },
     { columnName: 'editor', width: 120 },
+    { columnName: 'updated', width: 200 },
     { columnName: 'action', width: 150 },
   ];
   const [defaultHiddenColumnNames, setDefaultHiddenColumnNames] = useState<
     string[]
   >([]);
   const [filter, setFilter] = useState(false);
+
+  moment.locale(lang);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -302,10 +315,12 @@ export function TranscriptionTab(props: IProps) {
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
-
+    if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
   const doProjectExport = (exportType: string) => {
+    setBusy(true);
+
     const mediaFiles = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile')
     ) as MediaFile[];
@@ -327,7 +342,6 @@ export function TranscriptionTab(props: IProps) {
     );
   };
   const handleProjectExport = () => {
-    setExporting(true);
     if (isElectron) setOpenExport(true);
     else doProjectExport('ptf');
   };
@@ -467,14 +481,12 @@ export function TranscriptionTab(props: IProps) {
         showMessage(t.error, translateError(exportStatus));
         exportComplete();
         setBusy(false);
-        setExporting(false);
       } else {
         if (exportStatus.statusMsg) {
-          setBusy(true);
           showMessage('', exportStatus.statusMsg);
         }
         if (exportStatus.complete) {
-          setExporting(false);
+          setBusy(false);
           if (exportFile && exportName === '') {
             setExportName(exportFile.data.attributes.message);
             setExportUrl(exportFile.data.attributes.fileurl);
@@ -632,7 +644,6 @@ export function TranscriptionTab(props: IProps) {
     };
     const closeNoChoice = () => {
       setOpenExport(false);
-      setExporting(false);
     };
 
     return (
@@ -681,7 +692,7 @@ export function TranscriptionTab(props: IProps) {
                 className={classes.button}
                 onClick={handleProjectExport}
                 title={t.exportProject}
-                disabled={exporting}
+                disabled={busy}
               >
                 {t.exportProject}
               </Button>

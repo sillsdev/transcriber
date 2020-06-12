@@ -29,3 +29,7 @@ export * from './DataPath';
 export * from './fontChoice';
 export * from './infoMsg';
 export * from './forceLogin';
+export * from './allUsers';
+export * from './resetData';
+export * from './exitElectronApp';
+export * from './linuxProgPath';

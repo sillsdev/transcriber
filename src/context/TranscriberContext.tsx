@@ -427,7 +427,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [role, project, trackedTask]);
+    }, [role, project, trackedTask, sections]);
 
     const actor: { [key: string]: string } = {
       [ActivityStates.TranscribeReady]: 'transcriber',

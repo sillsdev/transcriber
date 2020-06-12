@@ -1,10 +1,11 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/data';
+import { BaseModel } from './baseModel';
 
-export interface OrganizationMembership extends Record {
+export interface OrganizationMembership extends BaseModel {
   attributes: {
     dateCreated: string;
     dateUpdated: string;
-    lastModifiedBy: string;
+    lastModifiedBy: number;
   };
   relationships?: {
     user: RecordRelationship;

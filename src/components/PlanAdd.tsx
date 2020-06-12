@@ -59,11 +59,11 @@ function PlanAdd(props: IProps) {
   );
   const [planType, setPlanType] = useState('');
   const [message, setMessage] = useState(<></>);
-  const [inProcess, setInProcess] = useState(false);
+  const inProcess = React.useRef<boolean>(false);
 
   const handleAddOrSave = () => {
+    inProcess.current = true;
     doAddOrSave();
-    setInProcess(true);
   };
   const doAddOrSave = async () => {
     if (planType === '') {
@@ -92,8 +92,8 @@ function PlanAdd(props: IProps) {
         }
       }
     }
+    inProcess.current = false;
     setOpen(false);
-    setInProcess(false);
   };
   const handleCancel = () => {
     if (cancelMethod) {
@@ -159,7 +159,7 @@ function PlanAdd(props: IProps) {
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
-            disabled={name === '' || planType === '' || inProcess}
+            disabled={name === '' || planType === '' || inProcess.current}
           >
             {!planIn ? t.add : t.save}
           </Button>

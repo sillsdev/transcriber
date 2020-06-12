@@ -19,7 +19,7 @@ import {
 import * as actions from '../store';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
-import { QueryBuilder, Record } from '@orbit/data';
+import { QueryBuilder } from '@orbit/data';
 import {
   AppBar,
   Avatar,
@@ -81,6 +81,7 @@ import Busy from '../components/Busy';
 import Setup from '../components/Setup';
 import NotSetup from '../components/NotSetup';
 import SnackBar from '../components/SnackBar';
+import ResetAlert from '../control/ResetAlert';
 import {
   related,
   deepLink,
@@ -90,6 +91,12 @@ import {
   Online,
   remoteIdNum,
   forceLogin,
+  getMbrRoleRec,
+  getMbrRole,
+  allUsersRec,
+  resetData,
+  exitElectronApp,
+  linuxProgPath,
 } from '../utils';
 import logo from './transcriber10.png';
 import { isElectron, API_CONFIG } from '../api-variable';
@@ -100,8 +107,8 @@ import { DataPath } from '../utils/DataPath';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 
-const noop = { openExternal: () => {} };
-const { shell } = isElectron ? require('electron') : { shell: noop };
+const noop = { openExternal: () => {}, openItem: () => {} };
+const { shell } = isElectron ? require('electron') : { shell: noop as any };
 
 export const DrawerWidth = 240;
 export const DrawerTask = 9;
@@ -279,6 +286,7 @@ interface IRecordProps {
   groupMemberships: Array<GroupMembership>;
   roles: Array<Role>;
   mediafiles: Array<MediaFile>;
+  projects: Array<Project>;
 }
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
@@ -306,8 +314,8 @@ export function ResponsiveDrawer(props: IProps) {
     importStatus,
     organizationMemberships,
     groupMemberships,
-    roles,
     mediafiles,
+    projects,
     orbitError,
   } = props;
   const classes = useStyles();
@@ -357,7 +365,8 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
-  const [delProject, setDelProject] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+  const [linuxPath, setLinuxPath] = useState<string>();
   const timer = React.useRef<NodeJS.Timeout>();
   const syncTimer = React.useRef<NodeJS.Timeout>();
 
@@ -421,7 +430,6 @@ export function ResponsiveDrawer(props: IProps) {
       setOrganization(value);
       setAddProject(false);
       setGroup('');
-      setProjOptions([]);
       setCurProj(null);
       setTranscribe(false);
       setChoice('');
@@ -489,7 +497,6 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const handleFinishAdd = ({ to, projectId, planId }: IAddArgs) => {
-    setProjOptions([]);
     if (projectId)
       AddProjectLoaded(projectId, projectsLoaded, setProjectsLoaded);
     if (to) {
@@ -511,12 +518,23 @@ export function ResponsiveDrawer(props: IProps) {
       if (mini) setMini(false);
       setPlan('');
       if (addProject) setAddProject(false);
-      else setDelProject(true);
+
       if (projectId) setProject(projectId);
     }
   };
 
   const handleUserMenuAction = (what: string) => {
+    if (isElectron && /ClearLogout/i.test(what)) {
+      let linuxPath = linuxProgPath();
+      if (linuxPath) {
+        setLinuxPath(linuxPath);
+        setResetOpen(true);
+        return;
+      } else {
+        resetData();
+        exitElectronApp();
+      }
+    }
     if (isElectron && /logout/i.test(what)) {
       localStorage.removeItem('user-id');
       setView('Access');
@@ -536,6 +554,13 @@ export function ResponsiveDrawer(props: IProps) {
     }
   };
 
+  const handleReset = (what: string) => {
+    setResetOpen(false);
+    if (/Continue/i.test(what)) {
+      exitElectronApp();
+    }
+  };
+
   const handleSwitch = () => {
     checkSavedFn(() => setAppView(!isApp));
   };
@@ -545,7 +570,7 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const checkSavedFn = (method: () => any) => {
-    if (busy) {
+    if (busy || importexportBusy) {
       setMessage(<span>{t.loadingTable}</span>);
       return;
     }
@@ -607,34 +632,17 @@ export function ResponsiveDrawer(props: IProps) {
     setAlertOpen(false);
     finishConfirmed(savedMethod, 8);
   };
-  const getRole = (table: Record[], relate: string, id: string) => {
-    const memberRecs = table.filter(
-      (tbl) => related(tbl, 'user') === user && related(tbl, relate) === id
-    );
-    if (memberRecs.length === 1) {
-      const roleId = related(memberRecs[0], 'role');
-      const roleRecs = roles.filter((r) => r.id === roleId);
-      if (roleRecs.length === 1) {
-        const attr = roleRecs[0].attributes;
-        if (attr && attr.roleName) return attr.roleName.toLocaleLowerCase();
-      }
-    }
-    return '';
-  };
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   const getProjs = async () => {
-    let projs: Project[] = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('project')
-    ) as Project[];
     if (isElectron) {
       const groupids = groupMemberships
         .filter((gm) => related(gm, 'user') === user)
         .map((gm) => related(gm, 'group'));
 
-      projs = projs.filter((p) => groupids.includes(related(p, 'group')));
+      return projects.filter((p) => groupids.includes(related(p, 'group')));
     }
-    return projs;
+    return projects;
   };
 
   useEffect(() => {
@@ -682,9 +690,8 @@ export function ResponsiveDrawer(props: IProps) {
         const attr = orgRec[0].attributes;
         setOrgAvatar(attr?.logoUrl ? DataPath(attr.logoUrl) : '');
       }
-      setOrgRole(
-        getRole(organizationMemberships, 'organization', organization)
-      );
+      const mbrRecs = getMbrRoleRec(memory, 'organization', organization, user);
+      setOrgRole(getMbrRole(memory, mbrRecs));
     }
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -709,10 +716,6 @@ export function ResponsiveDrawer(props: IProps) {
   }, [orgOptions, organization, isApp]);
 
   useEffect(() => {
-    if (delProject) {
-      setDelProject(false);
-      return;
-    }
     getProjs().then((projects) => {
       const projOpts = projects
         .filter(
@@ -739,7 +742,7 @@ export function ResponsiveDrawer(props: IProps) {
       }
     });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [organization, addProject, delProject, orgRole, user]);
+  }, [organization, orgRole, user, projects]);
 
   useEffect(() => {
     const projKeys = projOptions.map((o) => o.value);
@@ -785,8 +788,14 @@ export function ResponsiveDrawer(props: IProps) {
         q.findRecord({ type: 'project', id: project })
       ) as any;
       const groupId = related(projRec, 'group');
-      setProjRole(getRole(groupMemberships, 'group', groupId));
-    } catch {} // Ignore if project not found
+      const mbrRecs = getMbrRoleRec(memory, 'group', groupId, user);
+      setProjRole(getMbrRole(memory, mbrRecs));
+    } catch {
+      const allUsers = allUsersRec(memory, organization);
+      const gMbrRecs = getMbrRoleRec(memory, 'group', allUsers[0]?.id, user);
+      const role = getMbrRole(memory, gMbrRecs);
+      setProjRole(role); // role for new projects is all user role
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project, addProject, curProj, user]);
 
@@ -1036,6 +1045,7 @@ export function ResponsiveDrawer(props: IProps) {
                 suggestions={orgOptions}
                 current={curOrg}
                 onCommit={commitOrg}
+                disabled={importexportBusy}
               />
             </div>
           )}
@@ -1090,6 +1100,7 @@ export function ResponsiveDrawer(props: IProps) {
                       suggestions={projOptions}
                       current={curProj}
                       onCommit={commitProj}
+                      disabled={importexportBusy}
                     />
                   </div>
                 </div>
@@ -1234,77 +1245,83 @@ export function ResponsiveDrawer(props: IProps) {
         })}
         color="inherit"
       >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
-          <img src={logo} className={classes.logo} alt="logo" />
-          <div>
-            <Typography variant="overline" className={classes.appName}>
-              {isApp ? t.transcribe : t.admin}
-            </Typography>
-            <br />
-            <Typography variant="h6" noWrap>
-              {title}
-            </Typography>
-          </div>
-          <div className={classes.grow}>{'\u00A0'}</div>
+        <>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+            <img src={logo} className={classes.logo} alt="logo" />
+            <div>
+              <Typography variant="overline" className={classes.appName}>
+                {isApp ? t.transcribe : t.admin}
+              </Typography>
+              <br />
+              <Typography variant="h6" noWrap>
+                {title}
+              </Typography>
+            </div>
+            <div className={classes.grow}>{'\u00A0'}</div>
 
-          {!isApp ? (
-            <div className={classes.navButton}>
-              <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSwitch}
-                disabled={!transcribe}
-              >
-                {t.transcribe}
-              </Button>
-            </div>
-          ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
-            <div className={classes.navButton}>
-              <Typography>{t.switchTo + '\u00A0'}</Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSwitch}
-                disabled={busy || doSave}
-              >
-                {t.admin}
-              </Button>
-            </div>
-          ) : (
-            isApp &&
-            online &&
-            (projRole === 'admin' || orgRole === 'admin') && (
+            {!isApp ? (
               <div className={classes.navButton}>
                 <Typography>{t.switchTo + '\u00A0'}</Typography>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={handleAdmin(API_CONFIG.endpoint)}
+                  onClick={handleSwitch}
+                  disabled={!transcribe}
                 >
-                  {t.goOnline}
+                  {t.transcribe}
                 </Button>
               </div>
-            )
+            ) : (projRole === 'admin' || orgRole === 'admin') && !isElectron ? (
+              <div className={classes.navButton}>
+                <Typography>{t.switchTo + '\u00A0'}</Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSwitch}
+                  disabled={busy || doSave}
+                >
+                  {t.admin}
+                </Button>
+              </div>
+            ) : (
+              isApp &&
+              online &&
+              (projRole === 'admin' || orgRole === 'admin') && (
+                <div className={classes.navButton}>
+                  <Typography>{t.switchTo + '\u00A0'}</Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleAdmin(API_CONFIG.endpoint)}
+                  >
+                    {t.goOnline}
+                  </Button>
+                </div>
+              )
+            )}
+            {'\u00A0'}
+            <HelpMenu online={online} />
+            <UserMenu action={menuAction} />
+          </Toolbar>
+          {(!busy && !importexportBusy && !doSave) || (
+            <AppBar
+              position="fixed"
+              className={classes.progress}
+              color="inherit"
+            >
+              <LinearProgress variant="indeterminate" />
+            </AppBar>
           )}
-          {'\u00A0'}
-          <HelpMenu online={online} />
-          <UserMenu action={menuAction} />
-        </Toolbar>
-        {(!busy && !importexportBusy && !doSave) || (
-          <AppBar position="fixed" className={classes.progress} color="inherit">
-            <LinearProgress variant="indeterminate" />
-          </AppBar>
-        )}
+        </>
       </AppBar>
       <nav
         className={clsx(classes.drawer, { [classes.drawerMini]: mini })}
@@ -1356,6 +1373,14 @@ export function ResponsiveDrawer(props: IProps) {
           noResponse={handleSaveRefused}
         />
       )}
+      {resetOpen && (
+        <ResetAlert
+          open={resetOpen}
+          path={linuxPath}
+          action={handleReset}
+          t={t}
+        />
+      )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
@@ -1381,8 +1406,8 @@ const mapRecordsToProps = {
     q.findRecords('organizationmembership'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
 };
 
 export default withData(mapRecordsToProps)(

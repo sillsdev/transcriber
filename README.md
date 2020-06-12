@@ -10,7 +10,7 @@ Clone the app, go to the project directory, and execute:
 2. `npm run stamp` _# this creates a file with the date to display in the version_
 3. `node src\components\LgPick\langPicker\makeIndexes.js` _# builds language indexes_
 
-Make the font folder using fonts from [SIL Fonts](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=using_web_fonts) and [Google Noto fonts](https://www.google.com/get/noto/)
+Currently the fonts are handled in a separate S3 bucket so they don't need to be included in the project deployment. If you wanted to build the fonts folder for deployment or to update the S3 bucket: Make the font folder using fonts from [SIL Fonts](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=using_web_fonts) and [Google Noto fonts](https://www.google.com/get/noto/)
 
 4. `node src\components\LgPick\langPicker\fontList.js <folderName>` _# builds **/public/fonts** folder_
 
@@ -26,7 +26,7 @@ You can use Visual Studio to build `updateLocalization.sln` (in the localization
 
 6. `cd localization\bin\Debug;& updateLocalization.exe`
 
-> NB. You may want ot download the strings from the [crowdin site](https://crowdin.com/project/sil-transcriber) and untip the file in the localization folder before executing this command to get all the latest localization strings included.
+> NB. You may want ot download the strings from the [crowdin site](https://crowdin.com/project/sil-transcriber) and unzip the file in the localization folder before executing this command to get all the latest localization strings included.
 
 ## Running Locally
 
@@ -158,7 +158,7 @@ const electronExtension = (BrowserWindow) => {
   BrowserWindow.addDevToolsExtension(
     path.join(
       os.homedir(),
-      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.4.0_0"
+      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.7.0_0"
     )
   );
   BrowserWindow.addDevToolsExtension(
@@ -186,6 +186,14 @@ alternatively
 3. `npm run dist`
 
 The _dist_ command creates a folder in the dist folder with an executable that can be launched directly by clicking on it. it also creates an installer in the _dist_ folder that can be distributed.
+
+## creating the Linux .deb package
+
+The electron-builder program doesn't include the icon as part of the .deb package. It also doesn't install the help file reader. In order to create a more complete .deb package for Linux, use this command:
+
+- `bash src/script/makeDeb.sh 2.0.8.4`
+
+where `2.0.8.4` is replaced with the latest version number corresponding to the version in the package.json file. The version number in this command is used in naming the file and must agree with the version in the `debian/changes` file. The .deb created by this command bundles source and binary into the .deb to create a complete package. The package will still need to be signed and deployed to `package.sil.org`.
 
 ## Test suite
 

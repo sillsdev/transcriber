@@ -11,7 +11,6 @@ import {
   DigestPreference,
   OrganizationMembership,
   Role,
-  Group,
   GroupMembership,
   Invitation,
 } from '../model';
@@ -45,12 +44,21 @@ import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { remoteId, makeAbbr, uiLang, related, remoteIdNum } from '../utils';
+import {
+  remoteId,
+  makeAbbr,
+  uiLang,
+  related,
+  remoteIdNum,
+  getRoleRec,
+  getMbrRoleRec,
+  allUsersRec,
+} from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
-import { UpdateRecord } from '../model/baseModel';
+import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
 import { isElectron } from '../api-variable';
 
@@ -185,6 +193,7 @@ export function Profile(props: IProps) {
   const [family, setFamily] = useState<string | null>(null);
   const [email, setEmail] = useState('');
   const [timezone, setTimezone] = useState<string | null>(moment.tz.guess());
+  const [role, setRole] = useState('member');
   const [locale, setLocale] = useState<string>(
     navigator.language.split('-')[0]
   );
@@ -252,6 +261,11 @@ export function Profile(props: IProps) {
     setTimezone(e.target.value);
   };
 
+  const handleRoleChange = (e: any) => {
+    setChanged(true);
+    setRole(e.target.value);
+  };
+
   const handleLocaleChange = (e: any) => {
     setChanged(true);
     setLocale(e.target.value);
@@ -292,12 +306,13 @@ export function Profile(props: IProps) {
 
   const handleSave = () => {
     if (changed) {
+      const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
       memory.update((t: TransformBuilder) => [
         UpdateRecord(
           t,
           {
             type: 'user',
-            id: currentUser === undefined ? user : currentUser.id, //currentuser will not be undefined here
+            id: currentUserId,
             attributes: {
               name,
               givenName: given,
@@ -325,29 +340,38 @@ export function Profile(props: IProps) {
         ),
         // we aren't allowing them to change owner oraganization currently
       ]);
+      const roleRecs = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('role')
+      ) as Role[];
+      const newRoleRec = getRoleRec(roleRecs, role, true);
+      const mbrRec = getMbrRoleRec(
+        memory,
+        'organization',
+        organization,
+        currentUserId
+      ) as OrganizationMembership[];
+      if (newRoleRec.length > 0 && mbrRec.length > 0) {
+        const curRoleId = related(mbrRec[0], 'role');
+        if (curRoleId !== newRoleRec[0].id) {
+          memory.update((t: TransformBuilder) =>
+            UpdateRelatedRecord(
+              t,
+              mbrRec[0],
+              'role',
+              'role',
+              newRoleRec[0].id,
+              remoteIdNum('user', user, memory.keyMap)
+            )
+          );
+          // setOrgRole(role);
+        }
+      }
       setLanguage(locale);
     }
     if (editId) {
       setEditId(null);
     }
     setView('Main');
-  };
-
-  const roleRec = (roleRecs: Role[], kind: string, orgRole: boolean) => {
-    const lcKind = kind.toLowerCase();
-    return orgRole
-      ? roleRecs.filter(
-          (r) =>
-            r.attributes.orgRole &&
-            r.attributes.roleName &&
-            r.attributes.roleName.toLowerCase() === lcKind
-        )
-      : roleRecs.filter(
-          (r) =>
-            r.attributes.groupRole &&
-            r.attributes.roleName &&
-            r.attributes.roleName.toLowerCase() === lcKind
-        );
   };
 
   const addToOrgAndGroup = (userRec: User) => {
@@ -358,14 +382,9 @@ export function Profile(props: IProps) {
     const roleRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('role')
     ) as Role[];
-    const memberRec = roleRec(roleRecs, 'member', true);
-    const groups = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('group')
-    ) as Group[];
-    const allUsersGroup = groups.filter(
-      (g) => related(g, 'owner') === organization && g.attributes.allUsers
-    );
-    const editorRec = roleRec(roleRecs, 'editor', false);
+    const memberRec = getRoleRec(roleRecs, 'member', true);
+    const allUsersGroup = allUsersRec(memory, organization);
+    const editorRec = getRoleRec(roleRecs, 'editor', false);
     let groupMbr: GroupMembership = {
       type: 'groupmembership',
     } as any;
@@ -517,6 +536,24 @@ export function Profile(props: IProps) {
       if (current.length === 1) {
         userRec = current[0];
         setCurrentUser(userRec);
+        const orgMbrRecs = memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('organizationmembership')
+        ) as OrganizationMembership[];
+        const mbrRec = orgMbrRecs.filter(
+          (r) =>
+            related(r, 'user') === userRec.id &&
+            related(r, 'organization') === organization
+        );
+        if (mbrRec.length > 0) {
+          const roleId = related(mbrRec[0], 'role');
+          const roleRec = memory.cache.query((q: QueryBuilder) =>
+            q.findRecord({ type: 'role', id: roleId })
+          ) as Role;
+          const roleName = roleRec?.attributes?.roleName;
+          if (roleName) {
+            setRole(roleName);
+          }
+        }
       }
     }
     const attr = userRec.attributes;
@@ -554,6 +591,8 @@ export function Profile(props: IProps) {
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Access/i.test(view)) return <Redirect to="/" />;
   if (/Main/i.test(view)) return <Redirect to="/main" />;
+
+  const orgRoles = ['Admin', 'Member'];
 
   return (
     <div id="Profile" className={classes.root}>
@@ -647,6 +686,35 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
+                  {orgRole === 'admin' && editId && !/Add/.test(editId) && (
+                    <FormControlLabel
+                      control={
+                        <TextField
+                          id="select-org-role"
+                          select
+                          label={t.role}
+                          className={classes.locale}
+                          value={role}
+                          onChange={handleRoleChange}
+                          SelectProps={{
+                            MenuProps: {
+                              className: classes.menu,
+                            },
+                          }}
+                          margin="normal"
+                          variant="filled"
+                          required={true}
+                        >
+                          {orgRoles.map((option: string, idx: number) => (
+                            <MenuItem key={'role' + idx} value={option}>
+                              {option}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      }
+                      label=""
+                    />
+                  )}
                   <FormControlLabel
                     control={
                       <TextField

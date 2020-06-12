@@ -465,8 +465,8 @@
       </unit>
       <unit id="projectSettings.notAdminInGroup">
          <segment>
-            <source>You are not an admin in this group, so you will be unable to manage the project.</source>
-            <target>Vous n'êtes pas administrateur de ce groupe, vous ne pourrez donc pas gérer le projet.</target>
+            <source>You are not an owner in this group, so you will be unable to manage the project.</source>
+         	<target>Vous n'êtes pas un propriétaire dans ce groupe, vous ne pourrez donc pas gérer le projet.</target>
          </segment>
       </unit>
 		<unit id="projectSettings.defaultPlanName">
@@ -1435,12 +1435,6 @@
 				<target>Project</target>
 			</segment>
 		</unit>
-		<unit id="main.loadingTranscriberAdmin">
-			<segment>
-				<source>Loading SIL Transcriber Admin</source>
-				<target>Chargement de SIL Transcriber</target>
-			</segment>
-		</unit>
 		<unit id="main.loadingTranscriber">
 			<segment>
 				<source>Loading SIL Transcriber</source>
@@ -1479,8 +1473,26 @@
       </unit>
       <unit id="main.loadingTable">
 			<segment>
-				<source>Loading data</source>
-				<target>Chargement des données</target>
+				<source>Busy...please wait.</source>
+				<target>Occupé ... veuillez patienter.</target>
+			</segment>
+		</unit>
+		<unit id="main.resetTitle">
+			<segment>
+				<source>Remove All Local Data</source>
+				<target>Supprimer toutes les données locales</target>
+			</segment>
+		</unit>
+		<unit id="main.resetDesc">
+			<segment>
+				<source>After the program exits, enter this command in a terminal window: {0}/resources/resetData.sh</source>
+				<target>Une fois le programme terminé, entrez cette commande dans une fenêtre de terminal : {0}/resources/resetData.sh</target>
+			</segment>
+		</unit>
+		<unit id="main.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
 			</segment>
 		</unit>
 		<unit id="main.logout">
@@ -1801,6 +1813,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.unassigned">
+         <segment>
+            <source>unassigned</source>
+            <target>Non attribué</target>
+         </segment>
+      </unit>
       <unit id="import.fontsize">
          <segment>
             <source>Font Size</source>
@@ -1939,6 +1957,12 @@
 				<target>Impossible de copier dans le presse-papiers</target>
 			</segment>
 		</unit>
+		<unit id="transcriptionTab.updated">
+			<segment>
+				<source>Updated</source>
+				<target>Mise à jour</target>
+			</segment>
+		</unit>
 		<unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
@@ -2005,6 +2029,12 @@
             <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
+      <unit id="transcriptionTab.exportTooLarge">
+         <segment>
+            <source>The project cannot be exported.  The export file is too large.</source>
+            <target>Le projet ne peut pas être exporté. Le fichier d'exportation est trop volumineux.</target>
+         </segment>
+       </unit>
 		<unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>
@@ -3135,6 +3165,12 @@
     		<target>Erreur de synchronisation:</target>
 	     </segment>
       </unit>
+      <unit id="integration.bookNotFound">
+         <segment>
+            <source>Book not included in this project</source>
+            <target>Livre non inclus dans ce projet</target>
+         </segment>
+      </unit>
       <unit id="integration.syncComplete">
          <segment>
             <source>Sync Complete!</source>
@@ -3559,6 +3595,12 @@
 			<segment>
 				<source>Receive daily digest</source>
 				<target>Recevoir les résumés quotidiens</target>
+			</segment>
+		</unit>
+		<unit id="profile.role">
+			<segment>
+				<source>Role</source>
+				<target>Rôle</target>
 			</segment>
 		</unit>
 		<unit id="deleteExpansion.dangerZone">

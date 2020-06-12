@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
       maxWidth: 752,
     },
-    demo: {
+    paper: {
       backgroundColor: theme.palette.background.paper,
     },
     list: {
@@ -86,7 +86,7 @@ export function LanguageChoice(props: IProps) {
   };
 
   const langElems = (list: number[], langTags: LangTag[]) => {
-    return list.map(r => {
+    return list.map((r) => {
       const tag = langTags[r];
       return (
         <ListItem
@@ -111,11 +111,11 @@ export function LanguageChoice(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <div className={classes.demo}>
+      <div className={classes.paper}>
         <List
           dense={dense}
           className={classes.list}
-          style={{ maxHeight: height - 450 }}
+          style={{ maxHeight: Math.max(height - 450, 200) }}
         >
           {langElems(list, langTags)}
         </List>

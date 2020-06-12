@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=SIL Transcriber Desktop Extension
+Name[fr]=SIL Transcriber extension de bureau
+Comment=Transcribe audio files for Paratext or Elan
+Comment[fr]=Transcrire des fichiers audio pour Paratext ou Elan
+Exec=/usr/bin/sil-transcriber
+Icon=sil-transcriber
+Categories=GTK;GNOME;Education;
+Terminal=false

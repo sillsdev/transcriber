@@ -289,7 +289,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "settings": string;
     "integrations": string;
     "project": string;
-    "loadingTranscriberAdmin": string;
     "loadingTranscriber": string;
     "addOrganization": string;
     "projectSummary": string;
@@ -297,6 +296,9 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "export": string;
     "import": string;
     "loadingTable": string;
+    "resetTitle": string;
+    "resetDesc": string;
+    "cancel": string;
     "logout": string;
     "myAccount": string;
     "orgRole": string;
@@ -353,6 +355,7 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "state": string;
     "editor": string;
     "transcriber": string;
+    "unassigned": string;
     "fontsize": string;
     "username": string;
     "given": string;
@@ -378,6 +381,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "copyTip": string;
     "showHideFilter": string;
     "cantCopy": string;
+    "updated": string;
     "exportProject": string;
     "electronBackup": string;
     "exportType": string;
@@ -389,6 +393,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "error": string;
     "downloading": string;
     "expiredToken": string;
+    "exportTooLarge": string;
 };
 
 export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {
@@ -625,6 +630,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "usernameError": string;
     "syncPending": string;
     "syncError": string;
+    "bookNotFound": string;
     "syncComplete": string;
     "countError": string;
     "countReady": string;
@@ -705,6 +711,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "addOfflineUser": string;
     "sendNews": string;
     "sendDigest": string;
+    "role": string;
 };
 
 export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {

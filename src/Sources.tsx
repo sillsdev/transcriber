@@ -23,7 +23,7 @@ import { API_CONFIG } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { LoadData } from './utils/loadData';
-import { orbitInfo, related } from './utils';
+import { orbitInfo, orbitRetry, related } from './utils';
 import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
@@ -194,7 +194,7 @@ export const Sources = async (
 
           if (ex instanceof NetworkError) {
             // When network errors are encountered, try again in 3s
-            orbitError(orbitInfo(null, 'NetworkError - will try again soon'));
+            orbitError(orbitRetry(null, 'NetworkError - will try again soon'));
             setTimeout(() => {
               remote.requestQueue.retry();
             }, 3000);
@@ -203,28 +203,30 @@ export const Sources = async (
             // reset state.
             let label = transform.options && transform.options.label;
             if (label) {
-              alert(`Unable to complete "${label}"`);
+              orbitError(orbitInfo(null, `Unable to complete "${label}"`));
             } else {
               const response = ex.response as any;
-              const url: string | null = response && response.url;
+              const url: string | null = response?.url;
               const data = (ex as any).data;
               const detail =
-                data &&
-                data.errors &&
+                data?.errors &&
                 Array.isArray(data.errors) &&
                 data.errors.length > 0 &&
                 data.errors[0].detail;
               if (url && detail) {
-                alert(
-                  `Unable to complete ` +
-                    transform.operations[0].op +
-                    ` in ` +
-                    url.split('/').pop() +
-                    `: ` +
-                    detail
+                orbitError(
+                  orbitInfo(
+                    null,
+                    `Unable to complete ` +
+                      transform.operations[0].op +
+                      ` in ` +
+                      url.split('/').pop() +
+                      `: ` +
+                      detail
+                  )
                 );
               } else {
-                alert(`Unable to complete operation`);
+                orbitError(orbitInfo(null, `Unable to complete operation`));
               }
             }
 

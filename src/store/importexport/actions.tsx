@@ -105,19 +105,27 @@ export const exportProject = (
         .then((response) => {
           var fr = response.data as FileResponse;
           start = Number(fr.data.id);
-          if (start === -1) {
-            dispatch({
-              payload: response.data,
-              type: EXPORT_SUCCESS,
-            });
-          } else {
-            dispatch({
-              payload: pendingmsg.replace(
-                '{0}',
-                Math.round((start / (numberOfMedia + 10)) * 100).toString()
-              ),
-              type: EXPORT_PENDING,
-            });
+          switch (start) {
+            case -1:
+              dispatch({
+                payload: response.data,
+                type: EXPORT_SUCCESS,
+              });
+              break;
+            case -2:
+              dispatch({
+                payload: errorStatus(undefined, fr.data.attributes.message),
+                type: EXPORT_ERROR,
+              });
+              break;
+            default:
+              dispatch({
+                payload: pendingmsg.replace(
+                  '{0}',
+                  Math.round((start / (numberOfMedia + 10)) * 100).toString()
+                ),
+                type: EXPORT_PENDING,
+              });
           }
         })
         // eslint-disable-next-line no-loop-func

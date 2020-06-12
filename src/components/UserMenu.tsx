@@ -17,6 +17,7 @@ import ExitIcon from '@material-ui/icons/ExitToApp';
 import AccountIcon from '@material-ui/icons/AccountCircle';
 import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
+import { isElectron } from '../api-variable';
 
 const StyledMenu = withStyles({
   paper: {
@@ -38,7 +39,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const StyledMenuItem = withStyles(theme => ({
+const StyledMenuItem = withStyles((theme) => ({
   root: {
     '&:focus': {
       backgroundColor: theme.palette.primary.main,
@@ -118,7 +119,7 @@ export function UserMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={t.myAccount} />
         </StyledMenuItem>
-        {shift && (
+        {shift && !isElectron && (
           <StyledMenuItem onClick={handleAction('Clear')}>
             <ListItemIcon>
               <ClearIcon fontSize="small" />

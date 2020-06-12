@@ -1,6 +1,7 @@
 import {
   FETCH_ORBIT_DATA,
   ORBIT_ERROR,
+  ORBIT_RETRY,
   IApiError,
   RESET_ORBIT_ERROR,
   ORBIT_SAVING,
@@ -12,12 +13,18 @@ import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
 import JSONAPISource from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
+import { Severity } from '../../components/logErrorService';
 
 export const orbitError = (ex: IApiError) => {
-  return {
-    type: ORBIT_ERROR,
-    payload: ex,
-  };
+  return ex.response.status === Severity.info
+    ? {
+        type: ORBIT_ERROR,
+        payload: ex,
+      }
+    : {
+        type: ORBIT_RETRY,
+        payload: ex,
+      };
 };
 
 export const doOrbitError = (ex: IApiError) => (dispatch: any) => {

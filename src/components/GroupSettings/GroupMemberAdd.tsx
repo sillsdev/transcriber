@@ -50,6 +50,7 @@ function GroupMemberAdd(props: IProps) {
   const [group] = useGlobal('group');
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
   const [message, setMessage] = useState(<></>);
+  const inProcess = React.useRef<boolean>(false);
 
   const handleCommit = (e: any) => {
     setCurrentPerson(e.target.value);
@@ -63,7 +64,7 @@ function GroupMemberAdd(props: IProps) {
   const handleMessageReset = () => setMessage(<></>);
 
   const handleAddMember = async () => {
-    setOpen(false);
+    inProcess.current = true;
     const fileRole: RoleNames =
       role === 'owner' ? RoleNames.Admin : (role as RoleNames);
     const roleId = getRoleId(roles, fileRole);
@@ -99,6 +100,9 @@ function GroupMemberAdd(props: IProps) {
     if (role === RoleNames.Editor) {
       setMessage(<span>{t.allReviewersCanTranscribe}</span>);
     }
+    inProcess.current = false;
+    setCurrentPerson(null);
+    setOpen(false);
   };
 
   return (
@@ -152,7 +156,7 @@ function GroupMemberAdd(props: IProps) {
           variant="outlined"
           onClick={handleAddMember}
           color="primary"
-          disabled={!currentPerson}
+          disabled={!currentPerson || inProcess.current}
         >
           {t.add}
         </Button>
