@@ -1,3 +1,58 @@
+sil-transcriber (2.0.8.5)  experimental; urgency=high
+
+  * Minimum Lang List Size (#423)
+  * Set a minimum size for the list of languages on the language picker.
+  * TT-1017 update project integration instead of removing (#417)
+  * TT-1240 add reset data to desktop
+  * TT-1256 Fall back to Paratext 8 registry key (#414)
+  * fix import report for editor/transcriber
+  * create history record when syncing.
+  * Disable sync button when sync begins.
+  * Show messages on local sync (#413)
+  * TT-1275 only one instance of desktop ext (#442)
+  * TT-1332 add Linux icon, menu item, and deb package
+  * TT-1345 Remove 401 error in Desktop
+  * TT-1368 Continuous desktop playing (#443)
+  * TT-1391 Modify org role (#425)
+  * TT-1395 empty json (#424)
+  * TT-1397, TT-1399, TT-1401 update when data changes come in (#412)
+  * TT-1398 Multiple Plan Modify (#415)
+  * Disable Save while Associations saving
+  * TT-1402 project editing role (#427)
+  * Require project admin role to edit project
+  * allow creation of new projects if role in all users is admin
+  * TT-1402 use owner in msg (#432)
+  * TT-1403 Don't display unnecessary alert (#421)
+  * fix pasting so it doesn't overwrite other rows
+  * add comment about numbers
+  * TT-1405 Justify numbers (#426)
+  * TT-1411 now that projects are a prop, don't reset projOptions elsewhere (#431)
+  * TT-1412 disable project and org list when exporting TT-1389 disappearing pane on filter (#429)
+  * TT-1413 Handle export errors (#422)
+  * TT-1418 No old attach (#420)
+  * TT-1419 filter focus (#435)
+  * TT-1419 no dynamic filter (#439)
+  * Reload data when slider changes
+  * TT-1421 Update passage list correctly (#419)
+  * fix drawer structure error
+  * fix loading when unauthorized
+  * TT-1434 Only assign one passage to a media (#433)
+  * TT-1437, TT-1444 Auto Match default (#430)
+  * include hyphen between beg and end
+  * remember last edited value
+  * separate defaults for Scripture and General plans
+  * TT-1442 handle more Paratext errors (#418
+  * use Ref instead of state for syncing, force dataChanges after sync
+  * rearrange comment/state change in history
+  * TT-1443 error retry count (#434)
+  * replace alert() with error reporting
+  * TT-1447 Manually remove relationships that have been deleted elsewhere (#436)
+  * TT-1449 Make play icon show again
+  * TT-1450 Add modified date to trans tab (#437)
+  * TT-1461 accept upper case extensions (#441)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 12 Jun 2020 15:40:00 -0600
+
 sil-transcriber (2.0.8.4)  experimental; urgency=high
 
    * See software.sil.org/siltranscriber/sil-transcriber-2-release-0-8-4/
