@@ -491,6 +491,7 @@ export function Transcriber(props: IProps) {
           []
         )
       );
+      setComment('');
     }
   };
   const handleKey = (e: React.KeyboardEvent) => {
