@@ -193,7 +193,7 @@ The electron-builder program doesn't include the icon as part of the .deb packag
 
 - `bash src/script/makeDeb.sh 2.0.8.4`
 
-where `2.0.8.4` is replaced with the latest version number corresponding to the version in the package.json file. The version number in this command is used in naming the file and must agree with the version in the `debian/changes` file. The .deb created by this command bundles source and binary into the .deb to create a complete package. The package will still need to be signed and deployed to `package.sil.org`.
+where `2.0.8.4` is replaced with the latest version number corresponding to the version in the package.json file. The version number in this command is used in naming the file and must agree with the version in the `debian/changes` file and in `debian/control`. The .deb created by this command bundles source and binary into the .deb to create a complete package. The package will still need to be signed and deployed to `package.sil.org`.
 
 ## Test suite
 
