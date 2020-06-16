@@ -265,7 +265,7 @@ export function ImportTab(props: IProps) {
       case 401:
         return t.expiredToken;
       case 422:
-        return t.invalidITF;
+        return t.invalidITF + ' ' + err.errMsg;
       case 450:
         return t.invalidProject;
     }
