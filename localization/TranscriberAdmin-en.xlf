@@ -616,6 +616,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.inlineToggle">
+         <segment>
+            <source>Condensed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.save">
          <segment>
             <source>Save</source>
@@ -646,9 +652,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.passageAbove">
+      <unit id="planSheet.passageBelow">
          <segment>
-            <source>Insert passage above</source>
+            <source>Insert passage below {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.passageBelowSection">
+         <segment>
+            <source>Insert new passage 1</source>
             <target/>
          </segment>
       </unit>
@@ -763,6 +775,12 @@
       <unit id="scriptureTable.pasteInvalidPassages">
          <segment>
             <source>Invalid passage numbers:</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.saveFirst">
+         <segment>
+            <source>You must save changes first!</source>
             <target/>
          </segment>
       </unit>

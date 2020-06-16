@@ -128,12 +128,14 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "attachMedia": string;
     "addSection": string;
     "addPassage": string;
+    "inlineToggle": string;
     "save": string;
     "saving": string;
     "selectRows": string;
     "confirm": string;
     "sectionAbove": string;
-    "passageAbove": string;
+    "passageBelow": string;
+    "passageBelowSection": string;
     "tablePaste": string;
     "bookSelect": string;
     "nonNumber": string;
@@ -156,6 +158,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "pasteInvalidColumnsGeneral": string;
     "pasteInvalidSections": string;
     "pasteInvalidPassages": string;
+    "saveFirst": string;
 };
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {

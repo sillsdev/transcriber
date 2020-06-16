@@ -7,6 +7,9 @@
 .data-grid-container .data-grid .cell.set {
   background-color: lightgreen;
 }
+.data-grid-container .data-grid .cell.setp {
+  background-color: rgb(201, 245, 201);
+}
 .data-grid-container .data-grid .cell.num {
   text-align: center;
 }

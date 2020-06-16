@@ -719,6 +719,13 @@
                     <context context-type="sourcefile">PlanSheet.tsx</context>
                 </context-group>
             </trans-unit>
+             <trans-unit id="planSheet.inlineToggle">
+                <source>Condensed</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">PlanSheet.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="planSheet.save">
                 <source>Save</source>
                 <target/>
@@ -754,8 +761,15 @@
         			<context context-type="sourcefile">PlanSheet.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="planSheet.passageAbove">
-        		<source>Insert passage above</source>
+        	<trans-unit id="planSheet.passageBelow">
+        		<source>Insert passage below {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="planSheet.passageBelowSection">
+        		<source>Insert new passage 1</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -889,6 +903,13 @@
             </trans-unit>
             <trans-unit id="scriptureTable.pasteInvalidPassages">
                 <source>Invalid passage numbers:</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">ScriptureTable.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="scriptureTable.saveFirst">
+                <source>You must save changes first!</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ScriptureTable.tsx</context>

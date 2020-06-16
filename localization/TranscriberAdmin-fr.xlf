@@ -595,6 +595,12 @@
 				<target>Copier</target>
 			</segment>
 		</unit>
+      <unit id="planSheet.inlineToggle">
+         <segment>
+            <source>Condensed</source>
+            <target>condensé</target>
+         </segment>
+      </unit>
 		<unit id="planSheet.attachMedia">
 			<segment>
 				<source>Attach Media</source>
@@ -643,12 +649,18 @@
 				<target>Insérer section ci-dessus</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.passageAbove">
+		<unit id="planSheet.passageBelow">
 			<segment>
-				<source>Insert passage above</source>
-				<target>Insérer passage ci-dessus</target>
+				<source>Insert passage below</source>
+				<target>Insérer passage ci-dessous</target>
 			</segment>
 		</unit>
+       <unit id="planSheet.passageBelowSection">
+         <segment>
+            <source>Insert new passage 1</source>
+            <target>Insérer un nouveau passage 1</target>
+         </segment>
+      </unit>
       <unit id="planSheet.tablePaste">
          <segment>
             <source>Paste Table</source>
@@ -763,7 +775,13 @@
          	<target>Numéros de passage non valides:</target>
          </segment>
       </unit>
-        <unit id="assignmentTable.title">
+      <unit id="scriptureTable.saveFirst">
+         <segment>
+            <source>You must save changes first!</source>
+            <target>Vous devez d'abord enregistrer les modifications!</target>
+         </segment>
+      </unit>
+      <unit id="assignmentTable.title">
          <segment>
             <source>Assignments</source>
          	<target>Affectations</target>
