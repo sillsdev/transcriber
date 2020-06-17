@@ -570,9 +570,12 @@ export function ScriptureTable(props: IProps) {
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map((row) => {
               if (isValidNumber(row[cols.SectionSeq])) {
-                return newSectionId(parseInt(row[cols.SectionSeq]));
+                var newid = [newSectionId(parseInt(row[cols.SectionSeq]))];
+                if (inlinePassages && isValidNumber(row[cols.PassageSeq]))
+                  newid.push(newPassageId(parseInt(row[cols.PassageSeq])));
+                return newid;
               } else {
-                return newPassageId(parseInt(row[cols.PassageSeq]));
+                return [newPassageId(parseInt(row[cols.PassageSeq]))];
               }
             })
         ),
@@ -709,7 +712,7 @@ export function ScriptureTable(props: IProps) {
             attribute: 'plan-id',
             value: remoteId('plan', plan, memory.keyMap),
           };
-          //not waiting for these...that doesn't work if they navigate away
+          //must wait for these...in case they they navigate away before done
           await memory.sync(
             await remote.pull((q) => q.findRecords('section').filter(filterrec))
           );
@@ -723,7 +726,7 @@ export function ScriptureTable(props: IProps) {
             if (rec !== undefined) {
               //outrecs is an array of arrays of IRecords
               var outrecs = JSON.parse(rec.attributes.data);
-              var newrowid = rowId.map((r) => r);
+              var newrowid = rowId.map((r) => [...r]);
               newrowid.forEach((row, index) => {
                 row.forEach((ri, riindex) => {
                   if (ri.id === '') {
@@ -732,7 +735,7 @@ export function ScriptureTable(props: IProps) {
                       (outrecs[index][riindex] as IRecord).id,
                       memory.keyMap
                     );
-                    newrowid[index][riindex].id = id;
+                    ri.id = id;
                   }
                 });
               });
