@@ -19,13 +19,9 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
+import { launch } from '../utils';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
-
-const noop = { openExternal: () => {} };
-const { shell } = isElectron ? require('electron') : { shell: noop };
-const execa = isElectron ? require('execa') : noop;
-const os = require('os');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -109,12 +105,7 @@ export function HelpMenu(props: IProps) {
         : isApp
         ? API_CONFIG.help + '/' + helpLanguage() + indexName
         : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName;
-      // console.log('launching', target);
-      if (online || os.platform() === 'win32') shell.openExternal(target);
-      else
-        execa.command(`xdg-open ${target}`, {
-          env: { ...{ ...process }.env },
-        });
+      launch(target, online);
     } else if (helpRef.current) {
       helpRef.current.click();
     }
