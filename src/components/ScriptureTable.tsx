@@ -224,7 +224,7 @@ export function ScriptureTable(props: IProps) {
     setData(resequence(data));
   };
   const toggleInline = (event: any) => {
-    if (changed) setMessage(<span>t.saveFirst</span>);
+    if (changed) setMessage(<span>{t.saveFirst}</span>);
     else {
       localStorage.setItem(
         'inline-passages',
