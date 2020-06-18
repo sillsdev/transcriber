@@ -36,6 +36,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
     "moment-timezone": "^0.5.31",
+    "mui-language-picker": "^1.0.1",
     "node-html-encoder": "0.0.2",
     "original-fs": "^1.1.0",
     "react": "^16.13.1",
