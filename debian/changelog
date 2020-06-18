@@ -1,3 +1,20 @@
+sil-transcriber (2.0.8.6)  experimental; urgency=high
+
+  * TT-1480 clear comment after reopen
+  * TT-1436 condensed passages
+  * TT-1479, TT-1366 no datachanges for electron, check for empty
+  * TT-1478 show more of the error messages for bad itf
+  * TT-1345 limit number of online electron calls
+  * TT-1436, TT-1481 fix past rowids
+  * TT-1331 help path
+  * TT-1332 Linux reset data
+  * TT-1491 remove any selections before toggle condensed
+  * TT-1487 new language picker
+  * fix error message
+  * keep buttons within lines
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 18 Jun 2020 17:25:00 -0600
+
 sil-transcriber (2.0.8.5)  experimental; urgency=high
 
   * Minimum Lang List Size (#423)

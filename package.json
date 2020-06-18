@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -34,7 +34,7 @@
     "jwt-decode": "^2.2.0",
     "keycode": "^2.2.0",
     "lodash": "^4.17.15",
-    "moment": "^2.26.0",
+    "moment": "^2.27.0",
     "moment-timezone": "^0.5.31",
     "mui-language-picker": "^1.0.1",
     "node-html-encoder": "0.0.2",
@@ -116,7 +116,7 @@
     "@types/lodash": "^4.14.152",
     "@types/moment-timezone": "^0.5.12",
     "@types/node": "^12.12.42",
-    "@types/react": "^16.9.35",
+    "@types/react": "^16.9.38",
     "@types/react-dom": "^16.9.8",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
