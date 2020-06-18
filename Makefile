@@ -10,7 +10,6 @@ endif
 build:
 	npm i
 	npm run stamp
-	node src/components/LgPick/langPicker/makeIndexes.js
 	npm run electron-pack
 	npm run dist
 tests:
