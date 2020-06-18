@@ -265,7 +265,7 @@ export function ImportTab(props: IProps) {
       case 401:
         return t.expiredToken;
       case 422:
-        return t.invalidITF;
+        return t.invalidITF + ' ' + err.errMsg;
       case 450:
         return t.invalidProject;
     }
@@ -310,6 +310,7 @@ export function ImportTab(props: IProps) {
       online: IData;
       imported: IData;
     }
+    if (changeReport === '') return [];
     var changes = JSON.parse(changeReport);
     var data = [] as IRow[];
     if (Array.isArray(changes)) {
@@ -582,7 +583,8 @@ export function ImportTab(props: IProps) {
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
-          dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
+          if (remote)
+            dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
           setBusy(false);
         }
       }

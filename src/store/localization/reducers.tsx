@@ -142,12 +142,14 @@ const initialState = {
 			"attachMedia": "Attach Media",
 			"addSection": "Add Section",
 			"addPassage": "Add Passage",
+			"inlineToggle": "Condensed",
 			"save": "Save",
 			"saving": "Saving...",
 			"selectRows": "Please select row(s) to {0}.",
 			"confirm": "{0} {1} Item(s). Are you sure?",
 			"sectionAbove": "Insert section above",
-			"passageAbove": "Insert passage above",
+			"passageBelow": "Insert passage below {0}",
+			"passageBelowSection": "Insert new passage 1",
 			"tablePaste": "Paste Table",
 			"bookSelect": "Select Book...",
 			"nonNumber": "Do not change to non-number.",
@@ -171,6 +173,7 @@ const initialState = {
 			"pasteInvalidColumnsGeneral": "Invalid number of columns ({0}). Expecting 5 columns.",
 			"pasteInvalidSections": "Invalid section number(s):",
 			"pasteInvalidPassages": "Invalid passage numbers:",
+			"saveFirst": "You must save changes first!",
 		}
 	}),
 	"assignmentTable": new LocalizedStrings({

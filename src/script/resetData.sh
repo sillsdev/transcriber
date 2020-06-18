@@ -20,7 +20,7 @@ if [ -d "/usr/lib/sil-transcriber" ]; then
 	/usr/bin/sil-transcriber
 fi
 
-if [ -d "${HOME}/snap/sil-transcriber/x1/.config" ]; then
+if [ -d "/snap/sil-transcriber/x1" ]; then
 	echo "# Launching snap SIL Transcriber Desktop Extension"
 	/usr/bin/snap run sil-transcriber
 fi

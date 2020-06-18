@@ -19,11 +19,9 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
+import { launch } from '../utils';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
-
-const noop = { openExternal: () => {} };
-const { shell } = isElectron ? require('electron') : { shell: noop };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -98,15 +96,16 @@ export function HelpMenu(props: IProps) {
     return 'en';
   };
 
+  const execFolder = () => path.dirname((process as any).helperExecPath);
+
   const handleHelp = () => {
     if (isElectron) {
       const target = !online
-        ? path.join(process.cwd(), API_CONFIG.chmHelp)
+        ? path.join(execFolder(), API_CONFIG.chmHelp)
         : isApp
         ? API_CONFIG.help + '/' + helpLanguage() + indexName
         : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName;
-      console.log('launching', target);
-      shell.openExternal(target);
+      launch(target, online);
     } else if (helpRef.current) {
       helpRef.current.click();
     }

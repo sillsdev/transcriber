@@ -81,7 +81,6 @@ import Busy from '../components/Busy';
 import Setup from '../components/Setup';
 import NotSetup from '../components/NotSetup';
 import SnackBar from '../components/SnackBar';
-import ResetAlert from '../control/ResetAlert';
 import {
   related,
   deepLink,
@@ -96,7 +95,6 @@ import {
   allUsersRec,
   resetData,
   exitElectronApp,
-  linuxProgPath,
 } from '../utils';
 import logo from './transcriber10.png';
 import { isElectron, API_CONFIG } from '../api-variable';
@@ -365,8 +363,6 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
-  const [resetOpen, setResetOpen] = useState(false);
-  const [linuxPath, setLinuxPath] = useState<string>();
   const timer = React.useRef<NodeJS.Timeout>();
   const syncTimer = React.useRef<NodeJS.Timeout>();
 
@@ -525,15 +521,8 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleUserMenuAction = (what: string) => {
     if (isElectron && /ClearLogout/i.test(what)) {
-      let linuxPath = linuxProgPath();
-      if (linuxPath) {
-        setLinuxPath(linuxPath);
-        setResetOpen(true);
-        return;
-      } else {
-        resetData();
-        exitElectronApp();
-      }
+      resetData();
+      exitElectronApp();
     }
     if (isElectron && /logout/i.test(what)) {
       localStorage.removeItem('user-id');
@@ -551,13 +540,6 @@ export function ResponsiveDrawer(props: IProps) {
         else console.log('ResetRequests not set in props');
       }
       setView(what);
-    }
-  };
-
-  const handleReset = (what: string) => {
-    setResetOpen(false);
-    if (/Continue/i.test(what)) {
-      exitElectronApp();
     }
   };
 
@@ -1371,14 +1353,6 @@ export function ResponsiveDrawer(props: IProps) {
           text={t.saveFirst}
           yesResponse={handleSaveConfirmed}
           noResponse={handleSaveRefused}
-        />
-      )}
-      {resetOpen && (
-        <ResetAlert
-          open={resetOpen}
-          path={linuxPath}
-          action={handleReset}
-          t={t}
         />
       )}
       <SnackBar {...props} message={message} reset={handleMessageReset} />

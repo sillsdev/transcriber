@@ -36,7 +36,7 @@ import DeleteExpansion from './DeleteExpansion';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { related } from '../utils';
-import LanguagePicker from './LgPick/LanguagePicker';
+import { LanguagePicker, ILanguagePickerStrings } from 'mui-language-picker';
 import FontSize from './FontSize';
 import { getRoleId, getCreatedBy, allUsersRec } from '../utils';
 import { SelectPlanType } from '../control';
@@ -115,6 +115,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IProjectSettingsStrings;
+  lt: ILanguagePickerStrings;
   saving: boolean;
 }
 
@@ -162,6 +163,7 @@ export function ProjectSettings(props: IProps) {
     roles,
     planTypes,
     t,
+    lt,
     noMargin,
     finishAdd,
     saving,
@@ -517,6 +519,7 @@ export function ProjectSettings(props: IProps) {
                     setName={handleLanguageName}
                     setFont={setDefaultFont}
                     disabled={adminOnly}
+                    t={lt}
                   />
                 }
                 label=""
@@ -693,6 +696,7 @@ export function ProjectSettings(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'projectSettings' }),
+  lt: localStrings(state, { layout: 'languagePicker' }),
   saving: state.orbit.saving,
 });
 

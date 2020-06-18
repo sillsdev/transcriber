@@ -142,12 +142,13 @@ export function Access(props: IProps) {
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
   const [online, setOnline] = useState(false);
   const handleLogin = () => auth.login();
+  const [selectedUser, setSelectedUser] = useState('');
 
   const handleSelect = (uId: string) => () => {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
       localStorage.setItem('user-id', selected[0].id);
-      setOffline(true);
+      setSelectedUser(uId);
     }
   };
 
@@ -202,13 +203,6 @@ export function Access(props: IProps) {
   const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
   useEffect(() => {
-    if (isElectron) {
-      Online((isOnline) => setOnline(isOnline), auth);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
-
-  useEffect(() => {
     const showMessage = (title: string, msg: string) => {
       setMessage(
         <span>
@@ -238,7 +232,10 @@ export function Access(props: IProps) {
       setLanguage(navigator.language.split('-')[0]);
     }
     fetchLocalization();
-    Online((online) => setOffline(!online), auth);
+    if (isElectron) {
+      Online((online) => setOnline(online), auth);
+      setOffline(true);
+    } else Online((online) => setOffline(!online), auth);
 
     const localAuth =
       !auth || !auth.isAuthenticated(offline)
@@ -262,10 +259,9 @@ export function Access(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
-
   if (
     (!isElectron && auth && auth.isAuthenticated(offline)) ||
-    (isElectron && localStorage.getItem('user-id') !== null)
+    (isElectron && selectedUser !== '')
   )
     return <Redirect to="/loading" />;
 

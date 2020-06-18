@@ -3,7 +3,15 @@ import { useGlobal } from 'reactn';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem, AppBar, Checkbox } from '@material-ui/core';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  AppBar,
+  Checkbox,
+  Switch,
+  FormControlLabel,
+} from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
@@ -46,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       margin: theme.spacing(1),
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      justifyContent: 'flex-start',
     },
     icon: {
       marginLeft: theme.spacing(1),
@@ -87,10 +98,12 @@ interface IProps extends IStateProps {
   updateData: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
-  addPassage: (i?: number) => void;
+  addPassage: (i?: number, before?: boolean) => void;
   addSection: (i?: number) => void;
   lookupBook?: (book: string) => string;
   resequence: () => void;
+  inlinePassages: boolean;
+  toggleInline: (event: any) => void;
 }
 
 export function PlanSheet(props: IProps) {
@@ -108,6 +121,8 @@ export function PlanSheet(props: IProps) {
     addSection,
     paste,
     resequence,
+    inlinePassages,
+    toggleInline,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -132,6 +147,7 @@ export function PlanSheet(props: IProps) {
   const [changed, setChanged] = useGlobal('changed');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
+  const currentRow = useRef<number>(-1);
   const sheetRef = useRef<any>();
   const [showRow, setShowRow] = useState(0);
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
@@ -139,10 +155,15 @@ export function PlanSheet(props: IProps) {
   const handleMessageReset = () => {
     setMessage(<></>);
   };
+  const SectionSeqCol = 0;
+  const PassageSeqCol = 2;
+
+  const isSection = (row: Array<any>) =>
+    /^[0-9]+$/.test(row[SectionSeqCol].toString());
+
   const handleCheck = (row: number) => (e: any) => {
     if (e.target.checked) {
       check.push(row);
-      const isSection = (row: Array<any>) => /^[0-9]+$/.test(row[0].toString());
       if (isSection(rowData[row])) {
         do {
           row += 1;
@@ -180,10 +201,13 @@ export function PlanSheet(props: IProps) {
     // this autoscroll causes issues TT-1393
     //don't mess with it if we're selecting the checkbox
     //if (loc.start.j > 0 && loc.start.i === loc.end.i) setShowRow(loc.start.i);
+    currentRow.current = loc.end.i;
   };
 
   const handleValueRender = (cell: ICell) =>
-    cell.className === 'book' && bookMap ? bookMap[cell.value] : cell.value;
+    cell.className?.substring(0, 4) === 'book' && bookMap
+      ? bookMap[cell.value]
+      : cell.value;
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
   const handleConfirmAction = (what: string) => (e: any) => {
     setActionMenuItem(null);
@@ -254,15 +278,24 @@ export function PlanSheet(props: IProps) {
   const handleNoContextMenu = () => setPosition(initialPosition);
 
   const handleSectionAbove = () => {
+    //we'll find a section before we get past 0
+    while (!isSection(rowData[position.i - 1])) position.i -= 1;
     addSection(position.i - 1);
     setPosition(initialPosition);
   };
 
-  const handlePassageAbove = () => {
-    addPassage(position.i - 1);
+  const handlePassageBelow = () => {
+    addPassage(position.i - 1, false);
     setPosition(initialPosition);
   };
-
+  const handlePassageBelowSection = () => {
+    addPassage(position.i - 1, true);
+    setPosition(initialPosition);
+  };
+  const handleToggleInline = (event: any) => {
+    setCheck(Array<number>());
+    toggleInline(event);
+  };
   const removeBlanks = (clipBoard: string) => {
     const blankLines = /\r?\n\t*\r?\n/;
     const chunks = clipBoard.split(blankLines);
@@ -280,7 +313,7 @@ export function PlanSheet(props: IProps) {
 
   const parsePaste = (clipBoard: string) => {
     if (projRole !== 'admin') return Array<Array<string>>();
-    if (position.i === 0) {
+    if (currentRow.current === 0) {
       setPasting(true);
       setMessage(<span>{t.pasting}</span>);
       const retVal = paste(cleanClipboard(clipBoard));
@@ -337,6 +370,7 @@ export function PlanSheet(props: IProps) {
       handleAutoSave();
     }, 1000 * 30);
   };
+
   useEffect(() => {
     if (changed && saveTimer.current === undefined) startSaveTimer();
     else {
@@ -362,7 +396,8 @@ export function PlanSheet(props: IProps) {
         ),
       ].concat(
         rowData.map((row, rowIndex) => {
-          const isSection = /^[0-9]+$/.test(row[0].toString());
+          const isSection = /^[0-9]+$/.test(row[SectionSeqCol].toString());
+          const isPassage = /^[0-9]+$/.test(row[PassageSeqCol].toString());
           return [
             {
               value: (
@@ -376,16 +411,29 @@ export function PlanSheet(props: IProps) {
             } as ICell,
           ].concat(
             row.map((e, cellIndex) => {
-              return cellIndex !== bookCol || isSection
+              return cellIndex !== bookCol || !isPassage
                 ? {
                     value: e,
-                    readOnly: isSection ? cellIndex > 1 : cellIndex <= 1,
+                    readOnly: isSection
+                      ? isPassage
+                        ? false
+                        : cellIndex > 1
+                      : cellIndex <= 1,
                     className:
-                      (isNum(e) ? 'num' : 'pass') + (isSection ? ' set' : ''),
+                      (cellIndex === SectionSeqCol ||
+                      cellIndex === PassageSeqCol
+                        ? 'num'
+                        : 'pass') +
+                      (isSection
+                        ? !inlinePassages || cellIndex <= 1
+                          ? ' set'
+                          : ' setp'
+                        : ''),
                   }
                 : {
                     value: e,
-                    className: 'book',
+                    className:
+                      'book' + (isSection && inlinePassages ? ' setp' : ''),
                     dataEditor: bookEditor,
                   };
             })
@@ -431,7 +479,6 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
 
-  //console.log('plansheet render', new Date().toLocaleTimeString());
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -507,6 +554,16 @@ export function PlanSheet(props: IProps) {
                     {t.delete}
                   </MenuItem>
                 </Menu>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={inlinePassages}
+                      onChange={handleToggleInline}
+                      color="primary"
+                    />
+                  }
+                  label={t.inlineToggle}
+                />
                 <div className={classes.grow}>{'\u00A0'}</div>
                 <Button
                   key="save"
@@ -546,10 +603,24 @@ export function PlanSheet(props: IProps) {
               : undefined
           }
         >
-          <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
-          <MenuItem onClick={handlePassageAbove} disabled={position.i < 2}>
-            {t.passageAbove}
-          </MenuItem>
+          {position.i > 0 && isSection(rowData[position.i - 1]) && (
+            <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
+          )}
+          {inlinePassages &&
+            position.i > 0 &&
+            isSection(rowData[position.i - 1]) && (
+              <MenuItem onClick={handlePassageBelowSection}>
+                {t.passageBelowSection}
+              </MenuItem>
+            )}
+          <MenuItem onClick={handlePassageBelow}>
+            {t.passageBelow.replace(
+              '{0}',
+              position.i > 0
+                ? rowData[position.i - 1][PassageSeqCol].toString()
+                : ''
+            )}
+          </MenuItem>{' '}
         </Menu>
       </div>
       {confirmAction !== '' ? (
