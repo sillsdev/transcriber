@@ -54,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       margin: theme.spacing(1),
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      justifyContent: 'flex-start',
     },
     icon: {
       marginLeft: theme.spacing(1),
