@@ -289,7 +289,10 @@ export function PlanSheet(props: IProps) {
     addPassage(position.i - 1, true);
     setPosition(initialPosition);
   };
-
+  const handleToggleInline = (event: any) => {
+    setCheck(Array<number>());
+    toggleInline(event);
+  };
   const removeBlanks = (clipBoard: string) => {
     const blankLines = /\r?\n\t*\r?\n/;
     const chunks = clipBoard.split(blankLines);
@@ -552,7 +555,7 @@ export function PlanSheet(props: IProps) {
                   control={
                     <Switch
                       checked={inlinePassages}
-                      onChange={toggleInline}
+                      onChange={handleToggleInline}
                       color="primary"
                     />
                   }
