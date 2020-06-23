@@ -355,7 +355,6 @@ export function MediaTab(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
-  const [keyMap] = useGlobal('keyMap');
   const [user] = useGlobal('user');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_tab, setTab] = useGlobal('tab');
@@ -560,7 +559,8 @@ export function MediaTab(props: IProps) {
       'Media Attached',
       remoteIdNum('user', user, memory.keyMap),
       tb,
-      ops
+      ops,
+      memory
     );
     await memory.update(ops);
   };
@@ -596,7 +596,8 @@ export function MediaTab(props: IProps) {
       'Media Detached',
       remoteIdNum('user', user, memory.keyMap),
       tb,
-      ops
+      ops,
+      memory
     );
     await memory.update(ops);
   };
@@ -837,7 +838,7 @@ export function MediaTab(props: IProps) {
           Math.min((currentlyLoading * 100) / uploadList.length, 100)
         );
         if (acceptExtPat.test(uploadList[currentlyLoading + 1].name)) {
-          const planId = remoteIdNum('plan', plan, keyMap);
+          const planId = remoteIdNum('plan', plan, memory.keyMap);
           const mediaFile = {
             planId: planId,
             originalFile: uploadList[currentlyLoading + 1].name,
@@ -1010,7 +1011,7 @@ export function MediaTab(props: IProps) {
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'playIcon') {
-      const mediaId = remoteId('mediafile', row.id, keyMap);
+      const mediaId = remoteId('mediafile', row.id, memory.keyMap);
       return <PlayCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'detach') {

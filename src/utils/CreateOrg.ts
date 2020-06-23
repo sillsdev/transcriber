@@ -1,45 +1,46 @@
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { Organization } from '../model';
-import { Schema, QueryBuilder, TransformBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { setDefaultProj } from './setDefaultProj';
+import Coordinator from '@orbit/coordinator';
 
 export const ReloadOrgTables = async (
   memory: Memory,
   remote: JSONAPISource
 ) => {
   await remote
-    .pull(q => q.findRecords('organization'))
-    .then(transform => memory.sync(transform));
+    .pull((q) => q.findRecords('organization'))
+    .then((transform) => memory.sync(transform));
   await remote
-    .pull(q => q.findRecords('organizationmembership'))
-    .then(transform => memory.sync(transform));
+    .pull((q) => q.findRecords('organizationmembership'))
+    .then((transform) => memory.sync(transform));
   await remote
-    .pull(q => q.findRecords('group'))
-    .then(transform => memory.sync(transform));
+    .pull((q) => q.findRecords('group'))
+    .then((transform) => memory.sync(transform));
   await remote
-    .pull(q => q.findRecords('groupmembership'))
-    .then(transform => memory.sync(transform));
+    .pull((q) => q.findRecords('groupmembership'))
+    .then((transform) => memory.sync(transform));
   await remote
-    .pull(q => q.findRecords('user'))
-    .then(transform => memory.sync(transform));
+    .pull((q) => q.findRecords('user'))
+    .then((transform) => memory.sync(transform));
 };
 
 export interface ICreateOrgProps {
   orgRec: Organization;
   user: string;
-  memory: Memory;
-  remote: JSONAPISource;
-  schema: Schema;
+  coordinator: Coordinator;
   setOrganization: (id: string) => void;
   setProject: (id: string) => void;
 }
 
 export const CreateOrg = async (props: ICreateOrgProps) => {
-  const { orgRec, user, schema, memory, remote } = props;
+  const { orgRec, user, coordinator } = props;
   const { setOrganization, setProject } = props;
 
-  schema.initializeRecord(orgRec);
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  memory.schema.initializeRecord(orgRec);
 
   await remote.update((t: TransformBuilder) => [
     t.addRecord(orgRec),

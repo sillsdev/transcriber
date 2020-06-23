@@ -1,9 +1,7 @@
 import Axios from 'axios';
 import {
-  KeyMap,
   QueryBuilder,
   Transform,
-  Schema,
   TransformBuilder,
   Operation,
   UpdateRecordOperation,
@@ -18,10 +16,8 @@ import { currentDateTime } from '../utils/currentDateTime';
 
 export const dateChanges = (
   auth: Auth,
-  keyMap: KeyMap,
   remote: JSONAPISource,
   memory: Memory,
-  schema: Schema,
   fingerprint: string
 ) => {
   let lastTime = localStorage.getItem('lastTime');
@@ -98,7 +94,7 @@ export const dateChanges = (
       var table = deletes[ix];
       let operations: Operation[] = [];
       table.forEach((r) => {
-        const localId = remoteIdGuid(r.type, r.id.toString(), keyMap);
+        const localId = remoteIdGuid(r.type, r.id.toString(), memory.keyMap);
         if (localId) {
           operations.push(tb.removeRecord({ type: r.type, id: localId }));
         }

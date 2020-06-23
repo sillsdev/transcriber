@@ -109,7 +109,8 @@ function PassageMedia(props: IProps) {
       t.mediaAttached,
       remoteIdNum('user', user, memory.keyMap),
       tb,
-      ops
+      ops,
+      memory
     );
     await memory.update(ops);
   };
@@ -130,7 +131,8 @@ function PassageMedia(props: IProps) {
       t.mediaDetached,
       remoteIdNum('user', user, memory.keyMap),
       tb,
-      ops
+      ops,
+      memory
     );
     await memory.update(ops);
   };
@@ -161,10 +163,10 @@ function PassageMedia(props: IProps) {
     setOpen(visible);
   }, [visible]);
 
-  const planMediaFiles = mediaFiles.filter(f => related(f, 'plan') === plan);
+  const planMediaFiles = mediaFiles.filter((f) => related(f, 'plan') === plan);
 
   const latest: ILatest = {};
-  planMediaFiles.forEach(f => {
+  planMediaFiles.forEach((f) => {
     const name = f.attributes.originalFile;
     const ver = f.attributes.versionNumber;
     if (!latest[name] || ver > latest[name]) {
@@ -174,7 +176,7 @@ function PassageMedia(props: IProps) {
 
   const selectedMediaFiles = planMediaFiles
     .filter(
-      f =>
+      (f) =>
         f.attributes.versionNumber === latest[f.attributes.originalFile] &&
         related(f, 'passage') === null
     )
@@ -206,22 +208,22 @@ function PassageMedia(props: IProps) {
 
   const attachedPassageIds = planMediaFiles
     .filter(
-      f =>
+      (f) =>
         f.attributes.versionNumber === latest[f.attributes.originalFile] &&
         related(f, 'passage') !== null
     )
-    .map(f => related(f, 'passage'));
+    .map((f) => related(f, 'passage'));
 
   const selectedSections = sections
-    .filter(s => related(s, 'plan') === plan)
-    .map(s => s.id);
+    .filter((s) => related(s, 'plan') === plan)
+    .map((s) => s.id);
 
   const selectedPassages = passages
-    .filter(p => selectedSections.indexOf(related(p, 'section')) !== -1)
+    .filter((p) => selectedSections.indexOf(related(p, 'section')) !== -1)
     .sort(passageRefCompare);
 
   const passageList = selectedPassages
-    .filter(p => attachedPassageIds.indexOf(p.id) === -1)
+    .filter((p) => attachedPassageIds.indexOf(p.id) === -1)
     .map((p, index) => {
       const labelId =
         'passage-' +
@@ -251,7 +253,7 @@ function PassageMedia(props: IProps) {
 
   const attachedMediaFiles = planMediaFiles
     .filter(
-      f =>
+      (f) =>
         f.attributes.versionNumber === latest[f.attributes.originalFile] &&
         related(f, 'passage') !== null
     )
@@ -262,7 +264,7 @@ function PassageMedia(props: IProps) {
   const attachedList = attachedMediaFiles.map((m, index) => {
     const labelId = 'media-' + m.attributes.originalFile;
     const passageList = selectedPassages.filter(
-      p => p.id === related(m, 'passage')
+      (p) => p.id === related(m, 'passage')
     );
     const passage =
       passageList.length >= 1

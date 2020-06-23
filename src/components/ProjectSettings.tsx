@@ -170,9 +170,7 @@ export function ProjectSettings(props: IProps) {
     orbitSaving,
   } = props;
   const classes = useStyles();
-  const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
-  const [keyMap] = useGlobal('keyMap');
   const [isApp] = useGlobal('appView');
   const [projRole] = useGlobal('projRole');
   const [project, setProject] = useGlobal('project');
@@ -286,7 +284,6 @@ export function ProjectSettings(props: IProps) {
       projectGroup,
       organization,
       user,
-      schema,
       memory,
     }).then((project) => {
       if (finishAdd) finishAdd({ projectId: project.id });
@@ -333,7 +330,6 @@ export function ProjectSettings(props: IProps) {
       projectGroup,
       organization,
       user,
-      schema,
       memory,
     }).then((project) => {
       projectShortcut({
@@ -344,9 +340,7 @@ export function ProjectSettings(props: IProps) {
         planName: t.defaultPlanName,
         sectionName: t.defaultSectionName,
         reference: t.defaultReference,
-        schema,
         memory,
-        keyMap,
         user,
       }).then(({ url, planId }) => {
         if (finishAdd) finishAdd({ to: url, projectId: project.id, planId });

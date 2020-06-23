@@ -318,11 +318,9 @@ export function ResponsiveDrawer(props: IProps) {
   } = props;
   const classes = useStyles();
   const theme = useTheme();
-  const [keyMap] = useGlobal('keyMap');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [backup] = useGlobal('backup');
-  const [schema] = useGlobal('schema');
   const [fingerprint] = useGlobal('fingerprint');
   const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [isApp, setAppView] = useGlobal('appView');
@@ -416,7 +414,7 @@ export function ResponsiveDrawer(props: IProps) {
     localStorage.removeItem('url');
     localStorage.setItem(
       'lastOrg',
-      remoteId(NavChoice.Organization, value, keyMap)
+      remoteId(NavChoice.Organization, value, memory.keyMap)
     );
     if (value === t.newOrganization) {
       setAddOrg(true);
@@ -456,7 +454,7 @@ export function ResponsiveDrawer(props: IProps) {
 
   const handleCommitProj = (value: string) => {
     localStorage.removeItem('url');
-    localStorage.setItem('lastProj', remoteId('project', value, keyMap));
+    localStorage.setItem('lastProj', remoteId('project', value, memory.keyMap));
     if (addProject) setAddProject(false); // for exiting from add project
     if (choice === '') {
       defaultView();
@@ -642,7 +640,7 @@ export function ResponsiveDrawer(props: IProps) {
   useEffect(() => {
     if (errorReporter && user && user !== '') {
       errorReporter.user = {
-        id: remoteIdNum('user', user, keyMap),
+        id: remoteIdNum('user', user, memory.keyMap),
         authId: localStorage.getItem('user-token'),
       };
     }
@@ -687,7 +685,7 @@ export function ResponsiveDrawer(props: IProps) {
           : remoteIdGuid(
               'organization',
               localStorage.getItem('lastOrg') || '',
-              keyMap
+              memory.keyMap
             ) || '';
       const cur = orgOptions.map((oo) => oo.value).indexOf(orgKey);
       if (cur !== -1) setCurOrg(cur);
@@ -734,7 +732,7 @@ export function ResponsiveDrawer(props: IProps) {
         : remoteIdGuid(
             'project',
             localStorage.getItem('lastProj') || '',
-            keyMap
+            memory.keyMap
           ) || '';
     const cur = projKeys.indexOf(projKey);
 
@@ -842,7 +840,7 @@ export function ResponsiveDrawer(props: IProps) {
       tab,
       choice,
       content,
-      keyMap,
+      keyMap: memory.keyMap,
     });
     if (target && target !== history.location.pathname) {
       history.push(target);
@@ -870,11 +868,11 @@ export function ResponsiveDrawer(props: IProps) {
         }, 1000);
       if (syncTimer.current === undefined) {
         if (!busy && !doSave) {
-          dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
+          dateChanges(auth, remote, memory, fingerprint);
         }
         syncTimer.current = setInterval(() => {
           if (!busy && !doSave) {
-            dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
+            dateChanges(auth, remote, memory, fingerprint);
           }
         }, 1000 * 100);
       }
@@ -924,7 +922,7 @@ export function ResponsiveDrawer(props: IProps) {
       tab,
       choice,
       content,
-      keyMap,
+      keyMap: memory.keyMap,
     });
     if (target && target !== history.location.pathname) {
       localStorage.setItem('url', history.location.pathname);
@@ -948,12 +946,16 @@ export function ResponsiveDrawer(props: IProps) {
     const base = 1;
     const UrlOrgPart = base + 1;
     if (parts.length > UrlOrgPart) {
-      const orgId = remoteIdGuid('organization', parts[UrlOrgPart], keyMap);
+      const orgId = remoteIdGuid(
+        'organization',
+        parts[UrlOrgPart],
+        memory.keyMap
+      );
       setOrganization(orgId);
     }
     const UrlProjPart = base + 3;
     if (parts.length > UrlProjPart) {
-      const projId = remoteIdGuid('project', parts[UrlProjPart], keyMap);
+      const projId = remoteIdGuid('project', parts[UrlProjPart], memory.keyMap);
       setProject(projId);
     }
     let urlChoice = '';
@@ -969,7 +971,7 @@ export function ResponsiveDrawer(props: IProps) {
     if (urlChoice === NavChoice.Plans) {
       const UrlPlanPart = base + 4;
       if (parts.length > UrlPlanPart) {
-        const planId = remoteIdGuid('plan', parts[UrlPlanPart], keyMap);
+        const planId = remoteIdGuid('plan', parts[UrlPlanPart], memory.keyMap);
         setPlan(planId);
         handlePlanType(pltype);
       }
@@ -984,7 +986,11 @@ export function ResponsiveDrawer(props: IProps) {
       }
       const UrlGroupPart = base + 5;
       if (parts.length > UrlGroupPart) {
-        const groupId = remoteIdGuid('group', parts[UrlGroupPart], keyMap);
+        const groupId = remoteIdGuid(
+          'group',
+          parts[UrlGroupPart],
+          memory.keyMap
+        );
         setGroup(groupId);
       }
     } else if (urlChoice === NavChoice.Tasks) {

@@ -93,11 +93,9 @@ export function ImportTab(props: IProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_busy, setBusy] = useGlobal('importexportBusy');
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
   const [remote] = useGlobal('remote');
   const [fingerprint] = useGlobal('fingerprint');
   const [backup] = useGlobal('backup');
-  const [keyMap] = useGlobal('keyMap');
   const [project] = useGlobal('project');
   const [coordinatorActivated] = useGlobal('coordinatorActivated');
 
@@ -233,7 +231,7 @@ export function ImportTab(props: IProps) {
       setBusy(true);
       importProjectFromElectron(
         files,
-        remoteIdNum('project', project, keyMap),
+        remoteIdNum('project', project, memory.keyMap),
         auth,
         orbitError,
         t.importPending,
@@ -583,8 +581,7 @@ export function ImportTab(props: IProps) {
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
-          if (remote)
-            dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
+          if (remote) dateChanges(auth, remote, memory, fingerprint);
           setBusy(false);
         }
       }

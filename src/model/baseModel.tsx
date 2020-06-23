@@ -5,7 +5,7 @@ import {
   AddRecordOperation,
   ReplaceRelatedRecordOperation,
 } from '@orbit/data';
-import { schema } from '../schema';
+import Memory from '@orbit/memory';
 import { currentDateTime } from '../utils/currentDateTime';
 
 export interface BaseModel extends Record {
@@ -30,9 +30,10 @@ export const UpdateRecord = (
 export const AddRecord = (
   t: TransformBuilder,
   rec: BaseModel,
-  user: number
+  user: number,
+  memory: Memory
 ): AddRecordOperation => {
-  schema.initializeRecord(rec);
+  memory.schema.initializeRecord(rec);
   rec.attributes.dateCreated = currentDateTime();
   rec.attributes.dateUpdated = rec.attributes.dateCreated;
   rec.attributes.lastModifiedBy = user;

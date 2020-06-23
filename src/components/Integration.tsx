@@ -45,7 +45,6 @@ import ParatextProject from '../model/paratextProject';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import ProjectIntegration from '../model/projectintegration';
 import Integration from '../model/integration';
-import { schema } from '../schema';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { isElectron } from '../api-variable';
@@ -174,7 +173,6 @@ export function IntegrationPanel(props: IProps) {
   const [ptPermission, setPtPermission] = React.useState('None');
   const [myProject, setMyProject] = React.useState('');
   const [project] = useGlobal('project');
-  const [keyMap] = useGlobal('keyMap');
   const [user] = useGlobal('user');
 
   const [paratextIntegration, setParatextIntegration] = React.useState('');
@@ -214,7 +212,7 @@ export function IntegrationPanel(props: IProps) {
         url: '',
       },
     } as Integration;
-    schema.initializeRecord(int);
+    memory.schema.initializeRecord(int);
     await memory.update((t: TransformBuilder) => t.addRecord(int));
     return int.id;
   };
@@ -237,7 +235,7 @@ export function IntegrationPanel(props: IProps) {
         settings: setting,
       },
     } as any;
-    schema.initializeRecord(pi);
+    memory.schema.initializeRecord(pi);
     await memory.update((t: TransformBuilder) => [
       t.addRecord(pi),
       t.replaceRelatedRecord(
@@ -267,7 +265,7 @@ export function IntegrationPanel(props: IProps) {
             settings: setting,
           },
         } as ProjectIntegration,
-        remoteIdNum('user', user, keyMap)
+        remoteIdNum('user', user, memory.keyMap)
       )
     );
     return projInt;
@@ -285,7 +283,9 @@ export function IntegrationPanel(props: IProps) {
   const removeProjectFromParatextList = (index: number) => {
     paratext_projects[index].ProjectIds = paratext_projects[
       index
-    ].ProjectIds.filter((p) => p !== remoteIdNum('project', project, keyMap));
+    ].ProjectIds.filter(
+      (p) => p !== remoteIdNum('project', project, memory.keyMap)
+    );
   };
   const handleParatextProjectChange = (e: any) => {
     if (e.target.value === t.removeProject) {
@@ -314,7 +314,7 @@ export function IntegrationPanel(props: IProps) {
         updateProjectIntegration(projint, JSON.stringify(setting));
       }
       paratext_projects[index].ProjectIds.push(
-        remoteIdNum('project', project, keyMap)
+        remoteIdNum('project', project, memory.keyMap)
       );
     }
   };
@@ -322,7 +322,7 @@ export function IntegrationPanel(props: IProps) {
     setSyncing(true);
     syncProject(
       auth,
-      remoteIdNum('project', project, keyMap),
+      remoteIdNum('project', project, memory.keyMap),
       errorReporter,
       t.syncPending
     );
@@ -369,7 +369,9 @@ export function IntegrationPanel(props: IProps) {
   };
   const findConnectedProject = () => {
     let index = paratext_projects.findIndex(
-      (p) => p.ProjectIds.indexOf(remoteIdNum('project', project, keyMap)) >= 0
+      (p) =>
+        p.ProjectIds.indexOf(remoteIdNum('project', project, memory.keyMap)) >=
+        0
     );
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
@@ -431,7 +433,7 @@ export function IntegrationPanel(props: IProps) {
         ? getLocalCount(passages, project, memory, t.countPending)
         : getCount(
             auth,
-            remoteIdNum('project', project, keyMap),
+            remoteIdNum('project', project, memory.keyMap),
             errorReporter,
             t.countPending
           );
@@ -493,7 +495,7 @@ export function IntegrationPanel(props: IProps) {
       if (paratext_syncStatus.complete) {
         resetCount();
         setSyncing(false);
-        dateChanges(auth, keyMap, remote, memory, schema, fingerprint);
+        dateChanges(auth, remote, memory, fingerprint);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

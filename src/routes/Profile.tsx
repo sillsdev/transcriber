@@ -178,9 +178,7 @@ interface IProps
 export function Profile(props: IProps) {
   const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;
   const classes = useStyles();
-  const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
-  const [keyMap] = useGlobal('keyMap');
   const [bucket] = useGlobal('bucket');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
@@ -335,7 +333,7 @@ export function Profile(props: IProps) {
           remoteIdNum(
             'user',
             currentUser !== undefined ? currentUser.id : '',
-            keyMap
+            memory.keyMap
           )
         ),
         // we aren't allowing them to change owner oraganization currently
@@ -378,7 +376,7 @@ export function Profile(props: IProps) {
     let orgMember: OrganizationMembership = {
       type: 'organizationmembership',
     } as any;
-    schema.initializeRecord(orgMember);
+    memory.schema.initializeRecord(orgMember);
     const roleRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('role')
     ) as Role[];
@@ -388,7 +386,7 @@ export function Profile(props: IProps) {
     let groupMbr: GroupMembership = {
       type: 'groupmembership',
     } as any;
-    schema.initializeRecord(groupMbr);
+    memory.schema.initializeRecord(groupMbr);
     memory
       .update((t: TransformBuilder) => [t.addRecord(userRec)])
       .then(() => {
@@ -433,10 +431,10 @@ export function Profile(props: IProps) {
           avatarUrl,
           dateCreated: currentDateTime(),
           dateUpdated: currentDateTime(),
-          lastModifiedBy: remoteId('user', user, keyMap),
+          lastModifiedBy: remoteId('user', user, memory.keyMap),
         },
       } as any;
-      schema.initializeRecord(userRec);
+      memory.schema.initializeRecord(userRec);
       if (!editId) {
         memory.update((t: TransformBuilder) => t.addRecord(userRec));
       } else {
@@ -528,7 +526,7 @@ export function Profile(props: IProps) {
         avatarUrl,
         dateCreated: currentDateTime(),
         dateUpdated: currentDateTime(),
-        lastModifiedBy: remoteIdNum('user', user, keyMap),
+        lastModifiedBy: remoteIdNum('user', user, memory.keyMap),
       },
     };
     if (!editId || !/Add/i.test(editId)) {

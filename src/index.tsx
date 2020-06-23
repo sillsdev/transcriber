@@ -7,14 +7,12 @@ import ErrorBoundary from './hoc/ErrorBoundary';
 import { Router, HashRouter } from 'react-router-dom';
 import { DataProvider } from './mods/react-orbitjs';
 import { Provider } from 'react-redux';
-import Memory from '@orbit/memory';
-import { schema, keyMap } from './schema';
+import { coordinator, memory, backup } from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
 import bugsnagReact from '@bugsnag/plugin-react';
 import history from './history';
-import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from './components/logErrorService';
 import { infoMsg } from './utils';
 import { isElectron, API_CONFIG } from './api-variable';
@@ -34,15 +32,6 @@ const SnagBoundary = bugsnagClient?.getPlugin('react');
 
 // Redux store
 const store = configureStore();
-
-// Orbit store
-const memory = new Memory({ schema, keyMap });
-const backup = new IndexedDBSource({
-  schema,
-  keyMap,
-  name: 'backup',
-  namespace: 'transcriber',
-});
 
 if (isElectron) {
   localStorage.removeItem('user-id');
@@ -77,10 +66,9 @@ setGlobal({
   group: '',
   user: '',
   lang: 'en',
-  memory: memory,
-  schema: schema,
-  keyMap: keyMap,
-  backup: backup,
+  coordinator,
+  memory,
+  backup,
   bucket: undefined,
   remote: undefined,
   remoteBusy: false,

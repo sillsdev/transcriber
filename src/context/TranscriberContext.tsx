@@ -149,9 +149,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { todoStr, taskItemStr, transcriberStr } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
     const { trackedTask, setTrackedTask } = props;
+    const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
-    const [keyMap] = useGlobal('keyMap');
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -291,7 +291,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                       passage: { ...p },
                       state: curState,
                       sectPass: secNum + '.' + passageNumber(p).trim(),
-                      mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
+                      mediaRemoteId: remoteId(
+                        'mediafile',
+                        mediaRec.id,
+                        memory.keyMap
+                      ),
                       mediaId: mediaRec.id,
                       playItem,
                       duration: mediaRec.attributes.duration,

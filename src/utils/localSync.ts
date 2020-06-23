@@ -208,7 +208,8 @@ const doPassage = async (
       'Paratext',
       userid,
       tb,
-      ops
+      ops,
+      memory
     );
   }
   await memory.update(ops);

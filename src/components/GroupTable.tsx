@@ -121,12 +121,10 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 export function GroupTable(props: IProps) {
   const { t, roles, groups, projects, groupMemberships } = props;
   const classes = useStyles();
-  const [keyMap] = useGlobal('keyMap');
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [group, setGroup] = useGlobal('group');
   const [user] = useGlobal('user');
-  const [schema] = useGlobal('schema');
   const [orgRole] = useGlobal('orgRole');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
@@ -168,10 +166,10 @@ export function GroupTable(props: IProps) {
       type: 'group',
       attributes: {
         name: name,
-        ownerId: remoteIdNum('organization', organization, keyMap),
+        ownerId: remoteIdNum('organization', organization, memory.keyMap),
       },
     } as any;
-    schema.initializeRecord(group);
+    memory.schema.initializeRecord(group);
 
     await memory.update((t: TransformBuilder) => [
       t.addRecord(group),
@@ -182,7 +180,6 @@ export function GroupTable(props: IProps) {
     ]);
     //add the user creating the group as a group admin
     await addGroupMember(
-      schema,
       memory,
       group.id,
       user,

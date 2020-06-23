@@ -84,7 +84,6 @@ interface IProps extends IStateProps, IRecordProps {
 export function PlanTable(props: IProps) {
   const { plans, planTypes, sections, t, displaySet } = props;
   const classes = useStyles();
-  const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
   const [projRole] = useGlobal('projRole');
   const [project] = useGlobal('project');
@@ -142,7 +141,7 @@ export function PlanTable(props: IProps) {
   };
   const handleAddMethod = async (name: string, planType: string) => {
     setDialogVisible(false);
-    saveNewPlan({ project, name, planType, schema, memory }).then((plan) =>
+    saveNewPlan({ project, name, planType, memory }).then((plan) =>
       handleSelect(plan.id)
     );
   };

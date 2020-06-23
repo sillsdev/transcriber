@@ -160,7 +160,12 @@ function Invite(props: IProps) {
     schema.initializeRecord(invitation);
 
     await memory.update((t: TransformBuilder) => [
-      AddRecord(t, invitation, remoteIdNum('user', user, memory.keyMap)),
+      AddRecord(
+        t,
+        invitation,
+        remoteIdNum('user', user, memory.keyMap),
+        memory
+      ),
       t.replaceRelatedRecord(
         { type: 'invitation', id: invitation.id },
         'organization',

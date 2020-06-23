@@ -85,9 +85,8 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 export function OrgSettings(props: IProps) {
   const { add, organizations, t, noMargin, finishAdd } = props;
   const classes = useStyles();
-  const [schema] = useGlobal('schema');
+  const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
   const [isApp] = useGlobal('appView');
   const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
@@ -161,9 +160,7 @@ export function OrgSettings(props: IProps) {
     CreateOrg({
       orgRec,
       user,
-      schema,
-      memory,
-      remote,
+      coordinator,
       setOrganization,
       setProject,
     });

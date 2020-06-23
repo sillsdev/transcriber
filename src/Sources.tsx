@@ -9,13 +9,7 @@ import Coordinator, {
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
-import {
-  Schema,
-  KeyMap,
-  Transform,
-  NetworkError,
-  QueryBuilder,
-} from '@orbit/data';
+import { Transform, NetworkError, QueryBuilder } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
@@ -27,10 +21,8 @@ import { orbitInfo, orbitRetry, related } from './utils';
 import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
-  schema: Schema,
+  coordinator: Coordinator,
   memory: Memory,
-  keyMap: KeyMap,
-  backup: IndexedDBSource,
   auth: Auth,
   offline: boolean,
   setUser: (id: string) => void,
@@ -43,6 +35,7 @@ export const Sources = async (
   InviteUser: (remote: JSONAPISource, userEmail: string) => Promise<void>,
   orbitError: (ex: IApiError) => void
 ) => {
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
   const tokData = JSON.parse(
     tokenPart.length > 1 ? Base64.decode(tokenPart[1]) : '{"sub":""}'
@@ -59,11 +52,6 @@ export const Sources = async (
 
   let remote: JSONAPISource = {} as JSONAPISource;
 
-  const coordinator = new Coordinator();
-
-  coordinator.addSource(memory);
-  coordinator.addSource(backup);
-
   if (!offline) {
     var components: Component[] = await Fingerprint2.getPromise({});
     var fp = Fingerprint2.x64hash128(
@@ -72,26 +60,29 @@ export const Sources = async (
     );
     setFingerprint(fp);
 
-    remote = new JSONAPISource({
-      schema,
-      keyMap,
-      bucket,
-      name: 'remote',
-      namespace: 'api',
-      host: API_CONFIG.host,
-      SerializerClass: JSONAPISerializerCustom,
-      defaultFetchSettings: {
-        headers: {
-          Authorization: 'Bearer ' + auth.accessToken,
-          'X-FP': fp,
-        },
-        timeout: 100000,
-      },
-    });
+    remote = coordinator.sourceNames.includes('remote')
+      ? (coordinator.getSource('remote') as JSONAPISource)
+      : new JSONAPISource({
+          schema: memory.schema,
+          keyMap: memory.keyMap,
+          bucket,
+          name: 'remote',
+          namespace: 'api',
+          host: API_CONFIG.host,
+          SerializerClass: JSONAPISerializerCustom,
+          defaultFetchSettings: {
+            headers: {
+              Authorization: 'Bearer ' + auth.accessToken,
+              'X-FP': fp,
+            },
+            timeout: 100000,
+          },
+        });
     remote.requestProcessor.serializer.resourceKey = () => {
       return 'remoteId';
     };
-    coordinator.addSource(remote);
+    if (!coordinator.sourceNames.includes('remote'))
+      coordinator.addSource(remote);
     setRemote(remote);
   }
   let goRemote =
@@ -138,143 +129,153 @@ export const Sources = async (
   }
   // Update indexedDb when memory updated
   // TODO: error if we can't read and write the indexedDB
-  coordinator.addStrategy(
-    new SyncStrategy({
-      source: 'memory',
-      target: 'backup',
-      blocking: true,
-    })
-  );
+  if (!coordinator.strategyNames.includes('sync-backup'))
+    coordinator.addStrategy(
+      new SyncStrategy({
+        name: 'sync-backup',
+        source: 'memory',
+        target: 'backup',
+        blocking: true,
+      })
+    );
 
   if (!offline) {
     // Trap error querying data (token expired or offline)
-    coordinator.addStrategy(
-      new RequestStrategy({
-        name: 'remote-pull-fail',
+    if (!coordinator.strategyNames.includes('remote-pull-fail'))
+      coordinator.addStrategy(
+        new RequestStrategy({
+          name: 'remote-pull-fail',
 
-        source: 'remote',
-        on: 'pullFail',
+          source: 'remote',
+          on: 'pullFail',
 
-        action(transform: Transform, ex: IApiError) {
-          console.log('***** api pull fail', transform, ex);
-          orbitError(ex);
-        },
+          action(transform: Transform, ex: IApiError) {
+            console.log('***** api pull fail', transform, ex);
+            orbitError(ex);
+          },
 
-        blocking: true,
-      })
-    );
+          blocking: true,
+        })
+      );
 
     // Query the remote server whenever the memory is queried
-    coordinator.addStrategy(
-      new RequestStrategy({
-        name: 'remote-request',
+    if (!coordinator.strategyNames.includes('remote-request'))
+      coordinator.addStrategy(
+        new RequestStrategy({
+          name: 'remote-request',
 
-        source: 'memory',
-        on: 'beforeQuery',
+          source: 'memory',
+          on: 'beforeQuery',
 
-        target: 'remote',
-        action: 'pull',
+          target: 'remote',
+          action: 'pull',
 
-        blocking: false,
-      })
-    );
+          blocking: false,
+        })
+      );
 
     // Trap error updating data (token expired or offline)
     // See: https://github.com/orbitjs/todomvc-ember-orbit
-    coordinator.addStrategy(
-      new RequestStrategy({
-        name: 'remote-push-fail',
+    if (!coordinator.strategyNames.includes('remote-push-fail'))
+      coordinator.addStrategy(
+        new RequestStrategy({
+          name: 'remote-push-fail',
 
-        source: 'remote',
-        on: 'pushFail',
+          source: 'remote',
+          on: 'pushFail',
 
-        action(transform: Transform, ex: IApiError) {
-          const remote = coordinator.getSource('remote');
-          const memory = coordinator.getSource('memory') as Memory;
+          action(transform: Transform, ex: IApiError) {
+            const remote = coordinator.getSource('remote');
+            const memory = coordinator.getSource('memory') as Memory;
 
-          if (ex instanceof NetworkError) {
-            // When network errors are encountered, try again in 3s
-            orbitError(orbitRetry(null, 'NetworkError - will try again soon'));
-            setTimeout(() => {
-              remote.requestQueue.retry();
-            }, 3000);
-          } else {
-            // When non-network errors occur, notify the user and
-            // reset state.
-            let label = transform.options && transform.options.label;
-            if (label) {
-              orbitError(orbitInfo(null, `Unable to complete "${label}"`));
-            } else {
-              const response = ex.response as any;
-              const url: string | null = response?.url;
-              const data = (ex as any).data;
-              const detail =
-                data?.errors &&
-                Array.isArray(data.errors) &&
-                data.errors.length > 0 &&
-                data.errors[0].detail;
-              if (url && detail) {
-                orbitError(
-                  orbitInfo(
-                    null,
-                    `Unable to complete ` +
-                      transform.operations[0].op +
-                      ` in ` +
-                      url.split('/').pop() +
-                      `: ` +
-                      detail
-                  )
-                );
-              } else {
-                orbitError(orbitInfo(null, `Unable to complete operation`));
-              }
-            }
-
-            // Roll back memory to position before transform
-            if (memory.transformLog.contains(transform.id)) {
+            if (ex instanceof NetworkError) {
+              // When network errors are encountered, try again in 3s
               orbitError(
-                orbitInfo(null, 'Rolling back - transform:' + transform.id)
+                orbitRetry(null, 'NetworkError - will try again soon')
               );
-              memory.rollback(transform.id, -1);
+              setTimeout(() => {
+                remote.requestQueue.retry();
+              }, 3000);
+            } else {
+              // When non-network errors occur, notify the user and
+              // reset state.
+              let label = transform.options && transform.options.label;
+              if (label) {
+                orbitError(orbitInfo(null, `Unable to complete "${label}"`));
+              } else {
+                const response = ex.response as any;
+                const url: string | null = response?.url;
+                const data = (ex as any).data;
+                const detail =
+                  data?.errors &&
+                  Array.isArray(data.errors) &&
+                  data.errors.length > 0 &&
+                  data.errors[0].detail;
+                if (url && detail) {
+                  orbitError(
+                    orbitInfo(
+                      null,
+                      `Unable to complete ` +
+                        transform.operations[0].op +
+                        ` in ` +
+                        url.split('/').pop() +
+                        `: ` +
+                        detail
+                    )
+                  );
+                } else {
+                  orbitError(orbitInfo(null, `Unable to complete operation`));
+                }
+              }
+
+              // Roll back memory to position before transform
+              if (memory.transformLog.contains(transform.id)) {
+                orbitError(
+                  orbitInfo(null, 'Rolling back - transform:' + transform.id)
+                );
+                memory.rollback(transform.id, -1);
+              }
+
+              return remote.requestQueue.skip();
             }
+          },
 
-            return remote.requestQueue.skip();
-          }
-        },
-
-        blocking: true,
-      })
-    );
+          blocking: true,
+        })
+      );
 
     // Update the remote server whenever the memory is updated
-    coordinator.addStrategy(
-      new RequestStrategy({
-        name: 'remote-update',
+    if (!coordinator.strategyNames.includes('remote-update'))
+      coordinator.addStrategy(
+        new RequestStrategy({
+          name: 'remote-update',
 
-        source: 'memory',
-        on: 'beforeUpdate',
+          source: 'memory',
+          on: 'beforeUpdate',
 
-        target: 'remote',
-        action: 'push',
+          target: 'remote',
+          action: 'push',
 
-        blocking: false,
-      })
-    );
+          blocking: false,
+        })
+      );
 
     // Sync all changes received from the remote server to the memory
-    coordinator.addStrategy(
-      new SyncStrategy({
-        name: 'remote-sync',
+    if (!coordinator.strategyNames.includes('remote-sync'))
+      coordinator.addStrategy(
+        new SyncStrategy({
+          name: 'remote-sync',
 
-        source: 'remote',
-        target: 'memory',
+          source: 'remote',
+          target: 'memory',
 
-        blocking: true,
-      })
-    );
+          blocking: true,
+        })
+      );
   }
 
-  coordinator.addStrategy(new EventLoggingStrategy());
+  if (!coordinator.strategyNames.includes('logging'))
+    coordinator.addStrategy(new EventLoggingStrategy({ name: 'logging' }));
   coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
     setCoordinatorActivated(true);
     console.log('Coordinator will log warnings');

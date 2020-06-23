@@ -96,13 +96,12 @@ export function Loading(props: IProps) {
   const { orbitLoaded, auth, setExpireAt, t } = props;
   const classes = useStyles();
   const { fetchOrbitData, fetchLocalization, setLanguage } = props;
+  const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
-  const [keyMap] = useGlobal('keyMap');
-  const [backup] = useGlobal('backup');
   const [offline] = useGlobal('offline');
   const [bucket, setBucket] = useGlobal('bucket');
-  const [remote, setRemote] = useGlobal('remote');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_remote, setRemote] = useGlobal('remote');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_fingerprint, setFingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
@@ -190,7 +189,7 @@ export function Loading(props: IProps) {
         setOrganization(orgId);
         localStorage.setItem(
           'lastOrg',
-          remoteId('organization', orgId, keyMap)
+          remoteId('organization', orgId, memory.keyMap)
         );
       }
     }
@@ -204,7 +203,7 @@ export function Loading(props: IProps) {
         remoteIdGuid(
           'organization',
           localStorage.getItem('lastOrg') || '',
-          keyMap
+          memory.keyMap
         ) || '';
     }
     if (org === '') {
@@ -227,10 +226,8 @@ export function Loading(props: IProps) {
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData(
-      schema,
+      coordinator,
       memory,
-      keyMap,
-      backup,
       auth,
       isElectron || offline,
       setUser,
@@ -288,9 +285,7 @@ export function Loading(props: IProps) {
           CreateOrg({
             orgRec,
             user,
-            schema,
-            memory,
-            remote,
+            coordinator,
             setOrganization,
             setProject,
           }).then(() => setCompleted(100));
