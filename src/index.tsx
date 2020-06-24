@@ -19,7 +19,7 @@ import { isElectron, API_CONFIG } from './api-variable';
 const appVersion = require('../package.json').version;
 
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
-const prod = API_CONFIG.endpoint.indexOf('admin.') !== -1;
+const prod = API_CONFIG.host.indexOf('prod') !== -1;
 const bugsnagClient = prodOrQa
   ? bugsnag({
       apiKey: API_CONFIG.snagId,
