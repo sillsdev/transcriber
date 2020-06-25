@@ -1,6 +1,7 @@
 import { KeyMap, Schema, SchemaSettings } from '@orbit/data';
-
-export const keyMap = new KeyMap();
+import Memory from '@orbit/memory';
+import IndexedDBSource from '@orbit/indexeddb';
+import Coordinator from '@orbit/coordinator';
 
 const schemaDefinition: SchemaSettings = {
   models: {
@@ -441,3 +442,20 @@ const schemaDefinition: SchemaSettings = {
 };
 
 export const schema = new Schema(schemaDefinition);
+
+export const keyMap = new KeyMap();
+
+export const memory = new Memory({ schema, keyMap });
+
+export const backup = window.indexedDB
+  ? new IndexedDBSource({
+      schema,
+      keyMap,
+      name: 'backup',
+      namespace: 'transcriber',
+    })
+  : ({} as IndexedDBSource);
+
+export const coordinator = new Coordinator();
+coordinator.addSource(memory);
+if (window.indexedDB) coordinator.addSource(backup);

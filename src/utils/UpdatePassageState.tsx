@@ -1,4 +1,5 @@
 import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
+import Memory from '@orbit/memory';
 import { PassageStateChange, ActivityStates, Passage } from '../model';
 import { AddRecord } from '../model/baseModel';
 import { currentDateTime } from './currentDateTime';
@@ -9,7 +10,8 @@ const AddPassageStateChangeToOps = (
   passage: string,
   state: string,
   comment: string,
-  userid: number
+  userid: number,
+  memory: Memory
 ) => {
   const psc = {
     type: 'passagestatechange',
@@ -19,7 +21,7 @@ const AddPassageStateChangeToOps = (
     },
   } as PassageStateChange;
 
-  ops.push(AddRecord(t, psc, userid));
+  ops.push(AddRecord(t, psc, userid, memory));
   // console.log(psc, passage, state, comment);
   ops.push(
     t.replaceRelatedRecord(
@@ -36,15 +38,24 @@ const AddPassageStateChangeToOps = (
 export const AddPassage = (
   rec: Passage,
   section: RecordIdentity,
-  user: number
+  user: number,
+  memory: Memory
 ): Operation[] => {
   var t = new TransformBuilder();
   var ops: Operation[] = [];
-  ops.push(AddRecord(t, rec, user));
+  ops.push(AddRecord(t, rec, user, memory));
   ops.push(
     t.replaceRelatedRecord({ type: 'passage', id: rec.id }, 'section', section)
   );
-  AddPassageStateChangeToOps(t, ops, rec.id, ActivityStates.NoMedia, '', user);
+  AddPassageStateChangeToOps(
+    t,
+    ops,
+    rec.id,
+    ActivityStates.NoMedia,
+    '',
+    user,
+    memory
+  );
   return ops;
 };
 
@@ -54,9 +65,10 @@ export const AddPassageStateCommentOps = (
   comment: string,
   userid: number,
   t: TransformBuilder,
-  ops: Operation[]
+  ops: Operation[],
+  memory: Memory
 ): Operation[] => {
-  AddPassageStateChangeToOps(t, ops, passage, state, comment, userid);
+  AddPassageStateChangeToOps(t, ops, passage, state, comment, userid, memory);
   return ops;
 };
 
@@ -66,7 +78,8 @@ export const UpdatePassageStateOps = (
   comment: string,
   userid: number,
   t: TransformBuilder,
-  ops: Operation[]
+  ops: Operation[],
+  memory: Memory
 ): Operation[] => {
   ops.push(
     t.replaceAttribute({ type: 'passage', id: passage }, 'state', state)
@@ -85,6 +98,6 @@ export const UpdatePassageStateOps = (
       userid
     )
   );
-  AddPassageStateChangeToOps(t, ops, passage, state, comment, userid);
+  AddPassageStateChangeToOps(t, ops, passage, state, comment, userid, memory);
   return ops;
 };

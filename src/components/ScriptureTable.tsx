@@ -110,7 +110,6 @@ export function ScriptureTable(props: IProps) {
   const classes = useStyles();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
-  const [schema] = useGlobal('schema');
   const [remote] = useGlobal('remote');
   const [doSave, setDoSave] = useGlobal('doSave');
   const [saving, setSaving] = useState(false);
@@ -689,7 +688,7 @@ export function ScriptureTable(props: IProps) {
           },
           type: 'sectionpassage',
         } as SectionPassage;
-        schema.initializeRecord(sp);
+        memory.schema.initializeRecord(sp);
         setComplete(20);
         var dumbrec = await memory.update(
           (t: TransformBuilder) => t.addRecord(sp),

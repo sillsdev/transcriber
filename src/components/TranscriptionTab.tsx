@@ -261,7 +261,6 @@ export function TranscriptionTab(props: IProps) {
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
-  const [keyMap] = useGlobal('keyMap');
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
@@ -333,8 +332,8 @@ export function TranscriptionTab(props: IProps) {
     exportProject(
       exportType,
       memory,
-      remoteIdNum('project', project, keyMap),
-      remoteIdNum('user', user, keyMap),
+      remoteIdNum('project', project, memory.keyMap),
+      remoteIdNum('user', user, memory.keyMap),
       media.length,
       auth,
       errorReporter,
@@ -434,7 +433,11 @@ export function TranscriptionTab(props: IProps) {
   const handleAudio = (passageId: string) => () => handleAudioFn(passageId);
   const handleAudioFn = (passageId: string) => {
     const mediaRec = getMediaRec(passageId, memory);
-    const id = remoteId('mediafile', mediaRec ? mediaRec.id : '', keyMap);
+    const id = remoteId(
+      'mediafile',
+      mediaRec ? mediaRec.id : '',
+      memory.keyMap
+    );
     const name = getMediaName(mediaRec, memory);
     fetchMediaUrl(id, memory, offline, auth);
     setAudName(name);

@@ -1,5 +1,5 @@
 import { Project } from '../model';
-import { TransformBuilder, Schema } from '@orbit/data';
+import { TransformBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 
 interface IProps {
@@ -14,7 +14,6 @@ interface IProps {
   projectGroup?: string;
   organization: string;
   user: string;
-  schema: Schema;
   memory: Memory;
 }
 
@@ -31,7 +30,6 @@ export const saveNewProject = async (props: IProps) => {
     projectGroup,
     organization,
     user,
-    schema,
     memory,
   } = props;
 
@@ -50,7 +48,7 @@ export const saveNewProject = async (props: IProps) => {
       isPublic: true,
     },
   } as Project;
-  schema.initializeRecord(project);
+  memory.schema.initializeRecord(project);
   await memory.update((t: TransformBuilder) => [
     t.addRecord(project),
     t.replaceRelatedRecord({ type: 'project', id: project.id }, 'projecttype', {

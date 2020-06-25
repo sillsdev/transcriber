@@ -149,9 +149,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { todoStr, taskItemStr, transcriberStr } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
     const { trackedTask, setTrackedTask } = props;
+    const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
-    const [keyMap] = useGlobal('keyMap');
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -211,7 +211,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       state: string,
       role: string,
       rowList: IRowData[],
-      onlyAssigned: boolean,
+      onlyAvailable: boolean,
       playItem: string
     ) => {
       const readyRecs = passages.filter(
@@ -235,9 +235,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
             if (planRecs.length > 0) {
               if (related(planRecs[0], 'project') === project) {
                 const assigned = related(secRecs[0], role);
-                const allowed = onlyAssigned
-                  ? assigned === user
-                  : !assigned || assigned === '' || role === 'view';
+                const allowed = onlyAvailable
+                  ? assigned === user || !assigned || assigned === ''
+                  : role === 'view';
                 if (allowed) {
                   let already: IRowData[] = [];
                   if (role === 'view') {
@@ -291,7 +291,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                       passage: { ...p },
                       state: curState,
                       sectPass: secNum + '.' + passageNumber(p).trim(),
-                      mediaRemoteId: remoteId('mediafile', mediaRec.id, keyMap),
+                      mediaRemoteId: remoteId(
+                        'mediafile',
+                        mediaRec.id,
+                        memory.keyMap
+                      ),
                       mediaId: mediaRec.id,
                       playItem,
                       duration: mediaRec.attributes.duration,
@@ -345,21 +349,27 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     }, [user, project, projects.length, groupMemberships.length, roles.length]);
 
     const selectTasks = (
-      assigned: boolean,
+      onlyAvailable: boolean,
       rowList: IRowData[],
       item: string
     ) => {
       // IN PROGRESS TASKS
       if (role !== RoleNames.Transcriber) {
         // editor or admin
-        addTasks(ActivityStates.Reviewing, 'editor', rowList, assigned, item);
+        addTasks(
+          ActivityStates.Reviewing,
+          'editor',
+          rowList,
+          onlyAvailable,
+          item
+        );
       }
 
       addTasks(
         ActivityStates.Transcribing,
         'transcriber',
         rowList,
-        assigned,
+        onlyAvailable,
         item
       );
 
@@ -368,7 +378,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         ActivityStates.Incomplete,
         'transcriber',
         rowList,
-        assigned,
+        onlyAvailable,
         item
       );
 
@@ -376,21 +386,27 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         ActivityStates.NeedsNewTranscription,
         'transcriber',
         rowList,
-        assigned,
+        onlyAvailable,
         item
       );
 
       // READY TO BEGIN TASKS
       if (role !== RoleNames.Transcriber) {
         // editor or admin
-        addTasks(ActivityStates.Transcribed, 'editor', rowList, assigned, item);
+        addTasks(
+          ActivityStates.Transcribed,
+          'editor',
+          rowList,
+          onlyAvailable,
+          item
+        );
       }
 
       addTasks(
         ActivityStates.TranscribeReady,
         'transcriber',
         rowList,
-        assigned,
+        onlyAvailable,
         item
       );
     };

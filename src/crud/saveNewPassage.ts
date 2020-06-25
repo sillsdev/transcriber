@@ -36,6 +36,6 @@ export const saveNewPassage = async (props: IProps) => {
       state: ActivityStates.NoMedia,
     },
   } as any;
-  await memory.update(AddPassage(passage, section, userId));
+  await memory.update(AddPassage(passage, section, userId, memory));
   return passage;
 };

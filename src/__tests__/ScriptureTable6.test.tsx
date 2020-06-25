@@ -12,7 +12,7 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ScriptureTable from '../components/ScriptureTable';
-import { Plan, Section } from '../model';
+import { ActivityStates, Plan, Section, Passage } from '../model';
 
 const store = configureStore();
 
@@ -67,24 +67,49 @@ const addOneSection = async () => {
     },
   } as any;
   memory.schema.initializeRecord(section);
-  await memory.update((t) => [
-    t.addRecord(section),
-    t.replaceRelatedRecord(section, 'plan', plan),
-  ]);
+  await memory.update((t) => t.addRecord(section));
+  await memory.update((t) => t.replaceRelatedRecord(section, 'plan', plan));
   return section;
+};
+
+const addPassageToSection = async (section: Section) => {
+  const passage: Passage = {
+    type: 'passage',
+    attributes: {
+      sequencenum: 1,
+      book: 'GEN',
+      reference: '1:1-20',
+      position: 0,
+      state: ActivityStates.NoMedia,
+      hold: false,
+      title: 'Seven Days',
+    },
+  } as any;
+  memory.schema.initializeRecord(passage);
+  await memory.update((t) => [
+    t.addRecord(passage),
+    t.replaceRelatedRecord(passage, 'section', section),
+  ]);
+  return passage;
 };
 
 afterEach(cleanup);
 
-test('ScriptureTable AddPassage button adds first row', async () => {
-  await addOneSection();
+test('ScriptureTable Delete section row removes rows', async () => {
+  const section = await addOneSection();
+  await addPassageToSection(section);
 
-  const { getByText, container } = render(tree);
+  const { getByText, getAllByTestId, container } = render(tree);
   await waitForElement(() => getByText(/^Creation$/i));
-  fireEvent.click(getByText(/Add Passage/i));
+  const box = getAllByTestId('check')[0];
+  fireEvent.click(box.querySelector('input') as HTMLElement);
+  await waitForElement(() => getAllByTestId('checked'));
+  expect(getAllByTestId('checked').length).toBe(1); // condensed
+  fireEvent.click(getByText(/Action/i));
+  await waitForElement(() => getByText(/Delete/i));
+  fireEvent.click(getByText(/Delete/i));
+  await waitForElement(() => getByText(/Confirmation/i));
+  fireEvent.click(getByText(/Yes/i));
   const body = container.querySelector('tbody');
-  expect(body).not.toBeFalsy();
-  expect(body && body.children.length).toBe(3); // condensed adds two
-  // sequence number column should be 1
-  expect(body && body.children[2].children[3].textContent).toBe('1');
+  expect(body && body.children.length).toBe(1); // just the header
 });

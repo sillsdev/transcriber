@@ -12,7 +12,7 @@ import {
 } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import ScriptureTable from '../components/ScriptureTable';
-import { Plan, Section } from '../model';
+import { ActivityStates, Plan, Section, Passage } from '../model';
 
 const store = configureStore();
 
@@ -74,17 +74,51 @@ const addOneSection = async () => {
   return section;
 };
 
+const addPassageToSection = async (section: Section) => {
+  const passage: Passage = {
+    type: 'passage',
+    attributes: {
+      sequencenum: 1,
+      book: 'GEN',
+      reference: '1:1-20',
+      position: 0,
+      state: ActivityStates.NoMedia,
+      hold: false,
+      title: 'Seven Days',
+    },
+  } as any;
+  memory.schema.initializeRecord(passage);
+  await memory.update((t) => [
+    t.addRecord(passage),
+    t.replaceRelatedRecord(passage, 'section', section),
+  ]);
+  return passage;
+};
+
 afterEach(cleanup);
 
-test('ScriptureTable AddPassage button adds first row', async () => {
-  await addOneSection();
+// test('ScriptureTable AddSection button adds second section when no passages in previous section', async () => {
+//   await addOneSection();
 
-  const { getByText, container } = render(tree);
+//   const { getByText, container } = render(tree);
+//   await waitForElement(() => getByText(/^Creation$/i));
+//   fireEvent.click(getByText(/Add Section/i));
+//   const body = container.querySelector('tbody');
+//   expect(body).not.toBeFalsy();
+//   expect(body && body.children.length).toBe(4); // not condensed
+//   // sequence number column should be 2
+//   expect(body && body.children[2].children[1].textContent).toBe('2');
+// });
+
+test('ScriptureTable Delete action with nothing selected', async () => {
+  const section = await addOneSection();
+  await addPassageToSection(section);
+
+  const { getByText } = render(tree);
   await waitForElement(() => getByText(/^Creation$/i));
-  fireEvent.click(getByText(/Add Passage/i));
-  const body = container.querySelector('tbody');
-  expect(body).not.toBeFalsy();
-  expect(body && body.children.length).toBe(3); // condensed adds two
-  // sequence number column should be 1
-  expect(body && body.children[2].children[3].textContent).toBe('1');
+  fireEvent.click(getByText(/Action/i));
+  await waitForElement(() => getByText(/Delete/i));
+  fireEvent.click(getByText(/Delete/i));
+  await waitForElement(() => getByText(/Please select row/i));
+  expect(true);
 });

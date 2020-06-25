@@ -45,7 +45,6 @@ interface IProps extends IStateProps, IRecordProps {
 function GroupMemberAdd(props: IProps) {
   const { open, role, orgPeople, t, roles, setOpen } = props;
   const classes = useStyles();
-  const [schema] = useGlobal('schema');
   const [memory] = useGlobal('memory');
   const [group] = useGlobal('group');
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
@@ -90,7 +89,6 @@ function GroupMemberAdd(props: IProps) {
       );
     } else {
       await addGroupMember(
-        schema,
         memory,
         group,
         currentPerson ? currentPerson : '',

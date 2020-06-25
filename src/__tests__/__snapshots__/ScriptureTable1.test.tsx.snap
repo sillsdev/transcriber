@@ -90,6 +90,19 @@ exports[`can render ScriptureTable snapshot 1`] = `
             />
           </button>
           <button
+            aria-label="Resequence"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary Mui-disabled Mui-disabled"
+            disabled=""
+            tabindex="-1"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Resequence
+            </span>
+          </button>
+          <button
             aria-label="Action"
             aria-owns="action-menu"
             class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary"
@@ -115,6 +128,42 @@ exports[`can render ScriptureTable snapshot 1`] = `
               class="MuiTouchRipple-root"
             />
           </button>
+          <label
+            class="MuiFormControlLabel-root"
+          >
+            <span
+              class="MuiSwitch-root"
+            >
+              <span
+                aria-disabled="false"
+                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiSwitch-switchBase MuiSwitch-colorPrimary"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <input
+                    class="PrivateSwitchBase-input-19 MuiSwitch-input"
+                    type="checkbox"
+                    value=""
+                  />
+                  <span
+                    class="MuiSwitch-thumb"
+                  />
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </span>
+              <span
+                class="MuiSwitch-track"
+              />
+            </span>
+            <span
+              class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+            >
+              Condensed
+            </span>
+          </label>
           <div
             class="makeStyles-grow-13"
           >
@@ -147,6 +196,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
       </header>
       <div
         class="makeStyles-content-10"
+        id="PlanSheet"
       >
         <span
           class="data-grid-container"
@@ -158,20 +208,14 @@ exports[`can render ScriptureTable snapshot 1`] = `
             <tbody>
               <tr>
                 <td
-                  cell="[object Object]"
                   class="cell read-only"
-                  col="0"
-                  row="0"
                 >
                   <span
                     class="value-viewer"
                   />
                 </td>
                 <td
-                  cell="[object Object]"
                   class="cell read-only"
-                  col="1"
-                  row="0"
                   style="width: 80px;"
                 >
                   <span
@@ -181,10 +225,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  cell="[object Object]"
                   class="cell read-only"
-                  col="2"
-                  row="0"
                   style="width: 280px;"
                 >
                   <span
@@ -194,10 +235,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  cell="[object Object]"
                   class="cell read-only"
-                  col="3"
-                  row="0"
                   style="width: 80px;"
                 >
                   <span
@@ -207,10 +245,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  cell="[object Object]"
                   class="cell read-only"
-                  col="4"
-                  row="0"
                   style="width: 170px;"
                 >
                   <span
@@ -220,10 +255,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  cell="[object Object]"
                   class="cell read-only"
-                  col="5"
-                  row="0"
                   style="width: 180px;"
                 >
                   <span
@@ -233,10 +265,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  cell="[object Object]"
                   class="cell read-only"
-                  col="6"
-                  row="0"
                   style="width: 280px;"
                 >
                   <span
@@ -251,7 +280,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
         </span>
       </div>
     </div>
-    <div />
   </div>
 </div>
 `;

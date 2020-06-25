@@ -21,7 +21,7 @@ export const saveNewSection = async (props: IProps) => {
     },
   } as any;
   await memory.update((t: TransformBuilder) => [
-    AddRecord(t, sec, userId),
+    AddRecord(t, sec, userId, memory),
     t.replaceRelatedRecord(sec, 'plan', plan),
   ]);
   return sec;

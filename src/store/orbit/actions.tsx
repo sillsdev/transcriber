@@ -6,13 +6,12 @@ import {
   RESET_ORBIT_ERROR,
   ORBIT_SAVING,
 } from './types';
-import { KeyMap, Schema } from '@orbit/data';
 import { Bucket } from '@orbit/core';
+import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
-import JSONAPISource from '@orbit/jsonapi';
-import IndexedDBSource from '@orbit/indexeddb';
 import { Severity } from '../../components/logErrorService';
 
 export const orbitError = (ex: IApiError) => {
@@ -45,10 +44,8 @@ export const orbitSaving = (val: boolean) => {
 };
 
 export const fetchOrbitData = (
-  schema: Schema,
+  coordinator: Coordinator,
   memory: Memory,
-  keyMap: KeyMap,
-  backup: IndexedDBSource,
   auth: Auth,
   offline: boolean,
   setUser: (id: string) => void,
@@ -61,10 +58,8 @@ export const fetchOrbitData = (
   InviteUser: (remote: JSONAPISource, email: string) => Promise<void>
 ) => (dispatch: any) => {
   Sources(
-    schema,
+    coordinator,
     memory,
-    keyMap,
-    backup,
     auth,
     offline,
     setUser,

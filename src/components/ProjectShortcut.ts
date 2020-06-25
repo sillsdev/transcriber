@@ -1,5 +1,4 @@
 import { PlanType } from '../model';
-import { Schema, KeyMap } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { remoteId, waitForRemoteId, remoteIdNum } from '../utils';
 import { saveNewPlan, saveNewSection, saveNewPassage } from '../crud';
@@ -12,9 +11,7 @@ interface IProps {
   planTypes: PlanType[];
   sectionName: string;
   reference: string;
-  schema: Schema;
   memory: Memory;
-  keyMap: KeyMap;
   user: string;
 }
 
@@ -27,9 +24,7 @@ export const projectShortcut = async (props: IProps) => {
     planTypes,
     sectionName,
     reference,
-    schema,
     memory,
-    keyMap,
     user,
   } = props;
 
@@ -37,7 +32,6 @@ export const projectShortcut = async (props: IProps) => {
     project,
     name: planName,
     planType,
-    schema,
     memory,
   });
   const userId = remoteIdNum('user', user, memory.keyMap);
@@ -55,16 +49,16 @@ export const projectShortcut = async (props: IProps) => {
     memory,
     userId,
   });
-  const planId = await waitForRemoteId(plan, keyMap);
+  const planId = await waitForRemoteId(plan, memory.keyMap);
   const projId = await waitForRemoteId(
     { type: 'project', id: project },
-    keyMap
+    memory.keyMap
   );
   const rec = planTypes.filter((pt) => pt.id === planType);
   const typeName = rec.length > 0 ? rec[0].attributes.name : 'other';
   return {
     url: '/main/{0}/{1}-plan/{2}/{3}/1/'
-      .replace('{0}', remoteId('organization', organization, keyMap))
+      .replace('{0}', remoteId('organization', organization, memory.keyMap))
       .replace('{1}', typeName.toLowerCase())
       .replace('{2}', projId)
       .replace('{3}', planId),

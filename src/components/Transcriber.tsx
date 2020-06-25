@@ -66,7 +66,11 @@ import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
 import moment from 'moment-timezone';
-import { UpdateRecord, AddRecord } from '../model/baseModel';
+import {
+  UpdateRecord,
+  UpdateRelatedRecord,
+  AddRecord,
+} from '../model/baseModel';
 import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
@@ -166,7 +170,6 @@ export function Transcriber(props: IProps) {
   };
   const classes = useStyles();
   const theme = useTheme();
-  const [keyMap] = useGlobal('keyMap');
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -295,7 +298,8 @@ export function Transcriber(props: IProps) {
         pass.attributes.lastComment,
         remoteIdNum('user', user, memory.keyMap),
         new TransformBuilder(),
-        []
+        [],
+        memory
       )
     );
     pass.attributes.lastComment = '';
@@ -351,7 +355,8 @@ export function Transcriber(props: IProps) {
           comment,
           remoteIdNum('user', user, memory.keyMap),
           tb,
-          []
+          [],
+          memory
         );
         ops.push(
           UpdateRecord(
@@ -364,7 +369,7 @@ export function Transcriber(props: IProps) {
                 position: 0,
               },
             } as MediaFile,
-            remoteIdNum('user', user, keyMap)
+            remoteIdNum('user', user, memory.keyMap)
           )
         );
         await memory.update(ops);
@@ -377,6 +382,25 @@ export function Transcriber(props: IProps) {
     }
   };
 
+  const handleAssign = async () => {
+    const secRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord(section)
+    );
+    const assigned = related(secRec, role);
+    if (!assigned || assigned === '') {
+      await memory.update(
+        UpdateRelatedRecord(
+          new TransformBuilder(),
+          section,
+          role,
+          'user',
+          user,
+          remoteIdNum('user', user, memory.keyMap)
+        )
+      );
+    }
+  };
+
   const nextOnSave: { [key: string]: string } = {
     incomplete: ActivityStates.Transcribing,
     needsNewTranscription: ActivityStates.Transcribing,
@@ -384,18 +408,10 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Reviewing,
   };
 
-  const handleSaveButton = () => {
-    if (busy) {
-      setMessage(<span>{t.saving}</span>);
-      return;
-    }
-    handleSave(true);
-  };
-
   const handleSave = async (postComment: boolean = false) => {
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
-      const userid = remoteIdNum('user', user, keyMap);
+      const userid = remoteIdNum('user', user, memory.keyMap);
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
       if (nextOnSave[state] !== undefined)
@@ -405,7 +421,8 @@ export function Transcriber(props: IProps) {
           '',
           userid,
           tb,
-          ops
+          ops,
+          memory
         );
       if (postComment && comment !== '') {
         ops = AddPassageStateCommentOps(
@@ -414,7 +431,8 @@ export function Transcriber(props: IProps) {
           comment,
           userid,
           tb,
-          ops
+          ops,
+          memory
         );
       }
       ops.push(
@@ -437,6 +455,16 @@ export function Transcriber(props: IProps) {
       setChanged(false);
     }
   };
+
+  const handleSaveButton = () => {
+    if (busy) {
+      setMessage(<span>{t.saving}</span>);
+      return;
+    }
+    handleSave(true);
+    handleAssign();
+  };
+
   const previous: { [key: string]: string } = {
     incomplete: ActivityStates.TranscribeReady,
     transcribed: ActivityStates.TranscribeReady,
@@ -457,7 +485,7 @@ export function Transcriber(props: IProps) {
     } as MediaFile;
     newMedia.attributes.versionNumber += 1;
     await memory.update((t) => [
-      AddRecord(t, newMedia, remoteIdNum('user', user, memory.keyMap)),
+      AddRecord(t, newMedia, remoteIdNum('user', user, memory.keyMap), memory),
       t.replaceRelatedRecord(
         { type: 'mediafile', id: newMedia.id },
         'passage',
@@ -486,9 +514,10 @@ export function Transcriber(props: IProps) {
           passage.id,
           previous[state],
           comment,
-          remoteIdNum('user', user, keyMap),
+          remoteIdNum('user', user, memory.keyMap),
           new TransformBuilder(),
-          []
+          [],
+          memory
         )
       );
       setComment('');
@@ -612,6 +641,7 @@ export function Transcriber(props: IProps) {
             setTranscriptionIn(transcription);
             launchTimer();
           });
+          handleAssign();
         }
         return;
       }
@@ -657,7 +687,7 @@ export function Transcriber(props: IProps) {
   moment.locale(lang);
   const curZone = moment.tz.guess();
   const userFromId = (remoteId: number) => {
-    const id = remoteIdGuid('user', remoteId.toString(), keyMap);
+    const id = remoteIdGuid('user', remoteId.toString(), memory.keyMap);
     const user = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'user', id })
     ) as User;
@@ -838,7 +868,7 @@ export function Transcriber(props: IProps) {
                 <span>
                   <IconButton
                     onClick={handleTimer}
-                    disabled={role === 'view' || assigned !== user || playing}
+                    disabled={role === 'view' || playing}
                   >
                     <>
                       <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -863,7 +893,7 @@ export function Transcriber(props: IProps) {
                 >
                   <TextareaAutosize
                     value={textValue}
-                    readOnly={role === 'view' || assigned !== user}
+                    readOnly={role === 'view'}
                     style={textAreaStyle}
                     onChange={handleChange}
                   />
@@ -871,7 +901,7 @@ export function Transcriber(props: IProps) {
               ) : (
                 <TextareaAutosize
                   value={textValue}
-                  readOnly={role === 'view' || assigned !== user}
+                  readOnly={role === 'view'}
                   style={textAreaStyle}
                   onChange={handleChange}
                 />
@@ -914,7 +944,7 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
-                {role !== 'view' && assigned === user ? (
+                {role !== 'view' ? (
                   <>
                     <Button
                       variant="outlined"
