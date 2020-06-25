@@ -1,3 +1,10 @@
+sil-transcriber (2.0.8.8)  experimental; urgency=high
+
+  * TT-1514 add .ogg support (#458)
+  * Update desktop help file
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Jun 2020 15:11:00 -0600
+
 sil-transcriber (2.0.8.7)  experimental; urgency=high
 
   * TT-1516 Auto Assign (#457)
