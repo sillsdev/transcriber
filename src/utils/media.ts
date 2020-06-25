@@ -95,7 +95,13 @@ export const getMediaEaf = (mediaRec: MediaFile, memory: Memory): string => {
   const duration = durationNum ? (durationNum * 1000).toString() : '0';
   const lang = getMediaLang(mediaRec, memory);
   const mime = (mediaAttr && mediaAttr.contentType) || '';
-  const ext = /mpeg/.test(mime) ? '.mp3' : /m4a/.test(mime) ? '.m4a' : '.wav';
+  const ext = /mpeg/.test(mime)
+    ? '.mp3'
+    : /m4a/.test(mime)
+    ? '.m4a'
+    : /ogg/.test(mime)
+    ? '.ogg'
+    : '.wav';
   const audioUrl = mediaAttr && mediaAttr.audioUrl;
   const audioBase = audioUrl && audioUrl.split('?')[0];
   const audioName = audioBase && audioBase.split('/').pop();
