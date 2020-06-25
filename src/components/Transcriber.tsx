@@ -66,7 +66,11 @@ import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import keycode from 'keycode';
 import moment from 'moment-timezone';
-import { UpdateRecord, AddRecord } from '../model/baseModel';
+import {
+  UpdateRecord,
+  UpdateRelatedRecord,
+  AddRecord,
+} from '../model/baseModel';
 import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
@@ -378,19 +382,30 @@ export function Transcriber(props: IProps) {
     }
   };
 
+  const handleAssign = async () => {
+    const secRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord(section)
+    );
+    const assigned = related(secRec, role);
+    if (!assigned || assigned === '') {
+      await memory.update(
+        UpdateRelatedRecord(
+          new TransformBuilder(),
+          section,
+          role,
+          'user',
+          user,
+          remoteIdNum('user', user, memory.keyMap)
+        )
+      );
+    }
+  };
+
   const nextOnSave: { [key: string]: string } = {
     incomplete: ActivityStates.Transcribing,
     needsNewTranscription: ActivityStates.Transcribing,
     transcribeReady: ActivityStates.Transcribing,
     transcribed: ActivityStates.Reviewing,
-  };
-
-  const handleSaveButton = () => {
-    if (busy) {
-      setMessage(<span>{t.saving}</span>);
-      return;
-    }
-    handleSave(true);
   };
 
   const handleSave = async (postComment: boolean = false) => {
@@ -440,6 +455,16 @@ export function Transcriber(props: IProps) {
       setChanged(false);
     }
   };
+
+  const handleSaveButton = () => {
+    if (busy) {
+      setMessage(<span>{t.saving}</span>);
+      return;
+    }
+    handleSave(true);
+    handleAssign();
+  };
+
   const previous: { [key: string]: string } = {
     incomplete: ActivityStates.TranscribeReady,
     transcribed: ActivityStates.TranscribeReady,
@@ -616,6 +641,7 @@ export function Transcriber(props: IProps) {
             setTranscriptionIn(transcription);
             launchTimer();
           });
+          handleAssign();
         }
         return;
       }
@@ -842,7 +868,7 @@ export function Transcriber(props: IProps) {
                 <span>
                   <IconButton
                     onClick={handleTimer}
-                    disabled={role === 'view' || assigned !== user || playing}
+                    disabled={role === 'view' || playing}
                   >
                     <>
                       <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -867,7 +893,7 @@ export function Transcriber(props: IProps) {
                 >
                   <TextareaAutosize
                     value={textValue}
-                    readOnly={role === 'view' || assigned !== user}
+                    readOnly={role === 'view'}
                     style={textAreaStyle}
                     onChange={handleChange}
                   />
@@ -875,7 +901,7 @@ export function Transcriber(props: IProps) {
               ) : (
                 <TextareaAutosize
                   value={textValue}
-                  readOnly={role === 'view' || assigned !== user}
+                  readOnly={role === 'view'}
                   style={textAreaStyle}
                   onChange={handleChange}
                 />
@@ -918,7 +944,7 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
-                {role !== 'view' && assigned === user ? (
+                {role !== 'view' ? (
                   <>
                     <Button
                       variant="outlined"
