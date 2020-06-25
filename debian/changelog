@@ -1,3 +1,13 @@
+sil-transcriber (2.0.8.7)  experimental; urgency=high
+
+  * TT-1516 Auto Assign (#457)
+  * TT-1500 update language picker
+  * TT-1443 Report production errors
+  * Fixes refresh (#456)
+  * Fix path for data reset
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Jun 2020 13:13:00 -0600
+
 sil-transcriber (2.0.8.6)  experimental; urgency=high
 
   * TT-1480 clear comment after reopen
