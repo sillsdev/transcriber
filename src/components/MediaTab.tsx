@@ -820,7 +820,7 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [attachMap]);
 
-  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$/i;
+  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
 
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {

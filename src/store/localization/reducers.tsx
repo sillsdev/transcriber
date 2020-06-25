@@ -611,7 +611,7 @@ const initialState = {
 			"title": "Upload Media",
 			"PTFtitle": "Upload complete Project Data from PTF",
 			"ITFtitle": "Upload Change Data from Offline Extension",
-			"task": "You can upload audio files in .mp3, .m4a or .wav format.",
+			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",
 			"PTFtask": "Upload a Portable Transcriber File (ptf file).",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the offline extension.",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",

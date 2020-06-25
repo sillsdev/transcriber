@@ -61,13 +61,13 @@ function MediaUpload(props: IProps) {
   const [message, setMessage] = useState(<></>);
 
   const acceptextension = [
-    '.mp3, .m4a, .wav',
+    '.mp3, .m4a, .wav, .ogg',
     '.itf',
     '.ptf',
     '.jpg, .svg, .png',
   ];
   const acceptmime = [
-    'audio/mpeg, audio/wav, audio/m4a',
+    'audio/mpeg, audio/wav, audio/m4a, audio/ogg',
     'application/itf',
     'application/ptf',
     'image/jpeg, image/svg+xml, image/png',
