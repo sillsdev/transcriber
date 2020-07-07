@@ -18,7 +18,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
-    title: 'Boilerplate',
+    title: 'SIL Transcriber Desktop Extension',
     icon: path.join(__dirname, '../src/assets/icons/favicon.ico'),
     webPreferences: { nodeIntegration: true, webSecurity: false },
   });
@@ -55,12 +55,12 @@ function createWindow() {
 
   mainWindow.on('closed', () => (mainWindow = null));
 
-  imageWindow.on('close', e => {
+  imageWindow.on('close', (e) => {
     e.preventDefault();
     imageWindow.hide();
   });
 
-  settingsWindow.on('close', e => {
+  settingsWindow.on('close', (e) => {
     e.preventDefault();
     settingsWindow.hide();
   });

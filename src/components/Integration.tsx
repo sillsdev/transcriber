@@ -330,14 +330,14 @@ export function IntegrationPanel(props: IProps) {
   const handleLocalSync = async () => {
     setSyncing(true);
     showMessage('', t.syncPending);
-    await localSync(
+    var err = await localSync(
       project,
       ptShortName,
       passages,
       memory,
       remoteIdNum('user', user, memory.keyMap)
     );
-    showMessage('', t.syncComplete);
+    showMessage('', err || t.syncComplete);
     resetCount();
     setSyncing(false);
   };
@@ -380,10 +380,12 @@ export function IntegrationPanel(props: IProps) {
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
     if (err.errStatus === 500) {
-      if (err.errMsg.includes('401')) return t.expiredParatextToken;
+      if (err.errMsg.includes('401') || err.errMsg.includes('400'))
+        return t.expiredParatextToken;
       if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
       if (err.errMsg.includes('Book not included'))
         return t.bookNotFound + err.errMsg.substr(err.errMsg.lastIndexOf(':'));
+      return err.errMsg;
     }
     return err.errMsg;
   };

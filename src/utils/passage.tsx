@@ -37,7 +37,7 @@ function parseReferencePart(a: Passage, start: boolean, part: string) {
     a.endVerse = verse === 0 ? a.startVerse : verse;
   }
 }
-function parseRef(a: Passage) {
+export function parseRef(a: Passage) {
   if (a.startChapter === undefined) {
     if (a.attributes.book === '') {
       a.startChapter = 0;
@@ -88,7 +88,7 @@ export function passageReference(passage: Passage, bookData: BookName[] = []) {
   if (!attr) return '';
   let book = attr.book || '';
   if (book !== '') {
-    const bookItem = bookData.filter(b => b.code === book);
+    const bookItem = bookData.filter((b) => b.code === book);
     if (bookItem.length > 0) {
       book = bookItem[0].long;
     }
