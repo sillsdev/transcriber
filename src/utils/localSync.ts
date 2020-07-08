@@ -16,7 +16,6 @@ const fs = isElectron ? require('fs-extra') : null;
 
 const domParser = new DOMParser();
 const xmlSerializer = new XMLSerializer();
-const refRe = /^[0-9+][^0-9]+([0-9]+)[^0-9]?([0-9]+)?$/;
 const vrefRe = /^([0-9]+)[^0-9]?([0-9]+)?$/;
 
 const vInt = (s: string) => (typeof s === 'string' ? parseInt(s) : s);
@@ -262,8 +261,6 @@ const findNodeAfterVerse = (verses: Element[], verse: number) => {
 };
 
 const postPass = (doc: Document, p: Passage, memory: Memory) => {
-  const refMatch = refRe.exec(p.attributes.reference);
-  if (!refMatch) return;
   //get transcription
   const media = related(p, 'mediafiles') as Record[];
   const sortedMedia = media
