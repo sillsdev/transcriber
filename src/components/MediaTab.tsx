@@ -298,6 +298,8 @@ interface IStateProps {
   uploadList: FileList;
   loaded: boolean;
   currentlyLoading: number;
+  uploadError: string;
+  uploadSuccess: boolean[];
   hasUrl: boolean;
   mediaUrl: string;
   allBookData: BookName[];
@@ -334,6 +336,8 @@ export function MediaTab(props: IProps) {
     uploadList,
     loaded,
     currentlyLoading,
+    uploadError,
+    uploadSuccess,
     action,
     uploadFiles,
     nextUpload,
@@ -341,7 +345,6 @@ export function MediaTab(props: IProps) {
     mediaFiles,
     passages,
     sections,
-    queryStore,
     auth,
     projectplans,
     planColumn,
@@ -355,6 +358,7 @@ export function MediaTab(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
+  const [remote] = useGlobal('remote');
   const [user] = useGlobal('user');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_tab, setTab] = useGlobal('tab');
@@ -826,11 +830,20 @@ export function MediaTab(props: IProps) {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
       // wait to do this to give time for duration calc
       setTimeout(() => {
-        setMessage(<span>{t.uploadComplete}</span>);
+        let numsuccess = uploadSuccess.filter((x) => x === true).length;
+        setMessage(
+          <span>
+            {t.uploadComplete
+              .replace('{0}', numsuccess.toString())
+              .replace('{1}', uploadSuccess.length.toString())}
+          </span>
+        );
         uploadComplete();
         setComplete(0);
-        setAttachVisible(true);
-        setTab(tabs.associate);
+        if (numsuccess > 0) {
+          setAttachVisible(true);
+          setTab(tabs.associate);
+        }
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
@@ -864,10 +877,10 @@ export function MediaTab(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [uploadList, loaded, currentlyLoading, projectplans, auth]);
+  }, [uploadList, loaded, currentlyLoading, uploadSuccess, projectplans, auth]);
 
   useEffect(() => {
-    if (currentlyLoading === 0 /* all are done */) {
+    if (currentlyLoading === -2 /* all are done */) {
       var remoteid =
         projectplans.length === 1
           ? remoteId('plan', plan, memory.keyMap)
@@ -881,8 +894,11 @@ export function MediaTab(props: IProps) {
           attribute: projectplans.length === 1 ? 'plan-id' : 'project-id',
           value: remoteid,
         };
-        queryStore((q) => q.findRecords('mediafile').filter(filterrec));
+        remote
+          .pull((q) => q.findRecords('mediafile').filter(filterrec))
+          .then((transform) => memory.sync(transform));
       }
+      uploadFiles([] as any); //set current back to -1
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [currentlyLoading]);
@@ -893,6 +909,12 @@ export function MediaTab(props: IProps) {
       audioRef.current.play();
     }
   }, [hasUrl, mediaUrl, playing, playItem]);
+
+  useEffect(() => {
+    if (uploadError !== '') {
+      setMessage(<span>{uploadError}</span>);
+    }
+  }, [uploadError]);
 
   const matchMap = (pat: string, terms?: string[]) => {
     if (pdata.length === 0 || data.length === 0) return;
@@ -1281,6 +1303,8 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
   uploadList: state.upload.files,
   currentlyLoading: state.upload.current,
+  uploadError: state.upload.errmsg,
+  uploadSuccess: state.upload.success,
   loaded: state.upload.loaded,
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,

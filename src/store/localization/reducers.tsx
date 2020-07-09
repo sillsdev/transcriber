@@ -245,7 +245,7 @@ const initialState = {
 			"changeVersion": "Change Version",
 			"attachPassage": "Attach Passage",
 			"uploadMedia": "Upload Media",
-			"uploadComplete": "Upload complete.",
+			"uploadComplete": "{0} of {1} files uploaded successfully.",
 			"planName": "Plan",
 			"fileName": "File Name",
 			"sectionId": "Section Id",

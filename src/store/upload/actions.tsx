@@ -33,7 +33,7 @@ export const nextUpload = (
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
-    .then(response => {
+    .then((response) => {
       dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', response.data.audioUrl, true);
@@ -48,17 +48,44 @@ export const nextUpload = (
             errorReporter,
             `upload ${files[n].name}: (${xhr.status}) ${xhr.responseText}`
           );
-          dispatch({ payload: n, type: UPLOAD_ITEM_FAILED });
+          Axios.delete(
+            API_CONFIG.host + '/api/mediafiles/' + response.data.id,
+            {
+              headers: {
+                Authorization: 'Bearer ' + auth.accessToken,
+              },
+            }
+          ).catch((err) => {
+            logError(
+              Severity.info,
+              errorReporter,
+              `unable to remove orphaned mediafile ${response.data.id}`
+            );
+          });
+          dispatch({
+            payload: {
+              current: n,
+              error: `upload ${files[n].name}: (${xhr.status}) ${xhr.statusText}`,
+            },
+            type: UPLOAD_ITEM_FAILED,
+          });
         }
       };
     })
-    .catch(err => {
+    .catch((err) => {
       logError(
         Severity.info,
         errorReporter,
         infoMsg(err, `Upload ${files[n].name} failed.`)
       );
-      dispatch({ payload: n, type: UPLOAD_ITEM_FAILED });
+      dispatch({
+        payload: {
+          current: n,
+          error: `upload ${files[n].name}: (${err})`,
+          mediaid: record.id,
+        },
+        type: UPLOAD_ITEM_FAILED,
+      });
     });
 };
 

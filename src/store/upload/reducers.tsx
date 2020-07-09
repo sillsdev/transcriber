@@ -9,12 +9,17 @@ import {
 } from './types';
 
 export const uploadCleanState = {
-  current: 0,
+  current: -1,
   loaded: false,
   files: [] as any,
+  success: [] as boolean[],
+  errmsg: '',
 };
 
-export default function(state = uploadCleanState, action: UploadMsgs): IUploadState {
+export default function (
+  state = uploadCleanState,
+  action: UploadMsgs
+): IUploadState {
   switch (action.type) {
     case UPLOAD_LIST:
       return {
@@ -22,6 +27,11 @@ export default function(state = uploadCleanState, action: UploadMsgs): IUploadSt
         current: -1,
         loaded: false,
         files: action.payload,
+        success:
+          action.payload.length > 0
+            ? [...Array(action.payload.length)].map((u) => false)
+            : [],
+        errmsg: '',
       };
     case UPLOAD_ITEM_PENDING:
       return {
@@ -34,16 +44,26 @@ export default function(state = uploadCleanState, action: UploadMsgs): IUploadSt
         ...state,
         loaded: true,
         current: action.payload,
+        success: state.success.map((v, ix) =>
+          ix === action.payload ? true : v || false
+        ),
       };
     case UPLOAD_ITEM_FAILED:
       return {
         ...state,
+        loaded: true,
+        current: action.payload.current,
+        errmsg: action.payload.error,
+        success: state.success.map((v, ix) =>
+          ix === action.payload.current ? false : v || false
+        ),
       };
     case UPLOAD_COMPLETE:
       return {
         ...state,
-        current: 0,
+        current: -2,
         files: [] as any,
+        errmsg: '',
         loaded: false,
       };
     default:

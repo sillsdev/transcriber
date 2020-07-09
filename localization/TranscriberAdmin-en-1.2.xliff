@@ -1273,7 +1273,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="mediaTab.uploadComplete">
-                <source>Upload complete.</source>
+                <source>{0} of {1} files uploaded successfully.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaTab.tsx</context>

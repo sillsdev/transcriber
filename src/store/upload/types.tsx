@@ -3,6 +3,8 @@ export interface IUploadState {
   current: number;
   loaded: boolean;
   files: FileList;
+  errmsg: string;
+  success: boolean[];
 }
 
 // Describing the different ACTION NAMES available
@@ -14,27 +16,32 @@ export const UPLOAD_ITEM_FAILED = 'UPLOAD_ITEM_FAILED';
 export const UPLOAD_COMPLETE = 'UPLOAD_COMPLETE';
 
 interface UploadMsg {
-  type: typeof UPLOAD_LIST,
-  payload: FileList,
+  type: typeof UPLOAD_LIST;
+  payload: FileList;
 }
 
 interface UploadPendingMsg {
-  type: typeof UPLOAD_ITEM_PENDING,
-  payload: number,
+  type: typeof UPLOAD_ITEM_PENDING;
+  payload: number;
 }
 
 interface UploadSucceededMsg {
-  type: typeof UPLOAD_ITEM_SUCCEEDED,
-  payload: number,
+  type: typeof UPLOAD_ITEM_SUCCEEDED;
+  payload: number;
 }
 
 interface UploadFailedMsg {
-  type: typeof UPLOAD_ITEM_FAILED,
-  payload: number,
+  type: typeof UPLOAD_ITEM_FAILED;
+  payload: { current: number; mediaid: number; error: string };
 }
 
 interface UploadCompleteMsg {
-  type: typeof UPLOAD_COMPLETE,
+  type: typeof UPLOAD_COMPLETE;
 }
 
-export type UploadMsgs = UploadMsg | UploadPendingMsg | UploadSucceededMsg | UploadFailedMsg | UploadCompleteMsg;
+export type UploadMsgs =
+  | UploadMsg
+  | UploadPendingMsg
+  | UploadSucceededMsg
+  | UploadFailedMsg
+  | UploadCompleteMsg;

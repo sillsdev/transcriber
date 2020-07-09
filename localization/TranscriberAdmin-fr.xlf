@@ -1089,8 +1089,8 @@
 		</unit>
 		<unit id="mediaTab.uploadComplete">
 			<segment>
-				<source>Upload complete.</source>
-				<target>Charger achevées</target>
+				<source>{0} of {1} files uploaded successfully.</source>
+				<target>{0} des {1} fichiers téléchargés avec succès.</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.planName">

@@ -1092,7 +1092,7 @@
       </unit>
       <unit id="mediaTab.uploadComplete">
          <segment>
-            <source>Upload complete.</source>
+            <source>{0} of {1} files uploaded successfully.</source>
             <target/>
          </segment>
       </unit>
