@@ -2000,6 +2000,34 @@
         			<context context-type="sourcefile">Loading.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="emailUnverified.emailUnverified">
+        		<source>Your email is unverified.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">EmailUnverified.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="emailUnverified.verify">
+        		<source>Please verify by clicking on the link in the authorization email sent to your account.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">EmailUnverified.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="emailUnverified.resend">
+        		<source>Resend the authorization email</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">EmailUnverified.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="emailUnverified.verified">
+        		<source>I'm verified!  Carry on!</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">EmailUnverified.tsx</context>
+        		</context-group>
+        	</trans-unit>
             <trans-unit id="import.import">
         		<source>Import</source>
         		<target/>

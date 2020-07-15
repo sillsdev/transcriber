@@ -8,6 +8,7 @@ import Loading from './routes/Loading';
 import Profile from './routes/Profile';
 import Buggy from './routes/Buggy';
 import LogoutRequired from './routes/LogoutRequired';
+import EmailUnverified from './routes/EmailUnverified';
 import Callback from './callback/Callback';
 import TokenCheck from './hoc/TokenCheck';
 import Auth from './auth/Auth';
@@ -62,6 +63,11 @@ class App extends React.Component {
             }}
           />
           <Route path="/error" exact render={(props) => <Buggy />} />
+          <Route
+            path="/emailunverified"
+            exact={true}
+            render={(props) => <EmailUnverified auth={auth} {...props} />}
+          />
           <Route
             path="/logout"
             exact={true}

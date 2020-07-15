@@ -1714,6 +1714,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="emailUnverified.emailUnverified">
+         <segment>
+            <source>Your email is unverified.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.verify">
+         <segment>
+            <source>Please verify by clicking on the link in the authorization email sent to your account.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.resend">
+         <segment>
+            <source>Resend the authorization email</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.verified">
+         <segment>
+            <source>I'm verified!  Carry on!</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.import">
          <segment>
             <source>Import</source>

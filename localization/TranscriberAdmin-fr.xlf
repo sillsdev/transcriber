@@ -1711,6 +1711,30 @@
             <target>Organisation par défaut de </target>
          </segment>
       </unit>
+      <unit id="emailUnverified.emailUnverified">
+         <segment>
+            <source>Your email is unverified.</source>
+            <target>Votre e-mail n'est pas vérifié.</target>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.verify">
+         <segment>
+            <source>Please verify by clicking on the link in the authorization email sent to your account.</source>
+            <target>Veuillez vérifier en cliquant sur le lien dans l'e-mail d'autorisation envoyé à votre compte.</target>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.resend">
+         <segment>
+            <source>Resend the authorization email</source>
+            <target>Renvoyer l'e-mail d'autorisation</target>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.verified">
+         <segment>
+            <source>I'm verified!  Carry on!</source>
+            <target>Je suis vérifié! Continuer!</target>
+         </segment>
+      </unit>
         <unit id="import.import">
          <segment>
             <source>Import</source>

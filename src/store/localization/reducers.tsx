@@ -359,6 +359,14 @@ const initialState = {
 			"defaultOrgDesc": "Default organization of ",
 		}
 	}),
+	"emailUnverified": new LocalizedStrings({
+		"en": {
+			"emailUnverified": "Your email is unverified.",
+			"verify": "Please verify by clicking on the link in the authorization email sent to your account.",
+			"resend": "Resend the authorization email",
+			"verified": "I'm verified!  Carry on!",
+		}
+	}),
 	"import": new LocalizedStrings({
 		"en": {
 			"import": "Import",
@@ -854,6 +862,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"main" : new LocalizedStrings(action.payload.data.main),
+				"emailUnverified" : new LocalizedStrings(action.payload.data.emailUnverified),
 				"import" : new LocalizedStrings(action.payload.data.import),
 				"transcriptionTab" : new LocalizedStrings(action.payload.data.transcriptionTab),
 				"transcriptionShow" : new LocalizedStrings(action.payload.data.transcriptionShow),

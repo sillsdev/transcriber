@@ -337,6 +337,13 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "defaultOrgDesc": string;
 };
 
+export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethods {
+    "emailUnverified": string;
+    "verify": string;
+    "resend": string;
+    "verified": string;
+};
+
 export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "import": string;
     "importProject": string;
@@ -800,6 +807,7 @@ export interface ILocalizedStrings {
 	mediaTab: IMediaTabStrings;
 	passageMedia: IPassageMediaStrings;
 	main: IMainStrings;
+	emailUnverified: IEmailUnverifiedStrings;
 	import: IImportStrings;
 	transcriptionTab: ITranscriptionTabStrings;
 	transcriptionShow: ITranscriptionShowStrings;

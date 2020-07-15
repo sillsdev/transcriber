@@ -6,6 +6,7 @@ export default class Auth {
   accessToken: any;
   idToken: any;
   expiresAt: any;
+  email_verified: boolean;
 
   auth0 = new auth0.WebAuth({
     domain: AUTH_CONFIG.domain,
@@ -25,6 +26,7 @@ export default class Auth {
     this.getAccessToken = this.getAccessToken.bind(this);
     this.getIdToken = this.getIdToken.bind(this);
     this.renewSession = this.renewSession.bind(this);
+    this.email_verified = false;
   }
 
   login() {
@@ -73,9 +75,11 @@ export default class Auth {
     this.accessToken = authResult.accessToken;
     this.idToken = authResult.idToken;
     this.expiresAt = expiresAt;
+    this.email_verified = authResult.idTokenPayload.email_verified;
 
     // navigate to the home route
-    history.replace('/loading');
+    if (this.email_verified) history.replace('/loading');
+    else history.replace('/emailunverified');
   }
 
   renewSession() {
@@ -115,6 +119,7 @@ export default class Auth {
     if (offline) {
       return true;
     }
+    if (!this.email_verified) return false;
     let expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;
   }
