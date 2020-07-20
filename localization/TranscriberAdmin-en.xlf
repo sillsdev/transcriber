@@ -574,6 +574,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.NoSaveOffline">
+         <segment>
+            <source>Save is not available offline.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>

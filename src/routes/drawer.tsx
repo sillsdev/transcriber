@@ -104,6 +104,7 @@ import { getOrgs } from '../utils/getOrgs';
 import { DataPath } from '../utils/DataPath';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
+import { useInterval } from '../utils/useInterval';
 
 const noop = { openExternal: () => {}, openItem: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop as any };
@@ -361,8 +362,6 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
-  const timer = React.useRef<NodeJS.Timeout>();
-  const syncTimer = React.useRef<NodeJS.Timeout>();
 
   const slugMap: { [key: string]: string } = {
     [NavChoice.UsersAndGroups]: t.usersAndGroups,
@@ -858,37 +857,17 @@ export function ResponsiveDrawer(props: IProps) {
     busy,
   ]);
 
-  useEffect(() => {
-    if (remote) {
-      // remote is null if offline
-      if (timer.current === undefined)
-        timer.current = setInterval(() => {
-          const isBusy = remote.requestQueue.length !== 0;
-          if (busy !== isBusy) setBusy(isBusy);
-        }, 1000);
-      if (syncTimer.current === undefined) {
-        if (!busy && !doSave) {
-          dateChanges(auth, remote, memory, fingerprint);
-        }
-        syncTimer.current = setInterval(() => {
-          if (!busy && !doSave) {
-            dateChanges(auth, remote, memory, fingerprint);
-          }
-        }, 1000 * 100);
-      }
-      return () => {
-        if (timer.current) {
-          clearInterval(timer.current);
-          timer.current = undefined;
-        }
-        if (syncTimer.current) {
-          clearInterval(syncTimer.current);
-          syncTimer.current = undefined;
-        }
-      };
+  const updateBusy = () => {
+    const isBusy = remote.requestQueue.length !== 0;
+    if (busy !== isBusy) setBusy(isBusy);
+  };
+  const doDateChanges = () => {
+    if (!busy && !doSave) {
+      dateChanges(auth, remote, memory, fingerprint);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [remote, busy, doSave, curOrg]);
+  };
+  useInterval(updateBusy, remote ? 1000 : null);
+  useInterval(doDateChanges, remote ? 1000 * 30 : null);
 
   useEffect(() => {
     const media = mediafiles.filter((m) => {

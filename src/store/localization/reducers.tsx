@@ -135,6 +135,7 @@ const initialState = {
 	}),
 	"planSheet": new LocalizedStrings({
 		"en": {
+			"NoSaveOffline": "Save is not available offline.",
 			"action": "Action",
 			"delete": "Delete",
 			"move": "Move",

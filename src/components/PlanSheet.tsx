@@ -24,6 +24,8 @@ import './PlanSheet.css';
 import { isNumber } from 'util';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
+import { Online } from '../utils';
+import { useInterval } from '../utils/useInterval';
 
 const ActionHeight = 52;
 
@@ -144,6 +146,7 @@ export function PlanSheet(props: IProps) {
   const saveTimer = React.useRef<NodeJS.Timeout>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [doSave, setDoSave] = useGlobal('doSave');
+  const [online, setOnline] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
@@ -192,9 +195,13 @@ export function PlanSheet(props: IProps) {
       );
   };
   const handleSave = () => {
-    setChanged(false);
-    setMessage(<span>{t.saving}</span>);
-    setDoSave(true);
+    if (!online) {
+      setMessage(<span>{t.NoSaveOffline}</span>);
+    } else {
+      setChanged(false);
+      setMessage(<span>{t.saving}</span>);
+      setDoSave(true);
+    }
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {
@@ -371,9 +378,13 @@ export function PlanSheet(props: IProps) {
     }, 1000 * 30);
   };
 
+  const tryOnline = () => Online((result) => setOnline(result));
+
   useEffect(() => {
-    if (changed && saveTimer.current === undefined) startSaveTimer();
-    else {
+    if (changed) {
+      if (saveTimer.current === undefined) startSaveTimer();
+      if (!online) setMessage(<span>{t.NoSaveOffline}</span>);
+    } else {
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = undefined;
     }
@@ -479,6 +490,9 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
 
+  //check if online every 30 seconds to warn they can't save
+  useInterval(() => tryOnline(), 1000 * 30);
+
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -569,7 +583,7 @@ export function PlanSheet(props: IProps) {
                   key="save"
                   aria-label={t.save}
                   variant="contained"
-                  color="primary"
+                  color={online ? 'primary' : 'secondary'}
                   className={classes.button}
                   onClick={handleSave}
                   disabled={!changed}

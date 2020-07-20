@@ -121,6 +121,7 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
+    "NoSaveOffline": string;
     "action": string;
     "delete": string;
     "move": string;

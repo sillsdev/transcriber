@@ -571,6 +571,12 @@
          	<target>Afficher/masquer les lignes de filtre</target>
          </segment>
       </unit>
+      <unit id="planSheet.NoSaveOffline">
+         <segment>
+            <source>Save is not available offline.</source>
+            <target>L'enregistrement n'est pas disponible hors ligne.</target>
+         </segment>
+      </unit>
       <unit id="planSheet.action">
 			<segment>
 				<source>Action</source>
