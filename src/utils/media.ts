@@ -3,7 +3,7 @@ import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { related, cleanFileName, updateXml } from '.';
 import moment from 'moment';
-import eaf from './TranscriptionEaf';
+import eaf from './transcriptionEaf';
 import path from 'path';
 
 export const getMediaRec = (passageId: string, memory: Memory) => {

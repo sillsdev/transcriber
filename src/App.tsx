@@ -6,6 +6,7 @@ import Logout from './routes/Logout';
 import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
+import TeamScreen from './routes/TeamScreen';
 import Buggy from './routes/Buggy';
 import LogoutRequired from './routes/LogoutRequired';
 import EmailUnverified from './routes/EmailUnverified';
@@ -84,6 +85,10 @@ class App extends React.Component {
           <Route
             path="/profile"
             render={(props) => <Profile auth={auth} {...props} />}
+          />
+          <Route
+            path="/team"
+            render={(props) => <TeamScreen auth={auth} {...props} />}
           />
           <Route
             path="/callback"

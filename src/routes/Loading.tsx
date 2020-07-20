@@ -114,6 +114,7 @@ export function Loading(props: IProps) {
   const [_coordinatorActivated, setCoordinatorActivated] = useGlobal(
     'coordinatorActivated'
   );
+  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
   const [completed, setCompleted] = useState(0);
   const [newOrgParams, setNewOrgParams] = useState(
     localStorage.getItem('newOrg')
@@ -219,6 +220,8 @@ export function Loading(props: IProps) {
   };
 
   useEffect(() => {
+    const isDevValue = localStorage.getItem('developer');
+    setIsDeveloper(isDevValue ? isDevValue === 'true' : false);
     if (!auth || !auth.isAuthenticated(offline)) return;
     if (navigator.language.split('-')[0]) {
       setLanguage(navigator.language.split('-')[0]);
@@ -293,7 +296,9 @@ export function Loading(props: IProps) {
         } else {
           setCompleted(100);
         }
-        if (savedURL.length <= '/main'.length) setDefaultOrg();
+        const urlLen = Math.min(savedURL.length, 5);
+        if (savedURL.slice(0, urlLen) === '/main'.slice(0, urlLen))
+          setDefaultOrg();
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -313,6 +318,7 @@ export function Loading(props: IProps) {
     ) {
       return <Redirect to="/profile" />;
     }
+    if (isDeveloper) return <Redirect to={'/team'} />;
     const deepLink = localStorage.getItem('url');
     return <Redirect to={deepLink ? deepLink : '/main'} />;
   }

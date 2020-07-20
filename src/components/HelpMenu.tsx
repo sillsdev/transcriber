@@ -113,6 +113,7 @@ export function HelpMenu(props: IProps) {
   };
 
   const handleDeveloper = () => {
+    localStorage.setItem('developer', !developer ? 'true' : 'false');
     setDeveloper(!developer);
     setAnchorEl(null);
   };

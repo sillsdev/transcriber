@@ -345,6 +345,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
     'autoOpenAddMedia'
   );
+  const [isDeveloper] = useGlobal('developer');
   const [choice, setChoice] = useState('');
   const [content, setContent] = useState('');
   const [orgOptions, setOrgOptions] = useState(Array<OptionType>());
@@ -885,6 +886,7 @@ export function ResponsiveDrawer(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles, project, busy]);
 
+  if (isDeveloper) return <Redirect to="/team" />;
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <Redirect to="/profile" />;
   if (view === 'Loading') return <Redirect to="/loading" />;
