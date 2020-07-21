@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
       minHeight: 176,
       margin: theme.spacing(1),
       display: 'flex',
+      backgroundColor: theme.palette.primary.light,
     },
     content: {
       display: 'flex',

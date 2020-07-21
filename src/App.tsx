@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { hot } from 'react-hot-loader';
 import { Route, Redirect } from 'react-router-dom';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core';
 import Access from './routes/Access';
 import Logout from './routes/Logout';
 import Drawer from './routes/drawer';
@@ -43,11 +44,22 @@ const handleNewOrg = (props: any) => {
   return <Redirect to="/loading" />;
 };
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#3BA7CE',
+    },
+    secondary: {
+      main: '#F5CC4C',
+    },
+  },
+});
+
 class App extends React.Component {
   render() {
     return (
       <TokenCheck auth={auth}>
-        <>
+        <ThemeProvider theme={theme}>
           <Route
             path="/"
             exact={true}
@@ -98,7 +110,7 @@ class App extends React.Component {
             }}
           />
           <Route path="/neworg" render={(props) => handleNewOrg(props)} />
-        </>
+        </ThemeProvider>
       </TokenCheck>
     );
   }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
+import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TeamContext } from '../../context/TeamContext';
 import { ProjectCard, AddCard } from '.';
@@ -8,11 +9,21 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      backgroundColor: theme.palette.background.default,
+      marginBottom: theme.spacing(2),
     },
     teamHead: {
       display: 'flex',
       justifyContent: 'space-between',
       padding: theme.spacing(2),
+    },
+    name: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    icon: {
+      paddingRight: theme.spacing(1),
     },
     cardFlow: {
       paddingLeft: theme.spacing(2),
@@ -31,9 +42,12 @@ export const PersonalItem = () => {
   const { personalProjects } = ctx.state;
 
   return (
-    <div id="PersonalItem" className={classes.root}>
+    <Paper id="PersonalItem" className={classes.root}>
       <div className={classes.teamHead}>
-        <Typography variant="h5">{t.personalProjects}</Typography>
+        <Typography variant="h5" className={classes.name}>
+          <PersonIcon className={classes.icon} />
+          {t.personalProjects}
+        </Typography>
       </div>
       <Grid container className={classes.cardFlow}>
         {personalProjects().map((i) => {
@@ -41,6 +55,6 @@ export const PersonalItem = () => {
         })}
         <AddCard team={null} />
       </Grid>
-    </div>
+    </Paper>
   );
 };

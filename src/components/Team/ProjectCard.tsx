@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       minWidth: 275,
       margin: theme.spacing(1),
+      backgroundColor: theme.palette.primary.light,
     },
     content: {
       display: 'flex',

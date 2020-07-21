@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import GroupIcon from '@material-ui/icons/Group';
 import { Organization } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import { ProjectCard, AddCard } from '.';
@@ -9,11 +10,21 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      backgroundColor: theme.palette.background.default,
+      marginBottom: theme.spacing(2),
     },
     teamHead: {
       display: 'flex',
       justifyContent: 'space-between',
       padding: theme.spacing(2),
+    },
+    name: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    icon: {
+      paddingRight: theme.spacing(1),
     },
     cardFlow: {
       paddingLeft: theme.spacing(2),
@@ -46,9 +57,12 @@ export const TeamItem = (props: IProps) => {
   };
 
   return (
-    <div id="TeamItem" className={classes.root}>
+    <Paper id="TeamItem" className={classes.root}>
       <div className={classes.teamHead}>
-        <Typography variant="h5">{team?.attributes?.name}</Typography>
+        <Typography variant="h5" className={classes.name}>
+          <GroupIcon className={classes.icon} />
+          {team?.attributes?.name}
+        </Typography>
         <div>
           <Button variant="contained" onClick={handleMembers(team)}>
             {t.members.replace('{0}', teamMembers(team.id).toString())}
@@ -65,6 +79,6 @@ export const TeamItem = (props: IProps) => {
         })}
         <AddCard team={team} />
       </Grid>
-    </div>
+    </Paper>
   );
 };
