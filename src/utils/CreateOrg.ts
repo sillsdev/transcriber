@@ -32,17 +32,21 @@ export interface ICreateOrgProps {
   orgRec: Organization;
   user: string;
   coordinator: Coordinator;
+  online: boolean;
   setOrganization: (id: string) => void;
   setProject: (id: string) => void;
   doOrbitError: (ex: IApiError) => void;
 }
 
 export const CreateOrg = async (props: ICreateOrgProps) => {
-  const { orgRec, user, coordinator } = props;
+  const { orgRec, user, coordinator, online } = props;
   const { setOrganization, setProject, doOrbitError } = props;
 
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  if (!remote || !online)
+    throw new Error('Creating an Org is not available offline');
+
   memory.schema.initializeRecord(orgRec);
 
   remote

@@ -4,6 +4,12 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
+      <unit id="shared.NoSaveOffline">
+         <segment>
+            <source>Unable to save while offline.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.accessFirst">
          <segment>
             <source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
@@ -1357,6 +1363,12 @@
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.NoLoadOffline">
+         <segment>
+            <source>Unable to load project data offline.</source>
             <target/>
          </segment>
       </unit>

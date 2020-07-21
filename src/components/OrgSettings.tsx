@@ -3,7 +3,12 @@ import { Redirect } from 'react-router-dom';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Organization, IOrgSettingsStrings } from '../model';
+import {
+  IState,
+  Organization,
+  IOrgSettingsStrings,
+  ISharedStrings,
+} from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
@@ -24,7 +29,7 @@ import OrgIcon from '@material-ui/icons/AccountBalance';
 import DeleteExpansion from './DeleteExpansion';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
-import { CreateOrg, DataPath } from '../utils';
+import { CreateOrg, DataPath, Online } from '../utils';
 import { currentDateTime } from '../utils/currentDateTime';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
@@ -75,6 +80,7 @@ interface IDispatchProps {
 
 interface IStateProps {
   t: IOrgSettingsStrings;
+  ts: ISharedStrings;
 }
 
 interface IRecordProps {
@@ -92,13 +98,22 @@ interface IProps
 }
 
 export function OrgSettings(props: IProps) {
-  const { add, organizations, t, noMargin, finishAdd, doOrbitError } = props;
+  const {
+    add,
+    organizations,
+    t,
+    ts,
+    noMargin,
+    finishAdd,
+    doOrbitError,
+  } = props;
   const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const [isApp] = useGlobal('appView');
   const [orgRole] = useGlobal('orgRole');
   const [user] = useGlobal('user');
+  const [online, setOnline] = useState(false);
   const [organization, setOrganization] = useGlobal('organization');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_project, setProject] = useGlobal('project');
@@ -166,17 +181,24 @@ export function OrgSettings(props: IProps) {
         publicByDefault,
       },
     } as any;
-    CreateOrg({
-      orgRec,
-      user,
-      coordinator,
-      setOrganization,
-      setProject,
-      doOrbitError,
+    Online((online) => {
+      CreateOrg({
+        orgRec,
+        user,
+        coordinator,
+        online,
+        setOrganization,
+        setProject,
+        doOrbitError,
+      })
+        .then(() => {
+          if (finishAdd) finishAdd();
+        })
+        .catch((err) => {
+          if (!online) setMessage(<span>{ts.NoSaveOffline}</span>);
+          else setMessage(<span>{err.message}</span>);
+        });
     });
-    if (finishAdd) {
-      finishAdd();
-    }
   };
 
   const handleCancel = () => setView('Main');
@@ -192,6 +214,11 @@ export function OrgSettings(props: IProps) {
   };
 
   const handleDeleteRefused = () => setDeleteItem('');
+
+  useEffect(() => {
+    Online((val) => setOnline(val), undefined);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   useEffect(() => {
     let org: Organization = {
@@ -330,7 +357,7 @@ export function OrgSettings(props: IProps) {
               key="add"
               aria-label={t.add}
               variant="contained"
-              color="primary"
+              color={curOrg !== undefined || online ? 'primary' : 'secondary'}
               className={classes.button}
               disabled={name === '' || !changed}
               onClick={curOrg === undefined ? handleAdd : handleSave}
@@ -374,6 +401,7 @@ export function OrgSettings(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'orgSettings' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapRecordsToProps = {

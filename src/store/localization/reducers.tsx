@@ -6,6 +6,11 @@ import { ILocalizedStrings } from './model';
 const initialState = {
 	"loaded": false,
 	"lang": 'en',
+	"shared": new LocalizedStrings({
+		"en": {
+			"NoSaveOffline": "Unable to save while offline.",
+		}
+	}),
 	"access": new LocalizedStrings({
 		"en": {
 			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
@@ -298,6 +303,7 @@ const initialState = {
 	}),
 	"main": new LocalizedStrings({
 		"en": {
+			"NoLoadOffline": "Unable to load project data offline.",
 			"silTranscriberAdmin": "SIL Transcriber Admin",
 			"silTranscriber": "SIL Transcriber",
 			"online": "Online Status",
@@ -846,6 +852,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 			return {
 				...state,
 				"loaded": true,
+				"shared" : new LocalizedStrings(action.payload.data.shared),
 				"access" : new LocalizedStrings(action.payload.data.access),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),

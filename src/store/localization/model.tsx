@@ -1,6 +1,10 @@
 // WARNING: This file is generated using ToModel.xsl. Changes made here may be lost.
 import * as Localize from 'react-localization';
 
+export interface ISharedStrings extends Localize.LocalizedStringsMethods {
+    "NoSaveOffline": string;
+};
+
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessFirst": string;
     "accessSilTranscriber": string;
@@ -276,6 +280,7 @@ export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IMainStrings extends Localize.LocalizedStringsMethods {
+    "NoLoadOffline": string;
     "silTranscriberAdmin": string;
     "silTranscriber": string;
     "online": string;
@@ -791,6 +796,7 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
+	shared: ISharedStrings;
 	access: IAccessStrings;
 	electronImport: IElectronImportStrings;
 	usertable: IUsertableStrings;

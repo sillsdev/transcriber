@@ -5,7 +5,14 @@ import jwtDecode from 'jwt-decode';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings, Organization, Invitation, User } from '../model';
+import {
+  IState,
+  IMainStrings,
+  Organization,
+  Invitation,
+  User,
+  ISharedStrings,
+} from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -23,6 +30,7 @@ import {
   remoteId,
   GetUser,
   remoteIdGuid,
+  Online,
 } from '../utils';
 import SnackBar from '../components/SnackBar';
 import { getOrgs } from '../utils/getOrgs';
@@ -72,6 +80,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IMainStrings;
+  ts: ISharedStrings;
   orbitLoaded: boolean;
 }
 
@@ -88,7 +97,7 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Loading(props: IProps) {
-  const { orbitLoaded, auth, setExpireAt, t } = props;
+  const { orbitLoaded, auth, setExpireAt, t, ts } = props;
   const classes = useStyles();
   const {
     fetchOrbitData,
@@ -282,14 +291,24 @@ export function Loading(props: IProps) {
               },
             } as any;
           }
-          CreateOrg({
-            orgRec,
-            user,
-            coordinator,
-            setOrganization,
-            setProject,
-            doOrbitError,
-          }).then(() => setCompleted(100));
+          Online((online) => {
+            CreateOrg({
+              orgRec,
+              user,
+              coordinator,
+              online,
+              setOrganization,
+              setProject,
+              doOrbitError,
+            })
+              .then(() => {
+                setCompleted(100);
+              })
+              .catch((err: Error) => {
+                if (!online) setMessage(<span>{ts.NoSaveOffline}</span>);
+                else setMessage(<span>{err.message}</span>);
+              });
+          });
           setNewOrgParams(null);
         } else {
           setCompleted(100);
@@ -343,6 +362,7 @@ export function Loading(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
+  ts: localStrings(state, { layout: 'shared' }),
   orbitLoaded: state.orbit.loaded,
 });
 

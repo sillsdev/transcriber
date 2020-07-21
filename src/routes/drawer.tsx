@@ -736,15 +736,21 @@ export function ResponsiveDrawer(props: IProps) {
   }, [projOptions, project, addProject, busy]);
 
   useEffect(() => {
-    LoadProjectData(
-      project,
-      memory,
-      remote,
-      backup,
-      projectsLoaded,
-      setProjectsLoaded,
-      orbitError
-    );
+    Online((online) => {
+      LoadProjectData(
+        project,
+        memory,
+        remote,
+        online,
+        backup,
+        projectsLoaded,
+        setProjectsLoaded,
+        orbitError
+      ).catch((err: Error) => {
+        if (!online) setMessage(<span>{t.NoLoadOffline}</span>);
+        else setMessage(<span>{err.message}</span>);
+      });
+    });
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 

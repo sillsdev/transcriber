@@ -214,13 +214,14 @@ export async function LoadProjectData(
   project: string,
   memory: Memory,
   remote: JSONAPISource,
+  online: boolean,
   backup: IndexedDBSource,
   projectsLoaded: string[],
   setProjectsLoaded: (valud: string[]) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
   if (projectsLoaded.includes(project)) return true;
-  if (!remote) return false;
+  if (!remote || !online) throw new Error('offline.');
 
   const projectid = remoteIdNum('project', project, memory.keyMap);
   var tb: TransformBuilder = new TransformBuilder();
