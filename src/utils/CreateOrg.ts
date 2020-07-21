@@ -4,6 +4,8 @@ import { Organization } from '../model';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { setDefaultProj } from './setDefaultProj';
 import Coordinator from '@orbit/coordinator';
+import { orbitErr } from '.';
+import { IApiError } from '../model';
 
 export const ReloadOrgTables = async (
   memory: Memory,
@@ -32,31 +34,42 @@ export interface ICreateOrgProps {
   coordinator: Coordinator;
   setOrganization: (id: string) => void;
   setProject: (id: string) => void;
+  doOrbitError: (ex: IApiError) => void;
 }
 
 export const CreateOrg = async (props: ICreateOrgProps) => {
   const { orgRec, user, coordinator } = props;
-  const { setOrganization, setProject } = props;
+  const { setOrganization, setProject, doOrbitError } = props;
 
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   memory.schema.initializeRecord(orgRec);
 
-  await remote.update((t: TransformBuilder) => [
-    t.addRecord(orgRec),
-    t.replaceRelatedRecord({ type: 'organization', id: orgRec.id }, 'owner', {
-      type: 'user',
-      id: user,
-    }),
-  ]);
-  await ReloadOrgTables(memory, remote);
-  const newOrgRec: Organization[] = memory.cache.query((q: QueryBuilder) =>
-    q
-      .findRecords('organization')
-      .filter({ attribute: 'name', value: orgRec.attributes.name })
-  ) as any;
-  setOrganization(newOrgRec[0].id);
-  setDefaultProj(newOrgRec[0].id, memory, setProject);
+  remote
+    .update((t: TransformBuilder) => [
+      t.addRecord(orgRec),
+      t.replaceRelatedRecord({ type: 'organization', id: orgRec.id }, 'owner', {
+        type: 'user',
+        id: user,
+      }),
+    ])
+    .then(() => {
+      ReloadOrgTables(memory, remote).then(() => {
+        const newOrgRec: Organization[] = memory.cache.query(
+          (q: QueryBuilder) =>
+            q
+              .findRecords('organization')
+              .filter({ attribute: 'name', value: orgRec.attributes.name })
+        ) as any;
+        setOrganization(newOrgRec[0].id);
+        setDefaultProj(newOrgRec[0].id, memory, setProject);
+      });
+    })
+    .catch((err: Error) => {
+      var x = orbitErr(err, 'CreateOrg');
+      doOrbitError(x);
+      console.log(err.message);
+    });
 };
 
 export default CreateOrg;

@@ -26,6 +26,8 @@ import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import { CreateOrg, DataPath } from '../utils';
 import { currentDateTime } from '../utils/currentDateTime';
+import * as actions from '../store';
+import { bindActionCreators } from 'redux';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,6 +69,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+interface IDispatchProps {
+  doOrbitError: typeof actions.doOrbitError;
+}
 
 interface IStateProps {
   t: IOrgSettingsStrings;
@@ -76,14 +81,18 @@ interface IRecordProps {
   organizations: Array<Organization>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {
+interface IProps
+  extends IStateProps,
+    IRecordProps,
+    IDispatchProps,
+    WithDataProps {
   noMargin?: boolean;
   add?: boolean;
   finishAdd?: () => void;
 }
 
 export function OrgSettings(props: IProps) {
-  const { add, organizations, t, noMargin, finishAdd } = props;
+  const { add, organizations, t, noMargin, finishAdd, doOrbitError } = props;
   const classes = useStyles();
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
@@ -163,6 +172,7 @@ export function OrgSettings(props: IProps) {
       coordinator,
       setOrganization,
       setProject,
+      doOrbitError,
     });
     if (finishAdd) {
       finishAdd();
@@ -370,6 +380,9 @@ const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
 };
 
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators({ doOrbitError: actions.doOrbitError }, dispatch),
+});
 export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(OrgSettings) as any
+  connect(mapStateToProps, mapDispatchToProps)(OrgSettings) as any
 ) as any;

@@ -35,5 +35,6 @@ declare module 'reactn/default' {
     alertOpen: boolean;
     coordinatorActivated: boolean;
     fingerprint: string;
+    orbitRetries: number;
   }
 }

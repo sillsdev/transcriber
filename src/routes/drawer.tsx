@@ -104,6 +104,8 @@ import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 import { useInterval } from '../utils/useInterval';
 import { handleUserMenuAction } from '../components/App/AppHead';
 
+import { waitForIt } from '../utils/waitForIt';
+
 const noop = { openExternal: () => {}, openItem: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop as any };
 
@@ -298,6 +300,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
     push: (path: string) => void;
     replace: (path: string) => void;
   };
+  isRequestQueueEmpty: () => boolean;
 }
 
 export function ResponsiveDrawer(props: IProps) {
@@ -314,6 +317,7 @@ export function ResponsiveDrawer(props: IProps) {
     mediafiles,
     projects,
     orbitError,
+    isRequestQueueEmpty,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -579,18 +583,12 @@ export function ResponsiveDrawer(props: IProps) {
     setAlertOpen(false);
     setChanged(false);
   };
+
   const finishConfirmed = (
     savedMethod: (() => any) | undefined,
     tryCount: number
-  ) => {
-    setTimeout(() => {
-      if (remote.requestQueue.length === 0) {
-        if (savedMethod) savedMethod();
-      } else {
-        if (tryCount > 0) finishConfirmed(savedMethod, tryCount - 1);
-      }
-    }, 2000);
-  };
+  ) => waitForIt('BusyBeforeSave', isRequestQueueEmpty, savedMethod, tryCount);
+
   const handleSaveConfirmed = () => {
     const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;

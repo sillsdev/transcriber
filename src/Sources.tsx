@@ -17,7 +17,7 @@ import { API_CONFIG } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { LoadData } from './utils/loadData';
-import { orbitInfo, orbitRetry, related } from './utils';
+import { orbitRetry, related, orbitErr } from './utils';
 import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
@@ -33,7 +33,9 @@ export const Sources = async (
   setProjectsLoaded: (valud: string[]) => void,
   setCoordinatorActivated: (valud: boolean) => void,
   InviteUser: (remote: JSONAPISource, userEmail: string) => Promise<void>,
-  orbitError: (ex: IApiError) => void
+  orbitError: (ex: IApiError) => void,
+  setOrbitRetries: (r: number) => void,
+  globalStore: any
 ) => {
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
@@ -50,6 +52,20 @@ export const Sources = async (
   }) as any;
   setBucket(bucket);
 
+  //set up strategies
+  // Update indexedDb when memory updated
+  if (!coordinator.strategyNames.includes('sync-backup'))
+    coordinator.addStrategy(
+      new SyncStrategy({
+        name: 'sync-backup',
+        source: 'memory',
+        target: 'backup',
+        blocking: true,
+      })
+    );
+  if (!coordinator.strategyNames.includes('logging'))
+    coordinator.addStrategy(new EventLoggingStrategy({ name: 'logging' }));
+
   let remote: JSONAPISource = {} as JSONAPISource;
 
   if (!offline) {
@@ -59,7 +75,6 @@ export const Sources = async (
       31
     );
     setFingerprint(fp);
-
     remote = coordinator.sourceNames.includes('remote')
       ? (coordinator.getSource('remote') as JSONAPISource)
       : new JSONAPISource({
@@ -81,65 +96,11 @@ export const Sources = async (
     remote.requestProcessor.serializer.resourceKey = () => {
       return 'remoteId';
     };
+
     if (!coordinator.sourceNames.includes('remote'))
       coordinator.addSource(remote);
     setRemote(remote);
-  }
-  let goRemote =
-    !offline &&
-    (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
-  if (!goRemote) {
-    setUser(localStorage.getItem('user-id') as string);
-    console.log('using backup');
-    if (process.env.REACT_APP_MODE !== 'electron') {
-      //already did this if electron...
-      var transform = await backup.pull((q) => q.findRecords());
-      await memory.sync(transform);
-      const recs: Role[] = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('role')
-      ) as any;
-      if (recs.length === 0) {
-        orbitError(orbitInfo(null, 'Indexed DB corrupt or missing.'));
-        goRemote = true;
-      }
-    }
-    const plans = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[];
-    const projs = new Set(plans.map((p) => related(p, 'project') as string));
-    setProjectsLoaded(Array.from(projs));
-  }
-  if (goRemote) {
-    localStorage.setItem('lastTime', currentDateTime());
-    await backup.reset();
-    var currentuser: User | undefined;
-    var tr = await remote.pull((q) => q.findRecords('currentuser'));
-    const user = (tr[0].operations[0] as any).record;
-    setUser(user.id);
-    localStorage.setItem('user-id', user.id);
-    currentuser = user;
-    await InviteUser(
-      remote,
-      currentuser && currentuser.attributes
-        ? currentuser.attributes.email
-        : 'neverhere'
-    );
-    setProjectsLoaded([]);
-    setCompleted(10);
-  }
-  // Update indexedDb when memory updated
-  // TODO: error if we can't read and write the indexedDB
-  if (!coordinator.strategyNames.includes('sync-backup'))
-    coordinator.addStrategy(
-      new SyncStrategy({
-        name: 'sync-backup',
-        source: 'memory',
-        target: 'backup',
-        blocking: true,
-      })
-    );
 
-  if (!offline) {
     // Trap error querying data (token expired or offline)
     if (!coordinator.strategyNames.includes('remote-pull-fail'))
       coordinator.addStrategy(
@@ -152,6 +113,7 @@ export const Sources = async (
           action(transform: Transform, ex: IApiError) {
             console.log('***** api pull fail', transform, ex);
             orbitError(ex);
+            return remote.requestQueue.error;
           },
 
           blocking: true,
@@ -185,23 +147,30 @@ export const Sources = async (
           on: 'pushFail',
 
           action(transform: Transform, ex: IApiError) {
+            console.log('***** api pushfail');
             const remote = coordinator.getSource('remote');
             const memory = coordinator.getSource('memory') as Memory;
-
+            //we're passing in the whole dang store because anything futher down
+            //was not updated
             if (ex instanceof NetworkError) {
-              // When network errors are encountered, try again in 3s
-              orbitError(
-                orbitRetry(null, 'NetworkError - will try again soon')
-              );
-              setTimeout(() => {
-                remote.requestQueue.retry();
-              }, 3000);
+              if (globalStore.orbitRetries > 0) {
+                setOrbitRetries(globalStore.orbitRetries - 1);
+                // When network errors are encountered, try again in 3s
+                orbitError(
+                  orbitRetry(null, 'NetworkError - will try again soon')
+                );
+                setTimeout(() => {
+                  remote.requestQueue.retry();
+                }, 3000);
+              } else {
+                //ran out of retries -- bucket will retry later
+              }
             } else {
               // When non-network errors occur, notify the user and
               // reset state.
               let label = transform.options && transform.options.label;
               if (label) {
-                orbitError(orbitInfo(null, `Unable to complete "${label}"`));
+                orbitError(orbitErr(null, `Unable to complete "${label}"`));
               } else {
                 const response = ex.response as any;
                 const url: string | null = response?.url;
@@ -213,7 +182,7 @@ export const Sources = async (
                   data.errors[0].detail;
                 if (url && detail) {
                   orbitError(
-                    orbitInfo(
+                    orbitErr(
                       null,
                       `Unable to complete ` +
                         transform.operations[0].op +
@@ -224,15 +193,16 @@ export const Sources = async (
                     )
                   );
                 } else {
-                  orbitError(orbitInfo(null, `Unable to complete operation`));
+                  orbitError(orbitErr(null, `Unable to complete operation`));
                 }
               }
 
               // Roll back memory to position before transform
               if (memory.transformLog.contains(transform.id)) {
-                orbitError(
-                  orbitInfo(null, 'Rolling back - transform:' + transform.id)
-                );
+                //don't do this -- resets error to 0 and takes user away from continue/logout screen
+                //orbitError(
+                //  orbitInfo(null, 'Rolling back - transform:' + transform.id)
+                //);
                 memory.rollback(transform.id, -1);
               }
 
@@ -272,18 +242,61 @@ export const Sources = async (
           blocking: true,
         })
       );
-  }
+  } //!offline
 
-  if (!coordinator.strategyNames.includes('logging'))
-    coordinator.addStrategy(new EventLoggingStrategy({ name: 'logging' }));
-  coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => {
+  coordinator.activate({ logLevel: LogLevel.Warnings }).then(async () => {
     setCoordinatorActivated(true);
     console.log('Coordinator will log warnings');
-    if (goRemote)
+    let goRemote =
+      !offline &&
+      (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
+    //do this before activating the coordinator so if the backup pull fails, we'll
+    //carry on here and handle it
+    if (!goRemote) {
+      setUser(localStorage.getItem('user-id') as string);
+      console.log('using backup');
+      if (process.env.REACT_APP_MODE !== 'electron') {
+        //already did this if electron...
+        var transform = await backup.pull((q) => q.findRecords());
+        await memory.sync(transform);
+        const recs: Role[] = memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('role')
+        ) as any;
+        if (recs.length === 0) {
+          //orbitError(orbitInfo(null, 'Indexed DB corrupt or missing.'));
+          goRemote = true;
+        }
+      }
+      const plans = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('plan')
+      ) as Plan[];
+      const projs = new Set(plans.map((p) => related(p, 'project') as string));
+      setProjectsLoaded(Array.from(projs));
+    }
+
+    if (goRemote) {
+      localStorage.setItem('lastTime', currentDateTime());
+      await backup.reset();
+      var currentuser: User | undefined;
+
+      var tr = await remote.pull((q) => q.findRecords('currentuser'));
+      const user = (tr[0].operations[0] as any).record;
+      setUser(user.id);
+      localStorage.setItem('user-id', user.id);
+      currentuser = user;
+      await InviteUser(
+        remote,
+        currentuser && currentuser.attributes
+          ? currentuser.attributes.email
+          : 'neverhere'
+      );
+      setProjectsLoaded([]);
+      setCompleted(10);
+
       LoadData(memory, backup, remote, setCompleted, orbitError).then(() =>
         setCompleted(90)
       );
-    else setCompleted(90);
+    } else setCompleted(90);
   });
 };
 

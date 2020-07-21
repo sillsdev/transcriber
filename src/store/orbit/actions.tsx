@@ -15,7 +15,7 @@ import { Sources } from '../../Sources';
 import { Severity } from '../../components/logErrorService';
 
 export const orbitError = (ex: IApiError) => {
-  return ex.response.status === Severity.info
+  return ex.response.status !== Severity.retry
     ? {
         type: ORBIT_ERROR,
         payload: ex,
@@ -55,7 +55,9 @@ export const fetchOrbitData = (
   setCompleted: (value: number) => void,
   setProjectsLoaded: (value: string[]) => void,
   setCoordinatorActivated: (value: boolean) => void,
-  InviteUser: (remote: JSONAPISource, email: string) => Promise<void>
+  InviteUser: (remote: JSONAPISource, email: string) => Promise<void>,
+  setOrbitRetries: (r: number) => void,
+  global: any
 ) => (dispatch: any) => {
   Sources(
     coordinator,
@@ -70,6 +72,8 @@ export const fetchOrbitData = (
     setProjectsLoaded,
     setCoordinatorActivated,
     InviteUser,
-    (ex: IApiError) => dispatch(orbitError(ex))
+    (ex: IApiError) => dispatch(orbitError(ex)),
+    setOrbitRetries,
+    global
   ).then(dispatch({ type: FETCH_ORBIT_DATA }));
 };

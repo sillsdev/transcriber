@@ -80,6 +80,7 @@ interface IDispatchProps {
   setLanguage: typeof action.setLanguage;
   fetchOrbitData: typeof action.fetchOrbitData;
   setExpireAt: typeof action.setExpireAt;
+  doOrbitError: typeof action.doOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -89,7 +90,12 @@ interface IProps extends IStateProps, IDispatchProps {
 export function Loading(props: IProps) {
   const { orbitLoaded, auth, setExpireAt, t } = props;
   const classes = useStyles();
-  const { fetchOrbitData, fetchLocalization, setLanguage } = props;
+  const {
+    fetchOrbitData,
+    fetchLocalization,
+    setLanguage,
+    doOrbitError,
+  } = props;
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -104,6 +110,9 @@ export function Loading(props: IProps) {
   const [organization, setOrganization] = useGlobal('organization');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_project, setProject] = useGlobal('project');
+  const [globalStore] = useGlobal();
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [_orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -226,7 +235,9 @@ export function Loading(props: IProps) {
       setCompleted,
       setProjectsLoaded,
       setCoordinatorActivated,
-      InviteUser
+      InviteUser,
+      setOrbitRetries,
+      globalStore
     );
     if (!isElectron && !offline) {
       const decodedToken: any = jwtDecode(auth.getAccessToken());
@@ -277,6 +288,7 @@ export function Loading(props: IProps) {
             coordinator,
             setOrganization,
             setProject,
+            doOrbitError,
           }).then(() => setCompleted(100));
           setNewOrgParams(null);
         } else {
@@ -341,6 +353,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       setLanguage: action.setLanguage,
       fetchOrbitData: action.fetchOrbitData,
       setExpireAt: action.setExpireAt,
+      doOrbitError: action.doOrbitError,
     },
     dispatch
   ),

@@ -38,9 +38,15 @@ function TokenCheck(props: IProps) {
   React.useEffect(() => {
     if (!offline) {
       if (localStorage.getItem('isLoggedIn') === 'true') {
-        auth.renewSession().catch((err) => {
-          view.current = 'Logout';
-        });
+        auth
+          .renewSession()
+          .then(() => {
+            const decodedToken: any = jwtDecode(auth.getAccessToken());
+            setExpireAt(decodedToken.exp);
+          })
+          .catch((err) => {
+            view.current = 'Logout';
+          });
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

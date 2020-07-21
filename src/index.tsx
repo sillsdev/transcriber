@@ -18,6 +18,8 @@ import { infoMsg } from './utils';
 import { isElectron, API_CONFIG } from './api-variable';
 const appVersion = require('../package.json').version;
 
+const OrbitNetworkErrorRetries = 16;
+
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
 const bugsnagClient = prodOrQa
@@ -85,6 +87,7 @@ setGlobal({
   alertOpen: false,
   coordinatorActivated: false,
   fingerprint: window.location.origin,
+  orbitRetries: OrbitNetworkErrorRetries,
 });
 
 if (isElectron) {
