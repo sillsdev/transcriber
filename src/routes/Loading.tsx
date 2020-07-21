@@ -9,14 +9,7 @@ import { IState, IMainStrings, Organization, Invitation, User } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Paper,
-  LinearProgress,
-} from '@material-ui/core';
-import UserMenu from '../components/UserMenu';
+import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
@@ -34,6 +27,7 @@ import {
 import SnackBar from '../components/SnackBar';
 import { getOrgs } from '../utils/getOrgs';
 import { isElectron } from '../api-variable';
+import { AppHead } from '../components/App/AppHead';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -99,9 +93,11 @@ export function Loading(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
-  const [bucket, setBucket] = useGlobal('bucket');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_bucket, setBucket] = useGlobal('bucket');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_remote, setRemote] = useGlobal('remote');
+
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_fingerprint, setFingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
@@ -120,17 +116,7 @@ export function Loading(props: IProps) {
     localStorage.getItem('newOrg')
   );
   const [savedURL] = useState(localStorage.getItem('url') || '');
-  const [view, setView] = useState('');
   const [message, setMessage] = useState(<></>);
-
-  const handleUserMenuAction = (what: string) => {
-    if (!/Close/i.test(what)) {
-      if (/Clear/i.test(what)) {
-        bucket.setItem('remote-requests', []);
-      }
-      setView(what);
-    }
-  };
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -306,8 +292,6 @@ export function Loading(props: IProps) {
 
   if (!auth || !auth.isAuthenticated(offline)) return <Redirect to="/" />;
 
-  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-
   if (orbitLoaded && completed === 100) {
     const userRec: User = GetUser(memory, user);
     if (
@@ -325,15 +309,7 @@ export function Loading(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar} color="inherit">
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            {t.silTranscriber}
-          </Typography>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <UserMenu action={handleUserMenuAction} auth={auth} />
-        </Toolbar>
-      </AppBar>
+      <AppHead {...props} />
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <img src={logo} className={classes.icon} alt="logo" />

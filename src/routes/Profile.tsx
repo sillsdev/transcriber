@@ -25,8 +25,6 @@ import {
   Theme,
 } from '@material-ui/core/styles';
 import {
-  AppBar,
-  Toolbar,
   Paper,
   Grid,
   TextField,
@@ -39,7 +37,6 @@ import {
   Avatar,
   MenuItem,
 } from '@material-ui/core';
-import UserMenu from '../components/UserMenu';
 import SaveIcon from '@material-ui/icons/Save';
 import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
@@ -61,6 +58,7 @@ import fr from '../assets/fr.json';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
 import { isElectron } from '../api-variable';
+import { AppHead } from '../components/App/AppHead';
 
 interface ILangDes {
   type: string;
@@ -179,7 +177,6 @@ export function Profile(props: IProps) {
   const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
-  const [bucket] = useGlobal('bucket');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
@@ -287,20 +284,6 @@ export function Profile(props: IProps) {
   };
 
   const handleMessageReset = () => setMessage(<></>);
-
-  const handleUserMenuAction = (what: string) => {
-    if (isElectron && /logout/i.test(what)) {
-      localStorage.removeItem('user-id');
-      setView('Access');
-      return;
-    }
-    if (!/Close/i.test(what)) {
-      if (/Clear/i.test(what)) {
-        bucket.setItem('remote-requests', []);
-      }
-      setView(what);
-    }
-  };
 
   const handleSave = () => {
     if (changed) {
@@ -555,6 +538,7 @@ export function Profile(props: IProps) {
       }
     }
     const attr = userRec.attributes;
+    if (!attr) return;
     setName(attr.name !== attr.email ? attr.name : '');
     setGiven(attr.givenName ? attr.givenName : '');
     setFamily(attr.familyName ? attr.familyName : '');
@@ -582,6 +566,10 @@ export function Profile(props: IProps) {
     }
   }, [timezone]);
 
+  const userNotComplete = () =>
+    currentUser === undefined ||
+    currentUser.attributes?.name === currentUser.attributes?.email;
+
   if (!auth || !auth.isAuthenticated(offline)) {
     localStorage.setItem('url', history.location.pathname);
     return <Redirect to="/" />;
@@ -594,15 +582,7 @@ export function Profile(props: IProps) {
 
   return (
     <div id="Profile" className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar} color="inherit">
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            {t.silTranscriber + ' - ' + t.userProfile}
-          </Typography>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <UserMenu action={handleUserMenuAction} />
-        </Toolbar>
-      </AppBar>
+      <AppHead {...props} />
       <Paper
         className={clsx(classes.container, {
           [classes.fullContainer]: noMargin,
@@ -623,9 +603,7 @@ export function Profile(props: IProps) {
               {editId && /Add/i.test(editId) ? (
                 <Typography variant="h6">{t.addOfflineUser}</Typography>
               ) : (
-                (currentUser === undefined ||
-                  currentUser.attributes.name ===
-                    currentUser.attributes.email) && (
+                userNotComplete() && (
                   <Typography variant="h6">{t.completeProfile}</Typography>
                 )
               )}
@@ -831,8 +809,8 @@ export function Profile(props: IProps) {
               <div className={classes.actions}>
                 {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
-                    currentUser.attributes.name !==
-                      currentUser.attributes.email)) && (
+                    currentUser.attributes?.name !==
+                      currentUser.attributes?.email)) && (
                   <Button
                     key="cancel"
                     aria-label={t.cancel}
@@ -855,9 +833,7 @@ export function Profile(props: IProps) {
                 >
                   {editId && /Add/i.test(editId)
                     ? t.add
-                    : currentUser === undefined ||
-                      currentUser.attributes.name ===
-                        currentUser.attributes.email
+                    : userNotComplete()
                     ? t.next
                     : t.save}
                   <SaveIcon className={classes.icon} />

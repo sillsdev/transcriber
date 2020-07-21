@@ -89,12 +89,9 @@ import {
   makeAbbr,
   Online,
   remoteIdNum,
-  forceLogin,
   getMbrRoleRec,
   getMbrRole,
   allUsersRec,
-  resetData,
-  exitElectronApp,
 } from '../utils';
 import logo from './transcriber10.png';
 import { isElectron, API_CONFIG } from '../api-variable';
@@ -105,6 +102,7 @@ import { DataPath } from '../utils/DataPath';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 import { useInterval } from '../utils/useInterval';
+import { handleUserMenuAction } from '../components/App/AppHead';
 
 const noop = { openExternal: () => {}, openItem: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop as any };
@@ -290,7 +288,7 @@ interface IRecordProps {
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
-  resetRequests: () => void;
+  resetRequests: () => Promise<void>;
   history: {
     action: string;
     location: {
@@ -517,30 +515,6 @@ export function ResponsiveDrawer(props: IProps) {
     }
   };
 
-  const handleUserMenuAction = (what: string) => {
-    if (isElectron && /ClearLogout/i.test(what)) {
-      resetData();
-      exitElectronApp();
-    }
-    if (isElectron && /logout/i.test(what)) {
-      localStorage.removeItem('user-id');
-      setView('Access');
-      return;
-    }
-    localStorage.setItem('url', history.location.pathname);
-    if (!/Close/i.test(what)) {
-      if (/ClearLogout/i.test(what)) {
-        forceLogin();
-        what = 'Logout';
-      }
-      if (/Clear/i.test(what)) {
-        if (resetRequests) resetRequests();
-        else console.log('ResetRequests not set in props');
-      }
-      setView(what);
-    }
-  };
-
   const handleSwitch = () => {
     checkSavedFn(() => setAppView(!isApp));
   };
@@ -568,8 +542,22 @@ export function ResponsiveDrawer(props: IProps) {
   };
   const menuAction = (v: string) => {
     clickVal = v;
-    if (/Clear/i.test(v)) handleUserMenuAction(v);
-    else checkSavedFn(() => handleUserMenuAction(clickVal));
+    if (/Clear/i.test(v))
+      handleUserMenuAction(
+        v,
+        history.location.pathname,
+        setView,
+        resetRequests
+      );
+    else
+      checkSavedFn(() =>
+        handleUserMenuAction(
+          clickVal,
+          history.location.pathname,
+          setView,
+          resetRequests
+        )
+      );
   };
   const commitOrg = (v: string, e: any, callback: () => void) => {
     clickVal = v;

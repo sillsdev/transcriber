@@ -490,7 +490,9 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
 
-  //check if online every 30 seconds to warn they can't save
+  //do this once...
+  useEffect(() => tryOnline(), []);
+  //and every 30 seconds to warn they can't save
   useInterval(() => tryOnline(), 1000 * 30);
 
   return (

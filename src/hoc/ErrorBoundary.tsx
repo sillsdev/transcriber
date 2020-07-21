@@ -98,7 +98,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     }
     this.setState({
       errCount: this.state.errCount + 1,
-      error: error.error.toString(),
+      error: error.error?.toString(),
     });
   }
 
