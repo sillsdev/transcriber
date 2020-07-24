@@ -23,6 +23,7 @@ declare module 'reactn/default' {
     remote: JSONAPISource;
     remoteBusy: boolean;
     doSave: boolean;
+    saveResult: string | undefined;
     changed: boolean;
     projectsLoaded: string[];
     importexportBusy: boolean;

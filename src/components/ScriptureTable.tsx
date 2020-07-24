@@ -11,6 +11,7 @@ import {
   BookNameMap,
   BookName,
   SectionPassage,
+  ISharedStrings,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
@@ -26,7 +27,7 @@ import {
 import { LinearProgress } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
-import { remoteId, remoteIdNum, remoteIdGuid, related } from '../utils';
+import { remoteId, remoteIdNum, remoteIdGuid, related, Online } from '../utils';
 import { isUndefined } from 'util';
 import { DrawerTask } from '../routes/drawer';
 import { debounce } from 'lodash';
@@ -80,6 +81,7 @@ interface ICols {
 interface IStateProps {
   t: IScriptureTableStrings;
   s: IPlanSheetStrings;
+  ts: ISharedStrings;
   lang: string;
   bookSuggestions: OptionType[];
   bookMap: BookNameMap;
@@ -105,6 +107,7 @@ export function ScriptureTable(props: IProps) {
   const {
     t,
     s,
+    ts,
     lang,
     cols,
     bookSuggestions,
@@ -121,6 +124,8 @@ export function ScriptureTable(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [doSave, setDoSave] = useGlobal('doSave');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [saveResult, setSaveResult] = useGlobal('saveResult');
   const [saving, setSaving] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [changed, setChanged] = useGlobal('changed');
@@ -780,13 +785,27 @@ export function ScriptureTable(props: IProps) {
       await doSave(changedRows);
       setComplete(0);
     };
+    function saveCompleted(err: string) {
+      setSaveResult(err);
+      if (err === '') setChanged(false);
+      setDoSave(false);
+    }
 
     if (doSave && !saving) {
-      setSaving(true);
-      setMessage(<span>{t.saving}</span>);
-      handleSave().then(() => {
-        setDoSave(false);
-        setSaving(false);
+      setSaveResult(undefined);
+      Online((online) => {
+        if (!online) {
+          setMessage(<span>{ts.NoSaveOffline}</span>);
+          saveCompleted(ts.NoSaveOffline);
+          setSaving(false);
+        } else {
+          setSaving(true);
+          setMessage(<span>{t.saving}</span>);
+          handleSave().then(() => {
+            saveCompleted('');
+            setSaving(false);
+          });
+        }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -982,6 +1001,7 @@ export function ScriptureTable(props: IProps) {
         inlinePassages={inlinePassages.inline}
         toggleInline={toggleInline}
         t={s}
+        ts={ts}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
@@ -991,6 +1011,7 @@ export function ScriptureTable(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'scriptureTable' }),
   s: localStrings(state, { layout: 'planSheet' }),
+  ts: localStrings(state, { layout: 'shared' }),
   lang: state.strings.lang,
   bookSuggestions: state.books.suggestions,
   bookMap: state.books.map,

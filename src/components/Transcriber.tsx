@@ -181,6 +181,7 @@ export function Transcriber(props: IProps) {
   const [assigned, setAssigned] = React.useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave, setDoSave] = useGlobal('doSave');
+  const [saveResult, setSaveResult] = useGlobal('saveResult');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
   const [playSpeed, setPlaySpeed] = React.useState(1);
@@ -409,6 +410,11 @@ export function Transcriber(props: IProps) {
   };
 
   const handleSave = async (postComment: boolean = false) => {
+    function saveCompleted(err: string) {
+      setSaveResult(err);
+      if (err === '') setChanged(false);
+      setDoSave(false);
+    }
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
       const userid = remoteIdNum('user', user, memory.keyMap);
@@ -452,7 +458,7 @@ export function Transcriber(props: IProps) {
       await memory.update(ops);
       if (postComment) setComment('');
       loadHistory();
-      setChanged(false);
+      saveCompleted('');
     }
   };
 
@@ -585,7 +591,6 @@ export function Transcriber(props: IProps) {
   React.useEffect(() => {
     if (doSave) {
       handleSave();
-      setDoSave(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [doSave]);

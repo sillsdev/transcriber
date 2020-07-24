@@ -317,7 +317,6 @@ export function ResponsiveDrawer(props: IProps) {
     mediafiles,
     projects,
     orbitError,
-    isRequestQueueEmpty,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -342,6 +341,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [tab, setTab] = useGlobal('tab');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave, setDoSave] = useGlobal('doSave');
+
   const [alertOpen, setAlertOpen] = useGlobal('alertOpen');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
@@ -365,6 +365,8 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
+  const [saveResult] = useGlobal('saveResult');
+  const saveErr = useRef<string>();
 
   const slugMap: { [key: string]: string } = {
     [NavChoice.UsersAndGroups]: t.usersAndGroups,
@@ -584,16 +586,39 @@ export function ResponsiveDrawer(props: IProps) {
     setChanged(false);
   };
 
-  const finishConfirmed = (
+  useEffect(() => {
+    saveErr.current = saveResult;
+  }, [saveResult]);
+
+  const SaveIncomplete = () => saveErr.current === undefined;
+  const SaveUnsuccessful = () =>
+    saveErr.current !== undefined && saveErr.current !== '';
+
+  const finishConfirmed = async (
     savedMethod: (() => any) | undefined,
     tryCount: number
-  ) => waitForIt('BusyBeforeSave', isRequestQueueEmpty, savedMethod, tryCount);
+  ) => {
+    waitForIt(
+      'BusyBeforeSave',
+      SaveIncomplete,
+      savedMethod,
+      SaveUnsuccessful,
+      tryCount
+    ).catch((err) => {
+      saveConfirm.current = undefined;
+      if (SaveUnsuccessful()) {
+        setMessage(<span>{saveErr.current}</span>);
+      } else {
+        setMessage(<span>Timed Out.</span>);
+      }
+    });
+  };
 
   const handleSaveConfirmed = () => {
     const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;
     setMessage(<span>{t.saving}</span>);
-    setChanged(false);
+    saveErr.current = undefined;
     setDoSave(true);
     setAlertOpen(false);
     finishConfirmed(savedMethod, 8);
