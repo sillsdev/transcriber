@@ -49,8 +49,7 @@ function selectPlanType(props: IProps) {
           .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
           .map((option: PlanType) => (
             <MenuItem key={option.id} value={option.id}>
-              {option.attributes &&
-                option.attributes.name &&
+              {option?.attributes?.name &&
                 t.getString(option.attributes.name.toLowerCase())}
             </MenuItem>
           ))}

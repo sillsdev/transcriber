@@ -16,7 +16,8 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { LanguagePicker } from 'mui-language-picker';
 import FontSize from '../FontSize';
-import { SelectProjectType } from '.';
+import { SelectPlanType } from '../../control/selectPlanType';
+import { TeamContext } from '../../context/TeamContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -96,6 +97,8 @@ export function AddProjectDialog(props: IProps) {
   const { isOpen } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const ctx = React.useContext(TeamContext);
+  const { planTypes } = ctx.state;
   const [state, setState] = React.useState({ ...initState });
   const {
     name,
@@ -204,8 +207,9 @@ export function AddProjectDialog(props: IProps) {
             onChange={handleChangeDescription}
             fullWidth
           />
-          <SelectProjectType
-            projectType={type}
+          <SelectPlanType
+            planType={type}
+            planTypes={planTypes}
             handleTypeChange={handleTypeChange}
           />
           <FormLabel>{t.language}</FormLabel>

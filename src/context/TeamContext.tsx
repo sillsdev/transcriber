@@ -10,6 +10,7 @@ import {
   GroupMembership,
   Project,
   Plan,
+  PlanType,
   Organization,
   OrganizationMembership,
   IMainStrings,
@@ -17,7 +18,6 @@ import {
 // import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { ProjectType } from '../model';
 import { related, getMbrRoleRec, getMbrRole, Online } from '../utils';
 import { LoadProjectData } from '../utils/loadData';
 import localStrings from '../selector/localize';
@@ -51,29 +51,32 @@ interface IRecordProps {
   orgMembers: OrganizationMembership[];
   groupMemberships: GroupMembership[];
   projects: Project[];
-  projectTypes: ProjectType[];
+  plans: Plan[];
+  planTypes: PlanType[];
 }
 const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
   orgMembers: (q: QueryBuilder) => q.findRecords('organizationmembership'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
-  projectTypes: (q: QueryBuilder) => q.findRecords('projecttype'),
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
+  planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
 };
 
 const initState = {
-  projects: Array<Project>(),
-  projectTypes: Array<ProjectType>(),
   controlStrings: {} as IControlStrings,
   lang: 'en',
   message: <></>,
+  planTypes: Array<PlanType>(),
   teams: () => Array<Organization>(),
-  personalProjects: () => Array<Project>(),
-  teamProjects: (teamId: string) => Array<Project>(),
+  personalProjects: () => Array<Plan>(),
+  teamProjects: (teamId: string) => Array<Plan>(),
   teamMembers: (teamId: string) => 0,
-  selectProject: (project: Project) => {},
-  projectType: (project: Project) => '',
-  projectPlans: (project: Project) => '',
+  selectProject: (project: Plan) => {},
+  projectType: (project: Plan) => '',
+  projectSections: (project: Plan) => '',
+  projectDescription: (project: Plan) => '',
+  projectLanguage: (project: Plan) => '',
   handleMessageReset: () => {},
 };
 
@@ -99,7 +102,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       organizations,
       orgMembers,
       projects,
-      projectTypes,
+      plans,
+      planTypes,
       lang,
       controlStrings,
       t,
@@ -120,8 +124,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [message, setMessage] = useState(<></>);
     const [state, setState] = useState({
       ...initState,
-      projects,
-      projectTypes,
+      planTypes,
       controlStrings,
       lang,
       message,
@@ -131,12 +134,14 @@ const TeamProvider = withData(mapRecordsToProps)(
       setMessage(<></>);
     };
 
-    const selectProject = (project: Project) => {
-      setProject(project.id);
-      console.log('selected project: ', project?.attributes?.name);
+    const selectProject = (plan: Plan) => {
+      console.log('selected plan: ', plan?.attributes?.name);
+      const projectId = related(plan, 'project');
+      setProject(projectId);
+      setPlan(plan.id);
       Online((online) => {
         LoadProjectData(
-          project.id,
+          projectId,
           memory,
           remote,
           online,
@@ -146,17 +151,12 @@ const TeamProvider = withData(mapRecordsToProps)(
           orbitError
         )
           .then(() => {
-            const planRecs = (memory.cache.query((q: QueryBuilder) =>
-              q.findRecords('plan')
-            ) as Plan[])
-              .filter((p) => related(p, 'project') === project.id)
-              .sort((i, j) =>
-                i?.attributes?.name < j?.attributes?.name ? -1 : 1
-              );
-            if (planRecs.length > 0) setPlan(planRecs[0].id);
-            const groupId = related(project, 'group');
-            const roleRec = getMbrRoleRec(memory, 'group', groupId, user);
-            setProjRole(getMbrRole(memory, roleRec));
+            const projRecs = projects.filter((p) => p.id === projectId);
+            if (projRecs.length > 0) {
+              const groupId = related(projRecs[0], 'group');
+              const roleRec = getMbrRoleRec(memory, 'group', groupId, user);
+              setProjRole(getMbrRole(memory, roleRec));
+            }
           })
           .catch((err: Error) => {
             if (!online) setMessage(<span>{t.NoLoadOffline}</span>);
@@ -179,29 +179,56 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const personalProjects = () => {
-      return projects
+      const projIds = projects
         .filter((p) => {
           const teamId = related(p, 'organization');
           return teamMembers(teamId) === 1;
         })
+        .map((p) => p.id);
+      return plans
+        .filter((p) => projIds.includes(related(p, 'project')))
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
 
     const teamProjects = (teamId: string) => {
-      return projects
+      const projIds = projects
         .filter((p) => related(p, 'organization') === teamId)
+        .map((p) => p.id);
+      return plans
+        .filter((p) => projIds.includes(related(p, 'project')))
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
 
-    const projectType = (project: Project) => {
-      const typeId = related(project, 'projecttype');
-      const typeRecs = projectTypes.filter((t) => t.id === typeId);
-      return typeRecs.length > 0 ? typeRecs[0]?.attributes?.name : 'Training';
+    const projectType = (plan: Plan) => {
+      const typeId = related(plan, 'plantype');
+      const typeRecs = planTypes.filter((t) => t.id === typeId);
+      const planType = typeRecs[0]?.attributes?.name;
+      return (
+        (planType && controlStrings.getString(planType.toLowerCase())) ||
+        'Training'
+      );
     };
 
-    const projectPlans = (project: Project) => {
-      const planIds: string[] | null = related(project, 'plans');
-      return planIds ? planIds.length.toString() : '<na>';
+    const projectSections = (plan: Plan) => {
+      const sectionIds: string[] | null = related(plan, 'sections');
+      return sectionIds ? sectionIds.length.toString() : '<na>';
+    };
+
+    const getProject = (plan: Plan) => {
+      const projectId = related(plan, 'project');
+      const projRecs = projects.filter((p) => p.id === projectId);
+      if (projRecs.length > 0) return projRecs[0];
+      return null;
+    };
+
+    const projectDescription = (plan: Plan) => {
+      const projRec = getProject(plan);
+      return projRec?.attributes?.description || '';
+    };
+
+    const projectLanguage = (plan: Plan) => {
+      const projRec = getProject(plan);
+      return projRec?.attributes?.languageName || 'English';
     };
 
     return (
@@ -214,7 +241,9 @@ const TeamProvider = withData(mapRecordsToProps)(
             teamProjects,
             teamMembers,
             projectType,
-            projectPlans,
+            projectSections,
+            projectDescription,
+            projectLanguage,
             selectProject,
             handleMessageReset,
           },

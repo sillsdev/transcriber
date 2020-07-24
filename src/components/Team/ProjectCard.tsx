@@ -1,6 +1,4 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
-import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Card,
@@ -10,7 +8,7 @@ import {
   Chip,
 } from '@material-ui/core';
 import moment from 'moment';
-import { Project } from '../../model';
+import { Plan } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import { ProjectMenu } from '.';
 
@@ -46,22 +44,26 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const t = {
   language: 'Language: {0}',
-  plans: 'Plans',
-  passages: 'Passages',
+  sections: '{0} Sections',
 };
 
 interface IProps {
-  project: Project;
+  project: Plan;
 }
 
 export const ProjectCard = (props: IProps) => {
   const classes = useStyles();
   const { project } = props;
-  const [projectsLoaded] = useGlobal('projectsLoaded');
   const ctx = React.useContext(TeamContext);
-  const { selectProject, projectType, projectPlans } = ctx.state;
+  const {
+    selectProject,
+    projectType,
+    projectSections,
+    projectDescription,
+    projectLanguage,
+  } = ctx.state;
 
-  const handleSelect = (project: Project) => () => {
+  const handleSelect = (project: Plan) => () => {
     selectProject(project);
   };
 
@@ -70,13 +72,9 @@ export const ProjectCard = (props: IProps) => {
   };
 
   moment.locale(ctx.state.lang);
+
   return (
-    <Card
-      className={clsx(classes.root, {
-        [classes.rootLoaded]: projectsLoaded.includes(project.id),
-      })}
-      onClick={handleSelect(project)}
-    >
+    <Card className={classes.root} onClick={handleSelect(project)}>
       <CardContent className={classes.content}>
         <div className={classes.firstLine}>
           <Typography variant="h6" component="h2">
@@ -85,18 +83,13 @@ export const ProjectCard = (props: IProps) => {
           <ProjectMenu action={handleProjectAction} />
         </div>
         <Typography className={classes.pos} color="textSecondary">
-          {project?.attributes?.description}
+          {projectDescription(project)}
         </Typography>
         <Typography variant="body2" component="p">
-          {t.language.replace('{0}', project?.attributes?.languageName || '')}
+          {t.language.replace('{0}', projectLanguage(project))}
         </Typography>
         <Typography variant="body2" component="p">
-          {`${projectPlans(project)} ${t.plans}`}
-        </Typography>
-        <Typography variant="body2" component="p">
-          {`${moment(project?.attributes?.dateCreated).format('ll')} - ${moment(
-            project?.attributes?.dateUpdated
-          ).format('ll')}`}
+          {t.sections.replace('{0}', projectSections(project))}
         </Typography>
       </CardContent>
       <CardActions>
