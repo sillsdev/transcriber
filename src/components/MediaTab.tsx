@@ -78,6 +78,10 @@ const useStyles = makeStyles((theme: Theme) =>
     highBar: {
       top: `${HeadHeight}px`,
     },
+    barDev: {
+      left: 0,
+      width: '100%',
+    },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
@@ -366,6 +370,7 @@ export function MediaTab(props: IProps) {
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
+  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
@@ -1118,7 +1123,10 @@ export function MediaTab(props: IProps) {
       <div className={classes.paper}>
         <AppBar
           position="fixed"
-          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          className={clsx(classes.bar, {
+            [classes.highBar]: planColumn,
+            [classes.barDev]: isDeveloper,
+          })}
           color="default"
         >
           <div className={classes.actions}>

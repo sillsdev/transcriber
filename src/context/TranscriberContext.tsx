@@ -152,6 +152,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
+    const [devPlan] = useGlobal('plan');
+    const [isDeveloper] = useGlobal('developer');
     const [state, setState] = useState({
       ...initState,
       allBookData,
@@ -231,79 +233,83 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const secRecs = sections.filter((sr) => sr.id === secId);
           if (secRecs.length > 0) {
             const planId = related(secRecs[0], 'plan');
-            const planRecs = plans.filter((pl) => pl.id === planId);
-            if (planRecs.length > 0) {
-              if (related(planRecs[0], 'project') === project) {
-                const assigned = related(secRecs[0], role);
-                const allowed = onlyAvailable
-                  ? assigned === user || !assigned || assigned === ''
-                  : role === 'view';
-                if (allowed) {
-                  let already: IRowData[] = [];
-                  if (role === 'view') {
-                    already = rowList.filter((r) => r.mediaId === mediaRec.id);
-                  }
-                  if (role !== 'view' || already.length === 0) {
-                    const curState: ActivityStates | string =
-                      role === 'view'
-                        ? p.attributes && p.attributes.state
-                          ? p.attributes.state
-                          : state
-                        : state;
-                    const planName = getPlanName(planRecs[0]);
-                    const planTypeRecs = planTypes.filter(
-                      (pt) => pt.id === related(planRecs[0], 'plantype')
-                    );
-                    const planType =
-                      planTypeRecs.length > 0
-                        ? planTypeRecs[0].attributes.name
-                        : '';
-                    const secNum = sectionNumber(secRecs[0]);
-                    const nextSecId = secRecs[0].id;
-                    const transcriber = related(secRecs[0], 'transcriber');
-                    const editor = related(secRecs[0], 'editor');
-                    if (
-                      nextSecId !== curSec &&
-                      passageNumber(p).trim() === '1'
-                    ) {
-                      curSec = nextSecId;
+            if (!isDeveloper || planId === devPlan) {
+              const planRecs = plans.filter((pl) => pl.id === planId);
+              if (planRecs.length > 0) {
+                if (related(planRecs[0], 'project') === project) {
+                  const assigned = related(secRecs[0], role);
+                  const allowed = onlyAvailable
+                    ? assigned === user || !assigned || assigned === ''
+                    : role === 'view';
+                  if (allowed) {
+                    let already: IRowData[] = [];
+                    if (role === 'view') {
+                      already = rowList.filter(
+                        (r) => r.mediaId === mediaRec.id
+                      );
+                    }
+                    if (role !== 'view' || already.length === 0) {
+                      const curState: ActivityStates | string =
+                        role === 'view'
+                          ? p.attributes && p.attributes.state
+                            ? p.attributes.state
+                            : state
+                          : state;
+                      const planName = getPlanName(planRecs[0]);
+                      const planTypeRecs = planTypes.filter(
+                        (pt) => pt.id === related(planRecs[0], 'plantype')
+                      );
+                      const planType =
+                        planTypeRecs.length > 0
+                          ? planTypeRecs[0].attributes.name
+                          : '';
+                      const secNum = sectionNumber(secRecs[0]);
+                      const nextSecId = secRecs[0].id;
+                      const transcriber = related(secRecs[0], 'transcriber');
+                      const editor = related(secRecs[0], 'editor');
+                      if (
+                        nextSecId !== curSec &&
+                        passageNumber(p).trim() === '1'
+                      ) {
+                        curSec = nextSecId;
+                        addRows.push({
+                          planName,
+                          planType,
+                          section: { ...secRecs[0] },
+                          passage: { ...p },
+                          state: '',
+                          sectPass: sectionNumber(secRecs[0]) + '.',
+                          mediaRemoteId: '',
+                          mediaId: mediaRec.id,
+                          playItem: '',
+                          duration: 0,
+                          role,
+                          assigned,
+                          transcriber,
+                          editor,
+                        });
+                      }
                       addRows.push({
                         planName,
                         planType,
                         section: { ...secRecs[0] },
                         passage: { ...p },
-                        state: '',
-                        sectPass: sectionNumber(secRecs[0]) + '.',
-                        mediaRemoteId: '',
+                        state: curState,
+                        sectPass: secNum + '.' + passageNumber(p).trim(),
+                        mediaRemoteId: remoteId(
+                          'mediafile',
+                          mediaRec.id,
+                          memory.keyMap
+                        ),
                         mediaId: mediaRec.id,
-                        playItem: '',
-                        duration: 0,
+                        playItem,
+                        duration: mediaRec.attributes.duration,
                         role,
                         assigned,
                         transcriber,
                         editor,
                       });
                     }
-                    addRows.push({
-                      planName,
-                      planType,
-                      section: { ...secRecs[0] },
-                      passage: { ...p },
-                      state: curState,
-                      sectPass: secNum + '.' + passageNumber(p).trim(),
-                      mediaRemoteId: remoteId(
-                        'mediafile',
-                        mediaRec.id,
-                        memory.keyMap
-                      ),
-                      mediaId: mediaRec.id,
-                      playItem,
-                      duration: mediaRec.attributes.duration,
-                      role,
-                      assigned,
-                      transcriber,
-                      editor,
-                    });
                   }
                 }
               }

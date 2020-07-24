@@ -82,6 +82,10 @@ const useStyles = makeStyles((theme: Theme) =>
     highBar: {
       top: `${HeadHeight}px`,
     },
+    barDev: {
+      left: 0,
+      width: '100%',
+    },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
@@ -264,6 +268,7 @@ export function TranscriptionTab(props: IProps) {
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
+  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
@@ -682,7 +687,10 @@ export function TranscriptionTab(props: IProps) {
       <div className={classes.paper}>
         <AppBar
           position="fixed"
-          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          className={clsx(classes.bar, {
+            [classes.highBar]: planColumn,
+            [classes.barDev]: isDeveloper,
+          })}
           color="default"
         >
           <div className={classes.actions}>

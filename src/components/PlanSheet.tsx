@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { IPlanSheetStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
@@ -40,6 +41,10 @@ const useStyles = makeStyles((theme: Theme) =>
       left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
       width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    barDev: {
+      left: 0,
+      width: '100%',
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
@@ -148,6 +153,7 @@ export function PlanSheet(props: IProps) {
   const [doSave, setDoSave] = useGlobal('doSave');
   const [online, setOnline] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
+  const [isDeveloper] = useGlobal('developer');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
   const currentRow = useRef<number>(-1);
@@ -498,7 +504,11 @@ export function PlanSheet(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        <AppBar position="fixed" className={classes.bar} color="default">
+        <AppBar
+          position="fixed"
+          className={clsx(classes.bar, { [classes.barDev]: isDeveloper })}
+          color="default"
+        >
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>

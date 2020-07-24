@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -48,6 +49,10 @@ const useStyles = makeStyles((theme: Theme) =>
       left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
       width: `calc(100% - ${DrawerWidth}px)`,
+    },
+    barDev: {
+      left: 0,
+      width: '100%',
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
@@ -165,6 +170,7 @@ export function AssignmentTable(props: IProps) {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
+  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
@@ -268,7 +274,11 @@ export function AssignmentTable(props: IProps) {
   return (
     <div id="AssignmentTable" className={classes.container}>
       <div className={classes.paper}>
-        <AppBar position="fixed" className={classes.bar} color="default">
+        <AppBar
+          position="fixed"
+          className={clsx(classes.bar, { [classes.barDev]: isDeveloper })}
+          color="default"
+        >
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>

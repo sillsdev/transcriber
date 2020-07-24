@@ -8,6 +8,8 @@ import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
 import TeamScreen from './routes/TeamScreen';
+import PlanScreen from './routes/PlanScreen';
+import WorkScreen from './routes/WorkScreen';
 import Buggy from './routes/Buggy';
 import LogoutRequired from './routes/LogoutRequired';
 import EmailUnverified from './routes/EmailUnverified';
@@ -101,6 +103,14 @@ class App extends React.Component {
           <Route
             path="/team"
             render={(props) => <TeamScreen auth={auth} {...props} />}
+          />
+          <Route
+            path="/plan"
+            render={(props) => <PlanScreen auth={auth} {...props} />}
+          />
+          <Route
+            path="/work"
+            render={(props) => <WorkScreen auth={auth} {...props} />}
           />
           <Route
             path="/callback"

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { AddTeamDialog } from '.';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,22 +14,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  addTeam: 'Add a Team',
-};
-
 export const TeamActions = () => {
   const classes = useStyles();
 
-  const handleAdd = () => {
-    console.log('clicked', t.addTeam);
-  };
-
   return (
     <div className={classes.root}>
-      <Button variant="contained" onClick={handleAdd}>
-        {t.addTeam}
-      </Button>
+      <AddTeamDialog />
     </div>
   );
 };

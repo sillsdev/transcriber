@@ -3,6 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { Organization } from '../../model';
+import { AddProjectDialog } from '.';
 import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -51,9 +52,14 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
   const [show, setShow] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const handleShow = () => {
-    setShow(!show);
+    if (!isOpen) setShow(!show);
+  };
+
+  const handleOpen = (val: boolean) => {
+    setIsOpen(val);
   };
 
   const teamName = (teamId: TeamIdType) => {
@@ -63,11 +69,6 @@ export const AddCard = (props: IProps) => {
   const handleUpload = (team: TeamIdType) => (e: any) => {
     e.preventDefault();
     console.log(`clicked ${t.upload} for ${teamName(team)}`);
-  };
-
-  const handleNew = (team: TeamIdType) => (e: any) => {
-    e.preventDefault();
-    console.log(`clicked ${t.newProject} for ${teamName(team)}`);
   };
 
   const handleConnect = (team: TeamIdType) => (e: any) => {
@@ -82,26 +83,14 @@ export const AddCard = (props: IProps) => {
 
   return (
     <div>
-      {!show ? (
-        <Button onClick={handleShow}>
-          <Card className={classes.root}>
-            <CardContent className={classes.content}>
-              <div className={classes.icon}>
-                <AddIcon fontSize="large" />
-              </div>
-            </CardContent>
-          </Card>
-        </Button>
-      ) : (
-        <Card className={classes.root} onClick={handleShow}>
-          <CardContent className={classes.content}>
+      <Card className={classes.root} onClick={handleShow}>
+        <CardContent className={classes.content}>
+          {show ? (
             <div className={classes.buttons}>
               <Button variant="contained" onClick={handleUpload(team)}>
                 {t.upload}
               </Button>
-              <Button variant="contained" onClick={handleNew(team)}>
-                {t.newProject}
-              </Button>
+              <AddProjectDialog isOpen={handleOpen} />
               <Button variant="contained" onClick={handleConnect(team)}>
                 {t.connectParatext}
               </Button>
@@ -111,9 +100,13 @@ export const AddCard = (props: IProps) => {
                 </Button>
               )}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          ) : (
+            <div className={classes.icon}>
+              <AddIcon fontSize="large" />
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

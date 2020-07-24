@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -44,6 +45,10 @@ const useStyles = makeStyles((theme: Theme) =>
       left: `${DrawerWidth}px`,
       width: `calc(100% - ${DrawerWidth}px)`,
     },
+    barDev: {
+      left: 0,
+      width: '100%',
+    },
     content: {
       paddingTop: `${TabHeight}px`,
     },
@@ -84,6 +89,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
   const [busy] = useGlobal('remoteBusy');
+  const [isDeveloper] = useGlobal('developer');
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
@@ -129,7 +135,11 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.bar} color="default">
+      <AppBar
+        position="fixed"
+        className={clsx(classes.bar, { [classes.barDev]: isDeveloper })}
+        color="default"
+      >
         <Tabs
           value={tab}
           onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}

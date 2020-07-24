@@ -4,3 +4,7 @@ export * from './PersonalItem';
 export * from './TeamItem';
 export * from './TeamProjects';
 export * from './TeamActions';
+export * from './AddTeam';
+export * from './ProjectMenu';
+export * from './AddProject';
+export * from './SelectProjectType';
