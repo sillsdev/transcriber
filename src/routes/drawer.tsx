@@ -317,6 +317,7 @@ export function ResponsiveDrawer(props: IProps) {
     mediafiles,
     projects,
     orbitError,
+    isRequestQueueEmpty,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -594,7 +595,7 @@ export function ResponsiveDrawer(props: IProps) {
   const SaveUnsuccessful = () =>
     saveErr.current !== undefined && saveErr.current !== '';
 
-  const finishConfirmed = async (
+  const finishConfirmed = (
     savedMethod: (() => any) | undefined,
     tryCount: number
   ) => {
@@ -876,7 +877,7 @@ export function ResponsiveDrawer(props: IProps) {
   ]);
 
   const updateBusy = () => {
-    const isBusy = remote.requestQueue.length !== 0;
+    const isBusy = !isRequestQueueEmpty;
     if (busy !== isBusy) setBusy(isBusy);
   };
   const doDateChanges = () => {

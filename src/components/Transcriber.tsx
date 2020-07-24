@@ -181,6 +181,7 @@ export function Transcriber(props: IProps) {
   const [assigned, setAssigned] = React.useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave, setDoSave] = useGlobal('doSave');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [saveResult, setSaveResult] = useGlobal('saveResult');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();

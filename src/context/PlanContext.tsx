@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
@@ -50,7 +50,6 @@ interface IContext {
 const PlanContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  isRequestQueueEmpty: () => boolean;
   children: React.ReactElement;
 }
 
@@ -60,7 +59,7 @@ const PlanProvider = withBucket(
       mapStateToProps,
       mapDispatchToProps
     )((props: IProps) => {
-      const { t, isRequestQueueEmpty } = props;
+      const { t } = props;
       const [memory] = useGlobal('memory');
       const [plan] = useGlobal('plan');
       const [tab, setTab] = React.useState(0);
@@ -73,6 +72,9 @@ const PlanProvider = withBucket(
       const [_doSave, setDoSave] = useGlobal('doSave');
       const [message, setMessage] = React.useState(<></>);
       const saveConfirm = React.useRef<() => any>();
+      const [saveResult] = useGlobal('saveResult');
+      const saveErr = useRef<string>();
+
       const [state, setState] = useState({
         ...initState,
         message,
@@ -123,18 +125,39 @@ const PlanProvider = withBucket(
         setAlertOpen(false);
         setChanged(false);
       };
+      useEffect(() => {
+        saveErr.current = saveResult;
+      }, [saveResult]);
+
+      const SaveIncomplete = () => saveErr.current === undefined;
+      const SaveUnsuccessful = () =>
+        saveErr.current !== undefined && saveErr.current !== '';
 
       const finishConfirmed = (
         savedMethod: (() => any) | undefined,
         tryCount: number
-      ) =>
-        waitForIt('BusyBeforeSave', isRequestQueueEmpty, savedMethod, tryCount);
+      ) => {
+        waitForIt(
+          'BusyBeforeSave',
+          SaveIncomplete,
+          savedMethod,
+          SaveUnsuccessful,
+          tryCount
+        ).catch((err) => {
+          saveConfirm.current = undefined;
+          if (SaveUnsuccessful()) {
+            setMessage(<span>{saveErr.current}</span>);
+          } else {
+            setMessage(<span>Timed Out.</span>);
+          }
+        });
+      };
 
       const handleSaveConfirmed = () => {
         const savedMethod = saveConfirm.current;
         saveConfirm.current = undefined;
         setMessage(<span>{t.saving}</span>);
-        setChanged(false);
+        saveErr.current = undefined;
         setDoSave(true);
         setAlertOpen(false);
         finishConfirmed(savedMethod, 8);
