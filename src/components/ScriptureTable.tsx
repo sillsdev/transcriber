@@ -615,19 +615,6 @@ export function ScriptureTable(props: IProps) {
     setWidth(window.innerWidth - theme.spacing(DrawerTask));
   };
 
-  React.useEffect(() => {
-    setDimensions();
-    const handleResize = debounce(() => {
-      setDimensions();
-    }, 100);
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
-
   useEffect(() => {
     const inlinePref = localStorage.getItem('inline-passages');
     if (inlinePref !== null) {
