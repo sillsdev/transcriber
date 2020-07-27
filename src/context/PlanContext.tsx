@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
@@ -10,6 +10,7 @@ import { waitForIt } from '../utils/waitForIt';
 import { withBucket } from '../hoc/withBucket';
 import { QueryBuilder } from '@orbit/data';
 import { related } from '../utils';
+import { useCheckSave } from '../utils/useCheckSave';
 
 interface IStateProps {
   t: IMainStrings;
@@ -68,12 +69,8 @@ const PlanProvider = withBucket(
       const [changed, setChanged] = useGlobal('changed');
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_alertOpen, setAlertOpen] = useGlobal('alertOpen');
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_doSave, setDoSave] = useGlobal('doSave');
       const [message, setMessage] = React.useState(<></>);
       const saveConfirm = React.useRef<() => any>();
-      const [saveResult] = useGlobal('saveResult');
-      const saveErr = useRef<string>();
 
       const [state, setState] = useState({
         ...initState,
@@ -125,28 +122,21 @@ const PlanProvider = withBucket(
         setAlertOpen(false);
         setChanged(false);
       };
-      useEffect(() => {
-        saveErr.current = saveResult;
-      }, [saveResult]);
-
-      const SaveIncomplete = () => saveErr.current === undefined;
-      const SaveUnsuccessful = () =>
-        saveErr.current !== undefined && saveErr.current !== '';
 
       const finishConfirmed = (
         savedMethod: (() => any) | undefined,
-        tryCount: number
+        waitCount: number
       ) => {
         waitForIt(
           'BusyBeforeSave',
           SaveIncomplete,
           savedMethod,
           SaveUnsuccessful,
-          tryCount
+          waitCount
         ).catch((err) => {
           saveConfirm.current = undefined;
           if (SaveUnsuccessful()) {
-            setMessage(<span>{saveErr.current}</span>);
+            setMessage(<span>{saveError()}</span>);
           } else {
             setMessage(<span>Timed Out.</span>);
           }
@@ -157,8 +147,7 @@ const PlanProvider = withBucket(
         const savedMethod = saveConfirm.current;
         saveConfirm.current = undefined;
         setMessage(<span>{t.saving}</span>);
-        saveErr.current = undefined;
-        setDoSave(true);
+        startSave();
         setAlertOpen(false);
         finishConfirmed(savedMethod, 8);
       };
@@ -166,6 +155,14 @@ const PlanProvider = withBucket(
       const handleMessageReset = () => {
         setMessage(<></>);
       };
+
+      const [
+        startSave,
+        ,
+        SaveIncomplete,
+        SaveUnsuccessful,
+        saveError,
+      ] = useCheckSave();
 
       return (
         <PlanContext.Provider

@@ -31,6 +31,7 @@ import { remoteId, remoteIdNum, remoteIdGuid, related, Online } from '../utils';
 import { isUndefined } from 'util';
 import { DrawerTask } from '../routes/drawer';
 import { debounce } from 'lodash';
+import { useCheckSave } from '../utils/useCheckSave';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -123,9 +124,8 @@ export function ScriptureTable(props: IProps) {
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
-  const [doSave, setDoSave] = useGlobal('doSave');
+  const [doSave] = useGlobal('doSave');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [saveResult, setSaveResult] = useGlobal('saveResult');
   const [saving, setSaving] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [changed, setChanged] = useGlobal('changed');
@@ -654,6 +654,8 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
+  const [, saveCompleted] = useCheckSave();
+
   useEffect(() => {
     const handleSave = async () => {
       const doSave = async (changedRows: boolean[]) => {
@@ -785,14 +787,8 @@ export function ScriptureTable(props: IProps) {
       await doSave(changedRows);
       setComplete(0);
     };
-    function saveCompleted(err: string) {
-      setSaveResult(err);
-      if (err === '') setChanged(false);
-      setDoSave(false);
-    }
 
     if (doSave && !saving) {
-      setSaveResult(undefined);
       Online((online) => {
         if (!online) {
           setMessage(<span>{ts.NoSaveOffline}</span>);

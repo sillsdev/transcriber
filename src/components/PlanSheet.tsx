@@ -33,6 +33,7 @@ import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { Online } from '../utils';
 import { useInterval } from '../utils/useInterval';
+import { useCheckSave } from '../utils/useCheckSave';
 
 const ActionHeight = 52;
 
@@ -165,8 +166,7 @@ export function PlanSheet(props: IProps) {
   const suggestionRef = useRef<Array<OptionType>>();
   const listRef = useRef<Array<string>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [doSave, setDoSave] = useGlobal('doSave');
+  const [doSave] = useGlobal('doSave');
   const [online, setOnline] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
   const [isDeveloper] = useGlobal('developer');
@@ -216,8 +216,10 @@ export function PlanSheet(props: IProps) {
         row.filter((row, rowIndex) => rowIndex > 0).map((col) => col.value)
       );
   };
+  const [startSave] = useCheckSave();
+
   const handleSave = () => {
-    setDoSave(true);
+    startSave();
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {

@@ -105,6 +105,7 @@ import { useInterval } from '../utils/useInterval';
 import { handleUserMenuAction } from '../components/App/AppHead';
 
 import { waitForIt } from '../utils/waitForIt';
+import { useCheckSave } from '../utils/useCheckSave';
 
 const noop = { openExternal: () => {}, openItem: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop as any };
@@ -341,8 +342,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [changed, setChanged] = useGlobal('changed');
-  const [doSave, setDoSave] = useGlobal('doSave');
-
+  const [doSave] = useGlobal('doSave');
   const [alertOpen, setAlertOpen] = useGlobal('alertOpen');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
@@ -366,8 +366,6 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
-  const [saveResult] = useGlobal('saveResult');
-  const saveErr = useRef<string>();
 
   const slugMap: { [key: string]: string } = {
     [NavChoice.UsersAndGroups]: t.usersAndGroups,
@@ -587,6 +585,7 @@ export function ResponsiveDrawer(props: IProps) {
     setChanged(false);
   };
 
+  /*
   useEffect(() => {
     saveErr.current = saveResult;
   }, [saveResult]);
@@ -594,21 +593,21 @@ export function ResponsiveDrawer(props: IProps) {
   const SaveIncomplete = () => saveErr.current === undefined;
   const SaveUnsuccessful = () =>
     saveErr.current !== undefined && saveErr.current !== '';
-
+*/
   const finishConfirmed = (
     savedMethod: (() => any) | undefined,
-    tryCount: number
+    waitCount: number
   ) => {
     waitForIt(
       'BusyBeforeSave',
       SaveIncomplete,
       savedMethod,
       SaveUnsuccessful,
-      tryCount
+      waitCount
     ).catch((err) => {
       saveConfirm.current = undefined;
       if (SaveUnsuccessful()) {
-        setMessage(<span>{saveErr.current}</span>);
+        setMessage(<span>{saveError()}</span>);
       } else {
         setMessage(<span>Timed Out.</span>);
       }
@@ -619,8 +618,8 @@ export function ResponsiveDrawer(props: IProps) {
     const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;
     setMessage(<span>{t.saving}</span>);
-    saveErr.current = undefined;
-    setDoSave(true);
+    //saveErr.current = undefined;
+    startSave();
     setAlertOpen(false);
     finishConfirmed(savedMethod, 8);
   };
@@ -636,6 +635,13 @@ export function ResponsiveDrawer(props: IProps) {
     }
     return projects;
   };
+  const [
+    startSave,
+    ,
+    SaveIncomplete,
+    SaveUnsuccessful,
+    saveError,
+  ] = useCheckSave();
 
   useEffect(() => {
     Online((val) => setOnline(val), auth);

@@ -76,6 +76,7 @@ import {
   AddPassageStateCommentOps,
 } from '../utils/updatePassageState';
 import { logError, Severity } from '../components/logErrorService';
+import { useCheckSave } from '../utils/useCheckSave';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -180,9 +181,7 @@ export function Transcriber(props: IProps) {
   const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = React.useState('');
   const [changed, setChanged] = useGlobal('changed');
-  const [doSave, setDoSave] = useGlobal('doSave');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [saveResult, setSaveResult] = useGlobal('saveResult');
+  const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
   const [playSpeed, setPlaySpeed] = React.useState(1);
@@ -411,11 +410,6 @@ export function Transcriber(props: IProps) {
   };
 
   const handleSave = async (postComment: boolean = false) => {
-    function saveCompleted(err: string) {
-      setSaveResult(err);
-      if (err === '') setChanged(false);
-      setDoSave(false);
-    }
     if (transcriptionRef.current) {
       let transcription = transcriptionRef.current.firstChild.value;
       const userid = remoteIdNum('user', user, memory.keyMap);
@@ -779,6 +773,7 @@ export function Transcriber(props: IProps) {
     if (newAssigned !== assigned) setAssigned(newAssigned);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData]);
+  const [, saveCompleted] = useCheckSave();
 
   return (
     <div className={classes.root}>
