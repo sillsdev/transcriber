@@ -1,5 +1,5 @@
 import { Base64 } from 'js-base64';
-import { IApiError, User, Role, Plan } from './model';
+import { IApiError, User, Role, Plan, Section } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -267,9 +267,15 @@ export const Sources = async (
           goRemote = true;
         }
       }
-      const plans = memory.cache.query((q: QueryBuilder) =>
+
+      const loadedplans = new Set(
+        (memory.cache.query((q: QueryBuilder) =>
+          q.findRecords('section')
+        ) as Section[]).map((s) => related(s, 'plan') as string)
+      );
+      const plans = (memory.cache.query((q: QueryBuilder) =>
         q.findRecords('plan')
-      ) as Plan[];
+      ) as Plan[]).filter((p) => loadedplans.has(p.id));
       const projs = new Set(plans.map((p) => related(p, 'project') as string));
       setProjectsLoaded(Array.from(projs));
     }

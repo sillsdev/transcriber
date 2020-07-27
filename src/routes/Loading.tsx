@@ -257,8 +257,6 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     if (orbitLoaded && completed === 90) {
-      if (isDeveloper) memory.query((q: QueryBuilder) => q.findRecords('plan'));
-
       if (user && user !== '') {
         const userRec: User = GetUser(memory, user);
         if (userRec.attributes === null) {
