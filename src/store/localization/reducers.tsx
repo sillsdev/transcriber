@@ -142,6 +142,10 @@ const initialState = {
 		"en": {
 			"NoSaveOffline": "Save is not available offline.",
 			"action": "Action",
+			"upload": "Upload Audio",
+			"play": "Play / Pause",
+			"assign": "Assign",
+			"transcribe": "Transcribe",
 			"delete": "Delete",
 			"move": "Move",
 			"copy": "Copy",
@@ -172,6 +176,7 @@ const initialState = {
 			"book": "Book",
 			"reference": "Reference",
 			"description": "Description",
+			"action": "Action",
 			"loadingTable": "Loading data",
 			"saving": "Saving...",
 			"pasteNoRows": "No Rows in clipboard.",

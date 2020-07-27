@@ -691,7 +691,35 @@
                     <context context-type="sourcefile">PlanSheet.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planSheet.delete">
+        	<trans-unit id="planSheet.upload">
+        		<source>Upload Audio</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.play">
+        		<source>Play / Pause</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.assign">
+        		<source>Assign</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.transcribe">
+        		<source>Transcribe</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.delete">
                 <source>Delete</source>
                 <target/>
                 <context-group>
@@ -873,7 +901,14 @@
                     <context context-type="sourcefile">ScriptureTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="scriptureTable.loadingTable">
+        	<trans-unit id="scriptureTable.action">
+        		<source>Action</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ScriptureTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="scriptureTable.loadingTable">
                 <source>Loading data</source>
                 <target/>
                 <context-group>

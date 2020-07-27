@@ -12,10 +12,16 @@ import {
   Checkbox,
   Switch,
   FormControlLabel,
+  IconButton,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
+import UploadIcon from '@material-ui/icons/CloudUpload';
+import PlayIcon from '@material-ui/icons/PlayArrow';
+import AssignIcon from '@material-ui/icons/People';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { FaPenNib } from 'react-icons/fa';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
@@ -55,6 +61,14 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
     }) as any,
+    actionButton: {
+      '& .MuiIconButton-root': {
+        color: 'rgba(0,0,0,0.35)',
+      },
+    },
+    lessEmphasis: {
+      opacity: 0.6,
+    },
     text: {},
     grow: {
       flexGrow: 1,
@@ -417,7 +431,9 @@ export function PlanSheet(props: IProps) {
           const isPassage = /^[0-9]+$/.test(row[PassageSeqCol].toString());
           return [
             {
-              value: (
+              value: isDeveloper ? (
+                <></>
+              ) : (
                 <Checkbox
                   data-testid={check.includes(rowIndex) ? 'checked' : 'check'}
                   checked={check.includes(rowIndex)}
@@ -426,40 +442,67 @@ export function PlanSheet(props: IProps) {
               ),
               className: isSection ? 'set' : 'pass',
             } as ICell,
-          ].concat(
-            row.map((e, cellIndex) => {
-              return cellIndex !== bookCol || !isPassage
-                ? {
-                    value: e,
-                    readOnly: isSection
-                      ? isPassage
-                        ? false
-                        : cellIndex > 1
-                      : cellIndex <= 1,
-                    className:
-                      (cellIndex === SectionSeqCol ||
-                      cellIndex === PassageSeqCol
-                        ? 'num'
-                        : 'pass') +
-                      (isSection
-                        ? !inlinePassages || cellIndex <= 1
-                          ? ' set'
-                          : ' setp'
-                        : ''),
-                  }
-                : {
-                    value: e,
-                    className:
-                      'book' + (isSection && inlinePassages ? ' setp' : ''),
-                    dataEditor: bookEditor,
-                  };
-            })
-          );
+          ]
+            .concat(
+              row.map((e, cellIndex) => {
+                return cellIndex !== bookCol || !isPassage
+                  ? {
+                      value: e,
+                      readOnly: isSection
+                        ? isPassage
+                          ? false
+                          : cellIndex > 1
+                        : cellIndex <= 1,
+                      className:
+                        (cellIndex === SectionSeqCol ||
+                        cellIndex === PassageSeqCol
+                          ? 'num'
+                          : 'pass') +
+                        (isSection
+                          ? !inlinePassages || cellIndex <= 1
+                            ? ' set'
+                            : ' setp'
+                          : ''),
+                    }
+                  : {
+                      value: e,
+                      className:
+                        'book' + (isSection && inlinePassages ? ' setp' : ''),
+                      dataEditor: bookEditor,
+                    };
+              })
+            )
+            .concat([
+              {
+                value: !isDeveloper ? (
+                  <></>
+                ) : (
+                  <div className={classes.actionButton}>
+                    <IconButton title={t.upload}>
+                      <UploadIcon />
+                    </IconButton>
+                    <IconButton title={t.play}>
+                      <PlayIcon />
+                    </IconButton>
+                    <IconButton title={t.assign}>
+                      <AssignIcon />
+                    </IconButton>
+                    <IconButton title={t.transcribe}>
+                      <FaPenNib />
+                    </IconButton>
+                    <IconButton title={t.delete}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                ),
+                className: isSection ? 'set' : 'pass',
+              } as ICell,
+            ]);
         })
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, check, bookCol]);
+  }, [rowData, check, bookCol, columns]);
 
   useEffect(() => {
     if (sheetRef.current && showRow) {
@@ -558,29 +601,36 @@ export function PlanSheet(props: IProps) {
                 >
                   {t.resequence}
                 </Button>
-                <Button
-                  key="action"
-                  aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
-                  aria-label={t.action}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleMenu}
-                >
-                  {t.action}
-                  <DropDownIcon className={classes.icon} />
-                </Button>
-                <Menu
-                  id="action-menu"
-                  anchorEl={actionMenuItem}
-                  open={Boolean(actionMenuItem)}
-                  onClose={handleConfirmAction('Close')}
-                >
-                  <MenuItem onClick={handleConfirmAction('Delete')}>
-                    {t.delete}
-                  </MenuItem>
-                </Menu>
+                {!isDeveloper && (
+                  <>
+                    <Button
+                      key="action"
+                      aria-owns={
+                        actionMenuItem !== '' ? 'action-menu' : undefined
+                      }
+                      aria-label={t.action}
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleMenu}
+                    >
+                      {t.action}
+                      <DropDownIcon className={classes.icon} />
+                    </Button>
+                    <Menu
+                      id="action-menu"
+                      anchorEl={actionMenuItem}
+                      open={Boolean(actionMenuItem)}
+                      onClose={handleConfirmAction('Close')}
+                    >
+                      <MenuItem onClick={handleConfirmAction('Delete')}>
+                        {t.delete}
+                      </MenuItem>
+                    </Menu>
+                  </>
+                )}
                 <FormControlLabel
+                  className={classes.lessEmphasis}
                   control={
                     <Switch
                       checked={inlinePassages}

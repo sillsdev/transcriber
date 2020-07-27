@@ -17,12 +17,19 @@ import localStrings from '../selector/localize';
 import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  useTheme,
+} from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
 import { remoteId, remoteIdNum, remoteIdGuid, related } from '../utils';
 import { isUndefined } from 'util';
+import { DrawerTask } from '../routes/drawer';
+import { debounce } from 'lodash';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,6 +115,8 @@ export function ScriptureTable(props: IProps) {
     sections,
   } = props;
   const classes = useStyles();
+  const [width, setWidth] = React.useState(window.innerWidth);
+  const theme = useTheme();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
@@ -115,6 +124,7 @@ export function ScriptureTable(props: IProps) {
   const [saving, setSaving] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [changed, setChanged] = useGlobal('changed');
+  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [rowId, setRowId] = useState(Array<Array<ISequencedRecordIdentity>>());
   const [inlinePassages, setInlinePassages] = useState({
@@ -122,24 +132,15 @@ export function ScriptureTable(props: IProps) {
     inline: false,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [columns, setColumns] = useState([
     { value: t.section, readOnly: true, width: 80 },
     { value: t.title, readOnly: true, width: 280 },
     { value: t.passage, readOnly: true, width: 80 },
-    { value: t.book, readOnly: true, width: 170 },
     { value: t.reference, readOnly: true, width: 180 },
     { value: t.description, readOnly: true, width: 280 },
   ]);
 
-  const [data, setData] = useState(
-    Array<Array<any>>()
-    // [[1,"Luke wrote this book about Jesus for Theophilus",'','LUK',"Section 1:1–4",''],
-    // ['','',1,'LUK',"1:1-4",''],
-    // [2,"An angel said that John the Baptizer would be born",'','LUK',"Section 1:5–25",''],
-    // ['','',1,'LUK',"1:5-7",''],
-    // ['','',2,'LUK',"1:8-10",''],
-  );
+  const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
   const [complete, setComplete] = useState(0);
   const showBook = (cols: ICols) => cols.Book >= 0;
@@ -610,6 +611,23 @@ export function ScriptureTable(props: IProps) {
     });
   }
 
+  const setDimensions = () => {
+    setWidth(window.innerWidth - theme.spacing(DrawerTask));
+  };
+
+  React.useEffect(() => {
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
+
   useEffect(() => {
     const inlinePref = localStorage.getItem('inline-passages');
     if (inlinePref !== null) {
@@ -632,6 +650,15 @@ export function ScriptureTable(props: IProps) {
           ),
         });
     }
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
@@ -895,27 +922,55 @@ export function ScriptureTable(props: IProps) {
         setInData(initData.map((row: Array<any>) => [...row]));
         setRowId(rowIds);
       });
-      if (showBook(cols)) {
-        setColumns([
-          { value: t.section, readOnly: true, width: 80 },
-          { value: t.title, readOnly: true, width: 280 },
-          { value: t.passage, readOnly: true, width: 80 },
-          { value: t.book, readOnly: true, width: 170 },
-          { value: t.reference, readOnly: true, width: 180 },
-          { value: t.description, readOnly: true, width: 280 },
-        ]);
-      } else {
-        setColumns([
-          { value: t.section, readOnly: true, width: 80 },
-          { value: t.title, readOnly: true, width: 280 },
-          { value: t.passage, readOnly: true, width: 80 },
-          { value: t.reference, readOnly: true, width: 180 },
-          { value: t.description, readOnly: true, width: 280 },
-        ]);
-      }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [plan, sections, passages, saving, inlinePassages]);
+
+  useEffect(() => {
+    const colMx = data.reduce(
+      (prev, cur, i) =>
+        cur.map((v, i) =>
+          Math.max(
+            prev[i],
+            typeof v === 'number' ? v.toString().length : v.length
+          )
+        ),
+      [0, 0, 0, 0, 0, 0, 0]
+    );
+    const total = colMx.reduce((prev, cur) => prev + cur, 0);
+    const colMul = colMx.map((v) => v / total);
+    const extra = Math.max(width - 1020, 0);
+    const colAdd = colMul.map((v) => Math.floor(extra * v));
+    let colHead = [
+      { value: t.section, readOnly: true, width: 60 + colAdd[0] },
+      { value: t.title, readOnly: true, width: 100 + colAdd[1] },
+      { value: t.passage, readOnly: true, width: 60 + colAdd[2] },
+    ];
+    let nx = 3;
+    if (showBook(cols)) {
+      colHead = colHead.concat([
+        { value: t.book, readOnly: true, width: 170 + colAdd[3] },
+      ]);
+      nx += 1;
+    }
+    colHead = colHead.concat([
+      { value: t.reference, readOnly: true, width: 120 + colAdd[nx] },
+      { value: t.description, readOnly: true, width: 100 + colAdd[nx + 1] },
+    ]);
+    nx += 2;
+    if (isDeveloper) {
+      colHead = colHead.concat([
+        { value: t.action, readOnly: true, width: 250 },
+      ]);
+    }
+    if (
+      colHead.length !== columns.length ||
+      columns[1].width !== colHead[1].width
+    ) {
+      setColumns(colHead);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [data, width, cols, columns]);
 
   return (
     <div className={classes.container}>

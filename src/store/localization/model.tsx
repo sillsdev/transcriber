@@ -127,6 +127,10 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "NoSaveOffline": string;
     "action": string;
+    "upload": string;
+    "play": string;
+    "assign": string;
+    "transcribe": string;
     "delete": string;
     "move": string;
     "copy": string;
@@ -156,6 +160,7 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
     "book": string;
     "reference": string;
     "description": string;
+    "action": string;
     "loadingTable": string;
     "saving": string;
     "pasteNoRows": string;

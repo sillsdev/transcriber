@@ -592,6 +592,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.upload">
+         <segment>
+            <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.play">
+         <segment>
+            <source>Play / Pause</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.assign">
+         <segment>
+            <source>Assign</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.delete">
          <segment>
             <source>Delete</source>
@@ -745,6 +769,12 @@
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="scriptureTable.action">
+         <segment>
+            <source>Action</source>
             <target/>
          </segment>
       </unit>
