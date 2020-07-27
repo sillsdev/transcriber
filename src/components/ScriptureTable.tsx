@@ -957,7 +957,7 @@ export function ScriptureTable(props: IProps) {
       setColumns(colHead);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [data, width, cols, columns]);
+  }, [data, width, cols]);
 
   return (
     <div className={classes.container}>
