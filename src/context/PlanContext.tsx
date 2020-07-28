@@ -64,6 +64,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [importexportBusy] = useGlobal('importexportBusy');
     const [busy] = useGlobal('remoteBusy');
     const [changed, setChanged] = useGlobal('changed');
+    const [doSave] = useGlobal('doSave');
     const [, setAlertOpen] = useGlobal('alertOpen');
     const [message, setMessage] = React.useState(<></>);
     const saveConfirm = React.useRef<() => any>();
@@ -102,6 +103,11 @@ const PlanProvider = withData(mapRecordsToProps)(
         setMessage(<span>{t.loadingTable}</span>);
         return;
       }
+      console.log('checksavedfn', doSave);
+      if (doSave) {
+        setMessage(<span>{t.saving}</span>);
+        return;
+      }
       if (changed) {
         saveConfirm.current = method;
         setAlertOpen(true);
@@ -121,8 +127,11 @@ const PlanProvider = withData(mapRecordsToProps)(
       setChanged(false);
     };
 
-    const finishConfirmed = (waitCount: number) => {
-      waitForSave(waitCount).catch((err) => {
+    const finishConfirmed = (
+      savedMethod: undefined | (() => any),
+      waitCount: number
+    ) => {
+      waitForSave(savedMethod, waitCount).catch((err) => {
         setMessage(<span>{err.message}</span>);
       });
     };
@@ -131,9 +140,9 @@ const PlanProvider = withData(mapRecordsToProps)(
       const savedMethod = saveConfirm.current;
       saveConfirm.current = undefined;
       setMessage(<span>{t.saving}</span>);
-      startSave(savedMethod);
+      startSave();
       setAlertOpen(false);
-      finishConfirmed(8);
+      finishConfirmed(savedMethod, 8);
     };
 
     const handleMessageReset = () => {

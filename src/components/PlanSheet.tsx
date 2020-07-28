@@ -219,7 +219,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const handleSave = () => {
-    startSave(undefined);
+    startSave();
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {

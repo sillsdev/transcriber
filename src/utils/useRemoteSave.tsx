@@ -3,34 +3,30 @@ import { useGlobal } from 'reactn';
 import { waitForIt } from './waitForIt';
 
 export const useRemoteSave = (): [
-  (cb: undefined | (() => any)) => void,
+  () => void,
   (err: string) => void,
-  (cnt: number) => Promise<any>
+  (cb: undefined | (() => any), cnt: number) => Promise<any>
 ] => {
   const saveErr = useRef<string>();
-  const doAfter = useRef<() => any>();
   const [saveResult, setSaveResult] = useGlobal('saveResult');
   const [, setChanged] = useGlobal('changed');
   const [, setDoSave] = useGlobal('doSave');
 
   useEffect(() => {
     saveErr.current = saveResult;
-    console.log('saveResult', saveResult);
   }, [saveResult]);
 
-  const startSave = (resolvedMethod: undefined | (() => any)) => {
-    doAfter.current = resolvedMethod;
+  const startSave = () => {
     setSaveResult(undefined);
     setDoSave(true);
   };
 
   const saveCompleted = (err: string) => {
-    setSaveResult(err);
-    setDoSave(false);
     if (err === '') {
       setChanged(false);
-      if (doAfter.current) return doAfter.current();
     }
+    setSaveResult(err);
+    setDoSave(false);
   };
   const saveError = () => saveErr.current || '';
 
@@ -38,12 +34,17 @@ export const useRemoteSave = (): [
   const SaveUnsuccessful = () =>
     saveErr.current !== undefined && saveErr.current !== '';
 
-  const waitForSave = async (waitCount: number): Promise<any> => {
-    return waitForIt('Save', SaveIncomplete, SaveUnsuccessful, waitCount).catch(
-      (err) => {
+  const waitForSave = async (
+    resolvedMethod: undefined | (() => any),
+    waitCount: number
+  ): Promise<any> => {
+    return waitForIt('Save', SaveIncomplete, SaveUnsuccessful, waitCount)
+      .then(() => {
+        if (resolvedMethod) return resolvedMethod();
+      })
+      .catch((err) => {
         throw new Error(SaveUnsuccessful() ? saveError() : 'Timed Out');
-      }
-    );
+      });
   };
   return [startSave, saveCompleted, waitForSave];
 };
