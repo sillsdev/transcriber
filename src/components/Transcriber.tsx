@@ -351,6 +351,7 @@ export function Transcriber(props: IProps) {
         let nextState = next[state];
         if (nextState === ActivityStates.Approved && getType() !== 'scripture')
           nextState = ActivityStates.Done;
+
         var tb = new TransformBuilder();
         var ops = UpdatePassageStateOps(
           passage.id,
@@ -455,12 +456,14 @@ export function Transcriber(props: IProps) {
       await memory
         .update(ops)
         .then(() => {
+          //we come here before we get an error because we're non-blocking
           if (postComment) setComment('');
           loadHistory();
           saveCompleted('');
         })
         .catch((err) => {
-          saveCompleted('ugh');
+          //so we don't come here...we go to continue/logout
+          saveCompleted(err.message);
         });
     }
   };
