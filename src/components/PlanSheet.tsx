@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
-import { IPlanSheetStrings, BookNameMap } from '../model';
+import { IPlanSheetStrings, ISharedStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -33,6 +33,7 @@ import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { Online } from '../utils';
 import { useInterval } from '../utils/useInterval';
+import { useRemoteSave } from '../utils/useRemoteSave';
 
 const ActionHeight = 52;
 
@@ -108,6 +109,7 @@ interface IChange {
 
 interface IStateProps {
   t: IPlanSheetStrings;
+  ts: ISharedStrings;
 }
 
 interface IProps extends IStateProps {
@@ -132,6 +134,7 @@ export function PlanSheet(props: IProps) {
     columns,
     rowData,
     t,
+    ts,
     bookCol,
     bookSuggestions,
     bookMap,
@@ -163,8 +166,7 @@ export function PlanSheet(props: IProps) {
   const suggestionRef = useRef<Array<OptionType>>();
   const listRef = useRef<Array<string>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [doSave, setDoSave] = useGlobal('doSave');
+  const [doSave] = useGlobal('doSave');
   const [online, setOnline] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
   const [isDeveloper] = useGlobal('developer');
@@ -174,6 +176,7 @@ export function PlanSheet(props: IProps) {
   const sheetRef = useRef<any>();
   const [showRow, setShowRow] = useState(0);
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
+  const [startSave] = useRemoteSave();
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -214,14 +217,9 @@ export function PlanSheet(props: IProps) {
         row.filter((row, rowIndex) => rowIndex > 0).map((col) => col.value)
       );
   };
+
   const handleSave = () => {
-    if (!online) {
-      setMessage(<span>{t.NoSaveOffline}</span>);
-    } else {
-      setChanged(false);
-      setMessage(<span>{t.saving}</span>);
-      setDoSave(true);
-    }
+    startSave();
   };
 
   const handleSelect = (loc: DataSheet.Selection) => {
@@ -403,7 +401,7 @@ export function PlanSheet(props: IProps) {
   useEffect(() => {
     if (changed) {
       if (saveTimer.current === undefined) startSaveTimer();
-      if (!online) setMessage(<span>{t.NoSaveOffline}</span>);
+      if (!online) setMessage(<span>{ts.NoSaveOffline}</span>);
     } else {
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = undefined;

@@ -76,6 +76,7 @@ import {
   AddPassageStateCommentOps,
 } from '../utils/updatePassageState';
 import { logError, Severity } from '../components/logErrorService';
+import { useRemoteSave } from '../utils/useRemoteSave';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -180,7 +181,7 @@ export function Transcriber(props: IProps) {
   const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = React.useState('');
   const [changed, setChanged] = useGlobal('changed');
-  const [doSave, setDoSave] = useGlobal('doSave');
+  const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
   const [playSpeed, setPlaySpeed] = React.useState(1);
@@ -207,6 +208,8 @@ export function Transcriber(props: IProps) {
   const [historyContent, setHistoryContent] = React.useState<any[]>();
   const [rejectVisible, setRejectVisible] = React.useState(false);
   const [transcriptionIn, setTranscriptionIn] = React.useState('');
+  const [, saveCompleted] = useRemoteSave();
+
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
@@ -348,6 +351,7 @@ export function Transcriber(props: IProps) {
         let nextState = next[state];
         if (nextState === ActivityStates.Approved && getType() !== 'scripture')
           nextState = ActivityStates.Done;
+
         var tb = new TransformBuilder();
         var ops = UpdatePassageStateOps(
           passage.id,
@@ -449,10 +453,18 @@ export function Transcriber(props: IProps) {
           userid
         )
       );
-      await memory.update(ops);
-      if (postComment) setComment('');
-      loadHistory();
-      setChanged(false);
+      await memory
+        .update(ops)
+        .then(() => {
+          //we come here before we get an error because we're non-blocking
+          if (postComment) setComment('');
+          loadHistory();
+          saveCompleted('');
+        })
+        .catch((err) => {
+          //so we don't come here...we go to continue/logout
+          saveCompleted(err.message);
+        });
     }
   };
 
@@ -585,7 +597,6 @@ export function Transcriber(props: IProps) {
   React.useEffect(() => {
     if (doSave) {
       handleSave();
-      setDoSave(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [doSave]);

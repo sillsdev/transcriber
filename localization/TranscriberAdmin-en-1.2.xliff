@@ -677,13 +677,6 @@
         			<context context-type="sourcefile">PlanTable.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="planSheet.NoSaveOffline">
-                <source>Save is not available offline.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">PlanSheet.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="planSheet.action">
                 <source>Action</source>
                 <target/>

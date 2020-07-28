@@ -1,16 +1,15 @@
 export const waitForIt = async (
   label: string,
   testIt: () => boolean,
-  resolvedMethod: (() => any) | undefined,
-  tryCount: number
+  cancelIf: () => boolean,
+  waitCount: number
 ): Promise<any> => {
-  while (tryCount > 0) {
+  while (!cancelIf() && waitCount > 0) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     if (testIt()) {
-      if (resolvedMethod) return resolvedMethod();
       return;
     }
-    tryCount -= 1;
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    waitCount -= 1;
   }
   throw new Error('waitForIt failed: ' + label);
 };

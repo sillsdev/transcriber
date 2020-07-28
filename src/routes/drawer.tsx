@@ -104,7 +104,7 @@ import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 import { useInterval } from '../utils/useInterval';
 import { handleUserMenuAction } from '../components/App/AppHead';
 
-import { waitForIt } from '../utils/waitForIt';
+import { useRemoteSave } from '../utils/useRemoteSave';
 
 const noop = { openExternal: () => {}, openItem: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop as any };
@@ -341,7 +341,7 @@ export function ResponsiveDrawer(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [changed, setChanged] = useGlobal('changed');
-  const [doSave, setDoSave] = useGlobal('doSave');
+  const [doSave] = useGlobal('doSave');
   const [alertOpen, setAlertOpen] = useGlobal('alertOpen');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [_autoOpenAddMedia, setAutoOpenAddMedia] = useGlobal(
@@ -365,6 +365,7 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
+  const [startSave, , waitForSave] = useRemoteSave();
 
   const slugMap: { [key: string]: string } = {
     [NavChoice.UsersAndGroups]: t.usersAndGroups,
@@ -532,6 +533,10 @@ export function ResponsiveDrawer(props: IProps) {
       setMessage(<span>{t.loadingTable}</span>);
       return;
     }
+    if (doSave) {
+      setMessage(<span>{t.saving}</span>);
+      return;
+    }
     if (changed) {
       saveConfirm.current = method;
       setAlertOpen(true);
@@ -585,16 +590,19 @@ export function ResponsiveDrawer(props: IProps) {
   };
 
   const finishConfirmed = (
-    savedMethod: (() => any) | undefined,
-    tryCount: number
-  ) => waitForIt('BusyBeforeSave', isRequestQueueEmpty, savedMethod, tryCount);
+    savedMethod: undefined | (() => any),
+    waitCount: number
+  ) => {
+    waitForSave(savedMethod, waitCount).catch((err) => {
+      setMessage(<span>{err.message}</span>);
+    });
+  };
 
   const handleSaveConfirmed = () => {
     const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;
     setMessage(<span>{t.saving}</span>);
-    setChanged(false);
-    setDoSave(true);
+    startSave();
     setAlertOpen(false);
     finishConfirmed(savedMethod, 8);
   };
@@ -851,7 +859,7 @@ export function ResponsiveDrawer(props: IProps) {
   ]);
 
   const updateBusy = () => {
-    const isBusy = remote.requestQueue.length !== 0;
+    const isBusy = !isRequestQueueEmpty;
     if (busy !== isBusy) setBusy(isBusy);
   };
   const doDateChanges = () => {

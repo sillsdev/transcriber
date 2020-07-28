@@ -67,7 +67,6 @@ interface IProps
     WithStyles<typeof styles> {
   errorReporter: any;
   resetRequests: () => Promise<void>;
-  isRequestQueueEmpty: () => boolean;
   children: JSX.Element;
 }
 
