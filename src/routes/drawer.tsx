@@ -585,11 +585,8 @@ export function ResponsiveDrawer(props: IProps) {
     setChanged(false);
   };
 
-  const finishConfirmed = (
-    savedMethod: (() => any) | undefined,
-    waitCount: number
-  ) => {
-    waitForSave(savedMethod, waitCount).catch((err) => {
+  const finishConfirmed = (waitCount: number) => {
+    waitForSave(waitCount).catch((err) => {
       saveConfirm.current = undefined;
       setMessage(<span>{err.message}</span>);
     });
@@ -599,10 +596,9 @@ export function ResponsiveDrawer(props: IProps) {
     const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;
     setMessage(<span>{t.saving}</span>);
-    //saveErr.current = undefined;
-    startSave();
+    startSave(savedMethod);
     setAlertOpen(false);
-    finishConfirmed(savedMethod, 8);
+    finishConfirmed(8);
   };
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 

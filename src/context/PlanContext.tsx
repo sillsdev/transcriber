@@ -121,11 +121,8 @@ const PlanProvider = withData(mapRecordsToProps)(
       setChanged(false);
     };
 
-    const finishConfirmed = (
-      savedMethod: (() => any) | undefined,
-      waitCount: number
-    ) => {
-      waitForSave(savedMethod, waitCount).catch((err) => {
+    const finishConfirmed = (waitCount: number) => {
+      waitForSave(waitCount).catch((err) => {
         setMessage(<span>{err.message}</span>);
       });
     };
@@ -134,9 +131,9 @@ const PlanProvider = withData(mapRecordsToProps)(
       const savedMethod = saveConfirm.current;
       saveConfirm.current = undefined;
       setMessage(<span>{t.saving}</span>);
-      startSave();
+      startSave(savedMethod);
       setAlertOpen(false);
-      finishConfirmed(savedMethod, 8);
+      finishConfirmed(8);
     };
 
     const handleMessageReset = () => {
