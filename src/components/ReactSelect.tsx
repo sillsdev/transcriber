@@ -20,7 +20,6 @@ import { Typography, NoSsr, Paper, Chip, MenuItem } from '@material-ui/core';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TextField, { BaseTextFieldProps } from '@material-ui/core/TextField';
 import { emphasize } from '@material-ui/core/styles/colorManipulator';
-import './ReactSelect.css';
 
 export interface OptionType {
   label: string;
@@ -32,6 +31,12 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       height: 250,
+      '& .MuiInput-underline:before': {
+        borderBottom: 'none',
+      },
+      '& .css-1okebmr-indicatorSeparator': {
+        width: 0,
+      },
     },
     noExtraRoot: {
       flexGrow: 0,

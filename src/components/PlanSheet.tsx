@@ -27,7 +27,6 @@ import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import 'react-datasheet/lib/react-datasheet.css';
-import './PlanSheet.css';
 import { isNumber } from 'util';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
@@ -55,6 +54,32 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
+      '& .data-grid-container .data-grid .cell': {
+        verticalAlign: 'middle',
+        textAlign: 'left',
+        paddingLeft: theme.spacing(0.5),
+        paddingRight: theme.spacing(0.5),
+      },
+      '& .data-grid-container .data-grid .cell.set': {
+        backgroundColor: theme.palette.primary.dark,
+      },
+      '& .data-grid-container .data-grid .cell.setp': {
+        backgroundColor: theme.palette.primary.light,
+      },
+      '& .data-grid-container .data-grid .cell.num': {
+        textAlign: 'center',
+      },
+      '& .data-grid-container .data-grid .cell.num > input': {
+        textAlign: 'center',
+        padding: theme.spacing(1),
+      },
+      '& .data-grid-container .data-grid .cell.pass': {
+        textAlign: 'left',
+      },
+      '& .data-grid-container .data-grid .cell.pass > input': {
+        textAlign: 'left',
+        padding: theme.spacing(1),
+      },
     },
     actions: theme.mixins.gutters({
       paddingBottom: 16,

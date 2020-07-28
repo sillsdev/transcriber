@@ -24,7 +24,6 @@ import Auth from '../auth/Auth';
 import { sectionNumber, numCompare, sectionDescription } from '../utils';
 import { debounce } from 'lodash';
 import { DrawerTask } from '../routes/drawer';
-import './TaskTable.css';
 
 export const TaskItemWidth = 370;
 
@@ -32,6 +31,24 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      '&[data-list="true"] table': {
+        minWidth: '372px !important',
+      },
+      '&[data-list="true"] thead': {
+        display: 'none',
+      },
+      '& .MuiListItem-root': {
+        padding: '0 16px',
+      },
+      '& .MuiList-root': {
+        padding: 0,
+      },
+      '& colgroup col:first-child': {
+        width: '1px !important',
+      },
+      '&[data-list="true"] colgroup col:nth-child(2)': {
+        width: '370px !important',
+      },
     },
     container: {
       display: 'flex',

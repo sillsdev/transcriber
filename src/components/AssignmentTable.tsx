@@ -24,7 +24,6 @@ import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
 import related from '../utils/related';
 import Auth from '../auth/Auth';
-import './AssignmentTable.css';
 import AssignSection from './AssignSection';
 import {
   sectionDescription,
@@ -42,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
+      '& tr > td > div > span.MuiButtonBase-root:nth-child(3)': {
+        visibility: 'hidden',
+      },
     },
     paper: {},
     bar: {

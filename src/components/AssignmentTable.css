@@ -1,4 +1,0 @@
-/* hide the passage row selectors */
-#AssignmentTable tr > td > div > span.MuiButtonBase-root:nth-child(3) {
-  visibility: hidden;
-}
