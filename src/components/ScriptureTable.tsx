@@ -791,7 +791,6 @@ export function ScriptureTable(props: IProps) {
     if (doSave && !saving) {
       Online((online) => {
         if (!online) {
-          setMessage(<span>{ts.NoSaveOffline}</span>);
           saveCompleted(ts.NoSaveOffline);
           setSaving(false);
         } else {
