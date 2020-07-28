@@ -919,7 +919,7 @@ export function ScriptureTable(props: IProps) {
         cur.map((v, i) =>
           Math.max(
             prev[i],
-            typeof v === 'number' ? v.toString().length : v.length
+            !v ? 1 : typeof v === 'number' ? v.toString().length : v.length
           )
         ),
       [0, 0, 0, 0, 0, 0, 0]
