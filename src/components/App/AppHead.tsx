@@ -10,6 +10,7 @@ import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
 import { resetData, exitElectronApp, forceLogin } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
+const ipc = isElectron ? require('electron').ipcRenderer : null;
 
 const useStyles = makeStyles({
   appBar: {
@@ -50,6 +51,7 @@ export const handleUserMenuAction = (
     exitElectronApp();
   }
   if (isElectron && /logout/i.test(what)) {
+    ipc?.invoke('logout');
     localStorage.removeItem('user-id');
     setView('Access');
     return;

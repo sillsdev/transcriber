@@ -34,7 +34,7 @@ import SnackBar from './SnackBar';
 import related from '../utils/related';
 import { passageRefCompare, passageReference } from '../utils/passage';
 import { remoteIdNum } from '../utils';
-import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
+import { UpdatePassageStateOps } from '../utils/updatePassageState';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

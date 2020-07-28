@@ -6,7 +6,7 @@ import xpath from 'xpath';
 import { QueryBuilder, TransformBuilder, Record, Operation } from '@orbit/data';
 import related from './related';
 import { getParatextProgPath } from './paratextPath';
-import { UpdatePassageStateOps } from './UpdatePassageState';
+import { UpdatePassageStateOps } from './updatePassageState';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 var temp = isElectron ? require('electron').remote.getGlobal('temp') : '';

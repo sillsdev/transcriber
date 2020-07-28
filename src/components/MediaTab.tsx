@@ -59,7 +59,7 @@ import { dateCompare, numCompare } from '../utils/sort';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { getMediaInPlans } from '../utils/getMediaInPlans';
-import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
+import { UpdatePassageStateOps } from '../utils/updatePassageState';
 
 const ActionHeight = 52;
 

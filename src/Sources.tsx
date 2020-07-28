@@ -1,4 +1,3 @@
-import { Base64 } from 'js-base64';
 import { IApiError, User, Role, Plan, Section } from './model';
 import Coordinator, {
   RequestStrategy,
@@ -24,7 +23,6 @@ export const Sources = async (
   coordinator: Coordinator,
   memory: Memory,
   auth: Auth,
-  offline: boolean,
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
@@ -38,10 +36,7 @@ export const Sources = async (
   globalStore: any
 ) => {
   const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const tokenPart = auth.accessToken ? auth.accessToken.split('.') : [];
-  const tokData = JSON.parse(
-    tokenPart.length > 1 ? Base64.decode(tokenPart[1]) : '{"sub":""}'
-  );
+  const tokData = auth.getProfile() || { sub: '' };
   const userToken = localStorage.getItem('user-token');
   if (tokData.sub !== '') {
     localStorage.setItem('user-token', tokData.sub);
@@ -67,6 +62,8 @@ export const Sources = async (
     coordinator.addStrategy(new EventLoggingStrategy({ name: 'logging' }));
 
   let remote: JSONAPISource = {} as JSONAPISource;
+
+  const offline = !auth.accessToken;
 
   if (!offline) {
     var components: Component[] = await Fingerprint2.getPromise({});

@@ -2,7 +2,6 @@ import { FileResponse } from './types';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import path from 'path';
-import { DataPath } from '../../utils/DataPath';
 import {
   Project,
   User,
@@ -15,11 +14,13 @@ import {
   Group,
 } from '../../model';
 import {
+  dataPath,
   cleanFileName,
   remoteIdGuid,
   getMediaEaf,
   related,
   remoteId,
+  currentDateTime,
 } from '../../utils';
 import Memory from '@orbit/memory';
 import { JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
@@ -31,7 +32,6 @@ import {
 } from '@orbit/data';
 import { isArray } from 'util';
 import moment from 'moment';
-import { currentDateTime } from '../../utils/currentDateTime';
 
 export async function electronExport(
   exportType: string,
@@ -125,7 +125,7 @@ export async function electronExport(
           user.attributes.avatarUrl !== ''
         )
           AddStreamEntry(
-            DataPath(user.attributes.avatarUrl),
+            dataPath(user.attributes.avatarUrl),
             user.attributes.avatarUrl
           );
       });
@@ -139,7 +139,7 @@ export async function electronExport(
           org.attributes.logoUrl !== ''
         )
           AddStreamEntry(
-            DataPath(org.attributes.logoUrl),
+            dataPath(org.attributes.logoUrl),
             org.attributes.logoUrl
           );
       });
@@ -149,7 +149,7 @@ export async function electronExport(
         var mf = m as MediaFile;
         if (mf.attributes)
           AddStreamEntry(
-            DataPath(mf.attributes.audioUrl),
+            dataPath(mf.attributes.audioUrl),
             mf.attributes.audioUrl
           );
         const eafCode = getMediaEaf(mf, memory);
@@ -167,7 +167,7 @@ export async function electronExport(
     };
 
     const AddFonts = () => {
-      const dir = DataPath('fonts');
+      const dir = dataPath('fonts');
       var items = fs.readdirSync(dir);
       for (var i = 0; i < items.length; i++) {
         zip.addLocalFile(path.join(dir, items[i]), 'fonts', items[i]);
@@ -401,12 +401,12 @@ export async function electronExport(
     if (backupZip) {
       backupZip.addFile(filename, zip.toBuffer(), projects[ix].attributes.name);
     } else {
-      var where = DataPath(filename);
+      var where = dataPath(filename);
       zip.writeZip(where);
       return BuildFileResponse(where, filename);
     }
   }
-  var backupWhere = DataPath(backupName);
+  var backupWhere = dataPath(backupName);
   if (backupZip) backupZip.writeZip(backupWhere);
   return BuildFileResponse(backupWhere, backupName);
 }

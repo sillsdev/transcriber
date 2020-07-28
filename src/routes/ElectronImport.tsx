@@ -12,7 +12,7 @@ import { isArray } from 'util';
 import { remoteIdGuid } from '../utils';
 import moment, { Moment } from 'moment';
 import IndexedDBSource from '@orbit/indexeddb';
-import { DataPath } from '../utils/DataPath';
+import { dataPath } from '../utils/dataPath';
 import fs from 'fs';
 import path from 'path';
 import { OpenDialogSyncOptions } from 'electron';
@@ -171,7 +171,7 @@ if (isElectron) {
     t: IElectronImportStrings
   ): void => {
     if (zip) {
-      const where = DataPath();
+      const where = dataPath();
       // console.log(where);
       fs.mkdirSync(where, { recursive: true });
       //delete any old passagesection files

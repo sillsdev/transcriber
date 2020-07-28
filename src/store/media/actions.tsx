@@ -5,7 +5,7 @@ import * as type from './types';
 import MemorySource from '@orbit/memory';
 import { remoteIdGuid } from '../../utils';
 import { isArray } from 'util';
-import { DataPath } from '../../utils/DataPath';
+import { dataPath } from '../../utils/dataPath';
 
 export const fetchMediaUrl = (
   id: string,
@@ -15,7 +15,7 @@ export const fetchMediaUrl = (
 ) => (dispatch: any) => {
   dispatch({ type: type.FETCH_AUDIO_URL_PENDING });
   if (offline) {
-    var mediarec = memory.cache.query(q =>
+    var mediarec = memory.cache.query((q) =>
       q.findRecord({
         type: 'mediafile',
         id: remoteIdGuid('mediafile', id, memory.keyMap),
@@ -24,7 +24,7 @@ export const fetchMediaUrl = (
     if (isArray(mediarec)) mediarec = mediarec[0];
     if (mediarec && mediarec.attributes) {
       dispatch({
-        payload: DataPath(mediarec.attributes.audioUrl),
+        payload: dataPath(mediarec.attributes.audioUrl),
         type: type.FETCH_AUDIO_URL,
       });
     }
@@ -34,14 +34,14 @@ export const fetchMediaUrl = (
         Authorization: 'Bearer ' + auth.accessToken,
       },
     })
-      .then(strings => {
+      .then((strings) => {
         const attr: any = strings.data.data.attributes;
         dispatch({
           payload: attr['audio-url'],
           type: type.FETCH_AUDIO_URL,
         });
       })
-      .catch(e => {
+      .catch((e) => {
         console.log('media fetch failure: ' + e.message);
       });
   }

@@ -98,7 +98,7 @@ import { isElectron, API_CONFIG } from '../api-variable';
 import { TaskItemWidth } from '../components/TaskTable';
 import { dateChanges } from './dateChanges';
 import { getOrgs } from '../utils/getOrgs';
-import { DataPath } from '../utils/DataPath';
+import { dataPath } from '../utils/dataPath';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 import { useInterval } from '../utils/useInterval';
@@ -654,7 +654,7 @@ export function ResponsiveDrawer(props: IProps) {
       const orgRec = organizations.filter((o) => o.id === organization);
       if (orgRec.length > 0) {
         const attr = orgRec[0].attributes;
-        setOrgAvatar(attr?.logoUrl ? DataPath(attr.logoUrl) : '');
+        setOrgAvatar(attr?.logoUrl ? dataPath(attr.logoUrl) : '');
       }
       const mbrRecs = getMbrRoleRec(memory, 'organization', organization, user);
       setOrgRole(getMbrRole(memory, mbrRecs));

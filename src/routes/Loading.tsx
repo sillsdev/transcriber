@@ -25,7 +25,7 @@ import {
   related,
   hasAnyRelated,
   setDefaultProj,
-  CreateOrg,
+  createOrg,
   uiLang,
   remoteId,
   GetUser,
@@ -236,7 +236,6 @@ export function Loading(props: IProps) {
       coordinator,
       memory,
       auth,
-      isElectron || offline,
       setUser,
       setBucket,
       setRemote,
@@ -292,7 +291,7 @@ export function Loading(props: IProps) {
             } as any;
           }
           Online((online) => {
-            CreateOrg({
+            createOrg({
               orgRec,
               user,
               coordinator,

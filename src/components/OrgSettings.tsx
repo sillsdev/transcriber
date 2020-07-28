@@ -29,7 +29,7 @@ import OrgIcon from '@material-ui/icons/AccountBalance';
 import DeleteExpansion from './DeleteExpansion';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
-import { CreateOrg, DataPath, Online } from '../utils';
+import { createOrg, dataPath, Online } from '../utils';
 import { currentDateTime } from '../utils/currentDateTime';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
@@ -182,7 +182,7 @@ export function OrgSettings(props: IProps) {
       },
     } as any;
     Online((online) => {
-      CreateOrg({
+      createOrg({
         orgRec,
         user,
         coordinator,
@@ -249,7 +249,7 @@ export function OrgSettings(props: IProps) {
     const attr = org.attributes;
     setName(attr.name);
     setDescription(attr.description || '');
-    setOrgAvatar(attr?.logoUrl ? DataPath(attr.logoUrl) : '');
+    setOrgAvatar(attr?.logoUrl ? dataPath(attr.logoUrl) : '');
     setWebsite(attr.websiteUrl || '');
     setPublic(attr.publicByDefault);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

@@ -71,12 +71,13 @@ Follow the prompts as appropriate. If the `~/.aws` folder is configured correctl
 
 ### Configuration
 
-Two files are needed to create _dev_ environment configurations:
+Three files are needed to create _dev_ environment configurations:
 
-- _.env.dev.development.local_
-- _.env.dev.local_
+- _env-config/.env.dev.development.local_
+- _env-config/.env.dev.local_
+- _env-config/env-variables-dev.json_
 
-Example _.env.appdev.development.local_:
+Example _env-config/.env.dev.development.local_:
 
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
@@ -95,7 +96,7 @@ REACT_APP_CALLBACK=http://localhost:3000/callback
 REACT_APP_SITE_TITLE=SIL Transcriber DEV
 ```
 
-Example _.env.dev.local_:
+Example _env-config/.env.dev.local_:
 
 ```
 REACT_APP_DOMAIN= (url of auth0 domain)
@@ -111,13 +112,23 @@ REACT_APP_SNAGID=(bugsnag client id)
 REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
 ```
 
+Example _env-config/env-variables-dev.json_
+
+```
+{
+  "apiIdentifier": "(url of auth0 api)",
+  "auth0Domain": "(url of auth0 domain -- as above)",
+  "desktopId": "(auth0 desktop extension -- native client id)"
+}
+```
+
 ### Generate dev configuration files
 
-Having created or obtained the _.env.\*_ files listed above, generate the environment-appropriate _.env.development.local_ and _.env.local_ files by executing the following:
+Having created or obtained the _.env.\*_ files listed above, generate the environment-appropriate _.env.development.local_, _.env.local_ and _public/env-variables.json_ files by executing the following:
 
 - `npm run dev`
 
-> NB. You can use _appdev_, _qa_, _appqa_, _prod_, or _appprod_ in place of _dev_ in the command above depending on which environment you want to test with although localhost is only setup by default on the _dev_ environment as a valid source and callback. If you want to add it to the qa channel or the prod channel, you will need to add it in the auth0 console before using it with `npm start`
+> NB. You can use _qa_ or _prod_ in place of _dev_ in the command above depending on which environment you want to test with although localhost is only setup by default on the _dev_ environment as a valid source and callback. If you want to add it to the qa channel or the prod channel, you will need to add it in the auth0 console before using it with `npm start`
 
 ## Execute app
 
@@ -139,6 +150,8 @@ The steps above regarding _installation_ and setting up the environments are als
 
 ## Electron Development
 
+Selecting Electron: All from the drop down and clicking the "play" icon in the _Visual Studio Code_ editor will allow you to run the program and stop at breakpoints to check values.
+
 Sometimes it is possible to include Chrome Extensions in the embedded Chrome browser in [Electron](www.electronjs.org/). If this works for you, you will need to include the `chromeExtensions.js` function in the `public` folder. This is the contents of that file:
 
 ```javascript
@@ -148,7 +161,7 @@ const electronExtension = (BrowserWindow) => {
   BrowserWindow.addDevToolsExtension(
     path.join(
       os.homedir(),
-      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.7.0_0"
+      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.8.2_0"
     )
   );
   BrowserWindow.addDevToolsExtension(
@@ -164,10 +177,6 @@ module.exports = electronExtension;
 - `npm run electron-dev` _# launches electron in developer mode_
 
 > NB. This `dev` mode uses two Chrome extensions: [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi) and [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)
-
-alternatively
-
-- `npm run electron-prod` _# launches electron in production mode (developer mode can be enabled with the key combination: CTRL-SHIFT-I)_
 
 ## Creating installer
 

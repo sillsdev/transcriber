@@ -1,7 +1,7 @@
 import { Passage, ActivityStates } from '../model';
 import { RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { AddPassage } from '../utils/UpdatePassageState';
+import { AddPassage } from '../utils/updatePassageState';
 
 interface IProps {
   sequencenum: number;

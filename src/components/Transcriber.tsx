@@ -74,7 +74,7 @@ import {
 import {
   UpdatePassageStateOps,
   AddPassageStateCommentOps,
-} from '../utils/UpdatePassageState';
+} from '../utils/updatePassageState';
 import { logError, Severity } from '../components/logErrorService';
 
 const MIN_SPEED = 0.5;

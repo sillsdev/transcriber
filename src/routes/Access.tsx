@@ -44,6 +44,8 @@ const buildDate = require('../buildDate.json').date;
 
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
+const ipc = isElectron ? require('electron').ipcRenderer : null;
+const { remote } = isElectron ? require('electron') : { remote: null };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,8 +89,9 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: 16,
       marginTop: theme.spacing(2),
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: 'column',
       justifyContent: 'center',
+      alignItems: 'center',
     }) as any,
     button: {
       marginRight: theme.spacing(1),
@@ -137,6 +140,7 @@ export function Access(props: IProps) {
   const [backup] = useGlobal('backup');
   const [coordinatorActivated] = useGlobal('coordinatorActivated');
   const [offline, setOffline] = useGlobal('offline');
+  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [confirmAction, setConfirmAction] = useState('');
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
@@ -172,9 +176,11 @@ export function Access(props: IProps) {
       );
     setConfirmAction('');
   };
+
   const handleActionRefused = () => {
     setConfirmAction('');
   };
+
   const handleImport = () => {
     if (isElectron) {
       var importData: IImportData = getElectronImportData(memory, ei);
@@ -200,6 +206,20 @@ export function Access(props: IProps) {
       }
     }
   };
+
+  const handleGoOnline = () => {
+    if (isElectron) {
+      ipc?.invoke('login');
+      remote?.getCurrentWindow().close();
+    }
+  };
+
+  const handleVersionClick = (e: React.MouseEvent) => {
+    if (e.shiftKey) {
+      setIsDeveloper(!isDeveloper);
+    }
+  };
+
   const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
   useEffect(() => {
@@ -259,9 +279,34 @@ export function Access(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (isElectron) {
+      ipc?.invoke('get-profile').then((result) => {
+        // console.log('result:', result);
+        if (result) {
+          ipc?.invoke('get-token').then((accessToken) => {
+            if (auth) auth.setDesktopSession(result, accessToken);
+          });
+          const sub = result?.sub;
+          if (sub) {
+            const selected = users.filter((u) => u.attributes.auth0Id === sub);
+            if (selected.length > 0) {
+              const userId = selected[0].id;
+              if (selectedUser !== userId) {
+                localStorage.setItem('user-id', userId);
+                setSelectedUser(userId);
+              }
+            }
+          }
+        }
+      });
+    }
+  });
+
   if (
     (!isElectron && auth && auth.isAuthenticated(offline)) ||
-    (isElectron && selectedUser !== '')
+    (isElectron && (selectedUser !== '' || auth.isAuthenticated(false)))
   )
     return <Redirect to="/loading" />;
 
@@ -275,7 +320,7 @@ export function Access(props: IProps) {
             </Typography>
           </Toolbar>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <div className={classes.version}>
+          <div className={classes.version} onClick={handleVersionClick}>
             {version}
             <br />
             {buildDate}
@@ -354,6 +399,19 @@ export function Access(props: IProps) {
                   >
                     {t.importProject}
                   </Button>
+                  {isDeveloper && (
+                    <>
+                      <p> </p>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleGoOnline}
+                      >
+                        {'Go Online'}
+                      </Button>
+                    </>
+                  )}
                 </div>
               </Grid>
             </Grid>

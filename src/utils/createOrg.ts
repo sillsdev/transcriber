@@ -38,7 +38,7 @@ export interface ICreateOrgProps {
   doOrbitError: (ex: IApiError) => void;
 }
 
-export const CreateOrg = async (props: ICreateOrgProps) => {
+export const createOrg = async (props: ICreateOrgProps) => {
   const { orgRec, user, coordinator, online } = props;
   const { setOrganization, setProject, doOrbitError } = props;
 
@@ -76,4 +76,4 @@ export const CreateOrg = async (props: ICreateOrgProps) => {
     });
 };
 
-export default CreateOrg;
+export default createOrg;
