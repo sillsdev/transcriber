@@ -1,12 +1,11 @@
 import { useRef, useEffect } from 'react';
 import { useGlobal } from 'reactn';
+import { waitForIt } from './waitForIt';
 
-export const useCheckSave = (): [
+export const useRemoteSave = (): [
   () => void,
   (err: string) => void,
-  () => boolean,
-  () => boolean,
-  () => string
+  (cb: undefined | (() => any), cnt: number) => Promise<any>
 ] => {
   const saveErr = useRef<string>();
   const [saveResult, setSaveResult] = useGlobal('saveResult');
@@ -15,6 +14,7 @@ export const useCheckSave = (): [
 
   useEffect(() => {
     saveErr.current = saveResult;
+    console.log('saveResult', saveResult);
   }, [saveResult]);
 
   const startSave = () => {
@@ -32,11 +32,21 @@ export const useCheckSave = (): [
   const SaveUnsuccessful = () =>
     saveErr.current !== undefined && saveErr.current !== '';
 
-  return [
-    startSave,
-    saveCompleted,
-    SaveIncomplete,
-    SaveUnsuccessful,
-    saveError,
-  ];
+  const waitForSave = async (
+    savedMethod: undefined | (() => any),
+    waitCount: number
+  ): Promise<any> => {
+    try {
+      return waitForIt(
+        'Save',
+        SaveIncomplete,
+        savedMethod,
+        SaveUnsuccessful,
+        waitCount
+      );
+    } catch (err) {
+      throw new Error(SaveUnsuccessful() ? saveError() : 'Timed Out');
+    }
+  };
+  return [startSave, saveCompleted, waitForSave];
 };

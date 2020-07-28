@@ -33,7 +33,7 @@ import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { Online } from '../utils';
 import { useInterval } from '../utils/useInterval';
-import { useCheckSave } from '../utils/useCheckSave';
+import { useRemoteSave } from '../utils/useRemoteSave';
 
 const ActionHeight = 52;
 
@@ -176,6 +176,7 @@ export function PlanSheet(props: IProps) {
   const sheetRef = useRef<any>();
   const [showRow, setShowRow] = useState(0);
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
+  const [startSave] = useRemoteSave();
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -216,7 +217,6 @@ export function PlanSheet(props: IProps) {
         row.filter((row, rowIndex) => rowIndex > 0).map((col) => col.value)
       );
   };
-  const [startSave] = useCheckSave();
 
   const handleSave = () => {
     startSave();

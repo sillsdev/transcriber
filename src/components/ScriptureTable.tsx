@@ -31,7 +31,7 @@ import { remoteId, remoteIdNum, remoteIdGuid, related, Online } from '../utils';
 import { isUndefined } from 'util';
 import { DrawerTask } from '../routes/drawer';
 import { debounce } from 'lodash';
-import { useCheckSave } from '../utils/useCheckSave';
+import { useRemoteSave } from '../utils/useRemoteSave';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -148,6 +148,8 @@ export function ScriptureTable(props: IProps) {
   const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
   const [complete, setComplete] = useState(0);
+  const [, saveCompleted] = useRemoteSave();
+
   const showBook = (cols: ICols) => cols.Book >= 0;
 
   const handleMessageReset = () => {
@@ -653,8 +655,6 @@ export function ScriptureTable(props: IProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
-
-  const [, saveCompleted] = useCheckSave();
 
   useEffect(() => {
     const handleSave = async () => {

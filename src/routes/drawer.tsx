@@ -104,8 +104,7 @@ import { LoadProjectData, AddProjectLoaded } from '../utils/loadData';
 import { useInterval } from '../utils/useInterval';
 import { handleUserMenuAction } from '../components/App/AppHead';
 
-import { waitForIt } from '../utils/waitForIt';
-import { useCheckSave } from '../utils/useCheckSave';
+import { useRemoteSave } from '../utils/useRemoteSave';
 
 const noop = { openExternal: () => {}, openItem: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop as any };
@@ -366,6 +365,7 @@ export function ResponsiveDrawer(props: IProps) {
   const saveConfirm = useRef<() => any>();
   const [topFilter, setTopFilter] = useState(false);
   const [transcribe, setTranscribe] = useState(false);
+  const [startSave, , waitForSave] = useRemoteSave();
 
   const slugMap: { [key: string]: string } = {
     [NavChoice.UsersAndGroups]: t.usersAndGroups,
@@ -585,32 +585,13 @@ export function ResponsiveDrawer(props: IProps) {
     setChanged(false);
   };
 
-  /*
-  useEffect(() => {
-    saveErr.current = saveResult;
-  }, [saveResult]);
-
-  const SaveIncomplete = () => saveErr.current === undefined;
-  const SaveUnsuccessful = () =>
-    saveErr.current !== undefined && saveErr.current !== '';
-*/
   const finishConfirmed = (
     savedMethod: (() => any) | undefined,
     waitCount: number
   ) => {
-    waitForIt(
-      'BusyBeforeSave',
-      SaveIncomplete,
-      savedMethod,
-      SaveUnsuccessful,
-      waitCount
-    ).catch((err) => {
+    waitForSave(savedMethod, waitCount).catch((err) => {
       saveConfirm.current = undefined;
-      if (SaveUnsuccessful()) {
-        setMessage(<span>{saveError()}</span>);
-      } else {
-        setMessage(<span>Timed Out.</span>);
-      }
+      setMessage(<span>{err.message}</span>);
     });
   };
 
@@ -635,13 +616,6 @@ export function ResponsiveDrawer(props: IProps) {
     }
     return projects;
   };
-  const [
-    startSave,
-    ,
-    SaveIncomplete,
-    SaveUnsuccessful,
-    saveError,
-  ] = useCheckSave();
 
   useEffect(() => {
     Online((val) => setOnline(val), auth);

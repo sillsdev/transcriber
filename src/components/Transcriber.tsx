@@ -76,7 +76,7 @@ import {
   AddPassageStateCommentOps,
 } from '../utils/updatePassageState';
 import { logError, Severity } from '../components/logErrorService';
-import { useCheckSave } from '../utils/useCheckSave';
+import { useRemoteSave } from '../utils/useRemoteSave';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -208,6 +208,8 @@ export function Transcriber(props: IProps) {
   const [historyContent, setHistoryContent] = React.useState<any[]>();
   const [rejectVisible, setRejectVisible] = React.useState(false);
   const [transcriptionIn, setTranscriptionIn] = React.useState('');
+  const [, saveCompleted] = useRemoteSave();
+
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
@@ -450,10 +452,16 @@ export function Transcriber(props: IProps) {
           userid
         )
       );
-      await memory.update(ops);
-      if (postComment) setComment('');
-      loadHistory();
-      saveCompleted('');
+      await memory
+        .update(ops)
+        .then(() => {
+          if (postComment) setComment('');
+          loadHistory();
+          saveCompleted('');
+        })
+        .catch((err) => {
+          saveCompleted('ugh');
+        });
     }
   };
 
@@ -773,7 +781,6 @@ export function Transcriber(props: IProps) {
     if (newAssigned !== assigned) setAssigned(newAssigned);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData]);
-  const [, saveCompleted] = useCheckSave();
 
   return (
     <div className={classes.root}>
