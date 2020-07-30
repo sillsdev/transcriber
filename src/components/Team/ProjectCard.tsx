@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'flex-start',
+      color: theme.palette.primary.contrastText,
     },
     firstLine: {
       width: '100%',
@@ -82,7 +83,7 @@ export const ProjectCard = (props: IProps) => {
           </Typography>
           <ProjectMenu action={handleProjectAction} />
         </div>
-        <Typography className={classes.pos} color="textSecondary">
+        <Typography className={classes.pos}>
           {projectDescription(project)}
         </Typography>
         <Typography variant="body2" component="p">

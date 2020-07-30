@@ -6,4 +6,4 @@ export * from './TeamProjects';
 export * from './TeamActions';
 export * from './AddTeam';
 export * from './ProjectMenu';
-export * from './AddProject';
+export * from './AddProject/AddProject';

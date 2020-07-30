@@ -49,10 +49,10 @@ const handleNewOrg = (props: any) => {
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#3BA7CE',
+      main: '#2E6478',
     },
     secondary: {
-      main: '#F5CC4C',
+      main: '#913DA6',
     },
   },
 });

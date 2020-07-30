@@ -61,10 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
         paddingRight: theme.spacing(0.5),
       },
       '& .data-grid-container .data-grid .cell.set': {
-        backgroundColor: theme.palette.primary.dark,
+        backgroundColor: theme.palette.background.default,
       },
       '& .data-grid-container .data-grid .cell.setp': {
-        backgroundColor: theme.palette.primary.light,
+        backgroundColor: theme.palette.background.default,
       },
       '& .data-grid-container .data-grid .cell.num': {
         textAlign: 'center',

@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       flexGrow: 1,
       justifyContent: 'center',
+      color: theme.palette.primary.contrastText,
     },
     buttons: {
       display: 'flex',

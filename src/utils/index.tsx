@@ -34,3 +34,5 @@ export * from './uiLang';
 export * from './updateXml';
 export * from './user';
 export * from './validateEmail';
+export * from './toCamel';
+export * from './camel2Title';
