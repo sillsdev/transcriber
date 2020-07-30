@@ -175,6 +175,11 @@ interface IProps
   };
 }
 
+const localeDefault = () => {
+  const code = navigator.language.split('-')[0];
+  return ldml.hasOwnProperty(code) ? code : 'en';
+};
+
 export function Profile(props: IProps) {
   const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;
   const classes = useStyles();
@@ -192,9 +197,7 @@ export function Profile(props: IProps) {
   const [email, setEmail] = useState('');
   const [timezone, setTimezone] = useState<string | null>(moment.tz.guess());
   const [role, setRole] = useState('member');
-  const [locale, setLocale] = useState<string>(
-    navigator.language.split('-')[0]
-  );
+  const [locale, setLocale] = useState<string>(localeDefault());
   const [news, setNews] = useState<boolean | null>(null);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
@@ -561,7 +564,7 @@ export function Profile(props: IProps) {
     setEmail(attr.email);
     setPhone(attr.phone);
     setTimezone(attr.timezone);
-    setLocale(attr.locale ? attr.locale : navigator.language.split('-')[0]);
+    setLocale(attr.locale ? attr.locale : localeDefault());
     setNews(attr.newsPreference);
     setDigest(attr.digestPreference);
     setLocked(true);
