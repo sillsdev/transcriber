@@ -14,11 +14,11 @@ exports[`can render ScriptureTable snapshot 1`] = `
         class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorDefault makeStyles-bar-9 mui-fixed MuiPaper-elevation4"
       >
         <div
-          class="makeStyles-actions-11"
+          class="makeStyles-actions-12"
         >
           <button
             aria-label="Add Section"
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-17 MuiButton-outlinedPrimary"
             tabindex="0"
             type="button"
           >
@@ -28,7 +28,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
               Add Section
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root makeStyles-icon-15"
+                class="MuiSvgIcon-root makeStyles-icon-18"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -43,7 +43,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
           </button>
           <button
             aria-label="Add Passage"
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary Mui-disabled Mui-disabled"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-17 MuiButton-outlinedPrimary Mui-disabled Mui-disabled"
             disabled=""
             tabindex="-1"
             type="button"
@@ -54,7 +54,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
               Add Passage
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root makeStyles-icon-15"
+                class="MuiSvgIcon-root makeStyles-icon-18"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -66,7 +66,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
           </button>
           <button
             aria-label="Paste Table"
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-17 MuiButton-outlinedPrimary"
             tabindex="0"
             type="button"
           >
@@ -76,7 +76,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
               Paste Table
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root makeStyles-icon-15"
+                class="MuiSvgIcon-root makeStyles-icon-18"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -91,7 +91,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
           </button>
           <button
             aria-label="Resequence"
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary Mui-disabled Mui-disabled"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-17 MuiButton-outlinedPrimary Mui-disabled Mui-disabled"
             disabled=""
             tabindex="-1"
             type="button"
@@ -105,7 +105,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
           <button
             aria-label="Action"
             aria-owns="action-menu"
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-14 MuiButton-outlinedPrimary"
+            class="MuiButtonBase-root MuiButton-root MuiButton-outlined makeStyles-button-17 MuiButton-outlinedPrimary"
             tabindex="0"
             type="button"
           >
@@ -115,7 +115,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
               Action
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root makeStyles-icon-15"
+                class="MuiSvgIcon-root makeStyles-icon-18"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -129,20 +129,20 @@ exports[`can render ScriptureTable snapshot 1`] = `
             />
           </button>
           <label
-            class="MuiFormControlLabel-root"
+            class="MuiFormControlLabel-root makeStyles-lessEmphasis-14"
           >
             <span
               class="MuiSwitch-root"
             >
               <span
                 aria-disabled="false"
-                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiSwitch-switchBase MuiSwitch-colorPrimary"
+                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-19 MuiSwitch-switchBase MuiSwitch-colorPrimary"
               >
                 <span
                   class="MuiIconButton-label"
                 >
                   <input
-                    class="PrivateSwitchBase-input-19 MuiSwitch-input"
+                    class="PrivateSwitchBase-input-22 MuiSwitch-input"
                     type="checkbox"
                     value=""
                   />
@@ -165,13 +165,13 @@ exports[`can render ScriptureTable snapshot 1`] = `
             </span>
           </label>
           <div
-            class="makeStyles-grow-13"
+            class="makeStyles-grow-16"
           >
              
           </div>
           <button
             aria-label="Save"
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-button-14 MuiButton-containedPrimary Mui-disabled Mui-disabled"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-button-17 MuiButton-containedSecondary Mui-disabled Mui-disabled"
             disabled=""
             tabindex="-1"
             type="button"
@@ -182,7 +182,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
               Save
               <svg
                 aria-hidden="true"
-                class="MuiSvgIcon-root makeStyles-icon-15"
+                class="MuiSvgIcon-root makeStyles-icon-18"
                 focusable="false"
                 viewBox="0 0 24 24"
               >
@@ -195,7 +195,7 @@ exports[`can render ScriptureTable snapshot 1`] = `
         </div>
       </header>
       <div
-        class="makeStyles-content-10"
+        class="makeStyles-content-11"
         id="PlanSheet"
       >
         <span
@@ -245,8 +245,8 @@ exports[`can render ScriptureTable snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="cell read-only"
-                  style="width: 170px;"
+                  class="cell read-only updated"
+                  style="width: 180px;"
                 >
                   <span
                     class="value-viewer"
@@ -255,8 +255,8 @@ exports[`can render ScriptureTable snapshot 1`] = `
                   </span>
                 </td>
                 <td
-                  class="cell read-only"
-                  style="width: 180px;"
+                  class="cell read-only updated"
+                  style="width: 280px;"
                 >
                   <span
                     class="value-viewer"
@@ -266,7 +266,6 @@ exports[`can render ScriptureTable snapshot 1`] = `
                 </td>
                 <td
                   class="cell read-only"
-                  style="width: 280px;"
                 >
                   <span
                     class="value-viewer"
