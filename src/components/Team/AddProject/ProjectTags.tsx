@@ -98,13 +98,14 @@ export const ProjectTags = (props: IAddProjectState) => {
           }
           label={
             <TextField
-              id="other"
+              id="other-tag"
               margin="dense"
               className={classes.otherBox}
               label={t.other}
               value={other}
               onChange={handleOther}
               onKeyDown={handleKeyDown}
+              onBlur={addOther}
             />
           }
         />

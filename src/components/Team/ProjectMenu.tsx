@@ -8,16 +8,18 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-const useStyles = makeStyles({
-  icon: {
-    color: 'grey',
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    icon: {
+      color: theme.palette.primary.main,
+    },
+  })
+);
 
 const StyledMenu = withStyles({
   paper: {

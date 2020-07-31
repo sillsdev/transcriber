@@ -7,6 +7,8 @@ import {
   Typography,
   Chip,
 } from '@material-ui/core';
+import ScriptureIcon from '@material-ui/icons/MenuBook';
+import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
 import { Plan } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
@@ -34,6 +36,10 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
     },
+    name: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     button: {
       textTransform: 'none',
     },
@@ -58,6 +64,7 @@ export const ProjectCard = (props: IProps) => {
   const ctx = React.useContext(TeamContext);
   const {
     selectProject,
+    getPlanType,
     projectType,
     projectSections,
     projectDescription,
@@ -78,7 +85,13 @@ export const ProjectCard = (props: IProps) => {
     <Card className={classes.root} onClick={handleSelect(project)}>
       <CardContent className={classes.content}>
         <div className={classes.firstLine}>
-          <Typography variant="h6" component="h2">
+          <Typography variant="h6" component="h2" className={classes.name}>
+            {getPlanType(project) === 'scripture' ? (
+              <ScriptureIcon />
+            ) : (
+              <BsPencilSquare />
+            )}
+            {'\u00A0 '}
             {project?.attributes?.name}
           </Typography>
           <ProjectMenu action={handleProjectAction} />

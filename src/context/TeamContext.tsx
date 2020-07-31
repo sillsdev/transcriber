@@ -72,6 +72,7 @@ const initState = {
   personalProjects: () => Array<Plan>(),
   teamProjects: (teamId: string) => Array<Plan>(),
   teamMembers: (teamId: string) => 0,
+  getPlanType: (plan: Plan) => '',
   selectProject: (project: Plan) => {},
   projectType: (project: Plan) => '',
   projectSections: (project: Plan) => '',
@@ -199,10 +200,15 @@ const TeamProvider = withData(mapRecordsToProps)(
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
 
-    const projectType = (plan: Plan) => {
+    const getPlanType = (plan: Plan) => {
       const typeId = related(plan, 'plantype');
       const typeRecs = planTypes.filter((t) => t.id === typeId);
       const planType = typeRecs[0]?.attributes?.name;
+      return planType ? planType.toLowerCase() : 'other';
+    };
+
+    const projectType = (plan: Plan) => {
+      const planType = getPlanType(plan);
       return (
         (planType && controlStrings.getString(planType.toLowerCase())) ||
         'Training'
@@ -240,6 +246,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             personalProjects,
             teamProjects,
             teamMembers,
+            getPlanType,
             projectType,
             projectSections,
             projectDescription,

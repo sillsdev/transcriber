@@ -7,6 +7,8 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import ScriptureIcon from '@material-ui/icons/MenuBook';
+import { BsPencilSquare } from 'react-icons/bs';
 import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
@@ -92,6 +94,11 @@ export function AddProjectDialog(props: IProps) {
     setState((state) => ({ ...state, type: val || '' }));
   };
 
+  const decorations = {
+    scripture: <ScriptureIcon />,
+    other: <BsPencilSquare />,
+  };
+
   return (
     <div>
       <Button variant="contained" color="default" onClick={handleClickOpen}>
@@ -112,6 +119,7 @@ export function AddProjectDialog(props: IProps) {
             defaultValue={type}
             options={planTypes.map((t) => t.attributes.name.toLowerCase())}
             onChange={handleTypeChange}
+            decorations={decorations}
           />
           <ProjectLanguage state={state} setState={setState} />
           <ProjectTags state={state} setState={setState} />

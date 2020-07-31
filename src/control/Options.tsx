@@ -62,6 +62,7 @@ const OptionCtrl = (props: IProps) => {
   const [other, setOther] = React.useState<string | null>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOther(e.target.value);
     onChange(e.target.value);
   };
 
@@ -116,13 +117,14 @@ const OptionCtrl = (props: IProps) => {
             control={<Radio />}
             label={
               <TextField
-                id="other"
+                id="other-option"
                 margin="dense"
                 className={classes.otherBox}
                 label={t.other}
                 value={other}
                 onChange={handleOther}
                 onKeyDown={handleKeyDown}
+                onBlur={addOther}
               />
             }
           />
