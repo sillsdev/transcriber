@@ -39,12 +39,6 @@ interface IStateProps {
   t: IMediaUploadStrings;
 }
 
-interface IProps extends IStateProps {
-  visible: boolean;
-  uploadType: UploadType;
-  uploadMethod?: (files: FileList) => void;
-  cancelMethod?: () => void;
-}
 export enum UploadType {
   Media = 0,
   ITF = 1,
@@ -52,8 +46,25 @@ export enum UploadType {
   LOGO = 3 /* do we need separate ones for org and avatar? */,
 }
 
+interface IProps extends IStateProps {
+  visible: boolean;
+  uploadType: UploadType;
+  uploadMethod?: (files: FileList) => void;
+  cancelMethod?: () => void;
+  metaData?: JSX.Element;
+  ready?: () => boolean;
+}
+
 function MediaUpload(props: IProps) {
-  const { t, visible, uploadType, uploadMethod, cancelMethod } = props;
+  const {
+    t,
+    visible,
+    uploadType,
+    uploadMethod,
+    cancelMethod,
+    metaData,
+    ready,
+  } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
@@ -179,12 +190,18 @@ function MediaUpload(props: IProps) {
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
           <div className={classes.drop}>{dropTarget}</div>
+          {metaData}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} variant="outlined" color="primary">
             {t.cancel}
           </Button>
-          <Button onClick={handleAddOrSave} variant="contained" color="primary">
+          <Button
+            onClick={handleAddOrSave}
+            variant="contained"
+            color="primary"
+            disabled={(ready && !ready()) || !files}
+          >
             {t.upload}
           </Button>
         </DialogActions>

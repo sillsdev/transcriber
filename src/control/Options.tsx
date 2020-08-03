@@ -46,6 +46,7 @@ interface IProps extends IStateProps {
   onChange: (option: string) => void;
   addOption?: (option: string) => void;
   decorations?: IDecorations;
+  required?: boolean;
 }
 
 const OptionCtrl = (props: IProps) => {
@@ -57,13 +58,13 @@ const OptionCtrl = (props: IProps) => {
     addOption,
     tc,
     decorations,
+    required,
   } = props;
   const classes = useStyles();
   const [other, setOther] = React.useState<string | null>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOther(e.target.value);
-    onChange(e.target.value);
+    if (!addOther()) onChange(e.target.value);
   };
 
   const handleOther = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +78,11 @@ const OptionCtrl = (props: IProps) => {
       if (!options.includes(newTag)) {
         addOption && addOption(newTag);
       }
+      onChange(newTag);
+      setOther('');
+      return true;
     }
+    return false;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -88,7 +93,9 @@ const OptionCtrl = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <FormLabel className={classes.label}>{label}</FormLabel>
+      <FormLabel required={required} className={classes.label}>
+        {label}
+      </FormLabel>
       <RadioGroup
         value={other !== '' ? other : defaultValue || ''}
         onChange={handleChange}

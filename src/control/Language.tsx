@@ -8,7 +8,6 @@ import {
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { LanguagePicker } from 'mui-language-picker';
-import { IAddProjectState } from './AddProject';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,10 +50,25 @@ const lt = {
   cancel: 'Cancel',
 };
 
-export const ProjectLanguage = (props: IAddProjectState) => {
-  const { state, setState } = props;
+export interface ILanguage {
+  bcp47: string;
+  languageName: string;
+  font: string;
+}
+
+interface IProps extends ILanguage {
+  onChange: (state: ILanguage) => void;
+}
+
+export const Language = (props: IProps) => {
   const classes = useStyles();
-  const { bcp47, languageName, font } = state;
+  const { bcp47, languageName, font, onChange } = props;
+  const [state, setState] = React.useState<ILanguage>({
+    bcp47,
+    languageName,
+    font,
+  });
+  const stateRef = React.useRef<ILanguage>();
   const langEl = React.useRef<any>();
 
   const handleBcp47 = (bcp47: string) => {
@@ -73,6 +87,13 @@ export const ProjectLanguage = (props: IAddProjectState) => {
     if (langEl.current) langEl.current.click();
     e.stopPropagation();
   };
+
+  React.useEffect(() => {
+    if (stateRef.current !== state) {
+      onChange(state);
+      stateRef.current = state;
+    }
+  }, [state, onChange]);
 
   const widthStyle: CSSProperties = { width: 400 };
 

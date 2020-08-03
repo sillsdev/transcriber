@@ -7,17 +7,15 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import ScriptureIcon from '@material-ui/icons/MenuBook';
-import { BsPencilSquare } from 'react-icons/bs';
-import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
   ProjectDescription,
-  ProjectLanguage,
+  ProjectType,
   ProjectTags,
   ITag,
-  Options,
   ProjectExpansion,
+  Language,
+  ILanguage,
 } from '.';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const t = {
   newProject: 'New Project',
-  type: 'Project Type',
   cancel: 'Cancel',
   add: 'Add',
 };
@@ -67,8 +64,6 @@ export function AddProjectDialog(props: IProps) {
   const { isOpen } = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const ctx = React.useContext(TeamContext);
-  const { planTypes } = ctx.state;
   const [state, setState] = React.useState({ ...initState });
   const { name, type, bcp47 } = state;
 
@@ -94,9 +89,8 @@ export function AddProjectDialog(props: IProps) {
     setState((state) => ({ ...state, type: val || '' }));
   };
 
-  const decorations = {
-    scripture: <ScriptureIcon />,
-    other: <BsPencilSquare />,
+  const handleLanguageChange = (val: ILanguage) => {
+    setState((state) => ({ ...state, ...val }));
   };
 
   return (
@@ -114,14 +108,8 @@ export function AddProjectDialog(props: IProps) {
         <DialogContent>
           <ProjectName state={state} setState={setState} />
           <ProjectDescription state={state} setState={setState} />
-          <Options
-            label={t.type}
-            defaultValue={type}
-            options={planTypes.map((t) => t.attributes.name.toLowerCase())}
-            onChange={handleTypeChange}
-            decorations={decorations}
-          />
-          <ProjectLanguage state={state} setState={setState} />
+          <ProjectType type={type} onChange={handleTypeChange} />
+          <Language {...state} onChange={handleLanguageChange} />
           <ProjectTags state={state} setState={setState} />
           <ProjectExpansion state={state} setState={setState} />
         </DialogContent>

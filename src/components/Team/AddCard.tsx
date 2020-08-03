@@ -4,6 +4,9 @@ import { Card, CardContent, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { Organization } from '../../model';
 import { AddProjectDialog } from '.';
+import { ProjectType } from './AddProject';
+import { Language, ILanguage } from '../../control';
+import MediaUpload, { UploadType } from '../MediaUpload';
 import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,6 +39,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const initLang = {
+  bcp47: 'und',
+  languageName: '',
+  font: '',
+};
+
 const t = {
   upload: 'Upload Audio',
   newProject: 'New Project',
@@ -54,6 +63,9 @@ export const AddCard = (props: IProps) => {
   const classes = useStyles();
   const [show, setShow] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
+  const [uploadVisible, setUploadVisible] = React.useState(false);
+  const [type, setType] = React.useState('');
+  const [language, setLanguage] = React.useState<ILanguage>(initLang);
 
   const handleShow = () => {
     if (!isOpen) setShow(!show);
@@ -68,22 +80,36 @@ export const AddCard = (props: IProps) => {
   };
 
   const handleUpload = (team: TeamIdType) => (e: any) => {
-    e.preventDefault();
     console.log(`clicked ${t.upload} for ${teamName(team)}`);
+    setUploadVisible(true);
   };
 
+  const handleUploadMethod = (files: FileList) => {
+    console.log(`Uploading ${files}`);
+  };
+
+  const handleCancelUpload = () => {
+    setLanguage(initLang);
+    setType('');
+    setUploadVisible(false);
+  };
+
+  const handleLanguageChange = (lang: ILanguage) => {
+    setLanguage(lang);
+  };
+
+  const handleReady = () => type !== '' && language.bcp47 !== 'und';
+
   const handleConnect = (team: TeamIdType) => (e: any) => {
-    e.preventDefault();
     console.log(`clicked ${t.connectParatext} for ${teamName(team)}`);
   };
 
   const handleImport = (team: TeamIdType) => (e: any) => {
-    e.preventDefault();
     console.log(`clicked ${t.import} for ${teamName(team)}`);
   };
 
   return (
-    <div>
+    <>
       <Card className={classes.root} onClick={handleShow}>
         <CardContent className={classes.content}>
           {show ? (
@@ -108,6 +134,19 @@ export const AddCard = (props: IProps) => {
           )}
         </CardContent>
       </Card>
-    </div>
+      <MediaUpload
+        visible={uploadVisible}
+        uploadType={UploadType.Media}
+        uploadMethod={handleUploadMethod}
+        cancelMethod={handleCancelUpload}
+        metaData={
+          <>
+            <ProjectType type={type} onChange={setType} />
+            <Language {...language} onChange={handleLanguageChange} />
+          </>
+        }
+        ready={handleReady}
+      />
+    </>
   );
 };

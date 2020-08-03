@@ -20,6 +20,7 @@ export const ProjectName = (props: IAddProjectState) => {
       autoFocus
       margin="dense"
       id="name"
+      required
       label={t.projectName}
       value={name}
       onChange={handleChangeName}
