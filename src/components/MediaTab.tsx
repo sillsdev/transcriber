@@ -53,6 +53,7 @@ import {
   remoteId,
   passageReference,
   sectionDescription,
+  localeDefault,
 } from '../utils';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare } from '../utils/sort';
@@ -214,10 +215,10 @@ const getMedia = (
         f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
       const date = updated ? updated.format('YYYY-MM-DD') : '';
       const displayDate = updated
-        ? updated.locale(navigator.language.split('-')[0]).format('L')
+        ? updated.locale(localeDefault()).format('L')
         : '';
       const displayTime = updated
-        ? updated.locale(navigator.language.split('-')[0]).format('LT')
+        ? updated.locale(localeDefault()).format('LT')
         : '';
       const today = moment().format('YYYY-MM-DD');
       rowData.push({

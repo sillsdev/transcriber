@@ -31,6 +31,7 @@ import {
   GetUser,
   remoteIdGuid,
   Online,
+  localeDefault,
 } from '../utils';
 import SnackBar from '../components/SnackBar';
 import { getOrgs } from '../utils/getOrgs';
@@ -227,9 +228,7 @@ export function Loading(props: IProps) {
     const isDevValue = localStorage.getItem('developer');
     setIsDeveloper(isDevValue ? isDevValue === 'true' : false);
     if (!auth || !auth.isAuthenticated(offline)) return;
-    if (navigator.language.split('-')[0]) {
-      setLanguage(navigator.language.split('-')[0]);
-    }
+    setLanguage(localeDefault());
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData(

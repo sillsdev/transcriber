@@ -50,6 +50,7 @@ import {
   getRoleRec,
   getMbrRoleRec,
   allUsersRec,
+  localeDefault,
 } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
@@ -172,11 +173,6 @@ interface IProps
     };
   };
 }
-
-const localeDefault = () => {
-  const code = navigator.language.split('-')[0];
-  return ldml.hasOwnProperty(code) ? code : 'en';
-};
 
 export function Profile(props: IProps) {
   const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;

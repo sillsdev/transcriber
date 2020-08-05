@@ -21,7 +21,7 @@ import {
   LinearProgress,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online } from '../utils';
+import { Online, localeDefault } from '../utils';
 import { UserAvatar } from '../components/UserAvatar';
 import SnackBar from '../components/SnackBar';
 import { IAxiosStatus } from '../store/AxiosStatus';
@@ -248,9 +248,7 @@ export function Access(props: IProps) {
   }, [importStatus]);
 
   useEffect(() => {
-    if (navigator.language.split('-')[0]) {
-      setLanguage(navigator.language.split('-')[0]);
-    }
+    setLanguage(localeDefault());
     fetchLocalization();
     if (isElectron) {
       Online((online) => setOnline(online), auth);

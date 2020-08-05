@@ -8,7 +8,7 @@ import {
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import FontSize from '../../FontSize';
-import { IAddProjectState } from './AddProject';
+import { IProjectDialogState } from './ProjectDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,7 +45,7 @@ const t = {
   preview: 'Preview',
 };
 
-export const EditorSettings = (props: IAddProjectState) => {
+export const EditorSettings = (props: IProjectDialogState) => {
   const { state, setState } = props;
   const classes = useStyles();
   const { font, fontSize, rtl } = state;

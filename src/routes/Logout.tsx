@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
 import { isElectron } from '../api-variable';
 import { Redirect } from 'react-router-dom';
+import { localeDefault } from '../utils';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -51,9 +52,7 @@ export function Logout(props: IProps) {
   const [view, setView] = React.useState('');
 
   useEffect(() => {
-    if (navigator.language.split('-')[0]) {
-      setLanguage(navigator.language.split('-')[0]);
-    }
+    setLanguage(localeDefault());
     fetchLocalization();
     if (!isElectron) {
       auth.logout();

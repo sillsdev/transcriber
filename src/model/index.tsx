@@ -18,6 +18,7 @@ export * from './user';
 export * from './role';
 export * from './activityState';
 export * from './deleteItem';
+export * from './vproject';
 export * from './state';
 export * from '../store/book/types';
 export * from '../store/localization/types';

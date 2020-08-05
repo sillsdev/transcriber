@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { IAddProjectState } from './AddProject';
+import { IProjectDialogState } from './ProjectDialog';
 import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
 import renderLogo from '../../../assets/renderIcon.png';
@@ -39,7 +39,7 @@ const t = {
   organizedBy: 'Term for organizing layout',
 };
 
-export function ProjectExpansion(props: IAddProjectState) {
+export function ProjectExpansion(props: IProjectDialogState) {
   const classes = useStyles();
   const { state, setState } = props;
   const { layout, organizedBy } = state;
@@ -92,7 +92,7 @@ export function ProjectExpansion(props: IAddProjectState) {
           <Options
             label={t.layout}
             defaultValue={layout}
-            options={['hierarcical', 'flat']}
+            options={['hierarchical', 'flat']}
             onChange={handleLayoutChange}
             decorations={decoration}
           />

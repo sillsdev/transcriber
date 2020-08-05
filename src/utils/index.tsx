@@ -36,3 +36,4 @@ export * from './user';
 export * from './validateEmail';
 export * from './toCamel';
 export * from './camel2Title';
+export * from './localeDefault';

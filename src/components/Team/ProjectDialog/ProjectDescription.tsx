@@ -1,12 +1,12 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
-import { IAddProjectState } from './AddProject';
+import { IProjectDialogState } from './ProjectDialog';
 
 const t = {
   description: 'Description',
 };
 
-export const ProjectDescription = (props: IAddProjectState) => {
+export const ProjectDescription = (props: IProjectDialogState) => {
   const { state, setState } = props;
   const { description } = state;
 

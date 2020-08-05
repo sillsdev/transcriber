@@ -2,11 +2,16 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { Organization } from '../../model';
-import { AddProjectDialog } from '.';
-import { ProjectType } from './AddProject';
+import { VProject } from '../../model';
+import {
+  ProjectDialog,
+  Mode,
+  IProjectDialog,
+  ProjectType,
+} from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
 import MediaUpload, { UploadType } from '../MediaUpload';
+import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -52,8 +57,6 @@ const t = {
   import: 'Import PTF File',
 };
 
-type TeamIdType = Organization | null;
-
 interface IProps {
   team: TeamIdType;
 }
@@ -61,18 +64,20 @@ interface IProps {
 export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
+  const ctx = React.useContext(TeamContext);
+  const { projectCreate } = ctx.state;
   const [show, setShow] = React.useState(false);
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   const [uploadVisible, setUploadVisible] = React.useState(false);
   const [type, setType] = React.useState('');
   const [language, setLanguage] = React.useState<ILanguage>(initLang);
 
   const handleShow = () => {
-    if (!isOpen) setShow(!show);
+    if (!open) setShow(!show);
   };
 
   const handleOpen = (val: boolean) => {
-    setIsOpen(val);
+    setOpen(val);
   };
 
   const teamName = (teamId: TeamIdType) => {
@@ -108,6 +113,42 @@ export const AddCard = (props: IProps) => {
     console.log(`clicked ${t.import} for ${teamName(team)}`);
   };
 
+  const handleClickOpen = (e: React.MouseEvent) => {
+    setOpen(true);
+    e.stopPropagation();
+  };
+
+  const handleCommit = (values: IProjectDialog) => {
+    console.log(`comitting changes: ${values}`);
+    const {
+      name,
+      description,
+      type,
+      languageName,
+      rtl,
+      tags,
+      organizedBy,
+    } = values;
+    projectCreate(
+      {
+        attributes: {
+          name,
+          description,
+          type,
+          language: values.bcp47,
+          languageName,
+          defaultFont: values.font,
+          defaultFontSize: values.fontSize,
+          rtl,
+          tags,
+          flat: values.layout === 'flat',
+          organizedBy,
+        },
+      } as VProject,
+      team
+    );
+  };
+
   return (
     <>
       <Card className={classes.root} onClick={handleShow}>
@@ -117,7 +158,14 @@ export const AddCard = (props: IProps) => {
               <Button variant="contained" onClick={handleUpload(team)}>
                 {t.upload}
               </Button>
-              <AddProjectDialog isOpen={handleOpen} />
+              <Button
+                variant="contained"
+                color="default"
+                onClick={handleClickOpen}
+              >
+                {t.newProject}
+              </Button>
+
               <Button variant="contained" onClick={handleConnect(team)}>
                 {t.connectParatext}
               </Button>
@@ -126,6 +174,12 @@ export const AddCard = (props: IProps) => {
                   {t.import}
                 </Button>
               )}
+              <ProjectDialog
+                mode={Mode.add}
+                isOpen={open}
+                onOpen={handleOpen}
+                onCommit={handleCommit}
+              />
             </div>
           ) : (
             <div className={classes.icon}>

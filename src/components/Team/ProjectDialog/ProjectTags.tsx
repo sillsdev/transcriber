@@ -1,5 +1,6 @@
 import React from 'react';
 import keycode from 'keycode';
+import { ITag } from '../../../model';
 import {
   // Grid,
   FormLabel,
@@ -9,7 +10,7 @@ import {
   FormGroup,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { IAddProjectState } from './AddProject';
+import { IProjectDialogState } from './ProjectDialog';
 import { toCamel, camel2Title } from '../../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,16 +24,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export interface ITag {
-  [tag: string]: boolean;
-}
-
 const t = {
   tags: 'Tags',
   other: 'Other',
 };
 
-export const ProjectTags = (props: IAddProjectState) => {
+export const ProjectTags = (props: IProjectDialogState) => {
   const classes = useStyles();
   const { state, setState } = props;
   const { tags } = state;

@@ -13,6 +13,7 @@ import {
   PlanType,
   Organization,
   OrganizationMembership,
+  VProject,
   IMainStrings,
 } from '../model';
 // import localStrings from '../selector/localize';
@@ -21,7 +22,13 @@ import { QueryBuilder } from '@orbit/data';
 import { related, getMbrRoleRec, getMbrRole, Online } from '../utils';
 import { LoadProjectData } from '../utils/loadData';
 import localStrings from '../selector/localize';
-// import { related, remoteId } from '../utils';
+import {
+  useVProjectCreate,
+  useVProjectUpdate,
+  useVProjectDelete,
+} from '../crud';
+
+export type TeamIdType = Organization | null;
 
 interface IStateProps {
   lang: string;
@@ -69,16 +76,18 @@ const initState = {
   message: <></>,
   planTypes: Array<PlanType>(),
   teams: () => Array<Organization>(),
-  personalProjects: () => Array<Plan>(),
-  teamProjects: (teamId: string) => Array<Plan>(),
+  personalProjects: () => Array<VProject>(),
+  teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
-  getPlanType: (plan: Plan) => '',
   selectProject: (project: Plan) => {},
   projectType: (project: Plan) => '',
   projectSections: (project: Plan) => '',
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
   handleMessageReset: () => {},
+  projectCreate: (project: VProject, team: TeamIdType) => {},
+  projectUpdate: (project: VProject) => {},
+  projectDelete: (project: VProject) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -130,6 +139,9 @@ const TeamProvider = withData(mapRecordsToProps)(
       lang,
       message,
     });
+    const vProjectCreate = useVProjectCreate();
+    const vProjectUpdate = useVProjectUpdate();
+    const vProjectDelete = useVProjectDelete();
 
     const handleMessageReset = () => {
       setMessage(<></>);
@@ -179,6 +191,48 @@ const TeamProvider = withData(mapRecordsToProps)(
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
 
+    const projectType = (plan: Plan) => {
+      const planType = getPlanType(plan);
+      return (
+        (planType && controlStrings.getString(planType.toLowerCase())) ||
+        'Training'
+      );
+    };
+
+    const parseTags = (val: any) => {
+      if (typeof val === 'string') {
+        try {
+          return JSON.parse(val);
+        } catch {
+          // ignore invalid json
+        }
+      }
+      return {};
+    };
+
+    const vProject = (plan: Plan) => {
+      const projectId = related(plan, 'project');
+      const projectRecs = projects.filter((p) => p.id === projectId);
+      if (projectRecs.length > 0) {
+        return {
+          ...projectRecs[0],
+          ...plan,
+          type: 'vproject',
+          attributes: {
+            ...projectRecs[0].attributes,
+            ...plan.attributes,
+            tags: parseTags(plan?.attributes?.tags),
+            type: getPlanType(plan),
+          },
+          relationships: {
+            ...projectRecs[0].relationships,
+            ...plan.relationships,
+          },
+        } as VProject;
+      }
+      return plan as VProject;
+    };
+
     const personalProjects = () => {
       const projIds = projects
         .filter((p) => {
@@ -188,7 +242,8 @@ const TeamProvider = withData(mapRecordsToProps)(
         .map((p) => p.id);
       return plans
         .filter((p) => projIds.includes(related(p, 'project')))
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
+        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
+        .map((p) => vProject(p));
     };
 
     const teamProjects = (teamId: string) => {
@@ -197,7 +252,8 @@ const TeamProvider = withData(mapRecordsToProps)(
         .map((p) => p.id);
       return plans
         .filter((p) => projIds.includes(related(p, 'project')))
-        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
+        .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
+        .map((p) => vProject(p));
     };
 
     const getPlanType = (plan: Plan) => {
@@ -205,14 +261,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       const typeRecs = planTypes.filter((t) => t.id === typeId);
       const planType = typeRecs[0]?.attributes?.name;
       return planType ? planType.toLowerCase() : 'other';
-    };
-
-    const projectType = (plan: Plan) => {
-      const planType = getPlanType(plan);
-      return (
-        (planType && controlStrings.getString(planType.toLowerCase())) ||
-        'Training'
-      );
     };
 
     const projectSections = (plan: Plan) => {
@@ -237,6 +285,23 @@ const TeamProvider = withData(mapRecordsToProps)(
       return projRec?.attributes?.languageName || 'English';
     };
 
+    const projectCreate = (project: VProject, team: TeamIdType) => {
+      if (!team) {
+        const orgRecs = organizations.filter((o) => teamMembers(o.id) === 1);
+        if (orgRecs.length > 0) {
+          vProjectCreate(project, orgRecs[0]);
+        }
+      } else vProjectCreate(project, team);
+    };
+
+    const projectUpdate = (project: VProject) => {
+      vProjectUpdate(project);
+    };
+
+    const projectDelete = (project: VProject) => {
+      vProjectDelete(project);
+    };
+
     return (
       <TeamContext.Provider
         value={{
@@ -246,13 +311,15 @@ const TeamProvider = withData(mapRecordsToProps)(
             personalProjects,
             teamProjects,
             teamMembers,
-            getPlanType,
             projectType,
             projectSections,
             projectDescription,
             projectLanguage,
             selectProject,
             handleMessageReset,
+            projectCreate,
+            projectUpdate,
+            projectDelete,
           },
           setState,
         }}
