@@ -11,6 +11,7 @@ import {
   BookNameMap,
   BookName,
   SectionPassage,
+  Plan,
   ISharedStrings,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
@@ -31,6 +32,7 @@ import { remoteId, remoteIdNum, remoteIdGuid, related, Online } from '../utils';
 import { isUndefined } from 'util';
 import { DrawerTask } from '../routes/drawer';
 import { debounce } from 'lodash';
+import { useOrganizedBy } from '../crud';
 import { useRemoteSave } from '../utils/useRemoteSave';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -125,9 +127,7 @@ export function ScriptureTable(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [doSave] = useGlobal('doSave');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [saving, setSaving] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [changed, setChanged] = useGlobal('changed');
   const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
@@ -148,6 +148,7 @@ export function ScriptureTable(props: IProps) {
   const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
   const [complete, setComplete] = useState(0);
+  const getOrganizedBy = useOrganizedBy();
   const [, saveCompleted] = useRemoteSave();
 
   const showBook = (cols: ICols) => cols.Book >= 0;
@@ -237,7 +238,10 @@ export function ScriptureTable(props: IProps) {
         'inline-passages',
         inlinePassages.inline ? 'false' : 'true'
       );
-      setInlinePassages({ defaultSet: true, inline: !inlinePassages.inline });
+      setInlinePassages({
+        defaultSet: true,
+        inline: !inlinePassages.inline,
+      });
     }
   };
   const insertAt = (arr: Array<any>, item: any, index?: number) => {
@@ -622,8 +626,22 @@ export function ScriptureTable(props: IProps) {
     setWidth(window.innerWidth - theme.spacing(DrawerTask));
   };
 
+  const getFlat = (planId: string) => {
+    if (!planId || planId === '') return false;
+    const planRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('plan')
+    ) as Plan[];
+    const selected = planRec.filter((p) => p.id === planId);
+    if (selected.length > 0) {
+      return selected[0]?.attributes?.flat ? 'true' : 'false';
+    }
+    return false;
+  };
+
   useEffect(() => {
-    const inlinePref = localStorage.getItem('inline-passages');
+    const inlinePref = isDeveloper
+      ? getFlat(plan)
+      : localStorage.getItem('inline-passages');
     if (inlinePref !== null) {
       setInlinePassages({
         defaultSet: true,
@@ -942,8 +960,11 @@ export function ScriptureTable(props: IProps) {
     const colMul = colMx.map((v) => v / total);
     const extra = Math.max(width - 1020, 0);
     const colAdd = colMul.map((v) => Math.floor(extra * v));
+    const organizedBy = isDeveloper
+      ? getOrganizedBy(plan) || t.section
+      : t.section;
     let colHead = [
-      { value: t.section, readOnly: true, width: 60 + colAdd[0] },
+      { value: organizedBy, readOnly: true, width: 60 + colAdd[0] },
       { value: t.title, readOnly: true, width: 100 + colAdd[1] },
       { value: t.passage, readOnly: true, width: 60 + colAdd[2] },
     ];

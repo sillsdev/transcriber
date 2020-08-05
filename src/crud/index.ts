@@ -5,3 +5,4 @@ export * from './useVProjectCreate';
 export * from './useVProjectDelete';
 export * from './useVProjectUpdate';
 export * from './useTypeId';
+export * from './useOrganizedBy';

@@ -125,7 +125,6 @@ export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
-    "NoSaveOffline": string;
     "action": string;
     "upload": string;
     "play": string;
@@ -136,6 +135,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "copy": string;
     "attachMedia": string;
     "addSection": string;
+    "section": string;
     "addPassage": string;
     "inlineToggle": string;
     "save": string;
@@ -203,6 +203,7 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
 
 export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
     "sectionsPassages": string;
+    "sections": string;
     "passageStatus": string;
     "sectionStatus": string;
     "mediaStatus": string;

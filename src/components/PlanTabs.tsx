@@ -21,6 +21,7 @@ import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { useOrganizedBy } from '../crud';
 import { related } from '../utils';
 
 export const TabHeight = 48;
@@ -90,6 +91,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [busy] = useGlobal('remoteBusy');
   const [isDeveloper] = useGlobal('developer');
+  const getOrganizedBy = useOrganizedBy();
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
@@ -133,6 +135,8 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const statusMessage = (msg: string, val1: number, val2: number) =>
     msg.replace('{1}', val1.toString()).replace('{2}', val2.toString());
 
+  const organizedBy = getOrganizedBy(plan) || t.sections;
+
   return (
     <div className={classes.root}>
       <AppBar
@@ -148,7 +152,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label={t.sectionsPassages} />
+          <Tab label={t.sectionsPassages.replace('{0}', organizedBy)} />
           <Tab label={t.media} />
           <Tab
             label={
@@ -167,7 +171,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
               <Title
                 text={t.assignments}
                 status={statusMessage(
-                  t.sectionStatus,
+                  t.sectionStatus.replace('{0}', organizedBy),
                   assigned.length,
                   planSectionIds.length
                 )}

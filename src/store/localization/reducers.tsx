@@ -140,7 +140,6 @@ const initialState = {
 	}),
 	"planSheet": new LocalizedStrings({
 		"en": {
-			"NoSaveOffline": "Save is not available offline.",
 			"action": "Action",
 			"upload": "Upload Audio",
 			"play": "Play / Pause",
@@ -150,7 +149,8 @@ const initialState = {
 			"move": "Move",
 			"copy": "Copy",
 			"attachMedia": "Attach Media",
-			"addSection": "Add Section",
+			"addSection": "Add {0}",
+			"section": "Section",
 			"addPassage": "Add Passage",
 			"inlineToggle": "Condensed",
 			"save": "Save",
@@ -221,9 +221,10 @@ const initialState = {
 	}),
 	"planTabs": new LocalizedStrings({
 		"en": {
-			"sectionsPassages": "Sections & Passages",
+			"sectionsPassages": "{0} & Passages",
+			"sections": "Sections",
 			"passageStatus": "{1} of {2} passages",
-			"sectionStatus": "{1} of {2} sections",
+			"sectionStatus": "{1} of {2} {0}",
 			"mediaStatus": "{1} of {2} media files",
 			"media": "Media",
 			"assignments": "Assignments",

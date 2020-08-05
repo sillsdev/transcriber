@@ -741,13 +741,20 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="planSheet.addSection">
-                <source>Add Section</source>
+                <source>Add {0}</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PlanSheet.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planSheet.addPassage">
+        	<trans-unit id="planSheet.section">
+        		<source>Section</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.addPassage">
                 <source>Add Passage</source>
                 <target/>
                 <context-group>
@@ -1126,7 +1133,14 @@
                 </context-group>
             </trans-unit>
         	<trans-unit id="planTabs.sectionsPassages">
-        		<source>Sections &#x26; Passages</source>
+        		<source>{0} &#x26; Passages</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanTabs.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planTabs.sections">
+        		<source>Sections</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanTabs.tsx</context>
@@ -1140,7 +1154,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="planTabs.sectionStatus">
-        		<source>{1} of {2} sections</source>
+        		<source>{1} of {2} {0}</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanTabs.tsx</context>

@@ -639,8 +639,14 @@
 		</unit>
 		<unit id="planSheet.addSection">
 			<segment>
-				<source>Add Section</source>
-				<target>Ajouter une section</target>
+				<source>Add {0}</source>
+				<target>Ajouter un(e) {0}</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.section">
+			<segment>
+				<source>Section</source>
+				<target>section</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.addPassage">
@@ -963,8 +969,14 @@
 		</unit>
 		<unit id="planTabs.sectionsPassages">
 			<segment>
-				<source>Sections &amp; Passages</source>
-				<target>Sections et passages</target>
+				<source>{0} &amp; Passages</source>
+				<target>{0} et passages</target>
+			</segment>
+		</unit>
+		<unit id="planTabs.sections">
+			<segment>
+				<source>Sections</source>
+				<target>Sections</target>
 			</segment>
 		</unit>
 		<unit id="planTabs.passageStatus">
@@ -975,8 +987,8 @@
 		</unit>
 		<unit id="planTabs.sectionStatus">
 			<segment>
-				<source>{1} of {2} sections</source>
-				<target>{1} of {2} sections</target>
+				<source>{1} of {2} {0}</source>
+				<target>{1} of {2} {0}</target>
 			</segment>
 		</unit>
 		<unit id="planTabs.mediaStatus">

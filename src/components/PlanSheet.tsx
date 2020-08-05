@@ -31,6 +31,7 @@ import { isNumber } from 'util';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { Online } from '../utils';
+import { useOrganizedBy } from '../crud';
 import { useInterval } from '../utils/useInterval';
 import { useRemoteSave } from '../utils/useRemoteSave';
 
@@ -200,6 +201,7 @@ export function PlanSheet(props: IProps) {
   const currentRow = useRef<number>(-1);
   const sheetRef = useRef<any>();
   const [showRow, setShowRow] = useState(0);
+  const getOrganizedBy = useOrganizedBy();
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
 
@@ -208,6 +210,7 @@ export function PlanSheet(props: IProps) {
   };
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
+  const LastCol = 6;
 
   const isSection = (row: Array<any>) =>
     /^[0-9]+$/.test(row[SectionSeqCol].toString());
@@ -440,90 +443,105 @@ export function PlanSheet(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [changed]);
 
+  const isIndex = (val: any) => /^[0-9]+$/.test(val.toString());
+
   useEffect(() => {
-    setData(
-      [
-        [{ value: '', readOnly: true } as ICell].concat(
-          columns.map((col) => {
-            return { ...col, readOnly: true };
-          })
-        ),
-      ].concat(
-        rowData.map((row, rowIndex) => {
-          const isSection = /^[0-9]+$/.test(row[SectionSeqCol].toString());
-          const isPassage = /^[0-9]+$/.test(row[PassageSeqCol].toString());
-          return [
-            {
-              value: isDeveloper ? (
-                <></>
-              ) : (
-                <Checkbox
-                  data-testid={check.includes(rowIndex) ? 'checked' : 'check'}
-                  checked={check.includes(rowIndex)}
-                  onChange={handleCheck(rowIndex)}
-                />
-              ),
-              className: isSection ? 'set' : 'pass',
-            } as ICell,
-          ]
-            .concat(
-              row.map((e, cellIndex) => {
-                return cellIndex !== bookCol || !isPassage
-                  ? {
-                      value: e,
-                      readOnly: isSection
-                        ? isPassage
-                          ? false
-                          : cellIndex > 1
-                        : cellIndex <= 1,
-                      className:
-                        (cellIndex === SectionSeqCol ||
-                        cellIndex === PassageSeqCol
-                          ? 'num'
-                          : 'pass') +
-                        (isSection
-                          ? !inlinePassages || cellIndex <= 1
-                            ? ' set'
-                            : ' setp'
-                          : ''),
-                    }
-                  : {
-                      value: e,
-                      className:
-                        'book' + (isSection && inlinePassages ? ' setp' : ''),
-                      dataEditor: bookEditor,
-                    };
-              })
-            )
-            .concat([
-              {
-                value: !isDeveloper ? (
-                  <></>
-                ) : (
-                  <div className={classes.actionButton}>
-                    <IconButton title={t.upload}>
-                      <UploadIcon />
-                    </IconButton>
-                    <IconButton title={t.play}>
-                      <PlayIcon />
-                    </IconButton>
-                    <IconButton title={t.assign}>
-                      <AssignIcon />
-                    </IconButton>
-                    <IconButton title={t.transcribe}>
-                      <FaPenNib />
-                    </IconButton>
-                    <IconButton title={t.delete}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </div>
-                ),
-                className: isSection ? 'set' : 'pass',
-              } as ICell,
-            ]);
+    let data = [
+      [{ value: '', readOnly: true } as ICell].concat(
+        columns.map((col) => {
+          return { ...col, readOnly: true };
         })
-      )
+      ),
+    ].concat(
+      rowData.map((row, rowIndex) => {
+        const isSection = isIndex(row[SectionSeqCol]);
+        const isPassage = isIndex(row[PassageSeqCol]);
+        return [
+          {
+            value: isDeveloper ? (
+              <></>
+            ) : (
+              <Checkbox
+                data-testid={check.includes(rowIndex) ? 'checked' : 'check'}
+                checked={check.includes(rowIndex)}
+                onChange={handleCheck(rowIndex)}
+              />
+            ),
+            className: isSection ? 'set' : 'pass',
+          } as ICell,
+        ].concat(
+          row.slice(0, LastCol).map((e, cellIndex) => {
+            return cellIndex !== bookCol || !isPassage
+              ? {
+                  value: e,
+                  readOnly: isSection
+                    ? isPassage
+                      ? false
+                      : cellIndex > 1
+                    : cellIndex <= 1,
+                  className:
+                    (cellIndex === SectionSeqCol || cellIndex === PassageSeqCol
+                      ? 'num'
+                      : 'pass') +
+                    (isSection
+                      ? !inlinePassages || cellIndex <= 1
+                        ? ' set'
+                        : ' setp'
+                      : ''),
+                }
+              : {
+                  value: e,
+                  className:
+                    'book' + (isSection && inlinePassages ? ' setp' : ''),
+                  dataEditor: bookEditor,
+                };
+          })
+        );
+      })
     );
+    if (isDeveloper) {
+      data = data.map((row, rowIndex) => {
+        const isSection = isIndex(row[SectionSeqCol + 1].value);
+        const isPassage = isIndex(row[PassageSeqCol + 1].value);
+        return row.concat(
+          rowIndex === 0
+            ? []
+            : [
+                {
+                  value: (
+                    <div className={classes.actionButton}>
+                      {isPassage && (
+                        <>
+                          <IconButton title={t.upload}>
+                            <UploadIcon />
+                          </IconButton>
+                          <IconButton title={t.play}>
+                            <PlayIcon />
+                          </IconButton>
+                        </>
+                      )}
+                      {isSection && (
+                        <IconButton title={t.assign}>
+                          <AssignIcon />
+                        </IconButton>
+                      )}
+                      {isPassage && (
+                        <IconButton title={t.transcribe}>
+                          <FaPenNib />
+                        </IconButton>
+                      )}
+                      <IconButton title={t.delete}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </div>
+                  ),
+                  className: isSection ? 'set' : 'pass',
+                } as ICell,
+              ]
+        );
+      });
+    }
+    setData(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, check, bookCol, columns]);
 
@@ -586,21 +604,26 @@ export function PlanSheet(props: IProps) {
                   className={classes.button}
                   onClick={handleAddSection}
                 >
-                  {t.addSection}
+                  {t.addSection.replace(
+                    '{0}',
+                    getOrganizedBy(global.plan) || t.section
+                  )}
                   <AddIcon className={classes.icon} />
                 </Button>
-                <Button
-                  key="addPassage"
-                  aria-label={t.addPassage}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleAddPassage}
-                  disabled={data.length < 2}
-                >
-                  {t.addPassage}
-                  <AddIcon className={classes.icon} />
-                </Button>
+                {(!isDeveloper || (isDeveloper && !inlinePassages)) && (
+                  <Button
+                    key="addPassage"
+                    aria-label={t.addPassage}
+                    variant="outlined"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleAddPassage}
+                    disabled={data.length < 2}
+                  >
+                    {t.addPassage}
+                    <AddIcon className={classes.icon} />
+                  </Button>
+                )}
                 <Button
                   key="importExcel"
                   aria-label={t.tablePaste}
@@ -652,17 +675,19 @@ export function PlanSheet(props: IProps) {
                     </Menu>
                   </>
                 )}
-                <FormControlLabel
-                  className={classes.lessEmphasis}
-                  control={
-                    <Switch
-                      checked={inlinePassages}
-                      onChange={handleToggleInline}
-                      color="primary"
-                    />
-                  }
-                  label={t.inlineToggle}
-                />
+                {!isDeveloper && (
+                  <FormControlLabel
+                    className={classes.lessEmphasis}
+                    control={
+                      <Switch
+                        checked={inlinePassages}
+                        onChange={handleToggleInline}
+                        color="primary"
+                      />
+                    }
+                    label={t.inlineToggle}
+                  />
+                )}
                 <div className={classes.grow}>{'\u00A0'}</div>
                 <Button
                   key="save"
@@ -706,20 +731,23 @@ export function PlanSheet(props: IProps) {
             <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
           )}
           {inlinePassages &&
+            !isDeveloper &&
             position.i > 0 &&
             isSection(rowData[position.i - 1]) && (
               <MenuItem onClick={handlePassageBelowSection}>
                 {t.passageBelowSection}
               </MenuItem>
             )}
-          <MenuItem onClick={handlePassageBelow}>
-            {t.passageBelow.replace(
-              '{0}',
-              position.i > 0
-                ? rowData[position.i - 1][PassageSeqCol].toString()
-                : ''
-            )}
-          </MenuItem>{' '}
+          {(!isDeveloper || !inlinePassages) && (
+            <MenuItem onClick={handlePassageBelow}>
+              {t.passageBelow.replace(
+                '{0}',
+                position.i > 0
+                  ? rowData[position.i - 1][PassageSeqCol].toString()
+                  : ''
+              )}
+            </MenuItem>
+          )}
         </Menu>
       </div>
       {confirmAction !== '' ? (
