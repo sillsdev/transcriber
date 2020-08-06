@@ -651,6 +651,7 @@ const initialState = {
 		"en": {
 			"filter": "Filter",
 			"plan": "Plan",
+			"project": "Project",
 			"section": "Section",
 			"passage": "Passage",
 			"state": "State",

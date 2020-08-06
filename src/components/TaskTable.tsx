@@ -127,10 +127,11 @@ export function TaskTable(props: IProps) {
   const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [width, setWidth] = React.useState(window.innerWidth);
+  const [isDeveloper] = useGlobal('developer');
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
-    { name: 'plan', title: t.plan },
+    { name: 'plan', title: isDeveloper ? t.project : t.plan },
     { name: 'section', title: t.section },
     { name: 'title', title: t.title },
     { name: 'sectPass', title: t.passage },

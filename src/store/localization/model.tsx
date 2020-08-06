@@ -610,6 +610,7 @@ export interface IMyTaskStrings extends Localize.LocalizedStringsMethods {
 export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "filter": string;
     "plan": string;
+    "project": string;
     "section": string;
     "passage": string;
     "state": string;

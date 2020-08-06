@@ -3026,7 +3026,13 @@
             <target>Programme</target>
          </segment>
       </unit>
-      <unit id="toDoTable.section">
+		<unit id="toDoTable.project">
+			<segment>
+				<source>Project</source>
+				<target>Project</target>
+			</segment>
+		</unit>
+		<unit id="toDoTable.section">
          <segment>
             <source>Section</source>
             <target>Section</target>

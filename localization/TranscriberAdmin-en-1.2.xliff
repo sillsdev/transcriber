@@ -3526,7 +3526,14 @@
                     <context context-type="sourcefile">ToDoTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="toDoTable.section">
+        	<trans-unit id="toDoTable.project">
+        		<source>Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ToDoTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="toDoTable.section">
                 <source>Section</source>
                 <target/>
                 <context-group>
