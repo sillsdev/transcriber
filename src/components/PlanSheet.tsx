@@ -153,6 +153,8 @@ interface IProps extends IStateProps {
   resequence: () => void;
   inlinePassages: boolean;
   toggleInline: (event: any) => void;
+  onTranscribe: (i: number) => () => void;
+  hasMedia: (i: number) => boolean;
 }
 
 export function PlanSheet(props: IProps) {
@@ -173,6 +175,8 @@ export function PlanSheet(props: IProps) {
     resequence,
     inlinePassages,
     toggleInline,
+    onTranscribe,
+    hasMedia,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -515,9 +519,11 @@ export function PlanSheet(props: IProps) {
                           <IconButton title={t.upload}>
                             <UploadIcon />
                           </IconButton>
-                          <IconButton title={t.play}>
-                            <PlayIcon />
-                          </IconButton>
+                          {hasMedia(rowIndex) && (
+                            <IconButton title={t.play}>
+                              <PlayIcon />
+                            </IconButton>
+                          )}
                         </>
                       )}
                       {isSection && (
@@ -525,8 +531,11 @@ export function PlanSheet(props: IProps) {
                           <AssignIcon />
                         </IconButton>
                       )}
-                      {isPassage && (
-                        <IconButton title={t.transcribe}>
+                      {isPassage && hasMedia(rowIndex) && (
+                        <IconButton
+                          title={t.transcribe}
+                          onClick={onTranscribe(rowIndex)}
+                        >
                           <FaPenNib />
                         </IconButton>
                       )}

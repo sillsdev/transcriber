@@ -188,7 +188,7 @@ export const ProjectCard = (props: IProps) => {
             {Object.keys(project?.attributes?.tags)
               .filter((t) => project?.attributes?.tags[t])
               .map((t) => (
-                <Chip size="small" label={camel2Title(t)} />
+                <Chip key={t} size="small" label={camel2Title(t)} />
               ))}
           </CardActions>
         )}

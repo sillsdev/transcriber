@@ -135,6 +135,7 @@ interface IContext {
 const TranscriberContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+  select?: string;
   children: React.ReactElement;
 }
 
@@ -143,6 +144,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
+    const { select } = props;
     const { passages, mediafiles, sections, plans, planTypes } = props;
     const { projects, groupMemberships, roles } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -156,6 +158,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [isDeveloper] = useGlobal('developer');
     const [state, setState] = useState({
       ...initState,
+      selected: select || '',
       allBookData,
       todoStr,
       taskItemStr,
@@ -415,6 +418,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         onlyAvailable,
         item
       );
+
+      if (state.selected !== '') {
+        if (rowList[state.index].passage.id !== state.selected) {
+          setSelected(state.selected);
+        }
+      }
     };
 
     useEffect(() => {

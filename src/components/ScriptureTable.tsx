@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import {
   IState,
   Section,
@@ -12,6 +13,7 @@ import {
   BookName,
   SectionPassage,
   Plan,
+  MediaFile,
   ISharedStrings,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
@@ -59,6 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
+interface IPassageMedia {
+  [passageId: string]: Array<MediaFile>;
+}
 
 interface ISequencedRecordIdentity extends RecordIdentity {
   sequencenum: number;
@@ -148,6 +154,8 @@ export function ScriptureTable(props: IProps) {
   const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
   const [complete, setComplete] = useState(0);
+  const [view, setView] = useState('');
+  const [passageMedia, setPassageMedia] = useState<IPassageMedia>({});
   const getOrganizedBy = useOrganizedBy();
   const [, saveCompleted] = useRemoteSave();
 
@@ -626,6 +634,24 @@ export function ScriptureTable(props: IProps) {
     setWidth(window.innerWidth - theme.spacing(DrawerTask));
   };
 
+  const passageRow = (row: number) =>
+    inlinePassages.inline ? (row - 1) * 2 + 1 : row - 1;
+
+  const passageId = (row: number) => {
+    const passRow = passageRow(row);
+    return rowId.length > passRow ? rowId[passRow][0].id : '';
+  };
+
+  const handleTranscribe = (i: number) => () => {
+    const id = passageId(i);
+    const passageRemoteId = remoteIdNum('passage', id, memory.keyMap);
+    setView(`/work/${passageRemoteId}`);
+  };
+
+  const handleHasMedia = (i: number) => {
+    return passageMedia.hasOwnProperty(passageId(i));
+  };
+
   const getFlat = (planId: string) => {
     if (!planId || planId === '') return false;
     const planRec = memory.cache.query((q: QueryBuilder) =>
@@ -662,6 +688,27 @@ export function ScriptureTable(props: IProps) {
           ),
         });
     }
+
+    const mediaRecs = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('mediafile')
+    ) as MediaFile[];
+    const passMedia = { ...passageMedia };
+    mediaRecs
+      .sort((i, j) =>
+        i?.attributes?.versionNumber > j?.attributes?.versionNumber ? -1 : 1
+      )
+      .forEach((m) => {
+        if (related(m, 'plan') === plan) {
+          const passageId = related(m, 'passage');
+          if (passMedia.hasOwnProperty(passageId)) {
+            passMedia[passageId].push(m);
+          } else {
+            passMedia[passageId] = [m];
+          }
+        }
+      });
+    setPassageMedia(passMedia);
+
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
@@ -994,6 +1041,8 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [data, width, cols]);
 
+  if (view !== '') return <Redirect to={view} />;
+
   return (
     <div className={classes.container}>
       {complete === 0 || (
@@ -1016,6 +1065,8 @@ export function ScriptureTable(props: IProps) {
         resequence={handleResequence}
         inlinePassages={inlinePassages.inline}
         toggleInline={toggleInline}
+        onTranscribe={handleTranscribe}
+        hasMedia={handleHasMedia}
         t={s}
         ts={ts}
       />
