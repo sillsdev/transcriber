@@ -30,7 +30,7 @@ export const useRemoteSave = (): [
   };
   const saveError = () => saveErr.current || '';
 
-  const SaveIncomplete = () => saveErr.current === undefined;
+  const SaveComplete = () => saveErr.current !== undefined;
   const SaveUnsuccessful = () =>
     saveErr.current !== undefined && saveErr.current !== '';
 
@@ -38,7 +38,7 @@ export const useRemoteSave = (): [
     resolvedMethod: undefined | (() => any),
     waitCount: number
   ): Promise<any> => {
-    return waitForIt('Save', SaveIncomplete, SaveUnsuccessful, waitCount)
+    return waitForIt('Save', SaveComplete, SaveUnsuccessful, waitCount)
       .then(() => {
         if (resolvedMethod) return resolvedMethod();
       })
