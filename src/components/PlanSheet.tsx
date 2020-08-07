@@ -17,11 +17,12 @@ import {
 import SaveIcon from '@material-ui/icons/Save';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
-import UploadIcon from '@material-ui/icons/CloudUpload';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import AssignIcon from '@material-ui/icons/People';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { FaPenNib } from 'react-icons/fa';
+import UploadIcon from '@material-ui/icons/CloudUploadOutlined';
+import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
+import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
+import DeleteIcon from '@material-ui/icons/DeleteOutline';
+import TranscribeIcon from '@material-ui/icons/EditOutlined';
+// import { FaPenNib } from 'react-icons/fa';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
@@ -88,10 +89,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
       justifyContent: 'flex-end',
     }) as any,
+    arrangeActions: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
     actionButton: {
-      '& .MuiIconButton-root': {
-        color: 'rgba(0,0,0,0.35)',
-      },
+      color: theme.palette.primary.light,
     },
     lessEmphasis: {
       opacity: 0.6,
@@ -513,33 +516,46 @@ export function PlanSheet(props: IProps) {
             : [
                 {
                   value: (
-                    <div className={classes.actionButton}>
+                    <div className={classes.arrangeActions}>
                       {isPassage && (
                         <>
-                          <IconButton title={t.upload}>
+                          <IconButton
+                            className={classes.actionButton}
+                            title={t.upload}
+                          >
                             <UploadIcon />
                           </IconButton>
-                          {hasMedia(rowIndex) && (
-                            <IconButton title={t.play}>
-                              <PlayIcon />
-                            </IconButton>
-                          )}
+                          <IconButton
+                            className={classes.actionButton}
+                            title={t.play}
+                            disabled={!hasMedia(rowIndex)}
+                          >
+                            <PlayIcon />
+                          </IconButton>
                         </>
                       )}
                       {isSection && (
-                        <IconButton title={t.assign}>
+                        <IconButton
+                          className={classes.actionButton}
+                          title={t.assign}
+                        >
                           <AssignIcon />
                         </IconButton>
                       )}
-                      {isPassage && hasMedia(rowIndex) && (
+                      {isPassage && (
                         <IconButton
+                          className={classes.actionButton}
                           title={t.transcribe}
                           onClick={onTranscribe(rowIndex)}
+                          disabled={!hasMedia(rowIndex)}
                         >
-                          <FaPenNib />
+                          <TranscribeIcon />
                         </IconButton>
                       )}
-                      <IconButton title={t.delete}>
+                      <IconButton
+                        className={classes.actionButton}
+                        title={t.delete}
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </div>

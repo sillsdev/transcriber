@@ -1029,7 +1029,11 @@ export function ScriptureTable(props: IProps) {
     nx += 2;
     if (isDeveloper) {
       colHead = colHead.concat([
-        { value: t.action, readOnly: true, width: 250 },
+        {
+          value: t.action,
+          readOnly: true,
+          width: inlinePassages.inline ? 250 : 200,
+        },
       ]);
     }
     if (
