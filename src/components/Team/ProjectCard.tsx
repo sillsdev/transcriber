@@ -10,11 +10,11 @@ import {
 import ScriptureIcon from '@material-ui/icons/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
-import { VProject } from '../../model';
+import { VProject, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import { ProjectMenu } from '.';
 import Confirm from '../AlertDialog';
-import { ProjectDialog, Mode, IProjectDialog } from './ProjectDialog';
+import { ProjectDialog, IProjectDialog } from './ProjectDialog';
 import { camel2Title } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -200,7 +200,7 @@ export const ProjectCard = (props: IProps) => {
         )}
       </Card>
       <ProjectDialog
-        mode={Mode.edit}
+        mode={DialogMode.edit}
         values={projectValues(project)}
         isOpen={open}
         onOpen={handleOpen}

@@ -17,6 +17,8 @@ import {
   Language,
   ILanguage,
 } from '.';
+import Mode from '../../../model/dialogMode';
+import { IDialog } from '../../../model';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,21 +61,7 @@ export interface IProjectDialogState {
   setState: React.Dispatch<React.SetStateAction<IProjectDialog>>;
 }
 
-export enum Mode {
-  'add',
-  'edit',
-}
-
-interface IProps {
-  mode: Mode;
-  values?: IProjectDialog;
-  isOpen: boolean;
-  onOpen?: (val: boolean) => void;
-  onCommit: (values: IProjectDialog) => void;
-  onCancel?: () => void;
-}
-
-export function ProjectDialog(props: IProps) {
+export function ProjectDialog(props: IDialog<IProjectDialog>) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel } = props;
   const classes = useStyles();
   const [state, setState] = React.useState(

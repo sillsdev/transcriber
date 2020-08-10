@@ -2,13 +2,8 @@ import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { VProject } from '../../model';
-import {
-  ProjectDialog,
-  Mode,
-  IProjectDialog,
-  ProjectType,
-} from './ProjectDialog';
+import { VProject, DialogMode } from '../../model';
+import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
 import MediaUpload, { UploadType } from '../MediaUpload';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
@@ -175,7 +170,7 @@ export const AddCard = (props: IProps) => {
                 </Button>
               )}
               <ProjectDialog
-                mode={Mode.add}
+                mode={DialogMode.add}
                 isOpen={open}
                 onOpen={handleOpen}
                 onCommit={handleCommit}

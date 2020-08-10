@@ -8,6 +8,8 @@ export * from './useTypeId';
 export * from './useOrganizedBy';
 export * from './offlineError';
 export * from './useTeamCreate';
+export * from './useTeamUpdate';
+export * from './useTeamDelete';
 export * from './createOrg';
 export * from './useIsPersonalTeam';
 export * from './useNewTeamId';

@@ -28,6 +28,8 @@ import {
   useVProjectUpdate,
   useVProjectDelete,
   useTeamCreate,
+  useTeamUpdate,
+  useTeamDelete,
   useIsPersonalTeam,
   useNewTeamId,
 } from '../crud';
@@ -95,6 +97,8 @@ const initState = {
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
   teamCreate: (team: Organization) => {},
+  teamUpdate: (team: Organization) => {},
+  teamDelete: (team: Organization) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -147,6 +151,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     const vProjectUpdate = useVProjectUpdate();
     const vProjectDelete = useVProjectDelete();
     const orbitTeamCreate = useTeamCreate({ ...props, setMessage });
+    const orbitTeamUpdate = useTeamUpdate();
+    const orbitTeamDelete = useTeamDelete();
     const isPersonal = useIsPersonalTeam();
     const getTeamId = useNewTeamId({ ...props, setMessage });
 
@@ -306,6 +312,14 @@ const TeamProvider = withData(mapRecordsToProps)(
       orbitTeamCreate(team);
     };
 
+    const teamUpdate = (team: Organization) => {
+      orbitTeamUpdate(team);
+    };
+
+    const teamDelete = (team: Organization) => {
+      orbitTeamDelete(team);
+    };
+
     return (
       <TeamContext.Provider
         value={{
@@ -325,6 +339,8 @@ const TeamProvider = withData(mapRecordsToProps)(
             projectUpdate,
             projectDelete,
             teamCreate,
+            teamUpdate,
+            teamDelete,
           },
           setState,
         }}

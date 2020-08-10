@@ -2,9 +2,10 @@ import React from 'react';
 import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
-import { Organization } from '../../model';
+import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
-import { ProjectCard, AddCard } from '.';
+import { ProjectCard, AddCard, TeamDialog } from '.';
+import Confirm from '../AlertDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,8 +49,10 @@ interface IProps {
 export const TeamItem = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [deleteItem, setDeleteItem] = React.useState<Organization>();
   const ctx = React.useContext(TeamContext);
-  const { teamProjects, teamMembers } = ctx.state;
+  const { teamProjects, teamMembers, teamUpdate, teamDelete } = ctx.state;
 
   const handleMembers = (team: Organization) => () => {
     console.log(`clicked ${t.members} of ${team?.attributes?.name}`);
@@ -57,7 +60,22 @@ export const TeamItem = (props: IProps) => {
 
   const handleSettings = (team: Organization) => () => {
     console.log(`clicked ${t.settings} for ${team?.attributes?.name}`);
+    setEditOpen(true);
   };
+
+  const handleCommitSettings = (team: Organization) => {
+    teamUpdate(team);
+  };
+
+  const handleDeleteTeam = (team: Organization) => {
+    setDeleteItem(team);
+  };
+
+  const handleDeleteConfirmed = () => {
+    deleteItem && teamDelete(deleteItem);
+  };
+
+  const handleDeleteRefused = () => setDeleteItem(undefined);
 
   return (
     <Paper id="TeamItem" className={classes.root}>
@@ -76,6 +94,20 @@ export const TeamItem = (props: IProps) => {
           </Button>
         </div>
       </div>
+      <TeamDialog
+        mode={DialogMode.edit}
+        values={team}
+        isOpen={editOpen}
+        onOpen={setEditOpen}
+        onCommit={handleCommitSettings}
+        onDelete={handleDeleteTeam}
+      />
+      {deleteItem && (
+        <Confirm
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
+        />
+      )}
       <Grid container className={classes.cardFlow}>
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
