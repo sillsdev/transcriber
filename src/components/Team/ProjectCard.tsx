@@ -57,7 +57,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const t = {
   language: 'Language: {0}',
-  sections: '{0} Sections',
+  sectionStatus: '{0} {1}',
+  sections: 'sections',
 };
 
 interface IProps {
@@ -180,7 +181,12 @@ export const ProjectCard = (props: IProps) => {
             {t.language.replace('{0}', projectLanguage(project))}
           </Typography>
           <Typography variant="body2" component="p">
-            {t.sections.replace('{0}', projectSections(project))}
+            {t.sectionStatus
+              .replace('{0}', projectSections(project))
+              .replace(
+                '{1}',
+                camel2Title(project?.attributes?.organizedBy || t.sections)
+              )}
           </Typography>
         </CardContent>
         {project?.attributes?.tags && (

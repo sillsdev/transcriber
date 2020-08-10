@@ -1,10 +1,9 @@
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { Organization } from '../model';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { setDefaultProj } from './setDefaultProj';
+import { TransformBuilder } from '@orbit/data';
+import { setDefaultProj, orbitErr } from '../utils';
 import Coordinator from '@orbit/coordinator';
-import { orbitErr } from '.';
 import { IApiError } from '../model';
 
 export const ReloadOrgTables = async (
@@ -49,7 +48,7 @@ export const createOrg = async (props: ICreateOrgProps) => {
 
   memory.schema.initializeRecord(orgRec);
 
-  remote
+  await remote
     .update((t: TransformBuilder) => [
       t.addRecord(orgRec),
       t.replaceRelatedRecord({ type: 'organization', id: orgRec.id }, 'owner', {
@@ -57,23 +56,15 @@ export const createOrg = async (props: ICreateOrgProps) => {
         id: user,
       }),
     ])
-    .then(() => {
-      ReloadOrgTables(memory, remote).then(() => {
-        const newOrgRec: Organization[] = memory.cache.query(
-          (q: QueryBuilder) =>
-            q
-              .findRecords('organization')
-              .filter({ attribute: 'name', value: orgRec.attributes.name })
-        ) as any;
-        setOrganization(newOrgRec[0].id);
-        setDefaultProj(newOrgRec[0].id, memory, setProject);
-      });
-    })
     .catch((err: Error) => {
       var x = orbitErr(err, 'CreateOrg');
       doOrbitError(x);
       console.log(err.message);
     });
+  await ReloadOrgTables(memory, remote);
+  setOrganization(orgRec.id);
+  setDefaultProj(orgRec.id, memory, setProject);
+  return orgRec.id;
 };
 
 export default createOrg;

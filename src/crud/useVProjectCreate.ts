@@ -1,5 +1,5 @@
 import { useGlobal } from 'reactn';
-import { VProject, Project, Plan, Organization, Group } from '../model';
+import { VProject, Project, Plan, Group } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import { related, localeDefault } from '../utils';
 import { useTypeId } from '.';
@@ -9,15 +9,15 @@ export const useVProjectCreate = () => {
   const [user] = useGlobal('user');
   const getTypeId = useTypeId();
 
-  const getGroupId = (team: Organization) => {
+  const getGroupId = (teamId: string) => {
     const grpRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('group')
     ) as Group[];
-    const selected = grpRecs.filter((g) => related(g, 'owner') === team.id);
+    const selected = grpRecs.filter((g) => related(g, 'owner') === teamId);
     return selected.length > 0 ? selected[0].id : '';
   };
 
-  return async (vProject: VProject, team: Organization) => {
+  return async (vProject: VProject, teamId: string) => {
     const {
       name,
       description,
@@ -60,11 +60,11 @@ export const useVProjectCreate = () => {
       }),
       t.replaceRelatedRecord(project, 'group', {
         type: 'group',
-        id: getGroupId(team),
+        id: getGroupId(teamId),
       }),
       t.replaceRelatedRecord(project, 'organization', {
         type: 'organization',
-        id: team.id,
+        id: teamId,
       }),
       t.replaceRelatedRecord(project, 'owner', {
         type: 'user',

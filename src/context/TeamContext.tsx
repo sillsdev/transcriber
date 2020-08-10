@@ -15,6 +15,7 @@ import {
   OrganizationMembership,
   VProject,
   IMainStrings,
+  ISharedStrings,
 } from '../model';
 // import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -26,6 +27,9 @@ import {
   useVProjectCreate,
   useVProjectUpdate,
   useVProjectDelete,
+  useTeamCreate,
+  useIsPersonalTeam,
+  useNewTeamId,
 } from '../crud';
 
 export type TeamIdType = Organization | null;
@@ -34,20 +38,22 @@ interface IStateProps {
   lang: string;
   controlStrings: IControlStrings;
   t: IMainStrings;
+  ts: ISharedStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   lang: state.strings.lang,
   controlStrings: localStrings(state, { layout: 'control' }),
   t: localStrings(state, { layout: 'main' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 interface IDispatchProps {
-  orbitError: typeof actions.doOrbitError;
+  doOrbitError: typeof actions.doOrbitError;
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
-      orbitError: actions.doOrbitError,
+      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),
@@ -88,6 +94,7 @@ const initState = {
   projectCreate: (project: VProject, team: TeamIdType) => {},
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
+  teamCreate: (team: Organization) => {},
 };
 
 export type ICtxState = typeof initState;
@@ -117,17 +124,14 @@ const TeamProvider = withData(mapRecordsToProps)(
       lang,
       controlStrings,
       t,
-      orbitError,
+      doOrbitError,
     } = props;
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     // const [orgRole, setOrgRole] = useGlobal('orgRole');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_projROle, setProjRole] = useGlobal('projRole');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_project, setProject] = useGlobal('project');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [plan, setPlan] = useGlobal('plan');
+    const [, setProjRole] = useGlobal('projRole');
+    const [, setProject] = useGlobal('project');
+    const [, setPlan] = useGlobal('plan');
     const [remote] = useGlobal('remote');
     const [backup] = useGlobal('backup');
     const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
@@ -142,6 +146,9 @@ const TeamProvider = withData(mapRecordsToProps)(
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();
     const vProjectDelete = useVProjectDelete();
+    const orbitTeamCreate = useTeamCreate({ ...props, setMessage });
+    const isPersonal = useIsPersonalTeam();
+    const getTeamId = useNewTeamId({ ...props, setMessage });
 
     const handleMessageReset = () => {
       setMessage(<></>);
@@ -161,7 +168,7 @@ const TeamProvider = withData(mapRecordsToProps)(
           backup,
           projectsLoaded,
           setProjectsLoaded,
-          orbitError
+          doOrbitError
         )
           .then(() => {
             const projRecs = projects.filter((p) => p.id === projectId);
@@ -187,7 +194,7 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teams = () => {
       return organizations
-        .filter((o) => teamMembers(o.id) > 1)
+        .filter((o) => !isPersonal(o.id))
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
 
@@ -235,10 +242,7 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const personalProjects = () => {
       const projIds = projects
-        .filter((p) => {
-          const teamId = related(p, 'organization');
-          return teamMembers(teamId) === 1;
-        })
+        .filter((p) => isPersonal(related(p, 'organization')))
         .map((p) => p.id);
       return plans
         .filter((p) => projIds.includes(related(p, 'project')))
@@ -285,13 +289,9 @@ const TeamProvider = withData(mapRecordsToProps)(
       return projRec?.attributes?.languageName || 'English';
     };
 
-    const projectCreate = (project: VProject, team: TeamIdType) => {
-      if (!team) {
-        const orgRecs = organizations.filter((o) => teamMembers(o.id) === 1);
-        if (orgRecs.length > 0) {
-          vProjectCreate(project, orgRecs[0]);
-        }
-      } else vProjectCreate(project, team);
+    const projectCreate = async (project: VProject, team: TeamIdType) => {
+      const teamId = await getTeamId(team);
+      vProjectCreate(project, teamId);
     };
 
     const projectUpdate = (project: VProject) => {
@@ -300,6 +300,10 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const projectDelete = (project: VProject) => {
       vProjectDelete(project);
+    };
+
+    const teamCreate = (team: Organization) => {
+      orbitTeamCreate(team);
     };
 
     return (
@@ -320,6 +324,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             projectCreate,
             projectUpdate,
             projectDelete,
+            teamCreate,
           },
           setState,
         }}

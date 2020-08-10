@@ -8,6 +8,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
+import { TeamContext } from '../../context/TeamContext';
+import { Organization } from '../../model';
 
 const t = {
   addTeam: 'Add a Team',
@@ -20,6 +22,8 @@ const t = {
 export function AddTeamDialog() {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState('');
+  const ctx = React.useContext(TeamContext);
+  const { teamCreate } = ctx.state;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -32,6 +36,8 @@ export function AddTeamDialog() {
 
   const handleAdd = () => {
     console.log('Team added:', name);
+    const team = { attributes: { name } } as Organization;
+    teamCreate(team);
     setOpen(false);
   };
 
