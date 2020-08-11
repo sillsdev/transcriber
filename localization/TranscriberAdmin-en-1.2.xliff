@@ -4632,6 +4632,279 @@
         			<context context-type="sourcefile">template.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="cards.upload">
+        		<source>Upload Audio</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.newProject">
+        		<source>New Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.connectParatext">
+        		<source>Connect a Paratext Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.import">
+        		<source>Import PTF File</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.personalProjects">
+        		<source>Personal Projects</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.language">
+        		<source>Language: {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.sectionStatus">
+        		<source>{0} {1}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.sections">
+        		<source>sections</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.settings">
+        		<source>Settings</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.delete">
+        		<source>Delete</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.addTeam">
+        		<source>Add Team</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.teamSettings">
+        		<source>Team Settings</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.teamName">
+        		<source>Team Name</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.add">
+        		<source>Add</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.save">
+        		<source>Save</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.deleteTeam">
+        		<source>Delete Team</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.explainTeamDelete">
+        		<source>Deleting the team will delete all projects of the team.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.members">
+        		<source>Members ({0})</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.editorSettings">
+        		<source>Editor Settings</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.rightToLeft">
+        		<source>Right-to-Left</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.font">
+        		<source>Font</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.fontSize">
+        		<source>Font Size</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.preview">
+        		<source>Preview</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.description">
+        		<source>Description</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.newProject">
+        		<source>{0} Project</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.new">
+        		<source>New</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.edit">
+        		<source>Edit</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.add">
+        		<source>Add</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.save">
+        		<source>Save</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.advanced">
+        		<source>Advanced</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.layout">
+        		<source>Layout</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.organizedBy">
+        		<source>Term for organizing layout</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.projectName">
+        		<source>Project Name</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.tags">
+        		<source>Tags</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.other">
+        		<source>Other</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.type">
+        		<source>Project Type</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.language">
+        		<source>Language</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
         </body>
     </file>
 </xliff>

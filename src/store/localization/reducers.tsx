@@ -851,6 +851,53 @@ const initialState = {
 			"templateCodes": "Template Codes",
 		}
 	}),
+	"cards": new LocalizedStrings({
+		"en": {
+			"upload": "Upload Audio",
+			"newProject": "New Project",
+			"connectParatext": "Connect a Paratext Project",
+			"import": "Import PTF File",
+			"personalProjects": "Personal Projects",
+			"language": "Language: {0}",
+			"sectionStatus": "{0} {1}",
+			"sections": "sections",
+			"settings": "Settings",
+			"delete": "Delete",
+			"addTeam": "Add Team",
+			"teamSettings": "Team Settings",
+			"teamName": "Team Name",
+			"cancel": "Cancel",
+			"add": "Add",
+			"save": "Save",
+			"deleteTeam": "Delete Team",
+			"explainTeamDelete": "Deleting the team will delete all projects of the team.",
+			"members": "Members ({0})",
+		}
+	}),
+	"vProject": new LocalizedStrings({
+		"en": {
+			"editorSettings": "Editor Settings",
+			"rightToLeft": "Right-to-Left",
+			"font": "Font",
+			"fontSize": "Font Size",
+			"preview": "Preview",
+			"description": "Description",
+			"newProject": "{0} Project",
+			"new": "New",
+			"edit": "Edit",
+			"cancel": "Cancel",
+			"add": "Add",
+			"save": "Save",
+			"advanced": "Advanced",
+			"layout": "Layout",
+			"organizedBy": "Term for organizing layout",
+			"projectName": "Project Name",
+			"tags": "Tags",
+			"other": "Other",
+			"type": "Project Type",
+			"language": "Language",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -905,6 +952,8 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"setup" : new LocalizedStrings(action.payload.data.setup),
 				"notSetup" : new LocalizedStrings(action.payload.data.notSetup),
 				"template" : new LocalizedStrings(action.payload.data.template),
+				"cards" : new LocalizedStrings(action.payload.data.cards),
+				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 			};
 		case SET_LANGUAGE:
 			return {

@@ -1,13 +1,12 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
+import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
-
-const t = {
-  description: 'Description',
-};
 
 export const ProjectDescription = (props: IProjectDialogState) => {
   const { state, setState } = props;
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
   const { description } = state;
 
   const handleChangeDescription = (e: any) => {

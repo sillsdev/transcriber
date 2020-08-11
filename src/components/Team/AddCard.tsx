@@ -45,13 +45,6 @@ const initLang = {
   font: '',
 };
 
-const t = {
-  upload: 'Upload Audio',
-  newProject: 'New Project',
-  connectParatext: 'Connect A Paratext Project',
-  import: 'Import PTF File',
-};
-
 interface IProps {
   team: TeamIdType;
 }
@@ -60,7 +53,8 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
   const ctx = React.useContext(TeamContext);
-  const { projectCreate } = ctx.state;
+  const { projectCreate, cardStrings } = ctx.state;
+  const t = cardStrings;
   const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [uploadVisible, setUploadVisible] = React.useState(false);

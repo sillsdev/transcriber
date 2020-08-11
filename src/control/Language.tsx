@@ -8,6 +8,7 @@ import {
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { LanguagePicker } from 'mui-language-picker';
+import { TeamContext } from '../context/TeamContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,26 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  language: 'Language',
-  font: 'Font',
-};
-
-const lt = {
-  font: 'Font',
-  script: 'Script',
-  language: 'Language',
-  selectLanguage: 'Choose Language Details',
-  findALanguage: 'Find a language by name, code, or country',
-  codeExplained: 'Code Explained',
-  subtags: 'Subtags',
-  details: 'Details',
-  languageOf: 'A Language of $1$2.',
-  inScript: ' in the $1 script',
-  select: 'Save',
-  cancel: 'Cancel',
-};
-
 export interface ILanguage {
   bcp47: string;
   languageName: string;
@@ -68,6 +49,9 @@ export const Language = (props: IProps) => {
     languageName,
     font,
   });
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
+  const lt = ctx.state.pickerStrings;
   const stateRef = React.useRef<ILanguage>();
   const langEl = React.useRef<any>();
 

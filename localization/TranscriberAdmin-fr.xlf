@@ -1888,25 +1888,25 @@
       <unit id="import.transcription">
          <segment>
             <source>Transcription</source>
-            <target/>
+         	<target>Transcription</target>
          </segment>
       </unit>
       <unit id="import.state">
          <segment>
             <source>State</source>
-            <target/>
+         	<target>État</target>
          </segment>
       </unit>
       <unit id="import.editor">
          <segment>
             <source>Editor</source>
-            <target/>
+         	<target>Editeur</target>
          </segment>
       </unit>
       <unit id="import.transcriber">
          <segment>
             <source>Transcriber</source>
-            <target/>
+         	<target>Transcriber</target>
          </segment>
       </unit>
       <unit id="import.unassigned">
@@ -1918,7 +1918,7 @@
       <unit id="import.fontsize">
          <segment>
             <source>Font Size</source>
-            <target/>
+         	<target>Font Size</target>
          </segment>
       </unit>
       <unit id="import.username">
@@ -3960,20 +3960,254 @@
    <unit id="template.fileTemplate">
          <segment>
             <source>File Name Template</source>
-            <target/>
+         	<target>File Name Template</target>
          </segment>
       </unit>
       <unit id="template.apply">
          <segment>
             <source>Apply</source>
-            <target/>
+         	<target>Appliquer</target>
          </segment>
       </unit>
       <unit id="template.templateCodes">
          <segment>
             <source>Template Codes</source>
-            <target/>
+         	<target>Template Codes</target>
          </segment>
       </unit>
+		<unit id="cards.upload">
+			<segment>
+				<source>Upload Audio</source>
+				<target>Upload Audio</target>
+			</segment>
+		</unit>
+		<unit id="cards.newProject">
+			<segment>
+				<source>New Project</source>
+				<target>New Project</target>
+			</segment>
+		</unit>
+		<unit id="cards.connectParatext">
+			<segment>
+				<source>Connect a Paratext Project</source>
+				<target>Connect a Paratext Project</target>
+			</segment>
+		</unit>
+		<unit id="cards.import">
+			<segment>
+				<source>Import PTF File</source>
+				<target>Import PTF File</target>
+			</segment>
+		</unit>
+		<unit id="cards.personalProjects">
+			<segment>
+				<source>Personal Projects</source>
+				<target>Personal Projects</target>
+			</segment>
+		</unit>
+		<unit id="cards.language">
+			<segment>
+				<source>Language: {0}</source>
+				<target>Langue : {0}</target>
+			</segment>
+		</unit>
+		<unit id="cards.sectionStatus">
+			<segment>
+				<source>{0} {1}</source>
+				<target>{1} {0}</target>
+			</segment>
+		</unit>
+		<unit id="cards.sections">
+			<segment>
+				<source>sections</source>
+				<target>sections</target>
+			</segment>
+		</unit>
+		<unit id="cards.settings">
+			<segment>
+				<source>Settings</source>
+				<target>Settings</target>
+			</segment>
+		</unit>
+		<unit id="cards.delete">
+			<segment>
+				<source>Delete</source>
+				<target>Effacer</target>
+			</segment>
+		</unit>
+		<unit id="cards.addTeam">
+			<segment>
+				<source>Add Team</source>
+				<target>Add Team</target>
+			</segment>
+		</unit>
+		<unit id="cards.teamSettings">
+			<segment>
+				<source>Team Settings</source>
+				<target>Team Settings</target>
+			</segment>
+		</unit>
+		<unit id="cards.teamName">
+			<segment>
+				<source>Team Name</source>
+				<target>Nom de l'équipe</target>
+			</segment>
+		</unit>
+		<unit id="cards.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="cards.add">
+			<segment>
+				<source>Add</source>
+				<target>Ajouter</target>
+			</segment>
+		</unit>
+		<unit id="cards.save">
+			<segment>
+				<source>Save</source>
+				<target>Sauvegarder</target>
+			</segment>
+		</unit>
+		<unit id="cards.deleteTeam">
+			<segment>
+				<source>Delete Team</source>
+				<target>Supprimer l'équipe</target>
+			</segment>
+		</unit>
+		<unit id="cards.explainTeamDelete">
+			<segment>
+				<source>Deleting the team will delete all projects of the team.</source>
+				<target>Deleting the team will delete all projects of the team.</target>
+			</segment>
+		</unit>
+		<unit id="cards.members">
+			<segment>
+				<source>Members ({0})</source>
+				<target>Membres ({0})</target>
+			</segment>
+		</unit>
+		<unit id="vProject.editorSettings">
+			<segment>
+				<source>Editor Settings</source>
+				<target>Editor Settings</target>
+			</segment>
+		</unit>
+		<unit id="vProject.rightToLeft">
+			<segment>
+				<source>Right-to-Left</source>
+				<target>De droite à gauche</target>
+			</segment>
+		</unit>
+		<unit id="vProject.font">
+			<segment>
+				<source>Font</source>
+				<target>Police</target>
+			</segment>
+		</unit>
+		<unit id="vProject.fontSize">
+			<segment>
+				<source>Font Size</source>
+				<target>Taille de la police</target>
+			</segment>
+		</unit>
+		<unit id="vProject.preview">
+			<segment>
+				<source>Preview</source>
+				<target>Aperçu</target>
+			</segment>
+		</unit>
+		<unit id="vProject.description">
+			<segment>
+				<source>Description</source>
+				<target>Description</target>
+			</segment>
+		</unit>
+		<unit id="vProject.newProject">
+			<segment>
+				<source>{0} Project</source>
+				<target>Projet {0}</target>
+			</segment>
+		</unit>
+		<unit id="vProject.new">
+			<segment>
+				<source>New</source>
+				<target>Nouveau</target>
+			</segment>
+		</unit>
+		<unit id="vProject.edit">
+			<segment>
+				<source>Edit</source>
+				<target>Éditer</target>
+			</segment>
+		</unit>
+		<unit id="vProject.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="vProject.add">
+			<segment>
+				<source>Add</source>
+				<target>Ajouter</target>
+			</segment>
+		</unit>
+		<unit id="vProject.save">
+			<segment>
+				<source>Save</source>
+				<target>Sauvegarder</target>
+			</segment>
+		</unit>
+		<unit id="vProject.advanced">
+			<segment>
+				<source>Advanced</source>
+				<target>Avancé</target>
+			</segment>
+		</unit>
+		<unit id="vProject.layout">
+			<segment>
+				<source>Layout</source>
+				<target>Mise en page</target>
+			</segment>
+		</unit>
+		<unit id="vProject.organizedBy">
+			<segment>
+				<source>Term for organizing layout</source>
+				<target>Terme pour l'organisation de la mise en page</target>
+			</segment>
+		</unit>
+		<unit id="vProject.projectName">
+			<segment>
+				<source>Project Name</source>
+				<target>Nom du projet</target>
+			</segment>
+		</unit>
+		<unit id="vProject.tags">
+			<segment>
+				<source>Tags</source>
+				<target>Étiquettes</target>
+			</segment>
+		</unit>
+		<unit id="vProject.other">
+			<segment>
+				<source>Other</source>
+				<target>Autres</target>
+			</segment>
+		</unit>
+		<unit id="vProject.type">
+			<segment>
+				<source>Project Type</source>
+				<target>Type de projet</target>
+			</segment>
+		</unit>
+		<unit id="vProject.language">
+			<segment>
+				<source>Language</source>
+				<target>Langue</target>
+			</segment>
+		</unit>
    </file>
 </xliff>

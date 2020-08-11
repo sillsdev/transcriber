@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
 import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
@@ -33,16 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  advanced: 'Advanced',
-  layout: 'Layout',
-  organizedBy: 'Term for organizing layout',
-};
-
 export function ProjectExpansion(props: IProjectDialogState) {
   const classes = useStyles();
   const { state, setState } = props;
   const { layout, organizedBy } = state;
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
   const [options, setOptions] = React.useState([
     'sections',
     'sets',

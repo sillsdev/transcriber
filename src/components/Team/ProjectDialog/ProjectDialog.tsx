@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
   ProjectDescription,
@@ -30,15 +31,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-const t = {
-  newProject: '{0} Project',
-  new: 'New',
-  edit: 'Edit',
-  cancel: 'Cancel',
-  add: 'Add',
-  save: 'Save',
-};
 
 const initState = {
   name: '',
@@ -64,6 +56,8 @@ export interface IProjectDialogState {
 export function ProjectDialog(props: IDialog<IProjectDialog>) {
   const { mode, values, isOpen, onOpen, onCommit, onCancel } = props;
   const classes = useStyles();
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
   const [state, setState] = React.useState(
     mode === Mode.add || !values ? { ...initState } : { ...values }
   );

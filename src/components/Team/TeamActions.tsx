@@ -17,15 +17,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  addTeam: 'Add Team',
-};
-
 export const TeamActions = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const ctx = React.useContext(TeamContext);
-  const { teamCreate } = ctx.state;
+  const { teamCreate, cardStrings } = ctx.state;
+  const t = cardStrings;
 
   const handleClickOpen = () => {
     setOpen(true);

@@ -9,17 +9,7 @@ import {
 } from '@material-ui/core';
 import { Organization, IDialog, DialogMode } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
-
-const t = {
-  addTeam: 'Add a Team',
-  teamSettings: 'Team Settings',
-  teamName: 'Team Name',
-  cancel: 'Cancel',
-  add: 'Add',
-  save: 'Save',
-  deleteTeam: 'Delete Team',
-  explainTeamDelete: 'Deleting the team will delete all projects of the team.',
-};
+import { TeamContext } from '../../context/TeamContext';
 
 interface IProps extends IDialog<Organization> {
   onDelete?: (team: Organization) => void;
@@ -28,6 +18,9 @@ interface IProps extends IDialog<Organization> {
 export function TeamDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onDelete } = props;
   const [name, setName] = React.useState(values?.attributes?.name || '');
+  const ctx = React.useContext(TeamContext);
+  const { cardStrings } = ctx.state;
+  const t = cardStrings;
 
   const handleClose = () => {
     setName('');

@@ -1,14 +1,13 @@
 import React from 'react';
 import { TextField } from '@material-ui/core';
+import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
-
-const t = {
-  projectName: 'Project Name',
-};
 
 export const ProjectName = (props: IProjectDialogState) => {
   const { state, setState } = props;
   const { name } = state;
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
 
   const handleChangeName = (e: any) => {
     e.persist();

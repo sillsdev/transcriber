@@ -800,6 +800,51 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "templateCodes": string;
 };
 
+export interface ICardsStrings extends Localize.LocalizedStringsMethods {
+    "upload": string;
+    "newProject": string;
+    "connectParatext": string;
+    "import": string;
+    "personalProjects": string;
+    "language": string;
+    "sectionStatus": string;
+    "sections": string;
+    "settings": string;
+    "delete": string;
+    "addTeam": string;
+    "teamSettings": string;
+    "teamName": string;
+    "cancel": string;
+    "add": string;
+    "save": string;
+    "deleteTeam": string;
+    "explainTeamDelete": string;
+    "members": string;
+};
+
+export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
+    "editorSettings": string;
+    "rightToLeft": string;
+    "font": string;
+    "fontSize": string;
+    "preview": string;
+    "description": string;
+    "newProject": string;
+    "new": string;
+    "edit": string;
+    "cancel": string;
+    "add": string;
+    "save": string;
+    "advanced": string;
+    "layout": string;
+    "organizedBy": string;
+    "projectName": string;
+    "tags": string;
+    "other": string;
+    "type": string;
+    "language": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -849,5 +894,7 @@ export interface ILocalizedStrings {
 	setup: ISetupStrings;
 	notSetup: INotSetupStrings;
 	template: ITemplateStrings;
+	cards: ICardsStrings;
+	vProject: IVProjectStrings;
 	[key: string]: any;
 };

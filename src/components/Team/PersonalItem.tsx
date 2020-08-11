@@ -35,14 +35,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  personalProjects: 'Personal Projects',
-};
-
 export const PersonalItem = () => {
   const classes = useStyles();
   const ctx = React.useContext(TeamContext);
-  const { personalProjects } = ctx.state;
+  const { personalProjects, cardStrings } = ctx.state;
+  const t = cardStrings;
 
   return (
     <Paper id="PersonalItem" className={classes.root}>

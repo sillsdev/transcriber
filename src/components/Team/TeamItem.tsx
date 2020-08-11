@@ -37,11 +37,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  members: 'Members ({0})',
-  settings: 'Settings',
-};
-
 interface IProps {
   team: Organization;
 }
@@ -53,6 +48,7 @@ export const TeamItem = (props: IProps) => {
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
   const ctx = React.useContext(TeamContext);
   const { teamProjects, teamMembers, teamUpdate, teamDelete } = ctx.state;
+  const t = ctx.state.cardStrings;
 
   const handleMembers = (team: Organization) => () => {
     console.log(`clicked ${t.members} of ${team?.attributes?.name}`);

@@ -4,10 +4,6 @@ import { BsPencilSquare } from 'react-icons/bs';
 import { TeamContext } from '../../../context/TeamContext';
 import { Options } from '.';
 
-const t = {
-  type: 'Project Type',
-};
-
 const decorations = {
   scripture: <ScriptureIcon />,
   other: <BsPencilSquare />,
@@ -21,7 +17,8 @@ interface IProps {
 export const ProjectType = (props: IProps) => {
   const { type, onChange } = props;
   const ctx = React.useContext(TeamContext);
-  const { planTypes } = ctx.state;
+  const { planTypes, vProjectStrings } = ctx.state;
+  const t = vProjectStrings;
 
   return (
     <Options

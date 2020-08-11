@@ -10,6 +10,7 @@ import {
   FormGroup,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
 import { toCamel, camel2Title } from '../../../utils';
 
@@ -24,11 +25,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  tags: 'Tags',
-  other: 'Other',
-};
-
 export const ProjectTags = (props: IProjectDialogState) => {
   const classes = useStyles();
   const { state, setState } = props;
@@ -40,6 +36,8 @@ export const ProjectTags = (props: IProjectDialogState) => {
     ...tags,
   });
   const [other, setOther] = React.useState('');
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();

@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
+import { TeamContext } from '../../../context/TeamContext';
 import FontSize from '../../FontSize';
 import { IProjectDialogState } from './ProjectDialog';
 
@@ -37,17 +38,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  editorSettings: 'Editor Settings',
-  rightToLeft: 'Right-to-Left',
-  font: 'Font',
-  fontSize: 'Font size',
-  preview: 'Preview',
-};
-
 export const EditorSettings = (props: IProjectDialogState) => {
   const { state, setState } = props;
   const classes = useStyles();
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
   const { font, fontSize, rtl } = state;
 
   const handleChangeRtl = () => {

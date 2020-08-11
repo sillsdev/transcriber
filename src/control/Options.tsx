@@ -11,6 +11,7 @@ import {
   TextField,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
+import { TeamContext } from '../context/TeamContext';
 import { toCamel, camel2Title } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -26,10 +27,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-const t = {
-  other: 'Other',
-};
 
 export interface IDecorations {
   [key: string]: JSX.Element;
@@ -61,6 +58,8 @@ const OptionCtrl = (props: IProps) => {
     required,
   } = props;
   const classes = useStyles();
+  const ctx = React.useContext(TeamContext);
+  const t = ctx.state.vProjectStrings;
   const [other, setOther] = React.useState<string | null>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -3970,5 +3970,239 @@
             <target>Modèles de codes</target>
          </segment>
       </unit>
+      <unit id="cards.upload">
+         <segment>
+            <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.newProject">
+         <segment>
+            <source>New Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.connectParatext">
+         <segment>
+            <source>Connect a Paratext Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.import">
+         <segment>
+            <source>Import PTF File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.personalProjects">
+         <segment>
+            <source>Personal Projects</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.language">
+         <segment>
+            <source>Language: {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.sectionStatus">
+         <segment>
+            <source>{0} {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.sections">
+         <segment>
+            <source>sections</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.settings">
+         <segment>
+            <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.addTeam">
+         <segment>
+            <source>Add Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.teamSettings">
+         <segment>
+            <source>Team Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.teamName">
+         <segment>
+            <source>Team Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.deleteTeam">
+         <segment>
+            <source>Delete Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.explainTeamDelete">
+         <segment>
+            <source>Deleting the team will delete all projects of the team.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.members">
+         <segment>
+            <source>Members ({0})</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.editorSettings">
+         <segment>
+            <source>Editor Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.rightToLeft">
+         <segment>
+            <source>Right-to-Left</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.font">
+         <segment>
+            <source>Font</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.fontSize">
+         <segment>
+            <source>Font Size</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.preview">
+         <segment>
+            <source>Preview</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.description">
+         <segment>
+            <source>Description</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.newProject">
+         <segment>
+            <source>{0} Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.new">
+         <segment>
+            <source>New</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.edit">
+         <segment>
+            <source>Edit</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.add">
+         <segment>
+            <source>Add</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.advanced">
+         <segment>
+            <source>Advanced</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.layout">
+         <segment>
+            <source>Layout</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.organizedBy">
+         <segment>
+            <source>Term for organizing layout</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.projectName">
+         <segment>
+            <source>Project Name</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.tags">
+         <segment>
+            <source>Tags</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.other">
+         <segment>
+            <source>Other</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.type">
+         <segment>
+            <source>Project Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.language">
+         <segment>
+            <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
    </file>
 </xliff>

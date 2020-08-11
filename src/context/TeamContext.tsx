@@ -15,6 +15,9 @@ import {
   OrganizationMembership,
   VProject,
   IMainStrings,
+  ICardsStrings,
+  IVProjectStrings,
+  ILanguagePickerStrings,
   ISharedStrings,
 } from '../model';
 // import localStrings from '../selector/localize';
@@ -42,12 +45,18 @@ interface IStateProps {
   lang: string;
   controlStrings: IControlStrings;
   t: IMainStrings;
+  cardStrings: ICardsStrings;
+  vProjectStrings: IVProjectStrings;
+  pickerStrings: ILanguagePickerStrings;
   ts: ISharedStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   lang: state.strings.lang,
   controlStrings: localStrings(state, { layout: 'control' }),
   t: localStrings(state, { layout: 'main' }),
+  cardStrings: localStrings(state, { layout: 'cards' }),
+  vProjectStrings: localStrings(state, { layout: 'vProject' }),
+  pickerStrings: localStrings(state, { layout: 'languagePicker' }),
   ts: localStrings(state, { layout: 'shared' }),
 });
 
@@ -101,6 +110,9 @@ const initState = {
   teamCreate: (team: Organization) => {},
   teamUpdate: (team: Organization) => {},
   teamDelete: (team: Organization) => {},
+  cardStrings: {} as ICardsStrings,
+  vProjectStrings: {} as IVProjectStrings,
+  pickerStrings: {} as ILanguagePickerStrings,
 };
 
 export type ICtxState = typeof initState;
@@ -130,6 +142,9 @@ const TeamProvider = withData(mapRecordsToProps)(
       lang,
       controlStrings,
       t,
+      cardStrings,
+      vProjectStrings,
+      pickerStrings,
       doOrbitError,
     } = props;
     const [memory] = useGlobal('memory');
@@ -148,6 +163,9 @@ const TeamProvider = withData(mapRecordsToProps)(
       controlStrings,
       lang,
       message,
+      cardStrings,
+      vProjectStrings,
+      pickerStrings,
     });
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();

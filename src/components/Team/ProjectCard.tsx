@@ -55,12 +55,6 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  language: 'Language: {0}',
-  sectionStatus: '{0} {1}',
-  sections: 'sections',
-};
-
 interface IProps {
   project: VProject;
 }
@@ -76,9 +70,11 @@ export const ProjectCard = (props: IProps) => {
     projectLanguage,
     projectUpdate,
     projectDelete,
+    cardStrings,
   } = ctx.state;
   const [open, setOpen] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<VProject>();
+  const t = cardStrings;
 
   const handleSelect = (project: VProject) => () => {
     selectProject(project);

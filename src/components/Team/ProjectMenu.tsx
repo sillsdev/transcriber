@@ -12,6 +12,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { TeamContext } from '../../context/TeamContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,11 +53,6 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-const t = {
-  settings: 'Settings',
-  delete: 'Delete',
-};
-
 interface IProps {
   action?: (what: string) => void;
 }
@@ -65,6 +61,9 @@ export function ProjectMenu(props: IProps) {
   const { action } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const ctx = React.useContext(TeamContext);
+  const { cardStrings } = ctx.state;
+  const t = cardStrings;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
