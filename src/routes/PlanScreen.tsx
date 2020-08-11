@@ -1,6 +1,9 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
+import { IState, IMainStrings } from '../model';
+import { connect } from 'react-redux';
+import localStrings from '../selector/localize';
 import { makeStyles } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { PlanProvider, PlanContext } from '../context/PlanContext';
@@ -20,7 +23,14 @@ const useStyles = makeStyles({
   },
 });
 
-interface IProps {
+interface IStateProps {
+  t: IMainStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'main' }),
+});
+
+interface IProps extends IStateProps {
   auth: Auth;
   history: {
     action: string;
@@ -66,7 +76,8 @@ const PlanBase = (props: IProps) => {
   );
 };
 
-export const PlanScreen = (props: IProps) => {
+export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
+  const { t } = props;
   const classes = useStyles();
   const [isDeveloper] = useGlobal('developer');
   const [project] = useGlobal('project');
@@ -77,7 +88,7 @@ export const PlanScreen = (props: IProps) => {
   };
 
   const SwitchTo = () => {
-    return <TranscribeSwitch switchTo={handleSwitchTo} />;
+    return <TranscribeSwitch switchTo={handleSwitchTo} t={t} />;
   };
 
   if (!isDeveloper) return <Redirect to="/main" />;
@@ -92,6 +103,6 @@ export const PlanScreen = (props: IProps) => {
       </PlanProvider>
     </div>
   );
-};
+});
 
 export default PlanScreen;

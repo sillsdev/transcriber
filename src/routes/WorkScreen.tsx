@@ -2,6 +2,9 @@ import React from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
+import { IState, IMainStrings } from '../model';
+import { connect } from 'react-redux';
+import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { TranscriberProvider } from '../context/TranscriberContext';
@@ -50,11 +53,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  admin: 'Admin',
-};
+interface IStateProps {
+  t: IMainStrings;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'main' }),
+});
 
-interface IProps {
+interface IProps extends IStateProps {
   auth: Auth;
   history: {
     action: string;
@@ -65,8 +71,8 @@ interface IProps {
   };
 }
 
-export const WorkScreen = (props: IProps) => {
-  const { auth, history } = props;
+export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
+  const { auth, history, t } = props;
   const { pathname } = history?.location;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -82,7 +88,7 @@ export const WorkScreen = (props: IProps) => {
 
   const SwitchTo = () => {
     if (projRole !== 'admin') return <></>;
-    return <TranscribeSwitch label={t.admin} switchTo={handleSwitchTo} />;
+    return <TranscribeSwitch label={t.admin} switchTo={handleSwitchTo} t={t} />;
   };
 
   const handleTopFilter = (top: boolean) => setTopFilter(top);
@@ -115,6 +121,6 @@ export const WorkScreen = (props: IProps) => {
       </TranscriberProvider>
     </div>
   );
-};
+});
 
 export default WorkScreen;

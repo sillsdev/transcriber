@@ -1,4 +1,5 @@
 import React from 'react';
+import { IMainStrings } from '../../model';
 import { Typography, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
@@ -10,19 +11,17 @@ const useStyles = makeStyles({
   },
 });
 
-const t = {
-  transcribe: 'Transcribe',
-  switchTo: 'Switch to:',
-};
-
-interface IProps {
+interface IStateProps {
+  t: IMainStrings;
+}
+interface IProps extends IStateProps {
   label?: string;
   switchTo?: () => void;
   disabled?: boolean;
 }
 
 export const TranscribeSwitch = (props: IProps) => {
-  const { label, switchTo, disabled } = props;
+  const { label, switchTo, disabled, t } = props;
   const classes = useStyles();
 
   const handleSwitch = () => {

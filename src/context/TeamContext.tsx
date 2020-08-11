@@ -25,6 +25,7 @@ import { LoadProjectData } from '../utils/loadData';
 import localStrings from '../selector/localize';
 import {
   useVProjectCreate,
+  useVProjectRead,
   useVProjectUpdate,
   useVProjectDelete,
   useTeamCreate,
@@ -32,6 +33,7 @@ import {
   useTeamDelete,
   useIsPersonalTeam,
   useNewTeamId,
+  useTableType,
 } from '../crud';
 
 export type TeamIdType = Organization | null;
@@ -155,6 +157,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     const orbitTeamDelete = useTeamDelete();
     const isPersonal = useIsPersonalTeam();
     const getTeamId = useNewTeamId({ ...props, setMessage });
+    const getPlanType = useTableType('plan');
+    const vProject = useVProjectRead();
 
     const handleMessageReset = () => {
       setMessage(<></>);
@@ -212,40 +216,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       );
     };
 
-    const parseTags = (val: any) => {
-      if (typeof val === 'string') {
-        try {
-          return JSON.parse(val);
-        } catch {
-          // ignore invalid json
-        }
-      }
-      return {};
-    };
-
-    const vProject = (plan: Plan) => {
-      const projectId = related(plan, 'project');
-      const projectRecs = projects.filter((p) => p.id === projectId);
-      if (projectRecs.length > 0) {
-        return {
-          ...projectRecs[0],
-          ...plan,
-          type: 'vproject',
-          attributes: {
-            ...projectRecs[0].attributes,
-            ...plan.attributes,
-            tags: parseTags(plan?.attributes?.tags),
-            type: getPlanType(plan),
-          },
-          relationships: {
-            ...projectRecs[0].relationships,
-            ...plan.relationships,
-          },
-        } as VProject;
-      }
-      return plan as VProject;
-    };
-
     const personalProjects = () => {
       const projIds = projects
         .filter((p) => isPersonal(related(p, 'organization')))
@@ -264,13 +234,6 @@ const TeamProvider = withData(mapRecordsToProps)(
         .filter((p) => projIds.includes(related(p, 'project')))
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1))
         .map((p) => vProject(p));
-    };
-
-    const getPlanType = (plan: Plan) => {
-      const typeId = related(plan, 'plantype');
-      const typeRecs = planTypes.filter((t) => t.id === typeId);
-      const planType = typeRecs[0]?.attributes?.name;
-      return planType ? planType.toLowerCase() : 'other';
     };
 
     const projectSections = (plan: Plan) => {
