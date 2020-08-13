@@ -27,6 +27,7 @@ import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
+import { OrgButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { isNumber } from 'util';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
@@ -147,6 +148,7 @@ interface IProps extends IStateProps {
   bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
+  lastSaved?: string;
   updateData: (rows: string[][]) => void;
   paste: (rows: string[][]) => string[][];
   action: (what: string, where: number[]) => boolean;
@@ -166,6 +168,7 @@ export function PlanSheet(props: IProps) {
     rowData,
     t,
     ts,
+    lastSaved,
     bookCol,
     bookSuggestions,
     bookMap,
@@ -713,7 +716,11 @@ export function PlanSheet(props: IProps) {
                     label={t.inlineToggle}
                   />
                 )}
+                {isDeveloper && (
+                  <OrgButtons {...props} pasting={pasting} data={data} />
+                )}
                 <div className={classes.grow}>{'\u00A0'}</div>
+                {isDeveloper && <LastEdit when={lastSaved} />}
                 <Button
                   key="save"
                   aria-label={t.save}

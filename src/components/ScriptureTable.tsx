@@ -30,7 +30,14 @@ import {
 import { LinearProgress } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
-import { remoteId, remoteIdNum, remoteIdGuid, related, Online } from '../utils';
+import {
+  remoteId,
+  remoteIdNum,
+  remoteIdGuid,
+  related,
+  Online,
+  currentDateTime,
+} from '../utils';
 import { isUndefined } from 'util';
 import { DrawerTask } from '../routes/drawer';
 import { debounce } from 'lodash';
@@ -156,6 +163,7 @@ export function ScriptureTable(props: IProps) {
   const [complete, setComplete] = useState(0);
   const [view, setView] = useState('');
   const [passageMedia, setPassageMedia] = useState<IPassageMedia>({});
+  const [lastSaved, setLastSaved] = React.useState<string>();
   const getOrganizedBy = useOrganizedBy();
   const [, saveCompleted] = useRemoteSave();
 
@@ -850,6 +858,7 @@ export function ScriptureTable(props: IProps) {
         return;
       }
       await doSave(changedRows);
+      setLastSaved(currentDateTime());
       setComplete(0);
     };
 
@@ -1055,6 +1064,7 @@ export function ScriptureTable(props: IProps) {
         </div>
       )}
       <PlanSheet
+        {...props}
         columns={columns}
         rowData={data as any[][]}
         bookCol={showBook(cols) ? cols.Book : -1}
@@ -1071,6 +1081,7 @@ export function ScriptureTable(props: IProps) {
         toggleInline={toggleInline}
         onTranscribe={handleTranscribe}
         hasMedia={handleHasMedia}
+        lastSaved={lastSaved}
         t={s}
         ts={ts}
       />

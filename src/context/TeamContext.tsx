@@ -151,6 +151,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     // const [orgRole, setOrgRole] = useGlobal('orgRole');
     const [, setProjRole] = useGlobal('projRole');
+    const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
     const [remote] = useGlobal('remote');
@@ -185,6 +186,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     const selectProject = (plan: Plan) => {
       console.log('selected plan: ', plan?.attributes?.name);
       const projectId = related(plan, 'project');
+      const team = vProject(plan);
+      setOrganization(related(team, 'organization'));
       setProject(projectId);
       setPlan(plan.id);
       Online((online) => {

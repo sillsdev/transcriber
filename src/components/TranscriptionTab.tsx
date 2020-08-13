@@ -86,6 +86,11 @@ const useStyles = makeStyles((theme: Theme) =>
       left: 0,
       width: '100%',
     },
+    barDialog: {
+      left: '5%',
+      width: '88%',
+      top: `calc(${TabHeight}px + ${HeadHeight}px)`,
+    },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
@@ -689,7 +694,8 @@ export function TranscriptionTab(props: IProps) {
           position="fixed"
           className={clsx(classes.bar, {
             [classes.highBar]: planColumn,
-            [classes.barDev]: isDeveloper,
+            [classes.barDev]: isDeveloper && !planColumn,
+            [classes.barDialog]: isDeveloper && planColumn,
           })}
           color="default"
         >

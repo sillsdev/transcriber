@@ -1,10 +1,14 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { Grid, Paper, Typography, Button } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
+import { BigDialog } from '../../hoc/BigDialog';
+import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard, TeamDialog } from '.';
+import { useRole, useAllUserGroup } from '../../crud';
 import Confirm from '../AlertDialog';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -44,14 +48,23 @@ interface IProps {
 export const TeamItem = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
+  const [, setOrganization] = useGlobal('organization');
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
   const ctx = React.useContext(TeamContext);
   const { teamProjects, teamMembers, teamUpdate, teamDelete } = ctx.state;
   const t = ctx.state.cardStrings;
+  const [openMember, setOpenMember] = React.useState(false);
+  const [setOrgRole] = useRole();
+  const [, setGroup] = useGlobal('group');
+  const allUserGroup = useAllUserGroup();
 
   const handleMembers = (team: Organization) => () => {
     console.log(`clicked ${t.members} of ${team?.attributes?.name}`);
+    setOrganization(team.id);
+    setOrgRole(team.id);
+    setGroup(allUserGroup(team.id)?.id);
+    setOpenMember(true);
   };
 
   const handleSettings = (team: Organization) => () => {
@@ -98,6 +111,13 @@ export const TeamItem = (props: IProps) => {
         onCommit={handleCommitSettings}
         onDelete={handleDeleteTeam}
       />
+      <BigDialog
+        title={'{0} Members'.replace('{0}', team?.attributes?.name || '')}
+        isOpen={openMember}
+        onOpen={setOpenMember}
+      >
+        <GroupTabs {...props} />
+      </BigDialog>
       {deleteItem && (
         <Confirm
           yesResponse={handleDeleteConfirmed}

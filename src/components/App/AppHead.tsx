@@ -83,6 +83,7 @@ export const AppHead = withBucket(
     const classes = useStyles();
     const [isOffline] = useGlobal('offline');
     const [isDeveloper] = useGlobal('developer');
+    const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [plan, setPlan] = useGlobal('plan');
     const [view, setView] = React.useState('');
@@ -98,6 +99,7 @@ export const AppHead = withBucket(
     };
 
     const handleHome = () => {
+      setOrganization('');
       setProject('');
       setPlan('');
     };

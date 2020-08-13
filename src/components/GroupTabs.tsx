@@ -7,6 +7,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AppBar, Tabs, Tab } from '@material-ui/core';
 import UserTable from '../components/UserTable';
 import GroupTable from '../components/GroupTable';
+import GroupSettings from '../components/GroupSettings/GroupSettings';
 import InvitationTable from '../components/InvitationTable';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,6 +33,7 @@ const GroupTabs = (props: IProps) => {
   const { t, changeTab } = props;
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
+  const [isDeveloper] = useGlobal('developer');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -57,7 +59,12 @@ const GroupTabs = (props: IProps) => {
         </Tabs>
       </AppBar>
       {tab === 0 && <UserTable {...props} />}
-      {tab === 1 && <GroupTable {...props} />}
+      {tab === 1 &&
+        (isDeveloper ? (
+          <GroupSettings {...props} />
+        ) : (
+          <GroupTable {...props} />
+        ))}
       {tab === 2 && <InvitationTable {...props} />}
     </div>
   );

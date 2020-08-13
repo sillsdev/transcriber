@@ -32,13 +32,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 interface IProps extends IStateProps {
   auth: Auth;
-  history: {
-    action: string;
-    location: {
-      hash: string;
-      pathname: string;
-    };
-  };
 }
 
 const PlanBase = (props: IProps) => {
@@ -59,6 +52,7 @@ const PlanBase = (props: IProps) => {
   return (
     <div id="PlanScreen" className={classes.teamScreen}>
       <PlanTabs
+        {...props}
         changeTab={changeTab}
         checkSaved={checkSavedFn}
         bookCol={isScripture() ? 0 : -1}
@@ -81,6 +75,7 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const classes = useStyles();
   const [isDeveloper] = useGlobal('developer');
   const [project] = useGlobal('project');
+  const [plan] = useGlobal('plan');
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -92,7 +87,7 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   };
 
   if (!isDeveloper) return <Redirect to="/main" />;
-  if (project === '') return <Redirect to="/team" />;
+  if (project === '' || plan === '') return <Redirect to="/team" />;
   if (view === 'transcribe') return <Redirect to="/work" />;
 
   return (
