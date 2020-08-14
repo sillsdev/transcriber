@@ -35,6 +35,57 @@ const domVnum = (v: Element) => {
   return [];
 };
 
+const isText = (v: Node | null) => v?.nodeType === Node.TEXT_NODE;
+
+const isPara = (v: Node | null) =>
+  v?.nodeType === Node.ELEMENT_NODE && v?.nodeName === 'para';
+
+const isSection = (v: Node) =>
+  isPara(v) && (v as Element)?.getAttribute('style') === 's';
+
+const isNote = (v: Node) =>
+  v.nodeType === Node.ELEMENT_NODE && v.nodeName === 'note';
+
+const isAfterSection = (v: Node) => {
+  var prevSib;
+  if (isPara(v)) prevSib = v.previousSibling;
+  else prevSib = v.parentNode?.previousSibling;
+  if (prevSib === null) return undefined;
+  if (isText(prevSib as Node) && isSection(prevSib?.previousSibling as Element))
+    return prevSib?.previousSibling as Element;
+};
+
+const isVerse = (v: Node | null) => {
+  if (v == null || v.nodeType !== Node.ELEMENT_NODE) return false;
+  return (v as Element).nodeName === 'verse';
+};
+
+const firstVerse = (para: Node) => {
+  var verse = para.firstChild;
+  while (verse && !isVerse(verse)) verse = verse?.nextSibling;
+  return verse;
+};
+
+const verseText = (v: Element) => {
+  var next: Node | undefined | null = v.nextSibling;
+  var text = '';
+  while (next) {
+    if (isText(next)) {
+      text += next.nodeValue;
+      if (next.nextSibling) next = next.nextSibling;
+      else next = next.parentNode?.nextSibling;
+    } else if (isPara(next)) {
+      if (isSection(next) || firstVerse(next)) next = null;
+      else if (next.firstChild && isText(next.firstChild))
+        next = next.firstChild;
+      else next = next.nextSibling;
+    } else if (isVerse(next)) next = null;
+    //note
+    else if (next.nextSibling) next = next.nextSibling;
+    else next = next.parentNode?.nextSibling;
+  }
+  return text;
+};
 const newEl = (doc: Document, tag: string, style: string, vNum?: string) => {
   const el = doc.createElement(tag);
   if (vNum) el.setAttribute('number', vNum);
@@ -42,16 +93,9 @@ const newEl = (doc: Document, tag: string, style: string, vNum?: string) => {
   return el;
 };
 
-const rmNodeTx = (doc: Document, node: Node) => {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
-  }
-  doc.removeChild(node);
-};
-
 function bruteForceVerses(node: Node | null, verses: Element[]) {
   for (var n = node; n !== null; n = n.nextSibling) {
-    if (n.nodeType === Node.ELEMENT_NODE && n.nodeName === 'verse') {
+    if (isVerse(n)) {
       verses.push(n as Element);
     }
     bruteForceVerses(n.firstChild, verses);
@@ -60,11 +104,22 @@ function bruteForceVerses(node: Node | null, verses: Element[]) {
 
 const getVerses = (node: Node) => {
   try {
-    return xpath.select('//verse', node) as Element[];
+    if (isPara(node)) {
+      var verses: Element[] = [];
+      for (
+        var n: Node | null = node.firstChild;
+        n !== null;
+        n = n.nextSibling
+      ) {
+        if (isVerse(n)) {
+          verses.push(n as Element);
+        }
+      }
+      return verses;
+    } else return xpath.select('//verse', node) as Element[];
   } catch {
-    var sDebug = xmlSerializer.serializeToString(node);
-    console.log('bruteforce', sDebug);
-    var verses: Element[] = [];
+    //var sDebug = xmlSerializer.serializeToString(node);
+    verses = [];
     bruteForceVerses(node, verses);
     return verses;
   }
@@ -107,80 +162,33 @@ const paratextVerse = (doc: Document, verses: string, transcript: string) => {
   return para;
 };
 
-const removeSections = (doc: Document) => {
-  let sections = getElementsWithAttribute(doc, 'para', 'style', 's');
-  sections.forEach((s) => rmNodeTx(doc, s));
-};
-
 const getVerse = (doc: Document, verses: string) => {
   var v = getElementsWithAttribute(doc, 'verse', 'number', verses);
   if (v.length > 0) return v[0];
 };
 
-const addSections = (
+const addSection = (
   doc: Document,
   passage: Passage,
-  book: string,
-  chap: string,
+  verse: Element,
   memory: Memory,
   addNumbers = true
 ) => {
   var sections = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('section')
   ) as Section[];
-  var passages = memory.cache.query((q: QueryBuilder) =>
-    q.findRecords('passage')
-  ) as Passage[];
   /* get the section for this passage to get the plan */
   const sectionId = related(passage, 'section');
-  const sectionRecs = sections.filter((s) => s.id === sectionId);
-  var planid = related(sectionRecs[0], 'plan');
-  /* get all the sections in this plan */
-  sections = sections.filter((s) => related(s, 'plan') === planid) as Section[];
-  /* gather the sections in this chapter */
-  var inChapter: {
-    section: Section;
-    verses: string;
-    startverse: number;
-  }[] = [];
-  sections.forEach((s) => {
-    var p1 = passages.filter(
-      (p) =>
-        related(p, 'section') === s.id &&
-        p.attributes.sequencenum === 1 &&
-        p.attributes.book === book &&
-        passageChapter(p) === chap
-    );
-    if (p1.length > 0) {
-      parseRef(p1[0]);
-      inChapter.push({
-        section: s,
-        verses: passageVerses(p1[0]),
-        startverse: p1[0].startVerse, //in case verses aren't in paratext yet
-      });
-    }
-  });
-  inChapter.forEach((s) => {
-    var verse = getVerse(doc, s.verses);
-    if (!verse) {
-      verse = findNodeAfterVerse(
-        getVerses(doc.documentElement),
-        s.startverse - 1
-      );
-    }
-    if (verse) {
-      var para = moveToPara(doc, verse);
-      doc.insertBefore(
-        paratextSection(
-          doc,
-          (addNumbers
-            ? s.section.attributes.sequencenum.toString() + ' - '
-            : '') + s.section.attributes.name
-        ),
-        para
-      );
-    }
-  });
+  const sectionRec = sections.filter((s) => s.id === sectionId)[0];
+  var para = moveToPara(doc, verse);
+  doc.insertBefore(
+    paratextSection(
+      doc,
+      (addNumbers ? sectionRec.attributes.sequencenum.toString() + ' - ' : '') +
+        sectionRec.attributes.name
+    ),
+    para
+  );
 };
 
 const removeTimestamps = (transcript: string | null) =>
@@ -212,11 +220,46 @@ const addParatextVerse = (
     addAfter(doc, last, paratextPara(doc, 'p', doc.createTextNode(lines[ix])));
     last = last?.nextSibling as HTMLElement;
   }
+
   return first;
 };
 
+const ReplaceText = (doc: Document, para: Element, transcript: string) => {
+  //remove text
+  var verse = firstVerse(para);
+  var next = verse?.nextSibling;
+  var rem = next;
+
+  while (next) {
+    rem = next;
+    if (isText(next)) {
+      if (next.nextSibling) next = next.nextSibling;
+      else next = next.parentNode?.nextSibling;
+      var removeParent =
+        rem.parentNode?.childNodes.length === 1 ? rem.parentNode : null;
+      rem.parentNode?.removeChild(rem);
+      if (removeParent) removeParent.parentNode?.removeChild(removeParent);
+    } else if (isPara(next)) {
+      if (isSection(next) || firstVerse(next)) next = null;
+      else if (next.firstChild && isText(next.firstChild))
+        next = next.firstChild;
+      else next = next.nextSibling;
+    } else if (isVerse(next)) next = null;
+    //note
+    else if (next.nextSibling) next = next.nextSibling;
+    else next = next.parentNode?.nextSibling;
+  }
+  var lines: string[] = removeTimestamps(transcript).split('\n');
+  addAfter(doc, verse, doc.createTextNode(lines[0]));
+  var last = para;
+  for (var ix = 1; ix < lines.length; ix++) {
+    addAfter(doc, last, paratextPara(doc, 'p', doc.createTextNode(lines[ix])));
+    last = last?.nextSibling as HTMLElement;
+  }
+};
 const moveToPara = (doc: Document, verse: Element) => {
-  if (verse.parentNode?.nodeName === 'para') {
+  if (isPara(verse)) return verse;
+  if (isPara(verse.parentNode)) {
     //we're expecting one previous sibling with the newline
     if (verse.previousSibling != null) {
       if (
@@ -246,17 +289,33 @@ const moveToPara = (doc: Document, verse: Element) => {
   }
 };
 
-const findNodeAfterVerse = (verses: Element[], verse: number) => {
-  let after: Element | undefined;
-  let vaft: number = 9999;
+const findNodeAfterVerse = (
+  doc: Document,
+  verses: Element[],
+  startVerse: number,
+  endVerse: number
+) => {
+  let after: Element | undefined = undefined;
+  let nextverse: number = 9999;
   /* these may not be ordered */
   verses.forEach((v) => {
-    const [vstart] = domVnum(v);
-    if (vstart > verse && vstart < vaft) {
-      vaft = vstart;
+    const [vstart, vend] = domVnum(v);
+    if (
+      (startVerse === vstart && vend > endVerse) ||
+      (vstart > startVerse && vstart < nextverse)
+    ) {
       after = v;
+      nextverse = vstart;
     }
+    if (after) nextverse = vstart;
   });
+  if (after) {
+    after = moveToPara(doc, after);
+    //skip section if there
+    if (isAfterSection(after)) {
+      return isAfterSection(after);
+    }
+  }
   return after;
 };
 
@@ -272,33 +331,62 @@ const postPass = (doc: Document, p: Passage, memory: Memory) => {
       i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
     );
   //remove existing verses
-  var [firstRemoved, lastRemoved] = removeOverlappingVerses(doc, p);
-
-  let verses = getVerses(doc.documentElement);
-  var nextVerse = findNodeAfterVerse(verses, p.endVerse);
-  if (nextVerse) nextVerse = moveToPara(doc, nextVerse);
-
-  //add a node for each verse before our passage starts
-  for (var ix = firstRemoved; ix < p.startVerse; ix++) {
-    addParatextVerse(doc, nextVerse, ix.toString(), '', true);
+  var thisVerse = removeOverlappingVerses(doc, p);
+  if (thisVerse) {
+    thisVerse = moveToPara(doc, thisVerse);
+    ReplaceText(doc, thisVerse, sortedMedia[0].attributes.transcription || '');
+  } else {
+    let verses = getVerses(doc.documentElement);
+    var nextVerse = findNodeAfterVerse(doc, verses, p.startVerse, p.endVerse);
+    thisVerse = addParatextVerse(
+      doc,
+      nextVerse,
+      passageVerses(p),
+      sortedMedia[0].attributes.transcription || '',
+      true
+    );
   }
-  addParatextVerse(
-    doc,
-    nextVerse,
-    passageVerses(p),
-    sortedMedia[0].attributes.transcription || '',
-    true
-  );
-  //add a node for each verse after our passage ends
-  for (ix = p.endVerse + 1; ix <= lastRemoved; ix++) {
-    addParatextVerse(doc, nextVerse, ix.toString(), '', true);
+  if (p.attributes.sequencenum === 1) {
+    addSection(doc, p, thisVerse, memory, true);
   }
 };
 
-const passageChapter = (p: Passage) => {
+/*
+  const passageChapter = (p: Passage) => {
   var nums = /[0-9]+/.exec(p.attributes.reference);
   if (nums && nums.length > 0) return nums[0];
   return null;
+};
+*/
+
+const removeSection = (v: Element) => v.parentNode?.removeChild(v);
+
+const removeVerse = (v: Element) => {
+  if (!isVerse(v)) return;
+
+  var removeParent =
+    v.parentNode !== null &&
+    isPara(v.parentNode) &&
+    getVerses(v.parentNode).length === 1
+      ? v.parentNode
+      : null;
+
+  var next = v.nextSibling;
+  var rem = next;
+  while (next != null) {
+    if (isText(next)) {
+      next = next.nextSibling;
+      if (rem) v.parentNode?.removeChild(rem);
+    } else if (isPara(next) && !isSection(next) && !isVerse(next.firstChild)) {
+      next = next.nextSibling;
+      (rem as Element).remove();
+    } else if (isNote(next)) next = next.nextSibling;
+    //don't remove the note
+    else next = null;
+    rem = next;
+  }
+  v.parentNode?.removeChild(v);
+  if (removeParent != null) removeParent.parentNode?.removeChild(removeParent);
 };
 
 const removeOverlappingVerses = (doc: Document, p: Passage) => {
@@ -310,31 +398,23 @@ const removeOverlappingVerses = (doc: Document, p: Passage) => {
     var [vstart, vend] = domVnum(v);
     var result = false;
     if (vstart) {
-      if (vstart <= p.startVerse) result = vend >= p.startVerse;
-      //vstart > start
-      else result = vstart <= p.endVerse;
-      if (result) existing.push(v);
+      if (vstart === first && vend === last) {
+        if (p.attributes.sequencenum === 1 && isAfterSection(v))
+          existing.push(isAfterSection(v) as Element);
+      } else {
+        if (vstart <= p.startVerse) result = vend >= p.startVerse;
+        else result = vstart <= p.endVerse;
+        if (result && verseText(v).trim() === '') {
+          existing.push(v);
+        }
+      }
     }
   });
-  var startRemove: ChildNode | null = null;
-  if (existing.length > 0) {
-    var [lstart] = domVnum(existing[0] as Element);
-    first = lstart;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    var [_lstart, lend] = domVnum(existing[existing.length - 1]);
-    last = lend;
-    var thisVerse = moveToPara(doc, existing[0]);
-    startRemove = thisVerse;
-  }
-  var nextVerse = findNodeAfterVerse(verses, last);
-  if (nextVerse) nextVerse = moveToPara(doc, nextVerse);
-  //remove everything from first existing verse until nextverse
-  while (startRemove && startRemove !== nextVerse) {
-    var remove = startRemove;
-    startRemove = startRemove.nextSibling;
-    rmNodeTx(doc, remove);
-  }
-  return [first, last];
+  existing.forEach((v) => {
+    if (isVerse(v)) removeVerse(v);
+    else removeSection(v);
+  });
+  return getVerse(doc, passageVerses(p));
 };
 
 const doChapter = async (
@@ -362,12 +442,10 @@ const doChapter = async (
   const usx: string = fs.readFileSync(tempName, 'utf-8');
   let usxDom: Document = domParser.parseFromString(usx);
 
-  removeSections(usxDom);
   pass = pass.sort((i, j) => (i.startVerse < j.startVerse ? -1 : 1));
   pass.forEach((p) => {
     postPass(usxDom, p, memory);
   });
-  addSections(usxDom, pass[0], pt[0], pt[1], memory, addNumberToSection);
 
   const usxXml: string = xmlSerializer.serializeToString(usxDom);
   fs.writeFileSync(tempName, usxXml, { encoding: 'utf-8' });
@@ -382,7 +460,6 @@ const doChapter = async (
   if (stdoutw) console.log(stdoutw);
   var ops: Operation[] = [];
   var tb = new TransformBuilder();
-
   for (let p of pass) {
     UpdatePassageStateOps(
       p.id,

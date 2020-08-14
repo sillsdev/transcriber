@@ -418,8 +418,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         onlyAvailable,
         item
       );
-
-      if (state.selected !== '') {
+      if (state.selected !== '' && state.index < rowList.length) {
         if (rowList[state.index].passage.id !== state.selected) {
           setSelected(state.selected);
         }
