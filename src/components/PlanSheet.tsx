@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
     barDev: {
       left: 0,
       width: '100%',
+      height: '42px',
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
@@ -89,6 +90,9 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'flex-end',
+      '& .MuiButton-label': { fontSize: '.8rem' },
+      '& .MuiButtonBase-root': { margin: '5px', padding: '2px 10px' },
+      '& .MuiSvgIcon-root': { fontSize: '.9rem' },
     }) as any,
     arrangeActions: {
       display: 'flex',
@@ -282,6 +286,19 @@ export function PlanSheet(props: IProps) {
       }
     }
   };
+  const handleConfirmDelete = (rowIndex: number) => (e: any) => {
+    const toDelete = [rowIndex - 1];
+    if (isSection(rowData[rowIndex - 1])) {
+      var psg = rowIndex;
+      while (psg < rowData.length && !isSection(rowData[psg])) {
+        toDelete.push(psg);
+        psg++;
+      }
+    }
+    setCheck(toDelete);
+    setConfirmAction('Delete');
+  };
+
   const handleActionConfirmed = () => {
     if (action != null) {
       if (action(confirmAction, check)) {
@@ -558,6 +575,7 @@ export function PlanSheet(props: IProps) {
                       <IconButton
                         className={classes.actionButton}
                         title={t.delete}
+                        onClick={handleConfirmDelete(rowIndex)}
                       >
                         <DeleteIcon />
                       </IconButton>
