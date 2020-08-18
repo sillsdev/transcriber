@@ -5,7 +5,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
-import { BigDialog } from '../../hoc/BigDialog';
+import { BigDialog, BigDialogBp } from '../../hoc/BigDialog';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard, TeamDialog } from '.';
 import { useRole, useAllUserGroup } from '../../crud';
@@ -115,6 +115,7 @@ export const TeamItem = (props: IProps) => {
         title={'{0} Members'.replace('{0}', team?.attributes?.name || '')}
         isOpen={openMember}
         onOpen={setOpenMember}
+        bp={BigDialogBp.md}
       >
         <GroupTabs {...props} />
       </BigDialog>

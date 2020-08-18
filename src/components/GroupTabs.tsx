@@ -54,7 +54,7 @@ const GroupTabs = (props: IProps) => {
           scrollButtons="auto"
         >
           <Tab label={t.users} />
-          <Tab label={t.groups} />
+          <Tab label={isDeveloper ? t.roles : t.groups} />
           <Tab label={t.invitations} />
         </Tabs>
       </AppBar>

@@ -456,6 +456,7 @@ const initialState = {
 		"en": {
 			"users": "Users",
 			"groups": "Groups",
+			"roles": "Roles",
 			"invitations": "Invitations",
 		}
 	}),

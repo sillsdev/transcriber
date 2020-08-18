@@ -428,6 +428,7 @@ export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMeth
 export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
     "users": string;
     "groups": string;
+    "roles": string;
     "invitations": string;
 };
 

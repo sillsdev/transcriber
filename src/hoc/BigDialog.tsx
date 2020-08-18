@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import {
   Dialog,
@@ -13,7 +14,26 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       '& .MuiDialog-paper': {
         maxWidth: '90%',
-        minWidth: '535px',
+        minWidth: '600px',
+      },
+      '& .MuiTable-root': {
+        tableLayout: 'auto',
+        paddingRight: theme.spacing(1),
+      },
+    },
+    rootMd: {
+      '& .MuiDialog-paper': {
+        minWidth: '960px',
+      },
+    },
+    rootLg: {
+      '& .MuiDialog-paper': {
+        minWidth: '1280px',
+      },
+    },
+    rootXl: {
+      '& .MuiDialog-paper': {
+        minWidth: '1920px',
       },
     },
     row: {
@@ -25,14 +45,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+export enum BigDialogBp {
+  'md',
+  'lg',
+  'xl',
+}
+
 interface IProps {
   title: string;
   children: JSX.Element;
   isOpen: boolean;
   onOpen: (isOpen: boolean) => void;
+  bp?: BigDialogBp;
 }
 
-export function BigDialog({ title, children, isOpen, onOpen }: IProps) {
+export function BigDialog({ title, children, isOpen, onOpen, bp }: IProps) {
   const classes = useStyles();
 
   const handleClose = () => {
@@ -43,7 +70,11 @@ export function BigDialog({ title, children, isOpen, onOpen }: IProps) {
     <Dialog
       open={isOpen}
       onClose={handleClose}
-      className={classes.root}
+      className={clsx(classes.root, {
+        [classes.rootMd]: bp === BigDialogBp.md,
+        [classes.rootLg]: bp === BigDialogBp.lg,
+        [classes.rootXl]: bp === BigDialogBp.xl,
+      })}
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">

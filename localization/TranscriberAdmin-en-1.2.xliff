@@ -2525,7 +2525,14 @@
                     <context context-type="sourcefile">GroupTabs.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupTabs.invitations">
+        	<trans-unit id="groupTabs.roles">
+        		<source>Roles</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">GroupTabs.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="groupTabs.invitations">
                 <source>Invitations</source>
                 <target/>
                 <context-group>

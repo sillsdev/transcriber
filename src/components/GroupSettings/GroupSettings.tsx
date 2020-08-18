@@ -24,16 +24,19 @@ export function GroupSettings(props: IProps) {
   const { t } = props;
   const classes = useStyles();
   const [group] = useGlobal('group');
+  const [isDeveloper] = useGlobal('developer');
 
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        <FormControl>
-          <FormLabel className={classes.label}>{t.projects}</FormLabel>
-          <FormGroup className={classes.group}>
-            <GroupProjects />
-          </FormGroup>
-        </FormControl>
+        {!isDeveloper && (
+          <FormControl>
+            <FormLabel className={classes.label}>{t.projects}</FormLabel>
+            <FormGroup className={classes.group}>
+              <GroupProjects />
+            </FormGroup>
+          </FormControl>
+        )}
         <Team selectedGroup={group} detail={false} />
       </div>
     </div>

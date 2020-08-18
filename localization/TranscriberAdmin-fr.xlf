@@ -2167,6 +2167,12 @@
 				<target>Groupes</target>
 			</segment>
 		</unit>
+		<unit id="groupTabs.roles">
+			<segment>
+				<source>Roles</source>
+				<target>Rôles</target>
+			</segment>
+		</unit>
 		<unit id="groupTabs.invitations">
          <segment>
             <source>Invitations</source>

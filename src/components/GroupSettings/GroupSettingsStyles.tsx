@@ -4,6 +4,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
+      paddingTop: theme.spacing(2),
     },
     grow: {
       flexGrow: 1,
