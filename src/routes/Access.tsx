@@ -281,7 +281,6 @@ export function Access(props: IProps) {
   useEffect(() => {
     if (isElectron) {
       ipc?.invoke('get-profile').then((result) => {
-        // console.log('result:', result);
         if (result) {
           ipc?.invoke('get-token').then((accessToken) => {
             if (auth) auth.setDesktopSession(result, accessToken);

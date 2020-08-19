@@ -12,6 +12,7 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
+import { useRole } from '../crud';
 import Auth from '../auth/Auth';
 import { remoteIdGuid } from '../utils';
 
@@ -80,6 +81,8 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const [project] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
   const [topFilter, setTopFilter] = React.useState(false);
+  const [organization] = useGlobal('organization');
+  const { setMyProjRole } = useRole();
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -99,6 +102,11 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
       return remoteIdGuid('passage', part[2], memory.keyMap);
     return '';
   };
+
+  React.useEffect(() => {
+    if (projRole === '') setMyProjRole(organization);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!isDeveloper) return <Redirect to="/main" />;
   if (project === '') return <Redirect to="/team" />;

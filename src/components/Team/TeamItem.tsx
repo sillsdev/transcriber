@@ -55,20 +55,18 @@ export const TeamItem = (props: IProps) => {
   const { teamProjects, teamMembers, teamUpdate, teamDelete } = ctx.state;
   const t = ctx.state.cardStrings;
   const [openMember, setOpenMember] = React.useState(false);
-  const [setOrgRole] = useRole();
+  const { setMyOrgRole } = useRole();
   const [, setGroup] = useGlobal('group');
   const allUserGroup = useAllUserGroup();
 
   const handleMembers = (team: Organization) => () => {
-    console.log(`clicked ${t.members} of ${team?.attributes?.name}`);
     setOrganization(team.id);
-    setOrgRole(team.id);
+    setMyOrgRole(team.id);
     setGroup(allUserGroup(team.id)?.id);
     setOpenMember(true);
   };
 
   const handleSettings = (team: Organization) => () => {
-    console.log(`clicked ${t.settings} for ${team?.attributes?.name}`);
     setEditOpen(true);
   };
 
@@ -112,7 +110,7 @@ export const TeamItem = (props: IProps) => {
         onDelete={handleDeleteTeam}
       />
       <BigDialog
-        title={'{0} Members'.replace('{0}', team?.attributes?.name || '')}
+        title={t.members.replace('{0}', team?.attributes?.name || '')}
         isOpen={openMember}
         onOpen={setOpenMember}
         bp={BigDialogBp.md}

@@ -103,7 +103,6 @@ const PlanProvider = withData(mapRecordsToProps)(
         setMessage(<span>{t.loadingTable}</span>);
         return;
       }
-      console.log('checksavedfn', doSave);
       if (doSave) {
         setMessage(<span>{t.saving}</span>);
         return;

@@ -736,6 +736,54 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.lastEdit">
+         <segment>
+            <source>Last edit {0}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.importExport">
+         <segment>
+            <source>Import / Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.integrations">
+         <segment>
+            <source>Integrations</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.import">
+         <segment>
+            <source>Import</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.export">
+         <segment>
+            <source>Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.integrationsTitle">
+         <segment>
+            <source>{0} Integrations</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.exportTitle">
+         <segment>
+            <source>{0} Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planSheet.importTitle">
+         <segment>
+            <source>{0} Import</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
@@ -3910,6 +3958,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="template.templateCodes">
+         <segment>
+            <source>Template Codes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="template.projectCode">
          <segment>
             <source>Project Code</source>
@@ -3961,24 +4015,42 @@
       <unit id="template.fileTemplate">
          <segment>
             <source>File Name Template</source>
-            <target>Modèle de nom de fichier</target>
+            <target/>
          </segment>
       </unit>
       <unit id="template.apply">
          <segment>
             <source>Apply</source>
-            <target>Appliquer</target>
-         </segment>
-      </unit>
-      <unit id="template.templateCodes">
-         <segment>
-            <source>Template Codes</source>
-            <target>Modèles de codes</target>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.upload">
          <segment>
             <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.uploadProgress">
+         <segment>
+            <source>Upload Progress</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.projectCreated">
+         <segment>
+            <source>Project Created</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.mediaUploaded">
+         <segment>
+            <source>Media Uploaded</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.passagesCreated">
+         <segment>
+            <source>Passages Created</source>
             <target/>
          </segment>
       </unit>
@@ -4207,6 +4279,24 @@
       <unit id="vProject.language">
          <segment>
             <source>Language</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="uploadProgress.progressTitle">
+         <segment>
+            <source>Progress</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="uploadProgress.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="uploadProgress.canceling">
+         <segment>
+            <source>Canceling...</source>
             <target/>
          </segment>
       </unit>

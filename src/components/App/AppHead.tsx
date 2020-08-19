@@ -13,7 +13,7 @@ import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
 import { resetData, exitElectronApp, forceLogin } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
-import { usePlanName } from '../../crud';
+import { usePlan } from '../../crud';
 
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 
@@ -72,7 +72,6 @@ export const handleUserMenuAction = (
     }
     if (/Clear/i.test(what)) {
       if (resetRequests) resetRequests().then(() => setView(what));
-      else console.log('ResetRequests not set in props');
     } else setView(what);
   }
 };
@@ -85,9 +84,10 @@ export const AppHead = withBucket(
     const [isDeveloper] = useGlobal('developer');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
+    const [, setProjRole] = useGlobal('projRole');
     const [plan, setPlan] = useGlobal('plan');
     const [view, setView] = React.useState('');
-    const planName = usePlanName();
+    const { getPlanName } = usePlan();
 
     const handleUserMenu = (what: string) => {
       handleUserMenuAction(
@@ -102,6 +102,7 @@ export const AppHead = withBucket(
       setOrganization('');
       setProject('');
       setPlan('');
+      setProjRole('');
     };
 
     if (view === 'Error') return <Redirect to="/error" />;
@@ -116,7 +117,7 @@ export const AppHead = withBucket(
               <HomeIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-              {planName(plan)}
+              {getPlanName(plan)}
             </Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
             <Typography variant="h6" noWrap>

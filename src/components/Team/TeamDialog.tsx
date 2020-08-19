@@ -28,7 +28,6 @@ export function TeamDialog(props: IProps) {
   };
 
   const handleCommit = () => {
-    console.log('Team added:', name);
     const current =
       mode === DialogMode.edit && values
         ? { ...values }
@@ -48,8 +47,6 @@ export function TeamDialog(props: IProps) {
   };
 
   const handleDelete = () => {
-    console.log('Deleting team:', name);
-
     const team = { ...values, attributes: { name } } as Organization;
     onDelete && onDelete(team);
   };

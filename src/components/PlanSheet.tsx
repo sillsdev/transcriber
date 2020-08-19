@@ -27,7 +27,7 @@ import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
-import { OrgButtons, LastEdit } from '../control';
+import { ProjButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { isNumber } from 'util';
 import { DrawerWidth, HeadHeight } from '../routes/drawer';
@@ -735,10 +735,10 @@ export function PlanSheet(props: IProps) {
                   />
                 )}
                 {isDeveloper && (
-                  <OrgButtons {...props} pasting={pasting} data={data} />
+                  <ProjButtons {...props} pasting={pasting} data={data} t={t} />
                 )}
                 <div className={classes.grow}>{'\u00A0'}</div>
-                {isDeveloper && <LastEdit when={lastSaved} />}
+                {isDeveloper && <LastEdit when={lastSaved} t={t} />}
                 <Button
                   key="save"
                   aria-label={t.save}

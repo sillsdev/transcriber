@@ -166,6 +166,14 @@ const initialState = {
 			"pasting": "Pasting",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 			"resequence": "Resequence",
+			"lastEdit": "Last edit {0}",
+			"importExport": "Import / Export",
+			"integrations": "Integrations",
+			"import": "Import",
+			"export": "Export",
+			"integrationsTitle": "{0} Integrations",
+			"exportTitle": "{0} Export",
+			"importTitle": "{0} Import",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -839,6 +847,7 @@ const initialState = {
 	}),
 	"template": new LocalizedStrings({
 		"en": {
+			"templateCodes": "Template Codes",
 			"projectCode": "Project Code",
 			"language": "Language BCP47 code",
 			"book": "Paratext book identifier",
@@ -849,12 +858,15 @@ const initialState = {
 			"end": "Ending verse number",
 			"fileTemplate": "File Name Template",
 			"apply": "Apply",
-			"templateCodes": "Template Codes",
 		}
 	}),
 	"cards": new LocalizedStrings({
 		"en": {
 			"upload": "Upload Audio",
+			"uploadProgress": "Upload Progress",
+			"projectCreated": "Project Created",
+			"mediaUploaded": "Media Uploaded",
+			"passagesCreated": "Passages Created",
 			"newProject": "New Project",
 			"connectParatext": "Connect a Paratext Project",
 			"import": "Import PTF File",
@@ -897,6 +909,13 @@ const initialState = {
 			"other": "Other",
 			"type": "Project Type",
 			"language": "Language",
+		}
+	}),
+	"uploadProgress": new LocalizedStrings({
+		"en": {
+			"progressTitle": "Progress",
+			"cancel": "Cancel",
+			"canceling": "Canceling...",
 		}
 	}),
 };
@@ -955,6 +974,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"template" : new LocalizedStrings(action.payload.data.template),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
+				"uploadProgress" : new LocalizedStrings(action.payload.data.uploadProgress),
 			};
 		case SET_LANGUAGE:
 			return {

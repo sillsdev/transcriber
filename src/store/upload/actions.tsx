@@ -25,7 +25,8 @@ export const nextUpload = (
   files: FileList,
   n: number,
   auth: Auth,
-  errorReporter: any
+  errorReporter: any,
+  cb?: (n: number, success: boolean, data?: any) => void
 ) => (dispatch: any) => {
   dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
   Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
@@ -42,6 +43,7 @@ export const nextUpload = (
       xhr.onload = () => {
         if (xhr.status < 300) {
           dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
+          if (cb) cb(n, true, response.data);
         } else {
           logError(
             Severity.info,
@@ -69,6 +71,7 @@ export const nextUpload = (
             },
             type: UPLOAD_ITEM_FAILED,
           });
+          if (cb) cb(n, false);
         }
       };
     })
@@ -86,6 +89,7 @@ export const nextUpload = (
         },
         type: UPLOAD_ITEM_FAILED,
       });
+      if (cb) cb(n, false);
     });
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
+import { IPlanSheetStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Divider, Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -7,7 +8,7 @@ import { BigDialog } from '../hoc/BigDialog';
 import IntegrationTab from '../components/Integration';
 import ExportTab from '../components/TranscriptionTab';
 import ImportTab from '../components/ImportTab';
-import { useTeamRead, useProjectPlans } from '../crud';
+import { useProjectPlans, usePlan } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,26 +24,20 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const t = {
-  importExport: 'Import / Export',
-  integrations: 'Integrations',
-  import: 'Import',
-  export: 'Export',
-  integrationsTitle: '{0} Integrations',
-  exportTitle: '{0} Export',
-  importTitle: '{0} Import',
-};
+interface IStateProps {
+  t: IPlanSheetStrings;
+}
 
-interface IProps {
+interface IProps extends IStateProps {
   pasting: boolean;
   data: Array<any>;
 }
 
-export const OrgButtons = (props: IProps) => {
-  const { pasting, data } = props;
+export const ProjButtons = (props: IProps) => {
+  const { pasting, data, t } = props;
   const classes = useStyles();
-  const [teamId] = useGlobal('organization');
-  const teamRead = useTeamRead();
+  const { getPlanName } = usePlan();
+  const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
   const projectPlans = useProjectPlans();
   const [actionMenuItem, setActionMenuItem] = React.useState(null);
@@ -104,20 +99,14 @@ export const OrgButtons = (props: IProps) => {
         {t.integrations}
       </Button>
       <BigDialog
-        title={t.integrationsTitle.replace(
-          '{0}',
-          teamRead(teamId)?.attributes?.name || ''
-        )}
+        title={t.integrationsTitle.replace('{0}', getPlanName(plan))}
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
         <IntegrationTab {...props} />
       </BigDialog>
       <BigDialog
-        title={t.exportTitle.replace(
-          '{0}',
-          teamRead(teamId)?.attributes?.name || ''
-        )}
+        title={t.exportTitle.replace('{0}', getPlanName(plan))}
         isOpen={openExport}
         onOpen={setOpenExport}
       >
@@ -128,10 +117,7 @@ export const OrgButtons = (props: IProps) => {
         />
       </BigDialog>
       <BigDialog
-        title={t.importTitle.replace(
-          '{0}',
-          teamRead(teamId)?.attributes?.name || ''
-        )}
+        title={t.importTitle.replace('{0}', getPlanName(plan))}
         isOpen={openImport}
         onOpen={setOpenImport}
       >

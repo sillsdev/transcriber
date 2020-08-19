@@ -733,6 +733,54 @@
 				<target>Resequene</target>
 			</segment>
 		</unit>
+		<unit id="planSheet.lastEdit">
+			<segment>
+				<source>Last edit {0}</source>
+				<target>Dernière modification {0}</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.importExport">
+			<segment>
+				<source>Import / Export</source>
+				<target>Importation / Exportation</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.integrations">
+			<segment>
+				<source>Integrations</source>
+				<target>Intégrations</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.import">
+			<segment>
+				<source>Import</source>
+				<target>Importer</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.export">
+			<segment>
+				<source>Export</source>
+				<target>Exporter</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.integrationsTitle">
+			<segment>
+				<source>{0} Integrations</source>
+				<target>Intégrations de {0}</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.exportTitle">
+			<segment>
+				<source>{0} Export</source>
+				<target>Exportation de {0}</target>
+			</segment>
+		</unit>
+		<unit id="planSheet.importTitle">
+			<segment>
+				<source>{0} Import</source>
+				<target>Importation de {0}</target>
+			</segment>
+		</unit>
 		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
@@ -3915,13 +3963,19 @@
             <target>Ce projet doit être mis en place en ligne. Veuillez contacter votre administrateur de projet pour un fichier ptf comprenant des tâches.</target>
          </segment>
       </unit>
-    <unit id="template.projectCode">
+      <unit id="template.templateCodes">
          <segment>
-            <source>Project Code</source>
-         	<target>Code du projet</target>
+            <source>Template Codes</source>
+         	<target>Modèle de code</target>
          </segment>
       </unit>
-      <unit id="template.language">
+		<unit id="template.projectCode">
+			<segment>
+				<source>Project Code</source>
+				<target>Code du projet</target>
+			</segment>
+		</unit>
+		<unit id="template.language">
          <segment>
             <source>Language BCP47 code</source>
          	<target>Langue Code BCP47</target>
@@ -3974,17 +4028,35 @@
             <source>Apply</source>
          	<target>Appliquer</target>
          </segment>
-      </unit>
-      <unit id="template.templateCodes">
-         <segment>
-            <source>Template Codes</source>
-         	<target>Template Codes</target>
-         </segment>
-      </unit>
+        </unit>
 		<unit id="cards.upload">
 			<segment>
 				<source>Upload Audio</source>
 				<target>Upload Audio</target>
+			</segment>
+		</unit>
+		<unit id="cards.uploadProgress">
+			<segment>
+				<source>Upload Progress</source>
+				<target>Progression du téléchargement</target>
+			</segment>
+		</unit>
+		<unit id="cards.projectCreated">
+			<segment>
+				<source>Project Created</source>
+				<target>Projet créé</target>
+			</segment>
+		</unit>
+		<unit id="cards.mediaUploaded">
+			<segment>
+				<source>Media Uploaded</source>
+				<target>Fichier audio téléchargé</target>
+			</segment>
+		</unit>
+		<unit id="cards.passagesCreated">
+			<segment>
+				<source>Passages Created</source>
+				<target>Passages créés</target>
 			</segment>
 		</unit>
 		<unit id="cards.newProject">
@@ -4215,5 +4287,23 @@
 				<target>Langue</target>
 			</segment>
 		</unit>
-   </file>
+		<unit id="uploadProgress.progressTitle">
+			<segment>
+				<source>Progress</source>
+				<target>Progrès</target>
+			</segment>
+		</unit>
+		<unit id="uploadProgress.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Annuler</target>
+			</segment>
+		</unit>
+		<unit id="uploadProgress.canceling">
+			<segment>
+				<source>Canceling...</source>
+				<target>Annulation...</target>
+			</segment>
+		</unit>
+	</file>
 </xliff>

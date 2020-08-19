@@ -81,7 +81,6 @@ export const ProjectCard = (props: IProps) => {
   };
 
   const handleProjectAction = (what: string) => {
-    console.log(`clicked ${what} for ${project?.attributes?.name}`);
     if (what === 'settings') {
       setOpen(true);
     } else if (what === 'delete') {
@@ -94,7 +93,6 @@ export const ProjectCard = (props: IProps) => {
   };
 
   const handleCommit = (values: IProjectDialog) => {
-    console.log(`commiting changes: ${values}`);
     const {
       name,
       description,
@@ -125,7 +123,6 @@ export const ProjectCard = (props: IProps) => {
 
   const handleDeleteConfirmed = () => {
     if (!deleteItem) return;
-    console.log(`deleting: ${deleteItem?.attributes?.name}`);
     projectDelete(deleteItem);
     setDeleteItem(undefined);
   };

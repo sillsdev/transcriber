@@ -132,8 +132,6 @@ if (isElectron) {
             } else {
               var myLastExport = moment.utc(proj.attributes.dateExported);
               if (myLastExport > exportTime) {
-                // console.log(exportTime.toLocaleString());
-                // console.log(myLastExport.toLocaleString());
                 ret.warnMsg +=
                   t.importCreated.replace(
                     '{date0}',
@@ -172,7 +170,6 @@ if (isElectron) {
   ): void => {
     if (zip) {
       const where = dataPath();
-      // console.log(where);
       fs.mkdirSync(where, { recursive: true });
       //delete any old passagesection files
       try {

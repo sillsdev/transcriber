@@ -186,7 +186,6 @@ export const importProjectFromElectron = (
             payload: pendingmsg.replace('{0}', '20'),
             type: IMPORT_PENDING,
           });
-          // console.log('upload item ' + files[0].name + ' succeeded.');
           /* tell it to process the file now */
           url =
             API_CONFIG.host +

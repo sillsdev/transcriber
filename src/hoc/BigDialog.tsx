@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiDialog-paper': {
         maxWidth: '90%',
         minWidth: '600px',
+        minHeight: '80%',
       },
       '& .MuiTable-root': {
         tableLayout: 'auto',

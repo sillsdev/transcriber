@@ -49,9 +49,5 @@ export const useRole = () => {
     return role;
   };
 
-  const result: Array<typeof setMyOrgRole | typeof setMyProjRole> = [
-    setMyOrgRole,
-    setMyProjRole,
-  ];
-  return result;
+  return { setMyOrgRole, setMyProjRole };
 };

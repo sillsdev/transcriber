@@ -78,7 +78,7 @@ const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{'Template codes'}</DialogTitle>
+      <DialogTitle>{t.templateCodes}</DialogTitle>
       <List>
         {Object.keys(pattern).map((pat) => (
           <ListItem button key={pat}>

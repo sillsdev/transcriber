@@ -316,7 +316,6 @@ export async function electronExport(
 
     const AddAll = (info: fileInfo, project: Project | undefined) => {
       var recs = GetTableRecs(info, project);
-      console.log(info.table, recs.length);
       if (recs && isArray(recs) && recs.length > 0) {
         AddJsonEntry(info.table + 's', recs, info.sort);
         switch (info.table) {

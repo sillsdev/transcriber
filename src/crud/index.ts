@@ -16,7 +16,7 @@ export * from './useIsPersonalTeam';
 export * from './useNewTeamId';
 export * from './useTableType';
 export * from './useVProjectRead';
-export * from './usePlanName';
+export * from './usePlan';
 export * from './useRole';
 export * from './useAllUserGroup';
 export * from './useProjectPlans';

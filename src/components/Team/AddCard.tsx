@@ -1,13 +1,17 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { VProject, DialogMode } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
-import MediaUpload, { UploadType } from '../MediaUpload';
+import Uploader, { statusInit } from '../Uploader';
+import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
+import { waitForRemoteId } from '../../utils';
+import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,14 +56,26 @@ interface IProps {
 export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
+  const [memory] = useGlobal('memory');
   const ctx = React.useContext(TeamContext);
-  const { projectCreate, cardStrings } = ctx.state;
+  const { projectCreate, cardStrings, auth, setMessage, flatAdd } = ctx.state;
   const t = cardStrings;
   const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const [inProgress, setInProgress] = React.useState(false);
   const [uploadVisible, setUploadVisible] = React.useState(false);
   const [type, setType] = React.useState('');
   const [language, setLanguage] = React.useState<ILanguage>(initLang);
+  const [complete, setComplete] = React.useState(0);
+  const [steps] = React.useState([
+    t.projectCreated,
+    t.mediaUploaded,
+    t.passagesCreated,
+  ]);
+  const [step, setStep] = React.useState(0);
+  const [status] = React.useState({ ...statusInit });
+  const [, setPlan] = useGlobal('plan');
+  const [view, setView] = React.useState('');
 
   const handleShow = () => {
     if (!open) setShow(!show);
@@ -70,22 +86,12 @@ export const AddCard = (props: IProps) => {
   };
 
   const teamName = (teamId: TeamIdType) => {
-    return team ? team.attributes?.name : 'Personal Projects';
+    return team ? team.attributes?.name : t.personalProjects;
   };
 
   const handleUpload = (team: TeamIdType) => (e: any) => {
-    console.log(`clicked ${t.upload} for ${teamName(team)}`);
     setUploadVisible(true);
-  };
-
-  const handleUploadMethod = (files: FileList) => {
-    console.log(`Uploading ${files}`);
-  };
-
-  const handleCancelUpload = () => {
-    setLanguage(initLang);
-    setType('');
-    setUploadVisible(false);
+    setInProgress(true);
   };
 
   const handleLanguageChange = (lang: ILanguage) => {
@@ -108,7 +114,6 @@ export const AddCard = (props: IProps) => {
   };
 
   const handleCommit = (values: IProjectDialog) => {
-    console.log(`comitting changes: ${values}`);
     const {
       name,
       description,
@@ -137,6 +142,51 @@ export const AddCard = (props: IProps) => {
       team
     );
   };
+
+  const createProject = async (files: FileList) => {
+    setStep(0);
+    const fileList = (files as any) as File[];
+    const name = fileList[0]?.name.split('.')[0];
+    const planId = await projectCreate(
+      {
+        attributes: {
+          name,
+          description: '',
+          type,
+          language: language.bcp47,
+          languageName: language.languageName,
+          defaultFont: language.font,
+          defaultFontSize: 'large',
+          rtl: false,
+          tags: {},
+          flat: true,
+          organizedBy: 'sections',
+        },
+      } as any,
+      team
+    );
+    setPlan(planId);
+    await waitForRemoteId({ type: 'plan', id: planId }, memory.keyMap);
+    setStep(1);
+    return planId;
+  };
+
+  const makeSectionsAndPassages = async (
+    planId: string,
+    mediaRemoteIds?: string[]
+  ) => {
+    setStep(2);
+    mediaRemoteIds && (await flatAdd(planId, mediaRemoteIds, setComplete));
+    setInProgress(false);
+    setStep(0);
+    setView('/work');
+  };
+
+  const cancelUpload = (what: string) => {
+    status.canceled = true;
+  };
+
+  if (view !== '') return <Redirect to={view} />;
 
   return (
     <>
@@ -177,11 +227,12 @@ export const AddCard = (props: IProps) => {
           )}
         </CardContent>
       </Card>
-      <MediaUpload
-        visible={uploadVisible}
-        uploadType={UploadType.Media}
-        uploadMethod={handleUploadMethod}
-        cancelMethod={handleCancelUpload}
+      <Uploader
+        auth={auth}
+        isOpen={uploadVisible}
+        onOpen={setUploadVisible}
+        setMessage={setMessage}
+        setComplete={setComplete}
         metaData={
           <>
             <ProjectType type={type} onChange={setType} />
@@ -189,6 +240,17 @@ export const AddCard = (props: IProps) => {
           </>
         }
         ready={handleReady}
+        createProject={createProject}
+        finish={makeSectionsAndPassages}
+        status={status}
+      />
+      <Progress
+        title={t.uploadProgress}
+        open={!uploadVisible && inProgress}
+        progress={complete}
+        steps={steps}
+        currentStep={step}
+        action={cancelUpload}
       />
     </>
   );

@@ -223,7 +223,6 @@ export function Transcriber(props: IProps) {
   };
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
-    // console.log('Font status: current=', fontStatus, ' new=', status);
     setFontStatus(status);
   };
   const handleReady = () => {

@@ -859,6 +859,62 @@
         			<context context-type="sourcefile">PlanSheet.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="planSheet.lastEdit">
+        		<source>Last edit {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.importExport">
+        		<source>Import / Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.integrations">
+        		<source>Integrations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.import">
+        		<source>Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.export">
+        		<source>Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.integrationsTitle">
+        		<source>{0} Integrations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.exportTitle">
+        		<source>{0} Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.importTitle">
+        		<source>{0} Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="scriptureTable.section">
                 <source>Section</source>
                 <target/>
@@ -4562,6 +4618,13 @@
         			<context context-type="sourcefile">Setup.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="template.templateCodes">
+        		<source>Template Codes</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">template.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="template.projectCode">
         		<source>Project Code</source>
         		<target/>
@@ -4620,21 +4683,14 @@
         	</trans-unit>
         	<trans-unit id="template.fileTemplate">
         		<source>File Name Template</source>
-        		<target>Modèle de nom de fichier</target>
+        		<target/>
         		<context-group>
         			<context context-type="sourcefile">template.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="template.apply">
         		<source>Apply</source>
-        		<target>Appliquer</target>
-        		<context-group>
-        			<context context-type="sourcefile">template.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="template.templateCodes">
-        		<source>Template Codes</source>
-        		<target>Modèles de codes</target>
+        		<target/>
         		<context-group>
         			<context context-type="sourcefile">template.tsx</context>
         		</context-group>
@@ -4644,6 +4700,34 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.uploadProgress">
+        		<source>Upload Progress</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">AddCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.projectCreated">
+        		<source>Project Created</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">AddCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.mediaUploaded">
+        		<source>Media Uploaded</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">AddCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="cards.passagesCreated">
+        		<source>Passages Created</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">AddCard.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="cards.newProject">
@@ -4910,6 +4994,27 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="uploadProgress.progressTitle">
+        		<source>Progress</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UploadProgress.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="uploadProgress.cancel">
+        		<source>Cancel</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UploadProgress.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="uploadProgress.canceling">
+        		<source>Canceling...</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">UploadProgress.tsx</context>
         		</context-group>
         	</trans-unit>
         </body>

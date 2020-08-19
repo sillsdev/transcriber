@@ -23,7 +23,7 @@ import {
 // import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, getMbrRoleRec, getMbrRole, Online } from '../utils';
+import { related, Online } from '../utils';
 import { LoadProjectData } from '../utils/loadData';
 import localStrings from '../selector/localize';
 import {
@@ -37,7 +37,11 @@ import {
   useIsPersonalTeam,
   useNewTeamId,
   useTableType,
+  usePlan,
+  useRole,
 } from '../crud';
+import Auth from '../auth/Auth';
+import { useFlatAdd } from '../crud/useFlatAdd';
 
 export type TeamIdType = Organization | null;
 
@@ -90,6 +94,7 @@ const mapRecordsToProps = {
 };
 
 const initState = {
+  auth: undefined as any,
   controlStrings: {} as IControlStrings,
   lang: 'en',
   message: <></>,
@@ -104,18 +109,25 @@ const initState = {
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
   handleMessageReset: () => {},
-  projectCreate: (project: VProject, team: TeamIdType) => {},
+  projectCreate: async (project: VProject, team: TeamIdType) => '',
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
   teamCreate: (team: Organization) => {},
   teamUpdate: (team: Organization) => {},
   teamDelete: (team: Organization) => {},
+  flatAdd: (
+    planId: string,
+    mediaRemoteIds: string[],
+    setComplete?: (amt: number) => void
+  ) => {},
   cardStrings: {} as ICardsStrings,
   vProjectStrings: {} as IVProjectStrings,
   pickerStrings: {} as ILanguagePickerStrings,
 };
 
-export type ICtxState = typeof initState;
+export type ICtxState = typeof initState & {
+  setMessage: React.Dispatch<React.SetStateAction<JSX.Element>>;
+};
 
 interface IContext {
   state: ICtxState;
@@ -125,6 +137,7 @@ interface IContext {
 const TeamContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+  auth: Auth;
   children: React.ReactElement;
 }
 
@@ -134,6 +147,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     mapDispatchToProps
   )((props: IProps) => {
     const {
+      auth,
       organizations,
       orgMembers,
       projects,
@@ -148,9 +162,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       doOrbitError,
     } = props;
     const [memory] = useGlobal('memory');
-    const [user] = useGlobal('user');
     // const [orgRole, setOrgRole] = useGlobal('orgRole');
-    const [, setProjRole] = useGlobal('projRole');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
@@ -160,10 +172,12 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [message, setMessage] = useState(<></>);
     const [state, setState] = useState({
       ...initState,
+      auth,
       planTypes,
       controlStrings,
       lang,
       message,
+      setMessage,
       cardStrings,
       vProjectStrings,
       pickerStrings,
@@ -174,22 +188,30 @@ const TeamProvider = withData(mapRecordsToProps)(
     const orbitTeamCreate = useTeamCreate({ ...props, setMessage });
     const orbitTeamUpdate = useTeamUpdate();
     const orbitTeamDelete = useTeamDelete();
+    const orbitFlatAdd = useFlatAdd();
     const isPersonal = useIsPersonalTeam();
     const getTeamId = useNewTeamId({ ...props, setMessage });
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
+    const { setMyProjRole } = useRole();
+    const { getPlan } = usePlan();
 
     const handleMessageReset = () => {
       setMessage(<></>);
     };
 
-    const selectProject = (plan: Plan) => {
-      console.log('selected plan: ', plan?.attributes?.name);
+    const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');
       const team = vProject(plan);
-      setOrganization(related(team, 'organization'));
+      const orgId = related(team, 'organization');
+      setOrganization(orgId);
       setProject(projectId);
       setPlan(plan.id);
+      return [projectId, orgId];
+    };
+
+    const selectProject = (plan: Plan) => {
+      const [projectId, orgId] = setProjectParams(plan);
       Online((online) => {
         LoadProjectData(
           projectId,
@@ -202,12 +224,7 @@ const TeamProvider = withData(mapRecordsToProps)(
           doOrbitError
         )
           .then(() => {
-            const projRecs = projects.filter((p) => p.id === projectId);
-            if (projRecs.length > 0) {
-              const groupId = related(projRecs[0], 'group');
-              const roleRec = getMbrRoleRec(memory, 'group', groupId, user);
-              setProjRole(getMbrRole(memory, roleRec));
-            }
+            setMyProjRole(orgId);
           })
           .catch((err: Error) => {
             if (!online) setMessage(<span>{t.NoLoadOffline}</span>);
@@ -280,8 +297,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const projectCreate = async (project: VProject, team: TeamIdType) => {
-      const teamId = await getTeamId(team);
-      vProjectCreate(project, teamId);
+      const teamId = await getTeamId(team?.id);
+      return await vProjectCreate(project, teamId);
     };
 
     const projectUpdate = (project: VProject) => {
@@ -302,6 +319,16 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teamDelete = (team: Organization) => {
       orbitTeamDelete(team);
+    };
+
+    const flatAdd = async (
+      planId: string,
+      mediaRemoteIds: string[],
+      setComplete?: (amt: number) => void
+    ) => {
+      await orbitFlatAdd(planId, mediaRemoteIds, setComplete);
+      const planRec = getPlan(planId);
+      if (planRec) setProjectParams(planRec);
     };
 
     return (
@@ -325,6 +352,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             teamCreate,
             teamUpdate,
             teamDelete,
+            flatAdd,
           },
           setState,
         }}

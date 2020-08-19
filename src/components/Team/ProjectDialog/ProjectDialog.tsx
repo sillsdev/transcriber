@@ -70,7 +70,6 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
   };
 
   const handleAdd = () => {
-    console.log('Project added', state);
     if (onOpen) onOpen(false);
     onCommit(state);
   };

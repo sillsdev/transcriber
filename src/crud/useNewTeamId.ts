@@ -5,7 +5,6 @@ import { Organization, User, ISharedStrings } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { waitForIt } from '../utils';
 import { useTeamCreate, useIsPersonalTeam } from '.';
-import { TeamIdType } from '../context/TeamContext';
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -49,10 +48,10 @@ export const useNewTeamId = (props: IProps) => {
     orgRef.current = organization;
   }, [organization]);
 
-  return async (team: TeamIdType) => {
+  return async (teamIdType: string | undefined) => {
     let teamId: string;
-    if (team) {
-      teamId = team.id;
+    if (teamIdType && teamIdType) {
+      teamId = teamIdType;
     } else {
       const testId = getPersonalId();
       if (testId) {

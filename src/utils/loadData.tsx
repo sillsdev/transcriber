@@ -108,7 +108,6 @@ async function processData(
   tables.forEach((t) => {
     var json = ser.deserialize(t);
     if (isArray(json.data)) {
-      //console.log(json.data[0].type, json.data.length);
       json.data.forEach((item) =>
         insertData(item, memory, tb, oparray, orbitError, false, false)
       );

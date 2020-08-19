@@ -93,5 +93,6 @@ export const useVProjectCreate = () => {
         id: project.id,
       }),
     ]);
+    return plan.id;
   };
 };

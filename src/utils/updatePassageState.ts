@@ -22,7 +22,6 @@ const AddPassageStateChangeToOps = (
   } as PassageStateChange;
 
   ops.push(AddRecord(t, psc, userid, memory));
-  // console.log(psc, passage, state, comment);
   ops.push(
     t.replaceRelatedRecord(
       { type: 'passagestatechange', id: psc.id },
@@ -55,6 +54,34 @@ export const AddPassage = (
     '',
     user,
     memory
+  );
+  return ops;
+};
+
+export const AddFlatPassage = (
+  rec: Passage,
+  section: RecordIdentity,
+  media: RecordIdentity,
+  user: number,
+  memory: Memory
+): Operation[] => {
+  var t = new TransformBuilder();
+  var ops: Operation[] = [];
+  ops.push(AddRecord(t, rec, user, memory));
+  ops.push(
+    t.replaceRelatedRecord({ type: 'passage', id: rec.id }, 'section', section)
+  );
+  AddPassageStateChangeToOps(
+    t,
+    ops,
+    rec.id,
+    ActivityStates.TranscribeReady,
+    '',
+    user,
+    memory
+  );
+  ops.push(
+    t.replaceRelatedRecord(media, 'passage', { type: 'passage', id: rec.id })
   );
   return ops;
 };

@@ -87,9 +87,10 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     barDialog: {
-      left: '5%',
-      width: '88%',
-      top: `calc(${TabHeight}px + ${HeadHeight}px)`,
+      left: 'auto',
+      top: 'auto',
+      position: 'unset',
+      width: '95%',
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,

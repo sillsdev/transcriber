@@ -151,6 +151,14 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "pasting": string;
     "useCtrlV": string;
     "resequence": string;
+    "lastEdit": string;
+    "importExport": string;
+    "integrations": string;
+    "import": string;
+    "export": string;
+    "integrationsTitle": string;
+    "exportTitle": string;
+    "importTitle": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -788,6 +796,7 @@ export interface INotSetupStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
+    "templateCodes": string;
     "projectCode": string;
     "language": string;
     "book": string;
@@ -798,11 +807,14 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "end": string;
     "fileTemplate": string;
     "apply": string;
-    "templateCodes": string;
 };
 
 export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "upload": string;
+    "uploadProgress": string;
+    "projectCreated": string;
+    "mediaUploaded": string;
+    "passagesCreated": string;
     "newProject": string;
     "connectParatext": string;
     "import": string;
@@ -844,6 +856,12 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "other": string;
     "type": string;
     "language": string;
+};
+
+export interface IUploadProgressStrings extends Localize.LocalizedStringsMethods {
+    "progressTitle": string;
+    "cancel": string;
+    "canceling": string;
 };
 
 export interface ILocalizedStrings {
@@ -897,5 +915,6 @@ export interface ILocalizedStrings {
 	template: ITemplateStrings;
 	cards: ICardsStrings;
 	vProject: IVProjectStrings;
+	uploadProgress: IUploadProgressStrings;
 	[key: string]: any;
 };
