@@ -24,6 +24,7 @@ import Auth from '../auth/Auth';
 import { sectionNumber, numCompare, sectionDescription } from '../utils';
 import { debounce } from 'lodash';
 import { DrawerTask } from '../routes/drawer';
+import MediaPlayer from './MediaPlayer';
 
 export const TaskItemWidth = 370;
 
@@ -112,9 +113,6 @@ export function TaskTable(props: IProps) {
     rowData,
     taskItemStr,
     todoStr,
-    fetchMediaUrl,
-    hasUrl,
-    mediaUrl,
     selected,
     expandedGroups,
     filter,
@@ -123,8 +121,6 @@ export function TaskTable(props: IProps) {
   const t = todoStr;
   const classes = useStyles();
   const theme = useTheme();
-  const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [width, setWidth] = React.useState(window.innerWidth);
   const [isDeveloper] = useGlobal('developer');
@@ -175,9 +171,7 @@ export function TaskTable(props: IProps) {
     overflowY: 'auto',
   });
   const [message, setMessage] = useState(<></>);
-  const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
-  const audioRef = useRef<any>();
   const formRef = useRef<any>();
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
@@ -191,15 +185,7 @@ export function TaskTable(props: IProps) {
   };
 
   const handlePlay = (id: string) => () => {
-    if (playing) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    }
-    setPlaying(false);
     if (id !== playItem) {
-      fetchMediaUrl(id, memory, offline, auth);
       setPlayItem(id);
     } else {
       setPlayItem('');
@@ -308,13 +294,6 @@ export function TaskTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, selected]);
 
-  useEffect(() => {
-    if (hasUrl && audioRef.current && !playing && playItem !== '') {
-      setPlaying(true);
-      audioRef.current.play();
-    }
-  }, [hasUrl, mediaUrl, playing, playItem]);
-
   interface ICell {
     value: any;
     style?: React.CSSProperties;
@@ -422,7 +401,7 @@ export function TaskTable(props: IProps) {
           />
         </div>
       </div>
-      {!hasUrl || <audio ref={audioRef} src={mediaUrl} />}
+      <MediaPlayer auth={auth} srcMediaId={playItem} />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );

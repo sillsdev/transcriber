@@ -19,6 +19,7 @@ import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import UploadIcon from '@material-ui/icons/CloudUploadOutlined';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
+import PauseIcon from '@material-ui/icons/Pause';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
@@ -36,6 +37,9 @@ import { Online } from '../utils';
 import { useOrganizedBy } from '../crud';
 import { useInterval } from '../utils/useInterval';
 import { useRemoteSave } from '../utils/useRemoteSave';
+import TaskAvatar from './TaskAvatar';
+import MediaPlayer from './MediaPlayer';
+import Auth from '../auth/Auth';
 
 const ActionHeight = 52;
 
@@ -163,7 +167,12 @@ interface IProps extends IStateProps {
   inlinePassages: boolean;
   toggleInline: (event: any) => void;
   onTranscribe: (i: number) => () => void;
+  onAssign: (where: number[]) => () => void;
+  onPlay: (where: number, setSrcMedia: (id: string) => void) => void;
   hasMedia: (i: number) => boolean;
+  editor: (i: number) => string;
+  transcriber: (i: number) => string;
+  auth: Auth;
 }
 
 export function PlanSheet(props: IProps) {
@@ -186,7 +195,12 @@ export function PlanSheet(props: IProps) {
     inlinePassages,
     toggleInline,
     onTranscribe,
+    onAssign,
+    onPlay,
     hasMedia,
+    editor,
+    transcriber,
+    auth,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
@@ -218,6 +232,8 @@ export function PlanSheet(props: IProps) {
   const getOrganizedBy = useOrganizedBy();
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
+  const [srcMediaId, setSrcMediaId] = useState('');
+  const [playingIndex, setPlayingIndex] = useState(0);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -310,6 +326,19 @@ export function PlanSheet(props: IProps) {
   const handleActionRefused = () => {
     setConfirmAction('');
   };
+
+  const handlePlayStatus = (rowIndex: number) => () => {
+    if (playingIndex === rowIndex) {
+      //turn it off
+      setSrcMediaId('');
+      setPlayingIndex(0);
+    } else {
+      setPlayingIndex(rowIndex);
+      onPlay(rowIndex, setSrcMediaId);
+    }
+  };
+
+  const isPlaying = (rowIndex: number) => playingIndex === rowIndex;
 
   const doUpdate = (grid: ICell[][]) => {
     updateData(
@@ -486,7 +515,14 @@ export function PlanSheet(props: IProps) {
         return [
           {
             value: isDeveloper ? (
-              <></>
+              isSection ? (
+                <>
+                  <TaskAvatar assigned={transcriber(rowIndex + 1)} />
+                  <TaskAvatar assigned={editor(rowIndex + 1)} />
+                </>
+              ) : (
+                <></>
+              )
             ) : (
               <Checkbox
                 data-testid={check.includes(rowIndex) ? 'checked' : 'check'}
@@ -549,8 +585,9 @@ export function PlanSheet(props: IProps) {
                             className={classes.actionButton}
                             title={t.play}
                             disabled={!hasMedia(rowIndex)}
+                            onClick={handlePlayStatus(rowIndex)}
                           >
-                            <PlayIcon />
+                            {isPlaying(rowIndex) ? <PauseIcon /> : <PlayIcon />}
                           </IconButton>
                         </>
                       )}
@@ -558,6 +595,7 @@ export function PlanSheet(props: IProps) {
                         <IconButton
                           className={classes.actionButton}
                           title={t.assign}
+                          onClick={onAssign([rowIndex])}
                         >
                           <AssignIcon />
                         </IconButton>
@@ -589,7 +627,7 @@ export function PlanSheet(props: IProps) {
     }
     setData(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, check, bookCol, columns]);
+  }, [rowData, check, bookCol, columns, playingIndex]);
 
   useEffect(() => {
     if (sheetRef.current && showRow) {
@@ -811,6 +849,7 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
+      <MediaPlayer auth={auth} srcMediaId={srcMediaId} />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );

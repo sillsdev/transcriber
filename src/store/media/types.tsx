@@ -19,9 +19,9 @@ interface FetchAudioUrl {
   payload: string;
 }
 
-interface SetSeclected {
+interface SetSelected {
   type: typeof SET_SELECTED;
   payload: string;
 }
 
-export type MediaMsgs = FetchAudioUrl | FetchMediaUrlPending | SetSeclected;
+export type MediaMsgs = FetchAudioUrl | FetchMediaUrlPending | SetSelected;

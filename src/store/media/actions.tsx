@@ -3,7 +3,7 @@ import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import * as type from './types';
 import MemorySource from '@orbit/memory';
-import { remoteIdGuid } from '../../utils';
+import { remoteIdGuid, remoteId } from '../../utils';
 import { isArray } from 'util';
 import { dataPath } from '../../utils/dataPath';
 
@@ -29,6 +29,7 @@ export const fetchMediaUrl = (
       });
     }
   } else {
+    if (isNaN(Number(id))) id = remoteId('mediafile', id, memory.keyMap);
     Axios.get(API_CONFIG.host + '/api/mediafiles/' + id + '/fileurl', {
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,

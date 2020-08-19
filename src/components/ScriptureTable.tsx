@@ -37,12 +37,15 @@ import {
   related,
   Online,
   currentDateTime,
+  getMediaRec,
 } from '../utils';
 import { isUndefined } from 'util';
 import { DrawerTask } from '../routes/drawer';
 import { debounce } from 'lodash';
 import { useOrganizedBy } from '../crud';
 import { useRemoteSave } from '../utils/useRemoteSave';
+import AssignSection from './AssignSection';
+import Auth from '../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -117,6 +120,7 @@ interface IProps
     IRecordProps,
     WithDataProps {
   cols: ICols;
+  auth: Auth;
 }
 
 export function ScriptureTable(props: IProps) {
@@ -132,6 +136,7 @@ export function ScriptureTable(props: IProps) {
     fetchBooks,
     passages,
     sections,
+    auth,
   } = props;
   const classes = useStyles();
   const [width, setWidth] = React.useState(window.innerWidth);
@@ -166,6 +171,8 @@ export function ScriptureTable(props: IProps) {
   const [lastSaved, setLastSaved] = React.useState<string>();
   const getOrganizedBy = useOrganizedBy();
   const [, saveCompleted] = useRemoteSave();
+  const [assignSectionVisible, setAssignSectionVisible] = useState(false);
+  const [assignSections, setAssignSections] = useState<Section[]>([]);
 
   const showBook = (cols: ICols) => cols.Book >= 0;
 
@@ -193,6 +200,14 @@ export function ScriptureTable(props: IProps) {
     r[0].type === 'section';
   const isPassageRow = (r: ISequencedRecordIdentity[]) =>
     r[0].type === 'passage' || r.length > 1;
+  const sectionId = (row: number) =>
+    row < rowId.length && isSectionRow(rowId[row]) ? rowId[row][0].id : '';
+  const passageId = (row: number) =>
+    row < rowId.length && isPassageRow(rowId[row])
+      ? rowId[row].length > 1
+        ? rowId[row][1].id
+        : rowId[row][0].id
+      : '';
 
   const resequencePassages = (data: any[][], sectionIndex: number) => {
     let pas = 1;
@@ -436,6 +451,16 @@ export function ScriptureTable(props: IProps) {
     return false;
   };
 
+  const getSections = (where: number[]) => {
+    let selected = Array<Section>();
+    let one: any;
+    where.forEach((c) => {
+      one = sections.find((s) => s.id === sectionId(c - 1));
+      if (one) selected.push(one);
+    });
+    return selected;
+  };
+
   const validTable = (rows: string[][]) => {
     if (rows.length === 0) {
       setMessage(<span>{t.pasteNoRows}</span>);
@@ -598,7 +623,10 @@ export function ScriptureTable(props: IProps) {
             .map((row) => {
               if (isValidNumber(row[cols.SectionSeq])) {
                 var newid = [newSectionId(parseInt(row[cols.SectionSeq]))];
-                if (inlinePassages && isValidNumber(row[cols.PassageSeq]))
+                if (
+                  inlinePassages.inline &&
+                  isValidNumber(row[cols.PassageSeq])
+                )
                   newid.push(newPassageId(parseInt(row[cols.PassageSeq])));
                 return newid;
               } else {
@@ -642,24 +670,37 @@ export function ScriptureTable(props: IProps) {
     setWidth(window.innerWidth - theme.spacing(DrawerTask));
   };
 
-  const passageRow = (row: number) =>
-    inlinePassages.inline ? (row - 1) * 2 + 1 : row - 1;
-
-  const passageId = (row: number) => {
-    const passRow = passageRow(row);
-    return rowId.length > passRow ? rowId[passRow][0].id : '';
-  };
-
   const handleTranscribe = (i: number) => () => {
-    const id = passageId(i);
+    const id = passageId(i - 1);
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap);
     setView(`/work/${passageRemoteId}`);
   };
 
-  const handleHasMedia = (i: number) => {
-    return passageMedia.hasOwnProperty(passageId(i));
+  const handlePlay = (row: number, setSrcMediaId: (mf: string) => void) => {
+    if (passageMedia.hasOwnProperty(passageId(row - 1))) {
+      var mf = passageMedia[passageId(row - 1)];
+      setSrcMediaId(mf[0].id);
+    }
   };
+  const handleAssign = (where: number[]) => () => {
+    setAssignSections(getSections(where));
+    setAssignSectionVisible(true);
+  };
+  const handleAssignClose = () => () => setAssignSectionVisible(false);
 
+  const handleHasMedia = (i: number) => {
+    return passageMedia.hasOwnProperty(passageId(i - 1));
+  };
+  const getEditor = (i: number) => {
+    var sections = getSections([i]);
+    if (sections.length > 0) return related(sections[0], 'editor');
+    return '';
+  };
+  const getTranscriber = (i: number) => {
+    var sections = getSections([i]);
+    if (sections.length > 0) return related(sections[0], 'transcriber');
+    return '';
+  };
   const getFlat = (planId: string) => {
     if (!planId || planId === '') return false;
     const planRec = memory.cache.query((q: QueryBuilder) =>
@@ -696,27 +737,6 @@ export function ScriptureTable(props: IProps) {
           ),
         });
     }
-
-    const mediaRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('mediafile')
-    ) as MediaFile[];
-    const passMedia = { ...passageMedia };
-    mediaRecs
-      .sort((i, j) =>
-        i?.attributes?.versionNumber > j?.attributes?.versionNumber ? -1 : 1
-      )
-      .forEach((m) => {
-        if (related(m, 'plan') === plan) {
-          const passageId = related(m, 'passage');
-          if (passMedia.hasOwnProperty(passageId)) {
-            passMedia[passageId].push(m);
-          } else {
-            passMedia[passageId] = [m];
-          }
-        }
-      });
-    setPassageMedia(passMedia);
-
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
@@ -884,6 +904,8 @@ export function ScriptureTable(props: IProps) {
     if (showBook(cols) && allBookData.length === 0) fetchBooks(lang);
     let initData = Array<Array<any>>();
     let rowIds = Array<ISequencedRecordIdentity[]>();
+    const passMedia = { ...passageMedia };
+
     const getPassage = async (
       passage: Passage,
       list: (string | number)[][],
@@ -949,6 +971,14 @@ export function ScriptureTable(props: IProps) {
             rowIds.push([ids[psgIndex]]);
             initData.push(passageids[psgIndex]);
           }
+          var mf = getMediaRec(ids[psgIndex].id, memory);
+          if (mf) {
+            if (passMedia.hasOwnProperty(ids[psgIndex].id)) {
+              passMedia[ids[psgIndex].id].push(mf);
+            } else {
+              passMedia[ids[psgIndex].id] = [mf];
+            }
+          }
         }
       }
     };
@@ -996,6 +1026,7 @@ export function ScriptureTable(props: IProps) {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
         setRowId(rowIds);
+        setPassageMedia(passMedia);
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -1079,11 +1110,21 @@ export function ScriptureTable(props: IProps) {
         resequence={handleResequence}
         inlinePassages={inlinePassages.inline}
         toggleInline={toggleInline}
+        onPlay={handlePlay}
         onTranscribe={handleTranscribe}
+        onAssign={handleAssign}
         hasMedia={handleHasMedia}
         lastSaved={lastSaved}
+        editor={getEditor}
+        transcriber={getTranscriber}
+        auth={auth}
         t={s}
         ts={ts}
+      />
+      <AssignSection
+        sections={assignSections}
+        visible={assignSectionVisible}
+        closeMethod={handleAssignClose()}
       />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>

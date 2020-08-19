@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -61,6 +61,7 @@ import { DrawerWidth, HeadHeight } from '../routes/drawer';
 import { TabHeight } from './PlanTabs';
 import { getMediaInPlans } from '../utils/getMediaInPlans';
 import { UpdatePassageStateOps } from '../utils/updatePassageState';
+import MediaPlayer from './MediaPlayer';
 
 const ActionHeight = 52;
 
@@ -305,8 +306,6 @@ interface IStateProps {
   currentlyLoading: number;
   uploadError: string;
   uploadSuccess: boolean[];
-  hasUrl: boolean;
-  mediaUrl: string;
   allBookData: BookName[];
 }
 
@@ -314,7 +313,6 @@ interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
 }
 
 interface IRecordProps {
@@ -353,9 +351,6 @@ export function MediaTab(props: IProps) {
     auth,
     projectplans,
     planColumn,
-    fetchMediaUrl,
-    hasUrl,
-    mediaUrl,
     allBookData,
     attachTool,
   } = props;
@@ -366,10 +361,9 @@ export function MediaTab(props: IProps) {
   const [remote] = useGlobal('remote');
   const [user] = useGlobal('user');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_tab, setTab] = useGlobal('tab');
+  const [, setTab] = useGlobal('tab');
 
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
-  const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
@@ -479,8 +473,6 @@ export function MediaTab(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [complete, setComplete] = useState(0);
   const [autoMatch, setAutoMatch] = useState(false);
-  const audioRef = useRef<any>();
-  const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
@@ -668,19 +660,8 @@ export function MediaTab(props: IProps) {
     setPCheck(checks[0] === pcheck ? checks[1] : checks[0]);
   };
   const handleSelect = (id: string) => () => {
-    if (playing) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    }
-    setPlaying(false);
-    if (id !== playItem) {
-      fetchMediaUrl(id, memory, offline, auth);
-      setPlayItem(id);
-    } else {
-      setPlayItem('');
-    }
+    if (id === playItem) setPlayItem('');
+    else setPlayItem(id);
   };
 
   useEffect(() => {
@@ -908,13 +889,6 @@ export function MediaTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [currentlyLoading]);
-
-  useEffect(() => {
-    if (hasUrl && audioRef.current && !playing && playItem !== '') {
-      setPlaying(true);
-      audioRef.current.play();
-    }
-  }, [hasUrl, mediaUrl, playing, playItem]);
 
   useEffect(() => {
     if (uploadError !== '') {
@@ -1302,7 +1276,7 @@ export function MediaTab(props: IProps) {
           noResponse={handleActionRefused}
         />
       )}
-      {!hasUrl || <audio ref={audioRef} src={mediaUrl} />}
+      <MediaPlayer auth={auth} srcMediaId={playItem} />
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
@@ -1315,8 +1289,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
   uploadError: state.upload.errmsg,
   uploadSuccess: state.upload.success,
   loaded: state.upload.loaded,
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
   allBookData: state.books.bookData,
 });
 
@@ -1326,7 +1298,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
-      fetchMediaUrl: actions.fetchMediaUrl,
     },
     dispatch
   ),
