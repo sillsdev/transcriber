@@ -3,7 +3,13 @@ import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { IState, IMainStrings, Plan, PlanType } from '../model';
+import {
+  IState,
+  IMainStrings,
+  Plan,
+  PlanType,
+  IProjButtonsStrings,
+} from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -12,9 +18,11 @@ import { useRemoteSave } from '../utils/useRemoteSave';
 
 interface IStateProps {
   t: IMainStrings;
+  projButtonStr: IProjButtonsStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
+  projButtonStr: localStrings(state, { layout: 'projButtons' }),
 });
 
 interface IDispatchProps {}
@@ -33,6 +41,7 @@ const initState = {
   tab: 0,
   changeTab: (tab: number) => {},
   t: {} as IMainStrings,
+  projButtonStr: {} as IProjButtonsStrings,
   handleSaveConfirmed: () => {},
   handleSaveRefused: () => {},
   handleMessageReset: () => {},
@@ -57,7 +66,7 @@ const PlanProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { t } = props;
+    const { t, projButtonStr } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
     const [tab, setTab] = React.useState(0);
@@ -76,6 +85,7 @@ const PlanProvider = withData(mapRecordsToProps)(
       message,
       tab,
       t,
+      projButtonStr,
     });
 
     const isScripture = () => {

@@ -39,6 +39,7 @@ import { useInterval } from '../utils/useInterval';
 import { useRemoteSave } from '../utils/useRemoteSave';
 import TaskAvatar from './TaskAvatar';
 import MediaPlayer from './MediaPlayer';
+import { PlanContext } from '../context/PlanContext';
 import Auth from '../auth/Auth';
 
 const ActionHeight = 52;
@@ -203,6 +204,8 @@ export function PlanSheet(props: IProps) {
     auth,
   } = props;
   const classes = useStyles();
+  const ctx = React.useContext(PlanContext);
+  const { projButtonStr } = ctx.state;
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
   const [busy] = useGlobal('remoteBusy');
@@ -773,7 +776,12 @@ export function PlanSheet(props: IProps) {
                   />
                 )}
                 {isDeveloper && (
-                  <ProjButtons {...props} pasting={pasting} data={data} t={t} />
+                  <ProjButtons
+                    {...props}
+                    noImExport={pasting}
+                    noIntegrate={pasting || data.length < 2}
+                    t={projButtonStr}
+                  />
                 )}
                 <div className={classes.grow}>{'\u00A0'}</div>
                 {isDeveloper && <LastEdit when={lastSaved} t={t} />}

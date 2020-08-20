@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import {
   makeStyles,
@@ -51,6 +52,11 @@ const useStyles = makeStyles((theme: Theme) =>
         width: '370px !important',
       },
     },
+    devRoot: {
+      '& tbody > tr:first-child': {
+        display: 'none',
+      },
+    },
     container: {
       display: 'flex',
       justifyContent: 'center',
@@ -68,10 +74,11 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     dialogHeader: theme.mixins.gutters({
-      width: '370px',
+      width: '340px',
+      paddingTop: '8px',
+      paddingBottom: '8px',
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center',
     }) as any,
     editIcon: {
       fontSize: 16,
@@ -357,7 +364,9 @@ export function TaskTable(props: IProps) {
     <div
       id="TaskTable"
       ref={formRef}
-      className={classes.root}
+      className={clsx(classes.root, {
+        [classes.devRoot]: isDeveloper,
+      })}
       style={style}
       data-list={!filter ? 'true' : ''}
     >

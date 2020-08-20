@@ -167,13 +167,6 @@ const initialState = {
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 			"resequence": "Resequence",
 			"lastEdit": "Last edit {0}",
-			"importExport": "Import / Export",
-			"integrations": "Integrations",
-			"import": "Import",
-			"export": "Export",
-			"integrationsTitle": "{0} Integrations",
-			"exportTitle": "{0} Export",
-			"importTitle": "{0} Import",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({
@@ -918,6 +911,17 @@ const initialState = {
 			"canceling": "Canceling...",
 		}
 	}),
+	"projButtons": new LocalizedStrings({
+		"en": {
+			"importExport": "Import / Export",
+			"integrations": "Integrations",
+			"import": "Import",
+			"export": "Export",
+			"integrationsTitle": "{0} Integrations",
+			"exportTitle": "{0} Export",
+			"importTitle": "{0} Import",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -975,6 +979,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"uploadProgress" : new LocalizedStrings(action.payload.data.uploadProgress),
+				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
 			};
 		case SET_LANGUAGE:
 			return {

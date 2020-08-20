@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { IPlanSheetStrings } from '../model';
+import { IProjButtonsStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Divider, Button, Menu, MenuItem } from '@material-ui/core';
 import DropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -25,16 +25,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IStateProps {
-  t: IPlanSheetStrings;
+  t: IProjButtonsStrings;
 }
 
 interface IProps extends IStateProps {
-  pasting: boolean;
-  data: Array<any>;
+  noImExport?: boolean;
+  noIntegrate?: boolean;
+  onLeft?: boolean;
 }
 
 export const ProjButtons = (props: IProps) => {
-  const { pasting, data, t } = props;
+  const { noImExport, noIntegrate, onLeft, t } = props;
   const classes = useStyles();
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan');
@@ -64,7 +65,7 @@ export const ProjButtons = (props: IProps) => {
 
   return (
     <>
-      <Divider orientation="vertical" flexItem />
+      {!onLeft && <Divider orientation="vertical" flexItem />}
       <Button
         key="importExport"
         aria-owns={actionMenuItem !== '' ? 'action-menu' : undefined}
@@ -72,7 +73,7 @@ export const ProjButtons = (props: IProps) => {
         variant="outlined"
         color="primary"
         className={classes.button}
-        disabled={pasting}
+        disabled={noImExport}
         onClick={handleMenu}
       >
         {t.importExport}
@@ -93,7 +94,7 @@ export const ProjButtons = (props: IProps) => {
         variant="outlined"
         color="primary"
         className={classes.button}
-        disabled={pasting || data.length < 2}
+        disabled={noIntegrate}
         onClick={handleIntegrations}
       >
         {t.integrations}
@@ -123,6 +124,7 @@ export const ProjButtons = (props: IProps) => {
       >
         <ImportTab {...props} />
       </BigDialog>
+      {onLeft && <Divider orientation="vertical" flexItem />}
     </>
   );
 };

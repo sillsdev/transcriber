@@ -20,6 +20,7 @@ import {
   BookName,
   ActivityStates,
   RoleNames,
+  IProjButtonsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -34,6 +35,7 @@ interface IStateProps {
   todoStr: IToDoTableStrings;
   taskItemStr: ITaskItemStrings;
   transcriberStr: ITranscriberStrings;
+  projButtonStr: IProjButtonsStrings;
   allBookData: BookName[];
   booksLoaded: boolean;
   lang: string;
@@ -45,6 +47,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
   taskItemStr: localStrings(state, { layout: 'taskItem' }),
   transcriberStr: localStrings(state, { layout: 'transcriber' }),
+  projButtonStr: localStrings(state, { layout: 'projButtons' }),
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
   lang: state.strings.lang,
@@ -120,6 +123,7 @@ const initState = {
   taskItemStr: {} as ITaskItemStrings,
   todoStr: {} as IToDoTableStrings,
   transcriberStr: {} as ITranscriberStrings,
+  projButtonStr: {} as IProjButtonsStrings,
   hasUrl: false,
   mediaUrl: '',
   fetchMediaUrl: actions.fetchMediaUrl,
@@ -148,7 +152,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { passages, mediafiles, sections, plans, planTypes } = props;
     const { projects, groupMemberships, roles } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const { todoStr, taskItemStr, transcriberStr } = props;
+    const { todoStr, taskItemStr, transcriberStr, projButtonStr } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
     const { trackedTask, setTrackedTask } = props;
     const [memory] = useGlobal('memory');
@@ -163,6 +167,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       todoStr,
       taskItemStr,
       transcriberStr,
+      projButtonStr,
       hasUrl,
       mediaUrl,
       fetchMediaUrl,

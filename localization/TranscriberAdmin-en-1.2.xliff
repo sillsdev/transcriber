@@ -866,55 +866,6 @@
         			<context context-type="sourcefile">LastEdit.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="planSheet.importExport">
-        		<source>Import / Export</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">ProjButtons.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.integrations">
-        		<source>Integrations</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">ProjButtons.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.import">
-        		<source>Import</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">ProjButtons.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.export">
-        		<source>Export</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">ProjButtons.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.integrationsTitle">
-        		<source>{0} Integrations</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">ProjButtons.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.exportTitle">
-        		<source>{0} Export</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">ProjButtons.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.importTitle">
-        		<source>{0} Import</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">ProjButtons.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="scriptureTable.section">
                 <source>Section</source>
                 <target/>
@@ -5015,6 +4966,55 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">UploadProgress.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.importExport">
+        		<source>Import / Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.integrations">
+        		<source>Integrations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.import">
+        		<source>Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.export">
+        		<source>Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.integrationsTitle">
+        		<source>{0} Integrations</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.exportTitle">
+        		<source>{0} Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.importTitle">
+        		<source>{0} Import</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
         		</context-group>
         	</trans-unit>
         </body>

@@ -64,6 +64,7 @@ import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
+import { ProjButtons } from '../control/ProjButtons';
 import keycode from 'keycode';
 import moment from 'moment-timezone';
 import {
@@ -145,6 +146,7 @@ export function Transcriber(props: IProps) {
     rowData,
     index,
     transcriberStr,
+    projButtonStr,
     mediaUrl,
     fetchMediaUrl,
     allBookData,
@@ -215,6 +217,7 @@ export function Transcriber(props: IProps) {
   const transcriptionRef = React.useRef<any>();
   const commentRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
+  const [isDeveloper] = useGlobal('developer');
   const t = transcriberStr;
 
   const handleChange = (e: any) => {
@@ -954,6 +957,15 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
+                {isDeveloper && (
+                  <ProjButtons
+                    {...props}
+                    noImExport={playing}
+                    noIntegrate={playing}
+                    onLeft={true}
+                    t={projButtonStr}
+                  />
+                )}
                 {role !== 'view' ? (
                   <>
                     <Button

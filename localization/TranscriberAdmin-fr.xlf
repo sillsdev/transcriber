@@ -739,48 +739,6 @@
 				<target>Dernière modification {0}</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.importExport">
-			<segment>
-				<source>Import / Export</source>
-				<target>Importation / Exportation</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.integrations">
-			<segment>
-				<source>Integrations</source>
-				<target>Intégrations</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.import">
-			<segment>
-				<source>Import</source>
-				<target>Importer</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.export">
-			<segment>
-				<source>Export</source>
-				<target>Exporter</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.integrationsTitle">
-			<segment>
-				<source>{0} Integrations</source>
-				<target>Intégrations de {0}</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.exportTitle">
-			<segment>
-				<source>{0} Export</source>
-				<target>Exportation de {0}</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.importTitle">
-			<segment>
-				<source>{0} Import</source>
-				<target>Importation de {0}</target>
-			</segment>
-		</unit>
 		<unit id="scriptureTable.section">
          <segment>
             <source>Section</source>
@@ -4303,6 +4261,48 @@
 			<segment>
 				<source>Canceling...</source>
 				<target>Annulation...</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.importExport">
+			<segment>
+				<source>Import / Export</source>
+				<target>Importation / Exportation</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.integrations">
+			<segment>
+				<source>Integrations</source>
+				<target>Intégrations</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.import">
+			<segment>
+				<source>Import</source>
+				<target>Importer</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.export">
+			<segment>
+				<source>Export</source>
+				<target>Exporter</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.integrationsTitle">
+			<segment>
+				<source>{0} Integrations</source>
+				<target>Intégrations de {0}</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.exportTitle">
+			<segment>
+				<source>{0} Export</source>
+				<target>Exportation de {0}</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.importTitle">
+			<segment>
+				<source>{0} Import</source>
+				<target>Importation de {0}</target>
 			</segment>
 		</unit>
 	</file>

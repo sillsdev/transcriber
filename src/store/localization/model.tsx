@@ -152,13 +152,6 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "useCtrlV": string;
     "resequence": string;
     "lastEdit": string;
-    "importExport": string;
-    "integrations": string;
-    "import": string;
-    "export": string;
-    "integrationsTitle": string;
-    "exportTitle": string;
-    "importTitle": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
@@ -864,6 +857,16 @@ export interface IUploadProgressStrings extends Localize.LocalizedStringsMethods
     "canceling": string;
 };
 
+export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
+    "importExport": string;
+    "integrations": string;
+    "import": string;
+    "export": string;
+    "integrationsTitle": string;
+    "exportTitle": string;
+    "importTitle": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -916,5 +919,6 @@ export interface ILocalizedStrings {
 	cards: ICardsStrings;
 	vProject: IVProjectStrings;
 	uploadProgress: IUploadProgressStrings;
+	projButtons: IProjButtonsStrings;
 	[key: string]: any;
 };
