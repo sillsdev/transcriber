@@ -506,6 +506,7 @@ export interface IMyTaskStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
+    "tasks": string;
     "filter": string;
     "plan": string;
     "project": string;
@@ -703,6 +704,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "deleteTeam": string;
     "explainTeamDelete": string;
     "members": string;
+    "sync": string;
 };
 
 export interface IVProjectStrings extends Localize.LocalizedStringsMethods {

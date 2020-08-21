@@ -2924,7 +2924,14 @@
                     <context context-type="sourcefile">MyTaskTabs.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="toDoTable.filter">
+        	<trans-unit id="toDoTable.tasks">
+        		<source>Tasks</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ToDoTable.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="toDoTable.filter">
                 <source>Filter</source>
                 <target/>
                 <context-group>
@@ -4041,14 +4048,14 @@
         		<source>Settings</source>
         		<target/>
         		<context-group>
-        			<context context-type="sourcefile">addCard.tsx</context>
+        			<context context-type="sourcefile">ProjectMenu.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="cards.delete">
         		<source>Delete</source>
         		<target/>
         		<context-group>
-        			<context context-type="sourcefile">addCard.tsx</context>
+        			<context context-type="sourcefile">ProjectMenu.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="cards.addTeam">
@@ -4282,8 +4289,15 @@
         			<context context-type="sourcefile">ProjButtons.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="cards.sync">
+        		<source>Sync ({0})</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjectButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="projButtons.integrations">
-        		<source>Integrations</source>
+        		<source>Paratext Integration</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjButtons.tsx</context>

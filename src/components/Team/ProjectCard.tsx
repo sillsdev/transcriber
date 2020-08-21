@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Card,
@@ -12,9 +13,14 @@ import { BsPencilSquare } from 'react-icons/bs';
 import moment from 'moment';
 import { VProject, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
-import { ProjectMenu } from '.';
+import ProjectMenu from './ProjectMenu';
+import { BigDialog } from '../../hoc/BigDialog';
+import IntegrationTab from '../Integration';
+import ExportTab from '../TranscriptionTab';
+import ImportTab from '../ImportTab';
 import Confirm from '../AlertDialog';
 import { ProjectDialog, IProjectDialog } from './ProjectDialog';
+import { usePlan, useProjectPlans } from '../../crud';
 import { camel2Title } from '../../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -64,6 +70,7 @@ export const ProjectCard = (props: IProps) => {
   const { project } = props;
   const ctx = React.useContext(TeamContext);
   const {
+    auth,
     selectProject,
     projectSections,
     projectDescription,
@@ -71,10 +78,18 @@ export const ProjectCard = (props: IProps) => {
     projectUpdate,
     projectDelete,
     cardStrings,
+    projButtonStrings,
   } = ctx.state;
-  const [open, setOpen] = React.useState(false);
+  const { getPlanName } = usePlan();
+  const [projectId] = useGlobal('project');
+  const projectPlans = useProjectPlans();
+  const [openProject, setOpenProject] = React.useState(false);
+  const [openIntegration, setOpenIntegration] = React.useState(false);
+  const [openImport, setOpenImport] = React.useState(false);
+  const [openExport, setOpenExport] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<VProject>();
   const t = cardStrings;
+  const tpb = projButtonStrings;
 
   const handleSelect = (project: VProject) => () => {
     selectProject(project);
@@ -82,14 +97,25 @@ export const ProjectCard = (props: IProps) => {
 
   const handleProjectAction = (what: string) => {
     if (what === 'settings') {
-      setOpen(true);
+      setOpenProject(true);
+    } else if (what === 'sync') {
+      console.log('sync');
+    } else if (what === 'integration') {
+      console.log('integration');
+      setOpenIntegration(true);
+    } else if (what === 'import') {
+      console.log('import');
+      setOpenImport(true);
+    } else if (what === 'export') {
+      console.log('export');
+      setOpenExport(true);
     } else if (what === 'delete') {
       setDeleteItem(project);
     }
   };
 
   const handleOpen = (open: boolean) => {
-    setOpen(open);
+    setOpenProject(open);
   };
 
   const handleCommit = (values: IProjectDialog) => {
@@ -198,10 +224,37 @@ export const ProjectCard = (props: IProps) => {
       <ProjectDialog
         mode={DialogMode.edit}
         values={projectValues(project)}
-        isOpen={open}
+        isOpen={openProject}
         onOpen={handleOpen}
         onCommit={handleCommit}
       />
+      <BigDialog
+        title={tpb.integrationsTitle.replace('{0}', getPlanName(project.id))}
+        isOpen={openIntegration}
+        onOpen={setOpenIntegration}
+      >
+        <IntegrationTab {...props} auth={auth} />
+      </BigDialog>
+      <BigDialog
+        title={tpb.exportTitle.replace('{0}', getPlanName(project.id))}
+        isOpen={openExport}
+        onOpen={setOpenExport}
+      >
+        <ExportTab
+          {...props}
+          auth={auth}
+          projectPlans={projectPlans(projectId)}
+          planColumn={true}
+        />
+      </BigDialog>
+      <BigDialog
+        title={tpb.importTitle.replace('{0}', getPlanName(project.id))}
+        isOpen={openImport}
+        onOpen={setOpenImport}
+      >
+        <ImportTab {...props} auth={auth} />
+      </BigDialog>
+
       {deleteItem && (
         <Confirm
           yesResponse={handleDeleteConfirmed}

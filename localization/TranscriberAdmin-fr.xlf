@@ -2522,13 +2522,19 @@
          	<target>Historique</target>
          </segment>
       </unit>
+		<unit id="toDoTable.tasks">
+			<segment>
+				<source>Tasks</source>
+				<target>Tâches</target>
+			</segment>
+		</unit>
 		<unit id="toDoTable.filter">
 			<segment>
 				<source>Filter</source>
 				<target>Filtre</target>
 			</segment>
 		</unit>
-	<unit id="toDoTable.plan">
+		<unit id="toDoTable.plan">
          <segment>
             <source>Plan</source>
             <target>Programme</target>
@@ -3687,10 +3693,16 @@
 				<target>Importation / Exportation</target>
 			</segment>
 		</unit>
+		<unit id="projButtons.sync">
+			<segment>
+				<source>Sync ({0})</source>
+				<target>Sync ({0})</target>
+			</segment>
+		</unit>
 		<unit id="projButtons.integrations">
 			<segment>
-				<source>Integrations</source>
-				<target>Intégrations</target>
+				<source>Paratext Integration</source>
+				<target>Intégration Paratext</target>
 			</segment>
 		</unit>
 		<unit id="projButtons.import">

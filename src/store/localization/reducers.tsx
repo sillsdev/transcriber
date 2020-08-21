@@ -541,6 +541,7 @@ const initialState = {
 	}),
 	"toDoTable": new LocalizedStrings({
 		"en": {
+			"tasks": "Tasks",
 			"filter": "Filter",
 			"plan": "Plan",
 			"project": "Project",
@@ -747,6 +748,7 @@ const initialState = {
 			"deleteTeam": "Delete Team",
 			"explainTeamDelete": "Deleting the team will delete all projects of the team.",
 			"members": "Members ({0})",
+			"sync": "Sync ({0})",
 		}
 	}),
 	"vProject": new LocalizedStrings({
@@ -783,7 +785,7 @@ const initialState = {
 	"projButtons": new LocalizedStrings({
 		"en": {
 			"importExport": "Import / Export",
-			"integrations": "Integrations",
+			"integrations": "Paratext Integration",
 			"import": "Import",
 			"export": "Export",
 			"integrationsTitle": "{0} Integrations",

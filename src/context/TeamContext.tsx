@@ -19,6 +19,7 @@ import {
   IVProjectStrings,
   ILanguagePickerStrings,
   ISharedStrings,
+  IProjButtonsStrings,
 } from '../model';
 // import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -53,6 +54,7 @@ interface IStateProps {
   cardStrings: ICardsStrings;
   vProjectStrings: IVProjectStrings;
   pickerStrings: ILanguagePickerStrings;
+  projButtonStrings: IProjButtonsStrings;
   ts: ISharedStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
@@ -62,6 +64,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   cardStrings: localStrings(state, { layout: 'cards' }),
   vProjectStrings: localStrings(state, { layout: 'vProject' }),
   pickerStrings: localStrings(state, { layout: 'languagePicker' }),
+  projButtonStrings: localStrings(state, { layout: 'projButtons' }),
   ts: localStrings(state, { layout: 'shared' }),
 });
 
@@ -124,6 +127,7 @@ const initState = {
   cardStrings: {} as ICardsStrings,
   vProjectStrings: {} as IVProjectStrings,
   pickerStrings: {} as ILanguagePickerStrings,
+  projButtonStrings: {} as IProjButtonsStrings,
 };
 
 export type ICtxState = typeof initState & {
@@ -160,6 +164,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       cardStrings,
       vProjectStrings,
       pickerStrings,
+      projButtonStrings,
       doOrbitError,
     } = props;
     const [memory] = useGlobal('memory');
@@ -182,6 +187,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       cardStrings,
       vProjectStrings,
       pickerStrings,
+      projButtonStrings,
     });
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();

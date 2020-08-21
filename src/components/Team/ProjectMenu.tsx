@@ -1,4 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import {
+  IState,
+  ICardsStrings,
+  IProjButtonsStrings,
+  IToDoTableStrings,
+} from '../../model';
+import localStrings from '../../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
 import {
@@ -11,13 +19,17 @@ import {
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
+// import SyncIcon from '@material-ui/icons/Sync';
+import IntegrationIcon from '@material-ui/icons/SyncAlt';
+import ImportIcon from '@material-ui/icons/CloudUpload';
+import ExportIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { TeamContext } from '../../context/TeamContext';
+import FilterIcon from '@material-ui/icons/FilterList';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     icon: {
-      color: theme.palette.primary.main,
+      color: theme.palette.primary.dark,
     },
   })
 );
@@ -53,17 +65,21 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-interface IProps {
+interface IStateProps {
+  t: ICardsStrings;
+  tpb: IProjButtonsStrings;
+  td: IToDoTableStrings;
+}
+
+interface IProps extends IStateProps {
+  inProject?: boolean;
   action?: (what: string) => void;
 }
 
 export function ProjectMenu(props: IProps) {
-  const { action } = props;
+  const { inProject, action, t, tpb, td } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const ctx = React.useContext(TeamContext);
-  const { cardStrings } = ctx.state;
-  const t = cardStrings;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -95,21 +111,64 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <StyledMenuItem onClick={handle('settings')}>
+        {!inProject && (
+          <StyledMenuItem onClick={handle('settings')}>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.settings} />
+          </StyledMenuItem>
+        )}
+        {/* <StyledMenuItem onClick={handle('sync')} disabled={syncDisable}>
           <ListItemIcon>
-            <SettingsIcon />
+            <SyncIcon />
           </ListItemIcon>
-          <ListItemText primary={t.settings} />
-        </StyledMenuItem>
-        <StyledMenuItem onClick={handle('delete')}>
+          <ListItemText
+            primary={tpb.sync.replace('{0}', toBeSynced.toString())}
+          />
+        </StyledMenuItem> */}
+        <StyledMenuItem onClick={handle('integration')}>
           <ListItemIcon>
-            <DeleteIcon />
+            <IntegrationIcon />
           </ListItemIcon>
-          <ListItemText primary={t.delete} />
+          <ListItemText primary={tpb.integrations} />
         </StyledMenuItem>
+        <StyledMenuItem onClick={handle('import')}>
+          <ListItemIcon>
+            <ImportIcon />
+          </ListItemIcon>
+          <ListItemText primary={tpb.import} />
+        </StyledMenuItem>
+        <StyledMenuItem onClick={handle('export')}>
+          <ListItemIcon>
+            <ExportIcon />
+          </ListItemIcon>
+          <ListItemText primary={tpb.export} />
+        </StyledMenuItem>
+        {!inProject ? (
+          <StyledMenuItem onClick={handle('delete')}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.delete} />
+          </StyledMenuItem>
+        ) : (
+          <StyledMenuItem onClick={handle('filter')}>
+            <ListItemIcon>
+              <FilterIcon />
+            </ListItemIcon>
+            <ListItemText primary={td.filter} />
+          </StyledMenuItem>
+        )}
       </StyledMenu>
     </div>
   );
 }
 
-export default ProjectMenu;
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'cards' }),
+  tpb: localStrings(state, { layout: 'projButtons' }),
+  td: localStrings(state, { layout: 'toDoTable' }),
+});
+
+export default connect(mapStateToProps)(ProjectMenu) as any;

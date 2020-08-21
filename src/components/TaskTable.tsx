@@ -2,22 +2,26 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import { Button, IconButton } from '@material-ui/core';
+import { IconButton, Typography } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
 import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
 import SnackBar from './SnackBar';
+import { BigDialog } from '../hoc/BigDialog';
+import IntegrationTab from './Integration';
+import ExportTab from './TranscriptionTab';
+import ImportTab from './ImportTab';
+import ProjectMenu from './Team/ProjectMenu';
 import { formatTime } from '../control';
 import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
 import { sectionNumber, sectionDescription } from '../crud';
 import { numCompare } from '../utils';
+import { usePlan, useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
 
@@ -71,6 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: '8px',
       display: 'flex',
       flexDirection: 'row',
+      alignItems: 'center',
     }) as any,
     editIcon: {
       fontSize: 16,
@@ -112,15 +117,24 @@ export function TaskTable(props: IProps) {
     rowData,
     taskItemStr,
     todoStr,
+    projButtonStr,
     selected,
     expandedGroups,
     filter,
     setFilter,
   } = useTodo();
   const t = todoStr;
+  const tpb = projButtonStr;
   const classes = useStyles();
   const [user] = useGlobal('user');
   const [width, setWidth] = React.useState(window.innerWidth);
+  const { getPlanName } = usePlan();
+  const [planName, setPlanName] = React.useState('');
+  const [projectId] = useGlobal('project');
+  const projectPlans = useProjectPlans();
+  const [openIntegration, setOpenIntegration] = React.useState(false);
+  const [openImport, setOpenImport] = React.useState(false);
+  const [openExport, setOpenExport] = React.useState(false);
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
@@ -176,9 +190,17 @@ export function TaskTable(props: IProps) {
   const handleMessageReset = () => {
     setMessage(<></>);
   };
-  const handleFilter = () => {
-    if (onFilter) onFilter(!filter);
-    setFilter(!filter);
+  const handleProjectMenu = (what: string) => {
+    if (what === 'integration') {
+      setOpenIntegration(true);
+    } else if (what === 'import') {
+      setOpenImport(true);
+    } else if (what === 'export') {
+      setOpenExport(true);
+    } else if (what === 'filter') {
+      if (onFilter) onFilter(!filter);
+      setFilter(!filter);
+    }
   };
 
   const handlePlay = (id: string) => () => {
@@ -287,7 +309,8 @@ export function TaskTable(props: IProps) {
       mediaRemoteId: r.mediaRemoteId,
     }));
     setRows(newRows);
-
+    const newPlanName = newRows.length > 0 ? getPlanName(newRows[0].plan) : '';
+    if (planName !== newPlanName) setPlanName(newPlanName);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, selected]);
 
@@ -361,23 +384,9 @@ export function TaskTable(props: IProps) {
       <div className={classes.container}>
         <div className={classes.paper}>
           <div className={classes.dialogHeader}>
+            <Typography variant="h6">{t.tasks}</Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
-            <Button
-              key="filter"
-              aria-label={t.filter}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleFilter}
-              title={t.showHide}
-            >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon className={classes.icon} />
-              ) : (
-                <FilterIcon className={classes.icon} />
-              )}
-            </Button>
+            <ProjectMenu action={handleProjectMenu} inProject={true} />
           </div>
           <ShapingTable
             columns={columns}
@@ -399,6 +408,32 @@ export function TaskTable(props: IProps) {
         </div>
       </div>
       <MediaPlayer auth={auth} srcMediaId={playItem} />
+      <BigDialog
+        title={tpb.integrationsTitle.replace('{0}', planName)}
+        isOpen={openIntegration}
+        onOpen={setOpenIntegration}
+      >
+        <IntegrationTab {...props} auth={auth} />
+      </BigDialog>
+      <BigDialog
+        title={tpb.exportTitle.replace('{0}', planName)}
+        isOpen={openExport}
+        onOpen={setOpenExport}
+      >
+        <ExportTab
+          {...props}
+          auth={auth}
+          projectPlans={projectPlans(projectId)}
+          planColumn={true}
+        />
+      </BigDialog>
+      <BigDialog
+        title={tpb.importTitle.replace('{0}', planName)}
+        isOpen={openImport}
+        onOpen={setOpenImport}
+      >
+        <ImportTab {...props} auth={auth} />
+      </BigDialog>
       <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );

@@ -2506,6 +2506,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="toDoTable.tasks">
+         <segment>
+            <source>Tasks</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="toDoTable.filter">
          <segment>
             <source>Filter</source>
@@ -3670,9 +3676,15 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.sync">
+         <segment>
+            <source>Sync ({0})</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projButtons.integrations">
          <segment>
-            <source>Integrations</source>
+            <source>Paratext Integration</source>
             <target/>
          </segment>
       </unit>
