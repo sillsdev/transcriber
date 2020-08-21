@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -22,17 +21,18 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
-import related from '../utils/related';
 import Auth from '../auth/Auth';
 import AssignSection from './AssignSection';
 import {
+  related,
   sectionDescription,
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
-} from '../utils';
-import { passageDescription, passageCompare } from '../utils';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
+  passageDescription,
+  passageCompare,
+} from '../crud';
+import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 
 const ActionHeight = 52;
@@ -48,11 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {},
     bar: {
       top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
-    },
-    barDev: {
       left: 0,
       width: '100%',
     },
@@ -172,7 +168,6 @@ export function AssignmentTable(props: IProps) {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
-  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
@@ -276,11 +271,7 @@ export function AssignmentTable(props: IProps) {
   return (
     <div id="AssignmentTable" className={classes.container}>
       <div className={classes.paper}>
-        <AppBar
-          position="fixed"
-          className={clsx(classes.bar, { [classes.barDev]: isDeveloper })}
-          color="default"
-        >
+        <AppBar position="fixed" className={classes.bar} color="default">
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>

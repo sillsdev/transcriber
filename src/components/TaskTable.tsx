@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import clsx from 'clsx';
 import { useGlobal } from 'reactn';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import { Button, IconButton } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
@@ -19,12 +13,12 @@ import ShapingTable from './ShapingTable';
 import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
 import SnackBar from './SnackBar';
-import { formatTime } from './Duration';
+import { formatTime } from '../control';
 import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
-import { sectionNumber, numCompare, sectionDescription } from '../utils';
+import { sectionNumber, sectionDescription } from '../crud';
+import { numCompare } from '../utils';
 import { debounce } from 'lodash';
-import { DrawerTask } from '../routes/drawer';
 import MediaPlayer from './MediaPlayer';
 
 export const TaskItemWidth = 370;
@@ -51,8 +45,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '&[data-list="true"] colgroup col:nth-child(2)': {
         width: '370px !important',
       },
-    },
-    devRoot: {
       '& tbody > tr:first-child': {
         display: 'none',
       },
@@ -127,14 +119,12 @@ export function TaskTable(props: IProps) {
   } = useTodo();
   const t = todoStr;
   const classes = useStyles();
-  const theme = useTheme();
   const [user] = useGlobal('user');
   const [width, setWidth] = React.useState(window.innerWidth);
-  const [isDeveloper] = useGlobal('developer');
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
-    { name: 'plan', title: isDeveloper ? t.project : t.plan },
+    { name: 'plan', title: t.project },
     { name: 'section', title: t.section },
     { name: 'title', title: t.title },
     { name: 'sectPass', title: t.passage },
@@ -201,7 +191,7 @@ export function TaskTable(props: IProps) {
 
   const setDimensions = () => {
     setStyle({ height: window.innerHeight - 100, overflowY: 'auto' });
-    setWidth(window.innerWidth - theme.spacing(DrawerTask));
+    setWidth(window.innerWidth);
   };
 
   useEffect(() => {
@@ -364,9 +354,7 @@ export function TaskTable(props: IProps) {
     <div
       id="TaskTable"
       ref={formRef}
-      className={clsx(classes.root, {
-        [classes.devRoot]: isDeveloper,
-      })}
+      className={classes.root}
       style={style}
       data-list={!filter ? 'true' : ''}
     >

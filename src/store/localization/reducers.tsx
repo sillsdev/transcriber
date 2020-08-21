@@ -74,70 +74,6 @@ const initialState = {
 			"delete": "Delete",
 		}
 	}),
-	"chart": new LocalizedStrings({
-		"en": {
-			"passagesCompleted": "Passages Completed",
-			"totalTransactions": "Total Transactions",
-		}
-	}),
-	"projectSettings": new LocalizedStrings({
-		"en": {
-			"myProject": "My Project",
-			"general": "General",
-			"name": "Name",
-			"createdBy": "Created by {0}",
-			"description": "Description",
-			"projectType": "Project Type",
-			"selectProjectType": "Please select your project type",
-			"language": "Language",
-			"transcriptionLanguage": "Transcription Language",
-			"preferredLanguageName": "Preferred Language Name",
-			"uiLanguagInUserProfile": "(User interface languages are set in the user profile.)",
-			"textEditor": "Text Editor",
-			"defaultFont": "Default Font",
-			"selectDefaultFont": "Please select the preferred default font",
-			"needFont": "Need Font",
-			"addMissingFont": "Can't find the font you need?",
-			"defaultFontSize": "Default Font Size",
-			"selectFontSize": "Please select the default font size",
-			"rightToLeft": "Right to left?",
-			"add": "Save",
-			"upload": "Save and Upload Media",
-			"nextSteps": "Select Next Step and Save",
-			"configure": "Configure a Collaborative Project",
-			"startNow": "Use Defaults to Start Transcribing",
-			"dangerZone": "Danger Zone",
-			"deleteProject": "Delete this Project",
-			"deleteExplained": "All plans, sections, passages, and media files will be removed.",
-			"delete": "DELETE",
-			"save": "Save",
-			"group": "Group",
-			"preview": "Preview",
-			"selectProjectGroup": "Select project group. Each project relates to a single group. Group members can work on the project.",
-			"notAdminInGroup": "You are not an owner in this group, so you will be unable to manage the project.",
-			"defaultPlanName": "Simple Plan",
-			"defaultSectionName": "Section 1",
-			"defaultReference": "Text 1",
-		}
-	}),
-	"planTable": new LocalizedStrings({
-		"en": {
-			"addPlan": "Add Plan",
-			"name": "Name",
-			"type": "Type",
-			"scripture": "Scripture Transcription",
-			"other": "General Transcription",
-			"sections": "Sections",
-			"createdBy": "Created By",
-			"taks": "Passages",
-			"action": "Action",
-			"filter": "Filter",
-			"silTranscriberAdmin": "SIL Transcriber Admin",
-			"choosePlan": "Choose a Project Plan",
-			"loadingTable": "Loading data",
-			"showHideFilter": "Show/Hide filter rows",
-		}
-	}),
 	"planSheet": new LocalizedStrings({
 		"en": {
 			"action": "Action",
@@ -231,23 +167,6 @@ const initialState = {
 			"assignments": "Assignments",
 			"transcriptions": "Transcriptions",
 			"associations": "Associations",
-		}
-	}),
-	"planAdd": new LocalizedStrings({
-		"en": {
-			"name": "Name",
-			"addPlan": "Add Plan",
-			"newPlanTask": "Type the name of the plan, which could be the name of a book of the Bible, a story, a lectionary and so on.",
-			"planType": "Type",
-			"selectPlanType": "Choose the plan type.",
-			"cancel": "Cancel",
-			"add": "Add",
-			"save": "Save",
-			"newPlan": "New Plan",
-			"selectAPlanType": "Please select a plan type",
-			"editPlan": "Edit Plan Details",
-			"scripture": "Scripture Transcription",
-			"other": "General Transcription",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
@@ -459,35 +378,6 @@ const initialState = {
 			"groups": "Groups",
 			"roles": "Roles",
 			"invitations": "Invitations",
-		}
-	}),
-	"groupTable": new LocalizedStrings({
-		"en": {
-			"name": "Name",
-			"abbr": "Abbreviation",
-			"owner": "Owner",
-			"projects": "Projects",
-			"members": "Members",
-			"filter": "Filter",
-			"action": "Action",
-			"delete": "Delete",
-			"removeSelected": "{0} active projects depend on this group. Assign each project to some other group before deleting this group.",
-			"addGroup": "Add Group",
-			"selectRows": "Please select row(s) to {0}.",
-			"showHideFilter": "Show/Hide filter rows",
-		}
-	}),
-	"groupAdd": new LocalizedStrings({
-		"en": {
-			"newGroup": "New Group",
-			"cancel": "Cancel",
-			"add": "Add",
-			"save": "Save",
-			"editGroup": "Edit Group",
-			"addGroup": "Add Group",
-			"newGroupTask": "Type the name and abbreviation of the group.",
-			"name": "Name",
-			"abbr": "Abbreviation",
 		}
 	}),
 	"groupSettings": new LocalizedStrings({
@@ -817,27 +707,6 @@ const initialState = {
 			"other": "General Transcription",
 		}
 	}),
-	"setup": new LocalizedStrings({
-		"en": {
-			"gettingStarted": "Getting Started",
-			"electronTitle": "No Tasks Available",
-			"addPlan": "Add a plan",
-			"upload": "Upload media files",
-			"attach": "Attach media to passages",
-			"assign": "Optionally assign sections to transcribers",
-			"offlineNote": "(Especially if transcribers are working offline)",
-			"electronStep1": "Setup must be done online:",
-			"electronStep2": "Configure the plan, upload media and attach passages",
-			"electronStep4": "Re-export ptf file online and re-import here",
-		}
-	}),
-	"notSetup": new LocalizedStrings({
-		"en": {
-			"welcome": "Welcome to SIL Transcriber",
-			"notReady": "This organization and project are not setup and ready for work yet.",
-			"electronNotReady": "This project must be set up online.  Please contact your project administrator for a ptf file that includes tasks.",
-		}
-	}),
 	"template": new LocalizedStrings({
 		"en": {
 			"templateCodes": "Template Codes",
@@ -936,15 +805,11 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),
-				"chart" : new LocalizedStrings(action.payload.data.chart),
-				"projectSettings" : new LocalizedStrings(action.payload.data.projectSettings),
-				"planTable" : new LocalizedStrings(action.payload.data.planTable),
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),
-				"planAdd" : new LocalizedStrings(action.payload.data.planAdd),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
 				"main" : new LocalizedStrings(action.payload.data.main),
@@ -953,8 +818,6 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"transcriptionTab" : new LocalizedStrings(action.payload.data.transcriptionTab),
 				"transcriptionShow" : new LocalizedStrings(action.payload.data.transcriptionShow),
 				"groupTabs" : new LocalizedStrings(action.payload.data.groupTabs),
-				"groupTable" : new LocalizedStrings(action.payload.data.groupTable),
-				"groupAdd" : new LocalizedStrings(action.payload.data.groupAdd),
 				"groupSettings" : new LocalizedStrings(action.payload.data.groupSettings),
 				"shapingTable" : new LocalizedStrings(action.payload.data.shapingTable),
 				"treeChart" : new LocalizedStrings(action.payload.data.treeChart),
@@ -973,8 +836,6 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),
 				"taskItem" : new LocalizedStrings(action.payload.data.taskItem),
 				"control" : new LocalizedStrings(action.payload.data.control),
-				"setup" : new LocalizedStrings(action.payload.data.setup),
-				"notSetup" : new LocalizedStrings(action.payload.data.notSetup),
 				"template" : new LocalizedStrings(action.payload.data.template),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),

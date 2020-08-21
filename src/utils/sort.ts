@@ -1,9 +1,5 @@
 import moment from 'moment';
 
-export function strCompare(a: string, b: string) {
-  return a > b ? 1 : a < b ? -1 : 0;
-}
-
 export function numCompare(a: number, b: number) {
   return a - b;
 }

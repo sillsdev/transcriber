@@ -15,7 +15,7 @@ export const setDefaultProj = async (
   projs =
     projs &&
     projs
-      .filter(p => related(p, 'organization') === orgId && p.attributes)
+      .filter((p) => related(p, 'organization') === orgId && p.attributes)
       .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
   if (projs && projs.length > 0) {
     let projKey =
@@ -24,7 +24,7 @@ export const setDefaultProj = async (
         localStorage.getItem('lastProj') || '',
         memory.keyMap
       ) || '';
-    if (projs.findIndex(p => p.id === projKey) !== -1) setProject(projKey);
+    if (projs.findIndex((p) => p.id === projKey) !== -1) setProject(projKey);
     else setProject(projs[0].id);
   }
 };

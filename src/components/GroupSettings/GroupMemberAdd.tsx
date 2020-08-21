@@ -24,8 +24,7 @@ import {
 import SnackBar from '../SnackBar';
 import { OptionType } from '../ReactSelect';
 import useStyles from './GroupSettingsStyles';
-import { getRoleId } from '../../utils';
-import { addGroupMember } from '../../utils/groupmembership';
+import { addGroupMember, getRoleId } from '../../crud';
 
 interface IStateProps {
   t: IGroupSettingsStrings;

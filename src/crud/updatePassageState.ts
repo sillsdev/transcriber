@@ -2,7 +2,7 @@ import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { PassageStateChange, ActivityStates, Passage } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { currentDateTime } from './currentDateTime';
+import { currentDateTime } from '../utils/currentDateTime';
 
 const AddPassageStateChangeToOps = (
   t: TransformBuilder,

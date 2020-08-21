@@ -5,7 +5,7 @@ import localStrings from '../../selector/localize';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
-import { related } from '../../utils';
+import { related } from '../../crud';
 import useStyles from './GroupSettingsStyles';
 import getPlan from './GetPlan';
 
@@ -35,11 +35,11 @@ function Involvement(props: IProps) {
   let planData: IPlanData = {};
   sections
     .filter(
-      s =>
+      (s) =>
         (rev && related(s, 'editor') === user) ||
         (!rev && related(s, 'transcriber') === user)
     )
-    .forEach(s => {
+    .forEach((s) => {
       const planName = getPlan(s, plans);
       if (planName) {
         if (planData.hasOwnProperty(planName)) {
@@ -60,7 +60,7 @@ function Involvement(props: IProps) {
       <List className={classes.detail}>
         {keys
           .sort((i, j) => (i < j ? -1 : 1))
-          .map(p => {
+          .map((p) => {
             return (
               <ListItem className={classes.detail}>
                 <ListItemText

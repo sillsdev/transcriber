@@ -16,7 +16,7 @@ import {
 import Memory from '@orbit/memory';
 import OrgData from '../model/orgData';
 import { Project, IApiError } from '../model';
-import { orbitInfo } from './infoMsg';
+import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 
 const completePerTable = 3;

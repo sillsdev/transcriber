@@ -13,8 +13,7 @@ import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
 import bugsnagReact from '@bugsnag/plugin-react';
 import history from './history';
-import { logError, Severity } from './components/logErrorService';
-import { infoMsg } from './utils';
+import { logError, Severity, infoMsg } from './utils';
 import { isElectron, API_CONFIG } from './api-variable';
 const appVersion = require('../package.json').version;
 

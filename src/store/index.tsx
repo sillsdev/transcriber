@@ -3,7 +3,6 @@ import bookReducer from './book/reducers';
 import localizationReducer from './localization/reducers';
 import orbitReducer from './orbit/reducers';
 import uploadReducer from './upload/reducers';
-import contextReducer from './context/reducer';
 import mediaReducer from './media/reducers';
 import paratextReducer from './paratext/reducers';
 import exportReducer from './importexport/reducers';
@@ -14,7 +13,6 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunkMiddleware from 'redux-thunk';
 
 const appReducer = combineReducers({
-  context: contextReducer,
   strings: localizationReducer,
   books: bookReducer,
   orbit: orbitReducer,
@@ -37,7 +35,6 @@ export default function configureStore() {
   );
   return store;
 }
-export * from './context/actions';
 export * from './book/actions';
 export * from './localization/actions';
 export * from './orbit/actions';

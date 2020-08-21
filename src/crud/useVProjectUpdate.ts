@@ -1,8 +1,7 @@
 import { useGlobal } from 'reactn';
 import { VProject } from '../model';
 import { TransformBuilder } from '@orbit/data';
-import { related } from '../utils';
-import { useTypeId } from '.';
+import { related, useTypeId } from '.';
 
 export const useVProjectUpdate = () => {
   const [memory] = useGlobal('memory');

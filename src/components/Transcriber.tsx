@@ -1,6 +1,9 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
+import ReactPlayer from 'react-player';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
+import keycode from 'keycode';
+import moment from 'moment-timezone';
 import {
   MediaFile,
   Project,
@@ -13,12 +16,7 @@ import {
   User,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -44,40 +42,37 @@ import SkipAheadIcon from '@material-ui/icons/FastForward';
 import HistoryIcon from '@material-ui/icons/History';
 import TimerIcon from '@material-ui/icons/AccessTime';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
-import ReactPlayer from 'react-player';
-import Duration, { formatTime } from './Duration';
+import { Duration, formatTime } from '../control';
 import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
 import SnackBar from './SnackBar';
 import {
   sectionDescription,
   passageDescription,
-  relMouseCoords,
   related,
-  insertAtCursor,
   remoteIdGuid,
   remoteIdNum,
   FontData,
   getFontData,
+  UpdatePassageStateOps,
+  AddPassageStateCommentOps,
+} from '../crud';
+import {
+  relMouseCoords,
+  insertAtCursor,
+  useRemoteSave,
+  logError,
+  Severity,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
-import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
 import { ProjButtons } from '../control/ProjButtons';
-import keycode from 'keycode';
-import moment from 'moment-timezone';
 import {
   UpdateRecord,
   UpdateRelatedRecord,
   AddRecord,
 } from '../model/baseModel';
-import {
-  UpdatePassageStateOps,
-  AddPassageStateCommentOps,
-} from '../utils/updatePassageState';
-import { logError, Severity } from '../components/logErrorService';
-import { useRemoteSave } from '../utils/useRemoteSave';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -172,7 +167,6 @@ export function Transcriber(props: IProps) {
     role: '',
   };
   const classes = useStyles();
-  const theme = useTheme();
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -217,7 +211,6 @@ export function Transcriber(props: IProps) {
   const transcriptionRef = React.useRef<any>();
   const commentRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
-  const [isDeveloper] = useGlobal('developer');
   const t = transcriberStr;
 
   const handleChange = (e: any) => {
@@ -580,7 +573,7 @@ export function Transcriber(props: IProps) {
 
   const setDimensions = () => {
     setHeight(window.innerHeight);
-    setWidth(window.innerWidth - theme.spacing(DrawerTask) - TaskItemWidth);
+    setWidth(window.innerWidth - TaskItemWidth - 16);
   };
 
   React.useEffect(() => {
@@ -957,15 +950,13 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
-                {isDeveloper && (
-                  <ProjButtons
-                    {...props}
-                    noImExport={playing}
-                    noIntegrate={playing}
-                    onLeft={true}
-                    t={projButtonStr}
-                  />
-                )}
+                <ProjButtons
+                  {...props}
+                  noImExport={playing}
+                  noIntegrate={playing}
+                  onLeft={true}
+                  t={projButtonStr}
+                />
                 {role !== 'view' ? (
                   <>
                     <Button

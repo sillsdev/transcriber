@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 import { FaCopy } from 'react-icons/fa';
 import SnackBar from './SnackBar';
-import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../utils';
+import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

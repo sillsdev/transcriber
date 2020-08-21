@@ -1,8 +1,7 @@
 import { useGlobal } from 'reactn';
 import { VProject, Plan, Project } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { related } from '../utils';
-import { useTableType } from '.';
+import { related, useTableType } from '.';
 
 export const useVProjectRead = () => {
   const [memory] = useGlobal('memory');

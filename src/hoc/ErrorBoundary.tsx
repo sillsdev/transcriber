@@ -12,8 +12,7 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import { logError, Severity } from '../components/logErrorService';
-import { forceLogin } from '../utils';
+import { logError, Severity, forceLogin } from '../utils';
 import { withBucket } from './withBucket';
 
 const styles = (theme: Theme) =>

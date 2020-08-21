@@ -12,7 +12,7 @@ import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
-import { Severity } from '../../components/logErrorService';
+import { Severity } from '../../utils';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry

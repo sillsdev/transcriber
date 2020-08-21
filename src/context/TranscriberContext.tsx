@@ -25,7 +25,7 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, remoteId, sectionNumber, passageNumber } from '../utils';
+import { related, remoteId, sectionNumber, passageNumber } from '../crud';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -159,7 +159,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
-    const [isDeveloper] = useGlobal('developer');
     const [state, setState] = useState({
       ...initState,
       selected: select || '',
@@ -241,7 +240,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const secRecs = sections.filter((sr) => sr.id === secId);
           if (secRecs.length > 0) {
             const planId = related(secRecs[0], 'plan');
-            if (!isDeveloper || planId === devPlan) {
+            if (planId === devPlan) {
               const planRecs = plans.filter((pl) => pl.id === planId);
               if (planRecs.length > 0) {
                 if (related(planRecs[0], 'project') === project) {

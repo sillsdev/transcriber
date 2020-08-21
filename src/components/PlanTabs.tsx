@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -20,9 +19,8 @@ import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
-import { useOrganizedBy } from '../crud';
-import { related } from '../utils';
+import { HeadHeight } from '../App';
+import { related, useOrganizedBy } from '../crud';
 
 export const TabHeight = 48;
 export enum tabs {
@@ -43,10 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }) as any,
     bar: {
       top: `${HeadHeight}px`,
-      left: `${DrawerWidth}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
-    },
-    barDev: {
+
       left: 0,
       width: '100%',
     },
@@ -90,7 +85,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
   const [busy] = useGlobal('remoteBusy');
-  const [isDeveloper] = useGlobal('developer');
   const getOrganizedBy = useOrganizedBy();
 
   const handleChange = (event: any, value: number) => {
@@ -139,11 +133,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <AppBar
-        position="fixed"
-        className={clsx(classes.bar, { [classes.barDev]: isDeveloper })}
-        color="default"
-      >
+      <AppBar position="fixed" className={classes.bar} color="default">
         <Tabs
           value={tab}
           onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}

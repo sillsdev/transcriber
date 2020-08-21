@@ -73,7 +73,6 @@ const PlanBase = (props: IProps) => {
 export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
   const classes = useStyles();
-  const [isDeveloper] = useGlobal('developer');
   const [project] = useGlobal('project');
   const [plan] = useGlobal('plan');
   const [view, setView] = React.useState('');
@@ -86,7 +85,6 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
     return <TranscribeSwitch switchTo={handleSwitchTo} t={t} />;
   };
 
-  if (!isDeveloper) return <Redirect to="/main" />;
   if (project === '' || plan === '') return <Redirect to="/team" />;
   if (view === 'transcribe') return <Redirect to="/work" />;
 

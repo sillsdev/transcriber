@@ -63,67 +63,6 @@ export interface IProjectTableStrings extends Localize.LocalizedStringsMethods {
     "delete": string;
 };
 
-export interface IChartStrings extends Localize.LocalizedStringsMethods {
-    "passagesCompleted": string;
-    "totalTransactions": string;
-};
-
-export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethods {
-    "myProject": string;
-    "general": string;
-    "name": string;
-    "createdBy": string;
-    "description": string;
-    "projectType": string;
-    "selectProjectType": string;
-    "language": string;
-    "transcriptionLanguage": string;
-    "preferredLanguageName": string;
-    "uiLanguagInUserProfile": string;
-    "textEditor": string;
-    "defaultFont": string;
-    "selectDefaultFont": string;
-    "needFont": string;
-    "addMissingFont": string;
-    "defaultFontSize": string;
-    "selectFontSize": string;
-    "rightToLeft": string;
-    "add": string;
-    "upload": string;
-    "nextSteps": string;
-    "configure": string;
-    "startNow": string;
-    "dangerZone": string;
-    "deleteProject": string;
-    "deleteExplained": string;
-    "delete": string;
-    "save": string;
-    "group": string;
-    "preview": string;
-    "selectProjectGroup": string;
-    "notAdminInGroup": string;
-    "defaultPlanName": string;
-    "defaultSectionName": string;
-    "defaultReference": string;
-};
-
-export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
-    "addPlan": string;
-    "name": string;
-    "type": string;
-    "scripture": string;
-    "other": string;
-    "sections": string;
-    "createdBy": string;
-    "taks": string;
-    "action": string;
-    "filter": string;
-    "silTranscriberAdmin": string;
-    "choosePlan": string;
-    "loadingTable": string;
-    "showHideFilter": string;
-};
-
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "upload": string;
@@ -212,22 +151,6 @@ export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
     "assignments": string;
     "transcriptions": string;
     "associations": string;
-};
-
-export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
-    "name": string;
-    "addPlan": string;
-    "newPlanTask": string;
-    "planType": string;
-    "selectPlanType": string;
-    "cancel": string;
-    "add": string;
-    "save": string;
-    "newPlan": string;
-    "selectAPlanType": string;
-    "editPlan": string;
-    "scripture": string;
-    "other": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
@@ -431,33 +354,6 @@ export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
     "groups": string;
     "roles": string;
     "invitations": string;
-};
-
-export interface IGroupTableStrings extends Localize.LocalizedStringsMethods {
-    "name": string;
-    "abbr": string;
-    "owner": string;
-    "projects": string;
-    "members": string;
-    "filter": string;
-    "action": string;
-    "delete": string;
-    "removeSelected": string;
-    "addGroup": string;
-    "selectRows": string;
-    "showHideFilter": string;
-};
-
-export interface IGroupAddStrings extends Localize.LocalizedStringsMethods {
-    "newGroup": string;
-    "cancel": string;
-    "add": string;
-    "save": string;
-    "editGroup": string;
-    "addGroup": string;
-    "newGroupTask": string;
-    "name": string;
-    "abbr": string;
 };
 
 export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods {
@@ -769,25 +665,6 @@ export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "other": string;
 };
 
-export interface ISetupStrings extends Localize.LocalizedStringsMethods {
-    "gettingStarted": string;
-    "electronTitle": string;
-    "addPlan": string;
-    "upload": string;
-    "attach": string;
-    "assign": string;
-    "offlineNote": string;
-    "electronStep1": string;
-    "electronStep2": string;
-    "electronStep4": string;
-};
-
-export interface INotSetupStrings extends Localize.LocalizedStringsMethods {
-    "welcome": string;
-    "notReady": string;
-    "electronNotReady": string;
-};
-
 export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "templateCodes": string;
     "projectCode": string;
@@ -876,15 +753,11 @@ export interface ILocalizedStrings {
 	usertable: IUsertableStrings;
 	alert: IAlertStrings;
 	projectTable: IProjectTableStrings;
-	chart: IChartStrings;
-	projectSettings: IProjectSettingsStrings;
-	planTable: IPlanTableStrings;
 	planSheet: IPlanSheetStrings;
 	scriptureTable: IScriptureTableStrings;
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
 	planTabs: IPlanTabsStrings;
-	planAdd: IPlanAddStrings;
 	mediaTab: IMediaTabStrings;
 	passageMedia: IPassageMediaStrings;
 	main: IMainStrings;
@@ -893,8 +766,6 @@ export interface ILocalizedStrings {
 	transcriptionTab: ITranscriptionTabStrings;
 	transcriptionShow: ITranscriptionShowStrings;
 	groupTabs: IGroupTabsStrings;
-	groupTable: IGroupTableStrings;
-	groupAdd: IGroupAddStrings;
 	groupSettings: IGroupSettingsStrings;
 	shapingTable: IShapingTableStrings;
 	treeChart: ITreeChartStrings;
@@ -913,8 +784,6 @@ export interface ILocalizedStrings {
 	deleteExpansion: IDeleteExpansionStrings;
 	taskItem: ITaskItemStrings;
 	control: IControlStrings;
-	setup: ISetupStrings;
-	notSetup: INotSetupStrings;
 	template: ITemplateStrings;
 	cards: ICardsStrings;
 	vProject: IVProjectStrings;

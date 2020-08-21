@@ -18,8 +18,8 @@ import {
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus } from '../AxiosStatus';
-import { logError, Severity } from '../../components/logErrorService';
-import { getMediaProjRec, getMediaRec, fileJson, infoMsg } from '../../utils';
+import { getMediaProjRec, getMediaRec } from '../../crud';
+import { fileJson, infoMsg, logError, Severity } from '../../utils';
 import MemorySource from '@orbit/memory';
 
 export const getUserName = (
@@ -36,7 +36,7 @@ export const getUserName = (
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
-    .then(response => {
+    .then((response) => {
       dispatch({ payload: response.data, type: USERNAME_SUCCESS });
     })
     .catch((err: AxiosError) => {
@@ -71,7 +71,7 @@ export const getProjects = (
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
-    .then(response => {
+    .then((response) => {
       let pt: ParatextProject[] = [];
       for (let ix = 0; ix < response.data.length; ix++) {
         let o: ParatextProject = {
@@ -89,7 +89,7 @@ export const getProjects = (
       }
       dispatch({ payload: pt, type: PROJECTS_SUCCESS });
     })
-    .catch(err => {
+    .catch((err) => {
       logError(Severity.info, errorReporter, infoMsg(err, 'Projects failed'));
       dispatch({ payload: errStatus(err), type: PROJECTS_ERROR });
     });
@@ -157,10 +157,10 @@ export const getCount = (
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
-    .then(response => {
+    .then((response) => {
       dispatch({ payload: response.data, type: COUNT_SUCCESS });
     })
-    .catch(err => {
+    .catch((err) => {
       logError(Severity.info, errorReporter, infoMsg(err, 'Count failed'));
       dispatch({ payload: errStatus(err), type: COUNT_ERROR });
     });
@@ -177,8 +177,8 @@ export const getLocalCount = (
     type: COUNT_PENDING,
   });
   const ready = passages
-    .filter(p => p.attributes.state === ActivityStates.Approved)
-    .filter(p => {
+    .filter((p) => p.attributes.state === ActivityStates.Approved)
+    .filter((p) => {
       const projRec = getMediaProjRec(getMediaRec(p.id, memory), memory);
       return projRec && projRec.id === project;
     });
@@ -201,11 +201,11 @@ export const syncProject = (
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
-    .then(response => {
+    .then((response) => {
       dispatch({ payload: response.data, type: SYNC_SUCCESS });
       getCount(auth, projectId, errorReporter, '');
     })
-    .catch(err => {
+    .catch((err) => {
       logError(Severity.info, errorReporter, infoMsg(err, 'Sync Failed'));
       dispatch({ payload: errStatus(err), type: SYNC_ERROR });
     });

@@ -1,10 +1,7 @@
 import { useGlobal } from 'reactn';
 import { Passage, MediaFile, ActivityStates } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { remoteIdGuid } from '../utils';
-import { saveNewSection } from './saveNewSection';
-import { remoteIdNum } from '../utils';
-import { AddFlatPassage } from '../utils/updatePassageState';
+import { remoteIdGuid, saveNewSection, remoteIdNum, AddFlatPassage } from '.';
 
 export const useFlatAdd = () => {
   const [memory] = useGlobal('memory');

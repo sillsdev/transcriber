@@ -35,7 +35,7 @@ import { withData } from '../mods/react-orbitjs';
 import AdmZip from 'adm-zip';
 import Confirm from '../components/AlertDialog';
 import { isElectron, API_CONFIG } from '../api-variable';
-import { HeadHeight } from './drawer';
+import { HeadHeight } from '../App';
 
 const reactStringReplace = require('react-string-replace');
 

@@ -30,11 +30,9 @@ interface IProps {
 
 export const TeamScreen = (props: IProps) => {
   const classes = useStyles();
-  const [isDeveloper] = useGlobal('developer');
   const [project] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
 
-  if (!isDeveloper) return <Redirect to="/main" />;
   if (project !== '' && projRole !== '')
     return <Redirect to={projRole === 'admin' ? '/plan' : '/work'} />;
 

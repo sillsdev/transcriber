@@ -5,8 +5,8 @@ import {
   AddRecordOperation,
 } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { currentDateTime } from '../utils/currentDateTime';
-import { related } from '../utils';
+import { related } from '../crud';
+import { currentDateTime } from '../utils';
 
 export interface BaseModel extends Record {
   attributes: {

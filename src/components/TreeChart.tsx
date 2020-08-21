@@ -17,8 +17,12 @@ import {
   TableHeaderRow,
   TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
-import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
-import './TreeChart.css';
+import {
+  withStyles,
+  Theme,
+  createStyles,
+  makeStyles,
+} from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
@@ -77,22 +81,19 @@ const LegendLabel: any = withStyles(legendLabelStyles, { name: 'LegendLabel' })(
 );
 
 const barSeriesForTask = (planwork: any) =>
-  Object.keys(planwork[0]).reduce(
-    (acc, item, index) => {
-      if (item !== 'task') {
-        acc.push(
-          <BarSeries
-            key={index.toString()}
-            valueField={item}
-            argumentField="task"
-            name={item}
-          />
-        );
-      }
-      return acc;
-    },
-    [] as any
-  );
+  Object.keys(planwork[0]).reduce((acc, item, index) => {
+    if (item !== 'task') {
+      acc.push(
+        <BarSeries
+          key={index.toString()}
+          valueField={item}
+          argumentField="task"
+          name={item}
+        />
+      );
+    }
+    return acc;
+  }, [] as any);
 
 const gridDetailContainerBase = (data1: any, data2: any) => ({
   row,
@@ -195,9 +196,13 @@ export interface IWork {
   work: Array<ITargetWork>;
 }
 
-const initialState = {
-  columns: [{ name: 'plan', title: 'Plan' }],
-};
+const useStyles = makeStyles({
+  root: {
+    '& .MuiTableRow-head': {
+      display: 'none',
+    },
+  },
+});
 
 interface IProps {
   rows: Array<IPlanRow>;
@@ -205,34 +210,21 @@ interface IProps {
   data2: Array<IWork>;
 }
 
-export default class TreeChart extends React.PureComponent<
-  IProps,
-  typeof initialState
-> {
-  public state = { ...initialState };
+export const TreeChart = (props: IProps) => {
+  const { rows, data1, data2 } = props;
+  const classes = useStyles();
+  const [columns] = React.useState([{ name: 'plan', title: 'Plan' }]);
 
-  constructor(props: IProps) {
-    super(props);
-
-    this.state = initialState;
-  }
-
-  public render() {
-    const { columns } = this.state;
-    const { rows, data1, data2 } = this.props;
-
-    return (
-      <Paper id="TreeChart">
-        <Grid rows={rows} columns={columns}>
-          {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
-          <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
-          <Table noDataCellComponent={NoDataCell} />
-          <TableHeaderRow />
-          <TableRowDetail
-            contentComponent={gridDetailContainer(data1, data2)}
-          />
-        </Grid>
-      </Paper>
-    );
-  }
-}
+  return (
+    <Paper id="TreeChart" className={classes.root}>
+      <Grid rows={rows} columns={columns}>
+        {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
+        <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
+        <Table noDataCellComponent={NoDataCell} />
+        <TableHeaderRow />
+        <TableRowDetail contentComponent={gridDetailContainer(data1, data2)} />
+      </Grid>
+    </Paper>
+  );
+};
+export default TreeChart;

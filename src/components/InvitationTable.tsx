@@ -23,7 +23,7 @@ import Invite, { IInviteData } from './Invite';
 import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related } from '../utils';
+import { related } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

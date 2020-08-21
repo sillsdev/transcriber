@@ -46,24 +46,23 @@ import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
 import Auth from '../auth/Auth';
 import {
+  remoteId,
+  related,
+  remoteIdNum,
   sectionNumber,
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
-} from '../utils/section';
-import { passageCompare, passageDescription } from '../utils/passage';
-import {
+  passageCompare,
+  passageDescription,
   getMediaRec,
   getMediaEaf,
-  remoteId,
-  related,
-  remoteIdNum,
   getMediaName,
-} from '../utils';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
+  getMediaInPlans,
+} from '../crud';
+import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
-import { getMediaInPlans } from '../utils/getMediaInPlans';
 
 const ActionHeight = 52;
 
@@ -75,18 +74,11 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {},
     bar: {
       top: `calc(${TabHeight}px + ${HeadHeight}px)`,
-      left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
-    },
-    highBar: {
-      top: `${HeadHeight}px`,
-    },
-    barDev: {
       left: 0,
       width: '100%',
     },
-    barDialog: {
+    highBar: {
       left: 'auto',
       top: 'auto',
       position: 'unset',
@@ -274,7 +266,6 @@ export function TranscriptionTab(props: IProps) {
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
-  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
@@ -695,8 +686,6 @@ export function TranscriptionTab(props: IProps) {
           position="fixed"
           className={clsx(classes.bar, {
             [classes.highBar]: planColumn,
-            [classes.barDev]: isDeveloper && !planColumn,
-            [classes.barDialog]: isDeveloper && planColumn,
           })}
           color="default"
         >

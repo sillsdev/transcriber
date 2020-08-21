@@ -8,7 +8,7 @@ import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
 import { useGlobal } from 'reactn';
-import { logError, Severity } from '../components/logErrorService';
+import { logError, Severity } from '../utils';
 import { useInterval } from '../utils/useInterval';
 
 const Expires = 0; // Set to 7110 to test 1:30 token

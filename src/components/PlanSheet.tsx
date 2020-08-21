@@ -1,21 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import clsx from 'clsx';
 import { useGlobal } from 'reactn';
 import { IPlanSheetStrings, ISharedStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Button,
-  Menu,
-  MenuItem,
-  AppBar,
-  Checkbox,
-  Switch,
-  FormControlLabel,
-  IconButton,
-} from '@material-ui/core';
+import { Button, Menu, MenuItem, AppBar, IconButton } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import UploadIcon from '@material-ui/icons/CloudUploadOutlined';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
@@ -31,7 +20,7 @@ import BookSelect from './BookSelect';
 import { ProjButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
 import { isNumber } from 'util';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { Online } from '../utils';
 import { useOrganizedBy } from '../crud';
@@ -52,11 +41,6 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {},
     bar: {
       top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      left: `${DrawerWidth}px`,
-      height: `${ActionHeight}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
-    },
-    barDev: {
       left: 0,
       width: '100%',
       height: '42px',
@@ -194,7 +178,6 @@ export function PlanSheet(props: IProps) {
     paste,
     resequence,
     inlinePassages,
-    toggleInline,
     onTranscribe,
     onAssign,
     onPlay,
@@ -217,7 +200,6 @@ export function PlanSheet(props: IProps) {
     j: number;
   }>(initialPosition);
   const [data, setData] = useState(Array<Array<ICell>>());
-  const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
@@ -226,7 +208,6 @@ export function PlanSheet(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [online, setOnline] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
-  const [isDeveloper] = useGlobal('developer');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
   const currentRow = useRef<number>(-1);
@@ -248,23 +229,6 @@ export function PlanSheet(props: IProps) {
   const isSection = (row: Array<any>) =>
     /^[0-9]+$/.test(row[SectionSeqCol].toString());
 
-  const handleCheck = (row: number) => (e: any) => {
-    if (e.target.checked) {
-      check.push(row);
-      if (isSection(rowData[row])) {
-        do {
-          row += 1;
-          if (row === rowData.length || isSection(rowData[row])) {
-            break;
-          }
-          check.push(row);
-        } while (true);
-      }
-      setCheck([...check]);
-    } else {
-      setCheck(check.filter((listIndex) => listIndex !== row));
-    }
-  };
   const handleAddSection = () => {
     addSection();
   };
@@ -294,17 +258,6 @@ export function PlanSheet(props: IProps) {
     cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell.value;
-  const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
-  const handleConfirmAction = (what: string) => (e: any) => {
-    setActionMenuItem(null);
-    if (!/Close/i.test(what)) {
-      if (check.length === 0) {
-        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
-      } else {
-        setConfirmAction(what);
-      }
-    }
-  };
   const handleConfirmDelete = (rowIndex: number) => (e: any) => {
     const toDelete = [rowIndex - 1];
     if (isSection(rowData[rowIndex - 1])) {
@@ -399,14 +352,6 @@ export function PlanSheet(props: IProps) {
   const handlePassageBelow = () => {
     addPassage(position.i - 1, false);
     setPosition(initialPosition);
-  };
-  const handlePassageBelowSection = () => {
-    addPassage(position.i - 1, true);
-    setPosition(initialPosition);
-  };
-  const handleToggleInline = (event: any) => {
-    setCheck(Array<number>());
-    toggleInline(event);
   };
   const removeBlanks = (clipBoard: string) => {
     const blankLines = /\r?\n\t*\r?\n/;
@@ -517,21 +462,13 @@ export function PlanSheet(props: IProps) {
         const isPassage = isIndex(row[PassageSeqCol]);
         return [
           {
-            value: isDeveloper ? (
-              isSection ? (
-                <>
-                  <TaskAvatar assigned={transcriber(rowIndex + 1)} />
-                  <TaskAvatar assigned={editor(rowIndex + 1)} />
-                </>
-              ) : (
-                <></>
-              )
+            value: isSection ? (
+              <>
+                <TaskAvatar assigned={transcriber(rowIndex + 1)} />
+                <TaskAvatar assigned={editor(rowIndex + 1)} />
+              </>
             ) : (
-              <Checkbox
-                data-testid={check.includes(rowIndex) ? 'checked' : 'check'}
-                checked={check.includes(rowIndex)}
-                onChange={handleCheck(rowIndex)}
-              />
+              <></>
             ),
             className: isSection ? 'set' : 'pass',
           } as ICell,
@@ -565,69 +502,67 @@ export function PlanSheet(props: IProps) {
         );
       })
     );
-    if (isDeveloper) {
-      data = data.map((row, rowIndex) => {
-        const isSection = isIndex(row[SectionSeqCol + 1].value);
-        const isPassage = isIndex(row[PassageSeqCol + 1].value);
-        return row.concat(
-          rowIndex === 0
-            ? []
-            : [
-                {
-                  value: (
-                    <div className={classes.arrangeActions}>
-                      {isPassage && (
-                        <>
-                          <IconButton
-                            className={classes.actionButton}
-                            title={t.upload}
-                          >
-                            <UploadIcon />
-                          </IconButton>
-                          <IconButton
-                            className={classes.actionButton}
-                            title={t.play}
-                            disabled={!hasMedia(rowIndex)}
-                            onClick={handlePlayStatus(rowIndex)}
-                          >
-                            {isPlaying(rowIndex) ? <PauseIcon /> : <PlayIcon />}
-                          </IconButton>
-                        </>
-                      )}
-                      {isSection && (
+    data = data.map((row, rowIndex) => {
+      const isSection = isIndex(row[SectionSeqCol + 1].value);
+      const isPassage = isIndex(row[PassageSeqCol + 1].value);
+      return row.concat(
+        rowIndex === 0
+          ? []
+          : [
+              {
+                value: (
+                  <div className={classes.arrangeActions}>
+                    {isPassage && (
+                      <>
                         <IconButton
                           className={classes.actionButton}
-                          title={t.assign}
-                          onClick={onAssign([rowIndex])}
+                          title={t.upload}
                         >
-                          <AssignIcon />
+                          <UploadIcon />
                         </IconButton>
-                      )}
-                      {isPassage && (
                         <IconButton
                           className={classes.actionButton}
-                          title={t.transcribe}
-                          onClick={onTranscribe(rowIndex)}
+                          title={t.play}
                           disabled={!hasMedia(rowIndex)}
+                          onClick={handlePlayStatus(rowIndex)}
                         >
-                          <TranscribeIcon />
+                          {isPlaying(rowIndex) ? <PauseIcon /> : <PlayIcon />}
                         </IconButton>
-                      )}
+                      </>
+                    )}
+                    {isSection && (
                       <IconButton
                         className={classes.actionButton}
-                        title={t.delete}
-                        onClick={handleConfirmDelete(rowIndex)}
+                        title={t.assign}
+                        onClick={onAssign([rowIndex])}
                       >
-                        <DeleteIcon />
+                        <AssignIcon />
                       </IconButton>
-                    </div>
-                  ),
-                  className: isSection ? 'set' : 'pass',
-                } as ICell,
-              ]
-        );
-      });
-    }
+                    )}
+                    {isPassage && (
+                      <IconButton
+                        className={classes.actionButton}
+                        title={t.transcribe}
+                        onClick={onTranscribe(rowIndex)}
+                        disabled={!hasMedia(rowIndex)}
+                      >
+                        <TranscribeIcon />
+                      </IconButton>
+                    )}
+                    <IconButton
+                      className={classes.actionButton}
+                      title={t.delete}
+                      onClick={handleConfirmDelete(rowIndex)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                ),
+                className: isSection ? 'set' : 'pass',
+              } as ICell,
+            ]
+      );
+    });
     setData(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData, check, bookCol, columns, playingIndex]);
@@ -675,11 +610,7 @@ export function PlanSheet(props: IProps) {
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        <AppBar
-          position="fixed"
-          className={clsx(classes.bar, { [classes.barDev]: isDeveloper })}
-          color="default"
-        >
+        <AppBar position="fixed" className={classes.bar} color="default">
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
@@ -697,7 +628,7 @@ export function PlanSheet(props: IProps) {
                   )}
                   <AddIcon className={classes.icon} />
                 </Button>
-                {(!isDeveloper || (isDeveloper && !inlinePassages)) && (
+                {!inlinePassages && (
                   <Button
                     key="addPassage"
                     aria-label={t.addPassage}
@@ -734,57 +665,15 @@ export function PlanSheet(props: IProps) {
                 >
                   {t.resequence}
                 </Button>
-                {!isDeveloper && (
-                  <>
-                    <Button
-                      key="action"
-                      aria-owns={
-                        actionMenuItem !== '' ? 'action-menu' : undefined
-                      }
-                      aria-label={t.action}
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleMenu}
-                    >
-                      {t.action}
-                      <DropDownIcon className={classes.icon} />
-                    </Button>
-                    <Menu
-                      id="action-menu"
-                      anchorEl={actionMenuItem}
-                      open={Boolean(actionMenuItem)}
-                      onClose={handleConfirmAction('Close')}
-                    >
-                      <MenuItem onClick={handleConfirmAction('Delete')}>
-                        {t.delete}
-                      </MenuItem>
-                    </Menu>
-                  </>
-                )}
-                {!isDeveloper && (
-                  <FormControlLabel
-                    className={classes.lessEmphasis}
-                    control={
-                      <Switch
-                        checked={inlinePassages}
-                        onChange={handleToggleInline}
-                        color="primary"
-                      />
-                    }
-                    label={t.inlineToggle}
-                  />
-                )}
-                {isDeveloper && (
-                  <ProjButtons
-                    {...props}
-                    noImExport={pasting}
-                    noIntegrate={pasting || data.length < 2}
-                    t={projButtonStr}
-                  />
-                )}
+
+                <ProjButtons
+                  {...props}
+                  noImExport={pasting}
+                  noIntegrate={pasting || data.length < 2}
+                  t={projButtonStr}
+                />
                 <div className={classes.grow}>{'\u00A0'}</div>
-                {isDeveloper && <LastEdit when={lastSaved} t={t} />}
+                <LastEdit when={lastSaved} t={t} />
                 <Button
                   key="save"
                   aria-label={t.save}
@@ -826,15 +715,8 @@ export function PlanSheet(props: IProps) {
           {position.i > 0 && isSection(rowData[position.i - 1]) && (
             <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
           )}
-          {inlinePassages &&
-            !isDeveloper &&
-            position.i > 0 &&
-            isSection(rowData[position.i - 1]) && (
-              <MenuItem onClick={handlePassageBelowSection}>
-                {t.passageBelowSection}
-              </MenuItem>
-            )}
-          {(!isDeveloper || !inlinePassages) && (
+
+          {!inlinePassages && (
             <MenuItem onClick={handlePassageBelow}>
               {t.passageBelow.replace(
                 '{0}',

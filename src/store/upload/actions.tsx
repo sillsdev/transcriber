@@ -10,8 +10,7 @@ import {
   UPLOAD_ITEM_FAILED,
   UPLOAD_COMPLETE,
 } from './types';
-import logError, { Severity } from '../../components/logErrorService';
-import { infoMsg } from '../../utils';
+import { infoMsg, logError, Severity } from '../../utils';
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
   dispatch({

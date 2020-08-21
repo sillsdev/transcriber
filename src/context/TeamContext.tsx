@@ -23,10 +23,12 @@ import {
 // import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, Online } from '../utils';
-import { LoadProjectData } from '../utils/loadData';
+import { Online } from '../utils';
 import localStrings from '../selector/localize';
 import {
+  related,
+  LoadProjectData,
+  useFlatAdd,
   useVProjectCreate,
   useVProjectRead,
   useVProjectUpdate,
@@ -41,7 +43,6 @@ import {
   useRole,
 } from '../crud';
 import Auth from '../auth/Auth';
-import { useFlatAdd } from '../crud/useFlatAdd';
 
 export type TeamIdType = Organization | null;
 

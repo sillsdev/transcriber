@@ -20,21 +20,18 @@ import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
-import { parseQuery } from '../utils/parseQuery';
+import { uiLang, Online, localeDefault, parseQuery } from '../utils';
 import {
   related,
-  hasAnyRelated,
-  setDefaultProj,
-  uiLang,
   remoteId,
+  hasAnyRelated,
+  createOrg,
   GetUser,
+  getOrgs,
   remoteIdGuid,
-  Online,
-  localeDefault,
-} from '../utils';
-import { createOrg } from '../crud';
+  setDefaultProj,
+} from '../crud';
 import SnackBar from '../components/SnackBar';
-import { getOrgs } from '../utils/getOrgs';
 import { isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
 
@@ -129,7 +126,7 @@ export function Loading(props: IProps) {
   const [_coordinatorActivated, setCoordinatorActivated] = useGlobal(
     'coordinatorActivated'
   );
-  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [, setIsDeveloper] = useGlobal('developer');
   const [completed, setCompleted] = useState(0);
   const [newOrgParams, setNewOrgParams] = useState(
     localStorage.getItem('newOrg')
@@ -331,9 +328,7 @@ export function Loading(props: IProps) {
     ) {
       return <Redirect to="/profile" />;
     }
-    if (isDeveloper) return <Redirect to={'/team'} />;
-    const deepLink = localStorage.getItem('url');
-    return <Redirect to={deepLink ? deepLink : '/main'} />;
+    return <Redirect to={'/team'} />;
   }
 
   return (

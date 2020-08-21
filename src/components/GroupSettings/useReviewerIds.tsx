@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { GroupMembership, Role, RoleNames } from '../../model';
-import { related, getRoleId } from '../../utils';
+import { related, getRoleId } from '../../crud';
 import { IPerson } from './TeamCol';
 
 interface IProps {
@@ -17,10 +17,10 @@ function useReviewerIds(props: IProps): IPerson[] {
 
   return groupMemberships
     .filter(
-      gm =>
+      (gm) =>
         related(gm, 'group') === group && related(gm, 'role') !== transcriberId
     )
-    .map(gm => ({
+    .map((gm) => ({
       canDelete: related(gm, 'role') === editorId,
       user: related(gm, 'user'),
     }));

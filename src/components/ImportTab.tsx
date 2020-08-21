@@ -39,7 +39,7 @@ import {
 } from '../routes/ElectronImport';
 import { useGlobal } from 'reactn';
 import AdmZip from 'adm-zip';
-import { remoteIdNum, passageDescription, remoteIdGuid } from '../utils';
+import { remoteIdNum, passageDescription, remoteIdGuid } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
 import { dateChanges } from '../routes/dateChanges';

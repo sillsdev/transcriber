@@ -12,13 +12,9 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
-import { useRole } from '../crud';
+import { remoteIdGuid, useRole } from '../crud';
 import Auth from '../auth/Auth';
-import { remoteIdGuid } from '../utils';
-
-const DrawerMin = 0;
-const DrawerTask = 0;
-const HeadHeight = 64;
+import { HeadHeight } from '../App';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,19 +33,13 @@ const useStyles = makeStyles((theme: Theme) =>
     topFilter: {
       zIndex: 2,
       position: 'absolute',
-      left: theme.spacing(DrawerMin) + 1,
-      [theme.breakpoints.up('sm')]: {
-        left: theme.spacing(DrawerTask) + 1,
-      },
+      left: 0,
       backgroundColor: 'white',
     },
     topTranscriber: {
       zIndex: 1,
       position: 'absolute',
-      left: theme.spacing(DrawerMin) + TaskItemWidth + theme.spacing(0.5),
-      [theme.breakpoints.up('sm')]: {
-        left: theme.spacing(DrawerTask) + TaskItemWidth + theme.spacing(0.5),
-      },
+      left: TaskItemWidth + theme.spacing(0.5),
     },
   })
 );
@@ -77,7 +67,6 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const { pathname } = history?.location;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
-  const [isDeveloper] = useGlobal('developer');
   const [project] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
   const [topFilter, setTopFilter] = React.useState(false);
@@ -108,7 +97,6 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!isDeveloper) return <Redirect to="/main" />;
   if (project === '') return <Redirect to="/team" />;
   if (view === 'admin') return <Redirect to="/plan" />;
 

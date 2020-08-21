@@ -39,11 +39,12 @@ import {
 import SnackBar from './SnackBar';
 import UserAvatar from './UserAvatar';
 import {
+  related,
+  getRoleId,
   sectionTranscriberName,
   sectionEditorName,
   sectionNumber,
-} from '../utils/section';
-import { related, getRoleId } from '../utils';
+} from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -119,13 +120,13 @@ function AssignSection(props: IProps) {
 
   const handleSelectTranscriber = (id: string) => () => {
     setSelectedTranscriber(id);
-    sections.forEach(function(s) {
+    sections.forEach(function (s) {
       assign(s, id, RoleNames.Transcriber);
     });
   };
   const handleSelectReviewer = (id: string) => () => {
     setSelectedReviewer(id);
-    sections.forEach(function(s) {
+    sections.forEach(function (s) {
       assign(s, id, RoleNames.Editor);
     });
   };
@@ -136,16 +137,16 @@ function AssignSection(props: IProps) {
     setSelectedReviewer('');
   }, [visible]);
 
-  const projectRec = projects.filter(p => p.id === project);
+  const projectRec = projects.filter((p) => p.id === project);
   const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
   const transcriberRoleId = getRoleId(roles, RoleNames.Transcriber);
 
   const transcriberIds = groupMemberships
-    .filter(gm => related(gm, 'group') === groupId)
-    .map(gm => related(gm, 'user'));
+    .filter((gm) => related(gm, 'group') === groupId)
+    .map((gm) => related(gm, 'user'));
 
   const transcriberUserList = users
-    .filter(u => u.attributes && transcriberIds.indexOf(u.id) !== -1)
+    .filter((u) => u.attributes && transcriberIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -172,13 +173,13 @@ function AssignSection(props: IProps) {
 
   const editorIds = groupMemberships
     .filter(
-      gm =>
+      (gm) =>
         related(gm, 'group') === groupId &&
         related(gm, 'role') !== transcriberRoleId
     )
-    .map(gm => related(gm, 'user'));
+    .map((gm) => related(gm, 'user'));
   const editorUserList = users
-    .filter(u => u.attributes && editorIds.indexOf(u.id) !== -1)
+    .filter((u) => u.attributes && editorIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (

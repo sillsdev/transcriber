@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { Plan } from '../model';
 import { QueryBuilder, Record } from '@orbit/data';
-import { related } from '../utils';
+import { related } from '.';
 
 export const useTableType = (table: string) => {
   const [memory] = useGlobal('memory');

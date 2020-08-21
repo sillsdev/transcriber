@@ -16,8 +16,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { TransformBuilder } from '@orbit/data';
-import { sectionNumber, sectionDescription, remoteIdNum } from '../utils';
-import PeopleIcon from '@material-ui/icons/PeopleAlt';
+import { sectionNumber, sectionDescription, remoteIdNum } from '../crud';
 import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
@@ -55,7 +54,6 @@ export function TaskHead(props: IProps) {
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
-  const [isDeveloper] = useGlobal('developer');
   const [menuItem, setMenuItem] = React.useState(null);
   const t = taskItemStr;
 
@@ -158,7 +156,7 @@ export function TaskHead(props: IProps) {
             onClick={handleMenu}
             aria-owns={menuItem !== '' ? 'action-menu' : undefined}
           >
-            {isDeveloper ? <PeopleIconOutline /> : <PeopleIcon />}
+            <PeopleIconOutline />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>

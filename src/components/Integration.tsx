@@ -32,13 +32,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SyncIcon from '@material-ui/icons/Sync';
 import CheckIcon from '@material-ui/icons/Check';
 import SnackBar from '../components/SnackBar';
-import {
-  remoteIdNum,
-  related,
-  Online,
-  localSync,
-  getParatextDataPath,
-} from '../utils';
+import { remoteIdNum, related } from '../crud';
+import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';

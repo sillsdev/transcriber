@@ -32,13 +32,8 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import SnackBar from './SnackBar';
-import {
-  validateEmail,
-  related,
-  getRoleId,
-  getUserById,
-  remoteIdNum,
-} from '../utils';
+import { related, getRoleId, getUserById, remoteIdNum } from '../crud';
+import { validateEmail } from '../utils';
 import { schema } from '../schema';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord } from '../model/baseModel';

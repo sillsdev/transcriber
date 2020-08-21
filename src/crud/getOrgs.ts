@@ -11,10 +11,10 @@ export function getOrgs(memory: Memory, currentUser: string): Organization[] {
     let oms: OrganizationMembership[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organizationmembership')
     ) as any;
-    orgs = orgs.filter(o =>
+    orgs = orgs.filter((o) =>
       oms
-        .filter(om => related(om, 'user') === currentUser)
-        .map(om => related(om, 'organization'))
+        .filter((om) => related(om, 'user') === currentUser)
+        .map((om) => related(om, 'organization'))
         .includes(o.id)
     );
   }

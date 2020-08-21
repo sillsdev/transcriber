@@ -7,7 +7,7 @@ import { IState, IMediaTabStrings, ISharedStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
-import { remoteIdNum } from '../utils';
+import { remoteIdNum } from '../crud';
 import Auth from '../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>

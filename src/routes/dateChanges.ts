@@ -10,9 +10,9 @@ import Memory from '@orbit/memory';
 import { DataChange } from '../model/dataChange';
 import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
-import { remoteIdGuid } from '../utils';
+import { remoteIdGuid } from '../crud';
 import JSONAPISource from '@orbit/jsonapi';
-import { currentDateTime } from '../utils/currentDateTime';
+import { currentDateTime } from '../utils';
 
 export const dateChanges = (
   auth: Auth,

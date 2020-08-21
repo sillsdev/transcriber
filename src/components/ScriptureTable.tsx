@@ -21,12 +21,7 @@ import localStrings from '../selector/localize';
 import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
 import SnackBar from './SnackBar';
 import PlanSheet from './PlanSheet';
@@ -35,15 +30,12 @@ import {
   remoteIdNum,
   remoteIdGuid,
   related,
-  Online,
-  currentDateTime,
   getMediaRec,
-} from '../utils';
+  useOrganizedBy,
+} from '../crud';
+import { Online, currentDateTime, useRemoteSave } from '../utils';
 import { isUndefined } from 'util';
-import { DrawerTask } from '../routes/drawer';
 import { debounce } from 'lodash';
-import { useOrganizedBy } from '../crud';
-import { useRemoteSave } from '../utils/useRemoteSave';
 import AssignSection from './AssignSection';
 import Auth from '../auth/Auth';
 
@@ -140,14 +132,12 @@ export function ScriptureTable(props: IProps) {
   } = props;
   const classes = useStyles();
   const [width, setWidth] = React.useState(window.innerWidth);
-  const theme = useTheme();
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [doSave] = useGlobal('doSave');
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
-  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [rowId, setRowId] = useState(Array<Array<ISequencedRecordIdentity>>());
   const [inlinePassages, setInlinePassages] = useState({
@@ -667,7 +657,7 @@ export function ScriptureTable(props: IProps) {
   }
 
   const setDimensions = () => {
-    setWidth(window.innerWidth - theme.spacing(DrawerTask));
+    setWidth(window.innerWidth);
   };
 
   const handleTranscribe = (i: number) => () => {
@@ -714,9 +704,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   useEffect(() => {
-    const inlinePref = isDeveloper
-      ? getFlat(plan)
-      : localStorage.getItem('inline-passages');
+    const inlinePref = getFlat(plan);
     if (inlinePref !== null) {
       setInlinePassages({
         defaultSet: true,
@@ -1047,9 +1035,7 @@ export function ScriptureTable(props: IProps) {
     const colMul = colMx.map((v) => v / total);
     const extra = Math.max(width - 1020, 0);
     const colAdd = colMul.map((v) => Math.floor(extra * v));
-    const organizedBy = isDeveloper
-      ? getOrganizedBy(plan) || t.section
-      : t.section;
+    const organizedBy = getOrganizedBy(plan) || t.section;
     let colHead = [
       { value: organizedBy, readOnly: true, width: 60 + colAdd[0] },
       { value: t.title, readOnly: true, width: 100 + colAdd[1] },
@@ -1067,15 +1053,13 @@ export function ScriptureTable(props: IProps) {
       { value: t.description, readOnly: true, width: 100 + colAdd[nx + 1] },
     ]);
     nx += 2;
-    if (isDeveloper) {
-      colHead = colHead.concat([
-        {
-          value: t.action,
-          readOnly: true,
-          width: inlinePassages.inline ? 250 : 200,
-        },
-      ]);
-    }
+    colHead = colHead.concat([
+      {
+        value: t.action,
+        readOnly: true,
+        width: inlinePassages.inline ? 250 : 200,
+      },
+    ]);
     if (
       colHead.length !== columns.length ||
       columns[1].width !== colHead[1].width

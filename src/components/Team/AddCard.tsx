@@ -10,7 +10,7 @@ import Uploader, { statusInit } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
-import { waitForRemoteId } from '../../utils';
+import { waitForRemoteId } from '../../crud';
 import { Redirect } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>

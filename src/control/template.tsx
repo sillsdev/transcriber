@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import InfoIcon from '@material-ui/icons/Info';
-import { related } from '../utils';
+import { related } from '../crud';
 
 interface IstrMap {
   [key: string]: string;

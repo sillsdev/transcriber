@@ -1,5 +1,5 @@
 import { Project } from '../model';
-import { dataPath } from '.';
+import { dataPath } from '../utils';
 import path from 'path';
 
 export interface FontData {

@@ -4,7 +4,6 @@ import {
   User,
   IOrbitState,
   IUploadState,
-  IContextState,
   IMediaState,
   IParatextState,
   IImportExportState,
@@ -12,7 +11,6 @@ import {
 } from '.';
 
 export interface IState {
-  context: IContextState;
   strings: ILocalizedStrings;
   books: IBookNameData;
   orbit: IOrbitState;

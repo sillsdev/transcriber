@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { Role } from '../model';
 import { QueryBuilder, Record } from '@orbit/data';
-import { related } from '../utils';
+import { related } from '../crud';
 import { useAllUserGroup } from '.';
 
 export const useRole = () => {

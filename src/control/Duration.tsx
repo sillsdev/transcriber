@@ -25,7 +25,7 @@ interface IProps {
   seconds: number;
 }
 
-export default function Duration(props: IProps) {
+export function Duration(props: IProps) {
   const { direction, id, seconds } = props;
 
   return (
@@ -34,3 +34,5 @@ export default function Duration(props: IProps) {
     </time>
   );
 }
+
+export default Duration;

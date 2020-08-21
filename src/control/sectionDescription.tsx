@@ -1,7 +1,7 @@
 import React from 'react';
 import { Section } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { sectionNumber } from '../utils';
+import { sectionNumber } from '../crud';
 import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>

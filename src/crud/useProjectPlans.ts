@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { Plan } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { related } from '../utils';
+import { related } from '.';
 
 export const useProjectPlans = () => {
   const [memory] = useGlobal('memory');

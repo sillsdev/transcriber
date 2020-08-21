@@ -1,9 +1,10 @@
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { Organization } from '../model';
-import { TransformBuilder } from '@orbit/data';
-import { setDefaultProj, orbitErr } from '../utils';
 import Coordinator from '@orbit/coordinator';
+import { TransformBuilder } from '@orbit/data';
+import { setDefaultProj } from '.';
+import { orbitErr } from '../utils';
 import { IApiError } from '../model';
 
 export const ReloadOrgTables = async (

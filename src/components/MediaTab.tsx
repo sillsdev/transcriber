@@ -44,23 +44,22 @@ import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import Busy from './Busy';
 import Template from '../control/template';
-import related from '../utils/related';
 import Auth from '../auth/Auth';
 import moment from 'moment';
 import 'moment/locale/fr';
 import {
+  related,
   remoteIdNum,
   remoteId,
   passageReference,
   sectionDescription,
-  localeDefault,
-} from '../utils';
+  getMediaInPlans,
+  UpdatePassageStateOps,
+} from '../crud';
 import { useGlobal } from 'reactn';
-import { dateCompare, numCompare } from '../utils/sort';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import { dateCompare, numCompare, localeDefault } from '../utils';
+import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
-import { getMediaInPlans } from '../utils/getMediaInPlans';
-import { UpdatePassageStateOps } from '../utils/updatePassageState';
 import MediaPlayer from './MediaPlayer';
 
 const ActionHeight = 52;
@@ -73,16 +72,12 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {},
     bar: {
       top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
+      left: 0,
+      width: '100%',
     },
     highBar: {
       top: `${HeadHeight}px`,
-    },
-    barDev: {
-      left: 0,
-      width: '100%',
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
@@ -365,7 +360,6 @@ export function MediaTab(props: IProps) {
 
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [errorReporter] = useGlobal('errorReporter');
-  const [isDeveloper] = useGlobal('developer');
   const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
@@ -1100,7 +1094,6 @@ export function MediaTab(props: IProps) {
           position="fixed"
           className={clsx(classes.bar, {
             [classes.highBar]: planColumn,
-            [classes.barDev]: isDeveloper,
           })}
           color="default"
         >

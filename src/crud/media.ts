@@ -1,9 +1,10 @@
 import { MediaFile, Plan, Project, Passage, Section } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { related, cleanFileName, updateXml } from '.';
+import { related } from '.';
+import { cleanFileName, updateXml } from '../utils';
 import moment from 'moment';
-import eaf from './transcriptionEaf';
+import eaf from '../utils/transcriptionEaf';
 import path from 'path';
 
 export const getMediaRec = (passageId: string, memory: Memory) => {
@@ -20,7 +21,7 @@ export const getMediaRec = (passageId: string, memory: Memory) => {
     : null;
 };
 
-export const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
+const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   let planRec: Plan | undefined = undefined;
   if (rec) {
     const planId = related(rec, 'plan') as string;
@@ -43,7 +44,7 @@ export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
   return projRec;
 };
 
-export const getMediaLang = (rec: MediaFile | null, memory: Memory) => {
+const getMediaLang = (rec: MediaFile | null, memory: Memory) => {
   const projRec = getMediaProjRec(rec, memory);
   return projRec && projRec.attributes && projRec.attributes.language;
 };

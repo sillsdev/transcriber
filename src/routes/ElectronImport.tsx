@@ -2,21 +2,18 @@
 import { remote, OpenDialogSyncOptions } from 'electron';
 */
 import AdmZip from 'adm-zip';
-
-import MemorySource from '@orbit/memory';
-import { IApiError } from '../model';
-import * as action from '../store';
-import { QueryBuilder } from '@orbit/data';
-import { Project, IElectronImportStrings } from '../model';
-import { isArray } from 'util';
-import { remoteIdGuid } from '../utils';
-import moment, { Moment } from 'moment';
-import IndexedDBSource from '@orbit/indexeddb';
-import { dataPath } from '../utils/dataPath';
 import fs from 'fs';
 import path from 'path';
+import moment, { Moment } from 'moment';
 import { OpenDialogSyncOptions } from 'electron';
-import { orbitInfo } from '../utils';
+import MemorySource from '@orbit/memory';
+import { IApiError, Project, IElectronImportStrings } from '../model';
+import * as action from '../store';
+import { QueryBuilder } from '@orbit/data';
+import IndexedDBSource from '@orbit/indexeddb';
+import { remoteIdGuid } from '../crud';
+import { dataPath, orbitInfo } from '../utils';
+import { isArray } from 'util';
 import { isElectron } from '../api-variable';
 
 export interface IImportData {

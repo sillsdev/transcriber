@@ -15,8 +15,8 @@ import Auth from './auth/Auth';
 import { API_CONFIG } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
-import { LoadData } from './utils/loadData';
-import { orbitRetry, related, orbitErr } from './utils';
+import { related, LoadData } from './crud';
+import { orbitRetry, orbitErr } from './utils';
 import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (

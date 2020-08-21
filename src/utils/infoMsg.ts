@@ -1,6 +1,6 @@
 import { IApiError } from '../model';
-import { Severity } from '../components/logErrorService';
 import { ServerError } from '@orbit/data';
+import { Severity } from '.';
 
 export const infoMsg = (e: Error, info: string) => ({
   ...e,

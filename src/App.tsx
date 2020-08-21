@@ -4,7 +4,6 @@ import { Route, Redirect } from 'react-router-dom';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core';
 import Access from './routes/Access';
 import Logout from './routes/Logout';
-import Drawer from './routes/drawer';
 import Loading from './routes/Loading';
 import Profile from './routes/Profile';
 import TeamScreen from './routes/TeamScreen';
@@ -17,6 +16,8 @@ import Callback from './callback/Callback';
 import TokenCheck from './hoc/TokenCheck';
 import Auth from './auth/Auth';
 import { parseQuery } from './utils/parseQuery';
+
+export const HeadHeight = 64;
 
 const auth = new Auth();
 
@@ -91,10 +92,6 @@ class App extends React.Component {
           <Route
             path="/loading"
             render={(props) => <Loading auth={auth} {...props} />}
-          />
-          <Route
-            path="/main"
-            render={(props) => <Drawer auth={auth} {...props} />}
           />
           <Route
             path="/profile"

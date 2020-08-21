@@ -1,5 +1,5 @@
 import { Passage, BookName } from '../model';
-import { numCompare } from './sort';
+import { numCompare } from '../utils/sort';
 
 export function passageNumber(passage: Passage) {
   return passage.attributes && passage.attributes.sequencenum
@@ -63,23 +63,6 @@ export function parseRef(a: Passage) {
       }
     }
   }
-}
-export function passageRefCompare(a: Passage, b: Passage) {
-  if (!a.attributes || !b.attributes) return -1;
-
-  parseRef(a);
-  parseRef(b);
-  return a.startChapter === b.startChapter
-    ? a.startVerse === b.startVerse
-      ? a.attributes.reference < b.attributes.reference
-        ? -1
-        : 1
-      : a.startVerse < b.startVerse
-      ? -1
-      : 1
-    : a.startChapter < b.startChapter
-    ? -1
-    : 1;
 }
 
 /* build the passage ref = book + reference */

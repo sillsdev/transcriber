@@ -13,8 +13,8 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related } from '../utils';
-import { useRemoteSave } from '../utils/useRemoteSave';
+import { related } from '../crud';
+import { useRemoteSave } from '../utils';
 
 interface IStateProps {
   t: IMainStrings;

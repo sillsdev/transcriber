@@ -81,7 +81,6 @@ export const AppHead = withBucket(
     const { auth, history, resetRequests, SwitchTo, t } = props;
     const classes = useStyles();
     const [isOffline] = useGlobal('offline');
-    const [isDeveloper] = useGlobal('developer');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setProjRole] = useGlobal('projRole');
@@ -111,7 +110,7 @@ export const AppHead = withBucket(
 
     return (
       <AppBar position="fixed" className={classes.appBar} color="inherit">
-        {isDeveloper && plan !== '' ? (
+        {plan !== '' ? (
           <Toolbar>
             <IconButton onClick={handleHome}>
               <HomeIcon />

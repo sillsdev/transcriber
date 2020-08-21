@@ -10,13 +10,13 @@ import {
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import TaskFlag from './TaskFlag';
-import Duration from './Duration';
+import { Duration } from '../control';
 import {
   related,
   sectionNumber,
   passageNumber,
   passageReference,
-} from '../utils';
+} from '../crud';
 import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
 

@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { Group } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { related } from '../utils';
+import { related } from '.';
 
 export const useAllUserGroup = () => {
   const [memory] = useGlobal('memory');

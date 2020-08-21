@@ -24,7 +24,7 @@ import TeamCol from './TeamCol';
 import GroupMemberAdd from './GroupMemberAdd';
 import Confirm from '../AlertDialog';
 import { OptionType } from '../ReactSelect';
-import { related, getRoleId } from '../../utils';
+import { related, getRoleId } from '../../crud';
 import SnackBar from '../SnackBar';
 
 interface IStateProps {
@@ -72,9 +72,9 @@ function Team(props: IProps) {
   const getGroups = (userId: string) => {
     return groupMemberships
       .filter(
-        gm => related(gm, 'group') === group && related(gm, 'user') === userId
+        (gm) => related(gm, 'group') === group && related(gm, 'user') === userId
       )
-      .map(gm => gm.id);
+      .map((gm) => gm.id);
   };
 
   const handleDeleteConfirmed = () => {
@@ -112,13 +112,13 @@ function Team(props: IProps) {
     const roleIndex = groupRoles.indexOf(role);
     const groupRole = groupMemberships
       .filter(
-        gm => related(gm, 'group') === group && related(gm, 'user') === userId
+        (gm) => related(gm, 'group') === group && related(gm, 'user') === userId
       )
-      .map(gm => related(gm, 'role'));
+      .map((gm) => related(gm, 'role'));
     if (groupRole.length === 0) return true;
     const roleName = roles
-      .filter(r => r.id === groupRole[0])
-      .map(r => r.attributes && r.attributes.roleName);
+      .filter((r) => r.id === groupRole[0])
+      .map((r) => r.attributes && r.attributes.roleName);
     if (roleName.length === 0) return false; // This should not happen
     const roleKey = roleName[0];
     return groupRoles.indexOf(roleKey as RoleNames) > roleIndex;
@@ -126,18 +126,18 @@ function Team(props: IProps) {
 
   const handleAdd = (role: RoleNames) => {
     const allOrgUserIds = orgMemberships
-      .filter(om => related(om, 'organization') === organization)
-      .map(om => related(om, 'user'));
+      .filter((om) => related(om, 'organization') === organization)
+      .map((om) => related(om, 'user'));
     setOrgPeople(
       users
         .filter(
-          u =>
+          (u) =>
             u.attributes &&
             allOrgUserIds.indexOf(u.id) !== -1 &&
             roleCheck(u.id, role)
         )
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map(u => {
+        .map((u) => {
           return { label: u.attributes.name, value: u.id } as OptionType;
         })
     );
@@ -149,8 +149,8 @@ function Team(props: IProps) {
 
   useEffect(() => {
     const groupAll = groups
-      .filter(g => g.id === group && g.attributes)
-      .map(g => g.attributes.allUsers);
+      .filter((g) => g.id === group && g.attributes)
+      .map((g) => g.attributes.allUsers);
     if (groupAll.length > 0) setAllUsers(groupAll[0]);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [group]);

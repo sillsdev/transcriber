@@ -43,15 +43,13 @@ import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
 import {
   remoteId,
-  makeAbbr,
-  uiLang,
   related,
   remoteIdNum,
   getRoleRec,
   getMbrRoleRec,
   allUsersRec,
-  localeDefault,
-} from '../utils';
+} from '../crud';
+import { makeAbbr, uiLang, localeDefault } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
