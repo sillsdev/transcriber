@@ -151,6 +151,8 @@ export const ProjectCard = (props: IProps) => {
 
   moment.locale(ctx.state.lang);
 
+  const sectionCount = projectSections(project);
+
   return (
     <div className={classes.root}>
       <Card className={classes.card} onClick={handleSelect(project)}>
@@ -174,12 +176,13 @@ export const ProjectCard = (props: IProps) => {
             {t.language.replace('{0}', projectLanguage(project))}
           </Typography>
           <Typography variant="body2" component="p">
-            {t.sectionStatus
-              .replace('{0}', projectSections(project))
-              .replace(
-                '{1}',
-                camel2Title(project?.attributes?.organizedBy || t.sections)
-              )}
+            {sectionCount !== '<na>' &&
+              t.sectionStatus
+                .replace('{0}', sectionCount)
+                .replace(
+                  '{1}',
+                  camel2Title(project?.attributes?.organizedBy || t.sections)
+                )}
           </Typography>
         </CardContent>
         {project?.attributes?.tags && (
