@@ -80,6 +80,7 @@ export const AppHead = withBucket(
   connect(mapStateToProps)((props: IProps) => {
     const { auth, history, resetRequests, SwitchTo, t } = props;
     const classes = useStyles();
+    const pathname = history?.location?.pathname;
     const [isOffline] = useGlobal('offline');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
@@ -89,12 +90,7 @@ export const AppHead = withBucket(
     const { getPlanName } = usePlan();
 
     const handleUserMenu = (what: string) => {
-      handleUserMenuAction(
-        what,
-        history.location.pathname,
-        setView,
-        resetRequests
-      );
+      handleUserMenuAction(what, pathname, setView, resetRequests);
     };
 
     const handleHome = () => {
@@ -107,6 +103,8 @@ export const AppHead = withBucket(
     if (view === 'Error') return <Redirect to="/error" />;
     if (view === 'Profile') return <Redirect to="/profile" />;
     if (view === 'Logout') return <Redirect to="/logout" />;
+    if (!auth || !auth.isAuthenticated(isOffline))
+      return <Redirect to="/logout" />;
 
     return (
       <AppBar position="fixed" className={classes.appBar} color="inherit">
@@ -120,6 +118,11 @@ export const AppHead = withBucket(
             </Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
             <Typography variant="h6" noWrap>
+              {`${
+                pathname && pathname.indexOf('work') > 0
+                  ? t.transcribe
+                  : t.admin
+              } - `}
               {t.silTranscriber}
             </Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
