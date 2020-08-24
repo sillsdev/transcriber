@@ -17,6 +17,7 @@ import {
   ITaskItemStrings,
   IToDoTableStrings,
   ITranscriberStrings,
+  IProjButtonsStrings,
   BookName,
   ActivityStates,
   RoleNames,
@@ -35,6 +36,7 @@ interface IStateProps {
   todoStr: IToDoTableStrings;
   taskItemStr: ITaskItemStrings;
   transcriberStr: ITranscriberStrings;
+  projButtonStr: IProjButtonsStrings;
   sharedStr: ISharedStrings;
   allBookData: BookName[];
   booksLoaded: boolean;
@@ -47,6 +49,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
   taskItemStr: localStrings(state, { layout: 'taskItem' }),
   transcriberStr: localStrings(state, { layout: 'transcriber' }),
+  projButtonStr: localStrings(state, { layout: 'projButton' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
@@ -124,6 +127,7 @@ const initState = {
   sharedStr: {} as ISharedStrings,
   todoStr: {} as IToDoTableStrings,
   transcriberStr: {} as ITranscriberStrings,
+  projButtonStr: {} as IProjButtonsStrings,
   hasUrl: false,
   mediaUrl: '',
   fetchMediaUrl: actions.fetchMediaUrl,
@@ -152,7 +156,13 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { passages, mediafiles, sections, plans, planTypes } = props;
     const { projects, groupMemberships, roles } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const { todoStr, taskItemStr, transcriberStr, sharedStr } = props;
+    const {
+      todoStr,
+      taskItemStr,
+      transcriberStr,
+      projButtonStr,
+      sharedStr,
+    } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
     const { trackedTask, setTrackedTask } = props;
     const [memory] = useGlobal('memory');
@@ -166,6 +176,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       todoStr,
       taskItemStr,
       transcriberStr,
+      projButtonStr,
       sharedStr,
       hasUrl,
       mediaUrl,
