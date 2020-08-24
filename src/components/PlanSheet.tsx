@@ -673,7 +673,7 @@ export function PlanSheet(props: IProps) {
                   t={projButtonStr}
                 />
                 <div className={classes.grow}>{'\u00A0'}</div>
-                <LastEdit when={lastSaved} t={t} />
+                <LastEdit when={lastSaved} t={ts} />
                 <Button
                   key="save"
                   aria-label={t.save}

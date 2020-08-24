@@ -5,7 +5,14 @@
 
     <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
         <body>
-           <trans-unit id="shared.NoSaveOffline">
+        	<trans-unit id="shared.lastEdit">
+        		<source>Last save {0}</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="shared.NoSaveOffline">
             	<source>Unable to save while offline.</source>
                 <target/>
                 <context-group>
@@ -493,13 +500,6 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanSheet.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.lastEdit">
-        		<source>Last edit {0}</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">LastEdit.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="scriptureTable.section">

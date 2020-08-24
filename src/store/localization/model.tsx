@@ -2,6 +2,7 @@
 import * as Localize from 'react-localization';
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
+    "lastEdit": string;
     "NoSaveOffline": string;
 };
 
@@ -90,7 +91,6 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "pasting": string;
     "useCtrlV": string;
     "resequence": string;
-    "lastEdit": string;
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {

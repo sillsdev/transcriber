@@ -1,7 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
 	<file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
-      <unit id="shared.NoSaveOffline">
+		<unit id="shared.lastEdit">
+			<segment>
+				<source>Last save {0}</source>
+				<target>Dernière modification {0}</target>
+			</segment>
+		</unit>
+		<unit id="shared.NoSaveOffline">
          <segment>
             <source>Unable to save while offline.</source>
             <target>Impossible d'enregistrer en mode hors connexion.</target>
@@ -431,12 +437,6 @@
 			<segment>
 				<source>Resequence</source>
 				<target>Resequene</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.lastEdit">
-			<segment>
-				<source>Last edit {0}</source>
-				<target>Dernière modification {0}</target>
 			</segment>
 		</unit>
 		<unit id="scriptureTable.section">

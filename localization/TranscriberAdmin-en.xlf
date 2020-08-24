@@ -4,6 +4,12 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
+      <unit id="shared.lastEdit">
+         <segment>
+            <source>Last save {0}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.NoSaveOffline">
          <segment>
             <source>Unable to save while offline.</source>
@@ -421,12 +427,6 @@
       <unit id="planSheet.resequence">
          <segment>
             <source>Resequence</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.lastEdit">
-         <segment>
-            <source>Last edit {0}</source>
             <target/>
          </segment>
       </unit>

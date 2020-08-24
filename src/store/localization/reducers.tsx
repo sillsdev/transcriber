@@ -8,6 +8,7 @@ const initialState = {
 	"lang": 'en',
 	"shared": new LocalizedStrings({
 		"en": {
+			"lastEdit": "Last save {0}",
 			"NoSaveOffline": "Unable to save while offline.",
 		}
 	}),
@@ -102,7 +103,6 @@ const initialState = {
 			"pasting": "Pasting",
 			"useCtrlV": "Select a column head and use CTRL-V to append table rows.",
 			"resequence": "Resequence",
-			"lastEdit": "Last edit {0}",
 		}
 	}),
 	"scriptureTable": new LocalizedStrings({

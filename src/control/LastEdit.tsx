@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { IPlanSheetStrings } from '../model';
+import { ISharedStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import moment from 'moment-timezone';
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IStateProps {
-  t: IPlanSheetStrings;
+  t: ISharedStrings;
 }
 
 interface IProps extends IStateProps {

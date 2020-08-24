@@ -63,11 +63,12 @@ import {
   useRemoteSave,
   logError,
   Severity,
+  currentDateTime,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
-import { ProjButtons } from '../control/ProjButtons';
+import { LastEdit } from '../control';
 import {
   UpdateRecord,
   UpdateRelatedRecord,
@@ -141,7 +142,7 @@ export function Transcriber(props: IProps) {
     rowData,
     index,
     transcriberStr,
-    projButtonStr,
+    sharedStr,
     mediaUrl,
     fetchMediaUrl,
     allBookData,
@@ -196,6 +197,7 @@ export function Transcriber(props: IProps) {
   const [width, setWidth] = React.useState(window.innerWidth);
   const [boxHeight, setBoxHeight] = React.useState(height - NON_BOX_HEIGHT);
   const [textValue, setTextValue] = React.useState('');
+  const [lastSaved, setLastSaved] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
   const [message, setMessage] = React.useState(<></>);
   const [makeComment, setMakeComment] = React.useState(false);
@@ -455,6 +457,7 @@ export function Transcriber(props: IProps) {
           if (postComment) setComment('');
           loadHistory();
           saveCompleted('');
+          setLastSaved(currentDateTime());
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
@@ -615,6 +618,7 @@ export function Transcriber(props: IProps) {
       setTranscriptionIn(transcription);
       setTextValue(transcription);
       setDefaultPosition(attr.position);
+      setLastSaved(attr.dateUpdated);
       //focus on player
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
@@ -950,69 +954,67 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
-                <ProjButtons
-                  {...props}
-                  noImExport={playing}
-                  noIntegrate={playing}
-                  onLeft={true}
-                  t={projButtonStr}
-                />
-                {role !== 'view' ? (
-                  <>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleReject}
-                      disabled={playing}
-                    >
-                      {t.reject}
-                    </Button>
-                    <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
+                <div>
+                  <LastEdit when={lastSaved} t={sharedStr} />
+                  {role !== 'view' ? (
+                    <>
                       <Button
                         variant="outlined"
                         color="primary"
                         className={classes.button}
-                        onClick={handleSaveButton}
+                        onClick={handleReject}
                         disabled={playing}
                       >
-                        {t.save}
+                        {t.reject}
                       </Button>
-                    </Tooltip>
-                    <Tooltip
-                      title={
-                        transcribing
-                          ? t.submitTranscriptionTip
-                          : t.submitReviewTip
+                      <Tooltip
+                        title={transcribing ? t.saveTip : t.saveReviewTip}
+                      >
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          className={classes.button}
+                          onClick={handleSaveButton}
+                          disabled={playing}
+                        >
+                          {t.save}
+                        </Button>
+                      </Tooltip>
+                      <Tooltip
+                        title={
+                          transcribing
+                            ? t.submitTranscriptionTip
+                            : t.submitReviewTip
+                        }
+                      >
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                          onClick={handleSubmit}
+                          disabled={playing}
+                        >
+                          {t.submit}
+                        </Button>
+                      </Tooltip>
+                    </>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleReopen}
+                      disabled={
+                        !previous.hasOwnProperty(state) ||
+                        playing ||
+                        (user !== related(section, 'transcriber') &&
+                          !/admin/i.test(projRole))
                       }
                     >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={handleSubmit}
-                        disabled={playing}
-                      >
-                        {t.submit}
-                      </Button>
-                    </Tooltip>{' '}
-                  </>
-                ) : (
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleReopen}
-                    disabled={
-                      !previous.hasOwnProperty(state) ||
-                      playing ||
-                      (user !== related(section, 'transcriber') &&
-                        !/admin/i.test(projRole))
-                    }
-                  >
-                    {t.reopen}
-                  </Button>
-                )}
+                      {t.reopen}
+                    </Button>
+                  )}
+                </div>
               </Grid>
             </Grid>
           </Grid>
