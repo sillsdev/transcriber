@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core';
@@ -58,7 +58,14 @@ export const AddCard = (props: IProps) => {
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const ctx = React.useContext(TeamContext);
-  const { projectCreate, cardStrings, auth, setMessage, flatAdd } = ctx.state;
+  const {
+    projectCreate,
+    cardStrings,
+    auth,
+    setMessage,
+    flatAdd,
+    sharedStrings,
+  } = ctx.state;
   const t = cardStrings;
   const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -182,6 +189,14 @@ export const AddCard = (props: IProps) => {
     setView('/work');
   };
 
+  useEffect(() => {
+    if (status.canceled) {
+      setInProgress(false);
+      //get ready for next time
+      status.canceled = false;
+    }
+  }, [status.canceled]);
+
   const cancelUpload = (what: string) => {
     status.canceled = true;
   };
@@ -195,7 +210,7 @@ export const AddCard = (props: IProps) => {
           {show ? (
             <div className={classes.buttons}>
               <Button variant="contained" onClick={handleUpload(team)}>
-                {t.upload}
+                {sharedStrings.uploadMediaPlural}
               </Button>
               <Button
                 variant="contained"
@@ -233,6 +248,7 @@ export const AddCard = (props: IProps) => {
         onOpen={setUploadVisible}
         setMessage={setMessage}
         setComplete={setComplete}
+        multiple={true}
         metaData={
           <>
             <ProjectType type={type} onChange={setType} />

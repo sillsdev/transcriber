@@ -13,7 +13,55 @@
             <target>Impossible d'enregistrer en mode hors connexion.</target>
          </segment>
       </unit>
-		<unit id="access.accessFirst">
+      <unit id="shared.transcriber">
+			<segment>
+				<source>Transcriber</source>
+				<target>Transcripteur</target>
+			</segment>
+		</unit>
+		<unit id="shared.editor">
+			<segment>
+				<source>Editor</source>
+				<target>Éditeur</target>
+			</segment>
+		</unit>
+        <unit id="shared.uploadMediaSingular">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+        </unit>
+        <unit id="shared.uploadMediaPlural">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+        </unit>
+      <unit id="planActions.assign">
+         <segment>
+            <source>Assign</source>
+			<target>Affecter</target>
+         </segment>
+      </unit>
+      <unit id="planActions.transcribe">
+         <segment>
+            <source>Transcribe</source>
+			<target>Transcrire</target>
+         </segment>
+      </unit>
+      <unit id="planActions.delete">
+         <segment>
+            <source>Delete</source>
+         	<target>Supprimer</target>
+         </segment>
+      </unit>
+      <unit id="planActions.playpause">
+         <segment>
+            <source>Play/Pause</source>
+        	<target>Jeu / Pause</target>
+	     </segment>
+      </unit>
+	    <unit id="access.accessFirst">
 			<segment>
 				<source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
 				<target>Bienvenue à SIL Transcriber. Un projet est créé en ligne sur le site de l'administration de SIL Transcriber. Exportez un fichier au format Portable Transcriber Format (PTF) et importez-le ici.</target>
@@ -235,90 +283,6 @@
 				<target>Oui</target>
 			</segment>
 		</unit>
-		<unit id="projectTable.silTranscriberAdmin">
-			<segment>
-				<source>SIL Transcriber Admin</source>
-				<target>Administration du SIL Transcriber</target>
-			</segment>
-		</unit>
-		<unit id="projectTable.chooseProject">
-			<segment>
-				<source>Choose Project</source>
-				<target>Choisissez une projet</target>
-			</segment>
-		</unit>
-		<unit id="projectTable.name">
-			<segment>
-				<source>Name</source>
-				<target>Nom</target>
-			</segment>
-		</unit>
-		<unit id="projectTable.description">
-			<segment>
-				<source>Description</source>
-				<target>Description du projet</target>
-			</segment>
-		</unit>
-		<unit id="projectTable.language">
-			<segment>
-				<source>Language</source>
-				<target>Langue</target>
-			</segment>
-		</unit>
-		<unit id="projectTable.delete">
-			<segment>
-				<source>Delete</source>
-				<target>Supprimer</target>
-			</segment>
-		</unit>
-		<unit id="chart.passagesCompleted">
-			<segment>
-				<source>Passages Completed</source>
-				<target>Passages achevées</target>
-			</segment>
-		</unit>
-		<unit id="chart.totalTransactions">
-			<segment>
-				<source>Total Transactions</source>
-				<target>Total des transactions</target>
-			</segment>
-		</unit>
-      <unit id="planSheet.action">
-			<segment>
-				<source>Action</source>
-				<target>Action</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.upload">
-			<segment>
-				<source>Upload Audio</source>
-				<target>Télécharger l'audio</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.play">
-			<segment>
-				<source>Play / Pause</source>
-				<target>Jeu / Pause</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.assign">
-			<segment>
-				<source>Assign</source>
-				<target>Affecter</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.transcribe">
-			<segment>
-				<source>Transcribe</source>
-				<target>Transcrire</target>
-			</segment>
-		</unit>
-		<unit id="planSheet.delete">
-			<segment>
-				<source>Delete</source>
-				<target>Supprimer</target>
-			</segment>
-		</unit>
 		<unit id="planSheet.move">
 			<segment>
 				<source>Move</source>
@@ -331,12 +295,6 @@
 				<target>Copier</target>
 			</segment>
 		</unit>
-      <unit id="planSheet.inlineToggle">
-         <segment>
-            <source>Condensed</source>
-            <target>condensé</target>
-         </segment>
-      </unit>
 		<unit id="planSheet.attachMedia">
 			<segment>
 				<source>Attach Media</source>
@@ -595,18 +553,6 @@
 				<target>Filtre</target>
 			</segment>
 		</unit>
-		<unit id="assignmentTable.transcriber">
-			<segment>
-				<source>Transcriber</source>
-				<target>Transcripteur</target>
-			</segment>
-		</unit>
-		<unit id="assignmentTable.editor">
-			<segment>
-				<source>Editor</source>
-				<target>Éditeur</target>
-			</segment>
-		</unit>
 		<unit id="assignmentTable.selectRowsToAssign">
          <segment>
             <source>Please select row(s) to assign.</source>
@@ -641,18 +587,6 @@
 			<segment>
 				<source>Users</source>
 				<target>Utilisatrices</target>
-			</segment>
-		</unit>
-		<unit id="assignSection.editor">
-			<segment>
-				<source>Editor</source>
-				<target>Éditeur</target>
-			</segment>
-		</unit>
-		<unit id="assignSection.transcriber">
-			<segment>
-				<source>Transcriber</source>
-				<target>Transcripteur</target>
 			</segment>
 		</unit>
 		<unit id="assignSection.role">
@@ -755,12 +689,6 @@
 			<segment>
 				<source>Attach Passage</source>
 				<target>Attacher un passage</target>
-			</segment>
-		</unit>
-		<unit id="mediaTab.uploadMedia">
-			<segment>
-				<source>Upload Media</source>
-				<target>Charger le fichier audio</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.uploadComplete">
@@ -1525,18 +1453,6 @@
          	<target>État</target>
          </segment>
       </unit>
-      <unit id="import.editor">
-         <segment>
-            <source>Editor</source>
-         	<target>Editeur</target>
-         </segment>
-      </unit>
-      <unit id="import.transcriber">
-         <segment>
-            <source>Transcriber</source>
-         	<target>Transcriber</target>
-         </segment>
-      </unit>
       <unit id="import.unassigned">
          <segment>
             <source>unassigned</source>
@@ -1625,18 +1541,6 @@
 			<segment>
 				<source>Filter</source>
 				<target>Filtre</target>
-			</segment>
-		</unit>
-		<unit id="transcriptionTab.transcriber">
-			<segment>
-				<source>Transcriber</source>
-				<target>Transcripteur</target>
-			</segment>
-		</unit>
-		<unit id="transcriptionTab.editor">
-			<segment>
-				<source>Editor</source>
-				<target>Éditeur</target>
 			</segment>
 		</unit>
 		<unit id="transcriptionTab.plan">
@@ -2294,24 +2198,12 @@
             <target>(Gérer + Réviser + Transcrire)</target>
          </segment>
       </unit>
-		<unit id="invite.transcriber">
-			<segment>
-				<source>Transcriber</source>
-				<target>Transcripteur</target>
-			</segment>
-		</unit>
      <unit id="invite.transcriberDetail">
          <segment>
             <source>(Transcribe)</source>
          	<target>(Transcription)</target>
          </segment>
       </unit>
-		<unit id="invite.editor">
-			<segment>
-				<source>Editor</source>
-				<target>Éditeur</target>
-			</segment>
-		</unit>
      <unit id="invite.editorDetail">
          <segment>
             <source>(Review + Transcribe)</source>
@@ -2388,66 +2280,6 @@
 			<segment>
 				<source>Show/Hide filter rows</source>
 				<target>Afficher/masquer les lignes de filtre</target>
-			</segment>
-		</unit>
-		<unit id="orgSettings.add">
-         <segment>
-            <source>Add</source>
-            <target>Ajouter</target>
-         </segment>
-      </unit>
-      <unit id="orgSettings.name">
-         <segment>
-            <source>Name</source>
-            <target>Nom</target>
-         </segment>
-      </unit>
-		<unit id="orgSettings.description">
-			<segment>
-				<source>Description</source>
-				<target>Description</target>
-			</segment>
-		</unit>
-		<unit id="orgSettings.website">
-         <segment>
-            <source>Website</source>
-            <target>Site Web</target>
-         </segment>
-      </unit>
-      <unit id="orgSettings.logo">
-         <segment>
-            <source>Logo</source>
-            <target>Logo</target>
-         </segment>
-      </unit>
-      <unit id="orgSettings.publicByDefault">
-         <segment>
-            <source>Public By Default</source>
-         	<target>public par défaut</target>
-         </segment>
-      </unit>
-      <unit id="orgSettings.save">
-         <segment>
-            <source>Save</source>
-            <target>Enregistrer</target>
-         </segment>
-      </unit>
-		<unit id="orgSettings.cancel">
-			<segment>
-				<source>Cancel</source>
-				<target>Annuler</target>
-			</segment>
-		</unit>
-		<unit id="orgSettings.deleteOrg">
-			<segment>
-				<source>Delete Organization</source>
-				<target>Supprimer l'organisation</target>
-			</segment>
-		</unit>
-		<unit id="orgSettings.deleteExplained">
-			<segment>
-				<source>Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.</source>
-				<target>La suppression de cet organisme empêchera tout membre de l'organisme de travailler à l'un ou l'autre des projets ou des plans de cet organisme.</target>
 			</segment>
 		</unit>
 		<unit id="mediaUpload.title">
@@ -3315,18 +3147,6 @@
 				<target>Désassigner {0}</target>
 			</segment>
 		</unit>
-		<unit id="taskItem.transcriber">
-			<segment>
-				<source>Transcriber</source>
-				<target>Transcriber</target>
-			</segment>
-		</unit>
-		<unit id="taskItem.editor">
-			<segment>
-				<source>Editor</source>
-				<target>Éditeur</target>
-			</segment>
-		</unit>
 		<unit id="control.contentType">
 			<segment>
 				<source>Content Type</source>
@@ -3411,12 +3231,6 @@
          	<target>Appliquer</target>
          </segment>
         </unit>
-		<unit id="cards.upload">
-			<segment>
-				<source>Upload Audio</source>
-				<target>Upload Audio</target>
-			</segment>
-		</unit>
 		<unit id="cards.uploadProgress">
 			<segment>
 				<source>Upload Progress</source>

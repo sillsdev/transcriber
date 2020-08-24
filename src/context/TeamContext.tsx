@@ -52,6 +52,7 @@ interface IStateProps {
   controlStrings: IControlStrings;
   t: IMainStrings;
   cardStrings: ICardsStrings;
+  sharedStrings: ISharedStrings;
   vProjectStrings: IVProjectStrings;
   pickerStrings: ILanguagePickerStrings;
   projButtonStrings: IProjButtonsStrings;
@@ -59,6 +60,7 @@ interface IStateProps {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   lang: state.strings.lang,
+  sharedStrings: localStrings(state, { layout: 'shared' }),
   controlStrings: localStrings(state, { layout: 'control' }),
   t: localStrings(state, { layout: 'main' }),
   cardStrings: localStrings(state, { layout: 'cards' }),
@@ -125,6 +127,7 @@ const initState = {
     setComplete?: (amt: number) => void
   ) => {},
   cardStrings: {} as ICardsStrings,
+  sharedStrings: {} as ISharedStrings,
   vProjectStrings: {} as IVProjectStrings,
   pickerStrings: {} as ILanguagePickerStrings,
   projButtonStrings: {} as IProjButtonsStrings,
@@ -161,6 +164,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       lang,
       controlStrings,
       t,
+      sharedStrings,
       cardStrings,
       vProjectStrings,
       pickerStrings,
@@ -185,6 +189,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       message,
       setMessage,
       cardStrings,
+      sharedStrings,
       vProjectStrings,
       pickerStrings,
       projButtonStrings,

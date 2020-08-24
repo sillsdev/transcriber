@@ -50,6 +50,7 @@ interface IProps extends IStateProps {
   visible: boolean;
   uploadType: UploadType;
   uploadMethod?: (files: FileList) => void;
+  multiple?: boolean;
   cancelMethod?: () => void;
   metaData?: JSX.Element;
   ready?: () => boolean;
@@ -60,6 +61,7 @@ function MediaUpload(props: IProps) {
     t,
     visible,
     uploadType,
+    multiple,
     uploadMethod,
     cancelMethod,
     metaData,
@@ -83,7 +85,6 @@ function MediaUpload(props: IProps) {
     'application/ptf',
     'image/jpeg, image/svg+xml, image/png',
   ];
-  const multiple = [true, false, false, false];
   const title = [t.title, t.ITFtitle, t.PTFtitle, 'FUTURE TODO'];
   const text = [t.task, t.ITFtask, t.PTFtask, 'FUTURE TODO'];
 
@@ -140,7 +141,7 @@ function MediaUpload(props: IProps) {
           onChange={handleNameChange}
         >
           {name === ''
-            ? multiple[uploadType]
+            ? multiple
               ? t.dragDropMultiple
               : t.dragDropSingle
             : name}
@@ -150,7 +151,7 @@ function MediaUpload(props: IProps) {
           style={inputStyle}
           type="file"
           accept={acceptextension[uploadType]}
-          multiple={multiple[uploadType]}
+          multiple={multiple}
           onChange={handleNameChange}
         />
       </FileDrop>
@@ -163,7 +164,7 @@ function MediaUpload(props: IProps) {
           onChange={handleNameChange}
         >
           {name === ''
-            ? multiple[uploadType]
+            ? multiple
               ? t.dragDropMultiple
               : t.dragDropSingle
             : name}
@@ -173,7 +174,7 @@ function MediaUpload(props: IProps) {
           style={inputStyle}
           type="file"
           accept={acceptmime[uploadType]}
-          multiple={multiple[uploadType]}
+          multiple={multiple}
           onChange={handleNameChange}
         />
       </div>

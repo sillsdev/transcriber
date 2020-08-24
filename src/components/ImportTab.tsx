@@ -12,6 +12,7 @@ import {
   GroupMembership,
   Group,
   BookName,
+  ISharedStrings,
 } from '../model';
 import { WithDataProps, withData } from '../mods/react-orbitjs';
 import Confirm from './AlertDialog';
@@ -48,6 +49,7 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 
 interface IStateProps {
   t: IImportStrings;
+  ts: ISharedStrings;
   ei: IElectronImportStrings;
   importStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
@@ -73,6 +75,7 @@ interface IProps
 export function ImportTab(props: IProps) {
   const {
     t,
+    ts,
     ei,
     auth,
     importComplete,
@@ -387,11 +390,11 @@ export function ImportTab(props: IProps) {
                   })
                 ) as User;
                 imported +=
-                  t.editor +
+                  ts.editor +
                   ':' +
                   (editor ? editor.attributes.name : t.unassigned) +
                   '   ';
-                old += t.editor + ':' + oldeditor?.attributes.name + '   ';
+                old += ts.editor + ':' + oldeditor?.attributes.name + '   ';
               }
               if (
                 oldsection.relationships?.transcriber?.data &&
@@ -425,12 +428,15 @@ export function ImportTab(props: IProps) {
                   })
                 ) as User;
                 imported +=
-                  t.transcriber +
+                  ts.transcriber +
                   ':' +
                   (transcriber ? transcriber.attributes.name : t.unassigned) +
                   '   ';
                 old +=
-                  t.transcriber + ':' + oldtranscriber?.attributes.name + '   ';
+                  ts.transcriber +
+                  ':' +
+                  oldtranscriber?.attributes.name +
+                  '   ';
               } /*
               if (section.attributes.state !== oldsection.attributes.state) {
                 imported += t.state + ':' + section.attributes.state;
@@ -667,6 +673,7 @@ export function ImportTab(props: IProps) {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'import' }),
+  ts: localStrings(state, { layout: 'shared' }),
   ei: localStrings(state, { layout: 'electronImport' }),
   importStatus: state.importexport.importexportStatus,
   allBookData: state.books.bookData,

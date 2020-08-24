@@ -10,6 +10,18 @@ const initialState = {
 		"en": {
 			"lastEdit": "Last save {0}",
 			"NoSaveOffline": "Unable to save while offline.",
+			"transcriber": "Transcriber",
+			"editor": "Editor",
+			"uploadMediaSingular": "Upload Media",
+			"uploadMediaPlural": "Upload Media",
+		}
+	}),
+	"planActions": new LocalizedStrings({
+		"en": {
+			"assign": "Assign",
+			"transcribe": "Transcribe",
+			"delete": "Delete",
+			"playpause": "Play / Pause",
 		}
 	}),
 	"access": new LocalizedStrings({
@@ -65,24 +77,9 @@ const initialState = {
 			"yes": "Yes",
 		}
 	}),
-	"projectTable": new LocalizedStrings({
-		"en": {
-			"silTranscriberAdmin": "SIL Transcriber Admin",
-			"chooseProject": "Choose Project",
-			"name": "Name",
-			"description": "Description",
-			"language": "Language",
-			"delete": "Delete",
-		}
-	}),
 	"planSheet": new LocalizedStrings({
 		"en": {
 			"action": "Action",
-			"upload": "Upload Audio",
-			"play": "Play / Pause",
-			"assign": "Assign",
-			"transcribe": "Transcribe",
-			"delete": "Delete",
 			"move": "Move",
 			"copy": "Copy",
 			"attachMedia": "Attach Media",
@@ -137,8 +134,6 @@ const initialState = {
 			"removeSec": "Remove Assignment",
 			"delete": "Delete",
 			"filter": "Filter",
-			"transcriber": "Transcriber",
-			"editor": "Editor",
 			"selectRowsToAssign": "Please select row(s) to assign.",
 			"selectRowsToRemove": "Please select row(s) to remove assignment.",
 			"showHideFilter": "Show/Hide filter rows",
@@ -149,8 +144,6 @@ const initialState = {
 			"title": "Assign Sections to Users",
 			"sections": "Sections",
 			"users": "Users",
-			"editor": "Editor",
-			"transcriber": "Transcriber",
 			"role": "Role",
 			"assignAs": "Assign As",
 			"close": "Close",
@@ -176,7 +169,6 @@ const initialState = {
 			"download": "Download",
 			"changeVersion": "Change Version",
 			"attachPassage": "Attach Passage",
-			"uploadMedia": "Upload Media",
 			"uploadComplete": "{0} of {1} files uploaded successfully.",
 			"planName": "Plan",
 			"fileName": "File Name",
@@ -320,8 +312,6 @@ const initialState = {
 			"imported": "Imported Value",
 			"transcription": "Transcription",
 			"state": "State",
-			"editor": "Editor",
-			"transcriber": "Transcriber",
 			"unassigned": "unassigned",
 			"fontsize": "Font Size",
 			"username": "Name",
@@ -340,8 +330,6 @@ const initialState = {
 			"sectionstate": "State",
 			"passages": "Passages",
 			"filter": "Filter",
-			"transcriber": "Transcriber",
-			"editor": "Editor",
 			"plan": "Plan",
 			"elan": "Elan",
 			"export": "Export",
@@ -483,9 +471,7 @@ const initialState = {
 			"emailsubject": "SIL Transcriber Invitation",
 			"admin": "Owner",
 			"adminDetail": "(Manage + Review + Transcribe)",
-			"transcriber": "Transcriber",
 			"transcriberDetail": "(Transcribe)",
-			"editor": "Editor",
 			"editorDetail": "(Review + Transcribe)",
 		}
 	}),
@@ -503,20 +489,6 @@ const initialState = {
 			"selectRows": "Please select row(s) to {0}.",
 			"noData": "No invitations",
 			"showHideFilter": "Show/Hide filter rows",
-		}
-	}),
-	"orgSettings": new LocalizedStrings({
-		"en": {
-			"add": "Add",
-			"name": "Name",
-			"description": "Description",
-			"website": "Website",
-			"logo": "Logo",
-			"publicByDefault": "Public By Default",
-			"save": "Save",
-			"cancel": "Cancel",
-			"deleteOrg": "Delete Organization",
-			"deleteExplained": "Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.",
 		}
 	}),
 	"mediaUpload": new LocalizedStrings({
@@ -697,8 +669,6 @@ const initialState = {
 			"section": "Section {0}.{1}",
 			"assign": "Assign {0}",
 			"unassign": "Unassign {0}",
-			"transcriber": "Transcriber",
-			"editor": "Editor",
 		}
 	}),
 	"control": new LocalizedStrings({
@@ -725,7 +695,6 @@ const initialState = {
 	}),
 	"cards": new LocalizedStrings({
 		"en": {
-			"upload": "Upload Audio",
 			"uploadProgress": "Upload Progress",
 			"projectCreated": "Project Created",
 			"mediaUploaded": "Media Uploaded",
@@ -802,11 +771,11 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				...state,
 				"loaded": true,
 				"shared" : new LocalizedStrings(action.payload.data.shared),
+				"planActions" : new LocalizedStrings(action.payload.data.planActions),
 				"access" : new LocalizedStrings(action.payload.data.access),
 				"electronImport" : new LocalizedStrings(action.payload.data.electronImport),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"alert" : new LocalizedStrings(action.payload.data.alert),
-				"projectTable" : new LocalizedStrings(action.payload.data.projectTable),
 				"planSheet" : new LocalizedStrings(action.payload.data.planSheet),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
@@ -827,7 +796,6 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"activityState" : new LocalizedStrings(action.payload.data.activityState),
 				"invite" : new LocalizedStrings(action.payload.data.invite),
 				"invitationTable" : new LocalizedStrings(action.payload.data.invitationTable),
-				"orgSettings" : new LocalizedStrings(action.payload.data.orgSettings),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"myTask" : new LocalizedStrings(action.payload.data.myTask),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),

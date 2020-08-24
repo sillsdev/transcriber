@@ -19,6 +19,62 @@
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
+            <trans-unit id="shared.transcriber">
+            	<source>Transcriber</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="shared.editor">
+            	<source>Editor</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">Access.tsx</context>
+                </context-group>
+            </trans-unit>
+            <trans-unit id="shared.uploadMediaSingular">
+        		<source>Upload Media</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="shared.uploadMediaPlural">
+        		<source>Upload Media</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="planActions.assign">
+        		<source>Assign</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planActions.transcribe">
+        		<source>Transcribe</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planActions.delete">
+                <source>Delete</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">PlanSheet.tsx</context>
+                </context-group>
+            </trans-unit>
+        	<trans-unit id="planActions.playpause">
+        		<source>Play / Pause</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
             <trans-unit id="access.accessFirst">
             	<source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
                 <target/>
@@ -278,85 +334,8 @@
                     <context context-type="sourcefile">AlertDialog.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="projectTable.silTranscriberAdmin">
-                <source>SIL Transcriber Admin</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ProjectTable.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="projectTable.chooseProject">
-                <source>Choose Project</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ProjectTable.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="projectTable.name">
-                <source>Name</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ProjectTable.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="projectTable.description">
-                <source>Description</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ProjectTable.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="projectTable.language">
-                <source>Language</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ProjectTable.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="projectTable.delete">
-                <source>Delete</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ProjectTable.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="planSheet.action">
                 <source>Action</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">PlanSheet.tsx</context>
-                </context-group>
-            </trans-unit>
-        	<trans-unit id="planSheet.upload">
-        		<source>Upload Audio</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanSheet.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.play">
-        		<source>Play / Pause</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanSheet.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.assign">
-        		<source>Assign</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanSheet.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.transcribe">
-        		<source>Transcribe</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanSheet.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planSheet.delete">
-                <source>Delete</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -684,20 +663,6 @@
                     <context context-type="sourcefile">assignmentTable.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="assignmentTable.transcriber">
-                <source>Transcriber</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">assignmentTable.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="assignmentTable.editor">
-                <source>Editor</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">assignmentTable.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="assignmentTable.selectRowsToAssign">
                 <source>Please select row(s) to assign.</source>
                 <target/>
@@ -735,20 +700,6 @@
             </trans-unit>
             <trans-unit id="assignSection.users">
                 <source>Users</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">AssignSection.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="assignSection.editor">
-                <source>Editor</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">AssignSection.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="assignSection.transcriber">
-                <source>Transcriber</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">AssignSection.tsx</context>
@@ -868,13 +819,6 @@
             </trans-unit>
             <trans-unit id="mediaTab.attachPassage">
                 <source>Attach Passage</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">MediaTab.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="mediaTab.uploadMedia">
-                <source>Upload Media</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaTab.tsx</context>
@@ -1769,20 +1713,6 @@
                     <context context-type="sourcefile">import.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="import.editor">
-                <source>Editor</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">import.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="import.transcriber">
-                <source>Transcriber</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">import.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="import.unassigned">
                 <source>unassigned</source>
                 <target/>
@@ -1876,20 +1806,6 @@
             </trans-unit>
             <trans-unit id="transcriptionTab.filter">
                 <source>Filter</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="transcriptionTab.transcriber">
-                <source>Transcriber</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="transcriptionTab.editor">
-                <source>Editor</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">TranscriptionTab.tsx</context>
@@ -2658,22 +2574,8 @@
         			<context context-type="sourcefile">Invite.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="invite.transcriber">
-        		<source>Transcriber</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">Invite.tsx</context>
-        		</context-group>
-        	</trans-unit>
             <trans-unit id="invite.transcriberDetail">
         		<source>(Transcribe)</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">Invite.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="invite.editor">
-        		<source>Editor</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Invite.tsx</context>
@@ -2768,76 +2670,6 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">InvitationTable.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="orgSettings.add">
-                <source>Add</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">OrgSettings.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="orgSettings.name">
-                <source>Name</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">OrgSettings.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="orgSettings.description">
-                <source>Description</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">OrgSettings.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="orgSettings.website">
-                <source>Website</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">OrgSettings.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="orgSettings.logo">
-                <source>Logo</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">OrgSettings.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="orgSettings.publicByDefault">
-                <source>Public By Default</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">OrgSettings.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="orgSettings.save">
-                <source>Save</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">OrgSettings.tsx</context>
-                </context-group>
-            </trans-unit>
-        	<trans-unit id="orgSettings.cancel">
-        		<source>Cancel</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">OrgSettings.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="orgSettings.deleteOrg">
-        		<source>Delete Organization</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">OrgSettings.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="orgSettings.deleteExplained">
-        		<source>Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">OrgSettings.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="mediaUpload.title">
@@ -3848,20 +3680,6 @@
         			<context context-type="sourcefile">TaskHead.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="taskItem.transcriber">
-        		<source>Transcriber</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">TaskHead.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="taskItem.editor">
-        		<source>Editor</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">TaskHead.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="control.contentType">
         		<source>Content Type</source>
         		<target/>
@@ -3958,13 +3776,6 @@
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">template.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="cards.upload">
-        		<source>Upload Audio</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">addCard.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="cards.uploadProgress">

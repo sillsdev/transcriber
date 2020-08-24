@@ -43,7 +43,7 @@ interface IProps {
 
 export function TaskHead(props: IProps) {
   const { item } = props;
-  const { rowData, taskItemStr } = useTodo();
+  const { rowData, taskItemStr, sharedStr } = useTodo();
   const { transcriber, editor } = rowData[item] || {
     transcriber: '',
     editor: '',
@@ -56,6 +56,7 @@ export function TaskHead(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [menuItem, setMenuItem] = React.useState(null);
   const t = taskItemStr;
+  const ts = sharedStr;
 
   const planHead = t.section
     .replace('{0}', sectionNumber(section))
@@ -121,7 +122,7 @@ export function TaskHead(props: IProps) {
           >
             {
               <div className={classes.menuItem}>
-                <>{tranAction.replace('{0}', t.transcriber) + '\u00A0'}</>
+                <>{tranAction.replace('{0}', ts.transcriber) + '\u00A0'}</>
                 <TaskAvatar
                   assigned={
                     transcriber && transcriber !== '' ? transcriber : user
@@ -142,7 +143,7 @@ export function TaskHead(props: IProps) {
           >
             {
               <div className={classes.menuItem}>
-                <>{editAction.replace('{0}', t.editor) + '\u00A0'}</>
+                <>{editAction.replace('{0}', ts.editor) + '\u00A0'}</>
                 <TaskAvatar
                   assigned={editor && editor !== '' ? editor : user}
                 />

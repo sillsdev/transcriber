@@ -3,16 +3,9 @@ import { useGlobal } from 'reactn';
 import { IPlanSheetStrings, ISharedStrings, BookNameMap } from '../model';
 import { OptionType } from './ReactSelect';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, Menu, MenuItem, AppBar, IconButton } from '@material-ui/core';
+import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
-import UploadIcon from '@material-ui/icons/CloudUploadOutlined';
-import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
-import PauseIcon from '@material-ui/icons/Pause';
-import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
-import DeleteIcon from '@material-ui/icons/DeleteOutline';
-import TranscribeIcon from '@material-ui/icons/EditOutlined';
-// import { FaPenNib } from 'react-icons/fa';
 import SnackBar from './SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
@@ -30,6 +23,9 @@ import TaskAvatar from './TaskAvatar';
 import MediaPlayer from './MediaPlayer';
 import { PlanContext } from '../context/PlanContext';
 import Auth from '../auth/Auth';
+import { IRowInfo } from './ScriptureTable';
+import { TranscriberIcon, EditorIcon } from './RoleIcons';
+import PlanActions from './PlanActions';
 
 const ActionHeight = 52;
 
@@ -72,6 +68,14 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .data-grid-container .data-grid .cell.pass > input': {
         textAlign: 'left',
         padding: theme.spacing(1),
+      },
+      '& tr td:first-child > span': {
+        display: 'flex!important',
+        justifyContent: 'center',
+      },
+      '& tr td:nth-child(2) > span': {
+        display: 'flex!important',
+        justifyContent: 'center',
       },
     },
     actions: theme.mixins.gutters({
@@ -138,6 +142,7 @@ interface IStateProps {
 interface IProps extends IStateProps {
   columns: Array<ICell>;
   rowData: Array<Array<string | number>>;
+  rowInfo: Array<IRowInfo>;
   bookCol: number;
   bookSuggestions?: OptionType[];
   bookMap?: BookNameMap;
@@ -150,13 +155,9 @@ interface IProps extends IStateProps {
   lookupBook?: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
-  toggleInline: (event: any) => void;
   onTranscribe: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
-  onPlay: (where: number, setSrcMedia: (id: string) => void) => void;
-  hasMedia: (i: number) => boolean;
-  editor: (i: number) => string;
-  transcriber: (i: number) => string;
+  onUpload: (i: number) => () => void;
   auth: Auth;
 }
 
@@ -164,6 +165,7 @@ export function PlanSheet(props: IProps) {
   const {
     columns,
     rowData,
+    rowInfo,
     t,
     ts,
     lastSaved,
@@ -178,12 +180,6 @@ export function PlanSheet(props: IProps) {
     paste,
     resequence,
     inlinePassages,
-    onTranscribe,
-    onAssign,
-    onPlay,
-    hasMedia,
-    editor,
-    transcriber,
     auth,
   } = props;
   const classes = useStyles();
@@ -217,7 +213,6 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-  const [playingIndex, setPlayingIndex] = useState(0);
 
   const handleMessageReset = () => {
     setMessage(<></>);
@@ -226,8 +221,12 @@ export function PlanSheet(props: IProps) {
   const PassageSeqCol = 2;
   const LastCol = 6;
 
-  const isSection = (row: Array<any>) =>
-    /^[0-9]+$/.test(row[SectionSeqCol].toString());
+  const isValidNumber = (val: any) =>
+    val === undefined ? false : /^[0-9]+$/.test(val.toString());
+
+  const isSection = (row: any[]) => isValidNumber(row[SectionSeqCol]);
+
+  const isPassage = (row: any[]) => isValidNumber(row[PassageSeqCol]);
 
   const handleAddSection = () => {
     addSection();
@@ -239,7 +238,7 @@ export function PlanSheet(props: IProps) {
     return data
       .filter((row, rowIndex) => rowIndex > 0)
       .map((row) =>
-        row.filter((row, rowIndex) => rowIndex > 0).map((col) => col.value)
+        row.filter((row, rowIndex) => rowIndex > 1).map((col) => col.value)
       );
   };
 
@@ -258,7 +257,8 @@ export function PlanSheet(props: IProps) {
     cell.className?.substring(0, 4) === 'book' && bookMap
       ? bookMap[cell.value]
       : cell.value;
-  const handleConfirmDelete = (rowIndex: number) => (e: any) => {
+
+  const handleConfirmDelete = (rowIndex: number) => () => {
     const toDelete = [rowIndex - 1];
     if (isSection(rowData[rowIndex - 1])) {
       var psg = rowIndex;
@@ -283,18 +283,9 @@ export function PlanSheet(props: IProps) {
     setConfirmAction('');
   };
 
-  const handlePlayStatus = (rowIndex: number) => () => {
-    if (playingIndex === rowIndex) {
-      //turn it off
-      setSrcMediaId('');
-      setPlayingIndex(0);
-    } else {
-      setPlayingIndex(rowIndex);
-      onPlay(rowIndex, setSrcMediaId);
-    }
+  const handlePlayStatus = (mediaId: string) => {
+    setSrcMediaId(mediaId);
   };
-
-  const isPlaying = (rowIndex: number) => playingIndex === rowIndex;
 
   const doUpdate = (grid: ICell[][]) => {
     updateData(
@@ -308,7 +299,7 @@ export function PlanSheet(props: IProps) {
     );
   };
 
-  const numCol = [1, 3]; // Section num = col 1, Passage num = col 3
+  const numCol = [2, 4]; // Section num = col 2, Passage num = col 4
   const handleCellsChanged = (changes: Array<IChange>) => {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
@@ -447,125 +438,105 @@ export function PlanSheet(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [changed]);
 
-  const isIndex = (val: any) => /^[0-9]+$/.test(val.toString());
+  const MemoizedTaskAvatar = React.memo(TaskAvatar);
 
   useEffect(() => {
-    let data = [
-      [{ value: '', readOnly: true } as ICell].concat(
-        columns.map((col) => {
-          return { ...col, readOnly: true };
-        })
-      ),
-    ].concat(
-      rowData.map((row, rowIndex) => {
-        const isSection = isIndex(row[SectionSeqCol]);
-        const isPassage = isIndex(row[PassageSeqCol]);
-        return [
+    if (rowData.length !== rowInfo.length) {
+      setData([]);
+    } else {
+      let data = [
+        [
           {
-            value: isSection ? (
-              <>
-                <TaskAvatar assigned={transcriber(rowIndex + 1)} />
-                <TaskAvatar assigned={editor(rowIndex + 1)} />
-              </>
-            ) : (
-              <></>
-            ),
-            className: isSection ? 'set' : 'pass',
+            value: <EditorIcon />,
+            readOnly: true,
+          } as ICell,
+          {
+            value: <TranscriberIcon />,
+            readOnly: true,
           } as ICell,
         ].concat(
-          row.slice(0, LastCol).map((e, cellIndex) => {
-            return cellIndex !== bookCol || !isPassage
-              ? {
-                  value: e,
-                  readOnly: isSection
-                    ? isPassage
-                      ? false
-                      : cellIndex > 1
-                    : cellIndex <= 1,
-                  className:
-                    (cellIndex === SectionSeqCol || cellIndex === PassageSeqCol
-                      ? 'num'
-                      : 'pass') +
-                    (isSection
-                      ? !inlinePassages || cellIndex <= 1
-                        ? ' set'
-                        : ' setp'
-                      : ''),
-                }
-              : {
-                  value: e,
-                  className:
-                    'book' + (isSection && inlinePassages ? ' setp' : ''),
-                  dataEditor: bookEditor,
-                };
+          columns.map((col) => {
+            return { ...col, readOnly: true };
           })
-        );
-      })
-    );
-    data = data.map((row, rowIndex) => {
-      const isSection = isIndex(row[SectionSeqCol + 1].value);
-      const isPassage = isIndex(row[PassageSeqCol + 1].value);
-      return row.concat(
-        rowIndex === 0
-          ? []
-          : [
-              {
-                value: (
-                  <div className={classes.arrangeActions}>
-                    {isPassage && (
-                      <>
-                        <IconButton
-                          className={classes.actionButton}
-                          title={t.upload}
-                        >
-                          <UploadIcon />
-                        </IconButton>
-                        <IconButton
-                          className={classes.actionButton}
-                          title={t.play}
-                          disabled={!hasMedia(rowIndex)}
-                          onClick={handlePlayStatus(rowIndex)}
-                        >
-                          {isPlaying(rowIndex) ? <PauseIcon /> : <PlayIcon />}
-                        </IconButton>
-                      </>
-                    )}
-                    {isSection && (
-                      <IconButton
-                        className={classes.actionButton}
-                        title={t.assign}
-                        onClick={onAssign([rowIndex])}
-                      >
-                        <AssignIcon />
-                      </IconButton>
-                    )}
-                    {isPassage && (
-                      <IconButton
-                        className={classes.actionButton}
-                        title={t.transcribe}
-                        onClick={onTranscribe(rowIndex)}
-                        disabled={!hasMedia(rowIndex)}
-                      >
-                        <TranscribeIcon />
-                      </IconButton>
-                    )}
-                    <IconButton
-                      className={classes.actionButton}
-                      title={t.delete}
-                      onClick={handleConfirmDelete(rowIndex)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </div>
-                ),
-                className: isSection ? 'set' : 'pass',
-              } as ICell,
-            ]
+        ),
+      ].concat(
+        rowData.map((row, rowIndex) => {
+          const section = isSection(row);
+          const passage = isPassage(row);
+          return [
+            {
+              value: (
+                <MemoizedTaskAvatar assigned={rowInfo[rowIndex].editor || ''} />
+              ),
+              readonly: true,
+            } as ICell,
+            {
+              value: (
+                <MemoizedTaskAvatar
+                  assigned={rowInfo[rowIndex].transcriber || ''}
+                />
+              ),
+              readonly: true,
+            } as ICell,
+          ].concat(
+            row.slice(0, LastCol).map((e, cellIndex) => {
+              return cellIndex === bookCol && passage
+                ? {
+                    value: e,
+                    className: 'book' + (section ? ' setp' : ''),
+                    dataEditor: bookEditor,
+                  }
+                : {
+                    value: e,
+                    readOnly: section
+                      ? passage
+                        ? false
+                        : cellIndex > 1
+                      : cellIndex <= 1,
+                    className:
+                      (cellIndex === SectionSeqCol ||
+                      cellIndex === PassageSeqCol
+                        ? 'num'
+                        : 'pass') +
+                      (section
+                        ? !inlinePassages || cellIndex <= 1
+                          ? ' set'
+                          : ' setp'
+                        : ''),
+                  };
+            })
+          );
+        })
       );
-    });
-    setData(data);
+      data = data.map((row, rowIndex) => {
+        const isSection = isValidNumber(row[SectionSeqCol + 2].value);
+        const isPassage = isValidNumber(row[PassageSeqCol + 2].value);
+        return row.concat(
+          rowIndex === 0
+            ? []
+            : [
+                {
+                  value: (
+                    <PlanActions
+                      {...props}
+                      rowIndex={rowIndex}
+                      isSection={isSection}
+                      isPassage={isPassage}
+                      mediaId={rowInfo[rowIndex - 1].mediaId}
+                      onPlayStatus={handlePlayStatus}
+                      onDelete={handleConfirmDelete}
+                    />
+                  ),
+                  className: isSection ? 'set' : 'pass',
+                } as ICell,
+              ]
+        );
+      });
+      setData(data);
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, check, bookCol, columns, playingIndex]);
+  }, [rowData, rowInfo, bookCol, columns]);
 
   useEffect(() => {
     if (sheetRef.current && showRow) {

@@ -9,13 +9,13 @@ import {
   Passage,
   Section,
   IMediaTabStrings,
-  ActivityStates,
   Plan,
   BookName,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
-import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -54,13 +54,13 @@ import {
   passageReference,
   sectionDescription,
   getMediaInPlans,
-  UpdatePassageStateOps,
 } from '../crud';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare, localeDefault } from '../utils';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import MediaPlayer from './MediaPlayer';
+import { useMediaAttach } from '../crud/useMediaAttach';
 
 const ActionHeight = 52;
 
@@ -296,6 +296,7 @@ const getPassages = (
 
 interface IStateProps {
   t: IMediaTabStrings;
+  ts: ISharedStrings;
   uploadList: FileList;
   loaded: boolean;
   currentlyLoading: number;
@@ -308,6 +309,7 @@ interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
+  doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IRecordProps {
@@ -331,6 +333,8 @@ interface IProps
 export function MediaTab(props: IProps) {
   const {
     t,
+    ts,
+    doOrbitError,
     uploadList,
     loaded,
     currentlyLoading,
@@ -354,7 +358,6 @@ export function MediaTab(props: IProps) {
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
-  const [user] = useGlobal('user');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [, setTab] = useGlobal('tab');
 
@@ -472,7 +475,11 @@ export function MediaTab(props: IProps) {
   const [dataAttach, setDataAttach] = useState(new Set<number>());
   const [passAttach, setPassAttach] = useState(new Set<number>());
   const inProcess = React.useRef<boolean>(false);
-
+  const [attachPassage, detachPassage] = useMediaAttach({
+    ...props,
+    ts,
+    doOrbitError,
+  });
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
       if (attachMap[mediaId] === pRow) return true;
@@ -540,33 +547,12 @@ export function MediaTab(props: IProps) {
   // const handleAttach = () => setAttachVisible(!attachVisible);
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
 
-  const attach = async (passage: string, mediaId: string) => {
-    var tb = new TransformBuilder();
-    var ops: Operation[] = [];
-    ops.push(
-      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaId }, 'passage', {
-        type: 'passage',
-        id: passage,
-      })
-    );
-    ops = UpdatePassageStateOps(
-      passage,
-      ActivityStates.TranscribeReady,
-      'Media Attached',
-      remoteIdNum('user', user, memory.keyMap),
-      tb,
-      ops,
-      memory
-    );
-    await memory.update(ops);
-  };
-
   const handleSave = async () => {
     inProcess.current = true;
     setMessage(<span>{t.saving}</span>);
     const handleRow = async (mediaId: string) => {
       const pRow = attachMap[mediaId];
-      await attach(pdata[pRow].id, mediaId);
+      await attachPassage(pdata[pRow].id, mediaId);
     };
     for (let mediaId of Object.keys(attachMap)) {
       await handleRow(mediaId);
@@ -574,28 +560,6 @@ export function MediaTab(props: IProps) {
     setAttachMap({});
     setMessage(<span>{t.savingComplete}</span>);
     inProcess.current = false;
-  };
-
-  const detach = async (passage: string, mediaId: string) => {
-    var tb = new TransformBuilder();
-    var ops: Operation[] = [];
-    ops.push(
-      tb.replaceRelatedRecord(
-        { type: 'mediafile', id: mediaId },
-        'passage',
-        null
-      )
-    );
-    ops = UpdatePassageStateOps(
-      passage,
-      ActivityStates.NoMedia,
-      'Media Detached',
-      remoteIdNum('user', user, memory.keyMap),
-      tb,
-      ops,
-      memory
-    );
-    await memory.update(ops);
   };
 
   const handleDetach = (mediaId: string) => () => {
@@ -609,7 +573,7 @@ export function MediaTab(props: IProps) {
     } else {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
-        detach(passId, mediaId);
+        detachPassage(passId, mediaId);
       } else {
         setMessage(
           <span>{t.noPassageAttached.replace('{0}', data[mRow].fileName)}</span>
@@ -1103,13 +1067,13 @@ export function MediaTab(props: IProps) {
                 {!planColumn && !attachVisible && (
                   <Button
                     key="upload"
-                    aria-label={t.uploadMedia}
+                    aria-label={ts.uploadMediaPlural}
                     variant="outlined"
                     color="primary"
                     className={classes.button}
                     onClick={handleUpload}
                   >
-                    {t.uploadMedia}
+                    {ts.uploadMediaPlural}
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
@@ -1277,6 +1241,7 @@ export function MediaTab(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
+  ts: localStrings(state, { layout: 'shared' }),
   uploadList: state.upload.files,
   currentlyLoading: state.upload.current,
   uploadError: state.upload.errmsg,
@@ -1291,6 +1256,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
+      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),

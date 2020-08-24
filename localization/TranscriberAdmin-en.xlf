@@ -16,6 +16,54 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.transcriber">
+         <segment>
+            <source>Transcriber</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.editor">
+         <segment>
+            <source>Editor</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.uploadMediaSingular">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.uploadMediaPlural">
+         <segment>
+            <source>Upload Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.assign">
+         <segment>
+            <source>Assign</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="planActions.playpause">
+         <segment>
+            <source>Play / Pause</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.accessFirst">
          <segment>
             <source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
@@ -238,75 +286,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="projectTable.silTranscriberAdmin">
-         <segment>
-            <source>SIL Transcriber Admin</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectTable.chooseProject">
-         <segment>
-            <source>Choose Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectTable.name">
-         <segment>
-            <source>Name</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectTable.description">
-         <segment>
-            <source>Description</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectTable.language">
-         <segment>
-            <source>Language</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectTable.delete">
-         <segment>
-            <source>Delete</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.upload">
-         <segment>
-            <source>Upload Audio</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.play">
-         <segment>
-            <source>Play / Pause</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.assign">
-         <segment>
-            <source>Assign</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.transcribe">
-         <segment>
-            <source>Transcribe</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planSheet.delete">
-         <segment>
-            <source>Delete</source>
             <target/>
          </segment>
       </unit>
@@ -586,18 +568,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="assignmentTable.transcriber">
-         <segment>
-            <source>Transcriber</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="assignmentTable.editor">
-         <segment>
-            <source>Editor</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="assignmentTable.selectRowsToAssign">
          <segment>
             <source>Please select row(s) to assign.</source>
@@ -631,18 +601,6 @@
       <unit id="assignSection.users">
          <segment>
             <source>Users</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="assignSection.editor">
-         <segment>
-            <source>Editor</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="assignSection.transcriber">
-         <segment>
-            <source>Transcriber</source>
             <target/>
          </segment>
       </unit>
@@ -745,12 +703,6 @@
       <unit id="mediaTab.attachPassage">
          <segment>
             <source>Attach Passage</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="mediaTab.uploadMedia">
-         <segment>
-            <source>Upload Media</source>
             <target/>
          </segment>
       </unit>
@@ -1516,18 +1468,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="import.editor">
-         <segment>
-            <source>Editor</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="import.transcriber">
-         <segment>
-            <source>Transcriber</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="import.unassigned">
          <segment>
             <source>unassigned</source>
@@ -1609,18 +1549,6 @@
       <unit id="transcriptionTab.filter">
          <segment>
             <source>Filter</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.transcriber">
-         <segment>
-            <source>Transcriber</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.editor">
-         <segment>
-            <source>Editor</source>
             <target/>
          </segment>
       </unit>
@@ -2278,21 +2206,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.transcriber">
-         <segment>
-            <source>Transcriber</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="invite.transcriberDetail">
          <segment>
             <source>(Transcribe)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.editor">
-         <segment>
-            <source>Editor</source>
             <target/>
          </segment>
       </unit>
@@ -2371,66 +2287,6 @@
       <unit id="invitationTable.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.add">
-         <segment>
-            <source>Add</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.name">
-         <segment>
-            <source>Name</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.description">
-         <segment>
-            <source>Description</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.website">
-         <segment>
-            <source>Website</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.logo">
-         <segment>
-            <source>Logo</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.publicByDefault">
-         <segment>
-            <source>Public By Default</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.save">
-         <segment>
-            <source>Save</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.cancel">
-         <segment>
-            <source>Cancel</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.deleteOrg">
-         <segment>
-            <source>Delete Organization</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="orgSettings.deleteExplained">
-         <segment>
-            <source>Deleting this organization will prevent any members of the organization from doing work on any of the projects or plans in this organization.</source>
             <target/>
          </segment>
       </unit>
@@ -3298,18 +3154,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="taskItem.transcriber">
-         <segment>
-            <source>Transcriber</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.editor">
-         <segment>
-            <source>Editor</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="control.contentType">
          <segment>
             <source>Content Type</source>
@@ -3391,12 +3235,6 @@
       <unit id="template.apply">
          <segment>
             <source>Apply</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.upload">
-         <segment>
-            <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>

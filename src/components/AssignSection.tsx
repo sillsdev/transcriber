@@ -10,6 +10,7 @@ import {
   GroupMembership,
   Role,
   RoleNames,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -34,8 +35,8 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  IconButton,
 } from '@material-ui/core';
-// import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import SnackBar from './SnackBar';
 import UserAvatar from './UserAvatar';
 import {
@@ -45,6 +46,7 @@ import {
   sectionEditorName,
   sectionNumber,
 } from '../crud';
+import { TranscriberIcon, EditorIcon } from './RoleIcons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IAssignSectionStrings;
+  ts: ISharedStrings;
 }
 
 interface IRecordProps {
@@ -84,6 +87,7 @@ function AssignSection(props: IProps) {
     roles,
     sections,
     t,
+    ts,
     visible,
     closeMethod,
   } = props;
@@ -237,8 +241,14 @@ function AssignSection(props: IProps) {
                 <TableHead>
                   <TableRow>
                     <TableCell>{t.sections}</TableCell>
-                    <TableCell align="right">{t.editor}</TableCell>
-                    <TableCell align="right">{t.transcriber}</TableCell>
+                    <TableCell align="right">
+                      <EditorIcon />
+                      {ts.editor}
+                    </TableCell>
+                    <TableCell align="right">
+                      <TranscriberIcon />
+                      {ts.transcriber}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>{sectionList}</TableBody>
@@ -255,7 +265,12 @@ function AssignSection(props: IProps) {
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
-                  <ListItem key="head">{t.editor}</ListItem>
+                  <ListItem key="head">
+                    <IconButton>
+                      <EditorIcon />
+                    </IconButton>
+                    {ts.editor}
+                  </ListItem>
                   {editorUserList}
                 </List>
               </Paper>
@@ -263,7 +278,10 @@ function AssignSection(props: IProps) {
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
-                  <ListItem key="head">{t.transcriber}</ListItem>
+                  <ListItem key="head">
+                    <TranscriberIcon />
+                    {ts.transcriber}
+                  </ListItem>
                   {transcriberUserList}
                 </List>
               </Paper>
@@ -283,6 +301,7 @@ function AssignSection(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'assignSection' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapRecordsToProps = {

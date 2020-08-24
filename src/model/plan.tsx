@@ -1,7 +1,8 @@
-import { Record, RecordRelationship } from '@orbit/data';
+import { RecordRelationship } from '@orbit/data';
 import { ITag } from '.';
+import { BaseModel } from './baseModel';
 
-export interface Plan extends Record {
+export interface Plan extends BaseModel {
   attributes: {
     name: string;
     slug: string;
@@ -9,6 +10,8 @@ export interface Plan extends Record {
     organizedBy: string;
     tags: ITag;
     lastModifiedBy: number;
+    dateCreated: string;
+    dateUpdated: string;
   };
   relationships?: {
     project: RecordRelationship;

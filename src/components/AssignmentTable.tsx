@@ -10,6 +10,7 @@ import {
   IActivityStateStrings,
   Role,
   BookName,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -139,6 +140,7 @@ const getAssignments = (
 interface IStateProps {
   activityState: IActivityStateStrings;
   t: IAssignmentTableStrings;
+  ts: ISharedStrings;
   allBookData: BookName[];
 }
 
@@ -158,6 +160,7 @@ export function AssignmentTable(props: IProps) {
   const {
     activityState,
     t,
+    ts,
     passages,
     sections,
     users,
@@ -177,8 +180,8 @@ export function AssignmentTable(props: IProps) {
     { name: 'name', title: t.section },
     { name: 'state', title: t.sectionstate },
     { name: 'passages', title: t.passages },
-    { name: 'transcriber', title: t.transcriber },
-    { name: 'editor', title: t.editor },
+    { name: 'transcriber', title: ts.transcriber },
+    { name: 'editor', title: ts.editor },
   ];
   const columnWidths = [
     { columnName: 'name', width: 300 },
@@ -363,6 +366,7 @@ export function AssignmentTable(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'assignmentTable' }),
+  ts: localStrings(state, { layout: 'shared' }),
   activityState: localStrings(state, { layout: 'activityState' }),
   allBookData: state.books.bookData,
 });

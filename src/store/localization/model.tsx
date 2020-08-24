@@ -4,6 +4,17 @@ import * as Localize from 'react-localization';
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "lastEdit": string;
     "NoSaveOffline": string;
+    "transcriber": string;
+    "editor": string;
+    "uploadMediaSingular": string;
+    "uploadMediaPlural": string;
+};
+
+export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
+    "assign": string;
+    "transcribe": string;
+    "delete": string;
+    "playpause": string;
 };
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
@@ -55,22 +66,8 @@ export interface IAlertStrings extends Localize.LocalizedStringsMethods {
     "yes": string;
 };
 
-export interface IProjectTableStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdmin": string;
-    "chooseProject": string;
-    "name": string;
-    "description": string;
-    "language": string;
-    "delete": string;
-};
-
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
-    "upload": string;
-    "play": string;
-    "assign": string;
-    "transcribe": string;
-    "delete": string;
     "move": string;
     "copy": string;
     "attachMedia": string;
@@ -123,8 +120,6 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
     "removeSec": string;
     "delete": string;
     "filter": string;
-    "transcriber": string;
-    "editor": string;
     "selectRowsToAssign": string;
     "selectRowsToRemove": string;
     "showHideFilter": string;
@@ -134,8 +129,6 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "title": string;
     "sections": string;
     "users": string;
-    "editor": string;
-    "transcriber": string;
     "role": string;
     "assignAs": string;
     "close": string;
@@ -159,7 +152,6 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "download": string;
     "changeVersion": string;
     "attachPassage": string;
-    "uploadMedia": string;
     "uploadComplete": string;
     "planName": string;
     "fileName": string;
@@ -299,8 +291,6 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "imported": string;
     "transcription": string;
     "state": string;
-    "editor": string;
-    "transcriber": string;
     "unassigned": string;
     "fontsize": string;
     "username": string;
@@ -318,8 +308,6 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "sectionstate": string;
     "passages": string;
     "filter": string;
-    "transcriber": string;
-    "editor": string;
     "plan": string;
     "elan": string;
     "export": string;
@@ -453,9 +441,7 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "emailsubject": string;
     "admin": string;
     "adminDetail": string;
-    "transcriber": string;
     "transcriberDetail": string;
-    "editor": string;
     "editorDetail": string;
 };
 
@@ -472,19 +458,6 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
     "selectRows": string;
     "noData": string;
     "showHideFilter": string;
-};
-
-export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
-    "add": string;
-    "name": string;
-    "description": string;
-    "website": string;
-    "logo": string;
-    "publicByDefault": string;
-    "save": string;
-    "cancel": string;
-    "deleteOrg": string;
-    "deleteExplained": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
@@ -656,8 +629,6 @@ export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "section": string;
     "assign": string;
     "unassign": string;
-    "transcriber": string;
-    "editor": string;
 };
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
@@ -681,7 +652,6 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ICardsStrings extends Localize.LocalizedStringsMethods {
-    "upload": string;
     "uploadProgress": string;
     "projectCreated": string;
     "mediaUploaded": string;
@@ -750,11 +720,11 @@ export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
 	shared: ISharedStrings;
+	planActions: IPlanActionsStrings;
 	access: IAccessStrings;
 	electronImport: IElectronImportStrings;
 	usertable: IUsertableStrings;
 	alert: IAlertStrings;
-	projectTable: IProjectTableStrings;
 	planSheet: IPlanSheetStrings;
 	scriptureTable: IScriptureTableStrings;
 	assignmentTable: IAssignmentTableStrings;
@@ -775,7 +745,6 @@ export interface ILocalizedStrings {
 	activityState: IActivityStateStrings;
 	invite: IInviteStrings;
 	invitationTable: IInvitationTableStrings;
-	orgSettings: IOrgSettingsStrings;
 	mediaUpload: IMediaUploadStrings;
 	myTask: IMyTaskStrings;
 	toDoTable: IToDoTableStrings;

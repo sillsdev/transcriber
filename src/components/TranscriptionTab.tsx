@@ -18,6 +18,7 @@ import {
   FileResponse,
   BookName,
   Project,
+  ISharedStrings,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -204,6 +205,7 @@ const getAssignments = (
 
 interface IStateProps {
   t: ITranscriptionTabStrings;
+  ts: ISharedStrings;
   activityState: IActivityStateStrings;
   hasUrl: boolean;
   mediaUrl: string;
@@ -242,6 +244,7 @@ export function TranscriptionTab(props: IProps) {
     auth,
     activityState,
     t,
+    ts,
     projects,
     passages,
     sections,
@@ -287,8 +290,8 @@ export function TranscriptionTab(props: IProps) {
     { name: 'state', title: t.sectionstate },
     { name: 'planName', title: t.plan },
     { name: 'passages', title: t.passages },
-    { name: 'transcriber', title: t.transcriber },
-    { name: 'editor', title: t.editor },
+    { name: 'transcriber', title: ts.transcriber },
+    { name: 'editor', title: ts.editor },
     { name: 'action', title: '\u00A0' },
     { name: 'updated', title: t.updated },
   ];
@@ -806,6 +809,7 @@ export function TranscriptionTab(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
+  ts: localStrings(state, { layout: 'shared' }),
   activityState: localStrings(state, { layout: 'activityState' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,

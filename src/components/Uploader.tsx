@@ -44,10 +44,11 @@ interface IProps extends IStateProps, IDispatchProps {
   ready?: () => boolean; // if false control is disabled
   createProject?: (file: FileList) => Promise<any>;
   status: typeof statusInit;
+  multiple?: boolean;
 }
 
 export const Uploader = (props: IProps) => {
-  const { auth, t, isOpen, onOpen, setMessage, status } = props;
+  const { auth, t, isOpen, onOpen, setMessage, status, multiple } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
   const { uploadComplete, setComplete, finish } = props;
@@ -158,6 +159,7 @@ export const Uploader = (props: IProps) => {
 
   const uploadCancel = () => {
     onOpen(false);
+    if (status) status.canceled = true;
   };
 
   React.useEffect(() => {
@@ -171,6 +173,7 @@ export const Uploader = (props: IProps) => {
     <MediaUpload
       visible={isOpen}
       uploadType={UploadType.Media}
+      multiple={multiple}
       uploadMethod={uploadMedia}
       cancelMethod={uploadCancel}
       metaData={metaData}
