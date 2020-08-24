@@ -49,7 +49,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
   taskItemStr: localStrings(state, { layout: 'taskItem' }),
   transcriberStr: localStrings(state, { layout: 'transcriber' }),
-  projButtonStr: localStrings(state, { layout: 'projButton' }),
+  projButtonStr: localStrings(state, { layout: 'projButtons' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
