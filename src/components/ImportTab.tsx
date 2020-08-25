@@ -43,9 +43,9 @@ import AdmZip from 'adm-zip';
 import { remoteIdNum, passageDescription, remoteIdGuid } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
-import { dateChanges } from '../routes/dateChanges';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { doDataChanges } from '../hoc/DataChanges';
 
 interface IStateProps {
   t: IImportStrings;
@@ -101,6 +101,7 @@ export function ImportTab(props: IProps) {
   const [backup] = useGlobal('backup');
   const [project] = useGlobal('project');
   const [coordinatorActivated] = useGlobal('coordinatorActivated');
+  const [errorReporter] = useGlobal('errorReporter');
 
   const [message, setMessage] = useState(<></>);
   const [changeData, setChangeData] = useState(Array<IRow>());
@@ -587,7 +588,8 @@ export function ImportTab(props: IProps) {
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
-          if (remote) dateChanges(auth, remote, memory, fingerprint);
+          if (remote)
+            doDataChanges(auth, remote, memory, fingerprint, errorReporter);
           setBusy(false);
         }
       }

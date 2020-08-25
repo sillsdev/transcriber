@@ -16,6 +16,7 @@ import Callback from './callback/Callback';
 import TokenCheck from './hoc/TokenCheck';
 import Auth from './auth/Auth';
 import { parseQuery } from './utils/parseQuery';
+import DataChanges from './hoc/DataChanges';
 
 export const HeadHeight = 64;
 
@@ -62,62 +63,64 @@ class App extends React.Component {
   render() {
     return (
       <TokenCheck auth={auth}>
-        <ThemeProvider theme={theme}>
-          <Route
-            path="/"
-            exact={true}
-            render={(props) => {
-              handleParameters(props);
-              if (
-                localStorage.getItem('inviteId') &&
-                localStorage.getItem('isLoggedIn')
-              ) {
-                localStorage.removeItem('inviteId');
-                return <LogoutRequired />;
-              }
-              return <Access auth={auth} {...props} />;
-            }}
-          />
-          <Route path="/error" exact render={(props) => <Buggy />} />
-          <Route
-            path="/emailunverified"
-            exact={true}
-            render={(props) => <EmailUnverified auth={auth} {...props} />}
-          />
-          <Route
-            path="/logout"
-            exact={true}
-            render={(props) => <Logout auth={auth} {...props} />}
-          />
-          <Route
-            path="/loading"
-            render={(props) => <Loading auth={auth} {...props} />}
-          />
-          <Route
-            path="/profile"
-            render={(props) => <Profile auth={auth} {...props} />}
-          />
-          <Route
-            path="/team"
-            render={(props) => <TeamScreen auth={auth} {...props} />}
-          />
-          <Route
-            path="/plan"
-            render={(props) => <PlanScreen auth={auth} {...props} />}
-          />
-          <Route
-            path="/work"
-            render={(props) => <WorkScreen auth={auth} {...props} />}
-          />
-          <Route
-            path="/callback"
-            render={(props) => {
-              handleParameters(props);
-              return <Callback {...props} />;
-            }}
-          />
-          <Route path="/neworg" render={(props) => handleNewOrg(props)} />
-        </ThemeProvider>
+        <DataChanges auth={auth}>
+          <ThemeProvider theme={theme}>
+            <Route
+              path="/"
+              exact={true}
+              render={(props) => {
+                handleParameters(props);
+                if (
+                  localStorage.getItem('inviteId') &&
+                  localStorage.getItem('isLoggedIn')
+                ) {
+                  localStorage.removeItem('inviteId');
+                  return <LogoutRequired />;
+                }
+                return <Access auth={auth} {...props} />;
+              }}
+            />
+            <Route path="/error" exact render={(props) => <Buggy />} />
+            <Route
+              path="/emailunverified"
+              exact={true}
+              render={(props) => <EmailUnverified auth={auth} {...props} />}
+            />
+            <Route
+              path="/logout"
+              exact={true}
+              render={(props) => <Logout auth={auth} {...props} />}
+            />
+            <Route
+              path="/loading"
+              render={(props) => <Loading auth={auth} {...props} />}
+            />
+            <Route
+              path="/profile"
+              render={(props) => <Profile auth={auth} {...props} />}
+            />
+            <Route
+              path="/team"
+              render={(props) => <TeamScreen auth={auth} {...props} />}
+            />
+            <Route
+              path="/plan"
+              render={(props) => <PlanScreen auth={auth} {...props} />}
+            />
+            <Route
+              path="/work"
+              render={(props) => <WorkScreen auth={auth} {...props} />}
+            />
+            <Route
+              path="/callback"
+              render={(props) => {
+                handleParameters(props);
+                return <Callback {...props} />;
+              }}
+            />
+            <Route path="/neworg" render={(props) => handleNewOrg(props)} />
+          </ThemeProvider>
+        </DataChanges>
       </TokenCheck>
     );
   }

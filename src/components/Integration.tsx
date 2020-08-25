@@ -43,7 +43,7 @@ import Integration from '../model/integration';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { isElectron } from '../api-variable';
-import { dateChanges } from '../routes/dateChanges';
+import { doDataChanges } from '../hoc/DataChanges';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -492,7 +492,7 @@ export function IntegrationPanel(props: IProps) {
       if (paratext_syncStatus.complete) {
         resetCount();
         setSyncing(false);
-        dateChanges(auth, remote, memory, fingerprint);
+        doDataChanges(auth, remote, memory, fingerprint, errorReporter);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
