@@ -110,6 +110,9 @@ const initState = {
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
   selectProject: (project: Plan) => {},
+  setProjectParams: (project: Plan) => {
+    return ['', ''];
+  },
   projectType: (project: Plan) => '',
   projectSections: (project: Plan) => '',
   projectDescription: (project: Plan) => '',
@@ -357,6 +360,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             projectDescription,
             projectLanguage,
             selectProject,
+            setProjectParams,
             handleMessageReset,
             projectCreate,
             projectUpdate,

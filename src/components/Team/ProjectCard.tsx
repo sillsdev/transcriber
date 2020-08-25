@@ -1,5 +1,5 @@
-import React from 'react';
-import { useGlobal } from 'reactn';
+import React, { useState } from 'react';
+import { useGlobal, useEffect } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Card,
@@ -72,6 +72,7 @@ export const ProjectCard = (props: IProps) => {
   const {
     auth,
     selectProject,
+    setProjectParams,
     projectSections,
     projectDescription,
     projectLanguage,
@@ -83,11 +84,12 @@ export const ProjectCard = (props: IProps) => {
   const { getPlanName } = usePlan();
   const [projectId] = useGlobal('project');
   const projectPlans = useProjectPlans();
-  const [openProject, setOpenProject] = React.useState(false);
-  const [openIntegration, setOpenIntegration] = React.useState(false);
-  const [openImport, setOpenImport] = React.useState(false);
-  const [openExport, setOpenExport] = React.useState(false);
-  const [deleteItem, setDeleteItem] = React.useState<VProject>();
+  const [openProject, setOpenProject] = useState(false);
+  const [openIntegration, setOpenIntegration] = useState(false);
+  const [openImport, setOpenImport] = useState(false);
+  const [openExport, setOpenExport] = useState(false);
+  const [deleteItem, setDeleteItem] = useState<VProject>();
+  const [open, setOpen] = useState('');
   const t = cardStrings;
   const tpb = projButtonStrings;
 
@@ -95,7 +97,12 @@ export const ProjectCard = (props: IProps) => {
     selectProject(project);
   };
 
-  const handleProjectAction = (what: string) => {
+  useEffect(() => {
+    if (open !== '') doOpen(open);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId, open]);
+
+  const doOpen = (what: string) => {
     if (what === 'settings') {
       setOpenProject(true);
     } else if (what === 'sync') {
@@ -112,6 +119,13 @@ export const ProjectCard = (props: IProps) => {
     } else if (what === 'delete') {
       setDeleteItem(project);
     }
+    setOpen('');
+  };
+  const handleProjectAction = (what: string) => {
+    const [projectid] = setProjectParams(project);
+    //otherwise it will be done in the useEffect for projectId
+    if (projectid === projectId) doOpen(what);
+    else setOpen(what);
   };
 
   const handleOpen = (open: boolean) => {
