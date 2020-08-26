@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { StickyRedirect } from '../control';
 import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
@@ -11,6 +12,7 @@ import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';
 import Confirm from '../components/AlertDialog';
 import SnackBar from '../components/SnackBar';
+import { useUrlContext } from '../crud';
 import Auth from '../auth/Auth';
 
 const useStyles = makeStyles({
@@ -39,7 +41,6 @@ const PlanBase = (props: IProps) => {
   const [alertOpen] = useGlobal('alertOpen');
   const ctx = React.useContext(PlanContext);
   const {
-    changeTab,
     checkSavedFn,
     t,
     handleSaveConfirmed,
@@ -53,7 +54,6 @@ const PlanBase = (props: IProps) => {
     <div id="PlanScreen" className={classes.teamScreen}>
       <PlanTabs
         {...props}
-        changeTab={changeTab}
         checkSaved={checkSavedFn}
         bookCol={isScripture() ? 0 : -1}
       />
@@ -73,8 +73,10 @@ const PlanBase = (props: IProps) => {
 export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
   const classes = useStyles();
+  const { prjId } = useParams();
+  const setUrlContext = useUrlContext();
   const [project] = useGlobal('project');
-  const [plan] = useGlobal('plan');
+  const [organization] = useGlobal('organization');
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -85,8 +87,14 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
     return <TranscribeSwitch switchTo={handleSwitchTo} t={t} />;
   };
 
-  if (project === '' || plan === '') return <Redirect to="/team" />;
-  if (view === 'transcribe') return <Redirect to="/work" />;
+  React.useEffect(() => {
+    setUrlContext(prjId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prjId]);
+
+  if (project === '' && organization !== '')
+    return <StickyRedirect to="/team" />;
+  if (view === 'transcribe') return <StickyRedirect to={`/work/${prjId}`} />;
 
   return (
     <div className={classes.root}>

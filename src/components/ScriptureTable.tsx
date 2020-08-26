@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { StickyRedirect } from '../control';
 import {
   IState,
   Section,
@@ -137,6 +138,7 @@ export function ScriptureTable(props: IProps) {
     auth,
   } = props;
   const classes = useStyles();
+  const { prjId } = useParams();
   const [width, setWidth] = React.useState(window.innerWidth);
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
@@ -674,7 +676,7 @@ export function ScriptureTable(props: IProps) {
   const handleTranscribe = (i: number) => () => {
     const id = passageId(i - 1);
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap);
-    setView(`/work/${passageRemoteId}`);
+    setView(`/work/${prjId}/${passageRemoteId}`);
   };
 
   const handleAssign = (where: number[]) => () => {
@@ -1056,7 +1058,7 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [data, width, cols]);
 
-  if (view !== '') return <Redirect to={view} />;
+  if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length > 0) {

@@ -10,8 +10,8 @@ import Uploader, { statusInit } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
-import { waitForRemoteId } from '../../crud';
-import { Redirect } from 'react-router-dom';
+import { waitForRemoteId, remoteIdGuid } from '../../crud';
+import { StickyRedirect } from '../../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -186,7 +186,7 @@ export const AddCard = (props: IProps) => {
     mediaRemoteIds && (await flatAdd(planId, mediaRemoteIds, setComplete));
     setInProgress(false);
     setStep(0);
-    setView('/work');
+    setView(`/work/${remoteIdGuid('plan', planId, memory.keyMap)}`);
   };
 
   useEffect(() => {
@@ -201,7 +201,7 @@ export const AddCard = (props: IProps) => {
     status.canceled = true;
   };
 
-  if (view !== '') return <Redirect to={view} />;
+  if (view !== '') return <StickyRedirect to={view} />;
 
   return (
     <>

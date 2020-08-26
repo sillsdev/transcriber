@@ -1,11 +1,12 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { StickyRedirect } from '../control';
 import { makeStyles } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamActions, TeamProjects } from '../components/Team';
 import Auth from '../auth/Auth';
+import { remoteId } from '../crud';
 
 const useStyles = makeStyles({
   root: {
@@ -19,22 +20,25 @@ const useStyles = makeStyles({
 
 interface IProps {
   auth: Auth;
-  history: {
-    action: string;
-    location: {
-      hash: string;
-      pathname: string;
-    };
-  };
 }
 
 export const TeamScreen = (props: IProps) => {
   const classes = useStyles();
   const [project] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
+  const [memory] = useGlobal('memory');
+  const [plan] = useGlobal('plan');
 
-  if (project !== '' && projRole !== '')
-    return <Redirect to={projRole === 'admin' ? '/plan' : '/work'} />;
+  if (project !== '' && projRole !== '') {
+    const remProjId = remoteId('plan', plan, memory.keyMap);
+    return (
+      <StickyRedirect
+        to={
+          projRole === 'admin' ? `/plan/${remProjId}/0` : `/work/${remProjId}`
+        }
+      />
+    );
+  }
 
   return (
     <div className={classes.root}>

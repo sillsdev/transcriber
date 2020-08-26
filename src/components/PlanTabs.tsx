@@ -1,5 +1,7 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal, useEffect } from 'reactn';
+import { useParams } from 'react-router-dom';
+import { StickyRedirect } from '../control';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -66,14 +68,12 @@ interface IRecordProps {
 }
 interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
-  changeTab?: (v: number) => void;
   checkSaved: (method: () => void) => void;
 }
 
 const ScrollableTabsButtonAuto = (props: IProps) => {
   const {
     t,
-    changeTab,
     bookCol,
     checkSaved,
     plans,
@@ -82,17 +82,15 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     mediafiles,
   } = props;
   const classes = useStyles();
-  const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
+  const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
+  const { prjId, tabNm } = useParams();
   const getOrganizedBy = useOrganizedBy();
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
     setTab(value);
-    if (changeTab) {
-      changeTab(value);
-    }
   };
 
   const planSections = sections.filter((s) => related(s, 'plan') === plan);
@@ -130,6 +128,16 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     msg.replace('{1}', val1.toString()).replace('{2}', val2.toString());
 
   const organizedBy = getOrganizedBy(plan) || t.sections;
+
+  useEffect(() => {
+    if (tab === undefined) {
+      setTab(tabNm && /^[0-4]+$/.test(tabNm) ? parseInt(tabNm) : 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (tab !== undefined && tab.toString() !== tabNm)
+    return <StickyRedirect to={`/plan/${prjId}/${tab}`} />;
 
   return (
     <div className={classes.root}>

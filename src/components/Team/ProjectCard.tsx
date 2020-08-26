@@ -108,13 +108,10 @@ export const ProjectCard = (props: IProps) => {
     } else if (what === 'sync') {
       console.log('sync');
     } else if (what === 'integration') {
-      console.log('integration');
       setOpenIntegration(true);
     } else if (what === 'import') {
-      console.log('import');
       setOpenImport(true);
     } else if (what === 'export') {
-      console.log('export');
       setOpenExport(true);
     } else if (what === 'delete') {
       setDeleteItem(project);

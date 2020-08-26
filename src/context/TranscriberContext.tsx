@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
+import { useParams } from 'react-router-dom';
+import { StickyRedirect } from '../control';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -26,7 +28,13 @@ import {
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, remoteId, sectionNumber, passageNumber } from '../crud';
+import {
+  related,
+  remoteId,
+  sectionNumber,
+  passageNumber,
+  remoteIdGuid,
+} from '../crud';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -143,7 +151,6 @@ interface IContext {
 const TranscriberContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  select?: string;
   children: React.ReactElement;
 }
 
@@ -152,7 +159,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { select } = props;
     const { passages, mediafiles, sections, plans, planTypes } = props;
     const { projects, groupMemberships, roles } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
@@ -165,13 +171,15 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
     const { trackedTask, setTrackedTask } = props;
+    const { prjId, pasId } = useParams();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
+    const view = React.useRef('');
     const [state, setState] = useState({
       ...initState,
-      selected: select || '',
+      selected: '',
       allBookData,
       todoStr,
       taskItemStr,
@@ -210,6 +218,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const r = rowData[i];
         if (r.passage?.id === selected && r.mediaRemoteId !== '') {
           if (state.index !== i || trackedTask !== selected) {
+            const remId = remoteId('passage', selected, memory.keyMap);
+            if (pasId !== remId) {
+              view.current = `/work/${prjId}/${remId}`;
+            }
             setTrackedTask(selected);
             setState((state: ICtxState) => {
               return {
@@ -457,7 +469,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       setExpandedGroups(exGrp);
 
       if (rowList.length > 0) {
-        let selected = state.selected !== '' ? state.selected : trackedTask;
+        let selected = remoteIdGuid('passage', pasId, memory.keyMap);
+        selected =
+          state.selected !== '' ? state.selected : selected || trackedTask;
         if (selected !== '') {
           const selectedRow = rowList.filter((r) => r.passage.id === selected);
           if (selectedRow.length > 0) {
@@ -518,8 +532,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const passRecs = passages.filter((p) => p.id === r.passage.id);
         if (passRecs.length > 0) {
           const passage = { ...passRecs[0] };
-          const newState = passage.attributes.state;
-          if (newState !== r.passage.attributes.state) {
+          const newState = passage?.attributes?.state;
+          if (newState !== r.passage?.attributes?.state) {
             changed = true;
             if (noNewSelection.indexOf(newState) === -1) selected = '';
           }
@@ -543,6 +557,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [lang, booksLoaded, allBookData]);
+
+    if (view.current !== '') {
+      const target = view.current;
+      view.current = '';
+      return <StickyRedirect to={target} />;
+    }
 
     return (
       <TranscriberContext.Provider

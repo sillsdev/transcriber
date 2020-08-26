@@ -328,7 +328,8 @@ export function Loading(props: IProps) {
     ) {
       return <Redirect to="/profile" />;
     }
-    return <Redirect to={'/team'} />;
+    const fromUrl = localStorage.getItem('fromUrl');
+    return <Redirect to={fromUrl || '/team'} />;
   }
 
   return (

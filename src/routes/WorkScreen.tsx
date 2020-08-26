@@ -1,7 +1,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { StickyRedirect } from '../control';
 import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
@@ -12,7 +13,7 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
-import { remoteIdGuid, useRole } from '../crud';
+import { useRole, useUrlContext } from '../crud';
 import Auth from '../auth/Auth';
 import { HeadHeight } from '../App';
 
@@ -53,21 +54,14 @@ const mapStateToProps = (state: IState): IStateProps => ({
 
 interface IProps extends IStateProps {
   auth: Auth;
-  history: {
-    action: string;
-    location: {
-      hash: string;
-      pathname: string;
-    };
-  };
 }
 
 export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
-  const { auth, history, t } = props;
-  const { pathname } = history?.location;
+  const { auth, t } = props;
   const classes = useStyles();
-  const [memory] = useGlobal('memory');
+  const { prjId } = useParams();
   const [project] = useGlobal('project');
+  const setUrlContext = useUrlContext();
   const [projRole] = useGlobal('projRole');
   const [topFilter, setTopFilter] = React.useState(false);
   const { setMyProjRole } = useRole();
@@ -84,25 +78,26 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
 
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
-  const selected = (url: string) => {
-    const part = url.split('/');
-    if (part.length > 2 && /[0-9]+/.test(part[2]))
-      return remoteIdGuid('passage', part[2], memory.keyMap);
-    return '';
-  };
-
   React.useEffect(() => {
+
     if (projRole === '') setMyProjRole(project);
+    setUrlContext(prjId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (project === '') return <Redirect to="/team" />;
-  if (view === 'admin') return <Redirect to="/plan" />;
+  React.useEffect(() => {
+    setUrlContext(prjId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prjId]);
+
+  if (project === '' && organization !== '')
+    return <StickyRedirect to="/team" />;
+  if (view === 'admin') return <StickyRedirect to={`/plan/${prjId}/0`} />;
 
   return (
     <div className={classes.root}>
       <AppHead {...props} SwitchTo={SwitchTo} />
-      <TranscriberProvider {...props} select={selected(pathname)}>
+      <TranscriberProvider {...props}>
         <div className={classes.panel2}>
           <div className={clsx({ [classes.topFilter]: topFilter })}>
             <TaskTable auth={auth} onFilter={handleTopFilter} />

@@ -53,7 +53,6 @@ export const AppHead = withBucket(
     const classes = useStyles();
     const pathname = history?.location?.pathname;
     const [isOffline] = useGlobal('offline');
-    const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setProjRole] = useGlobal('projRole');
     const [plan, setPlan] = useGlobal('plan');
@@ -93,7 +92,6 @@ export const AppHead = withBucket(
     };
 
     const handleHome = () => {
-      setOrganization('');
       setProject('');
       setPlan('');
       setProjRole('');

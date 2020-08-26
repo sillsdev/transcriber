@@ -38,8 +38,6 @@ export interface IRowData {}
 const initState = {
   checkSavedFn: (method: () => {}) => {},
   message: <></>,
-  tab: 0,
-  changeTab: (tab: number) => {},
   t: {} as IMainStrings,
   projButtonStr: {} as IProjButtonsStrings,
   handleSaveConfirmed: () => {},
@@ -69,7 +67,6 @@ const PlanProvider = withData(mapRecordsToProps)(
     const { t, projButtonStr } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
-    const [tab, setTab] = React.useState(0);
     const [importexportBusy] = useGlobal('importexportBusy');
     const [busy] = useGlobal('remoteBusy');
     const [changed, setChanged] = useGlobal('changed');
@@ -83,7 +80,6 @@ const PlanProvider = withData(mapRecordsToProps)(
     const [state, setState] = useState({
       ...initState,
       message,
-      tab,
       t,
       projButtonStr,
     });
@@ -125,10 +121,6 @@ const PlanProvider = withData(mapRecordsToProps)(
       }
     };
 
-    const changeTab = (tab: number) => {
-      setTab(tab);
-    };
-
     const handleSaveRefused = () => {
       if (saveConfirm.current) saveConfirm.current();
       saveConfirm.current = undefined;
@@ -164,7 +156,6 @@ const PlanProvider = withData(mapRecordsToProps)(
           state: {
             ...state,
             checkSavedFn,
-            changeTab,
             handleSaveRefused,
             handleSaveConfirmed,
             handleMessageReset,

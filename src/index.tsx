@@ -63,7 +63,7 @@ setGlobal({
   project: '',
   projRole: '',
   plan: '',
-  tab: 0,
+  tab: undefined,
   group: '',
   user: '',
   lang: 'en',

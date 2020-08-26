@@ -14,6 +14,7 @@ import LogoutRequired from './routes/LogoutRequired';
 import EmailUnverified from './routes/EmailUnverified';
 import Callback from './callback/Callback';
 import TokenCheck from './hoc/TokenCheck';
+import PrivateRoute from './hoc/PrivateRoute';
 import Auth from './auth/Auth';
 import { parseQuery } from './utils/parseQuery';
 import DataChanges from './hoc/DataChanges';
@@ -91,26 +92,24 @@ class App extends React.Component {
               exact={true}
               render={(props) => <Logout auth={auth} {...props} />}
             />
-            <Route
-              path="/loading"
-              render={(props) => <Loading auth={auth} {...props} />}
-            />
-            <Route
-              path="/profile"
-              render={(props) => <Profile auth={auth} {...props} />}
-            />
-            <Route
-              path="/team"
-              render={(props) => <TeamScreen auth={auth} {...props} />}
-            />
-            <Route
-              path="/plan"
-              render={(props) => <PlanScreen auth={auth} {...props} />}
-            />
-            <Route
-              path="/work"
-              render={(props) => <WorkScreen auth={auth} {...props} />}
-            />
+            <PrivateRoute auth={auth} path="/loading">
+              <Loading auth={auth} />
+            </PrivateRoute>
+            <PrivateRoute auth={auth} path="/profile">
+              <Profile />
+            </PrivateRoute>
+            <PrivateRoute auth={auth} path="/team">
+              <TeamScreen auth={auth} />
+            </PrivateRoute>
+            <PrivateRoute auth={auth} path="/plan/:prjId/:tabNm">
+              <PlanScreen auth={auth} />
+            </PrivateRoute>
+            <PrivateRoute auth={auth} exact path="/work/:prjId/:pasId">
+              <WorkScreen auth={auth} />
+            </PrivateRoute>
+            <PrivateRoute auth={auth} exact path="/work/:prjId">
+              <WorkScreen auth={auth} />
+            </PrivateRoute>
             <Route
               path="/callback"
               render={(props) => {
