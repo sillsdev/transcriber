@@ -226,7 +226,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const selectProject = (plan: Plan) => {
-      const [projectId, orgId] = setProjectParams(plan);
+      const [projectId] = setProjectParams(plan);
       Online((online) => {
         LoadProjectData(
           projectId,
@@ -239,7 +239,7 @@ const TeamProvider = withData(mapRecordsToProps)(
           doOrbitError
         )
           .then(() => {
-            setMyProjRole(orgId);
+            setMyProjRole(projectId);
           })
           .catch((err: Error) => {
             if (!online) setMessage(<span>{t.NoLoadOffline}</span>);

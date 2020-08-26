@@ -1,15 +1,13 @@
 import { useGlobal } from 'reactn';
-import { Role } from '../model';
+import { Role, Project } from '../model';
 import { QueryBuilder, Record } from '@orbit/data';
 import { related } from '../crud';
-import { useAllUserGroup } from '.';
 
 export const useRole = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProjRole] = useGlobal('projRole');
-  const allUserGroup = useAllUserGroup();
 
   const getMbrRoleRec = (relate: string, id: string, userId: string) => {
     const tableName =
@@ -41,9 +39,11 @@ export const useRole = () => {
     return role;
   };
 
-  const setMyProjRole = (teamId: string) => {
-    const allUsers = allUserGroup(teamId);
-    const gMbrRecs = getMbrRoleRec('group', allUsers?.id, user);
+  const setMyProjRole = (projectId: string) => {
+    const proj = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'project', id: projectId })
+    ) as Project;
+    const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
     const role = getMbrRole(gMbrRecs);
     setProjRole(role);
     return role;
