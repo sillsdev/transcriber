@@ -61,6 +61,7 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const classes = useStyles();
   const { prjId } = useParams();
   const [project] = useGlobal('project');
+  const [organization] = useGlobal('organization');
   const setUrlContext = useUrlContext();
   const [projRole] = useGlobal('projRole');
   const [topFilter, setTopFilter] = React.useState(false);
@@ -79,7 +80,6 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   React.useEffect(() => {
-
     if (projRole === '') setMyProjRole(project);
     setUrlContext(prjId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
