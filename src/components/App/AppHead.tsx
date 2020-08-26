@@ -47,35 +47,6 @@ interface IProps extends IStateProps {
   };
 }
 
-//exported only for drawer -- put back inside AppHead when drawer goes away
-export const handleUserMenuAction = (
-  what: string,
-  lastpath: string,
-  setView: (v: string) => void,
-  resetRequests: () => Promise<void>
-) => {
-  if (isElectron && /ClearLogout/i.test(what)) {
-    resetData();
-    exitElectronApp();
-  }
-  if (isElectron && /logout/i.test(what)) {
-    ipc?.invoke('logout');
-    localStorage.removeItem('user-id');
-    setView('Access');
-    return;
-  }
-  localStorage.setItem('url', lastpath);
-  if (!/Close/i.test(what)) {
-    if (/ClearLogout/i.test(what)) {
-      forceLogin();
-      what = 'Logout';
-    }
-    if (/Clear/i.test(what)) {
-      if (resetRequests) resetRequests().then(() => setView(what));
-    } else setView(what);
-  }
-};
-
 export const AppHead = withBucket(
   connect(mapStateToProps)((props: IProps) => {
     const { auth, history, resetRequests, SwitchTo, t } = props;
@@ -88,6 +59,34 @@ export const AppHead = withBucket(
     const [plan, setPlan] = useGlobal('plan');
     const [view, setView] = React.useState('');
     const { getPlanName } = usePlan();
+
+    const handleUserMenuAction = (
+      what: string,
+      lastpath: string,
+      setView: (v: string) => void,
+      resetRequests: () => Promise<void>
+    ) => {
+      if (isElectron && /ClearLogout/i.test(what)) {
+        resetData();
+        exitElectronApp();
+      }
+      if (isElectron && /logout/i.test(what)) {
+        ipc?.invoke('logout');
+        localStorage.removeItem('user-id');
+        setView('Access');
+        return;
+      }
+      localStorage.setItem('url', lastpath);
+      if (!/Close/i.test(what)) {
+        if (/ClearLogout/i.test(what)) {
+          forceLogin();
+          what = 'Logout';
+        }
+        if (/Clear/i.test(what)) {
+          if (resetRequests) resetRequests().then(() => setView(what));
+        } else setView(what);
+      }
+    };
 
     const handleUserMenu = (what: string) => {
       handleUserMenuAction(what, pathname, setView, resetRequests);
@@ -103,6 +102,7 @@ export const AppHead = withBucket(
     if (view === 'Error') return <Redirect to="/error" />;
     if (view === 'Profile') return <Redirect to="/profile" />;
     if (view === 'Logout') return <Redirect to="/logout" />;
+    if (view === 'Access') return <Redirect to="/" />;
     if (!auth || !auth.isAuthenticated(isOffline))
       return <Redirect to="/logout" />;
 

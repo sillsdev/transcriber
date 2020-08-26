@@ -147,6 +147,10 @@ export function Access(props: IProps) {
   const [online, setOnline] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
+  const [, setOrganization] = useGlobal('organization');
+  const [, setProject] = useGlobal('project');
+  const [, setProjRole] = useGlobal('projRole');
+  const [, setPlan] = useGlobal('plan');
 
   const handleSelect = (uId: string) => () => {
     const selected = users.filter((u) => u.id === uId);
@@ -254,6 +258,11 @@ export function Access(props: IProps) {
       Online((online) => setOnline(online), auth);
       setOffline(true);
     } else Online((online) => setOffline(!online), auth);
+
+    setOrganization('');
+    setProject('');
+    setPlan('');
+    setProjRole('');
 
     const localAuth =
       !auth || !auth.isAuthenticated(offline)
