@@ -14,6 +14,7 @@ import Confirm from '../components/AlertDialog';
 import SnackBar from '../components/SnackBar';
 import { useUrlContext, useRole } from '../crud';
 import Auth from '../auth/Auth';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles({
   root: {
@@ -39,7 +40,7 @@ interface IProps extends IStateProps {
 const PlanBase = (props: IProps) => {
   const classes = useStyles();
   const [alertOpen] = useGlobal('alertOpen');
-  const ctx = React.useContext(PlanContext);
+  const uctx = React.useContext(UnsavedContext);
   const {
     checkSavedFn,
     t,
@@ -47,8 +48,9 @@ const PlanBase = (props: IProps) => {
     handleSaveRefused,
     message,
     handleMessageReset,
-    isScripture,
-  } = ctx.state;
+  } = uctx.state;
+  const ctx = React.useContext(PlanContext);
+  const { isScripture } = ctx.state;
 
   return (
     <div id="PlanScreen" className={classes.teamScreen}>
@@ -75,6 +77,8 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const classes = useStyles();
   const { prjId } = useParams();
   const setUrlContext = useUrlContext();
+  const uctx = React.useContext(UnsavedContext);
+  const { checkSavedFn } = uctx.state;
   const [projRole] = useGlobal('projRole');
   const { setMyProjRole } = useRole();
   const [project] = useGlobal('project');
@@ -86,7 +90,9 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   };
 
   const SwitchTo = () => {
-    return <TranscribeSwitch switchTo={handleSwitchTo} t={t} />;
+    return (
+      <TranscribeSwitch switchTo={() => checkSavedFn(handleSwitchTo)} t={t} />
+    );
   };
 
   React.useEffect(() => {

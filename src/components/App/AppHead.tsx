@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import Auth from '../../auth/Auth';
 import { isElectron } from '../../api-variable';
+import { UnsavedContext } from '../../context/UnsavedContext';
 import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
 import { resetData, exitElectronApp, forceLogin } from '../../utils';
@@ -59,6 +60,8 @@ export const AppHead = withBucket(
     const [, setProject] = useGlobal('project');
     const [, setProjRole] = useGlobal('projRole');
     const [plan, setPlan] = useGlobal('plan');
+    const ctx = React.useContext(UnsavedContext);
+    const { checkSavedFn } = ctx.state;
     const [view, setView] = React.useState('');
     const { getPlanName } = usePlan();
     const [busy] = useGlobal('remoteBusy');
@@ -114,7 +117,7 @@ export const AppHead = withBucket(
       <AppBar position="fixed" className={classes.appBar} color="inherit">
         {plan !== '' ? (
           <Toolbar>
-            <IconButton onClick={handleHome}>
+            <IconButton onClick={() => checkSavedFn(() => handleHome())}>
               <HomeIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
@@ -132,7 +135,12 @@ export const AppHead = withBucket(
             <div className={classes.grow}>{'\u00A0'}</div>
             {SwitchTo && <SwitchTo />}
             <HelpMenu online={!isOffline} />
-            <UserMenu action={handleUserMenu} auth={auth} />
+            <UserMenu
+              action={(what: string) =>
+                checkSavedFn(() => handleUserMenu(what))
+              }
+              auth={auth}
+            />
           </Toolbar>
         ) : (
           <Toolbar>
@@ -141,7 +149,12 @@ export const AppHead = withBucket(
             </Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
             <HelpMenu online={!isOffline} />
-            <UserMenu action={handleUserMenu} auth={auth} />
+            <UserMenu
+              action={(what: string) =>
+                checkSavedFn(() => handleUserMenu(what))
+              }
+              auth={auth}
+            />
           </Toolbar>
         )}
         {!importexportBusy || <Busy />}

@@ -14,14 +14,11 @@ import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { related } from '../crud';
-import { useRemoteSave } from '../utils';
 
 interface IStateProps {
-  t: IMainStrings;
   projButtonStr: IProjButtonsStrings;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'main' }),
   projButtonStr: localStrings(state, { layout: 'projButtons' }),
 });
 
@@ -36,13 +33,8 @@ const mapRecordsToProps = {};
 export interface IRowData {}
 
 const initState = {
-  checkSavedFn: (method: () => {}) => {},
-  message: <></>,
   t: {} as IMainStrings,
   projButtonStr: {} as IProjButtonsStrings,
-  handleSaveConfirmed: () => {},
-  handleSaveRefused: () => {},
-  handleMessageReset: () => {},
   isScripture: () => false,
 };
 
@@ -64,23 +56,11 @@ const PlanProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { t, projButtonStr } = props;
+    const { projButtonStr } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
-    const [importexportBusy] = useGlobal('importexportBusy');
-    const [busy] = useGlobal('remoteBusy');
-    const [changed, setChanged] = useGlobal('changed');
-    const [doSave] = useGlobal('doSave');
-    const [, setAlertOpen] = useGlobal('alertOpen');
-    const [message, setMessage] = React.useState(<></>);
-    const saveConfirm = React.useRef<() => any>();
-
-    const [startSave, , waitForSave] = useRemoteSave();
-
     const [state, setState] = useState({
       ...initState,
-      message,
-      t,
       projButtonStr,
     });
 
@@ -104,61 +84,11 @@ const PlanProvider = withData(mapRecordsToProps)(
       return false;
     };
 
-    const checkSavedFn = (method: () => any) => {
-      if (busy || importexportBusy) {
-        setMessage(<span>{t.loadingTable}</span>);
-        return;
-      }
-      if (doSave) {
-        setMessage(<span>{t.saving}</span>);
-        return;
-      }
-      if (changed) {
-        saveConfirm.current = method;
-        setAlertOpen(true);
-      } else {
-        method();
-      }
-    };
-
-    const handleSaveRefused = () => {
-      if (saveConfirm.current) saveConfirm.current();
-      saveConfirm.current = undefined;
-      setAlertOpen(false);
-      setChanged(false);
-    };
-
-    const finishConfirmed = (
-      savedMethod: undefined | (() => any),
-      waitCount: number
-    ) => {
-      waitForSave(savedMethod, waitCount).catch((err) => {
-        setMessage(<span>{err.message}</span>);
-      });
-    };
-
-    const handleSaveConfirmed = () => {
-      const savedMethod = saveConfirm.current;
-      saveConfirm.current = undefined;
-      setMessage(<span>{t.saving}</span>);
-      startSave();
-      setAlertOpen(false);
-      finishConfirmed(savedMethod, 8);
-    };
-
-    const handleMessageReset = () => {
-      setMessage(<></>);
-    };
-
     return (
       <PlanContext.Provider
         value={{
           state: {
             ...state,
-            checkSavedFn,
-            handleSaveRefused,
-            handleSaveConfirmed,
-            handleMessageReset,
             isScripture,
           },
           setState,

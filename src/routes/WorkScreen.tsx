@@ -13,6 +13,9 @@ import { TaskItemWidth } from '../components/TaskTable';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
+import { UnsavedContext } from '../context/UnsavedContext';
+import Confirm from '../components/AlertDialog';
+import SnackBar from '../components/SnackBar';
 import { useRole, useUrlContext } from '../crud';
 import Auth from '../auth/Auth';
 import { HeadHeight } from '../App';
@@ -66,6 +69,15 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const [projRole] = useGlobal('projRole');
   const [topFilter, setTopFilter] = React.useState(false);
   const { setMyProjRole } = useRole();
+  const [alertOpen] = useGlobal('alertOpen');
+  const uctx = React.useContext(UnsavedContext);
+  const {
+    checkSavedFn,
+    handleSaveConfirmed,
+    handleSaveRefused,
+    message,
+    handleMessageReset,
+  } = uctx.state;
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -74,7 +86,13 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
 
   const SwitchTo = () => {
     if (projRole !== 'admin') return <></>;
-    return <TranscribeSwitch label={t.admin} switchTo={handleSwitchTo} t={t} />;
+    return (
+      <TranscribeSwitch
+        label={t.admin}
+        switchTo={() => checkSavedFn(handleSwitchTo)}
+        t={t}
+      />
+    );
   };
 
   const handleTopFilter = (top: boolean) => setTopFilter(top);
@@ -109,6 +127,15 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
           )}
         </div>
       </TranscriberProvider>
+      {alertOpen && (
+        <Confirm
+          title={t.UnsavedData}
+          text={t.saveFirst}
+          yesResponse={handleSaveConfirmed}
+          noResponse={handleSaveRefused}
+        />
+      )}
+      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 });
