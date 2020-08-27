@@ -217,6 +217,7 @@ export async function LoadProjectData(
   backup: IndexedDBSource,
   projectsLoaded: string[],
   setProjectsLoaded: (valud: string[]) => void,
+  setBusy: (v: boolean) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
   if (projectsLoaded.includes(project)) return true;
@@ -228,6 +229,7 @@ export async function LoadProjectData(
 
   try {
     let start = 0;
+    setBusy(true);
     do {
       var transform: ProjData[] = (await remote.query(
         // eslint-disable-next-line no-loop-func
@@ -268,8 +270,10 @@ export async function LoadProjectData(
         start = -1;
       }
     } while (start > -1);
+    setBusy(false);
   } catch (rejected) {
     console.log(rejected);
+    setBusy(false);
     return false;
   }
   AddProjectLoaded(project, projectsLoaded, setProjectsLoaded);

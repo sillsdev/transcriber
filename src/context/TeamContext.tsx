@@ -175,6 +175,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       doOrbitError,
     } = props;
     const [memory] = useGlobal('memory');
+    const [, setBusy] = useGlobal('importexportBusy');
+
     // const [orgRole, setOrgRole] = useGlobal('orgRole');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
@@ -236,6 +238,7 @@ const TeamProvider = withData(mapRecordsToProps)(
           backup,
           projectsLoaded,
           setProjectsLoaded,
+          setBusy,
           doOrbitError
         )
           .then(() => {

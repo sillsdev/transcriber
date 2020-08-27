@@ -4,7 +4,13 @@ import { Redirect, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../../model';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
-import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  LinearProgress,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import Auth from '../../auth/Auth';
@@ -14,6 +20,7 @@ import UserMenu from '../UserMenu';
 import { resetData, exitElectronApp, forceLogin } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
+import Busy from '../Busy';
 
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 
@@ -24,6 +31,9 @@ const useStyles = makeStyles({
   },
   grow: {
     flexGrow: 1,
+  },
+  progress: {
+    width: '100%',
   },
 });
 
@@ -51,6 +61,9 @@ export const AppHead = withBucket(
     const [plan, setPlan] = useGlobal('plan');
     const [view, setView] = React.useState('');
     const { getPlanName } = usePlan();
+    const [busy] = useGlobal('remoteBusy');
+    const [importexportBusy] = useGlobal('importexportBusy');
+    const [doSave] = useGlobal('doSave');
 
     const handleUserMenuAction = (
       what: string,
@@ -131,6 +144,8 @@ export const AppHead = withBucket(
             <UserMenu action={handleUserMenu} auth={auth} />
           </Toolbar>
         )}
+        {!importexportBusy || <Busy />}
+        {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}
       </AppBar>
     );
   })
