@@ -173,14 +173,13 @@ interface IProps
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;
+  const { users, t, noMargin, finishAdd, setLanguage } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
-  const [offline] = useGlobal('offline');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
@@ -349,7 +348,7 @@ export function Profile(props: IProps) {
     if (editId) {
       setEditId(null);
     }
-    setView('Main');
+    setView('Team');
   };
 
   const addToOrgAndGroup = (userRec: User) => {
@@ -424,14 +423,14 @@ export function Profile(props: IProps) {
     if (finishAdd) {
       finishAdd();
     }
-    setView('Main');
+    setView('Team');
   };
 
   const handleCancel = () => {
     if (editId) {
       setEditId(null);
     }
-    setView('Main');
+    setView('Team');
   };
 
   const handleDelete = () => {
@@ -567,13 +566,9 @@ export function Profile(props: IProps) {
     currentUser === undefined ||
     currentUser.attributes?.name === currentUser.attributes?.email;
 
-  if (!auth || !auth.isAuthenticated(offline)) {
-    localStorage.setItem('url', history.location.pathname);
-    return <Redirect to="/" />;
-  }
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Access/i.test(view)) return <Redirect to="/" />;
-  if (/Main/i.test(view)) return <Redirect to="/main" />;
+  if (/Team/i.test(view)) return <Redirect to="/team" />;
 
   const orgRoles = ['Admin', 'Member'];
 

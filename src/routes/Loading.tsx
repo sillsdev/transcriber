@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import {
   IState,
   IMainStrings,
-  Organization,
   Invitation,
   User,
   ISharedStrings,
@@ -20,8 +19,8 @@ import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
-import { uiLang, Online, localeDefault, parseQuery } from '../utils';
-import { related, remoteId, hasAnyRelated, createOrg, GetUser } from '../crud';
+import { uiLang, localeDefault } from '../utils';
+import { related, remoteId, GetUser } from '../crud';
 import SnackBar from '../components/SnackBar';
 import { isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
@@ -86,14 +85,9 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Loading(props: IProps) {
-  const { orbitLoaded, auth, setExpireAt, t, ts } = props;
+  const { orbitLoaded, auth, setExpireAt, t } = props;
   const classes = useStyles();
-  const {
-    fetchOrbitData,
-    fetchLocalization,
-    setLanguage,
-    doOrbitError,
-  } = props;
+  const { fetchOrbitData, fetchLocalization, setLanguage } = props;
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -101,17 +95,13 @@ export function Loading(props: IProps) {
   const [, setRemote] = useGlobal('remote');
   const [, setFingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
-  const [organization, setOrganization] = useGlobal('organization');
-  const [, setProject] = useGlobal('project');
+  const [, setOrganization] = useGlobal('organization');
   const [globalStore] = useGlobal();
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
   const [, setIsDeveloper] = useGlobal('developer');
   const [completed, setCompleted] = useState(0);
-  const [newOrgParams, setNewOrgParams] = useState(
-    localStorage.getItem('newOrg')
-  );
   const [message, setMessage] = useState(<></>);
 
   const handleMessageReset = () => {
@@ -216,55 +206,7 @@ export function Loading(props: IProps) {
         }
         const locale = userRec.attributes?.locale || 'en';
         if (locale) setLanguage(locale);
-
-        if (
-          organization === '' &&
-          (newOrgParams !== null || !hasAnyRelated(userRec, 'groupMemberships'))
-        ) {
-          let orgRec: Organization;
-          if (newOrgParams) {
-            localStorage.removeItem('newOrg');
-            const { orgId, orgName } = parseQuery(newOrgParams);
-            orgRec = {
-              type: 'organization',
-              attributes: {
-                name: orgName,
-                SilId: orgId,
-                publicByDefault: true,
-              },
-            } as any;
-          } else {
-            orgRec = {
-              type: 'organization',
-              attributes: {
-                name: t.myWorkbench,
-                description: t.defaultOrgDesc + userRec.attributes?.name || '',
-                publicByDefault: true,
-              },
-            } as any;
-          }
-          Online((online) => {
-            createOrg({
-              orgRec,
-              user,
-              coordinator,
-              online,
-              setOrganization,
-              setProject,
-              doOrbitError,
-            })
-              .then(() => {
-                setCompleted(100);
-              })
-              .catch((err: Error) => {
-                if (!online) setMessage(<span>{ts.NoSaveOffline}</span>);
-                else setMessage(<span>{err.message}</span>);
-              });
-          });
-          setNewOrgParams(null);
-        } else {
-          setCompleted(100);
-        }
+        setCompleted(100);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

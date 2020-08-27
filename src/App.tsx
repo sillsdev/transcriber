@@ -98,7 +98,7 @@ class App extends React.Component {
                 <Loading auth={auth} />
               </PrivateRoute>
               <PrivateRoute auth={auth} path="/profile">
-                <Profile />
+                <Profile auth={auth} />
               </PrivateRoute>
               <PrivateRoute auth={auth} path="/team">
                 <TeamScreen auth={auth} />

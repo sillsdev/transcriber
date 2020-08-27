@@ -1309,12 +1309,6 @@
             <target>Continuer</target>
          </segment>
       </unit>
-		<unit id="main.myWorkbench">
-			<segment>
-				<source>My Workbench</source>
-				<target>Mon Atelier</target>
-			</segment>
-		</unit>
       <unit id="main.defaultOrgDesc">
          <segment>
             <source>Default organization of </source>
