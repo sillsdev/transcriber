@@ -10,7 +10,7 @@ import Uploader, { statusInit } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
-import { waitForRemoteId, remoteIdGuid } from '../../crud';
+import { waitForRemoteId, remoteId } from '../../crud';
 import { StickyRedirect } from '../../control';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -186,7 +186,7 @@ export const AddCard = (props: IProps) => {
     mediaRemoteIds && (await flatAdd(planId, mediaRemoteIds, setComplete));
     setInProgress(false);
     setStep(0);
-    setView(`/work/${remoteIdGuid('plan', planId, memory.keyMap)}`);
+    setView(`/work/${remoteId('plan', planId, memory.keyMap)}`);
   };
 
   useEffect(() => {

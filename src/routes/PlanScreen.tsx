@@ -12,7 +12,7 @@ import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';
 import Confirm from '../components/AlertDialog';
 import SnackBar from '../components/SnackBar';
-import { useUrlContext } from '../crud';
+import { useUrlContext, useRole } from '../crud';
 import Auth from '../auth/Auth';
 
 const useStyles = makeStyles({
@@ -75,6 +75,8 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const classes = useStyles();
   const { prjId } = useParams();
   const setUrlContext = useUrlContext();
+  const [projRole] = useGlobal('projRole');
+  const { setMyProjRole } = useRole();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
   const [view, setView] = React.useState('');
@@ -86,6 +88,12 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const SwitchTo = () => {
     return <TranscribeSwitch switchTo={handleSwitchTo} t={t} />;
   };
+
+  React.useEffect(() => {
+    const projectId = setUrlContext(prjId);
+    if (projRole === '') setMyProjRole(projectId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   React.useEffect(() => {
     setUrlContext(prjId);

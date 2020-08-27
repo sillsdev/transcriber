@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../../model';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
@@ -38,20 +38,13 @@ interface IProps extends IStateProps {
   auth: Auth;
   resetRequests: () => Promise<void>;
   SwitchTo?: React.FC;
-  history: {
-    action: string;
-    location: {
-      hash: string;
-      pathname: string;
-    };
-  };
 }
 
 export const AppHead = withBucket(
   connect(mapStateToProps)((props: IProps) => {
-    const { auth, history, resetRequests, SwitchTo, t } = props;
+    const { auth, resetRequests, SwitchTo, t } = props;
     const classes = useStyles();
-    const pathname = history?.location?.pathname;
+    const { pathname } = useLocation();
     const [isOffline] = useGlobal('offline');
     const [, setProject] = useGlobal('project');
     const [, setProjRole] = useGlobal('projRole');

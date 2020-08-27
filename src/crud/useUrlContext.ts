@@ -20,6 +20,8 @@ export const useUrlContext = () => {
       const orgId = related(team, 'organization');
       if (orgId !== organization) setOrganization(orgId);
       if (projectId !== project) setProject(projectId);
+      return projectId;
     }
+    return project;
   };
 };

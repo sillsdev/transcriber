@@ -122,7 +122,6 @@ interface IDispatchProps {
 }
 
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  history: any;
   auth: Auth;
 }
 

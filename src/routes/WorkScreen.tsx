@@ -80,8 +80,8 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const handleTopFilter = (top: boolean) => setTopFilter(top);
 
   React.useEffect(() => {
-    if (projRole === '') setMyProjRole(project);
-    setUrlContext(prjId);
+    const projectId = setUrlContext(prjId);
+    if (projRole === '') setMyProjRole(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

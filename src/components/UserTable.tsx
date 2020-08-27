@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -125,18 +125,12 @@ interface IRecordProps {
   organizationMemberships: Array<OrganizationMembership>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  history: {
-    action: string;
-    location: {
-      pathname: string;
-    };
-  };
-}
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function UserTable(props: IProps) {
-  const { t, users, roles, organizationMemberships, history } = props;
+  const { t, users, roles, organizationMemberships } = props;
   const classes = useStyles();
+  const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -183,7 +177,7 @@ export function UserTable(props: IProps) {
   };
 
   const handleEdit = (userId: string) => (e: any) => {
-    localStorage.setItem('url', history.location.pathname);
+    localStorage.setItem('url', pathname);
     setEditId(userId);
     setView('Profile');
   };

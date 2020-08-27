@@ -21,16 +21,7 @@ import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
 import { uiLang, Online, localeDefault, parseQuery } from '../utils';
-import {
-  related,
-  remoteId,
-  hasAnyRelated,
-  createOrg,
-  GetUser,
-  getOrgs,
-  remoteIdGuid,
-  setDefaultProj,
-} from '../crud';
+import { related, remoteId, hasAnyRelated, createOrg, GetUser } from '../crud';
 import SnackBar from '../components/SnackBar';
 import { isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
@@ -106,32 +97,21 @@ export function Loading(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_bucket, setBucket] = useGlobal('bucket');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_remote, setRemote] = useGlobal('remote');
-
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_fingerprint, setFingerprint] = useGlobal('fingerprint');
+  const [, setBucket] = useGlobal('bucket');
+  const [, setRemote] = useGlobal('remote');
+  const [, setFingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
   const [organization, setOrganization] = useGlobal('organization');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_project, setProject] = useGlobal('project');
+  const [, setProject] = useGlobal('project');
   const [globalStore] = useGlobal();
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_coordinatorActivated, setCoordinatorActivated] = useGlobal(
-    'coordinatorActivated'
-  );
+  const [, setOrbitRetries] = useGlobal('orbitRetries');
+  const [, setProjectsLoaded] = useGlobal('projectsLoaded');
+  const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
   const [, setIsDeveloper] = useGlobal('developer');
   const [completed, setCompleted] = useState(0);
   const [newOrgParams, setNewOrgParams] = useState(
     localStorage.getItem('newOrg')
   );
-  const [savedURL] = useState(localStorage.getItem('url') || '');
   const [message, setMessage] = useState(<></>);
 
   const handleMessageReset = () => {
@@ -196,29 +176,6 @@ export function Loading(props: IProps) {
         );
       }
     }
-  };
-
-  const setDefaultOrg = async () => {
-    let orgs: Organization[] = getOrgs(memory, user);
-    var org = organization;
-    if (org === '' || orgs.findIndex((o) => o.id === org) < 0) {
-      org =
-        remoteIdGuid(
-          'organization',
-          localStorage.getItem('lastOrg') || '',
-          memory.keyMap
-        ) || '';
-    }
-    if (org === '') {
-      orgs = orgs
-        .filter((o) => o.attributes)
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
-      if (orgs.length > 0) {
-        org = orgs[0].id;
-      }
-    }
-    setOrganization(org);
-    if (org !== '') setDefaultProj(org, memory, setProject);
   };
 
   useEffect(() => {
@@ -308,9 +265,6 @@ export function Loading(props: IProps) {
         } else {
           setCompleted(100);
         }
-        const urlLen = Math.min(savedURL.length, 5);
-        if (savedURL.slice(0, urlLen) === '/main'.slice(0, urlLen))
-          setDefaultOrg();
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -328,7 +282,8 @@ export function Loading(props: IProps) {
     ) {
       return <Redirect to="/profile" />;
     }
-    const fromUrl = localStorage.getItem('fromUrl');
+    let fromUrl = localStorage.getItem('fromUrl');
+    if (fromUrl && !/^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     return <Redirect to={fromUrl || '/team'} />;
   }
 

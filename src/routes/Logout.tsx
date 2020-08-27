@@ -41,7 +41,6 @@ interface IDispatchProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
-  history: any;
   auth: Auth;
 }
 
