@@ -1225,6 +1225,7 @@ export function MediaTab(props: IProps) {
         uploadType={UploadType.Media}
         uploadMethod={uploadMedia}
         cancelMethod={uploadCancel}
+        multiple={true}
       />
       {confirmAction === '' || (
         <Confirm
