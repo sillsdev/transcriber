@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
       flexGrow: 1,
     },
     icon: {
@@ -106,10 +106,6 @@ export const AddCard = (props: IProps) => {
   };
 
   const handleReady = () => type !== '' && language.bcp47 !== 'und';
-
-  const handleConnect = (team: TeamIdType) => (e: any) => {
-    console.log(`clicked ${t.connectParatext} for ${teamName(team)}`);
-  };
 
   const handleImport = (team: TeamIdType) => (e: any) => {
     console.log(`clicked ${t.import} for ${teamName(team)}`);
@@ -220,9 +216,11 @@ export const AddCard = (props: IProps) => {
                 {t.newProject}
               </Button>
 
+              {/*  revisit in the future
               <Button variant="contained" onClick={handleConnect(team)}>
                 {t.connectParatext}
               </Button>
+              */}
               {isElectron && (
                 <Button variant="contained" onClick={handleImport(team)}>
                   {t.import}
