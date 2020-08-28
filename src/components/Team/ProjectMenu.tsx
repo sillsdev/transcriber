@@ -73,11 +73,12 @@ interface IStateProps {
 
 interface IProps extends IStateProps {
   inProject?: boolean;
+  isOwner?: boolean;
   action?: (what: string) => void;
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, action, t, tpb, td } = props;
+  const { inProject, action, t, tpb, td, isOwner } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -111,7 +112,7 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!inProject && (
+        {!inProject && isOwner && (
           <StyledMenuItem onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
@@ -133,32 +134,36 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.integrations} />
         </StyledMenuItem>
-        <StyledMenuItem onClick={handle('import')}>
-          <ListItemIcon>
-            <ImportIcon />
-          </ListItemIcon>
-          <ListItemText primary={tpb.import} />
-        </StyledMenuItem>
+        {isOwner && (
+          <StyledMenuItem onClick={handle('import')}>
+            <ListItemIcon>
+              <ImportIcon />
+            </ListItemIcon>
+            <ListItemText primary={tpb.import} />
+          </StyledMenuItem>
+        )}
         <StyledMenuItem onClick={handle('export')}>
           <ListItemIcon>
             <ExportIcon />
           </ListItemIcon>
           <ListItemText primary={tpb.export} />
         </StyledMenuItem>
-        {!inProject ? (
-          <StyledMenuItem onClick={handle('delete')}>
-            <ListItemIcon>
-              <DeleteIcon />
-            </ListItemIcon>
-            <ListItemText primary={t.delete} />
-          </StyledMenuItem>
-        ) : (
+        {inProject ? (
           <StyledMenuItem onClick={handle('filter')}>
             <ListItemIcon>
               <FilterIcon />
             </ListItemIcon>
             <ListItemText primary={td.filter} />
           </StyledMenuItem>
+        ) : (
+          isOwner && (
+            <StyledMenuItem onClick={handle('delete')}>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.delete} />
+            </StyledMenuItem>
+          )
         )}
       </StyledMenu>
     </div>

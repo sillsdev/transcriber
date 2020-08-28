@@ -32,22 +32,30 @@ export const useRole = () => {
     return '';
   };
 
-  const setMyOrgRole = (orgId: string) => {
+  const getMyOrgRole = (orgId: string) => {
     const gMbrRecs = getMbrRoleRec('organization', orgId, user);
-    const role = getMbrRole(gMbrRecs);
+    return getMbrRole(gMbrRecs);
+  };
+
+  const setMyOrgRole = (orgId: string) => {
+    const role = getMyOrgRole(orgId);
     setOrgRole(role);
     return role;
   };
 
-  const setMyProjRole = (projectId: string) => {
+  const getMyProjRole = (projectId: string) => {
     const proj = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'project', id: projectId })
     ) as Project;
     const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
-    const role = getMbrRole(gMbrRecs);
+    return getMbrRole(gMbrRecs);
+  };
+
+  const setMyProjRole = (projectId: string) => {
+    const role = getMyProjRole(projectId);
     setProjRole(role);
     return role;
   };
 
-  return { setMyOrgRole, setMyProjRole };
+  return { setMyOrgRole, setMyProjRole, getMyOrgRole, getMyProjRole };
 };

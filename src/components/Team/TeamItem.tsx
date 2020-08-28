@@ -52,7 +52,13 @@ export const TeamItem = (props: IProps) => {
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
   const ctx = React.useContext(TeamContext);
-  const { teamProjects, teamMembers, teamUpdate, teamDelete } = ctx.state;
+  const {
+    teamProjects,
+    teamMembers,
+    teamUpdate,
+    teamDelete,
+    isAdmin,
+  } = ctx.state;
   const t = ctx.state.cardStrings;
   const [openMember, setOpenMember] = React.useState(false);
   const { setMyOrgRole } = useRole();
@@ -96,9 +102,11 @@ export const TeamItem = (props: IProps) => {
             {t.members.replace('{0}', teamMembers(team.id).toString())}
           </Button>
           {' \u00A0'}
-          <Button variant="contained" onClick={handleSettings(team)}>
-            {t.settings}
-          </Button>
+          {isAdmin(team) && (
+            <Button variant="contained" onClick={handleSettings(team)}>
+              {t.settings}
+            </Button>
+          )}
         </div>
       </div>
       <TeamDialog
@@ -127,7 +135,7 @@ export const TeamItem = (props: IProps) => {
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        <AddCard team={team} />
+        {isAdmin(team) && <AddCard team={team} />}
       </Grid>
     </Paper>
   );

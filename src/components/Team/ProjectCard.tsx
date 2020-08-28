@@ -78,6 +78,7 @@ export const ProjectCard = (props: IProps) => {
     projectLanguage,
     projectUpdate,
     projectDelete,
+    isOwner,
     cardStrings,
     projButtonStrings,
   } = ctx.state;
@@ -204,7 +205,10 @@ export const ProjectCard = (props: IProps) => {
               {'\u00A0 '}
               {project?.attributes?.name}
             </Typography>
-            <ProjectMenu action={handleProjectAction} />
+            <ProjectMenu
+              action={handleProjectAction}
+              isOwner={isOwner(project)}
+            />
           </div>
           <Typography className={classes.pos}>
             {projectDescription(project)}

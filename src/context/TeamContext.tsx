@@ -117,6 +117,7 @@ const initState = {
   projectSections: (project: Plan) => '',
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
+  isOwner: (project: Plan) => false,
   handleMessageReset: () => {},
   projectCreate: async (project: VProject, team: TeamIdType) => '',
   projectUpdate: (project: VProject) => {},
@@ -124,6 +125,7 @@ const initState = {
   teamCreate: (team: Organization) => {},
   teamUpdate: (team: Organization) => {},
   teamDelete: (team: Organization) => {},
+  isAdmin: (team: Organization) => false,
   flatAdd: (
     planId: string,
     mediaRemoteIds: string[],
@@ -210,7 +212,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const getTeamId = useNewTeamId({ ...props, setMessage });
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
-    const { setMyProjRole } = useRole();
+    const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { getPlan } = usePlan();
 
     const handleMessageReset = () => {
@@ -249,6 +251,17 @@ const TeamProvider = withData(mapRecordsToProps)(
             else setMessage(<span>{err.message}</span>);
           });
       });
+    };
+
+    const isOwner = (plan: Plan) => {
+      const projectId = related(plan, 'project');
+      const role = getMyProjRole(projectId);
+      return /admin/i.test(role);
+    };
+
+    const isAdmin = (org: Organization) => {
+      const role = getMyOrgRole(org.id);
+      return /admin/i.test(role);
     };
 
     const teamMembers = (teamId: string) => {
@@ -362,6 +375,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             projectSections,
             projectDescription,
             projectLanguage,
+            isOwner,
             selectProject,
             setProjectParams,
             handleMessageReset,
@@ -371,6 +385,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             teamCreate,
             teamUpdate,
             teamDelete,
+            isAdmin,
             flatAdd,
           },
           setState,
