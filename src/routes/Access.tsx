@@ -263,22 +263,7 @@ export function Access(props: IProps) {
     setPlan('');
     setProjRole('');
 
-    const localAuth =
-      !auth || !auth.isAuthenticated(offline)
-        ? localStorage.getItem('trAdminAuthResult')
-        : null;
-    if (localAuth) {
-      try {
-        auth.setSession(JSON.parse(localAuth));
-        auth
-          .renewSession()
-          .catch(() => localStorage.removeItem('trAdminAuthResult'));
-      } catch (error) {
-        localStorage.removeItem('trAdminAuthResult');
-      }
-    }
     if (!auth || !auth.isAuthenticated(offline)) {
-      localStorage.removeItem('trAdminAuthResult');
       if (!offline && !isElectron) {
         handleLogin();
       }

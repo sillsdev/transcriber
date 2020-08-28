@@ -20,7 +20,7 @@ import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
 import { uiLang, localeDefault } from '../utils';
-import { related, remoteId, GetUser } from '../crud';
+import { related, GetUser } from '../crud';
 import SnackBar from '../components/SnackBar';
 import { isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
@@ -160,10 +160,6 @@ export function Loading(props: IProps) {
       } else if (invite) {
         const orgId = related(invite, 'organization');
         setOrganization(orgId);
-        localStorage.setItem(
-          'lastOrg',
-          remoteId('organization', orgId, memory.keyMap)
-        );
       }
     }
   };
