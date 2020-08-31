@@ -104,12 +104,14 @@ export const AppHead = withBucket(
       setProject('');
       setPlan('');
       setProjRole('');
+      setView('Home');
     };
 
     if (view === 'Error') return <Redirect to="/error" />;
     if (view === 'Profile') return <Redirect to="/profile" />;
     if (view === 'Logout') return <Redirect to="/logout" />;
     if (view === 'Access') return <Redirect to="/" />;
+    if (view === 'Home') return <Redirect to="/team" />;
     if (!auth || !auth.isAuthenticated(isOffline))
       return <Redirect to="/logout" />;
 
