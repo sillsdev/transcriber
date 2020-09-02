@@ -31,7 +31,7 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SyncIcon from '@material-ui/icons/Sync';
 import CheckIcon from '@material-ui/icons/Check';
-import SnackBar from '../components/SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import { remoteIdNum, related } from '../crud';
 import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
@@ -177,24 +177,12 @@ export function IntegrationPanel(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
 
   const [errorReporter] = useGlobal('errorReporter');
-  const [message, setMessage] = React.useState(<></>);
+  const { showMessage, showTitledMessage } = useSnackBar();
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
 
-  const showMessage = (title: string, msg: string) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
-  };
-  const handleMessageReset = () => () => {
-    setMessage(<></>);
-  };
   const getProject = () => {
     const projfind: Project[] = projects.filter((p) => p.id === project);
     return projfind.length > 0 ? projfind[0] : undefined;
@@ -324,7 +312,7 @@ export function IntegrationPanel(props: IProps) {
   };
   const handleLocalSync = async () => {
     setSyncing(true);
-    showMessage('', t.syncPending);
+    showMessage(t.syncPending);
     var err = await localSync(
       project,
       ptShortName,
@@ -332,7 +320,7 @@ export function IntegrationPanel(props: IProps) {
       memory,
       remoteIdNum('user', user, memory.keyMap)
     );
-    showMessage('', err || t.syncComplete);
+    showMessage(err || t.syncComplete);
     resetCount();
     setSyncing(false);
   };
@@ -435,7 +423,7 @@ export function IntegrationPanel(props: IProps) {
             t.countPending
           );
     } else if (paratext_countStatus.errStatus)
-      showMessage(t.countError, translateError(paratext_countStatus));
+      showTitledMessage(t.countError, translateError(paratext_countStatus));
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_count, paratext_countStatus]);
@@ -445,7 +433,10 @@ export function IntegrationPanel(props: IProps) {
       if (!paratext_usernameStatus) {
         getUserName(auth, errorReporter, t.usernamePending);
       } else if (paratext_usernameStatus.errStatus)
-        showMessage(t.usernameError, translateError(paratext_usernameStatus));
+        showTitledMessage(
+          t.usernameError,
+          translateError(paratext_usernameStatus)
+        );
 
       setHasParatext(paratext_username !== '');
     }
@@ -467,7 +458,10 @@ export function IntegrationPanel(props: IProps) {
         }
       } else {
         if (paratext_projectsStatus.errStatus) {
-          showMessage(t.projectError, translateError(paratext_projectsStatus));
+          showTitledMessage(
+            t.projectError,
+            translateError(paratext_projectsStatus)
+          );
         } else if (paratext_projectsStatus.complete) {
           findConnectedProject();
         }
@@ -484,10 +478,10 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (paratext_syncStatus) {
       if (paratext_syncStatus.errStatus) {
-        showMessage(t.syncError, translateError(paratext_syncStatus));
+        showTitledMessage(t.syncError, translateError(paratext_syncStatus));
         setSyncing(false);
       } else if (paratext_syncStatus.statusMsg !== '') {
-        showMessage('', paratext_syncStatus.statusMsg);
+        showMessage(paratext_syncStatus.statusMsg);
       }
       if (paratext_syncStatus.complete) {
         resetCount();
@@ -843,7 +837,6 @@ export function IntegrationPanel(props: IProps) {
       ) : (
         <></>
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

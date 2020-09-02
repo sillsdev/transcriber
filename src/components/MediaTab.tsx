@@ -39,7 +39,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
 import { tabs } from './PlanTabs';
 import MediaUpload, { UploadType } from './MediaUpload';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import Busy from './Busy';
@@ -363,7 +363,7 @@ export function MediaTab(props: IProps) {
 
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [errorReporter] = useGlobal('errorReporter');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
   const [attachVisible, setAttachVisible] = useState(attachTool);
@@ -487,15 +487,12 @@ export function MediaTab(props: IProps) {
     return false;
   };
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const handleUpload = () => {
     setUploadVisible(true);
   };
   const uploadMedia = (files: FileList) => {
     if (!files) {
-      setMessage(<span>{t.selectFiles}</span>);
+      showMessage(t.selectFiles);
       return;
     }
     uploadFiles(files);
@@ -509,7 +506,7 @@ export function MediaTab(props: IProps) {
     setActionMenuItem(null);
     if (!/Close/i.test(what)) {
       if (check.length === 0) {
-        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
+        showMessage(t.selectRows.replace('{0}', what));
       } else {
         setConfirmAction(what);
       }
@@ -549,7 +546,7 @@ export function MediaTab(props: IProps) {
 
   const handleSave = async () => {
     inProcess.current = true;
-    setMessage(<span>{t.saving}</span>);
+    showMessage(t.saving);
     const handleRow = async (mediaId: string) => {
       const pRow = attachMap[mediaId];
       await attachPassage(pdata[pRow].id, mediaId);
@@ -558,7 +555,7 @@ export function MediaTab(props: IProps) {
       await handleRow(mediaId);
     }
     setAttachMap({});
-    setMessage(<span>{t.savingComplete}</span>);
+    showMessage(t.savingComplete);
     inProcess.current = false;
   };
 
@@ -575,19 +572,17 @@ export function MediaTab(props: IProps) {
       if (passId && passId !== '') {
         detachPassage(passId, mediaId);
       } else {
-        setMessage(
-          <span>{t.noPassageAttached.replace('{0}', data[mRow].fileName)}</span>
-        );
+        showMessage(t.noPassageAttached.replace('{0}', data[mRow].fileName));
       }
     }
   };
 
   const doAttach = (mRow: number, pRow: number) => {
     if (attachMap.hasOwnProperty(data[mRow].id) || dataAttach.has(mRow)) {
-      setMessage(<span>{t.fileAttached}</span>);
+      showMessage(t.fileAttached);
       return;
     } else if (hasPassage(pRow) || passAttach.has(pRow)) {
-      setMessage(<span>{t.passageAttached}</span>);
+      showMessage(t.passageAttached);
       return;
     }
     setAttachMap({ ...attachMap, [data[mRow].id]: pRow });
@@ -776,12 +771,10 @@ export function MediaTab(props: IProps) {
       // wait to do this to give time for duration calc
       setTimeout(() => {
         let numsuccess = uploadSuccess.filter((x) => x === true).length;
-        setMessage(
-          <span>
-            {t.uploadComplete
-              .replace('{0}', numsuccess.toString())
-              .replace('{1}', uploadSuccess.length.toString())}
-          </span>
+        showMessage(
+          t.uploadComplete
+            .replace('{0}', numsuccess.toString())
+            .replace('{1}', uploadSuccess.length.toString())
         );
         uploadComplete();
         setComplete(0);
@@ -810,13 +803,8 @@ export function MediaTab(props: IProps) {
             errorReporter
           );
         } else {
-          setMessage(
-            <span className={classes.unsupported}>
-              {t.unsupported.replace(
-                '{0}',
-                uploadList[currentlyLoading + 1].name
-              )}
-            </span>
+          showMessage(
+            t.unsupported.replace('{0}', uploadList[currentlyLoading + 1].name)
           );
         }
       }
@@ -850,8 +838,9 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     if (uploadError !== '') {
-      setMessage(<span>{uploadError}</span>);
+      showMessage(uploadError);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadError]);
 
   const matchMap = (pat: string, terms?: string[]) => {
@@ -901,9 +890,9 @@ export function MediaTab(props: IProps) {
     });
     if (found) {
       setAttachMap(newMap);
-      setMessage(<span>{t.matchAdded.replace('{0}', found.toString())}</span>);
+      showMessage(t.matchAdded.replace('{0}', found.toString()));
     } else {
-      setMessage(<span>{t.noMatch}</span>);
+      showMessage(t.noMatch);
     }
   };
 
@@ -1235,7 +1224,6 @@ export function MediaTab(props: IProps) {
         />
       )}
       <MediaPlayer auth={auth} srcMediaId={playItem} />
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

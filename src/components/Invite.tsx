@@ -31,7 +31,6 @@ import {
   ListItem,
   ListItemText,
 } from '@material-ui/core';
-import SnackBar from './SnackBar';
 import { related, getRoleId, getUserById, remoteIdNum } from '../crud';
 import { validateEmail } from '../utils';
 import { schema } from '../schema';
@@ -121,7 +120,6 @@ function Invite(props: IProps) {
   const [groupsNoAll, setGroupsNoAll] = useState<Group[]>();
   const [allUsersProjects, setAllUsersProjects] = useState('');
   const [otherProjects, setOtherProjects] = useState('');
-  const [message, setMessage] = useState(<></>);
   const [allowMultiple, setallowMultiple] = useState(false);
 
   const resetFields = () => {
@@ -264,9 +262,7 @@ function Invite(props: IProps) {
   const handleGroupRoleChange = (e: any) => {
     setGroupRole(e.target.value);
   };
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
+
   const hasInvite = (email: string) => {
     const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('invitation').filter({ attribute: 'email', value: email })
@@ -591,7 +587,6 @@ function Invite(props: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

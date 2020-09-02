@@ -11,7 +11,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import SnackBar from './SnackBar';
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
@@ -71,7 +70,6 @@ function MediaUpload(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
   const [files, setFiles] = useState<FileList>();
-  const [message, setMessage] = useState(<></>);
 
   const acceptextension = [
     '.mp3, .m4a, .wav, .ogg',
@@ -117,9 +115,6 @@ function MediaUpload(props: IProps) {
       setName(fileName(inputEl.files));
       setFiles(inputEl.files);
     }
-  };
-  const handleMessageReset = () => {
-    setMessage(<></>);
   };
 
   const handleDrop = (files: FileList) => {
@@ -207,7 +202,6 @@ function MediaUpload(props: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

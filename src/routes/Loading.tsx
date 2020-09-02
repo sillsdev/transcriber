@@ -21,7 +21,7 @@ import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
 import { uiLang, localeDefault } from '../utils';
 import { related, GetUser } from '../crud';
-import SnackBar from '../components/SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import { isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
 
@@ -102,11 +102,8 @@ export function Loading(props: IProps) {
   const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
   const [, setIsDeveloper] = useGlobal('developer');
   const [completed, setCompleted] = useState(0);
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
@@ -156,7 +153,7 @@ export function Loading(props: IProps) {
       }
       if (inviteError !== '') {
         localStorage.setItem('inviteError', inviteError);
-        setMessage(<span>{localStorage.getItem('inviteError') || ''}</span>);
+        showMessage(localStorage.getItem('inviteError') || '');
       } else if (invite) {
         const orgId = related(invite, 'organization');
         setOrganization(orgId);
@@ -242,7 +239,6 @@ export function Loading(props: IProps) {
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

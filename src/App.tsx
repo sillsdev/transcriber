@@ -19,6 +19,7 @@ import Auth from './auth/Auth';
 import { parseQuery } from './utils/parseQuery';
 import DataChanges from './hoc/DataChanges';
 import { UnsavedProvider } from './context/UnsavedContext';
+import SnackBarProvider from './hoc/SnackBar';
 
 export const HeadHeight = 64;
 
@@ -62,62 +63,64 @@ class App extends React.Component {
     return (
       <TokenCheck auth={auth}>
         <DataChanges auth={auth}>
-          <UnsavedProvider>
-            <ThemeProvider theme={theme}>
-              <Route
-                path="/"
-                exact={true}
-                render={(props) => {
-                  handleParameters(props);
-                  if (
-                    localStorage.getItem('inviteId') &&
-                    localStorage.getItem('isLoggedIn')
-                  ) {
-                    localStorage.removeItem('inviteId');
-                    return <LogoutRequired />;
-                  }
-                  return <Access auth={auth} {...props} />;
-                }}
-              />
-              <Route path="/error" exact render={(props) => <Buggy />} />
-              <Route
-                path="/emailunverified"
-                exact={true}
-                render={(props) => <EmailUnverified auth={auth} {...props} />}
-              />
-              <Route
-                path="/logout"
-                exact={true}
-                render={(props) => <Logout auth={auth} {...props} />}
-              />
-              <PrivateRoute auth={auth} path="/loading">
-                <Loading auth={auth} />
-              </PrivateRoute>
-              <PrivateRoute auth={auth} path="/profile">
-                <Profile auth={auth} />
-              </PrivateRoute>
-              <PrivateRoute auth={auth} path="/team">
-                <TeamScreen auth={auth} />
-              </PrivateRoute>
-              <PrivateRoute auth={auth} path="/plan/:prjId/:tabNm">
-                <PlanScreen auth={auth} />
-              </PrivateRoute>
-              <PrivateRoute auth={auth} exact path="/work/:prjId/:pasId">
-                <WorkScreen auth={auth} />
-              </PrivateRoute>
-              <PrivateRoute auth={auth} exact path="/work/:prjId">
-                <WorkScreen auth={auth} />
-              </PrivateRoute>
-              <Route
-                path="/callback"
-                render={(props) => {
-                  handleParameters(props);
-                  return <Callback {...props} />;
-                }}
-              />
-              <Route path="/neworg" render={(props) => handleNewOrg(props)} />
-            </ThemeProvider>
-          </UnsavedProvider>
+          <SnackBarProvider>
+            <UnsavedProvider>
+              <ThemeProvider theme={theme}>
+                <Route
+                  path="/"
+                  exact={true}
+                  render={(props) => {
+                    handleParameters(props);
+                    if (
+                      localStorage.getItem('inviteId') &&
+                      localStorage.getItem('isLoggedIn')
+                    ) {
+                      localStorage.removeItem('inviteId');
+                      return <LogoutRequired />;
+                    }
+                    return <Access auth={auth} {...props} />;
+                  }}
+                />
+                <Route path="/error" exact render={(props) => <Buggy />} />
+                <Route
+                  path="/emailunverified"
+                  exact={true}
+                  render={(props) => <EmailUnverified auth={auth} {...props} />}
+                />
+                <Route
+                  path="/logout"
+                  exact={true}
+                  render={(props) => <Logout auth={auth} {...props} />}
+                />
+                <PrivateRoute auth={auth} path="/loading">
+                  <Loading auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute auth={auth} path="/profile">
+                  <Profile auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute auth={auth} path="/team">
+                  <TeamScreen auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute auth={auth} path="/plan/:prjId/:tabNm">
+                  <PlanScreen auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute auth={auth} exact path="/work/:prjId/:pasId">
+                  <WorkScreen auth={auth} />
+                </PrivateRoute>
+                <PrivateRoute auth={auth} exact path="/work/:prjId">
+                  <WorkScreen auth={auth} />
+                </PrivateRoute>
+                <Route
+                  path="/callback"
+                  render={(props) => {
+                    handleParameters(props);
+                    return <Callback {...props} />;
+                  }}
+                />
+                <Route path="/neworg" render={(props) => handleNewOrg(props)} />
+              </ThemeProvider>
+            </UnsavedProvider>
+          </SnackBarProvider>
         </DataChanges>
       </TokenCheck>
     );

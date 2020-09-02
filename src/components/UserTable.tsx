@@ -25,7 +25,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
-import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import { related } from '../crud';
@@ -137,7 +136,6 @@ export function UserTable(props: IProps) {
   const [editId, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
-  const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -233,9 +231,6 @@ export function UserTable(props: IProps) {
     setDeleteItem('');
   };
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const handleFilter = () => setFilter(!filter);
   const isCurrentUser = (userId: string) => userId === user;
 
@@ -365,7 +360,6 @@ export function UserTable(props: IProps) {
       ) : (
         <></>
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

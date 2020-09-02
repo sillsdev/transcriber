@@ -25,7 +25,6 @@ import GroupMemberAdd from './GroupMemberAdd';
 import Confirm from '../AlertDialog';
 import { OptionType } from '../ReactSelect';
 import { related, getRoleId } from '../../crud';
-import SnackBar from '../SnackBar';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -62,7 +61,6 @@ function Team(props: IProps) {
   const [role, setRole] = useState('');
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
   const [confirmItem, setConfirmItem] = useState<IDeleteItem | null>(null);
-  const [message, setMessage] = useState(<></>);
   const [allUsers, setAllUsers] = useState(false);
 
   const handleRemove = (id: string, name: string) => {
@@ -145,8 +143,6 @@ function Team(props: IProps) {
     setOpen(true);
   };
 
-  const handleMessageReset = () => setMessage(<></>);
-
   useEffect(() => {
     const groupAll = groups
       .filter((g) => g.id === group && g.attributes)
@@ -207,7 +203,6 @@ function Team(props: IProps) {
         orgPeople={orgPeople}
         setOpen={setOpen}
       />
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
       {confirmItem !== null ? (
         <Confirm
           title={t.delete}

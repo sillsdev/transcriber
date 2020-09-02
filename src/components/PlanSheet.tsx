@@ -6,7 +6,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import DataSheet from 'react-datasheet';
 import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
@@ -188,7 +188,7 @@ export function PlanSheet(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
   const [busy] = useGlobal('remoteBusy');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const [position, setPosition] = useState<{
     mouseX: null | number;
     mouseY: null | number;
@@ -214,9 +214,6 @@ export function PlanSheet(props: IProps) {
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = 6;
@@ -304,7 +301,7 @@ export function PlanSheet(props: IProps) {
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
       if (row !== 0 && numCol.includes(col) && value && !isNum(value)) {
-        setMessage(<span>{t.nonNumber}</span>);
+        showMessage(t.nonNumber);
       } else {
         grid[row][col] = { ...grid[row][col], value };
       }
@@ -363,7 +360,7 @@ export function PlanSheet(props: IProps) {
     if (projRole !== 'admin') return Array<Array<string>>();
     if (currentRow.current === 0) {
       setPasting(true);
-      setMessage(<span>{t.pasting}</span>);
+      showMessage(t.pasting);
       const retVal = paste(cleanClipboard(clipBoard));
       setPasting(false);
       return retVal;
@@ -373,13 +370,13 @@ export function PlanSheet(props: IProps) {
   const handleTablePaste = () => {
     if (typeof navigator.clipboard.readText === 'function') {
       setPasting(true);
-      setMessage(<span>{t.pasting}</span>);
+      showMessage(t.pasting);
       navigator.clipboard.readText().then((clipText) => {
         paste(cleanClipboard(clipText));
         setPasting(false);
       });
     } else {
-      setMessage(<span>{t.useCtrlV}</span>);
+      showMessage(t.useCtrlV);
     }
   };
   const handleResequence = () => {
@@ -424,7 +421,7 @@ export function PlanSheet(props: IProps) {
   useEffect(() => {
     if (changed) {
       if (saveTimer.current === undefined) startSaveTimer();
-      if (!online) setMessage(<span>{ts.NoSaveOffline}</span>);
+      if (!online) showMessage(ts.NoSaveOffline);
     } else {
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = undefined;
@@ -709,7 +706,6 @@ export function PlanSheet(props: IProps) {
         <></>
       )}
       <MediaPlayer auth={auth} srcMediaId={srcMediaId} />
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

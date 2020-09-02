@@ -22,7 +22,7 @@ import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import PlanSheet from './PlanSheet';
 import {
   remoteId,
@@ -146,7 +146,7 @@ export function ScriptureTable(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage, showJSXMessage } = useSnackBar();
   const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
   const [inlinePassages, setInlinePassages] = useState(false);
 
@@ -177,9 +177,7 @@ export function ScriptureTable(props: IProps) {
     ts,
     doOrbitError,
   });
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
+
   const newSectionId = (sequenceNum: number) => {
     return {
       type: 'section',
@@ -446,7 +444,7 @@ export function ScriptureTable(props: IProps) {
       setInData(inData.filter((row, rowIndex) => !where.includes(rowIndex)));
       return true;
     }
-    setMessage(<span>{what}...</span>);
+    showJSXMessage(<span>{what}...</span>);
     return false;
   };
 
@@ -462,30 +460,23 @@ export function ScriptureTable(props: IProps) {
 
   const validTable = (rows: string[][]) => {
     if (rows.length === 0) {
-      setMessage(<span>{t.pasteNoRows}</span>);
+      showMessage(t.pasteNoRows);
       return false;
     }
     if (showBook(cols)) {
       if (rows[0].length !== 6) {
-        setMessage(
-          <span>
-            {t.pasteInvalidColumnsScripture.replace(
-              '{0}',
-              rows[0].length.toString()
-            )}
-          </span>
+        showMessage(
+          t.pasteInvalidColumnsScripture.replace(
+            '{0}',
+            rows[0].length.toString()
+          )
         );
         return false;
       }
     } else {
       if (rows[0].length !== 5) {
-        setMessage(
-          <span>
-            {t.pasteInvalidColumnsGeneral.replace(
-              '{0}',
-              rows[0].length.toString()
-            )}
-          </span>
+        showMessage(
+          t.pasteInvalidColumnsGeneral.replace('{0}', rows[0].length.toString())
         );
         return false;
       }
@@ -497,7 +488,7 @@ export function ScriptureTable(props: IProps) {
       )
       .map((row) => row[cols.SectionSeq]);
     if (invalidSec.length > 0) {
-      setMessage(
+      showJSXMessage(
         <span>
           {t.pasteInvalidSections} {invalidSec.join()}
         </span>
@@ -511,7 +502,7 @@ export function ScriptureTable(props: IProps) {
       )
       .map((row) => row[cols.PassageSeq]);
     if (invalidPas.length > 0) {
-      setMessage(
+      showJSXMessage(
         <span>
           {t.pasteInvalidSections} {invalidPas.join()}.
         </span>
@@ -565,7 +556,6 @@ export function ScriptureTable(props: IProps) {
 
   const handleTablePaste = (rows: string[][]) => {
     if (validTable(rows)) {
-      //setMessage(<span>Pasting...</span>); this doesn't actually ever show up
       const startRow = isBlankOrValidNumber(rows[0][cols.SectionSeq]) ? 0 : 1;
       if (!inlinePassages) {
         while (
@@ -851,7 +841,7 @@ export function ScriptureTable(props: IProps) {
           setSaving(false);
         } else {
           setSaving(true);
-          setMessage(<span>{t.saving}</span>);
+          showMessage(t.saving);
           handleSave().then(() => {
             saveCompleted('');
             setSaving(false);
@@ -1109,13 +1099,13 @@ export function ScriptureTable(props: IProps) {
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
-        setMessage={setMessage}
+        showMessage={showMessage}
+        showJSXMessage={showJSXMessage}
         setComplete={setComplete}
         multiple={false}
         finish={afterUpload}
         status={status}
       />
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

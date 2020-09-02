@@ -12,9 +12,7 @@ interface IStateProps {
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
 }
-interface IProps extends IStateProps, IDispatchProps {
-  setMessage: React.Dispatch<React.SetStateAction<JSX.Element>>;
-}
+interface IProps extends IStateProps, IDispatchProps {}
 
 export const useNewTeamId = (props: IProps) => {
   const [memory] = useGlobal('memory');

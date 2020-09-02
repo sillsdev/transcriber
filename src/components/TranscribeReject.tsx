@@ -21,7 +21,6 @@ import {
   Radio,
   TextField,
 } from '@material-ui/core';
-import SnackBar from './SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +56,6 @@ function TranscribeReject(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [next, setNext] = useState<ActivityStates>();
   const [comment, setComment] = useState(passageIn?.attributes?.lastComment);
-  const [message, setMessage] = useState(<></>);
   const [inProcess, setInProcess] = useState(false);
 
   const handleSave = () => {
@@ -93,9 +91,6 @@ function TranscribeReject(props: IProps) {
       cancelMethod();
     }
     setOpen(false);
-  };
-  const handleMessageReset = () => {
-    setMessage(<></>);
   };
 
   useEffect(() => {
@@ -177,7 +172,6 @@ function TranscribeReject(props: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

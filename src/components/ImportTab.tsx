@@ -32,7 +32,7 @@ import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { connect } from 'react-redux';
 import * as actions from '../store';
 import MediaUpload, { UploadType } from './MediaUpload';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import {
   handleElectronImport,
   IImportData,
@@ -103,7 +103,7 @@ export function ImportTab(props: IProps) {
   const [coordinatorActivated] = useGlobal('coordinatorActivated');
   const [errorReporter] = useGlobal('errorReporter');
 
-  const [message, setMessage] = useState(<></>);
+  const { showMessage, showTitledMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
@@ -206,7 +206,7 @@ export function ImportTab(props: IProps) {
 
   const electronImport = () => {
     var importData: IImportData = getElectronImportData(memory, ei);
-    if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
+    if (importData.errMsg) showMessage(importData.errMsg);
     else {
       setZipFile(importData.zip);
       if (importData.warnMsg) {
@@ -230,7 +230,7 @@ export function ImportTab(props: IProps) {
   };
   const uploadITF = (files: FileList) => {
     if (!files || files.length === 0) {
-      setMessage(<span>{t.noFile}</span>);
+      showMessage(t.noFile);
     } else {
       setBusy(true);
       importProjectFromElectron(
@@ -249,18 +249,6 @@ export function ImportTab(props: IProps) {
     setUploadVisible(false);
   };
 
-  const showMessage = (title: string, msg: string) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
-  };
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const translateError = (err: IAxiosStatus): string => {
     console.log(err.errMsg);
     switch (err.errStatus) {
@@ -571,13 +559,13 @@ export function ImportTab(props: IProps) {
     if (importStatus) {
       if (importStatus.errStatus) {
         setImportTitle(translateError(importStatus));
-        showMessage(t.error, translateError(importStatus));
+        showTitledMessage(t.error, translateError(importStatus));
         importComplete();
         setBusy(false);
       } else {
         if (importStatus.statusMsg) {
           setImportTitle(importStatus.statusMsg);
-          showMessage(t.import, importStatus.statusMsg);
+          showTitledMessage(t.import, importStatus.statusMsg);
         }
         if (importStatus.complete) {
           //import completed ok but might have message
@@ -668,7 +656,6 @@ export function ImportTab(props: IProps) {
             noResponse={handleActionRefused}
           />
         )}
-        <SnackBar message={message} reset={handleMessageReset} />
       </div>
     </div>
   );

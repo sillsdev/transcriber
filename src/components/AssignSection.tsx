@@ -37,7 +37,6 @@ import {
   TableBody,
   IconButton,
 } from '@material-ui/core';
-import SnackBar from './SnackBar';
 import UserAvatar from './UserAvatar';
 import {
   related,
@@ -97,16 +96,12 @@ function AssignSection(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
-  const [message, setMessage] = useState(<></>);
 
   const handleClose = () => {
     if (closeMethod) {
       closeMethod();
     }
     setOpen(false);
-  };
-  const handleMessageReset = () => {
-    setMessage(<></>);
   };
 
   const assign = async (section: Section, userId: string, role: RoleNames) => {
@@ -294,7 +289,6 @@ function AssignSection(props: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

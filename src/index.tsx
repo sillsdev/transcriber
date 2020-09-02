@@ -75,6 +75,7 @@ setGlobal({
   remoteBusy: false,
   doSave: false,
   saveResult: undefined,
+  snackMessage: <></>,
   changed: false,
   projectsLoaded: [],
   importexportBusy: false,

@@ -37,7 +37,8 @@ interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
-  setMessage: React.Dispatch<React.SetStateAction<JSX.Element>>;
+  showMessage: (msg: string) => void;
+  showJSXMessage: (msg: JSX.Element) => void;
   setComplete: (amount: number) => void; // 0 to 100
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
@@ -48,7 +49,16 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export const Uploader = (props: IProps) => {
-  const { auth, t, isOpen, onOpen, setMessage, status, multiple } = props;
+  const {
+    auth,
+    t,
+    isOpen,
+    onOpen,
+    showMessage,
+    showJSXMessage,
+    status,
+    multiple,
+  } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
   const { uploadComplete, setComplete, finish } = props;
@@ -69,12 +79,10 @@ export const Uploader = (props: IProps) => {
   const finishMessage = () => {
     setTimeout(() => {
       if (fileList.current)
-        setMessage(
-          <span>
-            {t.uploadComplete
-              .replace('{0}', successCount.current.toString())
-              .replace('{1}', fileList.current.length.toString())}
-          </span>
+        showMessage(
+          t.uploadComplete
+            .replace('{0}', successCount.current.toString())
+            .replace('{1}', fileList.current.length.toString())
         );
       uploadComplete();
       setComplete(0);
@@ -134,7 +142,7 @@ export const Uploader = (props: IProps) => {
         itemComplete
       );
     } else {
-      setMessage(
+      showJSXMessage(
         <span className={classes.unsupported}>
           {t.unsupported.replace('{0}', uploadList[currentlyLoading].name)}
         </span>
@@ -144,7 +152,7 @@ export const Uploader = (props: IProps) => {
 
   const uploadMedia = async (files: FileList) => {
     if (!files || files.length === 0) {
-      setMessage(<span>{t.selectFiles}</span>);
+      showMessage(t.selectFiles);
       return;
     }
     if (createProject) planIdRef.current = await createProject(files);
@@ -164,7 +172,7 @@ export const Uploader = (props: IProps) => {
 
   React.useEffect(() => {
     if (uploadError !== '') {
-      setMessage(<span>{uploadError}</span>);
+      showMessage(uploadError);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [uploadError]);

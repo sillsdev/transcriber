@@ -38,7 +38,6 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
-import SnackBar from '../components/SnackBar';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
 import {
@@ -200,7 +199,6 @@ export function Profile(props: IProps) {
   const [showDetail, setShowDetail] = useState(false);
   const [locked, setLocked] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
-  const [message, setMessage] = useState(<></>);
   const [dupName, setDupName] = useState(false);
   const [view, setView] = useState('');
   const [changed, setChanged] = useState(false);
@@ -278,8 +276,6 @@ export function Profile(props: IProps) {
       digest ? DigestPreference.noDigest : DigestPreference.dailyDigest
     );
   };
-
-  const handleMessageReset = () => setMessage(<></>);
 
   const handleSave = () => {
     if (changed) {
@@ -852,7 +848,6 @@ export function Profile(props: IProps) {
         ) : (
           <></>
         )}
-        <SnackBar {...props} message={message} reset={handleMessageReset} />
       </Paper>
     </div>
   );

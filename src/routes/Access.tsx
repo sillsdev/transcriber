@@ -23,7 +23,7 @@ import {
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { UserAvatar } from '../components/UserAvatar';
-import SnackBar from '../components/SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import {
@@ -140,7 +140,7 @@ export function Access(props: IProps) {
   const [coordinatorActivated] = useGlobal('coordinatorActivated');
   const [offline, setOffline] = useGlobal('offline');
   const [isDeveloper, setIsDeveloper] = useGlobal('developer');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage, showTitledMessage } = useSnackBar();
   const [confirmAction, setConfirmAction] = useState('');
   const [zipFile, setZipFile] = useState<AdmZip | null>(null);
   const [online, setOnline] = useState(false);
@@ -158,8 +158,6 @@ export function Access(props: IProps) {
       setSelectedUser(uId);
     }
   };
-
-  const handleResetMessage = () => setMessage(<></>);
 
   const handleActionConfirmed = () => {
     if (!zipFile) {
@@ -187,7 +185,7 @@ export function Access(props: IProps) {
   const handleImport = () => {
     if (isElectron) {
       var importData: IImportData = getElectronImportData(memory, ei);
-      if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
+      if (importData.errMsg) showMessage(importData.errMsg);
       else {
         setZipFile(importData.zip);
         if (importData.warnMsg) {
@@ -226,21 +224,12 @@ export function Access(props: IProps) {
   const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
   useEffect(() => {
-    const showMessage = (title: string, msg: string) => {
-      setMessage(
-        <span>
-          {title}
-          <br />
-          {msg}
-        </span>
-      );
-    };
     if (importStatus) {
       if (importStatus.errStatus) {
-        showMessage(t.importError, importStatus.errMsg);
+        showTitledMessage(t.importError, importStatus.errMsg);
       } else {
         if (importStatus.statusMsg) {
-          showMessage(t.importProject, importStatus.statusMsg);
+          showTitledMessage(t.importProject, importStatus.statusMsg);
         }
         if (importStatus.complete) {
           importComplete();
@@ -413,7 +402,6 @@ export function Access(props: IProps) {
               noResponse={handleActionRefused}
             />
           )}
-          <SnackBar message={message} reset={handleResetMessage} />
         </div>
       )}
     </div>

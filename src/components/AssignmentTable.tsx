@@ -19,7 +19,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, AppBar } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
 import Auth from '../auth/Auth';
@@ -171,7 +171,7 @@ export function AssignmentTable(props: IProps) {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
@@ -194,20 +194,16 @@ export function AssignmentTable(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
-
   const handleAssignSection = (status: boolean) => (e: any) => {
     if (check.length === 0) {
-      setMessage(<span>{t.selectRowsToAssign}</span>);
+      showMessage(t.selectRowsToAssign);
     } else {
       setAssignSectionVisible(status);
     }
   };
   const handleRemoveAssignments = (e: any) => {
     if (check.length === 0) {
-      setMessage(<span>{t.selectRowsToRemove}</span>);
+      showMessage(t.selectRowsToRemove);
     } else {
       let work = false;
       check.forEach((i) => {
@@ -215,7 +211,7 @@ export function AssignmentTable(props: IProps) {
         if (row.editor !== '' || row.transcriber !== '') work = true;
       });
       if (!work) {
-        setMessage(<span>{t.selectRowsToRemove}</span>);
+        showMessage(t.selectRowsToRemove);
       } else {
         setConfirmAction(t.delete + '? (' + check.length + ')');
       }
@@ -359,7 +355,6 @@ export function AssignmentTable(props: IProps) {
       ) : (
         <></>
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

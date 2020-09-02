@@ -24,6 +24,7 @@ declare module 'reactn/default' {
     remoteBusy: boolean;
     doSave: boolean;
     saveResult: string | undefined;
+    snackMessage: JSX.Element;
     changed: boolean;
     projectsLoaded: string[];
     importexportBusy: boolean;

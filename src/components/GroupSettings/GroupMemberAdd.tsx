@@ -21,7 +21,7 @@ import {
   TextField,
   MenuItem,
 } from '@material-ui/core';
-import SnackBar from '../SnackBar';
+import { useSnackBar } from '../../hoc/SnackBar';
 import { OptionType } from '../ReactSelect';
 import useStyles from './GroupSettingsStyles';
 import { addGroupMember, getRoleId } from '../../crud';
@@ -47,7 +47,7 @@ function GroupMemberAdd(props: IProps) {
   const [memory] = useGlobal('memory');
   const [group] = useGlobal('group');
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const inProcess = React.useRef<boolean>(false);
 
   const handleCommit = (e: any) => {
@@ -58,8 +58,6 @@ function GroupMemberAdd(props: IProps) {
     setCurrentPerson(null);
     setOpen(false);
   };
-
-  const handleMessageReset = () => setMessage(<></>);
 
   const handleAddMember = async () => {
     inProcess.current = true;
@@ -95,7 +93,7 @@ function GroupMemberAdd(props: IProps) {
       );
     }
     if (role === RoleNames.Editor) {
-      setMessage(<span>{t.allReviewersCanTranscribe}</span>);
+      showMessage(t.allReviewersCanTranscribe);
     }
     inProcess.current = false;
     setCurrentPerson(null);
@@ -158,7 +156,6 @@ function GroupMemberAdd(props: IProps) {
           {t.add}
         </Button>
       </DialogActions>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </Dialog>
   );
 }

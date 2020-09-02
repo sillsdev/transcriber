@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { IState, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
 import { useRemoteSave } from '../utils';
+import { useSnackBar } from '../hoc/SnackBar';
 
 interface IStateProps {
   t: IMainStrings;
@@ -25,11 +26,9 @@ const initState = {
   checkSavedFn: (method: () => void) => {
     return;
   },
-  message: <></>,
   t: {} as IMainStrings,
   handleSaveConfirmed: () => {},
   handleSaveRefused: () => {},
-  handleMessageReset: () => {},
 };
 
 export type ICtxState = typeof initState;
@@ -56,23 +55,21 @@ const UnsavedProvider = connect(
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
   const [, setAlertOpen] = useGlobal('alertOpen');
-  const [message, setMessage] = React.useState(<></>);
   const saveConfirm = React.useRef<() => any>();
-
+  const { showMessage } = useSnackBar();
   const [startSave, , waitForSave] = useRemoteSave();
   const [state, setState] = useState({
     ...initState,
-    message,
     t,
   });
 
   const checkSavedFn = (method: () => any) => {
     if (busy || importexportBusy) {
-      setMessage(<span>{t.loadingTable}</span>);
+      showMessage(t.loadingTable);
       return;
     }
     if (doSave) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     if (changed) {
@@ -95,21 +92,17 @@ const UnsavedProvider = connect(
     waitCount: number
   ) => {
     waitForSave(savedMethod, waitCount).catch((err) => {
-      setMessage(<span>{err.message}</span>);
+      showMessage(err.message);
     });
   };
 
   const handleSaveConfirmed = () => {
     const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;
-    setMessage(<span>{t.saving}</span>);
+    showMessage(t.saving);
     startSave();
     setAlertOpen(false);
     finishConfirmed(savedMethod, 8);
-  };
-
-  const handleMessageReset = () => {
-    setMessage(<></>);
   };
 
   return (
@@ -120,7 +113,6 @@ const UnsavedProvider = connect(
           checkSavedFn,
           handleSaveRefused,
           handleSaveConfirmed,
-          handleMessageReset,
         },
         setState,
       }}

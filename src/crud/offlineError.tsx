@@ -1,4 +1,3 @@
-import React from 'react';
 import { ISharedStrings } from '../model';
 
 interface IStateProps {
@@ -10,15 +9,15 @@ interface IProps extends IStateProps {
   err: {
     message: string;
   };
-  setMessage: React.Dispatch<React.SetStateAction<JSX.Element>>;
+  showMessage: (msg: string) => void;
 }
 
 export const offlineError = (props: IProps) => {
-  const { online, err, setMessage, ts } = props;
+  const { online, err, showMessage, ts } = props;
 
   if (!online) {
-    setMessage(<span>{ts.NoSaveOffline}</span>);
+    showMessage(ts.NoSaveOffline);
   } else {
-    setMessage(<span>{err.message}</span>);
+    showMessage(err.message);
   }
 };

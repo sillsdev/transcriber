@@ -45,7 +45,7 @@ import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import { Duration, formatTime } from '../control';
 import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import {
   sectionDescription,
   passageDescription,
@@ -199,7 +199,7 @@ export function Transcriber(props: IProps) {
   const [textValue, setTextValue] = React.useState('');
   const [lastSaved, setLastSaved] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
-  const [message, setMessage] = React.useState(<></>);
+  const { showMessage } = useSnackBar();
   const [makeComment, setMakeComment] = React.useState(false);
   const [comment, setComment] = React.useState('');
   const [showHistory, setShowHistory] = React.useState(false);
@@ -283,7 +283,7 @@ export function Transcriber(props: IProps) {
   };
   const handleReject = () => {
     if (busy) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     setMakeComment(true);
@@ -339,7 +339,7 @@ export function Transcriber(props: IProps) {
   };
   const handleSubmit = async () => {
     if (busy) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     if (transcriptionRef.current) {
@@ -468,7 +468,7 @@ export function Transcriber(props: IProps) {
 
   const handleSaveButton = () => {
     if (busy) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     handleSave(true);
@@ -512,7 +512,7 @@ export function Transcriber(props: IProps) {
   };
   const handleReopen = async () => {
     if (busy) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     if (previous.hasOwnProperty(state)) {
@@ -534,7 +534,6 @@ export function Transcriber(props: IProps) {
     }
   };
   const handleKey = (e: React.KeyboardEvent) => {
-    // setMessage(<span>{e.keyCode} pressed</span>);
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
     const JumpBackKey = keycode(BACK_KEY);
     const JumpAheadKey = keycode(AHEAD_KEY);
@@ -572,7 +571,6 @@ export function Transcriber(props: IProps) {
         e.preventDefault();
     }
   };
-  const handleMessageReset = () => setMessage(<></>);
 
   const setDimensions = () => {
     setHeight(window.innerHeight);
@@ -1038,7 +1036,6 @@ export function Transcriber(props: IProps) {
           onReady={handleReady}
         />
       </div>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

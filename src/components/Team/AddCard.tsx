@@ -12,6 +12,7 @@ import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import { waitForRemoteId, remoteId } from '../../crud';
 import { StickyRedirect } from '../../control';
+import { useSnackBar } from '../../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,11 +63,11 @@ export const AddCard = (props: IProps) => {
     projectCreate,
     cardStrings,
     auth,
-    setMessage,
     flatAdd,
     sharedStrings,
   } = ctx.state;
   const t = cardStrings;
+  const { showMessage, showJSXMessage } = useSnackBar();
   const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
@@ -244,7 +245,8 @@ export const AddCard = (props: IProps) => {
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
-        setMessage={setMessage}
+        showMessage={showMessage}
+        showJSXMessage={showJSXMessage}
         setComplete={setComplete}
         multiple={true}
         metaData={

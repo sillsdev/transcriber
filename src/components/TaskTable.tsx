@@ -10,7 +10,6 @@ import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
 import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
-import SnackBar from './SnackBar';
 import { BigDialog } from '../hoc/BigDialog';
 import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
@@ -181,15 +180,11 @@ export function TaskTable(props: IProps) {
     height: window.innerHeight - 100,
     overflowY: 'auto',
   });
-  const [message, setMessage] = useState(<></>);
   const [playItem, setPlayItem] = useState('');
   const formRef = useRef<any>();
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const handleProjectMenu = (what: string) => {
     if (what === 'integration') {
       setOpenIntegration(true);
@@ -434,7 +429,6 @@ export function TaskTable(props: IProps) {
       >
         <ImportTab {...props} auth={auth} />
       </BigDialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

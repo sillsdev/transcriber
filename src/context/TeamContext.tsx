@@ -44,6 +44,7 @@ import {
   useRole,
 } from '../crud';
 import Auth from '../auth/Auth';
+import { useSnackBar } from '../hoc/SnackBar';
 
 export type TeamIdType = Organization | null;
 
@@ -103,7 +104,6 @@ const initState = {
   auth: undefined as any,
   controlStrings: {} as IControlStrings,
   lang: 'en',
-  message: <></>,
   planTypes: Array<PlanType>(),
   teams: () => Array<Organization>(),
   personalProjects: () => Array<VProject>(),
@@ -118,7 +118,6 @@ const initState = {
   projectDescription: (project: Plan) => '',
   projectLanguage: (project: Plan) => '',
   isOwner: (project: Plan) => false,
-  handleMessageReset: () => {},
   projectCreate: async (project: VProject, team: TeamIdType) => '',
   projectUpdate: (project: VProject) => {},
   projectDelete: (project: VProject) => {},
@@ -138,9 +137,7 @@ const initState = {
   projButtonStrings: {} as IProjButtonsStrings,
 };
 
-export type ICtxState = typeof initState & {
-  setMessage: React.Dispatch<React.SetStateAction<JSX.Element>>;
-};
+export type ICtxState = typeof initState & {};
 
 interface IContext {
   state: ICtxState;
@@ -186,15 +183,13 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [remote] = useGlobal('remote');
     const [backup] = useGlobal('backup');
     const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
-    const [message, setMessage] = useState(<></>);
+    const { showMessage } = useSnackBar();
     const [state, setState] = useState({
       ...initState,
       auth,
       planTypes,
       controlStrings,
       lang,
-      message,
-      setMessage,
       cardStrings,
       sharedStrings,
       vProjectStrings,
@@ -204,20 +199,16 @@ const TeamProvider = withData(mapRecordsToProps)(
     const vProjectCreate = useVProjectCreate();
     const vProjectUpdate = useVProjectUpdate();
     const vProjectDelete = useVProjectDelete();
-    const orbitTeamCreate = useTeamCreate({ ...props, setMessage });
+    const orbitTeamCreate = useTeamCreate({ ...props });
     const orbitTeamUpdate = useTeamUpdate();
     const orbitTeamDelete = useTeamDelete();
     const orbitFlatAdd = useFlatAdd();
     const isPersonal = useIsPersonalTeam();
-    const getTeamId = useNewTeamId({ ...props, setMessage });
+    const getTeamId = useNewTeamId({ ...props });
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { getPlan } = usePlan();
-
-    const handleMessageReset = () => {
-      setMessage(<></>);
-    };
 
     const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');
@@ -247,8 +238,8 @@ const TeamProvider = withData(mapRecordsToProps)(
             setMyProjRole(projectId);
           })
           .catch((err: Error) => {
-            if (!online) setMessage(<span>{t.NoLoadOffline}</span>);
-            else setMessage(<span>{err.message}</span>);
+            if (!online) showMessage(t.NoLoadOffline);
+            else showMessage(err.message);
           });
       });
     };
@@ -378,7 +369,6 @@ const TeamProvider = withData(mapRecordsToProps)(
             isOwner,
             selectProject,
             setProjectParams,
-            handleMessageReset,
             projectCreate,
             projectUpdate,
             projectDelete,

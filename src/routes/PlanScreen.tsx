@@ -11,7 +11,6 @@ import { PlanProvider, PlanContext } from '../context/PlanContext';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';
 import Confirm from '../components/AlertDialog';
-import SnackBar from '../components/SnackBar';
 import { useUrlContext, useRole } from '../crud';
 import Auth from '../auth/Auth';
 import { UnsavedContext } from '../context/UnsavedContext';
@@ -46,8 +45,6 @@ const PlanBase = (props: IProps) => {
     t,
     handleSaveConfirmed,
     handleSaveRefused,
-    message,
-    handleMessageReset,
   } = uctx.state;
   const ctx = React.useContext(PlanContext);
   const { isScripture } = ctx.state;
@@ -67,7 +64,6 @@ const PlanBase = (props: IProps) => {
           noResponse={handleSaveRefused}
         />
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 };

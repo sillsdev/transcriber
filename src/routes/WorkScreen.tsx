@@ -15,7 +15,6 @@ import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import { UnsavedContext } from '../context/UnsavedContext';
 import Confirm from '../components/AlertDialog';
-import SnackBar from '../components/SnackBar';
 import { useRole, useUrlContext } from '../crud';
 import Auth from '../auth/Auth';
 import { HeadHeight } from '../App';
@@ -71,13 +70,7 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const { setMyProjRole } = useRole();
   const [alertOpen] = useGlobal('alertOpen');
   const uctx = React.useContext(UnsavedContext);
-  const {
-    checkSavedFn,
-    handleSaveConfirmed,
-    handleSaveRefused,
-    message,
-    handleMessageReset,
-  } = uctx.state;
+  const { checkSavedFn, handleSaveConfirmed, handleSaveRefused } = uctx.state;
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -135,7 +128,6 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
           noResponse={handleSaveRefused}
         />
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 });

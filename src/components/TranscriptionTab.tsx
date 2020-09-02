@@ -42,7 +42,7 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import moment from 'moment-timezone';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
 import Auth from '../auth/Auth';
@@ -269,7 +269,7 @@ export function TranscriptionTab(props: IProps) {
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
@@ -311,10 +311,6 @@ export function TranscriptionTab(props: IProps) {
   const [filter, setFilter] = useState(false);
 
   moment.locale(lang);
-
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
 
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
@@ -401,7 +397,7 @@ export function TranscriptionTab(props: IProps) {
         getCopy(projectPlans, passages, sections, allBookData).join('\n')
       )
       .catch((err) => {
-        setMessage(<span>{t.cantCopy}</span>);
+        showMessage(t.cantCopy);
       });
   };
 
@@ -448,16 +444,6 @@ export function TranscriptionTab(props: IProps) {
     setAudName(name);
   };
 
-  const showMessage = (title: string, msg: string) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
-  };
-
   useEffect(() => {
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
@@ -474,7 +460,10 @@ export function TranscriptionTab(props: IProps) {
         exportAnchor.current.click();
         URL.revokeObjectURL(exportUrl);
         setExportUrl(undefined);
-        showMessage(t.exportProject, t.downloading.replace('{0}', exportName));
+        showTitledMessage(
+          t.exportProject,
+          t.downloading.replace('{0}', exportName)
+        );
         setExportName('');
         exportComplete();
         setBusy(false);
@@ -486,12 +475,12 @@ export function TranscriptionTab(props: IProps) {
   useEffect(() => {
     if (exportStatus) {
       if (exportStatus.errStatus) {
-        showMessage(t.error, translateError(exportStatus));
+        showTitledMessage(t.error, translateError(exportStatus));
         exportComplete();
         setBusy(false);
       } else {
         if (exportStatus.statusMsg) {
-          showMessage('', exportStatus.statusMsg);
+          showMessage(exportStatus.statusMsg);
         }
         if (exportStatus.complete) {
           setBusy(false);
@@ -802,7 +791,6 @@ export function TranscriptionTab(props: IProps) {
         rel="noopener noreferrer"
       />
       <WhichExportDlg />
-      <SnackBar message={message} reset={handleMessageReset} />
     </div>
   );
 }
