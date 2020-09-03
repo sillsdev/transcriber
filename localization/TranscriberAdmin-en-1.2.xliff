@@ -369,13 +369,6 @@
                     <context context-type="sourcefile">PlanSheet.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="planSheet.section">
-        		<source>Section</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanSheet.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="planSheet.addPassage">
                 <source>Add Passage</source>
                 <target/>
@@ -419,7 +412,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="planSheet.sectionAbove">
-        		<source>Insert section above</source>
+        		<source>Insert {0} above</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanSheet.tsx</context>
@@ -481,13 +474,6 @@
         			<context context-type="sourcefile">PlanSheet.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="scriptureTable.section">
-                <source>Section</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ScriptureTable.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="scriptureTable.title">
                 <source>Title</source>
                 <target/>
@@ -566,7 +552,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="scriptureTable.pasteInvalidSections">
-                <source>Invalid section number(s):</source>
+                <source>Invalid {0} number(s):</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">ScriptureTable.tsx</context>
@@ -588,13 +574,6 @@
             </trans-unit>
             <trans-unit id="assignmentTable.title">
                 <source>Assignments</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">AssignmentTable.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="assignmentTable.section">
-                <source>Section</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">AssignmentTable.tsx</context>
@@ -636,7 +615,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="assignmentTable.assignSec">
-                <source>Assign Section</source>
+                <source>Assign {0}</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -685,14 +664,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="assignSection.title">
-                <source>Assign Sections to Users</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">AssignSection.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="assignSection.sections">
-                <source>Sections</source>
+                <source>Assign {0} to Users</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">AssignSection.tsx</context>
@@ -728,13 +700,6 @@
             </trans-unit>
         	<trans-unit id="planTabs.sectionsPassages">
         		<source>{0} &#x26; Passages</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">PlanTabs.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="planTabs.sections">
-        		<source>Sections</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">PlanTabs.tsx</context>
@@ -845,21 +810,7 @@
                     <context context-type="sourcefile">MediaTab.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="mediaTab.sectionId">
-                <source>Section Id</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">MediaTab.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="mediaTab.sectionName">
-                <source>Section Name</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">MediaTab.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="mediaTab.book">
+           <trans-unit id="mediaTab.book">
                 <source>Book</source>
                 <target/>
                 <context-group>
@@ -889,13 +840,6 @@
             </trans-unit>
             <trans-unit id="mediaTab.version">
                 <source>Version</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">MediaTab.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="mediaTab.section">
-                <source>Section</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaTab.tsx</context>
@@ -1167,13 +1111,6 @@
         			<context context-type="sourcefile">drawer.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="main.organization">
-                <source>Org Details</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">drawer.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="main.usersAndGroups">
                 <source>Users and Groups</source>
                 <target/>
@@ -1265,13 +1202,6 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="main.addOrganization">
-        		<source>Add Organization</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">drawer.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="main.projectSummary">
                 <source>Project Summary</source>
                 <target/>
@@ -1343,7 +1273,7 @@
                 </context-group>
             </trans-unit>
         	<trans-unit id="main.orgRole">
-        		<source>Organizational Role:</source>
+        		<source>Team Role:</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">UserMenu.tsx</context>
@@ -1447,13 +1377,6 @@
                     <context context-type="sourcefile">drawer.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="main.newOrganization">
-                <source>Add Organization</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">drawer.tsx</context>
-                </context-group>
-            </trans-unit>
         	<trans-unit id="main.admin">
         		<source>Admin</source>
         		<target/>
@@ -1545,13 +1468,6 @@
                     <context context-type="sourcefile">TokenCheck.tsx</context>
                 </context-group>
             </trans-unit>
-        	<trans-unit id="main.defaultOrgDesc">
-        		<source>Default organization of </source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">Loading.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="emailUnverified.emailUnverified">
         		<source>Your email is unverified.</source>
         		<target/>
@@ -1652,13 +1568,6 @@
             </trans-unit>
             <trans-unit id="import.plan">
                 <source>Plan</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">import.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="import.section">
-                <source>Section</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">import.tsx</context>
@@ -1776,13 +1685,6 @@
         			<context context-type="sourcefile">import.tsx</context>
         		</context-group>
         	</trans-unit>
-            <trans-unit id="transcriptionTab.section">
-                <source>Section</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">TranscriptionTab.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="transcriptionTab.sectionstate">
                 <source>State</source>
                 <target/>
@@ -2119,13 +2021,6 @@
                     <context context-type="sourcefile">GroupSettings.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="groupSettings.groupExplain">
-                <source>Groups connect organization members to a project.</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">GroupSettings.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="groupSettings.case1">
                 <source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
                 <target/>
@@ -2141,7 +2036,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupSettings.assignedSections">
-                <source>&#xA0;&#xA0;Assigned Sections:&#xA0;</source>
+                <source>&#xA0;&#xA0;Assigned {0}:&#xA0;</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2386,14 +2281,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invite.organization">
-				<source>Organization</source>
+				<source>Team</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
 			<trans-unit id="invite.selectOrgRole">
-                <source>Select Organizational Role</source>
+                <source>Select Team Role</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Invite.tsx</context>
@@ -2589,7 +2484,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invitationTable.role">
-                <source>Organization Role</source>
+                <source>Team Role</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">InvitationTable.tsx</context>
@@ -2777,13 +2672,6 @@
         			<context context-type="sourcefile">ToDoTable.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="toDoTable.section">
-                <source>Section</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">ToDoTable.tsx</context>
-                </context-group>
-            </trans-unit>
             <trans-unit id="toDoTable.passage">
                 <source>Passage</source>
                 <target/>
@@ -3653,7 +3541,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="taskItem.section">
-        		<source>Section {0}.{1}</source>
+        		<source>{0} {1}.{2}</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">TaskItem.tsx</context>
@@ -3722,15 +3610,8 @@
         			<context context-type="sourcefile">template.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="template.section">
-        		<source>Section number</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">template.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="template.passage">
-        		<source>Passage number(within section)</source>
+        		<source>Passage number(within {0})</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">template.tsx</context>
@@ -3836,13 +3717,6 @@
         	</trans-unit>
         	<trans-unit id="cards.sectionStatus">
         		<source>{0} {1}</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">addCard.tsx</context>
-        		</context-group>
-        	</trans-unit>
-        	<trans-unit id="cards.sections">
-        		<source>sections</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">addCard.tsx</context>
@@ -4030,6 +3904,48 @@
         			<context context-type="sourcefile">addCard.tsx</context>
         		</context-group>
         	</trans-unit>
+            <trans-unit id="vProject.sections">
+        		<source>Section/Sections</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="vProject.sets">
+        		<source>Set/Sets</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="vProject.stories">
+        		<source>Story/Stories</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="vProject.scenes">
+        		<source>Scene/Scenes</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="vProject.pericopes">
+        		<source>Pericope/Pericopes</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="vProject.correctformat">
+        		<source>Please enter in the format: singular/plural</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">LastEdit.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="vProject.projectName">
         		<source>Project Name</source>
         		<target/>
@@ -4037,14 +3953,49 @@
         			<context context-type="sourcefile">addCard.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="vProject.tags">
+        	<trans-unit id="vProject.flat">
+        		<source>Flat</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+         	<trans-unit id="vProject.hierarchical">
+        		<source>Hierarchical</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="vProject.tags">
         		<source>Tags</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">addCard.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="vProject.other">
+        	<trans-unit id="vProject.training">
+        		<source>Training</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="vProject.testing">
+        		<source>Testing</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+         	<trans-unit id="vProject.backtranslation">
+        		<source>Back Translation</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">addCard.tsx</context>
+        		</context-group>
+        	</trans-unit>
+             <trans-unit id="vProject.other">
         		<source>Other</source>
         		<target/>
         		<context-group>

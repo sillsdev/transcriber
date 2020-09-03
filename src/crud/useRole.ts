@@ -44,6 +44,7 @@ export const useRole = () => {
   };
 
   const getMyProjRole = (projectId: string) => {
+    if (projectId === '') return '';
     const proj = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'project', id: projectId })
     ) as Project;

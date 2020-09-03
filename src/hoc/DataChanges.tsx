@@ -66,7 +66,7 @@ export const doDataChanges = (
                 var tb = new TransformBuilder();
                 var newOps: Operation[] = [];
                 tr.operations.forEach((o) => {
-                  if ((o.op = 'updateRecord')) {
+                  if (o.op === 'updateRecord') {
                     var upRec = o as UpdateRecordOperation;
                     switch (upRec.record.type) {
                       case 'section':

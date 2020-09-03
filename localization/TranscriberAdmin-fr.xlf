@@ -310,7 +310,7 @@
 		<unit id="planSheet.section">
 			<segment>
 				<source>Section</source>
-				<target>section</target>
+				<target>Section</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.addPassage">
@@ -502,7 +502,7 @@
       <unit id="assignmentTable.sectionstate">
          <segment>
             <source>State</source>
-         	<target>État de la section</target>
+         	<target>État</target>
          </segment>
       </unit>
       <unit id="assignmentTable.passages">
@@ -531,8 +531,8 @@
       </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
-            <source>Assign Section</source>
-         	<target>Affecter une section</target>
+            <source>Assign {0}</source>
+         	<target>Affecter {0}</target>
          </segment>
       </unit>
 		<unit id="assignmentTable.removeSec">
@@ -713,12 +713,6 @@
 			<segment>
 				<source>Section Id</source>
 				<target>Section Id</target>
-			</segment>
-		</unit>
-		<unit id="mediaTab.sectionName">
-			<segment>
-				<source>Section Name</source>
-				<target>Nom de la section</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.book">
@@ -985,12 +979,6 @@
 				<target>Chercher…</target>
 			</segment>
 		</unit>
-		<unit id="main.organization">
-			<segment>
-				<source>Org Details</source>
-				<target>Détails de l'organisation</target>
-			</segment>
-		</unit>
 		<unit id="main.usersAndGroups">
 			<segment>
 				<source>Users and Groups</source>
@@ -1069,12 +1057,6 @@
 				<target>Chargement de SIL Transcriber</target>
 			</segment>
 		</unit>
-		<unit id="main.addOrganization">
-			<segment>
-				<source>Add Organization</source>
-				<target>Ajouter une organisation</target>
-			</segment>
-		</unit>
 		<unit id="main.projectSummary">
 			<segment>
 				<source>Project Summary</source>
@@ -1137,8 +1119,8 @@
 		</unit>
 		<unit id="main.orgROle">
 			<segment>
-				<source>Organizational Role:</source>
-				<target>Rôle organisationnel</target>
+				<source>Team Role:</source>
+				<target>Rôle d'équipe</target>
 			</segment>
 		</unit>
 		<unit id="main.projRole">
@@ -1225,12 +1207,6 @@
          	<target>Épargner...</target>
          </segment>
       </unit>
-      <unit id="main.newOrganization">
-         <segment>
-            <source>Add Organization</source>
-            <target>Ajouter Organization</target>
-         </segment>
-      </unit>
 		<unit id="main.admin">
 			<segment>
 				<source>Admin</source>
@@ -1307,12 +1283,6 @@
          <segment>
             <source>Continue</source>
             <target>Continuer</target>
-         </segment>
-      </unit>
-      <unit id="main.defaultOrgDesc">
-         <segment>
-            <source>Default organization of </source>
-            <target>Organisation par défaut de </target>
          </segment>
       </unit>
       <unit id="emailUnverified.emailUnverified">
@@ -1807,12 +1777,6 @@
 			<target>Tous les éditeurs sont autorisés à transcrire.</target>
 		</segment>
 	</unit>
-	<unit id="groupSettings.groupExplain">
-         <segment>
-            <source>Groups connect organization members to a project.</source>
-         	<target>Les groupes relient les membres de l'organisation à un projet.</target>
-         </segment>
-      </unit>
       <unit id="groupSettings.case1">
          <segment>
          	<source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
@@ -1827,8 +1791,8 @@
       </unit>
       <unit id="groupSettings.assignedSections">
          <segment>
-            <source>  Assigned Sections: </source>
-         	<target>  Sections assignées : </target>
+            <source>  Assigned {0}: </source>
+         	<target>  {0} assignées : </target>
          </segment>
       </unit>
       <unit id="groupSettings.projectPlans">
@@ -2031,20 +1995,14 @@
       </unit>
       <unit id="invite.role">
          <segment>
-            <source>Organization Role</source>
-         	<target>Rôle organisationnel</target>
-         </segment>
-      </unit>
-	  <unit id="invite.organization">
-         <segment>
-            <source>Organization</source>
-            <target>Organisation</target>
+            <source>Role</source>
+         	<target>Rôle</target>
          </segment>
       </unit>
       <unit id="invite.selectOrgRole">
          <segment>
-            <source>Select Organizational Role</source>
-         	<target>Sélectionner le rôle organisationnel</target>
+            <source>Select Team Role</source>
+         	<target>Sélectionnez le rôle de l'équipe</target>
          </segment>
       </unit>
 	  <unit id="invite.allusersgroup">
@@ -2212,8 +2170,8 @@
       </unit>
       <unit id="invitationTable.role">
          <segment>
-            <source>Organization Role</source>
-         	<target>Rôle organisationnel</target>
+            <source>Team Role</source>
+         	<target>Rôle d'équipe</target>
          </segment>
       </unit>
       <unit id="invitationTable.allUsers">
@@ -3125,8 +3083,8 @@
 		</unit>
 		<unit id="taskItem.section">
 			<segment>
-				<source>Section {0}.{1}</source>
-				<target>Section {0}.{1}</target>
+				<source>{0} {1}.{2}</source>
+				<target>{0} {1}.{2}</target>
 			</segment>
 		</unit>
 		<unit id="taskItem.assign">
@@ -3270,7 +3228,7 @@
 		<unit id="cards.personalProjects">
 			<segment>
 				<source>Personal Projects</source>
-				<target>Personal Projects</target>
+				<target>Projets personnels</target>
 			</segment>
 		</unit>
 		<unit id="cards.language">
@@ -3287,14 +3245,14 @@
 		</unit>
 		<unit id="cards.sections">
 			<segment>
-				<source>sections</source>
-				<target>sections</target>
+				<source>Sections</source>
+				<target>Sections</target>
 			</segment>
 		</unit>
 		<unit id="cards.settings">
 			<segment>
 				<source>Settings</source>
-				<target>Settings</target>
+				<target>Paramètres</target>
 			</segment>
 		</unit>
 		<unit id="cards.delete">
@@ -3306,13 +3264,13 @@
 		<unit id="cards.addTeam">
 			<segment>
 				<source>Add Team</source>
-				<target>Add Team</target>
+				<target>Ajouter une équipe</target>
 			</segment>
 		</unit>
 		<unit id="cards.teamSettings">
 			<segment>
 				<source>Team Settings</source>
-				<target>Team Settings</target>
+				<target>Paramètres de l'équipe</target>
 			</segment>
 		</unit>
 		<unit id="cards.teamName">
@@ -3348,7 +3306,7 @@
 		<unit id="cards.explainTeamDelete">
 			<segment>
 				<source>Deleting the team will delete all projects of the team.</source>
-				<target>Deleting the team will delete all projects of the team.</target>
+				<target>La suppression de l'équipe supprimera tous les projets de l'équipe.</target>
 			</segment>
 		</unit>
 		<unit id="cards.members">
@@ -3447,19 +3405,91 @@
 				<target>Terme pour l'organisation de la mise en page</target>
 			</segment>
 		</unit>
-		<unit id="vProject.projectName">
+      <unit id="vProject.sections">
+         <segment>
+            <source>Section/Sections</source>
+            <target>Section/Sections</target>
+         </segment>
+      </unit>
+      <unit id="vProject.sets">
+         <segment>
+            <source>Set/Sets</source>
+           <target>Ensemble/Ensembles</target>
+         </segment>
+      </unit>
+      <unit id="vProject.stories">
+         <segment>
+            <source>Story/Stories</source>
+           <target>l' histoire/Histoires</target>
+         </segment>
+      </unit>
+      <unit id="vProject.scenes">
+         <segment>
+            <source>Scene/Scenes</source>
+           <target>Scène/Scènes</target>
+         </segment>
+      </unit>
+      <unit id="vProject.pericopes">
+         <segment>
+            <source>cd /Pericopes</source>
+           <target>Péricope/Péricopes</target>
+         </segment>
+      </unit>
+      <unit id="vProject.singular">
+         <segment>
+            <source>Singular</source>
+            <target>Singulier</target>
+         </segment>
+      </unit>
+      <unit id="vProject.plural">
+         <segment>
+            <source>Plural</source>
+            <target>Pluriel</target>
+         </segment>
+      </unit>
+      <unit id="vProject.projectName">
 			<segment>
 				<source>Project Name</source>
 				<target>Nom du projet</target>
 			</segment>
 		</unit>
-		<unit id="vProject.tags">
+      <unit id="vProject.flat">
+         <segment>
+            <source>Flat</source>
+            <target>Plate</target>
+         </segment>
+      </unit>
+      <unit id="vProject.hierarchical">
+         <segment>
+            <source>Hierarchical</source>
+            <target>Hiérarchique</target>
+         </segment>
+      </unit>
+      <unit id="vProject.tags">
 			<segment>
 				<source>Tags</source>
 				<target>Étiquettes</target>
 			</segment>
 		</unit>
-		<unit id="vProject.other">
+        <unit id="vProject.training">
+            <segment>
+                <source>Training</source>
+				<target>Formation</target>
+            </segment>
+        </unit>
+        <unit id="vProject.testing">
+            <segment>
+                <source>Testing</source>
+				<target>Essai</target>
+            </segment>
+        </unit>
+        <unit id="vProject.backtranslation">
+            <segment>
+                <source>Back Translation</source>
+				<target>Traduction inverse</target>
+            </segment>
+        </unit>
+            <unit id="vProject.other">
 			<segment>
 				<source>Other</source>
 				<target>Autres</target>

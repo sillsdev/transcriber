@@ -132,8 +132,7 @@ export function UserTable(props: IProps) {
   const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [editId, setEditId] = useGlobal('editUserId');
+  const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
   const [data, setData] = useState(Array<IRow>());

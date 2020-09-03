@@ -72,7 +72,6 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "copy": string;
     "attachMedia": string;
     "addSection": string;
-    "section": string;
     "addPassage": string;
     "inlineToggle": string;
     "save": string;
@@ -91,7 +90,6 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
-    "section": string;
     "title": string;
     "passage": string;
     "book": string;
@@ -110,7 +108,6 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
 
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
     "title": string;
-    "section": string;
     "sectionstate": string;
     "passages": string;
     "passagestate": string;
@@ -127,7 +124,6 @@ export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethod
 
 export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {
     "title": string;
-    "sections": string;
     "users": string;
     "role": string;
     "assignAs": string;
@@ -136,7 +132,6 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
 
 export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
     "sectionsPassages": string;
-    "sections": string;
     "passageStatus": string;
     "sectionStatus": string;
     "mediaStatus": string;
@@ -155,14 +150,11 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "uploadComplete": string;
     "planName": string;
     "fileName": string;
-    "sectionId": string;
-    "sectionName": string;
     "book": string;
     "reference": string;
     "duration": string;
     "size": string;
     "version": string;
-    "section": string;
     "date": string;
     "filter": string;
     "selectFiles": string;
@@ -207,7 +199,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "silTranscriber": string;
     "online": string;
     "search": string;
-    "organization": string;
     "usersAndGroups": string;
     "passages": string;
     "media": string;
@@ -221,7 +212,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "integrations": string;
     "project": string;
     "loadingTranscriber": string;
-    "addOrganization": string;
     "projectSummary": string;
     "addProject": string;
     "export": string;
@@ -247,7 +237,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "UnsavedData": string;
     "saveFirst": string;
     "saving": string;
-    "newOrganization": string;
     "admin": string;
     "goOnline": string;
     "transcribe": string;
@@ -261,8 +250,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "sessionExpireTask": string;
     "exit": string;
     "continue": string;
-    "myWorkbench": string;
-    "defaultOrgDesc": string;
 };
 
 export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethods {
@@ -284,7 +271,6 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "invalidProject": string;
     "importComplete": string;
     "plan": string;
-    "section": string;
     "passage": string;
     "other": string;
     "old": string;
@@ -304,7 +290,6 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
-    "section": string;
     "sectionstate": string;
     "passages": string;
     "filter": string;
@@ -362,7 +347,6 @@ export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods 
     "delete": string;
     "choose": string;
     "allReviewersCanTranscribe": string;
-    "groupExplain": string;
     "case1": string;
     "case2": string;
     "assignedSections": string;
@@ -483,7 +467,6 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
     "filter": string;
     "plan": string;
     "project": string;
-    "section": string;
     "passage": string;
     "state": string;
     "action": string;
@@ -642,7 +625,6 @@ export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
     "projectCode": string;
     "language": string;
     "book": string;
-    "section": string;
     "passage": string;
     "chapter": string;
     "beginning": string;
@@ -662,7 +644,6 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "personalProjects": string;
     "language": string;
     "sectionStatus": string;
-    "sections": string;
     "settings": string;
     "delete": string;
     "addTeam": string;
@@ -693,8 +674,19 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "advanced": string;
     "layout": string;
     "organizedBy": string;
+    "sections": string;
+    "sets": string;
+    "stories": string;
+    "scenes": string;
+    "pericopes": string;
+    "correctformat": string;
     "projectName": string;
+    "flat": string;
+    "hierarchical": string;
     "tags": string;
+    "training": string;
+    "testing": string;
+    "backtranslation": string;
     "other": string;
     "type": string;
     "language": string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ITag } from '../../../model';
+import { ITag, IVProjectStrings } from '../../../model';
 import {
   Button,
   Dialog,
@@ -42,10 +42,10 @@ const initState = {
   rtl: false,
   fontSize: 'large',
   tags: {} as ITag,
-  layout: 'hierarchical',
-  organizedBy: 'sections',
+  flat: false,
+  organizedBy: '',
+  vProjectStrings: {} as IVProjectStrings,
 };
-
 export type IProjectDialog = typeof initState;
 
 export interface IProjectDialogState {
@@ -58,6 +58,8 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
   const classes = useStyles();
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
+  initState.organizedBy = t.sections;
+  initState.vProjectStrings = t;
   const [state, setState] = React.useState(
     mode === Mode.add || !values ? { ...initState } : { ...values }
   );

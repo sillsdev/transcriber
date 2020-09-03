@@ -7,6 +7,7 @@ import { TeamProvider } from '../context/TeamContext';
 import { TeamActions, TeamProjects } from '../components/Team';
 import Auth from '../auth/Auth';
 import { remoteId } from '../crud';
+import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles({
   root: {
@@ -34,7 +35,9 @@ export const TeamScreen = (props: IProps) => {
     return (
       <StickyRedirect
         to={
-          projRole === 'admin' ? `/plan/${remProjId}/0` : `/work/${remProjId}`
+          projRole === 'admin' && !isElectron
+            ? `/plan/${remProjId}/0`
+            : `/work/${remProjId}`
         }
       />
     );
@@ -45,7 +48,7 @@ export const TeamScreen = (props: IProps) => {
       <AppHead {...props} />
       <TeamProvider {...props}>
         <div id="TeamScreen" className={classes.teamScreen}>
-          <TeamActions />
+          {!isElectron && <TeamActions />}
           <TeamProjects />
         </div>
       </TeamProvider>

@@ -149,9 +149,11 @@ export function ScriptureTable(props: IProps) {
   const { showMessage, showJSXMessage } = useSnackBar();
   const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
   const [inlinePassages, setInlinePassages] = useState(false);
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState<string>(getOrganizedBy(true));
 
   const [columns, setColumns] = useState([
-    { value: t.section, readOnly: true, width: 80 },
+    { value: organizedBy, readOnly: true, width: 80 },
     { value: t.title, readOnly: true, width: 280 },
     { value: t.passage, readOnly: true, width: 80 },
     { value: t.reference, readOnly: true, width: 180 },
@@ -163,8 +165,7 @@ export function ScriptureTable(props: IProps) {
   const [complete, setComplete] = useState(0);
   const [view, setView] = useState('');
   const [lastSaved, setLastSaved] = React.useState<string>();
-  const getOrganizedBy = useOrganizedBy();
-  const [, saveCompleted] = useRemoteSave();
+  const [startSave, saveCompleted, waitForSave] = useRemoteSave();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<Section[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -360,6 +361,7 @@ export function ScriptureTable(props: IProps) {
       rowinfo.passageId = newPassageId(
         myData[index][cols.PassageSeq] as number
       );
+      rowinfo.mediaId = '';
       myRowInfo[index] = rowinfo;
       setRowInfo([...myRowInfo]);
     } else {
@@ -375,7 +377,7 @@ export function ScriptureTable(props: IProps) {
       );
       myRowInfo = insertAt(
         myRowInfo,
-        { passageId: newPassageId(0) },
+        { passageId: newPassageId(0), mediaId: '' },
         index < lastRow ? index + 1 : undefined
       );
       if (
@@ -666,7 +668,10 @@ export function ScriptureTable(props: IProps) {
   const handleTranscribe = (i: number) => () => {
     const id = passageId(i - 1);
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap);
-    setView(`/work/${prjId}/${passageRemoteId}`);
+    if (changed) {
+      startSave();
+      waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), 100);
+    } else setView(`/work/${prjId}/${passageRemoteId}`);
   };
 
   const handleAssign = (where: number[]) => () => {
@@ -675,9 +680,15 @@ export function ScriptureTable(props: IProps) {
   };
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
-  const handleUpload = (i: number) => () => {
+  const showUpload = (i: number) => {
     setUploadVisible(true);
     setUploadPassage(passageId(i - 1));
+  };
+  const handleUpload = (i: number) => () => {
+    if (passageId(i - 1) === '') {
+      startSave();
+      waitForSave(() => showUpload(i), 100);
+    } else showUpload(i);
   };
 
   const getLastModified = () => {
@@ -1014,7 +1025,6 @@ export function ScriptureTable(props: IProps) {
     const colMul = colMx.map((v) => v / total);
     const extra = Math.max(width - 1020, 0);
     const colAdd = colMul.map((v) => Math.floor(extra * v));
-    const organizedBy = getOrganizedBy(plan) || t.section;
     let colHead = [
       { value: organizedBy, readOnly: true, width: 60 + colAdd[0] },
       { value: t.title, readOnly: true, width: 100 + colAdd[1] },

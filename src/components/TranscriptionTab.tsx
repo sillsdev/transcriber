@@ -60,6 +60,7 @@ import {
   getMediaEaf,
   getMediaName,
   getMediaInPlans,
+  useOrganizedBy,
 } from '../crud';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
@@ -284,9 +285,10 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const { getOrganizedBy } = useOrganizedBy();
 
   const columnDefs = [
-    { name: 'name', title: t.section },
+    { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
     { name: 'planName', title: t.plan },
     { name: 'passages', title: t.passages },

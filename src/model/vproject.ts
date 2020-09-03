@@ -3,7 +3,9 @@ import { Record, RecordRelationship } from '@orbit/data';
 export interface ITag {
   [tag: string]: boolean;
 }
-
+export interface ITagLocal {
+  [tag: string]: string;
+}
 export interface VProject extends Record {
   attributes: {
     name: string;

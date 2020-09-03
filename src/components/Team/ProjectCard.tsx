@@ -20,8 +20,8 @@ import ExportTab from '../TranscriptionTab';
 import ImportTab from '../ImportTab';
 import Confirm from '../AlertDialog';
 import { ProjectDialog, IProjectDialog } from './ProjectDialog';
-import { usePlan, useProjectPlans } from '../../crud';
-import { camel2Title } from '../../utils';
+import { usePlan, useProjectPlans, useOrganizedBy } from '../../crud';
+import { localizeProjectTag } from '../../utils/localizeProjectTag';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,9 +80,14 @@ export const ProjectCard = (props: IProps) => {
     projectDelete,
     isOwner,
     cardStrings,
+    vProjectStrings,
     projButtonStrings,
   } = ctx.state;
   const { getPlanName } = usePlan();
+  const { localizedOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(
+    localizedOrganizedBy(project.attributes.organizedBy, false)
+  );
   const [projectId] = useGlobal('project');
   const projectPlans = useProjectPlans();
   const [openProject, setOpenProject] = useState(false);
@@ -153,7 +158,7 @@ export const ProjectCard = (props: IProps) => {
         defaultFontSize: values.fontSize,
         rtl,
         tags,
-        flat: values.layout === 'flat',
+        flat: values.flat,
         organizedBy,
       },
     });
@@ -181,8 +186,9 @@ export const ProjectCard = (props: IProps) => {
       rtl: attr.rtl,
       fontSize: attr.defaultFontSize || '',
       tags: attr.tags || {},
-      layout: attr.flat ? 'flat' : 'hierarchical',
-      organizedBy: attr.organizedBy || 'sections',
+      flat: attr.flat,
+      organizedBy: attr.organizedBy || vProjectStrings.sections,
+      vProjectStrings: vProjectStrings,
     };
     return value;
   };
@@ -220,10 +226,7 @@ export const ProjectCard = (props: IProps) => {
             {sectionCount !== '<na>' &&
               t.sectionStatus
                 .replace('{0}', sectionCount)
-                .replace(
-                  '{1}',
-                  camel2Title(project?.attributes?.organizedBy || t.sections)
-                )}
+                .replace('{1}', organizedBy)}
           </Typography>
         </CardContent>
         {project?.attributes?.tags && (
@@ -231,7 +234,11 @@ export const ProjectCard = (props: IProps) => {
             {Object.keys(project?.attributes?.tags)
               .filter((t) => project?.attributes?.tags[t])
               .map((t) => (
-                <Chip key={t} size="small" label={camel2Title(t)} />
+                <Chip
+                  key={t}
+                  size="small"
+                  label={localizeProjectTag(t, vProjectStrings)}
+                />
               ))}
           </CardActions>
         )}

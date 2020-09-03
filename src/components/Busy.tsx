@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     busy: {
       display: 'flex',
-      height: `calc(100vh - 120px)`,
+      height: '100vh',
     },
     img: {
       width: '120px',

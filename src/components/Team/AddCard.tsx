@@ -10,7 +10,7 @@ import Uploader, { statusInit } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
-import { waitForRemoteId, remoteId } from '../../crud';
+import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
 import { StickyRedirect } from '../../control';
 import { useSnackBar } from '../../hoc/SnackBar';
 
@@ -80,6 +80,7 @@ export const AddCard = (props: IProps) => {
     t.mediaUploaded,
     t.passagesCreated,
   ]);
+  const { getOrganizedBy } = useOrganizedBy();
   const [step, setStep] = React.useState(0);
   const [status] = React.useState({ ...statusInit });
   const [, setPlan] = useGlobal('plan');
@@ -139,7 +140,7 @@ export const AddCard = (props: IProps) => {
           defaultFontSize: values.fontSize,
           rtl,
           tags,
-          flat: values.layout === 'flat',
+          flat: values.flat,
           organizedBy,
         },
       } as VProject,
@@ -164,7 +165,7 @@ export const AddCard = (props: IProps) => {
           rtl: false,
           tags: {},
           flat: true,
-          organizedBy: 'sections',
+          organizedBy: getOrganizedBy(false),
         },
       } as any,
       team

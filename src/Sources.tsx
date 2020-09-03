@@ -247,9 +247,9 @@ export const Sources = async (
     let goRemote =
       !offline &&
       (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
-    //do this before activating the coordinator so if the backup pull fails, we'll
-    //carry on here and handle it
-    if (!goRemote) {
+    if (goRemote) {
+      localStorage.removeItem('fromUrl'); //we're a different user, or we want to go to the new project anyway
+    } else {
       setUser(localStorage.getItem('user-id') as string);
       console.log('using backup');
       if (process.env.REACT_APP_MODE !== 'electron') {

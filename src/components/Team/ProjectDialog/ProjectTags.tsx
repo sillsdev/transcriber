@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import keycode from 'keycode';
 import { ITag } from '../../../model';
 import {
@@ -10,9 +10,9 @@ import {
   FormGroup,
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
-import { toCamel, camel2Title } from '../../../utils';
+import { useEffect } from 'reactn';
+import { localizeProjectTag } from '../../../utils/localizeProjectTag';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,21 +29,56 @@ export const ProjectTags = (props: IProjectDialogState) => {
   const classes = useStyles();
   const { state, setState } = props;
   const { tags } = state;
-  const [check, setCheck] = React.useState<ITag>({
-    testing: false,
-    training: false,
-    backTranslation: false,
-    ...tags,
+  const t = state.vProjectStrings;
+
+  const [check, setCheck] = useState<ITag>({
+    [t.testing]: false,
+    [t.training]: false,
+    [t.backtranslation]: false,
   });
-  const [other, setOther] = React.useState('');
-  const ctx = React.useContext(TeamContext);
-  const t = ctx.state.vProjectStrings;
+  const [other, setOther] = useState('');
+
+  useEffect(() => {
+    let checks: ITag = { ...check };
+    Object.keys(tags).map((k, i) => {
+      checks = { ...checks, [localizeProjectTag(k, t)]: tags[k] };
+      return k;
+    });
+    console.log(check);
+    console.log(tags, checks);
+    setCheck(checks);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tags]);
+
+  const localToTag = (localized: ITag) => {
+    let tag = {};
+    Object.keys(localized).map((k) => {
+      switch (k) {
+        case t.training:
+          tag = { ...tag, training: localized[k] };
+          break;
+        case t.testing:
+          tag = { ...tag, testing: localized[k] };
+          break;
+        case t.backtranslation:
+          tag = { ...tag, backTranslation: localized[k] };
+          break;
+        default:
+          tag = { ...tag, [k]: localized[k] };
+          break;
+      }
+      return k;
+    });
+    return tag;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.persist();
-    const checks = { ...check, [e.target.name]: e.target.checked };
-    setCheck(checks);
-    setState((state) => ({ ...state, tags: checks }));
+    if (e.target.name !== '' && e.target.name !== '<o>') {
+      const checks = { ...check, [e.target.name]: e.target.checked };
+      setCheck(checks);
+      setState((state) => ({ ...state, tags: localToTag(checks) }));
+    }
   };
 
   const handleOther = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,8 +87,8 @@ export const ProjectTags = (props: IProjectDialogState) => {
   };
 
   const addOther = () => {
-    if (other !== '') {
-      const newTag = toCamel(other);
+    if (other !== '' && other !== '<o>') {
+      const newTag = other;
       const checks = { ...check, [newTag]: true };
       setCheck(checks);
       setState((state) => ({ ...state, tags: checks }));
@@ -78,7 +113,7 @@ export const ProjectTags = (props: IProjectDialogState) => {
               control={
                 <Checkbox checked={check[k]} onChange={handleChange} name={k} />
               }
-              label={camel2Title(k)}
+              label={k}
             />
           );
         })}

@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TeamContext } from '../context/TeamContext';
-import { toCamel, camel2Title } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,7 +72,7 @@ const OptionCtrl = (props: IProps) => {
 
   const addOther = () => {
     if (other !== '') {
-      const newTag = toCamel(other || '');
+      const newTag = other || '';
       if (!options.includes(newTag)) {
         addOption && addOption(newTag);
       }
@@ -107,7 +106,7 @@ const OptionCtrl = (props: IProps) => {
               control={<Radio />}
               label={
                 <>
-                  {tc.hasOwnProperty(k) ? tc.getString(k) : camel2Title(k)}
+                  {tc.hasOwnProperty(k) ? tc.getString(k) : k}
                   {'\u00A0 '}
                   {decorations &&
                     decorations.hasOwnProperty(k) &&

@@ -12,6 +12,7 @@ import { IProjectDialogState } from './ProjectDialog';
 import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
 import renderLogo from '../../../assets/renderIcon.png';
+import { useSnackBar } from '../../SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,27 +38,32 @@ const useStyles = makeStyles((theme: Theme) =>
 export function ProjectExpansion(props: IProjectDialogState) {
   const classes = useStyles();
   const { state, setState } = props;
-  const { layout, organizedBy } = state;
+  const { organizedBy } = state;
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
   const [options, setOptions] = React.useState([
-    'sections',
-    'sets',
-    'stories',
-    'scenes',
-    'pericopes',
+    t.sections,
+    t.sets,
+    t.stories,
+    t.scenes,
+    t.pericopes,
   ]);
+  const { SnackBar, message, showMessage } = useSnackBar();
 
   const handleLayoutChange = (val: string) => {
-    setState((state) => ({ ...state, layout: val || '' }));
+    setState((state) => ({ ...state, flat: val === t.flat }));
   };
 
   const handleOrgByChange = (val: string) => {
-    setState((state) => ({ ...state, organizedBy: val || '' }));
+    setState((state) => ({ ...state, organizedBy: val }));
   };
 
   const handleAddOption = (val: string) => {
     const newOptions = options.map((i) => i);
+    if (val.indexOf('/') === -1) {
+      showMessage(t.correctformat);
+      return;
+    }
     newOptions.push(val);
     setOptions(newOptions);
     handleOrgByChange(val);
@@ -68,8 +74,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
   };
 
   const decoration = {
-    sets: <RenderLogo />,
-    flat: <RenderLogo />,
+    [t.sets]: <RenderLogo />,
+    [t.flat]: <RenderLogo />,
   };
 
   return (
@@ -88,8 +94,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
           <EditorSettings state={state} setState={setState} />
           <Options
             label={t.layout}
-            defaultValue={layout}
-            options={['hierarchical', 'flat']}
+            defaultValue={state.flat ? t.flat : t.hierarchical}
+            options={[t.hierarchical, t.flat]}
             onChange={handleLayoutChange}
             decorations={decoration}
           />
@@ -103,6 +109,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
           />
         </ExpansionPanelDetails>
       </ExpansionPanel>
+      <SnackBar message={message} />
     </div>
   );
 }

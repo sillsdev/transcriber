@@ -316,12 +316,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="planSheet.section">
-         <segment>
-            <source>Section</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
@@ -360,7 +354,7 @@
       </unit>
       <unit id="planSheet.sectionAbove">
          <segment>
-            <source>Insert section above</source>
+            <source>Insert {0} above</source>
             <target/>
          </segment>
       </unit>
@@ -409,12 +403,6 @@
       <unit id="planSheet.resequence">
          <segment>
             <source>Resequence</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="scriptureTable.section">
-         <segment>
-            <source>Section</source>
             <target/>
          </segment>
       </unit>
@@ -486,7 +474,7 @@
       </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
-            <source>Invalid section number(s):</source>
+            <source>Invalid {0} number(s):</source>
             <target/>
          </segment>
       </unit>
@@ -505,12 +493,6 @@
       <unit id="assignmentTable.title">
          <segment>
             <source>Assignments</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="assignmentTable.section">
-         <segment>
-            <source>Section</source>
             <target/>
          </segment>
       </unit>
@@ -546,7 +528,7 @@
       </unit>
       <unit id="assignmentTable.assignSec">
          <segment>
-            <source>Assign Section</source>
+            <source>Assign {0}</source>
             <target/>
          </segment>
       </unit>
@@ -588,13 +570,7 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign Sections to Users</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="assignSection.sections">
-         <segment>
-            <source>Sections</source>
+            <source>Assign {0} to Users</source>
             <target/>
          </segment>
       </unit>
@@ -625,12 +601,6 @@
       <unit id="planTabs.sectionsPassages">
          <segment>
             <source>{0} &amp; Passages</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="planTabs.sections">
-         <segment>
-            <source>Sections</source>
             <target/>
          </segment>
       </unit>
@@ -724,18 +694,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.sectionId">
-         <segment>
-            <source>Section Id</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="mediaTab.sectionName">
-         <segment>
-            <source>Section Name</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="mediaTab.book">
          <segment>
             <source>Book</source>
@@ -763,12 +721,6 @@
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="mediaTab.section">
-         <segment>
-            <source>Section</source>
             <target/>
          </segment>
       </unit>
@@ -1000,12 +952,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.organization">
-         <segment>
-            <source>Org Details</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.usersAndGroups">
          <segment>
             <source>Users and Groups</source>
@@ -1084,12 +1030,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.addOrganization">
-         <segment>
-            <source>Add Organization</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.projectSummary">
          <segment>
             <source>Project Summary</source>
@@ -1152,7 +1092,7 @@
       </unit>
       <unit id="main.orgRole">
          <segment>
-            <source>Organizational Role:</source>
+            <source>Team Role:</source>
             <target/>
          </segment>
       </unit>
@@ -1240,12 +1180,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="main.newOrganization">
-         <segment>
-            <source>Add Organization</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="main.admin">
          <segment>
             <source>Admin</source>
@@ -1321,12 +1255,6 @@
       <unit id="main.continue">
          <segment>
             <source>Continue</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.defaultOrgDesc">
-         <segment>
-            <source>Default organization of </source>
             <target/>
          </segment>
       </unit>
@@ -1417,12 +1345,6 @@
       <unit id="import.plan">
          <segment>
             <source>Plan</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="import.section">
-         <segment>
-            <source>Section</source>
             <target/>
          </segment>
       </unit>
@@ -1519,12 +1441,6 @@
       <unit id="import.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.section">
-         <segment>
-            <source>Section</source>
             <target/>
          </segment>
       </unit>
@@ -1816,12 +1732,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="groupSettings.groupExplain">
-         <segment>
-            <source>Groups connect organization members to a project.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="groupSettings.case1">
          <segment>
             <source>If the project does not exist, click the plus button in the Navigation pane to create it.</source>
@@ -1836,7 +1746,7 @@
       </unit>
       <unit id="groupSettings.assignedSections">
          <segment>
-            <source>  Assigned Sections: </source>
+            <source>  Assigned {0}: </source>
             <target/>
          </segment>
       </unit>
@@ -2046,13 +1956,13 @@
       </unit>
       <unit id="invite.organization">
          <segment>
-            <source>Organization</source>
+            <source>Team</source>
             <target/>
          </segment>
       </unit>
       <unit id="invite.selectOrgRole">
          <segment>
-            <source>Select Organizational Role</source>
+            <source>Select Team Role</source>
             <target/>
          </segment>
       </unit>
@@ -2220,7 +2130,7 @@
       </unit>
       <unit id="invitationTable.role">
          <segment>
-            <source>Organization Role</source>
+            <source>Team Role</source>
             <target/>
          </segment>
       </unit>
@@ -2377,12 +2287,6 @@
       <unit id="toDoTable.project">
          <segment>
             <source>Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="toDoTable.section">
-         <segment>
-            <source>Section</source>
             <target/>
          </segment>
       </unit>
@@ -3132,7 +3036,7 @@
       </unit>
       <unit id="taskItem.section">
          <segment>
-            <source>Section {0}.{1}</source>
+            <source>{0} {1}.{2}</source>
             <target/>
          </segment>
       </unit>
@@ -3190,15 +3094,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="template.section">
-         <segment>
-            <source>Section number</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="template.passage">
          <segment>
-            <source>Passage number(within section)</source>
+            <source>Passage number(within {0})</source>
             <target/>
          </segment>
       </unit>
@@ -3289,12 +3187,6 @@
       <unit id="cards.sectionStatus">
          <segment>
             <source>{0} {1}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="cards.sections">
-         <segment>
-            <source>sections</source>
             <target/>
          </segment>
       </unit>
@@ -3454,15 +3346,81 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.sections">
+         <segment>
+            <source>Section/Sections</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.sets">
+         <segment>
+            <source>Set/Sets</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.stories">
+         <segment>
+            <source>Story/Stories</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.scenes">
+         <segment>
+            <source>Scene/Scenes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.pericopes">
+         <segment>
+            <source>Pericope/Pericopes</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.correctformat">
+         <segment>
+            <source>Please enter in the format: singular/plural</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.projectName">
          <segment>
             <source>Project Name</source>
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.flat">
+         <segment>
+            <source>Flat</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.hierarchical">
+         <segment>
+            <source>Hierarchical</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.tags">
          <segment>
             <source>Tags</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.training">
+         <segment>
+            <source>Training</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.testing">
+         <segment>
+            <source>Testing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.backtranslation">
+         <segment>
+            <source>Back Translation</source>
             <target/>
          </segment>
       </unit>

@@ -42,9 +42,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps {
   item: number;
+  organizedBy: string;
 }
 
 export function TaskItem(props: IProps) {
+  const { organizedBy } = props;
   const { rowData, taskItemStr, setSelected, allBookData } = useTodo();
   const { passage, section, duration } = rowData[props.item];
   const classes = useStyles();
@@ -82,8 +84,9 @@ export function TaskItem(props: IProps) {
             </div>
             <div className={classes.detailAlign}>
               {t.section
-                .replace('{0}', sectionNumber(section))
-                .replace('{1}', passageNumber(passage).trim())}
+                .replace('{0}', organizedBy)
+                .replace('{1}', sectionNumber(section))
+                .replace('{2}', passageNumber(passage).trim())}
             </div>
           </div>
         </ListItemSecondaryAction>

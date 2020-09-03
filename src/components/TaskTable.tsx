@@ -18,7 +18,7 @@ import ProjectMenu from './Team/ProjectMenu';
 import { formatTime } from '../control';
 import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
-import { sectionNumber, sectionDescription } from '../crud';
+import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
 import { numCompare } from '../utils';
 import { usePlan, useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
@@ -126,19 +126,21 @@ export function TaskTable(props: IProps) {
   const tpb = projButtonStr;
   const classes = useStyles();
   const [user] = useGlobal('user');
-  const [width, setWidth] = React.useState(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth);
   const { getPlanName } = usePlan();
-  const [planName, setPlanName] = React.useState('');
+  const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = React.useState(false);
-  const [openImport, setOpenImport] = React.useState(false);
-  const [openExport, setOpenExport] = React.useState(false);
+  const [openImport, setOpenImport] = useState(false);
+  const [openExport, setOpenExport] = useState(false);
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
     { name: 'plan', title: t.project },
-    { name: 'section', title: t.section },
+    { name: 'section', title: organizedBy },
     { name: 'title', title: t.title },
     { name: 'sectPass', title: t.passage },
     { name: 'description', title: t.description },
@@ -290,7 +292,12 @@ export function TaskTable(props: IProps) {
 
   useEffect(() => {
     const newRows = rowData.map((r, i) => ({
-      composite: r.state === '' ? <TaskHead item={i} /> : <TaskItem item={i} />,
+      composite:
+        r.state === '' ? (
+          <TaskHead item={i} />
+        ) : (
+          <TaskItem item={i} organizedBy={organizedBy} />
+        ),
       play: r.playItem,
       plan: r.planName,
       section: Number(sectionNumber(r.section)),

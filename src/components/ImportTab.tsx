@@ -40,7 +40,12 @@ import {
 } from '../routes/ElectronImport';
 import { useGlobal } from 'reactn';
 import AdmZip from 'adm-zip';
-import { remoteIdNum, passageDescription, remoteIdGuid } from '../crud';
+import {
+  remoteIdNum,
+  passageDescription,
+  remoteIdGuid,
+  useOrganizedBy,
+} from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -111,11 +116,12 @@ export function ImportTab(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
+  const { getOrganizedBy } = useOrganizedBy();
 
   const handleFilter = () => setFilter(!filter);
   const columnDefs = [
     { name: 'plan', title: t.plan },
-    { name: 'section', title: t.section },
+    { name: 'section', title: getOrganizedBy(true) },
     { name: 'passage', title: t.passage },
     { name: 'other', title: t.other },
     { name: 'old', title: t.old },

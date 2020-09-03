@@ -32,6 +32,7 @@ import {
   sectionCompare,
   passageDescription,
   passageCompare,
+  useOrganizedBy,
 } from '../crud';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
@@ -175,9 +176,10 @@ export function AssignmentTable(props: IProps) {
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
-
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const columnDefs = [
-    { name: 'name', title: t.section },
+    { name: 'name', title: organizedBy },
     { name: 'state', title: t.sectionstate },
     { name: 'passages', title: t.passages },
     { name: 'transcriber', title: ts.transcriber },
@@ -222,7 +224,7 @@ export function AssignmentTable(props: IProps) {
     let one: any;
     check.forEach((c) => {
       one = sections.find(function (s) {
-        return c <= data.length ? s.id === data[c].id : undefined;
+        return c < data.length ? s.id === data[c].id : undefined;
       });
       if (one !== undefined) selected.push(one);
     });
@@ -281,9 +283,9 @@ export function AssignmentTable(props: IProps) {
                   color="primary"
                   className={classes.button}
                   onClick={handleAssignSection(true)}
-                  title={t.assignSec}
+                  title={t.assignSec.replace('{0}', organizedBy)}
                 >
-                  {t.assignSec}
+                  {t.assignSec.replace('{0}', organizedBy)}
                 </Button>
                 <Button
                   key="remove"

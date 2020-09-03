@@ -44,6 +44,7 @@ import {
   sectionTranscriberName,
   sectionEditorName,
   sectionNumber,
+  useOrganizedBy,
 } from '../crud';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 
@@ -96,6 +97,8 @@ function AssignSection(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(false));
 
   const handleClose = () => {
     if (closeMethod) {
@@ -235,7 +238,7 @@ function AssignSection(props: IProps) {
               <Table className={classes.grids} size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>{t.sections}</TableCell>
+                    <TableCell>{organizedBy}</TableCell>
                     <TableCell align="right">
                       <EditorIcon />
                       {ts.editor}

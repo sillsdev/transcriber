@@ -86,12 +86,13 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
   const { prjId, tabNm } = useParams();
-  const getOrganizedBy = useOrganizedBy();
+  const { getOrganizedBy } = useOrganizedBy();
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
     setTab(value);
   };
+  const organizedBy = getOrganizedBy(false);
 
   const planSections = sections.filter((s) => related(s, 'plan') === plan);
   const planSectionIds = planSections.map((p) => p.id);
@@ -127,8 +128,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const statusMessage = (msg: string, val1: number, val2: number) =>
     msg.replace('{1}', val1.toString()).replace('{2}', val2.toString());
 
-  const organizedBy = getOrganizedBy(plan) || t.sections;
-
   useEffect(() => {
     if (tab === undefined) {
       setTab(tabNm && /^[0-4]+$/.test(tabNm) ? parseInt(tabNm) : 0);
@@ -143,7 +142,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.bar} color="default">
         <Tabs
-          value={tab}
+          value={tab ?? 0}
           onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}
           indicatorColor="primary"
           textColor="primary"

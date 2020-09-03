@@ -209,7 +209,8 @@ export function PlanSheet(props: IProps) {
   const currentRow = useRef<number>(-1);
   const sheetRef = useRef<any>();
   const [showRow, setShowRow] = useState(0);
-  const getOrganizedBy = useOrganizedBy();
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
@@ -588,10 +589,7 @@ export function PlanSheet(props: IProps) {
                   className={classes.button}
                   onClick={handleAddSection}
                 >
-                  {t.addSection.replace(
-                    '{0}',
-                    getOrganizedBy(global.plan) || t.section
-                  )}
+                  {t.addSection.replace('{0}', organizedBy)}
                   <AddIcon className={classes.icon} />
                 </Button>
                 {!inlinePassages && (
@@ -679,7 +677,9 @@ export function PlanSheet(props: IProps) {
           }
         >
           {position.i > 0 && isSection(rowData[position.i - 1]) && (
-            <MenuItem onClick={handleSectionAbove}>{t.sectionAbove}</MenuItem>
+            <MenuItem onClick={handleSectionAbove}>
+              {t.sectionAbove.replace('{0}', organizedBy)}
+            </MenuItem>
           )}
 
           {!inlinePassages && (

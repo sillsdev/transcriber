@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { IState, Section, Plan, IGroupSettingsStrings } from '../../model';
 import localStrings from '../../selector/localize';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
-import { related } from '../../crud';
+import { related, useOrganizedBy } from '../../crud';
 import useStyles from './GroupSettingsStyles';
 import getPlan from './GetPlan';
 
@@ -31,6 +31,8 @@ function Involvement(props: IProps) {
   const { user, rev, t } = props;
   const { sections, plans } = props;
   const classes = useStyles();
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(false));
 
   let planData: IPlanData = {};
   sections
@@ -68,7 +70,7 @@ function Involvement(props: IProps) {
                     <>
                       <Typography>- {p}</Typography>
                       <Typography>
-                        {t.assignedSections}
+                        {t.assignedSections.replace('{0}', organizedBy)}
                         {planData[p].length}
                       </Typography>
                     </>

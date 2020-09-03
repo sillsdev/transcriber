@@ -46,7 +46,7 @@ import Busy from './Busy';
 import Template from '../control/template';
 import Auth from '../auth/Auth';
 import moment from 'moment';
-import 'moment/locale/fr';
+
 import {
   related,
   remoteIdNum,
@@ -54,6 +54,8 @@ import {
   passageReference,
   sectionDescription,
   getMediaInPlans,
+  usePlan,
+  useOrganizedBy,
 } from '../crud';
 import { useGlobal } from 'reactn';
 import { dateCompare, numCompare, localeDefault } from '../utils';
@@ -185,7 +187,7 @@ const getReference = (passage: Passage[], bookData: BookName[] = []) => {
 };
 
 const getMedia = (
-  projectplans: Array<Plan>,
+  planrec: Plan,
   mediaFiles: Array<MediaFile>,
   passages: Array<Passage>,
   sections: Array<Section>,
@@ -195,7 +197,7 @@ const getMedia = (
   attachMap: IAttachMap,
   pdata: IPRow[]
 ) => {
-  let media: MediaFile[] = getMediaInPlans(projectplans, mediaFiles);
+  let media: MediaFile[] = getMediaInPlans([planrec], mediaFiles);
   let rowData: IRow[] = [];
 
   media.forEach((f) => {
@@ -220,8 +222,7 @@ const getMedia = (
       rowData.push({
         planid: related(f, 'plan'),
         passId: passageId,
-        planName: projectplans.filter((p) => p.id === related(f, 'plan'))[0]
-          .attributes.name,
+        planName: planrec.attributes.name,
         id: f.id,
         playIcon: playItem,
         fileName: f.attributes.originalFile,
@@ -325,8 +326,6 @@ interface IProps
     WithDataProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
-  projectplans: Plan[];
-  planColumn?: boolean;
   attachTool?: boolean;
 }
 
@@ -348,16 +347,16 @@ export function MediaTab(props: IProps) {
     passages,
     sections,
     auth,
-    projectplans,
-    planColumn,
     allBookData,
     attachTool,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
-  const [plan, setPlan] = useGlobal('plan');
+  const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
+  const { getPlan } = usePlan();
+  const [planRec] = useState(getPlan(plan) || ({} as Plan));
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [, setTab] = useGlobal('tab');
 
@@ -372,11 +371,14 @@ export function MediaTab(props: IProps) {
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
   const [confirmAction, setConfirmAction] = useState('');
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
+
   const columnDefs = [
     { name: 'planName', title: t.planName },
     { name: 'playIcon', title: '\u00A0' },
     { name: 'fileName', title: t.fileName },
-    { name: 'section', title: t.section },
+    { name: 'section', title: organizedBy },
     {
       name: 'reference',
       title: attachVisible ? t.viewAssociations : t.reference,
@@ -431,7 +433,7 @@ export function MediaTab(props: IProps) {
   ];
   const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
   const pColumnDefs = [
-    { name: 'section', title: t.section },
+    { name: 'section', title: organizedBy },
     { name: 'reference', title: t.reference },
     { name: 'attached', title: 'Attached' },
     { name: 'sort', title: '\u00A0' },
@@ -625,8 +627,6 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlOpen]);
 
-  const planNoFilt: string[] = ['detach'];
-  const planFilt = ['duration', 'size', 'version', 'date', 'detach'];
   const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
   const noPlanNoFilt = ['planName', 'detach'];
   const noPlayFilt = [
@@ -642,17 +642,10 @@ export function MediaTab(props: IProps) {
   const noPaging: number[] = [];
   const paging = [4, 10, 40];
   useEffect(() => {
-    let newHide = planNoFilt;
     let newFilt = noPlayFilt;
-    if (planColumn && attachVisible) {
-      newHide = planFilt;
-    } else if (!planColumn) {
-      if (projectplans.length === 1 && plan === '') {
-        setPlan(projectplans[0].id); //set the global plan
-      }
-      newHide = attachVisible ? noPlanFilt : noPlanNoFilt;
-      if (attachFilt) newFilt = attachFilt;
-    }
+    let newHide = attachVisible ? noPlanFilt : noPlanNoFilt;
+    if (attachFilt) newFilt = attachFilt;
+
     const newPages =
       attachVisible && (data.length > 40 || pdata.length > 40)
         ? paging
@@ -661,12 +654,12 @@ export function MediaTab(props: IProps) {
     if (filteringEnabled !== newFilt) setFilteringEnabled(newFilt);
     if (pageSizes !== newPages) setPageSizes(newPages);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projectplans, plan, planColumn, attachVisible]);
+  }, [plan, attachVisible]);
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const newData = getMedia(
-      projectplans,
+      planRec,
       mediaFiles,
       passages,
       sections,
@@ -689,7 +682,7 @@ export function MediaTab(props: IProps) {
       setData(newData);
     }
     const newPassData = getPassages(
-      projectplans,
+      [planRec],
       mediaFiles,
       passages,
       sections,
@@ -708,7 +701,6 @@ export function MediaTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [
-    projectplans,
     mediaFiles,
     passages,
     sections,
@@ -810,21 +802,15 @@ export function MediaTab(props: IProps) {
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [uploadList, loaded, currentlyLoading, uploadSuccess, projectplans, auth]);
+  }, [uploadList, loaded, currentlyLoading, uploadSuccess, planRec, auth]);
 
   useEffect(() => {
     if (currentlyLoading === -2 /* all are done */) {
-      var remoteid =
-        projectplans.length === 1
-          ? remoteId('plan', plan, memory.keyMap)
-          : remoteId(
-              'project',
-              related(projectplans[0], 'project'),
-              memory.keyMap
-            );
+      var remoteid = remoteId('plan', plan, memory.keyMap);
+
       if (remoteid !== undefined) {
         var filterrec = {
-          attribute: projectplans.length === 1 ? 'plan-id' : 'project-id',
+          attribute: 'plan-id',
           value: remoteid,
         };
         remote
@@ -1046,14 +1032,14 @@ export function MediaTab(props: IProps) {
         <AppBar
           position="fixed"
           className={clsx(classes.bar, {
-            [classes.highBar]: planColumn,
+            [classes.highBar]: false,
           })}
           color="default"
         >
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {!planColumn && !attachVisible && (
+                {!attachVisible && (
                   <Button
                     key="upload"
                     aria-label={ts.uploadMediaPlural}
@@ -1109,24 +1095,22 @@ export function MediaTab(props: IProps) {
               </>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
-            {planColumn && (
-              <Button
-                key="filter"
-                aria-label={t.filter}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleFilter}
-                title={t.showHideFilter}
-              >
-                {t.filter}
-                {filter ? (
-                  <SelectAllIcon className={classes.icon} />
-                ) : (
-                  <FilterIcon className={classes.icon} />
-                )}
-              </Button>
-            )}
+            <Button
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleFilter}
+              title={t.showHideFilter}
+            >
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
+            </Button>
             {attachVisible && (
               <>
                 <Button
@@ -1158,7 +1142,7 @@ export function MediaTab(props: IProps) {
             </>
           )}
 
-          {attachVisible && autoMatch && !planColumn && (
+          {attachVisible && autoMatch && (
             <div className={classes.template}>
               <Template matchMap={matchMap} />
             </div>
@@ -1186,7 +1170,7 @@ export function MediaTab(props: IProps) {
               bandHeader={attachVisible ? mBandHead : null}
               summaryItems={mSummaryItems}
             />
-            {attachVisible && mcheck !== -1 && !planColumn && (
+            {attachVisible && mcheck !== -1 && (
               <ShapingTable
                 columns={pColumnDefs}
                 columnWidths={pColumnWidths}

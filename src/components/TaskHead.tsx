@@ -16,7 +16,12 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { TransformBuilder } from '@orbit/data';
-import { sectionNumber, sectionDescription, remoteIdNum } from '../crud';
+import {
+  sectionNumber,
+  sectionDescription,
+  remoteIdNum,
+  useOrganizedBy,
+} from '../crud';
 import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
@@ -55,12 +60,15 @@ export function TaskHead(props: IProps) {
   const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [menuItem, setMenuItem] = React.useState(null);
+  const { getOrganizedBy } = useOrganizedBy();
+
   const t = taskItemStr;
   const ts = sharedStr;
 
   const planHead = t.section
-    .replace('{0}', sectionNumber(section))
-    .replace('{1}', '');
+    .replace('{0}', getOrganizedBy(true))
+    .replace('{1}', sectionNumber(section))
+    .replace('{2}', '');
 
   const assignAction = t.assign;
   const unassignAction = t.unassign;
