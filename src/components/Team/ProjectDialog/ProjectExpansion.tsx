@@ -12,7 +12,7 @@ import { IProjectDialogState } from './ProjectDialog';
 import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
 import renderLogo from '../../../assets/renderIcon.png';
-import { useSnackBar } from '../../SnackBar';
+import { useSnackBar } from '../../../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
