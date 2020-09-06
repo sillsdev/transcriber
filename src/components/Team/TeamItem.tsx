@@ -10,6 +10,7 @@ import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard, TeamDialog } from '.';
 import { useRole, useAllUserGroup } from '../../crud';
 import Confirm from '../AlertDialog';
+import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -135,7 +136,7 @@ export const TeamItem = (props: IProps) => {
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        {isAdmin(team) && <AddCard team={team} />}
+        {!isElectron && isAdmin(team) && <AddCard team={team} />}
       </Grid>
     </Paper>
   );

@@ -14,7 +14,6 @@ import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import { UnsavedContext } from '../context/UnsavedContext';
-import Confirm from '../components/AlertDialog';
 import { useRole, useUrlContext } from '../crud';
 import Auth from '../auth/Auth';
 import { HeadHeight } from '../App';
@@ -68,9 +67,8 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const [projRole] = useGlobal('projRole');
   const [topFilter, setTopFilter] = React.useState(false);
   const { setMyProjRole } = useRole();
-  const [alertOpen] = useGlobal('alertOpen');
   const uctx = React.useContext(UnsavedContext);
-  const { checkSavedFn, handleSaveConfirmed, handleSaveRefused } = uctx.state;
+  const { checkSavedFn } = uctx.state;
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -120,14 +118,6 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
           )}
         </div>
       </TranscriberProvider>
-      {alertOpen && (
-        <Confirm
-          title={t.UnsavedData}
-          text={t.saveFirst}
-          yesResponse={handleSaveConfirmed}
-          noResponse={handleSaveRefused}
-        />
-      )}
     </div>
   );
 });

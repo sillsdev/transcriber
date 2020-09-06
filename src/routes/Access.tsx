@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IAccessStrings, User, IElectronImportStrings } from '../model';
+import { IState, IAccessStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -18,24 +18,15 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  LinearProgress,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { UserAvatar } from '../components/UserAvatar';
-import { useSnackBar } from '../hoc/SnackBar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
-import {
-  IImportData,
-  handleElectronImport,
-  getElectronImportData,
-} from './ElectronImport';
 import { withData } from '../mods/react-orbitjs';
-import AdmZip from 'adm-zip';
-import Confirm from '../components/AlertDialog';
 import { isElectron, API_CONFIG } from '../api-variable';
-import { HeadHeight } from '../App';
+import ImportTab from '../components/ImportTab';
 
 const reactStringReplace = require('react-string-replace');
 
@@ -96,11 +87,6 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginRight: theme.spacing(1),
     },
-    progress: {
-      top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
-      zIndex: 100,
-      width: '100%',
-    },
   })
 );
 interface IRecordProps {
@@ -109,16 +95,12 @@ interface IRecordProps {
 
 interface IStateProps {
   t: IAccessStrings;
-  ei: IElectronImportStrings;
   importStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
-  importProject: typeof action.importProjectToElectron;
-  importComplete: typeof action.importComplete;
-  orbitError: typeof action.doOrbitError;
 }
 
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
@@ -126,23 +108,12 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function Access(props: IProps) {
-  const { auth, t, ei, importStatus, users } = props;
+  const { auth, t, importStatus, users } = props;
   const classes = useStyles();
-  const {
-    fetchLocalization,
-    setLanguage,
-    importProject,
-    importComplete,
-    orbitError,
-  } = props;
-  const [memory] = useGlobal('memory');
-  const [backup] = useGlobal('backup');
-  const [coordinatorActivated] = useGlobal('coordinatorActivated');
+  const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
   const [isDeveloper, setIsDeveloper] = useGlobal('developer');
-  const { showMessage, showTitledMessage } = useSnackBar();
-  const [confirmAction, setConfirmAction] = useState('');
-  const [zipFile, setZipFile] = useState<AdmZip | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
   const [online, setOnline] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
@@ -159,53 +130,8 @@ export function Access(props: IProps) {
     }
   };
 
-  const handleActionConfirmed = () => {
-    if (!zipFile) {
-      console.log('No zip file yet...');
-      setTimeout(() => {
-        handleActionConfirmed();
-      }, 2000);
-    } else
-      handleElectronImport(
-        memory,
-        backup,
-        coordinatorActivated,
-        zipFile,
-        importProject,
-        orbitError,
-        ei
-      );
-    setConfirmAction('');
-  };
-
-  const handleActionRefused = () => {
-    setConfirmAction('');
-  };
-
   const handleImport = () => {
-    if (isElectron) {
-      var importData: IImportData = getElectronImportData(memory, ei);
-      if (importData.errMsg) showMessage(importData.errMsg);
-      else {
-        setZipFile(importData.zip);
-        if (importData.warnMsg) {
-          setConfirmAction(importData.warnMsg);
-        } else {
-          //no warning...so set confirmed
-          //zip file never got set here
-          //handleActionConfirmed();
-          handleElectronImport(
-            memory,
-            backup,
-            coordinatorActivated,
-            importData.zip,
-            importProject,
-            orbitError,
-            ei
-          );
-        }
-      }
-    }
+    setImportOpen(true);
   };
 
   const handleGoOnline = () => {
@@ -222,22 +148,6 @@ export function Access(props: IProps) {
   };
 
   const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
-
-  useEffect(() => {
-    if (importStatus) {
-      if (importStatus.errStatus) {
-        showTitledMessage(t.importError, importStatus.errMsg);
-      } else {
-        if (importStatus.statusMsg) {
-          showTitledMessage(t.importProject, importStatus.statusMsg);
-        }
-        if (importStatus.complete) {
-          importComplete();
-        }
-      }
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [importStatus]);
 
   useEffect(() => {
     setLanguage(localeDefault());
@@ -304,25 +214,13 @@ export function Access(props: IProps) {
             <br />
             {buildDate}
           </div>
-          {!importStatus || (
-            <AppBar
-              position="fixed"
-              className={classes.progress}
-              color="inherit"
-            >
-              <LinearProgress variant="indeterminate" />
-            </AppBar>
-          )}
         </>
       </AppBar>
       {isElectron && (
         <div className={classes.container}>
           <Paper className={classes.paper}>
             <Typography variant="body1" className={classes.dialogHeader}>
-              {importStatus ? (
-                importStatus.statusMsg +
-                (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
-              ) : users.length > 0 ? (
+              {users.length > 0 ? (
                 t.accessSilTranscriber
               ) : (
                 <span>
@@ -395,13 +293,7 @@ export function Access(props: IProps) {
               </Grid>
             </Grid>
           </Paper>
-          {confirmAction === '' || (
-            <Confirm
-              text={confirmAction + '  Continue?'}
-              yesResponse={handleActionConfirmed}
-              noResponse={handleActionRefused}
-            />
-          )}
+          <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
         </div>
       )}
     </div>
@@ -410,7 +302,6 @@ export function Access(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'access' }),
-  ei: localStrings(state, { layout: 'electronImport' }),
   importStatus: state.importexport.importexportStatus,
 });
 
@@ -419,9 +310,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
-      importProject: action.importProjectToElectron,
-      importComplete: action.importComplete,
-      orbitError: action.doOrbitError,
     },
     dispatch
   ),

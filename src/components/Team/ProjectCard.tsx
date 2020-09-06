@@ -269,14 +269,14 @@ export const ProjectCard = (props: IProps) => {
           planColumn={true}
         />
       </BigDialog>
-      <BigDialog
-        title={tpb.importTitle.replace('{0}', getPlanName(project.id))}
-        isOpen={openImport}
-        onOpen={setOpenImport}
-      >
-        <ImportTab {...props} auth={auth} />
-      </BigDialog>
-
+      {openImport && (
+        <ImportTab
+          auth={auth}
+          isOpen={openImport}
+          onOpen={setOpenImport}
+          planName={getPlanName(project.id)}
+        />
+      )}
       {deleteItem && (
         <Confirm
           yesResponse={handleDeleteConfirmed}

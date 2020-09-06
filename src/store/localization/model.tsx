@@ -20,12 +20,13 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessFirst": string;
     "accessSilTranscriber": string;
-    "importProject": string;
-    "importError": string;
     "login": string;
+    "importProject": string;
 };
 
 export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
+    "importProject": string;
+    "importError": string;
     "importPending": string;
     "importComplete": string;
     "importOldFile": string;
@@ -261,6 +262,8 @@ export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethod
 
 export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "import": string;
+    "continue": string;
+    "close": string;
     "importProject": string;
     "expiredToken": string;
     "error": string;

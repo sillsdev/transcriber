@@ -89,27 +89,34 @@
         			<context context-type="sourcefile">Access.tsx</context>
         		</context-group>
         	</trans-unit>
-        	<trans-unit id="access.importProject">
-                <source>Import Portable Transcriber Data</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">Access.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.importError">
-                <source>Import Error</source>
-                <target/>
-                <context-group>
-                    <context context-type="sourcefile">electronImport.tsx</context>
-                </context-group>
-            </trans-unit>
-            <trans-unit id="access.login">
+          <trans-unit id="access.login">
         		<source>Online Login</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Access.tsx</context>
         		</context-group>
         	</trans-unit>
+          <trans-unit id="access.importProject">
+              <source>Import Portable Transcriber File (PTF)</source>
+              <target/>
+              <context-group>
+                  <context context-type="sourcefile">electronImport.tsx</context>
+              </context-group>
+            </trans-unit>
+          <trans-unit id="electronImport.importProject">
+              <source>Import Project</source>
+              <target/>
+              <context-group>
+                  <context context-type="sourcefile">electronImport.tsx</context>
+              </context-group>
+            </trans-unit>
+            <trans-unit id="electronImport.importError">
+              <source>Import Error</source>
+              <target/>
+              <context-group>
+                  <context context-type="sourcefile">electronImport.tsx</context>
+              </context-group>
+            </trans-unit>
             <trans-unit id="electronImport.importPending">
                 <source>Import In Progress...{0}%</source>
                 <target/>
@@ -1503,7 +1510,21 @@
         			<context context-type="sourcefile">Import.tsx</context>
         		</context-group>
         	</trans-unit>
-             <trans-unit id="import.importProject">
+            <trans-unit id="import.continue">
+        		<source>Continue?</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="import.close">
+        		<source>Close</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Import.tsx</context>
+        		</context-group>
+        	</trans-unit>
+            <trans-unit id="import.importProject">
         		<source>Import Project</source>
         		<target/>
         		<context-group>
@@ -2589,7 +2610,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="mediaUpload.PTFtask">
-                <source>Upload a Portable Transcriber File (ptf file).</source>
+                <source>Upload a Portable Transcriber File (ptf).</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>

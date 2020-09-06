@@ -76,21 +76,27 @@
             <target/>
          </segment>
       </unit>
-      <unit id="access.importProject">
-         <segment>
-            <source>Import Portable Transcriber Data</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.importError">
-         <segment>
-            <source>Import Error</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="access.login">
          <segment>
             <source>Online Login</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.importProject">
+         <segment>
+            <source>Import Portable Transcriber File (PTF)</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.importProject">
+         <segment>
+            <source>Import Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.importError">
+         <segment>
+            <source>Import Error</source>
             <target/>
          </segment>
       </unit>
@@ -1288,6 +1294,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.continue">
+         <segment>
+            <source>Continue?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.close">
+         <segment>
+            <source>Close</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.importProject">
          <segment>
             <source>Import Project</source>
@@ -2220,7 +2238,7 @@
       </unit>
       <unit id="mediaUpload.PTFtask">
          <segment>
-            <source>Upload a Portable Transcriber File (ptf file).</source>
+            <source>Upload a Portable Transcriber File (ptf).</source>
             <target/>
          </segment>
       </unit>

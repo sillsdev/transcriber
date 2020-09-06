@@ -12,7 +12,7 @@ import { Transform, NetworkError, QueryBuilder } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
-import { API_CONFIG } from './api-variable';
+import { API_CONFIG, isElectron } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { related, LoadData } from './crud';
@@ -252,7 +252,7 @@ export const Sources = async (
     } else {
       setUser(localStorage.getItem('user-id') as string);
       console.log('using backup');
-      if (process.env.REACT_APP_MODE !== 'electron') {
+      if (!isElectron) {
         //already did this if electron...
         var transform = await backup.pull((q) => q.findRecords());
         await memory.sync(transform);
@@ -264,7 +264,6 @@ export const Sources = async (
           goRemote = true;
         }
       }
-
       const loadedplans = new Set(
         (memory.cache.query((q: QueryBuilder) =>
           q.findRecords('section')

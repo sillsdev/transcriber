@@ -4,6 +4,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TeamContext } from '../../context/TeamContext';
 import { ProjectCard, AddCard } from '.';
+import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +54,7 @@ export const PersonalItem = () => {
         {personalProjects().map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        <AddCard team={null} />
+        {!isElectron && <AddCard team={null} />}
       </Grid>
     </Paper>
   );

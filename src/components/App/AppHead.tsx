@@ -117,48 +117,30 @@ export const AppHead = withBucket(
 
     return (
       <AppBar position="fixed" className={classes.appBar} color="inherit">
-        {plan !== '' ? (
-          <Toolbar>
-            <IconButton onClick={() => checkSavedFn(() => handleHome())}>
-              <HomeIcon />
-            </IconButton>
+        <Toolbar>
+          <IconButton onClick={() => checkSavedFn(() => handleHome())}>
+            <HomeIcon />
+          </IconButton>
+          {plan !== '' && (
             <Typography variant="h6" noWrap>
               {getPlanName(plan)}
             </Typography>
-            <div className={classes.grow}>{'\u00A0'}</div>
-            <Typography variant="h6" noWrap>
-              {`${
-                pathname && pathname.indexOf('work') > 0
-                  ? t.transcribe
-                  : t.admin
-              } - `}
-              {t.silTranscriber}
-            </Typography>
-            <div className={classes.grow}>{'\u00A0'}</div>
-            {SwitchTo && <SwitchTo />}
-            <HelpMenu online={!isOffline} />
-            <UserMenu
-              action={(what: string) =>
-                checkSavedFn(() => handleUserMenu(what))
-              }
-              auth={auth}
-            />
-          </Toolbar>
-        ) : (
-          <Toolbar>
-            <Typography variant="h6" noWrap>
-              {t.silTranscriber}
-            </Typography>
-            <div className={classes.grow}>{'\u00A0'}</div>
-            <HelpMenu online={!isOffline} />
-            <UserMenu
-              action={(what: string) =>
-                checkSavedFn(() => handleUserMenu(what))
-              }
-              auth={auth}
-            />
-          </Toolbar>
-        )}
+          )}
+          <div className={classes.grow}>{'\u00A0'}</div>
+          <Typography variant="h6" noWrap>
+            {`${
+              pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin
+            } - `}
+            {t.silTranscriber}
+          </Typography>
+          <div className={classes.grow}>{'\u00A0'}</div>
+          {SwitchTo && <SwitchTo />}
+          <HelpMenu online={!isOffline} />
+          <UserMenu
+            action={(what: string) => checkSavedFn(() => handleUserMenu(what))}
+            auth={auth}
+          />
+        </Toolbar>
         {!importexportBusy || <Busy />}
         {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}
       </AppBar>

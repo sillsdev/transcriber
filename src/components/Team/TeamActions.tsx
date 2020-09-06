@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { DialogMode, Organization } from '../../model';
 import { TeamDialog } from '.';
 import { TeamContext } from '../../context/TeamContext';
+import { isElectron } from '../../api-variable';
+import Auth from '../../auth/Auth';
+import ImportTab from '../ImportTab';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,15 +20,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const TeamActions = () => {
+interface IProps {
+  auth: Auth;
+}
+
+const TeamActions = (props: IProps) => {
+  const { auth } = props;
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
   const { teamCreate, cardStrings } = ctx.state;
   const t = cardStrings;
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenAdd(true);
+  };
+  const handleClickImport = () => {
+    setImportOpen(true);
   };
 
   const handleAdd = (team: Organization) => {
@@ -34,15 +46,27 @@ export const TeamActions = () => {
 
   return (
     <div className={classes.root}>
-      <Button variant="contained" color="default" onClick={handleClickOpen}>
-        {t.addTeam}
-      </Button>
+      {!isElectron && (
+        <Button variant="contained" color="default" onClick={handleClickOpen}>
+          {t.addTeam}
+        </Button>
+      )}
+      {isElectron && (
+        <Button variant="contained" color="default" onClick={handleClickImport}>
+          {t.import}
+        </Button>
+      )}
       <TeamDialog
         mode={DialogMode.add}
-        isOpen={open}
-        onOpen={setOpen}
+        isOpen={openAdd}
+        onOpen={setOpenAdd}
         onCommit={handleAdd}
       />
+      {isElectron && importOpen && (
+        <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
+      )}
     </div>
   );
 };
+
+export default TeamActions;

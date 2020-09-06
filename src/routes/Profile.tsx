@@ -48,7 +48,7 @@ import {
   getMbrRoleRec,
   allUsersRec,
 } from '../crud';
-import { makeAbbr, uiLang, localeDefault } from '../utils';
+import { makeAbbr, uiLang, localeDefault, useRemoteSave } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
@@ -201,7 +201,9 @@ export function Profile(props: IProps) {
   const [deleteItem, setDeleteItem] = useState('');
   const [dupName, setDupName] = useState(false);
   const [view, setView] = useState('');
-  const [changed, setChanged] = useState(false);
+  const [changed, setChanged] = useGlobal('changed');
+  const [doSave] = useGlobal('doSave');
+  const [, saveCompleted] = useRemoteSave();
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -276,6 +278,12 @@ export function Profile(props: IProps) {
       digest ? DigestPreference.noDigest : DigestPreference.dailyDigest
     );
   };
+  useEffect(() => {
+    if (doSave) {
+      handleSave();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave]);
 
   const handleSave = () => {
     if (changed) {
@@ -341,6 +349,7 @@ export function Profile(props: IProps) {
       }
       setLanguage(locale);
     }
+    saveCompleted('');
     if (editId) {
       setEditId(null);
     }
@@ -426,6 +435,7 @@ export function Profile(props: IProps) {
     if (editId) {
       setEditId(null);
     }
+    setChanged(false);
     setView('Team');
   };
 
@@ -556,6 +566,7 @@ export function Profile(props: IProps) {
       setTimezone(myZone);
       setChanged(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timezone]);
 
   const userNotComplete = () =>

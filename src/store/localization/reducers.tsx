@@ -28,13 +28,14 @@ const initialState = {
 		"en": {
 			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
 			"accessSilTranscriber": "Click your avatar to transcriber or edit.",
-			"importProject": "Import Portable Transcriber Data",
-			"importError": "Import Error",
 			"login": "Online Login",
+			"importProject": "Import Portable Transcriber File (PTF)",
 		}
 	}),
 	"electronImport": new LocalizedStrings({
 		"en": {
+			"importProject": "Import Project",
+			"importError": "Import Error",
 			"importPending": "Import In Progress...{0}%",
 			"importComplete": "Import Complete",
 			"importOldFile": "This file was not exported from the latest version.  Reexport your PTF file from the online version.",
@@ -282,6 +283,8 @@ const initialState = {
 	"import": new LocalizedStrings({
 		"en": {
 			"import": "Import",
+			"continue": "Continue?",
+			"close": "Close",
 			"importProject": "Import Project",
 			"expiredToken": "Your log in token has expired and can't be automatically renewed.  Please log out and login again.",
 			"error": "Import Error",
@@ -481,7 +484,7 @@ const initialState = {
 			"PTFtitle": "Upload complete Project Data from PTF",
 			"ITFtitle": "Upload Change Data from Offline Extension",
 			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",
-			"PTFtask": "Upload a Portable Transcriber File (ptf file).",
+			"PTFtask": "Upload a Portable Transcriber File (ptf).",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the offline extension.",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",

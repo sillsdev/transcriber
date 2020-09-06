@@ -4,10 +4,11 @@ import { StickyRedirect } from '../control';
 import { makeStyles } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
-import { TeamActions, TeamProjects } from '../components/Team';
+import { TeamProjects } from '../components/Team';
 import Auth from '../auth/Auth';
 import { remoteId } from '../crud';
 import { isElectron } from '../api-variable';
+import TeamActions from '../components/Team/TeamActions';
 
 const useStyles = makeStyles({
   root: {
@@ -48,7 +49,7 @@ export const TeamScreen = (props: IProps) => {
       <AppHead {...props} />
       <TeamProvider {...props}>
         <div id="TeamScreen" className={classes.teamScreen}>
-          {!isElectron && <TeamActions />}
+          <TeamActions />
           <TeamProjects />
         </div>
       </TeamProvider>

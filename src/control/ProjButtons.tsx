@@ -1,5 +1,5 @@
-import React from 'react';
-import { useGlobal } from 'reactn';
+import React, { useState } from 'react';
+import { useGlobal, useEffect } from 'reactn';
 import { IProjButtonsStrings } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Divider, Button, Menu, MenuItem } from '@material-ui/core';
@@ -9,6 +9,7 @@ import IntegrationTab from '../components/Integration';
 import ExportTab from '../components/TranscriptionTab';
 import ImportTab from '../components/ImportTab';
 import { useProjectPlans, usePlan } from '../crud';
+import Auth from '../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,10 +33,11 @@ interface IProps extends IStateProps {
   noImExport?: boolean;
   noIntegrate?: boolean;
   onLeft?: boolean;
+  auth: Auth;
 }
 
 export const ProjButtons = (props: IProps) => {
-  const { noImExport, noIntegrate, onLeft, t } = props;
+  const { noImExport, noIntegrate, onLeft, auth, t } = props;
   const classes = useStyles();
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan');
@@ -45,7 +47,7 @@ export const ProjButtons = (props: IProps) => {
   const [openIntegration, setOpenIntegration] = React.useState(false);
   const [openExport, setOpenExport] = React.useState(false);
   const [openImport, setOpenImport] = React.useState(false);
-
+  const [planName, setPlanName] = useState('');
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
 
   const handleClose = () => setActionMenuItem(null);
@@ -62,7 +64,8 @@ export const ProjButtons = (props: IProps) => {
   const handleIntegrations = () => {
     setOpenIntegration(true);
   };
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => setPlanName(getPlanName(plan)), [plan]);
   return (
     <>
       {!onLeft && <Divider orientation="vertical" flexItem />}
@@ -100,14 +103,14 @@ export const ProjButtons = (props: IProps) => {
         {t.integrations}
       </Button>
       <BigDialog
-        title={t.integrationsTitle.replace('{0}', getPlanName(plan))}
+        title={t.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}
         onOpen={setOpenIntegration}
       >
         <IntegrationTab {...props} />
       </BigDialog>
       <BigDialog
-        title={t.exportTitle.replace('{0}', getPlanName(plan))}
+        title={t.exportTitle.replace('{0}', planName)}
         isOpen={openExport}
         onOpen={setOpenExport}
       >
@@ -117,13 +120,14 @@ export const ProjButtons = (props: IProps) => {
           planColumn={true}
         />
       </BigDialog>
-      <BigDialog
-        title={t.importTitle.replace('{0}', getPlanName(plan))}
-        isOpen={openImport}
-        onOpen={setOpenImport}
-      >
-        <ImportTab {...props} />
-      </BigDialog>
+      {openImport && (
+        <ImportTab
+          auth={auth}
+          isOpen={openImport}
+          onOpen={setOpenImport}
+          planName={planName}
+        />
+      )}
       {onLeft && <Divider orientation="vertical" flexItem />}
     </>
   );

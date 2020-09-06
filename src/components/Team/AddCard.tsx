@@ -9,7 +9,6 @@ import { Language, ILanguage } from '../../control';
 import Uploader, { statusInit } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
-import { isElectron } from '../../api-variable';
 import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
 import { StickyRedirect } from '../../control';
 import { useSnackBar } from '../../hoc/SnackBar';
@@ -94,10 +93,6 @@ export const AddCard = (props: IProps) => {
     setOpen(val);
   };
 
-  const teamName = (teamId: TeamIdType) => {
-    return team ? team.attributes?.name : t.personalProjects;
-  };
-
   const handleUpload = (team: TeamIdType) => (e: any) => {
     setUploadVisible(true);
     setInProgress(true);
@@ -108,10 +103,6 @@ export const AddCard = (props: IProps) => {
   };
 
   const handleReady = () => type !== '' && language.bcp47 !== 'und';
-
-  const handleImport = (team: TeamIdType) => (e: any) => {
-    console.log(`clicked ${t.import} for ${teamName(team)}`);
-  };
 
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
@@ -217,17 +208,11 @@ export const AddCard = (props: IProps) => {
               >
                 {t.newProject}
               </Button>
-
               {/*  revisit in the future
               <Button variant="contained" onClick={handleConnect(team)}>
                 {t.connectParatext}
               </Button>
               */}
-              {isElectron && (
-                <Button variant="contained" onClick={handleImport(team)}>
-                  {t.import}
-                </Button>
-              )}
               <ProjectDialog
                 mode={DialogMode.add}
                 isOpen={open}

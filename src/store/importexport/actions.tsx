@@ -336,6 +336,7 @@ export const importProjectToElectron = (
       payload: pendingmsg.replace('{0}', '5'),
       type: IMPORT_PENDING,
     });
+
     var delOpArray: Operation[] = [];
     mediaids.forEach((id) =>
       delOpArray.push(tb.removeRecord({ type: 'mediafile', id: id }))
@@ -385,6 +386,7 @@ export const importProjectToElectron = (
       try {
         return await backup.push(oparray);
       } catch (err) {
+        console.log(err);
         orbitError(orbitInfo(err, title));
         throw err;
       }

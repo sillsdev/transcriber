@@ -429,13 +429,14 @@ export function TaskTable(props: IProps) {
           planColumn={true}
         />
       </BigDialog>
-      <BigDialog
-        title={tpb.importTitle.replace('{0}', planName)}
+
+      <ImportTab
+        {...props}
+        auth={auth}
         isOpen={openImport}
         onOpen={setOpenImport}
-      >
-        <ImportTab {...props} auth={auth} />
-      </BigDialog>
+        planName={planName}
+      />
     </div>
   );
 }

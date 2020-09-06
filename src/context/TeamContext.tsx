@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
-import { useGlobal } from 'reactn';
+import { useGlobal, useEffect } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -45,6 +45,7 @@ import {
 } from '../crud';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
+import { isElectron } from '../api-variable';
 
 export type TeamIdType = Organization | null;
 
@@ -161,6 +162,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       organizations,
       orgMembers,
       projects,
+      groupMemberships,
       plans,
       planTypes,
       lang,
@@ -182,7 +184,10 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [, setPlan] = useGlobal('plan');
     const [remote] = useGlobal('remote');
     const [backup] = useGlobal('backup');
+    const [user] = useGlobal('user');
     const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+    const [userProjects, setUserProjects] = useState(projects);
+    const [userOrgs, setUserOrgs] = useState(organizations);
     const { showMessage } = useSnackBar();
     const [state, setState] = useState({
       ...initState,
@@ -263,7 +268,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const teams = () => {
-      return organizations
+      return userOrgs
         .filter((o) => !isPersonal(o.id))
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
@@ -277,7 +282,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const personalProjects = () => {
-      const projIds = projects
+      const projIds = userProjects
         .filter((p) => isPersonal(related(p, 'organization')))
         .map((p) => p.id);
       return plans
@@ -287,7 +292,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const teamProjects = (teamId: string) => {
-      const projIds = projects
+      const projIds = userProjects
         .filter((p) => related(p, 'organization') === teamId)
         .map((p) => p.id);
       return plans
@@ -352,6 +357,26 @@ const TeamProvider = withData(mapRecordsToProps)(
       const planRec = getPlan(planId);
       if (planRec) setProjectParams(planRec);
     };
+
+    useEffect(() => {
+      if (isElectron) {
+        const grpIds = groupMemberships
+          .filter((gm) => related(gm, 'user') === user)
+          .map((gm) => related(gm, 'group'));
+        setUserProjects(
+          projects.filter((p) => grpIds.includes(related(p, 'group')))
+        );
+      }
+    }, [projects, groupMemberships, user]);
+
+    useEffect(() => {
+      if (isElectron) {
+        const orgIds = orgMembers
+          .filter((om) => related(om, 'user') === user)
+          .map((om) => related(om, 'organization'));
+        setUserOrgs(organizations.filter((o) => orgIds.includes(o.id)));
+      }
+    }, [organizations, orgMembers, user]);
 
     return (
       <TeamContext.Provider

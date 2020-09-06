@@ -7,6 +7,7 @@ import { IState, IMainStrings } from '../model';
 import localStrings from '../selector/localize';
 import { useRemoteSave } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
+import Confirm from '../components/AlertDialog';
 
 interface IStateProps {
   t: IMainStrings;
@@ -54,7 +55,7 @@ const UnsavedProvider = connect(
   const [busy] = useGlobal('remoteBusy');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
-  const [, setAlertOpen] = useGlobal('alertOpen');
+  const [alertOpen, setAlertOpen] = useGlobal('alertOpen'); //global because planSheet checks it
   const saveConfirm = React.useRef<() => any>();
   const { showMessage } = useSnackBar();
   const [startSave, , waitForSave] = useRemoteSave();
@@ -118,6 +119,14 @@ const UnsavedProvider = connect(
       }}
     >
       {props.children}
+      {alertOpen && (
+        <Confirm
+          title={t.UnsavedData}
+          text={t.saveFirst}
+          yesResponse={handleSaveConfirmed}
+          noResponse={handleSaveRefused}
+        />
+      )}
     </UnsavedContext.Provider>
   );
 });

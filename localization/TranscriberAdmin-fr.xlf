@@ -73,25 +73,32 @@
 				<target>Cliquez sur votre avatar pour transcrire ou modifier.</target>
 			</segment>
 		</unit>
-		<unit id="access.importProject">
-			<segment>
-				<source>Import Portable Transcriber Data</source>
-				<target>Importation de données de transcripteurs portables</target>
-			</segment>
-		</unit>
-     <unit id="access.importError">
-         <segment>
-            <source>Import Error</source>
-            <target>Erreur d'importation</target>
-         </segment>
-      </unit>
-  	<unit id="access.login">
+ 	<unit id="access.login">
 			<segment>
 				<source>Online Login</source>
 				<target>Connexion en ligne</target>
 			</segment>
 		</unit>
-        <unit id="electronImport.importPending">
+		<unit id="access.importProject">
+			<segment>
+				<source>Import Portable Transcriber File (PTF)</source>
+				<target>Importation un fichier de transcripteurs portables (PTF)</target>
+			</segment>
+		</unit>
+        <unit id="electronImport.importProject">
+			<segment>
+				<source>Import Project</source>
+				<target>Importer un projet
+                </target>
+			</segment>
+		</unit>
+     <unit id="electronImport.importError">
+         <segment>
+            <source>Import Error</source>
+            <target>Erreur d'importation</target>
+         </segment>
+      </unit>
+         <unit id="electronImport.importPending">
          <segment>
             <source>Import In Progress...{0}%</source>
             <target>Importation en cours...{0}%</target>
@@ -1313,6 +1320,18 @@
          <segment>
             <source>Import</source>
             <target>Importation</target>
+         </segment>
+      </unit>
+      <unit id="import.continue">
+         <segment>
+            <source>Continue?</source>
+				<target>Continuer?</target>
+         </segment>
+      </unit>
+      <unit id="import.close">
+         <segment>
+            <source>Close</source>
+         	<target>Fermer</target>
          </segment>
       </unit>
       <unit id="import.importProject">

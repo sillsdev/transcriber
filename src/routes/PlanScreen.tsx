@@ -10,7 +10,6 @@ import { AppHead } from '../components/App/AppHead';
 import { PlanProvider, PlanContext } from '../context/PlanContext';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';
-import Confirm from '../components/AlertDialog';
 import { useUrlContext, useRole } from '../crud';
 import Auth from '../auth/Auth';
 import { UnsavedContext } from '../context/UnsavedContext';
@@ -38,14 +37,8 @@ interface IProps extends IStateProps {
 
 const PlanBase = (props: IProps) => {
   const classes = useStyles();
-  const [alertOpen] = useGlobal('alertOpen');
   const uctx = React.useContext(UnsavedContext);
-  const {
-    checkSavedFn,
-    t,
-    handleSaveConfirmed,
-    handleSaveRefused,
-  } = uctx.state;
+  const { checkSavedFn } = uctx.state;
   const ctx = React.useContext(PlanContext);
   const { isScripture } = ctx.state;
 
@@ -56,14 +49,6 @@ const PlanBase = (props: IProps) => {
         checkSaved={checkSavedFn}
         bookCol={isScripture() ? 0 : -1}
       />
-      {alertOpen && (
-        <Confirm
-          title={t.UnsavedData}
-          text={t.saveFirst}
-          yesResponse={handleSaveConfirmed}
-          noResponse={handleSaveRefused}
-        />
-      )}
     </div>
   );
 };
