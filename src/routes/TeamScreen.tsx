@@ -25,6 +25,7 @@ interface IProps {
 }
 
 export const TeamScreen = (props: IProps) => {
+  const { auth } = props;
   const classes = useStyles();
   const [project] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
@@ -49,7 +50,7 @@ export const TeamScreen = (props: IProps) => {
       <AppHead {...props} />
       <TeamProvider {...props}>
         <div id="TeamScreen" className={classes.teamScreen}>
-          <TeamActions />
+          <TeamActions auth={auth} />
           <TeamProjects />
         </div>
       </TeamProvider>
