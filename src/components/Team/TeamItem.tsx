@@ -86,6 +86,7 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleDeleteConfirmed = () => {
+    setEditOpen(false);
     deleteItem && teamDelete(deleteItem);
   };
 

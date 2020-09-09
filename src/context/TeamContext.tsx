@@ -366,7 +366,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         setUserProjects(
           projects.filter((p) => grpIds.includes(related(p, 'group')))
         );
-      }
+      } else setUserProjects(projects);
     }, [projects, groupMemberships, user]);
 
     useEffect(() => {
@@ -375,6 +375,8 @@ const TeamProvider = withData(mapRecordsToProps)(
           .filter((om) => related(om, 'user') === user)
           .map((om) => related(om, 'organization'));
         setUserOrgs(organizations.filter((o) => orgIds.includes(o.id)));
+      } else {
+        setUserOrgs(organizations);
       }
     }, [organizations, orgMembers, user]);
 
