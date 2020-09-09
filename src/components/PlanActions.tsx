@@ -1,6 +1,6 @@
 import { ISharedStrings, IPlanActionsStrings, IState } from '../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import React, { useState } from 'react';
+import React from 'react';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
@@ -9,6 +9,7 @@ import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
 import PauseIcon from '@material-ui/icons/Pause';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
+import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,6 +31,11 @@ interface IProps extends IStateProps {
   isSection: boolean;
   isPassage: boolean;
   mediaId: string;
+  online: boolean;
+  readonly: boolean;
+  isPlaying: boolean;
+  canAssign: boolean;
+  canDelete: boolean;
   onTranscribe: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
@@ -45,23 +51,26 @@ export function PlanActions(props: IProps) {
     isSection,
     isPassage,
     mediaId,
+    online,
+    readonly,
     onTranscribe,
     onAssign,
     onUpload,
     onPlayStatus,
     onDelete,
+    isPlaying,
+    canAssign,
+    canDelete,
   } = props;
   const classes = useStyles();
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlayStatus = () => () => {
     onPlayStatus(isPlaying ? '' : mediaId);
-    setIsPlaying(!isPlaying);
   };
 
   return (
     <div className={classes.arrangeActions}>
-      {isSection && (
+      {isSection && canAssign && !readonly && (
         <IconButton
           className={classes.actionButton}
           title={t.assign}
@@ -70,8 +79,9 @@ export function PlanActions(props: IProps) {
           <AssignIcon />
         </IconButton>
       )}
-      {isPassage && (
-        <>
+      {isPassage &&
+        !readonly &&
+        online && ( //for now just online
           <IconButton
             className={classes.actionButton}
             onClick={onUpload(rowIndex)}
@@ -79,15 +89,16 @@ export function PlanActions(props: IProps) {
           >
             <UploadIcon />
           </IconButton>
-          <IconButton
-            className={classes.actionButton}
-            title={t.playpause}
-            disabled={mediaId === ''}
-            onClick={handlePlayStatus()}
-          >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
-          </IconButton>
-        </>
+        )}
+      {isPassage && (isElectron || online) && (
+        <IconButton
+          className={classes.actionButton}
+          title={t.playpause}
+          disabled={mediaId === ''}
+          onClick={handlePlayStatus()}
+        >
+          {isPlaying ? <PauseIcon /> : <PlayIcon />}
+        </IconButton>
       )}
       {isPassage && (
         <IconButton
@@ -99,13 +110,15 @@ export function PlanActions(props: IProps) {
           <TranscribeIcon />
         </IconButton>
       )}
-      <IconButton
-        className={classes.actionButton}
-        title={t.delete}
-        onClick={onDelete(rowIndex)}
-      >
-        <DeleteIcon />
-      </IconButton>
+      {canDelete && !readonly && (
+        <IconButton
+          className={classes.actionButton}
+          title={t.delete}
+          onClick={onDelete(rowIndex)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      )}
     </div>
   );
 }

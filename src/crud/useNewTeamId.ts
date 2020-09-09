@@ -17,7 +17,7 @@ interface IProps extends IStateProps, IDispatchProps {}
 export const useNewTeamId = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [organization] = useGlobal('organization');
+  const [organization, setOrganization] = useGlobal('organization');
   const orgRef = React.useRef<string>();
   const orbitTeamCreate = useTeamCreate(props);
   const isPersonal = useIsPersonalTeam();
@@ -30,9 +30,16 @@ export const useNewTeamId = (props: IProps) => {
     const userRecs = users.filter((u) => u.id === user);
     const userName =
       userRecs.length > 0 ? userRecs[0]?.attributes?.name : 'user';
-    orbitTeamCreate({
-      attributes: { name: `>${userName} Personal<` },
-    } as Organization);
+    const personalOrg = `>${userName} Personal<`;
+    const orgs = (await memory.query((q: QueryBuilder) =>
+      q.findRecords('organization')
+    )) as Organization[];
+    const orgRecs = orgs.filter((o) => o.attributes.name === personalOrg);
+    if (orgRecs.length > 0) setOrganization(orgRecs[0].id);
+    else
+      orbitTeamCreate({
+        attributes: { name: personalOrg },
+      } as Organization);
   };
 
   const getPersonalId = () => {

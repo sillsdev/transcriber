@@ -76,7 +76,7 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   };
 
   const SwitchTo = () => {
-    if (projRole !== 'admin') return <></>;
+    //if (projRole !== 'admin') return <></>;
     return (
       <TranscribeSwitch
         label={t.admin}

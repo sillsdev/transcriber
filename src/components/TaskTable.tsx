@@ -430,13 +430,15 @@ export function TaskTable(props: IProps) {
         />
       </BigDialog>
 
-      <ImportTab
-        {...props}
-        auth={auth}
-        isOpen={openImport}
-        onOpen={setOpenImport}
-        planName={planName}
-      />
+      {openImport && (
+        <ImportTab
+          {...props}
+          auth={auth}
+          isOpen={openImport}
+          onOpen={setOpenImport}
+          planName={planName}
+        />
+      )}
     </div>
   );
 }

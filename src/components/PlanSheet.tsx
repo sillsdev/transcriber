@@ -26,6 +26,7 @@ import Auth from '../auth/Auth';
 import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActions from './PlanActions';
+import { isElectron } from '../api-variable';
 
 const ActionHeight = 52;
 
@@ -63,9 +64,11 @@ const useStyles = makeStyles((theme: Theme) =>
         padding: theme.spacing(1),
       },
       '& .data-grid-container .data-grid .cell.pass': {
+        backgroundColor: theme.palette.background.paper,
         textAlign: 'left',
       },
       '& .data-grid-container .data-grid .cell.pass > input': {
+        backgroundColor: theme.palette.background.paper,
         textAlign: 'left',
         padding: theme.spacing(1),
       },
@@ -87,16 +90,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiButtonBase-root': { margin: '5px', padding: '2px 10px' },
       '& .MuiSvgIcon-root': { fontSize: '.9rem' },
     }) as any,
-    arrangeActions: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-    actionButton: {
-      color: theme.palette.primary.light,
-    },
-    lessEmphasis: {
-      opacity: 0.6,
-    },
     text: {},
     grow: {
       flexGrow: 1,
@@ -181,6 +174,7 @@ export function PlanSheet(props: IProps) {
     resequence,
     inlinePassages,
     auth,
+    onTranscribe,
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
@@ -202,7 +196,7 @@ export function PlanSheet(props: IProps) {
   const listRef = useRef<Array<string>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
   const [doSave] = useGlobal('doSave');
-  const [online, setOnline] = useState(false);
+  const [online, setOnline] = useState(true);
   const [changed, setChanged] = useGlobal('changed');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
@@ -214,7 +208,7 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-
+  const [readonly] = useState(isElectron || projRole !== 'admin');
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = 6;
@@ -285,6 +279,11 @@ export function PlanSheet(props: IProps) {
     setSrcMediaId(mediaId);
   };
 
+  const handleTranscribe = (i: number) => () => {
+    setSrcMediaId('');
+    onTranscribe(i);
+  };
+
   const doUpdate = (grid: ICell[][]) => {
     updateData(
       justData(grid).map((row) =>
@@ -299,6 +298,8 @@ export function PlanSheet(props: IProps) {
 
   const numCol = [2, 4]; // Section num = col 2, Passage num = col 4
   const handleCellsChanged = (changes: Array<IChange>) => {
+    if (projRole !== 'admin') return; //readonly
+
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
       if (row !== 0 && numCol.includes(col) && value && !isNum(value)) {
@@ -467,6 +468,7 @@ export function PlanSheet(props: IProps) {
                 <MemoizedTaskAvatar assigned={rowInfo[rowIndex].editor || ''} />
               ),
               readonly: true,
+              className: section ? 'set' + (passage ? 'p' : '') : 'pass',
             } as ICell,
             {
               value: (
@@ -475,66 +477,66 @@ export function PlanSheet(props: IProps) {
                 />
               ),
               readonly: true,
+              className: section ? 'set' + (passage ? 'p' : '') : 'pass',
             } as ICell,
-          ].concat(
-            row.slice(0, LastCol).map((e, cellIndex) => {
-              return cellIndex === bookCol && passage
-                ? {
-                    value: e,
-                    className: 'book' + (section ? ' setp' : ''),
-                    dataEditor: bookEditor,
-                  }
-                : {
-                    value: e,
-                    readOnly: section
-                      ? passage
-                        ? false
-                        : cellIndex > 1
-                      : cellIndex <= 1,
-                    className:
-                      (cellIndex === SectionSeqCol ||
-                      cellIndex === PassageSeqCol
-                        ? 'num'
-                        : 'pass') +
-                      (section
-                        ? !inlinePassages || cellIndex <= 1
-                          ? ' set'
-                          : ' setp'
-                        : ''),
-                  };
-            })
-          );
+          ]
+            .concat(
+              row.slice(0, LastCol).map((e, cellIndex) => {
+                return cellIndex === bookCol && passage
+                  ? {
+                      value: e,
+                      className: 'book ' + (section ? ' setp' : 'pass'),
+                      dataEditor: bookEditor,
+                    }
+                  : {
+                      value: e,
+                      readOnly: section
+                        ? passage
+                          ? false
+                          : cellIndex > 1
+                        : cellIndex <= 1,
+                      className:
+                        (cellIndex === SectionSeqCol ||
+                        cellIndex === PassageSeqCol
+                          ? 'num '
+                          : '') +
+                        (section ? 'set' + (passage ? 'p' : '') : 'pass'),
+                    };
+              })
+            )
+            .concat([
+              {
+                value: (
+                  <PlanActions
+                    {...props}
+                    rowIndex={rowIndex}
+                    isSection={section}
+                    isPassage={passage}
+                    mediaId={rowInfo[rowIndex].mediaId}
+                    onPlayStatus={handlePlayStatus}
+                    onDelete={handleConfirmDelete}
+                    onTranscribe={handleTranscribe}
+                    online={online}
+                    readonly={readonly}
+                    canAssign={projRole === 'admin'}
+                    canDelete={projRole === 'admin'}
+                    isPlaying={
+                      rowInfo[rowIndex].mediaId !== '' &&
+                      srcMediaId === rowInfo[rowIndex].mediaId
+                    }
+                  />
+                ),
+                className: section ? 'set' + (passage ? 'p' : ' ') : 'pass',
+              } as ICell,
+            ]);
         })
       );
-      data = data.map((row, rowIndex) => {
-        const isSection = isValidNumber(row[SectionSeqCol + 2].value);
-        const isPassage = isValidNumber(row[PassageSeqCol + 2].value);
-        return row.concat(
-          rowIndex === 0
-            ? []
-            : [
-                {
-                  value: (
-                    <PlanActions
-                      {...props}
-                      rowIndex={rowIndex}
-                      isSection={isSection}
-                      isPassage={isPassage}
-                      mediaId={rowInfo[rowIndex - 1].mediaId}
-                      onPlayStatus={handlePlayStatus}
-                      onDelete={handleConfirmDelete}
-                    />
-                  ),
-                  className: isSection ? 'set' : 'pass',
-                } as ICell,
-              ]
-        );
-      });
+
       setData(data);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, rowInfo, bookCol, columns]);
+  }, [rowData, rowInfo, bookCol, columns, srcMediaId]);
 
   useEffect(() => {
     if (sheetRef.current && showRow) {
@@ -571,15 +573,17 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
 
+  useEffect(() => tryOnline(), []);
+
   //do this every 30 seconds to warn they can't save
   useInterval(() => tryOnline(), 1000 * 30);
 
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
-        <AppBar position="fixed" className={classes.bar} color="default">
-          <div className={classes.actions}>
-            {projRole === 'admin' && (
+        {projRole === 'admin' && (
+          <AppBar position="fixed" className={classes.bar} color="default">
+            <div className={classes.actions}>
               <>
                 <Button
                   key="addSection"
@@ -588,6 +592,7 @@ export function PlanSheet(props: IProps) {
                   color="primary"
                   className={classes.button}
                   onClick={handleAddSection}
+                  disabled={readonly}
                 >
                   {t.addSection.replace('{0}', organizedBy)}
                   <AddIcon className={classes.icon} />
@@ -600,7 +605,7 @@ export function PlanSheet(props: IProps) {
                     color="primary"
                     className={classes.button}
                     onClick={handleAddPassage}
-                    disabled={data.length < 2}
+                    disabled={data.length < 2 || readonly}
                   >
                     {t.addPassage}
                     <AddIcon className={classes.icon} />
@@ -612,7 +617,7 @@ export function PlanSheet(props: IProps) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
-                  disabled={pasting}
+                  disabled={pasting || readonly}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
@@ -624,7 +629,7 @@ export function PlanSheet(props: IProps) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
-                  disabled={pasting || data.length < 2}
+                  disabled={pasting || data.length < 2 || readonly}
                   onClick={handleResequence}
                 >
                   {t.resequence}
@@ -651,9 +656,9 @@ export function PlanSheet(props: IProps) {
                   <SaveIcon className={classes.icon} />
                 </Button>
               </>
-            )}
-          </div>
-        </AppBar>
+            </div>
+          </AppBar>
+        )}
         <div id="PlanSheet" ref={sheetRef} className={classes.content}>
           <DataSheet
             data={data as any[][]}

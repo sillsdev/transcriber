@@ -293,7 +293,9 @@ export function Access(props: IProps) {
               </Grid>
             </Grid>
           </Paper>
-          <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
+          {importOpen && (
+            <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
+          )}
         </div>
       )}
     </div>

@@ -69,7 +69,7 @@
 		</unit>
 		<unit id="access.accessSilTranscriber">
 			<segment>
-				<source>Click your avatar to transcriber or review.</source>
+				<source>Click your avatar to transcribe or review.</source>
 				<target>Cliquez sur votre avatar pour transcrire ou modifier.</target>
 			</segment>
 		</unit>

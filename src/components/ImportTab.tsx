@@ -598,7 +598,7 @@ export function ImportTab(props: IProps) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {t.importProject + ' ' + planName || ''}
+        {t.importProject + ' ' + (planName || '')}
       </DialogTitle>
       <DialogContent>
         <Typography variant="h5">{importTitle}</Typography>

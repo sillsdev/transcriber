@@ -4,8 +4,9 @@ import Auth from '../../auth/Auth';
 import * as type from './types';
 import MemorySource from '@orbit/memory';
 import { remoteIdGuid, remoteId } from '../../crud';
-import { isArray } from 'util';
 import { dataPath } from '../../utils/dataPath';
+import { isNumber } from 'lodash';
+import { MediaFile } from '../../model';
 
 export const fetchMediaUrl = (
   id: string,
@@ -15,18 +16,23 @@ export const fetchMediaUrl = (
 ) => (dispatch: any) => {
   dispatch({ type: type.FETCH_AUDIO_URL_PENDING });
   if (offline) {
-    var mediarec = memory.cache.query((q) =>
-      q.findRecord({
-        type: 'mediafile',
-        id: remoteIdGuid('mediafile', id, memory.keyMap),
-      })
-    );
-    if (isArray(mediarec)) mediarec = mediarec[0];
-    if (mediarec && mediarec.attributes) {
-      dispatch({
-        payload: dataPath(mediarec.attributes.audioUrl),
-        type: type.FETCH_AUDIO_URL,
-      });
+    if (isNumber(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
+    try {
+      var mediarec = memory.cache.query((q) =>
+        q.findRecord({
+          type: 'mediafile',
+          id: id,
+        })
+      ) as MediaFile;
+      if (mediarec && mediarec.attributes) {
+        dispatch({
+          payload: dataPath(mediarec.attributes.audioUrl),
+          type: type.FETCH_AUDIO_URL,
+        });
+      }
+    } catch (ex) {
+      //we don't have it in our keymap?
+      console.log(ex);
     }
   } else {
     if (isNaN(Number(id))) id = remoteId('mediafile', id, memory.keyMap);
