@@ -100,6 +100,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="electronImport.invalidProject">
+         <segment>
+            <source>Import File does not contain current project.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="electronImport.importPending">
          <segment>
             <source>Import In Progress...{0}%</source>
@@ -1350,7 +1356,7 @@
       </unit>
       <unit id="import.invalidProject">
          <segment>
-            <source>ITF File does not contain current project.</source>
+            <source>Import File does not contain current project.</source>
             <target/>
          </segment>
       </unit>

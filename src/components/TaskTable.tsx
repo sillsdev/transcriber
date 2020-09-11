@@ -130,6 +130,7 @@ export function TaskTable(props: IProps) {
   const { getPlanName } = usePlan();
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
+  const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = React.useState(false);
   const [openImport, setOpenImport] = useState(false);
@@ -314,7 +315,7 @@ export function TaskTable(props: IProps) {
     const newPlanName = newRows.length > 0 ? getPlanName(newRows[0].plan) : '';
     if (planName !== newPlanName) setPlanName(newPlanName);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, selected]);
+  }, [rowData]);
 
   interface ICell {
     value: any;
@@ -388,7 +389,11 @@ export function TaskTable(props: IProps) {
           <div className={classes.dialogHeader}>
             <Typography variant="h6">{t.tasks}</Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
-            <ProjectMenu action={handleProjectMenu} inProject={true} />
+            <ProjectMenu
+              action={handleProjectMenu}
+              inProject={true}
+              isOwner={projRole === 'admin'}
+            />
           </div>
           <ShapingTable
             columns={columns}
@@ -437,6 +442,7 @@ export function TaskTable(props: IProps) {
           isOpen={openImport}
           onOpen={setOpenImport}
           planName={planName}
+          project={projectId}
         />
       )}
     </div>

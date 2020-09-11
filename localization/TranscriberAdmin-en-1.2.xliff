@@ -117,6 +117,13 @@
                   <context context-type="sourcefile">electronImport.tsx</context>
               </context-group>
             </trans-unit>
+             <trans-unit id="electronImport.invalidProject">
+                <source>Import File does not contain current project.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">import.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="electronImport.importPending">
                 <source>Import In Progress...{0}%</source>
                 <target/>
@@ -1574,7 +1581,7 @@
                 </context-group>
             </trans-unit>
              <trans-unit id="import.invalidProject">
-                <source>ITF File does not contain current project.</source>
+                <source>Import File does not contain current project.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">import.tsx</context>

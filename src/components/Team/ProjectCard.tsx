@@ -20,7 +20,7 @@ import ExportTab from '../TranscriptionTab';
 import ImportTab from '../ImportTab';
 import Confirm from '../AlertDialog';
 import { ProjectDialog, IProjectDialog } from './ProjectDialog';
-import { usePlan, useProjectPlans, useOrganizedBy } from '../../crud';
+import { usePlan, useProjectPlans, useOrganizedBy, related } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -275,6 +275,7 @@ export const ProjectCard = (props: IProps) => {
           isOpen={openImport}
           onOpen={setOpenImport}
           planName={getPlanName(project.id)}
+          project={related(project, 'project')} //actual project id...not plan id
         />
       )}
       {deleteItem && (

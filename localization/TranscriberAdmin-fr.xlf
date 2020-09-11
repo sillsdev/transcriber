@@ -98,7 +98,13 @@
             <target>Erreur d'importation</target>
          </segment>
       </unit>
-         <unit id="electronImport.importPending">
+      <unit id="electronImport.invalidProject">
+         <segment>
+            <source>Import File does not contain current project.</source>
+            <target>Le fichier Importation ne contient pas le projet en cours.</target>
+         </segment>
+      </unit>
+	  <unit id="electronImport.importPending">
          <segment>
             <source>Import In Progress...{0}%</source>
             <target>Importation en cours...{0}%</target>
@@ -1378,8 +1384,8 @@
       </unit>
       <unit id="import.invalidProject">
          <segment>
-            <source>ITF File does not contain current project.</source>
-            <target>Le fichier ITF ne contient pas le projet en cours.</target>
+            <source>Import File does not contain current project.</source>
+            <target>Le fichier Importation ne contient pas le projet en cours.</target>
          </segment>
       </unit>
       <unit id="import.importComplete">

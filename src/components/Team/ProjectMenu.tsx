@@ -25,6 +25,7 @@ import ImportIcon from '@material-ui/icons/CloudUpload';
 import ExportIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterIcon from '@material-ui/icons/FilterList';
+import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -112,7 +113,7 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!inProject && isOwner && (
+        {!inProject && isOwner && !isElectron && (
           <StyledMenuItem onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
@@ -134,7 +135,7 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.integrations} />
         </StyledMenuItem>
-        {isOwner && (
+        {(isOwner || isElectron) && (
           <StyledMenuItem onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />
@@ -156,6 +157,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={td.filter} />
           </StyledMenuItem>
         ) : (
+          !isElectron &&
           isOwner && (
             <StyledMenuItem onClick={handle('delete')}>
               <ListItemIcon>

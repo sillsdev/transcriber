@@ -78,12 +78,14 @@ interface IProps
     IRecordProps,
     WithDataProps {
   auth: Auth;
+  project?: string;
   planName?: string;
 }
 export function ImportTab(props: IProps) {
   const {
     isOpen,
     onOpen,
+    project,
     planName,
     t,
     ts,
@@ -108,7 +110,6 @@ export function ImportTab(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [fingerprint] = useGlobal('fingerprint');
-  const [project] = useGlobal('project');
   const [errorReporter] = useGlobal('errorReporter');
 
   const { showMessage } = useSnackBar();
@@ -202,7 +203,7 @@ export function ImportTab(props: IProps) {
 
   useEffect(() => {
     const electronImport = () => {
-      var importData: IImportData = getElectronImportData();
+      var importData = getElectronImportData(project || '');
       if (importData.valid) {
         if (importData.warnMsg) {
           setConfirmAction(importData.warnMsg);
@@ -234,15 +235,17 @@ export function ImportTab(props: IProps) {
     if (!files || files.length === 0) {
       showMessage(t.noFile);
     } else {
-      setBusy(true);
-      importProjectFromElectron(
-        files,
-        remoteIdNum('project', project, memory.keyMap),
-        auth,
-        orbitError,
-        t.importPending,
-        t.importComplete
-      );
+      if (project) {
+        setBusy(true);
+        importProjectFromElectron(
+          files,
+          remoteIdNum('project', project, memory.keyMap),
+          auth,
+          orbitError,
+          t.importPending,
+          t.importComplete
+        );
+      }
     }
     setUploadVisible(false);
   };

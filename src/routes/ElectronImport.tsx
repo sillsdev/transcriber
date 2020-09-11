@@ -47,7 +47,7 @@ export const useElectronImport = (
     orbitError: (ex: IApiError) => void
   ): void => {};
 
-  var getElectronImportData = (): IImportData => {
+  var getElectronImportData = (project: string): IImportData => {
     return {
       valid: false,
       warnMsg: '',
@@ -56,7 +56,7 @@ export const useElectronImport = (
   };
 
   if (isElectron) {
-    getElectronImportData = (): IImportData => {
+    getElectronImportData = (project: string): IImportData => {
       var electron = require('electron');
       const options = {
         //: OpenDialogSyncOptions
@@ -109,6 +109,15 @@ export const useElectronImport = (
             const proj = projectRecs.find(
               (pr) => pr.id === remoteIdGuid('project', id, memory.keyMap)
             );
+
+            if (project !== '' && project !== proj?.id) {
+              showTitledMessage(t.importProject, t.invalidProject);
+              zipRef.current = undefined;
+              ret.valid = false;
+              ret.errMsg = t.invalidProject;
+              return ret; //huh, this just takes me out of the forEach
+            }
+
             //was this one exported before our current data?
             if (proj && proj.attributes) {
               projectNames += proj.attributes.name + ',';

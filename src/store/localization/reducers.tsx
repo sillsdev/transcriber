@@ -27,7 +27,7 @@ const initialState = {
 	"access": new LocalizedStrings({
 		"en": {
 			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
-			"accessSilTranscriber": "Click your avatar to transcriber or edit.",
+			"accessSilTranscriber": "Click your avatar to transcribe or review.",
 			"login": "Online Login",
 			"importProject": "Import Portable Transcriber File (PTF)",
 		}
@@ -36,6 +36,7 @@ const initialState = {
 		"en": {
 			"importProject": "Import Project",
 			"importError": "Import Error",
+			"invalidProject": "Import File does not contain current project.",
 			"importPending": "Import In Progress...{0}%",
 			"importComplete": "Import Complete",
 			"importOldFile": "This file was not exported from the latest version.  Reexport your PTF file from the online version.",
@@ -292,7 +293,7 @@ const initialState = {
 			"noFile": "Please select file to be uploaded.",
 			"importPending": "Import In Progress...",
 			"invalidITF": "Not a valid Incremental Transcriber File (ITF).",
-			"invalidProject": "ITF File does not contain current project.",
+			"invalidProject": "Import File does not contain current project.",
 			"importComplete": "Import Complete",
 			"plan": "Plan",
 			"passage": "Passage",

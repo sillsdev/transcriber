@@ -100,11 +100,13 @@ export const TeamItem = (props: IProps) => {
           {team?.attributes?.name}
         </Typography>
         <div>
-          <Button variant="contained" onClick={handleMembers(team)}>
-            {t.members.replace('{0}', teamMembers(team.id).toString())}
-          </Button>
+          {!isElectron && isAdmin(team) && (
+            <Button variant="contained" onClick={handleMembers(team)}>
+              {t.members.replace('{0}', teamMembers(team.id).toString())}
+            </Button>
+          )}
           {' \u00A0'}
-          {isAdmin(team) && (
+          {!isElectron && isAdmin(team) && (
             <Button variant="contained" onClick={handleSettings(team)}>
               {t.settings}
             </Button>
