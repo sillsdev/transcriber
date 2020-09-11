@@ -97,7 +97,7 @@
         		</context-group>
         	</trans-unit>
           <trans-unit id="access.importProject">
-              <source>Import Portable Transcriber File (PTF)</source>
+              <source>Import PTF File</source>
               <target/>
               <context-group>
                   <context context-type="sourcefile">electronImport.tsx</context>

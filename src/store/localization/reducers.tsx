@@ -29,7 +29,7 @@ const initialState = {
 			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
 			"accessSilTranscriber": "Click your avatar to transcribe or review.",
 			"login": "Online Login",
-			"importProject": "Import Portable Transcriber File (PTF)",
+			"importProject": "Import PTF File",
 		}
 	}),
 	"electronImport": new LocalizedStrings({

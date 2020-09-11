@@ -20,7 +20,7 @@ import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
 import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
 import { numCompare } from '../utils';
-import { usePlan, useProjectPlans } from '../crud';
+import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
 import MediaPlayer from './MediaPlayer';
 
@@ -127,7 +127,6 @@ export function TaskTable(props: IProps) {
   const classes = useStyles();
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
-  const { getPlanName } = usePlan();
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
@@ -312,7 +311,7 @@ export function TaskTable(props: IProps) {
       mediaRemoteId: r.mediaRemoteId,
     }));
     setRows(newRows);
-    const newPlanName = newRows.length > 0 ? getPlanName(newRows[0].plan) : '';
+    const newPlanName = newRows.length > 0 ? newRows[0].plan : '';
     if (planName !== newPlanName) setPlanName(newPlanName);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData]);

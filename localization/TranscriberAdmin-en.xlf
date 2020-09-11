@@ -84,7 +84,7 @@
       </unit>
       <unit id="access.importProject">
          <segment>
-            <source>Import Portable Transcriber File (PTF)</source>
+            <source>Import PTF File</source>
             <target/>
          </segment>
       </unit>

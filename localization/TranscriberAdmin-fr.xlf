@@ -28,13 +28,13 @@
         <unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Media</source>
-            <target/>
-         </segment>
+        	<target>Télécharger des médias</target>
+	     </segment>
         </unit>
         <unit id="shared.uploadMediaPlural">
          <segment>
             <source>Upload Media</source>
-            <target/>
+        	<target>Télécharger des médias</target>
          </segment>
         </unit>
       <unit id="planActions.assign">
@@ -81,8 +81,8 @@
 		</unit>
 		<unit id="access.importProject">
 			<segment>
-				<source>Import Portable Transcriber File (PTF)</source>
-				<target>Importation un fichier de transcripteurs portables (PTF)</target>
+				<source>Import PTF File</source>
+				<target>Importation un fichier de PTF</target>
 			</segment>
 		</unit>
         <unit id="electronImport.importProject">
@@ -320,12 +320,6 @@
 				<target>Ajouter un(e) {0}</target>
 			</segment>
 		</unit>
-		<unit id="planSheet.section">
-			<segment>
-				<source>Section</source>
-				<target>Section</target>
-			</segment>
-		</unit>
 		<unit id="planSheet.addPassage">
 			<segment>
 				<source>Add Passage</source>
@@ -358,8 +352,8 @@
 		</unit>
 		<unit id="planSheet.sectionAbove">
 			<segment>
-				<source>Insert section above</source>
-				<target>Insérer section ci-dessus</target>
+				<source>Insert {0} above</source>
+				<target>Insérer {0} ci-dessus</target>
 			</segment>
 		</unit>
 		<unit id="planSheet.passageBelow">
@@ -410,12 +404,6 @@
 				<target>Resequene</target>
 			</segment>
 		</unit>
-		<unit id="scriptureTable.section">
-         <segment>
-            <source>Section</source>
-            <target>Section</target>
-         </segment>
-      </unit>
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
@@ -484,8 +472,8 @@
       </unit>
       <unit id="scriptureTable.pasteInvalidSections">
          <segment>
-            <source>Invalid section number(s):</source>
-          	<target>Numéros de section non valides:</target>
+            <source>Invalid {0} number(s):</source>
+          	<target>Numéros de {0} non valides:</target>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidPassages">
@@ -504,12 +492,6 @@
          <segment>
             <source>Assignments</source>
          	<target>Affectations</target>
-         </segment>
-      </unit>
-      <unit id="assignmentTable.section">
-         <segment>
-            <source>Section</source>
-            <target>Section</target>
          </segment>
       </unit>
       <unit id="assignmentTable.sectionstate">
@@ -586,14 +568,8 @@
 		</unit>
 		<unit id="assignSection.title">
 			<segment>
-				<source>Assign Sections to Users</source>
-				<target>Assigner Ensembles aux Utilisatrices</target>
-			</segment>
-		</unit>
-		<unit id="assignSection.sections">
-			<segment>
-				<source>Sections</source>
-				<target>Ensembles</target>
+				<source>Assign {0} to Users</source>
+				<target>Assigner {0} aux Utilisatrices</target>
 			</segment>
 		</unit>
 		<unit id="assignSection.users">
@@ -624,12 +600,6 @@
 			<segment>
 				<source>{0} &amp; Passages</source>
 				<target>{0} et passages</target>
-			</segment>
-		</unit>
-		<unit id="planTabs.sections">
-			<segment>
-				<source>Sections</source>
-				<target>Sections</target>
 			</segment>
 		</unit>
 		<unit id="planTabs.passageStatus">
@@ -722,12 +692,6 @@
 				<target>Nom du fichier</target>
 			</segment>
 		</unit>
-		<unit id="mediaTab.sectionId">
-			<segment>
-				<source>Section Id</source>
-				<target>Section Id</target>
-			</segment>
-		</unit>
 		<unit id="mediaTab.book">
 			<segment>
 				<source>Book</source>
@@ -756,12 +720,6 @@
 			<segment>
 				<source>Version</source>
 				<target>Version</target>
-			</segment>
-		</unit>
-		<unit id="mediaTab.section">
-			<segment>
-				<source>Section</source>
-				<target>Section</target>
 			</segment>
 		</unit>
 		<unit id="mediaTab.date">
@@ -1400,12 +1358,6 @@
 			<target>Plan</target>
          </segment>
       </unit>
-      <unit id="import.section">
-         <segment>
-            <source>Section</source>
-			<target>Section</target>
-         </segment>
-      </unit>
       <unit id="import.passage">
          <segment>
             <source>Passage</source>
@@ -1508,12 +1460,6 @@
 			<target>Afficher/masquer les lignes de filtre</target>
          </segment>
       </unit>
- 		<unit id="transcriptionTab.section">
-			<segment>
-				<source>Section</source>
-				<target>Ensemble</target>
-			</segment>
-		</unit>
 		<unit id="transcriptionTab.sectionstate">
 			<segment>
 				<source>State</source>
@@ -2355,12 +2301,6 @@
 				<target>Project</target>
 			</segment>
 		</unit>
-		<unit id="toDoTable.section">
-         <segment>
-            <source>Section</source>
-            <target>Section</target>
-         </segment>
-      </unit>
       <unit id="toDoTable.passage">
          <segment>
             <source>Passage</source>
@@ -3166,16 +3106,10 @@
          	<target>Identifiant du livre du Paratext</target>
          </segment>
       </unit>
-      <unit id="template.section">
-         <segment>
-            <source>Section number</source>
-         	<target>Numéro de la section</target>
-         </segment>
-      </unit>
       <unit id="template.passage">
          <segment>
-            <source>Passage number(within section)</source>
-         	<target>Numéro de passage (dans la section)</target>
+            <source>Passage number(within {0})</source>
+         	<target>Numéro de passage (dans {0})</target>
          </segment>
       </unit>
       <unit id="template.chapter">
@@ -3235,19 +3169,19 @@
 		<unit id="cards.newProject">
 			<segment>
 				<source>New Project</source>
-				<target>New Project</target>
+				<target>Nouveau projet</target>
 			</segment>
 		</unit>
 		<unit id="cards.connectParatext">
 			<segment>
 				<source>Connect a Paratext Project</source>
-				<target>Connect a Paratext Project</target>
+				<target>Connectez un projet Paratext</target>
 			</segment>
 		</unit>
 		<unit id="cards.import">
 			<segment>
 				<source>Import PTF File</source>
-				<target>Import PTF File</target>
+				<target>Importer un fichier PTF</target>
 			</segment>
 		</unit>
 		<unit id="cards.personalProjects">
@@ -3266,12 +3200,6 @@
 			<segment>
 				<source>{0} {1}</source>
 				<target>{1} {0}</target>
-			</segment>
-		</unit>
-		<unit id="cards.sections">
-			<segment>
-				<source>Sections</source>
-				<target>Sections</target>
 			</segment>
 		</unit>
 		<unit id="cards.settings">
