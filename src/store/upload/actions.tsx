@@ -20,7 +20,7 @@ export const uploadFiles = (files: FileList) => (dispatch: any) => {
 };
 
 export const nextUpload = (
-  record: MediaFile,
+  record: any,
   files: FileList,
   n: number,
   auth: Auth,
@@ -28,6 +28,18 @@ export const nextUpload = (
   cb?: (n: number, success: boolean, data?: any) => void
 ) => (dispatch: any) => {
   dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
+  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
+  if (!acceptExtPat.test(record.originalFile)) {
+    dispatch({
+      payload: {
+        current: n,
+        error: `${files[n].name}:unsupported`,
+      },
+      type: UPLOAD_ITEM_FAILED,
+    });
+    if (cb) cb(n, false);
+    return;
+  }
   Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,

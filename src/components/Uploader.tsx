@@ -122,32 +122,22 @@ export const Uploader = (props: IProps) => {
     }
   };
 
-  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
-
   const doUpload = (currentlyLoading: number) => {
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
-    if (acceptExtPat.test(uploadList[currentlyLoading].name)) {
-      const mediaFile = {
-        planId: getPlanId(),
-        originalFile: uploadList[currentlyLoading].name,
-        contentType: uploadList[currentlyLoading].type,
-      } as any;
-      nextUpload(
-        mediaFile,
-        uploadList,
-        currentlyLoading,
-        authRef.current,
-        errorReporter,
-        itemComplete
-      );
-    } else {
-      showJSXMessage(
-        <span className={classes.unsupported}>
-          {t.unsupported.replace('{0}', uploadList[currentlyLoading].name)}
-        </span>
-      );
-    }
+    const mediaFile = {
+      planId: getPlanId(),
+      originalFile: uploadList[currentlyLoading].name,
+      contentType: uploadList[currentlyLoading].type,
+    } as any;
+    nextUpload(
+      mediaFile,
+      uploadList,
+      currentlyLoading,
+      authRef.current,
+      errorReporter,
+      itemComplete
+    );
   };
 
   const uploadMedia = async (files: FileList) => {
@@ -172,7 +162,16 @@ export const Uploader = (props: IProps) => {
 
   React.useEffect(() => {
     if (uploadError !== '') {
-      showMessage(uploadError);
+      if (uploadError.indexOf('unsupported') > 0)
+        showJSXMessage(
+          <span className={classes.unsupported}>
+            {t.unsupported.replace(
+              '{0}',
+              uploadError.substr(0, uploadError.indexOf(':unsupported'))
+            )}
+          </span>
+        );
+      else showMessage(uploadError);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [uploadError]);

@@ -756,8 +756,6 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [attachMap]);
 
-  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
-
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
       // wait to do this to give time for duration calc
@@ -780,25 +778,19 @@ export function MediaTab(props: IProps) {
         setComplete(
           Math.min((currentlyLoading * 100) / uploadList.length, 100)
         );
-        if (acceptExtPat.test(uploadList[currentlyLoading + 1].name)) {
-          const planId = remoteIdNum('plan', plan, memory.keyMap);
-          const mediaFile = {
-            planId: planId,
-            originalFile: uploadList[currentlyLoading + 1].name,
-            contentType: uploadList[currentlyLoading + 1].type,
-          } as any;
-          nextUpload(
-            mediaFile,
-            uploadList,
-            currentlyLoading + 1,
-            auth,
-            errorReporter
-          );
-        } else {
-          showMessage(
-            t.unsupported.replace('{0}', uploadList[currentlyLoading + 1].name)
-          );
-        }
+        const planId = remoteIdNum('plan', plan, memory.keyMap);
+        const mediaFile = {
+          planId: planId,
+          originalFile: uploadList[currentlyLoading + 1].name,
+          contentType: uploadList[currentlyLoading + 1].type,
+        } as any;
+        nextUpload(
+          mediaFile,
+          uploadList,
+          currentlyLoading + 1,
+          auth,
+          errorReporter
+        );
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -824,7 +816,14 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     if (uploadError !== '') {
-      showMessage(uploadError);
+      if (uploadError.indexOf('unsupported') > 0)
+        showMessage(
+          t.unsupported.replace(
+            '{0}',
+            uploadError.substr(0, uploadError.indexOf(':unsupported'))
+          )
+        );
+      else showMessage(uploadError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadError]);
