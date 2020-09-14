@@ -423,7 +423,7 @@ export function ScriptureTable(props: IProps) {
     rowdata[index + 1] = newrowid;
   };
 
-  const handleAction = (what: string, where: number[]) => {
+  const handleDelete = (what: string, where: number[]) => {
     if (what === 'Delete') {
       const deleteOrbitRow = async (id: RecordIdentity | undefined) => {
         if (id && id.id !== '') {
@@ -432,11 +432,11 @@ export function ScriptureTable(props: IProps) {
           );
         }
       };
-
+      //work from the bottom up so we can detach/delete passages before the section
       for (
-        let rowListIndex = 0;
-        rowListIndex < where.length;
-        rowListIndex += 1
+        let rowListIndex = where.length - 1;
+        rowListIndex >= 0;
+        rowListIndex -= 1
       ) {
         const rowIndex = where[rowListIndex];
         if (rowInfo[rowIndex].passageId) {
@@ -1095,7 +1095,7 @@ export function ScriptureTable(props: IProps) {
         bookCol={showBook(cols) ? cols.Book : -1}
         bookMap={bookMap}
         bookSuggestions={bookSuggestions}
-        action={handleAction}
+        action={handleDelete}
         addSection={addSection}
         addPassage={addPassage}
         updateData={updateData}
