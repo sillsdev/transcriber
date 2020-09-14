@@ -2232,7 +2232,7 @@
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source>Upload Change Data from Offline Extension</source>
+            <source>Upload Change Data from Desktop Extension</source>
             <target/>
          </segment>
       </unit>
@@ -2250,7 +2250,7 @@
       </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
             <target/>
          </segment>
       </unit>

@@ -61,7 +61,7 @@ export const useOrganizedBy = () => {
     const selected = planRec.filter((p) => p.id === planId);
     if (selected.length > 0) {
       return localizedOrganizedBy(
-        selected[0]?.attributes?.organizedBy,
+        selected[0]?.attributes?.organizedBy || 'section',
         singular
       );
     }

@@ -85,9 +85,8 @@ export const ProjectCard = (props: IProps) => {
   } = ctx.state;
   const { getPlanName } = usePlan();
   const { localizedOrganizedBy } = useOrganizedBy();
-  const [organizedBy] = useState(
-    localizedOrganizedBy(project.attributes.organizedBy, false)
-  );
+  const [organizedBySing, setOrganizedBySing] = useState('');
+  const [organizedByPlural, setOrganizedByPlural] = useState('');
   const [projectId] = useGlobal('project');
   const projectPlans = useProjectPlans();
   const [openProject, setOpenProject] = useState(false);
@@ -107,6 +106,16 @@ export const ProjectCard = (props: IProps) => {
     if (open !== '') doOpen(open);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId, open]);
+
+  useEffect(() => {
+    setOrganizedBySing(
+      localizedOrganizedBy(project.attributes.organizedBy, true)
+    );
+    setOrganizedByPlural(
+      localizedOrganizedBy(project.attributes.organizedBy, false)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project]);
 
   const doOpen = (what: string) => {
     if (what === 'settings') {
@@ -226,7 +235,10 @@ export const ProjectCard = (props: IProps) => {
             {sectionCount !== '<na>' &&
               t.sectionStatus
                 .replace('{0}', sectionCount)
-                .replace('{1}', organizedBy)}
+                .replace(
+                  '{1}',
+                  Number(sectionCount) > 1 ? organizedByPlural : organizedBySing
+                )}
           </Typography>
         </CardContent>
         {project?.attributes?.tags && (

@@ -2603,7 +2603,7 @@
                 </context-group>
             </trans-unit>
         	<trans-unit id="mediaUpload.ITFtitle">
-                <source>Upload Change Data from Offline Extension</source>
+                <source>Upload Change Data from Desktop Extension</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -2624,7 +2624,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="mediaUpload.ITFtask">
-                <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
+                <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">MediaUpload.tsx</context>

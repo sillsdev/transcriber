@@ -2219,8 +2219,8 @@
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source>Upload Change Data from Offline Extension</source>
-            <target>Télécharger les données de modification depuis l'extension hors ligne</target>
+            <source>Upload Change Data from the Desktop Extension</source>
+            <target>Télécharger les données de modification depuis l'extension de bureau</target>
          </segment>
       </unit>
       <unit id="mediaUpload.task">
@@ -2237,8 +2237,8 @@
       </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source>Upload an Incremental Transcriber File (itf file) exported from the offline extension.</source>
-            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'extension hors ligne.</target>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
+            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'extension de bureau.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDrop">
