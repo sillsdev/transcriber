@@ -65,6 +65,7 @@ import {
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
+import { dateCompare } from '../utils';
 
 const ActionHeight = 52;
 
@@ -149,60 +150,8 @@ const getReference = (passage: Passage, bookData: BookName[] = []) => {
   return passageDescription(passage, bookData);
 };
 
-const getAssignments = (
-  projectPlans: Plan[],
-  passages: Array<Passage>,
-  sections: Array<Section>,
-  users: Array<User>,
-  activityState: IActivityStateStrings,
-  bookData: BookName[]
-) => {
-  const rowData: IRow[] = [];
-  projectPlans.forEach((planRec) => {
-    sections
-      .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
-      .sort(sectionCompare)
-      .forEach((section) => {
-        const sectionpassages = passages
-          .filter((ps) => related(ps, 'section') === section.id)
-          .sort(passageCompare);
-        rowData.push({
-          id: section.id,
-          name: getSection(section),
-          state: '',
-          planName: planRec.attributes.name,
-          editor: sectionEditorName(section, users),
-          transcriber: sectionTranscriberName(section, users),
-          passages: sectionpassages.length.toString(),
-          updated: '',
-          action: '',
-          parentId: '',
-        });
-        sectionpassages.forEach((passage: Passage) => {
-          const state =
-            passage.attributes && passage.attributes.state
-              ? activityState.getString(passage.attributes.state)
-              : '';
-          rowData.push({
-            id: passage.id,
-            name: getReference(passage, bookData),
-            state: state,
-            planName: planRec.attributes.name,
-            editor: '',
-            transcriber: '',
-            passages: '',
-            updated: moment
-              .tz(moment.tz(passage.attributes.dateUpdated, 'utc'), curZone)
-              .calendar(),
-            action: passage.id,
-            parentId: section.id,
-          } as IRow);
-        });
-      });
-  });
-
-  return rowData as Array<IRow>;
-};
+const calendar = (date: string) =>
+  moment.tz(moment.tz(date, 'utc'), curZone).calendar();
 
 interface IStateProps {
   t: ITranscriptionTabStrings;
@@ -524,6 +473,69 @@ export function TranscriptionTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projectPlans, plan, planColumn]);
 
+  const getAssignments = (
+    projectPlans: Plan[],
+    passages: Array<Passage>,
+    sections: Array<Section>,
+    users: Array<User>,
+    activityState: IActivityStateStrings,
+    bookData: BookName[]
+  ) => {
+    const rowData: IRow[] = [];
+    projectPlans.forEach((planRec) => {
+      sections
+        .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
+        .sort(sectionCompare)
+        .forEach((section) => {
+          const sectionpassages = passages
+            .filter((ps) => related(ps, 'section') === section.id)
+            .sort(passageCompare);
+          const headerIndex = rowData.length;
+          rowData.push({
+            id: section.id,
+            name: getSection(section),
+            state: '',
+            planName: planRec.attributes.name,
+            editor: sectionEditorName(section, users),
+            transcriber: sectionTranscriberName(section, users),
+            passages: sectionpassages.length.toString(),
+            updated: '',
+            action: '',
+            parentId: '',
+          });
+          let hdrUpdated = section?.attributes?.dateUpdated;
+          sectionpassages.forEach((passage: Passage) => {
+            const mediaRec = getMediaRec(passage.id, memory);
+            const medUpdated = mediaRec?.attributes?.dateUpdated;
+            let pasUpdated = passage?.attributes?.dateUpdated;
+            if (medUpdated && dateCompare(medUpdated, pasUpdated) > 0)
+              pasUpdated = medUpdated;
+            if (dateCompare(pasUpdated, hdrUpdated) > 0)
+              hdrUpdated = pasUpdated;
+            const state =
+              passage.attributes && passage.attributes.state
+                ? activityState.getString(passage.attributes.state)
+                : '';
+            rowData.push({
+              id: passage.id,
+              name: getReference(passage, bookData),
+              state: state,
+              planName: planRec.attributes.name,
+              editor: '',
+              transcriber: '',
+              passages: '',
+              updated: calendar(pasUpdated),
+              action: passage.id,
+              parentId: section.id,
+            } as IRow);
+          });
+          rowData[headerIndex].updated = calendar(hdrUpdated);
+        });
+    });
+
+    return rowData as Array<IRow>;
+  };
+
   useEffect(() => {
     setData(
       getAssignments(
@@ -535,6 +547,7 @@ export function TranscriptionTab(props: IProps) {
         allBookData
       )
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     plan,
     projectPlans,
@@ -626,7 +639,7 @@ export function TranscriptionTab(props: IProps) {
         ) as MediaFile[];
         if (state !== ActivityStates.NoMedia && media.length > 0)
           return <ActionCell {...props} />;
-        else return <></>;
+        else return <td className="MuiTableCell-root" />;
       }
     }
     return <Table.Cell {...props} />;
