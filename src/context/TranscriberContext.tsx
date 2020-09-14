@@ -153,7 +153,10 @@ const TranscriberContext = React.createContext({} as IContext);
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
 }
-
+interface ParamTypes {
+  prjId: string;
+  pasId: string;
+}
 const TranscriberProvider = withData(mapRecordsToProps)(
   connect(
     mapStateToProps,
@@ -171,7 +174,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
     const { trackedTask, setTrackedTask } = props;
-    const { prjId, pasId } = useParams();
+    const { prjId, pasId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');

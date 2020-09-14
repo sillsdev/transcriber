@@ -52,11 +52,13 @@ const PlanBase = (props: IProps) => {
     </div>
   );
 };
-
+interface ParamTypes {
+  prjId: string;
+}
 export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
   const classes = useStyles();
-  const { prjId } = useParams();
+  const { prjId } = useParams<ParamTypes>();
   const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;

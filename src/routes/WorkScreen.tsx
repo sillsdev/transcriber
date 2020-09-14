@@ -56,11 +56,13 @@ const mapStateToProps = (state: IState): IStateProps => ({
 interface IProps extends IStateProps {
   auth: Auth;
 }
-
+interface ParamTypes {
+  prjId: string;
+}
 export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const { auth, t } = props;
   const classes = useStyles();
-  const { prjId } = useParams();
+  const { prjId } = useParams<ParamTypes>();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
   const setUrlContext = useUrlContext();

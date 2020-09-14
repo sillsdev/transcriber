@@ -70,7 +70,10 @@ interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
   checkSaved: (method: () => void) => void;
 }
-
+interface ParamTypes {
+  prjId: string;
+  tabNm: string;
+}
 const ScrollableTabsButtonAuto = (props: IProps) => {
   const {
     t,
@@ -85,7 +88,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
-  const { prjId, tabNm } = useParams();
+  const { prjId, tabNm } = useParams<ParamTypes>();
   const { getOrganizedBy } = useOrganizedBy();
 
   const handleChange = (event: any, value: number) => {

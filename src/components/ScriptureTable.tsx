@@ -120,6 +120,9 @@ export interface IRowInfo {
   editor?: string;
   mediaId: string;
 }
+interface ParamTypes {
+  prjId: string;
+}
 
 export function ScriptureTable(props: IProps) {
   const {
@@ -138,7 +141,7 @@ export function ScriptureTable(props: IProps) {
     auth,
   } = props;
   const classes = useStyles();
-  const { prjId } = useParams();
+  const { prjId } = useParams<ParamTypes>();
   const [width, setWidth] = React.useState(window.innerWidth);
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
