@@ -668,8 +668,8 @@ export function ScriptureTable(props: IProps) {
     setWidth(window.innerWidth);
   };
 
-  const handleTranscribe = (i: number) => () => {
-    const id = passageId(i - 1);
+  const handleTranscribe = (i: number) => {
+    const id = passageId(i);
     const passageRemoteId = remoteIdNum('passage', id, memory.keyMap);
     if (changed) {
       startSave();
@@ -685,10 +685,10 @@ export function ScriptureTable(props: IProps) {
 
   const showUpload = (i: number) => {
     setUploadVisible(true);
-    setUploadPassage(passageId(i - 1));
+    setUploadPassage(passageId(i));
   };
   const handleUpload = (i: number) => () => {
-    if (passageId(i - 1) === '') {
+    if (passageId(i) === '') {
       startSave();
       waitForSave(() => showUpload(i), 100);
     } else showUpload(i);

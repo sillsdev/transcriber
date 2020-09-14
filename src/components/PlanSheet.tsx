@@ -148,7 +148,7 @@ interface IProps extends IStateProps {
   lookupBook?: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
-  onTranscribe: (i: number) => () => void;
+  onTranscribe: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
   auth: Auth;

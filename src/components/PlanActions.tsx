@@ -94,7 +94,7 @@ export function PlanActions(props: IProps) {
         <IconButton
           className={classes.actionButton}
           title={t.playpause}
-          disabled={mediaId === ''}
+          disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus()}
         >
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -105,7 +105,7 @@ export function PlanActions(props: IProps) {
           className={classes.actionButton}
           title={t.transcribe}
           onClick={onTranscribe(rowIndex)}
-          disabled={mediaId === ''}
+          disabled={(mediaId || '') === ''}
         >
           <TranscribeIcon />
         </IconButton>
