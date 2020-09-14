@@ -14,6 +14,7 @@ import {
   BookName,
   SectionPassage,
   ISharedStrings,
+  MediaFile,
 } from '../model';
 import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
@@ -104,6 +105,7 @@ interface IDispatchProps {
 interface IRecordProps {
   passages: Array<Passage>;
   sections: Array<Section>;
+  mediafiles: Array<MediaFile>;
 }
 interface IProps
   extends IStateProps,
@@ -138,6 +140,7 @@ export function ScriptureTable(props: IProps) {
     doOrbitError,
     passages,
     sections,
+    mediafiles,
     auth,
   } = props;
   const classes = useStyles();
@@ -154,7 +157,6 @@ export function ScriptureTable(props: IProps) {
   const [inlinePassages, setInlinePassages] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState<string>(getOrganizedBy(true));
-
   const [columns, setColumns] = useState([
     { value: organizedBy, readOnly: true, width: 80 },
     { value: t.title, readOnly: true, width: 280 },
@@ -176,7 +178,7 @@ export function ScriptureTable(props: IProps) {
   const [uploadPassage, setUploadPassage] = useState('');
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
-  const [attachPassage] = useMediaAttach({
+  const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     ts,
     doOrbitError,
@@ -431,16 +433,22 @@ export function ScriptureTable(props: IProps) {
         }
       };
 
-      setChanged(true);
-
       for (
         let rowListIndex = 0;
         rowListIndex < where.length;
         rowListIndex += 1
       ) {
         const rowIndex = where[rowListIndex];
+        if (rowInfo[rowIndex].passageId) {
+          var attached = mediafiles.filter(
+            (m) => related(m, 'passage') === rowInfo[rowIndex].passageId?.id
+          );
+          attached.forEach((m) =>
+            detachPassage(rowInfo[rowIndex].passageId?.id || '', m.id)
+          );
+          deleteOrbitRow(rowInfo[rowIndex].passageId as RecordIdentity);
+        }
         deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
-        deleteOrbitRow(rowInfo[rowIndex].passageId as RecordIdentity);
       }
       setData(
         resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
@@ -457,7 +465,7 @@ export function ScriptureTable(props: IProps) {
     let selected = Array<Section>();
     let one: any;
     where.forEach((c) => {
-      one = sections.find((s) => s.id === sectionId(c - 1));
+      one = sections.find((s) => s.id === sectionId(c));
       if (one) selected.push(one);
     });
     return selected;
@@ -1146,6 +1154,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 const mapRecordsToProps = {
   passages: (q: QueryBuilder) => q.findRecords('passage'),
   sections: (q: QueryBuilder) => q.findRecords('section'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 
 export default withData(mapRecordsToProps)(

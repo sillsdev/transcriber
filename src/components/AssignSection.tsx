@@ -225,7 +225,9 @@ function AssignSection(props: IProps) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">{t.title}</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          {t.title.replace('{0}', organizedBy)}
+        </DialogTitle>
         <DialogContent>
           <Grid
             container

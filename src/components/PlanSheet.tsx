@@ -251,9 +251,9 @@ export function PlanSheet(props: IProps) {
       : cell.value;
 
   const handleConfirmDelete = (rowIndex: number) => () => {
-    const toDelete = [rowIndex - 1];
-    if (isSection(rowData[rowIndex - 1])) {
-      var psg = rowIndex;
+    const toDelete = [rowIndex];
+    if (isSection(rowData[rowIndex])) {
+      var psg = rowIndex + 1;
       while (psg < rowData.length && !isSection(rowData[psg])) {
         toDelete.push(psg);
         psg++;
@@ -271,6 +271,7 @@ export function PlanSheet(props: IProps) {
     }
     setConfirmAction('');
   };
+
   const handleActionRefused = () => {
     setConfirmAction('');
   };
