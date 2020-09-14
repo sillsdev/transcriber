@@ -594,6 +594,12 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "sendNews": string;
     "sendDigest": string;
     "role": string;
+    "checkingParatext": string;
+    "paratextLinked": string;
+    "paratextNotLinked": string;
+    "paratextLinking": string;
+    "linkingExplained": string;
+    "logout": string;
 };
 
 export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {

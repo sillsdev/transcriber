@@ -2980,6 +2980,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.checkingParatext">
+         <segment>
+            <source>Checking for Paratext account...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.paratextLinked">
+         <segment>
+            <source>Linked to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.paratextNotLinked">
+         <segment>
+            <source>Not linked to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.paratextLinking">
+         <segment>
+            <source>Linking to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.linkingExplained">
+         <segment>
+            <source>Log out and log in with Paratext button</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.logout">
+         <segment>
+            <source>Logout</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="deleteExpansion.dangerZone">
          <segment>
             <source>Danger Zone</source>

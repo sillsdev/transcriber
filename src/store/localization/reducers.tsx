@@ -632,6 +632,12 @@ const initialState = {
 			"sendNews": "Receive SIL Transcriber and Language Technology news",
 			"sendDigest": "Receive daily digests",
 			"role": "Role",
+			"checkingParatext": "Checking for Paratext account...",
+			"paratextLinked": "Linked to Paratext",
+			"paratextNotLinked": "Not linked to Paratext",
+			"paratextLinking": "Linking to Paratext",
+			"linkingExplained": "Log out and log in with Paratext button",
+			"logout": "Logout",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({

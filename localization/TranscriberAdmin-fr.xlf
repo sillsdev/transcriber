@@ -2968,6 +2968,42 @@
 				<target>Rôle</target>
 			</segment>
 		</unit>
+		<unit id="profile.checkingParatext">
+			<segment>
+				<source>Checking for Paratext account...</source>
+				<target>Vérification du compte Paratext...</target>
+			</segment>
+		</unit>
+		<unit id="profile.paratextLinked">
+			<segment>
+				<source>Linked to Paratext</source>
+				<target>Lié à Paratext</target>
+			</segment>
+		</unit>
+		<unit id="profile.paratextNotLinked">
+			<segment>
+				<source>Not linked to Paratext</source>
+				<target>Non lié à Paratext</target>
+			</segment>
+		</unit>
+		<unit id="profile.paratextLinking">
+			<segment>
+				<source>Linking to Paratext</source>
+				<target>Lien vers Paratext</target>
+			</segment>
+		</unit>
+		<unit id="profile.linkingExplained">
+			<segment>
+				<source>Log out and log in with Paratext button</source>
+				<target>Déconnectez-vous et connectez-vous avec le bouton Paratext</target>
+			</segment>
+		</unit>
+		<unit id="profile.logout">
+			<segment>
+				<source>Logout</source>
+				<target>Déconnexion</target>
+			</segment>
+		</unit>
 		<unit id="deleteExpansion.dangerZone">
 			<segment>
 				<source>Danger Zone</source>

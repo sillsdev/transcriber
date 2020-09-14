@@ -14,6 +14,7 @@ import {
   GroupMembership,
   Invitation,
 } from '../model';
+import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -36,8 +37,10 @@ import {
   Typography,
   Avatar,
   MenuItem,
+  IconButton,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
+import InfoIcon from '@material-ui/icons/Info';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
 import {
@@ -146,10 +149,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IProfileStrings;
+  paratext_username: string; // state.paratext.username
+  paratext_usernameStatus?: IAxiosStatus;
 }
 
 interface IDispatchProps {
   setLanguage: typeof action.setLanguage;
+  getUserName: typeof action.getUserName;
 }
 
 interface IRecordProps {
@@ -172,13 +178,15 @@ interface IProps
 }
 
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, setLanguage } = props;
+  const { users, t, noMargin, finishAdd, setLanguage, auth } = props;
+  const { paratext_username, paratext_usernameStatus, getUserName } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
+  const [errorReporter] = useGlobal('errorReporter');
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
@@ -200,6 +208,8 @@ export function Profile(props: IProps) {
   const [locked, setLocked] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dupName, setDupName] = useState(false);
+  const [hasParatext, setHasParatext] = useState(false);
+  const [howToLink, setHowToLink] = useState(false);
   const [view, setView] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -464,6 +474,18 @@ export function Profile(props: IProps) {
     setDeleteItem('');
   };
 
+  const handleHowTo = () => {
+    setHowToLink(true);
+  };
+
+  const handleLogout = () => {
+    setView('Logout');
+  };
+
+  const handleNoLinkSetup = () => {
+    setHowToLink(false);
+  };
+
   const langName = (loc: string, opt: string): string => {
     return ldml[loc].ldml.localeDisplayNames.languages.language
       .filter((d) => d.type === opt)
@@ -569,6 +591,16 @@ export function Profile(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timezone]);
 
+  useEffect(() => {
+    if (!isElectron) {
+      if (!paratext_usernameStatus) {
+        getUserName(auth, errorReporter, t.checkingParatext);
+      }
+      setHasParatext(paratext_username !== '');
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [paratext_username, paratext_usernameStatus]);
+
   const userNotComplete = () =>
     currentUser === undefined ||
     currentUser.attributes?.name === currentUser.attributes?.email;
@@ -597,6 +629,22 @@ export function Profile(props: IProps) {
                 </Typography>
               )}
               <Typography className={classes.caption}>{email || ''}</Typography>
+              <Typography
+                className={clsx({
+                  [classes.caption]: !paratext_usernameStatus?.errStatus || 0,
+                })}
+              >
+                {hasParatext && paratext_usernameStatus?.complete
+                  ? t.paratextLinked
+                  : paratext_usernameStatus?.errStatus || 0
+                  ? t.paratextNotLinked
+                  : paratext_usernameStatus?.statusMsg || t.checkingParatext}
+                {(paratext_usernameStatus?.errStatus || 0) > 0 && (
+                  <IconButton color="primary" onClick={handleHowTo}>
+                    <InfoIcon />
+                  </IconButton>
+                )}
+              </Typography>
             </StyledGrid>
             <Grid item xs={12} md={6}>
               {editId && /Add/i.test(editId) ? (
@@ -851,13 +899,21 @@ export function Profile(props: IProps) {
               />
             )}
         </div>
-        {deleteItem !== '' ? (
+        {deleteItem !== '' && (
           <Confirm
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
           />
-        ) : (
-          <></>
+        )}
+        {howToLink && (
+          <Confirm
+            title={t.paratextLinking}
+            text={t.linkingExplained}
+            yes={t.logout}
+            no={t.cancel}
+            yesResponse={handleLogout}
+            noResponse={handleNoLinkSetup}
+          />
         )}
       </Paper>
     </div>
@@ -866,6 +922,8 @@ export function Profile(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'profile' }),
+  paratext_username: state.paratext.username,
+  paratext_usernameStatus: state.paratext.usernameStatus,
 });
 
 const mapRecordsToProps = {
@@ -876,6 +934,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       setLanguage: action.setLanguage,
+      getUserName: action.getUserName,
     },
     dispatch
   ),

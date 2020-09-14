@@ -3477,6 +3477,48 @@
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="profile.checkingParatext">
+        		<source>Checking for Paratext account...</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.paratextLinked">
+        		<source>Linked to Paratext</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.paratextNotLinked">
+        		<source>Not linked to Paratext</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.paratextLinking">
+        		<source>Linking to Paratext</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.linkingExplained">
+        		<source>Log out and log in with Paratext button</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.logout">
+        		<source>Logout</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="deleteExpansion.dangerZone">
         		<source>Danger Zone</source>
         		<target/>
