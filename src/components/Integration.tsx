@@ -32,6 +32,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SyncIcon from '@material-ui/icons/Sync';
 import CheckIcon from '@material-ui/icons/Check';
 import { useSnackBar } from '../hoc/SnackBar';
+import ParatextLogo from '../control/ParatextLogo';
+import RenderLogo from '../control/RenderLogo';
 import { remoteIdNum, related } from '../crud';
 import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
@@ -516,7 +518,10 @@ export function IntegrationPanel(props: IProps) {
           aria-controls={t.paratext}
           id={t.paratext}
         >
-          <Typography className={classes.heading}>{t.paratext}</Typography>
+          <Typography className={classes.heading}>
+            <ParatextLogo />
+            {'\u00A0' + t.paratext}
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.panel}>
           <List dense component="div">
@@ -684,7 +689,10 @@ export function IntegrationPanel(props: IProps) {
           aria-controls={t.paratextLocal}
           id={t.paratextLocal}
         >
-          <Typography className={classes.heading}>{t.paratextLocal}</Typography>
+          <Typography className={classes.heading}>
+            <ParatextLogo />
+            {'\u00A0' + t.paratextLocal}
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.panel}>
           <List dense component="div">
@@ -812,7 +820,10 @@ export function IntegrationPanel(props: IProps) {
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography className={classes.heading}>{t.render}</Typography>
+          <Typography className={classes.heading}>
+            <RenderLogo />
+            {'\u00A0' + t.render}
+          </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>{'Not Implemented'}</Typography>

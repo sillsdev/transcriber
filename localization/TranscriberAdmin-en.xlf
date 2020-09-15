@@ -2994,7 +2994,7 @@
       </unit>
       <unit id="profile.paratextNotLinked">
          <segment>
-            <source>Not linked to Paratext</source>
+            <source>Link to Paratext</source>
             <target/>
          </segment>
       </unit>

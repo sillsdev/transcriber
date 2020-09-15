@@ -20,7 +20,8 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SettingsIcon from '@material-ui/icons/Settings';
 // import SyncIcon from '@material-ui/icons/Sync';
-import IntegrationIcon from '@material-ui/icons/SyncAlt';
+// import IntegrationIcon from '@material-ui/icons/SyncAlt';
+import ParatextLogo from '../../control/ParatextLogo';
 import ImportIcon from '@material-ui/icons/CloudUpload';
 import ExportIcon from '@material-ui/icons/CloudDownload';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -131,7 +132,7 @@ export function ProjectMenu(props: IProps) {
         </StyledMenuItem> */}
         <StyledMenuItem onClick={handle('integration')}>
           <ListItemIcon>
-            <IntegrationIcon />
+            <ParatextLogo />
           </ListItemIcon>
           <ListItemText primary={tpb.integrations} />
         </StyledMenuItem>

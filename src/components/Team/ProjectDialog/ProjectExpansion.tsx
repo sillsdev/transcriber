@@ -11,7 +11,7 @@ import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
 import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
-import renderLogo from '../../../assets/renderIcon.png';
+import RenderLogo from '../../../control/RenderLogo';
 import { useSnackBar } from '../../../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -67,10 +67,6 @@ export function ProjectExpansion(props: IProjectDialogState) {
     newOptions.push(val);
     setOptions(newOptions);
     handleOrgByChange(val);
-  };
-
-  const RenderLogo = (props: {}) => {
-    return <img src={renderLogo} alt="Render Logo" className={classes.logo} />;
   };
 
   const decoration = {

@@ -38,11 +38,13 @@ import {
   Avatar,
   MenuItem,
   IconButton,
+  Link,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import InfoIcon from '@material-ui/icons/Info';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
+import ParatextIcon from '../control/ParatextLogo';
 import {
   remoteId,
   related,
@@ -51,7 +53,13 @@ import {
   getMbrRoleRec,
   allUsersRec,
 } from '../crud';
-import { makeAbbr, uiLang, localeDefault, useRemoteSave } from '../utils';
+import {
+  makeAbbr,
+  uiLang,
+  localeDefault,
+  useRemoteSave,
+  getParatextDataPath,
+} from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
@@ -214,6 +222,7 @@ export function Profile(props: IProps) {
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
+  const [ptPath, setPtPath] = React.useState('');
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -508,6 +517,11 @@ export function Profile(props: IProps) {
   const StyledGrid = withStyles({ item: { padding: '0 30px' } })(Grid);
 
   useEffect(() => {
+    if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
+
+  useEffect(() => {
     let userRec: User = {
       type: 'user',
       id: '',
@@ -634,15 +648,22 @@ export function Profile(props: IProps) {
                   [classes.caption]: !paratext_usernameStatus?.errStatus || 0,
                 })}
               >
-                {hasParatext && paratext_usernameStatus?.complete
-                  ? t.paratextLinked
-                  : paratext_usernameStatus?.errStatus || 0
-                  ? t.paratextNotLinked
-                  : paratext_usernameStatus?.statusMsg || t.checkingParatext}
-                {(paratext_usernameStatus?.errStatus || 0) > 0 && (
-                  <IconButton color="primary" onClick={handleHowTo}>
-                    <InfoIcon />
-                  </IconButton>
+                <ParatextIcon />
+                {'\u00A0'}
+                {paratext_usernameStatus?.errStatus || 0 ? (
+                  <>
+                    <Link href="#" onClick={handleHowTo}>
+                      {t.paratextNotLinked}
+                    </Link>
+                    <IconButton color="primary" onClick={handleHowTo}>
+                      <InfoIcon />
+                    </IconButton>
+                  </>
+                ) : (hasParatext && paratext_usernameStatus?.complete) ||
+                  ptPath ? (
+                  t.paratextLinked
+                ) : (
+                  paratext_usernameStatus?.statusMsg || t.checkingParatext
                 )}
               </Typography>
             </StyledGrid>

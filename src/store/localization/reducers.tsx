@@ -634,7 +634,7 @@ const initialState = {
 			"role": "Role",
 			"checkingParatext": "Checking for Paratext account...",
 			"paratextLinked": "Linked to Paratext",
-			"paratextNotLinked": "Not linked to Paratext",
+			"paratextNotLinked": "Link to Paratext",
 			"paratextLinking": "Linking to Paratext",
 			"linkingExplained": "Log out and log in with Paratext button",
 			"logout": "Logout",

@@ -3492,7 +3492,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.paratextNotLinked">
-        		<source>Not linked to Paratext</source>
+        		<source>Link to Paratext</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
