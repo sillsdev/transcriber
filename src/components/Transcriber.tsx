@@ -303,6 +303,7 @@ export function Transcriber(props: IProps) {
       )
     );
     pass.attributes.lastComment = '';
+    setLastSaved(currentDateTime());
   };
   const handleRejectCancel = () => setRejectVisible(false);
 
@@ -377,6 +378,7 @@ export function Transcriber(props: IProps) {
         setComment('');
         loadHistory();
         setChanged(false);
+        setLastSaved(currentDateTime());
       } else {
         logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
       }
@@ -531,6 +533,7 @@ export function Transcriber(props: IProps) {
         )
       );
       setComment('');
+      setLastSaved(currentDateTime());
     }
   };
   const handleKey = (e: React.KeyboardEvent) => {
@@ -616,7 +619,7 @@ export function Transcriber(props: IProps) {
       setTranscriptionIn(transcription);
       setTextValue(transcription);
       setDefaultPosition(attr.position);
-      setLastSaved(attr.dateUpdated);
+      setLastSaved(attr.dateUpdated); //this always wins over the passage dateUpdated because we just got a url for it and updated the record
       //focus on player
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
