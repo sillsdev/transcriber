@@ -30,7 +30,8 @@ export const useOrganizedBy = () => {
     [t.pericopes]: 'pericope',
   };
 
-  const splitLocalized = (val: string, singular: boolean) => {
+  const splitLocalized = (val: string, singular?: boolean) => {
+    if (singular === undefined) return val;
     const index = (val || '').indexOf('/');
     if (index > 0) {
       if (singular) return val.substr(0, index);
@@ -39,7 +40,7 @@ export const useOrganizedBy = () => {
     return val || '';
   };
 
-  const localizedOrganizedBy = (val: string, singular: boolean) => {
+  const localizedOrganizedBy = (val: string, singular?: boolean) => {
     if (val === null) val = 'section';
     if (val in switchToLocal)
       return splitLocalized(switchToLocal[val], singular);

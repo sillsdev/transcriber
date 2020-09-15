@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import {
   ExpansionPanel,
@@ -13,6 +13,7 @@ import { EditorSettings } from './EditorSettings';
 import { Options } from '.';
 import RenderLogo from '../../../control/RenderLogo';
 import { useSnackBar } from '../../../hoc/SnackBar';
+import { useOrganizedBy } from '../../../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,6 +40,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
   const classes = useStyles();
   const { state, setState } = props;
   const { organizedBy } = state;
+  const { localizedOrganizedBy, fromLocalizedOrganizedBy } = useOrganizedBy();
+  const [localOrgBy, setLocalOrgBy] = useState('');
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
   const [options, setOptions] = React.useState([
@@ -55,8 +58,15 @@ export function ProjectExpansion(props: IProjectDialogState) {
   };
 
   const handleOrgByChange = (val: string) => {
-    setState((state) => ({ ...state, organizedBy: val }));
+    setState((state) => ({
+      ...state,
+      organizedBy: fromLocalizedOrganizedBy(val),
+    }));
   };
+
+  useEffect(() => {
+    setLocalOrgBy(localizedOrganizedBy(organizedBy, undefined));
+  }, [localizedOrganizedBy, organizedBy]);
 
   const handleAddOption = (val: string) => {
     const newOptions = options.map((i) => i);
@@ -97,7 +107,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
           />
           <Options
             label={t.organizedBy}
-            defaultValue={organizedBy}
+            defaultValue={localOrgBy}
             options={options}
             onChange={handleOrgByChange}
             addOption={options.length === 5 ? handleAddOption : undefined}
