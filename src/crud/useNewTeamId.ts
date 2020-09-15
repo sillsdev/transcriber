@@ -24,16 +24,16 @@ export const useNewTeamId = (props: IProps) => {
 
   const newPersonal = async () => {
     orgRef.current = undefined;
-    const users = (await memory.query((q: QueryBuilder) =>
+    const users = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('user')
-    )) as User[];
+    ) as User[];
     const userRecs = users.filter((u) => u.id === user);
     const userName =
       userRecs.length > 0 ? userRecs[0]?.attributes?.name : 'user';
     const personalOrg = `>${userName} Personal<`;
-    const orgs = (await memory.query((q: QueryBuilder) =>
+    const orgs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
-    )) as Organization[];
+    ) as Organization[];
     const orgRecs = orgs.filter((o) => o.attributes.name === personalOrg);
     if (orgRecs.length > 0) setOrganization(orgRecs[0].id);
     else

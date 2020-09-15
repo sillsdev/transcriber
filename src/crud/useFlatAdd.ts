@@ -12,9 +12,9 @@ export const useFlatAdd = () => {
     mediaRemoteIds: string[],
     setComplete?: (amt: number) => void
   ) => {
-    const mediaRecs = (await memory.query((q: QueryBuilder) =>
+    const mediaRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile')
-    )) as MediaFile[];
+    ) as MediaFile[];
     const userId = remoteIdNum('user', user, memory.keyMap);
     const total = mediaRemoteIds.length;
     for (let seq = 0; seq < total; seq++) {

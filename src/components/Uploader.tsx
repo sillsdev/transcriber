@@ -94,16 +94,17 @@ export const Uploader = (props: IProps) => {
   const getPlanId = () =>
     remoteIdNum('plan', planIdRef.current || plan, memory.keyMap);
 
-  const pullPlanMedia = () => {
+  const pullPlanMedia = async () => {
     const planId = getPlanId();
     if (planId !== undefined) {
       var filterrec = {
         attribute: 'plan-id',
         value: planId,
       };
-      remote
-        .pull((q) => q.findRecords('mediafile').filter(filterrec))
-        .then((transform) => memory.sync(transform));
+      var t = await remote.pull((q) =>
+        q.findRecords('mediafile').filter(filterrec)
+      );
+      await memory.sync(t);
     }
   };
 
@@ -117,8 +118,7 @@ export const Uploader = (props: IProps) => {
     if (next < uploadList.length && !status.canceled) {
       doUpload(next);
     } else {
-      finishMessage();
-      pullPlanMedia();
+      pullPlanMedia().then(() => finishMessage());
     }
   };
 
