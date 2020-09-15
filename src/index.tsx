@@ -72,7 +72,7 @@ setGlobal({
   backup,
   bucket: undefined,
   remote: undefined,
-  remoteBusy: false,
+  remoteBusy: true, //prevent datachanges until after login
   doSave: false,
   saveResult: undefined,
   snackMessage: <></>,

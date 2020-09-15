@@ -134,6 +134,7 @@ export default function DataChanges(props: IProps) {
   const { auth, children } = props;
   const [remote] = useGlobal('remote');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const [user] = useGlobal('user');
   const [doSave] = useGlobal('doSave');
   const [fingerprint] = useGlobal('fingerprint');
   const [memory] = useGlobal('memory');
@@ -153,7 +154,8 @@ export default function DataChanges(props: IProps) {
   }, [remote, auth]);
 
   const updateBusy = () => {
-    const checkBusy = remote && remote.requestQueue.length !== 0;
+    const checkBusy =
+      user === '' || (remote && remote.requestQueue.length !== 0);
     if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = () => {
