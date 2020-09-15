@@ -3010,9 +3010,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.installParatext">
+         <segment>
+            <source>Install Paratext to be able to sync.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.logout">
          <segment>
             <source>Logout</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.close">
+         <segment>
+            <source>Close</source>
             <target/>
          </segment>
       </unit>

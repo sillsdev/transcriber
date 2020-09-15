@@ -637,7 +637,9 @@ const initialState = {
 			"paratextNotLinked": "Link to Paratext",
 			"paratextLinking": "Linking to Paratext",
 			"linkingExplained": "Log out and log in with Paratext button",
+			"installParatext": "Install Paratext to be able to sync.",
 			"logout": "Logout",
+			"close": "Close",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({

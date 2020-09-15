@@ -2998,10 +2998,22 @@
 				<target>Déconnectez-vous et connectez-vous avec le bouton Paratext</target>
 			</segment>
 		</unit>
+		<unit id="profile.installParatext">
+			<segment>
+				<source>Install Paratext to be able to sync.</source>
+				<target>Installez Paratext pour pouvoir synchroniser.</target>
+			</segment>
+		</unit>
 		<unit id="profile.logout">
 			<segment>
 				<source>Logout</source>
 				<target>Déconnexion</target>
+			</segment>
+		</unit>
+		<unit id="profile.close">
+			<segment>
+				<source>Close</source>
+				<target>Fermer</target>
 			</segment>
 		</unit>
 		<unit id="deleteExpansion.dangerZone">

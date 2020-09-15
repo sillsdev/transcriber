@@ -3512,8 +3512,22 @@
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="profile.installParatext">
+        		<source>Install Paratext to be able to sync.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="profile.logout">
         		<source>Logout</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Profile.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="profile.close">
+        		<source>Close</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>

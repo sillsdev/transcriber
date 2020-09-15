@@ -599,7 +599,9 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "paratextNotLinked": string;
     "paratextLinking": string;
     "linkingExplained": string;
+    "installParatext": string;
     "logout": string;
+    "close": string;
 };
 
 export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {

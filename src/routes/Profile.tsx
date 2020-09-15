@@ -650,11 +650,11 @@ export function Profile(props: IProps) {
               >
                 <ParatextIcon />
                 {'\u00A0'}
-                {paratext_usernameStatus?.errStatus || 0 ? (
+                {paratext_usernameStatus?.errStatus ||
+                0 ||
+                (isElectron && !ptPath) ? (
                   <>
-                    <Link href="#" onClick={handleHowTo}>
-                      {t.paratextNotLinked}
-                    </Link>
+                    <Link onClick={handleHowTo}>{t.paratextNotLinked}</Link>
                     <IconButton color="primary" onClick={handleHowTo}>
                       <InfoIcon />
                     </IconButton>
@@ -929,9 +929,9 @@ export function Profile(props: IProps) {
         {howToLink && (
           <Confirm
             title={t.paratextLinking}
-            text={t.linkingExplained}
-            yes={t.logout}
-            no={t.cancel}
+            text={isElectron ? t.installParatext : t.linkingExplained}
+            yes={isElectron ? '' : t.logout}
+            no={isElectron ? t.close : t.cancel}
             yesResponse={handleLogout}
             noResponse={handleNoLinkSetup}
           />
