@@ -252,8 +252,12 @@ const getMedia = (
   return rowData;
 };
 
-const isAttached = (p: Passage, media: MediaFile[]) => {
-  return media.filter((m) => related(m, 'passage') === p.id).length > 0;
+const isAttached = (p: Passage, media: MediaFile[], attachMap: IAttachMap) => {
+  return (
+    media.filter(
+      (m) => related(m, 'passage') === p.id && attachMap.hasOwnProperty(m.id)
+    ).length > 0
+  );
 };
 
 const pad = (text: number) => ('00' + text).slice(-2);
@@ -263,6 +267,7 @@ const getPassages = (
   mediaFiles: Array<MediaFile>,
   passages: Array<Passage>,
   sections: Array<Section>,
+  attachMap: IAttachMap,
   allBookData: BookName[]
 ) => {
   const prowData: IPRow[] = [];
@@ -281,7 +286,7 @@ const getPassages = (
             id: passage.id,
             section: getSection([section]),
             reference: getReference([passage], allBookData),
-            attached: isAttached(passage, mediaFiles)
+            attached: isAttached(passage, mediaFiles, attachMap)
               ? StatusL.Yes
               : StatusL.No,
             sort: `${pad(section.attributes.sequencenum)}.${pad(
@@ -704,6 +709,7 @@ export function MediaTab(props: IProps) {
       mediaFiles,
       passages,
       sections,
+      attachMap,
       allBookData
     );
     const pasAttach = new Set<number>();
