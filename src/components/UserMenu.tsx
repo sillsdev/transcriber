@@ -65,7 +65,6 @@ interface IProps extends IStateProps {
 
 export function UserMenu(props: IProps) {
   const { action, t } = props;
-  const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
 
@@ -98,20 +97,21 @@ export function UserMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handleAction('Close')}
       >
-        <StyledMenuItem>
-          <ListItemText
-            primary={
-              <div style={roleStyle}>
-                <Typography>{t.orgRole + ' ' + orgRole}</Typography>
-                <Typography>
-                  {t.projRole +
-                    ' ' +
-                    (projRole === 'admin' ? t.owner : projRole)}
-                </Typography>
-              </div>
-            }
-          />
-        </StyledMenuItem>
+        {projRole !== '' && (
+          <StyledMenuItem>
+            <ListItemText
+              primary={
+                <div style={roleStyle}>
+                  <Typography>
+                    {t.projRole +
+                      ' ' +
+                      (projRole === 'admin' ? t.owner : projRole)}
+                  </Typography>
+                </div>
+              }
+            />
+          </StyledMenuItem>
+        )}
 
         <StyledMenuItem onClick={handleAction('Profile')}>
           <ListItemIcon>
