@@ -58,7 +58,12 @@ import {
   useOrganizedBy,
 } from '../crud';
 import { useGlobal } from 'reactn';
-import { dateCompare, numCompare, localeDefault } from '../utils';
+import {
+  dateCompare,
+  numCompare,
+  localeDefault,
+  useRemoteSave,
+} from '../utils';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import MediaPlayer from './MediaPlayer';
@@ -359,7 +364,9 @@ export function MediaTab(props: IProps) {
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [, setTab] = useGlobal('tab');
-
+  const [, setChanged] = useGlobal('changed');
+  const [doSave] = useGlobal('doSave');
+  const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [errorReporter] = useGlobal('errorReporter');
   const { showMessage } = useSnackBar();
@@ -559,6 +566,7 @@ export function MediaTab(props: IProps) {
     setAttachMap({});
     showMessage(t.savingComplete);
     inProcess.current = false;
+    saveCompleted('');
   };
 
   const handleDetach = (mediaId: string) => () => {
@@ -569,10 +577,12 @@ export function MediaTab(props: IProps) {
       const newMap = { ...attachMap };
       delete newMap[mediaId];
       setAttachMap(newMap);
+      setChanged(true);
     } else {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
         detachPassage(passId, mediaId);
+        setChanged(true);
       } else {
         showMessage(t.noPassageAttached.replace('{0}', data[mRow].fileName));
       }
@@ -591,6 +601,7 @@ export function MediaTab(props: IProps) {
     setMCheck(-1);
     setPCheck(-1);
     setCheck([]);
+    setChanged(true);
   };
 
   const handleMCheck = (checks: Array<number>) => {
@@ -626,6 +637,13 @@ export function MediaTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlOpen]);
+
+  React.useEffect(() => {
+    if (doSave && !inProcess.current) {
+      handleSave();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [doSave]);
 
   const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
   const noPlanNoFilt = ['planName', 'detach'];
