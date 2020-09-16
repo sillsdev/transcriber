@@ -44,8 +44,6 @@ export const ProjectTags = (props: IProjectDialogState) => {
       checks = { ...checks, [localizeProjectTag(k, t)]: tags[k] };
       return k;
     });
-    console.log(check);
-    console.log(tags, checks);
     setCheck(checks);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tags]);

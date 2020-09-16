@@ -40,7 +40,7 @@ interface IProps extends IStateProps {
   defaultValue?: string;
   options: string[];
   onChange: (option: string) => void;
-  addOption?: (option: string) => void;
+  addOption?: (option: string) => boolean;
   decorations?: IDecorations;
   required?: boolean;
 }
@@ -71,11 +71,13 @@ const OptionCtrl = (props: IProps) => {
   };
 
   const addOther = () => {
-    if (other !== '') {
-      const newTag = other || '';
-      if (!options.includes(newTag)) {
-        addOption && addOption(newTag);
-      }
+    const newTag = other || '';
+    if (
+      newTag !== '' &&
+      !options.includes(newTag) &&
+      addOption &&
+      addOption(newTag)
+    ) {
       onChange(newTag);
       setOther('');
       return true;
@@ -120,6 +122,7 @@ const OptionCtrl = (props: IProps) => {
           <FormControlLabel
             key="99"
             control={<Radio />}
+            disabled={other === ''}
             label={
               <TextField
                 id="other-option"

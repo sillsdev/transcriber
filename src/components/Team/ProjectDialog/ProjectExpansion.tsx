@@ -65,18 +65,24 @@ export function ProjectExpansion(props: IProjectDialogState) {
   };
 
   useEffect(() => {
-    setLocalOrgBy(localizedOrganizedBy(organizedBy, undefined));
-  }, [localizedOrganizedBy, organizedBy]);
+    const addOption = (val: string) => {
+      const newOptions = options.map((i) => i);
+      newOptions.push(val);
+      setOptions(newOptions);
+    };
+
+    var optionVal = localizedOrganizedBy(organizedBy, undefined);
+    if (!options.includes(optionVal)) addOption(optionVal);
+    setLocalOrgBy(optionVal);
+  }, [localizedOrganizedBy, options, organizedBy]);
 
   const handleAddOption = (val: string) => {
-    const newOptions = options.map((i) => i);
     if (val.indexOf('/') === -1) {
       showMessage(t.correctformat);
-      return;
+      return false;
     }
-    newOptions.push(val);
-    setOptions(newOptions);
     handleOrgByChange(val);
+    return true;
   };
 
   const decoration = {

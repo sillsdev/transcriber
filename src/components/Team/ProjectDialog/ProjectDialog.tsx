@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ITag, IVProjectStrings } from '../../../model';
 import {
   Button,
@@ -58,15 +58,16 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
   const classes = useStyles();
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
-  initState.organizedBy = t.sections;
+  initState.organizedBy = 'section';
   initState.vProjectStrings = t;
-  const [state, setState] = React.useState(
-    mode === Mode.add || !values ? { ...initState } : { ...values }
-  );
+  const [state, setState] = React.useState({ ...initState });
   const { name, type, bcp47 } = state;
 
+  useEffect(() => {
+    setState(mode === Mode.add || !values ? { ...initState } : { ...values });
+  }, [values, mode]);
+
   const handleClose = () => {
-    setState({ ...initState });
     if (onOpen) onOpen(false);
     if (onCancel) onCancel();
   };
