@@ -590,22 +590,22 @@ export function ScriptureTable(props: IProps) {
           rows
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map((row) =>
-              row.map((col, colIndex) =>
-                isValidNumber(row[cols.SectionSeq])
+              row.map((col, colIndex) => 
+                isValidNumber(row[cols.PassageSeq]) && colIndex === cols.Book 
+                ? lookupBook(col) 
+                : isValidNumber(row[cols.SectionSeq])
                   ? (inlinePassages &&
                       isValidNumber(row[cols.PassageSeq]) &&
                       parseInt(row[cols.PassageSeq]) === 1) ||
                     colIndex < cols.PassageSeq
                     ? col
                     : ''
-                  : colIndex >= cols.PassageSeq
-                  ? colIndex !== cols.Book
+                  : colIndex >= cols.PassageSeq //not a section row
                     ? col
-                    : lookupBook(col)
-                  : ''
+                    : ''
               )
             )
-        ),
+        )
       ]);
       setInData([
         ...inData.concat(
@@ -626,6 +626,7 @@ export function ScriptureTable(props: IProps) {
               if (isValidNumber(row[cols.SectionSeq])) {
                 var newid = {
                   sectionId: newSectionId(parseInt(row[cols.SectionSeq])),
+                  mediaId: '',
                 } as IRowInfo;
                 if (inlinePassages && isValidNumber(row[cols.PassageSeq]))
                   newid.passageId = newPassageId(
