@@ -145,13 +145,14 @@ export default function DataChanges(props: IProps) {
   useEffect(() => {
     const defaultBusyDelay = 1000;
     const defaultDataDelay = 1000 * 100;
+    if (!remote) setBusy(false);
     setBusyDelay(
       remote && auth && auth.isAuthenticated ? defaultBusyDelay : null
     );
     setDataDelay(
       remote && auth && auth.isAuthenticated ? defaultDataDelay : null
     );
-  }, [remote, auth]);
+  }, [remote, auth, setBusy]);
 
   const updateBusy = () => {
     const checkBusy =
