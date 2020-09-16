@@ -619,6 +619,13 @@ export function Profile(props: IProps) {
     currentUser === undefined ||
     currentUser.attributes?.name === currentUser.attributes?.email;
 
+  const requiredComplete = () =>
+    (name || '') !== '' &&
+    (family || '') !== '' &&
+    (given || '') !== '' &&
+    (timezone || '') !== '' &&
+    (locale || '') !== '';
+
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Access/i.test(view)) return <Redirect to="/" />;
   if (/Team/i.test(view)) return <Redirect to="/team" />;
@@ -711,6 +718,7 @@ export function Profile(props: IProps) {
                         value={given || ''}
                         onChange={handleGivenChange}
                         margin="normal"
+                        required
                         variant="filled"
                       />
                     }
@@ -725,6 +733,7 @@ export function Profile(props: IProps) {
                         value={family || ''}
                         onChange={handleFamilyChange}
                         margin="normal"
+                        required
                         variant="filled"
                       />
                     }
@@ -896,7 +905,7 @@ export function Profile(props: IProps) {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  disabled={name === '' || !changed || dupName}
+                  disabled={!requiredComplete() || !changed || dupName}
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
                   {editId && /Add/i.test(editId)
