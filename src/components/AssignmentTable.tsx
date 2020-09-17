@@ -349,7 +349,6 @@ export function AssignmentTable(props: IProps) {
       />
       {confirmAction !== '' ? (
         <Confirm
-          title={t.delete}
           text={confirmAction}
           yesResponse={handleRemoveAssignmentsConfirmed}
           noResponse={handleRemoveAssignmentsRefused}
