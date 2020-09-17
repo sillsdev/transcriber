@@ -178,11 +178,6 @@ interface IProps
   auth: Auth;
   noMargin?: boolean;
   finishAdd?: () => void;
-  history: {
-    location: {
-      pathname: string;
-    };
-  };
 }
 
 export function Profile(props: IProps) {

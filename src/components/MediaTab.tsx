@@ -45,6 +45,7 @@ import ShapingTable from './ShapingTable';
 import Busy from './Busy';
 import Template from '../control/template';
 import Auth from '../auth/Auth';
+import { isElectron } from '../api-variable';
 import moment from 'moment';
 
 import {
@@ -1062,7 +1063,7 @@ export function MediaTab(props: IProps) {
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {!attachVisible && (
+                {!attachVisible && !isElectron && (
                   <Button
                     key="upload"
                     aria-label={ts.uploadMediaPlural}
@@ -1075,7 +1076,7 @@ export function MediaTab(props: IProps) {
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {!attachVisible && (
+                {!attachVisible && !isElectron && (
                   <>
                     <Button
                       key="action"

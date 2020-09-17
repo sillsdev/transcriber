@@ -20,6 +20,7 @@ import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
+import { isElectron } from '../api-variable';
 import { withData } from '../mods/react-orbitjs';
 import { HeadHeight } from '../App';
 import { related, useOrganizedBy } from '../crud';
@@ -165,6 +166,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
+            disabled={isElectron}
           />
           <Tab
             label={
@@ -177,6 +179,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
+            disabled={isElectron}
           />
           <Tab
             label={
