@@ -140,8 +140,8 @@ const initialState = {
 	}),
 	"assignSection": new LocalizedStrings({
 		"en": {
-			"title": "Assign {0} to Users",
-			"users": "Users",
+			"title": "Assign {0} to Members",
+			"users": "Members",
 			"role": "Role",
 			"assignAs": "Assign As",
 			"close": "Close",
@@ -220,7 +220,7 @@ const initialState = {
 			"silTranscriber": "SIL Transcriber",
 			"online": "Online Status",
 			"search": "Search…",
-			"usersAndGroups": "Users and Groups",
+			"usersAndGroups": "Members and Groups",
 			"passages": "Passages",
 			"media": "Media",
 			"myTasks": "My Tasks",
@@ -351,7 +351,7 @@ const initialState = {
 	}),
 	"groupTabs": new LocalizedStrings({
 		"en": {
-			"users": "Users",
+			"users": "Members",
 			"groups": "Groups",
 			"roles": "Roles",
 			"invitations": "Invitations",
@@ -383,7 +383,7 @@ const initialState = {
 			"invalidRole": "Invalid Role. Member not added.",
 			"loadingTable": "Loading data",
 			"noDeleteInfo": "This role is included in a higher role and cannot be deleted.",
-			"noDeleteAllUsersInfo": "Cannot delete users from the All Users group",
+			"noDeleteAllUsersInfo": "Cannot delete members from the All Members group",
 		}
 	}),
 	"shapingTable": new LocalizedStrings({
@@ -435,7 +435,7 @@ const initialState = {
 			"role": "Role",
 			"organization": "Team",
 			"selectOrgRole": "Select Team Role",
-			"allusersgroup": "All Users Group",
+			"allusersgroup": "All Members Group",
 			"groups": "Groups",
 			"group": "Group",
 			"allUsersProjects": "Projects",
@@ -467,7 +467,7 @@ const initialState = {
 		"en": {
 			"email": "Email",
 			"role": "Team Role",
-			"allUsers": "All Users",
+			"allUsers": "All Members",
 			"group": "Group",
 			"accepted": "Accepted",
 			"invite": "Invite",

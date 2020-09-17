@@ -568,14 +568,14 @@
 		</unit>
 		<unit id="assignSection.title">
 			<segment>
-				<source>Assign {0} to Users</source>
-				<target>Assigner {0} aux Utilisatrices</target>
+				<source>Assign {0} to Members</source>
+				<target>Assigner {0} aux membres</target>
 			</segment>
 		</unit>
 		<unit id="assignSection.users">
 			<segment>
-				<source>Users</source>
-				<target>Utilisatrices</target>
+				<source>Members</source>
+				<target>Membres</target>
 			</segment>
 		</unit>
 		<unit id="assignSection.role">
@@ -952,8 +952,8 @@
 		</unit>
 		<unit id="main.usersAndGroups">
 			<segment>
-				<source>Users and Groups</source>
-				<target>Utilisatrices et Groupes</target>
+				<source>Members and Groups</source>
+				<target>Membres et Groupes</target>
 			</segment>
 		</unit>
 		<unit id="main.passages">
@@ -1624,8 +1624,8 @@
 		</unit>
 		<unit id="groupTabs.users">
 			<segment>
-				<source>Users</source>
-				<target>Utilisateurs</target>
+				<source>Members</source>
+				<target>Membres</target>
 			</segment>
 		</unit>
 		<unit id="groupTabs.groups">
@@ -1792,8 +1792,8 @@
       </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
          <segment>
-            <source>Cannot delete users from the All Users group</source>
-            <target>Impossible de supprimer des utilisateurs du groupe Tous les utilisateurs</target>
+            <source>Cannot delete users from the All Members group</source>
+         	<target>Impossible de supprimer des membres du groupe Tous les utilisateurs</target>
          </segment>
       </unit>
 		<unit id="shapingTable.NoColumns">
@@ -1978,8 +1978,8 @@
       </unit>
 	  <unit id="invite.allusersgroup">
          <segment>
-            <source>All Users Group</source>
-            <target>Groupe de tous les Utilisateurs</target>
+            <source>All Members Group</source>
+         	<target>Groupe de tous les membres</target>
          </segment>
       </unit>
       <unit id="invite.groups">
@@ -2147,8 +2147,8 @@
       </unit>
       <unit id="invitationTable.allUsers">
          <segment>
-            <source>All Users</source>
-            <target>Groupe de tous les Utilisateurs</target>
+            <source>All Members</source>
+         	<target>Groupe de tous les membres</target>
          </segment>
       </unit>
       <unit id="invitationTable.group">

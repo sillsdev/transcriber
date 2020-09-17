@@ -678,14 +678,14 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="assignSection.title">
-                <source>Assign {0} to Users</source>
+                <source>Assign {0} to Members</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">AssignSection.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="assignSection.users">
-                <source>Users</source>
+                <source>Members</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">AssignSection.tsx</context>
@@ -1126,7 +1126,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="main.usersAndGroups">
-                <source>Users and Groups</source>
+                <source>Members and Groups</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>
@@ -1903,7 +1903,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="groupTabs.users">
-                <source>Users</source>
+                <source>Members</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupTabs.tsx</context>
@@ -2099,7 +2099,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupSettings.noDeleteAllUsersInfo">
-                <source>Cannot delete users from the All Users group</source>
+                <source>Cannot delete members from the All Members group</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2323,7 +2323,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invite.allusersgroup">
-				<source>All Users Group</source>
+				<source>All Members Group</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Invite.tsx</context>
@@ -2519,7 +2519,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invitationTable.allUsers">
-				<source>All Users</source>
+				<source>All Members</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">InvitationTable.tsx</context>

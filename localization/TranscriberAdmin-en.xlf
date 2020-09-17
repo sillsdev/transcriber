@@ -582,13 +582,13 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0} to Users</source>
+            <source>Assign {0} to Members</source>
             <target/>
          </segment>
       </unit>
       <unit id="assignSection.users">
          <segment>
-            <source>Users</source>
+            <source>Members</source>
             <target/>
          </segment>
       </unit>
@@ -966,7 +966,7 @@
       </unit>
       <unit id="main.usersAndGroups">
          <segment>
-            <source>Users and Groups</source>
+            <source>Members and Groups</source>
             <target/>
          </segment>
       </unit>
@@ -1632,7 +1632,7 @@
       </unit>
       <unit id="groupTabs.users">
          <segment>
-            <source>Users</source>
+            <source>Members</source>
             <target/>
          </segment>
       </unit>
@@ -1800,7 +1800,7 @@
       </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
          <segment>
-            <source>Cannot delete users from the All Users group</source>
+            <source>Cannot delete members from the All Members group</source>
             <target/>
          </segment>
       </unit>
@@ -1992,7 +1992,7 @@
       </unit>
       <unit id="invite.allusersgroup">
          <segment>
-            <source>All Users Group</source>
+            <source>All Members Group</source>
             <target/>
          </segment>
       </unit>
@@ -2160,7 +2160,7 @@
       </unit>
       <unit id="invitationTable.allUsers">
          <segment>
-            <source>All Users</source>
+            <source>All Members</source>
             <target/>
          </segment>
       </unit>
