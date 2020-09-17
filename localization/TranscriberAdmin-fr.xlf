@@ -178,8 +178,8 @@
 		</unit>
 		<unit id="usertable.chooseUser">
 			<segment>
-				<source>Choose User</source>
-				<target>Choisissez un utilisateur</target>
+				<source>Choose Member</source>
+				<target>Choisissez un membre</target>
 			</segment>
 		</unit>
 		<unit id="usertable.name">
@@ -514,8 +514,8 @@
       </unit>
       <unit id="assignmentTable.user">
          <segment>
-            <source>User</source>
-         	<target>Utilisateur</target>
+            <source>Member</source>
+         	<target>Membre</target>
          </segment>
       </unit>
       <unit id="assignmentTable.role">
@@ -1318,8 +1318,8 @@
       </unit>
         <unit id="import.onlineChangeReport">
          <segment>
-            <source>Online changes made since data provided to offline user:</source>
-            <target>Modifications apportées en ligne depuis les données fournies à l'utilisateur hors ligne:</target>
+            <source>Online changes made since data provided to offline member:</source>
+         	<target>Modifications apportées en ligne depuis les données fournies au membre hors ligne:</target>
          </segment>
       </unit>
         <unit id="import.noFile">
@@ -1546,8 +1546,8 @@
       </unit>
       <unit id="transcriptionTab.exportExplanation">
          <segment>
-            <source>Export the full project to store locally or share with another offline user. Export incremental file to import changes into online app.</source>
-            <target>Exportez le projet complet pour le stocker localement ou le partager avec un autre utilisateur hors ligne. Exportez le fichier incrémentiel pour importer les modifications dans l'application en ligne.</target>
+            <source>Export the full project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
+         	<target>Exportez le projet complet pour le stocker localement ou le partager avec un autre membre hors ligne. Exportez le fichier incrémentiel pour importer les modifications dans l'application en ligne.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
@@ -1774,8 +1774,8 @@
       </unit>
       <unit id="groupSettings.invalidRole">
          <segment>
-            <source>Invalid Role. User not added.</source>
-         	<target>Rôle invalide. Utilisateur non ajouté.</target>
+            <source>Invalid Role. Member not added.</source>
+         	<target>Rôle invalide. Membre non ajouté.</target>
          </segment>
       </unit>
 		<unit id="groupSettings.loadingTable">
@@ -1948,14 +1948,14 @@
       </unit>
       <unit id="invite.addInvite">
          <segment>
-            <source>Invite User</source>
-         	<target>Inviter un utilisateur</target>
+            <source>Invite Member</source>
+         	<target>Inviter un membre</target>
          </segment>
       </unit>
       <unit id="invite.newInviteTask">
          <segment>
-            <source>Enter the email address of the user to invite.</source>
-         	<target>Entrez le adresse électronique de l'utilisateur à inviter.</target>
+            <source>Enter the email address of the member to invite.</source>
+         	<target>Entrez le adresse électronique du membre à inviter.</target>
          </segment>
       </unit>
       <unit id="invite.email">
@@ -2838,8 +2838,8 @@
       </unit>
 		<unit id="profile.userExists">
 			<segment>
-				<source>This offline user exists.</source>
-				<target>Cet utilisateur hors ligne existe.</target>
+				<source>This offline member exists.</source>
+				<target>Cet membre hors ligne existe.</target>
 			</segment>
 		</unit>
 		<unit id="profile.given">
@@ -2904,14 +2904,14 @@
       </unit>
       <unit id="profile.deleteUser">
          <segment>
-            <source>Delete User</source>
-         	<target>Supprimer un utilisateur</target>
+            <source>Delete Member</source>
+         	<target>Supprimer un membre</target>
          </segment>
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your user will block you from using the program and remove references to your work.</source>
-         	<target>La suppression de votre utilisateur vous empêchera d'utiliser le programme et supprimera les références à votre travail.</target>
+            <source>Deleting your member will block you from using the program and remove references to your work.</source>
+         	<target>La suppression de votre membre vous empêchera d'utiliser le programme et supprimera les références à votre travail.</target>
          </segment>
       </unit>
 		<unit id="profile.cancel">
@@ -2934,20 +2934,20 @@
 		</unit>
 		<unit id="profile.userProfile">
 			<segment>
-				<source>User Profile</source>
-				<target>Profil de l'utilisateur</target>
+				<source>Member Profile</source>
+				<target>Profil du membre</target>
 			</segment>
 		</unit>
 		<unit id="profile.completeProfile">
 			<segment>
-				<source>Complete User Profile</source>
-				<target>Remplir le profil de l'utilisateur</target>
+				<source>Complete Member Profile</source>
+				<target>Remplir le profil du membre</target>
 			</segment>
 		</unit>
 		<unit id="profile.addOfflineUser">
 			<segment>
-				<source>Add Offline User</source>
-				<target>Ajouter un utilisateur pour le hors ligne</target>
+				<source>Add Offline Member</source>
+				<target>Ajouter un membre pour le hors ligne</target>
 			</segment>
 		</unit>
 		<unit id="profile.sendNews">

@@ -209,7 +209,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="usertable.chooseUser">
-                <source>Choose User</source>
+                <source>Choose Member</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">UserTable.tsx</context>
@@ -615,7 +615,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="assignmentTable.user">
-                <source>User</source>
+                <source>Member</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">assignmentTable.tsx</context>
@@ -1553,7 +1553,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="import.onlineChangeReport">
-                <source>Online changes made since data provided to offline user:</source>
+                <source>Online changes made since data provided to offline member:</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">import.tsx</context>
@@ -1812,7 +1812,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="transcriptionTab.exportExplanation">
-        		<source>Export the full project to store locally or share with another offline user. Export incremental file to import changes into online app.</source>
+        		<source>Export the full project to store locally or share with another offline member. Export incremental file to import changes into online app.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ExportTab.tsx</context>
@@ -2078,7 +2078,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="groupSettings.invalidRole">
-                <source>Invalid Role. User not added.</source>
+                <source>Invalid Role. Member not added.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">GroupSettings.tsx</context>
@@ -2281,14 +2281,14 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invite.addInvite">
-                <source>Invite User</source>
+                <source>Invite Member</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Invite.tsx</context>
                 </context-group>
             </trans-unit>
             <trans-unit id="invite.newInviteTask">
-                <source>Enter the email address of the user to invite.</source>
+                <source>Enter the email address of the member to invite.</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Invite.tsx</context>
@@ -3324,7 +3324,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.userExists">
-        		<source>This offline user exists.</source>
+        		<source>This offline member exists.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
@@ -3401,14 +3401,14 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.deleteUser">
-        		<source>Delete User</source>
+        		<source>Delete Member</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.deleteExplained">
-        		<source>Deleting your user will block you from using the program and remove references to your work.</source>
+        		<source>Deleting your member will block you from using the program and remove references to your work.</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
@@ -3436,21 +3436,21 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.userProfile">
-        		<source>User profile</source>
+        		<source>Member profile</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.completeProfile">
-        		<source>Complete User Profile</source>
+        		<source>Complete Member Profile</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.addOfflineUser">
-        		<source>Add Offline User</source>
+        		<source>Add Offline Member</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>
