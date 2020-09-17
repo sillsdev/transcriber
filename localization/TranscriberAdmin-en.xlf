@@ -240,7 +240,7 @@
       </unit>
       <unit id="usertable.offline">
          <segment>
-            <source>Offline</source>
+            <source>Offline Desktop Member</source>
             <target/>
          </segment>
       </unit>
@@ -2958,7 +2958,7 @@
       </unit>
       <unit id="profile.addOfflineUser">
          <segment>
-            <source>Add Offline Member</source>
+            <source>Add Offline Desktop Member</source>
             <target/>
          </segment>
       </unit>

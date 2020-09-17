@@ -149,8 +149,8 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     bigAvatar: {
-      width: 200,
-      height: 200,
+      width: 150,
+      height: 150,
     },
   })
 );
@@ -642,7 +642,7 @@ export function Profile(props: IProps) {
       >
         <div className={classes.paper}>
           <Grid container>
-            <StyledGrid item xs={12} md={6}>
+            <StyledGrid item xs={12} md={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name} />
               {name !== email && (
                 <Typography variant="h6" className={classes.caption}>
@@ -674,7 +674,7 @@ export function Profile(props: IProps) {
                 )}
               </Typography>
             </StyledGrid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
                 <Typography variant="h6">{t.addOfflineUser}</Typography>
               ) : userNotComplete() ? (

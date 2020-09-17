@@ -279,7 +279,7 @@
                 </context-group>
             </trans-unit>
         	<trans-unit id="usertable.offline">
-        		<source>Offline</source>
+        		<source>Offline Desktop Member</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">UserTable.tsx</context>
@@ -3450,7 +3450,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.addOfflineUser">
-        		<source>Add Offline Member</source>
+        		<source>Add Offline Desktop Member</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>

@@ -238,8 +238,8 @@
       </unit>
 		<unit id="usertable.offline">
 			<segment>
-				<source>Offline</source>
-				<target>Hors ligne</target>
+				<source>Offline Desktop Member</source>
+				<target>Membre de bureau hors ligne</target>
 			</segment>
 		</unit>
 		<unit id="usertable.action">
@@ -2946,8 +2946,8 @@
 		</unit>
 		<unit id="profile.addOfflineUser">
 			<segment>
-				<source>Add Offline Member</source>
-				<target>Ajouter un membre pour le hors ligne</target>
+				<source>Add Offline Desktop Member</source>
+				<target>Ajouter un Membre de bureau hors ligne</target>
 			</segment>
 		</unit>
 		<unit id="profile.sendNews">
