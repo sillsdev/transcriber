@@ -1595,7 +1595,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="import.plan">
-                <source>Plan</source>
+                <source>Project</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">import.tsx</context>

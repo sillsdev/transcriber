@@ -1368,7 +1368,7 @@
       </unit>
       <unit id="import.plan">
          <segment>
-            <source>Plan</source>
+            <source>Project</source>
             <target/>
          </segment>
       </unit>

@@ -295,7 +295,7 @@ const initialState = {
 			"invalidITF": "Not a valid Incremental Transcriber File (ITF).",
 			"invalidProject": "Import File does not contain current project.",
 			"importComplete": "Import Complete",
-			"plan": "Plan",
+			"plan": "Project",
 			"passage": "Passage",
 			"other": "Other",
 			"old": "Previous Value",

@@ -1354,8 +1354,8 @@
       </unit>
       <unit id="import.plan">
          <segment>
-            <source>Plan</source>
-			<target>Plan</target>
+            <source>Project</source>
+         	<target>Projet</target>
          </segment>
       </unit>
       <unit id="import.passage">
