@@ -746,6 +746,7 @@ const initialState = {
 			"other": "Other",
 			"type": "Project Type",
 			"language": "Language",
+			"renderRecommended": "Recommended for Render",
 		}
 	}),
 	"uploadProgress": new LocalizedStrings({

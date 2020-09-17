@@ -702,6 +702,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "other": string;
     "type": string;
     "language": string;
+    "renderRecommended": string;
 };
 
 export interface IUploadProgressStrings extends Localize.LocalizedStringsMethods {

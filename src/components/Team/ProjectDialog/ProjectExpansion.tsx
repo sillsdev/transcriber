@@ -24,14 +24,21 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
+    summary: {
+      '& .MuiTypography-root': {
+        color: theme.palette.secondary.main,
+      },
+    },
     heading: {
-      color: theme.palette.secondary.main,
       fontSize: theme.typography.pxToRem(18),
       fontWeight: theme.typography.fontWeightRegular,
     },
     logo: {
       width: '16px',
       height: '16px',
+    },
+    render: {
+      display: 'flex',
     },
   })
 );
@@ -85,9 +92,16 @@ export function ProjectExpansion(props: IProjectDialogState) {
     return true;
   };
 
+  const RenderRecommended = () => (
+    <Typography variant="caption" className={classes.render}>
+      <RenderLogo />
+      {'\u00A0' + t.renderRecommended}
+    </Typography>
+  );
+
   const decoration = {
-    [t.sets]: <RenderLogo />,
-    [t.flat]: <RenderLogo />,
+    [t.sets]: <RenderRecommended />,
+    [t.flat]: <RenderRecommended />,
   };
 
   return (
@@ -95,12 +109,13 @@ export function ProjectExpansion(props: IProjectDialogState) {
       <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
+          className={classes.summary}
           aria-controls="proj-exp-content"
           id="proj-exp-header"
         >
           <Typography className={classes.heading}>{t.advanced}</Typography>
           {'\u00A0 '}
-          <RenderLogo />
+          <RenderRecommended />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.panel}>
           <EditorSettings state={state} setState={setState} />

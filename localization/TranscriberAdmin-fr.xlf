@@ -3508,6 +3508,12 @@
 				<target>Langue</target>
 			</segment>
 		</unit>
+		<unit id="vProject.renderRecommended">
+			<segment>
+				<source>Recommended for Render</source>
+				<target>Recommandé pour Render</target>
+			</segment>
+		</unit>
 		<unit id="uploadProgress.progressTitle">
 			<segment>
 				<source>Progress</source>

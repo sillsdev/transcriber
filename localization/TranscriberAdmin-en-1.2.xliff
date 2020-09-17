@@ -4100,6 +4100,13 @@
         			<context context-type="sourcefile">addCard.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="vProject.renderRecommended">
+        		<source>Recommended for Render</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">projectExpansion.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="uploadProgress.progressTitle">
         		<source>Progress</source>
         		<target/>

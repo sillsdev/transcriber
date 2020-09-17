@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
     otherBox: {
       marginBottom: theme.spacing(2),
     },
+    itemLabel: {
+      display: 'flex',
+    },
   })
 );
 
@@ -107,13 +110,13 @@ const OptionCtrl = (props: IProps) => {
               value={k}
               control={<Radio />}
               label={
-                <>
+                <div className={classes.itemLabel}>
                   {tc.hasOwnProperty(k) ? tc.getString(k) : k}
                   {'\u00A0 '}
                   {decorations &&
                     decorations.hasOwnProperty(k) &&
                     decorations[k]}
-                </>
+                </div>
               }
             />
           );
