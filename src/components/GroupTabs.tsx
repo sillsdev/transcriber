@@ -44,7 +44,7 @@ const GroupTabs = (props: IProps) => {
     <div className={classes.root}>
       <AppBar position="static" color="default">
         <Tabs
-          value={tab}
+          value={tab || 0}
           onChange={handleChange}
           indicatorColor="primary"
           textColor="primary"
@@ -56,7 +56,7 @@ const GroupTabs = (props: IProps) => {
           <Tab label={t.invitations} />
         </Tabs>
       </AppBar>
-      {tab === 0 && <UserTable {...props} />}
+      {(tab || 0) === 0 && <UserTable {...props} />}
       {tab === 1 && <GroupSettings {...props} />}
       {tab === 2 && <InvitationTable {...props} />}
     </div>
