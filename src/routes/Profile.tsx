@@ -734,7 +734,7 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {orgRole === 'admin' && editId && !/Add/.test(editId) && (
+                  {orgRole === 'admin' && editId && email !== '' && (
                     <FormControlLabel
                       control={
                         <TextField
@@ -819,31 +819,31 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
+                  {email !== '' && showDetail && (
+                    <FormControlLabel
+                      className={classes.textField}
+                      control={
+                        <Checkbox
+                          id="news"
+                          checked={news === true}
+                          onChange={handleNewsChange}
+                        />
+                      }
+                      label={t.sendNews}
+                    />
+                  )}
                   {email !== '' && (
-                    <>
-                      <FormControlLabel
-                        className={classes.textField}
-                        control={
-                          <Checkbox
-                            id="news"
-                            checked={news === true}
-                            onChange={handleNewsChange}
-                          />
-                        }
-                        label={t.sendNews}
-                      />
-                      <FormControlLabel
-                        className={classes.textField}
-                        control={
-                          <Checkbox
-                            id="digest"
-                            checked={digest === 1}
-                            onChange={handleDigestChange}
-                          />
-                        }
-                        label={t.sendDigest}
-                      />
-                    </>
+                    <FormControlLabel
+                      className={classes.textField}
+                      control={
+                        <Checkbox
+                          id="digest"
+                          checked={digest === 1}
+                          onChange={handleDigestChange}
+                        />
+                      }
+                      label={t.sendDigest}
+                    />
                   )}
                   {showDetail && (
                     <>

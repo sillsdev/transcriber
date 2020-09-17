@@ -2964,8 +2964,8 @@
 		</unit>
 		<unit id="profile.role">
 			<segment>
-				<source>Role</source>
-				<target>Rôle</target>
+				<source>Team Role</source>
+				<target>Rôle de l'équipe</target>
 			</segment>
 		</unit>
 		<unit id="profile.checkingParatext">

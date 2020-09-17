@@ -3471,7 +3471,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="profile.role">
-        		<source>Role</source>
+        		<source>Team Role</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">Profile.tsx</context>

@@ -631,7 +631,7 @@ const initialState = {
 			"addOfflineUser": "Add Offline Desktop Member",
 			"sendNews": "Receive SIL Transcriber and Language Technology news",
 			"sendDigest": "Receive daily digests",
-			"role": "Role",
+			"role": "Team Role",
 			"checkingParatext": "Checking for Paratext account...",
 			"paratextLinked": "Linked to Paratext",
 			"paratextNotLinked": "Link to Paratext",
