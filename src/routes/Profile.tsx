@@ -677,10 +677,10 @@ export function Profile(props: IProps) {
             <Grid item xs={12} md={6}>
               {editId && /Add/i.test(editId) ? (
                 <Typography variant="h6">{t.addOfflineUser}</Typography>
+              ) : userNotComplete() ? (
+                <Typography variant="h6">{t.completeProfile}</Typography>
               ) : (
-                userNotComplete() && (
-                  <Typography variant="h6">{t.completeProfile}</Typography>
-                )
+                <Typography variant="h6">{t.userProfile}</Typography>
               )}
 
               <FormControl>
