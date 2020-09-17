@@ -27,6 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+      '&:hover button': {
+        color: 'white',
+      },
+      '& .MuiTypography-root': {
+        cursor: 'default ',
+      },
     },
     card: {
       minWidth: 275,

@@ -31,7 +31,7 @@ import { isElectron } from '../../api-variable';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     icon: {
-      color: theme.palette.primary.dark,
+      color: theme.palette.primary.light,
     },
   })
 );
