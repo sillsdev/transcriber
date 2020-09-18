@@ -146,7 +146,6 @@ function TranscribeReject(props: IProps) {
             variant="filled"
             multiline
             rowsMax={5}
-            required
             className={classes.comment}
             value={comment}
             onChange={handleCommentChange}
