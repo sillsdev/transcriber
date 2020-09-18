@@ -90,6 +90,7 @@ function MediaUpload(props: IProps) {
     if (uploadMethod && files) {
       uploadMethod(files);
     }
+    setFiles(undefined);
     setName('');
     setOpen(false);
   };
