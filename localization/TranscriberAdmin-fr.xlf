@@ -25,7 +25,13 @@
 				<target>Éditeur</target>
 			</segment>
 		</unit>
-        <unit id="shared.uploadMediaSingular">
+		<unit id="shared.admin">
+			<segment>
+				<source>Owner</source>
+				<target>Maître</target>
+			</segment>
+		</unit>
+		<unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Media</source>
         	<target>Télécharger des médias</target>
@@ -2115,12 +2121,6 @@
             <target>SIL Transcriber Invitation</target>
          </segment>
       </unit>
-		<unit id="invite.admin">
-			<segment>
-				<source>Owner</source>
-				<target>Patron</target>
-			</segment>
-		</unit>
      <unit id="invite.adminDetail">
          <segment>
             <source>(Manage + Review + Transcribe)</source>

@@ -6,6 +6,7 @@ import {
   Role,
   Invitation,
   IInviteStrings,
+  ISharedStrings,
   Group,
   RoleNames,
   User,
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IInviteStrings;
+  ts: ISharedStrings;
 }
 
 interface IRecordProps {
@@ -80,6 +82,7 @@ interface IProps extends IRecordProps, IStateProps {
 function Invite(props: IProps) {
   const {
     t,
+    ts,
     visible,
     roles,
     groups,
@@ -409,7 +412,7 @@ function Invite(props: IProps) {
                   .map((option: Role) => (
                     <ListItem key={option.id} value={option.id}>
                       <ListItemText
-                        primary={t.getString(
+                        primary={ts.getString(
                           option.attributes.roleName.toLowerCase()
                         )}
                         secondary={t.getString(
@@ -454,6 +457,7 @@ function Invite(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'invite' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapRecordsToProps = {

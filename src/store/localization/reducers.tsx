@@ -12,6 +12,7 @@ const initialState = {
 			"NoSaveOffline": "Unable to save while offline.",
 			"transcriber": "Transcriber",
 			"editor": "Editor",
+			"admin": "Owner",
 			"uploadMediaSingular": "Upload Media",
 			"uploadMediaPlural": "Upload Media",
 		}
@@ -458,7 +459,6 @@ const initialState = {
 			"questions": "Questions? Contact",
 			"join": "Join",
 			"emailsubject": "SIL Transcriber Invitation",
-			"admin": "Owner",
 			"adminDetail": "(Manage + Review + Transcribe)",
 			"transcriberDetail": "(Transcribe)",
 			"editorDetail": "(Review + Transcribe)",

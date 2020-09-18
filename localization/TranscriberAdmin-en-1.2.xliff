@@ -33,7 +33,14 @@
                     <context context-type="sourcefile">Access.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="shared.uploadMediaSingular">
+        	<trans-unit id="shared.admin">
+        		<source>Owner</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Access.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="shared.uploadMediaSingular">
         		<source>Upload Media</source>
         		<target/>
         		<context-group>
@@ -2483,13 +2490,6 @@
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
-        	<trans-unit id="invite.admin">
-        		<source>Owner</source>
-        		<target/>
-        		<context-group>
-        			<context context-type="sourcefile">Invite.tsx</context>
-        		</context-group>
-        	</trans-unit>
         	<trans-unit id="invite.adminDetail">
         		<source>(Manage + Review + Transcribe)</source>
         		<target/>

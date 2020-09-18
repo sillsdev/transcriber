@@ -6,6 +6,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "NoSaveOffline": string;
     "transcriber": string;
     "editor": string;
+    "admin": string;
     "uploadMediaSingular": string;
     "uploadMediaPlural": string;
 };
@@ -428,7 +429,6 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "questions": string;
     "join": string;
     "emailsubject": string;
-    "admin": string;
     "adminDetail": string;
     "transcriberDetail": string;
     "editorDetail": string;

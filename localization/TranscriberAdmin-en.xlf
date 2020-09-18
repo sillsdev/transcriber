@@ -28,6 +28,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.admin">
+         <segment>
+            <source>Owner</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Media</source>
@@ -2125,12 +2131,6 @@
       <unit id="invite.emailsubject">
          <segment>
             <source>SIL Transcriber Invitation</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.admin">
-         <segment>
-            <source>Owner</source>
             <target/>
          </segment>
       </unit>
