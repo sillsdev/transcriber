@@ -443,9 +443,17 @@ export function ScriptureTable(props: IProps) {
           var attached = mediafiles.filter(
             (m) => related(m, 'passage') === rowInfo[rowIndex].passageId?.id
           );
-          attached.forEach((m) =>
-            detachPassage(rowInfo[rowIndex].passageId?.id || '', m.id)
-          );
+          attached.forEach((m) => {
+            var passage = passages.find(
+              (p) => p.id === rowInfo[rowIndex].passageId?.id
+            );
+            detachPassage(
+              rowInfo[rowIndex].passageId?.id || '',
+              related(passage, 'section'),
+              plan,
+              m.id
+            );
+          });
           deleteOrbitRow(rowInfo[rowIndex].passageId as RecordIdentity);
         }
         deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
@@ -590,10 +598,10 @@ export function ScriptureTable(props: IProps) {
           rows
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map((row) =>
-              row.map((col, colIndex) => 
-                isValidNumber(row[cols.PassageSeq]) && colIndex === cols.Book 
-                ? lookupBook(col) 
-                : isValidNumber(row[cols.SectionSeq])
+              row.map((col, colIndex) =>
+                isValidNumber(row[cols.PassageSeq]) && colIndex === cols.Book
+                  ? lookupBook(col)
+                  : isValidNumber(row[cols.SectionSeq])
                   ? (inlinePassages &&
                       isValidNumber(row[cols.PassageSeq]) &&
                       parseInt(row[cols.PassageSeq]) === 1) ||
@@ -601,11 +609,11 @@ export function ScriptureTable(props: IProps) {
                     ? col
                     : ''
                   : colIndex >= cols.PassageSeq //not a section row
-                    ? col
-                    : ''
+                  ? col
+                  : ''
               )
             )
-        )
+        ),
       ]);
       setInData([
         ...inData.concat(
@@ -1076,6 +1084,11 @@ export function ScriptureTable(props: IProps) {
     if (mediaRemoteIds && mediaRemoteIds.length > 0) {
       await attachPassage(
         uploadPassage,
+        related(
+          passages.find((p) => p.id === uploadPassage),
+          'section'
+        ),
+        plan,
         remoteIdGuid('mediafile', mediaRemoteIds[0], keyMap)
       );
     }

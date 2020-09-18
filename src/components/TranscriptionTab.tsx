@@ -65,7 +65,6 @@ import {
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
-import { dateCompare } from '../utils';
 
 const ActionHeight = 52;
 
@@ -490,7 +489,6 @@ export function TranscriptionTab(props: IProps) {
           const sectionpassages = passages
             .filter((ps) => related(ps, 'section') === section.id)
             .sort(passageCompare);
-          const headerIndex = rowData.length;
           rowData.push({
             id: section.id,
             name: getSection(section),
@@ -499,19 +497,11 @@ export function TranscriptionTab(props: IProps) {
             editor: sectionEditorName(section, users),
             transcriber: sectionTranscriberName(section, users),
             passages: sectionpassages.length.toString(),
-            updated: '',
+            updated: calendar(section?.attributes?.dateUpdated),
             action: '',
             parentId: '',
           });
-          let hdrUpdated = section?.attributes?.dateUpdated;
           sectionpassages.forEach((passage: Passage) => {
-            const mediaRec = getMediaRec(passage.id, memory);
-            const medUpdated = mediaRec?.attributes?.dateUpdated;
-            let pasUpdated = passage?.attributes?.dateUpdated;
-            if (medUpdated && dateCompare(medUpdated, pasUpdated) > 0)
-              pasUpdated = medUpdated;
-            if (dateCompare(pasUpdated, hdrUpdated) > 0)
-              hdrUpdated = pasUpdated;
             const state =
               passage.attributes && passage.attributes.state
                 ? activityState.getString(passage.attributes.state)
@@ -524,12 +514,11 @@ export function TranscriptionTab(props: IProps) {
               editor: '',
               transcriber: '',
               passages: '',
-              updated: calendar(pasUpdated),
+              updated: calendar(passage.attributes.dateUpdated),
               action: passage.id,
               parentId: section.id,
             } as IRow);
           });
-          rowData[headerIndex].updated = calendar(hdrUpdated);
         });
     });
 

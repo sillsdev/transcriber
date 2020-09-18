@@ -19,6 +19,7 @@ export interface VProject extends Record {
     rtl: boolean;
     flat: boolean;
     organizedBy: string;
+    sectionCount: number;
     tags: ITag;
     type: string;
     dateCreated: string;

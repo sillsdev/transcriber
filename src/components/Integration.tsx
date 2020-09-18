@@ -159,7 +159,6 @@ export function IntegrationPanel(props: IProps) {
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
-
   const [online, setOnline] = React.useState<boolean>();
   const [hasPtProj, setHasPtProj] = React.useState(false);
   const [ptProj, setPtProj] = React.useState(-1);
@@ -176,6 +175,7 @@ export function IntegrationPanel(props: IProps) {
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
+  const [plan] = useGlobal('plan');
   const [fingerprint] = useGlobal('fingerprint');
 
   const [errorReporter] = useGlobal('errorReporter');
@@ -316,7 +316,7 @@ export function IntegrationPanel(props: IProps) {
     setSyncing(true);
     showMessage(t.syncPending);
     var err = await localSync(
-      project,
+      plan,
       ptShortName,
       passages,
       memory,

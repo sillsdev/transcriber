@@ -34,33 +34,10 @@ const AddPassageStateChangeToOps = (
   );
 };
 
-export const AddPassage = (
-  rec: Passage,
-  section: RecordIdentity,
-  user: number,
-  memory: Memory
-): Operation[] => {
-  var t = new TransformBuilder();
-  var ops: Operation[] = [];
-  ops.push(AddRecord(t, rec, user, memory));
-  ops.push(
-    t.replaceRelatedRecord({ type: 'passage', id: rec.id }, 'section', section)
-  );
-  AddPassageStateChangeToOps(
-    t,
-    ops,
-    rec.id,
-    ActivityStates.NoMedia,
-    '',
-    user,
-    memory
-  );
-  return ops;
-};
-
 export const AddFlatPassage = (
   rec: Passage,
   section: RecordIdentity,
+  planid: string,
   media: RecordIdentity,
   user: number,
   memory: Memory
@@ -71,6 +48,22 @@ export const AddFlatPassage = (
   ops.push(
     t.replaceRelatedRecord({ type: 'passage', id: rec.id }, 'section', section)
   );
+  /* we don't need to do this, because the only time we call this is when
+  we've just created the plan and section
+  ops.push(
+    t.replaceAttribute(
+      { type: 'section', id: section.id },
+      'dateUpdated',
+      currentDateTime()
+    )
+  );
+  ops.push(
+    t.replaceAttribute(
+      { type: 'plan', id: planid },
+      'dateUpdated',
+      currentDateTime()
+    )
+  ); */
   AddPassageStateChangeToOps(
     t,
     ops,
@@ -101,6 +94,8 @@ export const AddPassageStateCommentOps = (
 
 export const UpdatePassageStateOps = (
   passage: string,
+  section: string,
+  plan: string,
   state: string,
   comment: string,
   userid: number,
@@ -123,6 +118,20 @@ export const UpdatePassageStateOps = (
       { type: 'passage', id: passage },
       'lastmodifiedby',
       userid
+    )
+  );
+  ops.push(
+    t.replaceAttribute(
+      { type: 'section', id: section },
+      'dateUpdated',
+      currentDateTime()
+    )
+  );
+  ops.push(
+    t.replaceAttribute(
+      { type: 'plan', id: plan },
+      'dateUpdated',
+      currentDateTime()
     )
   );
   AddPassageStateChangeToOps(t, ops, passage, state, comment, userid, memory);

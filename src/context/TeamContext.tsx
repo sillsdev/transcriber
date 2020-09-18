@@ -302,8 +302,12 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const projectSections = (plan: Plan) => {
-      const sectionIds: string[] | null = related(plan, 'sections');
-      return sectionIds ? sectionIds.length.toString() : '<na>';
+      if (plan.attributes.sectionCount === undefined) {
+        //only old data
+        var sectionIds: string[] | null = related(plan, 'sections');
+        return sectionIds ? sectionIds.length.toString() : '<na>';
+      }
+      return plan.attributes.sectionCount.toString();
     };
 
     const getProject = (plan: Plan) => {

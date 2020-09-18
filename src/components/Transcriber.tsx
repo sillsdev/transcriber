@@ -172,6 +172,7 @@ export function Transcriber(props: IProps) {
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
+  const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
@@ -294,6 +295,8 @@ export function Transcriber(props: IProps) {
     await memory.update(
       UpdatePassageStateOps(
         pass.id,
+        section.id,
+        plan,
         pass.attributes.state,
         pass.attributes.lastComment,
         remoteIdNum('user', user, memory.keyMap),
@@ -316,15 +319,8 @@ export function Transcriber(props: IProps) {
     needsNewTranscription: ActivityStates.Transcribed,
   };
   const getType = () => {
-    const sectionId = related(passage, 'section');
-    if (!sectionId) return null;
-    const secRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'section', id: sectionId })
-    ) as Section;
-    const planId = related(secRec, 'plan');
-    if (!planId) return null;
     const planRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'plan', id: planId })
+      q.findRecord({ type: 'plan', id: plan })
     ) as Plan;
     const planTypeId = related(planRec, 'plantype');
     if (!planTypeId) return null;
@@ -353,6 +349,8 @@ export function Transcriber(props: IProps) {
         var tb = new TransformBuilder();
         var ops = UpdatePassageStateOps(
           passage.id,
+          section.id,
+          plan,
           nextState,
           comment,
           remoteIdNum('user', user, memory.keyMap),
@@ -417,16 +415,19 @@ export function Transcriber(props: IProps) {
       const userid = remoteIdNum('user', user, memory.keyMap);
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
-      if (nextOnSave[state] !== undefined)
-        ops = UpdatePassageStateOps(
-          passage.id,
-          nextOnSave[state],
-          '',
-          userid,
-          tb,
-          ops,
-          memory
-        );
+      var nextState = nextOnSave[state] ?? state;
+      //always update the state, because we need the dateupdated to be updated
+      ops = UpdatePassageStateOps(
+        passage.id,
+        section.id,
+        plan,
+        nextState,
+        '',
+        userid,
+        tb,
+        ops,
+        memory
+      );
       if (postComment && comment !== '') {
         ops = AddPassageStateCommentOps(
           passage.id,
@@ -452,6 +453,7 @@ export function Transcriber(props: IProps) {
           userid
         )
       );
+
       await memory
         .update(ops)
         .then(() => {
@@ -524,6 +526,8 @@ export function Transcriber(props: IProps) {
       await memory.update(
         UpdatePassageStateOps(
           passage.id,
+          section.id,
+          plan,
           previous[state],
           comment,
           remoteIdNum('user', user, memory.keyMap),
@@ -619,13 +623,11 @@ export function Transcriber(props: IProps) {
       setTranscriptionIn(transcription);
       setTextValue(transcription);
       setDefaultPosition(attr.position);
-      setLastSaved(attr.dateUpdated); //this always wins over the passage dateUpdated because we just got a url for it and updated the record
       //focus on player
       if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
     }
-    if (passage && passage.attributes && passage.attributes.lastComment) {
-      setComment(passage.attributes.lastComment);
-    } else setComment('');
+    setLastSaved(passage.attributes?.dateUpdated || '');
+    setComment(passage.attributes?.lastComment || '');
     setTotalSeconds(duration);
     if (mediaRemoteId && mediaRemoteId !== '') {
       fetchMediaUrl(mediaRemoteId, memory, offline, auth);

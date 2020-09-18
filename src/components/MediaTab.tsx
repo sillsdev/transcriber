@@ -152,7 +152,8 @@ interface IRow {
   planName: string;
   playIcon: string;
   fileName: string;
-  section: string;
+  sectionId: string;
+  sectionDesc: string;
   reference: string;
   duration: string;
   size: number;
@@ -164,7 +165,8 @@ interface IRow {
 
 interface IPRow {
   id: string;
-  section: string;
+  sectionId: string;
+  sectionDesc: string;
   reference: string;
   attached: string;
   isAttaching?: boolean;
@@ -215,8 +217,11 @@ const getMedia = (
     if (status <= slider) {
       const sectionId = related(passage[0], 'section');
       const section = sections.filter((s) => s.id === sectionId);
-      const updated =
-        f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
+      var updateddt = passageId
+        ? passage[0].attributes.dateUpdated
+        : f.attributes.dateUpdated;
+      if (!updateddt.endsWith('Z')) updateddt += 'Z';
+      const updated = moment(updateddt);
       const date = updated ? updated.format('YYYY-MM-DD') : '';
       const displayDate = updated
         ? updated.locale(localeDefault()).format('L')
@@ -232,7 +237,8 @@ const getMedia = (
         id: f.id,
         playIcon: playItem,
         fileName: f.attributes.originalFile,
-        section: getSection(section),
+        sectionId: sectionId,
+        sectionDesc: getSection(section),
         reference: getReference(passage, allBookData),
         status:
           status === StatusN.Yes
@@ -285,7 +291,8 @@ const getPassages = (
           );
           prowData.push({
             id: passage.id,
-            section: getSection([section]),
+            sectionId: section.id,
+            sectionDesc: getSection([section]),
             reference: getReference([passage], allBookData),
             attached: isAttached(passage, mediaFiles, attachMap)
               ? StatusL.Yes
@@ -564,7 +571,7 @@ export function MediaTab(props: IProps) {
     showMessage(t.saving);
     const handleRow = async (mediaId: string) => {
       const pRow = attachMap[mediaId];
-      await attachPassage(pdata[pRow].id, mediaId);
+      await attachPassage(pdata[pRow].id, pdata[pRow].sectionId, plan, mediaId);
     };
     for (let mediaId of Object.keys(attachMap)) {
       await handleRow(mediaId);
@@ -587,7 +594,7 @@ export function MediaTab(props: IProps) {
     } else {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
-        detachPassage(passId, mediaId);
+        detachPassage(passId, data[mRow].sectionId, plan, mediaId);
         setChanged(true);
       } else {
         showMessage(t.noPassageAttached.replace('{0}', data[mRow].fileName));
@@ -695,7 +702,7 @@ export function MediaTab(props: IProps) {
     );
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
-      if (r.section !== '') medAttach.add(i);
+      if (r.sectionDesc !== '') medAttach.add(i);
     });
     if (
       medAttach.size !== dataAttach.size ||

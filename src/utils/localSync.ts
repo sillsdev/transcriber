@@ -3,13 +3,7 @@ import { DOMParser, XMLSerializer } from 'xmldom';
 import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
 import { QueryBuilder, TransformBuilder, Record, Operation } from '@orbit/data';
-import {
-  related,
-  getMediaProjRec,
-  getMediaRec,
-  parseRef,
-  UpdatePassageStateOps,
-} from '../crud';
+import { related, getMediaRec, parseRef, UpdatePassageStateOps } from '../crud';
 import { getParatextProgPath } from './paratextPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
@@ -422,6 +416,7 @@ const removeOverlappingVerses = (doc: Document, p: Passage) => {
 };
 
 const doChapter = async (
+  plan: string,
   chap: string,
   pass: Passage[],
   ptProjName: string,
@@ -467,6 +462,8 @@ const doChapter = async (
   for (let p of pass) {
     UpdatePassageStateOps(
       p.id,
+      related(p, 'section'),
+      plan,
       ActivityStates.Done,
       'Paratext',
       userid,
@@ -480,7 +477,7 @@ const doChapter = async (
 };
 
 export const localSync = async (
-  project: string,
+  plan: string,
   ptProjName: string,
   passages: Passage[],
   memory: Memory,
@@ -490,10 +487,7 @@ export const localSync = async (
   let chapChg: { [key: string]: Passage[] } = {};
   passages
     .filter((p) => p.attributes.state === ActivityStates.Approved)
-    .filter((p) => {
-      const projRec = getMediaProjRec(getMediaRec(p.id, memory), memory);
-      return projRec && projRec.id === project;
-    })
+    .filter((p) => related(getMediaRec(p.id, memory), 'plan') === plan)
     .forEach((p) => {
       parseRef(p);
       let chap = p.startChapter;
@@ -509,6 +503,7 @@ export const localSync = async (
   for (let c of Object.keys(chapChg)) {
     try {
       await doChapter(
+        plan,
         c,
         chapChg[c],
         ptProjName,

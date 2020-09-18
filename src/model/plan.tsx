@@ -9,6 +9,7 @@ export interface Plan extends BaseModel {
     flat: boolean;
     organizedBy: string;
     tags: ITag;
+    sectionCount: number;
     lastModifiedBy: number;
     dateCreated: string;
     dateUpdated: string;

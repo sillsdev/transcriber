@@ -47,6 +47,7 @@ import {
   useOrganizedBy,
 } from '../crud';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
+import { currentDateTime } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -108,7 +109,7 @@ function AssignSection(props: IProps) {
   };
 
   const assign = async (section: Section, userId: string, role: RoleNames) => {
-    await memory.update((t: TransformBuilder) =>
+    await memory.update((t: TransformBuilder) => [
       t.replaceRelatedRecord(
         { type: 'section', id: section.id },
         role.toLowerCase(),
@@ -116,8 +117,18 @@ function AssignSection(props: IProps) {
           type: 'user',
           id: userId,
         }
-      )
-    );
+      ),
+      t.replaceAttribute(
+        { type: 'section', id: section.id },
+        'dateUpdated',
+        currentDateTime()
+      ),
+      t.replaceAttribute(
+        { type: 'plan', id: related(section, 'plan') },
+        'dateUpdated',
+        currentDateTime()
+      ),
+    ]);
   };
 
   const handleSelectTranscriber = (id: string) => () => {

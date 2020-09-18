@@ -21,7 +21,12 @@ export const useMediaAttach = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
-  const attach = async (passage: string, mediaId: string) => {
+  const attach = async (
+    passage: string,
+    section: string,
+    plan: string,
+    mediaId: string
+  ) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     ops.push(
@@ -32,6 +37,8 @@ export const useMediaAttach = (props: IProps) => {
     );
     ops = UpdatePassageStateOps(
       passage,
+      section,
+      plan,
       ActivityStates.TranscribeReady,
       'Media Attached',
       remoteIdNum('user', user, memory.keyMap),
@@ -46,7 +53,12 @@ export const useMediaAttach = (props: IProps) => {
     });
   };
 
-  const detach = async (passage: string, mediaId: string) => {
+  const detach = async (
+    passage: string,
+    section: string,
+    plan: string,
+    mediaId: string
+  ) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     ops.push(
@@ -58,6 +70,8 @@ export const useMediaAttach = (props: IProps) => {
     );
     ops = UpdatePassageStateOps(
       passage,
+      section,
+      plan,
       ActivityStates.NoMedia,
       'Media Detached',
       remoteIdNum('user', user, memory.keyMap),
