@@ -1126,7 +1126,7 @@
         		</context-group>
         	</trans-unit>
             <trans-unit id="main.usersAndGroups">
-                <source>Members and Groups</source>
+                <source>Members and Roles</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">drawer.tsx</context>
@@ -2302,7 +2302,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="invite.role">
-                <source>Role</source>
+                <source>Team Role</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Invite.tsx</context>
@@ -2316,7 +2316,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="invite.selectOrgRole">
-                <source>Select Team Role</source>
+                <source>Select team role</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Invite.tsx</context>
@@ -2330,7 +2330,7 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="invite.groups">
-				<source>Groups</source>
+				<source>Project</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Invite.tsx</context>
@@ -2358,13 +2358,20 @@
 				</context-group>
 			</trans-unit>
 			<trans-unit id="invite.groupRole">
-				<source>Group Role</source>
+				<source>Project Role</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Invite.tsx</context>
 				</context-group>
 			</trans-unit>
-            <trans-unit id="invite.otherGroupProjects">
+        	<trans-unit id="invite.selectProjectRole">
+        		<source>Select project role</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Invite.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="invite.otherGroupProjects">
                 <source>Projects</source>
                 <target/>
                 <context-group>
@@ -2378,8 +2385,8 @@
                     <context context-type="sourcefile">Invite.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="invite.selectGroupRole">
-				<source>Select Group Role</source>
+            <trans-unit id="invite.selectTeamRole">
+				<source>Select Team Role</source>
 				<target/>
 				<context-group>
 					<context context-type="sourcefile">Invite.tsx</context>

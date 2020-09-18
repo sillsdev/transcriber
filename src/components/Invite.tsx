@@ -41,25 +41,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     menu: {},
     label: { marginTop: theme.spacing(1) },
-    container: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
       display: 'flex',
       flexGrow: 1,
     },
-    textarea: {},
   })
 );
 
@@ -114,12 +101,8 @@ function Invite(props: IProps) {
   const [role, setRole] = useState('');
   const [group, setGroup] = useState('');
   const [groupRole, setGroupRole] = useState('');
-  const [allUsersGroup, setAllUsersGroup] = useState('');
   const [allUsersRole, setAllUsersRole] = useState('');
-  const [groupsAllonly, setGroupsAllonly] = useState<Group[]>();
-  const [groupsNoAll, setGroupsNoAll] = useState<Group[]>();
   const [allUsersProjects, setAllUsersProjects] = useState('');
-  const [otherProjects, setOtherProjects] = useState('');
   const [allowMultiple, setallowMultiple] = useState(false);
 
   const resetFields = () => {
@@ -250,19 +233,6 @@ function Invite(props: IProps) {
   const handleAllUsersRoleChange = (e: any) => {
     setAllUsersRole(e.target.value);
   };
-  const handleGroupChange = (e: any) => {
-    setGroup(e.target.value);
-    var assocProjects = projects
-      .filter((p) => related(p, 'group') === e.target.value)
-      .map((p) => p.attributes.name);
-    setOtherProjects(
-      assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects
-    );
-  };
-  const handleGroupRoleChange = (e: any) => {
-    setGroupRole(e.target.value);
-  };
-
   const hasInvite = (email: string) => {
     const selectInvite: Invitation[] = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('invitation').filter({ attribute: 'email', value: email })
@@ -291,9 +261,7 @@ function Invite(props: IProps) {
         g.attributes.allUsers &&
         related(g, 'owner') === organization
     );
-    setGroupsAllonly(allusersgroup);
     if (allusersgroup.length > 0) {
-      setAllUsersGroup(allusersgroup[0].id);
       var assocProjects = projects
         .filter((p) => related(p, 'group') === allusersgroup[0].id)
         .map((p) => p.attributes.name);
@@ -301,15 +269,6 @@ function Invite(props: IProps) {
         assocProjects.length > 0 ? assocProjects.join(', ') : t.noProjects
       );
     }
-    const noallgroups = groups
-      .filter(
-        (g) =>
-          g.attributes &&
-          !g.attributes.allUsers &&
-          related(g, 'owner') === organization
-      )
-      .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
-    setGroupsNoAll(noallgroups);
 
     if (inviteIn) {
       setEmail(inviteIn.email);
@@ -404,7 +363,7 @@ function Invite(props: IProps) {
                     className: classes.menu,
                   },
                 }}
-                helperText={t.selectOrgRole}
+                helperText={t.selectTeamRole}
                 margin="normal"
                 variant="filled"
                 required
@@ -424,33 +383,7 @@ function Invite(props: IProps) {
             <Grid item xs={12}>
               <FormLabel>{t.groups}</FormLabel>
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                id="select-allgroup"
-                className={classes.textField}
-                select
-                label={t.group}
-                value={allUsersGroup}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu,
-                  },
-                }}
-                helperText={t.allusersgroup}
-                margin="normal"
-                variant="filled"
-                required
-              >
-                {groupsAllonly
-                  ? groupsAllonly.map((option: Group) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.attributes.name}
-                      </MenuItem>
-                    ))
-                  : ''}
-              </TextField>
-            </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 id="select-allusersrole"
                 className={classes.textField}
@@ -463,7 +396,7 @@ function Invite(props: IProps) {
                     className: classes.menu,
                   },
                 }}
-                helperText={t.allusersgroup && t.role}
+                helperText={t.selectProjectRole}
                 margin="normal"
                 variant="filled"
                 required
@@ -487,85 +420,13 @@ function Invite(props: IProps) {
                   ))}
               </TextField>
             </Grid>
-            <Grid item xs={6} sm={4}>
+            <Grid item xs={12} sm={6}>
               <label id="projectsAll" className={classes.label}>
                 {t.allUsersProjects}
               </label>
               <div>{allUsersProjects}</div>
               <br />
             </Grid>
-            {groupsNoAll && groupsNoAll.length > 0 && (
-              <>
-                <Grid item xs={12} sm={4}>
-                  <TextField
-                    id="select-group"
-                    className={classes.textField}
-                    select
-                    label={t.group}
-                    value={group}
-                    onChange={handleGroupChange}
-                    SelectProps={{
-                      MenuProps: {
-                        className: classes.menu,
-                      },
-                    }}
-                    helperText={t.additionalgroup}
-                    margin="normal"
-                    variant="filled"
-                  >
-                    {groupsNoAll.map((option: Group) => (
-                      <MenuItem key={option.id} value={option.id}>
-                        {option.attributes.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={6} sm={4}>
-                  <TextField
-                    id="select-grouprole"
-                    className={classes.textField}
-                    select
-                    label={t.groupRole}
-                    value={groupRole}
-                    onChange={handleGroupRoleChange}
-                    SelectProps={{
-                      MenuProps: {
-                        className: classes.menu,
-                      },
-                    }}
-                    helperText={t.selectGroupRole}
-                    margin="normal"
-                    variant="filled"
-                    disabled={group === ''}
-                  >
-                    {roles
-                      .filter((r) => r.attributes && r.attributes.groupRole)
-                      .sort((i, j) =>
-                        i.attributes.roleName < j.attributes.roleName ? -1 : 1
-                      )
-                      .map((option: Role) => (
-                        <ListItem key={option.id} value={option.id}>
-                          <ListItemText
-                            primary={t.getString(
-                              option.attributes.roleName.toLowerCase()
-                            )}
-                            secondary={t.getString(
-                              option.attributes.roleName.toLowerCase() +
-                                'Detail'
-                            )}
-                          />
-                        </ListItem>
-                      ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={6} sm={4}>
-                  <label id="projectsAllOther" className={classes.label}>
-                    {t.otherGroupProjects}
-                  </label>
-                  <div>{otherProjects}</div>
-                </Grid>
-              </>
-            )}
           </Grid>
         </DialogContent>
         <DialogActions>

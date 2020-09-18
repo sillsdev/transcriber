@@ -411,9 +411,10 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "allUsersProjects": string;
     "additionalgroup": string;
     "groupRole": string;
+    "selectProjectRole": string;
     "otherGroupProjects": string;
     "noProjects": string;
-    "selectGroupRole": string;
+    "selectTeamRole": string;
     "cancel": string;
     "send": string;
     "save": string;

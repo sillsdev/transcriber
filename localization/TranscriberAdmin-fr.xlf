@@ -952,8 +952,8 @@
 		</unit>
 		<unit id="main.usersAndGroups">
 			<segment>
-				<source>Members and Groups</source>
-				<target>Membres et Groupes</target>
+				<source>Members and Roles</source>
+				<target>Membres et rôles</target>
 			</segment>
 		</unit>
 		<unit id="main.passages">
@@ -1966,14 +1966,14 @@
       </unit>
       <unit id="invite.role">
          <segment>
-            <source>Role</source>
-         	<target>Rôle</target>
+            <source>Team Role</source>
+         	<target>Rôle dans l'équipe</target>
          </segment>
       </unit>
       <unit id="invite.selectOrgRole">
          <segment>
-            <source>Select Team Role</source>
-         	<target>Sélectionnez le rôle de l'équipe</target>
+            <source>Select team role</source>
+         	<target>Choisir le rôle dans l'équipe</target>
          </segment>
       </unit>
 	  <unit id="invite.allusersgroup">
@@ -1984,8 +1984,8 @@
       </unit>
       <unit id="invite.groups">
          <segment>
-            <source>Groups</source>
-            <target>Groupes</target>
+            <source>Projects</source>
+            <target>Projets</target>
          </segment>
       </unit>
       <unit id="invite.group">
@@ -2008,11 +2008,17 @@
       </unit>
       <unit id="invite.groupRole">
          <segment>
-            <source>Group Role</source>
-            <target>Rôle Groupe</target>
+            <source>Project Role</source>
+            <target>Rôle du projet</target>
          </segment>
       </unit>
-    <unit id="invite.otherGroupProjects">
+		<unit id="invite.selectProjectRole">
+			<segment>
+				<source>Select project role</source>
+				<target>Choisir le rôle du projet</target>
+			</segment>
+		</unit>
+		<unit id="invite.otherGroupProjects">
          <segment>
             <source>Projects</source>
            <target>Projets</target>
@@ -2024,10 +2030,10 @@
             <target>Aucun projet n'est associé à ce groupe.</target>
          </segment>
       </unit>
-      <unit id="invite.selectGroupRole">
+      <unit id="invite.selectTeamRole">
          <segment>
-            <source>Select Group Role</source>
-            <target>Sélectionner le rôle Groupe</target>
+            <source>Select Team Role</source>
+         	<target>Choisir le rôle dans l'équipe</target>
          </segment>
       </unit>
 
