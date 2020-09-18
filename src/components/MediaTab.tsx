@@ -195,8 +195,8 @@ const getReference = (passage: Passage[], bookData: BookName[] = []) => {
 };
 
 const getMedia = (
-  planrec: Plan,
-  mediaFiles: Array<MediaFile>,
+  planName: string,
+  media: Array<MediaFile>,
   passages: Array<Passage>,
   sections: Array<Section>,
   playItem: string,
@@ -205,7 +205,6 @@ const getMedia = (
   attachMap: IAttachMap,
   pdata: IPRow[]
 ) => {
-  let media: MediaFile[] = getMediaInPlans([planrec], mediaFiles);
   let rowData: IRow[] = [];
 
   media.forEach((f) => {
@@ -233,7 +232,7 @@ const getMedia = (
       rowData.push({
         planid: related(f, 'plan'),
         passId: passageId,
-        planName: planrec.attributes.name,
+        planName,
         id: f.id,
         playIcon: playItem,
         fileName: f.attributes.originalFile,
@@ -259,22 +258,19 @@ const getMedia = (
   return rowData;
 };
 
-const isAttached = (p: Passage, media: MediaFile[], attachMap: IAttachMap) => {
-  return (
-    media.filter(
-      (m) => related(m, 'passage') === p.id && attachMap.hasOwnProperty(m.id)
-    ).length > 0
-  );
+const isAttached = (p: Passage, media: MediaFile[]) => {
+  const mediaRecs = related(p, 'mediafiles') as MediaFile[];
+  const mediaId = mediaRecs && mediaRecs.length > 0 && mediaRecs[0].id;
+  return media.filter((m) => m.id === mediaId).length > 0;
 };
 
 const pad = (text: number) => ('00' + text).slice(-2);
 
 const getPassages = (
   projectplans: Array<Plan>,
-  mediaFiles: Array<MediaFile>,
+  media: MediaFile[],
   passages: Array<Passage>,
   sections: Array<Section>,
-  attachMap: IAttachMap,
   allBookData: BookName[]
 ) => {
   const prowData: IPRow[] = [];
@@ -294,9 +290,7 @@ const getPassages = (
             sectionId: section.id,
             sectionDesc: getSection([section]),
             reference: getReference([passage], allBookData),
-            attached: isAttached(passage, mediaFiles, attachMap)
-              ? StatusL.Yes
-              : StatusL.No,
+            attached: isAttached(passage, media) ? StatusL.Yes : StatusL.No,
             sort: `${pad(section.attributes.sequencenum)}.${pad(
               passage.attributes.sequencenum
             )}`,
@@ -689,9 +683,10 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
+    const media: MediaFile[] = getMediaInPlans([planRec], mediaFiles);
     const newData = getMedia(
-      planRec,
-      mediaFiles,
+      planRec?.attributes?.name,
+      media,
       passages,
       sections,
       playItem,
@@ -700,6 +695,7 @@ export function MediaTab(props: IProps) {
       attachMap,
       pdata
     );
+    console.log(newData);
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
       if (r.sectionDesc !== '') medAttach.add(i);
@@ -714,10 +710,9 @@ export function MediaTab(props: IProps) {
     }
     const newPassData = getPassages(
       [planRec],
-      mediaFiles,
+      media,
       passages,
       sections,
-      attachMap,
       allBookData
     );
     const pasAttach = new Set<number>();
@@ -745,33 +740,6 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     let dataChange = false;
-    // const newData = data.map((r, i) => {
-    //   const mediaId = r.id;
-    //   const newRow = attachMap.hasOwnProperty(mediaId)
-    //     ? {
-    //         ...r,
-    //         section: pdata[attachMap[mediaId]].section,
-    //         reference: pdata[attachMap[mediaId]].reference,
-    //         isAttaching: true,
-    //         status: StatusL.Proposed,
-    //       }
-    //     : r.isAttaching
-    //     ? {
-    //         ...r,
-    //         section: '',
-    //         reference: '',
-    //         isAttaching: false,
-    //         status: StatusL.No,
-    //       }
-    //     : null;
-    //   if (newRow) {
-    //     dataChange = true;
-    //     return newRow;
-    //   }
-    //   return { ...r };
-    // });
-    // if (dataChange) setData(newData);
-    // dataChange = false;
     const newPData = pdata.map((r, i) => {
       const newRow = hasPassage(i)
         ? { ...r, attached: 'Y', isAttaching: true }
@@ -980,7 +948,7 @@ export function MediaTab(props: IProps) {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap);
       return <PlayCell {...props} mediaId={mediaId} />;
     }
-    if (column.name === 'detach') {
+    if (column.name === 'detach' && projRole === 'admin') {
       return <DetachCell {...props} />;
     }
     if (['reference', 'section'].includes(column.name) && row.isAttaching) {
@@ -1001,12 +969,14 @@ export function MediaTab(props: IProps) {
     const handleSelect = () => {
       props.onToggle && props.onToggle();
     };
-    return (
+    return projRole === 'admin' ? (
       <Table.Cell {...props}>
         {(!props.row.fileName || props.row.reference === '') && (
           <Radio checked={props.selected} onChange={handleSelect} />
         )}
       </Table.Cell>
+    ) : (
+      <Table.Cell {...props} />
     );
   };
 
