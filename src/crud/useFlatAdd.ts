@@ -52,6 +52,9 @@ export const useFlatAdd = () => {
         );
       }
     }
+    await memory.update((t) =>
+      t.replaceAttribute({ type: 'plan', id: planId }, 'sectionCount', total)
+    );
     if (setComplete) setComplete(0);
   };
 };

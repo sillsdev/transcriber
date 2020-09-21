@@ -1,12 +1,14 @@
 import { useGlobal } from 'reactn';
 import { VProject, Project, Plan, Group } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
-import { related, useTypeId } from '.';
+import { AddProjectLoaded, related, useTypeId } from '.';
 import { localeDefault } from '../utils';
 
 export const useVProjectCreate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+
   const getTypeId = useTypeId();
 
   const getGroupId = (teamId: string) => {
@@ -71,6 +73,7 @@ export const useVProjectCreate = () => {
         id: user,
       }),
     ]);
+    AddProjectLoaded(project.id, projectsLoaded, setProjectsLoaded);
 
     let plan: Plan = {
       type: 'plan',
@@ -93,6 +96,7 @@ export const useVProjectCreate = () => {
         id: project.id,
       }),
     ]);
+
     return plan.id;
   };
 };
