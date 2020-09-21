@@ -69,6 +69,7 @@ export const Uploader = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [errorReporter] = useGlobal('errorReporter');
+  const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
   const planIdRef = React.useRef<string>();
   const successCount = React.useRef<number>(0);
@@ -86,6 +87,7 @@ export const Uploader = (props: IProps) => {
         );
       uploadComplete();
       setComplete(0);
+      setBusy(false);
       if (successCount.current > 0 && finish)
         finish(planIdRef.current || plan, mediaIdRef.current);
     }, 1000);
@@ -145,6 +147,7 @@ export const Uploader = (props: IProps) => {
       showMessage(t.selectFiles);
       return;
     }
+    setBusy(true);
     if (createProject) planIdRef.current = await createProject(files);
     uploadFiles(files);
     successCount.current = 0;
@@ -172,6 +175,7 @@ export const Uploader = (props: IProps) => {
           </span>
         );
       else showMessage(uploadError);
+      setBusy(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [uploadError]);
