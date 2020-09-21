@@ -326,7 +326,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0) {
+    if (i > 0 && !isElectron) {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
