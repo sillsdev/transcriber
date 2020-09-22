@@ -1,6 +1,6 @@
 # web-transcriber-admin
 
-A `react` web/electron app for transcribing
+This project builds a front end web app and an electron app for desktop use. It was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) and [craco](https://github.com/wwlib/cra-craco-electron-example) which enables file access using create-react-app. `Create-react-app` will manage dependency updates and web packaging.
 
 ## Installation
 
