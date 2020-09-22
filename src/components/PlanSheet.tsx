@@ -326,7 +326,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && !isElectron) {
+    if (i > 0 && !isElectron && projRole === 'admin') {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -360,7 +360,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const parsePaste = (clipBoard: string) => {
-    if (projRole !== 'admin') return Array<Array<string>>();
+    if (projRole !== 'admin' || isElectron) return Array<Array<string>>();
     if (currentRow.current === 0) {
       setPasting(true);
       showMessage(t.pasting);
@@ -618,7 +618,9 @@ export function PlanSheet(props: IProps) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
-                  disabled={pasting || readonly}
+                  disabled={
+                    pasting || readonly || isElectron || projRole !== 'admin'
+                  }
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
