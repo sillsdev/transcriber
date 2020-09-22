@@ -117,32 +117,40 @@ export const AppHead = withBucket(
 
     return (
       <AppBar position="fixed" className={classes.appBar} color="inherit">
-        <Toolbar>
-          <IconButton onClick={() => checkSavedFn(() => handleHome())}>
-            <HomeIcon />
-          </IconButton>
-          {plan !== '' && (
+        <>
+          <Toolbar>
+            {plan !== '' && (
+              <>
+                <IconButton onClick={() => checkSavedFn(() => handleHome())}>
+                  <HomeIcon />
+                </IconButton>
+                <Typography variant="h6" noWrap>
+                  {getPlanName(plan)}
+                </Typography>
+              </>
+            )}
+            <div className={classes.grow}>{'\u00A0'}</div>
             <Typography variant="h6" noWrap>
-              {getPlanName(plan)}
+              {`${
+                pathname && pathname.indexOf('work') > 0
+                  ? t.transcribe
+                  : t.admin
+              } - `}
+              {t.silTranscriber}
             </Typography>
-          )}
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <Typography variant="h6" noWrap>
-            {`${
-              pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin
-            } - `}
-            {t.silTranscriber}
-          </Typography>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          {SwitchTo && <SwitchTo />}
-          <HelpMenu online={!isOffline} />
-          <UserMenu
-            action={(what: string) => checkSavedFn(() => handleUserMenu(what))}
-            auth={auth}
-          />
-        </Toolbar>
-        {!importexportBusy || <Busy />}
-        {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}
+            <div className={classes.grow}>{'\u00A0'}</div>
+            {SwitchTo && <SwitchTo />}
+            <HelpMenu online={!isOffline} />
+            <UserMenu
+              action={(what: string) =>
+                checkSavedFn(() => handleUserMenu(what))
+              }
+              auth={auth}
+            />
+          </Toolbar>
+          {!importexportBusy || <Busy />}
+          {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}
+        </>
       </AppBar>
     );
   })

@@ -336,8 +336,11 @@ const TeamProvider = withData(mapRecordsToProps)(
       vProjectUpdate(project);
     };
 
-    const projectDelete = (project: VProject) => {
-      vProjectDelete(project);
+    const projectDelete = async (project: VProject) => {
+      await vProjectDelete(project);
+      setOrganization('');
+      setProject('');
+      setPlan('');
     };
 
     const teamCreate = (team: Organization) => {
