@@ -5,7 +5,6 @@ import * as type from './types';
 import MemorySource from '@orbit/memory';
 import { remoteIdGuid, remoteId } from '../../crud';
 import { dataPath } from '../../utils/dataPath';
-import { isNumber } from 'lodash';
 import { MediaFile } from '../../model';
 
 export const fetchMediaUrl = (
@@ -16,7 +15,7 @@ export const fetchMediaUrl = (
 ) => (dispatch: any) => {
   dispatch({ type: type.FETCH_AUDIO_URL_PENDING });
   if (offline) {
-    if (isNumber(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
+    if (!isNaN(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
     try {
       var mediarec = memory.cache.query((q) =>
         q.findRecord({

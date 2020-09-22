@@ -695,7 +695,6 @@ export function MediaTab(props: IProps) {
       attachMap,
       pdata
     );
-    console.log(newData);
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
       if (r.sectionDesc !== '') medAttach.add(i);

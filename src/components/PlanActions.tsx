@@ -6,7 +6,7 @@ import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
 import UploadIcon from '@material-ui/icons/CloudUploadOutlined';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
-import PauseIcon from '@material-ui/icons/Pause';
+import StopIcon from '@material-ui/icons/Stop';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../api-variable';
@@ -97,7 +97,7 @@ export function PlanActions(props: IProps) {
           disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus()}
         >
-          {isPlaying ? <PauseIcon /> : <PlayIcon />}
+          {isPlaying ? <StopIcon /> : <PlayIcon />}
         </IconButton>
       )}
       {isPassage && (
