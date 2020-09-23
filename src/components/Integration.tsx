@@ -119,6 +119,7 @@ interface IDispatchProps {
   resetSync: typeof actions.resetSync;
   resetCount: typeof actions.resetCount;
   resetProjects: typeof actions.resetProjects;
+  resetUserName: typeof actions.resetUserName;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -156,6 +157,7 @@ export function IntegrationPanel(props: IProps) {
     resetSync,
     resetCount,
     resetProjects,
+    resetUserName,
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
@@ -179,7 +181,11 @@ export function IntegrationPanel(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
 
   const [errorReporter] = useGlobal('errorReporter');
-  const { showMessage, showTitledMessage } = useSnackBar();
+  const {
+    showMessage,
+    showTitledMessage,
+    showTitledJSXMessage,
+  } = useSnackBar();
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
   const syncing = React.useRef<boolean>(false);
@@ -362,6 +368,64 @@ export function IntegrationPanel(props: IProps) {
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     if (pRef && pRef.current) pRef.current.focus();
   };
+  const translateSyncError = (err: IAxiosStatus): JSX.Element => {
+    if (err.errMsg.includes('ReferenceError')) {
+      const errs = err.errMsg.split('||');
+      let localizedErr: JSX.Element[] = [];
+      errs.forEach((referr) => {
+        var parts = referr.split('|');
+        var str = '';
+        switch (parts[0]) {
+          case 'Empty Book':
+            str = t.emptyBook.replace('{0}', parts[1]).replace('{1}', parts[2]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+            break;
+          case 'Missing Book':
+            str = t.bookNotInParatext
+              .replace('{0}', parts[1])
+              .replace('{1}', parts[2])
+              .replace('{2}', parts[3]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+            break;
+          case 'Chapter':
+            str = t.chapterSpan
+              .replace('{0}', parts[1])
+              .replace('{1}', parts[2])
+              .replace('{2}', parts[3]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+            break;
+          case 'Reference':
+            str = t.invalidReference
+              .replace('{0}', parts[1])
+              .replace('{1}', parts[2])
+              .replace('{2}', parts[3]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+        }
+      });
+      return <span>{localizedErr}</span>;
+    } else return <span>{translateError(err)}</span>;
+  };
+
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
     if (err.errStatus === 500) {
@@ -374,6 +438,7 @@ export function IntegrationPanel(props: IProps) {
     }
     return err.errMsg;
   };
+
   const canEditParatextText = (role: string): boolean => {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
@@ -386,8 +451,18 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     Online((result) => setOnline(result), auth);
     if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
+    resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    setHasParatext(false);
+    resetUserName();
+  }, [resetUserName, user]);
+
+  useEffect(() => {
+    if (online && !hasParatext) resetUserName();
+  }, [resetUserName, online, hasParatext]);
 
   useEffect(() => {
     if (project !== myProject) {
@@ -480,13 +555,18 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (paratext_syncStatus) {
       if (paratext_syncStatus.errStatus) {
-        showTitledMessage(t.syncError, translateError(paratext_syncStatus));
+        showTitledJSXMessage(
+          t.syncError,
+          translateSyncError(paratext_syncStatus)
+        );
+        resetSync();
         setSyncing(false);
       } else if (paratext_syncStatus.statusMsg !== '') {
         showMessage(paratext_syncStatus.statusMsg);
       }
       if (paratext_syncStatus.complete) {
         resetCount();
+        resetSync();
         setSyncing(false);
         doDataChanges(auth, remote, memory, fingerprint, errorReporter);
       }
@@ -873,6 +953,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       resetSync: actions.resetSync,
       resetCount: actions.resetCount,
       resetProjects: actions.resetProjects,
+      resetUserName: actions.resetUserName,
     },
     dispatch
   ),

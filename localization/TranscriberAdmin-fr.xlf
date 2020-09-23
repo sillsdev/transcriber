@@ -2536,6 +2536,30 @@
     		<target>Erreur de synchronisation:</target>
 	     </segment>
       </unit>
+      <unit id="integration.emptyBook">
+         <segment>
+            <source>Passage {0}.{1}: Book is missing.</source>
+            <target>Passage {0}.{1}: Livre manquant.</target>
+         </segment>
+      </unit>
+      <unit id="integration.bookNotInParatext">
+         <segment>
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target>Passage {0}.{1}: Le projet Paratext ne contient pas de livre {2}.</target>
+         </segment>
+      </unit>
+      <unit id="integration.chapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target>Passage {0}.{1} {2}: Le passage ne doit pas s'étendre sur des chapitres.</target>
+         </segment>
+      </unit>
+      <unit id="integration.invalidReference">
+         <segment>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target>Passage {0}.{1} {2}: Référence non valide</target>
+         </segment>
+      </unit>
       <unit id="integration.bookNotFound">
          <segment>
             <source>Book not included in this project</source>

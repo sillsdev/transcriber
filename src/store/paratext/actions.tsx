@@ -22,6 +22,13 @@ import { getMediaProjRec, getMediaRec } from '../../crud';
 import { fileJson, infoMsg, logError, Severity } from '../../utils';
 import MemorySource from '@orbit/memory';
 
+export const resetUserName = () => (dispatch: any) => {
+  dispatch({
+    payload: undefined,
+    type: USERNAME_PENDING,
+  });
+};
+
 export const getUserName = (
   auth: Auth,
   errorReporter: any,

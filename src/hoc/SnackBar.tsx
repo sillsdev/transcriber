@@ -32,6 +32,15 @@ export const useSnackBar = () => {
   const showJSXMessage = (msg: JSX.Element) => {
     setMessage(msg);
   };
+  const showTitledJSXMessage = (title: string, msg: JSX.Element) => {
+    setMessage(
+      <span>
+        {title}
+        <br />
+        {msg}
+      </span>
+    );
+  };
   const showTitledMessage = (title: string, msg: string) => {
     setMessage(
       <span>
@@ -99,6 +108,7 @@ export const useSnackBar = () => {
     showMessage,
     showJSXMessage,
     showTitledMessage,
+    showTitledJSXMessage,
   };
 };
 export default function SnackBarProvider(props: IProps) {

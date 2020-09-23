@@ -2973,6 +2973,34 @@
                     <context context-type="sourcefile">integration.tsx</context>
                 </context-group>
             </trans-unit>
+             <trans-unit id="integration.emptyBook">
+                <source>Passage {0}.{1}: Book is missing.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="integration.bookNotInParatext">
+                <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="integration.chapterSpan">
+                <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>
+             <trans-unit id="integration.invalidReference">
+                <source>Passage {0}.{1} {2}: Invalid Reference</source>
+                <target/>
+                <context-group>
+                    <context context-type="sourcefile">integration.tsx</context>
+                </context-group>
+            </trans-unit>
             <trans-unit id="integration.bookNotFound">
                 <source>Book not included in this project</source>
                 <target/>

@@ -513,6 +513,10 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "usernameError": string;
     "syncPending": string;
     "syncError": string;
+    "emptyBook": string;
+    "bookNotInParatext": string;
+    "chapterSpan": string;
+    "invalidReference": string;
     "bookNotFound": string;
     "syncComplete": string;
     "countError": string;

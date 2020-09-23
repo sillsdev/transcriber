@@ -64,6 +64,7 @@ export const AddCard = (props: IProps) => {
     auth,
     flatAdd,
     sharedStrings,
+    vProjectStrings,
   } = ctx.state;
   const t = cardStrings;
   const { showMessage, showJSXMessage } = useSnackBar();
@@ -79,7 +80,7 @@ export const AddCard = (props: IProps) => {
     t.mediaUploaded,
     t.passagesCreated,
   ]);
-  const { getOrganizedBy } = useOrganizedBy();
+  const { fromLocalizedOrganizedBy } = useOrganizedBy();
   const [step, setStep] = React.useState(0);
   const [status] = React.useState({ ...statusInit });
   const [, setPlan] = useGlobal('plan');
@@ -156,7 +157,7 @@ export const AddCard = (props: IProps) => {
           rtl: false,
           tags: {},
           flat: true,
-          organizedBy: getOrganizedBy(false),
+          organizedBy: fromLocalizedOrganizedBy(vProjectStrings.sections),
         },
       } as any,
       team

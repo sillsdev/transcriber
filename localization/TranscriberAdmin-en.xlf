@@ -2548,6 +2548,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="integration.emptyBook">
+         <segment>
+            <source>Passage {0}.{1}: Book is missing.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.bookNotInParatext">
+         <segment>
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.chapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="integration.invalidReference">
+         <segment>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="integration.bookNotFound">
          <segment>
             <source>Book not included in this project</source>
