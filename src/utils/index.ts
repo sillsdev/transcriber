@@ -27,3 +27,5 @@ export * from './useInterval';
 export * from './useRemoteSave';
 export * from './validateEmail';
 export * from './waitForIt';
+export * from './lookupBook';
+export * from './refMatch';

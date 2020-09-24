@@ -15,8 +15,8 @@ import {
   SectionPassage,
   ISharedStrings,
   MediaFile,
+  OptionType,
 } from '../model';
-import { OptionType } from '../components/ReactSelect';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -34,7 +34,7 @@ import {
   useOrganizedBy,
   usePlan,
 } from '../crud';
-import { Online, useRemoteSave } from '../utils';
+import { Online, useRemoteSave, lookupBook } from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
 import Auth from '../auth/Auth';
@@ -533,20 +533,6 @@ export function ScriptureTable(props: IProps) {
     return true;
   };
 
-  const lookupBook = (userBookDes: string): string => {
-    const userBookDesUc = userBookDes?.toLocaleUpperCase() || '';
-    if (userBookDesUc !== '' && !bookMap[userBookDesUc]) {
-      const proposed = allBookData.filter(
-        (bookName) =>
-          bookName.short.toLocaleUpperCase() === userBookDesUc ||
-          bookName.long.toLocaleUpperCase() === userBookDesUc ||
-          bookName.abbr.toLocaleUpperCase() === userBookDesUc
-      );
-      if (proposed.length >= 1) return proposed[0].code;
-    }
-    return userBookDesUc;
-  };
-
   const isBlankOrValidNumber = (value: string): boolean => {
     return /^[0-9]*$/.test(value);
   };
@@ -600,7 +586,7 @@ export function ScriptureTable(props: IProps) {
             .map((row) =>
               row.map((col, colIndex) =>
                 isValidNumber(row[cols.PassageSeq]) && colIndex === cols.Book
-                  ? lookupBook(col)
+                  ? lookupBook({ book: col, allBookData, bookMap })
                   : isValidNumber(row[cols.SectionSeq])
                   ? (inlinePassages &&
                       isValidNumber(row[cols.PassageSeq]) &&
@@ -621,7 +607,9 @@ export function ScriptureTable(props: IProps) {
             .filter((row, rowIndex) => rowIndex >= startRow)
             .map((row) =>
               row.map((col, colIndex) =>
-                colIndex !== cols.Book ? col : lookupBook(col)
+                colIndex !== cols.Book
+                  ? col
+                  : lookupBook({ book: col, allBookData, bookMap })
               )
             )
         ),
@@ -1094,6 +1082,9 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
+  const handleLookupBook = (book: string) =>
+    lookupBook({ book, allBookData, bookMap });
+
   return (
     <div className={classes.container}>
       {complete === 0 || (
@@ -1114,7 +1105,7 @@ export function ScriptureTable(props: IProps) {
         addPassage={addPassage}
         updateData={updateData}
         paste={handleTablePaste}
-        lookupBook={lookupBook}
+        lookupBook={handleLookupBook}
         resequence={handleResequence}
         inlinePassages={inlinePassages}
         onTranscribe={handleTranscribe}

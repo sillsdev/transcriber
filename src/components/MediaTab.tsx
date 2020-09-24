@@ -64,6 +64,7 @@ import {
   numCompare,
   localeDefault,
   useRemoteSave,
+  refMatch,
 } from '../utils';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
@@ -282,9 +283,7 @@ const getPassages = (
       passages
         .filter((p) => related(p, 'section') === sectionId)
         .forEach((passage) => {
-          const refMat = /([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/g.exec(
-            passage.attributes.reference
-          );
+          const refMat = refMatch(passage.attributes.reference);
           prowData.push({
             id: passage.id,
             sectionId: section.id,

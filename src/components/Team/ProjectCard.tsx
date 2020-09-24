@@ -195,6 +195,7 @@ export const ProjectCard = (props: IProps) => {
       name: attr.name,
       description: attr.description || '',
       type: attr.type,
+      book: '',
       bcp47: attr.language,
       languageName: attr.languageName || '',
       font: attr.defaultFont || '',

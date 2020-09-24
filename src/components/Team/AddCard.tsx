@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { VProject, DialogMode } from '../../model';
+import { VProject, DialogMode, OptionType } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
 import { Language, ILanguage } from '../../control';
 import Uploader, { statusInit } from '../Uploader';
@@ -11,6 +11,7 @@ import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
 import { StickyRedirect } from '../../control';
+import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -65,6 +66,7 @@ export const AddCard = (props: IProps) => {
     flatAdd,
     sharedStrings,
     vProjectStrings,
+    bookSuggestions,
   } = ctx.state;
   const t = cardStrings;
   const { showMessage, showJSXMessage } = useSnackBar();
@@ -74,6 +76,7 @@ export const AddCard = (props: IProps) => {
   const [uploadVisible, setUploadVisible] = React.useState(false);
   const [type, setType] = React.useState('');
   const [language, setLanguage] = React.useState<ILanguage>(initLang);
+  const [book, setBook] = React.useState<OptionType | null>(null);
   const [complete, setComplete] = React.useState(0);
   const [steps] = React.useState([
     t.projectCreated,
@@ -103,7 +106,10 @@ export const AddCard = (props: IProps) => {
     setLanguage(lang);
   };
 
-  const handleReady = () => type !== '' && language.bcp47 !== 'und';
+  const handleReady = () =>
+    type !== '' &&
+    language.bcp47 !== 'und' &&
+    (type !== 'scripture' || book !== null);
 
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
@@ -147,7 +153,7 @@ export const AddCard = (props: IProps) => {
     const planId = await projectCreate(
       {
         attributes: {
-          name,
+          name: book?.label || name,
           description: '',
           type,
           language: language.bcp47,
@@ -159,7 +165,7 @@ export const AddCard = (props: IProps) => {
           flat: true,
           organizedBy: fromLocalizedOrganizedBy(vProjectStrings.sections),
         },
-      } as any,
+      } as VProject,
       team
     );
     setPlan(planId);
@@ -173,10 +179,17 @@ export const AddCard = (props: IProps) => {
     mediaRemoteIds?: string[]
   ) => {
     setStep(2);
-    mediaRemoteIds && (await flatAdd(planId, mediaRemoteIds, setComplete));
+    mediaRemoteIds &&
+      (await flatAdd(planId, mediaRemoteIds, book?.value, setComplete));
     setInProgress(false);
     setStep(0);
-    setView(`/work/${remoteId('plan', planId, memory.keyMap)}`);
+    if (book?.value)
+      setView(`/plan/${remoteId('plan', planId, memory.keyMap)}/0`);
+    else setView(`/work/${remoteId('plan', planId, memory.keyMap)}`);
+  };
+
+  const handleBookCommit = (book: OptionType | null) => {
+    setBook(book);
   };
 
   useEffect(() => {
@@ -190,6 +203,26 @@ export const AddCard = (props: IProps) => {
   const cancelUpload = (what: string) => {
     status.canceled = true;
   };
+
+  const MetaData = React.useMemo(
+    () => {
+      return (
+        <>
+          <ProjectType type={type} onChange={setType} />
+          {type === 'scripture' && (
+            <BookCombobox
+              value={book}
+              suggestions={bookSuggestions}
+              onCommit={handleBookCommit}
+            />
+          )}
+          <Language {...language} onChange={handleLanguageChange} />
+        </>
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bookSuggestions, language, type, book]
+  );
 
   if (view !== '') return <StickyRedirect to={view} />;
 
@@ -209,7 +242,7 @@ export const AddCard = (props: IProps) => {
               >
                 {t.newProject}
               </Button>
-              {/*  revisit in the future
+              {/* TODO: revisit in the future
               <Button variant="contained" onClick={handleConnect(team)}>
                 {t.connectParatext}
               </Button>
@@ -236,12 +269,7 @@ export const AddCard = (props: IProps) => {
         showJSXMessage={showJSXMessage}
         setComplete={setComplete}
         multiple={true}
-        metaData={
-          <>
-            <ProjectType type={type} onChange={setType} />
-            <Language {...language} onChange={handleLanguageChange} />
-          </>
-        }
+        metaData={MetaData}
         ready={handleReady}
         createProject={createProject}
         finish={makeSectionsAndPassages}

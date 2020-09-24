@@ -23,7 +23,7 @@ import useTranscriberIds from './useTranscriberIds';
 import TeamCol from './TeamCol';
 import GroupMemberAdd from './GroupMemberAdd';
 import Confirm from '../AlertDialog';
-import { OptionType } from '../ReactSelect';
+import { OptionType } from '../../model';
 import { related, getRoleId } from '../../crud';
 
 interface IStateProps {

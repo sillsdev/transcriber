@@ -352,6 +352,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.refErr">
+         <segment>
+            <source>This project contains invalid references and will not sync to Paratext properly.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.saving">
          <segment>
             <source>Saving...</source>

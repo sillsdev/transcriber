@@ -1,4 +1,4 @@
-import { OptionType } from '../components/ReactSelect';
+import { OptionType } from '../model';
 
 export interface BookName {
   code: string;

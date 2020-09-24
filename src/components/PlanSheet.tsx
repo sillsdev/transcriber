@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import { IPlanSheetStrings, ISharedStrings, BookNameMap } from '../model';
-import { OptionType } from './ReactSelect';
+import {
+  IPlanSheetStrings,
+  ISharedStrings,
+  BookNameMap,
+  OptionType,
+} from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, Menu, MenuItem, AppBar } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
@@ -12,10 +16,9 @@ import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import { ProjButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { isNumber } from 'util';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
-import { Online } from '../utils';
+import { Online, refMatch } from '../utils';
 import { useOrganizedBy } from '../crud';
 import { useInterval } from '../utils/useInterval';
 import { useRemoteSave } from '../utils/useRemoteSave';
@@ -56,6 +59,9 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .data-grid-container .data-grid .cell.setp': {
         backgroundColor: theme.palette.background.default,
       },
+      '& .data-grid-container .data-grid .cell.setpErr': {
+        backgroundColor: theme.palette.warning.main,
+      },
       '& .data-grid-container .data-grid .cell.num': {
         textAlign: 'center',
       },
@@ -65,6 +71,10 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       '& .data-grid-container .data-grid .cell.pass': {
         backgroundColor: theme.palette.background.paper,
+        textAlign: 'left',
+      },
+      '& .data-grid-container .data-grid .cell.passErr': {
+        backgroundColor: theme.palette.warning.main,
         textAlign: 'left',
       },
       '& .data-grid-container .data-grid .cell.pass > input': {
@@ -102,6 +112,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     icon: {
       marginLeft: theme.spacing(1),
+    },
+    warning: {
+      backgroundColor: theme.palette.warning.main,
+      display: 'flex',
+      justifyContent: 'space-around',
+      padding: theme.spacing(1),
+      marginBottom: theme.spacing(1),
     },
   })
 );
@@ -145,7 +162,7 @@ interface IProps extends IStateProps {
   action: (what: string, where: number[]) => boolean;
   addPassage: (i?: number, before?: boolean) => void;
   addSection: (i?: number) => void;
-  lookupBook?: (book: string) => string;
+  lookupBook: (book: string) => string;
   resequence: () => void;
   inlinePassages: boolean;
   onTranscribe: (i: number) => void;
@@ -193,7 +210,6 @@ export function PlanSheet(props: IProps) {
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
   const suggestionRef = useRef<Array<OptionType>>();
-  const listRef = useRef<Array<string>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
   const [doSave] = useGlobal('doSave');
   const [online, setOnline] = useState(true);
@@ -208,7 +224,8 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-  const [readonly] = useState(isElectron || projRole !== 'admin');
+  const [readonly, setReadOnly] = useState(isElectron || projRole !== 'admin');
+  const [warning, setWarning] = useState<string>();
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
   const LastCol = 6;
@@ -403,7 +420,7 @@ export function PlanSheet(props: IProps) {
     );
   };
   const isNum = (value: string | number) =>
-    isNumber(value) || /^[0-9]+$/.test(value);
+    typeof value === 'number' || /^[0-9]+$/.test(value);
 
   const handleAutoSave = () => {
     if (changed && !preventSave.current && !global.alertOpen) {
@@ -420,6 +437,12 @@ export function PlanSheet(props: IProps) {
   };
 
   const tryOnline = () => Online((result) => setOnline(result));
+
+  useEffect(() => {
+    const newValue = isElectron || projRole !== 'admin';
+    if (readonly !== newValue) setReadOnly(newValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projRole]);
 
   useEffect(() => {
     if (changed) {
@@ -440,10 +463,14 @@ export function PlanSheet(props: IProps) {
 
   const MemoizedTaskAvatar = React.memo(TaskAvatar);
 
+  const refErrTest = (ref: any) => typeof ref !== 'string' || !refMatch(ref);
+
   useEffect(() => {
     if (rowData.length !== rowInfo.length) {
       setData([]);
     } else {
+      const refCol = bookCol + 1;
+
       let data = [
         [
           {
@@ -501,7 +528,10 @@ export function PlanSheet(props: IProps) {
                         cellIndex === PassageSeqCol
                           ? 'num '
                           : '') +
-                        (section ? 'set' + (passage ? 'p' : '') : 'pass'),
+                        (section ? 'set' + (passage ? 'p' : '') : 'pass') +
+                        (refCol && refCol === cellIndex && refErrTest(e)
+                          ? 'Err'
+                          : ''),
                     };
               })
             )
@@ -533,11 +563,23 @@ export function PlanSheet(props: IProps) {
         })
       );
 
+      let refErr = false;
+      if (refCol > 0) {
+        rowData.forEach((row) => {
+          if (isPassage(row)) {
+            const ref = row[refCol];
+            if (refErrTest(ref)) refErr = true;
+          }
+        });
+      }
+      if (refErr && !warning) setWarning(t.refErr);
+      else if (!refErr && warning) setWarning(undefined);
+
       setData(data);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, rowInfo, bookCol, columns, srcMediaId]);
+  }, [rowData, rowInfo, bookCol, columns, srcMediaId, projRole]);
 
   useEffect(() => {
     if (sheetRef.current && showRow) {
@@ -560,9 +602,6 @@ export function PlanSheet(props: IProps) {
 
   useEffect(() => {
     suggestionRef.current = bookSuggestions;
-    listRef.current = bookSuggestions
-      ? bookSuggestions.map((v) => v.label)
-      : [];
   }, [bookSuggestions]);
 
   useEffect(() => {
@@ -663,6 +702,7 @@ export function PlanSheet(props: IProps) {
           </AppBar>
         )}
         <div id="PlanSheet" ref={sheetRef} className={classes.content}>
+          {warning && <div className={classes.warning}>{warning}</div>}
           <DataSheet
             data={data as any[][]}
             valueRenderer={handleValueRender}

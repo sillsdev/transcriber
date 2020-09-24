@@ -22,7 +22,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { useSnackBar } from '../../hoc/SnackBar';
-import { OptionType } from '../ReactSelect';
+import { OptionType } from '../../model';
 import useStyles from './GroupSettingsStyles';
 import { addGroupMember, getRoleId } from '../../crud';
 

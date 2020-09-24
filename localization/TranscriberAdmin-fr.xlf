@@ -338,6 +338,12 @@
 				<target>Sauvegarder</target>
 			</segment>
 		</unit>
+		<unit id="planSheet.refErr">
+			<segment>
+				<source>This project contains invalid references and will not sync to Paratext properly.</source>
+				<target>Ce projet contient des références non valables et ne se synchronisera pas correctement avec Paratext.</target>
+			</segment>
+		</unit>
 		<unit id="planSheet.saving">
          <segment>
             <source>Saving</source>

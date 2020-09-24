@@ -78,6 +78,7 @@ export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "addPassage": string;
     "inlineToggle": string;
     "save": string;
+    "refErr": string;
     "saving": string;
     "selectRows": string;
     "confirm": string;

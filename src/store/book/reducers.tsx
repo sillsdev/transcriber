@@ -6,7 +6,7 @@ import {
   BookNameMsgs,
 } from './types';
 import { SET_LANGUAGE, LocalizationMsgs } from '../localization/types';
-import { OptionType } from '../../components/ReactSelect';
+import { OptionType } from '../../model';
 
 export const bookCleanState = {
   loaded: false,
@@ -19,13 +19,13 @@ const makeMap = (books: BookName[]) => {
   let result: BookNameMap = {};
   books
     .filter((b: BookName) => b.short !== '')
-    .forEach(b => {
+    .forEach((b) => {
       result[b.code] = b.short;
     });
   return result;
 };
 
-export default function(
+export default function (
   state = bookCleanState,
   action: BookNameMsgs | LocalizationMsgs
 ): IBookNameData {

@@ -411,7 +411,14 @@
                     <context context-type="sourcefile">PlanSheet.tsx</context>
                 </context-group>
             </trans-unit>
-            <trans-unit id="planSheet.saving">
+        	<trans-unit id="planSheet.refErr">
+        		<source>This project contains invalid references and will not sync to Paratext properly.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">PlanSheet.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="planSheet.saving">
                 <source>Saving...</source>
                 <target/>
                 <context-group>

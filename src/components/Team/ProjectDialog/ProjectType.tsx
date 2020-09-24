@@ -25,7 +25,9 @@ export const ProjectType = (props: IProps) => {
       required
       label={t.type}
       defaultValue={type}
-      options={planTypes.map((t) => t.attributes.name.toLowerCase())}
+      options={planTypes
+        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
+        .map((t) => t.attributes.name.toLowerCase())}
       onChange={onChange}
       decorations={decorations}
     />

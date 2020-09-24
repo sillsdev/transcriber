@@ -1,5 +1,5 @@
 // Describing the shape of the book names's slice of state
-import { OptionType } from '../../components/ReactSelect';
+import { OptionType } from '../../model';
 
 export interface BookName {
   code: string;
@@ -23,8 +23,8 @@ export interface IBookNameData {
 export const FETCH_BOOKS = 'FETCH_BOOKS';
 
 interface FetchBookNames {
-  type: typeof FETCH_BOOKS,
-  payload: {data: BookName[]},
+  type: typeof FETCH_BOOKS;
+  payload: { data: BookName[] };
 }
 
 export type BookNameMsgs = FetchBookNames;

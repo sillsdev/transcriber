@@ -10,6 +10,7 @@ export const useFlatAdd = () => {
   return async (
     planId: string,
     mediaRemoteIds: string[],
+    book: string | undefined,
     setComplete?: (amt: number) => void
   ) => {
     const mediaRecs = memory.cache.query((q: QueryBuilder) =>
@@ -39,7 +40,7 @@ export const useFlatAdd = () => {
           type: 'passage',
           attributes: {
             sequencenum: seq + 1,
-            book: '',
+            book: book,
             reference: `Part ${seq + 1}`,
             title: '',
             position: 0,

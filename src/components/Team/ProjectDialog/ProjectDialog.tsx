@@ -36,6 +36,7 @@ const initState = {
   name: '',
   description: '',
   type: 'scripture',
+  book: '',
   bcp47: 'und',
   languageName: '',
   font: '',

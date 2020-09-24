@@ -20,7 +20,11 @@ import {
   ILanguagePickerStrings,
   ISharedStrings,
   IProjButtonsStrings,
+  BookNameMap,
+  BookName,
 } from '../model';
+import { OptionType } from '../model';
+
 // import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
@@ -59,6 +63,9 @@ interface IStateProps {
   pickerStrings: ILanguagePickerStrings;
   projButtonStrings: IProjButtonsStrings;
   ts: ISharedStrings;
+  bookSuggestions: OptionType[];
+  bookMap: BookNameMap;
+  allBookData: BookName[];
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   lang: state.strings.lang,
@@ -70,14 +77,19 @@ const mapStateToProps = (state: IState): IStateProps => ({
   pickerStrings: localStrings(state, { layout: 'languagePicker' }),
   projButtonStrings: localStrings(state, { layout: 'projButtons' }),
   ts: localStrings(state, { layout: 'shared' }),
+  bookSuggestions: state.books.suggestions,
+  bookMap: state.books.map,
+  allBookData: state.books.bookData,
 });
 
 interface IDispatchProps {
+  fetchBooks: typeof actions.fetchBooks;
   doOrbitError: typeof actions.doOrbitError;
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
+      fetchBooks: actions.fetchBooks,
       doOrbitError: actions.doOrbitError,
     },
     dispatch
@@ -105,6 +117,9 @@ const initState = {
   auth: undefined as any,
   controlStrings: {} as IControlStrings,
   lang: 'en',
+  bookSuggestions: Array<OptionType>(),
+  bookMap: {} as BookNameMap,
+  allBookData: Array<BookName>(),
   planTypes: Array<PlanType>(),
   teams: () => Array<Organization>(),
   personalProjects: () => Array<VProject>(),
@@ -129,6 +144,7 @@ const initState = {
   flatAdd: (
     planId: string,
     mediaRemoteIds: string[],
+    book: string | undefined,
     setComplete?: (amt: number) => void
   ) => {},
   cardStrings: {} as ICardsStrings,
@@ -173,6 +189,10 @@ const TeamProvider = withData(mapRecordsToProps)(
       vProjectStrings,
       pickerStrings,
       projButtonStrings,
+      bookSuggestions,
+      bookMap,
+      allBookData,
+      fetchBooks,
       doOrbitError,
     } = props;
     const [memory] = useGlobal('memory');
@@ -358,12 +378,18 @@ const TeamProvider = withData(mapRecordsToProps)(
     const flatAdd = async (
       planId: string,
       mediaRemoteIds: string[],
+      book: string | undefined,
       setComplete?: (amt: number) => void
     ) => {
-      await orbitFlatAdd(planId, mediaRemoteIds, setComplete);
+      await orbitFlatAdd(planId, mediaRemoteIds, book, setComplete);
       const planRec = getPlan(planId);
       if (planRec) setProjectParams(planRec);
     };
+
+    useEffect(() => {
+      if (allBookData.length === 0) fetchBooks(lang);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lang, allBookData]);
 
     useEffect(() => {
       if (isElectron) {
@@ -392,6 +418,9 @@ const TeamProvider = withData(mapRecordsToProps)(
         value={{
           state: {
             ...state,
+            bookSuggestions,
+            bookMap,
+            allBookData,
             teams,
             personalProjects,
             teamProjects,
