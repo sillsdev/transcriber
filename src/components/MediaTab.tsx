@@ -260,9 +260,7 @@ const getMedia = (
 };
 
 const isAttached = (p: Passage, media: MediaFile[]) => {
-  const mediaRecs = related(p, 'mediafiles') as MediaFile[];
-  const mediaId = mediaRecs && mediaRecs.length > 0 && mediaRecs[0].id;
-  return media.filter((m) => m.id === mediaId).length > 0;
+  return media.filter((m) => related(m, 'passage') === p.id).length > 0;
 };
 
 const pad = (text: number) => ('00' + text).slice(-2);
