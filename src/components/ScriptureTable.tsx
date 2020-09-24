@@ -819,7 +819,7 @@ export function ScriptureTable(props: IProps) {
                   );
                 if (isPassageRow(row) && row.passageId?.id === '')
                   row.passageId.id = remoteIdGuid(
-                    'section',
+                    'passage',
                     (outrecs[index][isSectionRow(row) ? 1 : 0] as IRecord).id,
                     memory.keyMap
                   );
