@@ -518,11 +518,13 @@ export function PlanSheet(props: IProps) {
                     }
                   : {
                       value: e,
-                      readOnly: section
-                        ? passage
-                          ? false
-                          : cellIndex > 1
-                        : cellIndex <= 1,
+                      readOnly:
+                        isElectron ||
+                        (section
+                          ? passage
+                            ? false
+                            : cellIndex > 1
+                          : cellIndex <= 1),
                       className:
                         (cellIndex === SectionSeqCol ||
                         cellIndex === PassageSeqCol
