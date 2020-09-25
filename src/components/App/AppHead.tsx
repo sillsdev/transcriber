@@ -79,20 +79,21 @@ export const AppHead = withBucket(
         exitElectronApp();
       }
       if (isElectron && /logout/i.test(what)) {
-        ipc?.invoke('logout');
-        localStorage.removeItem('user-id');
-        setView('Access');
+        checkSavedFn(() => {
+          ipc?.invoke('logout');
+          localStorage.removeItem('user-id');
+          setView('Access');
+        });
         return;
       }
       localStorage.setItem('url', lastpath);
       if (!/Close/i.test(what)) {
         if (/ClearLogout/i.test(what)) {
           forceLogin();
-          what = 'Logout';
-        }
-        if (/Clear/i.test(what)) {
+          setView('Logout');
+        } else if (/Clear/i.test(what)) {
           if (resetRequests) resetRequests().then(() => setView(what));
-        } else setView(what);
+        } else checkSavedFn(() => setView(what));
       }
     };
 
@@ -156,9 +157,7 @@ export const AppHead = withBucket(
             {SwitchTo && <SwitchTo />}
             <HelpMenu online={!isOffline} />
             <UserMenu
-              action={(what: string) =>
-                checkSavedFn(() => handleUserMenu(what))
-              }
+              action={(what: string) => handleUserMenu(what)}
               auth={auth}
             />
           </Toolbar>
