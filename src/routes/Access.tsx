@@ -149,7 +149,19 @@ export function Access(props: IProps) {
 
   const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
+  // see: https://web.dev/persistent-storage/
+  const persistData = async () => {
+    if (navigator?.storage?.persisted) {
+      let isPersisted = await navigator.storage.persisted();
+      if (!isPersisted && navigator?.storage?.persist) {
+        isPersisted = await navigator.storage.persist();
+      }
+      console.log(`Persisted storage granted: ${isPersisted}`);
+    }
+  };
+
   useEffect(() => {
+    if (isElectron) persistData();
     setLanguage(localeDefault());
     fetchLocalization();
     if (isElectron) {
