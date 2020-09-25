@@ -55,7 +55,6 @@ import {
   FontData,
   getFontData,
   UpdatePassageStateOps,
-  AddPassageStateCommentOps,
 } from '../crud';
 import {
   relMouseCoords,
@@ -206,7 +205,8 @@ export function Transcriber(props: IProps) {
   const [showHistory, setShowHistory] = React.useState(false);
   const [historyContent, setHistoryContent] = React.useState<any[]>();
   const [rejectVisible, setRejectVisible] = React.useState(false);
-  const [transcriptionIn, setTranscriptionIn] = React.useState('');
+  const transcriptionIn = React.useRef<string>();
+  const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
 
   const playerRef = React.useRef<any>();
@@ -411,6 +411,7 @@ export function Transcriber(props: IProps) {
 
   const handleSave = async (postComment: boolean = false) => {
     if (transcriptionRef.current) {
+      saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
       const userid = remoteIdNum('user', user, memory.keyMap);
       const tb = new TransformBuilder();
@@ -422,23 +423,12 @@ export function Transcriber(props: IProps) {
         section.id,
         plan,
         nextState,
-        '',
+        postComment ? comment : '',
         userid,
         tb,
         ops,
         memory
       );
-      if (postComment && comment !== '') {
-        ops = AddPassageStateCommentOps(
-          passage.id,
-          state,
-          comment,
-          userid,
-          tb,
-          ops,
-          memory
-        );
-      }
       ops.push(
         UpdateRecord(
           tb,
@@ -459,13 +449,16 @@ export function Transcriber(props: IProps) {
         .then(() => {
           //we come here before we get an error because we're non-blocking
           if (postComment) setComment('');
+          transcriptionIn.current = transcription;
           loadHistory();
           saveCompleted('');
           setLastSaved(currentDateTime());
+          saving.current = false;
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
           saveCompleted(err.message);
+          saving.current = false;
         });
     }
   };
@@ -620,7 +613,7 @@ export function Transcriber(props: IProps) {
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
       const transcription = attr.transcription ? attr.transcription : '';
-      setTranscriptionIn(transcription);
+      transcriptionIn.current = transcription;
       setTextValue(transcription);
       setDefaultPosition(attr.position);
       //focus on player
@@ -648,10 +641,9 @@ export function Transcriber(props: IProps) {
   const handleAutosave = () => {
     if (transcriptionRef.current) {
       const transcription = transcriptionRef.current.firstChild.value;
-      if (transcriptionIn !== transcription) {
+      if (transcriptionIn.current !== transcription) {
         if (!busy) {
           handleSave().finally(() => {
-            setTranscriptionIn(transcription);
             launchTimer();
           });
           handleAssign();
@@ -682,7 +674,7 @@ export function Transcriber(props: IProps) {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [transcriptionIn, mediaId]);
+  }, [mediaId]);
 
   const textAreaStyle = {
     overflow: 'auto',
@@ -715,7 +707,7 @@ export function Transcriber(props: IProps) {
     comment: JSX.Element | string
   ) => {
     return (
-      <ListItem>
+      <ListItem key={`${psc?.keys?.remoteId}-${comment.toString()}`}>
         <ListItemIcon>
           <UserAvatar
             {...props}
@@ -779,7 +771,7 @@ export function Transcriber(props: IProps) {
   };
 
   React.useEffect(() => {
-    if (passage?.id) {
+    if (passage?.id && !saving.current) {
       loadHistory();
     }
     const newAssigned = rowData[index]?.assigned;
