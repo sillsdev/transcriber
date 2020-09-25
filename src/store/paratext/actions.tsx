@@ -1,4 +1,4 @@
-import Axios, { AxiosError } from 'axios';
+import Axios from 'axios';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import { Passage, ActivityStates } from '../../model';
@@ -17,7 +17,7 @@ import {
   SYNC_ERROR,
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
-import { pendingStatus, errStatus } from '../AxiosStatus';
+import { pendingStatus, errStatus, errorStatus } from '../AxiosStatus';
 import { getMediaProjRec, getMediaRec } from '../../crud';
 import { fileJson, infoMsg, logError, Severity } from '../../utils';
 import MemorySource from '@orbit/memory';
@@ -33,26 +33,43 @@ export const getUserName = (
   auth: Auth,
   errorReporter: any,
   pendingmsg: string
-) => (dispatch: any) => {
+) => async (dispatch: any) => {
   dispatch({
     payload: pendingStatus(pendingmsg),
     type: USERNAME_PENDING,
   });
-  Axios.get(API_CONFIG.host + '/api/paratext/username', {
-    headers: {
-      Authorization: 'Bearer ' + auth.accessToken,
-    },
-  })
-    .then((response) => {
+  let numTries = 5;
+  let success = false;
+  let lasterr: any = null;
+  while (numTries > 0 && !success) {
+    try {
+      let response = await Axios.get(
+        API_CONFIG.host + '/api/paratext/username',
+        {
+          headers: {
+            Authorization: 'Bearer ' + auth.accessToken,
+          },
+        }
+      );
       dispatch({ payload: response.data, type: USERNAME_SUCCESS });
-    })
-    .catch((err: AxiosError) => {
+      success = true;
+    } catch (err) {
+      lasterr = err;
       logError(Severity.info, errorReporter, infoMsg(err, 'Username failed'));
-      dispatch({
-        payload: errStatus(err),
-        type: USERNAME_ERROR,
-      });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    console.log('username', numTries);
+    numTries--;
+  }
+  if (!success) {
+    dispatch({
+      payload:
+        lasterr !== null
+          ? errStatus(lasterr)
+          : errorStatus(-1, 'unknown username error'),
+      type: USERNAME_ERROR,
     });
+  }
 };
 export const resetProjects = () => (dispatch: any) => {
   dispatch({
