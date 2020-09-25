@@ -107,6 +107,20 @@ export const AppHead = withBucket(
       setView('Home');
     };
 
+    React.useEffect(() => {
+      const handleUnload = (e: any) => {
+        e.preventDefault();
+        e.returnValue = '';
+        return true;
+      };
+
+      window.addEventListener('beforeunload', handleUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleUnload);
+      };
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    }, []);
+
     if (view === 'Error') return <Redirect to="/error" />;
     if (view === 'Profile') return <Redirect to="/profile" />;
     if (view === 'Logout') return <Redirect to="/logout" />;
