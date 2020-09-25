@@ -107,7 +107,7 @@ export const AppHead = withBucket(
       setProjRole('');
       setView('Home');
     };
-
+    /* -- see if this is the problem with the download
     React.useEffect(() => {
       const handleUnload = (e: any) => {
         e.preventDefault();
@@ -120,7 +120,8 @@ export const AppHead = withBucket(
         window.removeEventListener('beforeunload', handleUnload);
       };
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, []);
+    /*    }, []);
+     */
 
     if (view === 'Error') return <Redirect to="/error" />;
     if (view === 'Profile') return <Redirect to="/profile" />;
