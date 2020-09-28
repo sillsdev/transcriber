@@ -98,14 +98,20 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   };
   const organizedBy = getOrganizedBy(false);
 
-  const planSections = sections.filter((s) => related(s, 'plan') === plan);
+  const planSections = plan
+    ? sections.filter((s) => related(s, 'plan') === plan)
+    : ([] as Section[]);
   const planSectionIds = planSections.map((p) => p.id);
   const planPassages = passages.filter((p) =>
     planSectionIds.includes(related(p, 'section'))
   );
-  const planMedia = mediafiles.filter(
-    (m) => related(m, 'plan') === plan && m.attributes.versionNumber === 1
-  );
+  // this is only used to get counts,
+  // so we're using this clever hack of only getting version 1
+  const planMedia = plan
+    ? mediafiles.filter(
+        (m) => related(m, 'plan') === plan && m.attributes.versionNumber === 1
+      )
+    : ([] as MediaFile[]);
   const attached = planMedia
     .map((m) => related(m, 'passage'))
     .filter((p) => p && p !== '');

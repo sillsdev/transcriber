@@ -12,6 +12,7 @@ const useTodo = () => {
     setFilter,
     index: state.index,
     selected: state.selected,
+    mediafiles: state.mediafiles,
   };
 };
 

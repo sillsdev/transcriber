@@ -148,6 +148,7 @@ export function Transcriber(props: IProps) {
     selected,
     playing,
     setPlaying,
+    mediafiles,
   } = useTodo();
   const {
     section,
@@ -606,9 +607,6 @@ export function Transcriber(props: IProps) {
   }, [height, makeComment, comment, commentRef.current]);
 
   React.useEffect(() => {
-    const mediafiles = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('mediafile')
-    ) as MediaFile[];
     const mediaRec = mediafiles.filter((m) => m.id === mediaId);
     if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
       const attr = mediaRec[0].attributes;
@@ -626,7 +624,7 @@ export function Transcriber(props: IProps) {
       fetchMediaUrl(mediaRemoteId, memory, offline, auth);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [selected]);
+  }, [selected, mediafiles]);
 
   React.useEffect(() => {
     if (project && project !== '') {

@@ -18,6 +18,7 @@ import OrgData from '../model/orgData';
 import { Project, IApiError } from '../model';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
+import { isElectron } from '../api-variable';
 
 const completePerTable = 3;
 
@@ -220,7 +221,7 @@ export async function LoadProjectData(
   setBusy: (v: boolean) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
-  if (projectsLoaded.includes(project)) return true;
+  if (projectsLoaded.includes(project) || isElectron) return true;
   if (!remote || !online) throw new Error('offline.');
 
   const projectid = remoteIdNum('project', project, memory.keyMap);

@@ -139,6 +139,7 @@ const initState = {
   hasUrl: false,
   mediaUrl: '',
   fetchMediaUrl: actions.fetchMediaUrl,
+  mediafiles: [] as MediaFile[],
 };
 
 export type ICtxState = typeof initState;
@@ -192,6 +193,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       hasUrl,
       mediaUrl,
       fetchMediaUrl,
+      mediafiles,
     });
 
     const setRows = (rowData: IRowData[]) => {
@@ -249,9 +251,15 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       onlyAvailable: boolean,
       playItem: string
     ) => {
-      const readyRecs = passages.filter(
-        (p) => (p.attributes && p.attributes.state === state) || role === 'view'
-      );
+      const readyRecs = passages
+        .filter(
+          (p) =>
+            (p.attributes && p.attributes.state === state) || role === 'view'
+        ) //just group the passages within a section together right now
+        .sort((a, b) =>
+          related(a, 'section') < related(b, 'section') ? -1 : 1
+        );
+
       let addRows = Array<IRowData>();
       readyRecs.forEach((p) => {
         const mediaRecs = mediafiles
@@ -300,10 +308,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                       const nextSecId = secRecs[0].id;
                       const transcriber = related(secRecs[0], 'transcriber');
                       const editor = related(secRecs[0], 'editor');
-                      if (
-                        nextSecId !== curSec &&
-                        passageNumber(p).trim() === '1'
-                      ) {
+                      if (nextSecId !== curSec) {
                         curSec = nextSecId;
                         addRows.push({
                           planName,
@@ -526,6 +531,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       ActivityStates.Transcribing,
       ActivityStates.Reviewing,
     ];
+
+    useEffect(() => {
+      setState({ ...state, mediafiles });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [mediafiles]);
 
     useEffect(() => {
       let changed = false;
