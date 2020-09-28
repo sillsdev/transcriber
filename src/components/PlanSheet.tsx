@@ -513,6 +513,7 @@ export function PlanSheet(props: IProps) {
                 return cellIndex === bookCol && passage
                   ? {
                       value: e,
+                      readOnly: isElectron,
                       className: 'book ' + (section ? ' setp' : 'pass'),
                       dataEditor: bookEditor,
                     }
