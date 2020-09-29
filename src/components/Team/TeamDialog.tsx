@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   TextField,
@@ -17,13 +17,12 @@ interface IProps extends IDialog<Organization> {
 
 export function TeamDialog(props: IProps) {
   const { mode, values, isOpen, onOpen, onCommit, onDelete } = props;
-  const [name, setName] = React.useState(values?.attributes?.name || '');
+  const [name, setName] = React.useState('');
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
 
   const handleClose = () => {
-    setName('');
     onOpen && onOpen(false);
   };
 
@@ -50,6 +49,9 @@ export function TeamDialog(props: IProps) {
     const team = { ...values, attributes: { name } } as Organization;
     onDelete && onDelete(team);
   };
+  useEffect(() => {
+    setName(values?.attributes?.name || '');
+  }, [values]);
 
   return (
     <Dialog
