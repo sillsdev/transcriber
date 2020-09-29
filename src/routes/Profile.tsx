@@ -59,6 +59,7 @@ import {
   localeDefault,
   useRemoteSave,
   getParatextDataPath,
+  useStickyRedirect,
 } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
@@ -218,6 +219,7 @@ export function Profile(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
   const [ptPath, setPtPath] = React.useState('');
+  const stickyPush = useStickyRedirect();
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -623,7 +625,7 @@ export function Profile(props: IProps) {
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Access/i.test(view)) return <Redirect to="/" />;
-  if (/Team/i.test(view)) return <Redirect to="/team" />;
+  if (/Team/i.test(view)) stickyPush('/team');
 
   const orgRoles = ['Admin', 'Member'];
 

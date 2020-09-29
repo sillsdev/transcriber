@@ -36,6 +36,9 @@ const handleParameters = (props: any) => {
   }
   if (/access_token|id_token|error/.test(location.hash)) {
     auth.handleAuthentication();
+    return true;
+  } else {
+    return false;
   }
 };
 
@@ -113,7 +116,7 @@ class App extends React.Component {
                 <Route
                   path="/callback"
                   render={(props) => {
-                    handleParameters(props);
+                    if (!handleParameters(props)) return <Redirect to="/" />;
                     return <Callback {...props} />;
                   }}
                 />

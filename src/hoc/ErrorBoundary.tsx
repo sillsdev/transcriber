@@ -182,7 +182,7 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
   }
 
   private continue() {
-    var deeplink = localStorage.getItem('url');
+    var deeplink = localStorage.getItem('fromUrl');
     if (!deeplink || deeplink === 'loading') deeplink = '/';
     this.cleanUpAndGo(deeplink);
   }

@@ -233,6 +233,7 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
 
   const columnDefs = [
@@ -429,6 +430,7 @@ export function TranscriptionTab(props: IProps) {
         exportComplete();
         setBusy(false);
       } else {
+        if (!enableOffsite) setEnableOffsite(true);
         if (exportStatus.statusMsg) {
           showMessage(exportStatus.statusMsg);
         }

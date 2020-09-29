@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect, useLocation } from 'react-router-dom';
+import { useStickyRedirect } from '../../utils';
 import { IState, IMainStrings } from '../../model';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
@@ -67,6 +68,8 @@ export const AppHead = withBucket(
     const [busy] = useGlobal('remoteBusy');
     const [importexportBusy] = useGlobal('importexportBusy');
     const [doSave] = useGlobal('doSave');
+    const [globalStore] = useGlobal();
+    const stickyPush = useStickyRedirect();
 
     const handleUserMenuAction = (
       what: string,
@@ -86,7 +89,7 @@ export const AppHead = withBucket(
         });
         return;
       }
-      localStorage.setItem('url', lastpath);
+      localStorage.setItem('fromUrl', lastpath);
       if (!/Close/i.test(what)) {
         if (/ClearLogout/i.test(what)) {
           forceLogin();
@@ -107,27 +110,31 @@ export const AppHead = withBucket(
       setProjRole('');
       setView('Home');
     };
-    /* -- see if this is the problem with the download
+
+    // React.useEffect(() => {
+    //   console.log(`pageview: ${pathname}`);
+    // }, [pathname]);
+
     React.useEffect(() => {
       const handleUnload = (e: any) => {
-        e.preventDefault();
-        e.returnValue = '';
-        return true;
+        if (!globalStore.enableOffsite) {
+          e.preventDefault();
+          e.returnValue = '';
+          return true;
+        }
       };
-
       window.addEventListener('beforeunload', handleUnload);
       return () => {
         window.removeEventListener('beforeunload', handleUnload);
       };
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    /*    }, []);
-     */
+    }, []);
 
     if (view === 'Error') return <Redirect to="/error" />;
-    if (view === 'Profile') return <Redirect to="/profile" />;
+    if (view === 'Profile') stickyPush('/profile');
     if (view === 'Logout') return <Redirect to="/logout" />;
     if (view === 'Access') return <Redirect to="/" />;
-    if (view === 'Home') return <Redirect to="/team" />;
+    if (view === 'Home') stickyPush('/team');
     if (!auth || !auth.isAuthenticated(isOffline))
       return <Redirect to="/logout" />;
 

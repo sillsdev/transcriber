@@ -1,7 +1,6 @@
 import React from 'react';
 import { useGlobal, useEffect } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { StickyRedirect } from '../control';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -24,6 +23,7 @@ import { isElectron } from '../api-variable';
 import { withData } from '../mods/react-orbitjs';
 import { HeadHeight } from '../App';
 import { related, useOrganizedBy } from '../crud';
+import { useStickyRedirect } from '../utils';
 
 export const TabHeight = 48;
 export enum tabs {
@@ -91,6 +91,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [busy] = useGlobal('remoteBusy');
   const { prjId, tabNm } = useParams<ParamTypes>();
   const { getOrganizedBy } = useOrganizedBy();
+  const stickyPush = useStickyRedirect();
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
@@ -146,7 +147,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   }, []);
 
   if (tab !== undefined && tab.toString() !== tabNm)
-    return <StickyRedirect to={`/plan/${prjId}/${tab}`} />;
+    stickyPush(`/plan/${prjId}/${tab}`);
 
   return (
     <div className={classes.root}>

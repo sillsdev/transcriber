@@ -10,7 +10,7 @@ import Uploader, { statusInit } from '../Uploader';
 import Progress from '../../control/UploadProgress';
 import { TeamContext, TeamIdType } from '../../context/TeamContext';
 import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
-import { StickyRedirect } from '../../control';
+import { useStickyRedirect } from '../../utils';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 
@@ -88,6 +88,7 @@ export const AddCard = (props: IProps) => {
   const [status] = React.useState({ ...statusInit });
   const [, setPlan] = useGlobal('plan');
   const [view, setView] = React.useState('');
+  const stickyPush = useStickyRedirect();
 
   const handleShow = () => {
     if (!open) setShow(!show);
@@ -224,7 +225,7 @@ export const AddCard = (props: IProps) => {
     [bookSuggestions, language, type, book]
   );
 
-  if (view !== '') return <StickyRedirect to={view} />;
+  if (view !== '') stickyPush(view);
 
   return (
     <>

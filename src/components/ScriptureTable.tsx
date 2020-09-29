@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { StickyRedirect } from '../control';
 import {
   IState,
   Section,
@@ -34,7 +33,7 @@ import {
   useOrganizedBy,
   usePlan,
 } from '../crud';
-import { Online, useRemoteSave, lookupBook } from '../utils';
+import { Online, useRemoteSave, lookupBook, useStickyRedirect } from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
 import Auth from '../auth/Auth';
@@ -178,6 +177,7 @@ export function ScriptureTable(props: IProps) {
   const [uploadPassage, setUploadPassage] = useState('');
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
+  const stickyPush = useStickyRedirect();
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     ts,
@@ -1066,7 +1066,7 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [data, width, cols]);
 
-  if (view !== '') return <StickyRedirect to={view} />;
+  if (view !== '') stickyPush(view);
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length > 0) {

@@ -89,6 +89,7 @@ setGlobal({
   coordinatorActivated: false,
   fingerprint: window.location.origin,
   orbitRetries: OrbitNetworkErrorRetries,
+  enableOffsite: false,
 });
 
 if (isElectron) {

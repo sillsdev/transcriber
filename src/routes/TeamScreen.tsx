@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { StickyRedirect } from '../control';
+import { useStickyRedirect } from '../utils';
 import { makeStyles } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
@@ -27,22 +27,25 @@ interface IProps {
 export const TeamScreen = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
-  const [project] = useGlobal('project');
-  const [projRole] = useGlobal('projRole');
+  const [project, setProject] = useGlobal('project');
+  const [projRole, setProjRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
+  const stickyPush = useStickyRedirect();
 
   if (project !== '' && projRole !== '') {
     const remProjId = remoteId('plan', plan, memory.keyMap);
-    return (
-      <StickyRedirect
-        to={
-          projRole === 'admin' && !isElectron
-            ? `/plan/${remProjId}/0`
-            : `/work/${remProjId}`
-        }
-      />
-    );
+    const loc =
+      projRole === 'admin' && !isElectron
+        ? `/plan/${remProjId}/0`
+        : `/work/${remProjId}`;
+    if (loc !== localStorage.getItem('fromUrl')) {
+      stickyPush(loc);
+    } else {
+      localStorage.setItem('fromUrl', '/team');
+      setProject('');
+      setProjRole('');
+    }
   }
 
   return (

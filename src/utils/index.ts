@@ -29,3 +29,4 @@ export * from './validateEmail';
 export * from './waitForIt';
 export * from './lookupBook';
 export * from './refMatch';
+export * from './useStickyPush';

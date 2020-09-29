@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useStickyRedirect } from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -160,6 +161,7 @@ export function UserTable(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
+  const stickyPush = useStickyRedirect();
   const [view, setView] = useState('');
 
   const handleAdd = () => {
@@ -174,7 +176,7 @@ export function UserTable(props: IProps) {
   };
 
   const handleEdit = (userId: string) => (e: any) => {
-    localStorage.setItem('url', pathname);
+    localStorage.setItem('fromUrl', pathname);
     setEditId(userId);
     setView('Profile');
   };
@@ -287,7 +289,7 @@ export function UserTable(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
-  if (/profile/i.test(view)) return <Redirect to="/Profile" />;
+  if (/profile/i.test(view)) stickyPush('/Profile');
 
   return (
     <div className={classes.container}>

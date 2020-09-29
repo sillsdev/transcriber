@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import clsx from 'clsx';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import {
@@ -62,8 +63,10 @@ interface IProps {
 
 export function BigDialog({ title, children, isOpen, onOpen, bp }: IProps) {
   const classes = useStyles();
+  const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
 
   const handleClose = () => {
+    if (enableOffsite) setEnableOffsite(false);
     onOpen && onOpen(false);
   };
 

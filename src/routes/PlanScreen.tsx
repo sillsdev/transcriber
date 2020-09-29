@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { StickyRedirect } from '../control';
+import { useStickyRedirect } from '../utils';
 import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
@@ -66,6 +66,7 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { setMyProjRole } = useRole();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
+  const stickyPush = useStickyRedirect();
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -89,9 +90,8 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prjId]);
 
-  if (project === '' && organization !== '')
-    return <StickyRedirect to="/team" />;
-  if (view === 'transcribe') return <StickyRedirect to={`/work/${prjId}`} />;
+  if (project === '' && organization !== '') stickyPush('/team');
+  if (view === 'transcribe') stickyPush(`/work/${prjId}`);
 
   return (
     <div className={classes.root}>

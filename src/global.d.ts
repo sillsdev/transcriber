@@ -38,5 +38,6 @@ declare module 'reactn/default' {
     coordinatorActivated: boolean;
     fingerprint: string;
     orbitRetries: number;
+    enableOffsite: boolean;
   }
 }

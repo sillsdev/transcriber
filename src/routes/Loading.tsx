@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -103,6 +103,7 @@ export function Loading(props: IProps) {
   const [, setIsDeveloper] = useGlobal('developer');
   const [completed, setCompleted] = useState(0);
   const { showMessage } = useSnackBar();
+  const { push } = useHistory();
 
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
@@ -219,7 +220,7 @@ export function Loading(props: IProps) {
     }
     let fromUrl = localStorage.getItem('fromUrl');
     if (fromUrl && !/^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
-    return <Redirect to={fromUrl || '/team'} />;
+    push(fromUrl || '/team');
   }
 
   return (

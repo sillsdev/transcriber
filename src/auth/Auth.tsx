@@ -115,7 +115,6 @@ export default class Auth {
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('nonce');
-    //localStorage.removeItem('user-token');  even if we logout, remember who we were last logged in as
     //localStorage.removeItem('user-id');
 
     this.auth0.logout({
