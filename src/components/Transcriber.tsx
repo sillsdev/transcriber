@@ -73,6 +73,7 @@ import {
   UpdateRelatedRecord,
   AddRecord,
 } from '../model/baseModel';
+import { withData } from 'react-orbitjs';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -130,13 +131,18 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-interface IProps {
+interface IRecordProps {
+  mediafiles: MediaFile[];
+}
+const mapRecordsToProps = {
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+};
+interface IProps extends IRecordProps {
   auth: Auth;
 }
 
-export function Transcriber(props: IProps) {
-  const { auth } = props;
+const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
+  const { auth, mediafiles } = props;
   const {
     rowData,
     index,
@@ -148,7 +154,6 @@ export function Transcriber(props: IProps) {
     selected,
     playing,
     setPlaying,
-    mediafiles,
   } = useTodo();
   const {
     section,
@@ -637,7 +642,7 @@ export function Transcriber(props: IProps) {
   }, [project]);
 
   const handleAutosave = () => {
-    if (transcriptionRef.current) {
+    if (transcriptionRef.current && transcriptionIn.current) {
       const transcription = transcriptionRef.current.firstChild.value;
       if (transcriptionIn.current !== transcription) {
         if (!busy) {
@@ -1033,6 +1038,6 @@ export function Transcriber(props: IProps) {
       </div>
     </div>
   );
-}
+});
 
 export default Transcriber;

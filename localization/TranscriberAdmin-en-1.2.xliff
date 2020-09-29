@@ -3177,7 +3177,7 @@
         		</context-group>
         	</trans-unit>
         	<trans-unit id="transcriber.rejectTranscriptionTip">
-                <source>Audio recording is unusable</source>
+                <source>Recording is unusable</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">Transcriber.tsx</context>

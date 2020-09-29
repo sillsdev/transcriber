@@ -139,7 +139,6 @@ const initState = {
   hasUrl: false,
   mediaUrl: '',
   fetchMediaUrl: actions.fetchMediaUrl,
-  mediafiles: [] as MediaFile[],
 };
 
 export type ICtxState = typeof initState;
@@ -193,7 +192,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       hasUrl,
       mediaUrl,
       fetchMediaUrl,
-      mediafiles,
     });
 
     const setRows = (rowData: IRowData[]) => {
@@ -531,11 +529,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       ActivityStates.Transcribing,
       ActivityStates.Reviewing,
     ];
-
-    useEffect(() => {
-      setState({ ...state, mediafiles });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mediafiles]);
 
     useEffect(() => {
       let changed = false;
