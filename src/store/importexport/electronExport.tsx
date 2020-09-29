@@ -24,7 +24,6 @@ import {
 } from '@orbit/data';
 import { remoteIdGuid, related, remoteId, getMediaEaf } from '../../crud';
 import { dataPath, cleanFileName, currentDateTime } from '../../utils';
-import { isArray } from 'util';
 
 export async function electronExport(
   exportType: string,
@@ -50,7 +49,7 @@ export async function electronExport(
     };
   };
 
-  const fileName = (projRec: Project) =>
+  const fileName = (projRec: Project, ext: string) =>
     'Transcriber' +
     userid +
     '_' +
@@ -58,7 +57,13 @@ export async function electronExport(
     '_' +
     cleanFileName(projRec.attributes.name) +
     '.' +
-    exportType;
+    ext;
+
+  const itfb_fileName = (projRec: Project) =>
+    new Date().getDate().toString() +
+    new Date().getHours().toString() +
+    '_' +
+    fileName(projRec, 'itf');
 
   const backupName = 'Transcriber' + userid + '_backup.' + exportType;
 
@@ -284,7 +289,7 @@ export async function electronExport(
     const AddChanged = (info: fileInfo, project: Project | undefined) => {
       var recs = GetTableRecs(info, project);
       var changed = recs;
-      if (recs && isArray(recs) && recs.length > 0) {
+      if (recs && Array.isArray(recs) && recs.length > 0) {
         if (info.table !== 'project')
           changed = recs.filter(
             (u) =>
@@ -309,7 +314,7 @@ export async function electronExport(
 
     const AddAll = (info: fileInfo, project: Project | undefined) => {
       var recs = GetTableRecs(info, project);
-      if (recs && isArray(recs) && recs.length > 0) {
+      if (recs && Array.isArray(recs) && recs.length > 0) {
         AddJsonEntry(info.table + 's', recs, info.sort);
         switch (info.table) {
           case 'organization':
@@ -326,7 +331,7 @@ export async function electronExport(
 
     const onlyOneProject = (): boolean => {
       var p = memory.cache.query((q: QueryBuilder) => q.findRecords('project'));
-      if (p && isArray(p)) return p.length === 1;
+      if (p && Array.isArray(p)) return p.length === 1;
       return true; //should never get here
     };
 
@@ -389,7 +394,10 @@ export async function electronExport(
   }
   for (var ix: number = 0; ix < projects.length; ix++) {
     const zip = createZip(new AdmZip(), projects[ix]);
-    const filename = fileName(projects[ix]);
+    const filename =
+      exportType === 'itfb'
+        ? itfb_fileName(projects[ix])
+        : fileName(projects[ix], exportType);
     if (backupZip) {
       backupZip.addFile(filename, zip.toBuffer(), projects[ix].attributes.name);
     } else {

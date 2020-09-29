@@ -1,5 +1,5 @@
 import { useGlobal, useState, useEffect } from 'reactn';
-import { logError, Severity } from '../utils';
+import { infoMsg, logError, Severity } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
@@ -11,11 +11,13 @@ import {
 } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { DataChange } from '../model/dataChange';
-import { API_CONFIG } from '../api-variable';
+import { API_CONFIG, isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
-import { remoteIdGuid } from '../crud';
-import JSONAPISource from '@orbit/jsonapi';
+import { remoteIdGuid, remoteIdNum } from '../crud';
+import JSONAPISource, { JSONAPISerializerSettings } from '@orbit/jsonapi';
 import { currentDateTime } from '../utils';
+import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
+import { electronExport } from '../store/importexport/electronExport';
 
 interface IStateProps {}
 
@@ -141,10 +143,14 @@ export default function DataChanges(props: IProps) {
   const [errorReporter] = useGlobal('errorReporter');
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
+  const [project] = useGlobal('project');
+
+  const defaultBackupDelay = isElectron ? 1000 * 60 * 30 : null; //30 minutes;
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
     const defaultDataDelay = 1000 * 100;
+
     if (!remote) setBusy(false);
     setBusyDelay(
       remote && auth && auth.isAuthenticated ? defaultBusyDelay : null
@@ -164,8 +170,33 @@ export default function DataChanges(props: IProps) {
       doDataChanges(auth, remote, memory, fingerprint, errorReporter);
     }
   };
+  const backupElectron = () => {
+    if (!busy && !doSave && project !== '') {
+      const s: JSONAPISerializerSettings = {
+        schema: memory.schema,
+        keyMap: memory.keyMap,
+      };
+      const ser = new JSONAPISerializerCustom(s);
+      ser.resourceKey = () => {
+        return 'remoteId';
+      };
+      var projectid = remoteIdNum('project', project, memory.keyMap);
+      var userid = remoteIdNum('user', user, memory.keyMap);
+
+      electronExport('itfb', memory, projectid, userid, ser).catch(
+        (err: Error) => {
+          logError(
+            Severity.error,
+            errorReporter,
+            infoMsg(err, 'Backup export failed: ')
+          );
+        }
+      );
+    }
+  };
   useInterval(updateBusy, busyDelay);
   useInterval(updateData, dataDelay);
+  useInterval(backupElectron, defaultBackupDelay);
   // render the children component.
   return children;
 }
