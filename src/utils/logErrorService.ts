@@ -1,3 +1,9 @@
+import { isElectron } from '../api-variable';
+import moment from 'moment';
+import { join } from 'path';
+import { Stats } from 'fs';
+var fs = isElectron ? require('fs-extra') : undefined;
+
 export enum Severity {
   info = 0,
   error = 1,
@@ -9,7 +15,9 @@ export function logError(
   reporter: any,
   error: Error | string
 ) {
-  if (reporter) {
+  if (typeof reporter === 'string') {
+    logMessage(reporter, level, error);
+  } else if (reporter) {
     if (level === Severity.error) {
       if (reporter.notify)
         reporter.notify(typeof error === 'string' ? new Error(error) : error);
@@ -27,6 +35,98 @@ export function logError(
   if (typeof error !== 'string' || error !== '') {
     console.log(level ? 'ERROR:' : 'INFO:', error);
   }
+}
+
+const dayFormat = (s?: Date) => moment(s).format('YYYY-MM-DD');
+const isToday = (s: Date) => dayFormat(s) === dayFormat();
+
+const homedir = require('os').homedir();
+const LogFolder = join(homedir, '.transcriber-logs');
+
+const createLogFolder = () => {
+  // Create folder if it doesn't exist
+  try {
+    fs.statSync(LogFolder);
+  } catch (err) {
+    if (err.code === 'ENOENT') fs.mkdirSync(LogFolder);
+  }
+};
+
+const logFileHeader = (logFullName: string) => {
+  // Add file header
+  console.log(`creating new file ${logFullName}`);
+  fs.open(logFullName, 'w', (err: IStatErr, fd: number) => {
+    if (err) throw err;
+    fs.writeFile(
+      fd,
+      `Log for ${moment().format('L LT Z')}\n`,
+      (err: IStatErr) => {
+        fs.close(fd, (err: IStatErr) => {
+          if (err) throw err;
+        });
+        if (err) throw err;
+      }
+    );
+  });
+};
+
+const levelText = (level: Severity) =>
+  level === Severity.info
+    ? 'INFO'
+    : level === Severity.error
+    ? 'ERROR'
+    : 'RETRY';
+
+const msgText = (message: Error | string) =>
+  typeof message === 'string' ? message : JSON.stringify(message);
+
+const logMessage = (
+  logFullName: string,
+  level: Severity,
+  msg: Error | string
+) => {
+  // Add file header
+  console.log(`creating new file ${logFullName}`);
+  fs.open(logFullName, 'a', (err: IStatErr, fd: number) => {
+    if (err) throw err;
+    fs.writeFile(
+      fd,
+      `${levelText(level)}: ${msgText(msg)}\n`,
+      (err: IStatErr) => {
+        fs.close(fd, (err: IStatErr) => {
+          if (err) throw err;
+        });
+        if (err) throw err;
+      }
+    );
+  });
+};
+
+interface IStatErr {
+  errno: number;
+  code: string;
+  syscall: string;
+  path: string;
+}
+
+export function logFile() {
+  const logName = `log-${moment().format('DD')}.log`;
+  const logFullName = join(LogFolder, logName);
+  fs.stat(logFullName, (err: IStatErr, stats: Stats) => {
+    if (err?.code === 'ENOENT') {
+      createLogFolder();
+      logFileHeader(err.path);
+    } else if (err) {
+      console.log(JSON.stringify(err));
+    } else {
+      if (!isToday(stats.ctime)) {
+        logFileHeader(logFullName);
+      } else {
+        console.log(`using existing file ${logFullName}`);
+      }
+    }
+  });
+  return logFullName;
 }
 
 export default logError;
