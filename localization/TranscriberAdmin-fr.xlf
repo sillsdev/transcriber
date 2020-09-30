@@ -3598,6 +3598,12 @@
 				<target>Exporter</target>
 			</segment>
 		</unit>
+		<unit id="projButtons.reports">
+			<segment>
+				<source>Reports</source>
+				<target>Rapports</target>
+			</segment>
+		</unit>
 		<unit id="projButtons.integrationsTitle">
 			<segment>
 				<source>{0} Integrations</source>
@@ -3608,6 +3614,12 @@
 			<segment>
 				<source>{0} Export</source>
 				<target>Exportation de {0}</target>
+			</segment>
+		</unit>
+		<unit id="projButtons.reportsTitle">
+			<segment>
+				<source>{0} Reports</source>
+				<target>Rapports de {0}</target>
 			</segment>
 		</unit>
 		<unit id="projButtons.importTitle">

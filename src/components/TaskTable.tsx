@@ -14,6 +14,7 @@ import { BigDialog } from '../hoc/BigDialog';
 import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
 import ImportTab from './ImportTab';
+import Visualize from './Visualize';
 import ProjectMenu from './Team/ProjectMenu';
 import { formatTime } from '../control';
 import { ChipText } from './TaskFlag';
@@ -128,12 +129,14 @@ export function TaskTable(props: IProps) {
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
   const [planName, setPlanName] = useState('');
+  const [planId] = useGlobal('plan');
   const [projectId] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
   const [openIntegration, setOpenIntegration] = React.useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openExport, setOpenExport] = useState(false);
+  const [openReports, setOpenReports] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
   const [columns] = useState([
@@ -194,6 +197,8 @@ export function TaskTable(props: IProps) {
       setOpenImport(true);
     } else if (what === 'export') {
       setOpenExport(true);
+    } else if (what === 'reports') {
+      setOpenReports(true);
     } else if (what === 'filter') {
       if (onFilter) onFilter(!filter);
       setFilter(!filter);
@@ -432,6 +437,13 @@ export function TaskTable(props: IProps) {
           projectPlans={projectPlans(projectId)}
           planColumn={true}
         />
+      </BigDialog>
+      <BigDialog
+        title={tpb.reportsTitle.replace('{0}', planName)}
+        isOpen={openReports}
+        onOpen={setOpenReports}
+      >
+        <Visualize selectedPlan={planId} />
       </BigDialog>
 
       {openImport && (

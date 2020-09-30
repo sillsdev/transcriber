@@ -24,6 +24,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ParatextLogo from '../../control/ParatextLogo';
 import ImportIcon from '@material-ui/icons/CloudUpload';
 import ExportIcon from '@material-ui/icons/CloudDownload';
+import ReportIcon from '@material-ui/icons/Assessment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterIcon from '@material-ui/icons/FilterList';
 import { isElectron } from '../../api-variable';
@@ -130,6 +131,12 @@ export function ProjectMenu(props: IProps) {
             primary={tpb.sync.replace('{0}', toBeSynced.toString())}
           />
         </StyledMenuItem> */}
+        <StyledMenuItem onClick={handle('reports')}>
+          <ListItemIcon>
+            <ReportIcon />
+          </ListItemIcon>
+          <ListItemText primary={tpb.reports} />
+        </StyledMenuItem>
         <StyledMenuItem onClick={handle('integration')}>
           <ListItemIcon>
             <ParatextLogo />

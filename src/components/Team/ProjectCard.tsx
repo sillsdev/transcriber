@@ -18,6 +18,7 @@ import { BigDialog } from '../../hoc/BigDialog';
 import IntegrationTab from '../Integration';
 import ExportTab from '../TranscriptionTab';
 import ImportTab from '../ImportTab';
+import Visualize from '../Visualize';
 import Confirm from '../AlertDialog';
 import { ProjectDialog, IProjectDialog } from './ProjectDialog';
 import { usePlan, useProjectPlans, useOrganizedBy, related } from '../../crud';
@@ -99,6 +100,7 @@ export const ProjectCard = (props: IProps) => {
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openImport, setOpenImport] = useState(false);
   const [openExport, setOpenExport] = useState(false);
+  const [openReports, setOpenReports] = useState(false);
   const [deleteItem, setDeleteItem] = useState<VProject>();
   const [open, setOpen] = useState('');
   const t = cardStrings;
@@ -134,6 +136,8 @@ export const ProjectCard = (props: IProps) => {
       setOpenImport(true);
     } else if (what === 'export') {
       setOpenExport(true);
+    } else if (what === 'reports') {
+      setOpenReports(true);
     } else if (what === 'delete') {
       setDeleteItem(project);
     }
@@ -287,6 +291,13 @@ export const ProjectCard = (props: IProps) => {
           projectPlans={projectPlans(projectId)}
           planColumn={true}
         />
+      </BigDialog>
+      <BigDialog
+        title={tpb.reportsTitle.replace('{0}', getPlanName(project.id))}
+        isOpen={openReports}
+        onOpen={setOpenReports}
+      >
+        <Visualize selectedPlan={project.id} />
       </BigDialog>
       {openImport && (
         <ImportTab

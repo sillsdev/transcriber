@@ -2724,7 +2724,7 @@
       </unit>
       <unit id="transcriber.rejectTranscriptionTip">
          <segment>
-            <source>Audio recording is unusable</source>
+            <source>Recording is unusable</source>
             <target/>
          </segment>
       </unit>
@@ -3604,6 +3604,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projButtons.reports">
+         <segment>
+            <source>Reports</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="projButtons.integrationsTitle">
          <segment>
             <source>{0} Integrations</source>
@@ -3613,6 +3619,12 @@
       <unit id="projButtons.exportTitle">
          <segment>
             <source>{0} Export</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projButtons.reportsTitle">
+         <segment>
+            <source>{0} Reports</source>
             <target/>
          </segment>
       </unit>

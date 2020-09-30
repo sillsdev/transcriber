@@ -722,8 +722,10 @@ export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
     "integrations": string;
     "import": string;
     "export": string;
+    "reports": string;
     "integrationsTitle": string;
     "exportTitle": string;
+    "reportsTitle": string;
     "importTitle": string;
 };
 

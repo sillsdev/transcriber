@@ -4205,6 +4205,13 @@
         			<context context-type="sourcefile">ProjButtons.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="projButtons.reports">
+        		<source>Reports</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="projButtons.integrationsTitle">
         		<source>{0} Integrations</source>
         		<target/>
@@ -4214,6 +4221,13 @@
         	</trans-unit>
         	<trans-unit id="projButtons.exportTitle">
         		<source>{0} Export</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">ProjButtons.tsx</context>
+        		</context-group>
+        	</trans-unit>
+        	<trans-unit id="projButtons.reportsTitle">
+        		<source>{0} Reports</source>
         		<target/>
         		<context-group>
         			<context context-type="sourcefile">ProjButtons.tsx</context>
