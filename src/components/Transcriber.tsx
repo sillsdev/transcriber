@@ -815,7 +815,10 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
             <Grid item xs>
               <Grid container justify="center">
                 <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                  <IconButton onClick={handleJumpEv(-1 * jump)}>
+                  <IconButton
+                    onClick={handleJumpEv(-1 * jump)}
+                    disabled={selected === ''}
+                  >
                     <>
                       <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
                     </>
@@ -827,7 +830,10 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                     PLAY_PAUSE_KEY
                   )}
                 >
-                  <IconButton onClick={handlePlayStatus(!playing)}>
+                  <IconButton
+                    onClick={handlePlayStatus(!playing)}
+                    disabled={selected === ''}
+                  >
                     <>
                       {playing ? <PauseIcon /> : <PlayIcon />}{' '}
                       <Typography>{PLAY_PAUSE_KEY}</Typography>
@@ -835,14 +841,17 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                  <IconButton onClick={handleJumpEv(jump)}>
+                  <IconButton
+                    onClick={handleJumpEv(jump)}
+                    disabled={selected === ''}
+                  >
                     <>
                       <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
                     </>
                   </IconButton>
                 </Tooltip>
                 <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                  <IconButton onClick={handleSlower}>
+                  <IconButton onClick={handleSlower} disabled={selected === ''}>
                     <>
                       <FaAngleDoubleDown />{' '}
                       <Typography>{SLOWER_KEY}</Typography>
@@ -850,7 +859,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                   </IconButton>
                 </Tooltip>
                 <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                  <IconButton onClick={handleFaster}>
+                  <IconButton onClick={handleFaster} disabled={selected === ''}>
                     <>
                       <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
                     </>
@@ -876,7 +885,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                 <span>
                   <IconButton
                     onClick={handleTimer}
-                    disabled={role === 'view' || playing}
+                    disabled={selected === '' || role === 'view' || playing}
                   >
                     <>
                       <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -901,7 +910,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                 >
                   <TextareaAutosize
                     value={textValue}
-                    readOnly={role === 'view'}
+                    readOnly={selected === '' || role === 'view'}
                     style={textAreaStyle}
                     onChange={handleChange}
                   />
@@ -909,7 +918,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
               ) : (
                 <TextareaAutosize
                   value={textValue}
-                  readOnly={role === 'view'}
+                  readOnly={selected === '' || role === 'view'}
                   style={textAreaStyle}
                   onChange={handleChange}
                 />
@@ -944,6 +953,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                   <Checkbox
                     value={makeComment}
                     onChange={handleMakeComment}
+                    disabled={selected === ''}
                     color="primary"
                   />
                 }
@@ -961,7 +971,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                         color="primary"
                         className={classes.button}
                         onClick={handleReject}
-                        disabled={playing}
+                        disabled={selected === '' || playing}
                       >
                         {t.reject}
                       </Button>
@@ -973,7 +983,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                           color="primary"
                           className={classes.button}
                           onClick={handleSaveButton}
-                          disabled={playing}
+                          disabled={selected === '' || playing}
                         >
                           {t.save}
                         </Button>
@@ -990,7 +1000,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                           color="primary"
                           className={classes.button}
                           onClick={handleSubmit}
-                          disabled={playing}
+                          disabled={selected === '' || playing}
                         >
                           {t.submit}
                         </Button>
@@ -1003,6 +1013,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                       className={classes.button}
                       onClick={handleReopen}
                       disabled={
+                        selected === '' ||
                         !previous.hasOwnProperty(state) ||
                         playing ||
                         (user !== related(section, 'transcriber') &&
