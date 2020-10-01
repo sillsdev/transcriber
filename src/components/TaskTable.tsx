@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
+import clsx from 'clsx';
 import { IconButton, Typography } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
+import CloseIcon from '@material-ui/icons/Close';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
@@ -77,6 +79,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
       alignItems: 'center',
     }) as any,
+    filterHeader: {
+      width: 'auto',
+    },
     editIcon: {
       fontSize: 16,
     },
@@ -190,6 +195,11 @@ export function TaskTable(props: IProps) {
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
 
+  const handleToggleFilter = () => {
+    if (onFilter) onFilter(!filter);
+    setFilter(!filter);
+  };
+
   const handleProjectMenu = (what: string) => {
     if (what === 'integration') {
       setOpenIntegration(true);
@@ -200,8 +210,7 @@ export function TaskTable(props: IProps) {
     } else if (what === 'reports') {
       setOpenReports(true);
     } else if (what === 'filter') {
-      if (onFilter) onFilter(!filter);
-      setFilter(!filter);
+      handleToggleFilter();
     }
   };
 
@@ -390,7 +399,11 @@ export function TaskTable(props: IProps) {
     >
       <div className={classes.container}>
         <div className={classes.paper}>
-          <div className={classes.dialogHeader}>
+          <div
+            className={clsx(classes.dialogHeader, {
+              [classes.filterHeader]: filter,
+            })}
+          >
             <Typography variant="h6">{t.tasks}</Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
             <ProjectMenu
@@ -398,6 +411,11 @@ export function TaskTable(props: IProps) {
               inProject={true}
               isOwner={projRole === 'admin'}
             />
+            {filter && (
+              <IconButton onClick={handleToggleFilter}>
+                <CloseIcon />
+              </IconButton>
+            )}
           </div>
           <ShapingTable
             columns={columns}
