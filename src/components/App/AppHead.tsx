@@ -154,11 +154,13 @@ export const AppHead = withBucket(
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
             <Typography variant="h6" noWrap>
-              {`${
-                pathname && pathname.indexOf('work') > 0
-                  ? t.transcribe
-                  : t.admin
-              } - `}
+              {pathname &&
+                pathname.indexOf('team') < 0 &&
+                `${
+                  pathname && pathname.indexOf('work') > 0
+                    ? t.transcribe
+                    : t.admin
+                } - `}
               {t.silTranscriber}
             </Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
