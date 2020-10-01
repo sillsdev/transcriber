@@ -149,6 +149,8 @@ export function ScriptureTable(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [doSave] = useGlobal('doSave');
+  const [, setBusy] = useGlobal('importexportBusy');
+
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
   const { showMessage, showJSXMessage } = useSnackBar();
@@ -849,7 +851,23 @@ export function ScriptureTable(props: IProps) {
       if (numChanges === 0) {
         return;
       }
+      setBusy(true);
+      while (numChanges > 200) {
+        let someChangedRows = [...changedRows];
+        let count = 0;
+        someChangedRows.forEach((row, index) => {
+          if (count <= 200) {
+            if (row) {
+              count++;
+              changedRows[index] = false;
+            }
+          } else someChangedRows[index] = false;
+        });
+        await doSave(someChangedRows);
+        numChanges = changedRows.filter((r) => r).length;
+      }
       await doSave(changedRows);
+      setBusy(false);
       setComplete(0);
     };
 
