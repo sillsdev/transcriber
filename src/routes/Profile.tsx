@@ -363,7 +363,7 @@ export function Profile(props: IProps) {
           // setOrgRole(role);
         }
       }
-      setLanguage(locale);
+      if (!editId) setLanguage(locale);
       setChanged(false);
     }
     saveCompleted('');
