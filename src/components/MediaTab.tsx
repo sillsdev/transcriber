@@ -389,7 +389,7 @@ export function MediaTab(props: IProps) {
     { name: 'planName', title: t.planName },
     { name: 'playIcon', title: '\u00A0' },
     { name: 'fileName', title: t.fileName },
-    { name: 'section', title: organizedBy },
+    { name: 'sectionDesc', title: organizedBy },
     {
       name: 'reference',
       title: attachVisible ? t.viewAssociations : t.reference,
@@ -404,7 +404,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'planName', width: 150 },
     { columnName: 'playIcon', width: 50 },
     { columnName: 'fileName', width: 220 },
-    { columnName: 'section', width: 150 },
+    { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: attachVisible ? 165 : 150 },
     { columnName: 'duration', width: 100 },
     { columnName: 'size', width: 100 },
@@ -413,7 +413,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'detach', width: 50 },
   ];
   const columnFormatting = [
-    { columnName: 'section', aligh: 'left', wordWrapEnabled: true },
+    { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
   ];
   const mSorting = [
     { columnName: 'planName', direction: 'asc' },
@@ -436,7 +436,7 @@ export function MediaTab(props: IProps) {
       title: <Typography variant="h6">{t.mediaAssociations}</Typography>,
       children: [
         { columnName: 'fileName' },
-        { columnName: 'section' },
+        { columnName: 'sectionDesc' },
         { columnName: 'reference' },
         { columnName: 'detach' },
       ],
@@ -444,18 +444,18 @@ export function MediaTab(props: IProps) {
   ];
   const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
   const pColumnDefs = [
-    { name: 'section', title: organizedBy },
+    { name: 'sectionDesc', title: organizedBy },
     { name: 'reference', title: t.reference },
     { name: 'attached', title: 'Attached' },
     { name: 'sort', title: '\u00A0' },
   ];
   const pColumnWidths = [
-    { columnName: 'section', width: 150 },
+    { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: 150 },
     { columnName: 'attached', width: 105 },
   ];
   const pColumnFormatting = [
-    { columnName: 'section', aligh: 'left', wordWrapEnabled: true },
+    { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
     { columnName: 'reference', aligh: 'left', wordWrapEnabled: true },
   ];
   const pFilters = [{ columnName: 'attached', operation: 'equal', value: 'N' }];
@@ -465,7 +465,7 @@ export function MediaTab(props: IProps) {
     {
       title: <Typography variant="h6">{t.availablePassages}</Typography>,
       children: [
-        { columnName: 'section' },
+        { columnName: 'sectionDesc' },
         { columnName: 'reference' },
         { columnName: 'attached' },
       ],
@@ -657,7 +657,7 @@ export function MediaTab(props: IProps) {
   ];
   const attachFilt = [
     { columnName: 'playIcon', filteringEnabled: false },
-    { columnName: 'section', filteringEnabled: false },
+    { columnName: 'sectionDesc', filteringEnabled: false },
     { columnName: 'reference', filteringEnabled: false },
     { columnName: 'detach', filteringEnabled: false },
   ];
@@ -947,7 +947,7 @@ export function MediaTab(props: IProps) {
     if (column.name === 'detach' && projRole === 'admin') {
       return <DetachCell {...props} />;
     }
-    if (['reference', 'section'].includes(column.name) && row.isAttaching) {
+    if (['reference', 'sectionDesc'].includes(column.name) && row.isAttaching) {
       return <HighlightCell {...props} />;
     }
     return <Table.Cell {...props} />;
