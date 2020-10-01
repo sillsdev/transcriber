@@ -689,7 +689,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     direction: projData?.fontDir as any,
   };
 
-  const paperStyle = { width: width - 24 };
+  const paperStyle = { width: width - 36 };
   const historyStyle = { height: boxHeight };
 
   moment.locale(lang);
