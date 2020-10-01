@@ -179,6 +179,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
     const [devPlan] = useGlobal('plan');
+    const [projRole] = useGlobal('projRole');
     const view = React.useRef('');
     const stickyPush = useStickyRedirect();
     const [state, setState] = useState({
@@ -516,7 +517,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const editor = related(section, 'editor');
           if (editor !== r.editor) changed = true;
           const state = r.passage.attributes.state || '';
-          const role = actor[state] || 'view';
+          let role = actor[state] || 'view';
+          if (projRole === 'transcriber' && role === 'editor') role = 'view';
           const assigned = related(section, role);
           rowData.push({ ...r, section, role, assigned, transcriber, editor });
         }
