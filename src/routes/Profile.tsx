@@ -364,6 +364,7 @@ export function Profile(props: IProps) {
         }
       }
       setLanguage(locale);
+      setChanged(false);
     }
     saveCompleted('');
     if (editId) {
@@ -440,6 +441,7 @@ export function Profile(props: IProps) {
       } else {
         addToOrgAndGroup(userRec);
       }
+      setChanged(false);
     }
     if (finishAdd) {
       finishAdd();
