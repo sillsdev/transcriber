@@ -227,6 +227,7 @@ export function UserTable(props: IProps) {
     userGrpOrgRecs.forEach((g) => {
       memory.update((t: TransformBuilder) => t.removeRecord(g));
     });
+    setDeleteItem('');
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
