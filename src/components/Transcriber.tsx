@@ -449,13 +449,13 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           userid
         )
       );
-
+      //have to do this before the mediafiles useEffect kicks in
+      transcriptionIn.current = transcription;
       await memory
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
           if (postComment) setComment('');
-          transcriptionIn.current = transcription;
           loadHistory();
           saveCompleted('');
           setLastSaved(currentDateTime());
@@ -583,6 +583,33 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     setWidth(window.innerWidth - TaskItemWidth - 16);
   };
 
+  const getTranscription = () => {
+    const mediaRec = mediafiles.filter((m) => m.id === mediaId);
+    if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
+      const attr = mediaRec[0].attributes;
+      return {
+        transcription: attr.transcription ? attr.transcription : '',
+        position: attr.position,
+      };
+    } else return { transcription: '', position: 0 }; //shouldn't ever happen
+  };
+  const showTranscription = (val: {
+    transcription: string;
+    position: number;
+  }) => {
+    transcriptionIn.current = val.transcription;
+    setTextValue(val.transcription);
+    setDefaultPosition(val.position);
+    //focus on player
+    if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
+    setLastSaved(passage.attributes?.dateUpdated || '');
+    setComment(passage.attributes?.lastComment || '');
+    setTotalSeconds(duration);
+    if (mediaRemoteId && mediaRemoteId !== '') {
+      fetchMediaUrl(mediaRemoteId, memory, offline, auth);
+    }
+  };
+
   React.useEffect(() => {
     setDimensions();
     const handleResize = debounce(() => {
@@ -612,24 +639,20 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   }, [height, makeComment, comment, commentRef.current]);
 
   React.useEffect(() => {
-    const mediaRec = mediafiles.filter((m) => m.id === mediaId);
-    if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
-      const attr = mediaRec[0].attributes;
-      const transcription = attr.transcription ? attr.transcription : '';
-      transcriptionIn.current = transcription;
-      setTextValue(transcription);
-      setDefaultPosition(attr.position);
-      //focus on player
-      if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
-    }
-    setLastSaved(passage.attributes?.dateUpdated || '');
-    setComment(passage.attributes?.lastComment || '');
-    setTotalSeconds(duration);
-    if (mediaRemoteId && mediaRemoteId !== '') {
-      fetchMediaUrl(mediaRemoteId, memory, offline, auth);
+    showTranscription(getTranscription());
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [selected]);
+
+  React.useEffect(() => {
+    const trans = getTranscription();
+    if (trans.transcription !== transcriptionIn.current) {
+      //show warning if changed
+      if (changed) showMessage(t.updateByOther);
+      //but do it either way
+      showTranscription(trans);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [selected, mediafiles]);
+  }, [mediafiles]);
 
   React.useEffect(() => {
     if (project && project !== '') {
@@ -677,7 +700,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediaId]);
+  }, [mediaId, busy]);
 
   const textAreaStyle = {
     overflow: 'auto',

@@ -2818,6 +2818,13 @@
 				<target>Sauvegarder...</target>
 			</segment>
 		</unit>
+      <unit id="transcriber.updateByOther">
+         <segment>
+            <source>Transcription updated by another person or process.</source>
+            <target>Transcription mise à jour par une autre personne ou processus.</target>
+
+         </segment>
+      </unit>
 		<unit id="transcribeReject.rejectTitle">
          <segment>
             <source>Rejection</source>

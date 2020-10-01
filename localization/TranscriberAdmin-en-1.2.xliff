@@ -3302,6 +3302,13 @@
         			<context context-type="sourcefile">Transcriber.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="transcriber.updateByOther">
+        		<source>Transcription updated by another person or process.</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">Transcriber.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="transcribeReject.rejectTitle">
         		<source>Rejection</source>
         		<target/>

@@ -599,6 +599,7 @@ const initialState = {
 			"synced": "Completed",
 			"incomplete": "Incomplete transcripiton",
 			"saving": "Saving...",
+			"updateByOther": "Transcription updated by another person or process.",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({

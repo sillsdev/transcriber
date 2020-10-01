@@ -563,6 +563,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "synced": string;
     "incomplete": string;
     "saving": string;
+    "updateByOther": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
