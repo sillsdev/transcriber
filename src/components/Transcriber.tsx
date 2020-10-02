@@ -364,6 +364,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           [],
           memory
         );
+
         ops.push(
           UpdateRecord(
             tb,
@@ -378,6 +379,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
             remoteIdNum('user', user, memory.keyMap)
           )
         );
+        transcriptionIn.current = transcription;
         await memory.update(ops);
         setComment('');
         loadHistory();

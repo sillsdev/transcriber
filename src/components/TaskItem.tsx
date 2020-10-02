@@ -48,6 +48,9 @@ interface IProps {
 export function TaskItem(props: IProps) {
   const { organizedBy } = props;
   const { rowData, taskItemStr, setSelected, allBookData } = useTodo();
+  //TT-1728 leave this in until we close this issue
+  if (props.item === undefined || props.item < 0 || props.item > rowData.length)
+    console.log(props.item, rowData.length);
   const { passage, section, duration } = rowData[props.item];
   const classes = useStyles();
   const t = taskItemStr;
