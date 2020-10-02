@@ -753,6 +753,7 @@ const initialState = {
 			"other": "Other",
 			"type": "Project Type",
 			"language": "Language",
+			"renderCustomize": "including Render customization",
 			"renderRecommended": "Recommended for Render",
 		}
 	}),

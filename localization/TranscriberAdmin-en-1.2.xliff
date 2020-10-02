@@ -4149,6 +4149,13 @@
         			<context context-type="sourcefile">addCard.tsx</context>
         		</context-group>
         	</trans-unit>
+        	<trans-unit id="vProject.renderCustomize">
+        		<source>including Render customization</source>
+        		<target/>
+        		<context-group>
+        			<context context-type="sourcefile">projectExpansion.tsx</context>
+        		</context-group>
+        	</trans-unit>
         	<trans-unit id="vProject.renderRecommended">
         		<source>Recommended for Render</source>
         		<target/>

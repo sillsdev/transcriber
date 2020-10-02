@@ -99,6 +99,13 @@ export function ProjectExpansion(props: IProjectDialogState) {
     </Typography>
   );
 
+  const RenderCustomize = () => (
+    <Typography variant="caption" className={classes.render}>
+      <RenderLogo />
+      {'\u00A0' + t.renderCustomize}
+    </Typography>
+  );
+
   const decoration = {
     [t.sets]: <RenderRecommended />,
     [t.flat]: <RenderRecommended />,
@@ -115,7 +122,7 @@ export function ProjectExpansion(props: IProjectDialogState) {
         >
           <Typography className={classes.heading}>{t.advanced}</Typography>
           {'\u00A0 '}
-          <RenderRecommended />
+          <RenderCustomize />
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.panel}>
           <EditorSettings state={state} setState={setState} />

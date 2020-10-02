@@ -709,6 +709,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "other": string;
     "type": string;
     "language": string;
+    "renderCustomize": string;
     "renderRecommended": string;
 };
 

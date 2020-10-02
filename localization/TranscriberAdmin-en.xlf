@@ -3556,6 +3556,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.renderCustomize">
+         <segment>
+            <source>including Render customization</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.renderRecommended">
          <segment>
             <source>Recommended for Render</source>
