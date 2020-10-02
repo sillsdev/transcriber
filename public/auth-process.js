@@ -8,8 +8,8 @@ function createAuthWindow() {
   destroyAuthWin();
 
   win = new BrowserWindow({
-    width: 1064,
-    height: 768,
+    width: 1220,
+    height: 600,
     webPreferences: {
       nodeIntegration: false,
       enableRemoteModule: false,
