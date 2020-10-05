@@ -21,7 +21,12 @@ import ProjectMenu from './Team/ProjectMenu';
 import { formatTime } from '../control';
 import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
-import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
+import {
+  sectionNumber,
+  sectionDescription,
+  useOrganizedBy,
+  usePlan,
+} from '../crud';
 import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
@@ -133,8 +138,9 @@ export function TaskTable(props: IProps) {
   const classes = useStyles();
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
-  const [planName, setPlanName] = useState('');
+  const { getPlanName } = usePlan();
   const [planId] = useGlobal('plan');
+  const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
   const [projRole] = useGlobal('projRole');
   const projectPlans = useProjectPlans();
@@ -248,6 +254,10 @@ export function TaskTable(props: IProps) {
   });
 
   useEffect(() => {
+    setPlanName(getPlanName(planId));
+  }, [getPlanName, planId]);
+
+  useEffect(() => {
     if (!filter) {
       setColumnFormatting([
         { columnName: 'composite', width: TaskItemWidth, align: 'left' },
@@ -325,8 +335,6 @@ export function TaskTable(props: IProps) {
       mediaRemoteId: r.mediaRemoteId,
     }));
     setRows(newRows);
-    const newPlanName = newRows.length > 0 ? newRows[0].plan : '';
-    if (planName !== newPlanName) setPlanName(newPlanName);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rowData]);
 
