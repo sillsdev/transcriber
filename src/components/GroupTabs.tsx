@@ -56,7 +56,7 @@ const GroupTabs = (props: IProps) => {
           <Tab label={t.invitations} />
         </Tabs>
       </AppBar>
-      {(tab || 0) === 0 && <UserTable {...props} />}
+      {((tab || 0) === 0 || tab > 2) && <UserTable {...props} />}
       {tab === 1 && <GroupSettings {...props} />}
       {tab === 2 && <InvitationTable {...props} />}
     </div>
