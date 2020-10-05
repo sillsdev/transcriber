@@ -272,7 +272,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="usertable.role">
-                <source>Role</source>
+                <source>Team Role</source>
                 <target/>
                 <context-group>
                     <context context-type="sourcefile">UserTable.tsx</context>

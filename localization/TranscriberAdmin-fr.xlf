@@ -232,8 +232,8 @@
 		</unit>
 		<unit id="usertable.role">
          <segment>
-            <source>Role</source>
-         	<target>Rôle</target>
+            <source>Team Role</source>
+         	<target>Rôle d'équipe</target>
          </segment>
       </unit>
       <unit id="usertable.invite">

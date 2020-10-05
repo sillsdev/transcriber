@@ -62,7 +62,7 @@ const initialState = {
 			"timezone": "Timezone",
 			"cancel": "Cancel",
 			"continue": "Continue",
-			"role": "Role",
+			"role": "Team Role",
 			"invite": "Invite",
 			"offline": "Offline Desktop Member",
 			"action": "Action",
