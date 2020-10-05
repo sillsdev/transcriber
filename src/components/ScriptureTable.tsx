@@ -33,7 +33,13 @@ import {
   useOrganizedBy,
   usePlan,
 } from '../crud';
-import { Online, useRemoteSave, lookupBook, useStickyRedirect } from '../utils';
+import {
+  Online,
+  useRemoteSave,
+  lookupBook,
+  useStickyRedirect,
+  currentDateTime,
+} from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
 import Auth from '../auth/Auth';
@@ -460,6 +466,7 @@ export function ScriptureTable(props: IProps) {
         }
         deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
       }
+      updateLastModified();
       setData(
         resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
       );
@@ -699,6 +706,16 @@ export function ScriptureTable(props: IProps) {
       startSave();
       waitForSave(() => showUpload(i), 100);
     } else showUpload(i);
+  };
+
+  const updateLastModified = () => {
+    var planRec = getPlan(plan);
+    if (planRec !== null) {
+      planRec.attributes.dateUpdated = currentDateTime();
+      const plan = planRec; //assure typescript that the plan isn't null :/
+      memory.update((t: TransformBuilder) => t.updateRecord(plan));
+      setLastSaved(planRec.attributes.dateUpdated);
+    }
   };
 
   const getLastModified = () => {
