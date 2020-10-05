@@ -495,7 +495,7 @@ export function PlanSheet(props: IProps) {
               value: (
                 <MemoizedTaskAvatar assigned={rowInfo[rowIndex].editor || ''} />
               ),
-              readonly: true,
+              readOnly: true,
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',
             } as ICell,
             {
@@ -504,7 +504,7 @@ export function PlanSheet(props: IProps) {
                   assigned={rowInfo[rowIndex].transcriber || ''}
                 />
               ),
-              readonly: true,
+              readOnly: true,
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',
             } as ICell,
           ]
@@ -560,6 +560,7 @@ export function PlanSheet(props: IProps) {
                     }
                   />
                 ),
+                readOnly: true,
                 className: section ? 'set' + (passage ? 'p' : ' ') : 'pass',
               } as ICell,
             ]);
