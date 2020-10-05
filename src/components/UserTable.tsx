@@ -158,6 +158,8 @@ export function UserTable(props: IProps) {
     { columnName: 'role', width: 100 },
     { columnName: 'action', width: 150 },
   ];
+  const sortingEnabled = [{ columnName: 'action', sortingEnabled: false }];
+  const filteringEnabled = [{ columnName: 'action', filteringEnabled: false }];
   const [filter, setFilter] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -343,6 +345,8 @@ export function UserTable(props: IProps) {
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
+          sortingEnabled={sortingEnabled}
+          filteringEnabled={filteringEnabled}
           dataCell={Cell}
           rows={data}
           shaping={filter}
