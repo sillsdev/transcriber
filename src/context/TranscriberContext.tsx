@@ -24,6 +24,7 @@ import {
   ActivityStates,
   RoleNames,
   ISharedStrings,
+  IActivityStateStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -43,6 +44,7 @@ export const getPlanName = (plan: Plan) => {
 interface IStateProps {
   todoStr: IToDoTableStrings;
   taskItemStr: ITaskItemStrings;
+  activityStateStr: IActivityStateStrings;
   transcriberStr: ITranscriberStrings;
   projButtonStr: IProjButtonsStrings;
   sharedStr: ISharedStrings;
@@ -56,6 +58,7 @@ interface IStateProps {
 const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
   taskItemStr: localStrings(state, { layout: 'taskItem' }),
+  activityStateStr: localStrings(state, { layout: 'activityState' }),
   transcriberStr: localStrings(state, { layout: 'transcriber' }),
   projButtonStr: localStrings(state, { layout: 'projButtons' }),
   sharedStr: localStrings(state, { layout: 'shared' }),
@@ -132,6 +135,7 @@ const initState = {
   playItem: '',
   allBookData: Array<BookName>(),
   taskItemStr: {} as ITaskItemStrings,
+  activityStateStr: {} as IActivityStateStrings,
   sharedStr: {} as ISharedStrings,
   todoStr: {} as IToDoTableStrings,
   transcriberStr: {} as ITranscriberStrings,
@@ -168,6 +172,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const {
       todoStr,
       taskItemStr,
+      activityStateStr,
       transcriberStr,
       projButtonStr,
       sharedStr,
@@ -188,6 +193,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       allBookData,
       todoStr,
       taskItemStr,
+      activityStateStr,
       transcriberStr,
       projButtonStr,
       sharedStr,

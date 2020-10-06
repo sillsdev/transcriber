@@ -47,7 +47,13 @@ interface IProps {
 
 export function TaskItem(props: IProps) {
   const { organizedBy } = props;
-  const { rowData, taskItemStr, setSelected, allBookData } = useTodo();
+  const {
+    rowData,
+    taskItemStr,
+    activityStateStr,
+    setSelected,
+    allBookData,
+  } = useTodo();
   //TT-1728 leave this in until we close this issue
   if (props.item === undefined || props.item < 0 || props.item > rowData.length)
     console.log(props.item, rowData.length);
@@ -62,9 +68,13 @@ export function TaskItem(props: IProps) {
   let assigned: string | null = null;
   const attr = passage.attributes;
   if (attr) {
-    const next = NextAction({ t: taskItemStr, state: attr.state });
-    if (next === t.transcribe) assigned = related(section, 'transcriber');
-    if (next === t.review) assigned = related(section, 'editor');
+    const next = NextAction({
+      ta: activityStateStr,
+      state: attr.state,
+    });
+    if (next === activityStateStr.transcribe)
+      assigned = related(section, 'transcriber');
+    if (next === activityStateStr.review) assigned = related(section, 'editor');
   }
 
   return (
@@ -78,7 +88,7 @@ export function TaskItem(props: IProps) {
           primary={
             <Typography>{passageReference(passage, allBookData)}</Typography>
           }
-          secondary={<TaskFlag t={t} state={attr?.state} />}
+          secondary={<TaskFlag ta={activityStateStr} state={attr?.state} />}
         />
         <ListItemSecondaryAction>
           <div className={classes.detail}>

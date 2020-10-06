@@ -19,10 +19,22 @@
             <target>Importation un fichier de PTF</target>
          </segment>
       </unit>
+      <unit id="activityState.approved">
+         <segment>
+            <source>Ready to Sync</source>
+            <target>Prêt à synchroniser</target>
+         </segment>
+      </unit>
       <unit id="activityState.done">
          <segment>
             <source>Done</source>
             <target>Achevé</target>
+         </segment>
+      </unit>
+      <unit id="activityState.incomplete">
+         <segment>
+            <source>Incomplete</source>
+            <target>Incomplet</target>
          </segment>
       </unit>
       <unit id="activityState.needsNewRecording">
@@ -43,16 +55,40 @@
             <target>Pas d'enregistrement</target>
          </segment>
       </unit>
+      <unit id="activityState.review">
+         <segment>
+            <source>Review</source>
+            <target>Revue</target>
+         </segment>
+      </unit>
       <unit id="activityState.reviewing">
          <segment>
             <source>Reviewing</source>
             <target>Contrôler</target>
          </segment>
       </unit>
+      <unit id="activityState.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target>Transcrire</target>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribed">
+         <segment>
+            <source>Transcribed</source>
+            <target>Transcrite</target>
+         </segment>
+      </unit>
       <unit id="activityState.transcribing">
          <segment>
             <source>Transcribing</source>
             <target>Transcrire</target>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribeReady">
+         <segment>
+            <source>Ready to Transcribe</source>
+            <target>Prêt à transcrire</target>
          </segment>
       </unit>
       <unit id="alert.areYouSure">
@@ -2246,46 +2282,10 @@
             <target>Assigner {0}</target>
          </segment>
       </unit>
-      <unit id="taskItem.done">
-         <segment>
-            <source>Done</source>
-            <target>Terminé</target>
-         </segment>
-      </unit>
-      <unit id="taskItem.incomplete">
-         <segment>
-            <source>Incomplete</source>
-            <target>Incomplet</target>
-         </segment>
-      </unit>
-      <unit id="taskItem.needsNewRecording">
-         <segment>
-            <source>Recording Needed</source>
-            <target>Enregistrement nécessaire</target>
-         </segment>
-      </unit>
-      <unit id="taskItem.needsNewTranscription">
-         <segment>
-            <source>Correction Needed</source>
-            <target>Correction nécessaire</target>
-         </segment>
-      </unit>
-      <unit id="taskItem.noMedia">
-         <segment>
-            <source>No Recording</source>
-            <target>Pas d'enregistrement</target>
-         </segment>
-      </unit>
       <unit id="taskItem.review">
          <segment>
             <source>Review</source>
             <target>Examiner</target>
-         </segment>
-      </unit>
-      <unit id="taskItem.reviewing">
-         <segment>
-            <source>Reviewing</source>
-            <target>Révision</target>
          </segment>
       </unit>
       <unit id="taskItem.section">
@@ -2294,21 +2294,9 @@
             <target>{0} {1}.{2}</target>
          </segment>
       </unit>
-      <unit id="taskItem.sync">
-         <segment>
-            <source>Sync Needed</source>
-            <target>Synchroniser nécessaire</target>
-         </segment>
-      </unit>
       <unit id="taskItem.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrire</target>
-         </segment>
-      </unit>
-      <unit id="taskItem.transcribing">
-         <segment>
-            <source>Transcribing</source>
             <target>Transcrire</target>
          </segment>
       </unit>

@@ -2,8 +2,8 @@ import * as React from 'react';
 import { IState, ITreeChartStrings } from '../model';
 import Paper from '@material-ui/core/Paper';
 import { RowDetailState } from '@devexpress/dx-react-grid';
-import { scaleBand } from '@devexpress/dx-chart-core';
-import { ArgumentScale, Stack } from '@devexpress/dx-react-chart';
+import { scaleBand, scaleLinear } from '@devexpress/dx-chart-core';
+import { ArgumentScale, Stack, ValueScale } from '@devexpress/dx-react-chart';
 import {
   Chart,
   BarSeries,
@@ -80,20 +80,26 @@ const LegendLabel: any = withStyles(legendLabelStyles, { name: 'LegendLabel' })(
   LegendLabelBase
 );
 
-const barSeriesForTask = (planwork: any) =>
-  Object.keys(planwork[0]).reduce((acc, item, index) => {
-    if (item !== 'task') {
-      acc.push(
-        <BarSeries
-          key={index.toString()}
-          valueField={item}
-          argumentField="task"
-          name={item}
-        />
-      );
-    }
-    return acc;
-  }, [] as any);
+const barSeriesForTask = (planwork: any) => {
+  var acc: any[] = [];
+  var names: string[] = [];
+  planwork.forEach((pw: {}) => {
+    Object.keys(pw).forEach((item, index) => {
+      if (item !== 'task' && !names.includes(item)) {
+        names.push(item);
+        acc.push(
+          <BarSeries
+            key={index.toString()}
+            valueField={item}
+            argumentField="task"
+            name={item}
+          />
+        );
+      }
+    });
+  });
+  return acc;
+};
 
 const gridDetailContainerBase = (data1: any, data2: any) => ({
   row,
@@ -121,6 +127,14 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
     return [...acc, { task: item.task, ...currentwork }];
   }, []);
 
+  const getscale = () => {
+    var sx = scaleLinear();
+    sx.ticks = () =>
+      Array(500)
+        .fill(null)
+        .map((v, i) => i);
+    return sx;
+  };
   return (
     <div className={classes.detailContainer}>
       <h5 className={classes.title}>{`Contributions toward ${row.plan}`}</h5>
@@ -129,6 +143,7 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
           <ArgumentScale factory={scaleBand} />
           <ArgumentAxis showTicks={false} />
           <ValueAxis labelComponent={AxisLabel} />
+          <ValueScale factory={getscale} />
           {barSeriesForTask(planwork1)}
           <Stack />
           <Legend

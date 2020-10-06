@@ -8,11 +8,17 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IActivityStateStrings extends Localize.LocalizedStringsMethods {
+    "approved": string;
     "done": string;
+    "incomplete": string;
     "needsNewRecording": string;
     "needsNewTranscription": string;
     "noMedia": string;
+    "review": string;
     "reviewing": string;
+    "transcribe": string;
+    "transcribed": string;
+    "transcribeReady": string;
     "transcribing": string;
 };
 
@@ -466,17 +472,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
-    "done": string;
-    "incomplete": string;
-    "needsNewRecording": string;
-    "needsNewTranscription": string;
-    "noMedia": string;
-    "review": string;
-    "reviewing": string;
     "section": string;
-    "sync": string;
-    "transcribe": string;
-    "transcribing": string;
     "unassign": string;
 };
 

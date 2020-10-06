@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Plan, Section, Role, Passage, User } from '../model';
+import {
+  IState,
+  Plan,
+  Section,
+  Role,
+  Passage,
+  User,
+  ISharedStrings,
+  IActivityStateStrings,
+  localizeActivityState,
+} from '../model';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import TreeChart, {
@@ -10,8 +20,12 @@ import TreeChart, {
   ITargetWork,
 } from '../components/TreeChart';
 import { related } from '../crud';
+import localStrings from '../selector/localize';
 
-interface IStateProps {}
+interface IStateProps {
+  ts: ISharedStrings;
+  ta: IActivityStateStrings;
+}
 
 interface IRecordProps {
   plans: Array<Plan>;
@@ -26,7 +40,16 @@ interface IProps extends IStateProps, IRecordProps, WithDataProps {
 }
 
 export function Visualize(props: IProps) {
-  const { plans, sections, roles, passages, users, selectedPlan } = props;
+  const {
+    plans,
+    sections,
+    roles,
+    passages,
+    users,
+    selectedPlan,
+    ts,
+    ta,
+  } = props;
   const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
@@ -36,32 +59,34 @@ export function Visualize(props: IProps) {
     [key: string]: number;
   }
 
-  const getData = (tot: ITotal) => {
-    let edit = Array<ITargetWork>();
-    let transcribe = Array<ITargetWork>();
-    for (let [key, value] of Object.entries(tot)) {
-      const part = key.split(':');
-      if (part[2] === 'editor') {
-        edit.push({
-          name: part[0],
-          plan: part[1],
-          count: value,
-        });
-      } else if (part[2] === 'transcriber') {
-        transcribe.push({
-          name: part[0],
-          plan: part[1],
-          count: value,
-        });
-      }
-    }
-    return [
-      { task: 'Edit', work: edit },
-      { task: 'Transcribe', work: transcribe },
-    ];
-  };
-
   useEffect(() => {
+    const getData = (tot: ITotal) => {
+      let edit = Array<ITargetWork>();
+      let transcribe = Array<ITargetWork>();
+      let editor = true;
+      for (let [key, value] of Object.entries(tot)) {
+        const part = key.split(':');
+        if (part[2] === 'editor' || part[2] === 'status') {
+          if (part[2] === 'status') editor = false;
+          edit.push({
+            name: part[0],
+            plan: part[1],
+            count: value,
+          });
+        } else if (part[2] === 'transcriber') {
+          transcribe.push({
+            name: part[0],
+            plan: part[1],
+            count: value,
+          });
+        }
+      }
+      return [
+        { task: editor ? ts.editor : '', work: edit },
+        { task: ts.transcriber, work: transcribe },
+      ];
+    };
+
     let rowTot = {} as ITotal;
     let personTot = {} as ITotal;
     let statusTot = {} as ITotal;
@@ -113,7 +138,8 @@ export function Visualize(props: IProps) {
           const stateName = selPassage.attributes
             ? selPassage.attributes.state
             : '';
-          const statusKey = stateName + ':' + planName + ':' + roleName;
+          const statusKey =
+            localizeActivityState(stateName, ta) + ':' + planName + ':status';
           statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
             ? statusTot[statusKey] + 1
             : 1;
@@ -142,12 +168,26 @@ export function Visualize(props: IProps) {
     );
     setData1(getData(personTot));
     setData2(getData(statusTot));
-  }, [project, passages, plans, roles, sections, users, selectedPlan]);
+  }, [
+    project,
+    passages,
+    plans,
+    roles,
+    sections,
+    users,
+    selectedPlan,
+    ta,
+    ts.editor,
+    ts.transcriber,
+  ]);
 
   return <TreeChart rows={rows} data1={data1} data2={data2} />;
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({});
+const mapStateToProps = (state: IState): IStateProps => ({
+  ts: localStrings(state, { layout: 'shared' }),
+  ta: localStrings(state, { layout: 'activityState' }),
+});
 
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),

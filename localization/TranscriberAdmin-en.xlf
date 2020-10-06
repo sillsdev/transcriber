@@ -22,9 +22,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="activityState.approved">
+         <segment>
+            <source>Ready to Sync</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="activityState.done">
          <segment>
             <source>Done</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.incomplete">
+         <segment>
+            <source>Incomplete</source>
             <target/>
          </segment>
       </unit>
@@ -46,9 +58,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="activityState.review">
+         <segment>
+            <source>Review</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="activityState.reviewing">
          <segment>
             <source>Reviewing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribe">
+         <segment>
+            <source>Transcribe</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribed">
+         <segment>
+            <source>Transcribed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.transcribeReady">
+         <segment>
+            <source>Ready to Transcribe</source>
             <target/>
          </segment>
       </unit>
@@ -2266,69 +2302,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="taskItem.done">
-         <segment>
-            <source>Done</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.incomplete">
-         <segment>
-            <source>Incomplete</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.needsNewRecording">
-         <segment>
-            <source>Recording Needed</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.needsNewTranscription">
-         <segment>
-            <source>Correction Needed</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.noMedia">
-         <segment>
-            <source>No Recording</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.review">
-         <segment>
-            <source>Review</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.reviewing">
-         <segment>
-            <source>Reviewing</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="taskItem.section">
          <segment>
             <source>{0} {1}.{2}</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.sync">
-         <segment>
-            <source>Sync Needed</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.transcribe">
-         <segment>
-            <source>Transcribe</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="taskItem.transcribing">
-         <segment>
-            <source>Transcribing</source>
             <target/>
          </segment>
       </unit>

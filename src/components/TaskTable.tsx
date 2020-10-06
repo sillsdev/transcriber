@@ -125,7 +125,7 @@ export function TaskTable(props: IProps) {
   const { auth, onFilter } = props;
   const {
     rowData,
-    taskItemStr,
+    activityStateStr,
     todoStr,
     projButtonStr,
     selected,
@@ -329,7 +329,10 @@ export function TaskTable(props: IProps) {
       title: sectionDescription(r.section),
       description: r.passage?.attributes?.title,
       length: r.duration ? formatTime(r.duration) : '',
-      state: r.state !== '' ? ChipText({ state: r.state, t: taskItemStr }) : '',
+      state:
+        r.state !== ''
+          ? ChipText({ state: r.state, ta: activityStateStr })
+          : '',
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediaId,
       mediaRemoteId: r.mediaRemoteId,

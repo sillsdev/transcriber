@@ -23,8 +23,22 @@
                <context context-type="sourcefile">electronImport.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="activityState.approved">
+            <source>Ready to Sync</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="activityState.done">
             <source>Done</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="activityState.incomplete">
+            <source>Incomplete</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
@@ -51,14 +65,41 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="activityState.reviewing">
+          <trans-unit id="activityState.review">
+            <source>Review</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="activityState.reviewing">
             <source>Reviewing</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="activityState.transcribing">
+          <trans-unit id="activityState.transcribe">
+            <source>Transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="activityState.transcribed">
+            <source>Transcribed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="activityState.transcribeReady">
+            <source>Ready to Transcribe</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>        <trans-unit id="activityState.transcribing">
             <source>Transcribing</source>
             <target/>
             <context-group>
@@ -2641,81 +2682,11 @@
                <context context-type="sourcefile">TaskHead.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="taskItem.done">
-            <source>Done</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.incomplete">
-            <source>Incomplete</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.needsNewRecording">
-            <source>Recording Needed</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.needsNewTranscription">
-            <source>Correction Needed</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.noMedia">
-            <source>No Recording</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.review">
-            <source>Review</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.reviewing">
-            <source>Reviewing</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="taskItem.section">
             <source>{0} {1}.{2}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">TaskItem.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.sync">
-            <source>Sync Needed</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.transcribe">
-            <source>Transcribe</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="taskItem.transcribing">
-            <source>Transcribing</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">TaskFlag.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="taskItem.unassign">

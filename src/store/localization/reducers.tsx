@@ -15,11 +15,17 @@ const initialState = {
 	}),
 	"activityState": new LocalizedStrings({
 		"en": {
+			"approved": "Ready to Sync",
 			"done": "Done",
+			"incomplete": "Incomplete",
 			"needsNewRecording": "Recording Needed",
 			"needsNewTranscription": "Correction Needed",
 			"noMedia": "No Recording",
+			"review": "Review",
 			"reviewing": "Reviewing",
+			"transcribe": "Transcribe",
+			"transcribed": "Transcribed",
+			"transcribeReady": "Ready to Transcribe",
 			"transcribing": "Transcribing",
 		}
 	}),
@@ -501,17 +507,7 @@ const initialState = {
 	"taskItem": new LocalizedStrings({
 		"en": {
 			"assign": "Assign {0}",
-			"done": "Done",
-			"incomplete": "Incomplete",
-			"needsNewRecording": "Recording Needed",
-			"needsNewTranscription": "Correction Needed",
-			"noMedia": "No Recording",
-			"review": "Review",
-			"reviewing": "Reviewing",
 			"section": "{0} {1}.{2}",
-			"sync": "Sync Needed",
-			"transcribe": "Transcribe",
-			"transcribing": "Transcribing",
 			"unassign": "Unassign {0}",
 		}
 	}),

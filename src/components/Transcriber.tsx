@@ -147,6 +147,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     rowData,
     index,
     transcriberStr,
+    activityStateStr,
     sharedStr,
     mediaUrl,
     fetchMediaUrl,
@@ -221,7 +222,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   const commentRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const t = transcriberStr;
-
+  const ta = activityStateStr;
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     if (!changed) setChanged(true);
@@ -341,53 +342,13 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     return planType;
   };
   const handleSubmit = async () => {
-    if (busy) {
-      showMessage(t.saving);
-      return;
-    }
-    if (transcriptionRef.current) {
-      if (next.hasOwnProperty(state)) {
-        const transcription = transcriptionRef.current.firstChild.value;
-        let nextState = next[state];
-        if (nextState === ActivityStates.Approved && getType() !== 'scripture')
-          nextState = ActivityStates.Done;
-
-        var tb = new TransformBuilder();
-        var ops = UpdatePassageStateOps(
-          passage.id,
-          section.id,
-          plan,
-          nextState,
-          comment,
-          remoteIdNum('user', user, memory.keyMap),
-          tb,
-          [],
-          memory
-        );
-
-        ops.push(
-          UpdateRecord(
-            tb,
-            {
-              type: 'mediafile',
-              id: mediaId,
-              attributes: {
-                transcription: transcription,
-                position: 0,
-              },
-            } as MediaFile,
-            remoteIdNum('user', user, memory.keyMap)
-          )
-        );
-        transcriptionIn.current = transcription;
-        await memory.update(ops);
-        setComment('');
-        loadHistory();
-        setChanged(false);
-        setLastSaved(currentDateTime());
-      } else {
-        logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
-      }
+    if (next.hasOwnProperty(state)) {
+      let nextState = next[state];
+      if (nextState === ActivityStates.Approved && getType() !== 'scripture')
+        nextState = ActivityStates.Done;
+      save(nextState, 0);
+    } else {
+      logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
   };
 
@@ -418,13 +379,20 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   };
 
   const handleSave = async (postComment: boolean = false) => {
+    save(nextOnSave[state] ?? state, playedSecsRef.current, postComment);
+  };
+
+  const save = async (
+    nextState: string,
+    newPosition: number,
+    postComment: boolean = false
+  ) => {
     if (transcriptionRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
       const userid = remoteIdNum('user', user, memory.keyMap);
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
-      var nextState = nextOnSave[state] ?? state;
       //always update the state, because we need the dateupdated to be updated
       ops = UpdatePassageStateOps(
         passage.id,
@@ -445,7 +413,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
             id: mediaId,
             attributes: {
               transcription: transcription,
-              position: playedSecsRef.current,
+              position: newPosition,
             },
           } as MediaFile,
           userid
@@ -462,6 +430,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           saveCompleted('');
           setLastSaved(currentDateTime());
           saving.current = false;
+          handleAssign();
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
@@ -470,14 +439,12 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         });
     }
   };
-
   const handleSaveButton = () => {
     if (busy) {
       showMessage(t.saving);
       return;
     }
     handleSave(true);
-    handleAssign();
   };
 
   const previous: { [key: string]: string } = {
@@ -674,7 +641,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           handleSave().finally(() => {
             launchTimer();
           });
-          handleAssign();
         }
         return;
       }
@@ -780,7 +746,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         }
         if (psc.attributes.state !== curState) {
           curState = psc.attributes.state;
-          results.push(historyItem(psc, t.getString(curState)));
+          results.push(historyItem(psc, ta.getString(curState)));
         }
       });
     return results;
