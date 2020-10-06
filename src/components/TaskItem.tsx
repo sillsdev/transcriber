@@ -19,6 +19,7 @@ import {
 } from '../crud';
 import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +55,9 @@ export function TaskItem(props: IProps) {
     setSelected,
     allBookData,
   } = useTodo();
+  const uctx = React.useContext(UnsavedContext);
+  const { checkSavedFn } = uctx.state;
+
   //TT-1728 leave this in until we close this issue
   if (props.item === undefined || props.item < 0 || props.item > rowData.length)
     console.log(props.item, rowData.length);
@@ -62,7 +66,7 @@ export function TaskItem(props: IProps) {
   const t = taskItemStr;
 
   const handleSelect = (selected: string) => () => {
-    setSelected(selected);
+    checkSavedFn(() => setSelected(selected));
   };
 
   let assigned: string | null = null;

@@ -633,16 +633,15 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
-  const handleAutosave = () => {
-    if (transcriptionRef.current && transcriptionIn.current) {
+  const handleAutosave = async () => {
+    if (
+      !saving.current &&
+      transcriptionRef.current &&
+      transcriptionIn.current !== undefined
+    ) {
       const transcription = transcriptionRef.current.firstChild.value;
       if (transcriptionIn.current !== transcription) {
-        if (!busy) {
-          handleSave().finally(() => {
-            launchTimer();
-          });
-        }
-        return;
+        await handleSave();
       }
     }
     launchTimer();
@@ -668,7 +667,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediaId, busy]);
+  }, [mediaId]);
 
   const textAreaStyle = {
     overflow: 'auto',
