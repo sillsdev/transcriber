@@ -8,6 +8,8 @@
 
 	<xsl:variable name="en" select="document('TranscriberAdmin-en-1.2.xml')"/>
 	<xsl:variable name="fr" select="document('TranscriberAdmin-en-1.2-fr.xml')"/>
+	<xsl:variable name="pt" select="document('TranscriberAdmin-en-1.2-pt.xml')"/>
+	<xsl:variable name="ta" select="document('TranscriberAdmin-en-1.2-ta.xml')"/>
 	
 	<xsl:output indent="yes"/>
 	
@@ -18,6 +20,8 @@
 				<xsl:element name="{$section}">
 					<xsl:copy-of select="$en//*[local-name() = $section]/en"/>
 					<xsl:copy-of select="$fr//*[local-name() = $section]/fr"/>
+					<xsl:copy-of select="$pt//*[local-name() = $section]/pt"/>
+					<xsl:copy-of select="$ta//*[local-name() = $section]/ta"/>
 				</xsl:element>
 			</xsl:for-each>
 		</strings>

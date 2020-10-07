@@ -65,6 +65,8 @@ import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
+import pt from '../assets/pt.json';
+import ta from '../assets/ta.json';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
 import { isElectron } from '../api-variable';
@@ -85,7 +87,7 @@ interface ILdml {
     };
   };
 }
-const ldml: ILdml = { en, fr };
+const ldml: ILdml = { en, fr, pt, ta };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
