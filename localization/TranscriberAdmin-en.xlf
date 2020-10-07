@@ -346,6 +346,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="control.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="deleteExpansion.advanced">
          <segment>
             <source>Advanced</source>

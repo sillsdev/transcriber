@@ -400,7 +400,14 @@
                <context context-type="sourcefile">selectPlanType.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="deleteExpansion.advanced">
+      	<trans-unit id="control.scripture">
+      		<source>Scripture Transcription</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">selectPlanType.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="deleteExpansion.advanced">
             <source>Advanced</source>
             <target/>
             <context-group>

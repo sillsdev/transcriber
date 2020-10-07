@@ -77,6 +77,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IControlStrings extends Localize.LocalizedStringsMethods {
     "other": string;
+    "scripture": string;
 };
 
 export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {

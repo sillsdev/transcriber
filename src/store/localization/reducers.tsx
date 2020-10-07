@@ -89,6 +89,7 @@ const initialState = {
 	"control": new LocalizedStrings({
 		"en": {
 			"other": "General Transcription",
+			"scripture": "Scripture Transcription",
 		}
 	}),
 	"deleteExpansion": new LocalizedStrings({

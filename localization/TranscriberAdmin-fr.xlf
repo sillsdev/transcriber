@@ -337,7 +337,13 @@
             <target>Transcription générale</target>
          </segment>
       </unit>
-      <unit id="deleteExpansion.advanced">
+   	<unit id="control.scripture">
+   		<segment>
+   			<source>Scripture Transcription</source>
+   			<target>Transcription des Écritures</target>
+   		</segment>
+   	</unit>
+   	<unit id="deleteExpansion.advanced">
          <segment>
             <source>Advanced</source>
             <target>Avancé</target>
