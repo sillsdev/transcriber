@@ -125,6 +125,7 @@ const initState = {
   personalProjects: () => Array<VProject>(),
   teamProjects: (teamId: string) => Array<VProject>(),
   teamMembers: (teamId: string) => 0,
+  loadProject: (plan: Plan, cb: () => void) => {},
   selectProject: (project: Plan) => {},
   setProjectParams: (project: Plan) => {
     return ['', ''];
@@ -245,8 +246,16 @@ const TeamProvider = withData(mapRecordsToProps)(
       return [projectId, orgId];
     };
 
-    const selectProject = (plan: Plan) => {
+    const loadProject = (plan: Plan, cb: () => void) => {
+      selectProject(plan, cb);
+    };
+
+    const selectProject = (
+      plan: Plan,
+      cb: (() => void) | undefined = undefined
+    ) => {
       const [projectId] = setProjectParams(plan);
+
       Online((online) => {
         LoadProjectData(
           projectId,
@@ -260,7 +269,8 @@ const TeamProvider = withData(mapRecordsToProps)(
           doOrbitError
         )
           .then(() => {
-            setMyProjRole(projectId);
+            if (!cb) setMyProjRole(projectId);
+            else cb();
           })
           .catch((err: Error) => {
             if (!online) showMessage(t.NoLoadOffline);
@@ -431,6 +441,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             projectLanguage,
             isOwner,
             selectProject,
+            loadProject,
             setProjectParams,
             projectCreate,
             projectUpdate,

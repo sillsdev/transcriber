@@ -78,6 +78,7 @@ export const ProjectCard = (props: IProps) => {
   const ctx = React.useContext(TeamContext);
   const {
     auth,
+    loadProject,
     selectProject,
     setProjectParams,
     projectSections,
@@ -125,24 +126,41 @@ export const ProjectCard = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project]);
 
+  const LoadAndGo = async (what: string) => {
+    loadProject(project, () => {
+      switch (what) {
+        case 'import':
+          setOpenImport(true);
+          break;
+        case 'export':
+          setOpenExport(true);
+          break;
+        case 'reports':
+          setOpenReports(true);
+          break;
+      }
+    });
+  };
+
   const doOpen = (what: string) => {
-    if (what === 'settings') {
-      setOpenProject(true);
-    } else if (what === 'sync') {
-      console.log('sync');
-    } else if (what === 'integration') {
-      setOpenIntegration(true);
-    } else if (what === 'import') {
-      setOpenImport(true);
-    } else if (what === 'export') {
-      setOpenExport(true);
-    } else if (what === 'reports') {
-      setOpenReports(true);
-    } else if (what === 'delete') {
-      setDeleteItem(project);
+    switch (what) {
+      case 'settings':
+        setOpenProject(true);
+        break;
+      case 'integration':
+        setOpenIntegration(true);
+        break;
+      case 'delete':
+        setDeleteItem(project);
+        break;
+      case 'import':
+      case 'export':
+      case 'reports':
+        LoadAndGo(what);
     }
     setOpen('');
   };
+
   const handleProjectAction = (what: string) => {
     const [projectid] = setProjectParams(project);
     //otherwise it will be done in the useEffect for projectId
