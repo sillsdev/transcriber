@@ -11,9 +11,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { UpdateRecord } from '../model/baseModel';
 import Confirm from './AlertDialog';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
   FormControl,
   FormGroup,
@@ -592,8 +592,8 @@ export function IntegrationPanel(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel defaultExpanded={!isElectron} disabled={isElectron}>
-        <ExpansionPanelSummary
+      <Accordion defaultExpanded={!isElectron} disabled={isElectron}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratext}
           id={t.paratext}
@@ -602,8 +602,8 @@ export function IntegrationPanel(props: IProps) {
             <ParatextLogo />
             {'\u00A0' + t.paratext}
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
+        </AccordionSummary>
+        <AccordionDetails className={classes.panel}>
           <List dense component="div">
             <ListItem key="online">
               <ListItemAvatar>
@@ -761,10 +761,10 @@ export function IntegrationPanel(props: IProps) {
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel defaultExpanded={isElectron} disabled={!isElectron}>
-        <ExpansionPanelSummary
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={isElectron} disabled={!isElectron}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratextLocal}
           id={t.paratextLocal}
@@ -773,8 +773,8 @@ export function IntegrationPanel(props: IProps) {
             <ParatextLogo />
             {'\u00A0' + t.paratextLocal}
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
+        </AccordionSummary>
+        <AccordionDetails className={classes.panel}>
           <List dense component="div">
             <ListItem key="installed">
               <ListItemAvatar>
@@ -892,10 +892,10 @@ export function IntegrationPanel(props: IProps) {
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
           id="panel2a-header"
@@ -904,20 +904,20 @@ export function IntegrationPanel(props: IProps) {
             <RenderLogo />
             {'\u00A0' + t.render}
           </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        </AccordionSummary>
+        <AccordionDetails>
           <Typography>{'Not Implemented'}</Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel disabled>
-        <ExpansionPanelSummary
+        </AccordionDetails>
+      </Accordion>
+      <Accordion disabled>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3a-content"
           id="panel3a-header"
         >
           <Typography className={classes.heading}>{t.onestory}</Typography>
-        </ExpansionPanelSummary>
-      </ExpansionPanel>
+        </AccordionSummary>
+      </Accordion>
       {confirmItem !== null ? (
         <Confirm
           title={t.removeProject}

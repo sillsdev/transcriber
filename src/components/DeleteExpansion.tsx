@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
   FormGroup,
   FormLabel,
@@ -67,15 +67,15 @@ export function DeleteExpansion(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
+      <Accordion>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           <Typography className={classes.heading}>{t.advanced}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
+        </AccordionSummary>
+        <AccordionDetails className={classes.panel}>
           <FormLabel className={classes.label}>
             <Typography variant="h5" className={classes.dangerHeader}>
               {t.dangerZone}
@@ -104,8 +104,8 @@ export function DeleteExpansion(props: IProps) {
               </Button>
             </div>
           </FormGroup>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
     </div>
   );
 }

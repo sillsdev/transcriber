@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -113,8 +113,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
+      <Accordion>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           className={classes.summary}
           aria-controls="proj-exp-content"
@@ -123,8 +123,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
           <Typography className={classes.heading}>{t.advanced}</Typography>
           {'\u00A0 '}
           <RenderCustomize />
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
+        </AccordionSummary>
+        <AccordionDetails className={classes.panel}>
           <EditorSettings state={state} setState={setState} />
           <Options
             label={t.layout}
@@ -141,8 +141,8 @@ export function ProjectExpansion(props: IProjectDialogState) {
             addOption={options.length === 5 ? handleAddOption : undefined}
             decorations={decoration}
           />
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
+        </AccordionDetails>
+      </Accordion>
       <SnackBar message={message} />
     </div>
   );
