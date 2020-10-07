@@ -22,7 +22,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { uiLang, localeDefault } from '../utils';
 import { related, GetUser } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
-import { isElectron } from '../api-variable';
+import { API_CONFIG, isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -234,7 +234,7 @@ export function Loading(props: IProps) {
               {localStorage.getItem('inviteError') || ''}
             </Typography>
             <Typography variant="h6" className={classes.message}>
-              {t.loadingTranscriber}
+              {t.loadingTranscriber.replace('{0}', API_CONFIG.productName)}
             </Typography>
           </div>
           <LinearProgress variant="determinate" value={completed} />

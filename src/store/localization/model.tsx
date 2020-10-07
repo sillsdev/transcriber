@@ -247,7 +247,6 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "selectTeamRole": string;
     "send": string;
     "sil": string;
-    "silTranscriber": string;
 };
 
 export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods {
@@ -299,7 +298,6 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "sessionExpireTask": string;
     "sessionExpiring": string;
     "settings": string;
-    "silTranscriber": string;
     "switchTo": string;
     "tasks": string;
     "transcribe": string;
@@ -424,7 +422,6 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sendDigest": string;
     "sendNews": string;
-    "silTranscriber": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;

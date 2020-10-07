@@ -3,8 +3,8 @@
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
       <unit id="access.accessFirst">
          <segment>
-            <source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
-            <target>Bienvenue à SIL Transcriber. Un projet est créé en ligne sur le site de l'administration de SIL Transcriber. Exportez un fichier au format Portable Transcriber Format (PTF) et importez-le ici.</target>
+            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
+         	<target>Bienvenue à {0}. Tout d'abord, un projet est créé en ligne sur le site {1}. Ensuite, il faut exporter un fichier au format Portable Transcriber Format (PTF) et l'importer ici.</target>
          </segment>
       </unit>
       <unit id="access.accessSilTranscriber">
@@ -1096,8 +1096,8 @@
       </unit>
       <unit id="invite.emailsubject">
          <segment>
-            <source>SIL Transcriber Invitation</source>
-            <target>SIL Transcriber Invitation</target>
+         	<source>{0} Invitation</source>
+            <target>{0} Invitation</target>
          </segment>
       </unit>
       <unit id="invite.groupRole">
@@ -1194,12 +1194,6 @@
          <segment>
             <source>SIL International</source>
             <target>SIL International</target>
-         </segment>
-      </unit>
-      <unit id="invite.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
-            <target>SIL Transcriber</target>
          </segment>
       </unit>
    	<unit id="languagePicker.font">
@@ -1372,8 +1366,8 @@
       </unit>
       <unit id="main.loadingTranscriber">
          <segment>
-            <source>Loading SIL Transcriber</source>
-            <target>Chargement de SIL Transcriber</target>
+            <source>Loading {0}</source>
+            <target>Chargement de {0}</target>
          </segment>
       </unit>
       <unit id="main.logout">
@@ -1470,12 +1464,6 @@
          <segment>
             <source>Settings</source>
             <target>Paramètres</target>
-         </segment>
-      </unit>
-      <unit id="main.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
-            <target>SIL Transcriber</target>
          </segment>
       </unit>
       <unit id="main.switchTo">
@@ -2074,14 +2062,8 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Receive SIL Transcriber and Language Technology news</source>
-            <target>Recevez les nouvelles de SIL Transcriber et de Language Technology</target>
-         </segment>
-      </unit>
-      <unit id="profile.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
-            <target>SIL Transcriber</target>
+            <source>Receive {0} and Language Technology news</source>
+            <target>Recevez les nouvelles de {0} et de Language Technology</target>
          </segment>
       </unit>
       <unit id="profile.timezone">

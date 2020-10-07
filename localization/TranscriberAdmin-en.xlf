@@ -6,7 +6,7 @@
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.accessFirst">
          <segment>
-            <source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
+            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
             <target/>
          </segment>
       </unit>
@@ -1098,7 +1098,7 @@
       </unit>
       <unit id="invite.emailsubject">
          <segment>
-            <source>SIL Transcriber Invitation</source>
+            <source>{0} Invitation</source>
             <target/>
          </segment>
       </unit>
@@ -1201,12 +1201,6 @@
       <unit id="invite.sil">
          <segment>
             <source>SIL International</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="invite.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
             <target/>
          </segment>
       </unit>
@@ -1380,7 +1374,7 @@
       </unit>
       <unit id="main.loadingTranscriber">
          <segment>
-            <source>Loading SIL Transcriber</source>
+            <source>Loading {0}</source>
             <target/>
          </segment>
       </unit>
@@ -1477,12 +1471,6 @@
       <unit id="main.settings">
          <segment>
             <source>Settings</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="main.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
             <target/>
          </segment>
       </unit>
@@ -2100,13 +2088,7 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Receive SIL Transcriber and Language Technology news</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="profile.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
+            <source>Receive {0} and Language Technology news</source>
             <target/>
          </segment>
       </unit>

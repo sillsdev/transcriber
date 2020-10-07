@@ -236,15 +236,19 @@ export function Access(props: IProps) {
                 t.accessSilTranscriber
               ) : (
                 <span>
-                  {reactStringReplace(t.accessFirst, '{0}', () => {
-                    return online ? (
-                      <Button key="launch" onClick={handleAdmin}>
-                        SIL Transcriber
-                      </Button>
-                    ) : (
-                      'SIL Transcriber'
-                    );
-                  })}
+                  {reactStringReplace(
+                    t.accessFirst.replace('{0}', API_CONFIG.productName),
+                    '{1}',
+                    () => {
+                      return online ? (
+                        <Button key="launch" onClick={handleAdmin}>
+                          SIL Transcriber
+                        </Button>
+                      ) : (
+                        'SIL Transcriber'
+                      );
+                    }
+                  )}
                 </span>
               )}
             </Typography>

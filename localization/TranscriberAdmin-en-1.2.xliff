@@ -3,7 +3,7 @@
    <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
       <body>
          <trans-unit id="access.accessFirst">
-            <source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
+            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
@@ -1276,7 +1276,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="invite.emailsubject">
-            <source>SIL Transcriber Invitation</source>
+            <source>{0} Invitation</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -1396,13 +1396,6 @@
          </trans-unit>
          <trans-unit id="invite.sil">
             <source>SIL International</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Invite.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="invite.silTranscriber">
-            <source>SIL Transcriber</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
@@ -1605,7 +1598,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.loadingTranscriber">
-            <source>Loading SIL Transcriber</source>
+            <source>Loading {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">drawer.tsx</context>
@@ -1718,13 +1711,6 @@
          </trans-unit>
          <trans-unit id="main.settings">
             <source>Settings</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">drawer.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="main.silTranscriber">
-            <source>SIL Transcriber</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">drawer.tsx</context>
@@ -2445,14 +2431,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sendNews">
-            <source>Receive SIL Transcriber and Language Technology news</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="profile.silTranscriber">
-            <source>SIL Transcriber</source>
+            <source>Receive {0} and Language Technology news</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>

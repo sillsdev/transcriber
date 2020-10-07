@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="ta" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.accessFirst">
          <segment>
-            <source>Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.</source>
+         	<source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
             <target/>
          </segment>
       </unit>
@@ -1089,8 +1089,8 @@
       </unit>
       <unit id="invite.emailsubject">
          <segment>
-            <source>SIL Transcriber Invitation</source>
-            <target>SIL Transcriber Invitation</target>
+            <source>{0} Invitation</source>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.groupRole">
@@ -1193,12 +1193,6 @@
          <segment>
             <source>SIL International</source>
             <target>SIL International</target>
-         </segment>
-      </unit>
-      <unit id="invite.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
-            <target>எஸ்ஐஎல் டிரான்ஸ்கிரைபர்</target>
          </segment>
       </unit>
       <unit id="languagePicker.font">
@@ -1371,8 +1365,8 @@
       </unit>
       <unit id="main.loadingTranscriber">
          <segment>
-            <source>Loading SIL Transcriber</source>
-            <target>எஸ்ஐஎல் டிரான்ஸ்கிரைபரின் தரவுகள் நிரப்பப்படுகிறது</target>
+            <source>Loading {0}</source>
+            <target/>
          </segment>
       </unit>
       <unit id="main.logout">
@@ -1469,12 +1463,6 @@
          <segment>
             <source>Settings</source>
             <target>அமைப்புகள்</target>
-         </segment>
-      </unit>
-      <unit id="main.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
-            <target>எஸ்ஐஎல் டிரான்ஸ்கிரைபர்</target>
          </segment>
       </unit>
       <unit id="main.switchTo">
@@ -2091,14 +2079,8 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Receive SIL Transcriber and Language Technology news</source>
+            <source>Receive {0} and Language Technology news</source>
             <target/>
-         </segment>
-      </unit>
-      <unit id="profile.silTranscriber">
-         <segment>
-            <source>SIL Transcriber</source>
-            <target>எஸ்ஐஎல் டிரான்ஸ்கிரைபர்</target>
          </segment>
       </unit>
       <unit id="profile.timezone">

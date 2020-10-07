@@ -8,7 +8,7 @@ const initialState = {
 	"lang": 'en',
 	"access": new LocalizedStrings({
 		"en": {
-			"accessFirst": "Welcome to SIL Transcriber. A project is created online at the {0} admin site. Export a Portable Transcriber Format (PTF) file and import it here.",
+			"accessFirst": "Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.",
 			"accessSilTranscriber": "Click your avatar to transcribe or review.",
 			"importProject": "Import PTF File",
 		}
@@ -250,7 +250,7 @@ const initialState = {
 			"cancel": "Cancel",
 			"editInvite": "Edit Invite",
 			"email": "Email",
-			"emailsubject": "SIL Transcriber Invitation",
+			"emailsubject": "{0} Invitation",
 			"groupRole": "Project Role",
 			"groups": "Project",
 			"instructions": "Please click the following link to accept the invitation:",
@@ -268,7 +268,6 @@ const initialState = {
 			"selectTeamRole": "Select Team Role",
 			"send": "Send",
 			"sil": "SIL International",
-			"silTranscriber": "SIL Transcriber",
 		}
 	}),
 	"languagePicker": new LocalizedStrings({
@@ -305,7 +304,7 @@ const initialState = {
 			"integrations": "Integrations",
 			"inviteError": "Invitation not accepted.  You must login with the email that the invitation was sent to.",
 			"loadingTable": "Busy...please wait.",
-			"loadingTranscriber": "Loading SIL Transcriber",
+			"loadingTranscriber": "Loading {0}",
 			"logout": "Log Out",
 			"logoutRequired": "Log out of other tab required",
 			"media": "Media",
@@ -322,7 +321,6 @@ const initialState = {
 			"sessionExpireTask": "Your session will expire in {0} seconds. Would you like to continue?",
 			"sessionExpiring": "Session Expiring",
 			"settings": "Settings",
-			"silTranscriber": "SIL Transcriber",
 			"switchTo": "Switch to:",
 			"tasks": "Tasks",
 			"transcribe": "Transcribe",
@@ -453,8 +451,7 @@ const initialState = {
 			"role": "Team Role",
 			"save": "Save",
 			"sendDigest": "Receive daily digests",
-			"sendNews": "Receive SIL Transcriber and Language Technology news",
-			"silTranscriber": "SIL Transcriber",
+			"sendNews": "Receive {0} and Language Technology news",
 			"timezone": "Time zone",
 			"userExists": "This offline member exists.",
 			"userProfile": "Member profile",

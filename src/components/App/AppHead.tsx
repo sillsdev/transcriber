@@ -15,7 +15,7 @@ import {
 import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import Auth from '../../auth/Auth';
-import { isElectron } from '../../api-variable';
+import { API_CONFIG, isElectron } from '../../api-variable';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
@@ -161,7 +161,7 @@ export const AppHead = withBucket(
                     ? t.transcribe
                     : t.admin
                 } - `}
-              {t.silTranscriber}
+              {API_CONFIG.productName}
             </Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
             {SwitchTo && <SwitchTo />}

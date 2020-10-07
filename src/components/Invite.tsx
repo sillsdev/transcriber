@@ -118,10 +118,10 @@ function Invite(props: IProps) {
   const handleAdd = async () => {
     const strings = {
       SILOrg: t.sil,
-      App: t.silTranscriber,
+      App: API_CONFIG.productName,
       Invitation: t.invitation,
       Instructions: t.instructions,
-      Subject: t.emailsubject,
+      Subject: t.emailsubject.replace('{0}', API_CONFIG.productName),
       Questions: t.questions,
       Join: t.join,
     };

@@ -71,6 +71,7 @@ import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
 import { isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
+import { API_CONFIG } from '../api-variable';
 
 interface ILangDes {
   type: string;
@@ -835,7 +836,7 @@ export function Profile(props: IProps) {
                           onChange={handleNewsChange}
                         />
                       }
-                      label={t.sendNews}
+                      label={t.sendNews.replace('{0}', API_CONFIG.productName)}
                     />
                   )}
                   {email !== '' && (
