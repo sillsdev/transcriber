@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Card, CardContent, Button } from '@material-ui/core';
@@ -57,6 +58,7 @@ interface IProps {
 export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
+  const history = useHistory();
   const [memory] = useGlobal('memory');
   const ctx = React.useContext(TeamContext);
   const {
@@ -205,6 +207,10 @@ export const AddCard = (props: IProps) => {
     status.canceled = true;
   };
 
+  const closeUpload = () => {
+    history.goBack();
+  };
+
   const MetaData = React.useMemo(
     () => {
       return (
@@ -265,7 +271,7 @@ export const AddCard = (props: IProps) => {
       <Uploader
         auth={auth}
         isOpen={uploadVisible}
-        onOpen={setUploadVisible}
+        onOpen={closeUpload}
         showMessage={showMessage}
         showJSXMessage={showJSXMessage}
         setComplete={setComplete}
