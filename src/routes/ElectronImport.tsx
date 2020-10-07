@@ -11,7 +11,6 @@ import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
 import { remoteIdGuid } from '../crud';
 import { dataPath, orbitInfo } from '../utils';
-import { isArray } from 'util';
 import { isElectron } from '../api-variable';
 import { useGlobal, useRef } from 'reactn';
 import localStrings from '../selector/localize';
@@ -75,7 +74,10 @@ export const useElectronImport = (
       var zipEntries = zip.getEntries();
       for (let entry of zipEntries) {
         if (entry.entryName === 'SILTranscriber') {
-          exportTime = moment.utc(entry.getData().toString('utf8'));
+          exportTime = moment.utc(
+            entry.getData().toString('utf8'),
+            'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ'
+          );
           valid = true;
           break;
         }
@@ -101,7 +103,7 @@ export const useElectronImport = (
         var importProjs = JSON.parse(zip.readAsText('data/D_projects.json'));
         if (
           importProjs &&
-          isArray(importProjs.data) &&
+          Array.isArray(importProjs.data) &&
           importProjs.data.length > 0
         ) {
           importProjs.data.forEach((p: any) => {

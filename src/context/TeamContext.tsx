@@ -153,6 +153,10 @@ const initState = {
   vProjectStrings: {} as IVProjectStrings,
   pickerStrings: {} as ILanguagePickerStrings,
   projButtonStrings: {} as IProjButtonsStrings,
+  importOpen: false,
+  setImportOpen: (val: boolean) => {},
+  importProject: undefined as any,
+  doImport: (p: VProject | undefined = undefined) => {},
 };
 
 export type ICtxState = typeof initState & {};
@@ -210,6 +214,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [userProjects, setUserProjects] = useState(projects);
     const [userOrgs, setUserOrgs] = useState(organizations);
     const { showMessage } = useSnackBar();
+    const [importOpen, setImportOpen] = useState(false);
+    const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
       ...initState,
       auth,
@@ -244,6 +250,11 @@ const TeamProvider = withData(mapRecordsToProps)(
       setProject(projectId);
       setPlan(plan.id);
       return [projectId, orgId];
+    };
+
+    const doImport = (proj: VProject | undefined = undefined) => {
+      setImportProject(proj);
+      setImportOpen(true);
     };
 
     const loadProject = (plan: Plan, cb: () => void) => {
@@ -451,6 +462,10 @@ const TeamProvider = withData(mapRecordsToProps)(
             teamDelete,
             isAdmin,
             flatAdd,
+            importOpen,
+            setImportOpen,
+            importProject,
+            doImport,
           },
           setState,
         }}

@@ -17,11 +17,10 @@ import ProjectMenu from './ProjectMenu';
 import { BigDialog } from '../../hoc/BigDialog';
 import IntegrationTab from '../Integration';
 import ExportTab from '../TranscriptionTab';
-import ImportTab from '../ImportTab';
 import Visualize from '../Visualize';
 import Confirm from '../AlertDialog';
 import { ProjectDialog, IProjectDialog } from './ProjectDialog';
-import { usePlan, useProjectPlans, useOrganizedBy, related } from '../../crud';
+import { usePlan, useProjectPlans, useOrganizedBy } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -90,6 +89,7 @@ export const ProjectCard = (props: IProps) => {
     cardStrings,
     vProjectStrings,
     projButtonStrings,
+    doImport,
   } = ctx.state;
   const { getPlanName } = usePlan();
   const { localizedOrganizedBy } = useOrganizedBy();
@@ -99,7 +99,6 @@ export const ProjectCard = (props: IProps) => {
   const projectPlans = useProjectPlans();
   const [openProject, setOpenProject] = useState(false);
   const [openIntegration, setOpenIntegration] = useState(false);
-  const [openImport, setOpenImport] = useState(false);
   const [openExport, setOpenExport] = useState(false);
   const [openReports, setOpenReports] = useState(false);
   const [deleteItem, setDeleteItem] = useState<VProject>();
@@ -130,7 +129,7 @@ export const ProjectCard = (props: IProps) => {
     loadProject(project, () => {
       switch (what) {
         case 'import':
-          setOpenImport(true);
+          doImport(project);
           break;
         case 'export':
           setOpenExport(true);
@@ -317,15 +316,6 @@ export const ProjectCard = (props: IProps) => {
       >
         <Visualize selectedPlan={project.id} />
       </BigDialog>
-      {openImport && (
-        <ImportTab
-          auth={auth}
-          isOpen={openImport}
-          onOpen={setOpenImport}
-          planName={getPlanName(project.id)}
-          project={related(project, 'project')} //actual project id...not plan id
-        />
-      )}
       {deleteItem && (
         <Confirm
           yesResponse={handleDeleteConfirmed}

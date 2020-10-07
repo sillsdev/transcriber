@@ -31,7 +31,6 @@ import {
 import { errStatus, errorStatus } from '../AxiosStatus';
 import Memory from '@orbit/memory';
 import { TransformBuilder, Operation } from '@orbit/data';
-import { isArray } from 'util';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import { remoteIdGuid, related, insertData } from '../../crud';
@@ -397,7 +396,7 @@ export const importProjectToElectron = (
   function processFile(file: string, ser: JSONAPISerializerCustom) {
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
-    if (isArray(json.data))
+    if (Array.isArray(json.data))
       json.data.forEach((item) =>
         insertData(item, memory, tb, oparray, orbitError, true, true)
       );

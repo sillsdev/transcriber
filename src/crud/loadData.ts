@@ -1,5 +1,4 @@
 import { remoteIdGuid, remoteIdNum } from '.';
-import { isArray } from 'util';
 import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
 import JSONAPISource, {
   ResourceDocument,
@@ -50,13 +49,13 @@ export function insertData(
     }
   } finally {
     if (rec) {
-      if (isArray(rec)) rec = rec[0]; //won't be...
+      if (Array.isArray(rec)) rec = rec[0]; //won't be...
       rec.attributes = { ...item.attributes };
       oparray.push(tb.updateRecord(rec));
       for (var rel in item.relationships) {
         if (
           item.relationships[rel].data &&
-          !isArray(item.relationships[rel].data) &&
+          !Array.isArray(item.relationships[rel].data) &&
           (!rec.relationships ||
             !rec.relationships[rel] ||
             !rec.relationships[rel].data ||
@@ -108,7 +107,7 @@ async function processData(
 
   tables.forEach((t) => {
     var json = ser.deserialize(t);
-    if (isArray(json.data)) {
+    if (Array.isArray(json.data)) {
       json.data.forEach((item) =>
         insertData(item, memory, tb, oparray, orbitError, false, false)
       );

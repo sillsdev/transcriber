@@ -54,7 +54,7 @@ export const TeamScreen = (props: IProps) => {
       <TeamProvider {...props}>
         <div id="TeamScreen" className={classes.teamScreen}>
           <TeamActions auth={auth} />
-          <TeamProjects />
+          <TeamProjects auth={auth} />
         </div>
       </TeamProvider>
     </div>
