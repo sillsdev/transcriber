@@ -805,14 +805,16 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
             <Grid item xs>
               <Grid container justify="center">
                 <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                  <IconButton
-                    onClick={handleJumpEv(-1 * jump)}
-                    disabled={selected === ''}
-                  >
-                    <>
-                      <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleJumpEv(-1 * jump)}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip
                   title={(playing ? t.playTip : t.pauseTip).replace(
@@ -820,40 +822,55 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                     PLAY_PAUSE_KEY
                   )}
                 >
-                  <IconButton
-                    onClick={handlePlayStatus(!playing)}
-                    disabled={selected === ''}
-                  >
-                    <>
-                      {playing ? <PauseIcon /> : <PlayIcon />}{' '}
-                      <Typography>{PLAY_PAUSE_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handlePlayStatus(!playing)}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        {playing ? <PauseIcon /> : <PlayIcon />}{' '}
+                        <Typography>{PLAY_PAUSE_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                  <IconButton
-                    onClick={handleJumpEv(jump)}
-                    disabled={selected === ''}
-                  >
-                    <>
-                      <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleJumpEv(jump)}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                  <IconButton onClick={handleSlower} disabled={selected === ''}>
-                    <>
-                      <FaAngleDoubleDown />{' '}
-                      <Typography>{SLOWER_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleSlower}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <FaAngleDoubleDown />{' '}
+                        <Typography>{SLOWER_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                  <IconButton onClick={handleFaster} disabled={selected === ''}>
-                    <>
-                      <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleFaster}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <FaAngleDoubleUp />{' '}
+                        <Typography>{FASTER_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </Grid>
             </Grid>
@@ -968,15 +985,17 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                       <Tooltip
                         title={transcribing ? t.saveTip : t.saveReviewTip}
                       >
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          className={classes.button}
-                          onClick={handleSaveButton}
-                          disabled={selected === '' || playing}
-                        >
-                          {t.save}
-                        </Button>
+                        <span>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            className={classes.button}
+                            onClick={handleSaveButton}
+                            disabled={selected === '' || playing}
+                          >
+                            {t.save}
+                          </Button>
+                        </span>
                       </Tooltip>
                       <Tooltip
                         title={
@@ -985,15 +1004,17 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
                             : t.submitReviewTip
                         }
                       >
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          className={classes.button}
-                          onClick={handleSubmit}
-                          disabled={selected === '' || playing}
-                        >
-                          {t.submit}
-                        </Button>
+                        <span>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            className={classes.button}
+                            onClick={handleSubmit}
+                            disabled={selected === '' || playing}
+                          >
+                            {t.submit}
+                          </Button>
+                        </span>
                       </Tooltip>
                     </>
                   ) : (

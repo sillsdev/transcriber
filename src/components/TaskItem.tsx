@@ -48,6 +48,7 @@ interface IProps {
 
 export function TaskItem(props: IProps) {
   const { organizedBy } = props;
+  const classes = useStyles();
   const {
     rowData,
     taskItemStr,
@@ -58,11 +59,9 @@ export function TaskItem(props: IProps) {
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
 
-  //TT-1728 leave this in until we close this issue
-  if (props.item === undefined || props.item < 0 || props.item > rowData.length)
-    console.log(props.item, rowData.length);
+  // TT-1749 during refresh the index went out of range.
+  if (props.item >= rowData.length) return <></>;
   const { passage, section, duration } = rowData[props.item];
-  const classes = useStyles();
   const t = taskItemStr;
 
   const handleSelect = (selected: string) => () => {
