@@ -127,14 +127,43 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
     return [...acc, { task: item.task, ...currentwork }];
   }, []);
 
-  const getscale = () => {
+  /* put this back in once we fine tune this
+  ** I think this worked, but some data wasn't showing up
+  ** dev Cabtal team, Imported Plan
+  <ValueScale factory={scale1}>
+
+  const getmax = (planwork: any) => {
+    var max = 0;
+    planwork.forEach((pw: any) => {
+      Object.keys(pw).forEach((item, index) => {
+        if (item !== 'task' && (Number(pw[item]) || 0) > max)
+          max = Number(pw[item]);
+      });
+    });
+    return max;
+  };
+
+
+  const scale1 = () => {
+    var max = getmax(planwork1);
     var sx = scaleLinear();
     sx.ticks = () =>
-      Array(500)
+      Array(20)
         .fill(null)
-        .map((v, i) => i);
+        .map((v, i) => i * (max > 20 ? 10 : 1));
     return sx;
   };
+  const scale2 = () => {
+    var max = getmax(planwork2);
+    var x = Math.ceil(max / 75) * 5;
+    var sx = scaleLinear();
+    sx.ticks = () =>
+      Array(15)
+        .fill(null)
+        .map((v, i) => i * (max > 15 ? x : 1));
+    return sx;
+  };
+  */
   return (
     <div className={classes.detailContainer}>
       <h5 className={classes.title}>{`Contributions toward ${row.plan}`}</h5>
@@ -143,7 +172,6 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
           <ArgumentScale factory={scaleBand} />
           <ArgumentAxis showTicks={false} />
           <ValueAxis labelComponent={AxisLabel} />
-          <ValueScale factory={getscale} />
           {barSeriesForTask(planwork1)}
           <Stack />
           <Legend
