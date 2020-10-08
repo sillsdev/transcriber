@@ -204,7 +204,8 @@ const getMedia = (
   allBookData: BookName[],
   slider: StatusN,
   attachMap: IAttachMap,
-  pdata: IPRow[]
+  pdata: IPRow[],
+  locale: string
 ) => {
   let rowData: IRow[] = [];
 
@@ -223,12 +224,8 @@ const getMedia = (
       if (!updateddt.endsWith('Z')) updateddt += 'Z';
       const updated = moment(updateddt);
       const date = updated ? updated.format('YYYY-MM-DD') : '';
-      const displayDate = updated
-        ? updated.locale(localeDefault()).format('L')
-        : '';
-      const displayTime = updated
-        ? updated.locale(localeDefault()).format('LT')
-        : '';
+      const displayDate = updated ? updated.locale(locale).format('L') : '';
+      const displayTime = updated ? updated.locale(locale).format('LT') : '';
       const today = moment().format('YYYY-MM-DD');
       rowData.push({
         planid: related(f, 'plan'),
@@ -373,6 +370,7 @@ export function MediaTab(props: IProps) {
   const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [errorReporter] = useGlobal('errorReporter');
+  const [isDeveloper] = useGlobal('developer');
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
@@ -678,6 +676,8 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [plan, attachVisible]);
 
+  const locale = localeDefault(isDeveloper);
+
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = getMediaInPlans([planRec], mediaFiles);
@@ -690,7 +690,8 @@ export function MediaTab(props: IProps) {
       allBookData,
       slider,
       attachMap,
-      pdata
+      pdata,
+      locale
     );
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {

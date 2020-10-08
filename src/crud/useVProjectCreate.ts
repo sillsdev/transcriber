@@ -8,6 +8,7 @@ export const useVProjectCreate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+  const [isDeveloper] = useGlobal('developer');
 
   const getTypeId = useTypeId();
 
@@ -39,7 +40,7 @@ export const useVProjectCreate = () => {
       attributes: {
         name,
         description,
-        uilanguagebcp47: localeDefault(),
+        uilanguagebcp47: localeDefault(isDeveloper),
         language,
         languageName,
         defaultFont,

@@ -11,6 +11,7 @@ import Auth from '../auth/Auth';
 import { isElectron } from '../api-variable';
 import { Redirect } from 'react-router-dom';
 import { localeDefault } from '../utils';
+import { useGlobal } from 'reactn';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -48,10 +49,11 @@ export function Logout(props: IProps) {
   const { auth } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
+  const [isDeveloper] = useGlobal('developer');
   const [view, setView] = React.useState('');
 
   useEffect(() => {
-    setLanguage(localeDefault());
+    setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (!isElectron) {
       auth.logout();

@@ -24,10 +24,12 @@ interface ILdml {
     };
   };
 }
-const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
+const ldmlProd: ILdml = { en, fr };
+const ldmlDev: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
 
-export const localeDefault = (bcp47?: string) => {
+export const localeDefault = (isDev: boolean, bcp47?: string) => {
   const code1 = bcp47 && bcp47.split('-')[0];
+  const ldml = isDev ? ldmlDev : ldmlProd;
   if (code1 && ldml.hasOwnProperty(code1)) return code1;
   const code = navigator.language.split('-')[0];
   return ldml.hasOwnProperty(code) ? code : 'en';

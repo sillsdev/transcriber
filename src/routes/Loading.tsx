@@ -19,7 +19,7 @@ import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
-import { uiLang, localeDefault } from '../utils';
+import { uiLang, uiLangDev, localeDefault } from '../utils';
 import { related, GetUser } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -100,7 +100,8 @@ export function Loading(props: IProps) {
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
-  const [, setIsDeveloper] = useGlobal('developer');
+  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [completed, setCompleted] = useState(0);
   const { showMessage } = useSnackBar();
   const { push } = useHistory();
@@ -166,7 +167,7 @@ export function Loading(props: IProps) {
     const isDevValue = localStorage.getItem('developer');
     setIsDeveloper(isDevValue ? isDevValue === 'true' : false);
     if (!auth || !auth.isAuthenticated(offline)) return;
-    setLanguage(localeDefault());
+    setLanguage(localeDefault(isDeveloper));
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData(
@@ -214,7 +215,7 @@ export function Loading(props: IProps) {
       !userRec?.attributes?.givenName ||
       !userRec?.attributes?.timezone ||
       !userRec?.attributes?.locale ||
-      !uiLang.includes(userRec?.attributes?.locale)
+      !uiLanguages.includes(userRec?.attributes?.locale)
     ) {
       return <Redirect to="/profile" />;
     }

@@ -162,7 +162,7 @@ export function Access(props: IProps) {
 
   useEffect(() => {
     if (isElectron) persistData();
-    setLanguage(localeDefault());
+    setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (isElectron) {
       Online((online) => setOnline(online), auth);

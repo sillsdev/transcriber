@@ -2,8 +2,8 @@ import * as React from 'react';
 import { IState, ITreeChartStrings } from '../model';
 import Paper from '@material-ui/core/Paper';
 import { RowDetailState } from '@devexpress/dx-react-grid';
-import { scaleBand, scaleLinear } from '@devexpress/dx-chart-core';
-import { ArgumentScale, Stack, ValueScale } from '@devexpress/dx-react-chart';
+import { scaleBand } from '@devexpress/dx-chart-core';
+import { ArgumentScale, Stack } from '@devexpress/dx-react-chart';
 import {
   Chart,
   BarSeries,

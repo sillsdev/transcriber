@@ -56,6 +56,7 @@ import {
 import {
   makeAbbr,
   uiLang,
+  uiLangDev,
   localeDefault,
   useRemoteSave,
   getParatextDataPath,
@@ -200,6 +201,8 @@ export function Profile(props: IProps) {
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
   const [errorReporter] = useGlobal('errorReporter');
+  const [isDeveloper] = useGlobal('developer');
+  const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
@@ -207,7 +210,7 @@ export function Profile(props: IProps) {
   const [email, setEmail] = useState('');
   const [timezone, setTimezone] = useState<string | null>(moment.tz.guess());
   const [role, setRole] = useState('member');
-  const [locale, setLocale] = useState<string>(localeDefault());
+  const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
@@ -591,7 +594,7 @@ export function Profile(props: IProps) {
     setEmail(attr.email);
     setPhone(attr.phone);
     setTimezone(attr.timezone);
-    setLocale(attr.locale ? attr.locale : localeDefault());
+    setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
     setDigest(attr.digestPreference);
     setLocked(true);
@@ -794,7 +797,7 @@ export function Profile(props: IProps) {
                         variant="filled"
                         required={true}
                       >
-                        {uiLang.map((option: string, idx: number) => (
+                        {uiLanguages.map((option: string, idx: number) => (
                           <MenuItem key={'loc' + idx} value={option}>
                             {langName(locale, option)}
                           </MenuItem>
