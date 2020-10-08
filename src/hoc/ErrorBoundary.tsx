@@ -12,8 +12,7 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import { logError, Severity } from '../components/logErrorService';
-import { forceLogin } from '../utils';
+import { logError, Severity, forceLogin } from '../utils';
 import { withBucket } from './withBucket';
 
 const styles = (theme: Theme) =>
@@ -66,13 +65,14 @@ interface IProps
     IDispatchProps,
     WithStyles<typeof styles> {
   errorReporter: any;
-  resetRequests: () => void;
+  resetRequests: () => Promise<void>;
   children: JSX.Element;
 }
 
 const initState = {
   errCount: 0,
   error: '',
+  view: '',
 };
 
 export class ErrorBoundary extends React.Component<IProps, typeof initState> {
@@ -97,8 +97,9 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
       } as any);
     }
     this.setState({
+      ...this.state,
       errCount: this.state.errCount + 1,
-      error: error.error.toString(),
+      error: error.error?.toString(),
     });
   }
 
@@ -119,13 +120,15 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
             <Typography>{t.crashMessage}</Typography>
             {message}
             <div className={classes.modalActions}>
-              <Button
-                variant="contained"
-                className={classes.button}
-                onClick={this.continue}
-              >
-                {t.continue}
-              </Button>
+              {orbitStatus !== 401 && (
+                <Button
+                  variant="contained"
+                  className={classes.button}
+                  onClick={this.continue}
+                >
+                  {t.continue}
+                </Button>
+              )}
               <Button
                 variant="contained"
                 className={classes.button}
@@ -138,6 +141,8 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
         </div>
       );
     };
+    //this didn't work because resetorbiterror sent us off to loading and it never come back to where we wanted
+    //if (this.state.view !== '') return <Redirect to={this.state.view} />;
 
     if (this.state.errCount && localStorage.getItem('isLoggedIn')) {
       return modalMessage(this.state.error);
@@ -168,19 +173,23 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
     return this.props.children;
   }
 
-  private continue() {
-    this.props.resetOrbitError();
-    this.props.resetRequests();
-    this.setState({ ...initState });
-    history.replace(localStorage.getItem('url') || '/');
+  private async cleanUpAndGo(goNext: string) {
+    const { resetOrbitError, resetRequests } = this.props;
+    await resetRequests();
+    resetOrbitError(); //this resets state and sends us back to loading
+    this.setState(initState);
+    history.replace(goNext);
   }
 
-  private logout() {
-    this.props.resetOrbitError();
-    this.props.resetRequests();
+  private continue() {
+    var deeplink = localStorage.getItem('fromUrl');
+    if (!deeplink || deeplink === 'loading') deeplink = '/';
+    this.cleanUpAndGo(deeplink);
+  }
+
+  private async logout() {
+    await this.cleanUpAndGo('/logout');
     forceLogin();
-    this.setState({ ...initState });
-    history.replace('/logout');
   }
 }
 

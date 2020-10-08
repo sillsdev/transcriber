@@ -1,9 +1,13 @@
 import React from 'react';
-import { ITaskItemStrings, ActivityStates } from '../model';
+import {
+  IActivityStateStrings,
+  ActivityStates,
+  localizeActivityState,
+} from '../model';
 import { Chip } from '@material-ui/core';
 
 interface IStateProps {
-  t: ITaskItemStrings;
+  ta: IActivityStateStrings;
 }
 
 interface IProps extends IStateProps {
@@ -11,7 +15,7 @@ interface IProps extends IStateProps {
 }
 
 export const NextAction = (props: IProps) => {
-  const { state, t } = props;
+  const { state, ta } = props;
   switch (state) {
     case ActivityStates.NoMedia:
     case ActivityStates.TranscribeReady:
@@ -19,43 +23,39 @@ export const NextAction = (props: IProps) => {
     case ActivityStates.NeedsNewTranscription:
     case ActivityStates.NeedsNewRecording:
     case ActivityStates.Incomplete:
-      return t.transcribe;
+      return ta.transcribe;
     case ActivityStates.Transcribed:
     case ActivityStates.Reviewing:
-      return t.review;
+      return ta.review;
     case ActivityStates.Synced:
     case ActivityStates.Done:
-      return t.done;
+      return ta.done;
   }
   return '';
 };
 
 const FlagText = (props: IProps) => {
-  const { state, t } = props;
+  const { state, ta } = props;
   switch (state) {
     case ActivityStates.NoMedia:
-      return t.noMedia;
     case ActivityStates.NeedsNewRecording:
-      return t.needsNewRecording;
     case ActivityStates.NeedsNewTranscription:
-      return t.needsNewTranscription;
     case ActivityStates.Incomplete:
-      return t.incomplete;
     case ActivityStates.Approved:
-      return t.sync;
     case ActivityStates.Transcribing:
-      return t.transcribing;
     case ActivityStates.Reviewing:
-      return t.reviewing;
+      return localizeActivityState(state, ta);
+    default:
+      return undefined;
   }
 };
 
 export const ChipText = (props: IProps) => FlagText(props) || NextAction(props);
 
 const ChipColor = (props: IProps) => {
-  const { t } = props;
+  const { ta } = props;
   const flagText = FlagText(props);
-  if (flagText && [t.transcribing, t.reviewing].includes(flagText)) {
+  if (flagText && [ta.transcribing, ta.reviewing].includes(flagText)) {
     return { backgroundColor: 'green', color: 'white' };
   } else return flagText ? 'secondary' : 'primary';
 };

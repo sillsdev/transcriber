@@ -1,5 +1,6 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useGlobal, useEffect } from 'reactn';
+import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -18,9 +19,11 @@ import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
+import { isElectron } from '../api-variable';
 import { withData } from '../mods/react-orbitjs';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
-import { related } from '../utils';
+import { HeadHeight } from '../App';
+import { related, useOrganizedBy } from '../crud';
+import { useStickyRedirect } from '../utils';
 
 export const TabHeight = 48;
 export enum tabs {
@@ -41,8 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
     }) as any,
     bar: {
       top: `${HeadHeight}px`,
-      left: `${DrawerWidth}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
+
+      left: 0,
+      width: '100%',
     },
     content: {
       paddingTop: `${TabHeight}px`,
@@ -65,14 +69,15 @@ interface IRecordProps {
 }
 interface IProps extends IStateProps, IRecordProps {
   bookCol: number;
-  changeTab?: (v: number) => void;
   checkSaved: (method: () => void) => void;
 }
-
+interface ParamTypes {
+  prjId: string;
+  tabNm: string;
+}
 const ScrollableTabsButtonAuto = (props: IProps) => {
   const {
     t,
-    changeTab,
     bookCol,
     checkSaved,
     plans,
@@ -81,26 +86,33 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     mediafiles,
   } = props;
   const classes = useStyles();
-  const [tab, setTab] = useGlobal('tab');
   const [plan] = useGlobal('plan');
+  const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
+  const { prjId, tabNm } = useParams<ParamTypes>();
+  const { getOrganizedBy } = useOrganizedBy();
+  const stickyPush = useStickyRedirect();
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
     setTab(value);
-    if (changeTab) {
-      changeTab(value);
-    }
   };
+  const organizedBy = getOrganizedBy(false);
 
-  const planSections = sections.filter((s) => related(s, 'plan') === plan);
+  const planSections = plan
+    ? sections.filter((s) => related(s, 'plan') === plan)
+    : ([] as Section[]);
   const planSectionIds = planSections.map((p) => p.id);
   const planPassages = passages.filter((p) =>
     planSectionIds.includes(related(p, 'section'))
   );
-  const planMedia = mediafiles.filter(
-    (m) => related(m, 'plan') === plan && m.attributes.versionNumber === 1
-  );
+  // this is only used to get counts,
+  // so we're using this clever hack of only getting version 1
+  const planMedia = plan
+    ? mediafiles.filter(
+        (m) => related(m, 'plan') === plan && m.attributes.versionNumber === 1
+      )
+    : ([] as MediaFile[]);
   const attached = planMedia
     .map((m) => related(m, 'passage'))
     .filter((p) => p && p !== '');
@@ -127,18 +139,28 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const statusMessage = (msg: string, val1: number, val2: number) =>
     msg.replace('{1}', val1.toString()).replace('{2}', val2.toString());
 
+  useEffect(() => {
+    if (tab === undefined) {
+      setTab(tabNm && /^[0-4]+$/.test(tabNm) ? parseInt(tabNm) : 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (tab !== undefined && tab.toString() !== tabNm)
+    stickyPush(`/plan/${prjId}/${tab}`);
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.bar} color="default">
         <Tabs
-          value={tab}
+          value={tab ?? 0}
           onChange={(e: any, v: number) => checkSaved(() => handleChange(e, v))}
           indicatorColor="primary"
           textColor="primary"
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab label={t.sectionsPassages} />
+          <Tab label={t.sectionsPassages.replace('{0}', organizedBy)} />
           <Tab label={t.media} />
           <Tab
             label={
@@ -151,18 +173,20 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
+            disabled={isElectron}
           />
           <Tab
             label={
               <Title
                 text={t.assignments}
                 status={statusMessage(
-                  t.sectionStatus,
+                  t.sectionStatus.replace('{0}', organizedBy),
                   assigned.length,
                   planSectionIds.length
                 )}
               />
             }
+            disabled={isElectron}
           />
           <Tab
             label={

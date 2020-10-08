@@ -16,8 +16,13 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { TransformBuilder } from '@orbit/data';
-import { sectionNumber, sectionDescription, remoteIdNum } from '../utils';
-import PeopleIcon from '@material-ui/icons/PeopleAlt';
+import {
+  sectionNumber,
+  sectionDescription,
+  remoteIdNum,
+  useOrganizedBy,
+} from '../crud';
+import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
 
@@ -43,7 +48,7 @@ interface IProps {
 
 export function TaskHead(props: IProps) {
   const { item } = props;
-  const { rowData, taskItemStr } = useTodo();
+  const { rowData, taskItemStr, sharedStr } = useTodo();
   const { transcriber, editor } = rowData[item] || {
     transcriber: '',
     editor: '',
@@ -55,11 +60,15 @@ export function TaskHead(props: IProps) {
   const [orgRole] = useGlobal('orgRole');
   const [projRole] = useGlobal('projRole');
   const [menuItem, setMenuItem] = React.useState(null);
+  const { getOrganizedBy } = useOrganizedBy();
+
   const t = taskItemStr;
+  const ts = sharedStr;
 
   const planHead = t.section
-    .replace('{0}', sectionNumber(section))
-    .replace('{1}', '');
+    .replace('{0}', getOrganizedBy(true))
+    .replace('{1}', sectionNumber(section))
+    .replace('{2}', '');
 
   const assignAction = t.assign;
   const unassignAction = t.unassign;
@@ -121,7 +130,7 @@ export function TaskHead(props: IProps) {
           >
             {
               <div className={classes.menuItem}>
-                <>{tranAction.replace('{0}', t.transcriber) + '\u00A0'}</>
+                <>{tranAction.replace('{0}', ts.transcriber) + '\u00A0'}</>
                 <TaskAvatar
                   assigned={
                     transcriber && transcriber !== '' ? transcriber : user
@@ -142,7 +151,7 @@ export function TaskHead(props: IProps) {
           >
             {
               <div className={classes.menuItem}>
-                <>{editAction.replace('{0}', t.editor) + '\u00A0'}</>
+                <>{editAction.replace('{0}', ts.editor) + '\u00A0'}</>
                 <TaskAvatar
                   assigned={editor && editor !== '' ? editor : user}
                 />
@@ -156,7 +165,7 @@ export function TaskHead(props: IProps) {
             onClick={handleMenu}
             aria-owns={menuItem !== '' ? 'action-menu' : undefined}
           >
-            <PeopleIcon />
+            <PeopleIconOutline />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>

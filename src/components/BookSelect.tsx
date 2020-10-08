@@ -44,7 +44,6 @@ class SelectEditor extends PureComponent<IProps, SelectState> {
     }
     if (e) onCommit(opt.value, e);
     else onCommit(opt.value);
-    console.log('COMMITTED', opt.value);
   }
 
   handleKeyDown(e: KeyEvent) {

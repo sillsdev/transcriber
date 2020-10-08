@@ -13,7 +13,6 @@ export const orbitCleanState = {
   status: undefined,
   message: '',
   saving: false,
-  retry: 16,
 } as IOrbitState;
 
 export default function (
@@ -43,7 +42,6 @@ export default function (
         status: action.payload.response.status,
         message:
           action.payload.message + ' ' + (url2 ? url2.split('/').pop() : ''),
-        retry: Math.max(state.retry - 1, 0),
       };
     case RESET_ORBIT_ERROR:
       return {

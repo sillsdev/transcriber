@@ -1,7 +1,6 @@
 import Axios from 'axios';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
-import { MediaFile } from '../../model';
 import {
   UPLOAD_LIST,
   UPLOAD_ITEM_PENDING,
@@ -10,8 +9,7 @@ import {
   UPLOAD_ITEM_FAILED,
   UPLOAD_COMPLETE,
 } from './types';
-import logError, { Severity } from '../../components/logErrorService';
-import { infoMsg } from '../../utils';
+import { infoMsg, logError, Severity } from '../../utils';
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
   dispatch({
@@ -21,19 +19,32 @@ export const uploadFiles = (files: FileList) => (dispatch: any) => {
 };
 
 export const nextUpload = (
-  record: MediaFile,
+  record: any,
   files: FileList,
   n: number,
   auth: Auth,
-  errorReporter: any
+  errorReporter: any,
+  cb?: (n: number, success: boolean, data?: any) => void
 ) => (dispatch: any) => {
   dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
+  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
+  if (!acceptExtPat.test(record.originalFile)) {
+    dispatch({
+      payload: {
+        current: n,
+        error: `${files[n].name}:unsupported`,
+      },
+      type: UPLOAD_ITEM_FAILED,
+    });
+    if (cb) cb(n, false);
+    return;
+  }
   Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,
     },
   })
-    .then(response => {
+    .then((response) => {
       dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', response.data.audioUrl, true);
@@ -42,23 +53,53 @@ export const nextUpload = (
       xhr.onload = () => {
         if (xhr.status < 300) {
           dispatch({ payload: n, type: UPLOAD_ITEM_SUCCEEDED });
+          if (cb) cb(n, true, response.data);
         } else {
           logError(
             Severity.info,
             errorReporter,
             `upload ${files[n].name}: (${xhr.status}) ${xhr.responseText}`
           );
-          dispatch({ payload: n, type: UPLOAD_ITEM_FAILED });
+          Axios.delete(
+            API_CONFIG.host + '/api/mediafiles/' + response.data.id,
+            {
+              headers: {
+                Authorization: 'Bearer ' + auth.accessToken,
+              },
+            }
+          ).catch((err) => {
+            logError(
+              Severity.info,
+              errorReporter,
+              `unable to remove orphaned mediafile ${response.data.id}`
+            );
+          });
+          dispatch({
+            payload: {
+              current: n,
+              error: `upload ${files[n].name}: (${xhr.status}) ${xhr.statusText}`,
+            },
+            type: UPLOAD_ITEM_FAILED,
+          });
+          if (cb) cb(n, false);
         }
       };
     })
-    .catch(err => {
+    .catch((err) => {
       logError(
         Severity.info,
         errorReporter,
         infoMsg(err, `Upload ${files[n].name} failed.`)
       );
-      dispatch({ payload: n, type: UPLOAD_ITEM_FAILED });
+      dispatch({
+        payload: {
+          current: n,
+          error: `upload ${files[n].name}: (${err})`,
+          mediaid: record.id,
+        },
+        type: UPLOAD_ITEM_FAILED,
+      });
+      if (cb) cb(n, false);
     });
 };
 

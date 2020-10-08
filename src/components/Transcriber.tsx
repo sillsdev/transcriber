@@ -1,6 +1,9 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
+import ReactPlayer from 'react-player';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
+import keycode from 'keycode';
+import moment from 'moment-timezone';
 import {
   MediaFile,
   Project,
@@ -13,12 +16,7 @@ import {
   User,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -44,38 +42,38 @@ import SkipAheadIcon from '@material-ui/icons/FastForward';
 import HistoryIcon from '@material-ui/icons/History';
 import TimerIcon from '@material-ui/icons/AccessTime';
 import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
-import ReactPlayer from 'react-player';
-import Duration, { formatTime } from './Duration';
+import { Duration, formatTime } from '../control';
 import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import {
   sectionDescription,
   passageDescription,
-  relMouseCoords,
   related,
-  insertAtCursor,
   remoteIdGuid,
   remoteIdNum,
   FontData,
   getFontData,
+  UpdatePassageStateOps,
+} from '../crud';
+import {
+  relMouseCoords,
+  insertAtCursor,
+  useRemoteSave,
+  logError,
+  Severity,
+  currentDateTime,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
-import { DrawerTask } from '../routes/drawer';
 import { TaskItemWidth } from '../components/TaskTable';
-import keycode from 'keycode';
-import moment from 'moment-timezone';
+import { LastEdit } from '../control';
 import {
   UpdateRecord,
   UpdateRelatedRecord,
   AddRecord,
 } from '../model/baseModel';
-import {
-  UpdatePassageStateOps,
-  AddPassageStateCommentOps,
-} from '../utils/UpdatePassageState';
-import { logError, Severity } from '../components/logErrorService';
+import { withData } from 'react-orbitjs';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -133,17 +131,24 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-interface IProps {
+interface IRecordProps {
+  mediafiles: MediaFile[];
+}
+const mapRecordsToProps = {
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+};
+interface IProps extends IRecordProps {
   auth: Auth;
 }
 
-export function Transcriber(props: IProps) {
-  const { auth } = props;
+const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
+  const { auth, mediafiles } = props;
   const {
     rowData,
     index,
     transcriberStr,
+    activityStateStr,
+    sharedStr,
     mediaUrl,
     fetchMediaUrl,
     allBookData,
@@ -169,18 +174,18 @@ export function Transcriber(props: IProps) {
     role: '',
   };
   const classes = useStyles();
-  const theme = useTheme();
   const [lang] = useGlobal('lang');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
+  const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [busy] = useGlobal('remoteBusy');
   const [assigned, setAssigned] = React.useState('');
   const [changed, setChanged] = useGlobal('changed');
-  const [doSave, setDoSave] = useGlobal('doSave');
+  const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = React.useState<FontData>();
   const [fontStatus, setFontStatus] = React.useState<string>();
   const [playSpeed, setPlaySpeed] = React.useState(1);
@@ -199,28 +204,31 @@ export function Transcriber(props: IProps) {
   const [width, setWidth] = React.useState(window.innerWidth);
   const [boxHeight, setBoxHeight] = React.useState(height - NON_BOX_HEIGHT);
   const [textValue, setTextValue] = React.useState('');
+  const [lastSaved, setLastSaved] = React.useState('');
   const [defaultPosition, setDefaultPosition] = React.useState(0.0);
-  const [message, setMessage] = React.useState(<></>);
+  const { showMessage } = useSnackBar();
   const [makeComment, setMakeComment] = React.useState(false);
   const [comment, setComment] = React.useState('');
   const [showHistory, setShowHistory] = React.useState(false);
   const [historyContent, setHistoryContent] = React.useState<any[]>();
   const [rejectVisible, setRejectVisible] = React.useState(false);
-  const [transcriptionIn, setTranscriptionIn] = React.useState('');
+  const transcriptionIn = React.useRef<string>();
+  const saving = React.useRef(false);
+  const [, saveCompleted] = useRemoteSave();
+
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
   const commentRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const t = transcriberStr;
-
+  const ta = activityStateStr;
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     if (!changed) setChanged(true);
   };
   const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
-    // console.log('Font status: current=', fontStatus, ' new=', status);
     setFontStatus(status);
   };
   const handleReady = () => {
@@ -283,7 +291,7 @@ export function Transcriber(props: IProps) {
   };
   const handleReject = () => {
     if (busy) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     setMakeComment(true);
@@ -294,6 +302,8 @@ export function Transcriber(props: IProps) {
     await memory.update(
       UpdatePassageStateOps(
         pass.id,
+        section.id,
+        plan,
         pass.attributes.state,
         pass.attributes.lastComment,
         remoteIdNum('user', user, memory.keyMap),
@@ -303,6 +313,7 @@ export function Transcriber(props: IProps) {
       )
     );
     pass.attributes.lastComment = '';
+    setLastSaved(currentDateTime());
   };
   const handleRejectCancel = () => setRejectVisible(false);
 
@@ -315,15 +326,8 @@ export function Transcriber(props: IProps) {
     needsNewTranscription: ActivityStates.Transcribed,
   };
   const getType = () => {
-    const sectionId = related(passage, 'section');
-    if (!sectionId) return null;
-    const secRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'section', id: sectionId })
-    ) as Section;
-    const planId = related(secRec, 'plan');
-    if (!planId) return null;
     const planRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'plan', id: planId })
+      q.findRecord({ type: 'plan', id: plan })
     ) as Plan;
     const planTypeId = related(planRec, 'plantype');
     if (!planTypeId) return null;
@@ -338,47 +342,13 @@ export function Transcriber(props: IProps) {
     return planType;
   };
   const handleSubmit = async () => {
-    if (busy) {
-      setMessage(<span>{t.saving}</span>);
-      return;
-    }
-    if (transcriptionRef.current) {
-      if (next.hasOwnProperty(state)) {
-        const transcription = transcriptionRef.current.firstChild.value;
-        let nextState = next[state];
-        if (nextState === ActivityStates.Approved && getType() !== 'scripture')
-          nextState = ActivityStates.Done;
-        var tb = new TransformBuilder();
-        var ops = UpdatePassageStateOps(
-          passage.id,
-          nextState,
-          comment,
-          remoteIdNum('user', user, memory.keyMap),
-          tb,
-          [],
-          memory
-        );
-        ops.push(
-          UpdateRecord(
-            tb,
-            {
-              type: 'mediafile',
-              id: mediaId,
-              attributes: {
-                transcription: transcription,
-                position: 0,
-              },
-            } as MediaFile,
-            remoteIdNum('user', user, memory.keyMap)
-          )
-        );
-        await memory.update(ops);
-        setComment('');
-        loadHistory();
-        setChanged(false);
-      } else {
-        logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
-      }
+    if (next.hasOwnProperty(state)) {
+      let nextState = next[state];
+      if (nextState === ActivityStates.Approved && getType() !== 'scripture')
+        nextState = ActivityStates.Done;
+      save(nextState, 0);
+    } else {
+      logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
   };
 
@@ -409,32 +379,32 @@ export function Transcriber(props: IProps) {
   };
 
   const handleSave = async (postComment: boolean = false) => {
+    save(nextOnSave[state] ?? state, playedSecsRef.current, postComment);
+  };
+
+  const save = async (
+    nextState: string,
+    newPosition: number,
+    postComment: boolean = false
+  ) => {
     if (transcriptionRef.current) {
+      saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
       const userid = remoteIdNum('user', user, memory.keyMap);
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
-      if (nextOnSave[state] !== undefined)
-        ops = UpdatePassageStateOps(
-          passage.id,
-          nextOnSave[state],
-          '',
-          userid,
-          tb,
-          ops,
-          memory
-        );
-      if (postComment && comment !== '') {
-        ops = AddPassageStateCommentOps(
-          passage.id,
-          state,
-          comment,
-          userid,
-          tb,
-          ops,
-          memory
-        );
-      }
+      //always update the state, because we need the dateupdated to be updated
+      ops = UpdatePassageStateOps(
+        passage.id,
+        section.id,
+        plan,
+        nextState,
+        postComment ? comment : '',
+        userid,
+        tb,
+        ops,
+        memory
+      );
       ops.push(
         UpdateRecord(
           tb,
@@ -443,26 +413,38 @@ export function Transcriber(props: IProps) {
             id: mediaId,
             attributes: {
               transcription: transcription,
-              position: playedSecsRef.current,
+              position: newPosition,
             },
           } as MediaFile,
           userid
         )
       );
-      await memory.update(ops);
-      if (postComment) setComment('');
-      loadHistory();
-      setChanged(false);
+      //have to do this before the mediafiles useEffect kicks in
+      transcriptionIn.current = transcription;
+      await memory
+        .update(ops)
+        .then(() => {
+          //we come here before we get an error because we're non-blocking
+          if (postComment) setComment('');
+          loadHistory();
+          saveCompleted('');
+          setLastSaved(currentDateTime());
+          saving.current = false;
+          handleAssign();
+        })
+        .catch((err) => {
+          //so we don't come here...we go to continue/logout
+          saveCompleted(err.message);
+          saving.current = false;
+        });
     }
   };
-
   const handleSaveButton = () => {
     if (busy) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     handleSave(true);
-    handleAssign();
   };
 
   const previous: { [key: string]: string } = {
@@ -502,7 +484,7 @@ export function Transcriber(props: IProps) {
   };
   const handleReopen = async () => {
     if (busy) {
-      setMessage(<span>{t.saving}</span>);
+      showMessage(t.saving);
       return;
     }
     if (previous.hasOwnProperty(state)) {
@@ -512,6 +494,8 @@ export function Transcriber(props: IProps) {
       await memory.update(
         UpdatePassageStateOps(
           passage.id,
+          section.id,
+          plan,
           previous[state],
           comment,
           remoteIdNum('user', user, memory.keyMap),
@@ -521,10 +505,10 @@ export function Transcriber(props: IProps) {
         )
       );
       setComment('');
+      setLastSaved(currentDateTime());
     }
   };
   const handleKey = (e: React.KeyboardEvent) => {
-    // setMessage(<span>{e.keyCode} pressed</span>);
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
     const JumpBackKey = keycode(BACK_KEY);
     const JumpAheadKey = keycode(AHEAD_KEY);
@@ -562,11 +546,37 @@ export function Transcriber(props: IProps) {
         e.preventDefault();
     }
   };
-  const handleMessageReset = () => setMessage(<></>);
 
   const setDimensions = () => {
     setHeight(window.innerHeight);
-    setWidth(window.innerWidth - theme.spacing(DrawerTask) - TaskItemWidth);
+    setWidth(window.innerWidth - TaskItemWidth - 16);
+  };
+
+  const getTranscription = () => {
+    const mediaRec = mediafiles.filter((m) => m.id === mediaId);
+    if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
+      const attr = mediaRec[0].attributes;
+      return {
+        transcription: attr.transcription ? attr.transcription : '',
+        position: attr.position,
+      };
+    } else return { transcription: '', position: 0 }; //shouldn't ever happen
+  };
+  const showTranscription = (val: {
+    transcription: string;
+    position: number;
+  }) => {
+    transcriptionIn.current = val.transcription;
+    setTextValue(val.transcription);
+    setDefaultPosition(val.position);
+    //focus on player
+    if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
+    setLastSaved(passage.attributes?.dateUpdated || '');
+    setComment(passage.attributes?.lastComment || '');
+    setTotalSeconds(duration);
+    if (mediaRemoteId && mediaRemoteId !== '') {
+      fetchMediaUrl(mediaRemoteId, memory, offline, auth);
+    }
   };
 
   React.useEffect(() => {
@@ -585,7 +595,6 @@ export function Transcriber(props: IProps) {
   React.useEffect(() => {
     if (doSave) {
       handleSave();
-      setDoSave(false);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [doSave]);
@@ -599,28 +608,20 @@ export function Transcriber(props: IProps) {
   }, [height, makeComment, comment, commentRef.current]);
 
   React.useEffect(() => {
-    const mediafiles = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('mediafile')
-    ) as MediaFile[];
-    const mediaRec = mediafiles.filter((m) => m.id === mediaId);
-    if (mediaRec.length > 0 && mediaRec[0] && mediaRec[0].attributes) {
-      const attr = mediaRec[0].attributes;
-      const transcription = attr.transcription ? attr.transcription : '';
-      setTranscriptionIn(transcription);
-      setTextValue(transcription);
-      setDefaultPosition(attr.position);
-      //focus on player
-      if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
-    }
-    if (passage && passage.attributes && passage.attributes.lastComment) {
-      setComment(passage.attributes.lastComment);
-    } else setComment('');
-    setTotalSeconds(duration);
-    if (mediaRemoteId && mediaRemoteId !== '') {
-      fetchMediaUrl(mediaRemoteId, memory, offline, auth);
-    }
+    showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
+
+  React.useEffect(() => {
+    const trans = getTranscription();
+    if (trans.transcription !== transcriptionIn.current) {
+      //show warning if changed
+      if (changed) showMessage(t.updateByOther);
+      //but do it either way
+      showTranscription(trans);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [mediafiles]);
 
   React.useEffect(() => {
     if (project && project !== '') {
@@ -632,18 +633,15 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
-  const handleAutosave = () => {
-    if (transcriptionRef.current) {
+  const handleAutosave = async () => {
+    if (
+      !saving.current &&
+      transcriptionRef.current &&
+      transcriptionIn.current !== undefined
+    ) {
       const transcription = transcriptionRef.current.firstChild.value;
-      if (transcriptionIn !== transcription) {
-        if (!busy) {
-          handleSave().finally(() => {
-            setTranscriptionIn(transcription);
-            launchTimer();
-          });
-          handleAssign();
-        }
-        return;
+      if (transcriptionIn.current !== transcription) {
+        await handleSave();
       }
     }
     launchTimer();
@@ -669,7 +667,7 @@ export function Transcriber(props: IProps) {
       }
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [transcriptionIn, mediaId]);
+  }, [mediaId]);
 
   const textAreaStyle = {
     overflow: 'auto',
@@ -681,7 +679,7 @@ export function Transcriber(props: IProps) {
     direction: projData?.fontDir as any,
   };
 
-  const paperStyle = { width: width - 24 };
+  const paperStyle = { width: width - 36 };
   const historyStyle = { height: boxHeight };
 
   moment.locale(lang);
@@ -702,7 +700,7 @@ export function Transcriber(props: IProps) {
     comment: JSX.Element | string
   ) => {
     return (
-      <ListItem>
+      <ListItem key={`${psc?.keys?.remoteId}-${comment.toString()}`}>
         <ListItemIcon>
           <UserAvatar
             {...props}
@@ -747,7 +745,7 @@ export function Transcriber(props: IProps) {
         }
         if (psc.attributes.state !== curState) {
           curState = psc.attributes.state;
-          results.push(historyItem(psc, t.getString(curState)));
+          results.push(historyItem(psc, ta.getString(curState)));
         }
       });
     return results;
@@ -766,7 +764,7 @@ export function Transcriber(props: IProps) {
   };
 
   React.useEffect(() => {
-    if (passage?.id) {
+    if (passage?.id && !saving.current) {
       loadHistory();
     }
     const newAssigned = rowData[index]?.assigned;
@@ -807,11 +805,16 @@ export function Transcriber(props: IProps) {
             <Grid item xs>
               <Grid container justify="center">
                 <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                  <IconButton onClick={handleJumpEv(-1 * jump)}>
-                    <>
-                      <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleJumpEv(-1 * jump)}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip
                   title={(playing ? t.playTip : t.pauseTip).replace(
@@ -819,34 +822,55 @@ export function Transcriber(props: IProps) {
                     PLAY_PAUSE_KEY
                   )}
                 >
-                  <IconButton onClick={handlePlayStatus(!playing)}>
-                    <>
-                      {playing ? <PauseIcon /> : <PlayIcon />}{' '}
-                      <Typography>{PLAY_PAUSE_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handlePlayStatus(!playing)}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        {playing ? <PauseIcon /> : <PlayIcon />}{' '}
+                        <Typography>{PLAY_PAUSE_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                  <IconButton onClick={handleJumpEv(jump)}>
-                    <>
-                      <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleJumpEv(jump)}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                  <IconButton onClick={handleSlower}>
-                    <>
-                      <FaAngleDoubleDown />{' '}
-                      <Typography>{SLOWER_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleSlower}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <FaAngleDoubleDown />{' '}
+                        <Typography>{SLOWER_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                  <IconButton onClick={handleFaster}>
-                    <>
-                      <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
-                    </>
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      onClick={handleFaster}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <FaAngleDoubleUp />{' '}
+                        <Typography>{FASTER_KEY}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </Grid>
             </Grid>
@@ -868,7 +892,7 @@ export function Transcriber(props: IProps) {
                 <span>
                   <IconButton
                     onClick={handleTimer}
-                    disabled={role === 'view' || playing}
+                    disabled={selected === '' || role === 'view' || playing}
                   >
                     <>
                       <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
@@ -893,7 +917,7 @@ export function Transcriber(props: IProps) {
                 >
                   <TextareaAutosize
                     value={textValue}
-                    readOnly={role === 'view'}
+                    readOnly={selected === '' || role === 'view'}
                     style={textAreaStyle}
                     onChange={handleChange}
                   />
@@ -901,7 +925,7 @@ export function Transcriber(props: IProps) {
               ) : (
                 <TextareaAutosize
                   value={textValue}
-                  readOnly={role === 'view'}
+                  readOnly={selected === '' || role === 'view'}
                   style={textAreaStyle}
                   onChange={handleChange}
                 />
@@ -936,6 +960,7 @@ export function Transcriber(props: IProps) {
                   <Checkbox
                     value={makeComment}
                     onChange={handleMakeComment}
+                    disabled={selected === ''}
                     color="primary"
                   />
                 }
@@ -944,62 +969,72 @@ export function Transcriber(props: IProps) {
             </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
-                {role !== 'view' ? (
-                  <>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleReject}
-                      disabled={playing}
-                    >
-                      {t.reject}
-                    </Button>
-                    <Tooltip title={transcribing ? t.saveTip : t.saveReviewTip}>
+                <div>
+                  <LastEdit when={lastSaved} t={sharedStr} />
+                  {role !== 'view' ? (
+                    <>
                       <Button
                         variant="outlined"
                         color="primary"
                         className={classes.button}
-                        onClick={handleSaveButton}
-                        disabled={playing}
+                        onClick={handleReject}
+                        disabled={selected === '' || playing}
                       >
-                        {t.save}
+                        {t.reject}
                       </Button>
-                    </Tooltip>
-                    <Tooltip
-                      title={
-                        transcribing
-                          ? t.submitTranscriptionTip
-                          : t.submitReviewTip
+                      <Tooltip
+                        title={transcribing ? t.saveTip : t.saveReviewTip}
+                      >
+                        <span>
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            className={classes.button}
+                            onClick={handleSaveButton}
+                            disabled={selected === '' || playing}
+                          >
+                            {t.save}
+                          </Button>
+                        </span>
+                      </Tooltip>
+                      <Tooltip
+                        title={
+                          transcribing
+                            ? t.submitTranscriptionTip
+                            : t.submitReviewTip
+                        }
+                      >
+                        <span>
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            className={classes.button}
+                            onClick={handleSubmit}
+                            disabled={selected === '' || playing}
+                          >
+                            {t.submit}
+                          </Button>
+                        </span>
+                      </Tooltip>
+                    </>
+                  ) : (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      className={classes.button}
+                      onClick={handleReopen}
+                      disabled={
+                        selected === '' ||
+                        !previous.hasOwnProperty(state) ||
+                        playing ||
+                        (user !== related(section, 'transcriber') &&
+                          !/admin/i.test(projRole))
                       }
                     >
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={handleSubmit}
-                        disabled={playing}
-                      >
-                        {t.submit}
-                      </Button>
-                    </Tooltip>{' '}
-                  </>
-                ) : (
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleReopen}
-                    disabled={
-                      !previous.hasOwnProperty(state) ||
-                      playing ||
-                      (user !== related(section, 'transcriber') &&
-                        !/admin/i.test(projRole))
-                    }
-                  >
-                    {t.reopen}
-                  </Button>
-                )}
+                      {t.reopen}
+                    </Button>
+                  )}
+                </div>
               </Grid>
             </Grid>
           </Grid>
@@ -1023,9 +1058,8 @@ export function Transcriber(props: IProps) {
           onReady={handleReady}
         />
       </div>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
-}
+});
 
 export default Transcriber;

@@ -1,10 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import {
   Project,
   IImportStrings,
   IState,
-  IElectronImportStrings,
   Passage,
   MediaFile,
   Section,
@@ -12,6 +12,9 @@ import {
   GroupMembership,
   Group,
   BookName,
+  ISharedStrings,
+  IDialog,
+  VProject,
 } from '../model';
 import { WithDataProps, withData } from '../mods/react-orbitjs';
 import Confirm from './AlertDialog';
@@ -21,8 +24,12 @@ import {
   Theme,
   createStyles,
   Typography,
-  FormLabel,
-  FormControl,
+  LinearProgress,
+  AppBar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import localStrings from '../selector/localize';
@@ -31,24 +38,25 @@ import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { connect } from 'react-redux';
 import * as actions from '../store';
 import MediaUpload, { UploadType } from './MediaUpload';
-import SnackBar from './SnackBar';
-import {
-  handleElectronImport,
-  IImportData,
-  getElectronImportData,
-} from '../routes/ElectronImport';
+import { useSnackBar } from '../hoc/SnackBar';
+import { useElectronImport } from '../routes/ElectronImport';
 import { useGlobal } from 'reactn';
-import AdmZip from 'adm-zip';
-import { remoteIdNum, passageDescription, remoteIdGuid } from '../utils';
+import {
+  remoteIdNum,
+  passageDescription,
+  remoteIdGuid,
+  useOrganizedBy,
+} from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
-import { dateChanges } from '../routes/dateChanges';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
+import { doDataChanges } from '../hoc/DataChanges';
+import { HeadHeight } from '../App';
 
 interface IStateProps {
   t: IImportStrings;
-  ei: IElectronImportStrings;
+  ts: ISharedStrings;
   importStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
 }
@@ -65,15 +73,22 @@ interface IRecordProps {
 }
 interface IProps
   extends IStateProps,
+    IDialog<VProject>,
     IDispatchProps,
     IRecordProps,
     WithDataProps {
   auth: Auth;
+  project?: string;
+  planName?: string;
 }
 export function ImportTab(props: IProps) {
   const {
+    isOpen,
+    onOpen,
+    project,
+    planName,
     t,
-    ei,
+    ts,
     auth,
     importComplete,
     importStatus,
@@ -95,23 +110,23 @@ export function ImportTab(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [fingerprint] = useGlobal('fingerprint');
-  const [backup] = useGlobal('backup');
-  const [project] = useGlobal('project');
-  const [coordinatorActivated] = useGlobal('coordinatorActivated');
+  const [errorReporter] = useGlobal('errorReporter');
 
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
-  const [zipFile, setZipFile] = useState<AdmZip | null>(null);
   const [confirmAction, setConfirmAction] = useState('');
   const [uploadVisible, setUploadVisible] = useState(false);
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
-
+  const { getOrganizedBy } = useOrganizedBy();
+  const { handleElectronImport, getElectronImportData } = useElectronImport(
+    importComplete
+  );
   const handleFilter = () => setFilter(!filter);
   const columnDefs = [
     { name: 'plan', title: t.plan },
-    { name: 'section', title: t.section },
+    { name: 'section', title: getOrganizedBy(true) },
     { name: 'passage', title: t.passage },
     { name: 'other', title: t.other },
     { name: 'old', title: t.old },
@@ -132,7 +147,15 @@ export function ImportTab(props: IProps) {
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
       root: {
-        width: '100%',
+        '& .MuiDialog-paper': {
+          maxWidth: '90%',
+          minWidth: '600px',
+          minHeight: '80%',
+        },
+        '& .MuiTable-root': {
+          tableLayout: 'auto',
+          paddingRight: theme.spacing(1),
+        },
       },
       container: {
         display: 'flex',
@@ -164,99 +187,74 @@ export function ImportTab(props: IProps) {
       grow: {
         flexGrow: 1,
       },
+      dialogHeader: theme.mixins.gutters({
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+      }) as any,
+      progress: {
+        top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
+        zIndex: 100,
+        width: '100%',
+      },
     })
   );
   const classes = useStyles();
 
-  const handleProjectImport = () => {
+  useEffect(() => {
+    const electronImport = () => {
+      var importData = getElectronImportData(project || '');
+      if (importData.valid) {
+        if (importData.warnMsg) {
+          setConfirmAction(importData.warnMsg);
+        } else {
+          //no warning...so set confirmed
+          handleActionConfirmed();
+        }
+      } else handleActionRefused();
+    };
+
     setImportTitle('');
     setChangeData([]);
     if (isElectron) electronImport();
     else setUploadVisible(true);
-  };
+  }, []);
 
   const handleActionConfirmed = () => {
-    if (!zipFile) {
-      console.log('No zip file yet...');
-      setTimeout(() => {
-        handleActionConfirmed();
-      }, 2000);
-    } else {
-      setBusy(true);
-      handleElectronImport(
-        memory,
-        backup,
-        coordinatorActivated,
-        zipFile,
-        importProjectToElectron,
-        orbitError,
-        ei
-      );
-    }
+    setBusy(true);
+    handleElectronImport(importProjectToElectron, orbitError);
     setConfirmAction('');
   };
   const handleActionRefused = () => {
     setConfirmAction('');
     setBusy(false);
+    handleClose();
   };
 
-  const electronImport = () => {
-    var importData: IImportData = getElectronImportData(memory, ei);
-    if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
-    else {
-      setZipFile(importData.zip);
-      if (importData.warnMsg) {
-        setConfirmAction(importData.warnMsg);
-      } else {
-        //no warning...so set confirmed
-        //zip file never got set here
-        //handleActionConfirmed();
-        setBusy(true);
-        handleElectronImport(
-          memory,
-          backup,
-          coordinatorActivated,
-          importData.zip,
-          importProjectToElectron,
-          orbitError,
-          ei
-        );
-      }
-    }
-  };
   const uploadITF = (files: FileList) => {
     if (!files || files.length === 0) {
-      setMessage(<span>{t.noFile}</span>);
+      showMessage(t.noFile);
     } else {
-      setBusy(true);
-      importProjectFromElectron(
-        files,
-        remoteIdNum('project', project, memory.keyMap),
-        auth,
-        orbitError,
-        t.importPending,
-        t.importComplete
-      );
+      if (project) {
+        setBusy(true);
+        importProjectFromElectron(
+          files,
+          remoteIdNum('project', project, memory.keyMap),
+          auth,
+          orbitError,
+          t.importPending,
+          t.importComplete
+        );
+      }
     }
     setUploadVisible(false);
   };
 
   const uploadCancel = () => {
     setUploadVisible(false);
+    handleClose();
   };
 
-  const showMessage = (title: string, msg: string) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
-  };
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const translateError = (err: IAxiosStatus): string => {
     console.log(err.errMsg);
     switch (err.errStatus) {
@@ -387,11 +385,11 @@ export function ImportTab(props: IProps) {
                   })
                 ) as User;
                 imported +=
-                  t.editor +
+                  ts.editor +
                   ':' +
                   (editor ? editor.attributes.name : t.unassigned) +
                   '   ';
-                old += t.editor + ':' + oldeditor?.attributes.name + '   ';
+                old += ts.editor + ':' + oldeditor?.attributes.name + '   ';
               }
               if (
                 oldsection.relationships?.transcriber?.data &&
@@ -425,12 +423,15 @@ export function ImportTab(props: IProps) {
                   })
                 ) as User;
                 imported +=
-                  t.transcriber +
+                  ts.transcriber +
                   ':' +
                   (transcriber ? transcriber.attributes.name : t.unassigned) +
                   '   ';
                 old +=
-                  t.transcriber + ':' + oldtranscriber?.attributes.name + '   ';
+                  ts.transcriber +
+                  ':' +
+                  oldtranscriber?.attributes.name +
+                  '   ';
               } /*
               if (section.attributes.state !== oldsection.attributes.state) {
                 imported += t.state + ':' + section.attributes.state;
@@ -560,18 +561,14 @@ export function ImportTab(props: IProps) {
     else setHiddenColumnNames(['other']);
     return data;
   };
+
   useEffect(() => {
     if (importStatus) {
       if (importStatus.errStatus) {
         setImportTitle(translateError(importStatus));
-        showMessage(t.error, translateError(importStatus));
         importComplete();
         setBusy(false);
       } else {
-        if (importStatus.statusMsg) {
-          setImportTitle(importStatus.statusMsg);
-          showMessage(t.import, importStatus.statusMsg);
-        }
         if (importStatus.complete) {
           //import completed ok but might have message
           var changeReport = importStatus.errMsg;
@@ -581,7 +578,8 @@ export function ImportTab(props: IProps) {
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
-          if (remote) dateChanges(auth, remote, memory, fingerprint);
+          if (remote)
+            doDataChanges(auth, remote, memory, fingerprint, errorReporter);
           setBusy(false);
         }
       }
@@ -589,28 +587,30 @@ export function ImportTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [importStatus]);
 
-  return (
-    <div id="ImportTab" className={classes.container}>
-      <div className={classes.paper}>
-        <div className={classes.actions}>
-          <Button
-            key="import"
-            aria-label={t.importProject}
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleProjectImport}
-            title={t.importProject}
-          >
-            {t.importProject}
-          </Button>
-        </div>
+  const handleClose = () => {
+    onOpen && onOpen(false);
+  };
 
-        <FormControl>
-          <FormLabel className={classes.label}>
-            <Typography variant="h5">{importTitle}</Typography>
-          </FormLabel>
-        </FormControl>
+  return (
+    <Dialog
+      className={classes.root}
+      open={isOpen}
+      onClose={handleClose}
+      disableBackdropClick={true}
+      disableEscapeKeyDown={true}
+      aria-labelledby="form-dialog-title"
+    >
+      <DialogTitle id="form-dialog-title">
+        {t.importProject + ' ' + (planName || '')}
+      </DialogTitle>
+      <DialogContent>
+        <Typography variant="h5">{importTitle}</Typography>
+        <Typography variant="body1" className={classes.dialogHeader}>
+          {importStatus
+            ? importStatus.statusMsg +
+              (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
+            : ''}
+        </Typography>
         {changeData.length > 0 && (
           <div className={classes.actions}>
             <div className={classes.grow}>{'\u00A0'}</div>
@@ -647,6 +647,11 @@ export function ImportTab(props: IProps) {
             columnFormatting={columnFormatting}
           />
         )}
+        {!importStatus || (
+          <AppBar position="fixed" className={classes.progress} color="inherit">
+            <LinearProgress variant="indeterminate" />
+          </AppBar>
+        )}
         <MediaUpload
           visible={uploadVisible}
           uploadType={UploadType.ITF}
@@ -655,19 +660,28 @@ export function ImportTab(props: IProps) {
         />
         {confirmAction === '' || (
           <Confirm
-            text={confirmAction + '  Continue?'}
+            text={confirmAction + '  ' + t.continue}
             yesResponse={handleActionConfirmed}
             noResponse={handleActionRefused}
           />
         )}
-        <SnackBar message={message} reset={handleMessageReset} />
-      </div>
-    </div>
+      </DialogContent>
+      <DialogActions className={classes.actions}>
+        <Button
+          disabled={importStatus !== undefined}
+          onClick={handleClose}
+          variant="contained"
+          color="primary"
+        >
+          {t.close}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'import' }),
-  ei: localStrings(state, { layout: 'electronImport' }),
+  ts: localStrings(state, { layout: 'shared' }),
   importStatus: state.importexport.importexportStatus,
   allBookData: state.books.bookData,
 });

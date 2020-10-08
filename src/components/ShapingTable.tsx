@@ -91,19 +91,6 @@ const availableFilterOperations: string[] = [
 const getInputValue = (value?: string): string =>
   value === undefined ? '' : value;
 
-// const getColor = (amount: number) : string => {
-//   if (amount < 1000) {
-//     return '#F44336';
-//   }
-//   if (amount < 5000) {
-//     return '#FFC107';
-//   }
-//   if (amount < 10000) {
-//     return '#009688';
-//   }
-//   return '#FF5722';
-// };
-
 const SizeEditor = withStyles(styles)(
   ({ onValueChange, classes, value }: SizeEditorProps) => {
     const handleChange = (event: any) => {
@@ -132,12 +119,11 @@ const SizeEditor = withStyles(styles)(
   }
 );
 
-const SizeFormatter = withStyles(styles)(
-  ({ value, classes }: SizeFormatterProps) => (
-    // <i className={classes.size} style={{ color: getColor(value) }}>{value}</i>
-    <i className={classes.size}>{value}</i>
-  )
-);
+const SizeFormatter = withStyles(
+  styles
+)(({ value, classes }: SizeFormatterProps) => (
+  <i className={classes.size}>{value}</i>
+));
 
 const SizeTypeProvider: React.ComponentType<DataTypeProviderProps> = (
   props: DataTypeProviderProps

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
+import { useParams } from 'react-router-dom';
+import { useStickyRedirect } from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -17,14 +19,23 @@ import {
   ITaskItemStrings,
   IToDoTableStrings,
   ITranscriberStrings,
+  IProjButtonsStrings,
   BookName,
   ActivityStates,
   RoleNames,
+  ISharedStrings,
+  IActivityStateStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { related, remoteId, sectionNumber, passageNumber } from '../utils';
+import {
+  related,
+  remoteId,
+  sectionNumber,
+  passageNumber,
+  remoteIdGuid,
+} from '../crud';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -33,7 +44,10 @@ export const getPlanName = (plan: Plan) => {
 interface IStateProps {
   todoStr: IToDoTableStrings;
   taskItemStr: ITaskItemStrings;
+  activityStateStr: IActivityStateStrings;
   transcriberStr: ITranscriberStrings;
+  projButtonStr: IProjButtonsStrings;
+  sharedStr: ISharedStrings;
   allBookData: BookName[];
   booksLoaded: boolean;
   lang: string;
@@ -44,7 +58,10 @@ interface IStateProps {
 const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
   taskItemStr: localStrings(state, { layout: 'taskItem' }),
+  activityStateStr: localStrings(state, { layout: 'activityState' }),
   transcriberStr: localStrings(state, { layout: 'transcriber' }),
+  projButtonStr: localStrings(state, { layout: 'projButtons' }),
+  sharedStr: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
   booksLoaded: state.books.loaded,
   lang: state.strings.lang,
@@ -118,8 +135,11 @@ const initState = {
   playItem: '',
   allBookData: Array<BookName>(),
   taskItemStr: {} as ITaskItemStrings,
+  activityStateStr: {} as IActivityStateStrings,
+  sharedStr: {} as ISharedStrings,
   todoStr: {} as IToDoTableStrings,
   transcriberStr: {} as ITranscriberStrings,
+  projButtonStr: {} as IProjButtonsStrings,
   hasUrl: false,
   mediaUrl: '',
   fetchMediaUrl: actions.fetchMediaUrl,
@@ -137,7 +157,10 @@ const TranscriberContext = React.createContext({} as IContext);
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   children: React.ReactElement;
 }
-
+interface ParamTypes {
+  prjId: string;
+  pasId: string;
+}
 const TranscriberProvider = withData(mapRecordsToProps)(
   connect(
     mapStateToProps,
@@ -146,18 +169,34 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const { passages, mediafiles, sections, plans, planTypes } = props;
     const { projects, groupMemberships, roles } = props;
     const { lang, allBookData, fetchBooks, booksLoaded } = props;
-    const { todoStr, taskItemStr, transcriberStr } = props;
+    const {
+      todoStr,
+      taskItemStr,
+      activityStateStr,
+      transcriberStr,
+      projButtonStr,
+      sharedStr,
+    } = props;
     const { hasUrl, mediaUrl, fetchMediaUrl } = props;
     const { trackedTask, setTrackedTask } = props;
+    const { prjId, pasId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [project] = useGlobal('project');
+    const [devPlan] = useGlobal('plan');
+    const [projRole] = useGlobal('projRole');
+    const view = React.useRef('');
+    const stickyPush = useStickyRedirect();
     const [state, setState] = useState({
       ...initState,
+      selected: '',
       allBookData,
       todoStr,
       taskItemStr,
+      activityStateStr,
       transcriberStr,
+      projButtonStr,
+      sharedStr,
       hasUrl,
       mediaUrl,
       fetchMediaUrl,
@@ -190,6 +229,10 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const r = rowData[i];
         if (r.passage?.id === selected && r.mediaRemoteId !== '') {
           if (state.index !== i || trackedTask !== selected) {
+            const remId = remoteId('passage', selected, memory.keyMap);
+            if (pasId !== remId) {
+              view.current = `/work/${prjId}/${remId}`;
+            }
             setTrackedTask(selected);
             setState((state: ICtxState) => {
               return {
@@ -214,9 +257,15 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       onlyAvailable: boolean,
       playItem: string
     ) => {
-      const readyRecs = passages.filter(
-        (p) => (p.attributes && p.attributes.state === state) || role === 'view'
-      );
+      const readyRecs = passages
+        .filter(
+          (p) =>
+            (p.attributes && p.attributes.state === state) || role === 'view'
+        ) //just group the passages within a section together right now
+        .sort((a, b) =>
+          related(a, 'section') < related(b, 'section') ? -1 : 1
+        );
+
       let addRows = Array<IRowData>();
       readyRecs.forEach((p) => {
         const mediaRecs = mediafiles
@@ -231,79 +280,80 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const secRecs = sections.filter((sr) => sr.id === secId);
           if (secRecs.length > 0) {
             const planId = related(secRecs[0], 'plan');
-            const planRecs = plans.filter((pl) => pl.id === planId);
-            if (planRecs.length > 0) {
-              if (related(planRecs[0], 'project') === project) {
-                const assigned = related(secRecs[0], role);
-                const allowed = onlyAvailable
-                  ? assigned === user || !assigned || assigned === ''
-                  : role === 'view';
-                if (allowed) {
-                  let already: IRowData[] = [];
-                  if (role === 'view') {
-                    already = rowList.filter((r) => r.mediaId === mediaRec.id);
-                  }
-                  if (role !== 'view' || already.length === 0) {
-                    const curState: ActivityStates | string =
-                      role === 'view'
-                        ? p.attributes && p.attributes.state
-                          ? p.attributes.state
-                          : state
-                        : state;
-                    const planName = getPlanName(planRecs[0]);
-                    const planTypeRecs = planTypes.filter(
-                      (pt) => pt.id === related(planRecs[0], 'plantype')
-                    );
-                    const planType =
-                      planTypeRecs.length > 0
-                        ? planTypeRecs[0].attributes.name
-                        : '';
-                    const secNum = sectionNumber(secRecs[0]);
-                    const nextSecId = secRecs[0].id;
-                    const transcriber = related(secRecs[0], 'transcriber');
-                    const editor = related(secRecs[0], 'editor');
-                    if (
-                      nextSecId !== curSec &&
-                      passageNumber(p).trim() === '1'
-                    ) {
-                      curSec = nextSecId;
+            if (planId === devPlan) {
+              const planRecs = plans.filter((pl) => pl.id === planId);
+              if (planRecs.length > 0) {
+                if (related(planRecs[0], 'project') === project) {
+                  const assigned = related(secRecs[0], role);
+                  const allowed = onlyAvailable
+                    ? assigned === user || !assigned || assigned === ''
+                    : role === 'view';
+                  if (allowed) {
+                    let already: IRowData[] = [];
+                    if (role === 'view') {
+                      already = rowList.filter(
+                        (r) => r.mediaId === mediaRec.id
+                      );
+                    }
+                    if (role !== 'view' || already.length === 0) {
+                      const curState: ActivityStates | string =
+                        role === 'view'
+                          ? p.attributes && p.attributes.state
+                            ? p.attributes.state
+                            : state
+                          : state;
+                      const planName = getPlanName(planRecs[0]);
+                      const planTypeRecs = planTypes.filter(
+                        (pt) => pt.id === related(planRecs[0], 'plantype')
+                      );
+                      const planType =
+                        planTypeRecs.length > 0
+                          ? planTypeRecs[0].attributes.name
+                          : '';
+                      const secNum = sectionNumber(secRecs[0]);
+                      const nextSecId = secRecs[0].id;
+                      const transcriber = related(secRecs[0], 'transcriber');
+                      const editor = related(secRecs[0], 'editor');
+                      if (nextSecId !== curSec) {
+                        curSec = nextSecId;
+                        addRows.push({
+                          planName,
+                          planType,
+                          section: { ...secRecs[0] },
+                          passage: { ...p },
+                          state: '',
+                          sectPass: sectionNumber(secRecs[0]) + '.',
+                          mediaRemoteId: '',
+                          mediaId: mediaRec.id,
+                          playItem: '',
+                          duration: 0,
+                          role,
+                          assigned,
+                          transcriber,
+                          editor,
+                        });
+                      }
                       addRows.push({
                         planName,
                         planType,
                         section: { ...secRecs[0] },
                         passage: { ...p },
-                        state: '',
-                        sectPass: sectionNumber(secRecs[0]) + '.',
-                        mediaRemoteId: '',
+                        state: curState,
+                        sectPass: secNum + '.' + passageNumber(p).trim(),
+                        mediaRemoteId: remoteId(
+                          'mediafile',
+                          mediaRec.id,
+                          memory.keyMap
+                        ),
                         mediaId: mediaRec.id,
-                        playItem: '',
-                        duration: 0,
+                        playItem,
+                        duration: mediaRec.attributes.duration,
                         role,
                         assigned,
                         transcriber,
                         editor,
                       });
                     }
-                    addRows.push({
-                      planName,
-                      planType,
-                      section: { ...secRecs[0] },
-                      passage: { ...p },
-                      state: curState,
-                      sectPass: secNum + '.' + passageNumber(p).trim(),
-                      mediaRemoteId: remoteId(
-                        'mediafile',
-                        mediaRec.id,
-                        memory.keyMap
-                      ),
-                      mediaId: mediaRec.id,
-                      playItem,
-                      duration: mediaRec.attributes.duration,
-                      role,
-                      assigned,
-                      transcriber,
-                      editor,
-                    });
                   }
                 }
               }
@@ -409,6 +459,11 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         onlyAvailable,
         item
       );
+      if (state.selected !== '' && state.index < rowList.length) {
+        if (rowList[state.index].passage.id !== state.selected) {
+          setSelected(state.selected);
+        }
+      }
     };
 
     useEffect(() => {
@@ -428,7 +483,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       setExpandedGroups(exGrp);
 
       if (rowList.length > 0) {
-        let selected = state.selected !== '' ? state.selected : trackedTask;
+        let selected = remoteIdGuid('passage', pasId, memory.keyMap);
+        selected =
+          state.selected !== '' ? state.selected : selected || trackedTask;
         if (selected !== '') {
           const selectedRow = rowList.filter((r) => r.passage.id === selected);
           if (selectedRow.length > 0) {
@@ -466,7 +523,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
           const editor = related(section, 'editor');
           if (editor !== r.editor) changed = true;
           const state = r.passage.attributes.state || '';
-          const role = actor[state] || 'view';
+          let role = actor[state] || 'view';
+          if (projRole === 'transcriber' && role === 'editor') role = 'view';
           const assigned = related(section, role);
           rowData.push({ ...r, section, role, assigned, transcriber, editor });
         }
@@ -489,8 +547,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const passRecs = passages.filter((p) => p.id === r.passage.id);
         if (passRecs.length > 0) {
           const passage = { ...passRecs[0] };
-          const newState = passage.attributes.state;
-          if (newState !== r.passage.attributes.state) {
+          const newState = passage?.attributes?.state;
+          if (newState !== r.passage?.attributes?.state) {
             changed = true;
             if (noNewSelection.indexOf(newState) === -1) selected = '';
           }
@@ -514,6 +572,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       }
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [lang, booksLoaded, allBookData]);
+
+    if (view.current !== '') {
+      const target = view.current;
+      view.current = '';
+      stickyPush(target);
+    }
 
     return (
       <TranscriberContext.Provider

@@ -2,38 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IMainStrings, Organization, Invitation, User } from '../model';
+import {
+  IState,
+  IMainStrings,
+  Invitation,
+  User,
+  ISharedStrings,
+} from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Paper,
-  LinearProgress,
-} from '@material-ui/core';
-import UserMenu from '../components/UserMenu';
+import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
-import { parseQuery } from '../utils/parseQuery';
-import {
-  related,
-  hasAnyRelated,
-  setDefaultProj,
-  CreateOrg,
-  uiLang,
-  remoteId,
-  GetUser,
-  remoteIdGuid,
-} from '../utils';
-import SnackBar from '../components/SnackBar';
-import { getOrgs } from '../utils/getOrgs';
-import { isElectron } from '../api-variable';
+import { uiLang, uiLangDev, localeDefault } from '../utils';
+import { related, GetUser } from '../crud';
+import { useSnackBar } from '../hoc/SnackBar';
+import { API_CONFIG, isElectron } from '../api-variable';
+import { AppHead } from '../components/App/AppHead';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IMainStrings;
+  ts: ISharedStrings;
   orbitLoaded: boolean;
 }
 
@@ -86,6 +77,7 @@ interface IDispatchProps {
   setLanguage: typeof action.setLanguage;
   fetchOrbitData: typeof action.fetchOrbitData;
   setExpireAt: typeof action.setExpireAt;
+  doOrbitError: typeof action.doOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -99,41 +91,21 @@ export function Loading(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
-  const [bucket, setBucket] = useGlobal('bucket');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_remote, setRemote] = useGlobal('remote');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_fingerprint, setFingerprint] = useGlobal('fingerprint');
+  const [, setBucket] = useGlobal('bucket');
+  const [, setRemote] = useGlobal('remote');
+  const [, setFingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
-  const [organization, setOrganization] = useGlobal('organization');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_project, setProject] = useGlobal('project');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_coordinatorActivated, setCoordinatorActivated] = useGlobal(
-    'coordinatorActivated'
-  );
+  const [, setOrganization] = useGlobal('organization');
+  const [globalStore] = useGlobal();
+  const [, setOrbitRetries] = useGlobal('orbitRetries');
+  const [, setProjectsLoaded] = useGlobal('projectsLoaded');
+  const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
+  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [completed, setCompleted] = useState(0);
-  const [newOrgParams, setNewOrgParams] = useState(
-    localStorage.getItem('newOrg')
-  );
-  const [savedURL] = useState(localStorage.getItem('url') || '');
-  const [view, setView] = useState('');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
+  const { push } = useHistory();
 
-  const handleUserMenuAction = (what: string) => {
-    if (!/Close/i.test(what)) {
-      if (/Clear/i.test(what)) {
-        bucket.setItem('remote-requests', []);
-      }
-      setView(what);
-    }
-  };
-
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
     const inviteId = localStorage.getItem('inviteId');
@@ -183,53 +155,25 @@ export function Loading(props: IProps) {
       }
       if (inviteError !== '') {
         localStorage.setItem('inviteError', inviteError);
-        setMessage(<span>{localStorage.getItem('inviteError') || ''}</span>);
+        showMessage(localStorage.getItem('inviteError') || '');
       } else if (invite) {
         const orgId = related(invite, 'organization');
         setOrganization(orgId);
-        localStorage.setItem(
-          'lastOrg',
-          remoteId('organization', orgId, memory.keyMap)
-        );
       }
     }
-  };
-
-  const setDefaultOrg = async () => {
-    let orgs: Organization[] = getOrgs(memory, user);
-    var org = organization;
-    if (org === '' || orgs.findIndex((o) => o.id === org) < 0) {
-      org =
-        remoteIdGuid(
-          'organization',
-          localStorage.getItem('lastOrg') || '',
-          memory.keyMap
-        ) || '';
-    }
-    if (org === '') {
-      orgs = orgs
-        .filter((o) => o.attributes)
-        .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1));
-      if (orgs.length > 0) {
-        org = orgs[0].id;
-      }
-    }
-    setOrganization(org);
-    if (org !== '') setDefaultProj(org, memory, setProject);
   };
 
   useEffect(() => {
+    const isDevValue = localStorage.getItem('developer');
+    setIsDeveloper(isDevValue ? isDevValue === 'true' : false);
     if (!auth || !auth.isAuthenticated(offline)) return;
-    if (navigator.language.split('-')[0]) {
-      setLanguage(navigator.language.split('-')[0]);
-    }
+    setLanguage(localeDefault(isDeveloper));
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData(
       coordinator,
       memory,
       auth,
-      isElectron || offline,
       setUser,
       setBucket,
       setRemote,
@@ -237,7 +181,9 @@ export function Loading(props: IProps) {
       setCompleted,
       setProjectsLoaded,
       setCoordinatorActivated,
-      InviteUser
+      InviteUser,
+      setOrbitRetries,
+      globalStore
     );
     if (!isElectron && !offline) {
       const decodedToken: any = jwtDecode(auth.getAccessToken());
@@ -255,45 +201,7 @@ export function Loading(props: IProps) {
         }
         const locale = userRec.attributes?.locale || 'en';
         if (locale) setLanguage(locale);
-
-        if (
-          organization === '' &&
-          (newOrgParams !== null || !hasAnyRelated(userRec, 'groupMemberships'))
-        ) {
-          let orgRec: Organization;
-          if (newOrgParams) {
-            localStorage.removeItem('newOrg');
-            const { orgId, orgName } = parseQuery(newOrgParams);
-            orgRec = {
-              type: 'organization',
-              attributes: {
-                name: orgName,
-                SilId: orgId,
-                publicByDefault: true,
-              },
-            } as any;
-          } else {
-            orgRec = {
-              type: 'organization',
-              attributes: {
-                name: t.myWorkbench,
-                description: t.defaultOrgDesc + userRec.attributes?.name || '',
-                publicByDefault: true,
-              },
-            } as any;
-          }
-          CreateOrg({
-            orgRec,
-            user,
-            coordinator,
-            setOrganization,
-            setProject,
-          }).then(() => setCompleted(100));
-          setNewOrgParams(null);
-        } else {
-          setCompleted(100);
-        }
-        if (savedURL.length <= '/main'.length) setDefaultOrg();
+        setCompleted(100);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -301,33 +209,24 @@ export function Loading(props: IProps) {
 
   if (!auth || !auth.isAuthenticated(offline)) return <Redirect to="/" />;
 
-  if (/Logout/i.test(view)) return <Redirect to="/logout" />;
-
   if (orbitLoaded && completed === 100) {
     const userRec: User = GetUser(memory, user);
     if (
       !userRec?.attributes?.givenName ||
       !userRec?.attributes?.timezone ||
       !userRec?.attributes?.locale ||
-      !uiLang.includes(userRec?.attributes?.locale)
+      !uiLanguages.includes(userRec?.attributes?.locale)
     ) {
       return <Redirect to="/profile" />;
     }
-    const deepLink = localStorage.getItem('url');
-    return <Redirect to={deepLink ? deepLink : '/main'} />;
+    let fromUrl = localStorage.getItem('fromUrl');
+    if (fromUrl && !/^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    push(fromUrl || '/team');
   }
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar} color="inherit">
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            {t.silTranscriber}
-          </Typography>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <UserMenu action={handleUserMenuAction} auth={auth} />
-        </Toolbar>
-      </AppBar>
+      <AppHead {...props} />
       <div className={classes.container}>
         <Paper className={classes.paper}>
           <img src={logo} className={classes.icon} alt="logo" />
@@ -336,19 +235,19 @@ export function Loading(props: IProps) {
               {localStorage.getItem('inviteError') || ''}
             </Typography>
             <Typography variant="h6" className={classes.message}>
-              {t.loadingTranscriber}
+              {t.loadingTranscriber.replace('{0}', API_CONFIG.productName)}
             </Typography>
           </div>
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
+  ts: localStrings(state, { layout: 'shared' }),
   orbitLoaded: state.orbit.loaded,
 });
 
@@ -359,6 +258,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       setLanguage: action.setLanguage,
       fetchOrbitData: action.fetchOrbitData,
       setExpireAt: action.setExpireAt,
+      doOrbitError: action.doOrbitError,
     },
     dispatch
   ),

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,13 +9,13 @@ import {
   Passage,
   Section,
   IMediaTabStrings,
-  ActivityStates,
   Plan,
   BookName,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
-import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
@@ -39,27 +39,37 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
 import { tabs } from './PlanTabs';
 import MediaUpload, { UploadType } from './MediaUpload';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import Busy from './Busy';
 import Template from '../control/template';
-import related from '../utils/related';
 import Auth from '../auth/Auth';
+import { isElectron } from '../api-variable';
 import moment from 'moment';
-import 'moment/locale/fr';
+
 import {
+  related,
   remoteIdNum,
   remoteId,
   passageReference,
   sectionDescription,
-} from '../utils';
+  getMediaInPlans,
+  usePlan,
+  useOrganizedBy,
+} from '../crud';
 import { useGlobal } from 'reactn';
-import { dateCompare, numCompare } from '../utils/sort';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
+import {
+  dateCompare,
+  numCompare,
+  localeDefault,
+  useRemoteSave,
+  refMatch,
+} from '../utils';
+import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
-import { getMediaInPlans } from '../utils/getMediaInPlans';
-import { UpdatePassageStateOps } from '../utils/UpdatePassageState';
+import MediaPlayer from './MediaPlayer';
+import { useMediaAttach } from '../crud/useMediaAttach';
 
 const ActionHeight = 52;
 
@@ -71,9 +81,9 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {},
     bar: {
       top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
+      left: 0,
+      width: '100%',
     },
     highBar: {
       top: `${HeadHeight}px`,
@@ -143,7 +153,8 @@ interface IRow {
   planName: string;
   playIcon: string;
   fileName: string;
-  section: string;
+  sectionId: string;
+  sectionDesc: string;
   reference: string;
   duration: string;
   size: number;
@@ -155,7 +166,8 @@ interface IRow {
 
 interface IPRow {
   id: string;
-  section: string;
+  sectionId: string;
+  sectionDesc: string;
   reference: string;
   attached: string;
   isAttaching?: boolean;
@@ -184,17 +196,17 @@ const getReference = (passage: Passage[], bookData: BookName[] = []) => {
 };
 
 const getMedia = (
-  projectplans: Array<Plan>,
-  mediaFiles: Array<MediaFile>,
+  planName: string,
+  media: Array<MediaFile>,
   passages: Array<Passage>,
   sections: Array<Section>,
   playItem: string,
   allBookData: BookName[],
   slider: StatusN,
   attachMap: IAttachMap,
-  pdata: IPRow[]
+  pdata: IPRow[],
+  locale: string
 ) => {
-  let media: MediaFile[] = getMediaInPlans(projectplans, mediaFiles);
   let rowData: IRow[] = [];
 
   media.forEach((f) => {
@@ -206,25 +218,24 @@ const getMedia = (
     if (status <= slider) {
       const sectionId = related(passage[0], 'section');
       const section = sections.filter((s) => s.id === sectionId);
-      const updated =
-        f.attributes.dateUpdated && moment(f.attributes.dateUpdated + 'Z');
+      var updateddt = passageId
+        ? passage[0].attributes.dateUpdated
+        : f.attributes.dateUpdated;
+      if (!updateddt.endsWith('Z')) updateddt += 'Z';
+      const updated = moment(updateddt);
       const date = updated ? updated.format('YYYY-MM-DD') : '';
-      const displayDate = updated
-        ? updated.locale(navigator.language.split('-')[0]).format('L')
-        : '';
-      const displayTime = updated
-        ? updated.locale(navigator.language.split('-')[0]).format('LT')
-        : '';
+      const displayDate = updated ? updated.locale(locale).format('L') : '';
+      const displayTime = updated ? updated.locale(locale).format('LT') : '';
       const today = moment().format('YYYY-MM-DD');
       rowData.push({
         planid: related(f, 'plan'),
         passId: passageId,
-        planName: projectplans.filter((p) => p.id === related(f, 'plan'))[0]
-          .attributes.name,
+        planName,
         id: f.id,
         playIcon: playItem,
         fileName: f.attributes.originalFile,
-        section: getSection(section),
+        sectionId: sectionId,
+        sectionDesc: getSection(section),
         reference: getReference(passage, allBookData),
         status:
           status === StatusN.Yes
@@ -253,7 +264,7 @@ const pad = (text: number) => ('00' + text).slice(-2);
 
 const getPassages = (
   projectplans: Array<Plan>,
-  mediaFiles: Array<MediaFile>,
+  media: MediaFile[],
   passages: Array<Passage>,
   sections: Array<Section>,
   allBookData: BookName[]
@@ -267,16 +278,13 @@ const getPassages = (
       passages
         .filter((p) => related(p, 'section') === sectionId)
         .forEach((passage) => {
-          const refMat = /([0-9]+)[^0-9]+([0-9]+)[^0-9]+([0-9]+)/g.exec(
-            passage.attributes.reference
-          );
+          const refMat = refMatch(passage.attributes.reference);
           prowData.push({
             id: passage.id,
-            section: getSection([section]),
+            sectionId: section.id,
+            sectionDesc: getSection([section]),
             reference: getReference([passage], allBookData),
-            attached: isAttached(passage, mediaFiles)
-              ? StatusL.Yes
-              : StatusL.No,
+            attached: isAttached(passage, media) ? StatusL.Yes : StatusL.No,
             sort: `${pad(section.attributes.sequencenum)}.${pad(
               passage.attributes.sequencenum
             )}`,
@@ -295,11 +303,12 @@ const getPassages = (
 
 interface IStateProps {
   t: IMediaTabStrings;
+  ts: ISharedStrings;
   uploadList: FileList;
   loaded: boolean;
   currentlyLoading: number;
-  hasUrl: boolean;
-  mediaUrl: string;
+  uploadError: string;
+  uploadSuccess: boolean[];
   allBookData: BookName[];
 }
 
@@ -307,7 +316,7 @@ interface IDispatchProps {
   uploadFiles: typeof actions.uploadFiles;
   nextUpload: typeof actions.nextUpload;
   uploadComplete: typeof actions.uploadComplete;
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
+  doOrbitError: typeof actions.doOrbitError;
 }
 
 interface IRecordProps {
@@ -323,17 +332,19 @@ interface IProps
     WithDataProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
-  projectplans: Plan[];
-  planColumn?: boolean;
   attachTool?: boolean;
 }
 
 export function MediaTab(props: IProps) {
   const {
     t,
+    ts,
+    doOrbitError,
     uploadList,
     loaded,
     currentlyLoading,
+    uploadError,
+    uploadSuccess,
     action,
     uploadFiles,
     nextUpload,
@@ -341,28 +352,26 @@ export function MediaTab(props: IProps) {
     mediaFiles,
     passages,
     sections,
-    queryStore,
     auth,
-    projectplans,
-    planColumn,
-    fetchMediaUrl,
-    hasUrl,
-    mediaUrl,
     allBookData,
     attachTool,
   } = props;
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
-  const [plan, setPlan] = useGlobal('plan');
+  const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
-  const [user] = useGlobal('user');
+  const [remote] = useGlobal('remote');
+  const { getPlan } = usePlan();
+  const [planRec] = useState(getPlan(plan) || ({} as Plan));
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [_tab, setTab] = useGlobal('tab');
-
+  const [, setTab] = useGlobal('tab');
+  const [, setChanged] = useGlobal('changed');
+  const [doSave] = useGlobal('doSave');
+  const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
-  const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
-  const [message, setMessage] = useState(<></>);
+  const [isDeveloper] = useGlobal('developer');
+  const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
   const [attachVisible, setAttachVisible] = useState(attachTool);
@@ -371,11 +380,14 @@ export function MediaTab(props: IProps) {
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
   const [confirmAction, setConfirmAction] = useState('');
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
+
   const columnDefs = [
     { name: 'planName', title: t.planName },
     { name: 'playIcon', title: '\u00A0' },
     { name: 'fileName', title: t.fileName },
-    { name: 'section', title: t.section },
+    { name: 'sectionDesc', title: organizedBy },
     {
       name: 'reference',
       title: attachVisible ? t.viewAssociations : t.reference,
@@ -390,7 +402,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'planName', width: 150 },
     { columnName: 'playIcon', width: 50 },
     { columnName: 'fileName', width: 220 },
-    { columnName: 'section', width: 150 },
+    { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: attachVisible ? 165 : 150 },
     { columnName: 'duration', width: 100 },
     { columnName: 'size', width: 100 },
@@ -399,7 +411,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'detach', width: 50 },
   ];
   const columnFormatting = [
-    { columnName: 'section', aligh: 'left', wordWrapEnabled: true },
+    { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
   ];
   const mSorting = [
     { columnName: 'planName', direction: 'asc' },
@@ -422,7 +434,7 @@ export function MediaTab(props: IProps) {
       title: <Typography variant="h6">{t.mediaAssociations}</Typography>,
       children: [
         { columnName: 'fileName' },
-        { columnName: 'section' },
+        { columnName: 'sectionDesc' },
         { columnName: 'reference' },
         { columnName: 'detach' },
       ],
@@ -430,18 +442,18 @@ export function MediaTab(props: IProps) {
   ];
   const mSummaryItems = [{ columnName: 'fileName', type: 'count' }];
   const pColumnDefs = [
-    { name: 'section', title: t.section },
+    { name: 'sectionDesc', title: organizedBy },
     { name: 'reference', title: t.reference },
     { name: 'attached', title: 'Attached' },
     { name: 'sort', title: '\u00A0' },
   ];
   const pColumnWidths = [
-    { columnName: 'section', width: 150 },
+    { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: 150 },
     { columnName: 'attached', width: 105 },
   ];
   const pColumnFormatting = [
-    { columnName: 'section', aligh: 'left', wordWrapEnabled: true },
+    { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
     { columnName: 'reference', aligh: 'left', wordWrapEnabled: true },
   ];
   const pFilters = [{ columnName: 'attached', operation: 'equal', value: 'N' }];
@@ -451,7 +463,7 @@ export function MediaTab(props: IProps) {
     {
       title: <Typography variant="h6">{t.availablePassages}</Typography>,
       children: [
-        { columnName: 'section' },
+        { columnName: 'sectionDesc' },
         { columnName: 'reference' },
         { columnName: 'attached' },
       ],
@@ -469,14 +481,16 @@ export function MediaTab(props: IProps) {
   const [uploadVisible, setUploadVisible] = useState(false);
   const [complete, setComplete] = useState(0);
   const [autoMatch, setAutoMatch] = useState(false);
-  const audioRef = useRef<any>();
-  const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
   const [passAttach, setPassAttach] = useState(new Set<number>());
   const inProcess = React.useRef<boolean>(false);
-
+  const [attachPassage, detachPassage] = useMediaAttach({
+    ...props,
+    ts,
+    doOrbitError,
+  });
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
       if (attachMap[mediaId] === pRow) return true;
@@ -484,15 +498,12 @@ export function MediaTab(props: IProps) {
     return false;
   };
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const handleUpload = () => {
     setUploadVisible(true);
   };
   const uploadMedia = (files: FileList) => {
     if (!files) {
-      setMessage(<span>{t.selectFiles}</span>);
+      showMessage(t.selectFiles);
       return;
     }
     uploadFiles(files);
@@ -506,7 +517,7 @@ export function MediaTab(props: IProps) {
     setActionMenuItem(null);
     if (!/Close/i.test(what)) {
       if (check.length === 0) {
-        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
+        showMessage(t.selectRows.replace('{0}', what));
       } else {
         setConfirmAction(what);
       }
@@ -544,62 +555,20 @@ export function MediaTab(props: IProps) {
   // const handleAttach = () => setAttachVisible(!attachVisible);
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
 
-  const attach = async (passage: string, mediaId: string) => {
-    var tb = new TransformBuilder();
-    var ops: Operation[] = [];
-    ops.push(
-      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaId }, 'passage', {
-        type: 'passage',
-        id: passage,
-      })
-    );
-    ops = UpdatePassageStateOps(
-      passage,
-      ActivityStates.TranscribeReady,
-      'Media Attached',
-      remoteIdNum('user', user, memory.keyMap),
-      tb,
-      ops,
-      memory
-    );
-    await memory.update(ops);
-  };
-
   const handleSave = async () => {
     inProcess.current = true;
-    setMessage(<span>{t.saving}</span>);
+    showMessage(t.saving);
     const handleRow = async (mediaId: string) => {
       const pRow = attachMap[mediaId];
-      await attach(pdata[pRow].id, mediaId);
+      await attachPassage(pdata[pRow].id, pdata[pRow].sectionId, plan, mediaId);
     };
     for (let mediaId of Object.keys(attachMap)) {
       await handleRow(mediaId);
     }
     setAttachMap({});
-    setMessage(<span>{t.savingComplete}</span>);
+    showMessage(t.savingComplete);
     inProcess.current = false;
-  };
-
-  const detach = async (passage: string, mediaId: string) => {
-    var tb = new TransformBuilder();
-    var ops: Operation[] = [];
-    ops.push(
-      tb.replaceRelatedRecord(
-        { type: 'mediafile', id: mediaId },
-        'passage',
-        null
-      )
-    );
-    ops = UpdatePassageStateOps(
-      passage,
-      ActivityStates.NoMedia,
-      'Media Detached',
-      remoteIdNum('user', user, memory.keyMap),
-      tb,
-      ops,
-      memory
-    );
-    await memory.update(ops);
+    saveCompleted('');
   };
 
   const handleDetach = (mediaId: string) => () => {
@@ -610,30 +579,31 @@ export function MediaTab(props: IProps) {
       const newMap = { ...attachMap };
       delete newMap[mediaId];
       setAttachMap(newMap);
+      setChanged(true);
     } else {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
-        detach(passId, mediaId);
+        detachPassage(passId, data[mRow].sectionId, plan, mediaId);
+        setChanged(true);
       } else {
-        setMessage(
-          <span>{t.noPassageAttached.replace('{0}', data[mRow].fileName)}</span>
-        );
+        showMessage(t.noPassageAttached.replace('{0}', data[mRow].fileName));
       }
     }
   };
 
   const doAttach = (mRow: number, pRow: number) => {
     if (attachMap.hasOwnProperty(data[mRow].id) || dataAttach.has(mRow)) {
-      setMessage(<span>{t.fileAttached}</span>);
+      showMessage(t.fileAttached);
       return;
     } else if (hasPassage(pRow) || passAttach.has(pRow)) {
-      setMessage(<span>{t.passageAttached}</span>);
+      showMessage(t.passageAttached);
       return;
     }
     setAttachMap({ ...attachMap, [data[mRow].id]: pRow });
     setMCheck(-1);
     setPCheck(-1);
     setCheck([]);
+    setChanged(true);
   };
 
   const handleMCheck = (checks: Array<number>) => {
@@ -658,19 +628,8 @@ export function MediaTab(props: IProps) {
     setPCheck(checks[0] === pcheck ? checks[1] : checks[0]);
   };
   const handleSelect = (id: string) => () => {
-    if (playing) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    }
-    setPlaying(false);
-    if (id !== playItem) {
-      fetchMediaUrl(id, memory, offline, auth);
-      setPlayItem(id);
-    } else {
-      setPlayItem('');
-    }
+    if (id === playItem) setPlayItem('');
+    else setPlayItem(id);
   };
 
   useEffect(() => {
@@ -681,8 +640,13 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlOpen]);
 
-  const planNoFilt: string[] = ['detach'];
-  const planFilt = ['duration', 'size', 'version', 'date', 'detach'];
+  React.useEffect(() => {
+    if (doSave && !inProcess.current) {
+      handleSave();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [doSave]);
+
   const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
   const noPlanNoFilt = ['planName', 'detach'];
   const noPlayFilt = [
@@ -691,24 +655,17 @@ export function MediaTab(props: IProps) {
   ];
   const attachFilt = [
     { columnName: 'playIcon', filteringEnabled: false },
-    { columnName: 'section', filteringEnabled: false },
+    { columnName: 'sectionDesc', filteringEnabled: false },
     { columnName: 'reference', filteringEnabled: false },
     { columnName: 'detach', filteringEnabled: false },
   ];
   const noPaging: number[] = [];
   const paging = [4, 10, 40];
   useEffect(() => {
-    let newHide = planNoFilt;
     let newFilt = noPlayFilt;
-    if (planColumn && attachVisible) {
-      newHide = planFilt;
-    } else if (!planColumn) {
-      if (projectplans.length === 1 && plan === '') {
-        setPlan(projectplans[0].id); //set the global plan
-      }
-      newHide = attachVisible ? noPlanFilt : noPlanNoFilt;
-      if (attachFilt) newFilt = attachFilt;
-    }
+    let newHide = attachVisible ? noPlanFilt : noPlanNoFilt;
+    if (attachFilt) newFilt = attachFilt;
+
     const newPages =
       attachVisible && (data.length > 40 || pdata.length > 40)
         ? paging
@@ -717,24 +674,28 @@ export function MediaTab(props: IProps) {
     if (filteringEnabled !== newFilt) setFilteringEnabled(newFilt);
     if (pageSizes !== newPages) setPageSizes(newPages);
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [projectplans, plan, planColumn, attachVisible]);
+  }, [plan, attachVisible]);
+
+  const locale = localeDefault(isDeveloper);
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
+    const media: MediaFile[] = getMediaInPlans([planRec], mediaFiles);
     const newData = getMedia(
-      projectplans,
-      mediaFiles,
+      planRec?.attributes?.name,
+      media,
       passages,
       sections,
       playItem,
       allBookData,
       slider,
       attachMap,
-      pdata
+      pdata,
+      locale
     );
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
-      if (r.section !== '') medAttach.add(i);
+      if (r.sectionDesc !== '') medAttach.add(i);
     });
     if (
       medAttach.size !== dataAttach.size ||
@@ -745,8 +706,8 @@ export function MediaTab(props: IProps) {
       setData(newData);
     }
     const newPassData = getPassages(
-      projectplans,
-      mediaFiles,
+      [planRec],
+      media,
       passages,
       sections,
       allBookData
@@ -764,7 +725,6 @@ export function MediaTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [
-    projectplans,
     mediaFiles,
     passages,
     sections,
@@ -777,33 +737,6 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     let dataChange = false;
-    // const newData = data.map((r, i) => {
-    //   const mediaId = r.id;
-    //   const newRow = attachMap.hasOwnProperty(mediaId)
-    //     ? {
-    //         ...r,
-    //         section: pdata[attachMap[mediaId]].section,
-    //         reference: pdata[attachMap[mediaId]].reference,
-    //         isAttaching: true,
-    //         status: StatusL.Proposed,
-    //       }
-    //     : r.isAttaching
-    //     ? {
-    //         ...r,
-    //         section: '',
-    //         reference: '',
-    //         isAttaching: false,
-    //         status: StatusL.No,
-    //       }
-    //     : null;
-    //   if (newRow) {
-    //     dataChange = true;
-    //     return newRow;
-    //   }
-    //   return { ...r };
-    // });
-    // if (dataChange) setData(newData);
-    // dataChange = false;
     const newPData = pdata.map((r, i) => {
       const newRow = hasPassage(i)
         ? { ...r, attached: 'Y', isAttaching: true }
@@ -820,79 +753,77 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [attachMap]);
 
-  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
-
   useEffect(() => {
     if (loaded && currentlyLoading + 1 === uploadList.length) {
       // wait to do this to give time for duration calc
       setTimeout(() => {
-        setMessage(<span>{t.uploadComplete}</span>);
+        let numsuccess = uploadSuccess.filter((x) => x === true).length;
+        showMessage(
+          t.uploadComplete
+            .replace('{0}', numsuccess.toString())
+            .replace('{1}', uploadSuccess.length.toString())
+        );
         uploadComplete();
         setComplete(0);
-        setAttachVisible(true);
-        setTab(tabs.associate);
+        if (numsuccess > 0) {
+          setAttachVisible(true);
+          setTab(tabs.associate);
+        }
       }, 10000);
     } else if (loaded || currentlyLoading < 0) {
       if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
         setComplete(
           Math.min((currentlyLoading * 100) / uploadList.length, 100)
         );
-        if (acceptExtPat.test(uploadList[currentlyLoading + 1].name)) {
-          const planId = remoteIdNum('plan', plan, memory.keyMap);
-          const mediaFile = {
-            planId: planId,
-            originalFile: uploadList[currentlyLoading + 1].name,
-            contentType: uploadList[currentlyLoading + 1].type,
-          } as any;
-          nextUpload(
-            mediaFile,
-            uploadList,
-            currentlyLoading + 1,
-            auth,
-            errorReporter
-          );
-        } else {
-          setMessage(
-            <span className={classes.unsupported}>
-              {t.unsupported.replace(
-                '{0}',
-                uploadList[currentlyLoading + 1].name
-              )}
-            </span>
-          );
-        }
+        const planId = remoteIdNum('plan', plan, memory.keyMap);
+        const mediaFile = {
+          planId: planId,
+          originalFile: uploadList[currentlyLoading + 1].name,
+          contentType: uploadList[currentlyLoading + 1].type,
+        } as any;
+        nextUpload(
+          mediaFile,
+          uploadList,
+          currentlyLoading + 1,
+          auth,
+          errorReporter
+        );
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [uploadList, loaded, currentlyLoading, projectplans, auth]);
+  }, [uploadList, loaded, currentlyLoading, uploadSuccess, planRec, auth]);
 
   useEffect(() => {
-    if (currentlyLoading === 0 /* all are done */) {
-      var remoteid =
-        projectplans.length === 1
-          ? remoteId('plan', plan, memory.keyMap)
-          : remoteId(
-              'project',
-              related(projectplans[0], 'project'),
-              memory.keyMap
-            );
+    if (currentlyLoading === -2 /* all are done */) {
+      var remoteid = remoteId('plan', plan, memory.keyMap);
+
       if (remoteid !== undefined) {
         var filterrec = {
-          attribute: projectplans.length === 1 ? 'plan-id' : 'project-id',
+          attribute: 'plan-id',
           value: remoteid,
         };
-        queryStore((q) => q.findRecords('mediafile').filter(filterrec));
+        remote
+          .pull((q) => q.findRecords('mediafile').filter(filterrec))
+          .then((transform) => memory.sync(transform));
       }
+      uploadFiles([] as any); //set current back to -1
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [currentlyLoading]);
 
   useEffect(() => {
-    if (hasUrl && audioRef.current && !playing && playItem !== '') {
-      setPlaying(true);
-      audioRef.current.play();
+    if (uploadError !== '') {
+      if (uploadError.indexOf('unsupported') > 0)
+        showMessage(
+          t.unsupported.replace(
+            '{0}',
+            uploadError.substr(0, uploadError.indexOf(':unsupported'))
+          )
+        );
+      else showMessage(uploadError);
     }
-  }, [hasUrl, mediaUrl, playing, playItem]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadError]);
 
   const matchMap = (pat: string, terms?: string[]) => {
     if (pdata.length === 0 || data.length === 0) return;
@@ -941,9 +872,9 @@ export function MediaTab(props: IProps) {
     });
     if (found) {
       setAttachMap(newMap);
-      setMessage(<span>{t.matchAdded.replace('{0}', found.toString())}</span>);
+      showMessage(t.matchAdded.replace('{0}', found.toString()));
     } else {
-      setMessage(<span>{t.noMatch}</span>);
+      showMessage(t.noMatch);
     }
   };
 
@@ -1014,10 +945,10 @@ export function MediaTab(props: IProps) {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap);
       return <PlayCell {...props} mediaId={mediaId} />;
     }
-    if (column.name === 'detach') {
+    if (column.name === 'detach' && projRole === 'admin') {
       return <DetachCell {...props} />;
     }
-    if (['reference', 'section'].includes(column.name) && row.isAttaching) {
+    if (['reference', 'sectionDesc'].includes(column.name) && row.isAttaching) {
       return <HighlightCell {...props} />;
     }
     return <Table.Cell {...props} />;
@@ -1035,12 +966,14 @@ export function MediaTab(props: IProps) {
     const handleSelect = () => {
       props.onToggle && props.onToggle();
     };
-    return (
+    return projRole === 'admin' ? (
       <Table.Cell {...props}>
         {(!props.row.fileName || props.row.reference === '') && (
           <Radio checked={props.selected} onChange={handleSelect} />
         )}
       </Table.Cell>
+    ) : (
+      <Table.Cell {...props} />
     );
   };
 
@@ -1096,26 +1029,28 @@ export function MediaTab(props: IProps) {
       <div className={classes.paper}>
         <AppBar
           position="fixed"
-          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          className={clsx(classes.bar, {
+            [classes.highBar]: false,
+          })}
           color="default"
         >
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {!planColumn && !attachVisible && (
+                {!attachVisible && !isElectron && (
                   <Button
                     key="upload"
-                    aria-label={t.uploadMedia}
+                    aria-label={ts.uploadMediaPlural}
                     variant="outlined"
                     color="primary"
                     className={classes.button}
                     onClick={handleUpload}
                   >
-                    {t.uploadMedia}
+                    {ts.uploadMediaPlural}
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {!attachVisible && (
+                {!attachVisible && !isElectron && (
                   <>
                     <Button
                       key="action"
@@ -1158,24 +1093,22 @@ export function MediaTab(props: IProps) {
               </>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
-            {planColumn && (
-              <Button
-                key="filter"
-                aria-label={t.filter}
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleFilter}
-                title={t.showHideFilter}
-              >
-                {t.filter}
-                {filter ? (
-                  <SelectAllIcon className={classes.icon} />
-                ) : (
-                  <FilterIcon className={classes.icon} />
-                )}
-              </Button>
-            )}
+            <Button
+              key="filter"
+              aria-label={t.filter}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              onClick={handleFilter}
+              title={t.showHideFilter}
+            >
+              {t.filter}
+              {filter ? (
+                <SelectAllIcon className={classes.icon} />
+              ) : (
+                <FilterIcon className={classes.icon} />
+              )}
+            </Button>
             {attachVisible && (
               <>
                 <Button
@@ -1207,7 +1140,7 @@ export function MediaTab(props: IProps) {
             </>
           )}
 
-          {attachVisible && autoMatch && !planColumn && (
+          {attachVisible && autoMatch && (
             <div className={classes.template}>
               <Template matchMap={matchMap} />
             </div>
@@ -1235,7 +1168,7 @@ export function MediaTab(props: IProps) {
               bandHeader={attachVisible ? mBandHead : null}
               summaryItems={mSummaryItems}
             />
-            {attachVisible && mcheck !== -1 && !planColumn && (
+            {attachVisible && mcheck !== -1 && (
               <ShapingTable
                 columns={pColumnDefs}
                 columnWidths={pColumnWidths}
@@ -1263,6 +1196,7 @@ export function MediaTab(props: IProps) {
         uploadType={UploadType.Media}
         uploadMethod={uploadMedia}
         cancelMethod={uploadCancel}
+        multiple={true}
       />
       {confirmAction === '' || (
         <Confirm
@@ -1271,19 +1205,19 @@ export function MediaTab(props: IProps) {
           noResponse={handleActionRefused}
         />
       )}
-      {!hasUrl || <audio ref={audioRef} src={mediaUrl} />}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
+      <MediaPlayer auth={auth} srcMediaId={playItem} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
+  ts: localStrings(state, { layout: 'shared' }),
   uploadList: state.upload.files,
   currentlyLoading: state.upload.current,
+  uploadError: state.upload.errmsg,
+  uploadSuccess: state.upload.success,
   loaded: state.upload.loaded,
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
   allBookData: state.books.bookData,
 });
 
@@ -1293,7 +1227,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       uploadFiles: actions.uploadFiles,
       nextUpload: actions.nextUpload,
       uploadComplete: actions.uploadComplete,
-      fetchMediaUrl: actions.fetchMediaUrl,
+      doOrbitError: actions.doOrbitError,
     },
     dispatch
   ),

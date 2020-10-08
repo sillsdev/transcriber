@@ -146,6 +146,10 @@ const schemaDefinition: SchemaSettings = {
       keys: { remoteId: {} },
       attributes: {
         name: { type: 'string' },
+        organizedBy: { type: 'string' },
+        tags: { type: 'string' },
+        flat: { type: 'boolean' },
+        sectionCount: { type: 'number' },
         slug: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },

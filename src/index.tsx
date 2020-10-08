@@ -13,10 +13,11 @@ import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
 import bugsnagReact from '@bugsnag/plugin-react';
 import history from './history';
-import { logError, Severity } from './components/logErrorService';
-import { infoMsg } from './utils';
+import { logError, Severity, infoMsg, logFile } from './utils';
 import { isElectron, API_CONFIG } from './api-variable';
 const appVersion = require('../package.json').version;
+
+const OrbitNetworkErrorRetries = 16;
 
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
@@ -29,6 +30,7 @@ const bugsnagClient = prodOrQa
   : undefined;
 bugsnagClient?.use(bugsnagReact, React);
 const SnagBoundary = bugsnagClient?.getPlugin('react');
+const electronLog = isElectron ? logFile() : undefined;
 
 // Redux store
 const store = configureStore();
@@ -62,7 +64,7 @@ setGlobal({
   project: '',
   projRole: '',
   plan: '',
-  tab: 0,
+  tab: undefined,
   group: '',
   user: '',
   lang: 'en',
@@ -71,8 +73,10 @@ setGlobal({
   backup,
   bucket: undefined,
   remote: undefined,
-  remoteBusy: false,
+  remoteBusy: true, //prevent datachanges until after login
   doSave: false,
+  saveResult: undefined,
+  snackMessage: <></>,
   changed: false,
   projectsLoaded: [],
   importexportBusy: false,
@@ -81,10 +85,12 @@ setGlobal({
   appView: true,
   developer: false,
   offline: isElectron,
-  errorReporter: bugsnagClient,
+  errorReporter: !isElectron ? bugsnagClient : electronLog,
   alertOpen: false,
   coordinatorActivated: false,
   fingerprint: window.location.origin,
+  orbitRetries: OrbitNetworkErrorRetries,
+  enableOffsite: false,
 });
 
 if (isElectron) {
@@ -100,7 +106,7 @@ const errorManagedApp = bugsnagClient ? (
     </ErrorBoundary>
   </SnagBoundary>
 ) : (
-  <ErrorBoundary errorReporter={bugsnagClient}>
+  <ErrorBoundary errorReporter={electronLog}>
     <App />
   </ErrorBoundary>
 );

@@ -14,7 +14,6 @@ const lnRe = /([A-Za-z0-9_]+)[^A-Za-z0-9_]+([A-Za-z0-9_]+)[^A-Za-z0-9_]+(.*)/;
 
 const getRegVal = async (key: string, name: string) => {
   const { stdout } = (await execa('reg', ['query', key])) as Iexeca;
-  // console.log(stdout);
   let val = stdout
     .split('\n')
     .map((ln) => {

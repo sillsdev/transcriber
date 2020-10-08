@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, Plan, Section, Role, Passage, User } from '../model';
+import {
+  IState,
+  Plan,
+  Section,
+  Role,
+  Passage,
+  User,
+  ISharedStrings,
+  IActivityStateStrings,
+  localizeActivityState,
+} from '../model';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import TreeChart, {
@@ -9,9 +19,13 @@ import TreeChart, {
   IWork,
   ITargetWork,
 } from '../components/TreeChart';
-import { related } from '../utils';
+import { related } from '../crud';
+import localStrings from '../selector/localize';
 
-interface IStateProps {}
+interface IStateProps {
+  ts: ISharedStrings;
+  ta: IActivityStateStrings;
+}
 
 interface IRecordProps {
   plans: Array<Plan>;
@@ -21,10 +35,21 @@ interface IRecordProps {
   users: Array<User>;
 }
 
-interface IProps extends IStateProps, IRecordProps, WithDataProps {}
+interface IProps extends IStateProps, IRecordProps, WithDataProps {
+  selectedPlan?: string;
+}
 
 export function Visualize(props: IProps) {
-  const { plans, sections, roles, passages, users } = props;
+  const {
+    plans,
+    sections,
+    roles,
+    passages,
+    users,
+    selectedPlan,
+    ts,
+    ta,
+  } = props;
   const [project] = useGlobal('project');
   const [rows, setRows] = useState<Array<IPlanRow>>([]);
   const [data1, setData1] = useState<Array<IWork>>([]);
@@ -34,42 +59,48 @@ export function Visualize(props: IProps) {
     [key: string]: number;
   }
 
-  const getData = (tot: ITotal) => {
-    let edit = Array<ITargetWork>();
-    let transcribe = Array<ITargetWork>();
-    for (let [key, value] of Object.entries(tot)) {
-      const part = key.split(':');
-      if (part[2] === 'editor') {
-        edit.push({
-          name: part[0],
-          plan: part[1],
-          count: value,
-        });
-      } else if (part[2] === 'transcriber') {
-        transcribe.push({
-          name: part[0],
-          plan: part[1],
-          count: value,
-        });
-      }
-    }
-    return [
-      { task: 'Edit', work: edit },
-      { task: 'Transcribe', work: transcribe },
-    ];
-  };
-
   useEffect(() => {
+    const getData = (tot: ITotal) => {
+      let edit = Array<ITargetWork>();
+      let transcribe = Array<ITargetWork>();
+      let editor = true;
+      for (let [key, value] of Object.entries(tot)) {
+        const part = key.split(':');
+        if (part[2] === 'editor' || part[2] === 'status') {
+          if (part[2] === 'status') editor = false;
+          edit.push({
+            name: part[0],
+            plan: part[1],
+            count: value,
+          });
+        } else if (part[2] === 'transcriber') {
+          transcribe.push({
+            name: part[0],
+            plan: part[1],
+            count: value,
+          });
+        }
+      }
+      return [
+        { task: editor ? ts.editor : '', work: edit },
+        { task: ts.transcriber, work: transcribe },
+      ];
+    };
+
     let rowTot = {} as ITotal;
     let personTot = {} as ITotal;
     let statusTot = {} as ITotal;
-    const selPlans = plans.filter(p => related(p, 'project') === project);
-    selPlans.forEach(pl => {
+    const selPlans = plans.filter(
+      (p) =>
+        related(p, 'project') === project &&
+        (!selectedPlan || p.id === selectedPlan)
+    );
+    selPlans.forEach((pl) => {
       const planName = pl.attributes.name;
-      const selSections = sections.filter(s => related(s, 'plan') === pl.id);
-      selSections.forEach(s => {
+      const selSections = sections.filter((s) => related(s, 'plan') === pl.id);
+      selSections.forEach((s) => {
         const selPassages = passages.filter(
-          ps => related(ps, 'section') === s.id
+          (ps) => related(ps, 'section') === s.id
         );
         let roleName = 'transcriber';
         let rowKey = pl.id + ':' + roleName;
@@ -77,7 +108,7 @@ export function Visualize(props: IProps) {
           ? rowTot[rowKey] + selPassages.length
           : selPassages.length;
 
-        let userRec = users.filter(u => u.id === related(s, roleName));
+        let userRec = users.filter((u) => u.id === related(s, roleName));
         if (userRec.length > 0) {
           const userName = userRec[0].attributes
             ? userRec[0].attributes.name
@@ -93,7 +124,7 @@ export function Visualize(props: IProps) {
         rowTot[rowKey] = rowTot.hasOwnProperty(rowKey)
           ? rowTot[rowKey] + selPassages.length
           : selPassages.length;
-        userRec = users.filter(u => u.id === related(s, roleName));
+        userRec = users.filter((u) => u.id === related(s, roleName));
         if (userRec.length > 0) {
           const userName = userRec[0].attributes
             ? userRec[0].attributes.name
@@ -103,11 +134,12 @@ export function Visualize(props: IProps) {
             ? personTot[personKey] + selPassages.length
             : selPassages.length;
         }
-        selPassages.forEach(selPassage => {
+        selPassages.forEach((selPassage) => {
           const stateName = selPassage.attributes
             ? selPassage.attributes.state
             : '';
-          const statusKey = stateName + ':' + planName + ':' + roleName;
+          const statusKey =
+            localizeActivityState(stateName, ta) + ':' + planName + ':status';
           statusTot[statusKey] = statusTot.hasOwnProperty(statusKey)
             ? statusTot[statusKey] + 1
             : 1;
@@ -116,7 +148,7 @@ export function Visualize(props: IProps) {
     });
     setRows(
       selPlans
-        .filter(pl => {
+        .filter((pl) => {
           const reviewKey = pl.id + ':editor';
           const transKey = pl.id + ':transcriber';
           const reviewTot = rowTot.hasOwnProperty(reviewKey)
@@ -128,7 +160,7 @@ export function Visualize(props: IProps) {
           return reviewTot + transTot > 0;
         })
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
-        .map(pl => {
+        .map((pl) => {
           return {
             plan: pl.attributes.name,
           };
@@ -136,12 +168,26 @@ export function Visualize(props: IProps) {
     );
     setData1(getData(personTot));
     setData2(getData(statusTot));
-  }, [project, passages, plans, roles, sections, users]);
+  }, [
+    project,
+    passages,
+    plans,
+    roles,
+    sections,
+    users,
+    selectedPlan,
+    ta,
+    ts.editor,
+    ts.transcriber,
+  ]);
 
   return <TreeChart rows={rows} data1={data1} data2={data2} />;
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({});
+const mapStateToProps = (state: IState): IStateProps => ({
+  ts: localStrings(state, { layout: 'shared' }),
+  ta: localStrings(state, { layout: 'activityState' }),
+});
 
 const mapRecordsToProps = {
   plans: (q: QueryBuilder) => q.findRecords('plan'),

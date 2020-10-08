@@ -2,7 +2,7 @@ import { FileResponse } from './types';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import path from 'path';
-import { DataPath } from '../../utils/DataPath';
+import moment from 'moment';
 import {
   Project,
   User,
@@ -14,13 +14,6 @@ import {
   Passage,
   Group,
 } from '../../model';
-import {
-  cleanFileName,
-  remoteIdGuid,
-  getMediaEaf,
-  related,
-  remoteId,
-} from '../../utils';
 import Memory from '@orbit/memory';
 import { JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
 import {
@@ -29,9 +22,8 @@ import {
   Record,
   TransformBuilder,
 } from '@orbit/data';
-import { isArray } from 'util';
-import moment from 'moment';
-import { currentDateTime } from '../../utils/currentDateTime';
+import { remoteIdGuid, related, remoteId, getMediaEaf } from '../../crud';
+import { dataPath, cleanFileName, currentDateTime } from '../../utils';
 
 export async function electronExport(
   exportType: string,
@@ -57,7 +49,7 @@ export async function electronExport(
     };
   };
 
-  const fileName = (projRec: Project) =>
+  const fileName = (projRec: Project, ext: string) =>
     'Transcriber' +
     userid +
     '_' +
@@ -65,7 +57,13 @@ export async function electronExport(
     '_' +
     cleanFileName(projRec.attributes.name) +
     '.' +
-    exportType;
+    ext;
+
+  const itfb_fileName = (projRec: Project) =>
+    new Date().getDate().toString() +
+    new Date().getHours().toString() +
+    '_' +
+    fileName(projRec, 'itf');
 
   const backupName = 'Transcriber' + userid + '_backup.' + exportType;
 
@@ -125,7 +123,7 @@ export async function electronExport(
           user.attributes.avatarUrl !== ''
         )
           AddStreamEntry(
-            DataPath(user.attributes.avatarUrl),
+            dataPath(user.attributes.avatarUrl),
             user.attributes.avatarUrl
           );
       });
@@ -139,7 +137,7 @@ export async function electronExport(
           org.attributes.logoUrl !== ''
         )
           AddStreamEntry(
-            DataPath(org.attributes.logoUrl),
+            dataPath(org.attributes.logoUrl),
             org.attributes.logoUrl
           );
       });
@@ -149,7 +147,7 @@ export async function electronExport(
         var mf = m as MediaFile;
         if (mf.attributes)
           AddStreamEntry(
-            DataPath(mf.attributes.audioUrl),
+            dataPath(mf.attributes.audioUrl),
             mf.attributes.audioUrl
           );
         const eafCode = getMediaEaf(mf, memory);
@@ -167,7 +165,7 @@ export async function electronExport(
     };
 
     const AddFonts = () => {
-      const dir = DataPath('fonts');
+      const dir = dataPath('fonts');
       var items = fs.readdirSync(dir);
       for (var i = 0; i < items.length; i++) {
         zip.addLocalFile(path.join(dir, items[i]), 'fonts', items[i]);
@@ -291,7 +289,7 @@ export async function electronExport(
     const AddChanged = (info: fileInfo, project: Project | undefined) => {
       var recs = GetTableRecs(info, project);
       var changed = recs;
-      if (recs && isArray(recs) && recs.length > 0) {
+      if (recs && Array.isArray(recs) && recs.length > 0) {
         if (info.table !== 'project')
           changed = recs.filter(
             (u) =>
@@ -316,8 +314,7 @@ export async function electronExport(
 
     const AddAll = (info: fileInfo, project: Project | undefined) => {
       var recs = GetTableRecs(info, project);
-      console.log(info.table, recs.length);
-      if (recs && isArray(recs) && recs.length > 0) {
+      if (recs && Array.isArray(recs) && recs.length > 0) {
         AddJsonEntry(info.table + 's', recs, info.sort);
         switch (info.table) {
           case 'organization':
@@ -334,7 +331,7 @@ export async function electronExport(
 
     const onlyOneProject = (): boolean => {
       var p = memory.cache.query((q: QueryBuilder) => q.findRecords('project'));
-      if (p && isArray(p)) return p.length === 1;
+      if (p && Array.isArray(p)) return p.length === 1;
       return true; //should never get here
     };
 
@@ -397,16 +394,19 @@ export async function electronExport(
   }
   for (var ix: number = 0; ix < projects.length; ix++) {
     const zip = createZip(new AdmZip(), projects[ix]);
-    const filename = fileName(projects[ix]);
+    const filename =
+      exportType === 'itfb'
+        ? itfb_fileName(projects[ix])
+        : fileName(projects[ix], exportType);
     if (backupZip) {
       backupZip.addFile(filename, zip.toBuffer(), projects[ix].attributes.name);
     } else {
-      var where = DataPath(filename);
+      var where = dataPath(filename);
       zip.writeZip(where);
       return BuildFileResponse(where, filename);
     }
   }
-  var backupWhere = DataPath(backupName);
+  var backupWhere = dataPath(backupName);
   if (backupZip) backupZip.writeZip(backupWhere);
   return BuildFileResponse(backupWhere, backupName);
 }

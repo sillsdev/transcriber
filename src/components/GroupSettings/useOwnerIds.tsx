@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { GroupMembership, Role, RoleNames } from '../../model';
-import { related, getRoleId } from '../../utils';
+import { related, getRoleId } from '../../crud';
 import { IPerson } from './TeamCol';
 
 interface IProps {
@@ -16,9 +16,9 @@ function useOwnerIds(props: IProps): IPerson[] {
 
   return groupMemberships
     .filter(
-      gm => related(gm, 'group') === group && related(gm, 'role') === adminId
+      (gm) => related(gm, 'group') === group && related(gm, 'role') === adminId
     )
-    .map(gm => ({
+    .map((gm) => ({
       canDelete: true,
       user: related(gm, 'user'),
     }));

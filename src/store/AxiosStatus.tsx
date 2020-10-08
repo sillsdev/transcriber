@@ -19,15 +19,10 @@ export const successStatusMsg = (status: string, msg: string): IAxiosStatus => {
 export const errStatus = (err: AxiosError): IAxiosStatus => {
   if (err.response) {
     // Request made and server responded
-    console.log(err.response.data);
     if (Array.isArray(err.response.data.errors)) {
       let detail = err.response.data.errors[0];
-      console.log(detail);
-      console.log(detail.detail);
       err.message += ' Detail: ' + detail.detail;
     }
-    console.log(err.response.status);
-    console.log(err.response.headers);
   } else if (err.request) {
     // The request was made but no response was received
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
-import { Redirect } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useStickyRedirect } from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -25,10 +26,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
-import SnackBar from './SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related } from '../utils';
+import { related } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -125,25 +125,17 @@ interface IRecordProps {
   organizationMemberships: Array<OrganizationMembership>;
 }
 
-interface IProps extends IStateProps, IDispatchProps, IRecordProps {
-  history: {
-    action: string;
-    location: {
-      pathname: string;
-    };
-  };
-}
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {}
 
 export function UserTable(props: IProps) {
-  const { t, users, roles, organizationMemberships, history } = props;
+  const { t, users, roles, organizationMemberships } = props;
   const classes = useStyles();
+  const { pathname } = useLocation();
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
-  const [editId, setEditId] = useGlobal('editUserId');
+  const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
-  const [message, setMessage] = useState(<></>);
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -166,9 +158,12 @@ export function UserTable(props: IProps) {
     { columnName: 'role', width: 100 },
     { columnName: 'action', width: 150 },
   ];
+  const sortingEnabled = [{ columnName: 'action', sortingEnabled: false }];
+  const filteringEnabled = [{ columnName: 'action', filteringEnabled: false }];
   const [filter, setFilter] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
+  const stickyPush = useStickyRedirect();
   const [view, setView] = useState('');
 
   const handleAdd = () => {
@@ -183,7 +178,7 @@ export function UserTable(props: IProps) {
   };
 
   const handleEdit = (userId: string) => (e: any) => {
-    localStorage.setItem('url', history.location.pathname);
+    localStorage.setItem('fromUrl', pathname);
     setEditId(userId);
     setView('Profile');
   };
@@ -234,14 +229,12 @@ export function UserTable(props: IProps) {
     userGrpOrgRecs.forEach((g) => {
       memory.update((t: TransformBuilder) => t.removeRecord(g));
     });
+    setDeleteItem('');
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
   };
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
   const handleFilter = () => setFilter(!filter);
   const isCurrentUser = (userId: string) => userId === user;
 
@@ -299,7 +292,7 @@ export function UserTable(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
-  if (/profile/i.test(view)) return <Redirect to="/Profile" />;
+  if (/profile/i.test(view)) stickyPush('/Profile');
 
   return (
     <div className={classes.container}>
@@ -352,6 +345,8 @@ export function UserTable(props: IProps) {
         <ShapingTable
           columns={columnDefs}
           columnWidths={columnWidths}
+          sortingEnabled={sortingEnabled}
+          filteringEnabled={filteringEnabled}
           dataCell={Cell}
           rows={data}
           shaping={filter}
@@ -371,7 +366,6 @@ export function UserTable(props: IProps) {
       ) : (
         <></>
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

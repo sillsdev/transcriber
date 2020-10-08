@@ -8,7 +8,8 @@ import moment from 'moment';
 import Auth from '../auth/Auth';
 import jwtDecode from 'jwt-decode';
 import { useGlobal } from 'reactn';
-import { logError, Severity } from '../components/logErrorService';
+import { logError, Severity } from '../utils';
+import { useInterval } from '../utils/useInterval';
 
 const Expires = 0; // Set to 7110 to test 1:30 token
 
@@ -37,27 +38,33 @@ function TokenCheck(props: IProps) {
   React.useEffect(() => {
     if (!offline) {
       if (localStorage.getItem('isLoggedIn') === 'true') {
-        auth.renewSession().catch(err => {
-          view.current = 'Logout';
-        });
+        auth
+          .renewSession()
+          .then(() => {
+            const decodedToken: any = jwtDecode(auth.getAccessToken());
+            setExpireAt(decodedToken.exp);
+          })
+          .catch((err) => {
+            view.current = 'Logout';
+          });
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  React.useEffect(() => {
+  const checkTokenExpired = () => {
     if (expireAt && !offline) {
-      timer.current = setInterval(() => {
-        const currentUnix = moment().format('X');
-        const expires = moment.unix(expireAt).format('X');
-        const secondsLeft = Number(expires) - Number(currentUnix);
-        if (secondsLeft < Expires + 30) {
-          setSecondsToExpire(secondsLeft);
-          setModalOpen(true);
-        }
-      }, 1000);
+      const currentUnix = moment().format('X');
+      const expires = moment.unix(expireAt).format('X');
+      const secondsLeft = Number(expires) - Number(currentUnix);
+      if (secondsLeft < Expires + 30) {
+        setSecondsToExpire(secondsLeft);
+        setModalOpen(true);
+      }
     }
-  }, [expireAt, offline]);
+  };
+
+  useInterval(checkTokenExpired, expireAt && !offline ? 1000 : null);
 
   const handleClose = (value: number) => {
     setModalOpen(false);

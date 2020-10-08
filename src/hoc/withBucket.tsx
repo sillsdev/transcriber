@@ -3,14 +3,21 @@ import { useGlobal } from 'reactn';
 
 export const withBucket = (Component: any) => {
   return (props: any) => {
-    const [bucket] = useGlobal('bucket');
-
+    const [remote] = useGlobal('remote');
     const resetRequests = () => {
-      if (bucket) {
-        bucket.setItem('remote-requests', []);
-      }
+      return remote.requestQueue.clear();
     };
 
-    return <Component resetRequests={resetRequests} {...props} />;
+    const isRequestQueueEmpty = () => {
+      return remote.requestQueue.empty;
+    };
+
+    return (
+      <Component
+        resetRequests={resetRequests}
+        isRequestQueueEmpty={isRequestQueueEmpty}
+        {...props}
+      />
+    );
   };
 };

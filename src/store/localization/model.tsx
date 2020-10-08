@@ -5,475 +5,248 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessFirst": string;
     "accessSilTranscriber": string;
     "importProject": string;
-    "importError": string;
-    "login": string;
 };
 
-export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
-    "importPending": string;
-    "importComplete": string;
-    "importOldFile": string;
-    "ptfError": string;
-    "itfError": string;
-    "importCreated": string;
-    "projectImported": string;
-    "allDataOverwritten": string;
-    "neverExported": string;
-    "lastExported": string;
-    "exportedLost": string;
-};
-
-export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdmin": string;
-    "chooseUser": string;
-    "name": string;
-    "email": string;
-    "locale": string;
-    "phone": string;
-    "timezone": string;
-    "cancel": string;
-    "continue": string;
-    "role": string;
-    "invite": string;
-    "offline": string;
-    "action": string;
-    "delete": string;
-    "filter": string;
-    "selectRows": string;
-    "showHideFilter": string;
+export interface IActivityStateStrings extends Localize.LocalizedStringsMethods {
+    "approved": string;
+    "done": string;
+    "incomplete": string;
+    "needsNewRecording": string;
+    "needsNewTranscription": string;
+    "noMedia": string;
+    "review": string;
+    "reviewing": string;
+    "transcribe": string;
+    "transcribed": string;
+    "transcribeReady": string;
+    "transcribing": string;
 };
 
 export interface IAlertStrings extends Localize.LocalizedStringsMethods {
-    "confirmation": string;
     "areYouSure": string;
+    "confirmation": string;
     "no": string;
     "yes": string;
 };
 
-export interface IProjectTableStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdmin": string;
-    "chooseProject": string;
-    "name": string;
-    "description": string;
-    "language": string;
-    "delete": string;
-};
-
-export interface IChartStrings extends Localize.LocalizedStringsMethods {
-    "passagesCompleted": string;
-    "totalTransactions": string;
-};
-
-export interface IProjectSettingsStrings extends Localize.LocalizedStringsMethods {
-    "myProject": string;
-    "general": string;
-    "name": string;
-    "createdBy": string;
-    "description": string;
-    "projectType": string;
-    "selectProjectType": string;
-    "language": string;
-    "transcriptionLanguage": string;
-    "preferredLanguageName": string;
-    "uiLanguagInUserProfile": string;
-    "textEditor": string;
-    "defaultFont": string;
-    "selectDefaultFont": string;
-    "needFont": string;
-    "addMissingFont": string;
-    "defaultFontSize": string;
-    "selectFontSize": string;
-    "rightToLeft": string;
-    "add": string;
-    "upload": string;
-    "nextSteps": string;
-    "configure": string;
-    "startNow": string;
-    "dangerZone": string;
-    "deleteProject": string;
-    "deleteExplained": string;
-    "delete": string;
-    "save": string;
-    "group": string;
-    "preview": string;
-    "selectProjectGroup": string;
-    "notAdminInGroup": string;
-    "defaultPlanName": string;
-    "defaultSectionName": string;
-    "defaultReference": string;
-};
-
-export interface IPlanTableStrings extends Localize.LocalizedStringsMethods {
-    "addPlan": string;
-    "name": string;
-    "type": string;
-    "scripture": string;
-    "other": string;
-    "sections": string;
-    "createdBy": string;
-    "taks": string;
-    "action": string;
-    "filter": string;
-    "silTranscriberAdmin": string;
-    "choosePlan": string;
-    "loadingTable": string;
-    "showHideFilter": string;
-};
-
-export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
-    "action": string;
-    "delete": string;
-    "move": string;
-    "copy": string;
-    "attachMedia": string;
-    "addSection": string;
-    "addPassage": string;
-    "inlineToggle": string;
-    "save": string;
-    "saving": string;
-    "selectRows": string;
-    "confirm": string;
-    "sectionAbove": string;
-    "passageBelow": string;
-    "passageBelowSection": string;
-    "tablePaste": string;
-    "bookSelect": string;
-    "nonNumber": string;
-    "pasting": string;
-    "useCtrlV": string;
-    "resequence": string;
-};
-
-export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
-    "section": string;
-    "title": string;
-    "passage": string;
-    "book": string;
-    "reference": string;
-    "description": string;
-    "loadingTable": string;
-    "saving": string;
-    "pasteNoRows": string;
-    "pasteInvalidColumnsScripture": string;
-    "pasteInvalidColumnsGeneral": string;
-    "pasteInvalidSections": string;
-    "pasteInvalidPassages": string;
-    "saveFirst": string;
-};
-
 export interface IAssignmentTableStrings extends Localize.LocalizedStringsMethods {
-    "title": string;
-    "section": string;
-    "sectionstate": string;
-    "passages": string;
-    "passagestate": string;
-    "user": string;
-    "role": string;
     "assignSec": string;
-    "removeSec": string;
     "delete": string;
     "filter": string;
-    "transcriber": string;
-    "editor": string;
+    "passages": string;
+    "removeSec": string;
+    "role": string;
+    "sectionstate": string;
     "selectRowsToAssign": string;
     "selectRowsToRemove": string;
     "showHideFilter": string;
+    "title": string;
 };
 
 export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods {
-    "title": string;
-    "sections": string;
-    "users": string;
-    "editor": string;
-    "transcriber": string;
+    "close": string;
     "role": string;
-    "assignAs": string;
-    "close": string;
-};
-
-export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
-    "sectionsPassages": string;
-    "passageStatus": string;
-    "sectionStatus": string;
-    "mediaStatus": string;
-    "media": string;
-    "assignments": string;
-    "transcriptions": string;
-    "associations": string;
-};
-
-export interface IPlanAddStrings extends Localize.LocalizedStringsMethods {
-    "name": string;
-    "addPlan": string;
-    "newPlanTask": string;
-    "planType": string;
-    "selectPlanType": string;
-    "cancel": string;
-    "add": string;
-    "save": string;
-    "newPlan": string;
-    "selectAPlanType": string;
-    "editPlan": string;
-    "scripture": string;
-    "other": string;
-};
-
-export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
-    "action": string;
-    "delete": string;
-    "download": string;
-    "changeVersion": string;
-    "attachPassage": string;
-    "uploadMedia": string;
-    "uploadComplete": string;
-    "planName": string;
-    "fileName": string;
-    "sectionId": string;
-    "sectionName": string;
-    "book": string;
-    "reference": string;
-    "duration": string;
-    "size": string;
-    "version": string;
-    "section": string;
-    "date": string;
-    "filter": string;
-    "selectFiles": string;
-    "selectRows": string;
-    "unsupported": string;
-    "loadingTable": string;
-    "mediaAssociations": string;
-    "availablePassages": string;
-    "noMediaAttached": string;
-    "noPassageDetach": string;
-    "noPassageAttached": string;
-    "fileAttached": string;
-    "passageAttached": string;
-    "save": string;
-    "detach": string;
-    "autoMatch": string;
-    "showHideFilter": string;
-    "matchAdded": string;
-    "noMatch": string;
-    "none": string;
-    "proposed": string;
-    "all": string;
-    "viewAssociations": string;
-    "saving": string;
-    "savingComplete": string;
-};
-
-export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
-    "mediaAttached": string;
-    "mediaDetached": string;
-    "attachAvailableMedia": string;
-    "attachMediaToPassages": string;
-    "choosePassage": string;
-    "availableMedia": string;
-    "attachments": string;
-    "close": string;
-};
-
-export interface IMainStrings extends Localize.LocalizedStringsMethods {
-    "silTranscriberAdmin": string;
-    "silTranscriber": string;
-    "online": string;
-    "search": string;
-    "organization": string;
-    "usersAndGroups": string;
-    "passages": string;
-    "media": string;
-    "myTasks": string;
-    "todo": string;
-    "allTasks": string;
-    "tasks": string;
-    "plans": string;
-    "team": string;
-    "settings": string;
-    "integrations": string;
-    "project": string;
-    "loadingTranscriber": string;
-    "addOrganization": string;
-    "projectSummary": string;
-    "addProject": string;
-    "export": string;
-    "import": string;
-    "loadingTable": string;
-    "resetTitle": string;
-    "resetDesc": string;
-    "cancel": string;
-    "logout": string;
-    "myAccount": string;
-    "orgRole": string;
-    "projRole": string;
-    "owner": string;
-    "clearCache": string;
-    "clearLogout": string;
-    "inviteError": string;
-    "deletedInvitation": string;
-    "logoutRequired": string;
-    "helpCenter": string;
-    "reportIssue": string;
-    "developer": string;
-    "version": string;
-    "UnsavedData": string;
-    "saveFirst": string;
-    "saving": string;
-    "newOrganization": string;
-    "admin": string;
-    "goOnline": string;
-    "transcribe": string;
-    "switchTo": string;
-    "switchToAdmin": string;
-    "switchToApp": string;
-    "crashMessage": string;
-    "apiError": string;
-    "reports": string;
-    "sessionExpiring": string;
-    "sessionExpireTask": string;
-    "exit": string;
-    "continue": string;
-    "myWorkbench": string;
-    "defaultOrgDesc": string;
-};
-
-export interface IImportStrings extends Localize.LocalizedStringsMethods {
-    "import": string;
-    "importProject": string;
-    "expiredToken": string;
-    "error": string;
-    "onlineChangeReport": string;
-    "noFile": string;
-    "importPending": string;
-    "invalidITF": string;
-    "invalidProject": string;
-    "importComplete": string;
-    "plan": string;
-    "section": string;
-    "passage": string;
-    "other": string;
-    "old": string;
-    "imported": string;
-    "transcription": string;
-    "state": string;
-    "editor": string;
-    "transcriber": string;
-    "unassigned": string;
-    "fontsize": string;
-    "username": string;
-    "given": string;
-    "family": string;
-    "phone": string;
-    "timezone": string;
-    "locale": string;
-    "filter": string;
-    "showHideFilter": string;
-};
-
-export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
-    "section": string;
-    "sectionstate": string;
-    "passages": string;
-    "filter": string;
-    "transcriber": string;
-    "editor": string;
-    "plan": string;
-    "elan": string;
-    "export": string;
-    "copyTranscriptions": string;
-    "copyTip": string;
-    "showHideFilter": string;
-    "cantCopy": string;
-    "updated": string;
-    "exportProject": string;
-    "electronBackup": string;
-    "exportType": string;
-    "exportExplanation": string;
-    "exportPTFtype": string;
-    "exportITFtype": string;
-    "cancel": string;
-    "exportingProject": string;
-    "error": string;
-    "downloading": string;
-    "expiredToken": string;
-    "exportTooLarge": string;
-};
-
-export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {
-    "transcription": string;
-    "transcriptionDisplay": string;
-    "close": string;
-    "cantCopy": string;
-};
-
-export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
+    "title": string;
     "users": string;
-    "groups": string;
-    "invitations": string;
 };
 
-export interface IGroupTableStrings extends Localize.LocalizedStringsMethods {
-    "name": string;
-    "abbr": string;
-    "owner": string;
-    "projects": string;
-    "members": string;
-    "filter": string;
-    "action": string;
-    "delete": string;
-    "removeSelected": string;
-    "addGroup": string;
-    "selectRows": string;
-    "showHideFilter": string;
-};
-
-export interface IGroupAddStrings extends Localize.LocalizedStringsMethods {
-    "newGroup": string;
-    "cancel": string;
+export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "add": string;
+    "addTeam": string;
+    "cancel": string;
+    "connectParatext": string;
+    "delete": string;
+    "deleteTeam": string;
+    "explainTeamDelete": string;
+    "import": string;
+    "language": string;
+    "mediaUploaded": string;
+    "members": string;
+    "newProject": string;
+    "passagesCreated": string;
+    "personalProjects": string;
+    "projectCreated": string;
     "save": string;
-    "editGroup": string;
-    "addGroup": string;
-    "newGroupTask": string;
-    "name": string;
-    "abbr": string;
+    "sectionStatus": string;
+    "settings": string;
+    "sync": string;
+    "teamName": string;
+    "teamSettings": string;
+    "uploadProgress": string;
+};
+
+export interface IControlStrings extends Localize.LocalizedStringsMethods {
+    "other": string;
+    "scripture": string;
+};
+
+export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {
+    "advanced": string;
+    "dangerZone": string;
+    "delete": string;
+};
+
+export interface IElectronImportStrings extends Localize.LocalizedStringsMethods {
+    "allDataOverwritten": string;
+    "exportedLost": string;
+    "importComplete": string;
+    "importCreated": string;
+    "importOldFile": string;
+    "importPending": string;
+    "importProject": string;
+    "invalidProject": string;
+    "lastExported": string;
+    "neverExported": string;
+    "projectImported": string;
+    "ptfError": string;
+};
+
+export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethods {
+    "emailUnverified": string;
+    "resend": string;
+    "verified": string;
+    "verify": string;
 };
 
 export interface IGroupSettingsStrings extends Localize.LocalizedStringsMethods {
-    "name": string;
-    "abbreviation": string;
-    "save": string;
-    "projects": string;
-    "owners": string;
-    "editors": string;
-    "transcribers": string;
-    "ownersDetail": string;
-    "editorsDetail": string;
-    "transcribersDetail": string;
+    "add": string;
     "addGroupMember": string;
     "addMemberInstruction": string;
-    "cancel": string;
-    "add": string;
-    "delete": string;
-    "choose": string;
     "allReviewersCanTranscribe": string;
-    "groupExplain": string;
-    "case1": string;
-    "case2": string;
     "assignedSections": string;
-    "projectPlans": string;
-    "invalidRole": string;
+    "cancel": string;
+    "delete": string;
+    "editors": string;
+    "editorsDetail": string;
     "loadingTable": string;
-    "noDeleteInfo": string;
+    "name": string;
     "noDeleteAllUsersInfo": string;
+    "noDeleteInfo": string;
+    "owners": string;
+    "ownersDetail": string;
+    "projectPlans": string;
+    "save": string;
+    "transcribers": string;
+    "transcribersDetail": string;
 };
 
-export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
-    "NoColumns": string;
+export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
+    "groups": string;
+    "invitations": string;
+    "roles": string;
+    "users": string;
 };
 
-export interface ITreeChartStrings extends Localize.LocalizedStringsMethods {
+export interface IImportStrings extends Localize.LocalizedStringsMethods {
+    "close": string;
+    "continue": string;
+    "error": string;
+    "expiredToken": string;
+    "family": string;
+    "filter": string;
+    "fontsize": string;
+    "given": string;
+    "import": string;
+    "importComplete": string;
+    "imported": string;
+    "importPending": string;
+    "importProject": string;
+    "invalidITF": string;
+    "invalidProject": string;
+    "locale": string;
+    "noFile": string;
+    "old": string;
+    "onlineChangeReport": string;
+    "other": string;
+    "passage": string;
+    "phone": string;
+    "plan": string;
+    "showHideFilter": string;
+    "state": string;
+    "timezone": string;
+    "transcription": string;
+    "unassigned": string;
+    "username": string;
+};
+
+export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
+    "allCriteria": string;
+    "bookNotFound": string;
+    "bookNotInParatext": string;
+    "chapterSpan": string;
+    "countError": string;
+    "countPending": string;
+    "countReady": string;
+    "emptyBook": string;
+    "expiredParatextToken": string;
+    "expiredToken": string;
+    "invalidParatextLogin": string;
+    "invalidReference": string;
+    "no": string;
+    "noProject": string;
+    "offline": string;
+    "onestory": string;
+    "paratext": string;
+    "paratextAssociation": string;
+    "paratextLocal": string;
+    "projectError": string;
+    "projectsPending": string;
+    "questionAccount": string;
+    "questionInstalled": string;
+    "questionOnline": string;
+    "questionPermission": string;
+    "questionProject": string;
+    "removeProject": string;
+    "render": string;
+    "selectProject": string;
+    "showHideFilter": string;
+    "sync": string;
+    "syncComplete": string;
+    "syncError": string;
+    "syncPending": string;
+    "usernameError": string;
+    "usernamePending": string;
+    "yes": string;
+};
+
+export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
+    "accepted": string;
+    "action": string;
+    "delete": string;
+    "email": string;
+    "filter": string;
+    "invite": string;
     "noData": string;
+    "role": string;
+    "selectRows": string;
+    "showHideFilter": string;
+};
+
+export interface IInviteStrings extends Localize.LocalizedStringsMethods {
+    "addInvite": string;
+    "allUsersProjects": string;
+    "alreadyInvited": string;
+    "cancel": string;
+    "editInvite": string;
+    "email": string;
+    "emailsubject": string;
+    "groupRole": string;
+    "groups": string;
+    "instructions": string;
+    "invalidEmail": string;
+    "invitation": string;
+    "join": string;
+    "newInviteTask": string;
+    "noProjects": string;
+    "organization": string;
+    "questions": string;
+    "resend": string;
+    "role": string;
+    "save": string;
+    "selectProjectRole": string;
+    "selectTeamRole": string;
+    "send": string;
+    "sil": string;
 };
 
 export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods {
@@ -491,341 +264,427 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
     "cancel": string;
 };
 
-export interface IActivityStateStrings extends Localize.LocalizedStringsMethods {
-    "noMedia": string;
-    "transcribeReady": string;
-    "transcribing": string;
-    "needsNewRecording": string;
-    "transcribed": string;
-    "reviewing": string;
-    "needsNewTranscription": string;
-    "approved": string;
-    "synced": string;
-    "done": string;
-};
-
-export interface IInviteStrings extends Localize.LocalizedStringsMethods {
-    "editInvite": string;
-    "addInvite": string;
-    "newInviteTask": string;
-    "email": string;
-    "role": string;
-    "organization": string;
-    "selectOrgRole": string;
-    "allusersgroup": string;
-    "groups": string;
-    "group": string;
-    "allUsersProjects": string;
-    "additionalgroup": string;
-    "groupRole": string;
-    "otherGroupProjects": string;
-    "noProjects": string;
-    "selectGroupRole": string;
-    "cancel": string;
-    "send": string;
-    "save": string;
-    "invalidEmail": string;
-    "alreadyInvited": string;
-    "resend": string;
-    "sil": string;
-    "silTranscriber": string;
-    "invitation": string;
-    "instructions": string;
-    "questions": string;
-    "join": string;
-    "emailsubject": string;
+export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "admin": string;
-    "adminDetail": string;
-    "transcriber": string;
-    "transcriberDetail": string;
-    "editor": string;
-    "editorDetail": string;
-};
-
-export interface IInvitationTableStrings extends Localize.LocalizedStringsMethods {
-    "email": string;
-    "role": string;
-    "allUsers": string;
-    "group": string;
-    "accepted": string;
-    "invite": string;
-    "action": string;
-    "delete": string;
-    "filter": string;
-    "selectRows": string;
-    "noData": string;
-    "showHideFilter": string;
-};
-
-export interface IOrgSettingsStrings extends Localize.LocalizedStringsMethods {
-    "add": string;
-    "name": string;
-    "description": string;
-    "website": string;
-    "logo": string;
-    "publicByDefault": string;
-    "save": string;
+    "apiError": string;
     "cancel": string;
-    "deleteOrg": string;
-    "deleteExplained": string;
+    "clearCache": string;
+    "clearLogout": string;
+    "continue": string;
+    "crashMessage": string;
+    "deletedInvitation": string;
+    "developer": string;
+    "exit": string;
+    "export": string;
+    "helpCenter": string;
+    "import": string;
+    "integrations": string;
+    "inviteError": string;
+    "loadingTable": string;
+    "loadingTranscriber": string;
+    "logout": string;
+    "logoutRequired": string;
+    "media": string;
+    "myAccount": string;
+    "NoLoadOffline": string;
+    "owner": string;
+    "passages": string;
+    "project": string;
+    "projRole": string;
+    "reportIssue": string;
+    "reports": string;
+    "saveFirst": string;
+    "saving": string;
+    "sessionExpireTask": string;
+    "sessionExpiring": string;
+    "settings": string;
+    "switchTo": string;
+    "tasks": string;
+    "transcribe": string;
+    "UnsavedData": string;
+    "version": string;
+};
+
+export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
+    "all": string;
+    "autoMatch": string;
+    "availablePassages": string;
+    "book": string;
+    "date": string;
+    "delete": string;
+    "detach": string;
+    "duration": string;
+    "fileAttached": string;
+    "fileName": string;
+    "filter": string;
+    "loadingTable": string;
+    "matchAdded": string;
+    "mediaAssociations": string;
+    "noMatch": string;
+    "none": string;
+    "noPassageAttached": string;
+    "passageAttached": string;
+    "planName": string;
+    "proposed": string;
+    "reference": string;
+    "save": string;
+    "saving": string;
+    "savingComplete": string;
+    "selectFiles": string;
+    "selectRows": string;
+    "showHideFilter": string;
+    "size": string;
+    "unsupported": string;
+    "uploadComplete": string;
+    "version": string;
+    "viewAssociations": string;
 };
 
 export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
-    "title": string;
-    "PTFtitle": string;
-    "ITFtitle": string;
-    "task": string;
-    "PTFtask": string;
-    "ITFtask": string;
+    "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
-    "cancel": string;
+    "ITFtask": string;
+    "ITFtitle": string;
+    "PTFtask": string;
+    "PTFtitle": string;
+    "task": string;
+    "title": string;
     "upload": string;
 };
 
-export interface IMyTaskStrings extends Localize.LocalizedStringsMethods {
-    "todo": string;
-    "history": string;
+export interface IPassageMediaStrings extends Localize.LocalizedStringsMethods {
+    "close": string;
 };
 
-export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
-    "filter": string;
-    "plan": string;
-    "section": string;
-    "passage": string;
-    "state": string;
+export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
+    "assign": string;
+    "delete": string;
+    "playpause": string;
+    "transcribe": string;
+};
+
+export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
-    "transcriber": string;
-    "editor": string;
-    "view": string;
-    "length": string;
-    "assigned": string;
-    "yes": string;
-    "no": string;
-    "loadingTable": string;
-    "title": string;
-    "description": string;
-    "showHide": string;
-};
-
-export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
-    "sync": string;
-    "paratextAssociation": string;
-    "selectProject": string;
-    "noProject": string;
-    "projectsPending": string;
-    "countPending": string;
-    "usernamePending": string;
-    "offline": string;
-    "expiredToken": string;
-    "expiredParatextToken": string;
-    "invalidParatextLogin": string;
-    "questionOnline": string;
-    "questionInstalled": string;
-    "yes": string;
-    "no": string;
-    "questionProject": string;
-    "removeProject": string;
-    "questionAccount": string;
-    "questionPermission": string;
-    "allCriteria": string;
-    "projectError": string;
-    "usernameError": string;
-    "syncPending": string;
-    "syncError": string;
-    "bookNotFound": string;
-    "syncComplete": string;
-    "countError": string;
-    "countReady": string;
-    "paratext": string;
-    "paratextLocal": string;
-    "render": string;
-    "onestory": string;
-    "showHideFilter": string;
-};
-
-export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
-    "submit": string;
-    "reject": string;
+    "addPassage": string;
+    "addSection": string;
+    "bookSelect": string;
+    "confirm": string;
+    "nonNumber": string;
+    "passageBelow": string;
+    "pasting": string;
+    "refErr": string;
+    "resequence": string;
     "save": string;
-    "reopen": string;
-    "settingsTip": string;
-    "backTip": string;
-    "aheadTip": string;
-    "playTip": string;
-    "pauseTip": string;
-    "slowerTip": string;
-    "fasterTip": string;
-    "historyTip": string;
-    "timerTip": string;
-    "comment": string;
-    "makeComment": string;
-    "rejectTranscriptionTip": string;
-    "rejectReviewTip": string;
-    "submitTranscriptionTip": string;
-    "submitReviewTip": string;
-    "saveTip": string;
-    "saveReviewTip": string;
-    "noMedia": string;
-    "transcribeReady": string;
-    "transcribing": string;
-    "transcribed": string;
-    "reviewing": string;
-    "approved": string;
-    "needsNewTranscription": string;
-    "done": string;
-    "needsNewRecording": string;
-    "synced": string;
-    "incomplete": string;
     "saving": string;
+    "sectionAbove": string;
+    "selectRows": string;
+    "tablePaste": string;
+    "useCtrlV": string;
 };
 
-export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
-    "rejectTitle": string;
-    "rejectReason": string;
-    "needsAudio": string;
-    "needsCorrection": string;
-    "incomplete": string;
-    "comment": string;
-    "cancel": string;
-    "next": string;
+export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
+    "assignments": string;
+    "associations": string;
+    "media": string;
+    "mediaStatus": string;
+    "passageStatus": string;
+    "sectionsPassages": string;
+    "sectionStatus": string;
+    "transcriptions": string;
 };
 
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
-    "name": string;
-    "userExists": string;
-    "given": string;
-    "family": string;
+    "add": string;
+    "addOfflineUser": string;
+    "cancel": string;
+    "checkingParatext": string;
+    "close": string;
+    "completeProfile": string;
+    "deleteExplained": string;
+    "deleteUser": string;
     "email": string;
-    "phone": string;
-    "timezone": string;
+    "family": string;
+    "given": string;
+    "installParatext": string;
+    "linkingExplained": string;
     "locale": string;
     "locked": string;
+    "logout": string;
+    "name": string;
     "next": string;
-    "add": string;
-    "save": string;
-    "deleteUser": string;
-    "deleteExplained": string;
-    "cancel": string;
-    "silTranscriberAdmin": string;
-    "silTranscriber": string;
-    "userProfile": string;
-    "completeProfile": string;
-    "addOfflineUser": string;
-    "sendNews": string;
-    "sendDigest": string;
+    "paratextLinked": string;
+    "paratextLinking": string;
+    "paratextNotLinked": string;
+    "phone": string;
     "role": string;
+    "save": string;
+    "sendDigest": string;
+    "sendNews": string;
+    "timezone": string;
+    "userExists": string;
+    "userProfile": string;
 };
 
-export interface IDeleteExpansionStrings extends Localize.LocalizedStringsMethods {
-    "dangerZone": string;
-    "advanced": string;
-    "delete": string;
+export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
+    "export": string;
+    "exportTitle": string;
+    "import": string;
+    "importExport": string;
+    "integrations": string;
+    "integrationsTitle": string;
+    "reports": string;
+    "reportsTitle": string;
+};
+
+export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
+    "book": string;
+    "description": string;
+    "loadingTable": string;
+    "passage": string;
+    "pasteInvalidColumnsGeneral": string;
+    "pasteInvalidColumnsScripture": string;
+    "pasteInvalidSections": string;
+    "pasteNoRows": string;
+    "reference": string;
+    "saveFirst": string;
+    "saving": string;
+    "title": string;
+};
+
+export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
+    "NoColumns": string;
+};
+
+export interface ISharedStrings extends Localize.LocalizedStringsMethods {
+    "admin": string;
+    "editor": string;
+    "lastEdit": string;
+    "NoSaveOffline": string;
+    "transcriber": string;
+    "uploadMediaPlural": string;
+    "uploadMediaSingular": string;
 };
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
-    "noMedia": string;
-    "needsNewRecording": string;
-    "incomplete": string;
-    "needsNewTranscription": string;
-    "transcribing": string;
-    "reviewing": string;
-    "transcribe": string;
-    "review": string;
-    "sync": string;
-    "done": string;
+    "assign": string;
     "section": string;
-    "assign": string;
     "unassign": string;
-    "transcriber": string;
-    "editor": string;
-};
-
-export interface IControlStrings extends Localize.LocalizedStringsMethods {
-    "contentType": string;
-    "scripture": string;
-    "other": string;
-};
-
-export interface ISetupStrings extends Localize.LocalizedStringsMethods {
-    "gettingStarted": string;
-    "electronTitle": string;
-    "addPlan": string;
-    "upload": string;
-    "attach": string;
-    "assign": string;
-    "offlineNote": string;
-    "electronStep1": string;
-    "electronStep2": string;
-    "electronStep4": string;
-};
-
-export interface INotSetupStrings extends Localize.LocalizedStringsMethods {
-    "welcome": string;
-    "notReady": string;
-    "electronNotReady": string;
 };
 
 export interface ITemplateStrings extends Localize.LocalizedStringsMethods {
-    "projectCode": string;
-    "language": string;
-    "book": string;
-    "section": string;
-    "passage": string;
-    "chapter": string;
+    "apply": string;
     "beginning": string;
+    "book": string;
+    "chapter": string;
     "end": string;
     "fileTemplate": string;
-    "apply": string;
+    "language": string;
+    "passage": string;
     "templateCodes": string;
+};
+
+export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
+    "assigned": string;
+    "description": string;
+    "editor": string;
+    "filter": string;
+    "length": string;
+    "loadingTable": string;
+    "no": string;
+    "passage": string;
+    "plan": string;
+    "project": string;
+    "state": string;
+    "tasks": string;
+    "title": string;
+    "transcriber": string;
+    "yes": string;
+};
+
+export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
+    "aheadTip": string;
+    "backTip": string;
+    "comment": string;
+    "done": string;
+    "fasterTip": string;
+    "historyTip": string;
+    "incomplete": string;
+    "makeComment": string;
+    "needsNewRecording": string;
+    "needsNewTranscription": string;
+    "noMedia": string;
+    "pauseTip": string;
+    "playTip": string;
+    "reject": string;
+    "reopen": string;
+    "reviewing": string;
+    "save": string;
+    "saveReviewTip": string;
+    "saveTip": string;
+    "saving": string;
+    "slowerTip": string;
+    "submit": string;
+    "submitReviewTip": string;
+    "submitTranscriptionTip": string;
+    "timerTip": string;
+    "transcribing": string;
+    "updateByOther": string;
+};
+
+export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "comment": string;
+    "incomplete": string;
+    "needsAudio": string;
+    "needsCorrection": string;
+    "next": string;
+    "rejectReason": string;
+    "rejectTitle": string;
+};
+
+export interface ITranscriptionShowStrings extends Localize.LocalizedStringsMethods {
+    "cantCopy": string;
+    "close": string;
+    "transcription": string;
+    "transcriptionDisplay": string;
+};
+
+export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "cantCopy": string;
+    "copyTip": string;
+    "copyTranscriptions": string;
+    "downloading": string;
+    "elan": string;
+    "electronBackup": string;
+    "error": string;
+    "expiredToken": string;
+    "export": string;
+    "exportExplanation": string;
+    "exportingProject": string;
+    "exportITFtype": string;
+    "exportProject": string;
+    "exportPTFtype": string;
+    "exportTooLarge": string;
+    "exportType": string;
+    "filter": string;
+    "passages": string;
+    "plan": string;
+    "sectionstate": string;
+    "showHideFilter": string;
+    "updated": string;
+};
+
+export interface ITreeChartStrings extends Localize.LocalizedStringsMethods {
+    "noData": string;
+};
+
+export interface IUploadProgressStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "canceling": string;
+    "progressTitle": string;
+};
+
+export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
+    "action": string;
+    "cancel": string;
+    "continue": string;
+    "delete": string;
+    "email": string;
+    "filter": string;
+    "invite": string;
+    "locale": string;
+    "name": string;
+    "offline": string;
+    "phone": string;
+    "role": string;
+    "selectRows": string;
+    "showHideFilter": string;
+    "timezone": string;
+};
+
+export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
+    "add": string;
+    "advanced": string;
+    "backtranslation": string;
+    "cancel": string;
+    "correctformat": string;
+    "description": string;
+    "edit": string;
+    "editorSettings": string;
+    "flat": string;
+    "font": string;
+    "fontSize": string;
+    "hierarchical": string;
+    "language": string;
+    "layout": string;
+    "new": string;
+    "newProject": string;
+    "organizedBy": string;
+    "other": string;
+    "pericopes": string;
+    "preview": string;
+    "projectName": string;
+    "renderCustomize": string;
+    "renderRecommended": string;
+    "rightToLeft": string;
+    "save": string;
+    "scenes": string;
+    "sections": string;
+    "sets": string;
+    "stories": string;
+    "tags": string;
+    "testing": string;
+    "training": string;
+    "type": string;
 };
 
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
 	access: IAccessStrings;
-	electronImport: IElectronImportStrings;
-	usertable: IUsertableStrings;
+	activityState: IActivityStateStrings;
 	alert: IAlertStrings;
-	projectTable: IProjectTableStrings;
-	chart: IChartStrings;
-	projectSettings: IProjectSettingsStrings;
-	planTable: IPlanTableStrings;
-	planSheet: IPlanSheetStrings;
-	scriptureTable: IScriptureTableStrings;
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
-	planTabs: IPlanTabsStrings;
-	planAdd: IPlanAddStrings;
-	mediaTab: IMediaTabStrings;
-	passageMedia: IPassageMediaStrings;
-	main: IMainStrings;
-	import: IImportStrings;
-	transcriptionTab: ITranscriptionTabStrings;
-	transcriptionShow: ITranscriptionShowStrings;
-	groupTabs: IGroupTabsStrings;
-	groupTable: IGroupTableStrings;
-	groupAdd: IGroupAddStrings;
+	cards: ICardsStrings;
+	control: IControlStrings;
+	deleteExpansion: IDeleteExpansionStrings;
+	electronImport: IElectronImportStrings;
+	emailUnverified: IEmailUnverifiedStrings;
 	groupSettings: IGroupSettingsStrings;
-	shapingTable: IShapingTableStrings;
-	treeChart: ITreeChartStrings;
-	languagePicker: ILanguagePickerStrings;
-	activityState: IActivityStateStrings;
-	invite: IInviteStrings;
-	invitationTable: IInvitationTableStrings;
-	orgSettings: IOrgSettingsStrings;
-	mediaUpload: IMediaUploadStrings;
-	myTask: IMyTaskStrings;
-	toDoTable: IToDoTableStrings;
+	groupTabs: IGroupTabsStrings;
+	import: IImportStrings;
 	integration: IIntegrationStrings;
+	invitationTable: IInvitationTableStrings;
+	invite: IInviteStrings;
+	languagePicker: ILanguagePickerStrings;
+	main: IMainStrings;
+	mediaTab: IMediaTabStrings;
+	mediaUpload: IMediaUploadStrings;
+	passageMedia: IPassageMediaStrings;
+	planActions: IPlanActionsStrings;
+	planSheet: IPlanSheetStrings;
+	planTabs: IPlanTabsStrings;
+	profile: IProfileStrings;
+	projButtons: IProjButtonsStrings;
+	scriptureTable: IScriptureTableStrings;
+	shapingTable: IShapingTableStrings;
+	shared: ISharedStrings;
+	taskItem: ITaskItemStrings;
+	template: ITemplateStrings;
+	toDoTable: IToDoTableStrings;
 	transcriber: ITranscriberStrings;
 	transcribeReject: ITranscribeRejectStrings;
-	profile: IProfileStrings;
-	deleteExpansion: IDeleteExpansionStrings;
-	taskItem: ITaskItemStrings;
-	control: IControlStrings;
-	setup: ISetupStrings;
-	notSetup: INotSetupStrings;
-	template: ITemplateStrings;
+	transcriptionShow: ITranscriptionShowStrings;
+	transcriptionTab: ITranscriptionTabStrings;
+	treeChart: ITreeChartStrings;
+	uploadProgress: IUploadProgressStrings;
+	usertable: IUsertableStrings;
+	vProject: IVProjectStrings;
 	[key: string]: any;
 };

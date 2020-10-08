@@ -1,4 +1,5 @@
 import Axios, { AxiosError } from 'axios';
+import fs from 'fs';
 import path from 'path';
 import {
   IApiError,
@@ -10,6 +11,7 @@ import {
   PassageStateChange,
   GroupMembership,
   Group,
+  ProjectIntegration,
 } from '../../model';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
@@ -27,18 +29,13 @@ import {
   FileResponse,
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
-import fs from 'fs';
 import Memory from '@orbit/memory';
-
 import { TransformBuilder, Operation } from '@orbit/data';
-import { isArray } from 'util';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
-import { insertData } from '../../utils/loadData';
-import { logError, Severity } from '../../components/logErrorService';
-import { infoMsg, orbitInfo, remoteIdGuid, related } from '../../utils';
+import { remoteIdGuid, related, insertData } from '../../crud';
+import { infoMsg, orbitInfo, logError, Severity } from '../../utils';
 import { isElectron } from '../../api-variable';
-import ProjectIntegration from '../../model/projectintegration';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -186,7 +183,6 @@ export const importProjectFromElectron = (
             payload: pendingmsg.replace('{0}', '20'),
             type: IMPORT_PENDING,
           });
-          // console.log('upload item ' + files[0].name + ' succeeded.');
           /* tell it to process the file now */
           url =
             API_CONFIG.host +
@@ -339,6 +335,7 @@ export const importProjectToElectron = (
       payload: pendingmsg.replace('{0}', '5'),
       type: IMPORT_PENDING,
     });
+
     var delOpArray: Operation[] = [];
     mediaids.forEach((id) =>
       delOpArray.push(tb.removeRecord({ type: 'mediafile', id: id }))
@@ -388,6 +385,7 @@ export const importProjectToElectron = (
       try {
         return await backup.push(oparray);
       } catch (err) {
+        console.log(err);
         orbitError(orbitInfo(err, title));
         throw err;
       }
@@ -398,7 +396,7 @@ export const importProjectToElectron = (
   function processFile(file: string, ser: JSONAPISerializerCustom) {
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
-    if (isArray(json.data))
+    if (Array.isArray(json.data))
       json.data.forEach((item) =>
         insertData(item, memory, tb, oparray, orbitError, true, true)
       );

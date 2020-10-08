@@ -1,89 +1,58 @@
-const electron = require('electron');
-const ipcMain = electron.ipcMain;
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
-const path = require('path');
-const isDev = require('electron-is-dev');
+const { app, ipcMain } = require('electron');
+
+const createAppWindow = require('./app-process');
+const { createAuthWindow, createLogoutWindow } = require('./auth-process');
+const authService = require('./auth-service');
 
 //ToDo: Remove this and follow instructions here:
 //https://github.com/electron/electron/blob/master/docs/tutorial/security.md#electron-security-warnings
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
-let mainWindow;
-let imageWindow;
-let settingsWindow;
-
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
-    title: 'Boilerplate',
-    icon: path.join(__dirname, '../src/assets/icons/favicon.ico'),
-    webPreferences: { nodeIntegration: true, webSecurity: false },
-  });
-  imageWindow = new BrowserWindow({
-    width: 600,
-    height: 600,
-    parent: mainWindow,
-    show: false,
-  });
-  settingsWindow = new BrowserWindow({
-    width: 600,
-    height: 600,
-    parent: mainWindow,
-    show: false,
-  });
-
-  mainWindow.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
-  imageWindow.loadURL(
-    isDev
-      ? 'http://localhost:3000/image'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
-  settingsWindow.loadURL(
-    isDev
-      ? 'http://localhost:3000/settings'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
-
-  mainWindow.on('closed', () => (mainWindow = null));
-
-  imageWindow.on('close', e => {
-    e.preventDefault();
-    imageWindow.hide();
-  });
-
-  settingsWindow.on('close', e => {
-    e.preventDefault();
-    settingsWindow.hide();
-  });
+async function showWindow() {
+  return createAppWindow();
 }
 
 global['temp'] = app.getPath('temp');
 
-app.on('ready', createWindow);
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', showWindow);
+
+let isLogingIn = false;
+let isLogOut = false;
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (process.platform !== 'darwin' && !isLogingIn) {
     app.quit();
   }
 });
 
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
+ipcMain.handle('login', async () => {
+  isLogingIn = true;
+  isLogOut = false;
+  try {
+    await authService.refreshTokens();
+    isLogingIn = false;
+    return createAppWindow();
+  } catch (err) {
+    isLogingIn = false;
+    createAuthWindow();
   }
 });
 
-ipcMain.on('toggle-image', (event, arg) => {
-  imageWindow.show();
-  imageWindow.webContents.send('image', arg);
+ipcMain.handle('get-profile', () => {
+  if (isLogOut) return null;
+  return authService.getProfile();
 });
 
-ipcMain.on('toggle-settings', () => {
-  settingsWindow.isVisible() ? settingsWindow.hide() : settingsWindow.show();
+ipcMain.handle('get-token', () => {
+  if (isLogOut) return null;
+  return authService.getAccessToken();
+});
+
+ipcMain.handle('logout', () => {
+  isLogingIn = false;
+  isLogOut = true;
+  createLogoutWindow();
 });

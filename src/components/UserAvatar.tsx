@@ -7,7 +7,7 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
-import { DataPath } from '../utils/DataPath';
+import { dataPath } from '../utils/dataPath';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,7 +40,7 @@ export function UserAvatar(props: IProps) {
 
   const curUserRec = userRec
     ? []
-    : users.filter(u => u.id === user && u.attributes);
+    : users.filter((u) => u.id === user && u.attributes);
   const curUser = userRec
     ? userRec
     : curUserRec.length > 0
@@ -50,7 +50,7 @@ export function UserAvatar(props: IProps) {
   return curUser.attributes && curUser.attributes.avatarUrl ? (
     <Avatar
       alt={curUser.attributes.name}
-      src={DataPath(curUser.attributes.avatarUrl)}
+      src={dataPath(curUser.attributes.avatarUrl)}
       className={small ? classes.small : classes.medium}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (

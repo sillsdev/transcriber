@@ -22,4 +22,7 @@ export const API_CONFIG = {
   endpoint: process.env.REACT_APP_ENDPOINT
     ? process.env.REACT_APP_ENDPOINT
     : '',
+  productName: process.env.REACT_APP_SITE_TITLE
+    ? process.env.REACT_APP_SITE_TITLE
+    : 'SIL Transcriber',
 };

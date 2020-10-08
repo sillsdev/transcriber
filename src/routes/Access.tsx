@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IAccessStrings, User, IElectronImportStrings } from '../model';
+import { IState, IAccessStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -18,24 +18,15 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  LinearProgress,
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
-import { Online } from '../utils';
+import { Online, localeDefault } from '../utils';
 import { UserAvatar } from '../components/UserAvatar';
-import SnackBar from '../components/SnackBar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
-import {
-  IImportData,
-  handleElectronImport,
-  getElectronImportData,
-} from './ElectronImport';
 import { withData } from '../mods/react-orbitjs';
-import AdmZip from 'adm-zip';
-import Confirm from '../components/AlertDialog';
 import { isElectron, API_CONFIG } from '../api-variable';
-import { HeadHeight } from './drawer';
+import ImportTab from '../components/ImportTab';
 
 const reactStringReplace = require('react-string-replace');
 
@@ -44,6 +35,8 @@ const buildDate = require('../buildDate.json').date;
 
 const noop = { openExternal: () => {} };
 const { shell } = isElectron ? require('electron') : { shell: noop };
+const ipc = isElectron ? require('electron').ipcRenderer : null;
+const { remote } = isElectron ? require('electron') : { remote: null };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -87,16 +80,12 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingBottom: 16,
       marginTop: theme.spacing(2),
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: 'column',
       justifyContent: 'center',
+      alignItems: 'center',
     }) as any,
     button: {
       marginRight: theme.spacing(1),
-    },
-    progress: {
-      top: `calc(${HeadHeight}px - ${theme.spacing(1)}px)`,
-      zIndex: 100,
-      width: '100%',
     },
   })
 );
@@ -106,43 +95,32 @@ interface IRecordProps {
 
 interface IStateProps {
   t: IAccessStrings;
-  ei: IElectronImportStrings;
   importStatus: IAxiosStatus | undefined;
 }
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
   setLanguage: typeof action.setLanguage;
-  importProject: typeof action.importProjectToElectron;
-  importComplete: typeof action.importComplete;
-  orbitError: typeof action.doOrbitError;
 }
 
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
-  history: any;
   auth: Auth;
 }
 
 export function Access(props: IProps) {
-  const { auth, t, ei, importStatus, users } = props;
+  const { auth, t, importStatus, users } = props;
   const classes = useStyles();
-  const {
-    fetchLocalization,
-    setLanguage,
-    importProject,
-    importComplete,
-    orbitError,
-  } = props;
-  const [memory] = useGlobal('memory');
-  const [backup] = useGlobal('backup');
-  const [coordinatorActivated] = useGlobal('coordinatorActivated');
+  const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
-  const [message, setMessage] = useState(<></>);
-  const [confirmAction, setConfirmAction] = useState('');
-  const [zipFile, setZipFile] = useState<AdmZip | null>(null);
+  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [importOpen, setImportOpen] = useState(false);
   const [online, setOnline] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
+  const [, setOrganization] = useGlobal('organization');
+  const [, setProject] = useGlobal('project');
+  const [, setProjRole] = useGlobal('projRole');
+  const [, setPlan] = useGlobal('plan');
 
   const handleSelect = (uId: string) => () => {
     const selected = users.filter((u) => u.id === uId);
@@ -152,116 +130,84 @@ export function Access(props: IProps) {
     }
   };
 
-  const handleResetMessage = () => setMessage(<></>);
-
-  const handleActionConfirmed = () => {
-    if (!zipFile) {
-      console.log('No zip file yet...');
-      setTimeout(() => {
-        handleActionConfirmed();
-      }, 2000);
-    } else
-      handleElectronImport(
-        memory,
-        backup,
-        coordinatorActivated,
-        zipFile,
-        importProject,
-        orbitError,
-        ei
-      );
-    setConfirmAction('');
-  };
-  const handleActionRefused = () => {
-    setConfirmAction('');
-  };
   const handleImport = () => {
+    setImportOpen(true);
+  };
+
+  const handleGoOnline = () => {
     if (isElectron) {
-      var importData: IImportData = getElectronImportData(memory, ei);
-      if (importData.errMsg) setMessage(<span>{importData.errMsg}</span>);
-      else {
-        setZipFile(importData.zip);
-        if (importData.warnMsg) {
-          setConfirmAction(importData.warnMsg);
-        } else {
-          //no warning...so set confirmed
-          //zip file never got set here
-          //handleActionConfirmed();
-          handleElectronImport(
-            memory,
-            backup,
-            coordinatorActivated,
-            importData.zip,
-            importProject,
-            orbitError,
-            ei
-          );
-        }
-      }
+      ipc?.invoke('login');
+      remote?.getCurrentWindow().close();
     }
   };
+
+  const handleVersionClick = (e: React.MouseEvent) => {
+    if (e.shiftKey) {
+      setIsDeveloper(!isDeveloper);
+    }
+  };
+
   const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
-  useEffect(() => {
-    const showMessage = (title: string, msg: string) => {
-      setMessage(
-        <span>
-          {title}
-          <br />
-          {msg}
-        </span>
-      );
-    };
-    if (importStatus) {
-      if (importStatus.errStatus) {
-        showMessage(t.importError, importStatus.errMsg);
-      } else {
-        if (importStatus.statusMsg) {
-          showMessage(t.importProject, importStatus.statusMsg);
-        }
-        if (importStatus.complete) {
-          importComplete();
-        }
+  // see: https://web.dev/persistent-storage/
+  const persistData = async () => {
+    if (navigator?.storage?.persisted) {
+      let isPersisted = await navigator.storage.persisted();
+      if (!isPersisted && navigator?.storage?.persist) {
+        isPersisted = await navigator.storage.persist();
       }
+      console.log(`Persisted storage granted: ${isPersisted}`);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [importStatus]);
+  };
 
   useEffect(() => {
-    if (navigator.language.split('-')[0]) {
-      setLanguage(navigator.language.split('-')[0]);
-    }
+    if (isElectron) persistData();
+    setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (isElectron) {
       Online((online) => setOnline(online), auth);
       setOffline(true);
     } else Online((online) => setOffline(!online), auth);
 
-    const localAuth =
-      !auth || !auth.isAuthenticated(offline)
-        ? localStorage.getItem('trAdminAuthResult')
-        : null;
-    if (localAuth) {
-      try {
-        auth.setSession(JSON.parse(localAuth));
-        auth
-          .renewSession()
-          .catch(() => localStorage.removeItem('trAdminAuthResult'));
-      } catch (error) {
-        localStorage.removeItem('trAdminAuthResult');
-      }
-    }
+    setOrganization('');
+    setProject('');
+    setPlan('');
+    setProjRole('');
+
     if (!auth || !auth.isAuthenticated(offline)) {
-      localStorage.removeItem('trAdminAuthResult');
       if (!offline && !isElectron) {
         handleLogin();
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (isElectron) {
+      ipc?.invoke('get-profile').then((result) => {
+        if (result) {
+          ipc?.invoke('get-token').then((accessToken) => {
+            if (auth) auth.setDesktopSession(result, accessToken);
+          });
+          const sub = result?.sub;
+          if (sub) {
+            const selected = users.filter((u) => u.attributes.auth0Id === sub);
+            if (selected.length > 0) {
+              const userId = selected[0].id;
+              if (selectedUser !== userId) {
+                localStorage.setItem('user-id', userId);
+                setSelectedUser(userId);
+              }
+            }
+          }
+        }
+      });
+    }
+  });
+
   if (
     (!isElectron && auth && auth.isAuthenticated(offline)) ||
-    (isElectron && selectedUser !== '')
+    (isElectron && (selectedUser !== '' || auth.isAuthenticated(false)))
   )
     return <Redirect to="/loading" />;
 
@@ -275,42 +221,34 @@ export function Access(props: IProps) {
             </Typography>
           </Toolbar>
           <div className={classes.grow}>{'\u00A0'}</div>
-          <div className={classes.version}>
+          <div className={classes.version} onClick={handleVersionClick}>
             {version}
             <br />
             {buildDate}
           </div>
-          {!importStatus || (
-            <AppBar
-              position="fixed"
-              className={classes.progress}
-              color="inherit"
-            >
-              <LinearProgress variant="indeterminate" />
-            </AppBar>
-          )}
         </>
       </AppBar>
       {isElectron && (
         <div className={classes.container}>
           <Paper className={classes.paper}>
             <Typography variant="body1" className={classes.dialogHeader}>
-              {importStatus ? (
-                importStatus.statusMsg +
-                (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
-              ) : users.length > 0 ? (
+              {users.length > 0 ? (
                 t.accessSilTranscriber
               ) : (
                 <span>
-                  {reactStringReplace(t.accessFirst, '{0}', () => {
-                    return online ? (
-                      <Button key="launch" onClick={handleAdmin}>
-                        SIL Transcriber
-                      </Button>
-                    ) : (
-                      'SIL Transcriber'
-                    );
-                  })}
+                  {reactStringReplace(
+                    t.accessFirst.replace('{0}', API_CONFIG.productName),
+                    '{1}',
+                    () => {
+                      return online ? (
+                        <Button key="launch" onClick={handleAdmin}>
+                          SIL Transcriber
+                        </Button>
+                      ) : (
+                        'SIL Transcriber'
+                      );
+                    }
+                  )}
                 </span>
               )}
             </Typography>
@@ -354,18 +292,26 @@ export function Access(props: IProps) {
                   >
                     {t.importProject}
                   </Button>
+                  {isDeveloper && (
+                    <>
+                      <p> </p>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        onClick={handleGoOnline}
+                      >
+                        {'Go Online'}
+                      </Button>
+                    </>
+                  )}
                 </div>
               </Grid>
             </Grid>
           </Paper>
-          {confirmAction === '' || (
-            <Confirm
-              text={confirmAction + '  Continue?'}
-              yesResponse={handleActionConfirmed}
-              noResponse={handleActionRefused}
-            />
+          {importOpen && (
+            <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
           )}
-          <SnackBar message={message} reset={handleResetMessage} />
         </div>
       )}
     </div>
@@ -374,7 +320,6 @@ export function Access(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'access' }),
-  ei: localStrings(state, { layout: 'electronImport' }),
   importStatus: state.importexport.importexportStatus,
 });
 
@@ -383,9 +328,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       fetchLocalization: action.fetchLocalization,
       setLanguage: action.setLanguage,
-      importProject: action.importProjectToElectron,
-      importComplete: action.importComplete,
-      orbitError: action.doOrbitError,
     },
     dispatch
   ),

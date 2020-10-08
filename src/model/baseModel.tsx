@@ -3,10 +3,10 @@ import {
   TransformBuilder,
   UpdateRecordOperation,
   AddRecordOperation,
-  ReplaceRelatedRecordOperation,
 } from '@orbit/data';
 import Memory from '@orbit/memory';
-import { currentDateTime } from '../utils/currentDateTime';
+import { related } from '../crud';
+import { currentDateTime } from '../utils';
 
 export interface BaseModel extends Record {
   attributes: {
@@ -47,11 +47,17 @@ export const UpdateRelatedRecord = (
   relatedType: string,
   newId: string,
   user: number
-): ReplaceRelatedRecordOperation => {
+): any => {
   rec.attributes.dateUpdated = currentDateTime();
   rec.attributes.lastModifiedBy = user;
-  return t.replaceRelatedRecord(rec, relationship, {
-    type: relatedType,
-    id: newId,
-  });
+  if (related(rec, relationship) !== undefined)
+    return t.replaceRelatedRecord(rec, relationship, {
+      type: relatedType,
+      id: newId,
+    });
+  else
+    return t.addToRelatedRecords(rec, relationship, {
+      type: relatedType,
+      id: newId,
+    });
 };

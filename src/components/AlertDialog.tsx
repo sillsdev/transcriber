@@ -64,9 +64,11 @@ function AlertDialog(props: IProps) {
           <Button onClick={handleNo} color="primary">
             {no || t.no}
           </Button>
-          <Button onClick={handleYes} color="primary" autoFocus>
-            {yes || t.yes}
-          </Button>
+          {yes !== '' && (
+            <Button onClick={handleYes} color="primary" autoFocus>
+              {yes || t.yes}
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>

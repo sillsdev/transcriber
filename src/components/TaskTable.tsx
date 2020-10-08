@@ -1,30 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useGlobal } from 'reactn';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-  useTheme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import { Button, IconButton } from '@material-ui/core';
+import clsx from 'clsx';
+import { IconButton, Typography } from '@material-ui/core';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import StopIcon from '@material-ui/icons/Stop';
-import FilterIcon from '@material-ui/icons/FilterList';
-import SelectAllIcon from '@material-ui/icons/SelectAll';
+import CloseIcon from '@material-ui/icons/Close';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
 import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
-import SnackBar from './SnackBar';
-import { formatTime } from './Duration';
+import { BigDialog } from '../hoc/BigDialog';
+import IntegrationTab from './Integration';
+import ExportTab from './TranscriptionTab';
+import ImportTab from './ImportTab';
+import Visualize from './Visualize';
+import ProjectMenu from './Team/ProjectMenu';
+import { formatTime } from '../control';
 import { ChipText } from './TaskFlag';
 import Auth from '../auth/Auth';
-import { sectionNumber, numCompare, sectionDescription } from '../utils';
+import {
+  sectionNumber,
+  sectionDescription,
+  useOrganizedBy,
+  usePlan,
+} from '../crud';
+import { numCompare } from '../utils';
+import { useProjectPlans } from '../crud';
 import { debounce } from 'lodash';
-import { DrawerTask } from '../routes/drawer';
-import './TaskTable.css';
+import MediaPlayer from './MediaPlayer';
 
 export const TaskItemWidth = 370;
 
@@ -32,6 +38,27 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      '&[data-list="true"] table': {
+        minWidth: '372px !important',
+      },
+      '&[data-list="true"] thead': {
+        display: 'none',
+      },
+      '& .MuiListItem-root': {
+        padding: '0 16px',
+      },
+      '& .MuiList-root': {
+        padding: 0,
+      },
+      '& colgroup col:first-child': {
+        width: '1px !important',
+      },
+      '&[data-list="true"] colgroup col:nth-child(2)': {
+        width: '370px !important',
+      },
+      '& tbody > tr:first-child': {
+        display: 'none',
+      },
     },
     container: {
       display: 'flex',
@@ -50,11 +77,16 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     dialogHeader: theme.mixins.gutters({
-      width: '370px',
+      width: '340px',
+      paddingTop: '8px',
+      paddingBottom: '8px',
       display: 'flex',
       flexDirection: 'row',
-      justifyContent: 'center',
+      alignItems: 'center',
     }) as any,
+    filterHeader: {
+      width: 'auto',
+    },
     editIcon: {
       fontSize: 16,
     },
@@ -93,28 +125,36 @@ export function TaskTable(props: IProps) {
   const { auth, onFilter } = props;
   const {
     rowData,
-    taskItemStr,
+    activityStateStr,
     todoStr,
-    fetchMediaUrl,
-    hasUrl,
-    mediaUrl,
+    projButtonStr,
     selected,
     expandedGroups,
     filter,
     setFilter,
   } = useTodo();
   const t = todoStr;
+  const tpb = projButtonStr;
   const classes = useStyles();
-  const theme = useTheme();
-  const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
   const [user] = useGlobal('user');
-  const [width, setWidth] = React.useState(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth);
+  const { getPlanName } = usePlan();
+  const [planId] = useGlobal('plan');
+  const [planName, setPlanName] = useState('');
+  const [projectId] = useGlobal('project');
+  const [projRole] = useGlobal('projRole');
+  const projectPlans = useProjectPlans();
+  const [openIntegration, setOpenIntegration] = React.useState(false);
+  const [openImport, setOpenImport] = useState(false);
+  const [openExport, setOpenExport] = useState(false);
+  const [openReports, setOpenReports] = useState(false);
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const [columns] = useState([
     { name: 'composite', title: '\u00A0' },
     { name: 'play', title: '\u00A0' },
-    { name: 'plan', title: t.plan },
-    { name: 'section', title: t.section },
+    { name: 'plan', title: t.project },
+    { name: 'section', title: organizedBy },
     { name: 'title', title: t.title },
     { name: 'sectPass', title: t.passage },
     { name: 'description', title: t.description },
@@ -156,32 +196,32 @@ export function TaskTable(props: IProps) {
     height: window.innerHeight - 100,
     overflowY: 'auto',
   });
-  const [message, setMessage] = useState(<></>);
-  const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
-  const audioRef = useRef<any>();
   const formRef = useRef<any>();
   const selectedRef = useRef<any>();
   const notSelectedRef = useRef<any>();
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
-  const handleFilter = () => {
+  const handleToggleFilter = () => {
     if (onFilter) onFilter(!filter);
     setFilter(!filter);
   };
 
-  const handlePlay = (id: string) => () => {
-    if (playing) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+  const handleProjectMenu = (what: string) => {
+    if (what === 'integration') {
+      setOpenIntegration(true);
+    } else if (what === 'import') {
+      setOpenImport(true);
+    } else if (what === 'export') {
+      setOpenExport(true);
+    } else if (what === 'reports') {
+      setOpenReports(true);
+    } else if (what === 'filter') {
+      handleToggleFilter();
     }
-    setPlaying(false);
+  };
+
+  const handlePlay = (id: string) => () => {
     if (id !== playItem) {
-      fetchMediaUrl(id, memory, offline, auth);
       setPlayItem(id);
     } else {
       setPlayItem('');
@@ -190,7 +230,7 @@ export function TaskTable(props: IProps) {
 
   const setDimensions = () => {
     setStyle({ height: window.innerHeight - 100, overflowY: 'auto' });
-    setWidth(window.innerWidth - theme.spacing(DrawerTask));
+    setWidth(window.innerWidth);
   };
 
   useEffect(() => {
@@ -212,6 +252,10 @@ export function TaskTable(props: IProps) {
       formRef.current.scrollTo(0, selectedRef.current.offsetTop);
     }
   });
+
+  useEffect(() => {
+    setPlanName(getPlanName(planId));
+  }, [getPlanName, planId]);
 
   useEffect(() => {
     if (!filter) {
@@ -272,7 +316,12 @@ export function TaskTable(props: IProps) {
 
   useEffect(() => {
     const newRows = rowData.map((r, i) => ({
-      composite: r.state === '' ? <TaskHead item={i} /> : <TaskItem item={i} />,
+      composite:
+        r.state === '' ? (
+          <TaskHead item={i} />
+        ) : (
+          <TaskItem item={i} organizedBy={organizedBy} />
+        ),
       play: r.playItem,
       plan: r.planName,
       section: Number(sectionNumber(r.section)),
@@ -280,22 +329,17 @@ export function TaskTable(props: IProps) {
       title: sectionDescription(r.section),
       description: r.passage?.attributes?.title,
       length: r.duration ? formatTime(r.duration) : '',
-      state: r.state !== '' ? ChipText({ state: r.state, t: taskItemStr }) : '',
+      state:
+        r.state !== ''
+          ? ChipText({ state: r.state, ta: activityStateStr })
+          : '',
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediaId,
       mediaRemoteId: r.mediaRemoteId,
     }));
     setRows(newRows);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowData, selected]);
-
-  useEffect(() => {
-    if (hasUrl && audioRef.current && !playing && playItem !== '') {
-      setPlaying(true);
-      audioRef.current.play();
-    }
-  }, [hasUrl, mediaUrl, playing, playItem]);
+  }, [rowData]);
 
   interface ICell {
     value: any;
@@ -366,24 +410,23 @@ export function TaskTable(props: IProps) {
     >
       <div className={classes.container}>
         <div className={classes.paper}>
-          <div className={classes.dialogHeader}>
+          <div
+            className={clsx(classes.dialogHeader, {
+              [classes.filterHeader]: filter,
+            })}
+          >
+            <Typography variant="h6">{t.tasks}</Typography>
             <div className={classes.grow}>{'\u00A0'}</div>
-            <Button
-              key="filter"
-              aria-label={t.filter}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleFilter}
-              title={t.showHide}
-            >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon className={classes.icon} />
-              ) : (
-                <FilterIcon className={classes.icon} />
-              )}
-            </Button>
+            <ProjectMenu
+              action={handleProjectMenu}
+              inProject={true}
+              isOwner={projRole === 'admin'}
+            />
+            {filter && (
+              <IconButton onClick={handleToggleFilter}>
+                <CloseIcon />
+              </IconButton>
+            )}
           </div>
           <ShapingTable
             columns={columns}
@@ -404,8 +447,44 @@ export function TaskTable(props: IProps) {
           />
         </div>
       </div>
-      {!hasUrl || <audio ref={audioRef} src={mediaUrl} />}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
+      <MediaPlayer auth={auth} srcMediaId={playItem} />
+      <BigDialog
+        title={tpb.integrationsTitle.replace('{0}', planName)}
+        isOpen={openIntegration}
+        onOpen={setOpenIntegration}
+      >
+        <IntegrationTab {...props} auth={auth} />
+      </BigDialog>
+      <BigDialog
+        title={tpb.exportTitle.replace('{0}', planName)}
+        isOpen={openExport}
+        onOpen={setOpenExport}
+      >
+        <ExportTab
+          {...props}
+          auth={auth}
+          projectPlans={projectPlans(projectId)}
+          planColumn={true}
+        />
+      </BigDialog>
+      <BigDialog
+        title={tpb.reportsTitle.replace('{0}', planName)}
+        isOpen={openReports}
+        onOpen={setOpenReports}
+      >
+        <Visualize selectedPlan={planId} />
+      </BigDialog>
+
+      {openImport && (
+        <ImportTab
+          {...props}
+          auth={auth}
+          isOpen={openImport}
+          onOpen={setOpenImport}
+          planName={planName}
+          project={projectId}
+        />
+      )}
     </div>
   );
 }

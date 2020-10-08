@@ -19,8 +19,8 @@ import {
   IconButton,
 } from '@material-ui/core';
 import { FaCopy } from 'react-icons/fa';
-import SnackBar from './SnackBar';
-import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../utils';
+import { useSnackBar } from '../hoc/SnackBar';
+import { getMediaProjRec, getMediaRec, FontData, getFontData } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -51,13 +51,12 @@ function TranscriptionShow(props: IProps) {
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [open, setOpen] = useState(visible);
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const [transcription, setTranscription] = useState('');
   const [fontData, setFontData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
 
   const loadStatus = (status: string) => {
-    // console.log('Font status: current=', fontStatus, ' new=', status);
     setFontStatus(status);
   };
 
@@ -69,13 +68,10 @@ function TranscriptionShow(props: IProps) {
     }
     setOpen(false);
   };
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
 
   const handleCopy = (text: string) => () => {
     navigator.clipboard.writeText(text).catch((err) => {
-      setMessage(<span>{t.cantCopy}</span>);
+      showMessage(t.cantCopy);
     });
   };
 
@@ -149,7 +145,6 @@ function TranscriptionShow(props: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

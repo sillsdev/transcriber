@@ -10,15 +10,16 @@ import {
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import TaskFlag from './TaskFlag';
-import Duration from './Duration';
+import { Duration } from '../control';
 import {
   related,
   sectionNumber,
   passageNumber,
   passageReference,
-} from '../utils';
+} from '../crud';
 import { NextAction } from './TaskFlag';
 import TaskAvatar from './TaskAvatar';
+import { UnsavedContext } from '../context/UnsavedContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,24 +43,41 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IProps {
   item: number;
+  organizedBy: string;
 }
 
 export function TaskItem(props: IProps) {
-  const { rowData, taskItemStr, setSelected, allBookData } = useTodo();
-  const { passage, section, duration } = rowData[props.item];
+  const { organizedBy } = props;
   const classes = useStyles();
+  const {
+    rowData,
+    taskItemStr,
+    activityStateStr,
+    setSelected,
+    allBookData,
+  } = useTodo();
+  const uctx = React.useContext(UnsavedContext);
+  const { checkSavedFn } = uctx.state;
+
+  // TT-1749 during refresh the index went out of range.
+  if (props.item >= rowData.length) return <></>;
+  const { passage, section, duration } = rowData[props.item];
   const t = taskItemStr;
 
   const handleSelect = (selected: string) => () => {
-    setSelected(selected);
+    checkSavedFn(() => setSelected(selected));
   };
 
   let assigned: string | null = null;
   const attr = passage.attributes;
   if (attr) {
-    const next = NextAction({ t: taskItemStr, state: attr.state });
-    if (next === t.transcribe) assigned = related(section, 'transcriber');
-    if (next === t.review) assigned = related(section, 'editor');
+    const next = NextAction({
+      ta: activityStateStr,
+      state: attr.state,
+    });
+    if (next === activityStateStr.transcribe)
+      assigned = related(section, 'transcriber');
+    if (next === activityStateStr.review) assigned = related(section, 'editor');
   }
 
   return (
@@ -73,7 +91,7 @@ export function TaskItem(props: IProps) {
           primary={
             <Typography>{passageReference(passage, allBookData)}</Typography>
           }
-          secondary={<TaskFlag t={t} state={attr?.state} />}
+          secondary={<TaskFlag ta={activityStateStr} state={attr?.state} />}
         />
         <ListItemSecondaryAction>
           <div className={classes.detail}>
@@ -82,8 +100,9 @@ export function TaskItem(props: IProps) {
             </div>
             <div className={classes.detailAlign}>
               {t.section
-                .replace('{0}', sectionNumber(section))
-                .replace('{1}', passageNumber(passage).trim())}
+                .replace('{0}', organizedBy)
+                .replace('{1}', sectionNumber(section))
+                .replace('{2}', passageNumber(passage).trim())}
             </div>
           </div>
         </ListItemSecondaryAction>

@@ -11,7 +11,6 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import SnackBar from './SnackBar';
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
@@ -39,12 +38,6 @@ interface IStateProps {
   t: IMediaUploadStrings;
 }
 
-interface IProps extends IStateProps {
-  visible: boolean;
-  uploadType: UploadType;
-  uploadMethod?: (files: FileList) => void;
-  cancelMethod?: () => void;
-}
 export enum UploadType {
   Media = 0,
   ITF = 1,
@@ -52,13 +45,31 @@ export enum UploadType {
   LOGO = 3 /* do we need separate ones for org and avatar? */,
 }
 
+interface IProps extends IStateProps {
+  visible: boolean;
+  uploadType: UploadType;
+  uploadMethod?: (files: FileList) => void;
+  multiple?: boolean;
+  cancelMethod?: () => void;
+  metaData?: JSX.Element;
+  ready?: () => boolean;
+}
+
 function MediaUpload(props: IProps) {
-  const { t, visible, uploadType, uploadMethod, cancelMethod } = props;
+  const {
+    t,
+    visible,
+    uploadType,
+    multiple,
+    uploadMethod,
+    cancelMethod,
+    metaData,
+    ready,
+  } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
   const [files, setFiles] = useState<FileList>();
-  const [message, setMessage] = useState(<></>);
 
   const acceptextension = [
     '.mp3, .m4a, .wav, .ogg',
@@ -72,7 +83,6 @@ function MediaUpload(props: IProps) {
     'application/ptf',
     'image/jpeg, image/svg+xml, image/png',
   ];
-  const multiple = [true, false, false, false];
   const title = [t.title, t.ITFtitle, t.PTFtitle, 'FUTURE TODO'];
   const text = [t.task, t.ITFtask, t.PTFtask, 'FUTURE TODO'];
 
@@ -80,6 +90,7 @@ function MediaUpload(props: IProps) {
     if (uploadMethod && files) {
       uploadMethod(files);
     }
+    setFiles(undefined);
     setName('');
     setOpen(false);
   };
@@ -106,9 +117,6 @@ function MediaUpload(props: IProps) {
       setFiles(inputEl.files);
     }
   };
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
 
   const handleDrop = (files: FileList) => {
     setName(fileName(files));
@@ -129,7 +137,7 @@ function MediaUpload(props: IProps) {
           onChange={handleNameChange}
         >
           {name === ''
-            ? multiple[uploadType]
+            ? multiple
               ? t.dragDropMultiple
               : t.dragDropSingle
             : name}
@@ -139,7 +147,7 @@ function MediaUpload(props: IProps) {
           style={inputStyle}
           type="file"
           accept={acceptextension[uploadType]}
-          multiple={multiple[uploadType]}
+          multiple={multiple}
           onChange={handleNameChange}
         />
       </FileDrop>
@@ -152,7 +160,7 @@ function MediaUpload(props: IProps) {
           onChange={handleNameChange}
         >
           {name === ''
-            ? multiple[uploadType]
+            ? multiple
               ? t.dragDropMultiple
               : t.dragDropSingle
             : name}
@@ -162,7 +170,7 @@ function MediaUpload(props: IProps) {
           style={inputStyle}
           type="file"
           accept={acceptmime[uploadType]}
-          multiple={multiple[uploadType]}
+          multiple={multiple}
           onChange={handleNameChange}
         />
       </div>
@@ -179,17 +187,22 @@ function MediaUpload(props: IProps) {
         <DialogContent>
           <DialogContentText>{text[uploadType]}</DialogContentText>
           <div className={classes.drop}>{dropTarget}</div>
+          {metaData}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel} variant="outlined" color="primary">
             {t.cancel}
           </Button>
-          <Button onClick={handleAddOrSave} variant="contained" color="primary">
+          <Button
+            onClick={handleAddOrSave}
+            variant="contained"
+            color="primary"
+            disabled={(ready && !ready()) || !files}
+          >
             {t.upload}
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

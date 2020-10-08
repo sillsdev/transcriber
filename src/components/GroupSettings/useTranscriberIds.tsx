@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { GroupMembership, Role, RoleNames } from '../../model';
-import { related, getRoleId } from '../../utils';
+import { related, getRoleId } from '../../crud';
 import { IPerson } from './TeamCol';
 
 interface IProps {
@@ -15,8 +15,8 @@ function useTranscriberIds(props: IProps): IPerson[] {
   const transcriberId = getRoleId(roles, RoleNames.Transcriber);
 
   return groupMemberships
-    .filter(gm => related(gm, 'group') === group)
-    .map(gm => ({
+    .filter((gm) => related(gm, 'group') === group)
+    .map((gm) => ({
       canDelete: related(gm, 'role') === transcriberId,
       user: related(gm, 'user'),
     }));

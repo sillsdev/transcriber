@@ -14,6 +14,7 @@ import {
   GroupMembership,
   Invitation,
 } from '../model';
+import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -25,8 +26,6 @@ import {
   Theme,
 } from '@material-ui/core/styles';
 import {
-  AppBar,
-  Toolbar,
   Paper,
   Grid,
   TextField,
@@ -38,29 +37,48 @@ import {
   Typography,
   Avatar,
   MenuItem,
+  IconButton,
+  Link,
 } from '@material-ui/core';
-import UserMenu from '../components/UserMenu';
 import SaveIcon from '@material-ui/icons/Save';
-import SnackBar from '../components/SnackBar';
+import InfoIcon from '@material-ui/icons/Info';
 import Confirm from '../components/AlertDialog';
 import DeleteExpansion from '../components/DeleteExpansion';
+import ParatextIcon from '../control/ParatextLogo';
 import {
   remoteId,
-  makeAbbr,
-  uiLang,
   related,
   remoteIdNum,
   getRoleRec,
   getMbrRoleRec,
   allUsersRec,
+} from '../crud';
+import {
+  makeAbbr,
+  uiLang,
+  uiLangDev,
+  localeDefault,
+  useRemoteSave,
+  getParatextDataPath,
+  useStickyRedirect,
 } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
+import ar from '../assets/ar.json';
+import es from '../assets/es.json';
+import ha from '../assets/ha.json';
+import id from '../assets/id.json';
+import ru from '../assets/ru.json';
+import sw from '../assets/sw.json';
+import pt from '../assets/pt.json';
+import ta from '../assets/ta.json';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
 import { isElectron } from '../api-variable';
+import { AppHead } from '../components/App/AppHead';
+import { API_CONFIG } from '../api-variable';
 
 interface ILangDes {
   type: string;
@@ -77,7 +95,7 @@ interface ILdml {
     };
   };
 }
-const ldml: ILdml = { en, fr };
+const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -142,18 +160,21 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
     },
     bigAvatar: {
-      width: 200,
-      height: 200,
+      width: 150,
+      height: 150,
     },
   })
 );
 
 interface IStateProps {
   t: IProfileStrings;
+  paratext_username: string; // state.paratext.username
+  paratext_usernameStatus?: IAxiosStatus;
 }
 
 interface IDispatchProps {
   setLanguage: typeof action.setLanguage;
+  getUserName: typeof action.getUserName;
 }
 
 interface IRecordProps {
@@ -168,28 +189,20 @@ interface IProps
   auth: Auth;
   noMargin?: boolean;
   finishAdd?: () => void;
-  history: {
-    location: {
-      pathname: string;
-    };
-  };
 }
 
-const localeDefault = () => {
-  const code = navigator.language.split('-')[0];
-  return ldml.hasOwnProperty(code) ? code : 'en';
-};
-
 export function Profile(props: IProps) {
-  const { users, t, noMargin, finishAdd, auth, history, setLanguage } = props;
+  const { users, t, noMargin, finishAdd, setLanguage, auth } = props;
+  const { paratext_username, paratext_usernameStatus, getUserName } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
-  const [bucket] = useGlobal('bucket');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
-  const [offline] = useGlobal('offline');
+  const [errorReporter] = useGlobal('errorReporter');
+  const [isDeveloper] = useGlobal('developer');
+  const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
   const [given, setGiven] = useState<string | null>(null);
@@ -197,7 +210,7 @@ export function Profile(props: IProps) {
   const [email, setEmail] = useState('');
   const [timezone, setTimezone] = useState<string | null>(moment.tz.guess());
   const [role, setRole] = useState('member');
-  const [locale, setLocale] = useState<string>(localeDefault());
+  const [locale, setLocale] = useState<string>(localeDefault(isDeveloper));
   const [news, setNews] = useState<boolean | null>(null);
   const [digest, setDigest] = useState<DigestPreference | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
@@ -210,10 +223,15 @@ export function Profile(props: IProps) {
   const [showDetail, setShowDetail] = useState(false);
   const [locked, setLocked] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
-  const [message, setMessage] = useState(<></>);
   const [dupName, setDupName] = useState(false);
+  const [hasParatext, setHasParatext] = useState(false);
+  const [howToLink, setHowToLink] = useState(false);
   const [view, setView] = useState('');
-  const [changed, setChanged] = useState(false);
+  const [changed, setChanged] = useGlobal('changed');
+  const [doSave] = useGlobal('doSave');
+  const [, saveCompleted] = useRemoteSave();
+  const [ptPath, setPtPath] = React.useState('');
+  const stickyPush = useStickyRedirect();
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -288,22 +306,12 @@ export function Profile(props: IProps) {
       digest ? DigestPreference.noDigest : DigestPreference.dailyDigest
     );
   };
-
-  const handleMessageReset = () => setMessage(<></>);
-
-  const handleUserMenuAction = (what: string) => {
-    if (isElectron && /logout/i.test(what)) {
-      localStorage.removeItem('user-id');
-      setView('Access');
-      return;
+  useEffect(() => {
+    if (doSave) {
+      handleSave();
     }
-    if (!/Close/i.test(what)) {
-      if (/Clear/i.test(what)) {
-        bucket.setItem('remote-requests', []);
-      }
-      setView(what);
-    }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [doSave]);
 
   const handleSave = () => {
     if (changed) {
@@ -367,12 +375,14 @@ export function Profile(props: IProps) {
           // setOrgRole(role);
         }
       }
-      setLanguage(locale);
+      if (!editId) setLanguage(locale);
+      setChanged(false);
     }
+    saveCompleted('');
     if (editId) {
       setEditId(null);
     }
-    setView('Main');
+    setView('Team');
   };
 
   const addToOrgAndGroup = (userRec: User) => {
@@ -443,18 +453,20 @@ export function Profile(props: IProps) {
       } else {
         addToOrgAndGroup(userRec);
       }
+      setChanged(false);
     }
     if (finishAdd) {
       finishAdd();
     }
-    setView('Main');
+    setView('Team');
   };
 
   const handleCancel = () => {
     if (editId) {
       setEditId(null);
     }
-    setView('Main');
+    setChanged(false);
+    setView('Team');
   };
 
   const handleDelete = () => {
@@ -482,6 +494,18 @@ export function Profile(props: IProps) {
     setDeleteItem('');
   };
 
+  const handleHowTo = () => {
+    setHowToLink(true);
+  };
+
+  const handleLogout = () => {
+    setView('Logout');
+  };
+
+  const handleNoLinkSetup = () => {
+    setHowToLink(false);
+  };
+
   const langName = (loc: string, opt: string): string => {
     return ldml[loc].ldml.localeDisplayNames.languages.language
       .filter((d) => d.type === opt)
@@ -502,6 +526,11 @@ export function Profile(props: IProps) {
   };
 
   const StyledGrid = withStyles({ item: { padding: '0 30px' } })(Grid);
+
+  useEffect(() => {
+    if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
 
   useEffect(() => {
     let userRec: User = {
@@ -558,13 +587,14 @@ export function Profile(props: IProps) {
       }
     }
     const attr = userRec.attributes;
+    if (!attr) return;
     setName(attr.name !== attr.email ? attr.name : '');
     setGiven(attr.givenName ? attr.givenName : '');
     setFamily(attr.familyName ? attr.familyName : '');
     setEmail(attr.email);
     setPhone(attr.phone);
     setTimezone(attr.timezone);
-    setLocale(attr.locale ? attr.locale : localeDefault());
+    setLocale(attr.locale ? attr.locale : localeDefault(isDeveloper));
     setNews(attr.newsPreference);
     setDigest(attr.digestPreference);
     setLocked(true);
@@ -583,29 +613,39 @@ export function Profile(props: IProps) {
       setTimezone(myZone);
       setChanged(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timezone]);
 
-  if (!auth || !auth.isAuthenticated(offline)) {
-    localStorage.setItem('url', history.location.pathname);
-    return <Redirect to="/" />;
-  }
+  useEffect(() => {
+    if (!isElectron) {
+      if (!paratext_usernameStatus) {
+        getUserName(auth, errorReporter, t.checkingParatext);
+      }
+      setHasParatext(paratext_username !== '');
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [paratext_username, paratext_usernameStatus]);
+
+  const userNotComplete = () =>
+    currentUser === undefined ||
+    currentUser.attributes?.name === currentUser.attributes?.email;
+
+  const requiredComplete = () =>
+    (name || '') !== '' &&
+    (family || '') !== '' &&
+    (given || '') !== '' &&
+    (timezone || '') !== '' &&
+    (locale || '') !== '';
+
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Access/i.test(view)) return <Redirect to="/" />;
-  if (/Main/i.test(view)) return <Redirect to="/main" />;
+  if (/Team/i.test(view)) stickyPush('/team');
 
   const orgRoles = ['Admin', 'Member'];
 
   return (
     <div id="Profile" className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar} color="inherit">
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            {t.silTranscriber + ' - ' + t.userProfile}
-          </Typography>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <UserMenu action={handleUserMenuAction} />
-        </Toolbar>
-      </AppBar>
+      <AppHead {...props} />
       <Paper
         className={clsx(classes.container, {
           [classes.fullContainer]: noMargin,
@@ -613,7 +653,7 @@ export function Profile(props: IProps) {
       >
         <div className={classes.paper}>
           <Grid container>
-            <StyledGrid item xs={12} md={6}>
+            <StyledGrid item xs={12} md={5}>
               <BigAvatar avatarUrl={avatarUrl} name={name} />
               {name !== email && (
                 <Typography variant="h6" className={classes.caption}>
@@ -621,16 +661,37 @@ export function Profile(props: IProps) {
                 </Typography>
               )}
               <Typography className={classes.caption}>{email || ''}</Typography>
+              <Typography
+                className={clsx({
+                  [classes.caption]: !paratext_usernameStatus?.errStatus || 0,
+                })}
+              >
+                <ParatextIcon />
+                {'\u00A0'}
+                {paratext_usernameStatus?.errStatus ||
+                0 ||
+                (isElectron && !ptPath) ? (
+                  <>
+                    <Link onClick={handleHowTo}>{t.paratextNotLinked}</Link>
+                    <IconButton color="primary" onClick={handleHowTo}>
+                      <InfoIcon />
+                    </IconButton>
+                  </>
+                ) : (hasParatext && paratext_usernameStatus?.complete) ||
+                  ptPath ? (
+                  t.paratextLinked
+                ) : (
+                  paratext_usernameStatus?.statusMsg || t.checkingParatext
+                )}
+              </Typography>
             </StyledGrid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
                 <Typography variant="h6">{t.addOfflineUser}</Typography>
+              ) : userNotComplete() ? (
+                <Typography variant="h6">{t.completeProfile}</Typography>
               ) : (
-                (currentUser === undefined ||
-                  currentUser.attributes.name ===
-                    currentUser.attributes.email) && (
-                  <Typography variant="h6">{t.completeProfile}</Typography>
-                )
+                <Typography variant="h6">{t.userProfile}</Typography>
               )}
 
               <FormControl>
@@ -668,6 +729,7 @@ export function Profile(props: IProps) {
                         value={given || ''}
                         onChange={handleGivenChange}
                         margin="normal"
+                        required
                         variant="filled"
                       />
                     }
@@ -682,12 +744,13 @@ export function Profile(props: IProps) {
                         value={family || ''}
                         onChange={handleFamilyChange}
                         margin="normal"
+                        required
                         variant="filled"
                       />
                     }
                     label=""
                   />
-                  {orgRole === 'admin' && editId && !/Add/.test(editId) && (
+                  {orgRole === 'admin' && editId && email !== '' && (
                     <FormControlLabel
                       control={
                         <TextField
@@ -734,7 +797,7 @@ export function Profile(props: IProps) {
                         variant="filled"
                         required={true}
                       >
-                        {uiLang.map((option: string, idx: number) => (
+                        {uiLanguages.map((option: string, idx: number) => (
                           <MenuItem key={'loc' + idx} value={option}>
                             {langName(locale, option)}
                           </MenuItem>
@@ -772,31 +835,31 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
+                  {email !== '' && showDetail && (
+                    <FormControlLabel
+                      className={classes.textField}
+                      control={
+                        <Checkbox
+                          id="news"
+                          checked={news === true}
+                          onChange={handleNewsChange}
+                        />
+                      }
+                      label={t.sendNews.replace('{0}', API_CONFIG.productName)}
+                    />
+                  )}
                   {email !== '' && (
-                    <>
-                      <FormControlLabel
-                        className={classes.textField}
-                        control={
-                          <Checkbox
-                            id="news"
-                            checked={news === true}
-                            onChange={handleNewsChange}
-                          />
-                        }
-                        label={t.sendNews}
-                      />
-                      <FormControlLabel
-                        className={classes.textField}
-                        control={
-                          <Checkbox
-                            id="digest"
-                            checked={digest === 1}
-                            onChange={handleDigestChange}
-                          />
-                        }
-                        label={t.sendDigest}
-                      />
-                    </>
+                    <FormControlLabel
+                      className={classes.textField}
+                      control={
+                        <Checkbox
+                          id="digest"
+                          checked={digest === 1}
+                          onChange={handleDigestChange}
+                        />
+                      }
+                      label={t.sendDigest}
+                    />
                   )}
                   {showDetail && (
                     <>
@@ -834,8 +897,8 @@ export function Profile(props: IProps) {
               <div className={classes.actions}>
                 {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
-                    currentUser.attributes.name !==
-                      currentUser.attributes.email)) && (
+                    currentUser.attributes?.name !==
+                      currentUser.attributes?.email)) && (
                   <Button
                     key="cancel"
                     aria-label={t.cancel}
@@ -853,14 +916,12 @@ export function Profile(props: IProps) {
                   variant="contained"
                   color="primary"
                   className={classes.button}
-                  disabled={name === '' || !changed || dupName}
+                  disabled={!requiredComplete() || !changed || dupName}
                   onClick={currentUser === undefined ? handleAdd : handleSave}
                 >
                   {editId && /Add/i.test(editId)
                     ? t.add
-                    : currentUser === undefined ||
-                      currentUser.attributes.name ===
-                        currentUser.attributes.email
+                    : userNotComplete()
                     ? t.next
                     : t.save}
                   <SaveIcon className={classes.icon} />
@@ -879,15 +940,22 @@ export function Profile(props: IProps) {
               />
             )}
         </div>
-        {deleteItem !== '' ? (
+        {deleteItem !== '' && (
           <Confirm
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
           />
-        ) : (
-          <></>
         )}
-        <SnackBar {...props} message={message} reset={handleMessageReset} />
+        {howToLink && (
+          <Confirm
+            title={t.paratextLinking}
+            text={isElectron ? t.installParatext : t.linkingExplained}
+            yes={isElectron ? '' : t.logout}
+            no={isElectron ? t.close : t.cancel}
+            yesResponse={handleLogout}
+            noResponse={handleNoLinkSetup}
+          />
+        )}
       </Paper>
     </div>
   );
@@ -895,6 +963,8 @@ export function Profile(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'profile' }),
+  paratext_username: state.paratext.username,
+  paratext_usernameStatus: state.paratext.usernameStatus,
 });
 
 const mapRecordsToProps = {
@@ -905,6 +975,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       setLanguage: action.setLanguage,
+      getUserName: action.getUserName,
     },
     dispatch
   ),

@@ -10,6 +10,8 @@ import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
 import { isElectron } from '../api-variable';
 import { Redirect } from 'react-router-dom';
+import { localeDefault } from '../utils';
+import { useGlobal } from 'reactn';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -40,7 +42,6 @@ interface IDispatchProps {
 }
 
 interface IProps extends IStateProps, IDispatchProps {
-  history: any;
   auth: Auth;
 }
 
@@ -48,12 +49,11 @@ export function Logout(props: IProps) {
   const { auth } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
+  const [isDeveloper] = useGlobal('developer');
   const [view, setView] = React.useState('');
 
   useEffect(() => {
-    if (navigator.language.split('-')[0]) {
-      setLanguage(navigator.language.split('-')[0]);
-    }
+    setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (!isElectron) {
       auth.logout();

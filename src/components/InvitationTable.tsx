@@ -20,10 +20,10 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
-import { related } from '../utils';
+import { related } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -100,7 +100,7 @@ export function InvitationTable(props: IProps) {
   const [organization] = useGlobal('organization');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
@@ -130,9 +130,7 @@ export function InvitationTable(props: IProps) {
   const handleAddCancel = () => {
     setDialogVisible(false);
   };
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
+
   const handleCheck = (checks: Array<number>) => {
     setCheck(checks);
   };
@@ -142,7 +140,7 @@ export function InvitationTable(props: IProps) {
     setActionMenuItem(null);
     if (!/Close/i.test(what)) {
       if (check.length === 0) {
-        setMessage(<span>{t.selectRows.replace('{0}', what)}</span>);
+        showMessage(t.selectRows.replace('{0}', what));
       } else {
         setConfirmAction(what);
       }
@@ -260,7 +258,6 @@ export function InvitationTable(props: IProps) {
       ) : (
         <></>
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }

@@ -1,0 +1,39 @@
+import React from 'react';
+import { Grid } from '@material-ui/core';
+import { TeamContext } from '../../context/TeamContext';
+import { PersonalItem, TeamItem } from '.';
+import ImportTab from '../ImportTab';
+import { getPlanName } from '../../context/TranscriberContext';
+import { related } from '../../crud';
+import Auth from '../../auth/Auth';
+
+interface IProps {
+  auth: Auth;
+}
+export const TeamProjects = (props: IProps) => {
+  const { auth } = props;
+  const ctx = React.useContext(TeamContext);
+  const { teams, importOpen, setImportOpen, importProject } = ctx.state;
+
+  return (
+    <>
+      <Grid container>
+        <PersonalItem key={1} />
+        {teams().map((i) => {
+          return <TeamItem key={i.id} team={i} />;
+        })}
+      </Grid>
+      {importOpen && (
+        <ImportTab
+          auth={auth}
+          isOpen={importOpen}
+          onOpen={setImportOpen}
+          planName={importProject ? getPlanName(importProject.id) : undefined}
+          project={
+            importProject ? related(importProject, 'project') : undefined
+          } //actual project id...not plan id
+        />
+      )}
+    </>
+  );
+};

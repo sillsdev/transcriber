@@ -23,6 +23,8 @@ declare module 'reactn/default' {
     remote: JSONAPISource;
     remoteBusy: boolean;
     doSave: boolean;
+    saveResult: string | undefined;
+    snackMessage: JSX.Element;
     changed: boolean;
     projectsLoaded: string[];
     importexportBusy: boolean;
@@ -35,5 +37,7 @@ declare module 'reactn/default' {
     alertOpen: boolean;
     coordinatorActivated: boolean;
     fingerprint: string;
+    orbitRetries: number;
+    enableOffsite: boolean;
   }
 }

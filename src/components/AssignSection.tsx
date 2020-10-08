@@ -10,6 +10,7 @@ import {
   GroupMembership,
   Role,
   RoleNames,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
@@ -34,16 +35,19 @@ import {
   TableRow,
   TableCell,
   TableBody,
+  IconButton,
 } from '@material-ui/core';
-// import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import SnackBar from './SnackBar';
 import UserAvatar from './UserAvatar';
 import {
+  related,
+  getRoleId,
   sectionTranscriberName,
   sectionEditorName,
   sectionNumber,
-} from '../utils/section';
-import { related, getRoleId } from '../utils';
+  useOrganizedBy,
+} from '../crud';
+import { TranscriberIcon, EditorIcon } from './RoleIcons';
+import { currentDateTime } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IStateProps {
   t: IAssignSectionStrings;
+  ts: ISharedStrings;
 }
 
 interface IRecordProps {
@@ -83,6 +88,7 @@ function AssignSection(props: IProps) {
     roles,
     sections,
     t,
+    ts,
     visible,
     closeMethod,
   } = props;
@@ -92,7 +98,8 @@ function AssignSection(props: IProps) {
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
-  const [message, setMessage] = useState(<></>);
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(false));
 
   const handleClose = () => {
     if (closeMethod) {
@@ -100,12 +107,9 @@ function AssignSection(props: IProps) {
     }
     setOpen(false);
   };
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
 
   const assign = async (section: Section, userId: string, role: RoleNames) => {
-    await memory.update((t: TransformBuilder) =>
+    await memory.update((t: TransformBuilder) => [
       t.replaceRelatedRecord(
         { type: 'section', id: section.id },
         role.toLowerCase(),
@@ -113,19 +117,29 @@ function AssignSection(props: IProps) {
           type: 'user',
           id: userId,
         }
-      )
-    );
+      ),
+      t.replaceAttribute(
+        { type: 'section', id: section.id },
+        'dateUpdated',
+        currentDateTime()
+      ),
+      t.replaceAttribute(
+        { type: 'plan', id: related(section, 'plan') },
+        'dateUpdated',
+        currentDateTime()
+      ),
+    ]);
   };
 
   const handleSelectTranscriber = (id: string) => () => {
     setSelectedTranscriber(id);
-    sections.forEach(function(s) {
+    sections.forEach(function (s) {
       assign(s, id, RoleNames.Transcriber);
     });
   };
   const handleSelectReviewer = (id: string) => () => {
     setSelectedReviewer(id);
-    sections.forEach(function(s) {
+    sections.forEach(function (s) {
       assign(s, id, RoleNames.Editor);
     });
   };
@@ -136,16 +150,16 @@ function AssignSection(props: IProps) {
     setSelectedReviewer('');
   }, [visible]);
 
-  const projectRec = projects.filter(p => p.id === project);
+  const projectRec = projects.filter((p) => p.id === project);
   const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
   const transcriberRoleId = getRoleId(roles, RoleNames.Transcriber);
 
   const transcriberIds = groupMemberships
-    .filter(gm => related(gm, 'group') === groupId)
-    .map(gm => related(gm, 'user'));
+    .filter((gm) => related(gm, 'group') === groupId)
+    .map((gm) => related(gm, 'user'));
 
   const transcriberUserList = users
-    .filter(u => u.attributes && transcriberIds.indexOf(u.id) !== -1)
+    .filter((u) => u.attributes && transcriberIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -172,13 +186,13 @@ function AssignSection(props: IProps) {
 
   const editorIds = groupMemberships
     .filter(
-      gm =>
+      (gm) =>
         related(gm, 'group') === groupId &&
         related(gm, 'role') !== transcriberRoleId
     )
-    .map(gm => related(gm, 'user'));
+    .map((gm) => related(gm, 'user'));
   const editorUserList = users
-    .filter(u => u.attributes && editorIds.indexOf(u.id) !== -1)
+    .filter((u) => u.attributes && editorIds.indexOf(u.id) !== -1)
     .map((m, index) => {
       const labelId = 'user-' + m.attributes.name;
       return (
@@ -222,7 +236,9 @@ function AssignSection(props: IProps) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">{t.title}</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          {t.title.replace('{0}', organizedBy)}
+        </DialogTitle>
         <DialogContent>
           <Grid
             container
@@ -235,9 +251,15 @@ function AssignSection(props: IProps) {
               <Table className={classes.grids} size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>{t.sections}</TableCell>
-                    <TableCell align="right">{t.editor}</TableCell>
-                    <TableCell align="right">{t.transcriber}</TableCell>
+                    <TableCell>{organizedBy}</TableCell>
+                    <TableCell align="right">
+                      <EditorIcon />
+                      {ts.editor}
+                    </TableCell>
+                    <TableCell align="right">
+                      <TranscriberIcon />
+                      {ts.transcriber}
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>{sectionList}</TableBody>
@@ -254,7 +276,12 @@ function AssignSection(props: IProps) {
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
-                  <ListItem key="head">{t.editor}</ListItem>
+                  <ListItem key="head">
+                    <IconButton>
+                      <EditorIcon />
+                    </IconButton>
+                    {ts.editor}
+                  </ListItem>
                   {editorUserList}
                 </List>
               </Paper>
@@ -262,7 +289,10 @@ function AssignSection(props: IProps) {
             <Grid item>
               <Paper className={classes.paper}>
                 <List dense component="div">
-                  <ListItem key="head">{t.transcriber}</ListItem>
+                  <ListItem key="head">
+                    <TranscriberIcon />
+                    {ts.transcriber}
+                  </ListItem>
                   {transcriberUserList}
                 </List>
               </Paper>
@@ -275,13 +305,13 @@ function AssignSection(props: IProps) {
           </Button>
         </DialogActions>
       </Dialog>
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'assignSection' }),
+  ts: localStrings(state, { layout: 'shared' }),
 });
 
 const mapRecordsToProps = {

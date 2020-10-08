@@ -17,8 +17,12 @@ import {
   TableHeaderRow,
   TableRowDetail,
 } from '@devexpress/dx-react-grid-material-ui';
-import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
-import './TreeChart.css';
+import {
+  withStyles,
+  Theme,
+  createStyles,
+  makeStyles,
+} from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
@@ -76,10 +80,13 @@ const LegendLabel: any = withStyles(legendLabelStyles, { name: 'LegendLabel' })(
   LegendLabelBase
 );
 
-const barSeriesForTask = (planwork: any) =>
-  Object.keys(planwork[0]).reduce(
-    (acc, item, index) => {
-      if (item !== 'task') {
+const barSeriesForTask = (planwork: any) => {
+  var acc: any[] = [];
+  var names: string[] = [];
+  planwork.forEach((pw: {}) => {
+    Object.keys(pw).forEach((item, index) => {
+      if (item !== 'task' && !names.includes(item)) {
+        names.push(item);
         acc.push(
           <BarSeries
             key={index.toString()}
@@ -89,10 +96,10 @@ const barSeriesForTask = (planwork: any) =>
           />
         );
       }
-      return acc;
-    },
-    [] as any
-  );
+    });
+  });
+  return acc;
+};
 
 const gridDetailContainerBase = (data1: any, data2: any) => ({
   row,
@@ -120,6 +127,43 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
     return [...acc, { task: item.task, ...currentwork }];
   }, []);
 
+  /* put this back in once we fine tune this
+  ** I think this worked, but some data wasn't showing up
+  ** dev Cabtal team, Imported Plan
+  <ValueScale factory={scale1}>
+
+  const getmax = (planwork: any) => {
+    var max = 0;
+    planwork.forEach((pw: any) => {
+      Object.keys(pw).forEach((item, index) => {
+        if (item !== 'task' && (Number(pw[item]) || 0) > max)
+          max = Number(pw[item]);
+      });
+    });
+    return max;
+  };
+
+
+  const scale1 = () => {
+    var max = getmax(planwork1);
+    var sx = scaleLinear();
+    sx.ticks = () =>
+      Array(20)
+        .fill(null)
+        .map((v, i) => i * (max > 20 ? 10 : 1));
+    return sx;
+  };
+  const scale2 = () => {
+    var max = getmax(planwork2);
+    var x = Math.ceil(max / 75) * 5;
+    var sx = scaleLinear();
+    sx.ticks = () =>
+      Array(15)
+        .fill(null)
+        .map((v, i) => i * (max > 15 ? x : 1));
+    return sx;
+  };
+  */
   return (
     <div className={classes.detailContainer}>
       <h5 className={classes.title}>{`Contributions toward ${row.plan}`}</h5>
@@ -195,9 +239,13 @@ export interface IWork {
   work: Array<ITargetWork>;
 }
 
-const initialState = {
-  columns: [{ name: 'plan', title: 'Plan' }],
-};
+const useStyles = makeStyles({
+  root: {
+    '& .MuiTableRow-head': {
+      display: 'none',
+    },
+  },
+});
 
 interface IProps {
   rows: Array<IPlanRow>;
@@ -205,34 +253,21 @@ interface IProps {
   data2: Array<IWork>;
 }
 
-export default class TreeChart extends React.PureComponent<
-  IProps,
-  typeof initialState
-> {
-  public state = { ...initialState };
+export const TreeChart = (props: IProps) => {
+  const { rows, data1, data2 } = props;
+  const classes = useStyles();
+  const [columns] = React.useState([{ name: 'plan', title: 'Plan' }]);
 
-  constructor(props: IProps) {
-    super(props);
-
-    this.state = initialState;
-  }
-
-  public render() {
-    const { columns } = this.state;
-    const { rows, data1, data2 } = this.props;
-
-    return (
-      <Paper id="TreeChart">
-        <Grid rows={rows} columns={columns}>
-          {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
-          <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
-          <Table noDataCellComponent={NoDataCell} />
-          <TableHeaderRow />
-          <TableRowDetail
-            contentComponent={gridDetailContainer(data1, data2)}
-          />
-        </Grid>
-      </Paper>
-    );
-  }
-}
+  return (
+    <Paper id="TreeChart" className={classes.root}>
+      <Grid rows={rows} columns={columns}>
+        {/* <RowDetailState defaultExpandedRowIds={[1]} /> */}
+        <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
+        <Table noDataCellComponent={NoDataCell} />
+        <TableHeaderRow />
+        <TableRowDetail contentComponent={gridDetailContainer(data1, data2)} />
+      </Grid>
+    </Paper>
+  );
+};
+export default TreeChart;

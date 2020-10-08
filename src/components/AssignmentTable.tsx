@@ -10,6 +10,7 @@ import {
   IActivityStateStrings,
   Role,
   BookName,
+  ISharedStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -18,22 +19,24 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Button, AppBar } from '@material-ui/core';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import TreeGrid from './TreeGrid';
-import related from '../utils/related';
 import Auth from '../auth/Auth';
-import './AssignmentTable.css';
 import AssignSection from './AssignSection';
 import {
+  related,
   sectionDescription,
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
-} from '../utils';
-import { passageDescription, passageCompare } from '../utils';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
+  passageDescription,
+  passageCompare,
+  useOrganizedBy,
+} from '../crud';
+import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
+import { currentDateTime } from '../utils';
 
 const ActionHeight = 52;
 
@@ -41,13 +44,16 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       display: 'flex',
+      '& tr > td > div > span.MuiButtonBase-root:nth-child(3)': {
+        visibility: 'hidden',
+      },
     },
     paper: {},
     bar: {
       top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
+      left: 0,
+      width: '100%',
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
@@ -136,6 +142,7 @@ const getAssignments = (
 interface IStateProps {
   activityState: IActivityStateStrings;
   t: IAssignmentTableStrings;
+  ts: ISharedStrings;
   allBookData: BookName[];
 }
 
@@ -155,6 +162,7 @@ export function AssignmentTable(props: IProps) {
   const {
     activityState,
     t,
+    ts,
     passages,
     sections,
     users,
@@ -165,17 +173,18 @@ export function AssignmentTable(props: IProps) {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [check, setCheck] = useState(Array<number>());
   const [confirmAction, setConfirmAction] = useState('');
-
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const columnDefs = [
-    { name: 'name', title: t.section },
+    { name: 'name', title: organizedBy },
     { name: 'state', title: t.sectionstate },
     { name: 'passages', title: t.passages },
-    { name: 'transcriber', title: t.transcriber },
-    { name: 'editor', title: t.editor },
+    { name: 'transcriber', title: ts.transcriber },
+    { name: 'editor', title: ts.editor },
   ];
   const columnWidths = [
     { columnName: 'name', width: 300 },
@@ -188,20 +197,16 @@ export function AssignmentTable(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
 
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
-
   const handleAssignSection = (status: boolean) => (e: any) => {
     if (check.length === 0) {
-      setMessage(<span>{t.selectRowsToAssign}</span>);
+      showMessage(t.selectRowsToAssign);
     } else {
       setAssignSectionVisible(status);
     }
   };
   const handleRemoveAssignments = (e: any) => {
     if (check.length === 0) {
-      setMessage(<span>{t.selectRowsToRemove}</span>);
+      showMessage(t.selectRowsToRemove);
     } else {
       let work = false;
       check.forEach((i) => {
@@ -209,7 +214,7 @@ export function AssignmentTable(props: IProps) {
         if (row.editor !== '' || row.transcriber !== '') work = true;
       });
       if (!work) {
-        setMessage(<span>{t.selectRowsToRemove}</span>);
+        showMessage(t.selectRowsToRemove);
       } else {
         setConfirmAction(t.delete + '? (' + check.length + ')');
       }
@@ -220,7 +225,7 @@ export function AssignmentTable(props: IProps) {
     let one: any;
     check.forEach((c) => {
       one = sections.find(function (s) {
-        return c <= data.length ? s.id === data[c].id : undefined;
+        return c < data.length ? s.id === data[c].id : undefined;
       });
       if (one !== undefined) selected.push(one);
     });
@@ -241,6 +246,16 @@ export function AssignmentTable(props: IProps) {
           type: 'user',
           id: '',
         }),
+        t.replaceAttribute(
+          { type: 'section', id: s.id },
+          'dateUpdated',
+          currentDateTime()
+        ),
+        t.replaceAttribute(
+          { type: 'plan', id: related(s, 'plan') },
+          'dateUpdated',
+          currentDateTime()
+        ),
       ]);
     });
   };
@@ -279,9 +294,9 @@ export function AssignmentTable(props: IProps) {
                   color="primary"
                   className={classes.button}
                   onClick={handleAssignSection(true)}
-                  title={t.assignSec}
+                  title={t.assignSec.replace('{0}', organizedBy)}
                 >
-                  {t.assignSec}
+                  {t.assignSec.replace('{0}', organizedBy)}
                 </Button>
                 <Button
                   key="remove"
@@ -345,7 +360,6 @@ export function AssignmentTable(props: IProps) {
       />
       {confirmAction !== '' ? (
         <Confirm
-          title={t.delete}
           text={confirmAction}
           yesResponse={handleRemoveAssignmentsConfirmed}
           noResponse={handleRemoveAssignmentsRefused}
@@ -353,13 +367,13 @@ export function AssignmentTable(props: IProps) {
       ) : (
         <></>
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'assignmentTable' }),
+  ts: localStrings(state, { layout: 'shared' }),
   activityState: localStrings(state, { layout: 'activityState' }),
   allBookData: state.books.bookData,
 });

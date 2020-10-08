@@ -18,6 +18,7 @@ import {
   FileResponse,
   BookName,
   Project,
+  ISharedStrings,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -41,29 +42,29 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
 import moment from 'moment-timezone';
-import SnackBar from './SnackBar';
+import { useSnackBar } from '../hoc/SnackBar';
 import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
 import Auth from '../auth/Auth';
 import {
+  remoteId,
+  related,
+  remoteIdNum,
   sectionNumber,
   sectionEditorName,
   sectionTranscriberName,
   sectionCompare,
-} from '../utils/section';
-import { passageCompare, passageDescription } from '../utils/passage';
-import {
+  passageCompare,
+  passageDescription,
   getMediaRec,
   getMediaEaf,
-  remoteId,
-  related,
-  remoteIdNum,
   getMediaName,
-} from '../utils';
-import { DrawerWidth, HeadHeight } from '../routes/drawer';
+  getMediaInPlans,
+  useOrganizedBy,
+} from '../crud';
+import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
-import { getMediaInPlans } from '../utils/getMediaInPlans';
 
 const ActionHeight = 52;
 
@@ -75,12 +76,15 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {},
     bar: {
       top: `calc(${TabHeight}px + ${HeadHeight}px)`,
-      left: `${DrawerWidth}px`,
       height: `${ActionHeight}px`,
-      width: `calc(100% - ${DrawerWidth}px)`,
+      left: 0,
+      width: '100%',
     },
     highBar: {
-      top: `${HeadHeight}px`,
+      left: 'auto',
+      top: 'auto',
+      position: 'unset',
+      width: '95%',
     },
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
@@ -145,63 +149,12 @@ const getReference = (passage: Passage, bookData: BookName[] = []) => {
   return passageDescription(passage, bookData);
 };
 
-const getAssignments = (
-  projectPlans: Plan[],
-  passages: Array<Passage>,
-  sections: Array<Section>,
-  users: Array<User>,
-  activityState: IActivityStateStrings,
-  bookData: BookName[]
-) => {
-  const rowData: IRow[] = [];
-  projectPlans.forEach((planRec) => {
-    sections
-      .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
-      .sort(sectionCompare)
-      .forEach((section) => {
-        const sectionpassages = passages
-          .filter((ps) => related(ps, 'section') === section.id)
-          .sort(passageCompare);
-        rowData.push({
-          id: section.id,
-          name: getSection(section),
-          state: '',
-          planName: planRec.attributes.name,
-          editor: sectionEditorName(section, users),
-          transcriber: sectionTranscriberName(section, users),
-          passages: sectionpassages.length.toString(),
-          updated: '',
-          action: '',
-          parentId: '',
-        });
-        sectionpassages.forEach((passage: Passage) => {
-          const state =
-            passage.attributes && passage.attributes.state
-              ? activityState.getString(passage.attributes.state)
-              : '';
-          rowData.push({
-            id: passage.id,
-            name: getReference(passage, bookData),
-            state: state,
-            planName: planRec.attributes.name,
-            editor: '',
-            transcriber: '',
-            passages: '',
-            updated: moment
-              .tz(moment.tz(passage.attributes.dateUpdated, 'utc'), curZone)
-              .calendar(),
-            action: passage.id,
-            parentId: section.id,
-          } as IRow);
-        });
-      });
-  });
-
-  return rowData as Array<IRow>;
-};
+const calendar = (date: string) =>
+  moment.tz(moment.tz(date, 'utc'), curZone).calendar();
 
 interface IStateProps {
   t: ITranscriptionTabStrings;
+  ts: ISharedStrings;
   activityState: IActivityStateStrings;
   hasUrl: boolean;
   mediaUrl: string;
@@ -240,6 +193,7 @@ export function TranscriptionTab(props: IProps) {
     auth,
     activityState,
     t,
+    ts,
     projects,
     passages,
     sections,
@@ -264,7 +218,7 @@ export function TranscriptionTab(props: IProps) {
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
-  const [message, setMessage] = useState(<></>);
+  const { showMessage, showTitledMessage } = useSnackBar();
   const [openExport, setOpenExport] = useState(false);
   const [data, setData] = useState(Array<IRow>());
   const [passageId, setPassageId] = useState('');
@@ -279,14 +233,16 @@ export function TranscriptionTab(props: IProps) {
   const [exportName, setExportName] = useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
+  const { getOrganizedBy } = useOrganizedBy();
 
   const columnDefs = [
-    { name: 'name', title: t.section },
+    { name: 'name', title: getOrganizedBy(true) },
     { name: 'state', title: t.sectionstate },
     { name: 'planName', title: t.plan },
     { name: 'passages', title: t.passages },
-    { name: 'transcriber', title: t.transcriber },
-    { name: 'editor', title: t.editor },
+    { name: 'transcriber', title: ts.transcriber },
+    { name: 'editor', title: ts.editor },
     { name: 'action', title: '\u00A0' },
     { name: 'updated', title: t.updated },
   ];
@@ -306,10 +262,6 @@ export function TranscriptionTab(props: IProps) {
   const [filter, setFilter] = useState(false);
 
   moment.locale(lang);
-
-  const handleMessageReset = () => {
-    setMessage(<></>);
-  };
 
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
@@ -396,7 +348,7 @@ export function TranscriptionTab(props: IProps) {
         getCopy(projectPlans, passages, sections, allBookData).join('\n')
       )
       .catch((err) => {
-        setMessage(<span>{t.cantCopy}</span>);
+        showMessage(t.cantCopy);
       });
   };
 
@@ -443,16 +395,6 @@ export function TranscriptionTab(props: IProps) {
     setAudName(name);
   };
 
-  const showMessage = (title: string, msg: string) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
-  };
-
   useEffect(() => {
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
@@ -469,7 +411,10 @@ export function TranscriptionTab(props: IProps) {
         exportAnchor.current.click();
         URL.revokeObjectURL(exportUrl);
         setExportUrl(undefined);
-        showMessage(t.exportProject, t.downloading.replace('{0}', exportName));
+        showTitledMessage(
+          t.exportProject,
+          t.downloading.replace('{0}', exportName)
+        );
         setExportName('');
         exportComplete();
         setBusy(false);
@@ -481,12 +426,13 @@ export function TranscriptionTab(props: IProps) {
   useEffect(() => {
     if (exportStatus) {
       if (exportStatus.errStatus) {
-        showMessage(t.error, translateError(exportStatus));
+        showTitledMessage(t.error, translateError(exportStatus));
         exportComplete();
         setBusy(false);
       } else {
+        if (!enableOffsite) setEnableOffsite(true);
         if (exportStatus.statusMsg) {
-          showMessage('', exportStatus.statusMsg);
+          showMessage(exportStatus.statusMsg);
         }
         if (exportStatus.complete) {
           setBusy(false);
@@ -528,6 +474,59 @@ export function TranscriptionTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projectPlans, plan, planColumn]);
 
+  const getAssignments = (
+    projectPlans: Plan[],
+    passages: Array<Passage>,
+    sections: Array<Section>,
+    users: Array<User>,
+    activityState: IActivityStateStrings,
+    bookData: BookName[]
+  ) => {
+    const rowData: IRow[] = [];
+    projectPlans.forEach((planRec) => {
+      sections
+        .filter((s) => related(s, 'plan') === planRec.id && s.attributes)
+        .sort(sectionCompare)
+        .forEach((section) => {
+          const sectionpassages = passages
+            .filter((ps) => related(ps, 'section') === section.id)
+            .sort(passageCompare);
+          rowData.push({
+            id: section.id,
+            name: getSection(section),
+            state: '',
+            planName: planRec.attributes.name,
+            editor: sectionEditorName(section, users),
+            transcriber: sectionTranscriberName(section, users),
+            passages: sectionpassages.length.toString(),
+            updated: calendar(section?.attributes?.dateUpdated),
+            action: '',
+            parentId: '',
+          });
+          sectionpassages.forEach((passage: Passage) => {
+            const state =
+              passage.attributes && passage.attributes.state
+                ? activityState.getString(passage.attributes.state)
+                : '';
+            rowData.push({
+              id: passage.id,
+              name: getReference(passage, bookData),
+              state: state,
+              planName: planRec.attributes.name,
+              editor: '',
+              transcriber: '',
+              passages: '',
+              updated: calendar(passage.attributes.dateUpdated),
+              action: passage.id,
+              parentId: section.id,
+            } as IRow);
+          });
+        });
+    });
+
+    return rowData as Array<IRow>;
+  };
+
   useEffect(() => {
     setData(
       getAssignments(
@@ -539,6 +538,7 @@ export function TranscriptionTab(props: IProps) {
         allBookData
       )
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     plan,
     projectPlans,
@@ -630,7 +630,7 @@ export function TranscriptionTab(props: IProps) {
         ) as MediaFile[];
         if (state !== ActivityStates.NoMedia && media.length > 0)
           return <ActionCell {...props} />;
-        else return <></>;
+        else return <td className="MuiTableCell-root" />;
       }
     }
     return <Table.Cell {...props} />;
@@ -682,7 +682,9 @@ export function TranscriptionTab(props: IProps) {
       <div className={classes.paper}>
         <AppBar
           position="fixed"
-          className={clsx(classes.bar, { [classes.highBar]: planColumn })}
+          className={clsx(classes.bar, {
+            [classes.highBar]: planColumn,
+          })}
           color="default"
         >
           <div className={classes.actions}>
@@ -795,13 +797,13 @@ export function TranscriptionTab(props: IProps) {
         rel="noopener noreferrer"
       />
       <WhichExportDlg />
-      <SnackBar message={message} reset={handleMessageReset} />
     </div>
   );
 }
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
+  ts: localStrings(state, { layout: 'shared' }),
   activityState: localStrings(state, { layout: 'activityState' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,

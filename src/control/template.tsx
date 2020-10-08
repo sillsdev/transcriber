@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
 import InfoIcon from '@material-ui/icons/Info';
-import { related } from '../utils';
+import { related, useOrganizedBy } from '../crud';
 
 interface IstrMap {
   [key: string]: string;
@@ -58,15 +58,16 @@ const mapStateToProps = (state: IState): IStateProps => ({
 interface InfoDialogProps extends IStateProps {
   open: boolean;
   onClose: () => void;
+  organizedBy: string;
 }
 
 const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
-  const { onClose, open, t } = props;
+  const { onClose, open, t, organizedBy } = props;
 
   const pattern: IstrMap = {
     BOOK: t.book,
-    SECT: t.section,
-    PASS: t.passage,
+    SECT: organizedBy,
+    PASS: t.passage.replace('{0}', organizedBy),
     CHAP: t.chapter,
     BEG: t.beginning,
     END: t.end,
@@ -78,7 +79,7 @@ const InfoDialog = connect(mapStateToProps)((props: InfoDialogProps) => {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{'Template codes'}</DialogTitle>
+      <DialogTitle>{t.templateCodes}</DialogTitle>
       <List>
         {Object.keys(pattern).map((pat) => (
           <ListItem button key={pat}>
@@ -100,9 +101,10 @@ export function Template(props: ITemplateProps) {
   const [plan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
   const classes = useStyles();
-  const [template, setTemplate] = React.useState<string>();
-  const [templateInfo, setTemplateInfo] = React.useState(false);
-
+  const [template, setTemplate] = useState<string>();
+  const [templateInfo, setTemplateInfo] = useState(false);
+  const { getOrganizedBy } = useOrganizedBy();
+  const [organizedBy] = useState(getOrganizedBy(true));
   const handleTemplateChange = (e: any) => {
     setTemplate(e.target.value);
     localStorage.setItem('template', e.target.value);
@@ -191,7 +193,11 @@ export function Template(props: ITemplateProps) {
       >
         <InfoIcon />
       </IconButton>
-      <InfoDialog open={templateInfo} onClose={handleClose} />
+      <InfoDialog
+        open={templateInfo}
+        onClose={handleClose}
+        organizedBy={organizedBy}
+      />
     </Paper>
   );
 }

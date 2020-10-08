@@ -11,9 +11,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { UpdateRecord } from '../model/baseModel';
 import Confirm from './AlertDialog';
 import {
-  ExpansionPanel,
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
   FormControl,
   FormGroup,
@@ -31,14 +31,11 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SyncIcon from '@material-ui/icons/Sync';
 import CheckIcon from '@material-ui/icons/Check';
-import SnackBar from '../components/SnackBar';
-import {
-  remoteIdNum,
-  related,
-  Online,
-  localSync,
-  getParatextDataPath,
-} from '../utils';
+import { useSnackBar } from '../hoc/SnackBar';
+import ParatextLogo from '../control/ParatextLogo';
+import RenderLogo from '../control/RenderLogo';
+import { remoteIdNum, related } from '../crud';
+import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
 import ParatextProject from '../model/paratextProject';
@@ -48,7 +45,7 @@ import Integration from '../model/integration';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { isElectron } from '../api-variable';
-import { dateChanges } from '../routes/dateChanges';
+import { doDataChanges } from '../hoc/DataChanges';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -122,6 +119,7 @@ interface IDispatchProps {
   resetSync: typeof actions.resetSync;
   resetCount: typeof actions.resetCount;
   resetProjects: typeof actions.resetProjects;
+  resetUserName: typeof actions.resetUserName;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -159,10 +157,10 @@ export function IntegrationPanel(props: IProps) {
     resetSync,
     resetCount,
     resetProjects,
+    resetUserName,
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
-
   const [online, setOnline] = React.useState<boolean>();
   const [hasPtProj, setHasPtProj] = React.useState(false);
   const [ptProj, setPtProj] = React.useState(-1);
@@ -179,27 +177,20 @@ export function IntegrationPanel(props: IProps) {
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
+  const [plan] = useGlobal('plan');
   const [fingerprint] = useGlobal('fingerprint');
 
   const [errorReporter] = useGlobal('errorReporter');
-  const [message, setMessage] = React.useState(<></>);
+  const {
+    showMessage,
+    showTitledMessage,
+    showTitledJSXMessage,
+  } = useSnackBar();
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
   const syncing = React.useRef<boolean>(false);
   const setSyncing = (state: boolean) => (syncing.current = state);
 
-  const showMessage = (title: string, msg: string) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
-  };
-  const handleMessageReset = () => () => {
-    setMessage(<></>);
-  };
   const getProject = () => {
     const projfind: Project[] = projects.filter((p) => p.id === project);
     return projfind.length > 0 ? projfind[0] : undefined;
@@ -329,15 +320,15 @@ export function IntegrationPanel(props: IProps) {
   };
   const handleLocalSync = async () => {
     setSyncing(true);
-    showMessage('', t.syncPending);
-    await localSync(
-      project,
+    showMessage(t.syncPending);
+    var err = await localSync(
+      plan,
       ptShortName,
       passages,
       memory,
       remoteIdNum('user', user, memory.keyMap)
     );
-    showMessage('', t.syncComplete);
+    showMessage(err || t.syncComplete);
     resetCount();
     setSyncing(false);
   };
@@ -377,16 +368,77 @@ export function IntegrationPanel(props: IProps) {
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
     if (pRef && pRef.current) pRef.current.focus();
   };
+  const translateSyncError = (err: IAxiosStatus): JSX.Element => {
+    if (err.errMsg.includes('ReferenceError')) {
+      const errs = err.errMsg.split('||');
+      let localizedErr: JSX.Element[] = [];
+      errs.forEach((referr) => {
+        var parts = referr.split('|');
+        var str = '';
+        switch (parts[0]) {
+          case 'Empty Book':
+            str = t.emptyBook.replace('{0}', parts[1]).replace('{1}', parts[2]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+            break;
+          case 'Missing Book':
+            str = t.bookNotInParatext
+              .replace('{0}', parts[1])
+              .replace('{1}', parts[2])
+              .replace('{2}', parts[3]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+            break;
+          case 'Chapter':
+            str = t.chapterSpan
+              .replace('{0}', parts[1])
+              .replace('{1}', parts[2])
+              .replace('{2}', parts[3]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+            break;
+          case 'Reference':
+            str = t.invalidReference
+              .replace('{0}', parts[1])
+              .replace('{1}', parts[2])
+              .replace('{2}', parts[3]);
+            localizedErr.push(
+              <>
+                {str}
+                <br />
+              </>
+            );
+        }
+      });
+      return <span>{localizedErr}</span>;
+    } else return <span>{translateError(err)}</span>;
+  };
+
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
     if (err.errStatus === 500) {
-      if (err.errMsg.includes('401')) return t.expiredParatextToken;
+      if (err.errMsg.includes('401') || err.errMsg.includes('400'))
+        return t.expiredParatextToken;
       if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
       if (err.errMsg.includes('Book not included'))
         return t.bookNotFound + err.errMsg.substr(err.errMsg.lastIndexOf(':'));
+      return err.errMsg;
     }
     return err.errMsg;
   };
+
   const canEditParatextText = (role: string): boolean => {
     return role === 'pt_administrator' || role === 'pt_translator';
   };
@@ -399,8 +451,18 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     Online((result) => setOnline(result), auth);
     if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
+    resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    setHasParatext(false);
+    resetUserName();
+  }, [resetUserName, user]);
+
+  useEffect(() => {
+    if (online && !hasParatext) resetUserName();
+  }, [resetUserName, online, hasParatext]);
 
   useEffect(() => {
     if (project !== myProject) {
@@ -438,7 +500,7 @@ export function IntegrationPanel(props: IProps) {
             t.countPending
           );
     } else if (paratext_countStatus.errStatus)
-      showMessage(t.countError, translateError(paratext_countStatus));
+      showTitledMessage(t.countError, translateError(paratext_countStatus));
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_count, paratext_countStatus]);
@@ -448,7 +510,10 @@ export function IntegrationPanel(props: IProps) {
       if (!paratext_usernameStatus) {
         getUserName(auth, errorReporter, t.usernamePending);
       } else if (paratext_usernameStatus.errStatus)
-        showMessage(t.usernameError, translateError(paratext_usernameStatus));
+        showTitledMessage(
+          t.usernameError,
+          translateError(paratext_usernameStatus)
+        );
 
       setHasParatext(paratext_username !== '');
     }
@@ -470,7 +535,10 @@ export function IntegrationPanel(props: IProps) {
         }
       } else {
         if (paratext_projectsStatus.errStatus) {
-          showMessage(t.projectError, translateError(paratext_projectsStatus));
+          showTitledMessage(
+            t.projectError,
+            translateError(paratext_projectsStatus)
+          );
         } else if (paratext_projectsStatus.complete) {
           findConnectedProject();
         }
@@ -487,15 +555,20 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (paratext_syncStatus) {
       if (paratext_syncStatus.errStatus) {
-        showMessage(t.syncError, translateError(paratext_syncStatus));
+        showTitledJSXMessage(
+          t.syncError,
+          translateSyncError(paratext_syncStatus)
+        );
+        resetSync();
         setSyncing(false);
       } else if (paratext_syncStatus.statusMsg !== '') {
-        showMessage('', paratext_syncStatus.statusMsg);
+        showMessage(paratext_syncStatus.statusMsg);
       }
       if (paratext_syncStatus.complete) {
         resetCount();
+        resetSync();
         setSyncing(false);
-        dateChanges(auth, remote, memory, fingerprint);
+        doDataChanges(auth, remote, memory, fingerprint, errorReporter);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -519,15 +592,18 @@ export function IntegrationPanel(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel defaultExpanded={!isElectron} disabled={isElectron}>
-        <ExpansionPanelSummary
+      <Accordion defaultExpanded={!isElectron} disabled={isElectron}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratext}
           id={t.paratext}
         >
-          <Typography className={classes.heading}>{t.paratext}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
+          <Typography className={classes.heading}>
+            <ParatextLogo />
+            {'\u00A0' + t.paratext}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.panel}>
           <List dense component="div">
             <ListItem key="online">
               <ListItemAvatar>
@@ -685,17 +761,20 @@ export function IntegrationPanel(props: IProps) {
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel defaultExpanded={isElectron} disabled={!isElectron}>
-        <ExpansionPanelSummary
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={isElectron} disabled={!isElectron}>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratextLocal}
           id={t.paratextLocal}
         >
-          <Typography className={classes.heading}>{t.paratextLocal}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails className={classes.panel}>
+          <Typography className={classes.heading}>
+            <ParatextLogo />
+            {'\u00A0' + t.paratextLocal}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails className={classes.panel}>
           <List dense component="div">
             <ListItem key="installed">
               <ListItemAvatar>
@@ -813,29 +892,32 @@ export function IntegrationPanel(props: IProps) {
               <FormHelperText>{t.allCriteria}</FormHelperText>
             </FormGroup>
           </FormControl>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel>
-        <ExpansionPanelSummary
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography className={classes.heading}>{t.render}</Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+          <Typography className={classes.heading}>
+            <RenderLogo />
+            {'\u00A0' + t.render}
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
           <Typography>{'Not Implemented'}</Typography>
-        </ExpansionPanelDetails>
-      </ExpansionPanel>
-      <ExpansionPanel disabled>
-        <ExpansionPanelSummary
+        </AccordionDetails>
+      </Accordion>
+      <Accordion disabled>
+        <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3a-content"
           id="panel3a-header"
         >
           <Typography className={classes.heading}>{t.onestory}</Typography>
-        </ExpansionPanelSummary>
-      </ExpansionPanel>
+        </AccordionSummary>
+      </Accordion>
       {confirmItem !== null ? (
         <Confirm
           title={t.removeProject}
@@ -846,7 +928,6 @@ export function IntegrationPanel(props: IProps) {
       ) : (
         <></>
       )}
-      <SnackBar {...props} message={message} reset={handleMessageReset} />
     </div>
   );
 }
@@ -872,6 +953,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       resetSync: actions.resetSync,
       resetCount: actions.resetCount,
       resetProjects: actions.resetProjects,
+      resetUserName: actions.resetUserName,
     },
     dispatch
   ),
