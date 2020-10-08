@@ -433,49 +433,52 @@ export function ScriptureTable(props: IProps) {
 
   const handleDelete = (what: string, where: number[]) => {
     if (what === 'Delete') {
-      const deleteOrbitRow = async (id: RecordIdentity | undefined) => {
-        if (id && id.id !== '') {
-          memory.update((t: TransformBuilder) =>
-            t.removeRecord({ type: id.type, id: id.id })
-          );
-        }
-      };
-      //work from the bottom up so we can detach/delete passages before the section
-      for (
-        let rowListIndex = where.length - 1;
-        rowListIndex >= 0;
-        rowListIndex -= 1
-      ) {
-        const rowIndex = where[rowListIndex];
-        if (rowInfo[rowIndex].passageId) {
-          var attached = mediafiles.filter(
-            (m) => related(m, 'passage') === rowInfo[rowIndex].passageId?.id
-          );
-          attached.forEach((m) => {
-            var passage = passages.find(
-              (p) => p.id === rowInfo[rowIndex].passageId?.id
-            );
-            detachPassage(
-              rowInfo[rowIndex].passageId?.id || '',
-              related(passage, 'section'),
-              plan,
-              m.id
-            );
-          });
-          deleteOrbitRow(rowInfo[rowIndex].passageId as RecordIdentity);
-        }
-        deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
-      }
-      updateLastModified();
-      setData(
-        resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
-      );
-      setRowInfo(rowInfo.filter((row, rowIndex) => !where.includes(rowIndex)));
-      setInData(inData.filter((row, rowIndex) => !where.includes(rowIndex)));
+      doDelete(where);
       return true;
+    } else {
+      showJSXMessage(<span>{what}...</span>);
+      return false;
     }
-    showJSXMessage(<span>{what}...</span>);
-    return false;
+  };
+  const doDelete = async (where: number[]) => {
+    const deleteOrbitRow = async (id: RecordIdentity | undefined) => {
+      if (id && id.id !== '') {
+        await memory.update((t: TransformBuilder) => t.removeRecord(id));
+      }
+    };
+    //work from the bottom up so we can detach/delete passages before the section
+    for (
+      let rowListIndex = where.length - 1;
+      rowListIndex >= 0;
+      rowListIndex -= 1
+    ) {
+      const rowIndex = where[rowListIndex];
+      if (rowInfo[rowIndex].passageId) {
+        var attached = mediafiles.filter(
+          (m) => related(m, 'passage') === rowInfo[rowIndex].passageId?.id
+        );
+        for (let ix = 0; ix < attached.length; ix++) {
+          var passage = passages.find(
+            (p) => p.id === rowInfo[rowIndex].passageId?.id
+          );
+          await detachPassage(
+            rowInfo[rowIndex].passageId?.id || '',
+            related(passage, 'section'),
+            plan,
+            attached[ix].id
+          );
+        }
+        await deleteOrbitRow(rowInfo[rowIndex].passageId as RecordIdentity);
+      }
+      await deleteOrbitRow(rowInfo[rowIndex].sectionId as RecordIdentity);
+    }
+    updateLastModified();
+    setData(
+      resequence(data.filter((row, rowIndex) => !where.includes(rowIndex)))
+    );
+    setRowInfo(rowInfo.filter((row, rowIndex) => !where.includes(rowIndex)));
+    setInData(inData.filter((row, rowIndex) => !where.includes(rowIndex)));
+    return true;
   };
 
   const getSections = (where: number[]) => {
@@ -708,12 +711,19 @@ export function ScriptureTable(props: IProps) {
     } else showUpload(i);
   };
 
-  const updateLastModified = () => {
+  const updateLastModified = async () => {
     var planRec = getPlan(plan);
     if (planRec !== null) {
       planRec.attributes.dateUpdated = currentDateTime();
-      const plan = planRec; //assure typescript that the plan isn't null :/
-      memory.update((t: TransformBuilder) => t.updateRecord(plan));
+      //don't use sections here, it hasn't been updated yet
+      var plansections = memory.cache.query((qb) =>
+        qb.findRecords('section')
+      ) as Section[];
+      planRec.attributes.sectionCount = plansections.filter(
+        (s) => related(s, 'plan') === plan
+      ).length;
+      const myplan = planRec; //assure typescript that the plan isn't null :/
+      await memory.update((t: TransformBuilder) => t.updateRecord(myplan));
       setLastSaved(planRec.attributes.dateUpdated);
     }
   };
@@ -1004,7 +1014,7 @@ export function ScriptureTable(props: IProps) {
     const getSections = async (plan: string) => {
       let plansections = sections
         .filter((s) => related(s, 'plan') === plan)
-        .sort((i, j) => i.attributes.sequencenum - j.attributes.sequencenum);
+        .sort((i, j) => i.attributes?.sequencenum - j.attributes?.sequencenum);
       if (plansections != null) {
         for (let secIndex = 0; secIndex < plansections.length; secIndex += 1) {
           let sec = plansections[secIndex] as Section;

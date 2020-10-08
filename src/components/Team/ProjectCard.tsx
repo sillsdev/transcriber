@@ -265,7 +265,9 @@ export const ProjectCard = (props: IProps) => {
                 .replace('{0}', sectionCount)
                 .replace(
                   '{1}',
-                  Number(sectionCount) > 1 ? organizedByPlural : organizedBySing
+                  Number(sectionCount) === 1
+                    ? organizedBySing
+                    : organizedByPlural
                 )}
           </Typography>
         </CardContent>
