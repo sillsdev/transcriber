@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="ta" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.accessFirst">
          <segment>
-         	<source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
+            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
             <target/>
          </segment>
       </unit>
@@ -586,7 +586,7 @@
       <unit id="groupTabs.roles">
          <segment>
             <source>Roles</source>
-            <target/>
+            <target>சிறப்புரிமைகள்</target>
          </segment>
       </unit>
       <unit id="groupTabs.users">
@@ -712,7 +712,7 @@
       <unit id="import.other">
          <segment>
             <source>Other</source>
-            <target/>
+            <target>மற்றவை</target>
          </segment>
       </unit>
       <unit id="import.passage">
@@ -1594,7 +1594,7 @@
       <unit id="mediaTab.none">
          <segment>
             <source>None</source>
-            <target/>
+            <target>ஏதுமில்லை</target>
          </segment>
       </unit>
       <unit id="mediaTab.noPassageAttached">
@@ -1774,7 +1774,7 @@
       <unit id="planActions.playpause">
          <segment>
             <source>Play / Pause</source>
-            <target/>
+            <target>இயங்கு / இடைநிறுத்து</target>
          </segment>
       </unit>
       <unit id="planActions.transcribe">
@@ -3034,7 +3034,7 @@
       <unit id="vProject.other">
          <segment>
             <source>Other</source>
-            <target/>
+            <target>மற்றவை</target>
          </segment>
       </unit>
       <unit id="vProject.pericopes">
@@ -3052,7 +3052,7 @@
       <unit id="vProject.projectName">
          <segment>
             <source>Project Name</source>
-            <target/>
+            <target>திட்டப்பணி பெயர்</target>
          </segment>
       </unit>
       <unit id="vProject.renderCustomize">

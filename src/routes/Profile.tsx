@@ -65,6 +65,12 @@ import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
+import ar from '../assets/ar.json';
+import es from '../assets/es.json';
+import ha from '../assets/ha.json';
+import id from '../assets/id.json';
+import ru from '../assets/ru.json';
+import sw from '../assets/sw.json';
 import pt from '../assets/pt.json';
 import ta from '../assets/ta.json';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
@@ -88,7 +94,7 @@ interface ILdml {
     };
   };
 }
-const ldml: ILdml = { en, fr, pt, ta };
+const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

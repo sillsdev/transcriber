@@ -10,7 +10,7 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>TranscriberAdmin-ta.xlf</String>
+                                    <String>TranscriberAdmin-sw.xlf</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -40,7 +40,97 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
+                                    <String>TranscriberAdmin-ru.xlf</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>TranscriberAdmin-pt</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
                                     <String>TranscriberAdmin-pt.xlf</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>TranscriberAdmin-pt</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>TranscriberAdmin-id.xlf</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>TranscriberAdmin-pt</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>TranscriberAdmin-ha.xlf</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>TranscriberAdmin-pt</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>TranscriberAdmin-es.xlf</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>TranscriberAdmin-pt</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>TranscriberAdmin-ar.xlf</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>TranscriberAdmin-pt</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>TranscriberAdmin-ta.xlf</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1670,12 +1760,17 @@
         <file name="MakeStrings-12.xsl"/>
         <file name="ToModel.xsl"/>
         <file name="ToReducer.xsl"/>
+        <file name="TranscriberAdmin-ar.xlf"/>
         <file name="TranscriberAdmin-en-1.2-old.xliff"/>
         <file name="TranscriberAdmin-en-1.2.xliff"/>
         <file name="TranscriberAdmin-en.xlf"/>
+        <file name="TranscriberAdmin-es.xlf"/>
         <file name="TranscriberAdmin-fr-old.xlf"/>
         <file name="TranscriberAdmin-fr.xlf"/>
+        <file name="TranscriberAdmin-ha.xlf"/>
+        <file name="TranscriberAdmin-id.xlf"/>
         <file name="TranscriberAdmin-pt.xlf"/>
+        <file name="TranscriberAdmin-ru.xlf"/>
         <file name="TranscriberAdmin-ta.xlf"/>
     </projectTree>
 </project>

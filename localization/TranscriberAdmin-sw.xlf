@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="pt" version="1.0">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="en" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.accessFirst">
          <segment>
@@ -28,7 +28,7 @@
       <unit id="activityState.done">
          <segment>
             <source>Done</source>
-            <target>Concluido</target>
+            <target/>
          </segment>
       </unit>
       <unit id="activityState.incomplete">
@@ -58,25 +58,25 @@
       <unit id="activityState.review">
          <segment>
             <source>Review</source>
-            <target>Revisar</target>
+            <target>Hakiki</target>
          </segment>
       </unit>
       <unit id="activityState.reviewing">
          <segment>
             <source>Reviewing</source>
-            <target>Revisando</target>
+            <target/>
          </segment>
       </unit>
       <unit id="activityState.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>Andika</target>
          </segment>
       </unit>
       <unit id="activityState.transcribed">
          <segment>
             <source>Transcribed</source>
-            <target>Transcrito</target>
+            <target>Imeandikwa</target>
          </segment>
       </unit>
       <unit id="activityState.transcribeReady">
@@ -88,31 +88,31 @@
       <unit id="activityState.transcribing">
          <segment>
             <source>Transcribing</source>
-            <target>Transcrevendo</target>
+            <target/>
          </segment>
       </unit>
       <unit id="alert.areYouSure">
          <segment>
             <source>Are you sure?</source>
-            <target>Você tem certeza?</target>
+            <target/>
          </segment>
       </unit>
       <unit id="alert.confirmation">
          <segment>
             <source>Confirmation</source>
-            <target>Confirmação</target>
+            <target/>
          </segment>
       </unit>
       <unit id="alert.no">
          <segment>
             <source>No</source>
-            <target>Não</target>
+            <target/>
          </segment>
       </unit>
       <unit id="alert.yes">
          <segment>
             <source>Yes</source>
-            <target>Sim</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.assignSec">
@@ -124,49 +124,49 @@
       <unit id="assignmentTable.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="assignmentTable.filter">
          <segment>
             <source>Filter</source>
-            <target>Filtrar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.passages">
          <segment>
             <source>Passages</source>
-            <target>Passagens</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.removeSec">
          <segment>
             <source>Remove Assignment</source>
-            <target>Remover Atribuição</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.role">
          <segment>
             <source>Role</source>
-            <target>Função</target>
+            <target>Kazi</target>
          </segment>
       </unit>
       <unit id="assignmentTable.sectionstate">
          <segment>
             <source>State</source>
-            <target>Estado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.selectRowsToAssign">
          <segment>
             <source>Please select row(s) to assign.</source>
-            <target>Por favor, selecione linha(s) para atribuir.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.selectRowsToRemove">
          <segment>
             <source>Please select row(s) to remove assignment.</source>
-            <target>Por favor, selecione linha(s) para remover atribuição.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignmentTable.showHideFilter">
@@ -178,19 +178,19 @@
       <unit id="assignmentTable.title">
          <segment>
             <source>Assignments</source>
-            <target>Atribuições</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignSection.close">
          <segment>
             <source>Close</source>
-            <target>Fechar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="assignSection.role">
          <segment>
             <source>Role</source>
-            <target>Função</target>
+            <target>Kazi</target>
          </segment>
       </unit>
       <unit id="assignSection.title">
@@ -202,13 +202,13 @@
       <unit id="assignSection.users">
          <segment>
             <source>Members</source>
-            <target>Membros</target>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.add">
          <segment>
             <source>Add</source>
-            <target>Adicionar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.addTeam">
@@ -220,7 +220,7 @@
       <unit id="cards.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.connectParatext">
@@ -232,7 +232,7 @@
       <unit id="cards.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="cards.deleteTeam">
@@ -298,7 +298,7 @@
       <unit id="cards.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="cards.sectionStatus">
@@ -310,7 +310,7 @@
       <unit id="cards.settings">
          <segment>
             <source>Settings</source>
-            <target>Configurações</target>
+            <target/>
          </segment>
       </unit>
       <unit id="cards.sync">
@@ -340,25 +340,31 @@
       <unit id="control.other">
          <segment>
             <source>General Transcription</source>
-            <target>Transcrição Geral</target>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="control.scripture">
+         <segment>
+            <source>Scripture Transcription</source>
+            <target/>
          </segment>
       </unit>
       <unit id="deleteExpansion.advanced">
          <segment>
             <source>Advanced</source>
-            <target>Avançado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="deleteExpansion.dangerZone">
          <segment>
             <source>Danger Zone</source>
-            <target>Zona de Perigo</target>
+            <target/>
          </segment>
       </unit>
       <unit id="deleteExpansion.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="electronImport.allDataOverwritten">
@@ -460,19 +466,19 @@
       <unit id="groupSettings.add">
          <segment>
             <source>Ok</source>
-            <target>Ok</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.addGroupMember">
          <segment>
             <source>Choose {0}</source>
-            <target>Escolher {0}</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.addMemberInstruction">
          <segment>
             <source>Choose a person who will act as a {0} for projects in this group.</source>
-            <target>Escolher uma pessoa que atuará como {0} para projetos neste grupo.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.allReviewersCanTranscribe">
@@ -490,13 +496,13 @@
       <unit id="groupSettings.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="groupSettings.editors">
@@ -508,19 +514,19 @@
       <unit id="groupSettings.editorsDetail">
          <segment>
             <source>(Review + Transcribe)</source>
-            <target>(Revisar + Transcrever)</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.loadingTable">
          <segment>
             <source>Loading data</source>
-            <target>Carregando dados</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.name">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>Jina</target>
          </segment>
       </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
@@ -532,73 +538,73 @@
       <unit id="groupSettings.noDeleteInfo">
          <segment>
             <source>This role is included in a higher role and cannot be deleted.</source>
-            <target>Esta função está incluída numa função superior e não pode ser excluída.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.owners">
          <segment>
             <source>Owners</source>
-            <target>Proprietários</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.ownersDetail">
          <segment>
             <source>(Manage + Review + Transcribe)</source>
-            <target>(Gerenciar + Revisar + Transcrever)</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.projectPlans">
          <segment>
             <source>Project Plans</source>
-            <target>Planos do Projeto</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="groupSettings.transcribers">
          <segment>
             <source>Transcribers</source>
-            <target>Transcritores</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupSettings.transcribersDetail">
          <segment>
             <source>(Transcribe)</source>
-            <target>(Transcrever)</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupTabs.groups">
          <segment>
             <source>Groups</source>
-            <target>Grupos</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupTabs.invitations">
          <segment>
             <source>Invitations</source>
-            <target>Convites</target>
+            <target/>
          </segment>
       </unit>
       <unit id="groupTabs.roles">
          <segment>
             <source>Roles</source>
-            <target>Privilégios</target>
+            <target>Wajibu</target>
          </segment>
       </unit>
       <unit id="groupTabs.users">
          <segment>
             <source>Members</source>
-            <target>Membros</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.close">
          <segment>
             <source>Close</source>
-            <target>Fechar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.continue">
@@ -622,13 +628,13 @@
       <unit id="import.family">
          <segment>
             <source>Family Name</source>
-            <target>Nome de Família</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.filter">
          <segment>
             <source>Filter</source>
-            <target>Filtrar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.fontsize">
@@ -640,7 +646,7 @@
       <unit id="import.given">
          <segment>
             <source>Given Name</source>
-            <target>Nome Próprio</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.import">
@@ -688,7 +694,7 @@
       <unit id="import.locale">
          <segment>
             <source>Preferred Language</source>
-            <target>Idioma Preferido</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.noFile">
@@ -712,25 +718,25 @@
       <unit id="import.other">
          <segment>
             <source>Other</source>
-            <target>Outro</target>
+            <target>Ingine</target>
          </segment>
       </unit>
       <unit id="import.passage">
          <segment>
             <source>Passage</source>
-            <target>Passagem</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.phone">
          <segment>
             <source>Phone</source>
-            <target>Telefone</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.plan">
          <segment>
             <source>Project</source>
-            <target>Projetos</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -742,19 +748,19 @@
       <unit id="import.state">
          <segment>
             <source>State</source>
-            <target>Estado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.timezone">
          <segment>
             <source>Time zone</source>
-            <target>Fuso horário</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.transcription">
          <segment>
             <source>Transcription</source>
-            <target>Transcrição</target>
+            <target/>
          </segment>
       </unit>
       <unit id="import.unassigned">
@@ -766,13 +772,13 @@
       <unit id="import.username">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>Jina</target>
          </segment>
       </unit>
       <unit id="integration.allCriteria">
          <segment>
             <source>You must satisfy all criteria to sync.</source>
-            <target>Você deve satisfazer todos os critérios para sincronizar.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.bookNotFound">
@@ -796,19 +802,19 @@
       <unit id="integration.countError">
          <segment>
             <source>Count query error: </source>
-            <target>Erro de consulta de contagem: </target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.countPending">
          <segment>
             <source>Querying count...</source>
-            <target>Consultando contagem...</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.countReady">
          <segment>
             <source>Passages ready to sync: </source>
-            <target>Passagens prontas para sincronizar: </target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.emptyBook">
@@ -832,7 +838,7 @@
       <unit id="integration.invalidParatextLogin">
          <segment>
             <source>You must login with a valid paratext login to sync projects.</source>
-            <target>Você deve fazer login com um login válido do Paratext para sincronizar projetos.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.invalidReference">
@@ -844,7 +850,7 @@
       <unit id="integration.no">
          <segment>
             <source>No</source>
-            <target>Não</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.noProject">
@@ -856,25 +862,25 @@
       <unit id="integration.offline">
          <segment>
             <source>Offline</source>
-            <target>Offline</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.onestory">
          <segment>
             <source>One Story</source>
-            <target>Uma História</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.paratext">
          <segment>
             <source>Paratext</source>
-            <target>Paratext</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.paratextAssociation">
          <segment>
             <source>Paratext association</source>
-            <target>Associação do Paratext</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.paratextLocal">
@@ -886,19 +892,19 @@
       <unit id="integration.projectError">
          <segment>
             <source>Project Query error:</source>
-            <target>Erro na Consulta do Projeto:</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.projectsPending">
          <segment>
             <source>Querying projects...</source>
-            <target>Consultando projetos...</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.questionAccount">
          <segment>
             <source>Do you have a Paratext Account?</source>
-            <target>Você tem uma conta do Paratext?</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.questionInstalled">
@@ -910,13 +916,13 @@
       <unit id="integration.questionOnline">
          <segment>
             <source>Are you connected to the Internet?</source>
-            <target>Você está conectado à Internet?</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.questionPermission">
          <segment>
             <source>Do you have permission to edit the Paratext project text?</source>
-            <target>Você tem permissão para editar o texto do projeto do Paratext?</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.questionProject">
@@ -928,19 +934,19 @@
       <unit id="integration.removeProject">
          <segment>
             <source>Remove Project Association</source>
-            <target>Remover Associação de Projeto</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.render">
          <segment>
             <source>Render</source>
-            <target>Renderizador</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.selectProject">
          <segment>
             <source>Select Paratext Project</source>
-            <target>Selecione Projeto do Paratext</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.showHideFilter">
@@ -952,85 +958,85 @@
       <unit id="integration.sync">
          <segment>
             <source>Sync</source>
-            <target>Sincronizar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.syncComplete">
          <segment>
             <source>Sync Complete!</source>
-            <target>Sincronização Concluída!</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.syncError">
          <segment>
             <source>Sync error:</source>
-            <target>Erro de sincronização:</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.syncPending">
          <segment>
             <source>Syncing...</source>
-            <target>Sincronizando...</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.usernameError">
          <segment>
             <source>Username error:</source>
-            <target>Erro de nome de usuário:</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.usernamePending">
          <segment>
             <source>Querying username...</source>
-            <target>Consultando nome de usuário...</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.yes">
          <segment>
             <source>Yes</source>
-            <target>Sim</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.accepted">
          <segment>
             <source>Accepted</source>
-            <target>Aceito</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="invitationTable.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.filter">
          <segment>
             <source>Filter</source>
-            <target>Filtrar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.invite">
          <segment>
             <source>Invite</source>
-            <target>Convidar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.noData">
          <segment>
             <source>No invitations</source>
-            <target>Nenhum convite</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.role">
@@ -1042,7 +1048,7 @@
       <unit id="invitationTable.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
-            <target>Por favor, selecione linha(s) para {0}.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invitationTable.showHideFilter">
@@ -1060,37 +1066,37 @@
       <unit id="invite.allUsersProjects">
          <segment>
             <source>Projects</source>
-            <target>Projetos</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.alreadyInvited">
          <segment>
             <source>Already invited!</source>
-            <target>Já convidado!</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.editInvite">
          <segment>
             <source>Edit Invite</source>
-            <target>Editar Convite</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.emailsubject">
          <segment>
             <source>{0} Invitation</source>
-            <target>Convite do {0}</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.groupRole">
@@ -1102,31 +1108,31 @@
       <unit id="invite.groups">
          <segment>
             <source>Project</source>
-            <target>Projetos</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.instructions">
          <segment>
             <source>Please click the following link to accept the invitation:</source>
-            <target>Por favor, clique no seguinte link para aceitar o convite:</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.invalidEmail">
          <segment>
             <source>Invalid email address</source>
-            <target>E-mail inválido</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.invitation">
          <segment>
             <source>has invited you to join</source>
-            <target>convidou você para se juntar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.join">
          <segment>
             <source>Join</source>
-            <target>Juntar-se</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.newInviteTask">
@@ -1144,19 +1150,19 @@
       <unit id="invite.organization">
          <segment>
             <source>Team</source>
-            <target>Equipe</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.questions">
          <segment>
             <source>Questions? Contact</source>
-            <target>Dúvidas? Entre em contato</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.resend">
          <segment>
             <source>Resend</source>
-            <target>Reenviar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.role">
@@ -1168,7 +1174,7 @@
       <unit id="invite.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="invite.selectProjectRole">
@@ -1186,109 +1192,109 @@
       <unit id="invite.send">
          <segment>
             <source>Send</source>
-            <target>Enviar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="invite.sil">
          <segment>
             <source>SIL International</source>
-            <target>SIL Internacional</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.font">
          <segment>
             <source>Font</source>
-            <target>Fonte</target>
+            <target>Aina ya Mwandiko</target>
          </segment>
       </unit>
       <unit id="languagePicker.script">
          <segment>
             <source>Script</source>
-            <target>Script</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.language">
          <segment>
             <source>Language</source>
-            <target>Idioma</target>
+            <target>Lugha</target>
          </segment>
       </unit>
       <unit id="languagePicker.selectLanguage">
          <segment>
             <source>Choose Language Details</source>
-            <target>Escolher Detalhes do Idioma</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.findALanguage">
          <segment>
             <source>Find a language by name, code, or country</source>
-            <target>Encontrar um idioma por nome, código ou país</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.codeExplained">
          <segment>
             <source>Code Explained</source>
-            <target>Código Explicado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.subtags">
          <segment>
             <source>Subtags</source>
-            <target>Subtags</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.details">
          <segment>
             <source>Details</source>
-            <target>Detalhes</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.languageOf">
          <segment>
             <source>A Language of $1$2.</source>
-            <target>Um idioma de $1$2.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.inScript">
          <segment>
             <source> in the $1 script</source>
-            <target> no script $1</target>
+            <target/>
          </segment>
       </unit>
       <unit id="languagePicker.select">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="languagePicker.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.admin">
          <segment>
             <source>Admin</source>
-            <target>Administrador</target>
+            <target>Mwelekezi</target>
          </segment>
       </unit>
       <unit id="main.apiError">
          <segment>
             <source>API Error:</source>
-            <target>Erro de API:</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.clearCache">
          <segment>
             <source>Clear cache</source>
-            <target>Limpar cache</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.clearLogout">
@@ -1300,13 +1306,13 @@
       <unit id="main.continue">
          <segment>
             <source>Continue</source>
-            <target>Continuar</target>
+            <target>Endelea</target>
          </segment>
       </unit>
       <unit id="main.crashMessage">
          <segment>
             <source>Something went wrong. The developers need to address this issue.</source>
-            <target>Algo deu errado. Os desenvolvedores precisam resolver este problema.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.deletedInvitation">
@@ -1318,25 +1324,25 @@
       <unit id="main.developer">
          <segment>
             <source>Developer mode</source>
-            <target>Modo de desenvolvedor</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.exit">
          <segment>
             <source>Exit</source>
-            <target>Sair</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.export">
          <segment>
             <source>Export</source>
-            <target>Exportar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.helpCenter">
          <segment>
             <source>Help Center</source>
-            <target>Central de Ajuda</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.import">
@@ -1348,7 +1354,7 @@
       <unit id="main.integrations">
          <segment>
             <source>Integrations</source>
-            <target>Integrações</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.inviteError">
@@ -1366,13 +1372,13 @@
       <unit id="main.loadingTranscriber">
          <segment>
             <source>Loading {0}</source>
-            <target>Carregando {0}</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.logout">
          <segment>
             <source>Log Out</source>
-            <target>Sair</target>
+            <target>Ingia nje</target>
          </segment>
       </unit>
       <unit id="main.logoutRequired">
@@ -1384,13 +1390,13 @@
       <unit id="main.media">
          <segment>
             <source>Media</source>
-            <target>Mídia</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.myAccount">
          <segment>
             <source>My Account</source>
-            <target>Minha Conta</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.NoLoadOffline">
@@ -1402,37 +1408,37 @@
       <unit id="main.owner">
          <segment>
             <source>Owner</source>
-            <target>Proprietário</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.passages">
          <segment>
             <source>Passages</source>
-            <target>Passagens</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.project">
          <segment>
             <source>Project</source>
-            <target>Projetos</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.projRole">
          <segment>
             <source>Role in Project:</source>
-            <target>Função no Projeto:</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.reportIssue">
          <segment>
             <source>Report an Issue</source>
-            <target>Relatar um Problema</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.reports">
          <segment>
             <source>Reports</source>
-            <target>Relatórios</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.saveFirst">
@@ -1450,19 +1456,19 @@
       <unit id="main.sessionExpireTask">
          <segment>
             <source>Your session will expire in {0} seconds. Would you like to continue?</source>
-            <target>Sua sessão vai expirar em {0} segundos. Deseja continuar?</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.sessionExpiring">
          <segment>
             <source>Session Expiring</source>
-            <target>Sessão Expirando</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.settings">
          <segment>
             <source>Settings</source>
-            <target>Configurações</target>
+            <target/>
          </segment>
       </unit>
       <unit id="main.switchTo">
@@ -1474,13 +1480,13 @@
       <unit id="main.tasks">
          <segment>
             <source>Tasks</source>
-            <target>Tarefas</target>
+            <target>Kazi</target>
          </segment>
       </unit>
       <unit id="main.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>Andika</target>
          </segment>
       </unit>
       <unit id="main.UnsavedData">
@@ -1492,13 +1498,13 @@
       <unit id="main.version">
          <segment>
             <source>Version: </source>
-            <target>Versão: </target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.all">
@@ -1522,19 +1528,19 @@
       <unit id="mediaTab.book">
          <segment>
             <source>Book</source>
-            <target>Livro</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.date">
          <segment>
             <source>Date</source>
-            <target>Data</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="mediaTab.detach">
@@ -1546,7 +1552,7 @@
       <unit id="mediaTab.duration">
          <segment>
             <source>Length (s)</source>
-            <target>Comprimento (s)</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.fileAttached">
@@ -1558,19 +1564,19 @@
       <unit id="mediaTab.fileName">
          <segment>
             <source>File Name</source>
-            <target>Nome do Arquivo</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.filter">
          <segment>
             <source>Filter</source>
-            <target>Filtrar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.loadingTable">
          <segment>
             <source>Loading data</source>
-            <target>Carregando dados</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.matchAdded">
@@ -1594,7 +1600,7 @@
       <unit id="mediaTab.none">
          <segment>
             <source>None</source>
-            <target>Nenhum</target>
+            <target>Hakuna</target>
          </segment>
       </unit>
       <unit id="mediaTab.noPassageAttached">
@@ -1612,7 +1618,7 @@
       <unit id="mediaTab.planName">
          <segment>
             <source>Plan</source>
-            <target>Plano</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.proposed">
@@ -1624,13 +1630,13 @@
       <unit id="mediaTab.reference">
          <segment>
             <source>Reference</source>
-            <target>Referência</target>
+            <target>Marejeo</target>
          </segment>
       </unit>
       <unit id="mediaTab.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="mediaTab.saving">
@@ -1648,13 +1654,13 @@
       <unit id="mediaTab.selectFiles">
          <segment>
             <source>Please select files to be uploaded.</source>
-            <target>Por favor, selecione os arquivos a serem carregados.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
-            <target>Por favor, selecione linha(s) para {0}.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.showHideFilter">
@@ -1666,13 +1672,13 @@
       <unit id="mediaTab.size">
          <segment>
             <source>Size (KB)</source>
-            <target>Tamanho (KB)</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.unsupported">
          <segment>
             <source>File {0} is an unsupported file type.</source>
-            <target>Arquivo {0} é um tipo de arquivo sem suporte.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.uploadComplete">
@@ -1684,7 +1690,7 @@
       <unit id="mediaTab.version">
          <segment>
             <source>Version</source>
-            <target>Versão</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaTab.viewAssociations">
@@ -1696,13 +1702,13 @@
       <unit id="mediaUpload.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDropMultiple">
          <segment>
             <source>Drag and drop files here, or click here to browse for the files.</source>
-            <target>Arraste e solte arquivos aqui ou clique aqui para procurar pelos arquivos.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.dragDropSingle">
@@ -1744,19 +1750,19 @@
       <unit id="mediaUpload.title">
          <segment>
             <source>Upload Media</source>
-            <target>Carregar Mídia</target>
+            <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.upload">
          <segment>
             <source>Upload</source>
-            <target>Carregar</target>
+            <target>Weka kwa mtandao</target>
          </segment>
       </unit>
       <unit id="passageMedia.close">
          <segment>
             <source>Close</source>
-            <target>Fechar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="planActions.assign">
@@ -1768,31 +1774,31 @@
       <unit id="planActions.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="planActions.playpause">
          <segment>
             <source>Play / Pause</source>
-            <target>Tocar / Pausar gravação</target>
+            <target>Cheza / Zima</target>
          </segment>
       </unit>
       <unit id="planActions.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>Andika</target>
          </segment>
       </unit>
       <unit id="planSheet.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
-            <target>Adicionar Passagem</target>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.addSection">
@@ -1810,7 +1816,7 @@
       <unit id="planSheet.confirm">
          <segment>
             <source>{0} {1} Item(s). Are you sure?</source>
-            <target>{0} {1} item(ns). Tem certeza?</target>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.nonNumber">
@@ -1846,7 +1852,7 @@
       <unit id="planSheet.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="planSheet.saving">
@@ -1864,7 +1870,7 @@
       <unit id="planSheet.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
-            <target>Por favor, selecione linha(s) para {0}.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="planSheet.tablePaste">
@@ -1882,7 +1888,7 @@
       <unit id="planTabs.assignments">
          <segment>
             <source>Assignments</source>
-            <target>Atribuições</target>
+            <target/>
          </segment>
       </unit>
       <unit id="planTabs.associations">
@@ -1894,7 +1900,7 @@
       <unit id="planTabs.media">
          <segment>
             <source>Media</source>
-            <target>Mídia</target>
+            <target/>
          </segment>
       </unit>
       <unit id="planTabs.mediaStatus">
@@ -1924,13 +1930,13 @@
       <unit id="planTabs.transcriptions">
          <segment>
             <source>Transcriptions</source>
-            <target>Transcrições</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.add">
          <segment>
             <source>Add</source>
-            <target>Adicionar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.addOfflineUser">
@@ -1942,7 +1948,7 @@
       <unit id="profile.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.checkingParatext">
@@ -1954,7 +1960,7 @@
       <unit id="profile.close">
          <segment>
             <source>Close</source>
-            <target>Fechar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.completeProfile">
@@ -1978,19 +1984,19 @@
       <unit id="profile.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.family">
          <segment>
             <source>Family Name</source>
-            <target>Nome de Família</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.given">
          <segment>
             <source>Given Name</source>
-            <target>Nome Próprio</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.installParatext">
@@ -2008,13 +2014,13 @@
       <unit id="profile.locale">
          <segment>
             <source>Preferred Language</source>
-            <target>Idioma Preferido</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.locked">
          <segment>
             <source>Locked</source>
-            <target>Bloqueado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.logout">
@@ -2026,13 +2032,13 @@
       <unit id="profile.name">
          <segment>
             <source>Full Name</source>
-            <target>Nome Completo</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.next">
          <segment>
             <source>Next</source>
-            <target>Próximo</target>
+            <target>Inayofuata</target>
          </segment>
       </unit>
       <unit id="profile.paratextLinked">
@@ -2056,7 +2062,7 @@
       <unit id="profile.phone">
          <segment>
             <source>Phone</source>
-            <target>Telefone</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.role">
@@ -2068,7 +2074,7 @@
       <unit id="profile.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="profile.sendDigest">
@@ -2086,7 +2092,7 @@
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
-            <target>Fuso horário</target>
+            <target/>
          </segment>
       </unit>
       <unit id="profile.userExists">
@@ -2104,7 +2110,7 @@
       <unit id="projButtons.export">
          <segment>
             <source>Export</source>
-            <target>Exportar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="projButtons.exportTitle">
@@ -2140,7 +2146,7 @@
       <unit id="projButtons.reports">
          <segment>
             <source>Reports</source>
-            <target>Relatórios</target>
+            <target/>
          </segment>
       </unit>
       <unit id="projButtons.reportsTitle">
@@ -2152,31 +2158,31 @@
       <unit id="scriptureTable.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.book">
          <segment>
             <source>Book</source>
-            <target>Livro</target>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.description">
          <segment>
             <source>Description</source>
-            <target>Descrição</target>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.loadingTable">
          <segment>
             <source>Loading data</source>
-            <target>Carregando dados</target>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.passage">
          <segment>
             <source>Passage</source>
-            <target>Passagem</target>
+            <target/>
          </segment>
       </unit>
       <unit id="scriptureTable.pasteInvalidColumnsGeneral">
@@ -2206,7 +2212,7 @@
       <unit id="scriptureTable.reference">
          <segment>
             <source>Reference</source>
-            <target>Referência</target>
+            <target>Marejeo</target>
          </segment>
       </unit>
       <unit id="scriptureTable.saveFirst">
@@ -2224,19 +2230,19 @@
       <unit id="scriptureTable.title">
          <segment>
             <source>Title</source>
-            <target>Título</target>
+            <target/>
          </segment>
       </unit>
       <unit id="shapingTable.NoColumns">
          <segment>
             <source>No columns visible</source>
-            <target>Nenhuma coluna visível</target>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.admin">
          <segment>
             <source>Owner</source>
-            <target>Proprietário</target>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.editor">
@@ -2260,19 +2266,19 @@
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
-            <target>Transcritor</target>
+            <target>Mwandishi</target>
          </segment>
       </unit>
       <unit id="shared.uploadMediaPlural">
          <segment>
             <source>Upload Media</source>
-            <target>Carregar Mídia</target>
+            <target/>
          </segment>
       </unit>
       <unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Media</source>
-            <target>Carregar Mídia</target>
+            <target/>
          </segment>
       </unit>
       <unit id="taskItem.assign">
@@ -2350,115 +2356,115 @@
       <unit id="toDoTable.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.assigned">
          <segment>
             <source>Assigned</source>
-            <target>Atribuído</target>
+            <target>Imepeanwa</target>
          </segment>
       </unit>
       <unit id="toDoTable.description">
          <segment>
             <source>Description</source>
-            <target>Descrição</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.editor">
          <segment>
             <source>Review</source>
-            <target>Revisar</target>
+            <target>Hakiki</target>
          </segment>
       </unit>
       <unit id="toDoTable.filter">
          <segment>
             <source>Filter</source>
-            <target>Filtrar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.length">
          <segment>
             <source>Duration</source>
-            <target>Duração</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.loadingTable">
          <segment>
             <source>Loading data</source>
-            <target>Carregando dados</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.no">
          <segment>
             <source>No</source>
-            <target>Não</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.passage">
          <segment>
             <source>Passage</source>
-            <target>Passagem</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.plan">
          <segment>
             <source>Plan</source>
-            <target>Plano</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.project">
          <segment>
             <source>Project</source>
-            <target>Projetos</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.state">
          <segment>
             <source>State</source>
-            <target>Estado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.tasks">
          <segment>
             <source>Tasks</source>
-            <target>Tarefas</target>
+            <target>Kazi</target>
          </segment>
       </unit>
       <unit id="toDoTable.title">
          <segment>
             <source>Title</source>
-            <target>Título</target>
+            <target/>
          </segment>
       </unit>
       <unit id="toDoTable.transcriber">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>Andika</target>
          </segment>
       </unit>
       <unit id="toDoTable.yes">
          <segment>
             <source>Yes</source>
-            <target>Sim</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.aheadTip">
          <segment>
             <source>Skip ahead ({0})</source>
-            <target>Avançar ({0})</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.backTip">
          <segment>
             <source>Skip back ({0})</source>
-            <target>Voltar ({0})</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
-            <target>Comentário</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.done">
@@ -2470,13 +2476,13 @@
       <unit id="transcriber.fasterTip">
          <segment>
             <source>Faster ({0})</source>
-            <target>Mais rápido ({0})</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.historyTip">
          <segment>
             <source>History ({0})</source>
-            <target>Histórico ({0})</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.incomplete">
@@ -2488,7 +2494,7 @@
       <unit id="transcriber.makeComment">
          <segment>
             <source>Make Comment</source>
-            <target>Fazer Comentário</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.needsNewRecording">
@@ -2512,25 +2518,25 @@
       <unit id="transcriber.pauseTip">
          <segment>
             <source>Play ({0})</source>
-            <target>Executar ({0})</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.playTip">
          <segment>
             <source>Pause ({0})</source>
-            <target>Pausar ({0})</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.reject">
          <segment>
             <source>Reject</source>
-            <target>Rejeitar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.reopen">
          <segment>
             <source>Reopen</source>
-            <target>Reabrir</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.reviewing">
@@ -2542,7 +2548,7 @@
       <unit id="transcriber.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="transcriber.saveReviewTip">
@@ -2566,13 +2572,13 @@
       <unit id="transcriber.slowerTip">
          <segment>
             <source>Slower ({0})</source>
-            <target>Mais lento ({0})</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriber.submit">
          <segment>
             <source>Submit</source>
-            <target>Enviar</target>
+            <target>Wasilisha</target>
          </segment>
       </unit>
       <unit id="transcriber.submitReviewTip">
@@ -2608,7 +2614,7 @@
       <unit id="transcribeReject.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcribeReject.comment">
@@ -2638,7 +2644,7 @@
       <unit id="transcribeReject.next">
          <segment>
             <source>Next</source>
-            <target>Próximo</target>
+            <target>Inayofuata</target>
          </segment>
       </unit>
       <unit id="transcribeReject.rejectReason">
@@ -2662,25 +2668,25 @@
       <unit id="transcriptionShow.close">
          <segment>
             <source>Close</source>
-            <target>Fechar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionShow.transcription">
          <segment>
             <source>Transcription</source>
-            <target>Transcrição</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionShow.transcriptionDisplay">
          <segment>
             <source>This display allows you to review the transcription that is stored.</source>
-            <target>Esta tela permite que você revise a transcrição que foi armazenada.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.cantCopy">
@@ -2710,7 +2716,7 @@
       <unit id="transcriptionTab.elan">
          <segment>
             <source>Elan</source>
-            <target>Elan</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.electronBackup">
@@ -2722,7 +2728,7 @@
       <unit id="transcriptionTab.error">
          <segment>
             <source>Export Error</source>
-            <target>Erro ao Exportar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.expiredToken">
@@ -2734,7 +2740,7 @@
       <unit id="transcriptionTab.export">
          <segment>
             <source>Export</source>
-            <target>Exportar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportExplanation">
@@ -2758,7 +2764,7 @@
       <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
-            <target>Exportar Projeto</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.exportPTFtype">
@@ -2782,25 +2788,25 @@
       <unit id="transcriptionTab.filter">
          <segment>
             <source>Filter</source>
-            <target>Filtrar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.passages">
          <segment>
             <source>Passages</source>
-            <target>Passagens</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.plan">
          <segment>
             <source>Plan</source>
-            <target>Plano</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.sectionstate">
          <segment>
             <source>State</source>
-            <target>Estado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.showHideFilter">
@@ -2818,13 +2824,13 @@
       <unit id="treeChart.noData">
          <segment>
             <source>No Transcription Data Yet</source>
-            <target>Nenhum Dado de Transcrição Ainda</target>
+            <target/>
          </segment>
       </unit>
       <unit id="uploadProgress.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="uploadProgress.canceling">
@@ -2842,55 +2848,55 @@
       <unit id="usertable.action">
          <segment>
             <source>Action</source>
-            <target>Ação</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.continue">
          <segment>
             <source>Continue</source>
-            <target>Continuar</target>
+            <target>Endelea</target>
          </segment>
       </unit>
       <unit id="usertable.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>Futa</target>
          </segment>
       </unit>
       <unit id="usertable.email">
          <segment>
             <source>Email</source>
-            <target>E-mail</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.filter">
          <segment>
             <source>Filter</source>
-            <target>Filtrar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.invite">
          <segment>
             <source>Invite</source>
-            <target>Convidar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.locale">
          <segment>
             <source>Locale</source>
-            <target>Localidade</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.name">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>Jina</target>
          </segment>
       </unit>
       <unit id="usertable.offline">
@@ -2902,7 +2908,7 @@
       <unit id="usertable.phone">
          <segment>
             <source>Phone</source>
-            <target>Telefone</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.role">
@@ -2914,7 +2920,7 @@
       <unit id="usertable.selectRows">
          <segment>
             <source>Please select row(s) to {0}.</source>
-            <target>Por favor, selecione linha(s) para {0}.</target>
+            <target/>
          </segment>
       </unit>
       <unit id="usertable.showHideFilter">
@@ -2926,19 +2932,19 @@
       <unit id="usertable.timezone">
          <segment>
             <source>Timezone</source>
-            <target>Fuso horário</target>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.add">
          <segment>
             <source>Add</source>
-            <target>Adicionar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.advanced">
          <segment>
             <source>Advanced</source>
-            <target>Avançado</target>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.backtranslation">
@@ -2950,7 +2956,7 @@
       <unit id="vProject.cancel">
          <segment>
             <source>Cancel</source>
-            <target>Cancelar</target>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.correctformat">
@@ -2962,7 +2968,7 @@
       <unit id="vProject.description">
          <segment>
             <source>Description</source>
-            <target>Descrição</target>
+            <target/>
          </segment>
       </unit>
       <unit id="vProject.edit">
@@ -2986,7 +2992,7 @@
       <unit id="vProject.font">
          <segment>
             <source>Font</source>
-            <target>Fonte</target>
+            <target>Aina ya Mwandiko</target>
          </segment>
       </unit>
       <unit id="vProject.fontSize">
@@ -3004,7 +3010,7 @@
       <unit id="vProject.language">
          <segment>
             <source>Language</source>
-            <target>Idioma</target>
+            <target>Lugha</target>
          </segment>
       </unit>
       <unit id="vProject.layout">
@@ -3034,7 +3040,7 @@
       <unit id="vProject.other">
          <segment>
             <source>Other</source>
-            <target>Outro</target>
+            <target>Ingine</target>
          </segment>
       </unit>
       <unit id="vProject.pericopes">
@@ -3046,13 +3052,13 @@
       <unit id="vProject.preview">
          <segment>
             <source>Preview</source>
-            <target>Pré-visualizar</target>
+            <target>Angalia</target>
          </segment>
       </unit>
       <unit id="vProject.projectName">
          <segment>
             <source>Project Name</source>
-            <target>Nome do Projeto</target>
+            <target>Jina la Mradi</target>
          </segment>
       </unit>
       <unit id="vProject.renderCustomize">
@@ -3076,7 +3082,7 @@
       <unit id="vProject.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>Hifadhi</target>
          </segment>
       </unit>
       <unit id="vProject.scenes">
@@ -3124,7 +3130,7 @@
       <unit id="vProject.type">
          <segment>
             <source>Project Type</source>
-            <target>Tipo de Projeto</target>
+            <target/>
          </segment>
       </unit>
    </file>

@@ -58,7 +58,7 @@
       <unit id="activityState.review">
          <segment>
             <source>Review</source>
-            <target>Revisar</target>
+            <target>مراجعة</target>
          </segment>
       </unit>
       <unit id="activityState.reviewing">
@@ -70,13 +70,13 @@
       <unit id="activityState.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>نسخ</target>
          </segment>
       </unit>
       <unit id="activityState.transcribed">
          <segment>
             <source>Transcribed</source>
-            <target>Transcrito</target>
+            <target>نسخت</target>
          </segment>
       </unit>
       <unit id="activityState.transcribeReady">
@@ -124,7 +124,7 @@
       <unit id="assignmentTable.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="assignmentTable.filter">
@@ -148,7 +148,7 @@
       <unit id="assignmentTable.role">
          <segment>
             <source>Role</source>
-            <target>Função</target>
+            <target>دور</target>
          </segment>
       </unit>
       <unit id="assignmentTable.sectionstate">
@@ -190,7 +190,7 @@
       <unit id="assignSection.role">
          <segment>
             <source>Role</source>
-            <target>Função</target>
+            <target>دور</target>
          </segment>
       </unit>
       <unit id="assignSection.title">
@@ -232,7 +232,7 @@
       <unit id="cards.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="cards.deleteTeam">
@@ -298,7 +298,7 @@
       <unit id="cards.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="cards.sectionStatus">
@@ -358,7 +358,7 @@
       <unit id="deleteExpansion.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="electronImport.allDataOverwritten">
@@ -496,7 +496,7 @@
       <unit id="groupSettings.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="groupSettings.editors">
@@ -520,7 +520,7 @@
       <unit id="groupSettings.name">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>اسم</target>
          </segment>
       </unit>
       <unit id="groupSettings.noDeleteAllUsersInfo">
@@ -556,7 +556,7 @@
       <unit id="groupSettings.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="groupSettings.transcribers">
@@ -586,7 +586,7 @@
       <unit id="groupTabs.roles">
          <segment>
             <source>Roles</source>
-            <target>Privilégios</target>
+            <target>امتيازات</target>
          </segment>
       </unit>
       <unit id="groupTabs.users">
@@ -712,7 +712,7 @@
       <unit id="import.other">
          <segment>
             <source>Other</source>
-            <target>Outro</target>
+            <target>الاخري</target>
          </segment>
       </unit>
       <unit id="import.passage">
@@ -766,7 +766,7 @@
       <unit id="import.username">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>اسم</target>
          </segment>
       </unit>
       <unit id="integration.allCriteria">
@@ -1006,7 +1006,7 @@
       <unit id="invitationTable.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="invitationTable.email">
@@ -1168,7 +1168,7 @@
       <unit id="invite.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="invite.selectProjectRole">
@@ -1198,7 +1198,7 @@
       <unit id="languagePicker.font">
          <segment>
             <source>Font</source>
-            <target>Fonte</target>
+            <target>خط</target>
          </segment>
       </unit>
       <unit id="languagePicker.script">
@@ -1210,7 +1210,7 @@
       <unit id="languagePicker.language">
          <segment>
             <source>Language</source>
-            <target>Idioma</target>
+            <target>اللغة</target>
          </segment>
       </unit>
       <unit id="languagePicker.selectLanguage">
@@ -1258,7 +1258,7 @@
       <unit id="languagePicker.select">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="languagePicker.cancel">
@@ -1270,7 +1270,7 @@
       <unit id="main.admin">
          <segment>
             <source>Admin</source>
-            <target>Administrador</target>
+            <target>مشرف</target>
          </segment>
       </unit>
       <unit id="main.apiError">
@@ -1300,7 +1300,7 @@
       <unit id="main.continue">
          <segment>
             <source>Continue</source>
-            <target>Continuar</target>
+            <target>استمر</target>
          </segment>
       </unit>
       <unit id="main.crashMessage">
@@ -1372,7 +1372,7 @@
       <unit id="main.logout">
          <segment>
             <source>Log Out</source>
-            <target>Sair</target>
+            <target>الخروج</target>
          </segment>
       </unit>
       <unit id="main.logoutRequired">
@@ -1474,13 +1474,13 @@
       <unit id="main.tasks">
          <segment>
             <source>Tasks</source>
-            <target>Tarefas</target>
+            <target>مهام</target>
          </segment>
       </unit>
       <unit id="main.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>نسخ</target>
          </segment>
       </unit>
       <unit id="main.UnsavedData">
@@ -1534,7 +1534,7 @@
       <unit id="mediaTab.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="mediaTab.detach">
@@ -1594,7 +1594,7 @@
       <unit id="mediaTab.none">
          <segment>
             <source>None</source>
-            <target>Nenhum</target>
+            <target>لا شيء</target>
          </segment>
       </unit>
       <unit id="mediaTab.noPassageAttached">
@@ -1624,13 +1624,13 @@
       <unit id="mediaTab.reference">
          <segment>
             <source>Reference</source>
-            <target>Referência</target>
+            <target>مرجع</target>
          </segment>
       </unit>
       <unit id="mediaTab.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="mediaTab.saving">
@@ -1750,7 +1750,7 @@
       <unit id="mediaUpload.upload">
          <segment>
             <source>Upload</source>
-            <target>Carregar</target>
+            <target>رفع</target>
          </segment>
       </unit>
       <unit id="passageMedia.close">
@@ -1768,19 +1768,19 @@
       <unit id="planActions.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="planActions.playpause">
          <segment>
             <source>Play / Pause</source>
-            <target>Tocar / Pausar gravação</target>
+            <target>تشغيل / إيقاف مؤقت</target>
          </segment>
       </unit>
       <unit id="planActions.transcribe">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>نسخ</target>
          </segment>
       </unit>
       <unit id="planSheet.action">
@@ -1846,7 +1846,7 @@
       <unit id="planSheet.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="planSheet.saving">
@@ -2032,7 +2032,7 @@
       <unit id="profile.next">
          <segment>
             <source>Next</source>
-            <target>Próximo</target>
+            <target>التالى</target>
          </segment>
       </unit>
       <unit id="profile.paratextLinked">
@@ -2068,7 +2068,7 @@
       <unit id="profile.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="profile.sendDigest">
@@ -2206,7 +2206,7 @@
       <unit id="scriptureTable.reference">
          <segment>
             <source>Reference</source>
-            <target>Referência</target>
+            <target>مرجع</target>
          </segment>
       </unit>
       <unit id="scriptureTable.saveFirst">
@@ -2260,7 +2260,7 @@
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
-            <target>Transcritor</target>
+            <target>الناسخ</target>
          </segment>
       </unit>
       <unit id="shared.uploadMediaPlural">
@@ -2356,7 +2356,7 @@
       <unit id="toDoTable.assigned">
          <segment>
             <source>Assigned</source>
-            <target>Atribuído</target>
+            <target>مُعيَّن</target>
          </segment>
       </unit>
       <unit id="toDoTable.description">
@@ -2368,7 +2368,7 @@
       <unit id="toDoTable.editor">
          <segment>
             <source>Review</source>
-            <target>Revisar</target>
+            <target>مراجعة</target>
          </segment>
       </unit>
       <unit id="toDoTable.filter">
@@ -2422,7 +2422,7 @@
       <unit id="toDoTable.tasks">
          <segment>
             <source>Tasks</source>
-            <target>Tarefas</target>
+            <target>مهام</target>
          </segment>
       </unit>
       <unit id="toDoTable.title">
@@ -2434,7 +2434,7 @@
       <unit id="toDoTable.transcriber">
          <segment>
             <source>Transcribe</source>
-            <target>Transcrever</target>
+            <target>نسخ</target>
          </segment>
       </unit>
       <unit id="toDoTable.yes">
@@ -2542,7 +2542,7 @@
       <unit id="transcriber.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="transcriber.saveReviewTip">
@@ -2572,7 +2572,7 @@
       <unit id="transcriber.submit">
          <segment>
             <source>Submit</source>
-            <target>Enviar</target>
+            <target>إرسال</target>
          </segment>
       </unit>
       <unit id="transcriber.submitReviewTip">
@@ -2638,7 +2638,7 @@
       <unit id="transcribeReject.next">
          <segment>
             <source>Next</source>
-            <target>Próximo</target>
+            <target>التالى</target>
          </segment>
       </unit>
       <unit id="transcribeReject.rejectReason">
@@ -2854,13 +2854,13 @@
       <unit id="usertable.continue">
          <segment>
             <source>Continue</source>
-            <target>Continuar</target>
+            <target>استمر</target>
          </segment>
       </unit>
       <unit id="usertable.delete">
          <segment>
             <source>Delete</source>
-            <target>Excluir</target>
+            <target>حذف</target>
          </segment>
       </unit>
       <unit id="usertable.email">
@@ -2890,7 +2890,7 @@
       <unit id="usertable.name">
          <segment>
             <source>Name</source>
-            <target>Nome</target>
+            <target>اسم</target>
          </segment>
       </unit>
       <unit id="usertable.offline">
@@ -2986,7 +2986,7 @@
       <unit id="vProject.font">
          <segment>
             <source>Font</source>
-            <target>Fonte</target>
+            <target>خط</target>
          </segment>
       </unit>
       <unit id="vProject.fontSize">
@@ -3004,7 +3004,7 @@
       <unit id="vProject.language">
          <segment>
             <source>Language</source>
-            <target>Idioma</target>
+            <target>اللغة</target>
          </segment>
       </unit>
       <unit id="vProject.layout">
@@ -3034,7 +3034,7 @@
       <unit id="vProject.other">
          <segment>
             <source>Other</source>
-            <target>Outro</target>
+            <target>الاخري</target>
          </segment>
       </unit>
       <unit id="vProject.pericopes">
@@ -3046,13 +3046,13 @@
       <unit id="vProject.preview">
          <segment>
             <source>Preview</source>
-            <target>Pré-visualizar</target>
+            <target>معاينة</target>
          </segment>
       </unit>
       <unit id="vProject.projectName">
          <segment>
             <source>Project Name</source>
-            <target>Nome do Projeto</target>
+            <target>اسم المشروع</target>
          </segment>
       </unit>
       <unit id="vProject.renderCustomize">
@@ -3076,7 +3076,7 @@
       <unit id="vProject.save">
          <segment>
             <source>Save</source>
-            <target>Salvar</target>
+            <target>حفظ</target>
          </segment>
       </unit>
       <unit id="vProject.scenes">

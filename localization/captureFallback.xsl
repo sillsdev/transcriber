@@ -5,7 +5,10 @@
 	xmlns:ns20="urn:oasis:names:tc:xliff:document:2.0"
 	version="1.0">
 	
-	<xsl:param name="prev" select="document('file:ta/TranscriberAdmin-en-1.2.xliff')"/>
+	<xsl:param name="lg">ta</xsl:param>
+	<xsl:param name="prev" select="document(concat('file:',$lg,'/TranscriberAdmin-en-1.2.xliff'))"/>
+	<xsl:param name="v1Name" select="concat('file:../../Transcribe/src/portable/ReactUi/data/localization/TranscriberUi-',$lg,'.xlf')"/>
+	<xsl:param name="v1" select="document($v1Name)"/>
 	
 	<xsl:output method="xml" encoding="UTF-8" indent="yes" />
 	
@@ -17,6 +20,11 @@
 				<xsl:when test="$src = $prev//ns12:source">
 					<xsl:element name="target" namespace="urn:oasis:names:tc:xliff:document:2.0">
 						<xsl:value-of select="$prev//*[ns12:source/text() = $src]/ns12:target/text()"/>
+					</xsl:element>
+				</xsl:when>
+				<xsl:when test="$src = $v1//ns20:source">
+					<xsl:element name="target" namespace="urn:oasis:names:tc:xliff:document:2.0">
+						<xsl:value-of select="$v1//*[ns20:source/text() = $src]/ns20:target/text()"/>
 					</xsl:element>
 				</xsl:when>
 				<xsl:otherwise>

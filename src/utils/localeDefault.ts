@@ -1,5 +1,13 @@
 import en from '../assets/en.json';
 import fr from '../assets/fr.json';
+import ar from '../assets/ar.json';
+import es from '../assets/es.json';
+import ha from '../assets/ha.json';
+import id from '../assets/id.json';
+import pt from '../assets/pt.json';
+import ru from '../assets/ru.json';
+import sw from '../assets/sw.json';
+import ta from '../assets/ta.json';
 
 interface ILangDes {
   type: string;
@@ -16,7 +24,7 @@ interface ILdml {
     };
   };
 }
-const ldml: ILdml = { en, fr };
+const ldml: ILdml = { en, fr, ar, es, ha, id, ru, sw, pt, ta };
 
 export const localeDefault = (bcp47?: string) => {
   const code1 = bcp47 && bcp47.split('-')[0];
