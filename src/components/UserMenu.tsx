@@ -18,6 +18,7 @@ import AccountIcon from '@material-ui/icons/AccountCircle';
 import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
+import { useHistory } from 'react-router-dom';
 
 const StyledMenu = withStyles({
   paper: {
@@ -67,7 +68,7 @@ export function UserMenu(props: IProps) {
   const { action, t } = props;
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
-
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
 
@@ -112,13 +113,14 @@ export function UserMenu(props: IProps) {
             />
           </StyledMenuItem>
         )}
-
-        <StyledMenuItem onClick={handleAction('Profile')}>
-          <ListItemIcon>
-            <AccountIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary={t.myAccount} />
-        </StyledMenuItem>
+        {history.location.pathname !== '/profile' && (
+          <StyledMenuItem onClick={handleAction('Profile')}>
+            <ListItemIcon>
+              <AccountIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary={t.myAccount} />
+          </StyledMenuItem>
+        )}
         {shift && !isElectron && (
           <StyledMenuItem onClick={handleAction('Clear')}>
             <ListItemIcon>
