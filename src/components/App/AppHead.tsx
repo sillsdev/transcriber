@@ -59,7 +59,7 @@ export const AppHead = withBucket(
     const { pathname } = useLocation();
     const [isOffline] = useGlobal('offline');
     const [, setProject] = useGlobal('project');
-    const [, setProjRole] = useGlobal('projRole');
+    const [projRole, setProjRole] = useGlobal('projRole');
     const [plan, setPlan] = useGlobal('plan');
     const ctx = React.useContext(UnsavedContext);
     const { checkSavedFn } = ctx.state;
@@ -142,7 +142,7 @@ export const AppHead = withBucket(
       <AppBar position="fixed" className={classes.appBar} color="inherit">
         <>
           <Toolbar>
-            {plan !== '' && (
+            {projRole !== '' && (
               <>
                 <IconButton onClick={() => checkSavedFn(() => handleHome())}>
                   <HomeIcon />
