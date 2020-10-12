@@ -79,7 +79,14 @@
                <context context-type="sourcefile">PassageMedia.tsx</context>
             </context-group>
          </trans-unit>
-          <trans-unit id="activityState.transcribe">
+        <trans-unit id="activityState.synced">
+            <source>Synced</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PassageMedia.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="activityState.transcribe">
             <source>Transcribe</source>
             <target/>
             <context-group>
