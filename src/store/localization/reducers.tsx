@@ -23,6 +23,7 @@ const initialState = {
 			"noMedia": "No Recording",
 			"review": "Review",
 			"reviewing": "Reviewing",
+			"synced": "Synced",
 			"transcribe": "Transcribe",
 			"transcribed": "Transcribed",
 			"transcribeReady": "Ready to Transcribe",

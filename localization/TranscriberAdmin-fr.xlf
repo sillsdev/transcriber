@@ -67,6 +67,12 @@
             <target>Contrôler</target>
          </segment>
       </unit>
+      <unit id="activityState.synced">
+         <segment>
+            <source>Synced</source>
+            <target>Synchronisé</target>
+         </segment>
+      </unit>
       <unit id="activityState.transcribe">
          <segment>
             <source>Transcribe</source>

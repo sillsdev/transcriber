@@ -16,6 +16,7 @@ export interface IActivityStateStrings extends Localize.LocalizedStringsMethods 
     "noMedia": string;
     "review": string;
     "reviewing": string;
+    "synced": string;
     "transcribe": string;
     "transcribed": string;
     "transcribeReady": string;
