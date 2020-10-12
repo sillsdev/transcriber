@@ -41,7 +41,7 @@ export const useOrganizedBy = () => {
   };
 
   const localizedOrganizedBy = (val: string, singular?: boolean) => {
-    if (val === null) val = 'section';
+    if (!val) val = 'section';
     if (val in switchToLocal)
       return splitLocalized(switchToLocal[val], singular);
     return splitLocalized(val, singular); //user defined
