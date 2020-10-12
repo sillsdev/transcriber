@@ -49,9 +49,10 @@ export function TeamDialog(props: IProps) {
     const team = { ...values, attributes: { name } } as Organization;
     onDelete && onDelete(team);
   };
+
   useEffect(() => {
     setName(values?.attributes?.name || '');
-  }, [values]);
+  }, [values, isOpen]);
 
   return (
     <Dialog
