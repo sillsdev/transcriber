@@ -314,7 +314,12 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                       const nextSecId = secRecs[0].id;
                       const transcriber = related(secRecs[0], 'transcriber');
                       const editor = related(secRecs[0], 'editor');
-                      if (nextSecId !== curSec) {
+                      if (
+                        nextSecId !== curSec &&
+                        rowList.findIndex(
+                          (r) => r.sectPass === sectionNumber(secRecs[0]) + '.'
+                        ) === -1
+                      ) {
                         curSec = nextSecId;
                         addRows.push({
                           planName,
