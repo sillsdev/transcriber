@@ -1429,6 +1429,13 @@
       			<context context-type="sourcefile">LanguagePicker.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="languagePicker.phonetic">
+      		<source>Phonetic</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">LanguagePicker.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="languagePicker.selectLanguage">
       		<source>Choose Language Details</source>
       		<target/>

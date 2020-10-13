@@ -276,6 +276,7 @@ const initialState = {
 			"font": "Font",
 			"script": "Script",
 			"language": "Language",
+			"phonetic": "Phonetic",
 			"selectLanguage": "Choose Language Details",
 			"findALanguage": "Find a language by name, code, or country",
 			"codeExplained": "Code Explained",
