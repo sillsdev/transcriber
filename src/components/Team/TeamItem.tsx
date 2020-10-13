@@ -59,6 +59,7 @@ export const TeamItem = (props: IProps) => {
     teamUpdate,
     teamDelete,
     isAdmin,
+    isProjectAdmin,
   } = ctx.state;
   const t = ctx.state.cardStrings;
   const [openMember, setOpenMember] = React.useState(false);
@@ -91,7 +92,6 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleDeleteRefused = () => setDeleteItem(undefined);
-
   return (
     <Paper id="TeamItem" className={classes.root}>
       <div className={classes.teamHead}>
@@ -139,7 +139,7 @@ export const TeamItem = (props: IProps) => {
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        {!isElectron && isAdmin(team) && <AddCard team={team} />}
+        {!isElectron && isProjectAdmin(team) && <AddCard team={team} />}
       </Grid>
     </Paper>
   );
