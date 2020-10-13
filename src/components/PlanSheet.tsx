@@ -228,7 +228,7 @@ export function PlanSheet(props: IProps) {
   const [warning, setWarning] = useState<string>();
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
-  const LastCol = 6;
+  const LastCol = bookCol > 0 ? 6 : 5;
 
   const isValidNumber = (val: any) =>
     val === undefined ? false : /^[0-9]+$/.test(val.toString());
