@@ -346,7 +346,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       let nextState = next[state];
       if (nextState === ActivityStates.Approved && getType() !== 'scripture')
         nextState = ActivityStates.Done;
-      save(nextState, 0);
+      save(nextState, 0, true);
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -600,6 +600,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   }, [doSave]);
 
   React.useEffect(() => {
+    if (!makeComment) setComment('');
     const commentHeight =
       commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
     const newBoxHeight = height - NON_BOX_HEIGHT - commentHeight;
