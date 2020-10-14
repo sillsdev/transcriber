@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGlobal } from 'reactn';
 import ReactPlayer from 'react-player';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
@@ -183,35 +183,36 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   const [projRole] = useGlobal('projRole');
   const [errorReporter] = useGlobal('errorReporter');
   const [busy] = useGlobal('remoteBusy');
-  const [assigned, setAssigned] = React.useState('');
+  const [assigned, setAssigned] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
-  const [projData, setProjData] = React.useState<FontData>();
-  const [fontStatus, setFontStatus] = React.useState<string>();
-  const [playSpeed, setPlaySpeed] = React.useState(1);
+  const [projData, setProjData] = useState<FontData>();
+  const [fontStatus, setFontStatus] = useState<string>();
+  const [playSpeed, setPlaySpeed] = useState(1);
   // playedSeconds is needed to update progress bar
-  const [playedSeconds, setPlayedSeconds] = React.useState(0);
+  const [playedSeconds, setPlayedSeconds] = useState(0);
   // playedSecsRef is needed for autosave
   const playedSecsRef = React.useRef<number>(0);
-  const [totalSeconds, setTotalSeconds] = React.useState(duration);
-  const [seeking, setSeeking] = React.useState(false);
-  const [jump] = React.useState(2);
-  const [transcribing] = React.useState(
+  const stateRef = React.useRef<string>(state);
+  const [totalSeconds, setTotalSeconds] = useState(duration);
+  const [seeking, setSeeking] = useState(false);
+  const [jump] = useState(2);
+  const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
       state === ActivityStates.TranscribeReady
   );
-  const [height, setHeight] = React.useState(window.innerHeight);
-  const [width, setWidth] = React.useState(window.innerWidth);
-  const [boxHeight, setBoxHeight] = React.useState(height - NON_BOX_HEIGHT);
-  const [textValue, setTextValue] = React.useState('');
-  const [lastSaved, setLastSaved] = React.useState('');
-  const [defaultPosition, setDefaultPosition] = React.useState(0.0);
+  const [height, setHeight] = useState(window.innerHeight);
+  const [width, setWidth] = useState(window.innerWidth);
+  const [boxHeight, setBoxHeight] = useState(height - NON_BOX_HEIGHT);
+  const [textValue, setTextValue] = useState('');
+  const [lastSaved, setLastSaved] = useState('');
+  const [defaultPosition, setDefaultPosition] = useState(0.0);
   const { showMessage } = useSnackBar();
-  const [makeComment, setMakeComment] = React.useState(false);
-  const [comment, setComment] = React.useState('');
-  const [showHistory, setShowHistory] = React.useState(false);
-  const [historyContent, setHistoryContent] = React.useState<any[]>();
-  const [rejectVisible, setRejectVisible] = React.useState(false);
+  const [makeComment, setMakeComment] = useState(false);
+  const [comment, setComment] = useState('');
+  const [showHistory, setShowHistory] = useState(false);
+  const [historyContent, setHistoryContent] = useState<any[]>();
+  const [rejectVisible, setRejectVisible] = useState(false);
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
@@ -223,6 +224,88 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const t = transcriberStr;
   const ta = activityStateStr;
+
+  React.useEffect(() => {
+    setDimensions();
+    const handleResize = debounce(() => {
+      setDimensions();
+    }, 100);
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, []);
+
+  React.useEffect(() => {
+    if (doSave) {
+      handleSave();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [doSave]);
+
+  React.useEffect(() => {
+    if (!makeComment) setComment('');
+    const commentHeight =
+      commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
+    const newBoxHeight = height - NON_BOX_HEIGHT - commentHeight;
+    if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [height, makeComment, comment, commentRef.current]);
+
+  React.useEffect(() => {
+    showTranscription(getTranscription());
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [selected]);
+
+  React.useEffect(() => {
+    const trans = getTranscription();
+    if (trans.transcription !== transcriptionIn.current) {
+      //show warning if changed
+      if (changed) showMessage(t.updateByOther);
+      //but do it either way
+      showTranscription(trans);
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [mediafiles]);
+
+  React.useEffect(() => {
+    if (autosaveTimer.current === undefined) {
+      launchTimer();
+    } else {
+      clearTimeout(autosaveTimer.current);
+      launchTimer();
+    }
+    return () => {
+      if (autosaveTimer.current) {
+        clearTimeout(autosaveTimer.current);
+        autosaveTimer.current = undefined;
+      }
+    };
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [mediaId]);
+
+  React.useEffect(() => {
+    if (project && project !== '') {
+      var r = memory.cache.query((q) =>
+        q.findRecord({ type: 'project', id: project })
+      ) as Project;
+      setProjData(getFontData(r, offline));
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [project]);
+
+  React.useEffect(() => {
+    if (passage?.id && !saving.current) {
+      loadHistory();
+    }
+    const newAssigned = rowData[index]?.assigned;
+    if (newAssigned !== assigned) setAssigned(newAssigned);
+    stateRef.current = rowData[index]?.state;
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [index, rowData]);
+
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     if (!changed) setChanged(true);
@@ -346,7 +429,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       let nextState = next[state];
       if (nextState === ActivityStates.Approved && getType() !== 'scripture')
         nextState = ActivityStates.Done;
-      save(nextState, 0, true);
+      await save(nextState, 0, true);
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -379,7 +462,9 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   };
 
   const handleSave = async (postComment: boolean = false) => {
-    save(nextOnSave[state] ?? state, playedSecsRef.current, postComment);
+    //this needs to use the refs because it is called from a timer, which
+    //apparently remembers the values when it is kicked off...not when it is run
+    await save(nextOnSave[stateRef.current] ?? stateRef.current, playedSecsRef.current, postComment);
   };
 
   const save = async (
@@ -579,61 +664,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     }
   };
 
-  React.useEffect(() => {
-    setDimensions();
-    const handleResize = debounce(() => {
-      setDimensions();
-    }, 100);
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, []);
-
-  React.useEffect(() => {
-    if (doSave) {
-      handleSave();
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [doSave]);
-
-  React.useEffect(() => {
-    if (!makeComment) setComment('');
-    const commentHeight =
-      commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
-    const newBoxHeight = height - NON_BOX_HEIGHT - commentHeight;
-    if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [height, makeComment, comment, commentRef.current]);
-
-  React.useEffect(() => {
-    showTranscription(getTranscription());
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [selected]);
-
-  React.useEffect(() => {
-    const trans = getTranscription();
-    if (trans.transcription !== transcriptionIn.current) {
-      //show warning if changed
-      if (changed) showMessage(t.updateByOther);
-      //but do it either way
-      showTranscription(trans);
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediafiles]);
-
-  React.useEffect(() => {
-    if (project && project !== '') {
-      var r = memory.cache.query((q) =>
-        q.findRecord({ type: 'project', id: project })
-      ) as Project;
-      setProjData(getFontData(r, offline));
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [project]);
-
   const handleAutosave = async () => {
     if (
       !saving.current &&
@@ -654,21 +684,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     }, 1000 * 30);
   };
 
-  React.useEffect(() => {
-    if (autosaveTimer.current === undefined) {
-      launchTimer();
-    } else {
-      clearTimeout(autosaveTimer.current);
-      launchTimer();
-    }
-    return () => {
-      if (autosaveTimer.current) {
-        clearTimeout(autosaveTimer.current);
-        autosaveTimer.current = undefined;
-      }
-    };
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [mediaId]);
+
 
   const textAreaStyle = {
     overflow: 'auto',
@@ -701,7 +717,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     comment: JSX.Element | string
   ) => {
     return (
-      <ListItem key={`${psc?.keys?.remoteId}-${comment.toString()}`}>
+      <ListItem key={`${psc?.keys?.remoteId}-${(comment || '').toString()}`}>
         <ListItemIcon>
           <UserAvatar
             {...props}
@@ -763,15 +779,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       setHistoryContent(historyList(curStateChanges));
     }
   };
-
-  React.useEffect(() => {
-    if (passage?.id && !saving.current) {
-      loadHistory();
-    }
-    const newAssigned = rowData[index]?.assigned;
-    if (newAssigned !== assigned) setAssigned(newAssigned);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [index, rowData]);
 
   return (
     <div className={classes.root}>
