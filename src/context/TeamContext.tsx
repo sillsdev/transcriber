@@ -310,12 +310,13 @@ const TeamProvider = withData(mapRecordsToProps)(
     };
 
     const isProjectAdmin = (team: Organization) => {
-      const allUsersGroup = allUsersRec(memory, team.id)[0];
+      const allUsersGroup = allUsersRec(memory, team.id);
       const adminId = getRoleId(roles, RoleNames.Admin);
+      if (!allUsersGroup || allUsersGroup.length === 0) return false;
       return (
         groupMemberships.filter(
           (gm) =>
-            related(gm, 'group') === allUsersGroup.id &&
+            related(gm, 'group') === allUsersGroup[0].id &&
             related(gm, 'role') === adminId &&
             related(gm, 'user') === user
         ).length > 0
