@@ -113,7 +113,7 @@ export function UserMenu(props: IProps) {
             />
           </StyledMenuItem>
         )}
-        {history.location.pathname !== '/profile' && (
+        {history.location.pathname.toLowerCase() !== '/profile' && (
           <StyledMenuItem onClick={handleAction('Profile')}>
             <ListItemIcon>
               <AccountIcon fontSize="small" />
