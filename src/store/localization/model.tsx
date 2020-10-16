@@ -254,6 +254,7 @@ export interface ILanguagePickerStrings extends Localize.LocalizedStringsMethods
     "font": string;
     "script": string;
     "language": string;
+    "phonetic": string;
     "selectLanguage": string;
     "findALanguage": string;
     "codeExplained": string;

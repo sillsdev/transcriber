@@ -22,6 +22,8 @@ import {
   IProjButtonsStrings,
   BookNameMap,
   BookName,
+  Role,
+  RoleNames,
 } from '../model';
 import { OptionType } from '../model';
 
@@ -46,6 +48,8 @@ import {
   useTableType,
   usePlan,
   useRole,
+  allUsersRec,
+  getRoleId,
 } from '../crud';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -100,6 +104,7 @@ interface IRecordProps {
   organizations: Organization[];
   orgMembers: OrganizationMembership[];
   groupMemberships: GroupMembership[];
+  roles: Role[];
   projects: Project[];
   plans: Plan[];
   planTypes: PlanType[];
@@ -108,6 +113,7 @@ const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
   orgMembers: (q: QueryBuilder) => q.findRecords('organizationmembership'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  roles: (q: QueryBuilder) => q.findRecords('role'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
@@ -142,6 +148,7 @@ const initState = {
   teamUpdate: (team: Organization) => {},
   teamDelete: (team: Organization) => {},
   isAdmin: (team: Organization) => false,
+  isProjectAdmin: (team: Organization) => false,
   flatAdd: (
     planId: string,
     mediaRemoteIds: string[],
@@ -184,6 +191,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       orgMembers,
       projects,
       groupMemberships,
+      roles,
       plans,
       planTypes,
       lang,
@@ -299,6 +307,20 @@ const TeamProvider = withData(mapRecordsToProps)(
     const isAdmin = (org: Organization) => {
       const role = getMyOrgRole(org.id);
       return /admin/i.test(role);
+    };
+
+    const isProjectAdmin = (team: Organization) => {
+      const allUsersGroup = allUsersRec(memory, team.id);
+      const adminId = getRoleId(roles, RoleNames.Admin);
+      if (!allUsersGroup || allUsersGroup.length === 0) return false;
+      return (
+        groupMemberships.filter(
+          (gm) =>
+            related(gm, 'group') === allUsersGroup[0].id &&
+            related(gm, 'role') === adminId &&
+            related(gm, 'user') === user
+        ).length > 0
+      );
     };
 
     const teamMembers = (teamId: string) => {
@@ -461,6 +483,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             teamUpdate,
             teamDelete,
             isAdmin,
+            isProjectAdmin,
             flatAdd,
             importOpen,
             setImportOpen,

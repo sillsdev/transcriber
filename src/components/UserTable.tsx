@@ -292,7 +292,7 @@ export function UserTable(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
-  if (/profile/i.test(view)) stickyPush('/Profile');
+  if (/profile/i.test(view)) stickyPush('/profile');
 
   return (
     <div className={classes.container}>

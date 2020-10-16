@@ -1,3 +1,21 @@
+sil-transcriber (2.9.0.0)  experimental; urgency=high
+
+  * single screen team and project management
+  * collaborative data sharing
+  * auto configuration on file upload
+  * simplify Paratext and Render configuration
+  * auto saving
+  * last saved date
+  * use SIL theme
+  * localization
+  * improve off line logging and saving
+  * new deep linking scheme
+  * ask user to wait when busy
+  * add all Paratext books
+  * better handling of large files
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 8 Oct 2020 15:29:00 -0600
+
 sil-transcriber (2.0.8.8)  experimental; urgency=high
 
   * TT-1514 add .ogg support (#458)

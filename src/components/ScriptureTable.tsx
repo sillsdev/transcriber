@@ -179,7 +179,7 @@ export function ScriptureTable(props: IProps) {
   const [lastSaved, setLastSaved] = React.useState<string>();
   const [startSave, saveCompleted, waitForSave] = useRemoteSave();
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
-  const [assignSections, setAssignSections] = useState<Section[]>([]);
+  const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
   const [uploadPassage, setUploadPassage] = useState('');
@@ -695,7 +695,7 @@ export function ScriptureTable(props: IProps) {
   };
 
   const handleAssign = (where: number[]) => () => {
-    setAssignSections(getSections(where));
+    setAssignSections(where);
     setAssignSectionVisible(true);
   };
   const handleAssignClose = () => () => setAssignSectionVisible(false);
@@ -1162,7 +1162,7 @@ export function ScriptureTable(props: IProps) {
         ts={ts}
       />
       <AssignSection
-        sections={assignSections}
+        sections={getSections(assignSections)}
         visible={assignSectionVisible}
         closeMethod={handleAssignClose()}
       />

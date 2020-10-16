@@ -65,8 +65,8 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
   const { name, type, bcp47 } = state;
 
   useEffect(() => {
-    setState(mode === Mode.add || !values ? { ...initState } : { ...values });
-  }, [values, mode]);
+    setState(!values ? { ...initState } : { ...values });
+  }, [values, isOpen]);
 
   const handleClose = () => {
     if (onOpen) onOpen(false);

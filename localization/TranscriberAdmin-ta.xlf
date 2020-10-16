@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="ta" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
       <unit id="access.accessFirst">
@@ -1213,7 +1213,13 @@
             <target>மொழி</target>
          </segment>
       </unit>
-      <unit id="languagePicker.selectLanguage">
+   	<unit id="languagePicker.phonetic">
+   		<segment>
+   			<source>Phonetic</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="languagePicker.selectLanguage">
          <segment>
             <source>Choose Language Details</source>
             <target>மொழி விவரங்களை தேர்வுசெய்க</target>

@@ -368,7 +368,7 @@ export async function electronExport(
     AddSourceEntry(projRec.attributes.dateImported || '');
     AddVersionEntry('1'); //TODO: ask what version indexeddb is
     const limit = onlyOneProject() ? undefined : projRec;
-    if (exportType === 'itf') {
+    if (exportType === 'itf' || exportType === 'itfb') {
       const exported = AddCheckEntry();
       projRec.attributes.dateExported = exported;
       updateableFiles.forEach((info) => AddChanged(info, limit));

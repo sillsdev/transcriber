@@ -1220,6 +1220,12 @@
    			<target>Langage</target>
    		</segment>
    	</unit>
+   	<unit id="languagePicker.phonetic">
+   		<segment>
+   			<source>Phonetic</source>
+   			<target>Phonétique</target>
+   		</segment>
+   	</unit>
    	<unit id="languagePicker.selectLanguage">
    		<segment>
    			<source>Choose Language Details</source>
