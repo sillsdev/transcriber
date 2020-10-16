@@ -161,6 +161,7 @@ export const Uploader = (props: IProps) => {
   const uploadCancel = () => {
     onOpen(false);
     if (status) status.canceled = true;
+    document.getElementsByTagName('body')[0].removeAttribute('style');
   };
 
   React.useEffect(() => {
