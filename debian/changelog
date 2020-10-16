@@ -1,3 +1,28 @@
+sil-transcriber (2.9.1.0)  experimental; urgency=high
+
+  * better handling of large files
+  * TT-1762, TT-1746 fix scroll bar on upload cancel (#614)
+      continue to display upload progress dialog
+  * TT-1761, TT-1293 lowercase /profile (#613)
+  * TT-1701 remember the state in a ref since it is called from a timer (#612)
+      Rearrange so all useEffects are together at the top
+  * TT-1760 check for allUsersGroup (could have been deleted) (#611)
+  * TT-1675 Update language picker
+      add phonetic script option
+      debounce option display
+  * TT-1754 Use project role to decide if user can create new projects (#604)
+      Use project role determine if a person can add a project
+      remove console.log
+  * TT-1711 don't include media in itf backups (#610)
+  * TT-1758 remember which sections to assign but not the details (#609)
+  * TT-1730 don't add section header if there already (#608)
+  * TT-1745 account for no book col (#607)
+  * TT-1755 save comment on submit, clear comment if they turn it off (#606)
+  * missing ActivityStates.synced which shows up in history after sync
+  * use ProjRole to determine if we're on the home page (#605)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 15 Oct 2020 23:29:00 -0600
+
 sil-transcriber (2.9.0.0)  experimental; urgency=high
 
   * single screen team and project management
