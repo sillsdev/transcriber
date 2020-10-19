@@ -317,6 +317,8 @@ export function ScriptureTable(props: IProps) {
     let newRow;
     if (showBook(cols)) {
       newRow = [sequencenum, '', '', '', '', ''];
+      var prevRow = i ? i-1 : data.length-1;
+      if (prevRow >=0) newRow[cols.Book] = data[prevRow][cols.Book];
     } else {
       newRow = [sequencenum, '', '', '', ''];
     }
