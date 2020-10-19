@@ -90,6 +90,20 @@ export const AddCard = (props: IProps) => {
   const [view, setView] = React.useState('');
   const stickyPush = useStickyRedirect();
 
+  useEffect(() => {
+    if (status.canceled) {
+      setInProgress(false);
+      //get ready for next time
+      status.canceled = false;
+    }
+  }, [status.canceled]);
+
+  useEffect(() => {
+    setType('');
+    setLanguage(initLang);
+    setBook(null);
+  }, [uploadVisible]);
+
   const handleShow = () => {
     if (!open) setShow(!show);
   };
@@ -193,13 +207,6 @@ export const AddCard = (props: IProps) => {
     setBook(book);
   };
 
-  useEffect(() => {
-    if (status.canceled) {
-      setInProgress(false);
-      //get ready for next time
-      status.canceled = false;
-    }
-  }, [status.canceled]);
 
   const cancelUpload = (what: string) => {
     status.canceled = true;
