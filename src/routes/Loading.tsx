@@ -220,7 +220,7 @@ export function Loading(props: IProps) {
       return <Redirect to="/profile" />;
     }
     let fromUrl = localStorage.getItem('fromUrl');
-    if (fromUrl && !/^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     push(fromUrl || '/team');
   }
 
