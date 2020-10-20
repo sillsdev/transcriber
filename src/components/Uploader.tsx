@@ -90,6 +90,7 @@ export const Uploader = (props: IProps) => {
       setBusy(false);
       if (successCount.current > 0 && finish)
         finish(planIdRef.current || plan, mediaIdRef.current);
+      else if (status) status.canceled = true;
     }, 1000);
   };
 
