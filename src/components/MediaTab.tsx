@@ -680,7 +680,8 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
-    const media: MediaFile[] = getMediaInPlans([planRec], mediaFiles);
+    const media: MediaFile[] = getMediaInPlans([planRec.id], mediaFiles);
+
     const newData = getMedia(
       planRec?.attributes?.name,
       media,

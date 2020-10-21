@@ -1,15 +1,14 @@
-import { Plan, MediaFile } from '../model';
+import { MediaFile } from '../model';
 import { related } from '.';
 
 interface ILatest {
   [planName: string]: number;
 }
 export const getMediaInPlans = (
-  plans: Array<Plan>,
+  planids: Array<string>,
   mediaFiles: Array<MediaFile>
 ) => {
   const latest: ILatest = {};
-  var planids = plans.map((p) => p.id);
   var media = mediaFiles.filter((m) => planids.includes(related(m, 'plan')));
   media.forEach((f) => {
     const name = related(f, 'plan') + f.attributes.originalFile;

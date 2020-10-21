@@ -280,7 +280,7 @@ export function TranscriptionTab(props: IProps) {
     ) as Plan[];
 
     var projectplans = plans.filter((pl) => related(pl, 'project') === project);
-    let media: MediaFile[] = getMediaInPlans(projectplans, mediaFiles);
+    let media: MediaFile[] = getMediaInPlans(projectplans.map((p) => p.id), mediaFiles);
     exportProject(
       exportType,
       memory,
