@@ -404,7 +404,7 @@ const initialState = {
 			"nonNumber": "Do not change to non-number.",
 			"passageBelow": "Insert passage below {0}",
 			"pasting": "Pasting",
-			"refErr": "This project contains invalid references and will not sync to Paratext properly.",
+			"refErr": "This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)",
 			"resequence": "Resequence",
 			"save": "Save",
 			"saving": "Saving...",

@@ -1828,8 +1828,8 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This project contains invalid references and will not sync to Paratext properly.</source>
-            <target>Ce projet contient des références non valables et ne se synchronisera pas correctement avec Paratext.</target>
+         	<source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
+         	<target>Ce projet contient des références non valables et ne se synchronise pas correctement avec Paratext. (Une référence valide serait 3:2-5 ou similaire).</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
