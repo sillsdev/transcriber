@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, IMainStrings } from '../model';
@@ -75,12 +76,30 @@ interface IProps extends IStateProps {
 
 export function HelpMenu(props: IProps) {
   const { online, action, t } = props;
+  const { pathname } = useLocation();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
-  const [isApp] = useGlobal('appView');
   const [developer, setDeveloper] = useGlobal('developer');
+  const [topic, setTopic] = React.useState<string>();
   const helpRef = React.useRef<any>();
+
+  interface IHelpLinkProps {
+    topic?: string;
+  }
+
+  const HelpLink = ({ topic }: IHelpLinkProps) => {
+    const topicS = topic || '';
+    return (
+      // eslint-disable-next-line jsx-a11y/anchor-has-content
+      <a
+        ref={helpRef}
+        href={API_CONFIG.help + '/' + helpLanguage() + indexName + topicS}
+        target="_blank"
+        rel="noopener noreferrer"
+      ></a>
+    );
+  };
 
   const indexName = '/index.htm';
 
@@ -98,16 +117,15 @@ export function HelpMenu(props: IProps) {
 
   const execFolder = () => path.dirname((process as any).helperExecPath);
 
-  const handleHelp = () => {
+  const handleHelp = (topic?: string) => () => {
+    const topicS = topic || '';
     if (isElectron) {
       const target = !online
         ? path.join(execFolder(), API_CONFIG.chmHelp)
-        : isApp
-        ? API_CONFIG.help + '/' + helpLanguage() + indexName
-        : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName;
+        : API_CONFIG.help + '/' + helpLanguage() + indexName + topicS;
       launch(target, online);
     } else if (helpRef.current) {
-      helpRef.current.click();
+      setTopic(topic || '');
     }
     setAnchorEl(null);
   };
@@ -124,6 +142,12 @@ export function HelpMenu(props: IProps) {
       action(what);
     }
   };
+
+  const spreadsheetTopic = '#t=Concepts%2FSpreadsheet_convention.htm';
+
+  React.useEffect(() => {
+    if (helpRef.current) helpRef.current.click();
+  }, [topic]);
 
   return (
     <div>
@@ -142,12 +166,52 @@ export function HelpMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        <StyledMenuItem onClick={handleHelp}>
+        <StyledMenuItem onClick={handleHelp()}>
           <ListItemIcon>
             <HelpIcon />
           </ListItemIcon>
           <ListItemText primary={t.helpCenter} />
         </StyledMenuItem>
+        {/\/plan\/[0-9]+\/0/.test(pathname) && (
+          <>
+            <StyledMenuItem onClick={handleHelp(spreadsheetTopic)}>
+              <ListItemIcon>
+                <HelpIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.helpSpreadsheet} />
+            </StyledMenuItem>
+            {!isElectron && (
+              <>
+                <a
+                  href={API_CONFIG.flatSample}
+                  style={{ textDecoration: 'none' }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <StyledMenuItem>
+                    <ListItemIcon>
+                      <HelpIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t.flatSample} />
+                  </StyledMenuItem>
+                </a>
+                <a
+                  href={API_CONFIG.hierarchicalSample}
+                  style={{ textDecoration: 'none' }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <StyledMenuItem>
+                    <ListItemIcon>
+                      <HelpIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t.hierarchicalSample} />
+                  </StyledMenuItem>
+                </a>
+              </>
+            )}
+          </>
+        )}
         <a
           href={API_CONFIG.community}
           style={{ textDecoration: 'none' }}
@@ -181,17 +245,7 @@ export function HelpMenu(props: IProps) {
           />
         </StyledMenuItem>
       </StyledMenu>
-      {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a
-        ref={helpRef}
-        href={
-          isApp
-            ? API_CONFIG.help + '/' + helpLanguage() + indexName
-            : API_CONFIG.adminHelp + '/' + helpLanguage() + indexName
-        }
-        target="_blank"
-        rel="noopener noreferrer"
-      ></a>
+      <HelpLink topic={topic} />
     </div>
   );
 }

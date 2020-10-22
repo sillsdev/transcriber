@@ -279,6 +279,9 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "exit": string;
     "export": string;
     "helpCenter": string;
+    "helpSpreadsheet": string;
+    "flatSample": string;
+    "hierarchicalSample": string;
     "import": string;
     "integrations": string;
     "inviteError": string;

@@ -1352,7 +1352,25 @@
             <target>Centre d'aide</target>
          </segment>
       </unit>
-      <unit id="main.import">
+   	<unit id="main.helpSpreadsheet">
+   		<segment>
+   			<source>Spreadsheet convention</source>
+   			<target>Convention sur les tableurs</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.flatSample">
+   		<segment>
+   			<source>Flat sample spreadsheet</source>
+   			<target>Feuille de calcul à échantillon plat</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.hierarchicalSample">
+   		<segment>
+   			<source>Hierarchical sample spreadsheet</source>
+   			<target>Exemple de tableur hiérarchique</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.import">
          <segment>
             <source>Import</source>
             <target>Importation</target>

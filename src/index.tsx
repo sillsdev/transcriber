@@ -82,7 +82,6 @@ setGlobal({
   importexportBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,
-  appView: true,
   developer: false,
   offline: isElectron,
   errorReporter: !isElectron ? bugsnagClient : electronLog,

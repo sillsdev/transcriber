@@ -1360,6 +1360,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.helpSpreadsheet">
+         <segment>
+            <source>Spreadsheet convention</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.flatSample">
+         <segment>
+            <source>Flat sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.hierarchicalSample">
+         <segment>
+            <source>Hierarchical sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.import">
          <segment>
             <source>Import</source>

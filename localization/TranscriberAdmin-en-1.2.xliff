@@ -1583,7 +1583,28 @@
                <context context-type="sourcefile">HelpMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.import">
+      	<trans-unit id="main.helpSpreadsheet">
+      		<source>Spreadsheet convention</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.flatSample">
+      		<source>Flat sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.hierarchicalSample">
+      		<source>Hierarchical sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.import">
             <source>Import</source>
             <target/>
             <context-group>

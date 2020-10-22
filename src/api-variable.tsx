@@ -12,9 +12,6 @@ export const API_CONFIG = {
   offline:
     process.env.REACT_APP_OFFLINE === 'true' || process.env.NODE_ENV === 'test',
   help,
-  adminHelp: process.env.REACT_APP_ADMIN_HELP
-    ? process.env.REACT_APP_ADMIN_HELP
-    : '',
   chmHelp: process.env.REACT_APP_CHM_HELP ? process.env.REACT_APP_CHM_HELP : '',
   community: process.env.REACT_APP_COMMUNITY
     ? process.env.REACT_APP_COMMUNITY
@@ -25,4 +22,8 @@ export const API_CONFIG = {
   productName: process.env.REACT_APP_SITE_TITLE
     ? process.env.REACT_APP_SITE_TITLE
     : 'SIL Transcriber',
+  flatSample: process.env.REACT_APP_FLAT ? process.env.REACT_APP_FLAT : '',
+  hierarchicalSample: process.env.REACT_APP_HIERARCHICAL
+    ? process.env.REACT_APP_HIERARCHICAL
+    : '',
 };
