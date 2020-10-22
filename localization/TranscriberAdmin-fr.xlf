@@ -1354,20 +1354,20 @@
       </unit>
    	<unit id="main.helpSpreadsheet">
    		<segment>
-   			<source>Spreadsheet convention</source>
-   			<target>Convention sur les tableurs</target>
+   			<source>View spreadsheet convention</source>
+   			<target>Voir la convention du tableur</target>
    		</segment>
    	</unit>
    	<unit id="main.flatSample">
    		<segment>
-   			<source>Flat sample spreadsheet</source>
-   			<target>Feuille de calcul à échantillon plat</target>
+   			<source>Download flat sample spreadsheet</source>
+   			<target>Télécharger un exemple de tableur plat</target>
    		</segment>
    	</unit>
    	<unit id="main.hierarchicalSample">
    		<segment>
-   			<source>Hierarchical sample spreadsheet</source>
-   			<target>Exemple de tableur hiérarchique</target>
+   			<source>Download hierarchical sample spreadsheet</source>
+   			<target>Télécharger un exemple de tableur hiérarchique</target>
    		</segment>
    	</unit>
    	<unit id="main.import">
@@ -1882,8 +1882,8 @@
       </unit>
       <unit id="planSheet.tablePaste">
          <segment>
-            <source>Paste Table</source>
-            <target>Coller la table</target>
+            <source>Paste Spreadsheet</source>
+         	<target>Coller le tableur</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">

@@ -1362,19 +1362,19 @@
       </unit>
       <unit id="main.helpSpreadsheet">
          <segment>
-            <source>Spreadsheet convention</source>
+            <source>View spreadsheet convention</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.flatSample">
          <segment>
-            <source>Flat sample spreadsheet</source>
+            <source>Download flat sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.hierarchicalSample">
          <segment>
-            <source>Hierarchical sample spreadsheet</source>
+            <source>Download hierarchical sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
@@ -1908,7 +1908,7 @@
       </unit>
       <unit id="planSheet.tablePaste">
          <segment>
-            <source>Paste Table</source>
+            <source>Paste Spreadsheet</source>
             <target/>
          </segment>
       </unit>

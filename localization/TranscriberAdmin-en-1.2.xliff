@@ -1584,21 +1584,21 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="main.helpSpreadsheet">
-      		<source>Spreadsheet convention</source>
+      		<source>View spreadsheet convention</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">HelpMenu.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="main.flatSample">
-      		<source>Flat sample spreadsheet</source>
+      		<source>Download flat sample spreadsheet</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">HelpMenu.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="main.hierarchicalSample">
-      		<source>Hierarchical sample spreadsheet</source>
+      		<source>Download hierarchical sample spreadsheet</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">HelpMenu.tsx</context>
@@ -2221,7 +2221,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.tablePaste">
-            <source>Paste Table</source>
+            <source>Paste Spreadsheet</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

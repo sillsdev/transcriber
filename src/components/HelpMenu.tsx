@@ -16,6 +16,7 @@ import {
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ReportIcon from '@material-ui/icons/Report';
 import HelpIcon from '@material-ui/icons/Help';
+import DownloadIcon from '@material-ui/icons/CloudDownload';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
@@ -146,7 +147,7 @@ export function HelpMenu(props: IProps) {
   const spreadsheetTopic = '#t=Concepts%2FSpreadsheet_convention.htm';
 
   React.useEffect(() => {
-    if (helpRef.current) helpRef.current.click();
+    if (helpRef.current && topic !== undefined) helpRef.current.click();
   }, [topic]);
 
   return (
@@ -190,7 +191,7 @@ export function HelpMenu(props: IProps) {
                 >
                   <StyledMenuItem>
                     <ListItemIcon>
-                      <HelpIcon />
+                      <DownloadIcon />
                     </ListItemIcon>
                     <ListItemText primary={t.flatSample} />
                   </StyledMenuItem>
@@ -203,7 +204,7 @@ export function HelpMenu(props: IProps) {
                 >
                   <StyledMenuItem>
                     <ListItemIcon>
-                      <HelpIcon />
+                      <DownloadIcon />
                     </ListItemIcon>
                     <ListItemText primary={t.hierarchicalSample} />
                   </StyledMenuItem>

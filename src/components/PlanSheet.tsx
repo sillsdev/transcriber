@@ -667,7 +667,6 @@ export function PlanSheet(props: IProps) {
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
-                  <AddIcon className={classes.icon} />
                 </Button>
                 <Button
                   key="resequence"
