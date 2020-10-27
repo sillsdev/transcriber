@@ -458,6 +458,9 @@ export function Profile(props: IProps) {
     if (finishAdd) {
       finishAdd();
     }
+    if (editId) {
+      setEditId(null);
+    }
     setView('Team');
   };
 
