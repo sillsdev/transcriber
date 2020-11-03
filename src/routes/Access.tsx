@@ -3,7 +3,15 @@ import { useGlobal } from 'reactn';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, IAccessStrings, User } from '../model';
+import {
+  IState,
+  IAccessStrings,
+  User,
+  GroupMembership,
+  Project,
+  Plan,
+  Section,
+} from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -21,6 +29,7 @@ import {
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
+import { related } from '../crud';
 import { UserAvatar } from '../components/UserAvatar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -91,6 +100,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface IRecordProps {
   users: Array<User>;
+  groupMemberships: Array<GroupMembership>;
+  projects: Array<Project>;
+  plans: Array<Plan>;
+  sections: Array<Section>;
 }
 
 interface IStateProps {
@@ -108,7 +121,16 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 }
 
 export function Access(props: IProps) {
-  const { auth, t, importStatus, users } = props;
+  const {
+    auth,
+    t,
+    importStatus,
+    users,
+    groupMemberships,
+    projects,
+    plans,
+    sections,
+  } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
@@ -134,15 +156,18 @@ export function Access(props: IProps) {
     setImportOpen(true);
   };
 
-  const handleGoOnline = () => {
+  const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
     if (isElectron) {
-      ipc?.invoke('login');
-      remote?.getCurrentWindow().close();
+      if (!event.shiftKey) {
+        ipc?.invoke('login');
+        remote?.getCurrentWindow().close();
+      } else ipc?.invoke('logout');
     }
   };
 
   const handleVersionClick = (e: React.MouseEvent) => {
     if (e.shiftKey) {
+      localStorage.setItem('developer', !isDeveloper ? 'true' : 'false');
       setIsDeveloper(!isDeveloper);
     }
   };
@@ -160,21 +185,33 @@ export function Access(props: IProps) {
     }
   };
 
+  const hasUserProjects = (userId: string) => {
+    const grpIds = groupMemberships
+      .filter((gm) => related(gm, 'user') === userId)
+      .map((gm) => related(gm, 'group'));
+    const projIds = projects
+      .filter((p) => grpIds.includes(related(p, 'group')))
+      .map((p) => p.id);
+    const planIds = plans
+      .filter((p) => projIds.includes(related(p, 'project')))
+      .map((p) => p.id);
+    const userSections = sections.filter((s) =>
+      planIds.includes(related(s, 'plan'))
+    );
+    return userSections.length > 0;
+  };
+
   useEffect(() => {
     if (isElectron) persistData();
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
-    if (isElectron) {
-      Online((online) => setOnline(online), auth);
-      setOffline(true);
-    } else Online((online) => setOffline(!online), auth);
-
+    Online((online) => setOnline(online), auth);
     setOrganization('');
     setProject('');
     setPlan('');
     setProjRole('');
 
-    if (!auth || !auth.isAuthenticated(offline)) {
+    if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
         handleLogin();
       }
@@ -183,31 +220,24 @@ export function Access(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (isElectron) {
+    if (isElectron && selectedUser === '') {
       ipc?.invoke('get-profile').then((result) => {
         if (result) {
+          // Even tho async, this executes first b/c users takes time to load
           ipc?.invoke('get-token').then((accessToken) => {
+            if (offline) setOffline(false);
             if (auth) auth.setDesktopSession(result, accessToken);
           });
-          const sub = result?.sub;
-          if (sub) {
-            const selected = users.filter((u) => u.attributes.auth0Id === sub);
-            if (selected.length > 0) {
-              const userId = selected[0].id;
-              if (selectedUser !== userId) {
-                localStorage.setItem('user-id', userId);
-                setSelectedUser(userId);
-              }
-            }
-          }
+          if (result?.sub && auth.accessToken) setSelectedUser('unknownUser');
         }
       });
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [users]);
 
   if (
-    (!isElectron && auth && auth.isAuthenticated(offline)) ||
-    (isElectron && (selectedUser !== '' || auth.isAuthenticated(false)))
+    (!isElectron && auth?.isAuthenticated()) ||
+    (isElectron && selectedUser !== '')
   )
     return <Redirect to="/loading" />;
 
@@ -258,6 +288,7 @@ export function Access(props: IProps) {
                   <div className={classes.actions}>
                     <List>
                       {users
+                        .filter((u) => hasUserProjects(u.id))
                         .sort((i, j) =>
                           (i.attributes ? i.attributes.name : '') <
                           (j.attributes ? j.attributes.name : '')
@@ -301,7 +332,7 @@ export function Access(props: IProps) {
                         className={classes.button}
                         onClick={handleGoOnline}
                       >
-                        {'Go Online'}
+                        {t.goOnline}
                       </Button>
                     </>
                   )}
@@ -334,6 +365,10 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
+  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
+  plans: (q: QueryBuilder) => q.findRecords('plan'),
+  sections: (q: QueryBuilder) => q.findRecords('section'),
 };
 
 export default withData(mapRecordsToProps)(

@@ -16,7 +16,14 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="access.importProject">
+      	<trans-unit id="access.goOnline">
+      		<source>Go Online</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">electronImport.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.importProject">
             <source>Import PTF File</source>
             <target/>
             <context-group>
@@ -2039,14 +2046,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaUpload.ITFtask">
-            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="mediaUpload.ITFtitle">
-            <source>Upload Change Data from Desktop Extension</source>
+            <source>Upload Change Data from Desktop app.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>

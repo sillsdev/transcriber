@@ -10,6 +10,7 @@ const initialState = {
 		"en": {
 			"accessFirst": "Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.",
 			"accessSilTranscriber": "Click your avatar to transcribe or review.",
+			"goOnline": "Go Online",
 			"importProject": "Import PTF File",
 		}
 	}),
@@ -375,8 +376,8 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
-			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.",
-			"ITFtitle": "Upload Change Data from Desktop Extension",
+			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",
+			"ITFtitle": "Upload Change Data from Desktop app.",
 			"PTFtask": "Upload a Portable Transcriber File (ptf).",
 			"PTFtitle": "Upload complete Project Data from PTF",
 			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",

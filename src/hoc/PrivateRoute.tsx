@@ -10,12 +10,11 @@ interface IProps extends RouteProps {
 
 export function PrivateRoute({ auth, children, ...rest }: IProps) {
   const [offline] = useGlobal('offline');
-
   return (
     <Route
       {...rest}
       render={({ location }) => {
-        if (auth.isAuthenticated(offline)) return children;
+        if (offline || auth.isAuthenticated()) return children;
         if (typeof location?.pathname === 'string')
           localStorage.setItem('fromUrl', location?.pathname);
         return (

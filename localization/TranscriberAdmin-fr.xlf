@@ -13,7 +13,13 @@
             <target>Cliquez sur votre avatar pour transcrire ou modifier.</target>
          </segment>
       </unit>
-      <unit id="access.importProject">
+   	  <unit id="access.goOnline">
+   		<segment>
+   			<source>Go Online</source>
+   			<target>Aller en ligne</target>
+   		</segment>
+   	  </unit>
+   	  <unit id="access.importProject">
          <segment>
             <source>Import PTF File</source>
             <target>Importation un fichier de PTF</target>
@@ -1732,14 +1738,14 @@
       </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
-            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'extension de bureau.</target>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
+            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'application de bureau.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source>Upload Change Data from the Desktop Extension</source>
-            <target>Télécharger les données de modification depuis l'extension de bureau</target>
+            <source>Upload Change Data from the Desktop app.</source>
+            <target>Télécharger les données de modification depuis l'application de bureau.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtask">

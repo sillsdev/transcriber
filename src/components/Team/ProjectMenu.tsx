@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
   IState,
@@ -27,7 +28,6 @@ import ExportIcon from '@material-ui/icons/CloudDownload';
 import ReportIcon from '@material-ui/icons/Assessment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterIcon from '@material-ui/icons/FilterList';
-import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,6 +83,7 @@ interface IProps extends IStateProps {
 export function ProjectMenu(props: IProps) {
   const { inProject, action, t, tpb, td, isOwner } = props;
   const classes = useStyles();
+  const [isOffline] = useGlobal('offline');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -115,7 +116,7 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!inProject && isOwner && !isElectron && (
+        {!inProject && isOwner && !isOffline && (
           <StyledMenuItem onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
@@ -143,7 +144,7 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.integrations} />
         </StyledMenuItem>
-        {(isOwner || isElectron) && (
+        {(isOwner || isOffline) && (
           <StyledMenuItem onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />
@@ -165,7 +166,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={td.filter} />
           </StyledMenuItem>
         ) : (
-          !isElectron &&
+          !isOffline &&
           isOwner && (
             <StyledMenuItem onClick={handle('delete')}>
               <ListItemIcon>

@@ -57,7 +57,7 @@ export const AppHead = withBucket(
     const { auth, resetRequests, SwitchTo, t } = props;
     const classes = useStyles();
     const { pathname } = useLocation();
-    const [isOffline] = useGlobal('offline');
+    const [isOffline, setIsOffline] = useGlobal('offline');
     const [, setProject] = useGlobal('project');
     const [projRole, setProjRole] = useGlobal('projRole');
     const [plan, setPlan] = useGlobal('plan');
@@ -84,7 +84,8 @@ export const AppHead = withBucket(
       if (isElectron && /logout/i.test(what)) {
         checkSavedFn(() => {
           ipc?.invoke('logout');
-          localStorage.removeItem('user-id');
+          localStorage.removeItem('isLoggedIn');
+          setIsOffline(isElectron);
           setView('Access');
         });
         return;
@@ -135,8 +136,6 @@ export const AppHead = withBucket(
     if (view === 'Logout') return <Redirect to="/logout" />;
     if (view === 'Access') return <Redirect to="/" />;
     if (view === 'Home') stickyPush('/team');
-    if (!auth || !auth.isAuthenticated(isOffline))
-      return <Redirect to="/logout" />;
 
     return (
       <AppBar position="fixed" className={classes.appBar} color="inherit">

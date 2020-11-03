@@ -19,7 +19,6 @@ import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
-import { isElectron } from '../api-variable';
 import { withData } from '../mods/react-orbitjs';
 import { HeadHeight } from '../App';
 import { getMediaInPlans, related, useOrganizedBy } from '../crud';
@@ -86,6 +85,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     mediafiles,
   } = props;
   const classes = useStyles();
+  const [isOffline] = useGlobal('offline');
   const [plan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
@@ -169,7 +169,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isElectron}
+            disabled={isOffline}
           />
           <Tab
             label={
@@ -182,7 +182,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isElectron}
+            disabled={isOffline}
           />
           <Tab
             label={

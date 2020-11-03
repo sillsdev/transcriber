@@ -35,7 +35,6 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import { remoteIdGuid, related, insertData } from '../../crud';
 import { infoMsg, orbitInfo, logError, Severity } from '../../utils';
-import { isElectron } from '../../api-variable';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -58,7 +57,8 @@ export const exportProject = (
     payload: pendingmsg.replace('{0}%', ''),
     type: EXPORT_PENDING,
   });
-  if (isElectron) {
+  if (auth.accessToken) {
+    // if we have a token we're online
     const s: JSONAPISerializerSettings = {
       schema: memory.schema,
       keyMap: memory.keyMap,
