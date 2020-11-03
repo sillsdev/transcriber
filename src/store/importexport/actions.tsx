@@ -57,7 +57,7 @@ export const exportProject = (
     payload: pendingmsg.replace('{0}%', ''),
     type: EXPORT_PENDING,
   });
-  if (auth.accessToken) {
+  if (!auth.accessToken) {
     // if we have a token we're online
     const s: JSONAPISerializerSettings = {
       schema: memory.schema,
