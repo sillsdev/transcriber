@@ -19,7 +19,13 @@ import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
-import { uiLang, uiLangDev, localeDefault } from '../utils';
+import {
+  uiLang,
+  uiLangDev,
+  localeDefault,
+  localUserKey,
+  LocalKey,
+} from '../utils';
 import { related, GetUser } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG } from '../api-variable';
@@ -217,7 +223,7 @@ export function Loading(props: IProps) {
     ) {
       return <Redirect to="/profile" />;
     }
-    let fromUrl = localStorage.getItem('fromUrl');
+    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     push(fromUrl || '/team');
   }

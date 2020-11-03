@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
-import { useStickyRedirect } from '../utils';
+import { LocalKey, localUserKey, useStickyRedirect } from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -178,7 +178,7 @@ export function UserTable(props: IProps) {
   };
 
   const handleEdit = (userId: string) => (e: any) => {
-    localStorage.setItem('fromUrl', pathname);
+    localStorage.setItem(localUserKey(LocalKey.url, memory), pathname);
     setEditId(userId);
     setView('Profile');
   };

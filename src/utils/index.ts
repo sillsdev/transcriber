@@ -30,4 +30,4 @@ export * from './waitForIt';
 export * from './lookupBook';
 export * from './refMatch';
 export * from './useStickyPush';
-export * from './lastTimeKey';
+export * from './localUserKey';

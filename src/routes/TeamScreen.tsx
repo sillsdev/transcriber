@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { useStickyRedirect } from '../utils';
+import { LocalKey, localUserKey, useStickyRedirect } from '../utils';
 import { makeStyles } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
@@ -39,10 +39,10 @@ export const TeamScreen = (props: IProps) => {
       projRole === 'admin' && !isOffline
         ? `/plan/${remProjId}/0`
         : `/work/${remProjId}`;
-    if (loc !== localStorage.getItem('fromUrl')) {
+    if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
       stickyPush(loc);
     } else {
-      localStorage.setItem('fromUrl', '/team');
+      localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
       setProject('');
       setProjRole('');
     }

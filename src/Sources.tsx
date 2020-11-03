@@ -16,7 +16,7 @@ import { API_CONFIG, isElectron } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { related, LoadData } from './crud';
-import { orbitRetry, orbitErr, lastTimeKey } from './utils';
+import { orbitRetry, orbitErr, localUserKey, LocalKey } from './utils';
 import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
@@ -249,9 +249,7 @@ export const Sources = async (
     let goRemote =
       !offline &&
       (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
-    if (goRemote) {
-      localStorage.removeItem('fromUrl'); //we're a different user, or we want to go to the new project anyway
-    } else {
+    if (!goRemote) {
       setUser(localStorage.getItem('user-id') as string);
       console.log('using backup');
       if (!isElectron) {
@@ -279,7 +277,10 @@ export const Sources = async (
     }
 
     if (goRemote) {
-      localStorage.setItem(lastTimeKey(auth), currentDateTime());
+      localStorage.setItem(
+        localUserKey(LocalKey.time, memory),
+        currentDateTime()
+      );
       if (!isElectron) await backup.reset();
       var currentuser: User | undefined;
 

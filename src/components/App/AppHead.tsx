@@ -19,7 +19,13 @@ import { API_CONFIG, isElectron } from '../../api-variable';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
-import { resetData, exitElectronApp, forceLogin } from '../../utils';
+import {
+  resetData,
+  exitElectronApp,
+  forceLogin,
+  localUserKey,
+  LocalKey,
+} from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
 import Busy from '../Busy';
@@ -57,6 +63,7 @@ export const AppHead = withBucket(
     const { auth, resetRequests, SwitchTo, t } = props;
     const classes = useStyles();
     const { pathname } = useLocation();
+    const [memory] = useGlobal('memory');
     const [isOffline, setIsOffline] = useGlobal('offline');
     const [, setProject] = useGlobal('project');
     const [projRole, setProjRole] = useGlobal('projRole');
@@ -90,7 +97,7 @@ export const AppHead = withBucket(
         });
         return;
       }
-      localStorage.setItem('fromUrl', lastpath);
+      localStorage.setItem(localUserKey(LocalKey.url, memory), lastpath);
       if (!/Close/i.test(what)) {
         if (/ClearLogout/i.test(what)) {
           forceLogin();

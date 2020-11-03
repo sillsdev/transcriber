@@ -99,12 +99,12 @@ if (isElectron) {
 
 const errorManagedApp = bugsnagClient ? (
   <SnagBoundary>
-    <ErrorBoundary errorReporter={bugsnagClient}>
+    <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
       <App />
     </ErrorBoundary>
   </SnagBoundary>
 ) : (
-  <ErrorBoundary errorReporter={electronLog}>
+  <ErrorBoundary errorReporter={electronLog} memory={memory}>
     <App />
   </ErrorBoundary>
 );

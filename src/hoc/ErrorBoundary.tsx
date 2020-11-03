@@ -12,8 +12,15 @@ import {
   createStyles,
 } from '@material-ui/core/styles';
 import { Typography, Button } from '@material-ui/core';
-import { logError, Severity, forceLogin } from '../utils';
+import {
+  logError,
+  Severity,
+  forceLogin,
+  localUserKey,
+  LocalKey,
+} from '../utils';
 import { withBucket } from './withBucket';
+import Memory from '@orbit/memory';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -65,6 +72,7 @@ interface IProps
     IDispatchProps,
     WithStyles<typeof styles> {
   errorReporter: any;
+  memory: Memory;
   resetRequests: () => Promise<void>;
   children: JSX.Element;
 }
@@ -182,7 +190,8 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
   }
 
   private continue() {
-    var deeplink = localStorage.getItem('fromUrl');
+    const { memory } = this.props;
+    var deeplink = localStorage.getItem(localUserKey(LocalKey.url, memory));
     if (!deeplink || deeplink === 'loading') deeplink = '/';
     this.cleanUpAndGo(deeplink);
   }

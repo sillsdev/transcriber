@@ -15,7 +15,7 @@ import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
 import { remoteIdGuid, remoteIdNum } from '../crud';
 import JSONAPISource, { JSONAPISerializerSettings } from '@orbit/jsonapi';
-import { currentDateTime, lastTimeKey } from '../utils';
+import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
 
@@ -35,7 +35,7 @@ export const doDataChanges = (
   fingerprint: string,
   errorReporter: any
 ) => {
-  const userLastTimeKey = lastTimeKey(auth);
+  const userLastTimeKey = localUserKey(LocalKey.time, memory);
   let lastTime = localStorage.getItem(userLastTimeKey);
   if (!lastTime) lastTime = currentDateTime(); // should not happen
   let nextTime = currentDateTime();
