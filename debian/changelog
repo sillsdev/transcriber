@@ -1,4 +1,4 @@
-sil-transcriber (2.9.1.2)  experimental; urgency=high
+sil-transcriber (2.9.2.0)  experimental; urgency=high
 
   * TT-1792 Keey deep linking by user
   * TT-1604 check all steps on file upload
