@@ -155,7 +155,7 @@ export function ScriptureTable(props: IProps) {
   const [memory] = useGlobal('memory');
   const [remote] = useGlobal('remote');
   const [doSave] = useGlobal('doSave');
-  const [, setBusy] = useGlobal('importexportBusy');
+  const [busy, setBusy] = useGlobal('importexportBusy');
 
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
@@ -317,8 +317,8 @@ export function ScriptureTable(props: IProps) {
     let newRow;
     if (showBook(cols)) {
       newRow = [sequencenum, '', '', '', '', ''];
-      var prevRow = i ? i-1 : data.length-1;
-      if (prevRow >=0) newRow[cols.Book] = data[prevRow][cols.Book];
+      var prevRow = i ? i - 1 : data.length - 1;
+      if (prevRow >= 0) newRow[cols.Book] = data[prevRow][cols.Book];
     } else {
       newRow = [sequencenum, '', '', '', ''];
     }
@@ -880,7 +880,7 @@ export function ScriptureTable(props: IProps) {
       if (numChanges === 0) {
         return;
       }
-      setBusy(true);
+      if (numChanges > 200 && !busy) setBusy(true);
       while (numChanges > 200) {
         let someChangedRows = [...changedRows];
         let count = 0;
@@ -896,7 +896,7 @@ export function ScriptureTable(props: IProps) {
         numChanges = changedRows.filter((r) => r).length;
       }
       await doSave(changedRows);
-      setBusy(false);
+      if (busy) setBusy(false);
       setComplete(0);
     };
 
