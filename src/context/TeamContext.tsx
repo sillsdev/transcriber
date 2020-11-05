@@ -25,9 +25,8 @@ import {
   Role,
   RoleNames,
 } from '../model';
+import { isElectron } from '../api-variable';
 import { OptionType } from '../model';
-
-// import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { Online } from '../utils';
@@ -53,7 +52,6 @@ import {
 } from '../crud';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
-import { isElectron } from '../api-variable';
 
 export type TeamIdType = Organization | null;
 
@@ -209,6 +207,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       doOrbitError,
     } = props;
     const [memory] = useGlobal('memory');
+    const [isOffline] = useGlobal('offline');
     const [, setBusy] = useGlobal('importexportBusy');
 
     // const [orgRole, setOrgRole] = useGlobal('orgRole');
@@ -280,7 +279,7 @@ const TeamProvider = withData(mapRecordsToProps)(
           projectId,
           memory,
           remote,
-          online,
+          online && !isOffline,
           backup,
           projectsLoaded,
           setProjectsLoaded,
@@ -295,7 +294,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             if (!online) showMessage(t.NoLoadOffline);
             else showMessage(err.message);
           });
-      });
+      }, auth);
     };
 
     const isOwner = (plan: Plan) => {
@@ -332,7 +331,10 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teams = () => {
       return userOrgs
-        .filter((o) => !isPersonal(o.id))
+        .filter(
+          (o) =>
+            !isPersonal(o.id) && (!isElectron || teamProjects(o.id).length > 0)
+        )
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
 
@@ -346,7 +348,11 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const personalProjects = () => {
       const projIds = userProjects
-        .filter((p) => isPersonal(related(p, 'organization')))
+        .filter(
+          (p) =>
+            isPersonal(related(p, 'organization')) &&
+            (!isOffline || projectsLoaded.includes(p.id))
+        )
         .map((p) => p.id);
       return plans
         .filter((p) => projIds.includes(related(p, 'project')))
@@ -356,7 +362,11 @@ const TeamProvider = withData(mapRecordsToProps)(
 
     const teamProjects = (teamId: string) => {
       const projIds = userProjects
-        .filter((p) => related(p, 'organization') === teamId)
+        .filter(
+          (p) =>
+            related(p, 'organization') === teamId &&
+            (!isOffline || projectsLoaded.includes(p.id))
+        )
         .map((p) => p.id);
       return plans
         .filter((p) => projIds.includes(related(p, 'project')))
@@ -443,10 +453,10 @@ const TeamProvider = withData(mapRecordsToProps)(
           projects.filter((p) => grpIds.includes(related(p, 'group')))
         );
       } else setUserProjects(projects);
-    }, [projects, groupMemberships, user]);
+    }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
-      if (isElectron) {
+      if (isOffline) {
         const orgIds = orgMembers
           .filter((om) => related(om, 'user') === user)
           .map((om) => related(om, 'organization'));
@@ -454,7 +464,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       } else {
         setUserOrgs(organizations);
       }
-    }, [organizations, orgMembers, user]);
+    }, [organizations, orgMembers, user, isOffline]);
 
     return (
       <TeamContext.Provider

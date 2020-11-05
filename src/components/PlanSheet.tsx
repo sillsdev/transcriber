@@ -29,7 +29,6 @@ import Auth from '../auth/Auth';
 import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActions from './PlanActions';
-import { isElectron } from '../api-variable';
 
 const ActionHeight = 52;
 
@@ -196,6 +195,7 @@ export function PlanSheet(props: IProps) {
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
   const { projButtonStr } = ctx.state;
+  const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
   const [busy] = useGlobal('remoteBusy');
@@ -224,7 +224,7 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-  const [readonly, setReadOnly] = useState(isElectron || projRole !== 'admin');
+  const [readonly, setReadOnly] = useState(isOffline || projRole !== 'admin');
   const [warning, setWarning] = useState<string>();
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
@@ -343,7 +343,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && !isElectron && projRole === 'admin') {
+    if (i > 0 && !isOffline && projRole === 'admin') {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -377,7 +377,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const parsePaste = (clipBoard: string) => {
-    if (projRole !== 'admin' || isElectron) return Array<Array<string>>();
+    if (projRole !== 'admin' || isOffline) return Array<Array<string>>();
     if (currentRow.current === 0) {
       setPasting(true);
       showMessage(t.pasting);
@@ -439,7 +439,7 @@ export function PlanSheet(props: IProps) {
   const tryOnline = () => Online((result) => setOnline(result));
 
   useEffect(() => {
-    const newValue = isElectron || projRole !== 'admin';
+    const newValue = isOffline || projRole !== 'admin';
     if (readonly !== newValue) setReadOnly(newValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projRole]);
@@ -513,14 +513,14 @@ export function PlanSheet(props: IProps) {
                 return cellIndex === bookCol && passage
                   ? {
                       value: e,
-                      readOnly: isElectron,
+                      readOnly: isOffline,
                       className: 'book ' + (section ? ' setp' : 'pass'),
                       dataEditor: bookEditor,
                     }
                   : {
                       value: e,
                       readOnly:
-                        isElectron ||
+                        isOffline ||
                         (section
                           ? passage
                             ? false
@@ -662,12 +662,11 @@ export function PlanSheet(props: IProps) {
                   color="primary"
                   className={classes.button}
                   disabled={
-                    pasting || readonly || isElectron || projRole !== 'admin'
+                    pasting || readonly || isOffline || projRole !== 'admin'
                   }
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
-                  <AddIcon className={classes.icon} />
                 </Button>
                 <Button
                   key="resequence"

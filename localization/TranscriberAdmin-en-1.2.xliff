@@ -10,13 +10,20 @@
             </context-group>
          </trans-unit>
          <trans-unit id="access.accessSilTranscriber">
-            <source>Click your avatar to transcribe or review.</source>
+            <source>To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="access.importProject">
+      	<trans-unit id="access.goOnline">
+      		<source>Go Online</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">electronImport.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.importProject">
             <source>Import PTF File</source>
             <target/>
             <context-group>
@@ -1583,7 +1590,28 @@
                <context context-type="sourcefile">HelpMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.import">
+      	<trans-unit id="main.helpSpreadsheet">
+      		<source>View spreadsheet convention</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.flatSample">
+      		<source>Download flat sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.hierarchicalSample">
+      		<source>Download hierarchical sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.import">
             <source>Import</source>
             <target/>
             <context-group>
@@ -2018,14 +2046,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaUpload.ITFtask">
-            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="mediaUpload.ITFtitle">
-            <source>Upload Change Data from Desktop Extension</source>
+            <source>Upload Change Data from Desktop app.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -2158,7 +2186,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.refErr">
-            <source>This project contains invalid references and will not sync to Paratext properly.</source>
+            <source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -2200,7 +2228,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.tablePaste">
-            <source>Paste Table</source>
+            <source>Paste Spreadsheet</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

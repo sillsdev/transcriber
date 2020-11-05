@@ -1,10 +1,10 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { Grid, Paper, Typography } from '@material-ui/core';
 import PersonIcon from '@material-ui/icons/Person';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { TeamContext } from '../../context/TeamContext';
 import { ProjectCard, AddCard } from '.';
-import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,6 +41,7 @@ export const PersonalItem = () => {
   const ctx = React.useContext(TeamContext);
   const { personalProjects, cardStrings } = ctx.state;
   const t = cardStrings;
+  const [isOffline] = useGlobal('offline');
 
   return (
     <Paper id="PersonalItem" className={classes.root}>
@@ -54,7 +55,7 @@ export const PersonalItem = () => {
         {personalProjects().map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        {!isElectron && <AddCard team={null} />}
+        {!isOffline && <AddCard team={null} />}
       </Grid>
     </Paper>
   );

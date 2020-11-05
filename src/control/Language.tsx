@@ -67,8 +67,17 @@ export const Language = (props: IProps) => {
     setState((state) => ({ ...state, font }));
   };
 
+  const TAB = 9;
+  const SHIFT = 16;
+  const CTRL = 17;
+
   const handleChangeFont = (e: any) => {
-    if (langEl.current) langEl.current.click();
+    if (
+      langEl.current &&
+      e.keyCode &&
+      [TAB, SHIFT, CTRL].indexOf(e.keyCode) !== -1
+    )
+      langEl.current.click();
     e.stopPropagation();
   };
 

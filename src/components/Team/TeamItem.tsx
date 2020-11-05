@@ -10,7 +10,6 @@ import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard, TeamDialog } from '.';
 import { useRole, useAllUserGroup } from '../../crud';
 import Confirm from '../AlertDialog';
-import { isElectron } from '../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,6 +48,7 @@ interface IProps {
 export const TeamItem = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
+  const [isOffline] = useGlobal('offline');
   const [, setOrganization] = useGlobal('organization');
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
@@ -100,13 +100,13 @@ export const TeamItem = (props: IProps) => {
           {team?.attributes?.name}
         </Typography>
         <div>
-          {!isElectron && isAdmin(team) && (
+          {!isOffline && isAdmin(team) && (
             <Button variant="contained" onClick={handleMembers(team)}>
               {t.members.replace('{0}', teamMembers(team.id).toString())}
             </Button>
           )}
           {' \u00A0'}
-          {!isElectron && isAdmin(team) && (
+          {!isOffline && isAdmin(team) && (
             <Button variant="contained" onClick={handleSettings(team)}>
               {t.settings}
             </Button>
@@ -139,7 +139,7 @@ export const TeamItem = (props: IProps) => {
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        {!isElectron && isProjectAdmin(team) && <AddCard team={team} />}
+        {!isOffline && isProjectAdmin(team) && <AddCard team={team} />}
       </Grid>
     </Paper>
   );

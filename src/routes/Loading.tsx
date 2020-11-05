@@ -19,10 +19,16 @@ import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import JSONAPISource from '@orbit/jsonapi';
-import { uiLang, uiLangDev, localeDefault } from '../utils';
+import {
+  uiLang,
+  uiLangDev,
+  localeDefault,
+  localUserKey,
+  LocalKey,
+} from '../utils';
 import { related, GetUser } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
-import { API_CONFIG, isElectron } from '../api-variable';
+import { API_CONFIG } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -100,7 +106,7 @@ export function Loading(props: IProps) {
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
-  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [completed, setCompleted] = useState(0);
   const { showMessage } = useSnackBar();
@@ -164,9 +170,7 @@ export function Loading(props: IProps) {
   };
 
   useEffect(() => {
-    const isDevValue = localStorage.getItem('developer');
-    setIsDeveloper(isDevValue ? isDevValue === 'true' : false);
-    if (!auth || !auth.isAuthenticated(offline)) return;
+    if (!offline && !auth?.isAuthenticated()) return;
     setLanguage(localeDefault(isDeveloper));
     localStorage.removeItem('inviteError');
     fetchLocalization();
@@ -185,7 +189,7 @@ export function Loading(props: IProps) {
       setOrbitRetries,
       globalStore
     );
-    if (!isElectron && !offline) {
+    if (!offline) {
       const decodedToken: any = jwtDecode(auth.getAccessToken());
       setExpireAt(decodedToken.exp);
     }
@@ -207,7 +211,7 @@ export function Loading(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [completed, user]);
 
-  if (!auth || !auth.isAuthenticated(offline)) return <Redirect to="/" />;
+  if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
 
   if (orbitLoaded && completed === 100) {
     const userRec: User = GetUser(memory, user);
@@ -219,8 +223,8 @@ export function Loading(props: IProps) {
     ) {
       return <Redirect to="/profile" />;
     }
-    let fromUrl = localStorage.getItem('fromUrl');
-    if (fromUrl && !/^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
+    if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     push(fromUrl || '/team');
   }
 

@@ -195,6 +195,7 @@ export function Profile(props: IProps) {
   const { users, t, noMargin, finishAdd, setLanguage, auth } = props;
   const { paratext_username, paratext_usernameStatus, getUserName } = props;
   const classes = useStyles();
+  const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
@@ -457,6 +458,9 @@ export function Profile(props: IProps) {
     }
     if (finishAdd) {
       finishAdd();
+    }
+    if (editId) {
+      setEditId(null);
     }
     setView('Team');
   };
@@ -929,7 +933,7 @@ export function Profile(props: IProps) {
               </div>
             </Grid>
           </Grid>
-          {!isElectron &&
+          {!isOffline &&
             !editId &&
             currentUser &&
             currentUser.attributes.name !== currentUser.attributes.email && (

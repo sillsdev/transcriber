@@ -32,7 +32,7 @@ function getAuthenticationURL() {
     'audience=' +
     apiIdentifier +
     '&' +
-    'scope=openid profile offline_access&' +
+    'scope=openid email profile offline_access&' +
     'response_type=code&' +
     'client_id=' +
     desktopId +

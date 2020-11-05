@@ -36,7 +36,6 @@ const electronLog = isElectron ? logFile() : undefined;
 const store = configureStore();
 
 if (isElectron) {
-  localStorage.removeItem('user-id');
   backup
     .pull((q) => q.findRecords())
     .then((transform) => {
@@ -82,8 +81,7 @@ setGlobal({
   importexportBusy: false,
   autoOpenAddMedia: false,
   editUserId: null,
-  appView: true,
-  developer: false,
+  developer: localStorage.getItem('developer'),
   offline: isElectron,
   errorReporter: !isElectron ? bugsnagClient : electronLog,
   alertOpen: false,
@@ -101,12 +99,12 @@ if (isElectron) {
 
 const errorManagedApp = bugsnagClient ? (
   <SnagBoundary>
-    <ErrorBoundary errorReporter={bugsnagClient}>
+    <ErrorBoundary errorReporter={bugsnagClient} memory={memory}>
       <App />
     </ErrorBoundary>
   </SnagBoundary>
 ) : (
-  <ErrorBoundary errorReporter={electronLog}>
+  <ErrorBoundary errorReporter={electronLog} memory={memory}>
     <App />
   </ErrorBoundary>
 );

@@ -90,6 +90,20 @@ export const AddCard = (props: IProps) => {
   const [view, setView] = React.useState('');
   const stickyPush = useStickyRedirect();
 
+  useEffect(() => {
+    if (status.canceled) {
+      setInProgress(false);
+      //get ready for next time
+      status.canceled = false;
+    }
+  }, [status, status.canceled]);
+
+  useEffect(() => {
+    setType('');
+    setLanguage(initLang);
+    setBook(null);
+  }, [uploadVisible]);
+
   const handleShow = () => {
     if (!open) setShow(!show);
   };
@@ -182,24 +196,20 @@ export const AddCard = (props: IProps) => {
     setStep(2);
     mediaRemoteIds &&
       (await flatAdd(planId, mediaRemoteIds, book?.value, setComplete));
-    setInProgress(false);
-    setStep(0);
-    if (book?.value)
-      setView(`/plan/${remoteId('plan', planId, memory.keyMap)}/0`);
-    else setView(`/work/${remoteId('plan', planId, memory.keyMap)}`);
+    setStep(3);
+    setTimeout(() => {
+      // Allow time for last check mark
+      setInProgress(false);
+      setStep(0);
+      if (book?.value)
+        setView(`/plan/${remoteId('plan', planId, memory.keyMap)}/0`);
+      else setView(`/work/${remoteId('plan', planId, memory.keyMap)}`);
+    }, 1000);
   };
 
   const handleBookCommit = (book: OptionType | null) => {
     setBook(book);
   };
-
-  useEffect(() => {
-    if (status.canceled) {
-      setInProgress(false);
-      //get ready for next time
-      status.canceled = false;
-    }
-  }, [status.canceled]);
 
   const cancelUpload = (what: string) => {
     status.canceled = true;

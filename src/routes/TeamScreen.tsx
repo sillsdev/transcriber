@@ -1,13 +1,12 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { useStickyRedirect } from '../utils';
+import { LocalKey, localUserKey, useStickyRedirect } from '../utils';
 import { makeStyles } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
 import Auth from '../auth/Auth';
 import { remoteId } from '../crud';
-import { isElectron } from '../api-variable';
 import TeamActions from '../components/Team/TeamActions';
 
 const useStyles = makeStyles({
@@ -27,6 +26,7 @@ interface IProps {
 export const TeamScreen = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
+  const [isOffline] = useGlobal('offline');
   const [project, setProject] = useGlobal('project');
   const [projRole, setProjRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
@@ -36,13 +36,13 @@ export const TeamScreen = (props: IProps) => {
   if (project !== '' && projRole !== '') {
     const remProjId = remoteId('plan', plan, memory.keyMap);
     const loc =
-      projRole === 'admin' && !isElectron
+      projRole === 'admin' && !isOffline
         ? `/plan/${remProjId}/0`
         : `/work/${remProjId}`;
-    if (loc !== localStorage.getItem('fromUrl')) {
+    if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
       stickyPush(loc);
     } else {
-      localStorage.setItem('fromUrl', '/team');
+      localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
       setProject('');
       setProjRole('');
     }

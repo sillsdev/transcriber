@@ -9,11 +9,17 @@
       </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>Click your avatar to transcribe or review.</source>
-            <target>Cliquez sur votre avatar pour transcrire ou modifier.</target>
+         	<source>To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
+         	<target>Pour transcrire ou réviser sans Internet, cliquez sur votre avatar. Pour transcrire, réviser ou effectuer des tâches administratives en collaboration, cliquez sur 'Aller en ligne'. Pour configurer le programme avec les utilisateurs, le projet et les fichiers multimédia sans utiliser Internet, cliquez sur 'Importer un fichier PTF'. (Les fichiers PTF peuvent être exportés pendant qu'ils sont en ligne).</target>
          </segment>
       </unit>
-      <unit id="access.importProject">
+   	  <unit id="access.goOnline">
+   		<segment>
+   			<source>Go Online</source>
+   			<target>Aller en ligne</target>
+   		</segment>
+   	  </unit>
+   	  <unit id="access.importProject">
          <segment>
             <source>Import PTF File</source>
             <target>Importation un fichier de PTF</target>
@@ -1352,7 +1358,25 @@
             <target>Centre d'aide</target>
          </segment>
       </unit>
-      <unit id="main.import">
+   	<unit id="main.helpSpreadsheet">
+   		<segment>
+   			<source>View spreadsheet convention</source>
+   			<target>Voir la convention du tableur</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.flatSample">
+   		<segment>
+   			<source>Download flat sample spreadsheet</source>
+   			<target>Télécharger un exemple de tableur plat</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.hierarchicalSample">
+   		<segment>
+   			<source>Download hierarchical sample spreadsheet</source>
+   			<target>Télécharger un exemple de tableur hiérarchique</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.import">
          <segment>
             <source>Import</source>
             <target>Importation</target>
@@ -1714,14 +1738,14 @@
       </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
-            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'extension de bureau.</target>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
+            <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'application de bureau.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source>Upload Change Data from the Desktop Extension</source>
-            <target>Télécharger les données de modification depuis l'extension de bureau</target>
+            <source>Upload Change Data from the Desktop app.</source>
+            <target>Télécharger les données de modification depuis l'application de bureau.</target>
          </segment>
       </unit>
       <unit id="mediaUpload.PTFtask">
@@ -1828,8 +1852,8 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This project contains invalid references and will not sync to Paratext properly.</source>
-            <target>Ce projet contient des références non valables et ne se synchronisera pas correctement avec Paratext.</target>
+         	<source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
+         	<target>Ce projet contient des références non valables et ne se synchronise pas correctement avec Paratext. (Une référence valide serait 3:2-5 ou similaire).</target>
          </segment>
       </unit>
       <unit id="planSheet.resequence">
@@ -1864,8 +1888,8 @@
       </unit>
       <unit id="planSheet.tablePaste">
          <segment>
-            <source>Paste Table</source>
-            <target>Coller la table</target>
+            <source>Paste Spreadsheet</source>
+         	<target>Coller le tableur</target>
          </segment>
       </unit>
       <unit id="planSheet.useCtrlV">

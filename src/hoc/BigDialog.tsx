@@ -63,11 +63,12 @@ interface IProps {
 
 export function BigDialog({ title, children, isOpen, onOpen, bp }: IProps) {
   const classes = useStyles();
+  const [isExportBusy] = useGlobal('importexportBusy');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
 
   const handleClose = () => {
     if (enableOffsite) setEnableOffsite(false);
-    onOpen && onOpen(false);
+    if (!isExportBusy) onOpen && onOpen(false);
   };
 
   return (
@@ -85,9 +86,13 @@ export function BigDialog({ title, children, isOpen, onOpen, bp }: IProps) {
         <div className={classes.row}>
           {title}
           <div className={classes.grow}>{'\u00A0'}</div>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
+          {!isExportBusy ? (
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          ) : (
+            <div />
+          )}
         </div>
       </DialogTitle>
       <DialogContent>{children}</DialogContent>

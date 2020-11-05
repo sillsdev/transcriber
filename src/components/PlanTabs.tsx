@@ -19,10 +19,9 @@ import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
 import { QueryBuilder } from '@orbit/data';
-import { isElectron } from '../api-variable';
 import { withData } from '../mods/react-orbitjs';
 import { HeadHeight } from '../App';
-import { related, useOrganizedBy } from '../crud';
+import { getMediaInPlans, related, useOrganizedBy } from '../crud';
 import { useStickyRedirect } from '../utils';
 
 export const TabHeight = 48;
@@ -86,6 +85,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
     mediafiles,
   } = props;
   const classes = useStyles();
+  const [isOffline] = useGlobal('offline');
   const [plan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
@@ -106,13 +106,9 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const planPassages = passages.filter((p) =>
     planSectionIds.includes(related(p, 'section'))
   );
-  // this is only used to get counts,
-  // so we're using this clever hack of only getting version 1
-  const planMedia = plan
-    ? mediafiles.filter(
-        (m) => related(m, 'plan') === plan && m.attributes.versionNumber === 1
-      )
-    : ([] as MediaFile[]);
+  const planMedia = (plan
+    ? getMediaInPlans([plan], mediafiles)
+    : []) as MediaFile[];
   const attached = planMedia
     .map((m) => related(m, 'passage'))
     .filter((p) => p && p !== '');
@@ -173,7 +169,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isElectron}
+            disabled={isOffline}
           />
           <Tab
             label={
@@ -186,7 +182,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isElectron}
+            disabled={isOffline}
           />
           <Tab
             label={

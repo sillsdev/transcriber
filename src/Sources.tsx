@@ -16,7 +16,7 @@ import { API_CONFIG, isElectron } from './api-variable';
 import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { related, LoadData } from './crud';
-import { orbitRetry, orbitErr } from './utils';
+import { orbitRetry, orbitErr, localUserKey, LocalKey } from './utils';
 import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
@@ -94,8 +94,10 @@ export const Sources = async (
       return 'remoteId';
     };
 
-    if (!coordinator.sourceNames.includes('remote'))
+    if (!coordinator.sourceNames.includes('remote')) {
+      if (coordinator.activated) await coordinator.deactivate();
       coordinator.addSource(remote);
+    }
     setRemote(remote);
 
     // Trap error querying data (token expired or offline)
@@ -247,9 +249,7 @@ export const Sources = async (
     let goRemote =
       !offline &&
       (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
-    if (goRemote) {
-      localStorage.removeItem('fromUrl'); //we're a different user, or we want to go to the new project anyway
-    } else {
+    if (!goRemote) {
       setUser(localStorage.getItem('user-id') as string);
       console.log('using backup');
       if (!isElectron) {
@@ -277,8 +277,11 @@ export const Sources = async (
     }
 
     if (goRemote) {
-      localStorage.setItem('lastTime', currentDateTime());
-      await backup.reset();
+      localStorage.setItem(
+        localUserKey(LocalKey.time, memory),
+        currentDateTime()
+      );
+      if (!isElectron) await backup.reset();
       var currentuser: User | undefined;
 
       var tr = await remote.pull((q) => q.findRecords('currentuser'));

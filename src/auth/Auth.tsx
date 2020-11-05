@@ -1,5 +1,6 @@
 import history from '../history';
 import auth0 from 'auth0-js';
+import jwtDecode from 'jwt-decode';
 import { AUTH_CONFIG } from './auth0-variables';
 
 export default class Auth {
@@ -91,9 +92,12 @@ export default class Auth {
     this.accessToken = accessToken;
     this.profile = idTokenPayload;
     this.expiresAt = accessToken ? new Date(5000, 0, 0) : null;
-
-    // navigate to the home route
-    history.replace('/loading');
+    const decodedToken: any = jwtDecode(accessToken);
+    const verifiedKey = Object.keys(decodedToken).filter(
+      (n) => n.indexOf('email_verified') !== -1
+    );
+    if (verifiedKey.length > 0)
+      this.email_verified = decodedToken[verifiedKey[0]];
   }
 
   renewSession() {
@@ -115,7 +119,6 @@ export default class Auth {
     // Remove isLoggedIn flag from localStorage
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('nonce');
-    //localStorage.removeItem('user-id');
 
     this.auth0.logout({
       returnTo: window.location.origin,
@@ -125,12 +128,9 @@ export default class Auth {
     // history.replace('/loading');
   }
 
-  isAuthenticated(offline: boolean) {
+  isAuthenticated() {
     // Check whether the current time is past the
     // access token's expiry time
-    if (offline) {
-      return true;
-    }
     if (!this.email_verified) return false;
     let expiresAt = this.expiresAt;
     return new Date().getTime() < expiresAt;

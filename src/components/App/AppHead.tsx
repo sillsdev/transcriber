@@ -19,7 +19,13 @@ import { API_CONFIG, isElectron } from '../../api-variable';
 import { UnsavedContext } from '../../context/UnsavedContext';
 import HelpMenu from '../HelpMenu';
 import UserMenu from '../UserMenu';
-import { resetData, exitElectronApp, forceLogin } from '../../utils';
+import {
+  resetData,
+  exitElectronApp,
+  forceLogin,
+  localUserKey,
+  LocalKey,
+} from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
 import Busy from '../Busy';
@@ -57,7 +63,8 @@ export const AppHead = withBucket(
     const { auth, resetRequests, SwitchTo, t } = props;
     const classes = useStyles();
     const { pathname } = useLocation();
-    const [isOffline] = useGlobal('offline');
+    const [memory] = useGlobal('memory');
+    const [isOffline, setIsOffline] = useGlobal('offline');
     const [, setProject] = useGlobal('project');
     const [projRole, setProjRole] = useGlobal('projRole');
     const [plan, setPlan] = useGlobal('plan');
@@ -84,12 +91,13 @@ export const AppHead = withBucket(
       if (isElectron && /logout/i.test(what)) {
         checkSavedFn(() => {
           ipc?.invoke('logout');
-          localStorage.removeItem('user-id');
+          localStorage.removeItem('isLoggedIn');
+          setIsOffline(isElectron);
           setView('Access');
         });
         return;
       }
-      localStorage.setItem('fromUrl', lastpath);
+      localStorage.setItem(localUserKey(LocalKey.url, memory), lastpath);
       if (!/Close/i.test(what)) {
         if (/ClearLogout/i.test(what)) {
           forceLogin();
@@ -135,8 +143,6 @@ export const AppHead = withBucket(
     if (view === 'Logout') return <Redirect to="/logout" />;
     if (view === 'Access') return <Redirect to="/" />;
     if (view === 'Home') stickyPush('/team');
-    if (!auth || !auth.isAuthenticated(isOffline))
-      return <Redirect to="/logout" />;
 
     return (
       <AppBar position="fixed" className={classes.appBar} color="inherit">

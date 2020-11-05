@@ -45,7 +45,6 @@ import ShapingTable from './ShapingTable';
 import Busy from './Busy';
 import Template from '../control/template';
 import Auth from '../auth/Auth';
-import { isElectron } from '../api-variable';
 import moment from 'moment';
 
 import {
@@ -363,7 +362,7 @@ export function MediaTab(props: IProps) {
   const [remote] = useGlobal('remote');
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
-  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  const [isOffline] = useGlobal('offline');
   const [, setTab] = useGlobal('tab');
   const [, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -680,7 +679,8 @@ export function MediaTab(props: IProps) {
 
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
-    const media: MediaFile[] = getMediaInPlans([planRec], mediaFiles);
+    const media: MediaFile[] = getMediaInPlans([planRec.id], mediaFiles);
+
     const newData = getMedia(
       planRec?.attributes?.name,
       media,
@@ -1037,7 +1037,7 @@ export function MediaTab(props: IProps) {
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {!attachVisible && !isElectron && (
+                {!attachVisible && !isOffline && (
                   <Button
                     key="upload"
                     aria-label={ts.uploadMediaPlural}
@@ -1050,7 +1050,7 @@ export function MediaTab(props: IProps) {
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {!attachVisible && !isElectron && (
+                {!attachVisible && !isOffline && (
                   <>
                     <Button
                       key="action"

@@ -11,11 +11,11 @@ import {
 } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { DataChange } from '../model/dataChange';
-import { API_CONFIG, isElectron } from '../api-variable';
+import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
 import { remoteIdGuid, remoteIdNum } from '../crud';
 import JSONAPISource, { JSONAPISerializerSettings } from '@orbit/jsonapi';
-import { currentDateTime } from '../utils';
+import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
 
@@ -35,7 +35,8 @@ export const doDataChanges = (
   fingerprint: string,
   errorReporter: any
 ) => {
-  let lastTime = localStorage.getItem('lastTime');
+  const userLastTimeKey = localUserKey(LocalKey.time, memory);
+  let lastTime = localStorage.getItem(userLastTimeKey);
   if (!lastTime) lastTime = currentDateTime(); // should not happen
   let nextTime = currentDateTime();
   Axios.get(
@@ -125,7 +126,7 @@ export const doDataChanges = (
           await memory.update(operations);
         }
       }
-      localStorage.setItem('lastTime', nextTime);
+      localStorage.setItem(userLastTimeKey, nextTime);
     })
     .catch((e: any) => {
       logError(Severity.error, errorReporter, e);
@@ -134,6 +135,7 @@ export const doDataChanges = (
 
 export default function DataChanges(props: IProps) {
   const { auth, children } = props;
+  const [isOffline] = useGlobal('offline');
   const [remote] = useGlobal('remote');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [user] = useGlobal('user');
@@ -145,19 +147,15 @@ export default function DataChanges(props: IProps) {
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [project] = useGlobal('project');
 
-  const defaultBackupDelay = isElectron ? 1000 * 60 * 30 : null; //30 minutes;
+  const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
 
   useEffect(() => {
     const defaultBusyDelay = 1000;
     const defaultDataDelay = 1000 * 100;
 
     if (!remote) setBusy(false);
-    setBusyDelay(
-      remote && auth && auth.isAuthenticated ? defaultBusyDelay : null
-    );
-    setDataDelay(
-      remote && auth && auth.isAuthenticated ? defaultDataDelay : null
-    );
+    setBusyDelay(remote && auth?.isAuthenticated() ? defaultBusyDelay : null);
+    setDataDelay(remote && auth?.isAuthenticated() ? defaultDataDelay : null);
   }, [remote, auth, setBusy]);
 
   const updateBusy = () => {
