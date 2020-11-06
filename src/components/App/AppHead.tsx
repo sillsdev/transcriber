@@ -77,6 +77,9 @@ export const AppHead = withBucket(
     const [doSave] = useGlobal('doSave');
     const [globalStore] = useGlobal();
     const stickyPush = useStickyRedirect();
+    const [isChanged] = useGlobal('changed');
+    const [exitAlert, setExitAlert] = React.useState(false);
+    const [dosave, setDoSave] = useGlobal('doSave');
 
     const handleUserMenuAction = (
       what: string,
@@ -119,12 +122,9 @@ export const AppHead = withBucket(
       setView('Home');
     };
 
-    // React.useEffect(() => {
-    //   console.log(`pageview: ${pathname}`);
-    // }, [pathname]);
-
     React.useEffect(() => {
       const handleUnload = (e: any) => {
+        if (!exitAlert && isElectron) setExitAlert(true);
         if (!globalStore.enableOffsite) {
           e.preventDefault();
           e.returnValue = '';
@@ -137,6 +137,10 @@ export const AppHead = withBucket(
       };
       /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, []);
+
+    if (exitAlert)
+      if (!isChanged) return <Redirect to="/logout" />;
+      else if (!dosave) setDoSave(true);
 
     if (view === 'Error') return <Redirect to="/error" />;
     if (view === 'Profile') stickyPush('/profile');

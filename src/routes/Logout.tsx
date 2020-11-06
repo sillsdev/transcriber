@@ -15,6 +15,8 @@ import { useGlobal } from 'reactn';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
+const ipc = isElectron ? require('electron').ipcRenderer : null;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -50,6 +52,7 @@ export function Logout(props: IProps) {
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [isDeveloper] = useGlobal('developer');
+  const [, setIsOffline] = useGlobal('offline');
   const [view, setView] = React.useState('');
 
   useEffect(() => {
@@ -58,7 +61,12 @@ export function Logout(props: IProps) {
     if (!isElectron) {
       auth.logout();
     } else {
-      localStorage.removeItem('user-id');
+      if (auth.accessToken) {
+        ipc?.invoke('logout');
+        localStorage.removeItem('isLoggedIn');
+        setIsOffline(isElectron);
+        auth.logout();
+      }
       setView('Access');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
