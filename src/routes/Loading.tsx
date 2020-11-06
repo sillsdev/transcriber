@@ -99,7 +99,7 @@ export function Loading(props: IProps) {
   const [offline] = useGlobal('offline');
   const [, setBucket] = useGlobal('bucket');
   const [, setRemote] = useGlobal('remote');
-  const [, setFingerprint] = useGlobal('fingerprint');
+  const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
   const [globalStore] = useGlobal();
@@ -178,10 +178,10 @@ export function Loading(props: IProps) {
       coordinator,
       memory,
       auth,
+      fingerprint,
       setUser,
       setBucket,
       setRemote,
-      setFingerprint,
       setCompleted,
       setProjectsLoaded,
       setCoordinatorActivated,

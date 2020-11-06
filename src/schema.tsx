@@ -1,7 +1,10 @@
-import { KeyMap, Schema, SchemaSettings } from '@orbit/data';
+import { KeyMap, Operation, Schema, SchemaSettings, TransformBuilder } from '@orbit/data';
 import Memory from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
+import { isElectron } from './api-variable';
+import { OfflineProject } from './model';
+import Fingerprint2 from 'fingerprintjs2';
 
 const schemaDefinition: SchemaSettings = {
   models: {
@@ -442,7 +445,21 @@ const schemaDefinition: SchemaSettings = {
       },
       relationships: {},
     },
+    offlineproject: {
+      keys: { remoteId: {} },
+      attributes: {
+        computerfp: { type: 'string' },
+        snapshotDate: { type: 'date-time' },
+      },
+      relationships: {
+        project: {
+          type: 'hasOne',
+          model: 'project',
+        },
+      },
+    },
   },
+  version:2,
 };
 
 export const schema = new Schema(schemaDefinition);
@@ -450,6 +467,41 @@ export const schema = new Schema(schemaDefinition);
 export const keyMap = new KeyMap();
 
 export const memory = new Memory({ schema, keyMap });
+const findMissingModels = (schema: Schema, db: IDBDatabase) => {
+  return Object.keys(schema.models).filter(model => !db.objectStoreNames.contains(model));
+}
+const SaveOfflineProjectInfo = async (backup: IndexedDBSource, db: IDBDatabase) => {
+  if (isElectron)
+  {
+    var t = await backup.pull((q) => q.findRecords('project'));
+    const ops: Operation[] = [];
+    const tb = new TransformBuilder();
+    var fingerprint = '';
+    if (t[0].operations.length > 0)
+    {
+      var components = await Fingerprint2.getPromise({});
+      fingerprint = Fingerprint2.x64hash128(
+          components.map((c) => c.value).join(''),
+          31
+        );
+    }
+    t[0].operations.forEach((r: any) => {
+      const proj: OfflineProject = {
+        type: 'offlineproject',
+        attributes: {
+          computerfp: fingerprint,
+          snapshotDate:  r.record.attributes.dateImported,
+        },
+      } as OfflineProject;
+      backup.schema.initializeRecord(proj);
+      ops.push(tb.addRecord(proj));
+      ops.push(tb.replaceRelatedRecord(proj, 'project', r.record))
+    });
+    await backup.push(ops);
+    await memory.update(ops);
+    console.log("done with upgrade to v2");
+  }
+}
 
 export const backup = window.indexedDB
   ? new IndexedDBSource({
@@ -459,6 +511,19 @@ export const backup = window.indexedDB
       namespace: 'transcriber',
     })
   : ({} as IndexedDBSource);
+
+  backup.cache.migrateDB = function(db, event) {
+    console.log('migrateDb', event);
+    // Ensure that all models are registered
+    findMissingModels(this.schema, db)
+    .forEach(model => {
+      console.log(`Registering IndexedDB model at version ${event.newVersion}: ${model}`);
+      this.registerModel(db, model);
+    });
+    if (isElectron && event.newVersion === 2){
+      SaveOfflineProjectInfo(backup, db);
+    }
+  }
 
 export const coordinator = new Coordinator();
 coordinator.addSource(memory);

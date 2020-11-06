@@ -6,6 +6,7 @@ export * from './integration';
 export * from './invitation';
 export * from './mediaDescription';
 export * from './mediaFile';
+export * from './offlineProject';
 export * from './project';
 export * from './projectType';
 export * from './plan';

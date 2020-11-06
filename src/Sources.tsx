@@ -8,7 +8,7 @@ import Coordinator, {
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
-import { Transform, NetworkError, QueryBuilder } from '@orbit/data';
+import { Transform, NetworkError, QueryBuilder, } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
@@ -17,16 +17,15 @@ import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { currentDateTime } from './utils/currentDateTime';
 import { related, LoadData } from './crud';
 import { orbitRetry, orbitErr, localUserKey, LocalKey } from './utils';
-import Fingerprint2, { Component } from 'fingerprintjs2';
 
 export const Sources = async (
   coordinator: Coordinator,
   memory: Memory,
   auth: Auth,
+  fingerprint: string,
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
-  setFingerprint: (fingerprint: string) => void,
   setCompleted: (valud: number) => void,
   setProjectsLoaded: (valud: string[]) => void,
   setCoordinatorActivated: (valud: boolean) => void,
@@ -65,14 +64,8 @@ export const Sources = async (
 
   const offline = !auth.accessToken;
 
-  if (!offline) {
-    var components: Component[] = await Fingerprint2.getPromise({});
-    var fp = Fingerprint2.x64hash128(
-      components.map((c) => c.value).join(''),
-      31
-    );
-    setFingerprint(fp);
-    remote = coordinator.sourceNames.includes('remote')
+    if (!offline) {
+      remote = coordinator.sourceNames.includes('remote')
       ? (coordinator.getSource('remote') as JSONAPISource)
       : new JSONAPISource({
           schema: memory.schema,
@@ -85,7 +78,7 @@ export const Sources = async (
           defaultFetchSettings: {
             headers: {
               Authorization: 'Bearer ' + auth.accessToken,
-              'X-FP': fp,
+              'X-FP': fingerprint,
             },
             timeout: 100000,
           },
