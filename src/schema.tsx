@@ -5,6 +5,7 @@ import Coordinator from '@orbit/coordinator';
 import { isElectron } from './api-variable';
 import { OfflineProject } from './model';
 import Fingerprint2 from 'fingerprintjs2';
+import { currentDateTime } from './utils';
 
 const schemaDefinition: SchemaSettings = {
   models: {
@@ -450,6 +451,9 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         computerfp: { type: 'string' },
         snapshotDate: { type: 'date-time' },
+        dateCreated: { type: 'date-time' },
+        dateUpdated: { type: 'date-time' },
+        lastModifiedBy: { type: 'number' },
       },
       relationships: {
         project: {
@@ -470,7 +474,7 @@ export const memory = new Memory({ schema, keyMap });
 const findMissingModels = (schema: Schema, db: IDBDatabase) => {
   return Object.keys(schema.models).filter(model => !db.objectStoreNames.contains(model));
 }
-const SaveOfflineProjectInfo = async (backup: IndexedDBSource, db: IDBDatabase) => {
+const SaveOfflineProjectInfo = async (backup: IndexedDBSource, memory: Memory) => {
   if (isElectron)
   {
     var t = await backup.pull((q) => q.findRecords('project'));
@@ -491,6 +495,8 @@ const SaveOfflineProjectInfo = async (backup: IndexedDBSource, db: IDBDatabase) 
         attributes: {
           computerfp: fingerprint,
           snapshotDate:  r.record.attributes.dateImported,
+          dateCreated: currentDateTime(),
+          dateUpdated:  currentDateTime(),
         },
       } as OfflineProject;
       backup.schema.initializeRecord(proj);
@@ -521,7 +527,7 @@ export const backup = window.indexedDB
       this.registerModel(db, model);
     });
     if (isElectron && event.newVersion === 2){
-      SaveOfflineProjectInfo(backup, db);
+      SaveOfflineProjectInfo(backup, memory);
     }
   }
 
