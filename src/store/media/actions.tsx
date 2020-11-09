@@ -4,7 +4,7 @@ import Auth from '../../auth/Auth';
 import * as type from './types';
 import MemorySource from '@orbit/memory';
 import { remoteIdGuid, remoteId } from '../../crud';
-import { dataPath } from '../../utils/dataPath';
+import { dataPath, PathType } from '../../utils/dataPath';
 import { MediaFile } from '../../model';
 
 export const fetchMediaUrl = (
@@ -25,7 +25,7 @@ export const fetchMediaUrl = (
       ) as MediaFile;
       if (mediarec && mediarec.attributes) {
         dispatch({
-          payload: dataPath(mediarec.attributes.audioUrl),
+          payload: dataPath(mediarec.attributes.audioUrl, PathType.MEDIA),
           type: type.FETCH_AUDIO_URL,
         });
       }

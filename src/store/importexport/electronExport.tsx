@@ -23,7 +23,7 @@ import {
   TransformBuilder,
 } from '@orbit/data';
 import { remoteIdGuid, related, remoteId, getMediaEaf } from '../../crud';
-import { dataPath, cleanFileName, currentDateTime } from '../../utils';
+import { dataPath, cleanFileName, currentDateTime, PathType} from '../../utils';
 
 export async function electronExport(
   exportType: string,
@@ -115,49 +115,56 @@ export async function electronExport(
       zip.addLocalFile(local, path.dirname(name), path.basename(name));
     };
     const AddUserAvatars = (recs: Record[]) => {
+      const avatarpath = PathType.AVATARS + '/';
       recs.forEach((u) => {
         var user = u as User;
         if (
           user.attributes &&
           user.attributes.avatarUrl !== null &&
           user.attributes.avatarUrl !== ''
-        )
+        ) {
+          var dp = dataPath(user.attributes.avatarUrl, PathType.AVATARS, remoteId('user', user.id, memory.keyMap) + user.attributes.familyName+".png" );
           AddStreamEntry(
-            dataPath(user.attributes.avatarUrl),
-            user.attributes.avatarUrl
+           dp,
+           avatarpath + path.basename(dp)
           );
+        }
       });
     };
     const AddOrgLogos = (recs: Record[]) => {
+      const logopath = PathType.LOGOS + '/';
       recs.forEach((o) => {
         var org = o as Organization;
         if (
           org.attributes &&
           org.attributes.logoUrl !== null &&
           org.attributes.logoUrl !== ''
-        )
+        ) {
+          var dp = dataPath(org.attributes.logoUrl, PathType.LOGOS, org.attributes.slug + ".png");
           AddStreamEntry(
-            dataPath(org.attributes.logoUrl),
-            org.attributes.logoUrl
-          );
+            dp,
+            logopath + path.basename(dp)
+          );}
       });
     };
     const AddMediaFiles = (recs: Record[]) => {
+      const mediapath = PathType.MEDIA + '/';
       recs.forEach((m) => {
         var mf = m as MediaFile;
-        if (mf.attributes)
-          AddStreamEntry(
-            dataPath(mf.attributes.audioUrl),
-            mf.attributes.audioUrl
+        if (!mf.attributes)
+          return;
+        const mp = dataPath(mf.attributes.audioUrl, PathType.MEDIA);
+        AddStreamEntry(
+            mp,
+            mediapath + path.basename(mp)
           );
         const eafCode = getMediaEaf(mf, memory);
         const name =
-          path.basename(
-            mf.attributes.audioUrl,
-            path.extname(mf.attributes.audioUrl)
+          path.basename(mp,
+                      path.extname(mp)
           ) + '.eaf';
         zip.addFile(
-          'media/' + name,
+          mediapath + name,
           Buffer.alloc(eafCode.length, eafCode),
           'EAF'
         );
