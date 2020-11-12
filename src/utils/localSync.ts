@@ -199,7 +199,7 @@ const addAfter = (doc: Document, last: Node | null | undefined, next: Node) =>
     ? doc.insertBefore(next, last.nextSibling)
     : last?.parentNode
     ? last?.parentNode.appendChild(next)
-    : doc.appendChild(next);
+    : doc.documentElement.appendChild(next);
 
 const addParatextVerse = (
   doc: Document,
