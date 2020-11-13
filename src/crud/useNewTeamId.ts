@@ -5,6 +5,7 @@ import { Organization, User, ISharedStrings } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { waitForIt } from '../utils';
 import { useTeamCreate, useIsPersonalTeam } from '.';
+import Auth from '../auth/Auth';
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -12,7 +13,9 @@ interface IStateProps {
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
 }
-interface IProps extends IStateProps, IDispatchProps {}
+interface IProps extends IStateProps, IDispatchProps {
+  auth: Auth
+}
 
 export const useNewTeamId = (props: IProps) => {
   const [memory] = useGlobal('memory');

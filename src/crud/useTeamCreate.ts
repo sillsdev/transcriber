@@ -4,6 +4,7 @@ import { Online } from '../utils';
 import { createOrg, offlineError } from '.';
 import * as actions from '../store';
 import { useSnackBar } from '../hoc/SnackBar';
+import Auth from '../auth/Auth';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -13,7 +14,9 @@ interface IStateProps {
   ts: ISharedStrings;
 }
 
-interface IProps extends IStateProps, IDispatchProps {}
+interface IProps extends IStateProps, IDispatchProps {
+  auth: Auth;
+}
 
 export const useTeamCreate = (props: IProps) => {
   const { doOrbitError } = props;
@@ -52,6 +55,6 @@ export const useTeamCreate = (props: IProps) => {
         setProject,
         doOrbitError,
       }).catch((err) => offlineError({ ...props, online, showMessage, err }));
-    });
+    }, props.auth);
   };
 };

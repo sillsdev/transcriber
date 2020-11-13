@@ -436,7 +436,7 @@ export function PlanSheet(props: IProps) {
     }, 1000 * 30);
   };
 
-  const tryOnline = () => Online((result) => setOnline(result));
+  const tryOnline = () => Online((result) => setOnline(result), auth);
 
   useEffect(() => {
     const newValue = isOffline || projRole !== 'admin';
@@ -617,6 +617,7 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => tryOnline(), []);
 
   //do this every 30 seconds to warn they can't save

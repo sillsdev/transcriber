@@ -913,7 +913,7 @@ export function ScriptureTable(props: IProps) {
             setSaving(false);
           });
         }
-      });
+      }, auth);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, saving, data, inData, rowInfo]);
