@@ -17,10 +17,12 @@ import OrgData from '../model/orgData';
 import { Project, IApiError } from '../model';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
+import { offlineProjectCreate, offlineProjectUpdate } from '../crud';
+import { getFingerprint } from '../utils';
 
 const completePerTable = 3;
 
-export function insertData(
+export async function insertData(
   item: Record,
   memory: Memory,
   tb: TransformBuilder,
@@ -51,6 +53,12 @@ export function insertData(
       if (Array.isArray(rec)) rec = rec[0]; //won't be...
       rec.attributes = { ...item.attributes };
       oparray.push(tb.updateRecord(rec));
+      if (rec.type === 'project') {
+        if (!offlineProjectUpdate(rec as Project, oparray, memory)) {
+          const fp = await getFingerprint();
+          offlineProjectCreate(rec as Project, oparray, memory, fp, true);
+        }
+      }
       for (var rel in item.relationships) {
         if (
           item.relationships[rel].data &&
@@ -73,6 +81,10 @@ export function insertData(
       try {
         memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
+        if (item.type === 'project') {
+          const fp = await getFingerprint();
+          offlineProjectCreate(item as Project, oparray, memory, fp, true);
+        }
       } catch (err) {
         orbitError(orbitInfo(err, 'Add record error'));
       }

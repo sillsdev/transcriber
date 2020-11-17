@@ -1,5 +1,11 @@
 import { IAxiosStatus } from '../AxiosStatus';
 
+export enum ExportType {
+  PTF = 'ptf',
+  ITF = 'itf',
+  ZIP = 'zip',
+}
+
 export interface FileResponse {
   data: {
     attributes: {

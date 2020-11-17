@@ -13,9 +13,8 @@ import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
 import bugsnagReact from '@bugsnag/plugin-react';
 import history from './history';
-import { logError, Severity, infoMsg, logFile } from './utils';
+import { logError, Severity, infoMsg, logFile, getFingerprint } from './utils';
 import { isElectron, API_CONFIG } from './api-variable';
-import Fingerprint2 from 'fingerprintjs2';
 const appVersion = require('../package.json').version;
 
 const OrbitNetworkErrorRetries = 16;
@@ -39,13 +38,12 @@ const store = configureStore();
 async function pullBackup() {
   try {
     await memory.sync(await backup.pull((q) => q.findRecords()));
-  }
-  catch(err) {
+  } catch (err) {
     logError(
       Severity.error,
       bugsnagClient,
       infoMsg(err, 'IndexedDB Pull error')
-    )
+    );
   }
 }
 if (isElectron) {
@@ -78,53 +76,48 @@ const Root = () => (
   </DataProvider>
 );
 if (isElectron) {
-   pullBackup().then(() => console.log('pull done'));
+  pullBackup().then(() => console.log('pull done'));
 }
-Fingerprint2.getPromise({}).then((components)=> {
-  var fp = Fingerprint2.x64hash128(
-    components.map((c) => c.value).join(''),
-    31
-  );
-  setGlobal({
-    organization: '',
-    orgRole: '',
-    project: '',
-    projRole: '',
-    plan: '',
-    tab: undefined,
-    group: '',
-    user: '',
-    lang: 'en',
-    coordinator,
-    memory,
-    backup,
-    bucket: undefined,
-    remote: undefined,
-    remoteBusy: true, //prevent datachanges until after login
-    doSave: false,
-    saveResult: undefined,
-    snackMessage: <></>,
-    changed: false,
-    projectsLoaded: [],
-    importexportBusy: false,
-    autoOpenAddMedia: false,
-    editUserId: null,
-    developer: localStorage.getItem('developer'),
-    offline: isElectron,
-    errorReporter: !isElectron ? bugsnagClient : electronLog,
-    alertOpen: false,
-    coordinatorActivated: false,
-    fingerprint: fp,
-    orbitRetries: OrbitNetworkErrorRetries,
-    enableOffsite: false,
+getFingerprint()
+  .then((fp) => {
+    setGlobal({
+      organization: '',
+      orgRole: '',
+      project: '',
+      projRole: '',
+      plan: '',
+      tab: undefined,
+      group: '',
+      user: '',
+      lang: 'en',
+      coordinator,
+      memory,
+      backup,
+      bucket: undefined,
+      remote: undefined,
+      remoteBusy: true, //prevent datachanges until after login
+      doSave: false,
+      saveResult: undefined,
+      snackMessage: <></>,
+      changed: false,
+      projectsLoaded: [],
+      importexportBusy: false,
+      autoOpenAddMedia: false,
+      editUserId: null,
+      developer: localStorage.getItem('developer'),
+      offline: isElectron,
+      errorReporter: !isElectron ? bugsnagClient : electronLog,
+      alertOpen: false,
+      coordinatorActivated: false,
+      fingerprint: fp,
+      orbitRetries: OrbitNetworkErrorRetries,
+      enableOffsite: false,
+    });
+    ReactDOM.render(<Root />, document.getElementById('root'));
+  })
+  .catch((err) => {
+    logError(Severity.error, bugsnagClient, infoMsg(err, 'Fingerprint failed'));
   });
-  ReactDOM.render(<Root />, document.getElementById('root'));
-}).catch((err) => {
-  logError(
-    Severity.error,
-    bugsnagClient,
-    infoMsg(err, 'Fingerprint failed')
-  )});
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA

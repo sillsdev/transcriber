@@ -175,6 +175,7 @@ export const ProjectCard = (props: IProps) => {
     const {
       name,
       description,
+      offlineAvailable,
       type,
       languageName,
       rtl,
@@ -187,6 +188,7 @@ export const ProjectCard = (props: IProps) => {
         ...project.attributes,
         name,
         description,
+        offlineAvailable,
         type,
         language: values.bcp47,
         languageName,
@@ -215,6 +217,7 @@ export const ProjectCard = (props: IProps) => {
     const value: IProjectDialog = {
       name: attr.name,
       description: attr.description || '',
+      offlineAvailable: attr.offlineAvailable,
       type: attr.type,
       book: '',
       bcp47: attr.language,

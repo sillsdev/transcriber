@@ -11,6 +11,7 @@ export interface VProject extends Record {
     name: string;
     slug: string;
     description: string | null;
+    offlineAvailable: boolean;
     uilanguagebcp47: string | null;
     language: string;
     languageName: string | null;

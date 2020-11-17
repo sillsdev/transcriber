@@ -30,8 +30,6 @@ import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
 import Busy from '../Busy';
 
-const ipc = isElectron ? require('electron').ipcRenderer : null;
-
 const useStyles = makeStyles({
   appBar: {
     width: '100%',
@@ -64,7 +62,7 @@ export const AppHead = withBucket(
     const classes = useStyles();
     const { pathname } = useLocation();
     const [memory] = useGlobal('memory');
-    const [isOffline, setIsOffline] = useGlobal('offline');
+    const [isOffline] = useGlobal('offline');
     const [, setProject] = useGlobal('project');
     const [projRole, setProjRole] = useGlobal('projRole');
     const [plan, setPlan] = useGlobal('plan');
@@ -93,10 +91,7 @@ export const AppHead = withBucket(
       }
       if (isElectron && /logout/i.test(what)) {
         checkSavedFn(() => {
-          ipc?.invoke('logout');
-          localStorage.removeItem('isLoggedIn');
-          setIsOffline(isElectron);
-          setView('Access');
+          setView('Logout');
         });
         return;
       }

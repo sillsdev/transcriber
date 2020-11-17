@@ -393,14 +393,16 @@ export const importProjectToElectron = (
     return null;
   }
 
-  function processFile(file: string, ser: JSONAPISerializerCustom) {
+  async function processFile(file: string, ser: JSONAPISerializerCustom) {
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
-    if (Array.isArray(json.data))
-      json.data.forEach((item) =>
-        insertData(item, memory, tb, oparray, orbitError, true, true)
-      );
-    else insertData(json.data, memory, tb, oparray, orbitError, true, true);
+    if (Array.isArray(json.data)) {
+      for (let n = 0; n < json.data.length; n += 1) {
+        const item = json.data[n];
+        await insertData(item, memory, tb, oparray, orbitError, true, true);
+      }
+    } else
+      await insertData(json.data, memory, tb, oparray, orbitError, true, true);
   }
   if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
     dispatch({
@@ -437,7 +439,7 @@ export const importProjectToElectron = (
         });
 
         for (let index = 0; index < files.length; index++) {
-          processFile(path.join(filepath, files[index]), ser);
+          await processFile(path.join(filepath, files[index]), ser);
         }
         dispatch({
           payload: pendingmsg.replace('{0}', '25'),

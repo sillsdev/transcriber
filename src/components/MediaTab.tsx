@@ -218,8 +218,8 @@ const getMedia = (
       const sectionId = related(passage[0], 'section');
       const section = sections.filter((s) => s.id === sectionId);
       var updateddt = passageId
-        ? passage[0].attributes.dateUpdated
-        : f.attributes.dateUpdated;
+        ? passage[0]?.attributes?.dateUpdated || ''
+        : f?.attributes?.dateUpdated || '';
       if (!updateddt.endsWith('Z')) updateddt += 'Z';
       const updated = moment(updateddt);
       const date = updated ? updated.format('YYYY-MM-DD') : '';

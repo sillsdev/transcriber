@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import fs from 'fs';
 import { bindActionCreators } from 'redux';
-import { IState } from '../model';
+import { IState, Project, GroupMembership, MediaFile } from '../model';
 import * as action from '../store';
+import { withData } from '../mods/react-orbitjs';
+import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -10,8 +13,16 @@ import Typography from '@material-ui/core/Typography';
 import Auth from '../auth/Auth';
 import { isElectron } from '../api-variable';
 import { Redirect } from 'react-router-dom';
-import { localeDefault } from '../utils';
+import { dataPath, PathType, localeDefault } from '../utils';
 import { useGlobal } from 'reactn';
+import Alert from '../components/AlertDialog';
+import ProjectExport from '../components/ProjectExport';
+import {
+  related,
+  useProjectPlans,
+  getMediaInPlans,
+  useOfflnProjRead,
+} from '../crud';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -36,6 +47,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface PlanProject {
+  [planId: string]: string;
+}
+
 interface IStateProps {}
 
 interface IDispatchProps {
@@ -43,7 +58,13 @@ interface IDispatchProps {
   setLanguage: typeof action.setLanguage;
 }
 
-interface IProps extends IStateProps, IDispatchProps {
+interface IRecordProps {
+  groupMemberships: Array<GroupMembership>;
+  projects: Array<Project>;
+  mediafiles: Array<MediaFile>;
+}
+
+interface IProps extends IStateProps, IDispatchProps, IRecordProps {
   auth: Auth;
 }
 
@@ -51,24 +72,77 @@ export function Logout(props: IProps) {
   const { auth } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
+  const { groupMemberships, projects, mediafiles } = props;
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
+  const [user] = useGlobal('user');
   const [view, setView] = React.useState('');
+  const [alert, setAlert] = React.useState(false);
+  const [downloadSize, setDownloadSize] = React.useState(0);
+  const [needyIds, setNeedyIds] = React.useState<string[]>([]);
+  const [expOpen, setExpOpen] = React.useState(false);
+  const projectPlans = useProjectPlans();
+  const offlineProject = useOfflnProjRead();
+
+  const getNeedyRemoteIds = () => {
+    const grpIds = groupMemberships
+      .filter((gm) => related(gm, 'user') === user)
+      .map((gm) => related(gm, 'group'));
+    const userProjects = projects.filter((p) =>
+      grpIds.includes(related(p, 'group'))
+    );
+    let planIds = Array<string>();
+    const planProject: PlanProject = {};
+    userProjects.forEach((p) => {
+      const offlineProjRec = offlineProject(p.id);
+      if (offlineProjRec?.attributes?.offlineAvailable) {
+        projectPlans(p.id).forEach((pl) => {
+          planIds.push(pl.id);
+          planProject[pl.id] =
+            // p?.keys?.remoteId ||
+            p.id;
+        });
+      }
+    });
+    const mediaRecs = getMediaInPlans(planIds, mediafiles);
+    const needyProject = new Set<string>();
+    let totalSize = 0;
+    mediaRecs.forEach((m) => {
+      if (!fs.existsSync(dataPath(m.attributes.audioUrl, PathType.MEDIA))) {
+        needyProject.add(planProject[related(m, 'plan')]);
+        totalSize += m?.attributes?.filesize || 0;
+      }
+    });
+    if (downloadSize !== totalSize) setDownloadSize(totalSize);
+    return Array.from(needyProject);
+  };
+
+  const handleLogout = () => {
+    if (auth.accessToken) {
+      ipc?.invoke('logout');
+      localStorage.removeItem('isLoggedIn');
+      setIsOffline(isElectron);
+      auth.logout();
+    }
+    setView('Access');
+  };
+
+  const handleDownload = () => {
+    setExpOpen(true);
+  };
 
   useEffect(() => {
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
     if (!isElectron) {
       auth.logout();
-    } else {
-      if (auth.accessToken) {
-        ipc?.invoke('logout');
-        localStorage.removeItem('isLoggedIn');
-        setIsOffline(isElectron);
-        auth.logout();
-      }
-      setView('Access');
-    }
+    } else if (auth.accessToken) {
+      const projRemIds = getNeedyRemoteIds();
+      if (projRemIds.length > 0) {
+        setNeedyIds(projRemIds);
+        setAlert(true);
+      } else handleLogout();
+    } else handleLogout();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -88,6 +162,22 @@ export function Logout(props: IProps) {
           {buildDate}
         </div>
       </AppBar>
+      {alert && (
+        <Alert
+          title={'Download?'}
+          text={`Download ${Math.floor(
+            downloadSize / 1000 + 0.5
+          )}MB of offline project files?`}
+          yesResponse={handleDownload}
+          noResponse={handleLogout}
+        />
+      )}
+      <ProjectExport
+        open={expOpen}
+        auth={auth}
+        projectIds={needyIds}
+        finish={handleLogout}
+      />
     </div>
   );
 }
@@ -104,4 +194,12 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Logout) as any;
+const mapRecordsToProps = {
+  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
+  mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+};
+
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(Logout) as any
+) as any;

@@ -31,3 +31,5 @@ export * from './lookupBook';
 export * from './refMatch';
 export * from './useStickyPush';
 export * from './localUserKey';
+export * from './getFIngerprint';
+export * from './downloadFile';
