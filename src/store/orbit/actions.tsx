@@ -5,6 +5,7 @@ import {
   IApiError,
   RESET_ORBIT_ERROR,
   ORBIT_SAVING,
+  FETCH_ORBIT_DATA_COMPLETE,
 } from './types';
 import { Bucket } from '@orbit/core';
 import Coordinator from '@orbit/coordinator';
@@ -13,6 +14,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
 import { Severity } from '../../utils';
+import { OfflineProject, Plan, VProject } from '../../model';
 
 export const orbitError = (ex: IApiError) => {
   return ex.response.status !== Severity.retry
@@ -24,6 +26,12 @@ export const orbitError = (ex: IApiError) => {
         type: ORBIT_RETRY,
         payload: ex,
       };
+};
+
+export const orbitComplete = () => (dispatch: any) => {
+  dispatch( {
+    type: FETCH_ORBIT_DATA_COMPLETE,
+  });
 };
 
 export const doOrbitError = (ex: IApiError) => (dispatch: any) => {
@@ -51,14 +59,13 @@ export const fetchOrbitData = (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
-  setCompleted: (value: number) => void,
   setProjectsLoaded: (value: string[]) => void,
   setCoordinatorActivated: (value: boolean) => void,
-  InviteUser: (remote: JSONAPISource, email: string) => Promise<void>,
   setOrbitRetries: (r: number) => void,
-  global: any
+  global: any,
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
 ) => (dispatch: any) => {
-  Sources(
+ Sources(
     coordinator,
     memory,
     auth,
@@ -66,12 +73,13 @@ export const fetchOrbitData = (
     setUser,
     setBucket,
     setRemote,
-    setCompleted,
     setProjectsLoaded,
     setCoordinatorActivated,
-    InviteUser,
     (ex: IApiError) => dispatch(orbitError(ex)),
     setOrbitRetries,
-    global
-  ).then(dispatch({ type: FETCH_ORBIT_DATA }));
+    global,
+    getOfflineProject,
+  ).then((fr) => {
+      dispatch({ type: FETCH_ORBIT_DATA, payload: fr})
+    });
 };

@@ -19,6 +19,7 @@ import {
   BookName,
   Project,
   ISharedStrings,
+  ExportType,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -65,6 +66,7 @@ import {
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
+import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 
 const ActionHeight = 52;
 
@@ -215,6 +217,7 @@ export function TranscriptionTab(props: IProps) {
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
   const [memory] = useGlobal('memory');
+  const [backup] = useGlobal('backup');
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
@@ -235,6 +238,8 @@ export function TranscriptionTab(props: IProps) {
   const [user] = useGlobal('user');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
+  const [fingerprint] = useGlobal('fingerprint');
+  const getOfflineProject = useOfflnProjRead();
 
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
@@ -269,7 +274,7 @@ export function TranscriptionTab(props: IProps) {
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
-  const doProjectExport = (exportType: string) => {
+  const doProjectExport = (exportType: ExportType) => {
     setBusy(true);
 
     const mediaFiles = memory.cache.query((q: QueryBuilder) =>
@@ -287,17 +292,20 @@ export function TranscriptionTab(props: IProps) {
     exportProject(
       exportType,
       memory,
+      backup,
       remoteIdNum('project', project, memory.keyMap),
+      fingerprint,
       remoteIdNum('user', user, memory.keyMap),
       media.length,
       auth,
       errorReporter,
-      t.exportingProject
+      t.exportingProject,
+      getOfflineProject,
     );
   };
   const handleProjectExport = () => {
     if (offline) setOpenExport(true);
-    else doProjectExport('ptf');
+    else doProjectExport(ExportType.PTF);
   };
 
   const getTranscription = (passageId: string) => {
@@ -356,7 +364,7 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleBackup = () => {
-    doProjectExport('zip');
+    doProjectExport(ExportType.FULLBACKUP);
   };
 
   const handleSelect = (passageId: string) => () => {
@@ -642,11 +650,11 @@ export function TranscriptionTab(props: IProps) {
   const WhichExportDlg = () => {
     const doPTF = () => {
       setOpenExport(false);
-      doProjectExport('ptf');
+      doProjectExport(ExportType.PTF);
     };
     const doITF = () => {
       setOpenExport(false);
-      doProjectExport('itf');
+      doProjectExport(ExportType.ITF);
     };
     const closeNoChoice = () => {
       setOpenExport(false);

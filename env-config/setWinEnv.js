@@ -22,26 +22,33 @@ var yN = nameN + 1;
 var ymlNm = process.argv.length > yN ? process.argv[yN] : 'serverless.env.yml';
 
 const loadYml = () => {
-  var settingsContent = fs.readFileSync(
-    path.join(__dirname, '..', '..', ymlNm),
-    'utf-8'
-  );
   var sets = {};
   var envs = {};
   var curEnv = '';
-  settingsContent.split('\n').forEach((line) => {
-    if (/[a-z]/i.test(line.slice(0, 1))) {
-      if (curEnv !== '') {
-        envs[curEnv] = sets;
-        sets = {};
+
+  var filename = path.join(__dirname, '..', '..', ymlNm);
+  if (!fs.existsSync(filename))
+    filename = path.join(__dirname, '..', '..', 'web-transcriber-lambda', 'src', ymlNm);
+  if (!fs.existsSync(filename))
+    console.log(`yml-file not found`, ymlNm);
+  else {
+    var settingsContent = fs.readFileSync(filename,
+      'utf-8'
+    );
+    settingsContent.split('\n').forEach((line) => {
+      if (/[a-z]/i.test(line.slice(0, 1))) {
+        if (curEnv !== '') {
+          envs[curEnv] = sets;
+          sets = {};
+        }
+        curEnv = line.slice(0, line.indexOf(':'));
+      } else if (line.slice(0, 1) === ' ') {
+        const mat = line.match(/\s*([A-Z_0-9]+):\s*"(.+)"\r?/i);
+        if (mat) sets[mat[1]] = mat[2];
       }
-      curEnv = line.slice(0, line.indexOf(':'));
-    } else if (line.slice(0, 1) === ' ') {
-      const mat = line.match(/\s*([A-Z_0-9]+):\s*"(.+)"\r?/i);
-      if (mat) sets[mat[1]] = mat[2];
-    }
-  });
-  if (curEnv !== '') envs[curEnv] = sets;
+    });
+    if (curEnv !== '') envs[curEnv] = sets;
+  }
   return envs;
 };
 

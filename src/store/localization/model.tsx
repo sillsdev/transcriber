@@ -153,6 +153,7 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "imported": string;
     "importPending": string;
     "importProject": string;
+    "importSync": string;
     "invalidITF": string;
     "invalidProject": string;
     "locale": string;

@@ -64,6 +64,7 @@ interface IStateProps {
 interface IDispatchProps {
   importProjectToElectron: typeof actions.importProjectToElectron;
   importProjectFromElectron: typeof actions.importProjectFromElectron;
+  importSyncFromElectron: typeof actions.importSyncFromElectron;
   importComplete: typeof actions.importComplete;
   orbitError: typeof actions.doOrbitError;
 }
@@ -80,6 +81,8 @@ interface IProps
   auth: Auth;
   project?: string;
   planName?: string;
+  syncBuffer: Buffer | undefined;
+  syncFile: string | undefined;
 }
 export function ImportTab(props: IProps) {
   const {
@@ -87,6 +90,8 @@ export function ImportTab(props: IProps) {
     onOpen,
     project,
     planName,
+    syncBuffer,
+    syncFile,
     t,
     ts,
     auth,
@@ -94,6 +99,7 @@ export function ImportTab(props: IProps) {
     importStatus,
     importProjectToElectron,
     importProjectFromElectron,
+    importSyncFromElectron,
     orbitError,
     allBookData,
   } = props;
@@ -216,7 +222,12 @@ export function ImportTab(props: IProps) {
 
     setImportTitle('');
     setChangeData([]);
-    if (isElectron) electronImport();
+    if (isElectron) {
+      if (syncFile && syncBuffer)
+        uploadSyncITF(syncBuffer, syncFile);
+      else
+       electronImport();
+     }
     else setUploadVisible(true);
   }, []);
 
@@ -249,6 +260,18 @@ export function ImportTab(props: IProps) {
     }
     setUploadVisible(false);
   };
+  const uploadSyncITF = (buffer: Buffer, fileName: string) => {
+    setBusy(true);
+    importSyncFromElectron(
+      fileName,
+      buffer,
+      auth,
+      orbitError,
+      t.importPending,
+      t.importComplete
+    );
+  }
+
 
   const uploadCancel = () => {
     setUploadVisible(false);
@@ -584,6 +607,13 @@ export function ImportTab(props: IProps) {
         }
       }
     }
+    else
+    {
+      if (syncFile && importTitle === t.importComplete)
+      {
+          handleClose();
+      }
+    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [importStatus]);
 
@@ -601,7 +631,7 @@ export function ImportTab(props: IProps) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {t.importProject + ' ' + (planName || '')}
+        {syncBuffer ? t.importSync : t.importProject + ' ' + (planName || '')}
       </DialogTitle>
       <DialogContent>
         <Typography variant="h5">{importTitle}</Typography>
@@ -691,6 +721,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       importProjectToElectron: actions.importProjectToElectron,
       importProjectFromElectron: actions.importProjectFromElectron,
+      importSyncFromElectron: actions.importSyncFromElectron,
       importComplete: actions.importComplete,
       orbitError: actions.doOrbitError,
     },

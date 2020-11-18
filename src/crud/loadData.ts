@@ -1,8 +1,7 @@
 import { remoteIdGuid, remoteIdNum } from '.';
-import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
+import { getSerializer, JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
 import JSONAPISource, {
   ResourceDocument,
-  JSONAPISerializerSettings,
 } from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import {
@@ -126,7 +125,7 @@ async function processData(
       insertData(json.data, memory, tb, oparray, orbitError, false, false);
     }
     completed += completePerTable;
-    if (setCompleted) setCompleted(completed);
+    if (setCompleted && completed < 90) setCompleted(completed);
   });
   try {
     //this was slower than just waiting for them both separately
@@ -153,18 +152,6 @@ async function processData(
   }
 }
 
-function GetSerializer(memory: Memory) {
-  const s: JSONAPISerializerSettings = {
-    schema: memory.schema,
-    keyMap: memory.keyMap,
-  };
-  const ser = new JSONAPISerializerCustom(s);
-  ser.resourceKey = () => {
-    return 'remoteId';
-  };
-  return ser;
-}
-
 export async function LoadData(
   memory: Memory,
   backup: IndexedDBSource,
@@ -173,7 +160,7 @@ export async function LoadData(
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
   var tb: TransformBuilder = new TransformBuilder();
-  const ser = GetSerializer(memory);
+  const ser = getSerializer(memory);
 
   try {
     let start = 0;
@@ -236,7 +223,7 @@ export async function LoadProjectData(
 
   const projectid = remoteIdNum('project', project, memory.keyMap);
   var tb: TransformBuilder = new TransformBuilder();
-  const ser = GetSerializer(memory);
+  const ser = getSerializer(memory);
 
   try {
     let start = 0;

@@ -101,6 +101,7 @@ getFingerprint()
       snackMessage: <></>,
       changed: false,
       projectsLoaded: [],
+      loadComplete: false,
       importexportBusy: false,
       autoOpenAddMedia: false,
       editUserId: null,

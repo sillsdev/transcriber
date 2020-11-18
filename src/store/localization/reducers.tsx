@@ -171,6 +171,7 @@ const initialState = {
 			"imported": "Imported Value",
 			"importPending": "Import In Progress...",
 			"importProject": "Import Project",
+			"importSync": "Syncing offline changes",
 			"invalidITF": "Not a valid Incremental Transcriber File (ITF).",
 			"invalidProject": "Import File does not contain current project.",
 			"locale": "Preferred Language",

@@ -6,6 +6,7 @@ export interface OfflineProject extends BaseModel {
     computerfp: string;
     snapshotDate: string;
     offlineAvailable: boolean;
+    exportedDate: string;
     dateCreated: string;
     dateUpdated: string;
     lastModifiedBy: number;

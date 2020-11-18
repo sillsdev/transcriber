@@ -1,4 +1,4 @@
-import { FileResponse } from './types';
+import { ExportType, FileResponse } from './types';
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import path from 'path';
@@ -13,6 +13,8 @@ import {
   Section,
   Passage,
   Group,
+  OfflineProject,
+  VProject,
 } from '../../model';
 import Memory from '@orbit/memory';
 import { JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
@@ -22,19 +24,26 @@ import {
   Record,
   TransformBuilder,
 } from '@orbit/data';
-import { remoteIdGuid, related, remoteId, getMediaEaf } from '../../crud';
+import {  related, remoteId, getMediaEaf, remoteIdGuid } from '../../crud';
 import { dataPath, cleanFileName, currentDateTime, PathType} from '../../utils';
+import IndexedDBSource from '@orbit/indexeddb';
 
 export async function electronExport(
-  exportType: string,
+  exportType: ExportType,
   memory: Memory,
+  backup: IndexedDBSource | undefined,
   projectid: number,
+  fingerprint: string,
   userid: number,
-  ser: JSONAPISerializerCustom
+  ser: JSONAPISerializerCustom,
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
 ): Promise<FileResponse | null> {
+
   const BuildFileResponse = (
     fullpath: string,
-    fileName: string
+    fileName: string,
+    buffer: Buffer | undefined,
+    changedRecs: number
   ): FileResponse => {
     return {
       data: {
@@ -42,6 +51,8 @@ export async function electronExport(
           message: fileName,
           fileurl: 'file:////' + fullpath,
           contenttype: 'application/' + exportType,
+          buffer: buffer,
+          changes: changedRecs,
         },
         type: 'file-responses',
         id: '1',
@@ -75,7 +86,7 @@ export async function electronExport(
       })
     ) as Project;
   };
-  const createZip = (zip: AdmZip, projRec: Project) => {
+  const createZip = async (zip: AdmZip, projRec: Project, fingerprint: string) => {
     const AddCheckEntry = (): string => {
       var dt = currentDateTime();
       zip.addFile(
@@ -112,7 +123,10 @@ export async function electronExport(
       );
     };
     const AddStreamEntry = (local: string, name: string) => {
-      zip.addLocalFile(local, path.dirname(name), path.basename(name));
+      if (fs.existsSync(local)) {
+        zip.addLocalFile(local, path.dirname(name), path.basename(name));
+        return true;
+      } else return false;
     };
     const AddUserAvatars = (recs: Record[]) => {
       const avatarpath = PathType.AVATARS + '/';
@@ -175,7 +189,9 @@ export async function electronExport(
       const dir = dataPath('fonts');
       var items = fs.readdirSync(dir);
       for (var i = 0; i < items.length; i++) {
-        zip.addLocalFile(path.join(dir, items[i]), 'fonts', items[i]);
+        var fontfile = path.join(dir, items[i])
+        if (fs.existsSync(fontfile))
+          zip.addLocalFile(fontfile, 'fonts', items[i]);
       }
     };
     const GroupMemberships = (project: Project) => {
@@ -316,7 +332,9 @@ export async function electronExport(
             );
             AddMediaFiles(newOnly);
         }
+        return changed.length;
       }
+      return 0;
     };
 
     const AddAll = (info: fileInfo, project: Project | undefined) => {
@@ -369,51 +387,69 @@ export async function electronExport(
       { table: 'plan', sort: 'E' },
       { table: 'projectintegration', sort: 'E' }, //do we care that they synced locally??
     ];
-    const imported = moment.utc(
-      projRec.attributes.dateImported || '01/01/1900'
-    );
+    const op = getOfflineProject(projRec.id);
+    const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
+
     AddSourceEntry(projRec.attributes.dateImported || '');
     AddVersionEntry('1'); //TODO: ask what version indexeddb is
     const limit = onlyOneProject() ? undefined : projRec;
-    if (exportType === 'itf' || exportType === 'itfb') {
-      const exported = AddCheckEntry();
-      projRec.attributes.dateExported = exported;
-      updateableFiles.forEach((info) => AddChanged(info, limit));
-      memory.update((t: TransformBuilder) => t.updateRecord(projRec));
-    } else {
-      projRec.attributes.dateExported = projRec.attributes.dateImported;
-      updateableFiles.forEach((info) => AddAll(info, limit));
-      staticFiles.forEach((info) => AddAll(info, limit));
-      AddFonts();
-    }
-    return zip;
+    var numRecs = 0;
+    switch (exportType)
+    { case ExportType.ITF:
+      case ExportType.ITFBACKUP:
+      case ExportType.ITFSYNC:
+        const exported = AddCheckEntry();
+        updateableFiles.forEach((info) => numRecs += AddChanged(info, limit));
+        if (exportType !== ExportType.ITFBACKUP && backup) {
+          op.attributes.exportedDate = exported;
+          await backup.push((t: TransformBuilder) => t.updateRecord(op));
+        }
+        break;
+      default:
+        updateableFiles.forEach((info) => AddAll(info, limit));
+        staticFiles.forEach((info) => AddAll(info, limit));
+        AddFonts();
+      }
+    return {zip, numRecs};
   };
+
   var projects: Project[];
   var backupZip: AdmZip | undefined;
-  if (exportType === 'zip') {
+  if (exportType === ExportType.FULLBACKUP || exportType === ExportType.ITFSYNC) {
     projects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')
     ) as Project[];
     backupZip = new AdmZip();
-    exportType = 'ptf';
+    if (exportType === ExportType.FULLBACKUP)
+      exportType = ExportType.PTF;
+    else {
+      exportType = ExportType.ITF;
+      var offlineprojects = memory.cache.query((q: QueryBuilder) =>
+                        q.findRecords('offlineproject')
+                    ) as OfflineProject[];
+      var ids = offlineprojects.map(o => related(o, 'project')) as string[];
+      projects = projects.filter(p => ids.includes(p.id));
+    }
   } else {
     projects = [getProjRec(projectid.toString())];
   }
+  var changedRecs = 0
   for (var ix: number = 0; ix < projects.length; ix++) {
-    const zip = createZip(new AdmZip(), projects[ix]);
+    const {zip, numRecs} = await createZip(new AdmZip(), projects[ix], fingerprint);
     const filename =
-      exportType === 'itfb'
+      exportType === ExportType.ITFBACKUP
         ? itfb_fileName(projects[ix])
         : fileName(projects[ix], exportType);
+    changedRecs += numRecs;
     if (backupZip) {
       backupZip.addFile(filename, zip.toBuffer(), projects[ix].attributes.name);
     } else {
       var where = dataPath(filename);
       zip.writeZip(where);
-      return BuildFileResponse(where, filename);
+      return BuildFileResponse(where, filename, undefined, changedRecs);
     }
   }
   var backupWhere = dataPath(backupName);
   if (backupZip) backupZip.writeZip(backupWhere);
-  return BuildFileResponse(backupWhere, backupName);
+  return BuildFileResponse(backupWhere, backupName, exportType === ExportType.ITF ? backupZip?.toBuffer() : undefined, changedRecs);
 }

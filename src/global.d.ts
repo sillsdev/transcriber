@@ -27,6 +27,7 @@ declare module 'reactn/default' {
     snackMessage: JSX.Element;
     changed: boolean;
     projectsLoaded: string[];
+    loadComplete: boolean;
     importexportBusy: boolean;
     autoOpenAddMedia: boolean; // open a dialog
     editUserId: string | null;

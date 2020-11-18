@@ -692,6 +692,12 @@
             <target>Importer un projet</target>
          </segment>
       </unit>
+      <unit id="import.importSync">
+         <segment>
+            <source>Syncing offline changes</source>
+            <target>Synchroniser les modifications hors ligne</target>
+         </segment>
+      </unit>
       <unit id="import.invalidITF">
          <segment>
             <source>Not a valid Incremental Transcriber File (ITF).</source>

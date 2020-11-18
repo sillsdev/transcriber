@@ -1,8 +1,8 @@
 import { useGlobal } from 'reactn';
 import * as actions from '../store';
 import { QueryBuilder } from '@orbit/data';
-import { Plan, MediaFile, ITranscriptionTabStrings } from '../model';
-import { getMediaInPlans, related, remoteIdNum } from '.';
+import { Plan, MediaFile, ITranscriptionTabStrings, ExportType } from '../model';
+import { getMediaInPlans, related, remoteIdNum, useOfflnProjRead } from '.';
 import Auth from '../auth/Auth';
 
 interface IProps {
@@ -15,11 +15,14 @@ export const useProjecExport = (props: IProps) => {
   const { auth } = props;
   const {exportProject, t} = props;
   const [memory] = useGlobal('memory');
+  const [backup] = useGlobal('backup');
+  const [fingerprint] = useGlobal('fingerprint');
   const [userId] = useGlobal('user');
   const [, setBusy] = useGlobal('importexportBusy');
   const [errorReporter] = useGlobal('errorReporter');
+  const getOfflineProject = useOfflnProjRead();
 
-  return (exportType: string, projectId: string) => {
+  return (exportType: ExportType, projectId: string) => {
     setBusy(true);
 
     const mediaFiles = memory.cache.query((q: QueryBuilder) =>
@@ -39,12 +42,15 @@ export const useProjecExport = (props: IProps) => {
     exportProject(
       exportType,
       memory,
+      backup,
       remoteIdNum('project', projectId, memory.keyMap),
+      fingerprint,
       remoteIdNum('user', userId, memory.keyMap),
       media.length,
       auth,
       errorReporter,
-      t.exportingProject
+      t.exportingProject,
+      getOfflineProject
     );
   };
 };

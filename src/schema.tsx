@@ -445,26 +445,31 @@ const schemaDefinition: SchemaSettings = {
       },
       relationships: {},
     },
-    offlineproject: {
-      keys: { remoteId: {} },
-      attributes: {
-        computerfp: { type: 'string' },
-        snapshotDate: { type: 'date-time' },
-        offlineAvailable: { type: 'boolean' },
-        dateCreated: { type: 'date-time' },
-        dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
-      },
-      relationships: {
-        project: {
-          type: 'hasOne',
-          model: 'project',
-        },
+  },
+  version:1,
+};
+if (process.env.REACT_APP_SCHEMAVERSION !== "1" && schemaDefinition.models)
+{
+  schemaDefinition.models.offlineproject = {
+    keys: { remoteId: {} },
+    attributes: {
+      computerfp: { type: 'string' },
+      snapshotDate: { type: 'date-time' },
+      offlineAvailable: { type: 'boolean' },
+      exportedDate: { type: 'date-time' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' },
+    },
+    relationships: {
+      project: {
+        type: 'hasOne',
+        model: 'project',
       },
     },
-  },
-  version: 2,
-};
+  };
+  schemaDefinition.version = 2;
+}
 
 export const schema = new Schema(schemaDefinition);
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { useGlobal } from 'reactn';
+import { useEffect, useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMainStrings } from '../model';
+import { IState, IMainStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
@@ -19,6 +19,8 @@ import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
 import { useHistory } from 'react-router-dom';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
 
 const StyledMenu = withStyles({
   paper: {
@@ -59,23 +61,31 @@ const roleStyle = {
 interface IStateProps {
   t: IMainStrings;
 }
-
-interface IProps extends IStateProps {
+interface IRecordProps {
+  users: Array<User>;
+}
+interface IProps extends IStateProps, IRecordProps {
   action: (what: string) => void;
 }
 
 export function UserMenu(props: IProps) {
-  const { action, t } = props;
+  const { action, t , users} = props;
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
+  const [user] = useGlobal('user');
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
-
+  const [userRec, setUserRec] = React.useState<User|undefined>(undefined);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    var x = users.filter((u) => u.id === user) as User[];
+    setUserRec(x.length > 0 ? x[0] : undefined);
+  }, [user, users]);
 
   const handleAction = (what: string) => () => {
     setAnchorEl(null);
@@ -89,7 +99,7 @@ export function UserMenu(props: IProps) {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <UserAvatar />
+        <UserAvatar  userRec={userRec} />
       </Button>
       <StyledMenu
         id="custom-user-menu"
@@ -160,4 +170,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
 });
 
-export default connect(mapStateToProps)(UserMenu) as any;
+const mapRecordsToProps = {
+  users: (q: QueryBuilder) => q.findRecords('user'),
+};
+export default withData(mapRecordsToProps)(connect(mapStateToProps)(UserMenu) as any) as any;

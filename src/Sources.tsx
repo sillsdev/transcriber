@@ -1,4 +1,4 @@
-import { IApiError, User, Role, Plan, Section } from './model';
+import { IApiError, Role, Plan, Section, OfflineProject, VProject, ExportType } from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -13,10 +13,10 @@ import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
 import { API_CONFIG, isElectron } from './api-variable';
-import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
-import { currentDateTime } from './utils/currentDateTime';
-import { related, LoadData } from './crud';
-import { orbitRetry, orbitErr, localUserKey, LocalKey } from './utils';
+import { getSerializer, JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
+import { related } from './crud';
+import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
+import { electronExport } from './store/importexport/electronExport';
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -26,14 +26,13 @@ export const Sources = async (
   setUser: (id: string) => void,
   setBucket: (bucket: Bucket) => void,
   setRemote: (remote: JSONAPISource) => void,
-  setCompleted: (valud: number) => void,
   setProjectsLoaded: (valud: string[]) => void,
   setCoordinatorActivated: (valud: boolean) => void,
-  InviteUser: (remote: JSONAPISource, userEmail: string) => Promise<void>,
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
-  globalStore: any
-) => {
+  globalStore: any,
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+)  => {
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const tokData = auth.getProfile() || { sub: '' };
   const userToken = localStorage.getItem('user-token');
@@ -64,7 +63,7 @@ export const Sources = async (
 
   const offline = !auth.accessToken;
 
-    if (!offline) {
+  if (!offline) {
       remote = coordinator.sourceNames.includes('remote')
       ? (coordinator.getSource('remote') as JSONAPISource)
       : new JSONAPISource({
@@ -83,7 +82,7 @@ export const Sources = async (
             timeout: 100000,
           },
         });
-    remote.requestProcessor.serializer.resourceKey = () => {
+      remote.requestProcessor.serializer.resourceKey = () => {
       return 'remoteId';
     };
 
@@ -234,68 +233,62 @@ export const Sources = async (
           blocking: true,
         })
       );
+    /* set the user from the token */
+    var tr = await remote.pull((q) => q.findRecords('currentuser'));
+    const user = (tr[0].operations[0] as any).record;
+    localStorage.setItem('user-id', user.id);
   } //!offline
-
-  coordinator.activate({ logLevel: LogLevel.Warnings }).then(async () => {
-    setCoordinatorActivated(true);
-    console.log('Coordinator will log warnings');
-    let goRemote =
-      !offline &&
-      (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
+  if (!coordinator.activated)
+    await coordinator.activate({ logLevel: LogLevel.Warnings })
+  setCoordinatorActivated(true);
+  console.log('Coordinator will log warnings');
+  setUser(localStorage.getItem('user-id') as string);
+  let goRemote =
+    !offline &&
+    (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
     if (!goRemote) {
-      setUser(localStorage.getItem('user-id') as string);
-      console.log('using backup');
-      if (!isElectron) {
-        //already did this if electron...
-        var transform = await backup.pull((q) => q.findRecords());
-        await memory.sync(transform);
-        const recs: Role[] = memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('role')
-        ) as any;
-        if (recs.length === 0) {
-          //orbitError(orbitInfo(null, 'Indexed DB corrupt or missing.'));
-          goRemote = true;
-        }
+    console.log('using backup');
+    if (!isElectron) {
+      //already did this if electron...
+      var transform = await backup.pull((q) => q.findRecords());
+      await memory.sync(transform);
+      const recs: Role[] = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('role')
+      ) as any;
+      if (recs.length === 0) {
+        //orbitError(orbitInfo(null, 'Indexed DB corrupt or missing.'));
+        goRemote = true;
       }
-      const loadedplans = new Set(
-        (memory.cache.query((q: QueryBuilder) =>
-          q.findRecords('section')
-        ) as Section[]).map((s) => related(s, 'plan') as string)
-      );
-      const plans = (memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('plan')
-      ) as Plan[]).filter((p) => loadedplans.has(p.id));
-      const projs = new Set(plans.map((p) => related(p, 'project') as string));
-      setProjectsLoaded(Array.from(projs));
     }
-
-    if (goRemote) {
-      localStorage.setItem(
-        localUserKey(LocalKey.time, memory),
-        currentDateTime()
-      );
-      if (!isElectron) await backup.reset();
-      var currentuser: User | undefined;
-
-      var tr = await remote.pull((q) => q.findRecords('currentuser'));
-      const user = (tr[0].operations[0] as any).record;
-      setUser(user.id);
-      localStorage.setItem('user-id', user.id);
-      currentuser = user;
-      await InviteUser(
-        remote,
-        currentuser && currentuser.attributes
-          ? currentuser.attributes.email
-          : 'neverhere'
-      );
-      setProjectsLoaded([]);
-      setCompleted(10);
-
-      LoadData(memory, backup, remote, setCompleted, orbitError).then(() =>
-        setCompleted(90)
-      );
-    } else setCompleted(90);
-  });
+    const loadedplans = new Set(
+      (memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('section')
+      ) as Section[]).map((s) => related(s, 'plan') as string)
+    );
+    const plans = (memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('plan')
+    ) as Plan[]).filter((p) => loadedplans.has(p.id));
+    const projs = new Set(plans.map((p) => related(p, 'project') as string));
+    setProjectsLoaded(Array.from(projs));
+  }
+  var syncBuffer:Buffer | undefined = undefined;
+  var syncFile = '';
+  if (!offline && isElectron) {
+    var fr = await electronExport(ExportType.ITFSYNC, memory, backup, 0, fingerprint, 0, getSerializer(memory), getOfflineProject).catch(
+      (err: Error) => {
+        logError(
+          Severity.error,
+          globalStore.errorReporter,
+          infoMsg(err, 'ITFSYNC export failed: ')
+        );
+      }
+    );
+    if (fr && fr.data.attributes.changes> 0) {
+      syncBuffer = fr.data.attributes.buffer;
+      syncFile = fr.data.attributes.message;
+    }
+  }
+  return {syncBuffer, syncFile, goRemote};
 };
 
-export default Sources;
+

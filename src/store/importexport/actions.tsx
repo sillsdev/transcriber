@@ -12,11 +12,13 @@ import {
   GroupMembership,
   Group,
   ProjectIntegration,
+  OfflineProject,
+  VProject,
 } from '../../model';
-import { API_CONFIG } from '../../api-variable';
+import { API_CONFIG, isElectron } from '../../api-variable';
 import Auth from '../../auth/Auth';
-import { JSONAPISerializerSettings, ResourceDocument } from '@orbit/jsonapi';
-import { JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
+import { ResourceDocument } from '@orbit/jsonapi';
+import { getSerializer, JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
 import {
   EXPORT_PENDING,
   EXPORT_SUCCESS,
@@ -27,6 +29,7 @@ import {
   IMPORT_ERROR,
   IMPORT_COMPLETE,
   FileResponse,
+  ExportType,
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
 import Memory from '@orbit/memory';
@@ -44,30 +47,24 @@ export const exportComplete = () => (dispatch: any) => {
 };
 
 export const exportProject = (
-  exportType: string,
+  exportType: ExportType,
   memory: Memory,
+  backup: IndexedDBSource,
   projectid: number,
+  fingerprint: string,
   userid: number,
   numberOfMedia: number,
   auth: Auth,
   errorReporter: any,
-  pendingmsg: string
-) => async (dispatch: any) => {
+  pendingmsg: string,
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+  ) => async (dispatch: any) => {
   dispatch({
     payload: pendingmsg.replace('{0}%', ''),
     type: EXPORT_PENDING,
   });
-  if (!auth.accessToken) {
-    // if we have a token we're online
-    const s: JSONAPISerializerSettings = {
-      schema: memory.schema,
-      keyMap: memory.keyMap,
-    };
-    const ser = new JSONAPISerializerCustom(s);
-    ser.resourceKey = () => {
-      return 'remoteId';
-    };
-    electronExport(exportType, memory, projectid, userid, ser)
+  if (isElectron) {
+    electronExport(exportType, memory, backup, projectid,fingerprint, userid, getSerializer(memory), getOfflineProject)
       .then((response) => {
         dispatch({
           payload: response,
@@ -147,6 +144,115 @@ export const importComplete = () => (dispatch: any) => {
     type: IMPORT_COMPLETE,
   });
 };
+const importFromElectron = (
+  filename: string,
+  file: Blob,
+  projectid: number,
+  auth: Auth,
+  errorReporter: any,
+  pendingmsg: string,
+  completemsg: string,
+  ) => (dispatch: any)  =>  {
+    console.log('made it into importFromElectron');
+    dispatch({
+      payload: pendingmsg.replace('{0}', '1'),
+      type: IMPORT_PENDING,
+    });
+    var url =
+      API_CONFIG.host + '/api/offlineData/project/import/' + filename;
+    Axios.get(url, {
+      headers: {
+        Authorization: 'Bearer ' + auth.accessToken,
+      },
+    })
+      .then((response) => {
+        const filename = response.data.data.attributes.message;
+        const xhr = new XMLHttpRequest();
+        /* FUTURE TODO Limit is 5G, but it's recommended to use a multipart upload > 100M */
+        xhr.open('PUT', response.data.data.attributes.fileurl, true);
+        xhr.setRequestHeader(
+          'Content-Type',
+          response.data.data.attributes.contenttype
+        );
+        xhr.send(file.slice());
+        xhr.onload = () => {
+          if (xhr.status < 300) {
+            dispatch({
+              payload: pendingmsg.replace('{0}', '20'),
+              type: IMPORT_PENDING,
+            });
+            /* tell it to process the file now */
+            if (projectid === 0)
+              url = API_CONFIG.host + '/api/offlineData/sync/' + filename;
+            else
+              url = API_CONFIG.host + '/api/offlineData/project/import/' +
+                  projectid.toString() + '/' + filename;
+
+            Axios.put(url, null, {
+              headers: {
+                Authorization: 'Bearer ' + auth.accessToken,
+              },
+            })
+              .then((response) => {
+                if (response.data.status === 200)
+                  dispatch({
+                    payload: { status: completemsg, msg: response.data.message },
+                    type: IMPORT_SUCCESS,
+                  });
+                else {
+                  logError(Severity.info, errorReporter, response.data.message);
+                  dispatch({
+                    payload: errorStatus(
+                      response.data.status,
+                      response.data.message
+                    ),
+                    type: IMPORT_ERROR,
+                  });
+                }
+              })
+              .catch((reason) => {
+                logError(Severity.error, errorReporter, reason.toString());
+                dispatch({
+                  payload: errorStatus(-1, reason.toString()),
+                  type: IMPORT_ERROR,
+                });
+              });
+          } else {
+            logError(
+              Severity.info,
+              errorReporter,
+              `upload ${filename}: (${xhr.status}) ${xhr.responseText}`
+            );
+            dispatch({
+              payload: errorStatus(xhr.status, xhr.responseText),
+              type: IMPORT_ERROR,
+            });
+          }
+        };
+      })
+      .catch((reason) => {
+        logError(
+          Severity.info,
+          errorReporter,
+          infoMsg(new Error(reason.toString()), 'Import Error')
+        );
+        dispatch({
+          payload: errorStatus(-1, reason.toString()),
+          type: IMPORT_ERROR,
+        });
+      });
+  };
+
+  export const importSyncFromElectron = (
+    filename: string,
+    file:Buffer,
+    auth: Auth,
+    errorReporter: any,
+    pendingmsg: string,
+    completemsg: string) => (dispatch: any) => {
+      console.log('importSyncFromElectron');
+     dispatch(importFromElectron(filename, new Blob([file]), 0, auth, errorReporter, pendingmsg, completemsg));
+  }
 
 export const importProjectFromElectron = (
   files: FileList,
@@ -156,93 +262,7 @@ export const importProjectFromElectron = (
   pendingmsg: string,
   completemsg: string
 ) => (dispatch: any) => {
-  dispatch({
-    payload: pendingmsg.replace('{0}', '1'),
-    type: IMPORT_PENDING,
-  });
-  var url =
-    API_CONFIG.host + '/api/offlineData/project/import/' + files[0].name;
-  Axios.get(url, {
-    headers: {
-      Authorization: 'Bearer ' + auth.accessToken,
-    },
-  })
-    .then((response) => {
-      const filename = response.data.data.attributes.message;
-      const xhr = new XMLHttpRequest();
-      /* FUTURE TODO Limit is 5G, but it's recommended to use a multipart upload > 100M */
-      xhr.open('PUT', response.data.data.attributes.fileurl, true);
-      xhr.setRequestHeader(
-        'Content-Type',
-        response.data.data.attributes.contenttype
-      );
-      xhr.send(files[0].slice());
-      xhr.onload = () => {
-        if (xhr.status < 300) {
-          dispatch({
-            payload: pendingmsg.replace('{0}', '20'),
-            type: IMPORT_PENDING,
-          });
-          /* tell it to process the file now */
-          url =
-            API_CONFIG.host +
-            '/api/offlineData/project/import/' +
-            projectid.toString() +
-            '/' +
-            filename;
-          Axios.put(url, null, {
-            headers: {
-              Authorization: 'Bearer ' + auth.accessToken,
-            },
-          })
-            .then((response) => {
-              if (response.data.status === 200)
-                dispatch({
-                  payload: { status: completemsg, msg: response.data.message },
-                  type: IMPORT_SUCCESS,
-                });
-              else {
-                logError(Severity.info, errorReporter, response.data.message);
-                dispatch({
-                  payload: errorStatus(
-                    response.data.status,
-                    response.data.message
-                  ),
-                  type: IMPORT_ERROR,
-                });
-              }
-            })
-            .catch((reason) => {
-              logError(Severity.error, errorReporter, reason.toString());
-              dispatch({
-                payload: errorStatus(-1, reason.toString()),
-                type: IMPORT_ERROR,
-              });
-            });
-        } else {
-          logError(
-            Severity.info,
-            errorReporter,
-            `upload ${files[0].name}: (${xhr.status}) ${xhr.responseText}`
-          );
-          dispatch({
-            payload: errorStatus(xhr.status, xhr.responseText),
-            type: IMPORT_ERROR,
-          });
-        }
-      };
-    })
-    .catch((reason) => {
-      logError(
-        Severity.info,
-        errorReporter,
-        infoMsg(new Error(reason.toString()), 'Import Error')
-      );
-      dispatch({
-        payload: errorStatus(-1, reason.toString()),
-        type: IMPORT_ERROR,
-      });
-    });
+  dispatch(importFromElectron(files[0].name, files[0], projectid, auth, errorReporter, pendingmsg, completemsg));
 };
 
 export const importProjectToElectron = (
@@ -253,8 +273,8 @@ export const importProjectToElectron = (
   orbitError: (ex: IApiError) => void,
   pendingmsg: string,
   completemsg: string,
-  oldfilemsg: string
-) => (dispatch: any) => {
+  oldfilemsg: string,
+) =>(dispatch: any) => {
   var tb: TransformBuilder = new TransformBuilder();
   var oparray: Operation[] = [];
 
@@ -422,14 +442,7 @@ export const importProjectToElectron = (
         type: IMPORT_ERROR,
       });
     } else {
-      const s: JSONAPISerializerSettings = {
-        schema: memory.schema,
-        keyMap: memory.keyMap,
-      };
-      const ser = new JSONAPISerializerCustom(s);
-      ser.resourceKey = () => {
-        return 'remoteId';
-      };
+      const ser = getSerializer(memory);
       try {
         //remove all project data
         await removeProject(ser);

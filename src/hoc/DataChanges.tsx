@@ -14,10 +14,12 @@ import { DataChange } from '../model/dataChange';
 import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
 import { remoteIdGuid, remoteIdNum } from '../crud';
-import JSONAPISource, { JSONAPISerializerSettings } from '@orbit/jsonapi';
+import JSONAPISource from '@orbit/jsonapi';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
-import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
+import { getSerializer } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
+import { useOfflnProjRead } from '../crud/useOfflnProjRead';
+import { ExportType } from '../model';
 
 interface IStateProps {}
 
@@ -137,6 +139,7 @@ export default function DataChanges(props: IProps) {
   const { auth, children } = props;
   const [isOffline] = useGlobal('offline');
   const [remote] = useGlobal('remote');
+  const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [user] = useGlobal('user');
   const [doSave] = useGlobal('doSave');
@@ -146,6 +149,7 @@ export default function DataChanges(props: IProps) {
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [project] = useGlobal('project');
+  const getOfflineProject = useOfflnProjRead();
 
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
 
@@ -155,8 +159,8 @@ export default function DataChanges(props: IProps) {
 
     if (!remote) setBusy(false);
     setBusyDelay(remote && auth?.isAuthenticated() ? defaultBusyDelay : null);
-    setDataDelay(remote && auth?.isAuthenticated() ? defaultDataDelay : null);
-  }, [remote, auth, setBusy]);
+    setDataDelay(loadComplete && remote && auth?.isAuthenticated() ? defaultDataDelay : null);
+  }, [remote, auth, loadComplete, setBusy]);
 
   const updateBusy = () => {
     const checkBusy =
@@ -170,18 +174,10 @@ export default function DataChanges(props: IProps) {
   };
   const backupElectron = () => {
     if (!busy && !doSave && project !== '') {
-      const s: JSONAPISerializerSettings = {
-        schema: memory.schema,
-        keyMap: memory.keyMap,
-      };
-      const ser = new JSONAPISerializerCustom(s);
-      ser.resourceKey = () => {
-        return 'remoteId';
-      };
       var projectid = remoteIdNum('project', project, memory.keyMap);
       var userid = remoteIdNum('user', user, memory.keyMap);
 
-      electronExport('itfb', memory, projectid, userid, ser).catch(
+      electronExport(ExportType.ITFBACKUP, memory, undefined, projectid, fingerprint, userid, getSerializer(memory), getOfflineProject).catch(
         (err: Error) => {
           logError(
             Severity.error,

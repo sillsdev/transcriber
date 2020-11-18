@@ -694,6 +694,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.importSync">
+         <segment>
+            <source>Syncing offline changes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.invalidITF">
          <segment>
             <source>Not a valid Incremental Transcriber File (ITF).</source>
