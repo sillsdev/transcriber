@@ -1,8 +1,9 @@
 import { remoteIdGuid, remoteIdNum } from '.';
-import { getSerializer, JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
-import JSONAPISource, {
-  ResourceDocument,
-} from '@orbit/jsonapi';
+import {
+  getSerializer,
+  JSONAPISerializerCustom,
+} from '../serializers/JSONAPISerializerCustom';
+import JSONAPISource, { ResourceDocument } from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import {
   Record,
@@ -55,7 +56,7 @@ export async function insertData(
       if (rec.type === 'project') {
         if (!offlineProjectUpdate(rec as Project, oparray, memory)) {
           const fp = await getFingerprint();
-          offlineProjectCreate(rec as Project, oparray, memory, fp, true);
+          offlineProjectCreate(rec as Project, oparray, memory, fp, isImport);
         }
       }
       for (var rel in item.relationships) {
@@ -82,7 +83,7 @@ export async function insertData(
         oparray.push(tb.addRecord(item));
         if (item.type === 'project') {
           const fp = await getFingerprint();
-          offlineProjectCreate(item as Project, oparray, memory, fp, true);
+          offlineProjectCreate(item as Project, oparray, memory, fp, isImport);
         }
       } catch (err) {
         orbitError(orbitInfo(err, 'Add record error'));

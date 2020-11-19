@@ -446,10 +446,9 @@ const schemaDefinition: SchemaSettings = {
       relationships: {},
     },
   },
-  version:1,
+  version: 1,
 };
-if (process.env.REACT_APP_SCHEMAVERSION !== "1" && schemaDefinition.models)
-{
+if (process.env.REACT_APP_SCHEMAVERSION !== '1' && schemaDefinition.models) {
   schemaDefinition.models.offlineproject = {
     keys: { remoteId: {} },
     attributes: {
@@ -490,7 +489,7 @@ const SaveOfflineProjectInfo = async (
     const ops: Operation[] = [];
     var fingerprint = t[0].operations.length > 0 ? await getFingerprint() : '';
     t[0].operations.forEach((r: any) => {
-      offlineProjectCreate(r.record, ops, memory, fingerprint, false);
+      offlineProjectCreate(r.record, ops, memory, fingerprint, true);
     });
     await backup.push(ops);
     await memory.update(ops);
