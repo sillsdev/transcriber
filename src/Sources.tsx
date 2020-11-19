@@ -1,4 +1,12 @@
-import { IApiError, Role, Plan, Section, OfflineProject, VProject, ExportType } from './model';
+import {
+  IApiError,
+  Role,
+  Plan,
+  Section,
+  OfflineProject,
+  VProject,
+  ExportType,
+} from './model';
 import Coordinator, {
   RequestStrategy,
   SyncStrategy,
@@ -8,12 +16,15 @@ import Coordinator, {
 import IndexedDBSource from '@orbit/indexeddb';
 import IndexedDBBucket from '@orbit/indexeddb-bucket';
 import JSONAPISource from '@orbit/jsonapi';
-import { Transform, NetworkError, QueryBuilder, } from '@orbit/data';
+import { Transform, NetworkError, QueryBuilder } from '@orbit/data';
 import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
 import { API_CONFIG, isElectron } from './api-variable';
-import { getSerializer, JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
+import {
+  getSerializer,
+  JSONAPISerializerCustom,
+} from './serializers/JSONAPISerializerCustom';
 import { related } from './crud';
 import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
 import { electronExport } from './store/importexport/electronExport';
@@ -31,13 +42,13 @@ export const Sources = async (
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
   globalStore: any,
-  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
-)  => {
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
+) => {
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const tokData = auth.getProfile() || { sub: '' };
-  const userToken = localStorage.getItem('user-token');
+  const userToken = localStorage.getItem('auth-id');
   if (tokData.sub !== '') {
-    localStorage.setItem('user-token', tokData.sub);
+    localStorage.setItem('auth-id', tokData.sub);
   }
 
   const bucket: Bucket = new IndexedDBBucket({
@@ -64,7 +75,7 @@ export const Sources = async (
   const offline = !auth.accessToken;
 
   if (!offline) {
-      remote = coordinator.sourceNames.includes('remote')
+    remote = coordinator.sourceNames.includes('remote')
       ? (coordinator.getSource('remote') as JSONAPISource)
       : new JSONAPISource({
           schema: memory.schema,
@@ -82,7 +93,7 @@ export const Sources = async (
             timeout: 100000,
           },
         });
-      remote.requestProcessor.serializer.resourceKey = () => {
+    remote.requestProcessor.serializer.resourceKey = () => {
       return 'remoteId';
     };
 
@@ -235,18 +246,19 @@ export const Sources = async (
       );
     /* set the user from the token */
     var tr = await remote.pull((q) => q.findRecords('currentuser'));
+    await memory.sync(tr);
     const user = (tr[0].operations[0] as any).record;
     localStorage.setItem('user-id', user.id);
   } //!offline
   if (!coordinator.activated)
-    await coordinator.activate({ logLevel: LogLevel.Warnings })
+    await coordinator.activate({ logLevel: LogLevel.Warnings });
   setCoordinatorActivated(true);
   console.log('Coordinator will log warnings');
   setUser(localStorage.getItem('user-id') as string);
   let goRemote =
     !offline &&
     (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
-    if (!goRemote) {
+  if (!goRemote) {
     console.log('using backup');
     if (!isElectron) {
       //already did this if electron...
@@ -271,24 +283,29 @@ export const Sources = async (
     const projs = new Set(plans.map((p) => related(p, 'project') as string));
     setProjectsLoaded(Array.from(projs));
   }
-  var syncBuffer:Buffer | undefined = undefined;
+  var syncBuffer: Buffer | undefined = undefined;
   var syncFile = '';
   if (!offline && isElectron) {
-    var fr = await electronExport(ExportType.ITFSYNC, memory, backup, 0, fingerprint, 0, getSerializer(memory), getOfflineProject).catch(
-      (err: Error) => {
-        logError(
-          Severity.error,
-          globalStore.errorReporter,
-          infoMsg(err, 'ITFSYNC export failed: ')
-        );
-      }
-    );
-    if (fr && fr.data.attributes.changes> 0) {
+    var fr = await electronExport(
+      ExportType.ITFSYNC,
+      memory,
+      backup,
+      0,
+      fingerprint,
+      0,
+      getSerializer(memory),
+      getOfflineProject
+    ).catch((err: Error) => {
+      logError(
+        Severity.error,
+        globalStore.errorReporter,
+        infoMsg(err, 'ITFSYNC export failed: ')
+      );
+    });
+    if (fr && fr.data.attributes.changes > 0) {
       syncBuffer = fr.data.attributes.buffer;
       syncFile = fr.data.attributes.message;
     }
   }
-  return {syncBuffer, syncFile, goRemote};
+  return { syncBuffer, syncFile, goRemote };
 };
-
-

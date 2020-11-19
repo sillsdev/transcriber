@@ -1,4 +1,4 @@
 export function forceLogin() {
-  localStorage.removeItem('user-token');
+  localStorage.removeItem('auth-id');
   localStorage.removeItem('user-id');
 }

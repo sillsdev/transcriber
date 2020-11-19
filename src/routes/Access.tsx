@@ -159,6 +159,7 @@ export function Access(props: IProps) {
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
     if (isElectron) {
       if (!event.shiftKey) {
+        localStorage.removeItem('auth-id');
         ipc?.invoke('login');
         remote?.getCurrentWindow().close();
       } else ipc?.invoke('logout');
