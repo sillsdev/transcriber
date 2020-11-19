@@ -247,7 +247,7 @@ export function Access(props: IProps) {
         <>
           <Toolbar>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              {process.env.REACT_APP_SITE_TITLE}
+              {API_CONFIG.productName}
             </Typography>
           </Toolbar>
           <div className={classes.grow}>{'\u00A0'}</div>

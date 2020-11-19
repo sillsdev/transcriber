@@ -19,9 +19,10 @@ export const API_CONFIG = {
   endpoint: process.env.REACT_APP_ENDPOINT
     ? process.env.REACT_APP_ENDPOINT
     : '',
-  productName: process.env.REACT_APP_SITE_TITLE
-    ? process.env.REACT_APP_SITE_TITLE
-    : 'SIL Transcriber',
+  productName:
+    (process.env.REACT_APP_SITE_TITLE
+      ? process.env.REACT_APP_SITE_TITLE
+      : 'SIL Transcriber') + (isElectron ? ' Desktop' : ''),
   flatSample: process.env.REACT_APP_FLAT ? process.env.REACT_APP_FLAT : '',
   hierarchicalSample: process.env.REACT_APP_HIERARCHICAL
     ? process.env.REACT_APP_HIERARCHICAL
