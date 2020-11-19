@@ -427,7 +427,7 @@ export async function electronExport(
       var offlineprojects = memory.cache.query((q: QueryBuilder) =>
                         q.findRecords('offlineproject')
                     ) as OfflineProject[];
-      var ids = offlineprojects.map(o => related(o, 'project')) as string[];
+      var ids = offlineprojects.filter(o => o.attributes.offlineAvailable).map(o => related(o, 'project')) as string[];
       projects = projects.filter(p => ids.includes(p.id));
     }
   } else {
