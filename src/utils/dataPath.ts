@@ -52,7 +52,6 @@ export const dataPath = (
         );
         break;
     }
-    console.log(`Checking for ${localName}`);
     if (fs.existsSync(localName)) return localName;
   }
   return relPath?.startsWith('http')
