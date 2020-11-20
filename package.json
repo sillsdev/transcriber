@@ -151,7 +151,7 @@
   },
   "build": {
     "appId": "sil.lsdev.sil-transcriber-electron",
-    "productName": "SIL Transcriber Desktop Extension",
+    "productName": "SIL Transcriber Desktop",
     "copyright": "Copyright © 2020 ${author}",
     "win": {
       "icon": "public/favicon.png"
