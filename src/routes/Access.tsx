@@ -324,19 +324,15 @@ export function Access(props: IProps) {
                   >
                     {t.importProject}
                   </Button>
-                  {isDeveloper && (
-                    <>
-                      <p> </p>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={handleGoOnline}
-                      >
-                        {t.goOnline}
-                      </Button>
-                    </>
-                  )}
+                  <p> </p>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleGoOnline}
+                  >
+                    {t.goOnline}
+                  </Button>
                 </div>
               </Grid>
             </Grid>
