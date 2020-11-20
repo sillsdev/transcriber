@@ -244,17 +244,13 @@ export const Sources = async (
           blocking: true,
         })
       );
-    /* set the user from the token */
-    var tr = await remote.pull((q) => q.findRecords('currentuser'));
-    await memory.sync(tr);
-    const user = (tr[0].operations[0] as any).record;
-    localStorage.setItem('user-id', user.id);
   } //!offline
   if (!coordinator.activated)
     await coordinator.activate({ logLevel: LogLevel.Warnings });
+
   setCoordinatorActivated(true);
   console.log('Coordinator will log warnings');
-  setUser(localStorage.getItem('user-id') as string);
+
   let goRemote =
     !offline &&
     (userToken !== tokData.sub || localStorage.getItem('inviteId') !== null);
@@ -272,6 +268,7 @@ export const Sources = async (
         goRemote = true;
       }
     }
+
     const loadedplans = new Set(
       (memory.cache.query((q: QueryBuilder) =>
         q.findRecords('section')
@@ -283,6 +280,14 @@ export const Sources = async (
     const projs = new Set(plans.map((p) => related(p, 'project') as string));
     setProjectsLoaded(Array.from(projs));
   }
+  /* set the user from the token - must be done after the backup is loaded */
+  if (!offline) {
+    var tr = await remote.pull((q) => q.findRecords('currentuser'));
+    const user = (tr[0].operations[0] as any).record;
+    localStorage.setItem('user-id', user.id);
+  }
+  setUser(localStorage.getItem('user-id') as string);
+
   var syncBuffer: Buffer | undefined = undefined;
   var syncFile = '';
   if (!offline && isElectron) {
