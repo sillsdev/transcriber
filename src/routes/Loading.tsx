@@ -1,7 +1,7 @@
-import  React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
-import {  Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -12,6 +12,7 @@ import {
   ISharedStrings,
   IFetchResults,
 } from '../model';
+import { useCoordinator } from '../crud';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
@@ -97,8 +98,14 @@ interface IProps extends IStateProps, IDispatchProps {
 export function Loading(props: IProps) {
   const { orbitFetchResults, auth, t } = props;
   const classes = useStyles();
-  const { fetchOrbitData, orbitComplete, doOrbitError, fetchLocalization, setLanguage } = props;
-  const [coordinator] = useGlobal('coordinator');
+  const {
+    fetchOrbitData,
+    orbitComplete,
+    doOrbitError,
+    fetchLocalization,
+    setLanguage,
+  } = props;
+  const coordinator = useCoordinator();
   const [memory] = useGlobal('memory');
   const [backup] = useGlobal('backup');
   const [remote] = useGlobal('remote');
@@ -123,7 +130,6 @@ export function Loading(props: IProps) {
   const [doSync, setDoSync] = useState(false);
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
-
 
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
@@ -199,7 +205,7 @@ export function Loading(props: IProps) {
       setCoordinatorActivated,
       setOrbitRetries,
       globalStore,
-      getOfflineProject,
+      getOfflineProject
     );
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -216,17 +222,14 @@ export function Loading(props: IProps) {
       const locale = userRec.attributes?.locale || 'en';
       if (locale) setLanguage(locale);
 
-      if (orbitFetchResults?.syncBuffer)
-      {
+      if (orbitFetchResults?.syncBuffer) {
         setImportOpen(true);
         setDoSync(true);
-      }
-      else
-      {
+      } else {
         setSyncComplete(true);
       }
     }
-  }, [orbitFetchResults, memory,  setLanguage, user]);
+  }, [orbitFetchResults, memory, setLanguage, user]);
 
   useEffect(() => {
     if (!importOpen && doSync) {
@@ -242,18 +245,24 @@ export function Loading(props: IProps) {
       setCompleted(100);
       setLoadComplete(true);
       orbitComplete();
-    }
+    };
     const finishRemoteLoad = () => {
-      remote.pull((q) => q.findRecords('currentuser')).then ((tr) => {
-        const user = (tr[0].operations[0] as any).record;
-        InviteUser(remote, user?.attributes?.email || 'neverhere').then (() => {
-          setCompleted(10);
-          LoadData(memory, backup, remote, setCompleted, doOrbitError).then(() => {
-            LoadComplete();
-          });
+      remote
+        .pull((q) => q.findRecords('currentuser'))
+        .then((tr) => {
+          const user = (tr[0].operations[0] as any).record;
+          InviteUser(remote, user?.attributes?.email || 'neverhere').then(
+            () => {
+              setCompleted(10);
+              LoadData(memory, backup, remote, setCompleted, doOrbitError).then(
+                () => {
+                  LoadComplete();
+                }
+              );
+            }
+          );
         });
-      });
-    }
+    };
     //sync was either not needed, or is done
     if (syncComplete && orbitFetchResults) {
       if (orbitFetchResults.goRemote) {
@@ -261,8 +270,7 @@ export function Loading(props: IProps) {
           localUserKey(LocalKey.time, memory),
           currentDateTime()
         );
-        if (isElectron)
-          finishRemoteLoad();
+        if (isElectron) finishRemoteLoad();
         else
           backup.reset().then(() => {
             setProjectsLoaded([]);
@@ -272,8 +280,8 @@ export function Loading(props: IProps) {
         LoadComplete();
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [syncComplete, orbitFetchResults])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [syncComplete, orbitFetchResults]);
 
   if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
 
@@ -307,7 +315,13 @@ export function Loading(props: IProps) {
             </Typography>
           </div>
           {isElectron && importOpen && (
-            <ImportTab syncBuffer={orbitFetchResults?.syncBuffer} syncFile={orbitFetchResults?.syncFile} auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
+            <ImportTab
+              syncBuffer={orbitFetchResults?.syncBuffer}
+              syncFile={orbitFetchResults?.syncFile}
+              auth={auth}
+              isOpen={importOpen}
+              onOpen={setImportOpen}
+            />
           )}
           <LinearProgress variant="determinate" value={completed} />
         </Paper>

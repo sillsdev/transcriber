@@ -228,15 +228,17 @@ export function Access(props: IProps) {
           ipc?.invoke('get-token').then((accessToken) => {
             if (offline) setOffline(false);
             if (auth) auth.setDesktopSession(result, accessToken);
+            if (selectedUser === '') setSelectedUser('unknownUser');
           });
-          if (result?.sub && auth.accessToken) setSelectedUser('unknownUser');
         }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
-  if (
+  if (auth?.accessToken && !auth?.emailVerified()) {
+    return <Redirect to="/emailunverified" />;
+  } else if (
     (!isElectron && auth?.isAuthenticated()) ||
     (isElectron && selectedUser !== '')
   )

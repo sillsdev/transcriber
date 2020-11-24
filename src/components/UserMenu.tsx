@@ -69,14 +69,14 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 export function UserMenu(props: IProps) {
-  const { action, t , users} = props;
+  const { action, t, users } = props;
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
   const [user] = useGlobal('user');
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
-  const [userRec, setUserRec] = React.useState<User|undefined>(undefined);
+  const [userRec, setUserRec] = React.useState<User | undefined>(undefined);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
@@ -99,7 +99,7 @@ export function UserMenu(props: IProps) {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <UserAvatar  userRec={userRec} />
+        <UserAvatar userRec={userRec} />
       </Button>
       <StyledMenu
         id="custom-user-menu"
@@ -173,4 +173,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
 };
-export default withData(mapRecordsToProps)(connect(mapStateToProps)(UserMenu) as any) as any;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(UserMenu) as any
+) as any;

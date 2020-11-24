@@ -160,7 +160,7 @@ export const ProjectExport = (props: IProps) => {
 
   const percent = (count: number, total: number) => {
     if (!total) return 0;
-    return Math.floor((count * 100) / total);
+    return Math.ceil((count * 100) / total);
   };
 
   return (

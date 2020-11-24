@@ -7,7 +7,12 @@ import ErrorBoundary from './hoc/ErrorBoundary';
 import { Router, HashRouter } from 'react-router-dom';
 import { DataProvider } from './mods/react-orbitjs';
 import { Provider } from 'react-redux';
-import { coordinator, memory, backup } from './schema';
+import {
+  offlineCoordinator,
+  onlineCoordinator,
+  memory,
+  backup,
+} from './schema';
 import configureStore from './store';
 import { setGlobal } from 'reactn';
 import bugsnag from '@bugsnag/js';
@@ -90,7 +95,8 @@ getFingerprint()
       group: '',
       user: '',
       lang: 'en',
-      coordinator,
+      offlineCoordinator,
+      onlineCoordinator,
       memory,
       backup,
       bucket: undefined,

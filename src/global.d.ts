@@ -16,7 +16,8 @@ declare module 'reactn/default' {
     group: string;
     user: string;
     lang: string;
-    coordinator: Coordinator;
+    offlineCoordinator: Coordinator;
+    onlineCoordinator: Coordinator;
     memory: Memory;
     backup: IndexedDBSource;
     bucket: Bucket;

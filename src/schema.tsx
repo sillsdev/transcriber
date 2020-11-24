@@ -520,6 +520,10 @@ backup.cache.migrateDB = function (db, event) {
   }
 };
 
-export const coordinator = new Coordinator();
-coordinator.addSource(memory);
-if (window.indexedDB) coordinator.addSource(backup);
+export const onlineCoordinator = new Coordinator();
+onlineCoordinator.addSource(memory);
+if (window.indexedDB) onlineCoordinator.addSource(backup);
+
+export const offlineCoordinator = new Coordinator();
+offlineCoordinator.addSource(memory);
+if (window.indexedDB) offlineCoordinator.addSource(backup);

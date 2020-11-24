@@ -4,6 +4,7 @@ import fs from 'fs';
 import { bindActionCreators } from 'redux';
 import { IState, Project, GroupMembership, MediaFile } from '../model';
 import * as action from '../store';
+// import { useCoordinator } from '../crud';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -23,7 +24,7 @@ import {
   getMediaInPlans,
   useOfflnProjRead,
 } from '../crud';
-import { LogLevel } from '@orbit/coordinator';
+// import { LogLevel } from '@orbit/coordinator';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -78,7 +79,7 @@ export function Logout(props: IProps) {
   const [, setIsOffline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [view, setView] = React.useState('');
-  const [coordinator] = useGlobal('coordinator');
+  // const coordinator = useCoordinator();
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
   const [needyIds, setNeedyIds] = React.useState<string[]>([]);
@@ -119,18 +120,19 @@ export function Logout(props: IProps) {
     return Array.from(needyProject);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (auth.accessToken) {
-      ipc?.invoke('logout');
       localStorage.removeItem('isLoggedIn');
       setIsOffline(isElectron);
-      if (isElectron && coordinator.sourceNames.includes('remote')) {
-        coordinator.deactivate().then(() => {
-          coordinator.removeSource('remote');
-          coordinator.activate({ logLevel: LogLevel.Warnings }).then(() => setView('Access'));
-        });
-      }
+      // RemoveSource should work but it seems to break the coordinator
+      // if (isElectron && coordinator?.sourceNames.includes('remote')) {
+      //   await coordinator.deactivate();
+      //   coordinator.removeSource('remote');
+      // await coordinator.activate({ logLevel: LogLevel.Warnings });
+      // setView('Access');
+      // }
       auth.logout();
+      ipc?.invoke('logout');
     }
     setView('Access');
   };
