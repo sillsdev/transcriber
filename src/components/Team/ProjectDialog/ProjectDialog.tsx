@@ -21,6 +21,7 @@ import {
 } from '.';
 import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
+import { isElectron } from '../../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -101,7 +102,7 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
       <DialogContent>
         <ProjectName state={state} setState={setState} />
         <ProjectDescription state={state} setState={setState} />
-        <ProjectOffline state={state} setState={setState} />
+        {isElectron && <ProjectOffline state={state} setState={setState} />}
         <ProjectType type={type} onChange={handleTypeChange} />
         <Language {...state} onChange={handleLanguageChange} />
         <ProjectTags state={state} setState={setState} />
