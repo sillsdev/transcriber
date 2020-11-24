@@ -217,6 +217,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [remote] = useGlobal('remote');
     const [backup] = useGlobal('backup');
     const [user] = useGlobal('user');
+    const [offline] = useGlobal('offline');
     const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
     const [userProjects, setUserProjects] = useState(projects);
     const [userOrgs, setUserOrgs] = useState(organizations);
@@ -333,7 +334,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       return userOrgs
         .filter(
           (o) =>
-            !isPersonal(o.id) && (!isElectron || teamProjects(o.id).length > 0)
+            !isPersonal(o.id) && (!offline || teamProjects(o.id).length > 0)
         )
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };

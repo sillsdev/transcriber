@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { DialogMode, Organization } from '../../model';
@@ -17,6 +18,9 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       alignContent: 'center',
     },
+    button: {
+      marginBottom: theme.spacing(2),
+    },
   })
 );
 
@@ -27,6 +31,7 @@ interface IProps {
 const TeamActions = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
+  const [offline] = useGlobal('offline');
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
@@ -46,8 +51,13 @@ const TeamActions = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      {!isElectron && (
-        <Button variant="contained" color="default" onClick={handleClickOpen}>
+      {!offline && (
+        <Button
+          variant="contained"
+          color="default"
+          className={classes.button}
+          onClick={handleClickOpen}
+        >
           {t.addTeam}
         </Button>
       )}
