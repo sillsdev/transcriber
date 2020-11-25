@@ -61,7 +61,7 @@ const TeamActions = (props: IProps) => {
           {t.addTeam}
         </Button>
       )}
-      {isElectron && (
+      {offline && (
         <Button variant="contained" color="default" onClick={handleClickImport}>
           {t.import}
         </Button>
