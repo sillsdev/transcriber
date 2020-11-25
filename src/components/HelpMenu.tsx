@@ -83,6 +83,7 @@ export function HelpMenu(props: IProps) {
   const [shift, setShift] = React.useState(false);
   const [developer, setDeveloper] = useGlobal('developer');
   const [topic, setTopic] = React.useState<string>();
+  const [helpToggle, setHelpToggle] = React.useState(false);
   const helpRef = React.useRef<any>();
 
   interface IHelpLinkProps {
@@ -127,6 +128,7 @@ export function HelpMenu(props: IProps) {
       launch(target, online);
     } else if (helpRef.current) {
       setTopic(topic || '');
+      setHelpToggle(!helpToggle);
     }
     setAnchorEl(null);
   };
@@ -148,7 +150,7 @@ export function HelpMenu(props: IProps) {
 
   React.useEffect(() => {
     if (helpRef.current && topic !== undefined) helpRef.current.click();
-  }, [topic]);
+  }, [topic, helpToggle]);
 
   return (
     <div>
