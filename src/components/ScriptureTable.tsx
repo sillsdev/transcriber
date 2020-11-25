@@ -897,7 +897,7 @@ export function ScriptureTable(props: IProps) {
         numChanges = changedRows.filter((r) => r).length;
       }
       await doSave(changedRows);
-      if (busy) setBusy(false);
+      setBusy(false);
       setComplete(0);
     };
 
