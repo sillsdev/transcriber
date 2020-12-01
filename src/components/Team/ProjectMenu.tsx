@@ -28,7 +28,8 @@ import ExportIcon from '@material-ui/icons/CloudDownload';
 import ReportIcon from '@material-ui/icons/Assessment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterIcon from '@material-ui/icons/FilterList';
-import CheckIcon from '@material-ui/icons/Check';
+import UncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import CheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
 import { useOfflnProjRead } from '../../crud';
 
@@ -134,7 +135,11 @@ export function ProjectMenu(props: IProps) {
         {isElectron && !isOffline && (
           <StyledMenuItem onClick={handle('offlineAvail')}>
             <ListItemIcon>
-              {offlineProject?.attributes?.offlineAvailable && <CheckIcon />}
+              {offlineProject?.attributes?.offlineAvailable ? (
+                <CheckedIcon />
+              ) : (
+                <UncheckedIcon />
+              )}
             </ListItemIcon>
             <ListItemText primary={t.offlineAvail} />
           </StyledMenuItem>
