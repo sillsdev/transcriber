@@ -1,9 +1,15 @@
 import { useGlobal } from 'reactn';
 import * as actions from '../store';
 import { QueryBuilder } from '@orbit/data';
-import { Plan, MediaFile, ITranscriptionTabStrings, ExportType } from '../model';
+import {
+  Plan,
+  MediaFile,
+  ITranscriptionTabStrings,
+  ExportType,
+} from '../model';
 import { getMediaInPlans, related, remoteIdNum, useOfflnProjRead } from '.';
 import Auth from '../auth/Auth';
+import IndexedDBSource from '@orbit/indexeddb';
 
 interface IProps {
   auth: Auth;
@@ -13,9 +19,10 @@ interface IProps {
 
 export const useProjecExport = (props: IProps) => {
   const { auth } = props;
-  const {exportProject, t} = props;
+  const { exportProject, t } = props;
   const [memory] = useGlobal('memory');
-  const [backup] = useGlobal('backup');
+  const [coordinator] = useGlobal('coordinator');
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [fingerprint] = useGlobal('fingerprint');
   const [userId] = useGlobal('user');
   const [, setBusy] = useGlobal('importexportBusy');

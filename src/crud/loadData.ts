@@ -19,6 +19,7 @@ import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import { offlineProjectCreate, offlineProjectUpdate } from '../crud';
 import { getFingerprint } from '../utils';
+import Coordinator from '@orbit/coordinator';
 
 const completePerTable = 3;
 
@@ -154,12 +155,13 @@ async function processData(
 }
 
 export async function LoadData(
-  memory: Memory,
-  backup: IndexedDBSource,
-  remote: JSONAPISource,
+  coordinator: Coordinator,
   setCompleted: (valud: number) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   var tb: TransformBuilder = new TransformBuilder();
   const ser = getSerializer(memory);
 
@@ -210,15 +212,16 @@ export async function LoadData(
 }
 export async function LoadProjectData(
   project: string,
-  memory: Memory,
-  remote: JSONAPISource,
+  coordinator: Coordinator,
   online: boolean,
-  backup: IndexedDBSource,
   projectsLoaded: string[],
   setProjectsLoaded: (valud: string[]) => void,
   setBusy: (v: boolean) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   if (projectsLoaded.includes(project)) return true;
   if (!remote || !online) throw new Error('offline.');
 

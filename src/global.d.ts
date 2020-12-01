@@ -1,9 +1,6 @@
 import 'reactn';
 import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
-import { Bucket } from '@orbit/core';
-import JSONAPISource from '@orbit/jsonapi';
-import IndexedDBSource from '@orbit/indexeddb';
 
 declare module 'reactn/default' {
   export interface State {
@@ -16,12 +13,8 @@ declare module 'reactn/default' {
     group: string;
     user: string;
     lang: string;
-    offlineCoordinator: Coordinator;
-    onlineCoordinator: Coordinator;
+    coordinator: Coordinator;
     memory: Memory;
-    backup: IndexedDBSource;
-    bucket: Bucket;
-    remote: JSONAPISource;
     remoteBusy: boolean;
     doSave: boolean;
     saveResult: string | undefined;

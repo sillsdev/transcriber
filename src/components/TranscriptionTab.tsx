@@ -67,6 +67,7 @@ import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { isElectron } from '../api-variable';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
+import IndexedDBSource from '@orbit/indexeddb';
 
 const ActionHeight = 52;
 
@@ -216,8 +217,9 @@ export function TranscriptionTab(props: IProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
+  const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
-  const [backup] = useGlobal('backup');
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
@@ -300,7 +302,7 @@ export function TranscriptionTab(props: IProps) {
       auth,
       errorReporter,
       t.exportingProject,
-      getOfflineProject,
+      getOfflineProject
     );
   };
   const handleProjectExport = () => {

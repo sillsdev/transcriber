@@ -31,12 +31,9 @@ import { electronExport } from './store/importexport/electronExport';
 
 export const Sources = async (
   coordinator: Coordinator,
-  memory: Memory,
   auth: Auth,
   fingerprint: string,
   setUser: (id: string) => void,
-  setBucket: (bucket: Bucket) => void,
-  setRemote: (remote: JSONAPISource) => void,
   setProjectsLoaded: (valud: string[]) => void,
   setCoordinatorActivated: (valud: boolean) => void,
   orbitError: (ex: IApiError) => void,
@@ -44,6 +41,7 @@ export const Sources = async (
   globalStore: any,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ) => {
+  const memory = coordinator.getSource('memory') as Memory;
   const backup = coordinator.getSource('backup') as IndexedDBSource;
   const tokData = auth.getProfile() || { sub: '' };
   const userToken = localStorage.getItem('auth-id');
@@ -54,7 +52,6 @@ export const Sources = async (
   const bucket: Bucket = new IndexedDBBucket({
     namespace: 'transcriber-' + tokData.sub.replace(/\|/g, '-') + '-bucket',
   }) as any;
-  setBucket(bucket);
 
   //set up strategies
   // Update indexedDb when memory updated
@@ -101,7 +98,6 @@ export const Sources = async (
       if (coordinator.activated) await coordinator.deactivate();
       coordinator.addSource(remote);
     }
-    setRemote(remote);
 
     // Trap error querying data (token expired or offline)
     if (!coordinator.strategyNames.includes('remote-pull-fail'))

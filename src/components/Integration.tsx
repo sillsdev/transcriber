@@ -46,6 +46,7 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { isElectron } from '../api-variable';
 import { doDataChanges } from '../hoc/DataChanges';
+import Memory from '@orbit/memory';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -175,8 +176,8 @@ export function IntegrationPanel(props: IProps) {
 
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
-  const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
   const [plan] = useGlobal('plan');
   const [fingerprint] = useGlobal('fingerprint');
 
@@ -568,7 +569,7 @@ export function IntegrationPanel(props: IProps) {
         resetCount();
         resetSync();
         setSyncing(false);
-        doDataChanges(auth, remote, memory, fingerprint, errorReporter);
+        doDataChanges(auth, coordinator, fingerprint, errorReporter);
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

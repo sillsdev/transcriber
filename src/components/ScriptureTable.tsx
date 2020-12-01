@@ -19,6 +19,8 @@ import {
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
+import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
@@ -152,8 +154,9 @@ export function ScriptureTable(props: IProps) {
   const { prjId } = useParams<ParamTypes>();
   const [width, setWidth] = React.useState(window.innerWidth);
   const [plan] = useGlobal('plan');
-  const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [doSave, setDoSave] = useGlobal('doSave');
   const [busy, setBusy] = useGlobal('importexportBusy');
 

@@ -34,6 +34,8 @@ import {
 import Auth from '../auth/Auth';
 import localStrings from '../selector/localize';
 import { bindActionCreators } from 'redux';
+import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -113,8 +115,9 @@ export function ImportTab(props: IProps) {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_busy, setBusy] = useGlobal('importexportBusy');
-  const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
 
@@ -223,12 +226,9 @@ export function ImportTab(props: IProps) {
     setImportTitle('');
     setChangeData([]);
     if (isElectron) {
-      if (syncFile && syncBuffer)
-        uploadSyncITF(syncBuffer, syncFile);
-      else
-       electronImport();
-     }
-    else setUploadVisible(true);
+      if (syncFile && syncBuffer) uploadSyncITF(syncBuffer, syncFile);
+      else electronImport();
+    } else setUploadVisible(true);
   }, []);
 
   const handleActionConfirmed = () => {
@@ -270,8 +270,7 @@ export function ImportTab(props: IProps) {
       t.importPending,
       t.importComplete
     );
-  }
-
+  };
 
   const uploadCancel = () => {
     setUploadVisible(false);
@@ -602,16 +601,13 @@ export function ImportTab(props: IProps) {
           );
           importComplete();
           if (remote)
-            doDataChanges(auth, remote, memory, fingerprint, errorReporter);
+            doDataChanges(auth, coordinator, fingerprint, errorReporter);
           setBusy(false);
         }
       }
-    }
-    else
-    {
-      if (syncFile && importTitle === t.importComplete)
-      {
-          handleClose();
+    } else {
+      if (syncFile && importTitle === t.importComplete) {
+        handleClose();
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

@@ -7,6 +7,7 @@ import * as action from '../store';
 // import { useCoordinator } from '../crud';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
+import { LogLevel } from '@orbit/coordinator';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -75,6 +76,7 @@ export function Logout(props: IProps) {
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const { groupMemberships, projects, mediafiles } = props;
+  const [coordinator] = useGlobal('coordinator');
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
   const [user] = useGlobal('user');
@@ -124,13 +126,17 @@ export function Logout(props: IProps) {
     if (auth.accessToken) {
       localStorage.removeItem('isLoggedIn');
       setIsOffline(isElectron);
-      // RemoveSource should work but it seems to break the coordinator
-      // if (isElectron && coordinator?.sourceNames.includes('remote')) {
-      //   await coordinator.deactivate();
-      //   coordinator.removeSource('remote');
-      // await coordinator.activate({ logLevel: LogLevel.Warnings });
-      // setView('Access');
-      // }
+      if (isElectron && coordinator?.sourceNames.includes('remote')) {
+        await coordinator.deactivate();
+        coordinator.removeStrategy('remote-push-fail');
+        coordinator.removeStrategy('remote-pull-fail');
+        coordinator.removeStrategy('remote-request');
+        coordinator.removeStrategy('remote-update');
+        coordinator.removeStrategy('remote-sync');
+        coordinator.removeSource('remote');
+        await coordinator.activate({ logLevel: LogLevel.Warnings });
+        setView('Access');
+      }
       auth.logout();
       ipc?.invoke('logout');
     }

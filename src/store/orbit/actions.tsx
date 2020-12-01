@@ -7,10 +7,7 @@ import {
   ORBIT_SAVING,
   FETCH_ORBIT_DATA_COMPLETE,
 } from './types';
-import { Bucket } from '@orbit/core';
 import Coordinator from '@orbit/coordinator';
-import Memory from '@orbit/memory';
-import JSONAPISource from '@orbit/jsonapi';
 import Auth from '../../auth/Auth';
 import { Sources } from '../../Sources';
 import { Severity } from '../../utils';
@@ -29,7 +26,7 @@ export const orbitError = (ex: IApiError) => {
 };
 
 export const orbitComplete = () => (dispatch: any) => {
-  dispatch( {
+  dispatch({
     type: FETCH_ORBIT_DATA_COMPLETE,
   });
 };
@@ -53,33 +50,27 @@ export const orbitSaving = (val: boolean) => {
 
 export const fetchOrbitData = (
   coordinator: Coordinator,
-  memory: Memory,
   auth: Auth,
   fingerprint: string,
   setUser: (id: string) => void,
-  setBucket: (bucket: Bucket) => void,
-  setRemote: (remote: JSONAPISource) => void,
   setProjectsLoaded: (value: string[]) => void,
   setCoordinatorActivated: (value: boolean) => void,
   setOrbitRetries: (r: number) => void,
   global: any,
-  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject,
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ) => (dispatch: any) => {
- Sources(
+  Sources(
     coordinator,
-    memory,
     auth,
     fingerprint,
     setUser,
-    setBucket,
-    setRemote,
     setProjectsLoaded,
     setCoordinatorActivated,
     (ex: IApiError) => dispatch(orbitError(ex)),
     setOrbitRetries,
     global,
-    getOfflineProject,
+    getOfflineProject
   ).then((fr) => {
-      dispatch({ type: FETCH_ORBIT_DATA, payload: fr})
-    });
+    dispatch({ type: FETCH_ORBIT_DATA, payload: fr });
+  });
 };

@@ -12,14 +12,15 @@ import {
   ISharedStrings,
   IFetchResults,
 } from '../model';
-import { useCoordinator } from '../crud';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
+import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
+import IndexedDBSource from '@orbit/indexeddb';
 import {
   uiLang,
   uiLangDev,
@@ -105,13 +106,11 @@ export function Loading(props: IProps) {
     fetchLocalization,
     setLanguage,
   } = props;
-  const coordinator = useCoordinator();
-  const [memory] = useGlobal('memory');
-  const [backup] = useGlobal('backup');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [offline] = useGlobal('offline');
-  const [, setBucket] = useGlobal('bucket');
-  const [, setRemote] = useGlobal('remote');
   const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
@@ -195,12 +194,9 @@ export function Loading(props: IProps) {
     fetchLocalization();
     fetchOrbitData(
       coordinator,
-      memory,
       auth,
       fingerprint,
       setUser,
-      setBucket,
-      setRemote,
       setProjectsLoaded,
       setCoordinatorActivated,
       setOrbitRetries,
@@ -254,11 +250,9 @@ export function Loading(props: IProps) {
           InviteUser(remote, user?.attributes?.email || 'neverhere').then(
             () => {
               setCompleted(10);
-              LoadData(memory, backup, remote, setCompleted, doOrbitError).then(
-                () => {
-                  LoadComplete();
-                }
-              );
+              LoadData(coordinator, setCompleted, doOrbitError).then(() => {
+                LoadComplete();
+              });
             }
           );
         });

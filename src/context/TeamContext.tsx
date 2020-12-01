@@ -206,7 +206,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       fetchBooks,
       doOrbitError,
     } = props;
-    const [memory] = useGlobal('memory');
     const [isOffline] = useGlobal('offline');
     const [, setBusy] = useGlobal('importexportBusy');
 
@@ -214,8 +213,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
-    const [remote] = useGlobal('remote');
-    const [backup] = useGlobal('backup');
+    const [coordinator] = useGlobal('coordinator');
+    const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [offline] = useGlobal('offline');
     const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
@@ -278,10 +277,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       Online((online) => {
         LoadProjectData(
           projectId,
-          memory,
-          remote,
+          coordinator,
           online && !isOffline,
-          backup,
           projectsLoaded,
           setProjectsLoaded,
           setBusy,

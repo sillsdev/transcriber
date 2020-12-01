@@ -1,6 +1,5 @@
 import { useGlobal } from 'reactn';
 import { VProject } from '../model';
-import { useCoordinator } from '../crud';
 import { TransformBuilder } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { related, useTypeId } from '.';
@@ -8,7 +7,7 @@ import { useOfflnProjRead } from './useOfflnProjRead';
 
 export const useVProjectUpdate = () => {
   const [memory] = useGlobal('memory');
-  const coordinator = useCoordinator();
+  const [coordinator] = useGlobal('coordinator');
   const getTypeId = useTypeId();
   const offlineProject = useOfflnProjRead();
 

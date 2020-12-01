@@ -1,6 +1,3 @@
-/*
-import { remote, OpenDialogSyncOptions } from 'electron';
-*/
 import AdmZip from 'adm-zip';
 import fs from 'fs';
 import path from 'path';
@@ -16,6 +13,7 @@ import { useGlobal, useRef } from 'reactn';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
+import IndexedDBSource from '@orbit/indexeddb';
 
 export interface IImportData {
   valid: boolean;
@@ -32,8 +30,9 @@ const stringSelector = (state: IState) =>
 export const useElectronImport = (
   importComplete: typeof action.importComplete
 ) => {
+  const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
-  const [backup] = useGlobal('backup');
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [coordinatorActivated] = useGlobal('coordinatorActivated');
   const { showTitledMessage } = useSnackBar();
   const zipRef = useRef<AdmZip>();

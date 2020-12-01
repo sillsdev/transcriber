@@ -40,4 +40,3 @@ export * from './offlineProjectCreate';
 export * from './offlineProjectUpdate';
 export * from './useOfflnProjRead';
 export * from './useProjectExport';
-export * from './useCoordinator';

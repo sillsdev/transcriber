@@ -1,7 +1,6 @@
 import { useGlobal } from 'reactn';
 import { Organization, ISharedStrings } from '../model';
 import { Online } from '../utils';
-import { useCoordinator } from '../crud';
 import { createOrg, offlineError } from '.';
 import * as actions from '../store';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -21,7 +20,7 @@ interface IProps extends IStateProps, IDispatchProps {
 
 export const useTeamCreate = (props: IProps) => {
   const { doOrbitError } = props;
-  const coordinator = useCoordinator();
+  const [coordinator] = useGlobal('coordinator');
   const [user] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');

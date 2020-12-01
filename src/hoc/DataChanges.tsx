@@ -9,12 +9,13 @@ import {
   Operation,
   UpdateRecordOperation,
 } from '@orbit/data';
+import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 import { DataChange } from '../model/dataChange';
 import { API_CONFIG } from '../api-variable';
 import Auth from '../auth/Auth';
 import { remoteIdGuid, remoteIdNum } from '../crud';
-import JSONAPISource from '@orbit/jsonapi';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { getSerializer } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
@@ -32,11 +33,12 @@ interface IProps extends IStateProps, IDispatchProps {
 
 export const doDataChanges = (
   auth: Auth,
-  remote: JSONAPISource,
-  memory: Memory,
+  coordinator: Coordinator,
   fingerprint: string,
   errorReporter: any
 ) => {
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const userLastTimeKey = localUserKey(LocalKey.time, memory);
   let lastTime = localStorage.getItem(userLastTimeKey);
   if (!lastTime) lastTime = currentDateTime(); // should not happen
@@ -138,13 +140,14 @@ export const doDataChanges = (
 export default function DataChanges(props: IProps) {
   const { auth, children } = props;
   const [isOffline] = useGlobal('offline');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
   const [user] = useGlobal('user');
   const [doSave] = useGlobal('doSave');
   const [fingerprint] = useGlobal('fingerprint');
-  const [memory] = useGlobal('memory');
   const [errorReporter] = useGlobal('errorReporter');
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
@@ -159,7 +162,11 @@ export default function DataChanges(props: IProps) {
 
     if (!remote) setBusy(false);
     setBusyDelay(remote && auth?.isAuthenticated() ? defaultBusyDelay : null);
-    setDataDelay(loadComplete && remote && auth?.isAuthenticated() ? defaultDataDelay : null);
+    setDataDelay(
+      loadComplete && remote && auth?.isAuthenticated()
+        ? defaultDataDelay
+        : null
+    );
   }, [remote, auth, loadComplete, setBusy]);
 
   const updateBusy = () => {
@@ -169,7 +176,7 @@ export default function DataChanges(props: IProps) {
   };
   const updateData = () => {
     if (!busy && !doSave) {
-      doDataChanges(auth, remote, memory, fingerprint, errorReporter);
+      doDataChanges(auth, coordinator, fingerprint, errorReporter);
     }
   };
   const backupElectron = () => {
@@ -177,15 +184,22 @@ export default function DataChanges(props: IProps) {
       var projectid = remoteIdNum('project', project, memory.keyMap);
       var userid = remoteIdNum('user', user, memory.keyMap);
 
-      electronExport(ExportType.ITFBACKUP, memory, undefined, projectid, fingerprint, userid, getSerializer(memory), getOfflineProject).catch(
-        (err: Error) => {
-          logError(
-            Severity.error,
-            errorReporter,
-            infoMsg(err, 'Backup export failed: ')
-          );
-        }
-      );
+      electronExport(
+        ExportType.ITFBACKUP,
+        memory,
+        undefined,
+        projectid,
+        fingerprint,
+        userid,
+        getSerializer(memory),
+        getOfflineProject
+      ).catch((err: Error) => {
+        logError(
+          Severity.error,
+          errorReporter,
+          infoMsg(err, 'Backup export failed: ')
+        );
+      });
     }
   };
   useInterval(updateBusy, busyDelay);
