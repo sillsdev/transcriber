@@ -125,18 +125,20 @@ async function processData(
   var oparray: Operation[] = [];
   var completed: number = 15 + start * completePerTable;
 
-  tables.forEach((t) => {
-    var json = ser.deserialize(t);
-    if (Array.isArray(json.data)) {
-      json.data.forEach((item) =>
-        insertData(item, memory, tb, oparray, orbitError, false, false)
-      );
+  for (let ti = 0; ti < tables.length; ti += 1) {
+    const t = tables[ti];
+    var jsonData = ser.deserialize(t).data;
+    if (Array.isArray(jsonData)) {
+      for (let ji = 0; ji < jsonData.length; ji += 1) {
+        const item = jsonData[ji];
+        await insertData(item, memory, tb, oparray, orbitError, false, false);
+      }
     } else {
-      insertData(json.data, memory, tb, oparray, orbitError, false, false);
+      await insertData(jsonData, memory, tb, oparray, orbitError, false, false);
     }
     completed += completePerTable;
     if (setCompleted && completed < 90) setCompleted(completed);
-  });
+  }
   try {
     //this was slower than just waiting for them both separately
     //await Promise.all([memory.update(oparray), backup.push(oparray)]);

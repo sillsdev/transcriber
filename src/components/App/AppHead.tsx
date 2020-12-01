@@ -171,10 +171,7 @@ export const AppHead = withBucket(
             <div className={classes.grow}>{'\u00A0'}</div>
             {SwitchTo && <SwitchTo />}
             <HelpMenu online={!isOffline} />
-            <UserMenu
-              action={(what: string) => handleUserMenu(what)}
-              auth={auth}
-            />
+            <UserMenu action={handleUserMenu} auth={auth} />
           </Toolbar>
           {!importexportBusy || <Busy />}
           {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}

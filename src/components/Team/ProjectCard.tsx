@@ -145,6 +145,9 @@ export const ProjectCard = (props: IProps) => {
         case 'reports':
           setOpenReports(true);
           break;
+        case 'offlineAvail':
+          offlineAvailToggle(offlineProjectRead(projectId));
+          break;
       }
     });
   };
@@ -153,9 +156,6 @@ export const ProjectCard = (props: IProps) => {
     switch (what) {
       case 'settings':
         setOpenProject(true);
-        break;
-      case 'offlineAvail':
-        offlineAvailToggle(offlineProjectRead(projectId));
         break;
       case 'integration':
         setOpenIntegration(true);
@@ -166,6 +166,7 @@ export const ProjectCard = (props: IProps) => {
       case 'import':
       case 'export':
       case 'reports':
+      case 'offlineAvail':
         LoadAndGo(what);
     }
     setOpen('');

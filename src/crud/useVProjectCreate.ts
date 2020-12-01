@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { VProject, Project, Plan, Group } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
-import { AddProjectLoaded, related, useTypeId } from '.';
+import { AddProjectLoaded, related, useTypeId, useOfflnProjCreate } from '.';
 import { localeDefault } from '../utils';
 
 export const useVProjectCreate = () => {
@@ -9,6 +9,7 @@ export const useVProjectCreate = () => {
   const [user] = useGlobal('user');
   const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [isDeveloper] = useGlobal('developer');
+  const offlineProjectCreate = useOfflnProjCreate();
 
   const getTypeId = useTypeId();
 
@@ -75,6 +76,7 @@ export const useVProjectCreate = () => {
       }),
     ]);
     AddProjectLoaded(project.id, projectsLoaded, setProjectsLoaded);
+    offlineProjectCreate(project);
 
     let plan: Plan = {
       type: 'plan',
