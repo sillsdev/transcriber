@@ -25,7 +25,19 @@
             <target>Importation un fichier de PTF</target>
          </segment>
       </unit>
-      <unit id="activityState.approved">
+   	<unit id="access.download">
+   		<segment>
+   			<source>Download?</source>
+   			<target>Télécharger ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.downloadMb">
+   		<segment>
+   			<source>Download {0}MB of offline project files?</source>
+   			<target>Télécharger {0}MB de fichiers de projets hors ligne ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="activityState.approved">
          <segment>
             <source>Ready to Sync</source>
             <target>Prêt à synchroniser</target>
@@ -325,7 +337,13 @@
             <target>Paramètres</target>
          </segment>
       </unit>
-      <unit id="cards.teamName">
+   	<unit id="cards.offlineAvail">
+   		<segment>
+   			<source>Offline Available</source>
+   			<target>Disponible hors ligne</target>
+   		</segment>
+   	</unit>
+   	<unit id="cards.teamName">
          <segment>
             <source>Team Name</source>
             <target>Nom de l'équipe</target>

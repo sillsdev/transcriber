@@ -20,7 +20,13 @@ import ExportTab from '../TranscriptionTab';
 import Visualize from '../Visualize';
 import Confirm from '../AlertDialog';
 import { ProjectDialog, IProjectDialog } from './ProjectDialog';
-import { usePlan, useProjectPlans, useOrganizedBy } from '../../crud';
+import {
+  usePlan,
+  useProjectPlans,
+  useOrganizedBy,
+  useOfflnProjRead,
+  useOfflineAvailToggle,
+} from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -97,6 +103,8 @@ export const ProjectCard = (props: IProps) => {
   const [organizedByPlural, setOrganizedByPlural] = useState('');
   const [projectId] = useGlobal('project');
   const projectPlans = useProjectPlans();
+  const offlineProjectRead = useOfflnProjRead();
+  const offlineAvailToggle = useOfflineAvailToggle();
   const [openProject, setOpenProject] = useState(false);
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);
@@ -146,6 +154,9 @@ export const ProjectCard = (props: IProps) => {
       case 'settings':
         setOpenProject(true);
         break;
+      case 'offlineAvail':
+        offlineAvailToggle(offlineProjectRead(projectId));
+        break;
       case 'integration':
         setOpenIntegration(true);
         break;
@@ -175,7 +186,6 @@ export const ProjectCard = (props: IProps) => {
     const {
       name,
       description,
-      offlineAvailable,
       type,
       languageName,
       rtl,
@@ -188,7 +198,6 @@ export const ProjectCard = (props: IProps) => {
         ...project.attributes,
         name,
         description,
-        offlineAvailable,
         type,
         language: values.bcp47,
         languageName,
@@ -217,7 +226,6 @@ export const ProjectCard = (props: IProps) => {
     const value: IProjectDialog = {
       name: attr.name,
       description: attr.description || '',
-      offlineAvailable: attr.offlineAvailable,
       type: attr.type,
       book: '',
       bcp47: attr.language,
@@ -254,6 +262,7 @@ export const ProjectCard = (props: IProps) => {
             <ProjectMenu
               action={handleProjectAction}
               isOwner={isOwner(project)}
+              project={project}
             />
           </div>
           <Typography className={classes.pos}>

@@ -28,6 +28,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.download">
+         <segment>
+            <source>Download?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.downloadMb">
+         <segment>
+            <source>Download {0}MB of offline project files?</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="activityState.approved">
          <segment>
             <source>Ready to Sync</source>
@@ -325,6 +337,12 @@
       <unit id="cards.settings">
          <segment>
             <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.offlineAvail">
+         <segment>
+            <source>Offline Available</source>
             <target/>
          </segment>
       </unit>

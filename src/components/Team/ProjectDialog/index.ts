@@ -7,4 +7,3 @@ export * from './EditorSettings';
 export * from '../../../control/Options';
 export * from './ProjectExpansion';
 export * from './ProjectType';
-export * from './ProjectOffline';

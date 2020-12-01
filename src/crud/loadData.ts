@@ -83,8 +83,16 @@ export async function insertData(
         memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
         if (item.type === 'project') {
-          const fp = await getFingerprint();
-          offlineProjectCreate(item as Project, oparray, memory, fp, isImport);
+          if (!offlineProjectUpdate(item as Project, oparray, memory)) {
+            const fp = await getFingerprint();
+            offlineProjectCreate(
+              item as Project,
+              oparray,
+              memory,
+              fp,
+              isImport
+            );
+          }
         }
       } catch (err) {
         orbitError(orbitInfo(err, 'Add record error'));

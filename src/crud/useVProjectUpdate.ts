@@ -1,23 +1,17 @@
 import { useGlobal } from 'reactn';
 import { VProject } from '../model';
 import { TransformBuilder } from '@orbit/data';
-import IndexedDBSource from '@orbit/indexeddb';
 import { related, useTypeId } from '.';
-import { useOfflnProjRead } from './useOfflnProjRead';
 
 export const useVProjectUpdate = () => {
   const [memory] = useGlobal('memory');
-  const [coordinator] = useGlobal('coordinator');
   const getTypeId = useTypeId();
-  const offlineProject = useOfflnProjRead();
 
   return async (vProject: VProject) => {
     const id = related(vProject, 'project');
-    const oProject = offlineProject(vProject);
     const {
       name,
       description,
-      offlineAvailable,
       type,
       uilanguagebcp47,
       language,
@@ -70,19 +64,5 @@ export const useVProjectUpdate = () => {
         id: getTypeId(type, 'plan'),
       }),
     ]);
-
-    // local update only, migrate offlineproject to include offlineAvailable
-    const backup = coordinator.getSource('backup') as IndexedDBSource;
-    await memory.sync(
-      await backup.push((t: TransformBuilder) => [
-        t.updateRecord({
-          ...oProject,
-          attributes: {
-            ...oProject.attributes,
-            offlineAvailable,
-          },
-        }),
-      ])
-    );
   };
 };

@@ -12,6 +12,8 @@ const initialState = {
 			"accessSilTranscriber": "To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)",
 			"goOnline": "Go Online",
 			"importProject": "Import PTF File",
+			"download": "Download?",
+			"downloadMb": "Download {0}MB of offline project files?",
 		}
 	}),
 	"activityState": new LocalizedStrings({
@@ -82,6 +84,7 @@ const initialState = {
 			"save": "Save",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
+			"offlineAvail": "Offline Available",
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",

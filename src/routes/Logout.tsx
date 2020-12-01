@@ -2,9 +2,15 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import fs from 'fs';
 import { bindActionCreators } from 'redux';
-import { IState, Project, GroupMembership, MediaFile } from '../model';
+import {
+  IState,
+  Project,
+  GroupMembership,
+  MediaFile,
+  IAccessStrings,
+} from '../model';
+import localStrings from '../selector/localize';
 import * as action from '../store';
-// import { useCoordinator } from '../crud';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { LogLevel } from '@orbit/coordinator';
@@ -25,7 +31,6 @@ import {
   getMediaInPlans,
   useOfflnProjRead,
 } from '../crud';
-// import { LogLevel } from '@orbit/coordinator';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -54,7 +59,9 @@ interface PlanProject {
   [planId: string]: string;
 }
 
-interface IStateProps {}
+interface IStateProps {
+  t: IAccessStrings;
+}
 
 interface IDispatchProps {
   fetchLocalization: typeof action.fetchLocalization;
@@ -72,7 +79,7 @@ interface IProps extends IStateProps, IDispatchProps, IRecordProps {
 }
 
 export function Logout(props: IProps) {
-  const { auth } = props;
+  const { auth, t } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const { groupMemberships, projects, mediafiles } = props;
@@ -81,7 +88,6 @@ export function Logout(props: IProps) {
   const [, setIsOffline] = useGlobal('offline');
   const [user] = useGlobal('user');
   const [view, setView] = React.useState('');
-  // const coordinator = useCoordinator();
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
   const [needyIds, setNeedyIds] = React.useState<string[]>([]);
@@ -103,9 +109,7 @@ export function Logout(props: IProps) {
       if (offlineProjRec?.attributes?.offlineAvailable) {
         projectPlans(p.id).forEach((pl) => {
           planIds.push(pl.id);
-          planProject[pl.id] =
-            // p?.keys?.remoteId ||
-            p.id;
+          planProject[pl.id] = p.id;
         });
       }
     });
@@ -180,10 +184,11 @@ export function Logout(props: IProps) {
       </AppBar>
       {alert && (
         <Alert
-          title={'Download?'}
-          text={`Download ${Math.floor(
-            downloadSize / 1000 + 0.5
-          )}MB of offline project files?`}
+          title={t.download}
+          text={t.downloadMb.replace(
+            '{0}',
+            Math.ceil(downloadSize / 1000 + 0.5).toString()
+          )}
           yesResponse={handleDownload}
           noResponse={handleLogout}
         />
@@ -198,7 +203,9 @@ export function Logout(props: IProps) {
   );
 }
 
-const mapStateToProps = (state: IState): IStateProps => ({});
+const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'access' }),
+});
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(

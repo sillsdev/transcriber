@@ -30,7 +30,21 @@
                <context context-type="sourcefile">electronImport.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="activityState.approved">
+      	<trans-unit id="access.download">
+      		<source>Download?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">logout.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.downloadMb">
+      		<source>Download {0}MB of offline project files?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">logout.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="activityState.approved">
             <source>Ready to Sync</source>
             <target/>
             <context-group>
@@ -379,7 +393,14 @@
                <context context-type="sourcefile">ProjectMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.sync">
+      	<trans-unit id="cards.offlineAvail">
+      		<source>Offline Available</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.sync">
             <source>Sync ({0})</source>
             <target/>
             <context-group>

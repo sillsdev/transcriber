@@ -6,6 +6,8 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessSilTranscriber": string;
     "goOnline": string;
     "importProject": string;
+    "download": string;
+    "downloadMb": string;
 };
 
 export interface IActivityStateStrings extends Localize.LocalizedStringsMethods {
@@ -71,6 +73,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sectionStatus": string;
     "settings": string;
+    "offlineAvail": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;

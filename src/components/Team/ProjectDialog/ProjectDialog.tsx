@@ -12,7 +12,6 @@ import { TeamContext } from '../../../context/TeamContext';
 import {
   ProjectName,
   ProjectDescription,
-  ProjectOffline,
   ProjectType,
   ProjectTags,
   ProjectExpansion,
@@ -21,7 +20,6 @@ import {
 } from '.';
 import Mode from '../../../model/dialogMode';
 import { IDialog } from '../../../model';
-import { isElectron } from '../../../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const initState = {
   name: '',
   description: '',
-  offlineAvailable: false,
   type: 'scripture',
   book: '',
   bcp47: 'und',
@@ -102,7 +99,6 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
       <DialogContent>
         <ProjectName state={state} setState={setState} />
         <ProjectDescription state={state} setState={setState} />
-        {isElectron && <ProjectOffline state={state} setState={setState} />}
         <ProjectType type={type} onChange={handleTypeChange} />
         <Language {...state} onChange={handleLanguageChange} />
         <ProjectTags state={state} setState={setState} />
