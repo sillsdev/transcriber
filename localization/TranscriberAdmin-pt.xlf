@@ -9,7 +9,7 @@
       </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>Click your avatar to transcribe or review.</source>
+            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
             <target/>
          </segment>
       </unit>

@@ -10,7 +10,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="access.accessSilTranscriber">
-            <source>To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
+            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
@@ -2214,7 +2214,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.refErr">
-            <source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
+            <source>This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>

@@ -9,7 +9,7 @@
       </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-         	<source>To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
+         	<source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
          	<target>Pour transcrire ou réviser sans Internet, cliquez sur votre avatar. Pour transcrire, réviser ou effectuer des tâches administratives en collaboration, cliquez sur 'Aller en ligne'. Pour configurer le programme avec les utilisateurs, le projet et les fichiers multimédia sans utiliser Internet, cliquez sur 'Importer un fichier PTF'. (Les fichiers PTF peuvent être exportés pendant qu'ils sont en ligne).</target>
          </segment>
       </unit>
@@ -1876,7 +1876,7 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-         	<source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
+         	<source>This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
          	<target>Ce projet contient des références non valables et ne se synchronise pas correctement avec Paratext. (Une référence valide serait 3:2-5 ou similaire).</target>
          </segment>
       </unit>

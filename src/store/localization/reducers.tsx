@@ -9,7 +9,7 @@ const initialState = {
 	"access": new LocalizedStrings({
 		"en": {
 			"accessFirst": "Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.",
-			"accessSilTranscriber": "To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)",
+			"accessSilTranscriber": "To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)",
 			"goOnline": "Go Online",
 			"importProject": "Import PTF File",
 			"download": "Download?",
@@ -412,7 +412,7 @@ const initialState = {
 			"nonNumber": "Do not change to non-number.",
 			"passageBelow": "Insert passage below {0}",
 			"pasting": "Pasting",
-			"refErr": "This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)",
+			"refErr": "This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)",
 			"resequence": "Resequence",
 			"save": "Save",
 			"saving": "Saving...",
