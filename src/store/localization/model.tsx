@@ -74,6 +74,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "sectionStatus": string;
     "settings": string;
     "offlineAvail": string;
+    "offline": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;

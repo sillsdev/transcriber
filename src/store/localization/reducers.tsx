@@ -85,6 +85,7 @@ const initialState = {
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
 			"offlineAvail": "Offline Available",
+			"offline": "Offline",
 			"sync": "Sync ({0})",
 			"teamName": "Team Name",
 			"teamSettings": "Team Settings",

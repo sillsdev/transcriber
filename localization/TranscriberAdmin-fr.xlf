@@ -343,6 +343,18 @@
    			<target>Disponible hors ligne</target>
    		</segment>
    	</unit>
+   	<unit id="cards.offline">
+   		<segment>
+   			<source>Offline</source>
+   			<target>Hors ligne</target>
+   		</segment>
+   	</unit>
+   	<unit id="cards.sync">
+   		<segment>
+   			<source>Sync ({0})</source>
+   			<target>Sync ({0})</target>
+   		</segment>
+   	</unit>
    	<unit id="cards.teamName">
          <segment>
             <source>Team Name</source>

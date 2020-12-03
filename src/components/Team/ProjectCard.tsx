@@ -28,6 +28,7 @@ import {
   useOfflineAvailToggle,
 } from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
+import OfflineIcon from '@material-ui/icons/OfflinePin';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,6 +70,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     pos: {
       marginBottom: 12,
+    },
+    offline: {
+      display: 'flex',
+      color: theme.palette.primary.contrastText,
     },
   })
 );
@@ -286,15 +291,24 @@ export const ProjectCard = (props: IProps) => {
         </CardContent>
         {project?.attributes?.tags && (
           <CardActions>
-            {Object.keys(project?.attributes?.tags)
-              .filter((t) => project?.attributes?.tags[t])
-              .map((t) => (
-                <Chip
-                  key={t}
-                  size="small"
-                  label={localizeProjectTag(t, vProjectStrings)}
-                />
-              ))}
+            <>
+              {offlineProjectRead(project)?.attributes?.offlineAvailable && (
+                <div className={classes.offline}>
+                  <OfflineIcon />
+                  {'\u00A0'}
+                  <Typography>{t.offline}</Typography>
+                </div>
+              )}
+              {Object.keys(project?.attributes?.tags)
+                .filter((t) => project?.attributes?.tags[t])
+                .map((t) => (
+                  <Chip
+                    key={t}
+                    size="small"
+                    label={localizeProjectTag(t, vProjectStrings)}
+                  />
+                ))}
+            </>
           </CardActions>
         )}
       </Card>

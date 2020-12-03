@@ -400,6 +400,13 @@
       			<context context-type="sourcefile">ProjectMenu.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="cards.offline">
+      		<source>Offline</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="cards.sync">
             <source>Sync ({0})</source>
             <target/>

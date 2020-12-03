@@ -30,6 +30,7 @@ import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
+import CloudOffIcon from '@material-ui/icons/CloudOff';
 
 const useStyles = makeStyles({
   appBar: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles({
 });
 
 interface INameProps {
-  setView: (view: string) => void;
+  setView: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ProjectName = ({ setView }: INameProps) => {
@@ -109,7 +110,6 @@ export const AppHead = (props: IProps) => {
   const [dosave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted();
   const [pathDescription, setPathDescription] = React.useState('');
-  const [projName, setProjName] = React.useState<JSX.Element>();
 
   const handleUserMenuAction = (
     what: string,
@@ -175,15 +175,6 @@ export const AppHead = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, t.admin, t.transcribe, isMounted]);
 
-  useEffect(() => {
-    if (isMounted.current) {
-      setProjName(
-        projRole !== '' ? <ProjectName setView={setView} /> : undefined
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projRole, isMounted]);
-
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
@@ -194,13 +185,14 @@ export const AppHead = (props: IProps) => {
     <AppBar position="fixed" className={classes.appBar} color="inherit">
       <>
         <Toolbar>
-          {projName}
+          {projRole !== '' && <ProjectName setView={setView} />}
           <div className={classes.grow}>{'\u00A0'}</div>
           <Typography variant="h6" noWrap>
             {pathDescription}
             {API_CONFIG.productName}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
+          {isOffline && <CloudOffIcon />}
           {SwitchTo && <SwitchTo />}
           <HelpMenu online={!isOffline} />
           <UserMenu action={handleUserMenu} auth={auth} />

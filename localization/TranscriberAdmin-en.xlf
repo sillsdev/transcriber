@@ -346,6 +346,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.offline">
+         <segment>
+            <source>Offline</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.sync">
          <segment>
             <source>Sync ({0})</source>
