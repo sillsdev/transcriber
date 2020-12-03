@@ -193,6 +193,7 @@ export const AppHead = (props: IProps) => {
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
           {isOffline && <CloudOffIcon />}
+          {'\u00A0'}
           {SwitchTo && <SwitchTo />}
           <HelpMenu online={!isOffline} />
           <UserMenu action={handleUserMenu} auth={auth} />
