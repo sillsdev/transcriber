@@ -9,6 +9,7 @@ import IntegrationTab from '../components/Integration';
 import ExportTab from '../components/TranscriptionTab';
 import ImportTab from '../components/ImportTab';
 import { useProjectPlans, usePlan } from '../crud';
+import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -42,6 +43,7 @@ export const ProjButtons = (props: IProps) => {
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
+  const [isOffline] = useGlobal('offline');
   const projectPlans = useProjectPlans();
   const [actionMenuItem, setActionMenuItem] = React.useState(null);
   const [openIntegration, setOpenIntegration] = React.useState(false);
@@ -88,7 +90,9 @@ export const ProjButtons = (props: IProps) => {
         open={Boolean(actionMenuItem)}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleImport}>{t.import}</MenuItem>
+        {(!isElectron || isOffline) && (
+          <MenuItem onClick={handleImport}>{t.import}</MenuItem>
+        )}
         <MenuItem onClick={handleExport}>{t.export}</MenuItem>
       </Menu>
       <Button

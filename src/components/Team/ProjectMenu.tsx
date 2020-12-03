@@ -164,7 +164,7 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.integrations} />
         </StyledMenuItem>
-        {(isOwner || isOffline) && (
+        {isOwner && (!isElectron || isOffline) && (
           <StyledMenuItem onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />
