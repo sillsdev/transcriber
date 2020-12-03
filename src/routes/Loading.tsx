@@ -29,7 +29,7 @@ import {
   LocalKey,
   currentDateTime,
 } from '../utils';
-import { related, GetUser, LoadData } from '../crud';
+import { related, GetUser, LoadData, remoteIdGuid, usePlan } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
@@ -126,6 +126,7 @@ export function Loading(props: IProps) {
   const { showMessage } = useSnackBar();
   const { push } = useHistory();
   const getOfflineProject = useOfflnProjRead();
+  const { getPlan } = usePlan();
   const [importOpen, setImportOpen] = useState(false);
   const [doSync, setDoSync] = useState(false);
   const [syncComplete, setSyncComplete] = useState(false);
@@ -257,6 +258,15 @@ export function Loading(props: IProps) {
     }
     let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    if (fromUrl) {
+      const m = /^\/[workplan]+\/([0-9]+)/.exec(fromUrl);
+      if (m) {
+        const planId = remoteIdGuid('plan', m[1], memory.keyMap);
+        const planRec = getPlan(planId);
+        const oProjRec = planRec && getOfflineProject(planRec);
+        if (oProjRec?.attributes?.offlineAvailable === false) fromUrl = null;
+      }
+    }
     push(fromUrl || '/team');
   };
 

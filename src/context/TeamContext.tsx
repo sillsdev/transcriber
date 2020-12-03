@@ -49,6 +49,7 @@ import {
   useRole,
   allUsersRec,
   getRoleId,
+  useOfflnProjRead,
 } from '../crud';
 import { useProjectsLoaded } from '../utils';
 import Auth from '../auth/Auth';
@@ -248,6 +249,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
     const AddProjectLoaded = useProjectsLoaded();
+    const oProjRead = useOfflnProjRead();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { getPlan } = usePlan();
 
@@ -351,7 +353,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         .filter(
           (p) =>
             isPersonal(related(p, 'organization')) &&
-            (!isOffline || projectsLoaded.includes(p.id))
+            (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
         )
         .map((p) => p.id);
       return plans
@@ -365,7 +367,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         .filter(
           (p) =>
             related(p, 'organization') === teamId &&
-            (!isOffline || projectsLoaded.includes(p.id))
+            (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
         )
         .map((p) => p.id);
       return plans
