@@ -44,7 +44,6 @@ import ProjectIntegration from '../model/projectintegration';
 import Integration from '../model/integration';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-import { isElectron } from '../api-variable';
 import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
 
@@ -175,6 +174,7 @@ export function IntegrationPanel(props: IProps) {
   const [user] = useGlobal('user');
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const getOfflineProject = useOfflnProjRead();
+  const [offline] = useGlobal('offline');
 
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
@@ -198,11 +198,11 @@ export function IntegrationPanel(props: IProps) {
     const projfind: Project[] = projects.filter((p) => p.id === project);
     return projfind.length > 0 ? projfind[0] : undefined;
   };
-  const addParatextIntegration = async (): Promise<string> => {
+  const addParatextIntegration = async (local: string): Promise<string> => {
     const int = {
       type: 'integration',
       attributes: {
-        name: 'paratext',
+        name: local,
         url: '',
       },
     } as Integration;
@@ -215,7 +215,7 @@ export function IntegrationPanel(props: IProps) {
       (i) => i.attributes && i.attributes.name === local
     );
     if (intfind.length === 0)
-      addParatextIntegration().then((res) => setParatextIntegration(res));
+      addParatextIntegration(local).then((res) => setParatextIntegration(res));
     else setParatextIntegration(intfind[0].id);
   };
 
@@ -350,7 +350,7 @@ export function IntegrationPanel(props: IProps) {
   };
   const handleDeleteRefused = () => setConfirmItem(null);
   const getProjectLabel = (): string => {
-    if (isElectron) return t.selectProject;
+    if (offline) return t.selectProject;
     return online
       ? paratext_projectsStatus && paratext_projectsStatus.complete
         ? !paratext_projectsStatus.errStatus
@@ -453,7 +453,7 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     Online((result) => setOnline(result), auth);
-    if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
+    if (offline) getParatextDataPath().then((val) => setPtPath(val));
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
@@ -487,14 +487,14 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (integrations.length > 0 && !paratextIntegration) {
       resetSync();
-      getParatextIntegration(isElectron ? 'paratextLocal' : 'paratext');
+      getParatextIntegration(offline ? 'paratextLocal' : 'paratext');
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [integrations, paratextIntegration]);
 
   useEffect(() => {
     if (!paratext_countStatus) {
-      isElectron
+      offline
         ? getLocalCount(passages, project, memory, t.countPending)
         : getCount(
             auth,
@@ -509,7 +509,7 @@ export function IntegrationPanel(props: IProps) {
   }, [paratext_count, paratext_countStatus]);
 
   useEffect(() => {
-    if (!isElectron) {
+    if (!offline) {
       if (!paratext_usernameStatus) {
         getUserName(auth, errorReporter, t.usernamePending);
       } else if (paratext_usernameStatus.errStatus)
@@ -529,7 +529,7 @@ export function IntegrationPanel(props: IProps) {
         let proj = getProject();
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
-        if (isElectron) {
+        if (offline) {
           getParatextDataPath().then((ptPath) =>
             getLocalProjects(ptPath, t.projectsPending, langTag)
           );
@@ -602,7 +602,7 @@ export function IntegrationPanel(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <Accordion defaultExpanded={!isElectron} disabled={isElectron}>
+      <Accordion defaultExpanded={!offline} disabled={offline}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratext}
@@ -773,7 +773,7 @@ export function IntegrationPanel(props: IProps) {
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion defaultExpanded={isElectron} disabled={!isElectron}>
+      <Accordion defaultExpanded={offline} disabled={!offline}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls={t.paratextLocal}
