@@ -286,7 +286,7 @@ export function Access(props: IProps) {
               )}
             </Typography>
             <Grid container direction="row">
-              {!importStatus && users && users.length > 0 && (
+              {importStatus?.complete !== false && users && users.length > 0 && (
                 <Grid item xs={12} md={6}>
                   <div className={classes.actions}>
                     <List>
