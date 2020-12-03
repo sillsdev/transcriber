@@ -50,6 +50,7 @@ import {
   allUsersRec,
   getRoleId,
 } from '../crud';
+import { useProjectsLoaded } from '../utils';
 import Auth from '../auth/Auth';
 import { useSnackBar } from '../hoc/SnackBar';
 
@@ -217,7 +218,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [offline] = useGlobal('offline');
-    const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+    const [projectsLoaded] = useGlobal('projectsLoaded');
     const [userProjects, setUserProjects] = useState(projects);
     const [userOrgs, setUserOrgs] = useState(organizations);
     const { showMessage } = useSnackBar();
@@ -246,6 +247,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const getTeamId = useNewTeamId({ ...props });
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
+    const AddProjectLoaded = useProjectsLoaded();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { getPlan } = usePlan();
 
@@ -280,7 +282,7 @@ const TeamProvider = withData(mapRecordsToProps)(
           coordinator,
           online && !isOffline,
           projectsLoaded,
-          setProjectsLoaded,
+          AddProjectLoaded,
           setBusy,
           doOrbitError
         )

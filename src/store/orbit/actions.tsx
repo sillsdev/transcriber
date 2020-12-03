@@ -54,7 +54,6 @@ export const fetchOrbitData = (
   fingerprint: string,
   setUser: (id: string) => void,
   setProjectsLoaded: (value: string[]) => void,
-  setCoordinatorActivated: (value: boolean) => void,
   setOrbitRetries: (r: number) => void,
   global: any,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
@@ -65,7 +64,6 @@ export const fetchOrbitData = (
     fingerprint,
     setUser,
     setProjectsLoaded,
-    setCoordinatorActivated,
     (ex: IApiError) => dispatch(orbitError(ex)),
     setOrbitRetries,
     global,

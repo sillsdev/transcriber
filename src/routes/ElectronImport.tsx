@@ -6,19 +6,25 @@ import { OpenDialogSyncOptions } from 'electron';
 import { IApiError, Project, IElectronImportStrings, IState } from '../model';
 import * as action from '../store';
 import { QueryBuilder } from '@orbit/data';
-import { remoteIdGuid } from '../crud';
-import { dataPath, orbitInfo } from '../utils';
+import { remoteIdGuid, useOfflnProjRead } from '../crud';
+import {
+  dataPath,
+  LocalKey,
+  localUserKey,
+  orbitInfo,
+  useProjectsLoaded,
+} from '../utils';
 import { isElectron } from '../api-variable';
 import { useGlobal, useRef } from 'reactn';
 import localStrings from '../selector/localize';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
-import IndexedDBSource from '@orbit/indexeddb';
 
 export interface IImportData {
   valid: boolean;
   warnMsg: string;
   errMsg: string;
+  exportDate: string;
 }
 
 const stringSelector = (state: IState) =>
@@ -32,16 +38,17 @@ export const useElectronImport = (
 ) => {
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
-  const [coordinatorActivated] = useGlobal('coordinatorActivated');
   const { showTitledMessage } = useSnackBar();
+  const getOfflineProject = useOfflnProjRead();
+  const AddProjectLoaded = useProjectsLoaded();
   const zipRef = useRef<AdmZip>();
   const t = useSelector(stringSelector, shallowEqual) as IElectronImportStrings;
+
   //var importStatus = useSelector(importStatusSelector, shallowEqual);
 
   /* if we aren't electron - define these dummies */
   var handleElectronImport = (
-    importProject: typeof action.importProjectToElectron,
+    importProjectToElectron: typeof action.importProjectToElectron,
     orbitError: (ex: IApiError) => void
   ): void => {};
 
@@ -50,6 +57,7 @@ export const useElectronImport = (
       valid: false,
       warnMsg: '',
       errMsg: 'We should never get here',
+      exportDate: '',
     };
   };
 
@@ -65,18 +73,17 @@ export const useElectronImport = (
       if (!filePaths || filePaths.length === 0) {
         zipRef.current = undefined;
         //they didn't pick a file
-        return { valid: false, warnMsg: '', errMsg: '' };
+        return { valid: false, warnMsg: '', errMsg: '', exportDate: '' };
       }
       var zip = new AdmZip(filePaths[0]);
       let valid = false;
       var exportTime: Moment;
+      var exportDate = '';
       var zipEntries = zip.getEntries();
       for (let entry of zipEntries) {
         if (entry.entryName === 'SILTranscriber') {
-          exportTime = moment.utc(
-            entry.getData().toString('utf8'),
-            'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ'
-          );
+          exportDate = entry.getData().toString('utf8');
+          exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
           valid = true;
           break;
         }
@@ -88,11 +95,17 @@ export const useElectronImport = (
           valid: false,
           warnMsg: '',
           errMsg: t.ptfError,
+          exportDate: '',
         };
       }
       //we have a valid file
       zipRef.current = zip;
-      var ret: IImportData = { valid: true, warnMsg: '', errMsg: '' };
+      var ret: IImportData = {
+        valid: true,
+        warnMsg: '',
+        errMsg: '',
+        exportDate: exportDate,
+      };
       //if we already have projects...check dates
       const projectRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('project')
@@ -122,9 +135,11 @@ export const useElectronImport = (
             //was this one exported before our current data?
             if (proj && proj.attributes) {
               projectNames += proj.attributes.name + ',';
+              var op = getOfflineProject(proj.id);
               if (
-                proj.attributes.dateImported &&
-                moment.utc(proj.attributes.dateImported) > exportTime
+                op &&
+                op.attributes.snapshotDate &&
+                moment.utc(op.attributes.snapshotDate) > exportTime
               ) {
                 ret.warnMsg +=
                   t.importCreated.replace(
@@ -136,19 +151,19 @@ export const useElectronImport = (
                     .replace('{name0}', p.attributes.name)
                     .replace(
                       '{date1}',
-                      moment.utc(proj.attributes.dateImported).toLocaleString()
+                      moment.utc(op.attributes.snapshotDate).toLocaleString()
                     ) +
                   '  ' +
                   t.allDataOverwritten.replace('{name0}', p.attributes.name);
               }
               //has our current data never been exported, or exported after incoming?
-              if (!proj.attributes.dateExported) {
+              if (!op.attributes.exportedDate) {
                 ret.warnMsg +=
                   t.neverExported.replace('{name0}', p.attributes.name) +
                   '  ' +
                   t.allDataOverwritten.replace('{name0}', p.attributes.name);
               } else {
-                var myLastExport = moment.utc(proj.attributes.dateExported);
+                var myLastExport = moment.utc(op.attributes.exportedDate);
                 if (myLastExport > exportTime) {
                   ret.warnMsg +=
                     t.importCreated.replace(
@@ -178,7 +193,7 @@ export const useElectronImport = (
     };
 
     handleElectronImport = (
-      importProject: typeof action.importProjectToElectron,
+      importProjectToElectron: typeof action.importProjectToElectron,
       orbitError: (ex: IApiError) => void
     ): void => {
       if (zipRef.current) {
@@ -194,16 +209,28 @@ export const useElectronImport = (
             );
         }
         zipRef.current.extractAllTo(where, true);
-        importProject(
+        //get the exported date from SILTranscriber file
+        var dataDate = fs
+          .readFileSync(path.join(where, 'SILTranscriber'), {
+            encoding: 'utf8',
+            flag: 'r',
+          })
+          .replace(/(\r\n|\n|\r)/gm, '');
+        importProjectToElectron(
           path.join(where, 'data'),
-          memory,
-          backup,
-          coordinatorActivated,
+          dataDate,
+          coordinator,
+          AddProjectLoaded,
           orbitError,
           t.importPending,
           t.importComplete,
           t.importOldFile
         );
+        const userLastTimeKey = localUserKey(LocalKey.time, memory);
+        let lastTime = localStorage.getItem(userLastTimeKey) || '';
+        if (!lastTime || moment(lastTime) > moment(dataDate)) {
+          localStorage.setItem(userLastTimeKey, dataDate);
+        }
       }
     };
   }

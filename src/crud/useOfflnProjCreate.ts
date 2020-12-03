@@ -13,7 +13,15 @@ export const useOfflnProjCreate = () => {
     // local update only, migrate offlineproject to include offlineAvailable
     const backup = coordinator.getSource('backup') as IndexedDBSource;
     let ops: Operation[] = [];
-    offlineProjectCreate(project, ops, memory, fingerprint);
+    offlineProjectCreate(
+      project,
+      ops,
+      memory,
+      fingerprint,
+      project.attributes.dateCreated,
+      project.attributes.dateCreated,
+      false
+    );
     await memory.sync(await backup.push(ops));
   };
 };

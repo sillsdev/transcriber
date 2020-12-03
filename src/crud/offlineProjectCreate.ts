@@ -8,15 +8,17 @@ export const offlineProjectCreate = (
   ops: Operation[],
   memory: Memory,
   fingerprint: string,
-  defaultAvailable?: boolean,
+  snapshotDate: string,
+  fileDownloadDate: string,
+  defaultAvailable?: boolean
 ) => {
   const tb = new TransformBuilder();
   const proj: OfflineProject = {
     type: 'offlineproject',
     attributes: {
       computerfp: fingerprint,
-      snapshotDate:
-        project.attributes.dateImported || project.attributes.dateCreated,
+      snapshotDate: snapshotDate,
+      fileDownloadDate: fileDownloadDate,
       offlineAvailable: Boolean(defaultAvailable),
       dateCreated: currentDateTime(),
       dateUpdated: currentDateTime(),

@@ -467,6 +467,8 @@ if (process.env.REACT_APP_SCHEMAVERSION !== '1' && schemaDefinition.models) {
       },
     },
   };
+  delete schemaDefinition.models.project.attributes?.dateImported;
+  delete schemaDefinition.models.project.attributes?.dateExported;
   schemaDefinition.version = 2;
 }
 
@@ -489,7 +491,15 @@ const SaveOfflineProjectInfo = async (
     const ops: Operation[] = [];
     var fingerprint = t[0].operations.length > 0 ? await getFingerprint() : '';
     t[0].operations.forEach((r: any) => {
-      offlineProjectCreate(r.record, ops, memory, fingerprint, true);
+      offlineProjectCreate(
+        r.record,
+        ops,
+        memory,
+        fingerprint,
+        r.record.attributes.dateImported,
+        r.record.attributes.dateImported,
+        true
+      );
     });
     await backup.push(ops);
     await memory.update(ops);

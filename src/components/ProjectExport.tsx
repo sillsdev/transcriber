@@ -13,13 +13,14 @@ import {
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
-import { QueryBuilder } from '@orbit/data';
+import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { useSnackBar } from '../hoc/SnackBar';
 import Progress from '../control/UploadProgress';
-import { useProjecExport } from '../crud';
-import { dataPath, downloadFile, PathType } from '../utils';
+import { offlineProjectUpdateFilesDownloaded, useProjecExport } from '../crud';
+import { currentDateTime, dataPath, downloadFile, PathType } from '../utils';
 import AdmZip from 'adm-zip';
-
+import { Operation } from '@orbit/data';
+import IndexedDBSource from '@orbit/indexeddb';
 enum Steps {
   Prepare,
   Download,
@@ -38,7 +39,6 @@ interface IStateProps {
 interface IDispatchProps {
   exportProject: typeof actions.exportProject;
   exportComplete: typeof actions.exportComplete;
-  importProjectToElectron: typeof actions.importProjectToElectron;
   importComplete: typeof actions.importComplete;
   orbitError: typeof actions.doOrbitError;
 }
@@ -54,6 +54,7 @@ export const ProjectExport = (props: IProps) => {
   const { open, projectIds, auth, t, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
   const [memory] = useGlobal('memory');
+  const [coordinator] = useGlobal('coordinator');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
@@ -63,14 +64,20 @@ export const ProjectExport = (props: IProps) => {
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
   const [exportUrl, setExportUrl] = React.useState('');
-
+  const [offlineUpdates] = React.useState<Operation[]>([]);
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
 
   React.useEffect(() => {
+    const updateLocalOnly = async () => {
+      await memory.sync(
+        await backup.push((t: TransformBuilder) => offlineUpdates)
+      );
+    };
     if (open && projectIds.length > 0 && progress === Steps.Prepare) {
       if (currentStep < projectIds.length) {
         let newSteps = new Array<string>();
@@ -86,6 +93,7 @@ export const ProjectExport = (props: IProps) => {
         doProjectExport(ExportType.PTF, projectIds[currentStep]);
       } else if (busy) {
         setBusy(false);
+        if (offlineUpdates.length > 0) updateLocalOnly();
         setTimeout(() => {
           setExportName('');
           setExportUrl('');
@@ -153,6 +161,12 @@ export const ProjectExport = (props: IProps) => {
       // console.log(`unzipping: ${localPath}`);
       const zip = new AdmZip(localPath);
       zip.extractAllTo(dataPath(), true);
+      offlineProjectUpdateFilesDownloaded(
+        projectIds[currentStep],
+        offlineUpdates,
+        memory,
+        currentDateTime()
+      );
       setProgress(Steps.Prepare);
       setCurrentStep(currentStep + 1);
     } /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -192,7 +206,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
-      importProjectToElectron: actions.importProjectToElectron,
       importComplete: actions.importComplete,
       orbitError: actions.doOrbitError,
     },

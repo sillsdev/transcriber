@@ -2,7 +2,6 @@ import {
   IApiError,
   Role,
   Plan,
-  Section,
   OfflineProject,
   VProject,
   ExportType,
@@ -25,9 +24,9 @@ import {
   getSerializer,
   JSONAPISerializerCustom,
 } from './serializers/JSONAPISerializerCustom';
-import { related } from './crud';
 import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
 import { electronExport } from './store/importexport/electronExport';
+import { restoreBackup } from '.';
 
 export const Sources = async (
   coordinator: Coordinator,
@@ -35,7 +34,6 @@ export const Sources = async (
   fingerprint: string,
   setUser: (id: string) => void,
   setProjectsLoaded: (valud: string[]) => void,
-  setCoordinatorActivated: (valud: boolean) => void,
   orbitError: (ex: IApiError) => void,
   setOrbitRetries: (r: number) => void,
   globalStore: any,
@@ -244,7 +242,6 @@ export const Sources = async (
   if (!coordinator.activated)
     await coordinator.activate({ logLevel: LogLevel.Warnings });
 
-  setCoordinatorActivated(true);
   console.log('Coordinator will log warnings');
 
   let goRemote =
@@ -254,8 +251,7 @@ export const Sources = async (
     console.log('using backup');
     if (!isElectron) {
       //already did this if electron...
-      var transform = await backup.pull((q) => q.findRecords());
-      await memory.sync(transform);
+      setProjectsLoaded(await restoreBackup());
       const recs: Role[] = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('role')
       ) as any;
@@ -264,17 +260,6 @@ export const Sources = async (
         goRemote = true;
       }
     }
-
-    const loadedplans = new Set(
-      (memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('section')
-      ) as Section[]).map((s) => related(s, 'plan') as string)
-    );
-    const plans = (memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('plan')
-    ) as Plan[]).filter((p) => loadedplans.has(p.id));
-    const projs = new Set(plans.map((p) => related(p, 'project') as string));
-    setProjectsLoaded(Array.from(projs));
   }
   /* set the user from the token - must be done after the backup is loaded */
   if (!offline) {

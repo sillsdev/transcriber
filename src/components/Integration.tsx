@@ -34,7 +34,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 import RenderLogo from '../control/RenderLogo';
-import { remoteIdNum, related } from '../crud';
+import { remoteIdNum, related, useOfflnProjRead } from '../crud';
 import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
@@ -173,6 +173,8 @@ export function IntegrationPanel(props: IProps) {
   const [myProject, setMyProject] = React.useState('');
   const [project] = useGlobal('project');
   const [user] = useGlobal('user');
+  const [projectsLoaded] = useGlobal('projectsLoaded');
+  const getOfflineProject = useOfflnProjRead();
 
   const [paratextIntegration, setParatextIntegration] = React.useState('');
   const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
@@ -569,7 +571,14 @@ export function IntegrationPanel(props: IProps) {
         resetCount();
         resetSync();
         setSyncing(false);
-        doDataChanges(auth, coordinator, fingerprint, errorReporter);
+        doDataChanges(
+          auth,
+          coordinator,
+          fingerprint,
+          projectsLoaded,
+          getOfflineProject,
+          errorReporter
+        );
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

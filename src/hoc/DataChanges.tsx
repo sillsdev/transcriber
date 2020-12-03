@@ -13,14 +13,20 @@ import Coordinator from '@orbit/coordinator';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { DataChange } from '../model/dataChange';
-import { API_CONFIG } from '../api-variable';
+import { API_CONFIG, isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
-import { remoteIdGuid, remoteIdNum } from '../crud';
+import {
+  offlineProjectUpdateSnapshot,
+  remoteId,
+  remoteIdGuid,
+  remoteIdNum,
+} from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { getSerializer } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
-import { ExportType } from '../model';
+import { ExportType, OfflineProject, Plan, VProject } from '../model';
+import IndexedDBSource from '@orbit/indexeddb';
 
 interface IStateProps {}
 
@@ -31,110 +37,135 @@ interface IProps extends IStateProps, IDispatchProps {
   children: JSX.Element;
 }
 
-export const doDataChanges = (
+export const doDataChanges = async (
   auth: Auth,
   coordinator: Coordinator,
   fingerprint: string,
+  projectsLoaded: string[],
+  getOfflineProject: (plan: string | Plan | VProject) => OfflineProject,
   errorReporter: any
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const userLastTimeKey = localUserKey(LocalKey.time, memory);
   let lastTime = localStorage.getItem(userLastTimeKey);
   if (!lastTime) lastTime = currentDateTime(); // should not happen
   let nextTime = currentDateTime();
-  Axios.get(
-    API_CONFIG.host +
-      '/api/datachanges/since/' +
-      lastTime +
-      '?origin=' +
-      fingerprint,
-    {
+
+  const updateSnapshotDates = async () => {
+    const oparray: Operation[] = [];
+
+    projectsLoaded.forEach((p) => {
+      offlineProjectUpdateSnapshot(p, oparray, memory, nextTime, false);
+    });
+    await memory.sync(await backup.push((t: TransformBuilder) => oparray));
+  };
+
+  const resetRelated = (
+    newOps: Operation[],
+    tb: TransformBuilder,
+    relationship: string,
+    upRec: UpdateRecordOperation
+  ) => {
+    var table = relationship;
+    switch (relationship) {
+      case 'transcriber':
+      case 'editor':
+        table = 'user';
+    }
+
+    newOps.push(
+      tb.replaceRelatedRecord(upRec.record, relationship, {
+        type: table,
+        id: '',
+      })
+    );
+  };
+  var api = API_CONFIG.host + '/api/datachanges/';
+  var params;
+  if (isElectron) {
+    api += 'projects/' + fingerprint;
+    var records: { id: string; since: string }[] = [];
+    projectsLoaded.forEach((p) => {
+      var op = getOfflineProject(p);
+      if (op.attributes && op.attributes.snapshotDate)
+        records.push({
+          id: remoteId('project', p, memory.keyMap),
+          since: op.attributes.snapshotDate,
+        });
+    });
+    params = new URLSearchParams([['projlist', JSON.stringify(records)]]);
+  } else {
+    api += 'since/' + lastTime + '?origin=' + fingerprint;
+  }
+  try {
+    var response = await Axios.get(api, {
+      params: params,
       headers: {
         Authorization: 'Bearer ' + auth.accessToken,
       },
-    }
-  )
-    .then(async (response) => {
-      const data = response.data.data as DataChange;
-      const changes = data.attributes.changes;
-      changes.forEach((table) => {
-        if (table.length > 0) {
-          const list = table.map((t) => t.id);
-          remote
-            .pull((q: QueryBuilder) =>
-              q
-                .findRecords(table[0].type)
-                .filter({ attribute: 'id-list', value: list.join('|') })
-            )
-            .then((t: Transform[]) => {
-              memory.sync(t);
-              t.forEach((tr) => {
-                var tb = new TransformBuilder();
-                var newOps: Operation[] = [];
-                tr.operations.forEach((o) => {
-                  if (o.op === 'updateRecord') {
-                    var upRec = o as UpdateRecordOperation;
-                    switch (upRec.record.type) {
-                      case 'section':
-                        if (
-                          upRec.record.relationships?.transcriber === undefined
-                        )
-                          newOps.push(
-                            tb.replaceRelatedRecord(
-                              upRec.record,
-                              'transcriber',
-                              {
-                                type: 'user',
-                                id: '',
-                              }
-                            )
-                          );
-                        if (upRec.record.relationships?.editor === undefined)
-                          newOps.push(
-                            tb.replaceRelatedRecord(upRec.record, 'editor', {
-                              type: 'user',
-                              id: '',
-                            })
-                          );
-                        break;
-                      case 'mediafile':
-                        if (upRec.record.relationships?.passage === undefined)
-                          newOps.push(
-                            tb.replaceRelatedRecord(upRec.record, 'passage', {
-                              type: 'passage',
-                              id: '',
-                            })
-                          );
-                    }
+    });
+    var data = response.data.data as DataChange;
+    const changes = data?.attributes?.changes;
+    changes.forEach((table) => {
+      if (table.ids.length > 0) {
+        remote
+          .pull((q: QueryBuilder) =>
+            q
+              .findRecords(table.type)
+              .filter({ attribute: 'id-list', value: table.ids.join('|') })
+          )
+          .then((t: Transform[]) => {
+            memory.sync(t);
+            t.forEach((tr) => {
+              var tb = new TransformBuilder();
+              var newOps: Operation[] = [];
+              tr.operations.forEach((o) => {
+                if (o.op === 'updateRecord') {
+                  var upRec = o as UpdateRecordOperation;
+                  switch (upRec.record.type) {
+                    case 'section':
+                      if (upRec.record.relationships?.transcriber === undefined)
+                        resetRelated(newOps, tb, 'transcriber', upRec);
+
+                      if (upRec.record.relationships?.editor === undefined)
+                        resetRelated(newOps, tb, 'editor', upRec);
+
+                      break;
+                    case 'mediafile':
+                      if (upRec.record.relationships?.passage === undefined)
+                        resetRelated(newOps, tb, 'passage', upRec);
                   }
-                });
-                if (newOps.length > 0) memory.update(() => newOps);
+                }
               });
+              if (newOps.length > 0) memory.update(() => newOps);
             });
+          });
+      }
+    });
+    const deletes = data.attributes.deleted;
+    var tb: TransformBuilder = new TransformBuilder();
+
+    for (var ix = 0; ix < deletes.length; ix++) {
+      var table = deletes[ix];
+      let operations: Operation[] = [];
+      // eslint-disable-next-line no-loop-func
+      table.ids.forEach((r) => {
+        const localId = remoteIdGuid(table.type, r.toString(), memory.keyMap);
+        if (localId) {
+          operations.push(tb.removeRecord({ type: table.type, id: localId }));
         }
       });
-      const deletes = data.attributes.deleted;
-      var tb: TransformBuilder = new TransformBuilder();
-
-      for (var ix = 0; ix < deletes.length; ix++) {
-        var table = deletes[ix];
-        let operations: Operation[] = [];
-        table.forEach((r) => {
-          const localId = remoteIdGuid(r.type, r.id.toString(), memory.keyMap);
-          if (localId) {
-            operations.push(tb.removeRecord({ type: r.type, id: localId }));
-          }
-        });
-        if (operations.length > 0) {
-          await memory.update(operations);
-        }
+      if (operations.length > 0) {
+        await memory.update(operations);
       }
-      localStorage.setItem(userLastTimeKey, nextTime);
-    })
-    .catch((e: any) => {
-      logError(Severity.error, errorReporter, e);
-    });
+    }
+    localStorage.setItem(userLastTimeKey, nextTime);
+    if (isElectron) await updateSnapshotDates();
+  } catch (e) {
+    logError(Severity.error, errorReporter, e);
+  }
 };
 
 export default function DataChanges(props: IProps) {
@@ -152,6 +183,7 @@ export default function DataChanges(props: IProps) {
   const [busyDelay, setBusyDelay] = useState<number | null>(null);
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [project] = useGlobal('project');
+  const [projectsLoaded] = useGlobal('projectsLoaded');
   const getOfflineProject = useOfflnProjRead();
 
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
@@ -176,7 +208,14 @@ export default function DataChanges(props: IProps) {
   };
   const updateData = () => {
     if (!busy && !doSave) {
-      doDataChanges(auth, coordinator, fingerprint, errorReporter);
+      doDataChanges(
+        auth,
+        coordinator,
+        fingerprint,
+        projectsLoaded,
+        getOfflineProject,
+        errorReporter
+      );
     }
   };
   const backupElectron = () => {

@@ -1,16 +1,16 @@
 import { useGlobal } from 'reactn';
 import { VProject, Project, Plan, Group } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
-import { AddProjectLoaded, related, useTypeId, useOfflnProjCreate } from '.';
-import { localeDefault } from '../utils';
+import { related, useTypeId, useOfflnProjCreate } from '.';
+import { useProjectsLoaded, localeDefault, currentDateTime } from '../utils';
 
 export const useVProjectCreate = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [isDeveloper] = useGlobal('developer');
   const offlineProjectCreate = useOfflnProjCreate();
 
+  const AddProjectLoaded = useProjectsLoaded();
   const getTypeId = useTypeId();
 
   const getGroupId = (teamId: string) => {
@@ -49,6 +49,7 @@ export const useVProjectCreate = () => {
         rtl,
         allowClaim: true,
         isPublic: true,
+        dateCreated: currentDateTime(),
       },
     } as Project;
     memory.schema.initializeRecord(project);
@@ -75,8 +76,8 @@ export const useVProjectCreate = () => {
         id: user,
       }),
     ]);
-    AddProjectLoaded(project.id, projectsLoaded, setProjectsLoaded);
     offlineProjectCreate(project);
+    AddProjectLoaded(project.id);
 
     let plan: Plan = {
       type: 'plan',

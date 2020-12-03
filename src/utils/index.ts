@@ -32,3 +32,4 @@ export * from './refMatch';
 export * from './localUserKey';
 export * from './getFIngerprint';
 export * from './downloadFile';
+export * from './useProjectsLoaded';

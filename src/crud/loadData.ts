@@ -1,4 +1,10 @@
-import { remoteIdGuid, remoteIdNum } from '.';
+import {
+  offlineProjectCreate,
+  offlineProjectFromProject,
+  offlineProjectUpdateSnapshot,
+  remoteIdGuid,
+  remoteIdNum,
+} from '.';
 import {
   getSerializer,
   JSONAPISerializerCustom,
@@ -17,26 +23,59 @@ import OrgData from '../model/orgData';
 import { Project, IApiError } from '../model';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
-import { offlineProjectCreate, offlineProjectUpdate } from '../crud';
-import { getFingerprint } from '../utils';
 import Coordinator from '@orbit/coordinator';
+import { getFingerprint, currentDateTime } from '../utils';
 
 const completePerTable = 3;
+
+const saveOfflineProject = async (
+  project: Project,
+  memory: Memory,
+  backup: IndexedDBSource,
+  dataDate: string | undefined,
+  isImport: boolean
+) => {
+  var oparray: Operation[] = [];
+  /* don't update to undefined dataDate from here */
+  if (
+    !dataDate ||
+    !offlineProjectUpdateSnapshot(
+      project.id,
+      oparray,
+      memory,
+      dataDate,
+      isImport
+    )
+  ) {
+    /* if I have a dataDate, the update above failed for sure
+     if I don't have a dataDate, go see if a record already exists */
+    if (dataDate || !offlineProjectFromProject(memory, project.id)) {
+      var fp = await getFingerprint();
+      offlineProjectCreate(
+        project,
+        oparray,
+        memory,
+        fp,
+        dataDate || '',
+        isImport ? dataDate || '' : '',
+        isImport
+      );
+    }
+  }
+  await memory.sync(await backup.push((t: TransformBuilder) => oparray));
+};
 
 export async function insertData(
   item: Record,
   memory: Memory,
+  backup: IndexedDBSource,
   tb: TransformBuilder,
   oparray: Operation[],
   orbitError: (ex: IApiError) => void,
   checkExisting: boolean,
-  isImport: boolean
+  isImport: boolean,
+  snapshotDate?: string
 ) {
-  if (isImport && item.type === 'project') {
-    var project = item as Project;
-    project.attributes.dateImported = project.attributes.dateExported;
-    project.attributes.dateExported = null;
-  }
   var rec: Record | Record[] | null = null;
   try {
     if (item.keys && checkExisting) {
@@ -55,10 +94,13 @@ export async function insertData(
       rec.attributes = { ...item.attributes };
       oparray.push(tb.updateRecord(rec));
       if (rec.type === 'project') {
-        if (!offlineProjectUpdate(rec as Project, oparray, memory)) {
-          const fp = await getFingerprint();
-          offlineProjectCreate(rec as Project, oparray, memory, fp, isImport);
-        }
+        await saveOfflineProject(
+          rec as Project,
+          memory,
+          backup,
+          snapshotDate,
+          isImport
+        );
       }
       for (var rel in item.relationships) {
         if (
@@ -83,16 +125,13 @@ export async function insertData(
         memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
         if (item.type === 'project') {
-          if (!offlineProjectUpdate(item as Project, oparray, memory)) {
-            const fp = await getFingerprint();
-            offlineProjectCreate(
-              item as Project,
-              oparray,
-              memory,
-              fp,
-              isImport
-            );
-          }
+          await saveOfflineProject(
+            item as Project,
+            memory,
+            backup,
+            snapshotDate,
+            isImport
+          );
         }
       } catch (err) {
         orbitError(orbitInfo(err, 'Add record error'));
@@ -115,7 +154,7 @@ async function processData(
   data: string,
   ser: JSONAPISerializerCustom,
   memory: Memory,
-  _backup: IndexedDBSource,
+  backup: IndexedDBSource,
   tb: TransformBuilder,
   setCompleted: undefined | ((valud: number) => void),
   orbitError: (ex: IApiError) => void
@@ -128,13 +167,20 @@ async function processData(
   for (let ti = 0; ti < tables.length; ti += 1) {
     const t = tables[ti];
     var jsonData = ser.deserialize(t).data;
-    if (Array.isArray(jsonData)) {
-      for (let ji = 0; ji < jsonData.length; ji += 1) {
-        const item = jsonData[ji];
-        await insertData(item, memory, tb, oparray, orbitError, false, false);
-      }
-    } else {
-      await insertData(jsonData, memory, tb, oparray, orbitError, false, false);
+    if (!Array.isArray(jsonData)) jsonData = [jsonData];
+    for (let ji = 0; ji < jsonData.length; ji += 1) {
+      const item = jsonData[ji];
+      await insertData(
+        item,
+        memory,
+        backup,
+        tb,
+        oparray,
+        orbitError,
+        false,
+        false,
+        undefined
+      );
     }
     completed += completePerTable;
     if (setCompleted && completed < 90) setCompleted(completed);
@@ -225,7 +271,7 @@ export async function LoadProjectData(
   coordinator: Coordinator,
   online: boolean,
   projectsLoaded: string[],
-  setProjectsLoaded: (valud: string[]) => void,
+  AddProjectLoaded: (proj: string) => void,
   setBusy: (v: boolean) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
@@ -276,6 +322,17 @@ export async function LoadProjectData(
           undefined,
           orbitError
         );
+        if (start === 0) {
+          var oparray: Operation[] = [];
+          offlineProjectUpdateSnapshot(
+            project,
+            oparray,
+            memory,
+            r.attributes.snapshotdate || currentDateTime(),
+            false
+          );
+          await memory.sync(await backup.push(oparray));
+        }
         start = r.attributes.startnext;
       } else {
         //bail - never expect to be here
@@ -288,17 +345,6 @@ export async function LoadProjectData(
     setBusy(false);
     return false;
   }
-  AddProjectLoaded(project, projectsLoaded, setProjectsLoaded);
+  AddProjectLoaded(project);
   return true;
-}
-
-export function AddProjectLoaded(
-  project: string,
-  projectsLoaded: string[],
-  setProjectsLoaded: (valud: string[]) => void
-) {
-  if (projectsLoaded.includes(project)) return;
-  var pl = [...projectsLoaded];
-  pl.push(project);
-  setProjectsLoaded(pl);
 }

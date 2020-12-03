@@ -2,18 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import fs from 'fs';
 import { bindActionCreators } from 'redux';
-import {
-  IState,
-  Project,
-  GroupMembership,
-  MediaFile,
-  IAccessStrings,
-} from '../model';
+import { IState, MediaFile, IAccessStrings, OfflineProject } from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { LogLevel } from '@orbit/coordinator';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -25,12 +18,8 @@ import { dataPath, PathType, localeDefault } from '../utils';
 import { useGlobal } from 'reactn';
 import Alert from '../components/AlertDialog';
 import ProjectExport from '../components/ProjectExport';
-import {
-  related,
-  useProjectPlans,
-  getMediaInPlans,
-  useOfflnProjRead,
-} from '../crud';
+import { related, useProjectPlans, getMediaInPlans } from '../crud';
+import { LogLevel } from '@orbit/coordinator';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 
@@ -69,8 +58,7 @@ interface IDispatchProps {
 }
 
 interface IRecordProps {
-  groupMemberships: Array<GroupMembership>;
-  projects: Array<Project>;
+  offlineProjects: Array<OfflineProject>;
   mediafiles: Array<MediaFile>;
 }
 
@@ -82,36 +70,27 @@ export function Logout(props: IProps) {
   const { auth, t } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
-  const { groupMemberships, projects, mediafiles } = props;
+  const { offlineProjects, mediafiles } = props;
   const [coordinator] = useGlobal('coordinator');
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
-  const [user] = useGlobal('user');
   const [view, setView] = React.useState('');
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
   const [needyIds, setNeedyIds] = React.useState<string[]>([]);
   const [expOpen, setExpOpen] = React.useState(false);
   const projectPlans = useProjectPlans();
-  const offlineProject = useOfflnProjRead();
 
   const getNeedyRemoteIds = () => {
-    const grpIds = groupMemberships
-      .filter((gm) => related(gm, 'user') === user)
-      .map((gm) => related(gm, 'group'));
-    const userProjects = projects.filter((p) =>
-      grpIds.includes(related(p, 'group'))
-    );
+    const ops = offlineProjects.filter((op) => op.attributes.offlineAvailable);
     let planIds = Array<string>();
     const planProject: PlanProject = {};
-    userProjects.forEach((p) => {
-      const offlineProjRec = offlineProject(p.id);
-      if (offlineProjRec?.attributes?.offlineAvailable) {
-        projectPlans(p.id).forEach((pl) => {
-          planIds.push(pl.id);
-          planProject[pl.id] = p.id;
-        });
-      }
+    ops.forEach((offlineProjRec) => {
+      var p = related(offlineProjRec, 'project');
+      projectPlans(p).forEach((pl) => {
+        planIds.push(pl.id);
+        planProject[pl.id] = p;
+      });
     });
     const mediaRecs = getMediaInPlans(planIds, mediafiles);
     const needyProject = new Set<string>();
@@ -221,8 +200,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 });
 
 const mapRecordsToProps = {
-  groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  projects: (q: QueryBuilder) => q.findRecords('project'),
+  offlineProjects: (q: QueryBuilder) => q.findRecords('offlineproject'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 

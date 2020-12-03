@@ -35,6 +35,7 @@ import { API_CONFIG, isElectron } from '../api-variable';
 import { AppHead } from '../components/App/AppHead';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import ImportTab from '../components/ImportTab';
+import jwtDecode from 'jwt-decode';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -105,6 +106,7 @@ export function Loading(props: IProps) {
     doOrbitError,
     fetchLocalization,
     setLanguage,
+    setExpireAt,
   } = props;
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -118,7 +120,6 @@ export function Loading(props: IProps) {
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
   const [, setLoadComplete] = useGlobal('loadComplete');
-  const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [completed, setCompleted] = useState(0);
@@ -190,6 +191,10 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     if (!offline && !auth?.isAuthenticated()) return;
+    if (!offline) {
+      const decodedToken: any = jwtDecode(auth.getAccessToken());
+      setExpireAt(decodedToken.exp);
+    }
     setLanguage(localeDefault(isDeveloper));
     localStorage.removeItem('inviteError');
     fetchLocalization();
@@ -199,7 +204,6 @@ export function Loading(props: IProps) {
       fingerprint,
       setUser,
       setProjectsLoaded,
-      setCoordinatorActivated,
       setOrbitRetries,
       globalStore,
       getOfflineProject

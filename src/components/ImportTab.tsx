@@ -48,6 +48,7 @@ import {
   passageDescription,
   remoteIdGuid,
   useOrganizedBy,
+  useOfflnProjRead,
 } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
@@ -129,6 +130,8 @@ export function ImportTab(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const { getOrganizedBy } = useOrganizedBy();
+  const [projectsLoaded] = useGlobal('projectsLoaded');
+  const getOfflineProject = useOfflnProjRead();
   const { handleElectronImport, getElectronImportData } = useElectronImport(
     importComplete
   );
@@ -601,7 +604,14 @@ export function ImportTab(props: IProps) {
           );
           importComplete();
           if (remote)
-            doDataChanges(auth, coordinator, fingerprint, errorReporter);
+            doDataChanges(
+              auth,
+              coordinator,
+              fingerprint,
+              projectsLoaded,
+              getOfflineProject,
+              errorReporter
+            );
           setBusy(false);
         }
       }

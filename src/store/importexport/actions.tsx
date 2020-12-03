@@ -41,6 +41,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import { remoteIdGuid, related, insertData } from '../../crud';
 import { infoMsg, orbitInfo, logError, Severity } from '../../utils';
+import Coordinator from '@orbit/coordinator';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -304,9 +305,9 @@ export const importProjectFromElectron = (
 
 export const importProjectToElectron = (
   filepath: string,
-  memory: Memory,
-  backup: IndexedDBSource,
-  coordinatorActivated: boolean,
+  dataDate: string,
+  coordinator: Coordinator,
+  AddProjectLoaded: (project: string) => void,
   orbitError: (ex: IApiError) => void,
   pendingmsg: string,
   completemsg: string,
@@ -315,7 +316,10 @@ export const importProjectToElectron = (
   var tb: TransformBuilder = new TransformBuilder();
   var oparray: Operation[] = [];
 
-  async function removeProject(ser: JSONAPISerializerCustom) {
+  const memory = coordinator.getSource('memory') as Memory;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
+
+  function getProjectFromFile(ser: JSONAPISerializerCustom) {
     var file = path.join(filepath, 'D_projects.json');
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
@@ -332,9 +336,16 @@ export const importProjectToElectron = (
       var rec = memory.cache.query((q) =>
         q.findRecord({ type: project.type, id: id })
       ) as Project;
+      return rec;
     } catch {
-      return;
+      return undefined;
     }
+  }
+  async function removeProject(ser: JSONAPISerializerCustom) {
+    var rec = getProjectFromFile(ser);
+
+    if (!rec) return;
+
     var group = memory.cache.query((q) =>
       q.findRecord({ type: 'group', id: related(rec, 'group') })
     ) as Group;
@@ -363,10 +374,10 @@ export const importProjectToElectron = (
     var projintids = (memory.cache.query((q) =>
       q.findRecords('projectintegration')
     ) as ProjectIntegration[])
-      .filter((pl) => related(pl, 'project') === rec.id)
+      .filter((pl) => related(pl, 'project') === rec?.id)
       .map((pi) => pi.id);
     var planids = (memory.cache.query((q) => q.findRecords('plan')) as Plan[])
-      .filter((pl) => related(pl, 'project') === rec.id)
+      .filter((pl) => related(pl, 'project') === rec?.id)
       .map((pl) => pl.id);
     var sectionids = (memory.cache.query((q) =>
       q.findRecords('section')
@@ -438,7 +449,7 @@ export const importProjectToElectron = (
     }
   }
   async function saveToBackup(oparray: Operation[], title: string) {
-    if (!coordinatorActivated) {
+    if (!coordinator.activated) {
       try {
         return await backup.push(oparray);
       } catch (err) {
@@ -450,17 +461,30 @@ export const importProjectToElectron = (
     return null;
   }
 
-  async function processFile(file: string, ser: JSONAPISerializerCustom) {
+  async function processFile(
+    file: string,
+    ser: JSONAPISerializerCustom,
+    dataDate: string
+  ) {
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
-    if (Array.isArray(json.data)) {
-      for (let n = 0; n < json.data.length; n += 1) {
-        const item = json.data[n];
-        await insertData(item, memory, tb, oparray, orbitError, true, true);
-      }
-    } else
-      await insertData(json.data, memory, tb, oparray, orbitError, true, true);
+    if (!Array.isArray(json.data)) json.data = [json.data];
+    for (let n = 0; n < json.data.length; n += 1) {
+      const item = json.data[n];
+      await insertData(
+        item,
+        memory,
+        backup,
+        tb,
+        oparray,
+        orbitError,
+        true,
+        true,
+        dataDate
+      );
+    }
   }
+
   if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
     dispatch({
       payload: errorStatus(-1, oldfilemsg),
@@ -489,7 +513,7 @@ export const importProjectToElectron = (
         });
 
         for (let index = 0; index < files.length; index++) {
-          await processFile(path.join(filepath, files[index]), ser);
+          await processFile(path.join(filepath, files[index]), ser, dataDate);
         }
         dispatch({
           payload: pendingmsg.replace('{0}', '25'),
@@ -520,6 +544,8 @@ export const importProjectToElectron = (
           await saveToMemory(oparray, 'remove extra records');
           await saveToBackup(oparray, 'remove extra records from backup');
         }
+        var proj = getProjectFromFile(ser);
+        AddProjectLoaded(proj?.id || '');
         dispatch({
           payload: { status: completemsg, msg: '' },
           type: IMPORT_SUCCESS,
