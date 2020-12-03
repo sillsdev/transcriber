@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { LocalKey, localUserKey } from '../utils';
 import { makeStyles } from '@material-ui/core';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
 import StickyRedirect from '../components/StickyRedirect';
@@ -32,21 +32,27 @@ export const TeamScreen = (props: IProps) => {
   const [projRole, setProjRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
+  const [view, setView] = useState('');
 
-  if (project !== '' && projRole !== '') {
-    const remProjId = remoteId('plan', plan, memory.keyMap);
-    const loc =
-      projRole === 'admin' && !isOffline
-        ? `/plan/${remProjId}/0`
-        : `/work/${remProjId}`;
-    if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
-      return <StickyRedirect to={loc} />;
-    } else {
-      localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
-      if (project !== '') setProject('');
-      if (projRole !== '') setProjRole('');
+  useEffect(() => {
+    if (project !== '' && projRole !== '') {
+      const remProjId = remoteId('plan', plan, memory.keyMap);
+      const loc =
+        projRole === 'admin' && !isOffline
+          ? `/plan/${remProjId}/0`
+          : `/work/${remProjId}`;
+      if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
+        setView(loc);
+      } else {
+        localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
+        if (project !== '') setProject('');
+        if (projRole !== '') setProjRole('');
+      }
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project, projRole, isOffline, plan]);
+
+  if (view !== '') return <StickyRedirect to={view} />;
 
   return (
     <div className={classes.root}>

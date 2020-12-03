@@ -5,7 +5,7 @@ import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import { makeStyles } from '@material-ui/core';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
 import { PlanProvider, PlanContext } from '../context/PlanContext';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';

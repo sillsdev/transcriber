@@ -76,7 +76,7 @@ import ta from '../assets/ta.json';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
 import { isElectron } from '../api-variable';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
 import { API_CONFIG } from '../api-variable';
 

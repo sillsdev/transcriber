@@ -32,7 +32,7 @@ import {
 import { related, GetUser, LoadData, remoteIdGuid, usePlan } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import ImportTab from '../components/ImportTab';
 import jwtDecode from 'jwt-decode';

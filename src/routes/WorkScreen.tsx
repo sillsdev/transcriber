@@ -6,7 +6,7 @@ import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
 import { TranscriberProvider } from '../context/TranscriberContext';
 import { TaskItemWidth } from '../components/TaskTable';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
