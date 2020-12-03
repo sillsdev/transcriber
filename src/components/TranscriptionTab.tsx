@@ -65,7 +65,6 @@ import {
 } from '../crud';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
-import { isElectron } from '../api-variable';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
 
@@ -726,7 +725,7 @@ export function TranscriptionTab(props: IProps) {
             >
               {t.copyTranscriptions}
             </Button>
-            {planColumn && isElectron && projects.length > 1 && (
+            {planColumn && offline && projects.length > 1 && (
               <Button
                 key="backup"
                 aria-label={t.electronBackup}
