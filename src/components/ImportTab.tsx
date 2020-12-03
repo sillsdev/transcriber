@@ -630,67 +630,73 @@ export function ImportTab(props: IProps) {
         {syncBuffer ? t.importSync : t.importProject + ' ' + (planName || '')}
       </DialogTitle>
       <DialogContent>
-        <Typography variant="h5">{importTitle}</Typography>
-        <Typography variant="body1" className={classes.dialogHeader}>
-          {importStatus
-            ? importStatus.statusMsg +
-              (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
-            : ''}
-        </Typography>
-        {changeData.length > 0 && (
-          <div className={classes.actions}>
-            <div className={classes.grow}>{'\u00A0'}</div>
+        <div>
+          <Typography variant="h5">{importTitle}</Typography>
+          <Typography variant="body1" className={classes.dialogHeader}>
+            {importStatus
+              ? importStatus.statusMsg +
+                (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
+              : ''}
+          </Typography>
+          {changeData.length > 0 && (
+            <div className={classes.actions}>
+              <div className={classes.grow}>{'\u00A0'}</div>
 
-            <Button
-              key="filter"
-              aria-label={t.filter}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleFilter}
-              title={t.showHideFilter}
+              <Button
+                key="filter"
+                aria-label={t.filter}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleFilter}
+                title={t.showHideFilter}
+              >
+                {t.filter}
+                {filter ? (
+                  <SelectAllIcon className={classes.icon} />
+                ) : (
+                  <FilterIcon className={classes.icon} />
+                )}
+              </Button>
+            </div>
+          )}
+          {changeData.length > 0 && (
+            <ShapingTable
+              columns={columnDefs}
+              columnWidths={columnWidths}
+              sorting={[
+                { columnName: 'plan', direction: 'asc' },
+                { columnName: 'section', direction: 'asc' },
+              ]}
+              rows={changeData}
+              shaping={filter}
+              hiddenColumnNames={hiddenColumnNames}
+              columnFormatting={columnFormatting}
+            />
+          )}
+          {!importStatus || (
+            <AppBar
+              position="fixed"
+              className={classes.progress}
+              color="inherit"
             >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon className={classes.icon} />
-              ) : (
-                <FilterIcon className={classes.icon} />
-              )}
-            </Button>
-          </div>
-        )}
-        {changeData.length > 0 && (
-          <ShapingTable
-            columns={columnDefs}
-            columnWidths={columnWidths}
-            sorting={[
-              { columnName: 'plan', direction: 'asc' },
-              { columnName: 'section', direction: 'asc' },
-            ]}
-            rows={changeData}
-            shaping={filter}
-            hiddenColumnNames={hiddenColumnNames}
-            columnFormatting={columnFormatting}
+              <LinearProgress variant="indeterminate" />
+            </AppBar>
+          )}
+          <MediaUpload
+            visible={uploadVisible}
+            uploadType={UploadType.ITF}
+            uploadMethod={uploadITF}
+            cancelMethod={uploadCancel}
           />
-        )}
-        {!importStatus || (
-          <AppBar position="fixed" className={classes.progress} color="inherit">
-            <LinearProgress variant="indeterminate" />
-          </AppBar>
-        )}
-        <MediaUpload
-          visible={uploadVisible}
-          uploadType={UploadType.ITF}
-          uploadMethod={uploadITF}
-          cancelMethod={uploadCancel}
-        />
-        {confirmAction === '' || (
-          <Confirm
-            text={confirmAction + '  ' + t.continue}
-            yesResponse={handleActionConfirmed}
-            noResponse={handleActionRefused}
-          />
-        )}
+          {confirmAction === '' || (
+            <Confirm
+              text={confirmAction + '  ' + t.continue}
+              yesResponse={handleActionConfirmed}
+              noResponse={handleActionRefused}
+            />
+          )}
+        </div>
       </DialogContent>
       <DialogActions className={classes.actions}>
         <Button

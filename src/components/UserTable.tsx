@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { useLocation } from 'react-router-dom';
-import { LocalKey, localUserKey, useStickyRedirect } from '../utils';
+import { LocalKey, localUserKey } from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
@@ -28,6 +28,7 @@ import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
+import StickyRedirect from './StickyRedirect';
 import { related } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -163,7 +164,6 @@ export function UserTable(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
-  const stickyPush = useStickyRedirect();
   const [view, setView] = useState('');
 
   const handleAdd = () => {
@@ -292,7 +292,7 @@ export function UserTable(props: IProps) {
     return <Table.Cell {...props} />;
   };
 
-  if (/profile/i.test(view)) stickyPush('/profile');
+  if (/profile/i.test(view)) return <StickyRedirect to="/profile" />;
 
   return (
     <div className={classes.container}>

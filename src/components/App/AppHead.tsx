@@ -1,7 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect, useLocation } from 'react-router-dom';
-import { useStickyRedirect } from '../../utils';
 import { IState, IMainStrings } from '../../model';
 import { connect } from 'react-redux';
 import localStrings from '../../selector/localize';
@@ -29,6 +28,7 @@ import {
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
 import Busy from '../Busy';
+import StickyRedirect from '../StickyRedirect';
 
 const useStyles = makeStyles({
   appBar: {
@@ -74,7 +74,6 @@ export const AppHead = withBucket(
     const [importexportBusy] = useGlobal('importexportBusy');
     const [doSave] = useGlobal('doSave');
     const [globalStore] = useGlobal();
-    const stickyPush = useStickyRedirect();
     const [isChanged] = useGlobal('changed');
     const [exitAlert, setExitAlert] = React.useState(false);
     const [dosave, setDoSave] = useGlobal('doSave');
@@ -138,10 +137,10 @@ export const AppHead = withBucket(
       else if (!dosave) setDoSave(true);
 
     if (view === 'Error') return <Redirect to="/error" />;
-    if (view === 'Profile') stickyPush('/profile');
+    if (view === 'Profile') return <StickyRedirect to="/profile" />;
     if (view === 'Logout') return <Redirect to="/logout" />;
     if (view === 'Access') return <Redirect to="/" />;
-    if (view === 'Home') stickyPush('/team');
+    if (view === 'Home') return <StickyRedirect to="/team" />;
 
     return (
       <AppBar position="fixed" className={classes.appBar} color="inherit">

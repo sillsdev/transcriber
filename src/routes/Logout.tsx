@@ -139,12 +139,14 @@ export function Logout(props: IProps) {
         coordinator.removeStrategy('remote-sync');
         coordinator.removeSource('remote');
         await coordinator.activate({ logLevel: LogLevel.Warnings });
-        setView('Access');
       }
       auth.logout();
-      ipc?.invoke('logout');
+      ipc?.invoke('logout').then(() => {
+        setView('Access');
+      });
+    } else {
+      setView('Access');
     }
-    setView('Access');
   };
 
   const handleDownload = () => {
@@ -167,6 +169,7 @@ export function Logout(props: IProps) {
   }, []);
 
   if (/Access/i.test(view)) return <Redirect to="/" />;
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static" color="inherit">

@@ -117,7 +117,7 @@ export function Loading(props: IProps) {
   const [globalStore] = useGlobal();
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
-  const [orbitLoaded, setLoadComplete] = useGlobal('loadComplete');
+  const [, setLoadComplete] = useGlobal('loadComplete');
   const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
@@ -129,6 +129,7 @@ export function Loading(props: IProps) {
   const [doSync, setDoSync] = useState(false);
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
+  const [view, setView] = useState('');
 
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
@@ -236,12 +237,26 @@ export function Loading(props: IProps) {
     }
   }, [doSync, importOpen, setBusy]);
 
+  const LoadComplete = () => {
+    setCompleted(100);
+    setLoadComplete(true);
+    orbitComplete();
+    const userRec: User = GetUser(memory, user);
+    if (
+      !userRec?.attributes?.givenName ||
+      !userRec?.attributes?.timezone ||
+      !userRec?.attributes?.locale ||
+      !uiLanguages.includes(userRec?.attributes?.locale)
+    ) {
+      setView('/profile');
+      return;
+    }
+    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
+    if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    push(fromUrl || '/team');
+  };
+
   useEffect(() => {
-    const LoadComplete = () => {
-      setCompleted(100);
-      setLoadComplete(true);
-      orbitComplete();
-    };
     const finishRemoteLoad = () => {
       remote
         .pull((q) => q.findRecords('currentuser'))
@@ -278,21 +293,7 @@ export function Loading(props: IProps) {
   }, [syncComplete, orbitFetchResults]);
 
   if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
-
-  if (orbitLoaded && completed === 100) {
-    const userRec: User = GetUser(memory, user);
-    if (
-      !userRec?.attributes?.givenName ||
-      !userRec?.attributes?.timezone ||
-      !userRec?.attributes?.locale ||
-      !uiLanguages.includes(userRec?.attributes?.locale)
-    ) {
-      return <Redirect to="/profile" />;
-    }
-    let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
-    if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
-    push(fromUrl || '/team');
-  }
+  if (view !== '') return <Redirect to={view} />;
 
   return (
     <div className={classes.root}>

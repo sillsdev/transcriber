@@ -18,11 +18,11 @@ import ScriptureTable from '../components/ScriptureTable';
 import MediaTab from '../components/MediaTab';
 import AssignmentTable from './AssignmentTable';
 import TranscriptionTab from './TranscriptionTab';
+import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { HeadHeight } from '../App';
 import { getMediaInPlans, related, useOrganizedBy } from '../crud';
-import { useStickyRedirect } from '../utils';
 
 export const TabHeight = 48;
 export enum tabs {
@@ -91,7 +91,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   const [busy] = useGlobal('remoteBusy');
   const { prjId, tabNm } = useParams<ParamTypes>();
   const { getOrganizedBy } = useOrganizedBy();
-  const stickyPush = useStickyRedirect();
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
@@ -143,7 +142,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   }, []);
 
   if (tab !== undefined && tab.toString() !== tabNm)
-    stickyPush(`/plan/${prjId}/${tab}`);
+    return <StickyRedirect to={`/plan/${prjId}/${tab}`} />;
 
   return (
     <div className={classes.root}>

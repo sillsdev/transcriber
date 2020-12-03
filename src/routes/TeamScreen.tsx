@@ -1,10 +1,11 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { LocalKey, localUserKey, useStickyRedirect } from '../utils';
+import { LocalKey, localUserKey } from '../utils';
 import { makeStyles } from '@material-ui/core';
 import { AppHead } from '../components/App/AppHead';
 import { TeamProvider } from '../context/TeamContext';
 import { TeamProjects } from '../components/Team';
+import StickyRedirect from '../components/StickyRedirect';
 import Auth from '../auth/Auth';
 import { remoteId } from '../crud';
 import TeamActions from '../components/Team/TeamActions';
@@ -31,7 +32,6 @@ export const TeamScreen = (props: IProps) => {
   const [projRole, setProjRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
-  const stickyPush = useStickyRedirect();
 
   if (project !== '' && projRole !== '') {
     const remProjId = remoteId('plan', plan, memory.keyMap);
@@ -40,11 +40,11 @@ export const TeamScreen = (props: IProps) => {
         ? `/plan/${remProjId}/0`
         : `/work/${remProjId}`;
     if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
-      stickyPush(loc);
+      return <StickyRedirect to={loc} />;
     } else {
       localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
-      setProject('');
-      setProjRole('');
+      if (project !== '') setProject('');
+      if (projRole !== '') setProjRole('');
     }
   }
 

@@ -152,6 +152,10 @@ export function HelpMenu(props: IProps) {
     if (helpRef.current && topic !== undefined) helpRef.current.click();
   }, [topic, helpToggle]);
 
+  const isPlanScreen = React.useMemo(() => /\/plan\/[0-9]+\/0/.test(pathname), [
+    pathname,
+  ]);
+
   return (
     <div>
       <IconButton
@@ -175,45 +179,43 @@ export function HelpMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={t.helpCenter} />
         </StyledMenuItem>
-        {/\/plan\/[0-9]+\/0/.test(pathname) && (
-          <>
-            <StyledMenuItem onClick={handleHelp(spreadsheetTopic)}>
+        {isPlanScreen && (
+          <StyledMenuItem onClick={handleHelp(spreadsheetTopic)}>
+            <ListItemIcon>
+              <HelpIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.helpSpreadsheet} />
+          </StyledMenuItem>
+        )}
+        {isPlanScreen && isElectron && (
+          <a
+            href={API_CONFIG.flatSample}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem>
               <ListItemIcon>
-                <HelpIcon />
+                <DownloadIcon />
               </ListItemIcon>
-              <ListItemText primary={t.helpSpreadsheet} />
+              <ListItemText primary={t.flatSample} />
             </StyledMenuItem>
-            {!isElectron && (
-              <>
-                <a
-                  href={API_CONFIG.flatSample}
-                  style={{ textDecoration: 'none' }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <StyledMenuItem>
-                    <ListItemIcon>
-                      <DownloadIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={t.flatSample} />
-                  </StyledMenuItem>
-                </a>
-                <a
-                  href={API_CONFIG.hierarchicalSample}
-                  style={{ textDecoration: 'none' }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <StyledMenuItem>
-                    <ListItemIcon>
-                      <DownloadIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={t.hierarchicalSample} />
-                  </StyledMenuItem>
-                </a>
-              </>
-            )}
-          </>
+          </a>
+        )}
+        {isPlanScreen && isElectron && (
+          <a
+            href={API_CONFIG.hierarchicalSample}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem>
+              <ListItemIcon>
+                <DownloadIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.hierarchicalSample} />
+            </StyledMenuItem>
+          </a>
         )}
         <a
           href={API_CONFIG.community}

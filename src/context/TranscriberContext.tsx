@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 // see: https://upmostly.com/tutorials/how-to-use-the-usecontext-hook-in-react
 import { useGlobal } from 'reactn';
 import { useParams } from 'react-router-dom';
-import { useStickyRedirect } from '../utils';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -36,6 +35,7 @@ import {
   passageNumber,
   remoteIdGuid,
 } from '../crud';
+import StickyRedirect from '../components/StickyRedirect';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -186,7 +186,6 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [devPlan] = useGlobal('plan');
     const [projRole] = useGlobal('projRole');
     const view = React.useRef('');
-    const stickyPush = useStickyRedirect();
     const [state, setState] = useState({
       ...initState,
       selected: '',
@@ -581,7 +580,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     if (view.current !== '') {
       const target = view.current;
       view.current = '';
-      stickyPush(target);
+      return <StickyRedirect to={target} />;
     }
 
     return (

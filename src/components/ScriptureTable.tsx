@@ -35,15 +35,10 @@ import {
   useOrganizedBy,
   usePlan,
 } from '../crud';
-import {
-  Online,
-  useRemoteSave,
-  lookupBook,
-  useStickyRedirect,
-  currentDateTime,
-} from '../utils';
+import { Online, useRemoteSave, lookupBook, currentDateTime } from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
+import StickyRedirect from './StickyRedirect';
 import Auth from '../auth/Auth';
 import Uploader, { statusInit } from './Uploader';
 import { useMediaAttach } from '../crud/useMediaAttach';
@@ -188,7 +183,6 @@ export function ScriptureTable(props: IProps) {
   const [uploadPassage, setUploadPassage] = useState('');
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
-  const stickyPush = useStickyRedirect();
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     ts,
@@ -923,13 +917,15 @@ export function ScriptureTable(props: IProps) {
   }, [doSave, saving, data, inData, rowInfo]);
 
   useEffect(() => {
-    const getFlat = () => {
-      var planRec = getPlan(plan);
-      if (planRec !== null) return planRec.attributes?.flat;
-      return false;
-    };
+    if (plan !== '') {
+      const getFlat = () => {
+        var planRec = getPlan(plan);
+        if (planRec !== null) return planRec.attributes?.flat;
+        return false;
+      };
 
-    setInlinePassages(getFlat());
+      setInlinePassages(getFlat());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan]);
 
@@ -1058,7 +1054,7 @@ export function ScriptureTable(props: IProps) {
         }
       }
     };
-    if (!saving && !changed) {
+    if (!saving && !changed && plan !== '') {
       getSections(plan as string).then(() => {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
@@ -1117,7 +1113,7 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [data, width, cols]);
 
-  if (view !== '') stickyPush(view);
+  if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length > 0) {
