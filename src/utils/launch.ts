@@ -1,4 +1,7 @@
 import { isElectron } from '../api-variable';
+var temp = isElectron ? require('electron').remote.getGlobal('temp') : '';
+const fs = isElectron ? require('fs-extra') : null;
+const path = require('path');
 
 const noop = {} as any;
 const { shell } = isElectron ? require('electron') : { shell: noop };
@@ -14,6 +17,15 @@ export const launch = (target: string, online: boolean) => {
       env: { ...{ ...process }.env, DISPLAY: ':0' },
     });
   }
+};
+
+export const launchCmd = (target: string) => {
+  if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
+  const tempName = path.join(temp, 'transcriber-cmd.ps1');
+  fs.writeFileSync(tempName, target, { encoding: 'utf-8' });
+  execa(`powershell`, [tempName]).finally(() => {
+    fs.unlinkSync(tempName);
+  });
 };
 
 export default launch;

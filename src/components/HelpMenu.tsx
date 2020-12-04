@@ -21,9 +21,10 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
-import { launch } from '../utils';
+import { launch, launchCmd } from '../utils';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
+const os = require('os');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -122,11 +123,21 @@ export function HelpMenu(props: IProps) {
 
   const handleHelp = (topic?: string) => () => {
     const topicS = topic || '';
+    const topicWin = topic && decodeURIComponent(topic.slice(3));
     if (isElectron) {
-      const target = !online
-        ? path.join(execFolder(), API_CONFIG.chmHelp)
-        : API_CONFIG.help + '/' + helpLanguage() + indexName + topicS;
-      launch(target, online);
+      // see https://stackoverflow.com/questions/22300244/open-a-chm-file-to-a-specific-topic
+      if (os.platform() === 'win32' && topicWin && !online) {
+        const target = `C:\\Windows\\hh.exe ${path.join(
+          execFolder(),
+          API_CONFIG.chmHelp
+        )}::${topicWin}`;
+        launchCmd(target);
+      } else {
+        const target = !online
+          ? path.join(execFolder(), API_CONFIG.chmHelp)
+          : API_CONFIG.help + '/' + helpLanguage() + indexName + topicS;
+        launch(target, online);
+      }
     } else if (helpRef.current) {
       setTopic(topic || '');
       setHelpToggle(!helpToggle);
