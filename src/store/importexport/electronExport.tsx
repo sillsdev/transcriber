@@ -427,18 +427,16 @@ export async function electronExport(
     projects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')
     ) as Project[];
+    var offlineprojects = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('offlineproject')
+    ) as OfflineProject[];
+    var ids = offlineprojects
+      .filter((o) => o.attributes.offlineAvailable)
+      .map((o) => related(o, 'project')) as string[];
+    projects = projects.filter((p) => ids.includes(p.id));
     backupZip = new AdmZip();
     if (exportType === ExportType.FULLBACKUP) exportType = ExportType.PTF;
-    else {
-      exportType = ExportType.ITF;
-      var offlineprojects = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('offlineproject')
-      ) as OfflineProject[];
-      var ids = offlineprojects
-        .filter((o) => o.attributes.offlineAvailable)
-        .map((o) => related(o, 'project')) as string[];
-      projects = projects.filter((p) => ids.includes(p.id));
-    }
+    else exportType = ExportType.ITF;
   } else {
     projects = [getProjRec(projectid.toString())];
   }
