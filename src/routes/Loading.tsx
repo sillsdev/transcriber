@@ -264,7 +264,7 @@ export function Loading(props: IProps) {
         const planId = remoteIdGuid('plan', m[1], memory.keyMap);
         const planRec = getPlan(planId);
         const oProjRec = planRec && getOfflineProject(planRec);
-        if (oProjRec?.attributes?.offlineAvailable === false) fromUrl = null;
+        if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
       }
     }
     push(fromUrl || '/team');
