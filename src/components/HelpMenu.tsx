@@ -78,6 +78,7 @@ interface IProps extends IStateProps {
 export function HelpMenu(props: IProps) {
   const { online, action, t } = props;
   const { pathname } = useLocation();
+  const [offline] = useGlobal('offline');
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
@@ -187,7 +188,7 @@ export function HelpMenu(props: IProps) {
             <ListItemText primary={t.helpSpreadsheet} />
           </StyledMenuItem>
         )}
-        {isPlanScreen && isElectron && (
+        {isPlanScreen && !offline && (
           <a
             href={API_CONFIG.flatSample}
             style={{ textDecoration: 'none' }}
@@ -202,7 +203,7 @@ export function HelpMenu(props: IProps) {
             </StyledMenuItem>
           </a>
         )}
-        {isPlanScreen && isElectron && (
+        {isPlanScreen && !offline && (
           <a
             href={API_CONFIG.hierarchicalSample}
             style={{ textDecoration: 'none' }}
