@@ -441,6 +441,7 @@ const initialState = {
 			"addOfflineUser": "Add Offline Desktop Member",
 			"cancel": "Cancel",
 			"checkingParatext": "Checking for Paratext account...",
+			"notLinked": "Not linked to Paratext",
 			"close": "Close",
 			"completeProfile": "Complete Member Profile",
 			"deleteExplained": "Deleting your member will block you from using the program and remove references to your work.",

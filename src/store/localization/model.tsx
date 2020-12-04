@@ -411,6 +411,7 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "addOfflineUser": string;
     "cancel": string;
     "checkingParatext": string;
+    "notLinked": string;
     "close": string;
     "completeProfile": string;
     "deleteExplained": string;

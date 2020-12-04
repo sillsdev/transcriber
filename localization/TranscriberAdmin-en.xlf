@@ -2026,6 +2026,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.notLinked">
+         <segment>
+            <source>Not linked to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.close">
          <segment>
             <source>Close</source>

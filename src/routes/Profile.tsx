@@ -37,14 +37,11 @@ import {
   Typography,
   Avatar,
   MenuItem,
-  IconButton,
-  Link,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
-import InfoIcon from '@material-ui/icons/Info';
 import Confirm from '../components/AlertDialog';
+import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
-import ParatextIcon from '../control/ParatextLogo';
 import {
   remoteId,
   related,
@@ -159,6 +156,10 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 200,
       textAlign: 'center',
     },
+    notLinked: {
+      fontWeight: 'bold',
+      paddingTop: theme.spacing(2),
+    },
     bigAvatar: {
       width: 150,
       height: 150,
@@ -226,7 +227,6 @@ export function Profile(props: IProps) {
   const [deleteItem, setDeleteItem] = useState('');
   const [dupName, setDupName] = useState(false);
   const [hasParatext, setHasParatext] = useState(false);
-  const [howToLink, setHowToLink] = useState(false);
   const [view, setView] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -497,18 +497,6 @@ export function Profile(props: IProps) {
     setDeleteItem('');
   };
 
-  const handleHowTo = () => {
-    setHowToLink(true);
-  };
-
-  const handleLogout = () => {
-    setView('Logout');
-  };
-
-  const handleNoLinkSetup = () => {
-    setHowToLink(false);
-  };
-
   const langName = (loc: string, opt: string): string => {
     return ldml[loc].ldml.localeDisplayNames.languages.language
       .filter((d) => d.type === opt)
@@ -664,29 +652,11 @@ export function Profile(props: IProps) {
                 </Typography>
               )}
               <Typography className={classes.caption}>{email || ''}</Typography>
-              <Typography
-                className={clsx({
-                  [classes.caption]: !paratext_usernameStatus?.errStatus || 0,
-                })}
-              >
-                <ParatextIcon />
-                {'\u00A0'}
-                {paratext_usernameStatus?.errStatus ||
-                0 ||
-                (isElectron && !ptPath) ? (
-                  <>
-                    <Link onClick={handleHowTo}>{t.paratextNotLinked}</Link>
-                    <IconButton color="primary" onClick={handleHowTo}>
-                      <InfoIcon />
-                    </IconButton>
-                  </>
-                ) : (hasParatext && paratext_usernameStatus?.complete) ||
-                  ptPath ? (
-                  t.paratextLinked
-                ) : (
-                  paratext_usernameStatus?.statusMsg || t.checkingParatext
-                )}
-              </Typography>
+              <ParatextLinked
+                hasParatext={hasParatext}
+                ptPath={ptPath}
+                setView={setView}
+              />
             </StyledGrid>
             <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
@@ -947,16 +917,6 @@ export function Profile(props: IProps) {
           <Confirm
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
-          />
-        )}
-        {howToLink && (
-          <Confirm
-            title={t.paratextLinking}
-            text={isElectron ? t.installParatext : t.linkingExplained}
-            yes={isElectron ? '' : t.logout}
-            no={isElectron ? t.close : t.cancel}
-            yesResponse={handleLogout}
-            noResponse={handleNoLinkSetup}
           />
         )}
       </Paper>

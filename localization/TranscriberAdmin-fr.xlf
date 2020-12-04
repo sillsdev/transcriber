@@ -2006,7 +2006,13 @@
             <target>Vérification du compte Paratext...</target>
          </segment>
       </unit>
-      <unit id="profile.close">
+   	<unit id="profile.notLinked">
+   		<segment>
+   			<source>Not linked to Paratext</source>
+   			<target>Non lié à Paratext</target>
+   		</segment>
+   	</unit>
+   	<unit id="profile.close">
          <segment>
             <source>Close</source>
             <target>Fermer</target>
