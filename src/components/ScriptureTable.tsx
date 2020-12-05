@@ -694,9 +694,15 @@ export function ScriptureTable(props: IProps) {
     } else setView(`/work/${prjId}/${passageRemoteId}`);
   };
 
-  const handleAssign = (where: number[]) => () => {
+  const doAssign = (where: number[]) => {
     setAssignSections(where);
     setAssignSectionVisible(true);
+  };
+  const handleAssign = (where: number[]) => () => {
+    if (changed) {
+      startSave();
+      waitForSave(() => doAssign(where), 100);
+    } else doAssign(where);
   };
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
