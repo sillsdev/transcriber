@@ -79,6 +79,7 @@ export const ProjectExport = (props: IProps) => {
       );
     };
     if (open && projectIds.length > 0 && progress === Steps.Prepare) {
+      console.log(currentStep, projectIds);
       if (currentStep < projectIds.length) {
         let newSteps = new Array<string>();
         projectIds.forEach((pId) => {
@@ -97,7 +98,7 @@ export const ProjectExport = (props: IProps) => {
         setTimeout(() => {
           setExportName('');
           setExportUrl('');
-          setCurrentStep(0);
+          //setCurrentStep(0);
           setProgress(Steps.Finished);
           finish();
         }, 1000);

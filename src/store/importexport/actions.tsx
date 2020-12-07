@@ -167,7 +167,6 @@ const importFromElectron = (
   pendingmsg: string,
   completemsg: string
 ) => (dispatch: any) => {
-  console.log('made it into importFromElectron');
   dispatch({
     payload: pendingmsg.replace('{0}', '1'),
     type: IMPORT_PENDING,
