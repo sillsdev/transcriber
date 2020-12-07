@@ -3257,7 +3257,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriptionTab.electronBackup">
-            <source>Backup All Projects</source>
+            <source>Back up All Projects</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ExportTab.tsx</context>

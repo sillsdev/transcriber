@@ -613,7 +613,7 @@ const initialState = {
 			"copyTranscriptions": "Copy Transcriptions",
 			"downloading": "Creation complete. Downloading {0}",
 			"elan": "Elan",
-			"electronBackup": "Backup All Projects",
+			"electronBackup": "Back up All Projects",
 			"error": "Export Error",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
 			"export": "Export",
