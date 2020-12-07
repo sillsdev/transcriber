@@ -21,7 +21,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
-import { launch, launchCmd } from '../utils';
+import { launch, launchCmd, downloadFile, dataPath, PathType } from '../utils';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 const os = require('os');
@@ -145,6 +145,18 @@ export function HelpMenu(props: IProps) {
     setAnchorEl(null);
   };
 
+  const handleDownload = (url: string) => async () => {
+    const urlObj = new URL(url);
+    const name = urlObj.pathname.split('/').pop() || '';
+    const localPath = offline
+      ? path.join(execFolder(), 'help', name)
+      : dataPath(name, PathType.ZIP);
+    if (!offline) await downloadFile({ url, localPath });
+    launch(localPath, false);
+    setAnchorEl(null);
+    if (action) action('Download');
+  };
+
   const handleDeveloper = () => {
     localStorage.setItem('developer', !developer ? 'true' : 'false');
     setDeveloper(!developer);
@@ -199,7 +211,7 @@ export function HelpMenu(props: IProps) {
             <ListItemText primary={t.helpSpreadsheet} />
           </StyledMenuItem>
         )}
-        {isPlanScreen && !offline && (
+        {isPlanScreen && !isElectron && (
           <a
             href={API_CONFIG.flatSample}
             style={{ textDecoration: 'none' }}
@@ -214,7 +226,15 @@ export function HelpMenu(props: IProps) {
             </StyledMenuItem>
           </a>
         )}
-        {isPlanScreen && !offline && (
+        {isPlanScreen && isElectron && (
+          <StyledMenuItem onClick={handleDownload(API_CONFIG.flatSample)}>
+            <ListItemIcon>
+              <DownloadIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.flatSample} />
+          </StyledMenuItem>
+        )}
+        {isPlanScreen && !isElectron && (
           <a
             href={API_CONFIG.hierarchicalSample}
             style={{ textDecoration: 'none' }}
@@ -228,6 +248,16 @@ export function HelpMenu(props: IProps) {
               <ListItemText primary={t.hierarchicalSample} />
             </StyledMenuItem>
           </a>
+        )}
+        {isPlanScreen && isElectron && (
+          <StyledMenuItem
+            onClick={handleDownload(API_CONFIG.hierarchicalSample)}
+          >
+            <ListItemIcon>
+              <DownloadIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.hierarchicalSample} />
+          </StyledMenuItem>
         )}
         <a
           href={API_CONFIG.community}

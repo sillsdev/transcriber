@@ -181,6 +181,11 @@
         "filter": "*.chm"
       },
       {
+        "from": "help",
+        "to": "help",
+        "filter": "*.xlsx"
+      },
+      {
         "from": "src/script",
         "to": "resources",
         "filter": "resetData.*"
