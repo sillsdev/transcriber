@@ -1,4 +1,4 @@
-const { BrowserWindow } = require('electron');
+const { BrowserWindow, Menu, app } = require('electron');
 const authService = require('./auth-service');
 const createAppWindow = require('./app-process');
 
@@ -16,11 +16,36 @@ function createAuthWindow() {
     },
   });
 
+  function workOffline() {
+    createAppWindow();
+    return destroyAuthWin();
+  }
+
+  var menu = Menu.buildFromTemplate([
+    {
+      label: 'Back',
+      submenu: [
+        {
+          label: 'Abort Go Online',
+          click() {
+            return workOffline();
+          },
+        },
+        {
+          label: 'Exit',
+          click() {
+            app.quit();
+          },
+        },
+      ],
+    },
+  ]);
+  Menu.setApplicationMenu(menu);
+
   win.loadURL(authService.getAuthenticationURL()).catch((error) => {
     if (error.code === 'ERR_NAME_NOT_RESOLVED') {
       // allow working offline
-      createAppWindow();
-      return destroyAuthWin();
+      return workOffline();
     }
   });
 
