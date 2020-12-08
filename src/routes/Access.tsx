@@ -29,7 +29,7 @@ import {
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
-import { related } from '../crud';
+import { related, useOfflnProjRead } from '../crud';
 import { UserAvatar } from '../components/UserAvatar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -148,6 +148,7 @@ export function Access(props: IProps) {
   const [, setProject] = useGlobal('project');
   const [, setProjRole] = useGlobal('projRole');
   const [, setPlan] = useGlobal('plan');
+  const offlineProjRead = useOfflnProjRead();
 
   const handleSelect = (uId: string) => () => {
     const selected = users.filter((u) => u.id === uId);
@@ -194,7 +195,11 @@ export function Access(props: IProps) {
       .filter((gm) => related(gm, 'user') === userId)
       .map((gm) => related(gm, 'group'));
     const projIds = projects
-      .filter((p) => grpIds.includes(related(p, 'group')))
+      .filter(
+        (p) =>
+          grpIds.includes(related(p, 'group')) &&
+          offlineProjRead(p.id)?.attributes?.offlineAvailable
+      )
       .map((p) => p.id);
     const planIds = plans
       .filter((p) => projIds.includes(related(p, 'project')))
