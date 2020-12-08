@@ -458,7 +458,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
-      if (isOffline) {
+      if (isElectron) {
+        //online or offline we may have other user's orgs in the db
         const orgIds = orgMembers
           .filter((om) => related(om, 'user') === user)
           .map((om) => related(om, 'organization'));
