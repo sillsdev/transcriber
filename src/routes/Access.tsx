@@ -119,6 +119,11 @@ interface IDispatchProps {
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
 }
+export const goOnline = () => {
+  localStorage.removeItem('auth-id');
+  ipc?.invoke('login');
+  remote?.getCurrentWindow().close();
+};
 
 export function Access(props: IProps) {
   const {
@@ -159,9 +164,7 @@ export function Access(props: IProps) {
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
     if (isElectron) {
       if (!event.shiftKey) {
-        localStorage.removeItem('auth-id');
-        ipc?.invoke('login');
-        remote?.getCurrentWindow().close();
+        goOnline();
       } else ipc?.invoke('logout');
     }
   };
