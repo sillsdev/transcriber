@@ -7,6 +7,7 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "goOnline": string;
     "importProject": string;
     "download": string;
+    "downloadLater": string;
     "downloadMb": string;
 };
 

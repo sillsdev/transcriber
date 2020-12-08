@@ -13,6 +13,7 @@ const initialState = {
 			"goOnline": "Go Online",
 			"importProject": "Import PTF File",
 			"download": "Download?",
+			"downloadLater": "Download Later",
 			"downloadMb": "Download {0}MB of offline project files?",
 		}
 	}),

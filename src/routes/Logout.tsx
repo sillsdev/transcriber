@@ -172,7 +172,9 @@ export function Logout(props: IProps) {
             Math.ceil(downloadSize / 1000 + 0.5).toString()
           )}
           yesResponse={handleDownload}
+          no={t.downloadLater}
           noResponse={handleLogout}
+          noOnLeft={true}
         />
       )}
       <ProjectExport

@@ -37,6 +37,13 @@
       			<context context-type="sourcefile">logout.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="access.downloadLater">
+      		<source>Download Later</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">logout.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="access.downloadMb">
       		<source>Download {0}MB of offline project files?</source>
       		<target/>
