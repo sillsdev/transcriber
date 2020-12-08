@@ -72,7 +72,6 @@ import pt from '../assets/pt.json';
 import ta from '../assets/ta.json';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
-import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
 import { API_CONFIG } from '../api-variable';
@@ -153,9 +152,10 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
     },
     caption: {
-      display: 'table',
-      width: 200,
-      textAlign: 'center',
+      width: 150,
+      textAlign: 'left',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
     },
     notLinked: {
       fontWeight: 'bold',
@@ -525,7 +525,7 @@ export function Profile(props: IProps) {
   const StyledGrid = withStyles({ item: { padding: '0 30px' } })(Grid);
 
   useEffect(() => {
-    if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
+    if (isOffline) getParatextDataPath().then((val) => setPtPath(val));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -614,7 +614,7 @@ export function Profile(props: IProps) {
   }, [timezone]);
 
   useEffect(() => {
-    if (!isElectron) {
+    if (!isOffline) {
       if (!paratext_usernameStatus) {
         getUserName(auth, errorReporter, t.checkingParatext);
       }
@@ -662,6 +662,7 @@ export function Profile(props: IProps) {
                 hasParatext={hasParatext}
                 ptPath={ptPath}
                 setView={setView}
+                isOffline={isOffline}
               />
             </StyledGrid>
             <Grid item xs={12} md={7}>

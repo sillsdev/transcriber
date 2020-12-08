@@ -1,6 +1,5 @@
 import React from 'react';
 import clsx from 'clsx';
-import { isElectron } from '../api-variable';
 import { Typography, Link, IconButton } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { IState, IProfileStrings } from '../model';
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
     caption: {
       display: 'table',
       width: 200,
-      textAlign: 'center',
+      textAlign: 'left',
     },
     notLinked: {
       fontWeight: 'bold',
@@ -34,10 +33,11 @@ interface IProps extends IStateProps {
   hasParatext: Boolean;
   ptPath: string;
   setView: React.Dispatch<React.SetStateAction<string>>;
+  isOffline: Boolean;
 }
 
 export const ParatextLinked = (props: IProps) => {
-  const { status, t, hasParatext, ptPath, setView } = props;
+  const { status, t, hasParatext, ptPath, setView, isOffline } = props;
   const classes = useStyles();
   const [howToLink, setHowToLink] = React.useState(false);
 
@@ -69,7 +69,7 @@ export const ParatextLinked = (props: IProps) => {
       >
         <ParatextIcon />
         {'\u00A0'}
-        {status?.errStatus || 0 || (isElectron && !ptPath) ? (
+        {status?.errStatus || 0 || (isOffline && !ptPath) ? (
           <>
             <Link onClick={handleHowTo}>{t.paratextNotLinked}</Link>
             <IconButton color="primary" onClick={handleHowTo}>
@@ -85,9 +85,9 @@ export const ParatextLinked = (props: IProps) => {
       {howToLink && (
         <Confirm
           title={t.paratextLinking}
-          text={isElectron ? t.installParatext : t.linkingExplained}
-          yes={isElectron ? '' : t.logout}
-          no={isElectron ? t.close : t.cancel}
+          text={isOffline ? t.installParatext : t.linkingExplained}
+          yes={isOffline ? '' : t.logout}
+          no={isOffline ? t.close : t.cancel}
           yesResponse={handleLogout}
           noResponse={handleNoLinkSetup}
         />
