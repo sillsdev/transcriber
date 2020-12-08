@@ -24,6 +24,7 @@ import Auth from '../auth/Auth';
 import {
   sectionNumber,
   sectionDescription,
+  passageNumber,
   useOrganizedBy,
   usePlan,
   useOfflnProjRead,
@@ -116,6 +117,7 @@ interface IRow {
   state: string;
   assigned: string;
   mediaRemoteId: string;
+  rowKey: string;
 }
 
 interface IProps {
@@ -342,6 +344,9 @@ export function TaskTable(props: IProps) {
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediaId,
       mediaRemoteId: r.mediaRemoteId,
+      rowKey:
+        sectionNumber(r.section) +
+        (r.mediaRemoteId ? passageNumber(r.passage) : '   '),
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -441,7 +446,7 @@ export function TaskTable(props: IProps) {
             dataCell={Cell}
             sorting={[
               { columnName: 'plan', direction: 'asc' },
-              { columnName: 'sectPass', direction: 'asc' },
+              { columnName: 'rowKey', direction: 'asc' },
             ]}
             sortingEnabled={sortingEnabled}
             defaultGrouping={defaultGrouping}
