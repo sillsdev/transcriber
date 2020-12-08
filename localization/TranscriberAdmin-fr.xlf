@@ -2006,6 +2006,12 @@
             <target>Annuler</target>
          </segment>
       </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target>Veuillez choisir un nom autre que votre adresse e-mail.</target>
+         </segment>
+      </unit>
       <unit id="profile.checkingParatext">
          <segment>
             <source>Checking for Paratext account...</source>

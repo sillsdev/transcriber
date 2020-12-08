@@ -2032,6 +2032,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.notLinked">
          <segment>
             <source>Not linked to Paratext</source>

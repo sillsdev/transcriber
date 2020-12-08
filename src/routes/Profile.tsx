@@ -76,6 +76,7 @@ import { isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
 import { API_CONFIG } from '../api-variable';
+import { useSnackBar } from '../hoc/SnackBar';
 
 interface ILangDes {
   type: string;
@@ -232,12 +233,17 @@ export function Profile(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
   const [ptPath, setPtPath] = React.useState('');
+  const { showMessage } = useSnackBar();
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
 
   const handleNameChange = (e: any) => {
+    if (e.target.value === email) {
+      showMessage(t.nameNotEmail);
+      return;
+    }
     setChanged(true);
     setName(e.target.value);
     if (

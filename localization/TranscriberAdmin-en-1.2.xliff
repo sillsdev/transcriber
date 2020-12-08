@@ -2367,6 +2367,13 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="profile.nameNotEmail">
+            <source>Please choose a name other than your email address.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Profile.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="profile.notLinked">
       		<source>Not linked to Paratext</source>
       		<target/>
