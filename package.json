@@ -176,6 +176,11 @@
         "filter": "*.json"
       },
       {
+        "from": "public",
+        "to": ".",
+        "filter": "*.json"
+      },
+      {
         "from": "help",
         "to": "help",
         "filter": "*.chm"
