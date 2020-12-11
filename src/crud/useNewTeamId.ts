@@ -14,7 +14,7 @@ interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
 }
 interface IProps extends IStateProps, IDispatchProps {
-  auth: Auth
+  auth: Auth;
 }
 
 export const useNewTeamId = (props: IProps) => {
@@ -70,7 +70,7 @@ export const useNewTeamId = (props: IProps) => {
           'create new team',
           () => orgRef.current !== undefined,
           () => false,
-          10
+          100
         );
         teamId = orgRef.current as string;
       }
