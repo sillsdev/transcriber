@@ -319,13 +319,14 @@ export async function electronExport(
       var recs = GetTableRecs(info, project);
       var changed = recs;
       if (recs && Array.isArray(recs) && recs.length > 0) {
-        if (info.table !== 'project')
-          changed = recs.filter(
-            (u) =>
-              u.attributes && moment.utc(u.attributes.dateUpdated) > imported
-          );
-
-        AddJsonEntry(info.table + 's', changed, info.sort);
+        changed = recs.filter(
+          (u) => u.attributes && moment.utc(u.attributes.dateUpdated) > imported
+        );
+        AddJsonEntry(
+          info.table + 's',
+          info.table === 'project' ? recs : changed,
+          info.sort
+        );
 
         switch (info.table) {
           case 'user':
@@ -427,6 +428,15 @@ export async function electronExport(
     projects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')
     ) as Project[];
+    var bad = projects.filter(
+      (p) => p.relationships?.projecttype.data === null
+    );
+    if (bad.length && backup) {
+      await memory.sync(await backup.pull((q) => q.findRecords('project')));
+      projects = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('project')
+      ) as Project[];
+    }
     var offlineprojects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('offlineproject')
     ) as OfflineProject[];
@@ -453,7 +463,12 @@ export async function electronExport(
         : fileName(projects[ix], exportType);
     changedRecs += numRecs;
     if (backupZip) {
-      backupZip.addFile(filename, zip.toBuffer(), projects[ix].attributes.name);
+      if (numRecs)
+        backupZip.addFile(
+          filename,
+          zip.toBuffer(),
+          projects[ix].attributes.name
+        );
     } else {
       var where = dataPath(filename);
       zip.writeZip(where);
