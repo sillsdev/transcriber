@@ -1667,6 +1667,13 @@
       			<context context-type="sourcefile">HelpMenu.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="main.reportWhenOnline">
+      		<source>You must be online to report an problem.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="main.import">
             <source>Import</source>
             <target/>

@@ -314,6 +314,7 @@ const initialState = {
 			"helpSpreadsheet": "View spreadsheet convention",
 			"flatSample": "Download flat sample spreadsheet",
 			"hierarchicalSample": "Download hierarchical sample spreadsheet",
+			"reportWhenOnline": "You must be online to report an problem.",
 			"import": "Import",
 			"integrations": "Integrations",
 			"inviteError": "Invitation not accepted.  You must login with the email that the invitation was sent to.",

@@ -14,7 +14,13 @@ function createAppWindow() {
   });
 
   const isMac = process.platform === 'darwin';
-  const execFolder = () => path.dirname(process.helperExecPath);
+  const execFolder = () =>
+    path.dirname(
+      process.helperExecPath.replace(
+        path.join('node_modules', 'electron', 'dist'),
+        path.join('dist', 'win-unpacked')
+      )
+    );
 
   var menu = Menu.buildFromTemplate([
     // { role: 'appMenu' }

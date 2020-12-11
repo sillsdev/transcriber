@@ -21,7 +21,15 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
-import { launch, launchCmd, downloadFile, dataPath, PathType } from '../utils';
+import {
+  launch,
+  launchCmd,
+  downloadFile,
+  dataPath,
+  PathType,
+  execFolder,
+} from '../utils';
+import { useSnackBar } from '../hoc/SnackBar';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
 const os = require('os');
@@ -86,6 +94,7 @@ export function HelpMenu(props: IProps) {
   const [developer, setDeveloper] = useGlobal('developer');
   const [topic, setTopic] = React.useState<string>();
   const [helpToggle, setHelpToggle] = React.useState(false);
+  const { showMessage } = useSnackBar();
   const helpRef = React.useRef<any>();
 
   interface IHelpLinkProps {
@@ -118,8 +127,6 @@ export function HelpMenu(props: IProps) {
     // return language;
     return 'en';
   };
-
-  const execFolder = () => path.dirname((process as any).helperExecPath);
 
   const handleHelp = (topic?: string) => () => {
     const topicS = topic || '';
@@ -155,6 +162,11 @@ export function HelpMenu(props: IProps) {
     launch(localPath, false);
     setAnchorEl(null);
     if (action) action('Download');
+  };
+
+  const handleReportIssue = () => {
+    if (!online) showMessage(t.reportWhenOnline);
+    else launch(API_CONFIG.community, online);
   };
 
   const handleDeveloper = () => {
@@ -259,19 +271,29 @@ export function HelpMenu(props: IProps) {
             <ListItemText primary={t.hierarchicalSample} />
           </StyledMenuItem>
         )}
-        <a
-          href={API_CONFIG.community}
-          style={{ textDecoration: 'none' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <StyledMenuItem>
+        {isElectron && (
+          <StyledMenuItem onClick={handleReportIssue}>
             <ListItemIcon>
               <ReportIcon />
             </ListItemIcon>
             <ListItemText primary={t.reportIssue} />
           </StyledMenuItem>
-        </a>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.community}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem>
+              <ListItemIcon>
+                <ReportIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.reportIssue} />
+            </StyledMenuItem>
+          </a>
+        )}
         {shift && (
           <StyledMenuItem onClick={handleDeveloper}>
             <ListItemIcon>

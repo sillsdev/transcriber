@@ -34,3 +34,4 @@ export * from './getFIngerprint';
 export * from './downloadFile';
 export * from './useProjectsLoaded';
 export * from './useMounted';
+export * from './execFolder';

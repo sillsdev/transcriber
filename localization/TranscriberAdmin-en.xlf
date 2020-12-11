@@ -1432,6 +1432,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.reportWhenOnline">
+         <segment>
+            <source>You must be online to report an problem.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.import">
          <segment>
             <source>Import</source>
