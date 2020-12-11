@@ -790,6 +790,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.projectDeleted">
+         <segment>
+            <source>Project {0} has been deleted online.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.projectNotFound">
+         <segment>
+            <source>ITF does not contain current project.  It contains project {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>

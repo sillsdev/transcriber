@@ -169,6 +169,8 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "passage": string;
     "phone": string;
     "plan": string;
+    "projectDeleted": string;
+    "projectNotFound": string;
     "showHideFilter": string;
     "state": string;
     "timezone": string;

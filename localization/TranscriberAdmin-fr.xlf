@@ -794,6 +794,18 @@
             <target>Projet</target>
          </segment>
       </unit>
+      <unit id="import.projectDeleted">
+         <segment>
+            <source>Project {0} has been deleted online.</source>
+            <target>Le projet {0} a été supprimé en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="import.projectNotFound">
+         <segment>
+            <source>ITF does not contain current project.  It contains project {0}.</source>
+            <target>Le fichier ITF ne contient pas le projet en cours. Il contient le projet {0}.</target>
+         </segment>
+      </unit>
       <unit id="import.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>

@@ -918,6 +918,20 @@
                <context context-type="sourcefile">import.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="import.projectDeleted">
+            <source>Project {0} has been deleted online.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">import.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="import.projectNotFound">
+            <source>ITF does not contain current project.  It contains project {0}.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">import.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="import.showHideFilter">
             <source>Show/Hide filter rows</source>
             <target/>

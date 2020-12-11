@@ -187,6 +187,8 @@ const initialState = {
 			"passage": "Passage",
 			"phone": "Phone",
 			"plan": "Project",
+			"projectDeleted": "Project {0} has been deleted online.",
+			"projectNotFound": "ITF does not contain current project.  It contains project {0}.",
 			"showHideFilter": "Show/Hide filter rows",
 			"state": "State",
 			"timezone": "Time zone",

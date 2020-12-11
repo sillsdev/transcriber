@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { IAxiosStatus } from '../store/AxiosStatus';
+import { errorStatus, IAxiosStatus } from '../store/AxiosStatus';
 import {
   Project,
   IImportStrings,
@@ -279,13 +279,40 @@ export function ImportTab(props: IProps) {
     setUploadVisible(false);
     handleClose();
   };
+  function tryParseJSON(jsonString: string) {
+    try {
+      var o = JSON.parse(jsonString);
 
+      // Handle non-exception-throwing cases:
+      // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+      // but... JSON.parse(null) returns null, and typeof null === "object",
+      // so we must check for that, too. Thankfully, null is falsey, so this suffices:
+      if (o && typeof o === 'object') {
+        return o;
+      }
+    } catch (e) {}
+
+    return false;
+  }
   const translateError = (err: IAxiosStatus): string => {
     console.log(err.errMsg);
     switch (err.errStatus) {
+      case 301:
+        return t.projectDeleted.replace('{0}', err.errMsg);
       case 401:
         return t.expiredToken;
+      case 406:
+        return t.projectNotFound.replace('{0}', err.errMsg);
       case 422:
+        var json = tryParseJSON(err.errMsg);
+        if (Array.isArray(json)) {
+          var msg = '';
+          json.forEach((fr) => {
+            var thiserr = errorStatus(fr.Status, fr.Message);
+            msg += translateError(thiserr) + '\n';
+          });
+          return msg;
+        }
         return t.invalidITF + ' ' + err.errMsg;
       case 450:
         return t.invalidProject;
@@ -321,21 +348,20 @@ export function ImportTab(props: IProps) {
     }
     return undefined;
   };
-
-  const getChangeData = (changeReport: string) => {
-    interface IData {
-      data: any;
-    }
-    interface IChanges {
-      type: string;
-      online: IData;
-      imported: IData;
-    }
+  interface IData {
+    data: any;
+  }
+  interface IChanges {
+    type: string;
+    online: IData;
+    imported: IData;
+  }
+  const getChangeData = (changeReport: string | IChanges[]) => {
     if (changeReport === '') return [];
-    var changes = JSON.parse(changeReport);
     var data = [] as IRow[];
-    if (Array.isArray(changes)) {
-      changes.forEach((c: IChanges) => {
+    if (!Array.isArray(changeReport)) changeReport = tryParseJSON(changeReport);
+    if (Array.isArray(changeReport)) {
+      changeReport.forEach((c: IChanges) => {
         var passage;
         var section: Section | undefined;
         var old = '';
@@ -590,15 +616,27 @@ export function ImportTab(props: IProps) {
   useEffect(() => {
     if (importStatus) {
       if (importStatus.errStatus) {
-        setImportTitle(translateError(importStatus));
+        var json = tryParseJSON(importStatus.errMsg);
+        var msg: string;
+        if (json) {
+          msg =
+            translateError(
+              errorStatus(importStatus.errStatus, JSON.stringify(json.errors))
+            ) + '\n';
+          var chdata = getChangeData(json.report);
+          setChangeData([...changeData].concat(chdata));
+          msg += chdata.length > 0 ? t.onlineChangeReport : '\n';
+        } else {
+          msg = translateError(importStatus);
+        }
+        setImportTitle(msg);
         importComplete();
         setBusy(false);
       } else {
         if (importStatus.complete) {
           //import completed ok but might have message
-          var changeReport = importStatus.errMsg;
-          var chdata = getChangeData(changeReport);
-          setChangeData(chdata);
+          chdata = getChangeData(importStatus.errMsg);
+          setChangeData([...changeData].concat(chdata));
           setImportTitle(
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
