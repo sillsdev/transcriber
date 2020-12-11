@@ -15,6 +15,8 @@ import {
   ISharedStrings,
   IDialog,
   VProject,
+  localizeActivityState,
+  IActivityStateStrings,
 } from '../model';
 import { WithDataProps, withData } from '../mods/react-orbitjs';
 import Confirm from './AlertDialog';
@@ -59,6 +61,7 @@ import { HeadHeight } from '../App';
 
 interface IStateProps {
   t: IImportStrings;
+  ta: IActivityStateStrings;
   ts: ISharedStrings;
   importStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
@@ -96,6 +99,7 @@ export function ImportTab(props: IProps) {
     syncBuffer,
     syncFile,
     t,
+    ta,
     ts,
     auth,
     importComplete,
@@ -396,8 +400,17 @@ export function ImportTab(props: IProps) {
             section = sectionFromPassage(passage, true);
             if (section)
               plan = planFromSection(section, false)?.attributes.name || '';
-            imported = t.state + ':' + passage.attributes.state;
-            old = t.state + ':' + (c.online.data as Passage).attributes.state;
+            imported =
+              t.state +
+              ':' +
+              localizeActivityState(passage.attributes.state, ta);
+            old =
+              t.state +
+              ':' +
+              localizeActivityState(
+                (c.online.data as Passage).attributes.state,
+                ta
+              );
             break;
           case 'section':
             var oldsection = c.online.data as Section;
@@ -761,6 +774,7 @@ export function ImportTab(props: IProps) {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'import' }),
+  ta: localStrings(state, { layout: 'activityState' }),
   ts: localStrings(state, { layout: 'shared' }),
   importStatus: state.importexport.importexportStatus,
   allBookData: state.books.bookData,
