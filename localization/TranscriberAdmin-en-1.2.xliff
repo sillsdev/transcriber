@@ -20,7 +20,14 @@
       		<source>Go Online</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">electronImport.tsx</context>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.cancel">
+      		<source>Cancel</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="access.importProject">

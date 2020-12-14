@@ -36,6 +36,7 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { isElectron, API_CONFIG } from '../api-variable';
 import ImportTab from '../components/ImportTab';
+import Confirm from '../components/AlertDialog';
 
 const reactStringReplace = require('react-string-replace');
 
@@ -149,6 +150,9 @@ export function Access(props: IProps) {
   const [, setProjRole] = useGlobal('projRole');
   const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
+  const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
+    React.MouseEvent<HTMLElement>
+  >();
 
   const handleSelect = (uId: string) => () => {
     const selected = users.filter((u) => u.id === uId);
@@ -163,11 +167,18 @@ export function Access(props: IProps) {
   };
 
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
+    setGoOnlineConfirmation(event);
+  };
+  const handleGoOnlineConfirmed = () => {
     if (isElectron) {
-      if (!event.shiftKey) {
+      if (!goOnlineConfirmation?.shiftKey) {
         goOnline();
       } else ipc?.invoke('logout');
     }
+    setGoOnlineConfirmation(undefined);
+  };
+  const handleGoOnlineRefused = () => {
+    setGoOnlineConfirmation(undefined);
   };
 
   const handleVersionClick = (e: React.MouseEvent) => {
@@ -351,6 +362,14 @@ export function Access(props: IProps) {
             <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
           )}
         </div>
+      )}
+      {isElectron && goOnlineConfirmation && (
+        <Confirm
+          title={t.goOnline}
+          yesResponse={handleGoOnlineConfirmed}
+          noResponse={handleGoOnlineRefused}
+          no={t.cancel}
+        />
       )}
     </div>
   );

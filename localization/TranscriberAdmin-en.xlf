@@ -22,6 +22,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.importProject">
          <segment>
             <source>Import PTF File</source>

@@ -5,6 +5,7 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessFirst": string;
     "accessSilTranscriber": string;
     "goOnline": string;
+    "cancel": string;
     "importProject": string;
     "download": string;
     "downloadLater": string;

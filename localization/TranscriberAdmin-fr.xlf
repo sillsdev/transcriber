@@ -19,7 +19,13 @@
    			<target>Aller en ligne</target>
    		</segment>
    	  </unit>
-   	  <unit id="access.importProject">
+   	<unit id="access.cancel">
+   		<segment>
+   			<source>Cancel</source>
+   			<target>Annuler</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.importProject">
          <segment>
             <source>Import PTF File</source>
             <target>Importation un fichier de PTF</target>
