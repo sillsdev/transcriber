@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { API_CONFIG } from '../../api-variable';
+import { API_CONFIG, isElectron } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import {
   UPLOAD_LIST,
@@ -9,7 +9,8 @@ import {
   UPLOAD_ITEM_FAILED,
   UPLOAD_COMPLETE,
 } from './types';
-import { infoMsg, logError, Severity } from '../../utils';
+import { dataPath, infoMsg, logError, PathType, Severity } from '../../utils';
+var fs = require('fs');
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
   dispatch({
@@ -48,6 +49,15 @@ export const nextUpload = (
       dispatch({ payload: n, type: UPLOAD_ITEM_CREATED });
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', response.data.audioUrl, true);
+      if (isElectron) {
+        var local = { localname: '' };
+        dataPath(response.data.audioUrl, PathType.MEDIA, local);
+        try {
+          fs.copyFileSync(files[n].path, local.localname);
+        } catch (err) {
+          console.log(err);
+        }
+      }
       xhr.setRequestHeader('Content-Type', response.data.contentType);
       xhr.send(files[n].slice());
       xhr.onload = () => {

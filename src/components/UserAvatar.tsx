@@ -52,8 +52,12 @@ export function UserAvatar(props: IProps) {
   return curUser.attributes && curUser.attributes.avatarUrl ? (
     <Avatar
       alt={curUser.attributes.name}
-      src={dataPath(curUser.attributes.avatarUrl, PathType.AVATARS,
-            remoteId('user', curUser.id, memory.keyMap) + curUser.attributes.familyName+".png")}
+      src={dataPath(curUser.attributes.avatarUrl, PathType.AVATARS, {
+        localname:
+          remoteId('user', curUser.id, memory.keyMap) +
+          curUser.attributes.familyName +
+          '.png',
+      })}
       className={small ? classes.small : classes.medium}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (

@@ -25,7 +25,9 @@ export const getFontData = (r: Project, offline: boolean) => {
   const fontDir = r?.attributes?.rtl ? 'rtl' : 'ltr';
   const fileName = fontFamily + '.css';
   const url = offline
-    ? dataPath(path.join('fonts',fileName ), PathType.FONTS, fileName)
+    ? dataPath(path.join('fonts', fileName), PathType.FONTS, {
+        localname: fileName,
+      })
     : 'https://s3.amazonaws.com/fonts.siltranscriber.org/' + fileName;
   const data: FontData = {
     fontFamily,

@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import fs from 'fs';
 import { bindActionCreators } from 'redux';
 import { IState, MediaFile, IAccessStrings, OfflineProject } from '../model';
 import localStrings from '../selector/localize';
@@ -96,7 +95,9 @@ export function Logout(props: IProps) {
     const needyProject = new Set<string>();
     let totalSize = 0;
     mediaRecs.forEach((m) => {
-      if (!fs.existsSync(dataPath(m.attributes.audioUrl, PathType.MEDIA))) {
+      var local = { localname: '' };
+      var curpath = dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
+      if (curpath !== local.localname) {
         needyProject.add(planProject[related(m, 'plan')]);
         totalSize += m?.attributes?.filesize || 0;
       }

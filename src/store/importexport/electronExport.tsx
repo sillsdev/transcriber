@@ -145,13 +145,12 @@ export async function electronExport(
           user.attributes.avatarUrl !== null &&
           user.attributes.avatarUrl !== ''
         ) {
-          var dp = dataPath(
-            user.attributes.avatarUrl,
-            PathType.AVATARS,
-            remoteId('user', user.id, memory.keyMap) +
+          var dp = dataPath(user.attributes.avatarUrl, PathType.AVATARS, {
+            localname:
+              remoteId('user', user.id, memory.keyMap) +
               user.attributes.familyName +
-              '.png'
-          );
+              '.png',
+          });
           AddStreamEntry(dp, avatarpath + path.basename(dp));
         }
       });
@@ -165,11 +164,9 @@ export async function electronExport(
           org.attributes.logoUrl !== null &&
           org.attributes.logoUrl !== ''
         ) {
-          var dp = dataPath(
-            org.attributes.logoUrl,
-            PathType.LOGOS,
-            org.attributes.slug + '.png'
-          );
+          var dp = dataPath(org.attributes.logoUrl, PathType.LOGOS, {
+            localname: org.attributes.slug + '.png',
+          });
           AddStreamEntry(dp, logopath + path.basename(dp));
         }
       });

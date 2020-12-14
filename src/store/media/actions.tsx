@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { API_CONFIG } from '../../api-variable';
+import { API_CONFIG, isElectron } from '../../api-variable';
 import Auth from '../../auth/Auth';
 import * as type from './types';
 import MemorySource from '@orbit/memory';
@@ -14,7 +14,7 @@ export const fetchMediaUrl = (
   auth: Auth
 ) => (dispatch: any) => {
   dispatch({ type: type.FETCH_AUDIO_URL_PENDING });
-  if (offline) {
+  if (isElectron) {
     if (!isNaN(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
     try {
       var mediarec = memory.cache.query((q) =>

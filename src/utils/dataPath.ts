@@ -15,7 +15,7 @@ export enum PathType {
 export const dataPath = (
   relPath?: string,
   type?: PathType,
-  localname?: string
+  local_out?: { localname: string }
 ): string => {
   if (
     isElectron &&
@@ -31,7 +31,7 @@ export const dataPath = (
           os.homedir(),
           process.env.REACT_APP_OFFLINEDATA,
           type,
-          localname || ''
+          local_out?.localname || ''
         );
         break;
       case PathType.MEDIA:
@@ -48,10 +48,11 @@ export const dataPath = (
         localName = path.join(
           os.homedir(),
           process.env.REACT_APP_OFFLINEDATA,
-          localname || ''
+          local_out?.localname || ''
         );
         break;
     }
+    if (local_out) local_out.localname = localName;
     if (fs.existsSync(localName)) return localName;
   }
   return relPath?.startsWith('http')
