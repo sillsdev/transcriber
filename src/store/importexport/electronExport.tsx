@@ -425,18 +425,14 @@ export async function electronExport(
     exportType === ExportType.FULLBACKUP ||
     exportType === ExportType.ITFSYNC
   ) {
+    //avoid intermittent errors where projecttype or plan is null
+    if (backup)
+      await memory.sync(await backup.pull((q) => q.findRecords('project')));
+
     projects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('project')
     ) as Project[];
-    var bad = projects.filter(
-      (p) => p.relationships?.projecttype.data === null
-    );
-    if (bad.length && backup) {
-      await memory.sync(await backup.pull((q) => q.findRecords('project')));
-      projects = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('project')
-      ) as Project[];
-    }
+
     var offlineprojects = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('offlineproject')
     ) as OfflineProject[];
