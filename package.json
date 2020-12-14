@@ -160,7 +160,7 @@
       "icon": "debian/sil-transcriber.png",
       "desktop": "debian/sil-transcriber.desktop",
       "target": [
-        "snap"
+        "deb"
       ]
     },
     "mac": {
@@ -191,5 +191,7 @@
         "filter": "resetData.*"
       }
     ]
-  }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
 }
