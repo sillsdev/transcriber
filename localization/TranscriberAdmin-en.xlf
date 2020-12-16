@@ -2866,6 +2866,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.downloadingProject">
+         <segment>
+            <source>Downloading...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportITFtype">
          <segment>
             <source>Incremental Changes (itf)</source>
@@ -2875,6 +2881,12 @@
       <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadProject">
+         <segment>
+            <source>Download Project</source>
             <target/>
          </segment>
       </unit>

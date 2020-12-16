@@ -3340,7 +3340,14 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriptionTab.exportITFtype">
+      	<trans-unit id="transcriptionTab.downloadingProject">
+      		<source>Downloading...{0}%</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectDownload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriptionTab.exportITFtype">
             <source>Incremental Changes (itf)</source>
             <target/>
             <context-group>
@@ -3354,7 +3361,14 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriptionTab.exportPTFtype">
+      	<trans-unit id="transcriptionTab.downloadProject">
+      		<source>Download Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DownloadProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriptionTab.exportPTFtype">
             <source>Export Project (ptf)</source>
             <target/>
             <context-group>

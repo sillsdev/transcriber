@@ -15,10 +15,11 @@ interface IProps {
   auth: Auth;
   exportProject: typeof actions.exportProject;
   t: ITranscriptionTabStrings;
+  message?: string;
 }
 
 export const useProjecExport = (props: IProps) => {
-  const { auth } = props;
+  const { auth, message } = props;
   const { exportProject, t } = props;
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -56,7 +57,7 @@ export const useProjecExport = (props: IProps) => {
       media.length,
       auth,
       errorReporter,
-      t.exportingProject,
+      message || t.exportingProject,
       getOfflineProject
     );
   };

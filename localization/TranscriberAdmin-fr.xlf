@@ -2864,7 +2864,13 @@
             <target>Exportation...{0}%</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportITFtype">
+   	<unit id="transcriptionTab.downloadingProject">
+   		<segment>
+   			<source>Downloading...{0}%</source>
+   			<target>Téléchargement...{0}%</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcriptionTab.exportITFtype">
          <segment>
             <source>Incremental Changes (itf)</source>
             <target>Modifications incrémentielles (itf)</target>
@@ -2876,7 +2882,13 @@
             <target>Exporter une projet</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportPTFtype">
+   	<unit id="transcriptionTab.downloadProject">
+   		<segment>
+   			<source>Download Project</source>
+   			<target>Télécharger le projet</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcriptionTab.exportPTFtype">
          <segment>
             <source>Export Project (ptf)</source>
             <target>Projet d'exportation (ptf)</target>

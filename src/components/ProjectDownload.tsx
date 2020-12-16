@@ -50,7 +50,7 @@ interface IProps extends IStateProps, IDispatchProps {
   finish: () => void;
 }
 
-export const ProjectExport = (props: IProps) => {
+export const ProjectDownload = (props: IProps) => {
   const { open, projectIds, auth, t, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
   const [memory] = useGlobal('memory');
@@ -58,19 +58,25 @@ export const ProjectExport = (props: IProps) => {
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const { showMessage, showTitledMessage } = useSnackBar();
-  const doProjectExport = useProjecExport({ auth, exportProject, t });
+  const doProjectExport = useProjecExport({
+    auth,
+    exportProject,
+    t,
+    message: t.downloadingProject,
+  });
   const [progress, setProgress] = React.useState<Steps>(Steps.Prepare);
   const [steps, setSteps] = React.useState<string[]>([]);
   const [currentStep, setCurrentStep] = React.useState(0);
   const [exportName, setExportName] = React.useState('');
   const [exportUrl, setExportUrl] = React.useState('');
   const [offlineUpdates] = React.useState<Operation[]>([]);
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
+
   const translateError = (err: IAxiosStatus): string => {
     if (err.errStatus === 401) return t.expiredToken;
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
-  const backup = coordinator.getSource('backup') as IndexedDBSource;
 
   React.useEffect(() => {
     const updateLocalOnly = async () => {
@@ -89,7 +95,6 @@ export const ProjectExport = (props: IProps) => {
           if (projRec) newSteps = newSteps.concat(projRec.attributes.name);
         });
         setSteps(newSteps);
-        // console.log(Steps.Prepare, currentStep, newSteps);
         setProgress(Steps.Prepare);
         doProjectExport(ExportType.PTF, projectIds[currentStep]);
       } else if (busy) {
@@ -98,7 +103,6 @@ export const ProjectExport = (props: IProps) => {
         setTimeout(() => {
           setExportName('');
           setExportUrl('');
-          //setCurrentStep(0);
           setProgress(Steps.Finished);
           finish();
         }, 1000);
@@ -115,16 +119,11 @@ export const ProjectExport = (props: IProps) => {
         setBusy(false);
       } else {
         if (!enableOffsite) setEnableOffsite(true);
-        if (exportStatus.statusMsg) {
-          showMessage(exportStatus.statusMsg);
+        if (exportStatus?.statusMsg) {
+          showMessage(exportStatus?.statusMsg);
         }
         if (exportStatus.complete) {
           if (exportFile) {
-            // console.log(
-            //   `exportStatus=${JSON.stringify(
-            //     exportStatus
-            //   )}, exportFile=${JSON.stringify(exportFile)}`
-            // );
             setExportName(exportFile.data.attributes.message);
             setExportUrl(exportFile.data.attributes.fileurl);
             exportComplete();
@@ -139,17 +138,15 @@ export const ProjectExport = (props: IProps) => {
   React.useEffect(() => {
     if (progress === Steps.Download) {
       const localPath = dataPath(exportName, PathType.ZIP);
-      // console.log(progress, currentStep, `downloading ${localPath}`);
       downloadFile({ url: exportUrl, localPath })
         .then(() => {
-          // console.log(`download complete: ${localPath}`);
           setProgress(Steps.Import);
         })
         .finally(() => {
           URL.revokeObjectURL(exportUrl);
         });
       showTitledMessage(
-        t.exportProject,
+        t.downloadProject,
         t.downloading.replace('{0}', exportName)
       );
     }
@@ -182,7 +179,7 @@ export const ProjectExport = (props: IProps) => {
     <div>
       <Progress
         open={open}
-        title={t.exportProject}
+        title={t.downloadProject}
         progress={percent(progress, Steps.Import)}
         steps={steps}
         currentStep={currentStep}
@@ -217,4 +214,4 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProjectExport) as any;
+)(ProjectDownload) as any;

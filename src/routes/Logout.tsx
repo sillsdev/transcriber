@@ -16,7 +16,7 @@ import { Redirect } from 'react-router-dom';
 import { dataPath, PathType, localeDefault } from '../utils';
 import { useGlobal } from 'reactn';
 import Alert from '../components/AlertDialog';
-import ProjectExport from '../components/ProjectExport';
+import ProjectDownload from '../components/ProjectDownload';
 import { related, useProjectPlans, getMediaInPlans } from '../crud';
 import { LogLevel } from '@orbit/coordinator';
 const version = require('../../package.json').version;
@@ -77,7 +77,7 @@ export function Logout(props: IProps) {
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
   const [needyIds, setNeedyIds] = React.useState<string[]>([]);
-  const [expOpen, setExpOpen] = React.useState(false);
+  const [downloadOpen, setDownloadOpen] = React.useState(false);
   const projectPlans = useProjectPlans();
 
   const getNeedyRemoteIds = () => {
@@ -130,7 +130,7 @@ export function Logout(props: IProps) {
   };
 
   const handleDownload = () => {
-    setExpOpen(true);
+    setDownloadOpen(true);
   };
 
   useEffect(() => {
@@ -178,8 +178,8 @@ export function Logout(props: IProps) {
           noOnLeft={true}
         />
       )}
-      <ProjectExport
-        open={expOpen}
+      <ProjectDownload
+        open={downloadOpen}
         auth={auth}
         projectIds={needyIds}
         finish={handleLogout}
