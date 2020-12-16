@@ -220,6 +220,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [user] = useGlobal('user');
     const [offline] = useGlobal('offline');
     const [projectsLoaded] = useGlobal('projectsLoaded');
+    const [, setConnected] = useGlobal('connected');
     const [userProjects, setUserProjects] = useState(projects);
     const [userOrgs, setUserOrgs] = useState(organizations);
     const { showMessage } = useSnackBar();
@@ -279,6 +280,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       const [projectId] = setProjectParams(plan);
 
       Online((online) => {
+        setConnected(online);
         LoadProjectData(
           projectId,
           coordinator,

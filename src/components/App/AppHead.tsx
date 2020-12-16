@@ -80,9 +80,11 @@ const ProjectName = ({ setView }: INameProps) => {
 
 interface IStateProps {
   t: IMainStrings;
+  orbitStatus: number | undefined;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
+  orbitStatus: state.orbit.status,
 });
 
 interface IProps extends IStateProps {
@@ -92,12 +94,13 @@ interface IProps extends IStateProps {
 }
 
 export const AppHead = (props: IProps) => {
-  const { auth, resetRequests, SwitchTo, t } = props;
+  const { auth, resetRequests, SwitchTo, t, orbitStatus } = props;
   const classes = useStyles();
   const { pathname } = useLocation();
   const [memory] = useGlobal('memory');
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
+  const [connected] = useGlobal('connected');
   const ctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
   const [view, setView] = React.useState('');
@@ -192,7 +195,9 @@ export const AppHead = (props: IProps) => {
             {API_CONFIG.productName}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          {isOffline && <CloudOffIcon />}
+          {(isOffline || orbitStatus !== undefined || !connected) && (
+            <CloudOffIcon />
+          )}
           {'\u00A0'}
           {SwitchTo && <SwitchTo />}
           <HelpMenu online={!isOffline} />

@@ -141,8 +141,8 @@ export function Access(props: IProps) {
   const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
   const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [connected, setConnected] = useGlobal('connected');
   const [importOpen, setImportOpen] = useState(false);
-  const [online, setOnline] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
@@ -225,7 +225,9 @@ export function Access(props: IProps) {
     if (isElectron) persistData();
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
-    Online((online) => setOnline(online), auth);
+    Online((connected) => {
+      setConnected(connected);
+    }, auth);
     setOrganization('');
     setProject('');
     setPlan('');
@@ -233,6 +235,7 @@ export function Access(props: IProps) {
 
     if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
+        setConnected(true);
         handleLogin();
       }
     }
@@ -245,6 +248,7 @@ export function Access(props: IProps) {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
           ipc?.invoke('get-token').then((accessToken) => {
+            setConnected(true);
             if (offline) setOffline(false);
             if (auth) auth.setDesktopSession(result, accessToken);
             if (selectedUser === '') setSelectedUser('unknownUser');
@@ -292,7 +296,7 @@ export function Access(props: IProps) {
                     t.accessFirst.replace('{0}', API_CONFIG.productName),
                     '{1}',
                     () => {
-                      return online ? (
+                      return connected ? (
                         <Button key="launch" onClick={handleAdmin}>
                           SIL Transcriber
                         </Button>

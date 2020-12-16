@@ -154,6 +154,7 @@ export function ScriptureTable(props: IProps) {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [doSave, setDoSave] = useGlobal('doSave');
   const [busy, setBusy] = useGlobal('importexportBusy');
+  const [, setConnected] = useGlobal('connected');
 
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
@@ -906,6 +907,7 @@ export function ScriptureTable(props: IProps) {
 
     if (doSave && !saving) {
       Online((online) => {
+        setConnected(online);
         if (!online) {
           saveCompleted(ts.NoSaveOffline);
           setSaving(false);

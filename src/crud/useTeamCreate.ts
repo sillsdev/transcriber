@@ -24,6 +24,7 @@ export const useTeamCreate = (props: IProps) => {
   const [user] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
+  const [, setConnected] = useGlobal('connected');
   const { showMessage } = useSnackBar();
   return (organization: Organization) => {
     const {
@@ -46,6 +47,7 @@ export const useTeamCreate = (props: IProps) => {
     } as Organization;
 
     Online((online) => {
+      setConnected(online);
       createOrg({
         orgRec,
         user,

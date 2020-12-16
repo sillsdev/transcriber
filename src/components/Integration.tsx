@@ -161,7 +161,7 @@ export function IntegrationPanel(props: IProps) {
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
-  const [online, setOnline] = React.useState<boolean>();
+  const [connected, setConnected] = useGlobal('connected');
   const [hasPtProj, setHasPtProj] = React.useState(false);
   const [ptProj, setPtProj] = React.useState(-1);
   const [ptProjName, setPtProjName] = React.useState('');
@@ -351,7 +351,7 @@ export function IntegrationPanel(props: IProps) {
   const handleDeleteRefused = () => setConfirmItem(null);
   const getProjectLabel = (): string => {
     if (offline) return t.selectProject;
-    return online
+    return connected
       ? paratext_projectsStatus && paratext_projectsStatus.complete
         ? !paratext_projectsStatus.errStatus
           ? paratext_projects.length > 0
@@ -452,7 +452,9 @@ export function IntegrationPanel(props: IProps) {
   };
 
   useEffect(() => {
-    Online((result) => setOnline(result), auth);
+    Online((result) => {
+      setConnected(result);
+    }, auth);
     if (offline) getParatextDataPath().then((val) => setPtPath(val));
     resetProjects();
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -464,8 +466,8 @@ export function IntegrationPanel(props: IProps) {
   }, [resetUserName, user]);
 
   useEffect(() => {
-    if (online && !hasParatext) resetUserName();
-  }, [resetUserName, online, hasParatext]);
+    if (connected && !hasParatext) resetUserName();
+  }, [resetUserName, connected, hasParatext]);
 
   useEffect(() => {
     if (project !== myProject) {
@@ -615,15 +617,15 @@ export function IntegrationPanel(props: IProps) {
         </AccordionSummary>
         <AccordionDetails className={classes.panel}>
           <List dense component="div">
-            <ListItem key="online">
+            <ListItem key="connected">
               <ListItemAvatar>
                 <Avatar className={classes.avatar}>
-                  {!online || <CheckIcon />}
+                  {!connected || <CheckIcon />}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={t.questionOnline}
-                secondary={online ? t.yes : t.no}
+                secondary={connected ? t.yes : t.no}
               />
             </ListItem>
             <ListItem key="hasProj" className={classes.listItem}>
@@ -699,7 +701,7 @@ export function IntegrationPanel(props: IProps) {
                 secondary={
                   hasParatext
                     ? t.yes + ': ' + paratext_username
-                    : online
+                    : connected
                     ? paratext_usernameStatus &&
                       paratext_usernameStatus.complete
                       ? t.no
@@ -719,7 +721,7 @@ export function IntegrationPanel(props: IProps) {
                 secondary={
                   hasPermission
                     ? t.yes + ' :' + ptPermission
-                    : online
+                    : connected
                     ? t.no
                     : t.offline
                 }
@@ -754,7 +756,7 @@ export function IntegrationPanel(props: IProps) {
                     className={classes.button}
                     disabled={
                       syncing.current ||
-                      !online ||
+                      !connected ||
                       !hasPtProj ||
                       !hasParatext ||
                       !hasPermission ||

@@ -32,5 +32,6 @@ declare module 'reactn/default' {
     fingerprint: string;
     orbitRetries: number;
     enableOffsite: boolean;
+    connected: boolean;
   }
 }

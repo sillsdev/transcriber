@@ -133,6 +133,7 @@ Promise.all(promises)
       fingerprint: promResults[0][0],
       orbitRetries: OrbitNetworkErrorRetries,
       enableOffsite: false,
+      connected: true,
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })
