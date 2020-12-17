@@ -6,16 +6,20 @@ import MemorySource from '@orbit/memory';
 import { remoteIdGuid, remoteId } from '../../crud';
 import { dataPath, PathType } from '../../utils/dataPath';
 import { MediaFile } from '../../model';
+import { infoMsg, logError, Severity } from '../../utils';
 
 export const fetchMediaUrl = (
   id: string,
   memory: MemorySource,
   offline: boolean,
-  auth: Auth
+  auth: Auth,
+  reporter?: any
 ) => (dispatch: any) => {
   dispatch({ type: type.FETCH_AUDIO_URL_PENDING });
   if (isElectron) {
+    logError(Severity.info, reporter, `fetchMediaUrl`);
     if (!isNaN(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
+    logError(Severity.info, reporter, `id=${id}`);
     try {
       var mediarec = memory.cache.query((q) =>
         q.findRecord({
@@ -23,7 +27,13 @@ export const fetchMediaUrl = (
           id: id,
         })
       ) as MediaFile;
+      logError(Severity.info, reporter, `mediaRec=${JSON.stringify(mediarec)}`);
       if (mediarec && mediarec.attributes) {
+        logError(
+          Severity.info,
+          reporter,
+          `fetching=${dataPath(mediarec.attributes.audioUrl, PathType.MEDIA)}`
+        );
         dispatch({
           payload: dataPath(mediarec.attributes.audioUrl, PathType.MEDIA),
           type: type.FETCH_AUDIO_URL,
@@ -32,6 +42,7 @@ export const fetchMediaUrl = (
     } catch (ex) {
       //we don't have it in our keymap?
       console.log(ex);
+      logError(Severity.error, reporter, infoMsg(ex, ''));
     }
   } else {
     if (isNaN(Number(id))) id = remoteId('mediafile', id, memory.keyMap);

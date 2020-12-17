@@ -67,6 +67,7 @@ import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
+import { logError, Severity } from '../utils';
 
 const ActionHeight = 52;
 
@@ -241,6 +242,7 @@ export function TranscriptionTab(props: IProps) {
   const { getOrganizedBy } = useOrganizedBy();
   const [fingerprint] = useGlobal('fingerprint');
   const getOfflineProject = useOfflnProjRead();
+  const [globalStore] = useGlobal();
 
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
@@ -385,10 +387,20 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleEaf = (passageId: string) => () => {
+    logError(Severity.info, globalStore.errorReporter, 'handleEaf');
     const mediaRec = getMediaRec(passageId, memory);
+    logError(
+      Severity.info,
+      globalStore.errorReporter,
+      `mediaRec=` + JSON.stringify(mediaRec)
+    );
     if (!mediaRec) return;
-    const eafCode = btoa(getMediaEaf(mediaRec, memory));
+    const eafCode = btoa(
+      getMediaEaf(mediaRec, memory, globalStore.errorReporter)
+    );
+    logError(Severity.info, globalStore.errorReporter, `eafCode=${eafCode}`);
     const name = getMediaName(mediaRec, memory);
+    logError(Severity.info, globalStore.errorReporter, `name=${name}`);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
     handleAudioFn(passageId);
@@ -396,18 +408,25 @@ export function TranscriptionTab(props: IProps) {
 
   const handleAudio = (passageId: string) => () => handleAudioFn(passageId);
   const handleAudioFn = (passageId: string) => {
+    logError(Severity.info, globalStore.errorReporter, `handleAudioFn`);
     const mediaRec = getMediaRec(passageId, memory);
     const id = remoteId(
       'mediafile',
       mediaRec ? mediaRec.id : '',
       memory.keyMap
     );
+    logError(Severity.info, globalStore.errorReporter, `rem Media Id=${id}`);
     const name = getMediaName(mediaRec, memory);
-    fetchMediaUrl(id, memory, offline, auth);
+    fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
     setAudName(name);
   };
 
   useEffect(() => {
+    logError(
+      Severity.info,
+      globalStore.errorReporter,
+      `dataName=${dataName}, dataUrl=${dataUrl}, eafAnchor=${eafAnchor?.current}`
+    );
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
         eafAnchor.current.click();
@@ -415,6 +434,7 @@ export function TranscriptionTab(props: IProps) {
         setDataName('');
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataUrl, dataName, eafAnchor]);
 
   useEffect(() => {
@@ -459,6 +479,11 @@ export function TranscriptionTab(props: IProps) {
   }, [exportStatus]);
 
   useEffect(() => {
+    logError(
+      Severity.info,
+      globalStore.errorReporter,
+      `audName=${audName}, audUrl=${audUrl}, audAnchor=${audAnchor?.current}`
+    );
     if (audUrl && audName !== '') {
       if (audAnchor && audAnchor.current) {
         audAnchor.current.click();
@@ -466,13 +491,21 @@ export function TranscriptionTab(props: IProps) {
         setAudName('');
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audUrl, audName, audAnchor]);
 
   useEffect(() => {
+    logError(
+      Severity.info,
+      globalStore.errorReporter,
+      `audName=${audName}, audUrl=${audUrl} mediaUrl=${mediaUrl}`
+    );
     if (audName !== '' && !audUrl) setAudUrl(mediaUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasUrl, mediaUrl, audName, audUrl]);
 
   useEffect(() => {
+    logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
     if (planColumn) {
       if (defaultHiddenColumnNames.length > 0)
         //assume planName is only one
