@@ -261,14 +261,6 @@ export const Sources = async (
       }
     }
   }
-  /* set the user from the token - must be done after the backup is loaded */
-  if (!offline) {
-    var tr = await remote.pull((q) => q.findRecords('currentuser'));
-    const user = (tr[0].operations[0] as any).record;
-    localStorage.setItem('user-id', user.id);
-  }
-  setUser(localStorage.getItem('user-id') as string);
-
   var syncBuffer: Buffer | undefined = undefined;
   var syncFile = '';
   if (!offline && isElectron) {
@@ -293,5 +285,12 @@ export const Sources = async (
       syncFile = fr.data.attributes.message;
     }
   }
+  /* set the user from the token - must be done after the backup is loaded and after changes to offline are recorded */
+  if (!offline) {
+    var tr = await remote.pull((q) => q.findRecords('currentuser'));
+    const user = (tr[0].operations[0] as any).record;
+    localStorage.setItem('user-id', user.id);
+  }
+  setUser(localStorage.getItem('user-id') as string);
   return { syncBuffer, syncFile, goRemote };
 };
