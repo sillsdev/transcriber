@@ -29,7 +29,14 @@ import {
   LocalKey,
   currentDateTime,
 } from '../utils';
-import { related, GetUser, LoadData, remoteIdGuid, usePlan } from '../crud';
+import {
+  related,
+  GetUser,
+  LoadData,
+  remoteIdGuid,
+  usePlan,
+  useLoadProjectData,
+} from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
 import AppHead from '../components/App/AppHead';
@@ -131,6 +138,7 @@ export function Loading(props: IProps) {
   const [doSync, setDoSync] = useState(false);
   const [syncComplete, setSyncComplete] = useState(false);
   const [, setBusy] = useGlobal('importexportBusy');
+  const LoadProjData = useLoadProjectData(auth, t, doOrbitError);
   const [view, setView] = useState('');
 
   //remote is passed in because it wasn't always available in global
@@ -258,13 +266,17 @@ export function Loading(props: IProps) {
     }
     let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
-    if (fromUrl && offline) {
+    if (fromUrl) {
       const m = /^\/[workplan]+\/([0-9]+)/.exec(fromUrl);
       if (m) {
         const planId = remoteIdGuid('plan', m[1], memory.keyMap);
         const planRec = getPlan(planId);
-        const oProjRec = planRec && getOfflineProject(planRec);
-        if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
+        if (offline) {
+          const oProjRec = planRec && getOfflineProject(planRec);
+          if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
+        } else {
+          LoadProjData(related(planRec, 'project'));
+        }
       }
     }
     push(fromUrl || '/team');

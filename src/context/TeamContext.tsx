@@ -29,11 +29,9 @@ import { isElectron } from '../api-variable';
 import { OptionType } from '../model';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { Online } from '../utils';
 import localStrings from '../selector/localize';
 import {
   related,
-  LoadProjectData,
   useFlatAdd,
   useVProjectCreate,
   useVProjectRead,
@@ -50,10 +48,9 @@ import {
   allUsersRec,
   getRoleId,
   useOfflnProjRead,
+  useLoadProjectData,
 } from '../crud';
-import { useProjectsLoaded } from '../utils';
 import Auth from '../auth/Auth';
-import { useSnackBar } from '../hoc/SnackBar';
 
 export type TeamIdType = Organization | null;
 
@@ -209,21 +206,16 @@ const TeamProvider = withData(mapRecordsToProps)(
       doOrbitError,
     } = props;
     const [isOffline] = useGlobal('offline');
-    const [, setBusy] = useGlobal('importexportBusy');
 
     // const [orgRole, setOrgRole] = useGlobal('orgRole');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
-    const [coordinator] = useGlobal('coordinator');
     const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
     const [offline] = useGlobal('offline');
-    const [projectsLoaded] = useGlobal('projectsLoaded');
-    const [, setConnected] = useGlobal('connected');
     const [userProjects, setUserProjects] = useState(projects);
     const [userOrgs, setUserOrgs] = useState(organizations);
-    const { showMessage } = useSnackBar();
     const [importOpen, setImportOpen] = useState(false);
     const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
@@ -249,10 +241,10 @@ const TeamProvider = withData(mapRecordsToProps)(
     const getTeamId = useNewTeamId({ ...props });
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
-    const AddProjectLoaded = useProjectsLoaded();
     const oProjRead = useOfflnProjRead();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { getPlan } = usePlan();
+    const LoadData = useLoadProjectData(auth, t, doOrbitError);
 
     const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');
@@ -278,27 +270,10 @@ const TeamProvider = withData(mapRecordsToProps)(
       cb: (() => void) | undefined = undefined
     ) => {
       const [projectId] = setProjectParams(plan);
-
-      Online((online) => {
-        setConnected(online);
-        LoadProjectData(
-          projectId,
-          coordinator,
-          online && !isOffline,
-          projectsLoaded,
-          AddProjectLoaded,
-          setBusy,
-          doOrbitError
-        )
-          .then(() => {
-            if (!cb) setMyProjRole(projectId);
-            else cb();
-          })
-          .catch((err: Error) => {
-            if (!online) showMessage(t.NoLoadOffline);
-            else showMessage(err.message);
-          });
-      }, auth);
+      LoadData(projectId, () => {
+        if (!cb) setMyProjRole(projectId);
+        else cb();
+      });
     };
 
     const isOwner = (plan: Plan) => {
