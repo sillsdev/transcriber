@@ -30,8 +30,6 @@ enum Steps {
 
 interface IStateProps {
   t: ITranscriptionTabStrings;
-  hasUrl: boolean;
-  mediaUrl: string;
   exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
 }
@@ -39,8 +37,6 @@ interface IStateProps {
 interface IDispatchProps {
   exportProject: typeof actions.exportProject;
   exportComplete: typeof actions.exportComplete;
-  importComplete: typeof actions.importComplete;
-  orbitError: typeof actions.doOrbitError;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -193,8 +189,6 @@ export const ProjectDownload = (props: IProps) => {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
   exportFile: state.importexport.exportFile,
   exportStatus: state.importexport.importexportStatus,
 });
@@ -204,8 +198,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
-      importComplete: actions.importComplete,
-      orbitError: actions.doOrbitError,
     },
     dispatch
   ),

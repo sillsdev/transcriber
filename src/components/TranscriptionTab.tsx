@@ -479,30 +479,32 @@ export function TranscriptionTab(props: IProps) {
   }, [exportStatus]);
 
   useEffect(() => {
-    logError(
-      Severity.info,
-      globalStore.errorReporter,
-      `audName=${audName}, audUrl=${audUrl}, audAnchor=${audAnchor?.current}`
-    );
     if (audUrl && audName !== '') {
-      if (audAnchor && audAnchor.current) {
+      if (audAnchor?.current) {
+        logError(
+          Severity.info,
+          globalStore.errorReporter,
+          `audName=${audName}, audUrl=${audUrl}, audAnchor=${audAnchor?.current}`
+        );
         audAnchor.current.click();
         setAudUrl(undefined);
         setAudName('');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audUrl, audName, audAnchor]);
+  }, [audUrl, audName]);
 
   useEffect(() => {
-    logError(
-      Severity.info,
-      globalStore.errorReporter,
-      `audName=${audName}, audUrl=${audUrl} mediaUrl=${mediaUrl}`
-    );
-    if (audName !== '' && !audUrl) setAudUrl(mediaUrl);
+    if (audName !== '' && !audUrl && mediaUrl && mediaUrl !== '') {
+      logError(
+        Severity.info,
+        globalStore.errorReporter,
+        `audName=${audName}, audUrl=${audUrl} mediaUrl=${mediaUrl}`
+      );
+      setAudUrl(mediaUrl);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasUrl, mediaUrl, audName, audUrl]);
+  }, [hasUrl, mediaUrl, audName]);
 
   useEffect(() => {
     logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
