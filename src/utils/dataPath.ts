@@ -41,7 +41,7 @@ export const dataPath = (
           os.homedir(),
           process.env.REACT_APP_OFFLINEDATA,
           type,
-          fileName
+          decodeURIComponent(fileName)
         );
         break;
       case PathType.ZIP:

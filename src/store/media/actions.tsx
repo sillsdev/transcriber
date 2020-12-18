@@ -34,34 +34,37 @@ export const fetchMediaUrl = (
           reporter,
           `fetching=${dataPath(mediarec.attributes.audioUrl, PathType.MEDIA)}`
         );
-        dispatch({
-          payload: dataPath(mediarec.attributes.audioUrl, PathType.MEDIA),
-          type: type.FETCH_AUDIO_URL,
-        });
+        var path = dataPath(mediarec.attributes.audioUrl, PathType.MEDIA);
+        if (!path.startsWith('http')) {
+          dispatch({
+            payload: dataPath(mediarec.attributes.audioUrl, PathType.MEDIA),
+            type: type.FETCH_AUDIO_URL,
+          });
+          return;
+        }
       }
     } catch (ex) {
       //we don't have it in our keymap?
       console.log(ex);
       logError(Severity.error, reporter, infoMsg(ex, ''));
     }
-  } else {
-    if (isNaN(Number(id))) id = remoteId('mediafile', id, memory.keyMap);
-    Axios.get(API_CONFIG.host + '/api/mediafiles/' + id + '/fileurl', {
-      headers: {
-        Authorization: 'Bearer ' + auth.accessToken,
-      },
-    })
-      .then((strings) => {
-        const attr: any = strings.data.data.attributes;
-        dispatch({
-          payload: attr['audio-url'],
-          type: type.FETCH_AUDIO_URL,
-        });
-      })
-      .catch((e) => {
-        console.log('media fetch failure: ' + e.message);
-      });
   }
+  if (isNaN(Number(id))) id = remoteId('mediafile', id, memory.keyMap);
+  Axios.get(API_CONFIG.host + '/api/mediafiles/' + id + '/fileurl', {
+    headers: {
+      Authorization: 'Bearer ' + auth.accessToken,
+    },
+  })
+    .then((strings) => {
+      const attr: any = strings.data.data.attributes;
+      dispatch({
+        payload: attr['audio-url'],
+        type: type.FETCH_AUDIO_URL,
+      });
+    })
+    .catch((e) => {
+      console.log('media fetch failure: ' + e.message);
+    });
 };
 
 export const setTrackedTask = (val: string) => (dispatch: any) => {
