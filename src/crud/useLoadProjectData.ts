@@ -20,7 +20,10 @@ export const useLoadProjectData = (
   const { showMessage } = useSnackBar();
 
   return (projectId: string, cb?: () => void) => {
-    if (projectsLoaded.includes(projectId)) return;
+    if (projectsLoaded.includes(projectId)) {
+      if (cb) cb();
+      return;
+    }
     Online((online) => {
       setConnected(online);
       LoadProjectData(
