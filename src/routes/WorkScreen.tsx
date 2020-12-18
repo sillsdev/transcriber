@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
@@ -62,6 +62,7 @@ interface ParamTypes {
 export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const { auth, t } = props;
   const classes = useStyles();
+  const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
@@ -74,7 +75,7 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
-    setView('admin');
+    setView(`/plan/${prjId}/0`);
   };
 
   const SwitchTo = () => {
@@ -101,9 +102,11 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prjId]);
 
-  if (project === '' && organization !== '')
-    return <StickyRedirect to="/team" />;
-  if (view === 'admin') return <StickyRedirect to={`/plan/${prjId}/0`} />;
+  React.useEffect(() => {
+    if (project === '' && organization !== '') setView('/team');
+  }, [project, organization]);
+
+  if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
     <div className={classes.root}>

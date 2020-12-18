@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { LocalKey, localUserKey } from '../utils';
 import { makeStyles } from '@material-ui/core';
@@ -27,6 +28,7 @@ interface IProps {
 export const TeamScreen = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
+  const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
   const [project, setProject] = useGlobal('project');
   const [projRole, setProjRole] = useGlobal('projRole');
@@ -52,7 +54,9 @@ export const TeamScreen = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [project, projRole, isOffline, plan]);
 
-  if (view !== '') return <StickyRedirect to={view} />;
+  if (view !== '' && view !== pathname) {
+    return <StickyRedirect to={view} />;
+  }
 
   return (
     <div className={classes.root}>

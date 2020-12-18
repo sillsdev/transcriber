@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
@@ -58,6 +58,7 @@ interface ParamTypes {
 export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
   const classes = useStyles();
+  const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
   const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
@@ -69,7 +70,7 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
-    setView('transcribe');
+    setView(`/work/${prjId}`);
   };
 
   const SwitchTo = () => {
@@ -89,9 +90,12 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prjId]);
 
-  if (project === '' && organization !== '')
-    return <StickyRedirect to="/team" />;
-  if (view === 'transcribe') return <StickyRedirect to={`/work/${prjId}`} />;
+  React.useEffect(() => {
+    if (project === '' && organization !== '') setView('/team');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project, organization]);
+
+  if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
     <div className={classes.root}>
