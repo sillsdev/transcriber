@@ -20,13 +20,12 @@ interface IProps extends IStateProps, IDispatchProps {
 export const useNewTeamId = (props: IProps) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
-  const [organization, setOrganization] = useGlobal('organization');
-  const orgRef = React.useRef<string>();
+  const teamRef = React.useRef<string>();
   const orbitTeamCreate = useTeamCreate(props);
   const isPersonal = useIsPersonalTeam();
 
-  const newPersonal = async () => {
-    orgRef.current = undefined;
+  const newPersonal = () => {
+    teamRef.current = undefined;
     const users = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('user')
     ) as User[];
@@ -38,11 +37,17 @@ export const useNewTeamId = (props: IProps) => {
       q.findRecords('organization')
     ) as Organization[];
     const orgRecs = orgs.filter((o) => o.attributes.name === personalOrg);
-    if (orgRecs.length > 0) setOrganization(orgRecs[0].id);
-    else
-      orbitTeamCreate({
-        attributes: { name: personalOrg },
-      } as Organization);
+    if (orgRecs.length > 0) {
+      teamRef.current = orgRecs[0].id;
+    } else
+      orbitTeamCreate(
+        {
+          attributes: { name: personalOrg },
+        } as Organization,
+        (org: string) => {
+          teamRef.current = org;
+        }
+      );
   };
 
   const getPersonalId = () => {
@@ -51,10 +56,6 @@ export const useNewTeamId = (props: IProps) => {
     ) as Organization[]).filter((o) => isPersonal(o.id));
     return teamRecs.length > 0 ? teamRecs[0].id : null;
   };
-
-  React.useEffect(() => {
-    orgRef.current = organization;
-  }, [organization]);
 
   return async (teamIdType: string | undefined) => {
     let teamId: string;
@@ -68,11 +69,11 @@ export const useNewTeamId = (props: IProps) => {
         newPersonal();
         await waitForIt(
           'create new team',
-          () => orgRef.current !== undefined,
+          () => teamRef.current !== undefined,
           () => false,
           100
         );
-        teamId = orgRef.current as string;
+        teamId = teamRef.current as string;
       }
     }
     return teamId;

@@ -26,7 +26,8 @@ export const useTeamCreate = (props: IProps) => {
   const [, setProject] = useGlobal('project');
   const [, setConnected] = useGlobal('connected');
   const { showMessage } = useSnackBar();
-  return (organization: Organization) => {
+
+  return (organization: Organization, cb?: (org: string) => void) => {
     const {
       name,
       description,
@@ -56,7 +57,11 @@ export const useTeamCreate = (props: IProps) => {
         setOrganization,
         setProject,
         doOrbitError,
-      }).catch((err) => offlineError({ ...props, online, showMessage, err }));
+      })
+        .then((org: string) => {
+          if (cb) cb(org);
+        })
+        .catch((err) => offlineError({ ...props, online, showMessage, err }));
     }, props.auth);
   };
 };
