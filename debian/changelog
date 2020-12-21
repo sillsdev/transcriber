@@ -1,3 +1,58 @@
+sil-transcriber (2.10.0.0)  experimental; urgency=high
+
+  * TT-1738 Adjust browser back again (#686)
+  * decode URI for local name (#683)
+      handle fetch audio URL where file is not available off line
+  * update the version number when attaching to passage (#681)
+  * TT-1866 Load Project on deep link (#680)
+  * TT-1870 get latest version based on passage or plan+name if not associated (#678)
+  * TT-1841 Report off line status (#676)
+  * TT-1790 use the local path when available (#675)
+      copy uploaded files to the local path if electron
+  * TT-1827 Confirm Go On line (#674)
+  * TT-1858 On Report an issue, show message if off line (#671)
+      if on line with Electron, launch in browser
+  * handle case where both errors and change report come from syncing local changes (#669)
+      handle multiple change reports
+  * TT-1827 Add Abort Go On line menu item (#666)
+  * TT-1856 when on line use on line Paratext login (#665)
+  * TT-1769 avoid email address overlapping with form
+  * TT-1802 fix order of sections and passages when ten or more (#664)
+  * TT-1850 Remove users with no data from list of off line users (#663)
+  * TT-1505 don't allow name to be email address (#661)
+  * go On line after email verified if desktop (#660)
+  * TT-1821 only show current user`s teams (#659)
+  * TT-1849 Electron Samples (#656)
+  * start save before assign (#655)
+  * only backup off line available projects (#654)
+  * TT-1404 Change not linked message to make it clearer (#652)
+  * TT-1828 launch help on topic locally (#653)
+  * TT-1822 No on line backup since AWS backs up on line projects (#651)
+  * TT-1805 remove Import button from desktop app since it`s automatic (#650)
+  * handle electron Paratext integration (#649)
+  * TT-1842 Only show off line projects if desktop off line (#647)
+  * TT-1831 electron dates (#645)
+  * TT-1832 make avail off line when first loaded (#641)
+  * TT-1832 Make Available Menu Item (#639)
+  * TT-1810 Allow display help topic multiple times
+  * TT-1805 No PTF import when on line
+  * TT-1804 reset busy after sheet save (#638)
+  * TT-1787 Save after upload (#637)
+  * TT-1816 Allow add team from desktop if on line (#636)
+  * TT-1809 Available Off line only in Electron (#634)
+  * TT-1812 and TT-1814 on - off line logic (#635)
+      navigate to email verified screen if necessary
+      improve email verified logic
+  * Remove the word `extension` from product name
+  * only check sync changes for off line projects
+  * TT-1800 off line sync (#630)
+  * Remove separate desktop help
+  * TT-1793 download data so projects can be used off line (#629)
+  * TT-1789 Handle last verse in chapter
+  * log out on exit electron (#625)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 21 Dec 2020 10:23:00 -0600
+
 sil-transcriber (2.9.2.0)  experimental; urgency=high
 
   * TT-1792 Keey deep linking by user
