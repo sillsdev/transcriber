@@ -139,6 +139,8 @@ export function HelpMenu(props: IProps) {
           API_CONFIG.chmHelp
         )}::${topicWin}`;
         launchCmd(target);
+      } else if (topic && !online) {
+        launchCmd(`xchm -c 1 ${path.join(execFolder(), API_CONFIG.chmHelp)}`)
       } else {
         const target = !online
           ? path.join(execFolder(), API_CONFIG.chmHelp)
