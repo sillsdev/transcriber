@@ -25,12 +25,16 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 export const useSnackBar = () => {
   const [message, setMessage] = useGlobal('snackMessage');
+  const [messageText, setMessageText] = useState('');
 
   const showMessage = (msg: string) => {
-    setMessage(<span>{msg}</span>);
+    if (msg !== messageText) {
+      setMessage(<span>{msg}</span>);
+      setMessageText(msg);
+    }
   };
   const showJSXMessage = (msg: JSX.Element) => {
-    setMessage(msg);
+    if (msg !== message) setMessage(msg);
   };
   const showTitledJSXMessage = (title: string, msg: JSX.Element) => {
     setMessage(

@@ -6,13 +6,15 @@ import {
   ORBIT_RETRY,
   RESET_ORBIT_ERROR,
   ORBIT_SAVING,
+  FETCH_ORBIT_DATA_COMPLETE,
 } from './types';
 
 export const orbitCleanState = {
-  loaded: false,
   status: undefined,
   message: '',
   saving: false,
+  retry: 0,
+  fetchResults: undefined
 } as IOrbitState;
 
 export default function (
@@ -23,8 +25,13 @@ export default function (
     case FETCH_ORBIT_DATA:
       return {
         ...state,
-        loaded: true,
+        fetchResults:action.payload,
       };
+    case FETCH_ORBIT_DATA_COMPLETE:
+        return {
+          ...state,
+          fetchResults:undefined,
+        };
     case ORBIT_ERROR:
       const response = action.payload.response as any;
       const url: string = response?.url;

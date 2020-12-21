@@ -1,10 +1,14 @@
-import { Record, RecordIdentity } from '@orbit/data';
+import { Record } from '@orbit/data';
 
+interface ChangeList {
+  type: string;
+  ids: number[];
+}
 export interface DataChange extends Record {
   attributes: {
     querydate: Date;
-    changes: RecordIdentity[][];
-    deleted: RecordIdentity[][];
+    changes: ChangeList[];
+    deleted: ChangeList[];
   };
 }
 export default DataChange;

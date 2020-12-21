@@ -28,6 +28,10 @@ import ExportIcon from '@material-ui/icons/CloudDownload';
 import ReportIcon from '@material-ui/icons/Assessment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterIcon from '@material-ui/icons/FilterList';
+import UncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
+import CheckedIcon from '@material-ui/icons/RadioButtonChecked';
+import { isElectron } from '../../api-variable';
+import { useOfflnProjRead } from '../../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,14 +81,16 @@ interface IStateProps {
 interface IProps extends IStateProps {
   inProject?: boolean;
   isOwner?: boolean;
+  project: string;
   action?: (what: string) => void;
 }
 
 export function ProjectMenu(props: IProps) {
-  const { inProject, action, t, tpb, td, isOwner } = props;
+  const { inProject, action, t, tpb, td, isOwner, project } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const offlineProjectRead = useOfflnProjRead();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -98,6 +104,8 @@ export function ProjectMenu(props: IProps) {
       action(what);
     }
   };
+
+  const offlineProject = offlineProjectRead(project);
 
   return (
     <div>
@@ -124,6 +132,18 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={t.settings} />
           </StyledMenuItem>
         )}
+        {isElectron && !isOffline && (
+          <StyledMenuItem onClick={handle('offlineAvail')}>
+            <ListItemIcon>
+              {offlineProject?.attributes?.offlineAvailable ? (
+                <CheckedIcon />
+              ) : (
+                <UncheckedIcon />
+              )}
+            </ListItemIcon>
+            <ListItemText primary={t.offlineAvail} />
+          </StyledMenuItem>
+        )}
         {/* <StyledMenuItem onClick={handle('sync')} disabled={syncDisable}>
           <ListItemIcon>
             <SyncIcon />
@@ -144,7 +164,7 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.integrations} />
         </StyledMenuItem>
-        {(isOwner || isOffline) && (
+        {isOwner && (!isElectron || isOffline) && (
           <StyledMenuItem onClick={handle('import')}>
             <ListItemIcon>
               <ImportIcon />

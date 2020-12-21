@@ -1,18 +1,18 @@
 import React from 'react';
 import clsx from 'clsx';
 import { useGlobal } from 'reactn';
-import { useParams } from 'react-router-dom';
-import { useStickyRedirect } from '../utils';
+import { useLocation, useParams } from 'react-router-dom';
 import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
 import { TranscriberProvider } from '../context/TranscriberContext';
 import { TaskItemWidth } from '../components/TaskTable';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
+import StickyRedirect from '../components/StickyRedirect';
 import { UnsavedContext } from '../context/UnsavedContext';
 import { useRole, useUrlContext } from '../crud';
 import Auth from '../auth/Auth';
@@ -62,6 +62,7 @@ interface ParamTypes {
 export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const { auth, t } = props;
   const classes = useStyles();
+  const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
@@ -71,11 +72,10 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const { setMyProjRole } = useRole();
   const uctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = uctx.state;
-  const stickyPush = useStickyRedirect();
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
-    setView('admin');
+    setView(`/plan/${prjId}/0`);
   };
 
   const SwitchTo = () => {
@@ -102,8 +102,11 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prjId]);
 
-  if (project === '' && organization !== '') stickyPush('/team');
-  if (view === 'admin') stickyPush(`/plan/${prjId}/0`);
+  React.useEffect(() => {
+    if (project === '' && organization !== '') setView('/team');
+  }, [project, organization]);
+
+  if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
     <div className={classes.root}>

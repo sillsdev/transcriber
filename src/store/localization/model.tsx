@@ -5,7 +5,11 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "accessFirst": string;
     "accessSilTranscriber": string;
     "goOnline": string;
+    "cancel": string;
     "importProject": string;
+    "download": string;
+    "downloadLater": string;
+    "downloadMb": string;
 };
 
 export interface IActivityStateStrings extends Localize.LocalizedStringsMethods {
@@ -71,6 +75,8 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "save": string;
     "sectionStatus": string;
     "settings": string;
+    "offlineAvail": string;
+    "offline": string;
     "sync": string;
     "teamName": string;
     "teamSettings": string;
@@ -153,6 +159,7 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "imported": string;
     "importPending": string;
     "importProject": string;
+    "importSync": string;
     "invalidITF": string;
     "invalidProject": string;
     "locale": string;
@@ -163,6 +170,8 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "passage": string;
     "phone": string;
     "plan": string;
+    "projectDeleted": string;
+    "projectNotFound": string;
     "showHideFilter": string;
     "state": string;
     "timezone": string;
@@ -283,6 +292,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "helpSpreadsheet": string;
     "flatSample": string;
     "hierarchicalSample": string;
+    "reportWhenOnline": string;
     "import": string;
     "integrations": string;
     "inviteError": string;
@@ -406,6 +416,8 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "addOfflineUser": string;
     "cancel": string;
     "checkingParatext": string;
+    "nameNotEmail": string;
+    "notLinked": string;
     "close": string;
     "completeProfile": string;
     "deleteExplained": string;
@@ -572,8 +584,10 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "export": string;
     "exportExplanation": string;
     "exportingProject": string;
+    "downloadingProject": string;
     "exportITFtype": string;
     "exportProject": string;
+    "downloadProject": string;
     "exportPTFtype": string;
     "exportTooLarge": string;
     "exportType": string;

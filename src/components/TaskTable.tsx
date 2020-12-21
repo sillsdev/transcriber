@@ -24,8 +24,11 @@ import Auth from '../auth/Auth';
 import {
   sectionNumber,
   sectionDescription,
+  passageNumber,
   useOrganizedBy,
   usePlan,
+  useOfflnProjRead,
+  useOfflineAvailToggle,
 } from '../crud';
 import { numCompare } from '../utils';
 import { useProjectPlans } from '../crud';
@@ -114,6 +117,7 @@ interface IRow {
   state: string;
   assigned: string;
   mediaRemoteId: string;
+  rowKey: string;
 }
 
 interface IProps {
@@ -139,6 +143,8 @@ export function TaskTable(props: IProps) {
   const [user] = useGlobal('user');
   const [width, setWidth] = useState(window.innerWidth);
   const { getPlanName } = usePlan();
+  const offlineProjectRead = useOfflnProjRead();
+  const offlineAvailableToggle = useOfflineAvailToggle();
   const [planId] = useGlobal('plan');
   const [planName, setPlanName] = useState('');
   const [projectId] = useGlobal('project');
@@ -207,7 +213,9 @@ export function TaskTable(props: IProps) {
   };
 
   const handleProjectMenu = (what: string) => {
-    if (what === 'integration') {
+    if (what === 'offlineAvail') {
+      offlineAvailableToggle(offlineProjectRead(projectId));
+    } else if (what === 'integration') {
       setOpenIntegration(true);
     } else if (what === 'import') {
       setOpenImport(true);
@@ -336,6 +344,9 @@ export function TaskTable(props: IProps) {
       assigned: r.assigned === user ? t.yes : t.no,
       mediaId: r.mediaId,
       mediaRemoteId: r.mediaRemoteId,
+      rowKey:
+        sectionNumber(r.section) +
+        (r.mediaRemoteId ? passageNumber(r.passage) : '   '),
     }));
     setRows(newRows);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -421,6 +432,7 @@ export function TaskTable(props: IProps) {
               action={handleProjectMenu}
               inProject={true}
               isOwner={projRole === 'admin'}
+              project={projectId}
             />
             {filter && (
               <IconButton onClick={handleToggleFilter}>
@@ -434,7 +446,7 @@ export function TaskTable(props: IProps) {
             dataCell={Cell}
             sorting={[
               { columnName: 'plan', direction: 'asc' },
-              { columnName: 'sectPass', direction: 'asc' },
+              { columnName: 'rowKey', direction: 'asc' },
             ]}
             sortingEnabled={sortingEnabled}
             defaultGrouping={defaultGrouping}

@@ -1,7 +1,7 @@
-import React from 'react';
-import { useGlobal } from 'reactn';
+import React, { useMemo } from 'react';
+import { useEffect, useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMainStrings } from '../model';
+import { IState, IMainStrings, User } from '../model';
 import localStrings from '../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
@@ -18,7 +18,9 @@ import AccountIcon from '@material-ui/icons/AccountCircle';
 import ClearIcon from '@material-ui/icons/Clear';
 import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
-import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { QueryBuilder } from '@orbit/data';
+import { withData } from 'react-orbitjs';
 
 const StyledMenu = withStyles({
   paper: {
@@ -59,28 +61,44 @@ const roleStyle = {
 interface IStateProps {
   t: IMainStrings;
 }
-
-interface IProps extends IStateProps {
+interface IRecordProps {
+  users: Array<User>;
+}
+interface IProps extends IStateProps, IRecordProps {
   action: (what: string) => void;
 }
 
 export function UserMenu(props: IProps) {
-  const { action, t } = props;
+  const { action, t, users } = props;
   const [projRole] = useGlobal('projRole');
   const [developer] = useGlobal('developer');
-  const history = useHistory();
+  const [user] = useGlobal('user');
+  const { pathname } = useLocation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
+  const [userRec, setUserRec] = React.useState<User | undefined>(undefined);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setShift(event.shiftKey);
     setAnchorEl(event.currentTarget);
   };
 
+  useEffect(() => {
+    const userRecs = users.filter((u) => u.id === user) as User[];
+    const newRec = userRecs.length > 0 ? userRecs[0] : undefined;
+    if (userRec !== newRec) {
+      // console.log('setting userRec', userRec, 'to', newRec);
+      setUserRec(newRec);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, users, userRec]);
+
   const handleAction = (what: string) => () => {
     setAnchorEl(null);
     if (action) action(what);
   };
+
+  const isProfile = useMemo(() => /\/profile/i.test(pathname), [pathname]);
 
   return (
     <div>
@@ -89,7 +107,7 @@ export function UserMenu(props: IProps) {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <UserAvatar />
+        <UserAvatar userRec={userRec} />
       </Button>
       <StyledMenu
         id="custom-user-menu"
@@ -113,7 +131,7 @@ export function UserMenu(props: IProps) {
             />
           </StyledMenuItem>
         )}
-        {history.location.pathname.toLowerCase() !== '/profile' && (
+        {!isProfile && (
           <StyledMenuItem onClick={handleAction('Profile')}>
             <ListItemIcon>
               <AccountIcon fontSize="small" />
@@ -160,4 +178,9 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
 });
 
-export default connect(mapStateToProps)(UserMenu) as any;
+const mapRecordsToProps = {
+  users: (q: QueryBuilder) => q.findRecords('user'),
+};
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps)(UserMenu) as any
+) as any;

@@ -19,6 +19,7 @@ import {
   BookName,
   Project,
   ISharedStrings,
+  ExportType,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -64,7 +65,9 @@ import {
 } from '../crud';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
-import { isElectron } from '../api-variable';
+import { useOfflnProjRead } from '../crud/useOfflnProjRead';
+import IndexedDBSource from '@orbit/indexeddb';
+import { logError, Severity } from '../utils';
 
 const ActionHeight = 52;
 
@@ -214,7 +217,9 @@ export function TranscriptionTab(props: IProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [plan, setPlan] = useGlobal('plan');
+  const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   const [offline] = useGlobal('offline');
   const [errorReporter] = useGlobal('errorReporter');
   const [lang] = useGlobal('lang');
@@ -235,6 +240,9 @@ export function TranscriptionTab(props: IProps) {
   const [user] = useGlobal('user');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
   const { getOrganizedBy } = useOrganizedBy();
+  const [fingerprint] = useGlobal('fingerprint');
+  const getOfflineProject = useOfflnProjRead();
+  const [globalStore] = useGlobal();
 
   const columnDefs = [
     { name: 'name', title: getOrganizedBy(true) },
@@ -269,7 +277,7 @@ export function TranscriptionTab(props: IProps) {
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
-  const doProjectExport = (exportType: string) => {
+  const doProjectExport = (exportType: ExportType) => {
     setBusy(true);
 
     const mediaFiles = memory.cache.query((q: QueryBuilder) =>
@@ -287,17 +295,20 @@ export function TranscriptionTab(props: IProps) {
     exportProject(
       exportType,
       memory,
+      backup,
       remoteIdNum('project', project, memory.keyMap),
+      fingerprint,
       remoteIdNum('user', user, memory.keyMap),
       media.length,
       auth,
       errorReporter,
-      t.exportingProject
+      t.exportingProject,
+      getOfflineProject
     );
   };
   const handleProjectExport = () => {
     if (offline) setOpenExport(true);
-    else doProjectExport('ptf');
+    else doProjectExport(ExportType.PTF);
   };
 
   const getTranscription = (passageId: string) => {
@@ -356,7 +367,7 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleBackup = () => {
-    doProjectExport('zip');
+    doProjectExport(ExportType.FULLBACKUP);
   };
 
   const handleSelect = (passageId: string) => () => {
@@ -376,10 +387,20 @@ export function TranscriptionTab(props: IProps) {
   };
 
   const handleEaf = (passageId: string) => () => {
+    logError(Severity.info, globalStore.errorReporter, 'handleEaf');
     const mediaRec = getMediaRec(passageId, memory);
+    logError(
+      Severity.info,
+      globalStore.errorReporter,
+      `mediaRec=` + JSON.stringify(mediaRec)
+    );
     if (!mediaRec) return;
-    const eafCode = btoa(getMediaEaf(mediaRec, memory));
+    const eafCode = btoa(
+      getMediaEaf(mediaRec, memory, globalStore.errorReporter)
+    );
+    logError(Severity.info, globalStore.errorReporter, `eafCode=${eafCode}`);
     const name = getMediaName(mediaRec, memory);
+    logError(Severity.info, globalStore.errorReporter, `name=${name}`);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
     handleAudioFn(passageId);
@@ -387,18 +408,25 @@ export function TranscriptionTab(props: IProps) {
 
   const handleAudio = (passageId: string) => () => handleAudioFn(passageId);
   const handleAudioFn = (passageId: string) => {
+    logError(Severity.info, globalStore.errorReporter, `handleAudioFn`);
     const mediaRec = getMediaRec(passageId, memory);
     const id = remoteId(
       'mediafile',
       mediaRec ? mediaRec.id : '',
       memory.keyMap
     );
+    logError(Severity.info, globalStore.errorReporter, `rem Media Id=${id}`);
     const name = getMediaName(mediaRec, memory);
-    fetchMediaUrl(id, memory, offline, auth);
+    fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
     setAudName(name);
   };
 
   useEffect(() => {
+    logError(
+      Severity.info,
+      globalStore.errorReporter,
+      `dataName=${dataName}, dataUrl=${dataUrl}, eafAnchor=${eafAnchor?.current}`
+    );
     if (dataUrl && dataName !== '') {
       if (eafAnchor && eafAnchor.current) {
         eafAnchor.current.click();
@@ -406,6 +434,7 @@ export function TranscriptionTab(props: IProps) {
         setDataName('');
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataUrl, dataName, eafAnchor]);
 
   useEffect(() => {
@@ -451,19 +480,34 @@ export function TranscriptionTab(props: IProps) {
 
   useEffect(() => {
     if (audUrl && audName !== '') {
-      if (audAnchor && audAnchor.current) {
+      if (audAnchor?.current) {
+        logError(
+          Severity.info,
+          globalStore.errorReporter,
+          `audName=${audName}, audUrl=${audUrl}, audAnchor=${audAnchor?.current}`
+        );
         audAnchor.current.click();
         setAudUrl(undefined);
         setAudName('');
       }
     }
-  }, [audUrl, audName, audAnchor]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [audUrl, audName]);
 
   useEffect(() => {
-    if (audName !== '' && !audUrl) setAudUrl(mediaUrl);
-  }, [hasUrl, mediaUrl, audName, audUrl]);
+    if (audName !== '' && !audUrl && mediaUrl && mediaUrl !== '') {
+      logError(
+        Severity.info,
+        globalStore.errorReporter,
+        `audName=${audName}, audUrl=${audUrl} mediaUrl=${mediaUrl}`
+      );
+      setAudUrl(mediaUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasUrl, mediaUrl, audName]);
 
   useEffect(() => {
+    logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
     if (planColumn) {
       if (defaultHiddenColumnNames.length > 0)
         //assume planName is only one
@@ -642,11 +686,11 @@ export function TranscriptionTab(props: IProps) {
   const WhichExportDlg = () => {
     const doPTF = () => {
       setOpenExport(false);
-      doProjectExport('ptf');
+      doProjectExport(ExportType.PTF);
     };
     const doITF = () => {
       setOpenExport(false);
-      doProjectExport('itf');
+      doProjectExport(ExportType.ITF);
     };
     const closeNoChoice = () => {
       setOpenExport(false);
@@ -716,7 +760,7 @@ export function TranscriptionTab(props: IProps) {
             >
               {t.copyTranscriptions}
             </Button>
-            {planColumn && isElectron && projects.length > 1 && (
+            {planColumn && offline && projects.length > 1 && (
               <Button
                 key="backup"
                 aria-label={t.electronBackup}

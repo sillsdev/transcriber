@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import Auth from '../auth/Auth';
-import jwtDecode from 'jwt-decode';
 import { Redirect, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -11,6 +10,7 @@ import {
   Invitation,
   User,
   ISharedStrings,
+  IFetchResults,
 } from '../model';
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
@@ -18,18 +18,31 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Typography, Paper, LinearProgress } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
+import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
+import IndexedDBSource from '@orbit/indexeddb';
 import {
   uiLang,
   uiLangDev,
   localeDefault,
   localUserKey,
   LocalKey,
+  currentDateTime,
 } from '../utils';
-import { related, GetUser } from '../crud';
+import {
+  related,
+  GetUser,
+  LoadData,
+  remoteIdGuid,
+  usePlan,
+  useLoadProjectData,
+} from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
-import { API_CONFIG } from '../api-variable';
-import { AppHead } from '../components/App/AppHead';
+import { API_CONFIG, isElectron } from '../api-variable';
+import AppHead from '../components/App/AppHead';
+import { useOfflnProjRead } from '../crud/useOfflnProjRead';
+import ImportTab from '../components/ImportTab';
+import jwtDecode from 'jwt-decode';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -75,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IStateProps {
   t: IMainStrings;
   ts: ISharedStrings;
-  orbitLoaded: boolean;
+  orbitFetchResults: IFetchResults | undefined;
 }
 
 interface IDispatchProps {
@@ -84,6 +97,7 @@ interface IDispatchProps {
   fetchOrbitData: typeof action.fetchOrbitData;
   setExpireAt: typeof action.setExpireAt;
   doOrbitError: typeof action.doOrbitError;
+  orbitComplete: typeof action.orbitComplete;
 }
 
 interface IProps extends IStateProps, IDispatchProps {
@@ -91,26 +105,41 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export function Loading(props: IProps) {
-  const { orbitLoaded, auth, setExpireAt, t } = props;
+  const { orbitFetchResults, auth, t } = props;
   const classes = useStyles();
-  const { fetchOrbitData, fetchLocalization, setLanguage } = props;
+  const {
+    fetchOrbitData,
+    orbitComplete,
+    doOrbitError,
+    fetchLocalization,
+    setLanguage,
+    setExpireAt,
+  } = props;
   const [coordinator] = useGlobal('coordinator');
-  const [memory] = useGlobal('memory');
+  const memory = coordinator.getSource('memory') as Memory;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [offline] = useGlobal('offline');
-  const [, setBucket] = useGlobal('bucket');
-  const [, setRemote] = useGlobal('remote');
-  const [, setFingerprint] = useGlobal('fingerprint');
+  const [fingerprint] = useGlobal('fingerprint');
   const [user, setUser] = useGlobal('user');
   const [, setOrganization] = useGlobal('organization');
   const [globalStore] = useGlobal();
   const [, setOrbitRetries] = useGlobal('orbitRetries');
   const [, setProjectsLoaded] = useGlobal('projectsLoaded');
-  const [, setCoordinatorActivated] = useGlobal('coordinatorActivated');
+  const [, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [completed, setCompleted] = useState(0);
   const { showMessage } = useSnackBar();
   const { push } = useHistory();
+  const getOfflineProject = useOfflnProjRead();
+  const { getPlan } = usePlan();
+  const [importOpen, setImportOpen] = useState(false);
+  const [doSync, setDoSync] = useState(false);
+  const [syncComplete, setSyncComplete] = useState(false);
+  const [, setBusy] = useGlobal('importexportBusy');
+  const LoadProjData = useLoadProjectData(auth, t, doOrbitError);
+  const [view, setView] = useState('');
 
   //remote is passed in because it wasn't always available in global
   const InviteUser = async (newremote: JSONAPISource, userEmail: string) => {
@@ -171,49 +200,60 @@ export function Loading(props: IProps) {
 
   useEffect(() => {
     if (!offline && !auth?.isAuthenticated()) return;
+    if (!offline) {
+      const decodedToken: any = jwtDecode(auth.getAccessToken());
+      setExpireAt(decodedToken.exp);
+    }
     setLanguage(localeDefault(isDeveloper));
     localStorage.removeItem('inviteError');
     fetchLocalization();
     fetchOrbitData(
       coordinator,
-      memory,
       auth,
+      fingerprint,
       setUser,
-      setBucket,
-      setRemote,
-      setFingerprint,
-      setCompleted,
       setProjectsLoaded,
-      setCoordinatorActivated,
-      InviteUser,
       setOrbitRetries,
-      globalStore
+      globalStore,
+      getOfflineProject
     );
-    if (!offline) {
-      const decodedToken: any = jwtDecode(auth.getAccessToken());
-      setExpireAt(decodedToken.exp);
-    }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
   useEffect(() => {
-    if (orbitLoaded && completed === 90) {
-      if (user && user !== '') {
-        const userRec: User = GetUser(memory, user);
-        if (userRec.attributes === null) {
-          console.log('No user information.  Never expect to get here.');
-        }
-        const locale = userRec.attributes?.locale || 'en';
-        if (locale) setLanguage(locale);
-        setCompleted(100);
+    if (orbitFetchResults) {
+      //fetchOrbitData is complete
+
+      //set user language
+      const userRec: User = GetUser(memory, user);
+      if (userRec.attributes === null) {
+        console.log('No user information.  Never expect to get here.');
+      }
+      const locale = userRec.attributes?.locale || 'en';
+      if (locale) setLanguage(locale);
+
+      if (orbitFetchResults?.syncBuffer) {
+        setImportOpen(true);
+        setDoSync(true);
+      } else {
+        setSyncComplete(true);
       }
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [completed, user]);
+  }, [orbitFetchResults, memory, setLanguage, user]);
 
-  if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
+  useEffect(() => {
+    if (!importOpen && doSync) {
+      //import dialog has been closed
+      setDoSync(false);
+      setSyncComplete(true);
+      setBusy(false);
+    }
+  }, [doSync, importOpen, setBusy]);
 
-  if (orbitLoaded && completed === 100) {
+  const LoadComplete = () => {
+    setCompleted(100);
+    setLoadComplete(true);
+    orbitComplete();
     const userRec: User = GetUser(memory, user);
     if (
       !userRec?.attributes?.givenName ||
@@ -221,12 +261,65 @@ export function Loading(props: IProps) {
       !userRec?.attributes?.locale ||
       !uiLanguages.includes(userRec?.attributes?.locale)
     ) {
-      return <Redirect to="/profile" />;
+      setView('/profile');
+      return;
     }
     let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
+    if (fromUrl) {
+      const m = /^\/[workplan]+\/([0-9]+)/.exec(fromUrl);
+      if (m) {
+        const planId = remoteIdGuid('plan', m[1], memory.keyMap);
+        const planRec = getPlan(planId);
+        if (offline) {
+          const oProjRec = planRec && getOfflineProject(planRec);
+          if (!oProjRec?.attributes?.offlineAvailable) fromUrl = null;
+        } else {
+          LoadProjData(related(planRec, 'project'));
+        }
+      }
+    }
     push(fromUrl || '/team');
-  }
+  };
+
+  useEffect(() => {
+    const finishRemoteLoad = () => {
+      remote
+        .pull((q) => q.findRecords('currentuser'))
+        .then((tr) => {
+          const user = (tr[0].operations[0] as any).record;
+          InviteUser(remote, user?.attributes?.email || 'neverhere').then(
+            () => {
+              setCompleted(10);
+              LoadData(coordinator, setCompleted, doOrbitError).then(() => {
+                LoadComplete();
+              });
+            }
+          );
+        });
+    };
+    //sync was either not needed, or is done
+    if (syncComplete && orbitFetchResults) {
+      if (orbitFetchResults.goRemote) {
+        localStorage.setItem(
+          localUserKey(LocalKey.time, memory),
+          currentDateTime()
+        );
+        if (isElectron) finishRemoteLoad();
+        else
+          backup.reset().then(() => {
+            setProjectsLoaded([]);
+            finishRemoteLoad();
+          });
+      } else {
+        LoadComplete();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [syncComplete, orbitFetchResults]);
+
+  if (!offline && !auth?.isAuthenticated()) return <Redirect to="/" />;
+  if (view !== '') return <Redirect to={view} />;
 
   return (
     <div className={classes.root}>
@@ -242,6 +335,15 @@ export function Loading(props: IProps) {
               {t.loadingTranscriber.replace('{0}', API_CONFIG.productName)}
             </Typography>
           </div>
+          {isElectron && importOpen && (
+            <ImportTab
+              syncBuffer={orbitFetchResults?.syncBuffer}
+              syncFile={orbitFetchResults?.syncFile}
+              auth={auth}
+              isOpen={importOpen}
+              onOpen={setImportOpen}
+            />
+          )}
           <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
@@ -252,7 +354,7 @@ export function Loading(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'main' }),
   ts: localStrings(state, { layout: 'shared' }),
-  orbitLoaded: state.orbit.loaded,
+  orbitFetchResults: state.orbit.fetchResults,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
@@ -263,6 +365,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchOrbitData: action.fetchOrbitData,
       setExpireAt: action.setExpireAt,
       doOrbitError: action.doOrbitError,
+      orbitComplete: action.orbitComplete,
     },
     dispatch
   ),

@@ -1,10 +1,18 @@
 import Memory from '@orbit/memory';
-import {remoteId} from '../crud';
+import { isElectron } from '../api-variable';
+import { remoteId } from '../crud';
 
-export enum LocalKey {time='lastTime', url='fromUrl'}
+export enum LocalKey {
+  time = 'lastTime',
+  url = 'fromUrl',
+}
 
 export const localUserKey = (id: LocalKey, memory: Memory) => {
-  const userId = localStorage.getItem('user-id') || ''
-  const userRemoteId = remoteId('user', userId, memory.keyMap);
+  var userRemoteId: string;
+  if (isElectron && id === LocalKey.time) userRemoteId = 'electron';
+  else {
+    const userId = localStorage.getItem('user-id') || '';
+    userRemoteId = remoteId('user', userId, memory.keyMap);
+  }
   return `${userRemoteId}-${id}`;
-}
+};

@@ -7,7 +7,8 @@ import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { Avatar } from '@material-ui/core';
 import { makeAbbr } from '../utils';
-import { dataPath } from '../utils/dataPath';
+import { dataPath, PathType } from '../utils/dataPath';
+import { remoteId } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -37,6 +38,7 @@ export function UserAvatar(props: IProps) {
   const { userRec, users, small } = props;
   const classes = useStyles();
   const [user] = useGlobal('user');
+  const [memory] = useGlobal('memory');
 
   const curUserRec = userRec
     ? []
@@ -45,12 +47,17 @@ export function UserAvatar(props: IProps) {
     ? userRec
     : curUserRec.length > 0
     ? curUserRec[0]
-    : { attributes: { avatarUrl: null, name: '' } };
+    : { id: '', attributes: { avatarUrl: null, name: '', familyName: '' } };
 
   return curUser.attributes && curUser.attributes.avatarUrl ? (
     <Avatar
       alt={curUser.attributes.name}
-      src={dataPath(curUser.attributes.avatarUrl)}
+      src={dataPath(curUser.attributes.avatarUrl, PathType.AVATARS, {
+        localname:
+          remoteId('user', curUser.id, memory.keyMap) +
+          curUser.attributes.familyName +
+          '.png',
+      })}
       className={small ? classes.small : classes.medium}
     />
   ) : curUser.attributes && curUser.attributes.name !== '' ? (

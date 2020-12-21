@@ -1,18 +1,18 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
-import { useParams } from 'react-router-dom';
-import { useStickyRedirect } from '../utils';
+import { useParams, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../model';
 import { connect } from 'react-redux';
 import localStrings from '../selector/localize';
 import { makeStyles } from '@material-ui/core';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
 import { PlanProvider, PlanContext } from '../context/PlanContext';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useRole } from '../crud';
 import Auth from '../auth/Auth';
 import { UnsavedContext } from '../context/UnsavedContext';
+import StickyRedirect from '../components/StickyRedirect';
 
 const useStyles = makeStyles({
   root: {
@@ -58,6 +58,7 @@ interface ParamTypes {
 export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { t } = props;
   const classes = useStyles();
+  const { pathname } = useLocation();
   const { prjId } = useParams<ParamTypes>();
   const setUrlContext = useUrlContext();
   const uctx = React.useContext(UnsavedContext);
@@ -66,11 +67,10 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { setMyProjRole } = useRole();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
-  const stickyPush = useStickyRedirect();
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
-    setView('transcribe');
+    setView(`/work/${prjId}`);
   };
 
   const SwitchTo = () => {
@@ -90,8 +90,12 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prjId]);
 
-  if (project === '' && organization !== '') stickyPush('/team');
-  if (view === 'transcribe') stickyPush(`/work/${prjId}`);
+  React.useEffect(() => {
+    if (project === '' && organization !== '') setView('/team');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [project, organization]);
+
+  if (view !== '' && view !== pathname) return <StickyRedirect to={view} />;
 
   return (
     <div className={classes.root}>

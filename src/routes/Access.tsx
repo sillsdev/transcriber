@@ -29,13 +29,14 @@ import {
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
-import { related } from '../crud';
+import { related, useOfflnProjRead } from '../crud';
 import { UserAvatar } from '../components/UserAvatar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { isElectron, API_CONFIG } from '../api-variable';
 import ImportTab from '../components/ImportTab';
+import Confirm from '../components/AlertDialog';
 
 const reactStringReplace = require('react-string-replace');
 
@@ -119,6 +120,11 @@ interface IDispatchProps {
 interface IProps extends IRecordProps, IStateProps, IDispatchProps {
   auth: Auth;
 }
+export const goOnline = () => {
+  localStorage.removeItem('auth-id');
+  ipc?.invoke('login');
+  remote?.getCurrentWindow().close();
+};
 
 export function Access(props: IProps) {
   const {
@@ -135,14 +141,18 @@ export function Access(props: IProps) {
   const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
   const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [connected, setConnected] = useGlobal('connected');
   const [importOpen, setImportOpen] = useState(false);
-  const [online, setOnline] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
   const [, setProjRole] = useGlobal('projRole');
   const [, setPlan] = useGlobal('plan');
+  const offlineProjRead = useOfflnProjRead();
+  const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
+    React.MouseEvent<HTMLElement>
+  >();
 
   const handleSelect = (uId: string) => () => {
     const selected = users.filter((u) => u.id === uId);
@@ -157,12 +167,18 @@ export function Access(props: IProps) {
   };
 
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
+    setGoOnlineConfirmation(event);
+  };
+  const handleGoOnlineConfirmed = () => {
     if (isElectron) {
-      if (!event.shiftKey) {
-        ipc?.invoke('login');
-        remote?.getCurrentWindow().close();
+      if (!goOnlineConfirmation?.shiftKey) {
+        goOnline();
       } else ipc?.invoke('logout');
     }
+    setGoOnlineConfirmation(undefined);
+  };
+  const handleGoOnlineRefused = () => {
+    setGoOnlineConfirmation(undefined);
   };
 
   const handleVersionClick = (e: React.MouseEvent) => {
@@ -190,7 +206,11 @@ export function Access(props: IProps) {
       .filter((gm) => related(gm, 'user') === userId)
       .map((gm) => related(gm, 'group'));
     const projIds = projects
-      .filter((p) => grpIds.includes(related(p, 'group')))
+      .filter(
+        (p) =>
+          grpIds.includes(related(p, 'group')) &&
+          offlineProjRead(p.id)?.attributes?.offlineAvailable
+      )
       .map((p) => p.id);
     const planIds = plans
       .filter((p) => projIds.includes(related(p, 'project')))
@@ -205,7 +225,9 @@ export function Access(props: IProps) {
     if (isElectron) persistData();
     setLanguage(localeDefault(isDeveloper));
     fetchLocalization();
-    Online((online) => setOnline(online), auth);
+    Online((connected) => {
+      setConnected(connected);
+    }, auth);
     setOrganization('');
     setProject('');
     setPlan('');
@@ -213,6 +235,7 @@ export function Access(props: IProps) {
 
     if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
+        setConnected(true);
         handleLogin();
       }
     }
@@ -225,17 +248,20 @@ export function Access(props: IProps) {
         if (result) {
           // Even tho async, this executes first b/c users takes time to load
           ipc?.invoke('get-token').then((accessToken) => {
+            setConnected(true);
             if (offline) setOffline(false);
             if (auth) auth.setDesktopSession(result, accessToken);
+            if (selectedUser === '') setSelectedUser('unknownUser');
           });
-          if (result?.sub && auth.accessToken) setSelectedUser('unknownUser');
         }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [users]);
 
-  if (
+  if (auth?.accessToken && !auth?.emailVerified()) {
+    return <Redirect to="/emailunverified" />;
+  } else if (
     (!isElectron && auth?.isAuthenticated()) ||
     (isElectron && selectedUser !== '')
   )
@@ -247,7 +273,7 @@ export function Access(props: IProps) {
         <>
           <Toolbar>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              {process.env.REACT_APP_SITE_TITLE}
+              {API_CONFIG.productName}
             </Typography>
           </Toolbar>
           <div className={classes.grow}>{'\u00A0'}</div>
@@ -270,7 +296,7 @@ export function Access(props: IProps) {
                     t.accessFirst.replace('{0}', API_CONFIG.productName),
                     '{1}',
                     () => {
-                      return online ? (
+                      return connected ? (
                         <Button key="launch" onClick={handleAdmin}>
                           SIL Transcriber
                         </Button>
@@ -283,7 +309,7 @@ export function Access(props: IProps) {
               )}
             </Typography>
             <Grid container direction="row">
-              {!importStatus && users && users.length > 0 && (
+              {importStatus?.complete !== false && users && users.length > 0 && (
                 <Grid item xs={12} md={6}>
                   <div className={classes.actions}>
                     <List>
@@ -323,19 +349,15 @@ export function Access(props: IProps) {
                   >
                     {t.importProject}
                   </Button>
-                  {isDeveloper && (
-                    <>
-                      <p> </p>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        className={classes.button}
-                        onClick={handleGoOnline}
-                      >
-                        {t.goOnline}
-                      </Button>
-                    </>
-                  )}
+                  <p> </p>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={handleGoOnline}
+                  >
+                    {t.goOnline}
+                  </Button>
                 </div>
               </Grid>
             </Grid>
@@ -344,6 +366,14 @@ export function Access(props: IProps) {
             <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
           )}
         </div>
+      )}
+      {isElectron && goOnlineConfirmation && (
+        <Confirm
+          title={t.goOnline}
+          yesResponse={handleGoOnlineConfirmed}
+          noResponse={handleGoOnlineRefused}
+          no={t.cancel}
+        />
       )}
     </div>
   );

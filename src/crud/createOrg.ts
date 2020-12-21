@@ -7,10 +7,9 @@ import { setDefaultProj } from '.';
 import { orbitErr } from '../utils';
 import { IApiError } from '../model';
 
-export const ReloadOrgTables = async (
-  memory: Memory,
-  remote: JSONAPISource
-) => {
+export const ReloadOrgTables = async (coordinator: Coordinator) => {
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   await remote
     .pull((q) => q.findRecords('organization'))
     .then((transform) => memory.sync(transform));
@@ -62,7 +61,7 @@ export const createOrg = async (props: ICreateOrgProps) => {
       doOrbitError(x);
       console.log(err.message);
     });
-  await ReloadOrgTables(memory, remote);
+  await ReloadOrgTables(coordinator);
   setOrganization(orgRec.id);
   setDefaultProj(orgRec.id, memory, setProject);
   return orgRec.id;

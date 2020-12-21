@@ -20,8 +20,15 @@ import ExportTab from '../TranscriptionTab';
 import Visualize from '../Visualize';
 import Confirm from '../AlertDialog';
 import { ProjectDialog, IProjectDialog } from './ProjectDialog';
-import { usePlan, useProjectPlans, useOrganizedBy } from '../../crud';
+import {
+  usePlan,
+  useProjectPlans,
+  useOrganizedBy,
+  useOfflnProjRead,
+  useOfflineAvailToggle,
+} from '../../crud';
 import { localizeProjectTag } from '../../utils/localizeProjectTag';
+import OfflineIcon from '@material-ui/icons/OfflinePin';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,6 +71,10 @@ const useStyles = makeStyles((theme: Theme) =>
     pos: {
       marginBottom: 12,
     },
+    offline: {
+      display: 'flex',
+      color: theme.palette.primary.contrastText,
+    },
   })
 );
 
@@ -97,6 +108,8 @@ export const ProjectCard = (props: IProps) => {
   const [organizedByPlural, setOrganizedByPlural] = useState('');
   const [projectId] = useGlobal('project');
   const projectPlans = useProjectPlans();
+  const offlineProjectRead = useOfflnProjRead();
+  const offlineAvailToggle = useOfflineAvailToggle();
   const [openProject, setOpenProject] = useState(false);
   const [openIntegration, setOpenIntegration] = useState(false);
   const [openExport, setOpenExport] = useState(false);
@@ -137,6 +150,9 @@ export const ProjectCard = (props: IProps) => {
         case 'reports':
           setOpenReports(true);
           break;
+        case 'offlineAvail':
+          offlineAvailToggle(offlineProjectRead(projectId));
+          break;
       }
     });
   };
@@ -155,6 +171,7 @@ export const ProjectCard = (props: IProps) => {
       case 'import':
       case 'export':
       case 'reports':
+      case 'offlineAvail':
         LoadAndGo(what);
     }
     setOpen('');
@@ -251,6 +268,7 @@ export const ProjectCard = (props: IProps) => {
             <ProjectMenu
               action={handleProjectAction}
               isOwner={isOwner(project)}
+              project={project}
             />
           </div>
           <Typography className={classes.pos}>
@@ -273,15 +291,24 @@ export const ProjectCard = (props: IProps) => {
         </CardContent>
         {project?.attributes?.tags && (
           <CardActions>
-            {Object.keys(project?.attributes?.tags)
-              .filter((t) => project?.attributes?.tags[t])
-              .map((t) => (
-                <Chip
-                  key={t}
-                  size="small"
-                  label={localizeProjectTag(t, vProjectStrings)}
-                />
-              ))}
+            <>
+              {offlineProjectRead(project)?.attributes?.offlineAvailable && (
+                <div className={classes.offline}>
+                  <OfflineIcon />
+                  {'\u00A0'}
+                  <Typography>{t.offline}</Typography>
+                </div>
+              )}
+              {Object.keys(project?.attributes?.tags)
+                .filter((t) => project?.attributes?.tags[t])
+                .map((t) => (
+                  <Chip
+                    key={t}
+                    size="small"
+                    label={localizeProjectTag(t, vProjectStrings)}
+                  />
+                ))}
+            </>
           </CardActions>
         )}
       </Card>

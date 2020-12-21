@@ -12,11 +12,16 @@ import {
   GroupMembership,
   Group,
   ProjectIntegration,
+  OfflineProject,
+  VProject,
 } from '../../model';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
-import { JSONAPISerializerSettings, ResourceDocument } from '@orbit/jsonapi';
-import { JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
+import { ResourceDocument } from '@orbit/jsonapi';
+import {
+  getSerializer,
+  JSONAPISerializerCustom,
+} from '../../serializers/JSONAPISerializerCustom';
 import {
   EXPORT_PENDING,
   EXPORT_SUCCESS,
@@ -27,6 +32,7 @@ import {
   IMPORT_ERROR,
   IMPORT_COMPLETE,
   FileResponse,
+  ExportType,
 } from './types';
 import { errStatus, errorStatus } from '../AxiosStatus';
 import Memory from '@orbit/memory';
@@ -35,6 +41,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
 import { remoteIdGuid, related, insertData } from '../../crud';
 import { infoMsg, orbitInfo, logError, Severity } from '../../utils';
+import Coordinator from '@orbit/coordinator';
 
 export const exportComplete = () => (dispatch: any) => {
   dispatch({
@@ -44,30 +51,34 @@ export const exportComplete = () => (dispatch: any) => {
 };
 
 export const exportProject = (
-  exportType: string,
+  exportType: ExportType,
   memory: Memory,
+  backup: IndexedDBSource,
   projectid: number,
+  fingerprint: string,
   userid: number,
   numberOfMedia: number,
   auth: Auth,
   errorReporter: any,
-  pendingmsg: string
+  pendingmsg: string,
+  getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ) => async (dispatch: any) => {
   dispatch({
     payload: pendingmsg.replace('{0}%', ''),
     type: EXPORT_PENDING,
   });
-  if (!auth.accessToken) {
-    // if we have a token we're online
-    const s: JSONAPISerializerSettings = {
-      schema: memory.schema,
-      keyMap: memory.keyMap,
-    };
-    const ser = new JSONAPISerializerCustom(s);
-    ser.resourceKey = () => {
-      return 'remoteId';
-    };
-    electronExport(exportType, memory, projectid, userid, ser)
+  if (!auth.accessToken || exportType === ExportType.ITFSYNC) {
+    // equivalent to offline ie isElectron and not online
+    electronExport(
+      exportType,
+      memory,
+      backup,
+      projectid,
+      fingerprint,
+      userid,
+      getSerializer(memory),
+      getOfflineProject
+    )
       .then((response) => {
         dispatch({
           payload: response,
@@ -147,9 +158,9 @@ export const importComplete = () => (dispatch: any) => {
     type: IMPORT_COMPLETE,
   });
 };
-
-export const importProjectFromElectron = (
-  files: FileList,
+const importFromElectron = (
+  filename: string,
+  file: Blob,
   projectid: number,
   auth: Auth,
   errorReporter: any,
@@ -160,8 +171,7 @@ export const importProjectFromElectron = (
     payload: pendingmsg.replace('{0}', '1'),
     type: IMPORT_PENDING,
   });
-  var url =
-    API_CONFIG.host + '/api/offlineData/project/import/' + files[0].name;
+  var url = API_CONFIG.host + '/api/offlineData/project/import/' + filename;
   Axios.get(url, {
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,
@@ -176,7 +186,7 @@ export const importProjectFromElectron = (
         'Content-Type',
         response.data.data.attributes.contenttype
       );
-      xhr.send(files[0].slice());
+      xhr.send(file.slice());
       xhr.onload = () => {
         if (xhr.status < 300) {
           dispatch({
@@ -184,12 +194,16 @@ export const importProjectFromElectron = (
             type: IMPORT_PENDING,
           });
           /* tell it to process the file now */
-          url =
-            API_CONFIG.host +
-            '/api/offlineData/project/import/' +
-            projectid.toString() +
-            '/' +
-            filename;
+          if (projectid === 0)
+            url = API_CONFIG.host + '/api/offlineData/sync/' + filename;
+          else
+            url =
+              API_CONFIG.host +
+              '/api/offlineData/project/import/' +
+              projectid.toString() +
+              '/' +
+              filename;
+
           Axios.put(url, null, {
             headers: {
               Authorization: 'Bearer ' + auth.accessToken,
@@ -223,7 +237,7 @@ export const importProjectFromElectron = (
           logError(
             Severity.info,
             errorReporter,
-            `upload ${files[0].name}: (${xhr.status}) ${xhr.responseText}`
+            `upload ${filename}: (${xhr.status}) ${xhr.responseText}`
           );
           dispatch({
             payload: errorStatus(xhr.status, xhr.responseText),
@@ -245,11 +259,54 @@ export const importProjectFromElectron = (
     });
 };
 
+export const importSyncFromElectron = (
+  filename: string,
+  file: Buffer,
+  auth: Auth,
+  errorReporter: any,
+  pendingmsg: string,
+  completemsg: string
+) => (dispatch: any) => {
+  console.log('importSyncFromElectron');
+  dispatch(
+    importFromElectron(
+      filename,
+      new Blob([file]),
+      0,
+      auth,
+      errorReporter,
+      pendingmsg,
+      completemsg
+    )
+  );
+};
+
+export const importProjectFromElectron = (
+  files: FileList,
+  projectid: number,
+  auth: Auth,
+  errorReporter: any,
+  pendingmsg: string,
+  completemsg: string
+) => (dispatch: any) => {
+  dispatch(
+    importFromElectron(
+      files[0].name,
+      files[0],
+      projectid,
+      auth,
+      errorReporter,
+      pendingmsg,
+      completemsg
+    )
+  );
+};
+
 export const importProjectToElectron = (
   filepath: string,
-  memory: Memory,
-  backup: IndexedDBSource,
-  coordinatorActivated: boolean,
+  dataDate: string,
+  coordinator: Coordinator,
+  AddProjectLoaded: (project: string) => void,
   orbitError: (ex: IApiError) => void,
   pendingmsg: string,
   completemsg: string,
@@ -258,7 +315,10 @@ export const importProjectToElectron = (
   var tb: TransformBuilder = new TransformBuilder();
   var oparray: Operation[] = [];
 
-  async function removeProject(ser: JSONAPISerializerCustom) {
+  const memory = coordinator.getSource('memory') as Memory;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
+
+  function getProjectFromFile(ser: JSONAPISerializerCustom) {
     var file = path.join(filepath, 'D_projects.json');
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
@@ -275,9 +335,16 @@ export const importProjectToElectron = (
       var rec = memory.cache.query((q) =>
         q.findRecord({ type: project.type, id: id })
       ) as Project;
+      return rec;
     } catch {
-      return;
+      return undefined;
     }
+  }
+  async function removeProject(ser: JSONAPISerializerCustom) {
+    var rec = getProjectFromFile(ser);
+
+    if (!rec) return;
+
     var group = memory.cache.query((q) =>
       q.findRecord({ type: 'group', id: related(rec, 'group') })
     ) as Group;
@@ -306,10 +373,10 @@ export const importProjectToElectron = (
     var projintids = (memory.cache.query((q) =>
       q.findRecords('projectintegration')
     ) as ProjectIntegration[])
-      .filter((pl) => related(pl, 'project') === rec.id)
+      .filter((pl) => related(pl, 'project') === rec?.id)
       .map((pi) => pi.id);
     var planids = (memory.cache.query((q) => q.findRecords('plan')) as Plan[])
-      .filter((pl) => related(pl, 'project') === rec.id)
+      .filter((pl) => related(pl, 'project') === rec?.id)
       .map((pl) => pl.id);
     var sectionids = (memory.cache.query((q) =>
       q.findRecords('section')
@@ -381,7 +448,7 @@ export const importProjectToElectron = (
     }
   }
   async function saveToBackup(oparray: Operation[], title: string) {
-    if (!coordinatorActivated) {
+    if (!coordinator.activated) {
       try {
         return await backup.push(oparray);
       } catch (err) {
@@ -393,15 +460,30 @@ export const importProjectToElectron = (
     return null;
   }
 
-  function processFile(file: string, ser: JSONAPISerializerCustom) {
+  async function processFile(
+    file: string,
+    ser: JSONAPISerializerCustom,
+    dataDate: string
+  ) {
     var data = fs.readFileSync(file);
     var json = ser.deserialize(JSON.parse(data.toString()) as ResourceDocument);
-    if (Array.isArray(json.data))
-      json.data.forEach((item) =>
-        insertData(item, memory, tb, oparray, orbitError, true, true)
+    if (!Array.isArray(json.data)) json.data = [json.data];
+    for (let n = 0; n < json.data.length; n += 1) {
+      const item = json.data[n];
+      await insertData(
+        item,
+        memory,
+        backup,
+        tb,
+        oparray,
+        orbitError,
+        true,
+        true,
+        dataDate
       );
-    else insertData(json.data, memory, tb, oparray, orbitError, true, true);
+    }
   }
+
   if (fs.existsSync(path.join(filepath, 'H_passagesections.json'))) {
     dispatch({
       payload: errorStatus(-1, oldfilemsg),
@@ -420,14 +502,7 @@ export const importProjectToElectron = (
         type: IMPORT_ERROR,
       });
     } else {
-      const s: JSONAPISerializerSettings = {
-        schema: memory.schema,
-        keyMap: memory.keyMap,
-      };
-      const ser = new JSONAPISerializerCustom(s);
-      ser.resourceKey = () => {
-        return 'remoteId';
-      };
+      const ser = getSerializer(memory);
       try {
         //remove all project data
         await removeProject(ser);
@@ -437,7 +512,7 @@ export const importProjectToElectron = (
         });
 
         for (let index = 0; index < files.length; index++) {
-          processFile(path.join(filepath, files[index]), ser);
+          await processFile(path.join(filepath, files[index]), ser, dataDate);
         }
         dispatch({
           payload: pendingmsg.replace('{0}', '25'),
@@ -468,6 +543,8 @@ export const importProjectToElectron = (
           await saveToMemory(oparray, 'remove extra records');
           await saveToBackup(oparray, 'remove extra records from backup');
         }
+        var proj = getProjectFromFile(ser);
+        AddProjectLoaded(proj?.id || '');
         dispatch({
           payload: { status: completemsg, msg: '' },
           type: IMPORT_SUCCESS,

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { IAxiosStatus } from '../store/AxiosStatus';
+import { errorStatus, IAxiosStatus } from '../store/AxiosStatus';
 import {
   Project,
   IImportStrings,
@@ -15,6 +15,8 @@ import {
   ISharedStrings,
   IDialog,
   VProject,
+  localizeActivityState,
+  IActivityStateStrings,
 } from '../model';
 import { WithDataProps, withData } from '../mods/react-orbitjs';
 import Confirm from './AlertDialog';
@@ -34,6 +36,8 @@ import {
 import Auth from '../auth/Auth';
 import localStrings from '../selector/localize';
 import { bindActionCreators } from 'redux';
+import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 import { QueryBuilder, RecordIdentity } from '@orbit/data';
 import { connect } from 'react-redux';
 import * as actions from '../store';
@@ -46,6 +50,7 @@ import {
   passageDescription,
   remoteIdGuid,
   useOrganizedBy,
+  useOfflnProjRead,
 } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
@@ -56,6 +61,7 @@ import { HeadHeight } from '../App';
 
 interface IStateProps {
   t: IImportStrings;
+  ta: IActivityStateStrings;
   ts: ISharedStrings;
   importStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
@@ -64,6 +70,7 @@ interface IStateProps {
 interface IDispatchProps {
   importProjectToElectron: typeof actions.importProjectToElectron;
   importProjectFromElectron: typeof actions.importProjectFromElectron;
+  importSyncFromElectron: typeof actions.importSyncFromElectron;
   importComplete: typeof actions.importComplete;
   orbitError: typeof actions.doOrbitError;
 }
@@ -80,6 +87,8 @@ interface IProps
   auth: Auth;
   project?: string;
   planName?: string;
+  syncBuffer: Buffer | undefined;
+  syncFile: string | undefined;
 }
 export function ImportTab(props: IProps) {
   const {
@@ -87,13 +96,17 @@ export function ImportTab(props: IProps) {
     onOpen,
     project,
     planName,
+    syncBuffer,
+    syncFile,
     t,
+    ta,
     ts,
     auth,
     importComplete,
     importStatus,
     importProjectToElectron,
     importProjectFromElectron,
+    importSyncFromElectron,
     orbitError,
     allBookData,
   } = props;
@@ -107,8 +120,9 @@ export function ImportTab(props: IProps) {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_busy, setBusy] = useGlobal('importexportBusy');
-  const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
 
@@ -120,6 +134,8 @@ export function ImportTab(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const { getOrganizedBy } = useOrganizedBy();
+  const [projectsLoaded] = useGlobal('projectsLoaded');
+  const getOfflineProject = useOfflnProjRead();
   const { handleElectronImport, getElectronImportData } = useElectronImport(
     importComplete
   );
@@ -216,8 +232,10 @@ export function ImportTab(props: IProps) {
 
     setImportTitle('');
     setChangeData([]);
-    if (isElectron) electronImport();
-    else setUploadVisible(true);
+    if (isElectron) {
+      if (syncFile && syncBuffer) uploadSyncITF(syncBuffer, syncFile);
+      else electronImport();
+    } else setUploadVisible(true);
   }, []);
 
   const handleActionConfirmed = () => {
@@ -249,18 +267,56 @@ export function ImportTab(props: IProps) {
     }
     setUploadVisible(false);
   };
+  const uploadSyncITF = (buffer: Buffer, fileName: string) => {
+    setBusy(true);
+    importSyncFromElectron(
+      fileName,
+      buffer,
+      auth,
+      orbitError,
+      t.importPending,
+      t.importComplete
+    );
+  };
 
   const uploadCancel = () => {
     setUploadVisible(false);
     handleClose();
   };
+  function tryParseJSON(jsonString: string) {
+    try {
+      var o = JSON.parse(jsonString);
 
+      // Handle non-exception-throwing cases:
+      // Neither JSON.parse(false) or JSON.parse(1234) throw errors, hence the type-checking,
+      // but... JSON.parse(null) returns null, and typeof null === "object",
+      // so we must check for that, too. Thankfully, null is falsey, so this suffices:
+      if (o && typeof o === 'object') {
+        return o;
+      }
+    } catch (e) {}
+
+    return false;
+  }
   const translateError = (err: IAxiosStatus): string => {
     console.log(err.errMsg);
     switch (err.errStatus) {
+      case 301:
+        return t.projectDeleted.replace('{0}', err.errMsg);
       case 401:
         return t.expiredToken;
+      case 406:
+        return t.projectNotFound.replace('{0}', err.errMsg);
       case 422:
+        var json = tryParseJSON(err.errMsg);
+        if (Array.isArray(json)) {
+          var msg = '';
+          json.forEach((fr) => {
+            var thiserr = errorStatus(fr.Status, fr.Message);
+            msg += translateError(thiserr) + '\n';
+          });
+          return msg;
+        }
         return t.invalidITF + ' ' + err.errMsg;
       case 450:
         return t.invalidProject;
@@ -296,21 +352,20 @@ export function ImportTab(props: IProps) {
     }
     return undefined;
   };
-
-  const getChangeData = (changeReport: string) => {
-    interface IData {
-      data: any;
-    }
-    interface IChanges {
-      type: string;
-      online: IData;
-      imported: IData;
-    }
+  interface IData {
+    data: any;
+  }
+  interface IChanges {
+    type: string;
+    online: IData;
+    imported: IData;
+  }
+  const getChangeData = (changeReport: string | IChanges[]) => {
     if (changeReport === '') return [];
-    var changes = JSON.parse(changeReport);
     var data = [] as IRow[];
-    if (Array.isArray(changes)) {
-      changes.forEach((c: IChanges) => {
+    if (!Array.isArray(changeReport)) changeReport = tryParseJSON(changeReport);
+    if (Array.isArray(changeReport)) {
+      changeReport.forEach((c: IChanges) => {
         var passage;
         var section: Section | undefined;
         var old = '';
@@ -345,8 +400,17 @@ export function ImportTab(props: IProps) {
             section = sectionFromPassage(passage, true);
             if (section)
               plan = planFromSection(section, false)?.attributes.name || '';
-            imported = t.state + ':' + passage.attributes.state;
-            old = t.state + ':' + (c.online.data as Passage).attributes.state;
+            imported =
+              t.state +
+              ':' +
+              localizeActivityState(passage.attributes.state, ta);
+            old =
+              t.state +
+              ':' +
+              localizeActivityState(
+                (c.online.data as Passage).attributes.state,
+                ta
+              );
             break;
           case 'section':
             var oldsection = c.online.data as Section;
@@ -565,23 +629,46 @@ export function ImportTab(props: IProps) {
   useEffect(() => {
     if (importStatus) {
       if (importStatus.errStatus) {
-        setImportTitle(translateError(importStatus));
+        var json = tryParseJSON(importStatus.errMsg);
+        var msg: string;
+        if (json) {
+          msg =
+            translateError(
+              errorStatus(importStatus.errStatus, JSON.stringify(json.errors))
+            ) + '\n';
+          var chdata = getChangeData(json.report);
+          setChangeData([...changeData].concat(chdata));
+          msg += chdata.length > 0 ? t.onlineChangeReport : '\n';
+        } else {
+          msg = translateError(importStatus);
+        }
+        setImportTitle(msg);
         importComplete();
         setBusy(false);
       } else {
         if (importStatus.complete) {
           //import completed ok but might have message
-          var changeReport = importStatus.errMsg;
-          var chdata = getChangeData(changeReport);
-          setChangeData(chdata);
+          chdata = getChangeData(importStatus.errMsg);
+          setChangeData([...changeData].concat(chdata));
           setImportTitle(
             chdata.length > 0 ? t.onlineChangeReport : t.importComplete
           );
           importComplete();
           if (remote)
-            doDataChanges(auth, remote, memory, fingerprint, errorReporter);
+            doDataChanges(
+              auth,
+              coordinator,
+              fingerprint,
+              projectsLoaded,
+              getOfflineProject,
+              errorReporter
+            );
           setBusy(false);
         }
+      }
+    } else {
+      if (syncFile && importTitle === t.importComplete) {
+        handleClose();
       }
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -601,70 +688,76 @@ export function ImportTab(props: IProps) {
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">
-        {t.importProject + ' ' + (planName || '')}
+        {syncBuffer ? t.importSync : t.importProject + ' ' + (planName || '')}
       </DialogTitle>
       <DialogContent>
-        <Typography variant="h5">{importTitle}</Typography>
-        <Typography variant="body1" className={classes.dialogHeader}>
-          {importStatus
-            ? importStatus.statusMsg +
-              (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
-            : ''}
-        </Typography>
-        {changeData.length > 0 && (
-          <div className={classes.actions}>
-            <div className={classes.grow}>{'\u00A0'}</div>
+        <div>
+          <Typography variant="h5">{importTitle}</Typography>
+          <Typography variant="body1" className={classes.dialogHeader}>
+            {importStatus
+              ? importStatus.statusMsg +
+                (importStatus.errMsg !== '' ? ': ' + importStatus.errMsg : '')
+              : ''}
+          </Typography>
+          {changeData.length > 0 && (
+            <div className={classes.actions}>
+              <div className={classes.grow}>{'\u00A0'}</div>
 
-            <Button
-              key="filter"
-              aria-label={t.filter}
-              variant="outlined"
-              color="primary"
-              className={classes.button}
-              onClick={handleFilter}
-              title={t.showHideFilter}
+              <Button
+                key="filter"
+                aria-label={t.filter}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleFilter}
+                title={t.showHideFilter}
+              >
+                {t.filter}
+                {filter ? (
+                  <SelectAllIcon className={classes.icon} />
+                ) : (
+                  <FilterIcon className={classes.icon} />
+                )}
+              </Button>
+            </div>
+          )}
+          {changeData.length > 0 && (
+            <ShapingTable
+              columns={columnDefs}
+              columnWidths={columnWidths}
+              sorting={[
+                { columnName: 'plan', direction: 'asc' },
+                { columnName: 'section', direction: 'asc' },
+              ]}
+              rows={changeData}
+              shaping={filter}
+              hiddenColumnNames={hiddenColumnNames}
+              columnFormatting={columnFormatting}
+            />
+          )}
+          {!importStatus || (
+            <AppBar
+              position="fixed"
+              className={classes.progress}
+              color="inherit"
             >
-              {t.filter}
-              {filter ? (
-                <SelectAllIcon className={classes.icon} />
-              ) : (
-                <FilterIcon className={classes.icon} />
-              )}
-            </Button>
-          </div>
-        )}
-        {changeData.length > 0 && (
-          <ShapingTable
-            columns={columnDefs}
-            columnWidths={columnWidths}
-            sorting={[
-              { columnName: 'plan', direction: 'asc' },
-              { columnName: 'section', direction: 'asc' },
-            ]}
-            rows={changeData}
-            shaping={filter}
-            hiddenColumnNames={hiddenColumnNames}
-            columnFormatting={columnFormatting}
+              <LinearProgress variant="indeterminate" />
+            </AppBar>
+          )}
+          <MediaUpload
+            visible={uploadVisible}
+            uploadType={UploadType.ITF}
+            uploadMethod={uploadITF}
+            cancelMethod={uploadCancel}
           />
-        )}
-        {!importStatus || (
-          <AppBar position="fixed" className={classes.progress} color="inherit">
-            <LinearProgress variant="indeterminate" />
-          </AppBar>
-        )}
-        <MediaUpload
-          visible={uploadVisible}
-          uploadType={UploadType.ITF}
-          uploadMethod={uploadITF}
-          cancelMethod={uploadCancel}
-        />
-        {confirmAction === '' || (
-          <Confirm
-            text={confirmAction + '  ' + t.continue}
-            yesResponse={handleActionConfirmed}
-            noResponse={handleActionRefused}
-          />
-        )}
+          {confirmAction === '' || (
+            <Confirm
+              text={confirmAction + '  ' + t.continue}
+              yesResponse={handleActionConfirmed}
+              noResponse={handleActionRefused}
+            />
+          )}
+        </div>
       </DialogContent>
       <DialogActions className={classes.actions}>
         <Button
@@ -681,6 +774,7 @@ export function ImportTab(props: IProps) {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'import' }),
+  ta: localStrings(state, { layout: 'activityState' }),
   ts: localStrings(state, { layout: 'shared' }),
   importStatus: state.importexport.importexportStatus,
   allBookData: state.books.bookData,
@@ -691,6 +785,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
     {
       importProjectToElectron: actions.importProjectToElectron,
       importProjectFromElectron: actions.importProjectFromElectron,
+      importSyncFromElectron: actions.importSyncFromElectron,
       importComplete: actions.importComplete,
       orbitError: actions.doOrbitError,
     },

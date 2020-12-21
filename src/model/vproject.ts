@@ -26,8 +26,6 @@ export interface VProject extends Record {
     dateUpdated: string;
     dateArchived: string;
     lastModifiedBy: number;
-    dateExported: string | null;
-    dateImported: string | null;
   };
   relationships?: {
     project: RecordRelationship;

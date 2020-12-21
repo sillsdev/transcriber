@@ -1,7 +1,10 @@
-import { KeyMap, Schema, SchemaSettings } from '@orbit/data';
+import { KeyMap, Operation, Schema, SchemaSettings } from '@orbit/data';
 import Memory from '@orbit/memory';
 import IndexedDBSource from '@orbit/indexeddb';
 import Coordinator from '@orbit/coordinator';
+import { isElectron } from './api-variable';
+import { getFingerprint } from './utils';
+import { offlineProjectCreate } from './crud';
 
 const schemaDefinition: SchemaSettings = {
   models: {
@@ -443,13 +446,66 @@ const schemaDefinition: SchemaSettings = {
       relationships: {},
     },
   },
+  version: 1,
 };
+if (process.env.REACT_APP_SCHEMAVERSION !== '1' && schemaDefinition.models) {
+  schemaDefinition.models.offlineproject = {
+    keys: { remoteId: {} },
+    attributes: {
+      computerfp: { type: 'string' },
+      snapshotDate: { type: 'date-time' },
+      offlineAvailable: { type: 'boolean' },
+      exportedDate: { type: 'date-time' },
+      dateCreated: { type: 'date-time' },
+      dateUpdated: { type: 'date-time' },
+      lastModifiedBy: { type: 'number' },
+    },
+    relationships: {
+      project: {
+        type: 'hasOne',
+        model: 'project',
+      },
+    },
+  };
+  delete schemaDefinition.models.project.attributes?.dateImported;
+  delete schemaDefinition.models.project.attributes?.dateExported;
+  schemaDefinition.version = 2;
+}
 
 export const schema = new Schema(schemaDefinition);
 
 export const keyMap = new KeyMap();
 
 export const memory = new Memory({ schema, keyMap });
+const findMissingModels = (schema: Schema, db: IDBDatabase) => {
+  return Object.keys(schema.models).filter(
+    (model) => !db.objectStoreNames.contains(model)
+  );
+};
+const SaveOfflineProjectInfo = async (
+  backup: IndexedDBSource,
+  memory: Memory
+) => {
+  if (isElectron) {
+    var t = await backup.pull((q) => q.findRecords('project'));
+    const ops: Operation[] = [];
+    var fingerprint = t[0].operations.length > 0 ? await getFingerprint() : '';
+    t[0].operations.forEach((r: any) => {
+      offlineProjectCreate(
+        r.record,
+        ops,
+        memory,
+        fingerprint,
+        r.record.attributes.dateImported,
+        r.record.attributes.dateImported,
+        true
+      );
+    });
+    await backup.push(ops);
+    await memory.update(ops);
+    console.log('done with upgrade to v2');
+  }
+};
 
 export const backup = window.indexedDB
   ? new IndexedDBSource({
@@ -459,6 +515,20 @@ export const backup = window.indexedDB
       namespace: 'transcriber',
     })
   : ({} as IndexedDBSource);
+
+backup.cache.migrateDB = function (db, event) {
+  console.log('migrateDb', event);
+  // Ensure that all models are registered
+  findMissingModels(this.schema, db).forEach((model) => {
+    console.log(
+      `Registering IndexedDB model at version ${event.newVersion}: ${model}`
+    );
+    this.registerModel(db, model);
+  });
+  if (isElectron && event.newVersion === 2) {
+    SaveOfflineProjectInfo(backup, memory);
+  }
+};
 
 export const coordinator = new Coordinator();
 coordinator.addSource(memory);

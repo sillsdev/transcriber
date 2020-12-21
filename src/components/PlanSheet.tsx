@@ -212,7 +212,7 @@ export function PlanSheet(props: IProps) {
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
   const [doSave] = useGlobal('doSave');
-  const [online, setOnline] = useState(true);
+  const [connected, setConnected] = useGlobal('connected');
   const [changed, setChanged] = useGlobal('changed');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
@@ -436,7 +436,10 @@ export function PlanSheet(props: IProps) {
     }, 1000 * 30);
   };
 
-  const tryOnline = () => Online((result) => setOnline(result));
+  const tryOnline = () =>
+    Online((result) => {
+      setConnected(result);
+    }, auth);
 
   useEffect(() => {
     const newValue = isOffline || projRole !== 'admin';
@@ -447,7 +450,7 @@ export function PlanSheet(props: IProps) {
   useEffect(() => {
     if (changed) {
       if (saveTimer.current === undefined) startSaveTimer();
-      if (!online) showMessage(ts.NoSaveOffline);
+      if (!connected) showMessage(ts.NoSaveOffline);
     } else {
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = undefined;
@@ -550,7 +553,7 @@ export function PlanSheet(props: IProps) {
                     onPlayStatus={handlePlayStatus}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
-                    online={online}
+                    online={connected}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
@@ -617,6 +620,7 @@ export function PlanSheet(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => tryOnline(), []);
 
   //do this every 30 seconds to warn they can't save
@@ -692,7 +696,7 @@ export function PlanSheet(props: IProps) {
                   key="save"
                   aria-label={t.save}
                   variant="contained"
-                  color={online ? 'primary' : 'secondary'}
+                  color={connected ? 'primary' : 'secondary'}
                   className={classes.button}
                   onClick={handleSave}
                   disabled={!changed}

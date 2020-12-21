@@ -5,9 +5,10 @@ import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Typography, Grid, Button } from '@material-ui/core';
 import { Redirect } from 'react-router';
-import { API_CONFIG } from '../api-variable';
+import { API_CONFIG, isElectron } from '../api-variable';
 import Axios from 'axios';
 import Auth from '../auth/Auth';
+import { goOnline } from './Access';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,8 +63,9 @@ export const EmailUnverified = (props: IProps) => {
       });
   };
 
-  const handleLogout = (e: any) => {
-    setView('Logout');
+  const handleVerified = (e: any) => {
+    if (isElectron) goOnline();
+    else setView('Logout');
   };
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
@@ -100,7 +102,7 @@ export const EmailUnverified = (props: IProps) => {
             variant="contained"
             color="primary"
             className={classes.button}
-            onClick={handleLogout}
+            onClick={handleVerified}
           >
             {t.verified}
           </Button>

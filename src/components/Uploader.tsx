@@ -9,6 +9,8 @@ import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
 import { remoteIdNum } from '../crud';
 import Auth from '../auth/Auth';
+import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,8 +68,9 @@ export const Uploader = (props: IProps) => {
   const { metaData, ready } = props;
   const { createProject } = props;
   const classes = useStyles();
-  const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');

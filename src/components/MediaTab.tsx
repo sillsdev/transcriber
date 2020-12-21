@@ -69,6 +69,8 @@ import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
 import MediaPlayer from './MediaPlayer';
 import { useMediaAttach } from '../crud/useMediaAttach';
+import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 
 const ActionHeight = 52;
 
@@ -218,8 +220,8 @@ const getMedia = (
       const sectionId = related(passage[0], 'section');
       const section = sections.filter((s) => s.id === sectionId);
       var updateddt = passageId
-        ? passage[0].attributes.dateUpdated
-        : f.attributes.dateUpdated;
+        ? passage[0]?.attributes?.dateUpdated || ''
+        : f?.attributes?.dateUpdated || '';
       if (!updateddt.endsWith('Z')) updateddt += 'Z';
       const updated = moment(updateddt);
       const date = updated ? updated.format('YYYY-MM-DD') : '';
@@ -358,8 +360,9 @@ export function MediaTab(props: IProps) {
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
-  const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline');

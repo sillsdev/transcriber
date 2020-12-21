@@ -12,7 +12,7 @@
       </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-            <source>To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
+            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
             <target/>
          </segment>
       </unit>
@@ -22,9 +22,33 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.importProject">
          <segment>
             <source>Import PTF File</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.download">
+         <segment>
+            <source>Download?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.downloadLater">
+         <segment>
+            <source>Download Later</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.downloadMb">
+         <segment>
+            <source>Download {0}MB of offline project files?</source>
             <target/>
          </segment>
       </unit>
@@ -325,6 +349,18 @@
       <unit id="cards.settings">
          <segment>
             <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.offlineAvail">
+         <segment>
+            <source>Offline Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.offline">
+         <segment>
+            <source>Offline</source>
             <target/>
          </segment>
       </unit>
@@ -694,6 +730,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.importSync">
+         <segment>
+            <source>Syncing offline changes</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.invalidITF">
          <segment>
             <source>Not a valid Incremental Transcriber File (ITF).</source>
@@ -751,6 +793,18 @@
       <unit id="import.plan">
          <segment>
             <source>Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.projectDeleted">
+         <segment>
+            <source>Project {0} has been deleted online.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.projectNotFound">
+         <segment>
+            <source>ITF does not contain current project.  It contains project {0}.</source>
             <target/>
          </segment>
       </unit>
@@ -1384,6 +1438,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.reportWhenOnline">
+         <segment>
+            <source>You must be online to report an problem.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.import">
          <segment>
             <source>Import</source>
@@ -1878,7 +1938,7 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
+            <source>This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
          </segment>
       </unit>
@@ -1993,6 +2053,18 @@
       <unit id="profile.checkingParatext">
          <segment>
             <source>Checking for Paratext account...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.notLinked">
+         <segment>
+            <source>Not linked to Paratext</source>
             <target/>
          </segment>
       </unit>
@@ -2760,7 +2832,7 @@
       </unit>
       <unit id="transcriptionTab.electronBackup">
          <segment>
-            <source>Backup All Projects</source>
+            <source>Back up All Projects</source>
             <target/>
          </segment>
       </unit>
@@ -2794,6 +2866,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.downloadingProject">
+         <segment>
+            <source>Downloading...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportITFtype">
          <segment>
             <source>Incremental Changes (itf)</source>
@@ -2803,6 +2881,12 @@
       <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadProject">
+         <segment>
+            <source>Download Project</source>
             <target/>
          </segment>
       </unit>

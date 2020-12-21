@@ -1,11 +1,11 @@
 import { useGlobal } from 'reactn';
-import { ISharedStrings, ActivityStates } from '../model';
+import { ISharedStrings, ActivityStates, MediaFile } from '../model';
 import { orbitErr } from '../utils';
 
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
 import { UpdatePassageStateOps } from '../crud/updatePassageState';
-import { remoteIdNum } from '.';
+import { getMediaInPlans, related, remoteIdNum } from '.';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -29,6 +29,19 @@ export const useMediaAttach = (props: IProps) => {
   ) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
+    var media = getMediaInPlans(
+      [plan],
+      memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+    ).filter((m) => related(m, 'passage') === passage);
+    if (media.length > 0) {
+      ops.push(
+        tb.replaceAttribute(
+          { type: 'mediafile', id: mediaId },
+          'versionNumber',
+          media[0].attributes.versionNumber + 1
+        )
+      );
+    }
     ops.push(
       tb.replaceRelatedRecord({ type: 'mediafile', id: mediaId }, 'passage', {
         type: 'passage',

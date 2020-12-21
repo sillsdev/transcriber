@@ -10,7 +10,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="access.accessSilTranscriber">
-            <source>To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
+            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
@@ -20,7 +20,14 @@
       		<source>Go Online</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">electronImport.tsx</context>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.cancel">
+      		<source>Cancel</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="access.importProject">
@@ -30,7 +37,28 @@
                <context context-type="sourcefile">electronImport.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="activityState.approved">
+      	<trans-unit id="access.download">
+      		<source>Download?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">logout.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.downloadLater">
+      		<source>Download Later</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">logout.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.downloadMb">
+      		<source>Download {0}MB of offline project files?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">logout.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="activityState.approved">
             <source>Ready to Sync</source>
             <target/>
             <context-group>
@@ -379,7 +407,21 @@
                <context context-type="sourcefile">ProjectMenu.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.sync">
+      	<trans-unit id="cards.offlineAvail">
+      		<source>Offline Available</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.offline">
+      		<source>Offline</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectCard.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.sync">
             <source>Sync ({0})</source>
             <target/>
             <context-group>
@@ -806,6 +848,13 @@
                <context context-type="sourcefile">import.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="import.importSync">
+            <source>Syncing offline changes</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="import.invalidITF">
             <source>Not a valid Incremental Transcriber File (ITF).</source>
             <target/>
@@ -871,6 +920,20 @@
          </trans-unit>
          <trans-unit id="import.plan">
             <source>Project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">import.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.projectDeleted">
+            <source>Project {0} has been deleted online.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">import.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="import.projectNotFound">
+            <source>ITF does not contain current project.  It contains project {0}.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">import.tsx</context>
@@ -1611,6 +1674,13 @@
       			<context context-type="sourcefile">HelpMenu.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="main.reportWhenOnline">
+      		<source>You must be online to report an problem.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="main.import">
             <source>Import</source>
             <target/>
@@ -2186,7 +2256,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planSheet.refErr">
-            <source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
+            <source>This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
@@ -2325,7 +2395,21 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="profile.close">
+         <trans-unit id="profile.nameNotEmail">
+            <source>Please choose a name other than your email address.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Profile.tsx</context>
+            </context-group>
+         </trans-unit>
+      	<trans-unit id="profile.notLinked">
+      		<source>Not linked to Paratext</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Profile.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="profile.close">
             <source>Close</source>
             <target/>
             <context-group>
@@ -3215,7 +3299,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="transcriptionTab.electronBackup">
-            <source>Backup All Projects</source>
+            <source>Back up All Projects</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ExportTab.tsx</context>
@@ -3256,7 +3340,14 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriptionTab.exportITFtype">
+      	<trans-unit id="transcriptionTab.downloadingProject">
+      		<source>Downloading...{0}%</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectDownload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriptionTab.exportITFtype">
             <source>Incremental Changes (itf)</source>
             <target/>
             <context-group>
@@ -3270,7 +3361,14 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriptionTab.exportPTFtype">
+      	<trans-unit id="transcriptionTab.downloadProject">
+      		<source>Download Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">DownloadProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriptionTab.exportPTFtype">
             <source>Export Project (ptf)</source>
             <target/>
             <context-group>

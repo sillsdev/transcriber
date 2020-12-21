@@ -9,7 +9,7 @@
       </unit>
       <unit id="access.accessSilTranscriber">
          <segment>
-         	<source>To transcriber or revew without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
+         	<source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
          	<target>Pour transcrire ou réviser sans Internet, cliquez sur votre avatar. Pour transcrire, réviser ou effectuer des tâches administratives en collaboration, cliquez sur 'Aller en ligne'. Pour configurer le programme avec les utilisateurs, le projet et les fichiers multimédia sans utiliser Internet, cliquez sur 'Importer un fichier PTF'. (Les fichiers PTF peuvent être exportés pendant qu'ils sont en ligne).</target>
          </segment>
       </unit>
@@ -19,13 +19,37 @@
    			<target>Aller en ligne</target>
    		</segment>
    	  </unit>
-   	  <unit id="access.importProject">
+   	<unit id="access.cancel">
+   		<segment>
+   			<source>Cancel</source>
+   			<target>Annuler</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.importProject">
          <segment>
             <source>Import PTF File</source>
             <target>Importation un fichier de PTF</target>
          </segment>
       </unit>
-      <unit id="activityState.approved">
+   	<unit id="access.download">
+   		<segment>
+   			<source>Download?</source>
+   			<target>Télécharger ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.downloadLater">
+   		<segment>
+   			<source>Download Later</source>
+   			<target>Télécharger plus tard</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.downloadMb">
+   		<segment>
+   			<source>Download {0}MB of offline project files?</source>
+   			<target>Télécharger {0}MB de fichiers de projets hors ligne ?</target>
+   		</segment>
+   	</unit>
+   	<unit id="activityState.approved">
          <segment>
             <source>Ready to Sync</source>
             <target>Prêt à synchroniser</target>
@@ -325,7 +349,25 @@
             <target>Paramètres</target>
          </segment>
       </unit>
-      <unit id="cards.teamName">
+   	<unit id="cards.offlineAvail">
+   		<segment>
+   			<source>Offline Available</source>
+   			<target>Disponible hors ligne</target>
+   		</segment>
+   	</unit>
+   	<unit id="cards.offline">
+   		<segment>
+   			<source>Offline</source>
+   			<target>Hors ligne</target>
+   		</segment>
+   	</unit>
+   	<unit id="cards.sync">
+   		<segment>
+   			<source>Sync ({0})</source>
+   			<target>Sync ({0})</target>
+   		</segment>
+   	</unit>
+   	<unit id="cards.teamName">
          <segment>
             <source>Team Name</source>
             <target>Nom de l'équipe</target>
@@ -692,6 +734,12 @@
             <target>Importer un projet</target>
          </segment>
       </unit>
+      <unit id="import.importSync">
+         <segment>
+            <source>Syncing offline changes</source>
+            <target>Synchroniser les modifications hors ligne</target>
+         </segment>
+      </unit>
       <unit id="import.invalidITF">
          <segment>
             <source>Not a valid Incremental Transcriber File (ITF).</source>
@@ -750,6 +798,18 @@
          <segment>
             <source>Project</source>
             <target>Projet</target>
+         </segment>
+      </unit>
+      <unit id="import.projectDeleted">
+         <segment>
+            <source>Project {0} has been deleted online.</source>
+            <target>Le projet {0} a été supprimé en ligne.</target>
+         </segment>
+      </unit>
+      <unit id="import.projectNotFound">
+         <segment>
+            <source>ITF does not contain current project.  It contains project {0}.</source>
+            <target>Le fichier ITF ne contient pas le projet en cours. Il contient le projet {0}.</target>
          </segment>
       </unit>
       <unit id="import.showHideFilter">
@@ -1376,6 +1436,12 @@
    			<target>Télécharger un exemple de tableur hiérarchique</target>
    		</segment>
    	</unit>
+   	<unit id="main.reportWhenOnline">
+   		<segment>
+   			<source>You must be online to report a problem.</source>
+   			<target>Vous devez être en ligne pour signaler un problème.</target>
+   		</segment>
+   	</unit>
    	<unit id="main.import">
          <segment>
             <source>Import</source>
@@ -1852,7 +1918,7 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-         	<source>This project contains invalid references and will not sync to Paratext properly. (A valid would be 3:2-5 or similar.)</source>
+         	<source>This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
          	<target>Ce projet contient des références non valables et ne se synchronise pas correctement avec Paratext. (Une référence valide serait 3:2-5 ou similaire).</target>
          </segment>
       </unit>
@@ -1964,13 +2030,25 @@
             <target>Annuler</target>
          </segment>
       </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target>Veuillez choisir un nom autre que votre adresse e-mail.</target>
+         </segment>
+      </unit>
       <unit id="profile.checkingParatext">
          <segment>
             <source>Checking for Paratext account...</source>
             <target>Vérification du compte Paratext...</target>
          </segment>
       </unit>
-      <unit id="profile.close">
+   	<unit id="profile.notLinked">
+   		<segment>
+   			<source>Not linked to Paratext</source>
+   			<target>Non lié à Paratext</target>
+   		</segment>
+   	</unit>
+   	<unit id="profile.close">
          <segment>
             <source>Close</source>
             <target>Fermer</target>
@@ -2786,7 +2864,13 @@
             <target>Exportation...{0}%</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportITFtype">
+   	<unit id="transcriptionTab.downloadingProject">
+   		<segment>
+   			<source>Downloading...{0}%</source>
+   			<target>Téléchargement...{0}%</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcriptionTab.exportITFtype">
          <segment>
             <source>Incremental Changes (itf)</source>
             <target>Modifications incrémentielles (itf)</target>
@@ -2798,7 +2882,13 @@
             <target>Exporter une projet</target>
          </segment>
       </unit>
-      <unit id="transcriptionTab.exportPTFtype">
+   	<unit id="transcriptionTab.downloadProject">
+   		<segment>
+   			<source>Download Project</source>
+   			<target>Télécharger le projet</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcriptionTab.exportPTFtype">
          <segment>
             <source>Export Project (ptf)</source>
             <target>Projet d'exportation (ptf)</target>

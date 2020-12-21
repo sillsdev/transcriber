@@ -1,5 +1,5 @@
 import { Project } from '../model';
-import { dataPath } from '../utils';
+import { dataPath, PathType } from '../utils';
 import path from 'path';
 
 export interface FontData {
@@ -23,11 +23,12 @@ export const getFontData = (r: Project, offline: boolean) => {
     ? r.attributes.defaultFontSize
     : 'large';
   const fontDir = r?.attributes?.rtl ? 'rtl' : 'ltr';
+  const fileName = fontFamily + '.css';
   const url = offline
-    ? dataPath(path.join('fonts', fontFamily + '.css'))
-    : 'https://s3.amazonaws.com/fonts.siltranscriber.org/' +
-      fontFamily +
-      '.css';
+    ? dataPath(path.join('fonts', fileName), PathType.FONTS, {
+        localname: fileName,
+      })
+    : 'https://s3.amazonaws.com/fonts.siltranscriber.org/' + fileName;
   const data: FontData = {
     fontFamily,
     fontSize,

@@ -19,6 +19,8 @@ import {
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
+import Memory from '@orbit/memory';
+import JSONAPISource from '@orbit/jsonapi';
 import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
@@ -33,15 +35,10 @@ import {
   useOrganizedBy,
   usePlan,
 } from '../crud';
-import {
-  Online,
-  useRemoteSave,
-  lookupBook,
-  useStickyRedirect,
-  currentDateTime,
-} from '../utils';
+import { Online, useRemoteSave, lookupBook, currentDateTime } from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
+import StickyRedirect from './StickyRedirect';
 import Auth from '../auth/Auth';
 import Uploader, { statusInit } from './Uploader';
 import { useMediaAttach } from '../crud/useMediaAttach';
@@ -152,10 +149,12 @@ export function ScriptureTable(props: IProps) {
   const { prjId } = useParams<ParamTypes>();
   const [width, setWidth] = React.useState(window.innerWidth);
   const [plan] = useGlobal('plan');
-  const [memory] = useGlobal('memory');
-  const [remote] = useGlobal('remote');
-  const [doSave] = useGlobal('doSave');
+  const [coordinator] = useGlobal('coordinator');
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const [doSave, setDoSave] = useGlobal('doSave');
   const [busy, setBusy] = useGlobal('importexportBusy');
+  const [, setConnected] = useGlobal('connected');
 
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
@@ -185,7 +184,6 @@ export function ScriptureTable(props: IProps) {
   const [uploadPassage, setUploadPassage] = useState('');
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
-  const stickyPush = useStickyRedirect();
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
     ts,
@@ -666,21 +664,22 @@ export function ScriptureTable(props: IProps) {
     // Public Domain/MIT
     var d = new Date().getTime(); //Timestamp
     var d2 = (performance && performance.now && performance.now() * 1000) || 0; //Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (
-      c
-    ) {
-      var r = Math.random() * 16; //random number between 0 and 16
-      if (d > 0) {
-        //Use timestamp until depleted
-        r = (d + r) % 16 | 0;
-        d = Math.floor(d / 16);
-      } else {
-        //Use microseconds since page-load if supported
-        r = (d2 + r) % 16 | 0;
-        d2 = Math.floor(d2 / 16);
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
       }
-      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
-    });
+    );
   }
 
   const setDimensions = () => {
@@ -696,9 +695,15 @@ export function ScriptureTable(props: IProps) {
     } else setView(`/work/${prjId}/${passageRemoteId}`);
   };
 
-  const handleAssign = (where: number[]) => () => {
+  const doAssign = (where: number[]) => {
     setAssignSections(where);
     setAssignSectionVisible(true);
+  };
+  const handleAssign = (where: number[]) => () => {
+    if (changed) {
+      startSave();
+      waitForSave(() => doAssign(where), 100);
+    } else doAssign(where);
   };
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
@@ -896,12 +901,13 @@ export function ScriptureTable(props: IProps) {
         numChanges = changedRows.filter((r) => r).length;
       }
       await doSave(changedRows);
-      if (busy) setBusy(false);
+      setBusy(false);
       setComplete(0);
     };
 
     if (doSave && !saving) {
       Online((online) => {
+        setConnected(online);
         if (!online) {
           saveCompleted(ts.NoSaveOffline);
           setSaving(false);
@@ -913,19 +919,21 @@ export function ScriptureTable(props: IProps) {
             setSaving(false);
           });
         }
-      });
+      }, auth);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, saving, data, inData, rowInfo]);
 
   useEffect(() => {
-    const getFlat = () => {
-      var planRec = getPlan(plan);
-      if (planRec !== null) return planRec.attributes?.flat;
-      return false;
-    };
+    if (plan !== '') {
+      const getFlat = () => {
+        var planRec = getPlan(plan);
+        if (planRec !== null) return planRec.attributes?.flat;
+        return false;
+      };
 
-    setInlinePassages(getFlat());
+      setInlinePassages(getFlat());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan]);
 
@@ -1054,7 +1062,7 @@ export function ScriptureTable(props: IProps) {
         }
       }
     };
-    if (!saving && !changed) {
+    if (!saving && !changed && plan !== '') {
       getSections(plan as string).then(() => {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
@@ -1113,7 +1121,7 @@ export function ScriptureTable(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [data, width, cols]);
 
-  if (view !== '') stickyPush(view);
+  if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length > 0) {
@@ -1127,6 +1135,7 @@ export function ScriptureTable(props: IProps) {
         remoteIdGuid('mediafile', mediaRemoteIds[0], keyMap)
       );
     }
+    setDoSave(true);
   };
 
   const handleLookupBook = (book: string) =>

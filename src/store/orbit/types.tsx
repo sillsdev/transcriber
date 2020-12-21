@@ -7,17 +7,19 @@ export interface IApiError extends Exception {
     status: number;
   };
 }
+export interface IFetchResults  {syncBuffer: Buffer, syncFile:string, goRemote:boolean};
 
 export interface IOrbitState {
-  loaded: boolean;
   status: number | undefined;
   message: string;
   saving: boolean;
   retry: number;
+  fetchResults: IFetchResults|undefined
 }
 
 // Describing the different ACTION NAMES available
 export const FETCH_ORBIT_DATA = 'FETCH_ORBIT_DATA';
+export const FETCH_ORBIT_DATA_COMPLETE = 'FETCH_ORBIT_DATA_COMPLETE';
 export const ORBIT_ERROR = 'ORBIT_ERROR';
 export const ORBIT_RETRY = 'ORBIT_RETRY';
 export const RESET_ORBIT_ERROR = 'RESET_ORBIT_ERROR';
@@ -26,6 +28,11 @@ export const ORBIT_SAVING = 'ORBIT_SAVING';
 
 interface OrbitMsg {
   type: typeof FETCH_ORBIT_DATA;
+  payload:IFetchResults;
+}
+
+interface OrbitLoadedMsg {
+  type: typeof FETCH_ORBIT_DATA_COMPLETE;
 }
 
 interface OrbitErrorMsg {
@@ -54,6 +61,7 @@ interface SavingMsg {
 
 export type OrbitMsgs =
   | OrbitMsg
+  | OrbitLoadedMsg
   | OrbitErrorMsg
   | OrbitRetryMsg
   | ResetOrbitErrorMsg

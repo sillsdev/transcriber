@@ -37,14 +37,11 @@ import {
   Typography,
   Avatar,
   MenuItem,
-  IconButton,
-  Link,
 } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
-import InfoIcon from '@material-ui/icons/Info';
 import Confirm from '../components/AlertDialog';
+import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
-import ParatextIcon from '../control/ParatextLogo';
 import {
   remoteId,
   related,
@@ -60,7 +57,6 @@ import {
   localeDefault,
   useRemoteSave,
   getParatextDataPath,
-  useStickyRedirect,
 } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
@@ -76,9 +72,10 @@ import pt from '../assets/pt.json';
 import ta from '../assets/ta.json';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils/currentDateTime';
-import { isElectron } from '../api-variable';
-import { AppHead } from '../components/App/AppHead';
+import AppHead from '../components/App/AppHead';
+import StickyRedirect from '../components/StickyRedirect';
 import { API_CONFIG } from '../api-variable';
+import { useSnackBar } from '../hoc/SnackBar';
 
 interface ILangDes {
   type: string;
@@ -155,9 +152,14 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
     },
     caption: {
-      display: 'table',
-      width: 200,
-      textAlign: 'center',
+      width: 150,
+      textAlign: 'left',
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+    },
+    notLinked: {
+      fontWeight: 'bold',
+      paddingTop: theme.spacing(2),
     },
     bigAvatar: {
       width: 150,
@@ -226,19 +228,22 @@ export function Profile(props: IProps) {
   const [deleteItem, setDeleteItem] = useState('');
   const [dupName, setDupName] = useState(false);
   const [hasParatext, setHasParatext] = useState(false);
-  const [howToLink, setHowToLink] = useState(false);
   const [view, setView] = useState('');
   const [changed, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
   const [ptPath, setPtPath] = React.useState('');
-  const stickyPush = useStickyRedirect();
+  const { showMessage } = useSnackBar();
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
   };
 
   const handleNameChange = (e: any) => {
+    if (e.target.value === email) {
+      showMessage(t.nameNotEmail);
+      return;
+    }
     setChanged(true);
     setName(e.target.value);
     if (
@@ -498,18 +503,6 @@ export function Profile(props: IProps) {
     setDeleteItem('');
   };
 
-  const handleHowTo = () => {
-    setHowToLink(true);
-  };
-
-  const handleLogout = () => {
-    setView('Logout');
-  };
-
-  const handleNoLinkSetup = () => {
-    setHowToLink(false);
-  };
-
   const langName = (loc: string, opt: string): string => {
     return ldml[loc].ldml.localeDisplayNames.languages.language
       .filter((d) => d.type === opt)
@@ -532,7 +525,7 @@ export function Profile(props: IProps) {
   const StyledGrid = withStyles({ item: { padding: '0 30px' } })(Grid);
 
   useEffect(() => {
-    if (isElectron) getParatextDataPath().then((val) => setPtPath(val));
+    if (isOffline) getParatextDataPath().then((val) => setPtPath(val));
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
@@ -621,7 +614,7 @@ export function Profile(props: IProps) {
   }, [timezone]);
 
   useEffect(() => {
-    if (!isElectron) {
+    if (!isOffline) {
       if (!paratext_usernameStatus) {
         getUserName(auth, errorReporter, t.checkingParatext);
       }
@@ -643,7 +636,7 @@ export function Profile(props: IProps) {
 
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
   if (/Access/i.test(view)) return <Redirect to="/" />;
-  if (/Team/i.test(view)) stickyPush('/team');
+  if (/Team/i.test(view)) return <StickyRedirect to="/team" />;
 
   const orgRoles = ['Admin', 'Member'];
 
@@ -665,29 +658,12 @@ export function Profile(props: IProps) {
                 </Typography>
               )}
               <Typography className={classes.caption}>{email || ''}</Typography>
-              <Typography
-                className={clsx({
-                  [classes.caption]: !paratext_usernameStatus?.errStatus || 0,
-                })}
-              >
-                <ParatextIcon />
-                {'\u00A0'}
-                {paratext_usernameStatus?.errStatus ||
-                0 ||
-                (isElectron && !ptPath) ? (
-                  <>
-                    <Link onClick={handleHowTo}>{t.paratextNotLinked}</Link>
-                    <IconButton color="primary" onClick={handleHowTo}>
-                      <InfoIcon />
-                    </IconButton>
-                  </>
-                ) : (hasParatext && paratext_usernameStatus?.complete) ||
-                  ptPath ? (
-                  t.paratextLinked
-                ) : (
-                  paratext_usernameStatus?.statusMsg || t.checkingParatext
-                )}
-              </Typography>
+              <ParatextLinked
+                hasParatext={hasParatext}
+                ptPath={ptPath}
+                setView={setView}
+                isOffline={isOffline}
+              />
             </StyledGrid>
             <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
@@ -948,16 +924,6 @@ export function Profile(props: IProps) {
           <Confirm
             yesResponse={handleDeleteConfirmed}
             noResponse={handleDeleteRefused}
-          />
-        )}
-        {howToLink && (
-          <Confirm
-            title={t.paratextLinking}
-            text={isElectron ? t.installParatext : t.linkingExplained}
-            yes={isElectron ? '' : t.logout}
-            no={isElectron ? t.close : t.cancel}
-            yesResponse={handleLogout}
-            noResponse={handleNoLinkSetup}
           />
         )}
       </Paper>

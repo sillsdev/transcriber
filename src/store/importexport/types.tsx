@@ -1,11 +1,21 @@
 import { IAxiosStatus } from '../AxiosStatus';
 
+export enum ExportType {
+  PTF = "ptf",  //one full project
+  ITF = "itf",  //one project incremental changes
+  ITFBACKUP = "itfb", //one project incremental backup
+  FULLBACKUP = "zip",   //all offline projects - zip of ptfs
+  ITFSYNC = "itfs" //all projects incremental changes to send online
+}
+
 export interface FileResponse {
   data: {
     attributes: {
       message: string;
       fileurl: string;
       contenttype: string;
+      buffer: Buffer | undefined;
+      changes: number;
     };
     type: string; //"file-responses",
     id: string;

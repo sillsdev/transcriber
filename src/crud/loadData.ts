@@ -1,9 +1,15 @@
-import { remoteIdGuid, remoteIdNum } from '.';
-import { JSONAPISerializerCustom } from '../serializers/JSONAPISerializerCustom';
-import JSONAPISource, {
-  ResourceDocument,
-  JSONAPISerializerSettings,
-} from '@orbit/jsonapi';
+import {
+  offlineProjectCreate,
+  offlineProjectFromProject,
+  offlineProjectUpdateSnapshot,
+  remoteIdGuid,
+  remoteIdNum,
+} from '.';
+import {
+  getSerializer,
+  JSONAPISerializerCustom,
+} from '../serializers/JSONAPISerializerCustom';
+import JSONAPISource, { ResourceDocument } from '@orbit/jsonapi';
 import IndexedDBSource from '@orbit/indexeddb';
 import {
   Record,
@@ -17,23 +23,59 @@ import OrgData from '../model/orgData';
 import { Project, IApiError } from '../model';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
+import Coordinator from '@orbit/coordinator';
+import { getFingerprint, currentDateTime } from '../utils';
 
 const completePerTable = 3;
 
-export function insertData(
+const saveOfflineProject = async (
+  project: Project,
+  memory: Memory,
+  backup: IndexedDBSource,
+  dataDate: string | undefined,
+  isImport: boolean
+) => {
+  var oparray: Operation[] = [];
+  /* don't update to undefined dataDate from here */
+  if (
+    !dataDate ||
+    !offlineProjectUpdateSnapshot(
+      project.id,
+      oparray,
+      memory,
+      dataDate,
+      isImport
+    )
+  ) {
+    /* if I have a dataDate, the update above failed for sure
+     if I don't have a dataDate, go see if a record already exists */
+    if (dataDate || !offlineProjectFromProject(memory, project.id)) {
+      var fp = await getFingerprint();
+      offlineProjectCreate(
+        project,
+        oparray,
+        memory,
+        fp,
+        dataDate || '',
+        isImport ? dataDate || '' : '',
+        isImport
+      );
+    }
+  }
+  await memory.sync(await backup.push((t: TransformBuilder) => oparray));
+};
+
+export async function insertData(
   item: Record,
   memory: Memory,
+  backup: IndexedDBSource,
   tb: TransformBuilder,
   oparray: Operation[],
   orbitError: (ex: IApiError) => void,
   checkExisting: boolean,
-  isImport: boolean
+  isImport: boolean,
+  snapshotDate?: string
 ) {
-  if (isImport && item.type === 'project') {
-    var project = item as Project;
-    project.attributes.dateImported = project.attributes.dateExported;
-    project.attributes.dateExported = null;
-  }
   var rec: Record | Record[] | null = null;
   try {
     if (item.keys && checkExisting) {
@@ -51,6 +93,15 @@ export function insertData(
       if (Array.isArray(rec)) rec = rec[0]; //won't be...
       rec.attributes = { ...item.attributes };
       oparray.push(tb.updateRecord(rec));
+      if (rec.type === 'project') {
+        await saveOfflineProject(
+          rec as Project,
+          memory,
+          backup,
+          snapshotDate,
+          isImport
+        );
+      }
       for (var rel in item.relationships) {
         if (
           item.relationships[rel].data &&
@@ -73,6 +124,15 @@ export function insertData(
       try {
         memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
+        if (item.type === 'project') {
+          await saveOfflineProject(
+            item as Project,
+            memory,
+            backup,
+            snapshotDate,
+            isImport
+          );
+        }
       } catch (err) {
         orbitError(orbitInfo(err, 'Add record error'));
       }
@@ -94,7 +154,7 @@ async function processData(
   data: string,
   ser: JSONAPISerializerCustom,
   memory: Memory,
-  _backup: IndexedDBSource,
+  backup: IndexedDBSource,
   tb: TransformBuilder,
   setCompleted: undefined | ((valud: number) => void),
   orbitError: (ex: IApiError) => void
@@ -104,18 +164,27 @@ async function processData(
   var oparray: Operation[] = [];
   var completed: number = 15 + start * completePerTable;
 
-  tables.forEach((t) => {
-    var json = ser.deserialize(t);
-    if (Array.isArray(json.data)) {
-      json.data.forEach((item) =>
-        insertData(item, memory, tb, oparray, orbitError, false, false)
+  for (let ti = 0; ti < tables.length; ti += 1) {
+    const t = tables[ti];
+    var jsonData = ser.deserialize(t).data;
+    if (!Array.isArray(jsonData)) jsonData = [jsonData];
+    for (let ji = 0; ji < jsonData.length; ji += 1) {
+      const item = jsonData[ji];
+      await insertData(
+        item,
+        memory,
+        backup,
+        tb,
+        oparray,
+        orbitError,
+        false,
+        false,
+        undefined
       );
-    } else {
-      insertData(json.data, memory, tb, oparray, orbitError, false, false);
     }
     completed += completePerTable;
-    if (setCompleted) setCompleted(completed);
-  });
+    if (setCompleted && completed < 90) setCompleted(completed);
+  }
   try {
     //this was slower than just waiting for them both separately
     //await Promise.all([memory.update(oparray), backup.push(oparray)]);
@@ -141,27 +210,16 @@ async function processData(
   }
 }
 
-function GetSerializer(memory: Memory) {
-  const s: JSONAPISerializerSettings = {
-    schema: memory.schema,
-    keyMap: memory.keyMap,
-  };
-  const ser = new JSONAPISerializerCustom(s);
-  ser.resourceKey = () => {
-    return 'remoteId';
-  };
-  return ser;
-}
-
 export async function LoadData(
-  memory: Memory,
-  backup: IndexedDBSource,
-  remote: JSONAPISource,
+  coordinator: Coordinator,
   setCompleted: (valud: number) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   var tb: TransformBuilder = new TransformBuilder();
-  const ser = GetSerializer(memory);
+  const ser = getSerializer(memory);
 
   try {
     let start = 0;
@@ -210,21 +268,22 @@ export async function LoadData(
 }
 export async function LoadProjectData(
   project: string,
-  memory: Memory,
-  remote: JSONAPISource,
+  coordinator: Coordinator,
   online: boolean,
-  backup: IndexedDBSource,
   projectsLoaded: string[],
-  setProjectsLoaded: (valud: string[]) => void,
+  AddProjectLoaded: (proj: string) => void,
   setBusy: (v: boolean) => void,
   orbitError: (ex: IApiError) => void
 ): Promise<boolean> {
+  const memory = coordinator.getSource('memory') as Memory;
+  const remote = coordinator.getSource('remote') as JSONAPISource;
+  const backup = coordinator.getSource('backup') as IndexedDBSource;
   if (projectsLoaded.includes(project)) return true;
   if (!remote || !online) throw new Error('offline.');
 
   const projectid = remoteIdNum('project', project, memory.keyMap);
   var tb: TransformBuilder = new TransformBuilder();
-  const ser = GetSerializer(memory);
+  const ser = getSerializer(memory);
 
   try {
     let start = 0;
@@ -263,6 +322,17 @@ export async function LoadProjectData(
           undefined,
           orbitError
         );
+        if (start === 0) {
+          var oparray: Operation[] = [];
+          offlineProjectUpdateSnapshot(
+            project,
+            oparray,
+            memory,
+            r.attributes.snapshotdate || currentDateTime(),
+            false
+          );
+          await memory.sync(await backup.push(oparray));
+        }
         start = r.attributes.startnext;
       } else {
         //bail - never expect to be here
@@ -275,17 +345,6 @@ export async function LoadProjectData(
     setBusy(false);
     return false;
   }
-  AddProjectLoaded(project, projectsLoaded, setProjectsLoaded);
+  AddProjectLoaded(project);
   return true;
-}
-
-export function AddProjectLoaded(
-  project: string,
-  projectsLoaded: string[],
-  setProjectsLoaded: (valud: string[]) => void
-) {
-  if (projectsLoaded.includes(project)) return;
-  var pl = [...projectsLoaded];
-  pl.push(project);
-  setProjectsLoaded(pl);
 }

@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "2.9.2",
+  "version": "2.10.0",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -58,6 +58,7 @@
     "reactn": "^2.2.7",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "request": "^2.88.2",
     "reselect": "^4.0.0",
     "xml-js": "^1.6.11",
     "xmldom": "^0.2.1",
@@ -123,6 +124,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-select": "^3.0.21",
+    "@types/request": "^2.48.5",
     "concurrently": "^5.2.0",
     "craco-plugin-react-hot-reload": "^0.1.0",
     "electron": "^7.3.3",
@@ -149,7 +151,7 @@
   },
   "build": {
     "appId": "sil.lsdev.sil-transcriber-electron",
-    "productName": "SIL Transcriber Desktop Extension",
+    "productName": "SIL Transcriber Desktop",
     "copyright": "Copyright © 2020 ${author}",
     "win": {
       "icon": "public/favicon.png"
@@ -158,7 +160,7 @@
       "icon": "debian/sil-transcriber.png",
       "desktop": "debian/sil-transcriber.desktop",
       "target": [
-        "snap"
+        "deb"
       ]
     },
     "mac": {
@@ -177,6 +179,11 @@
         "from": "help",
         "to": "help",
         "filter": "*.chm"
+      },
+      {
+        "from": "help",
+        "to": "help",
+        "filter": "*.xlsx"
       },
       {
         "from": "src/script",

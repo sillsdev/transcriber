@@ -2,6 +2,7 @@ import history from '../history';
 import auth0 from 'auth0-js';
 import jwtDecode from 'jwt-decode';
 import { AUTH_CONFIG } from './auth0-variables';
+import { isElectron } from '../api-variable';
 
 export default class Auth {
   accessToken: any;
@@ -92,12 +93,19 @@ export default class Auth {
     this.accessToken = accessToken;
     this.profile = idTokenPayload;
     this.expiresAt = accessToken ? new Date(5000, 0, 0) : null;
-    const decodedToken: any = jwtDecode(accessToken);
-    const verifiedKey = Object.keys(decodedToken).filter(
-      (n) => n.indexOf('email_verified') !== -1
-    );
-    if (verifiedKey.length > 0)
-      this.email_verified = decodedToken[verifiedKey[0]];
+    this.email_verified = this.profile?.email_verified;
+    if (!this.email_verified) {
+      const decodedToken: any = jwtDecode(accessToken);
+      const verifiedKey = Object.keys(decodedToken).filter(
+        (n) => n.indexOf('email_verified') !== -1
+      );
+      if (verifiedKey.length > 0)
+        this.email_verified = decodedToken[verifiedKey[0]];
+    }
+  }
+
+  emailVerified() {
+    return this.email_verified;
   }
 
   renewSession() {
@@ -120,9 +128,10 @@ export default class Auth {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('nonce');
 
-    this.auth0.logout({
-      returnTo: window.location.origin,
-    });
+    if (!isElectron)
+      this.auth0.logout({
+        returnTo: window.location.origin,
+      });
 
     // navigate to the home route
     // history.replace('/loading');

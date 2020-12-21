@@ -21,9 +21,18 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import path from 'path';
 import { isElectron, API_CONFIG } from '../api-variable';
-import { launch } from '../utils';
+import {
+  launch,
+  launchCmd,
+  downloadFile,
+  dataPath,
+  PathType,
+  execFolder,
+} from '../utils';
+import { useSnackBar } from '../hoc/SnackBar';
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
+const os = require('os');
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,11 +87,14 @@ interface IProps extends IStateProps {
 export function HelpMenu(props: IProps) {
   const { online, action, t } = props;
   const { pathname } = useLocation();
+  const [offline] = useGlobal('offline');
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
   const [developer, setDeveloper] = useGlobal('developer');
   const [topic, setTopic] = React.useState<string>();
+  const [helpToggle, setHelpToggle] = React.useState(false);
+  const { showMessage } = useSnackBar();
   const helpRef = React.useRef<any>();
 
   interface IHelpLinkProps {
@@ -116,19 +128,45 @@ export function HelpMenu(props: IProps) {
     return 'en';
   };
 
-  const execFolder = () => path.dirname((process as any).helperExecPath);
-
   const handleHelp = (topic?: string) => () => {
     const topicS = topic || '';
+    const topicWin = topic && decodeURIComponent(topic.slice(3));
     if (isElectron) {
-      const target = !online
-        ? path.join(execFolder(), API_CONFIG.chmHelp)
-        : API_CONFIG.help + '/' + helpLanguage() + indexName + topicS;
-      launch(target, online);
+      // see https://stackoverflow.com/questions/22300244/open-a-chm-file-to-a-specific-topic
+      if (os.platform() === 'win32' && topicWin && !online) {
+        const target = `C:\\Windows\\hh.exe ${path.join(
+          execFolder(),
+          API_CONFIG.chmHelp
+        )}::${topicWin}`;
+        launchCmd(target);
+      } else {
+        const target = !online
+          ? path.join(execFolder(), API_CONFIG.chmHelp)
+          : API_CONFIG.help + '/' + helpLanguage() + indexName + topicS;
+        launch(target, online);
+      }
     } else if (helpRef.current) {
       setTopic(topic || '');
+      setHelpToggle(!helpToggle);
     }
     setAnchorEl(null);
+  };
+
+  const handleDownload = (url: string) => async () => {
+    const urlObj = new URL(url);
+    const name = urlObj.pathname.split('/').pop() || '';
+    const localPath = offline
+      ? path.join(execFolder(), 'help', name)
+      : dataPath(name, PathType.ZIP);
+    if (!offline) await downloadFile({ url, localPath });
+    launch(localPath, false);
+    setAnchorEl(null);
+    if (action) action('Download');
+  };
+
+  const handleReportIssue = () => {
+    if (!online) showMessage(t.reportWhenOnline);
+    else launch(API_CONFIG.community, online);
   };
 
   const handleDeveloper = () => {
@@ -148,7 +186,11 @@ export function HelpMenu(props: IProps) {
 
   React.useEffect(() => {
     if (helpRef.current && topic !== undefined) helpRef.current.click();
-  }, [topic]);
+  }, [topic, helpToggle]);
+
+  const isPlanScreen = React.useMemo(() => /\/plan\/[0-9]+\/0/.test(pathname), [
+    pathname,
+  ]);
 
   return (
     <div>
@@ -173,59 +215,85 @@ export function HelpMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={t.helpCenter} />
         </StyledMenuItem>
-        {/\/plan\/[0-9]+\/0/.test(pathname) && (
-          <>
-            <StyledMenuItem onClick={handleHelp(spreadsheetTopic)}>
-              <ListItemIcon>
-                <HelpIcon />
-              </ListItemIcon>
-              <ListItemText primary={t.helpSpreadsheet} />
-            </StyledMenuItem>
-            {!isElectron && (
-              <>
-                <a
-                  href={API_CONFIG.flatSample}
-                  style={{ textDecoration: 'none' }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <StyledMenuItem>
-                    <ListItemIcon>
-                      <DownloadIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={t.flatSample} />
-                  </StyledMenuItem>
-                </a>
-                <a
-                  href={API_CONFIG.hierarchicalSample}
-                  style={{ textDecoration: 'none' }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <StyledMenuItem>
-                    <ListItemIcon>
-                      <DownloadIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={t.hierarchicalSample} />
-                  </StyledMenuItem>
-                </a>
-              </>
-            )}
-          </>
+        {isPlanScreen && (
+          <StyledMenuItem onClick={handleHelp(spreadsheetTopic)}>
+            <ListItemIcon>
+              <HelpIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.helpSpreadsheet} />
+          </StyledMenuItem>
         )}
-        <a
-          href={API_CONFIG.community}
-          style={{ textDecoration: 'none' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <StyledMenuItem>
+        {isPlanScreen && !isElectron && (
+          <a
+            href={API_CONFIG.flatSample}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem>
+              <ListItemIcon>
+                <DownloadIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.flatSample} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isPlanScreen && isElectron && (
+          <StyledMenuItem onClick={handleDownload(API_CONFIG.flatSample)}>
+            <ListItemIcon>
+              <DownloadIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.flatSample} />
+          </StyledMenuItem>
+        )}
+        {isPlanScreen && !isElectron && (
+          <a
+            href={API_CONFIG.hierarchicalSample}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem>
+              <ListItemIcon>
+                <DownloadIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.hierarchicalSample} />
+            </StyledMenuItem>
+          </a>
+        )}
+        {isPlanScreen && isElectron && (
+          <StyledMenuItem
+            onClick={handleDownload(API_CONFIG.hierarchicalSample)}
+          >
+            <ListItemIcon>
+              <DownloadIcon />
+            </ListItemIcon>
+            <ListItemText primary={t.hierarchicalSample} />
+          </StyledMenuItem>
+        )}
+        {isElectron && (
+          <StyledMenuItem onClick={handleReportIssue}>
             <ListItemIcon>
               <ReportIcon />
             </ListItemIcon>
             <ListItemText primary={t.reportIssue} />
           </StyledMenuItem>
-        </a>
+        )}
+        {!isElectron && (
+          <a
+            href={API_CONFIG.community}
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <StyledMenuItem>
+              <ListItemIcon>
+                <ReportIcon />
+              </ListItemIcon>
+              <ListItemText primary={t.reportIssue} />
+            </StyledMenuItem>
+          </a>
+        )}
         {shift && (
           <StyledMenuItem onClick={handleDeveloper}>
             <ListItemIcon>

@@ -29,11 +29,9 @@ import { isElectron } from '../api-variable';
 import { OptionType } from '../model';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
-import { Online } from '../utils';
 import localStrings from '../selector/localize';
 import {
   related,
-  LoadProjectData,
   useFlatAdd,
   useVProjectCreate,
   useVProjectRead,
@@ -49,9 +47,10 @@ import {
   useRole,
   allUsersRec,
   getRoleId,
+  useOfflnProjRead,
+  useLoadProjectData,
 } from '../crud';
 import Auth from '../auth/Auth';
-import { useSnackBar } from '../hoc/SnackBar';
 
 export type TeamIdType = Organization | null;
 
@@ -206,21 +205,17 @@ const TeamProvider = withData(mapRecordsToProps)(
       fetchBooks,
       doOrbitError,
     } = props;
-    const [memory] = useGlobal('memory');
     const [isOffline] = useGlobal('offline');
-    const [, setBusy] = useGlobal('importexportBusy');
 
     // const [orgRole, setOrgRole] = useGlobal('orgRole');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
-    const [remote] = useGlobal('remote');
-    const [backup] = useGlobal('backup');
+    const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
-    const [projectsLoaded, setProjectsLoaded] = useGlobal('projectsLoaded');
+    const [offline] = useGlobal('offline');
     const [userProjects, setUserProjects] = useState(projects);
     const [userOrgs, setUserOrgs] = useState(organizations);
-    const { showMessage } = useSnackBar();
     const [importOpen, setImportOpen] = useState(false);
     const [importProject, setImportProject] = useState<VProject>();
     const [state, setState] = useState({
@@ -246,8 +241,10 @@ const TeamProvider = withData(mapRecordsToProps)(
     const getTeamId = useNewTeamId({ ...props });
     const getPlanType = useTableType('plan');
     const vProject = useVProjectRead();
+    const oProjRead = useOfflnProjRead();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
     const { getPlan } = usePlan();
+    const LoadData = useLoadProjectData(auth, t, doOrbitError);
 
     const setProjectParams = (plan: Plan) => {
       const projectId = related(plan, 'project');
@@ -273,28 +270,10 @@ const TeamProvider = withData(mapRecordsToProps)(
       cb: (() => void) | undefined = undefined
     ) => {
       const [projectId] = setProjectParams(plan);
-
-      Online((online) => {
-        LoadProjectData(
-          projectId,
-          memory,
-          remote,
-          online && !isOffline,
-          backup,
-          projectsLoaded,
-          setProjectsLoaded,
-          setBusy,
-          doOrbitError
-        )
-          .then(() => {
-            if (!cb) setMyProjRole(projectId);
-            else cb();
-          })
-          .catch((err: Error) => {
-            if (!online) showMessage(t.NoLoadOffline);
-            else showMessage(err.message);
-          });
-      }, auth);
+      LoadData(projectId, () => {
+        if (!cb) setMyProjRole(projectId);
+        else cb();
+      });
     };
 
     const isOwner = (plan: Plan) => {
@@ -333,7 +312,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       return userOrgs
         .filter(
           (o) =>
-            !isPersonal(o.id) && (!isElectron || teamProjects(o.id).length > 0)
+            !isPersonal(o.id) && (!offline || teamProjects(o.id).length > 0)
         )
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
@@ -351,7 +330,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         .filter(
           (p) =>
             isPersonal(related(p, 'organization')) &&
-            (!isOffline || projectsLoaded.includes(p.id))
+            (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
         )
         .map((p) => p.id);
       return plans
@@ -365,7 +344,7 @@ const TeamProvider = withData(mapRecordsToProps)(
         .filter(
           (p) =>
             related(p, 'organization') === teamId &&
-            (!isOffline || projectsLoaded.includes(p.id))
+            (!isOffline || oProjRead(p.id)?.attributes?.offlineAvailable)
         )
         .map((p) => p.id);
       return plans
@@ -456,7 +435,8 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
-      if (isOffline) {
+      if (isElectron) {
+        //online or offline we may have other user's orgs in the db
         const orgIds = orgMembers
           .filter((om) => related(om, 'user') === user)
           .map((om) => related(om, 'organization'));
