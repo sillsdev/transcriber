@@ -95,11 +95,13 @@ export function Logout(props: IProps) {
     const needyProject = new Set<string>();
     let totalSize = 0;
     mediaRecs.forEach((m) => {
-      var local = { localname: '' };
-      var curpath = dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
-      if (curpath !== local.localname) {
-        needyProject.add(planProject[related(m, 'plan')]);
-        totalSize += m?.attributes?.filesize || 0;
+      if (related(m, 'passage')) {
+        var local = { localname: '' };
+        var curpath = dataPath(m.attributes.audioUrl, PathType.MEDIA, local);
+        if (curpath !== local.localname) {
+          needyProject.add(planProject[related(m, 'plan')]);
+          totalSize += m?.attributes?.filesize || 0;
+        }
       }
     });
     if (downloadSize !== totalSize) setDownloadSize(totalSize);
