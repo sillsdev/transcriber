@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
