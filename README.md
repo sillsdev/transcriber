@@ -8,13 +8,18 @@ Clone the app, go to the project directory, and execute:
 
 1. `npm install`
 2. `npm run stamp` _# this creates a file with the date to display in the version_
-3. `npm run build`
+3. If this is the first time installing, you will want to `amplify init` (see Amplify below)
+4. Get a copy of the `env-files-transcriber.zip` from a team member and unzip it into the `env-config` folder (see configuration below)
+5. Optionally rebuild the localization `string.json` file (see below)
+6. `npm run build`
 
-### Visual Studio
+### Visual Studio for (`strings.json` file)
 
-You can use Visual Studio to build `updateLocalization.sln` (in the localization folder). This file will process the `xliff` and `xlf` files to add the `strings.json` and the localizaiton reducer and model to the source tree. It requires `.NET Framework` to execute XSLT 2.0 stylesheets.
+You can use Visual Studio to build `updateLocalization.sln` (in the localization folder). This file will process the `xliff` and `xlf` files to add the `strings.json` and the localizaiton reducer and model to the source tree. It requires `.NET Framework` to execute XSLT 2.0 stylesheets. When you first load it, you need to make sure the nuget dependencies are up to date.
 
-4. `cd localization\bin\Debug;& updateLocalization.exe`
+1. get the latest localization strings from crowdin (see below)
+2. `cd localization\bin\Debug` 
+3. execute `updateLocalization.exe`
 
 > NB. You may want ot download the strings from the [crowdin site](https://crowdin.com/project/sil-transcriber) and unzip the file in the localization folder before executing this command to get all the latest localization strings included.
 
@@ -68,6 +73,8 @@ Follow the prompts as appropriate. If the `~/.aws` folder is configured correctl
 ? Do you want to use an AWS profile? [Yes]
 ? Please choose the profile you want to use [transcriber]
 ```
+
+>NB: After running `amplify init` it is wise to check out any files it has changed in your repo. It does not need to change the files that are checked in.
 
 ### Configuration
 
@@ -163,13 +170,13 @@ const electronExtension = (BrowserWindow) => {
   BrowserWindow.addDevToolsExtension(
     path.join(
       os.homedir(),
-      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.8.2_0"
+      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.10.1_0"
     )
   );
   BrowserWindow.addDevToolsExtension(
     path.join(
       os.homedir(),
-      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/2.17.0_0"
+      "/AppData/Local/Google/Chrome/User Data/Default/Extensions/lmhkpmbekcpmknklioeibfkpmmfibljd/3.3_0"
     )
   );
 };

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
-using net.sf.saxon.tree.wrapper;
 using Newtonsoft.Json;
 using Saxon.Api;
 
