@@ -22,13 +22,13 @@ localization/packages
 .DS_Store
 .env.local
 .env.*.local
-.env*.zip
 localization/.vscode
 localization/.vs
 buildDate.json
 /public/fonts
 /public/electronExtensions.js
 env-variables*.json
+env-config/env-files*.zip
 
 npm-debug.log*
 yarn-debug.log*
