@@ -36,6 +36,7 @@ import { withData } from '../mods/react-orbitjs';
 import { isElectron, API_CONFIG } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
+import StickyRedirect from '../components/StickyRedirect';
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -132,6 +133,8 @@ export function Access(props: IProps) {
   const [offline, setOffline] = useGlobal('offline');
   const [isDeveloper, setIsDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
+  const [, setEditId] = useGlobal('editUserId');
+  const [view, setView] = useState('');
   const [importOpen, setImportOpen] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
@@ -180,6 +183,8 @@ export function Access(props: IProps) {
 
   const handleCreateUser = () => {
     console.log('create user');
+    setEditId('Add');
+    setView('Profile');
   };
 
   // see: https://web.dev/persistent-storage/
@@ -258,6 +263,7 @@ export function Access(props: IProps) {
     (isElectron && selectedUser !== '')
   )
     return <Redirect to="/loading" />;
+  if (/Profile/i.test(view)) return <StickyRedirect to="/profile" />;
 
   return (
     <div className={classes.root}>
