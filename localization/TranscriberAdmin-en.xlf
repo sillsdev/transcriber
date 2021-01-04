@@ -4,27 +4,51 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.accessFirst">
+      <unit id="access.availableUsers">
          <segment>
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.accessSilTranscriber">
-         <segment>
-            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.goOnline">
-         <segment>
-            <source>Go Online</source>
+            <source>Available Offline Users</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.cancel">
          <segment>
             <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.createUser">
+         <segment>
+            <source>Create a new user</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.logIn">
+         <segment>
+            <source>Log In</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.screenTitle">
+         <segment>
+            <source>I want to work...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.uploadArchive">
+         <segment>
+            <source>Upload a Project Archive</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withInternet">
+         <segment>
+            <source>With an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withoutInternet">
+         <segment>
+            <source>Without an Internet connection</source>
             <target/>
          </segment>
       </unit>
