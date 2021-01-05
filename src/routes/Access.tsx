@@ -28,7 +28,7 @@ import {
 } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
-import { related, useOfflnProjRead } from '../crud';
+import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { UserAvatar } from '../components/UserAvatar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
@@ -143,6 +143,7 @@ export function Access(props: IProps) {
   const [, setProjRole] = useGlobal('projRole');
   const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
+  const offlineSetup = useOfflineSetup();
   const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
     React.MouseEvent<HTMLElement>
   >();
@@ -181,8 +182,9 @@ export function Access(props: IProps) {
     }
   };
 
-  const handleCreateUser = () => {
+  const handleCreateUser = async () => {
     console.log('create user');
+    await offlineSetup();
     setEditId('Add');
     setView('Profile');
   };
