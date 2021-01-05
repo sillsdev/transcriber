@@ -33,5 +33,6 @@ declare module 'reactn/default' {
     orbitRetries: number;
     enableOffsite: boolean;
     connected: boolean;
+    offlineOnly: boolean;
   }
 }

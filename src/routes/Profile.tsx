@@ -201,8 +201,9 @@ export function Profile(props: IProps) {
   const [memory] = useGlobal('memory');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
-  const [user] = useGlobal('user');
+  const [user, setUser] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
@@ -454,8 +455,9 @@ export function Profile(props: IProps) {
         },
       } as any;
       memory.schema.initializeRecord(userRec);
-      if (!editId) {
+      if (!editId || offlineOnly) {
         memory.update((t: TransformBuilder) => t.addRecord(userRec));
+        if (offlineOnly) setUser(userRec.id);
       } else {
         addToOrgAndGroup(userRec);
       }

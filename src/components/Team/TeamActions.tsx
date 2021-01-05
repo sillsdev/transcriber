@@ -32,6 +32,7 @@ const TeamActions = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
   const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
@@ -51,7 +52,7 @@ const TeamActions = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      {!offline && (
+      {(!offline || offlineOnly) && (
         <Button
           variant="contained"
           color="default"
@@ -61,7 +62,7 @@ const TeamActions = (props: IProps) => {
           {t.addTeam}
         </Button>
       )}
-      {offline && (
+      {offline && !offlineOnly && (
         <Button variant="contained" color="default" onClick={handleClickImport}>
           {t.import}
         </Button>

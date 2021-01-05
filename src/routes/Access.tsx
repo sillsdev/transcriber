@@ -36,7 +36,6 @@ import { withData } from '../mods/react-orbitjs';
 import { isElectron, API_CONFIG } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
-import StickyRedirect from '../components/StickyRedirect';
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -134,7 +133,7 @@ export function Access(props: IProps) {
   const [isDeveloper, setIsDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
   const [, setEditId] = useGlobal('editUserId');
-  const [view, setView] = useState('');
+  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const [importOpen, setImportOpen] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
@@ -185,8 +184,8 @@ export function Access(props: IProps) {
   const handleCreateUser = async () => {
     console.log('create user');
     await offlineSetup();
+    setOfflineOnly(true);
     setEditId('Add');
-    setView('Profile');
   };
 
   // see: https://web.dev/persistent-storage/
@@ -262,10 +261,10 @@ export function Access(props: IProps) {
     return <Redirect to="/emailunverified" />;
   } else if (
     (!isElectron && auth?.isAuthenticated()) ||
+    offlineOnly ||
     (isElectron && selectedUser !== '')
   )
     return <Redirect to="/loading" />;
-  if (/Profile/i.test(view)) return <StickyRedirect to="/profile" />;
 
   return (
     <div className={classes.root}>

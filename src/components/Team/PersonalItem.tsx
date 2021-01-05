@@ -42,6 +42,7 @@ export const PersonalItem = () => {
   const { personalProjects, cardStrings } = ctx.state;
   const t = cardStrings;
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   return (
     <Paper id="PersonalItem" className={classes.root}>
@@ -55,7 +56,7 @@ export const PersonalItem = () => {
         {personalProjects().map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        {!isOffline && <AddCard team={null} />}
+        {(!isOffline || offlineOnly) && <AddCard team={null} />}
       </Grid>
     </Paper>
   );
