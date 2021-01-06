@@ -137,6 +137,7 @@ export function UserTable(props: IProps) {
   const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -300,17 +301,19 @@ export function UserTable(props: IProps) {
         <div className={classes.actions}>
           {orgRole === 'admin' && (
             <>
-              <Button
-                key="add"
-                aria-label={t.invite}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleAdd}
-              >
-                {t.invite}
-                <AddIcon className={classes.buttonIcon} />
-              </Button>
+              {!offlineOnly && (
+                <Button
+                  key="add"
+                  aria-label={t.invite}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAdd}
+                >
+                  {t.invite}
+                  <AddIcon className={classes.buttonIcon} />
+                </Button>
+              )}
               <Button
                 key="offline"
                 aria-label={t.offline}

@@ -11,7 +11,7 @@ import {
 import Coordinator from '@orbit/coordinator';
 import { QueryBuilder, TransformBuilder, RecordIdentity } from '@orbit/data';
 import { setDefaultProj, getRoleRec, allUsersRec } from '.';
-import { orbitErr } from '../utils';
+import { orbitErr, currentDateTime } from '../utils';
 
 export const ReloadOrgTables = async (coordinator: Coordinator) => {
   const memory = coordinator.getSource('memory') as Memory;
@@ -52,8 +52,8 @@ const OrgRelated = async (
   const roleRecs = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('role')
   ) as Role[];
-  const memberRec = getRoleRec(roleRecs, 'member', true);
-  const editorRec = getRoleRec(roleRecs, 'editor', false);
+  const orgRoleRec = getRoleRec(roleRecs, 'admin', true);
+  const grpRoleRec = getRoleRec(roleRecs, 'admin', false);
   const allUsersGroup = allUsersRec(memory, orgRec.id);
   if (allUsersGroup.length === 0) {
     let group: Group = {
@@ -62,6 +62,8 @@ const OrgRelated = async (
         name: `All users of ${orgRec.attributes.name}`,
         abbreviation: `all-users`,
         allUsers: true,
+        dateCreated: currentDateTime(),
+        dateUpdated: currentDateTime(),
       },
     } as any;
     memory.schema.initializeRecord(group);
@@ -75,13 +77,13 @@ const OrgRelated = async (
     t.addRecord(orgMember),
     t.replaceRelatedRecord(orgMember, 'user', userRecId),
     t.replaceRelatedRecord(orgMember, 'organization', orgRec),
-    t.replaceRelatedRecord(orgMember, 'role', memberRec[0]),
+    t.replaceRelatedRecord(orgMember, 'role', orgRoleRec[0]),
   ]);
   await memory.update((t: TransformBuilder) => [
     t.addRecord(groupMbr),
     t.replaceRelatedRecord(groupMbr, 'user', userRecId),
     t.replaceRelatedRecord(groupMbr, 'group', allUsersGroup[0]),
-    t.replaceRelatedRecord(groupMbr, 'role', editorRec[0]),
+    t.replaceRelatedRecord(groupMbr, 'role', grpRoleRec[0]),
   ]);
 };
 

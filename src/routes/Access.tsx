@@ -150,6 +150,7 @@ export function Access(props: IProps) {
   const handleSelect = (uId: string) => () => {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
+      if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
       localStorage.setItem('user-id', selected[0].id);
       setSelectedUser(uId);
     }
@@ -200,6 +201,9 @@ export function Access(props: IProps) {
   };
 
   const hasUserProjects = (userId: string) => {
+    const userRec = users.filter((u) => u.id === userId);
+    if (userRec.length > 0 && userRec[0]?.keys?.remoteId === undefined)
+      return true;
     const grpIds = groupMemberships
       .filter((gm) => related(gm, 'user') === userId)
       .map((gm) => related(gm, 'group'));

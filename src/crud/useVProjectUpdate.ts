@@ -2,6 +2,7 @@ import { useGlobal } from 'reactn';
 import { VProject } from '../model';
 import { TransformBuilder } from '@orbit/data';
 import { related, useTypeId } from '.';
+import { currentDateTime } from '../utils';
 
 export const useVProjectUpdate = () => {
   const [memory] = useGlobal('memory');
@@ -36,8 +37,7 @@ export const useVProjectUpdate = () => {
           defaultFont,
           defaultFontSize,
           rtl,
-          allowClaim: true,
-          isPublic: true,
+          dateUpdated: currentDateTime(),
         },
       }),
       // We use the plan type and not the project type
@@ -57,6 +57,7 @@ export const useVProjectUpdate = () => {
           flat,
           tags: JSON.stringify(tags),
           organizedBy,
+          dateUpdated: currentDateTime(),
         },
       }),
       t.replaceRelatedRecord({ type: 'plan', id: vProject.id }, 'plantype', {

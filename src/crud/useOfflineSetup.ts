@@ -48,6 +48,15 @@ export const useOfflineSetup = () => {
       q.findRecords('role')
     ) as Role[];
     if (roleRecs.length === 0) {
+      let adminRec = {
+        type: 'role',
+        attributes: {
+          orgRole: true,
+          groupRole: true,
+          roleName: 'Admin',
+        },
+      } as Role;
+      memory.schema.initializeRecord(adminRec);
       let memberRec = {
         type: 'role',
         attributes: {
@@ -68,6 +77,7 @@ export const useOfflineSetup = () => {
       memory.schema.initializeRecord(editorRec);
       await memory.sync(
         await backup.push((t: TransformBuilder) => [
+          t.addRecord(adminRec),
           t.addRecord(memberRec),
           t.addRecord(editorRec),
         ])

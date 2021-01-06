@@ -277,7 +277,7 @@ export function Loading(props: IProps) {
         } else {
           LoadProjData(related(planRec, 'project'));
         }
-      }
+      } else if (!/^\/profile/.test(fromUrl)) fromUrl = null;
     }
     push(fromUrl || '/team');
   };

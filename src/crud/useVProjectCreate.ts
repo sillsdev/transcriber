@@ -50,6 +50,7 @@ export const useVProjectCreate = () => {
         allowClaim: true,
         isPublic: true,
         dateCreated: currentDateTime(),
+        dateUpdated: currentDateTime(),
       },
     } as Project;
     memory.schema.initializeRecord(project);
@@ -86,6 +87,8 @@ export const useVProjectCreate = () => {
         flat,
         tags: JSON.stringify(tags),
         organizedBy,
+        dateCreated: currentDateTime(),
+        dateUpdated: currentDateTime(),
       },
     } as any;
     memory.schema.initializeRecord(plan);

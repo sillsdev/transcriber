@@ -15,6 +15,7 @@ import {
   ISharedStrings,
   MediaFile,
   OptionType,
+  ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
@@ -153,6 +154,7 @@ export function ScriptureTable(props: IProps) {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [doSave, setDoSave] = useGlobal('doSave');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [, setConnected] = useGlobal('connected');
 
@@ -735,10 +737,12 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
-  const getLastModified = () => {
-    var planRec = getPlan(plan);
-    if (planRec !== null) setLastSaved(planRec.attributes.dateUpdated);
-    else setLastSaved('');
+  const getLastModified = (plan: string) => {
+    if (plan) {
+      var planRec = getPlan(plan);
+      if (planRec !== null) setLastSaved(planRec.attributes.dateUpdated);
+      else setLastSaved('');
+    }
   };
 
   useEffect(() => {
@@ -754,117 +758,204 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
-  useEffect(() => {
-    const handleSave = async () => {
-      const doSave = async (changedRows: boolean[]) => {
-        setComplete(10);
-        let planid = remoteIdNum('plan', plan, memory.keyMap);
-        var anyNew = changedRows.includes(true);
-        let recs: IRecord[][] = [];
-        rowInfo.forEach((row, index) => {
-          var rec = [];
-          if (isSectionRow(row)) {
-            rec.push({
-              issection: true,
-              id: remoteId('section', row.sectionId?.id || '', memory.keyMap),
-              changed: changedRows[index],
-              sequencenum: data[index][cols.SectionSeq],
-              book: showBook(cols) ? data[index][cols.Book] : '',
-              reference: data[index][cols.Reference],
-              title: data[index][cols.SectionnName],
-            });
-          }
-          if (isPassageRow(row)) {
-            if (changedRows[index])
-              rec.push({
-                issection: false,
-                id: remoteId('passage', row.passageId?.id || '', memory.keyMap),
-                changed: true,
-                sequencenum: data[index][cols.PassageSeq],
-                book: showBook(cols) ? data[index][cols.Book] : '',
-                reference: data[index][cols.Reference],
-                title: data[index][cols.Title],
-              });
-            //don't bother to push all the passage if not changed
-            else
-              rec.push({
-                issection: false,
-                changed: false,
-              } as IRecord);
-          }
-          recs.push(rec);
+  const getChangedRecs = (changedRows: boolean[]) => {
+    let recs: IRecord[][] = [];
+    rowInfo.forEach((row, index) => {
+      var rec = [];
+      if (isSectionRow(row)) {
+        rec.push({
+          issection: true,
+          id: remoteId('section', row.sectionId?.id || '', memory.keyMap),
+          changed: changedRows[index],
+          sequencenum: data[index][cols.SectionSeq],
+          book: showBook(cols) ? data[index][cols.Book] : '',
+          reference: data[index][cols.Reference],
+          title: data[index][cols.SectionnName],
         });
-        let sp: SectionPassage = {
-          attributes: {
-            data: JSON.stringify(recs),
-            planId: planid,
-            uuid: generateUUID(),
-          },
-          type: 'sectionpassage',
-        } as SectionPassage;
-        memory.schema.initializeRecord(sp);
-        setComplete(20);
-        var dumbrec = await memory.update(
-          (t: TransformBuilder) => t.addRecord(sp),
-          {
-            label: 'Update Plan Section and Passages',
-            sources: {
-              remote: {
-                settings: {
-                  timeout: 2000000,
-                },
-              },
-            },
-          }
-        );
-        //null only if sent twice by orbit
-        if (dumbrec) {
-          setComplete(50);
-          //dumbrec does not contain the new data...just the new id so go get it
-          var filterrec = {
-            attribute: 'plan-id',
-            value: remoteId('plan', plan, memory.keyMap),
-          };
-          //must wait for these...in case they they navigate away before done
-          await memory.sync(
-            await remote.pull((q) => q.findRecords('section').filter(filterrec))
-          );
-          await memory.sync(
-            await remote.pull((q) => q.findRecords('passage').filter(filterrec))
-          );
-          await memory.sync(
-            await remote.pull((q) => q.findRecord({ type: 'plan', id: plan }))
-          );
-          if (anyNew) {
-            var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
-              q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
-            )) as any;
-            if (rec !== undefined) {
-              //outrecs is an array of arrays of IRecords
-              var outrecs = JSON.parse(rec.attributes.data);
-              var newrowinfo = rowInfo.map((r) => {
-                return { ...r };
-              }); // _.cloneDeep(r));
+      }
+      if (isPassageRow(row)) {
+        if (changedRows[index])
+          rec.push({
+            issection: false,
+            id: remoteId('passage', row.passageId?.id || '', memory.keyMap),
+            changed: true,
+            sequencenum: data[index][cols.PassageSeq],
+            book: showBook(cols) ? data[index][cols.Book] : '',
+            reference: data[index][cols.Reference],
+            title: data[index][cols.Title],
+          });
+        //don't bother to push all the passage if not changed
+        else
+          rec.push({
+            issection: false,
+            changed: false,
+          } as IRecord);
+      }
+      recs.push(rec);
+    });
+    return recs;
+  };
 
-              newrowinfo.forEach((row, index) => {
-                if (isSectionRow(row) && row.sectionId?.id === '')
-                  row.sectionId.id = remoteIdGuid(
-                    'section',
-                    (outrecs[index][0] as IRecord).id,
-                    memory.keyMap
-                  );
-                if (isPassageRow(row) && row.passageId?.id === '')
-                  row.passageId.id = remoteIdGuid(
-                    'passage',
-                    (outrecs[index][isSectionRow(row) ? 1 : 0] as IRecord).id,
-                    memory.keyMap
-                  );
-              });
-              setRowInfo(newrowinfo);
-              setInData(data.map((row: Array<any>) => [...row]));
+  const onlineSaveFn = async (recs: IRecord[][], anyNew: boolean) => {
+    const sp: SectionPassage = {
+      attributes: {
+        data: JSON.stringify(recs),
+        planId: remoteIdNum('plan', plan, memory.keyMap),
+        uuid: generateUUID(),
+      },
+      type: 'sectionpassage',
+    } as SectionPassage;
+    memory.schema.initializeRecord(sp);
+    setComplete(20);
+    var dumbrec = await memory.update(
+      (t: TransformBuilder) => t.addRecord(sp),
+      {
+        label: 'Update Plan Section and Passages',
+        sources: {
+          remote: {
+            settings: {
+              timeout: 2000000,
+            },
+          },
+        },
+      }
+    );
+    //null only if sent twice by orbit
+    if (dumbrec) {
+      setComplete(50);
+      //dumbrec does not contain the new data...just the new id so go get it
+      var filterrec = {
+        attribute: 'plan-id',
+        value: remoteId('plan', plan, memory.keyMap),
+      };
+      //must wait for these...in case they they navigate away before done
+      await memory.sync(
+        await remote.pull((q) => q.findRecords('section').filter(filterrec))
+      );
+      await memory.sync(
+        await remote.pull((q) => q.findRecords('passage').filter(filterrec))
+      );
+      await memory.sync(
+        await remote.pull((q) => q.findRecord({ type: 'plan', id: plan }))
+      );
+      if (anyNew) {
+        var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
+        )) as any;
+        if (rec !== undefined) {
+          //outrecs is an array of arrays of IRecords
+          var outrecs = JSON.parse(rec.attributes.data);
+          var newrowinfo = rowInfo.map((r) => {
+            return { ...r };
+          }); // _.cloneDeep(r));
+
+          newrowinfo.forEach((row, index) => {
+            if (isSectionRow(row) && row.sectionId?.id === '')
+              row.sectionId.id = remoteIdGuid(
+                'section',
+                (outrecs[index][0] as IRecord).id,
+                memory.keyMap
+              );
+            if (isPassageRow(row) && row.passageId?.id === '')
+              row.passageId.id = remoteIdGuid(
+                'passage',
+                (outrecs[index][isSectionRow(row) ? 1 : 0] as IRecord).id,
+                memory.keyMap
+              );
+          });
+          setRowInfo(newrowinfo);
+          setInData(data.map((row: Array<any>) => [...row]));
+        }
+      }
+    }
+  };
+
+  const localSaveFn = async (recs: IRecord[][], anyNew: boolean) => {
+    if (!anyNew) return;
+    let lastSec: string = '';
+    for (let rIdx = 0; rIdx < recs.length; rIdx += 1) {
+      const table = recs[rIdx];
+      for (let tIdx = 0; tIdx < table.length; tIdx += 1) {
+        const item = table[tIdx];
+        if (item.changed) {
+          if (item.issection) {
+            const secRecs = sections.filter((s) => s.id === item.id);
+            if (secRecs.length > 0) {
+              await memory.update((t: TransformBuilder) =>
+                t.updateRecord({
+                  ...secRecs[0],
+                  sequencenum: item.sequencenum,
+                  name: item.title,
+                  dateUpdated: currentDateTime(),
+                } as Section)
+              );
+              lastSec = secRecs[0].id;
+            } else {
+              const secRec: Section = {
+                type: 'section',
+                attributes: {
+                  sequencenum: item.sequencenum,
+                  name: item.title,
+                  state: ActivityStates.NoMedia,
+                  dateCreated: currentDateTime(),
+                  dateUpdated: currentDateTime(),
+                },
+              } as any;
+              memory.schema.initializeRecord(secRec);
+              const planRecId = { type: 'plan', id: plan };
+              await memory.update((t: TransformBuilder) => [
+                t.addRecord(secRec),
+                t.replaceRelatedRecord(secRec, 'plan', planRecId),
+              ]);
+              lastSec = secRec.id;
+            }
+          } else {
+            const passRecs = passages.filter((p) => p.id === item.id);
+            if (passRecs.length > 0) {
+              await memory.update((t: TransformBuilder) =>
+                t.updateRecord({
+                  ...passRecs[0],
+                  sequencenum: item.sequencenum,
+                  book: item.book,
+                  reference: item.reference,
+                  title: item.title,
+                  dateUpdated: currentDateTime(),
+                } as Passage)
+              );
+            } else {
+              const passRec: Passage = {
+                type: 'passage',
+                attributes: {
+                  sequencenum: item.sequencenum,
+                  book: item.book,
+                  reference: item.reference,
+                  title: item.title,
+                  state: ActivityStates.NoMedia,
+                  dateCreated: currentDateTime(),
+                  dateUpdated: currentDateTime(),
+                },
+              } as any;
+              memory.schema.initializeRecord(passRec);
+              const secRecId = { type: 'section', id: lastSec };
+              await memory.update((t: TransformBuilder) => [
+                t.addRecord(passRec),
+                t.replaceRelatedRecord(passRec, 'section', secRecId),
+              ]);
             }
           }
         }
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleSave = async () => {
+      const saveFn = async (changedRows: boolean[]) => {
+        setComplete(10);
+        const anyNew = changedRows.includes(true);
+        const recs = getChangedRecs(changedRows);
+        if (!offlineOnly) onlineSaveFn(recs, anyNew);
+        else localSaveFn(recs, anyNew);
       };
 
       let changedRows: boolean[] = rowInfo.map(
@@ -897,10 +988,10 @@ export function ScriptureTable(props: IProps) {
             }
           } else someChangedRows[index] = false;
         });
-        await doSave(someChangedRows);
+        await saveFn(someChangedRows);
         numChanges = changedRows.filter((r) => r).length;
       }
-      await doSave(changedRows);
+      await saveFn(changedRows);
       setBusy(false);
       setComplete(0);
     };
@@ -908,7 +999,7 @@ export function ScriptureTable(props: IProps) {
     if (doSave && !saving) {
       Online((online) => {
         setConnected(online);
-        if (!online) {
+        if (!online && !offlineOnly) {
           saveCompleted(ts.NoSaveOffline);
           setSaving(false);
         } else {
@@ -1062,12 +1153,12 @@ export function ScriptureTable(props: IProps) {
         }
       }
     };
-    if (!saving && !changed && plan !== '') {
+    if (!saving && !changed && plan) {
       getSections(plan as string).then(() => {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
         setRowInfo(rowInfo);
-        getLastModified();
+        getLastModified(plan);
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */

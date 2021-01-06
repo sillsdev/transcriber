@@ -877,7 +877,7 @@ export function Profile(props: IProps) {
                 </FormGroup>
               </FormControl>
               <div className={classes.actions}>
-                {((editId && /Add/i.test(editId)) ||
+                {((editId && /Add/i.test(editId) && !offlineOnly) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)) && (
