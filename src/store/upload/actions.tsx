@@ -40,6 +40,19 @@ export const nextUpload = (
     if (cb) cb(n, false);
     return;
   }
+  if (!auth.accessToken) {
+    // offlineOnly
+    var local = { localname: '' };
+    dataPath(`http://${files[n].path}`, PathType.MEDIA, local);
+    try {
+      fs.copyFileSync(files[n].path, local.localname);
+      if (cb) cb(n, true, { ...record, audioUrl: local.localname });
+    } catch (err) {
+      if (cb) cb(n, false);
+      console.log(err);
+    }
+    return;
+  }
   Axios.post(API_CONFIG.host + '/api/mediafiles', record, {
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,

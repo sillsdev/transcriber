@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
-import { IState, IMediaTabStrings, ISharedStrings } from '../model';
+import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
@@ -11,6 +11,8 @@ import { remoteIdNum } from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
+import { currentDateTime } from '../utils';
+import { TransformBuilder } from '@orbit/data';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -64,6 +66,7 @@ export const Uploader = (props: IProps) => {
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const planIdRef = React.useRef<string>();
   const successCount = React.useRef<number>(0);
   const fileList = React.useRef<FileList>();
@@ -104,17 +107,40 @@ export const Uploader = (props: IProps) => {
     }
   };
 
-  const itemComplete = (n: number, success: boolean, data?: any) => {
+  const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
-    if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
+    if (data?.stringId) mediaIdRef.current.push(data?.stringId);
+    else {
+      const mediaRec: MediaFile = {
+        type: 'mediafile',
+        attributes: {
+          ...data,
+          versionNumber: 1,
+          transcription: '',
+          filesize: uploadList[n].size,
+          position: 0,
+          dateCreated: currentDateTime(),
+          dateUpdated: currentDateTime(),
+        },
+      } as any;
+      memory.schema.initializeRecord(mediaRec);
+      const planRecId = { type: 'plan', id: plan };
+      await memory.update((t: TransformBuilder) => [
+        t.addRecord(mediaRec),
+        t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
+      ]);
+      mediaIdRef.current.push(mediaRec.id);
+    }
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;
     if (next < uploadList.length && !status.canceled) {
       doUpload(next);
-    } else {
+    } else if (!offlineOnly) {
       pullPlanMedia().then(() => finishMessage());
+    } else {
+      finishMessage();
     }
   };
 

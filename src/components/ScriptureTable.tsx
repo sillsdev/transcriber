@@ -1223,7 +1223,8 @@ export function ScriptureTable(props: IProps) {
           'section'
         ),
         plan,
-        remoteIdGuid('mediafile', mediaRemoteIds[0], keyMap)
+        remoteIdGuid('mediafile', mediaRemoteIds[0], keyMap) ||
+          mediaRemoteIds[0]
       );
     }
     setDoSave(true);

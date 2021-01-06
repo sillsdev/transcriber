@@ -556,7 +556,7 @@ export function PlanSheet(props: IProps) {
                     onPlayStatus={handlePlayStatus}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
-                    online={connected}
+                    online={connected || offlineOnly}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
