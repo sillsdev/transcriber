@@ -366,6 +366,7 @@ export function MediaTab(props: IProps) {
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [, setTab] = useGlobal('tab');
   const [, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -1040,7 +1041,7 @@ export function MediaTab(props: IProps) {
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {!attachVisible && !isOffline && (
+                {!attachVisible && (!isOffline || offlineOnly) && (
                   <Button
                     key="upload"
                     aria-label={ts.uploadMediaPlural}
@@ -1053,7 +1054,7 @@ export function MediaTab(props: IProps) {
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {!attachVisible && !isOffline && (
+                {!attachVisible && (!isOffline || offlineOnly) && (
                   <>
                     <Button
                       key="action"

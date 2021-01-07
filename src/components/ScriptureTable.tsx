@@ -881,14 +881,16 @@ export function ScriptureTable(props: IProps) {
           if (item.issection) {
             const secRecs = sections.filter((s) => s.id === item.id);
             if (secRecs.length > 0) {
-              await memory.update((t: TransformBuilder) =>
-                t.updateRecord({
-                  ...secRecs[0],
-                  sequencenum: item.sequencenum,
-                  name: item.title,
-                  dateUpdated: currentDateTime(),
-                } as Section)
-              );
+              if (item.changed) {
+                await memory.update((t: TransformBuilder) =>
+                  t.updateRecord({
+                    ...secRecs[0],
+                    sequencenum: item.sequencenum,
+                    name: item.title,
+                    dateUpdated: currentDateTime(),
+                  } as Section)
+                );
+              }
               lastSec = secRecs[0].id;
             } else {
               const secRec: Section = {

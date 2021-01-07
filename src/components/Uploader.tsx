@@ -113,6 +113,7 @@ export const Uploader = (props: IProps) => {
     if (!uploadList) return; // This should never happen
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     else {
+      // offlineOnly
       const mediaRec: MediaFile = {
         type: 'mediafile',
         attributes: {
