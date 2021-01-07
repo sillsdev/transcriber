@@ -11,6 +11,7 @@ import {
 } from './types';
 import { dataPath, infoMsg, logError, PathType, Severity } from '../../utils';
 var fs = require('fs');
+var path = require('path');
 
 export const uploadFiles = (files: FileList) => (dispatch: any) => {
   dispatch({
@@ -46,7 +47,11 @@ export const nextUpload = (
     dataPath(`http://${files[n].path}`, PathType.MEDIA, local);
     try {
       fs.copyFileSync(files[n].path, local.localname);
-      if (cb) cb(n, true, { ...record, audioUrl: local.localname });
+      const filename = path.join(
+        PathType.MEDIA,
+        files[n].path.split('\\').pop()?.split('/').pop()
+      );
+      if (cb) cb(n, true, { ...record, audioUrl: filename });
     } catch (err) {
       if (cb) cb(n, false);
       console.log(err);
