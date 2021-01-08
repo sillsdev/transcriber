@@ -296,8 +296,8 @@ export function IntegrationPanel(props: IProps) {
     if (ptProj >= 0) removeProjectFromParatextList(ptProj);
     setPtProj(index);
     setPtProjName(e.target.value);
-    setPtShortName(paratext_projects[index].ShortName);
     if (index >= 0) {
+      setPtShortName(paratext_projects[index].ShortName);
       const paratextProject: ParatextProject = paratext_projects[index];
       const setting = {
         Name: paratextProject.Name,
@@ -467,9 +467,21 @@ export function IntegrationPanel(props: IProps) {
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
         if (offline) {
-          getParatextDataPath().then((ptPath) =>
-            getLocalProjects(ptPath, t.projectsPending, langTag)
+          const localprojs: ProjectIntegration[] = projectintegrations.filter(
+            (pi) =>
+              related(pi, 'integration') === paratextIntegration &&
+              pi.attributes
           );
+          var projIds = localprojs.map((pi) => {
+            var settings = JSON.parse(pi.attributes.settings);
+            return {
+              Name: settings.Name,
+              Id: remoteIdNum('project', related(pi, 'project'), memory.keyMap),
+            };
+          });
+          getParatextDataPath().then((ptPath) => {
+            getLocalProjects(ptPath, t.projectsPending, projIds, langTag);
+          });
         } else {
           getProjects(auth, t.projectsPending, errorReporter, langTag);
         }
