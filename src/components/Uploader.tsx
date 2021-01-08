@@ -39,8 +39,7 @@ interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
-  showMessage: (msg: string) => void;
-  showJSXMessage: (msg: JSX.Element) => void;
+  showMessage: (msg: string | JSX.Element) => void;
   setComplete: (amount: number) => void; // 0 to 100
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
@@ -51,16 +50,7 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export const Uploader = (props: IProps) => {
-  const {
-    auth,
-    t,
-    isOpen,
-    onOpen,
-    showMessage,
-    showJSXMessage,
-    status,
-    multiple,
-  } = props;
+  const { auth, t, isOpen, onOpen, showMessage, status, multiple } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
   const { uploadComplete, setComplete, finish } = props;
@@ -171,7 +161,7 @@ export const Uploader = (props: IProps) => {
   React.useEffect(() => {
     if (uploadError !== '') {
       if (uploadError.indexOf('unsupported') > 0)
-        showJSXMessage(
+        showMessage(
           <span className={classes.unsupported}>
             {t.unsupported.replace(
               '{0}',
