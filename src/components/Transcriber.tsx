@@ -50,7 +50,6 @@ import {
   sectionDescription,
   passageDescription,
   related,
-  remoteIdGuid,
   remoteIdNum,
   FontData,
   getFontData,
@@ -464,7 +463,11 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   const handleSave = async (postComment: boolean = false) => {
     //this needs to use the refs because it is called from a timer, which
     //apparently remembers the values when it is kicked off...not when it is run
-    await save(nextOnSave[stateRef.current] ?? stateRef.current, playedSecsRef.current, postComment);
+    await save(
+      nextOnSave[stateRef.current] ?? stateRef.current,
+      playedSecsRef.current,
+      postComment
+    );
   };
 
   const save = async (
@@ -684,8 +687,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     }, 1000 * 30);
   };
 
-
-
   const textAreaStyle = {
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
@@ -701,15 +702,20 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
 
   moment.locale(lang);
   const curZone = moment.tz.guess();
-  const userFromId = (remoteId: number) => {
-    const id = remoteIdGuid('user', remoteId.toString(), memory.keyMap);
+  const userFromId = (psc: PassageStateChange): User => {
+    const id = related(psc, 'user');
+    if (!id)
+      return {
+        id: '',
+        attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
+      } as any;
     const user = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'user', id })
     ) as User;
     return user;
   };
-  const nameFromId = (remoteId: number) => {
-    const user = userFromId(remoteId);
+  const nameFromId = (psc: PassageStateChange) => {
+    const user = userFromId(psc);
     return user ? user.attributes.name : '';
   };
   const historyItem = (
@@ -717,18 +723,15 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     comment: JSX.Element | string
   ) => {
     return (
-      <ListItem key={`${psc?.keys?.remoteId}-${(comment || '').toString()}`}>
+      <ListItem key={`${psc.id}-${comment}`}>
         <ListItemIcon>
-          <UserAvatar
-            {...props}
-            userRec={userFromId(psc.attributes.lastModifiedBy)}
-          />
+          <UserAvatar {...props} userRec={userFromId(psc)} />
         </ListItemIcon>
         <ListItemText
           primary={
             <>
               <Typography variant="h6" component="span">
-                {nameFromId(psc.attributes.lastModifiedBy)}
+                {nameFromId(psc)}
               </Typography>
               {'\u00A0\u00A0 '}
               <Typography component="span">

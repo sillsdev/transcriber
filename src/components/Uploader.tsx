@@ -128,7 +128,8 @@ export const Uploader = (props: IProps) => {
       } as any;
       memory.schema.initializeRecord(mediaRec);
       const planRecId = { type: 'plan', id: plan };
-      await memory.update((t: TransformBuilder) => [
+      const t = new TransformBuilder();
+      await memory.update([
         t.addRecord(mediaRec),
         t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
       ]);

@@ -2,7 +2,8 @@ import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { PassageStateChange, ActivityStates, Passage } from '../model';
 import { AddRecord } from '../model/baseModel';
-import { currentDateTime } from '../utils/currentDateTime';
+import { currentDateTime } from '../utils';
+import { remoteIdGuid } from '.';
 
 const AddPassageStateChangeToOps = (
   t: TransformBuilder,
@@ -22,15 +23,13 @@ const AddPassageStateChangeToOps = (
   } as PassageStateChange;
 
   ops.push(AddRecord(t, psc, userid, memory));
+  const passRecId = { type: 'passage', id: passage };
+  ops.push(t.replaceRelatedRecord(psc, 'passage', passRecId));
   ops.push(
-    t.replaceRelatedRecord(
-      { type: 'passagestatechange', id: psc.id },
-      'passage',
-      {
-        type: 'passage',
-        id: passage,
-      }
-    )
+    t.replaceRelatedRecord(psc, 'user', {
+      type: 'user',
+      id: remoteIdGuid('user', userid.toString(), memory.keyMap),
+    })
   );
 };
 
@@ -45,25 +44,8 @@ export const AddFlatPassage = (
   var t = new TransformBuilder();
   var ops: Operation[] = [];
   ops.push(AddRecord(t, rec, user, memory));
-  ops.push(
-    t.replaceRelatedRecord({ type: 'passage', id: rec.id }, 'section', section)
-  );
-  /* we don't need to do this, because the only time we call this is when
-  we've just created the plan and section
-  ops.push(
-    t.replaceAttribute(
-      { type: 'section', id: section.id },
-      'dateUpdated',
-      currentDateTime()
-    )
-  );
-  ops.push(
-    t.replaceAttribute(
-      { type: 'plan', id: planid },
-      'dateUpdated',
-      currentDateTime()
-    )
-  ); */
+  const passRecId = { type: 'passage', id: rec.id };
+  ops.push(t.replaceRelatedRecord(passRecId, 'section', section));
   AddPassageStateChangeToOps(
     t,
     ops,
@@ -73,9 +55,7 @@ export const AddFlatPassage = (
     user,
     memory
   );
-  ops.push(
-    t.replaceRelatedRecord(media, 'passage', { type: 'passage', id: rec.id })
-  );
+  ops.push(t.replaceRelatedRecord(media, 'passage', passRecId));
   return ops;
 };
 
@@ -106,34 +86,14 @@ export const UpdatePassageStateOps = (
   ops.push(
     t.replaceAttribute({ type: 'passage', id: passage }, 'state', state)
   );
-  ops.push(
-    t.replaceAttribute(
-      { type: 'passage', id: passage },
-      'dateUpdated',
-      currentDateTime()
-    )
-  );
-  ops.push(
-    t.replaceAttribute(
-      { type: 'passage', id: passage },
-      'lastmodifiedby',
-      userid
-    )
-  );
-  ops.push(
-    t.replaceAttribute(
-      { type: 'section', id: section },
-      'dateUpdated',
-      currentDateTime()
-    )
-  );
-  ops.push(
-    t.replaceAttribute(
-      { type: 'plan', id: plan },
-      'dateUpdated',
-      currentDateTime()
-    )
-  );
+  const passRecId = { type: 'passage', id: passage };
+  const secRecId = { type: 'section', id: section };
+  const planRecId = { type: 'plan', id: plan };
+  const curTime = currentDateTime();
+  ops.push(t.replaceAttribute(passRecId, 'dateUpdated', curTime));
+  ops.push(t.replaceAttribute(passRecId, 'lastmodifiedby', userid));
+  ops.push(t.replaceAttribute(secRecId, 'dateUpdated', curTime));
+  ops.push(t.replaceAttribute(planRecId, 'dateUpdated', curTime));
   AddPassageStateChangeToOps(t, ops, passage, state, comment, userid, memory);
   return ops;
 };

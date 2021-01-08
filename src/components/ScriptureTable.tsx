@@ -22,7 +22,12 @@ import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
+import {
+  TransformBuilder,
+  RecordIdentity,
+  QueryBuilder,
+  Operation,
+} from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -35,6 +40,7 @@ import {
   getMediaRec,
   useOrganizedBy,
   usePlan,
+  UpdatePassageStateOps,
 } from '../crud';
 import { Online, useRemoteSave, lookupBook, currentDateTime } from '../utils';
 import { debounce } from 'lodash';
@@ -153,6 +159,7 @@ export function ScriptureTable(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const [user] = useGlobal('user');
   const [doSave, setDoSave] = useGlobal('doSave');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [busy, setBusy] = useGlobal('importexportBusy');
@@ -765,7 +772,9 @@ export function ScriptureTable(props: IProps) {
       if (isSectionRow(row)) {
         rec.push({
           issection: true,
-          id: remoteId('section', row.sectionId?.id || '', memory.keyMap),
+          id:
+            remoteId('section', row.sectionId?.id || '', memory.keyMap) ||
+            (row.sectionId?.id as string),
           changed: changedRows[index],
           sequencenum: data[index][cols.SectionSeq],
           book: showBook(cols) ? data[index][cols.Book] : '',
@@ -777,7 +786,9 @@ export function ScriptureTable(props: IProps) {
         if (changedRows[index])
           rec.push({
             issection: false,
-            id: remoteId('passage', row.passageId?.id || '', memory.keyMap),
+            id:
+              remoteId('passage', row.passageId?.id || '', memory.keyMap) ||
+              (row.passageId?.id as string),
             changed: true,
             sequencenum: data[index][cols.PassageSeq],
             book: showBook(cols) ? data[index][cols.Book] : '',
@@ -877,73 +888,90 @@ export function ScriptureTable(props: IProps) {
       const table = recs[rIdx];
       for (let tIdx = 0; tIdx < table.length; tIdx += 1) {
         const item = table[tIdx];
-        if (item.changed) {
-          if (item.issection) {
-            const secRecs = sections.filter((s) => s.id === item.id);
-            if (secRecs.length > 0) {
-              if (item.changed) {
-                await memory.update((t: TransformBuilder) =>
-                  t.updateRecord({
-                    ...secRecs[0],
-                    sequencenum: item.sequencenum,
-                    name: item.title,
-                    dateUpdated: currentDateTime(),
-                  } as Section)
-                );
-              }
-              lastSec = secRecs[0].id;
-            } else {
-              const secRec: Section = {
-                type: 'section',
-                attributes: {
-                  sequencenum: item.sequencenum,
-                  name: item.title,
-                  state: ActivityStates.NoMedia,
-                  dateCreated: currentDateTime(),
-                  dateUpdated: currentDateTime(),
-                },
-              } as any;
-              memory.schema.initializeRecord(secRec);
-              const planRecId = { type: 'plan', id: plan };
-              await memory.update((t: TransformBuilder) => [
-                t.addRecord(secRec),
-                t.replaceRelatedRecord(secRec, 'plan', planRecId),
-              ]);
-              lastSec = secRec.id;
-            }
-          } else {
-            const passRecs = passages.filter((p) => p.id === item.id);
-            if (passRecs.length > 0) {
+        if (item.issection) {
+          const secRecs = sections.filter((s) => s.id === item.id);
+          if (secRecs.length > 0) {
+            if (item.changed) {
               await memory.update((t: TransformBuilder) =>
                 t.updateRecord({
-                  ...passRecs[0],
-                  sequencenum: item.sequencenum,
-                  book: item.book,
-                  reference: item.reference,
-                  title: item.title,
-                  dateUpdated: currentDateTime(),
-                } as Passage)
+                  ...secRecs[0],
+                  attributes: {
+                    ...secRecs[0].attributes,
+                    sequencenum: parseInt(item.sequencenum),
+                    name: item.title,
+                    dateUpdated: currentDateTime(),
+                  },
+                } as Section)
               );
-            } else {
-              const passRec: Passage = {
-                type: 'passage',
+            }
+            lastSec = secRecs[0].id;
+          } else {
+            const secRec: Section = {
+              type: 'section',
+              attributes: {
+                sequencenum: parseInt(item.sequencenum),
+                name: item.title,
+                state: ActivityStates.NoMedia,
+                dateCreated: currentDateTime(),
+                dateUpdated: currentDateTime(),
+              },
+            } as any;
+            memory.schema.initializeRecord(secRec);
+            const planRecId = { type: 'plan', id: plan };
+            await memory.update((t: TransformBuilder) => [
+              t.addRecord(secRec),
+              t.replaceRelatedRecord(secRec, 'plan', planRecId),
+            ]);
+            lastSec = secRec.id;
+          }
+        } else if (item.changed) {
+          const passRecs = passages.filter((p) => p.id === item.id);
+          if (passRecs.length > 0) {
+            await memory.update((t: TransformBuilder) =>
+              t.updateRecord({
+                ...passRecs[0],
                 attributes: {
-                  sequencenum: item.sequencenum,
+                  ...passRecs[0].attributes,
+                  sequencenum: parseInt(item.sequencenum),
                   book: item.book,
                   reference: item.reference,
                   title: item.title,
-                  state: ActivityStates.NoMedia,
-                  dateCreated: currentDateTime(),
                   dateUpdated: currentDateTime(),
                 },
-              } as any;
-              memory.schema.initializeRecord(passRec);
-              const secRecId = { type: 'section', id: lastSec };
-              await memory.update((t: TransformBuilder) => [
-                t.addRecord(passRec),
-                t.replaceRelatedRecord(passRec, 'section', secRecId),
-              ]);
-            }
+              } as Passage)
+            );
+          } else {
+            const passRec: Passage = {
+              type: 'passage',
+              attributes: {
+                sequencenum: parseInt(item.sequencenum),
+                book: item.book,
+                reference: item.reference,
+                title: item.title,
+                state: ActivityStates.NoMedia,
+                dateCreated: currentDateTime(),
+                dateUpdated: currentDateTime(),
+              },
+            } as any;
+            memory.schema.initializeRecord(passRec);
+            const secRecId = { type: 'section', id: lastSec };
+            const t = new TransformBuilder();
+            const ops: Operation[] = [
+              t.addRecord(passRec),
+              t.replaceRelatedRecord(passRec, 'section', secRecId),
+            ];
+            UpdatePassageStateOps(
+              passRec.id,
+              lastSec,
+              plan,
+              ActivityStates.NoMedia,
+              'created',
+              remoteIdNum('user', user, memory.keyMap),
+              t,
+              ops,
+              memory
+            );
+            await memory.update(ops);
           }
         }
       }

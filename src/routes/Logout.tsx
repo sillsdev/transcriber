@@ -71,6 +71,7 @@ export function Logout(props: IProps) {
   const { fetchLocalization, setLanguage } = props;
   const { offlineProjects, mediafiles } = props;
   const [coordinator] = useGlobal('coordinator');
+  const [, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -111,6 +112,8 @@ export function Logout(props: IProps) {
 
   const handleLogout = async () => {
     if (offlineOnly) setOfflineOnly(false);
+    setUser('');
+    localStorage.removeItem('user-id');
     if (auth.accessToken) {
       localStorage.removeItem('isLoggedIn');
       setIsOffline(isElectron);

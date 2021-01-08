@@ -669,7 +669,10 @@ export function PlanSheet(props: IProps) {
                   color="primary"
                   className={classes.button}
                   disabled={
-                    pasting || readonly || isOffline || projRole !== 'admin'
+                    pasting ||
+                    readonly ||
+                    (isOffline && !offlineOnly) ||
+                    projRole !== 'admin'
                   }
                   onClick={handleTablePaste}
                 >

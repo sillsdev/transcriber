@@ -473,10 +473,15 @@ export function Profile(props: IProps) {
   };
 
   const handleCancel = () => {
+    setChanged(false);
     if (editId) {
       setEditId(null);
+      const userId = localStorage.getItem('user-id');
+      if (!userId && offlineOnly) {
+        setView('Logout');
+        return;
+      }
     }
-    setChanged(false);
     setView('Team');
   };
 
@@ -877,7 +882,7 @@ export function Profile(props: IProps) {
                 </FormGroup>
               </FormControl>
               <div className={classes.actions}>
-                {((editId && /Add/i.test(editId) && !offlineOnly) ||
+                {((editId && /Add/i.test(editId)) ||
                   (currentUser &&
                     currentUser.attributes?.name !==
                       currentUser.attributes?.email)) && (

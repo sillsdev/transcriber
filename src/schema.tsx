@@ -321,6 +321,7 @@ const schemaDefinition: SchemaSettings = {
       },
       relationships: {
         passage: { type: 'hasOne', model: 'passage' },
+        user: { type: 'hasOne', model: 'user' },
       },
     },
     mediafile: {

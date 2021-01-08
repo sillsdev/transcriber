@@ -86,6 +86,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
@@ -168,7 +169,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isOffline}
+            disabled={isOffline && !offlineOnly}
           />
           <Tab
             label={
@@ -181,7 +182,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isOffline}
+            disabled={isOffline && !offlineOnly}
           />
           <Tab
             label={
