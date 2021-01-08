@@ -700,12 +700,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="import.expiredToken">
-         <segment>
-            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="import.family">
          <segment>
             <source>Family Name</source>
@@ -880,24 +874,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="integration.bookNotFound">
-         <segment>
-            <source>Book not included in this project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.bookNotInParatext">
-         <segment>
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.chapterSpan">
-         <segment>
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="integration.countError">
          <segment>
             <source>Count query error: </source>
@@ -919,30 +895,6 @@
       <unit id="integration.emptyBook">
          <segment>
             <source>Passage {0}.{1}: Book is missing.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.expiredParatextToken">
-         <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.invalidParatextLogin">
-         <segment>
-            <source>You must login with a valid paratext login to sync projects.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.invalidReference">
-         <segment>
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
             <target/>
          </segment>
       </unit>
@@ -2404,6 +2356,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.bookNotInParatext">
+         <segment>
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.paratextchapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.invalidReference">
+         <segment>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.BookNotSet">
+         <segment>
+            <source>Book was not set for Section {0} Passage {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
@@ -2674,6 +2668,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.pullParatextCaption">
+         <segment>
+            <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStart">
+         <segment>
+            <source>Getting transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStatus">
+         <segment>
+            <source>Transcription pulled from Paratext</source>
+            <target>Transcription obtenue à partir de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextTip">
+         <segment>
+            <source>Pull transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+         </segment>
+      </unit>
       <unit id="transcriber.reject">
          <segment>
             <source>Reject</source>
@@ -2875,12 +2893,6 @@
       <unit id="transcriptionTab.error">
          <segment>
             <source>Export Error</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>

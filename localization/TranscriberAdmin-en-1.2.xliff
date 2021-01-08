@@ -813,13 +813,6 @@
                <context context-type="sourcefile">Import.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="import.expiredToken">
-            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ExportTab.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="import.family">
             <source>Family Name</source>
             <target/>
@@ -1023,27 +1016,6 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="integration.bookNotFound">
-            <source>Book not included in this project</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.bookNotInParatext">
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.chapterSpan">
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="integration.countError">
             <source>Count query error: </source>
             <target/>
@@ -1067,34 +1039,6 @@
          </trans-unit>
          <trans-unit id="integration.emptyBook">
             <source>Passage {0}.{1}: Book is missing.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.expiredParatextToken">
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.expiredToken">
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.invalidParatextLogin">
-            <source>You must login with a valid paratext login to sync projects.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.invalidReference">
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -2801,6 +2745,55 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.bookNotInParatext">
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.paratextchapterSpan">
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.invalidReference">
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.BookNotSet">
+            <source>Book was not set for Section {0} Passage {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.expiredParatextToken">
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+       <trans-unit id="shared.expiredToken">
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.invalidParatextLogin">
+            <source>You must login with a valid paratext login.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.transcriber">
             <source>Transcriber</source>
             <target/>
@@ -3116,6 +3109,34 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriber.pullParatextCaption">
+            <source>Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.pullParatextStart">
+            <source>Getting transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.pullParatextStatus">
+            <source>Transcription pulled from Paratext</source>
+            <target>Transcription obtenue à partir de Paratext</target>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.pullParatextTip">
+            <source>Pull transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="transcriber.reject">
             <source>Reject</source>
             <target/>
@@ -3349,13 +3370,6 @@
          </trans-unit>
          <trans-unit id="transcriptionTab.error">
             <source>Export Error</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ExportTab.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="transcriptionTab.expiredToken">
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">ExportTab.tsx</context>

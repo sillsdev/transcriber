@@ -105,7 +105,7 @@ export const getMediaEaf = (
   );
   const durationNum = mediaAttr && mediaAttr.duration;
   logError(Severity.info, reporter, `durationNum=${durationNum}`);
-  const duration = durationNum ? (durationNum * 1000).toString() : '0';
+  const duration = durationNum ? (durationNum * 1000).toPrecision(0).toString() : '0';
   logError(Severity.info, reporter, `duration=${duration}`);
   const lang = getMediaLang(mediaRec, memory);
   logError(Severity.info, reporter, `lang=${lang}`);

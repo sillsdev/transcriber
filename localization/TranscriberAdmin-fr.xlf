@@ -704,12 +704,6 @@
             <target>Erreur d'importation</target>
          </segment>
       </unit>
-      <unit id="import.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
-         </segment>
-      </unit>
       <unit id="import.family">
          <segment>
             <source>Family Name</source>
@@ -884,24 +878,6 @@
             <target>Vous devez satisfaire aux critères pour la synchronisation.</target>
          </segment>
       </unit>
-      <unit id="integration.bookNotFound">
-         <segment>
-            <source>Book not included in this project</source>
-            <target>Livre non inclus dans ce projet</target>
-         </segment>
-      </unit>
-      <unit id="integration.bookNotInParatext">
-         <segment>
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target>Passage {0}.{1}: Le projet Paratext ne contient pas de livre {2}.</target>
-         </segment>
-      </unit>
-      <unit id="integration.chapterSpan">
-         <segment>
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
-            <target>Passage {0}.{1} {2}: Le passage ne doit pas s'étendre sur des chapitres.</target>
-         </segment>
-      </unit>
       <unit id="integration.countError">
          <segment>
             <source>Count query error: </source>
@@ -924,24 +900,6 @@
          <segment>
             <source>Passage {0}.{1}: Book is missing.</source>
             <target>Passage {0}.{1}: Livre manquant.</target>
-         </segment>
-      </unit>
-      <unit id="integration.expiredParatextToken">
-         <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target>Votre connexion paratext a expiré et ne peut pas être automatiquement renouvelée. Veuillez vous déconnecter et vous reconnecter.</target>
-         </segment>
-      </unit>
-      <unit id="integration.expiredToken">
-         <segment>
-            <source>Your login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target>Votre identifiant a expiré et ne peut pas être automatiquement renouvelé. Veuillez vous déconnecter et vous reconnecter.</target>
-         </segment>
-      </unit>
-      <unit id="integration.invalidParatextLogin">
-         <segment>
-            <source>You must login with a valid paratext login to sync projects.</source>
-            <target>Vous devez vous connecter avec une connexion paratext valide pour synchroniser les projets</target>
          </segment>
       </unit>
       <unit id="integration.invalidReference">
@@ -2390,6 +2348,48 @@
             <target>Impossible d'enregistrer en mode hors connexion.</target>
          </segment>
       </unit>
+      <unit id="shared.bookNotInParatext">
+         <segment>
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target>Passage {0}.{1}: Le projet Paratext ne contient pas de livre {2}.</target>
+         </segment>
+      </unit>
+      <unit id="shared.paratextchapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target>Passage {0}.{1} {2}: Le passage ne doit pas s'Ã©tendre sur des chapitres.</target>
+         </segment>
+      </unit>
+      <unit id="shared.invalidReference">
+         <segment>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target>Passage {0}. {1} {2}: référence non valide</target>
+         </segment>
+      </unit>
+      <unit id="shared.BookNotSet">
+         <segment>
+            <source>Book was not set for Section {0} Passage {1}</source>
+            <target>Le livre n'a pas été défini pour la section {0} Passage {1}</target>
+         </segment>
+      </unit>
+      <unit id="shared.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target>Votre connexion paratext a expiré et ne peut pas être renouvelée automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+         </segment>
+      </unit>
+      <unit id="shared.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
+         </segment>
+      </unit>
+      <unit id="shared.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login.</source>
+            <target>Vous devez vous connecter avec une connexion paratext valide.</target>
+         </segment>
+      </unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
@@ -2672,6 +2672,30 @@
             <target>Pause ({0})</target>
          </segment>
       </unit>
+      <unit id="transcriber.pullParatextCaption">
+         <segment>
+            <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStart">
+         <segment>
+            <source>Getting transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStatus">
+         <segment>
+            <source>Transcription pulled from Paratext</source>
+            <target>Transcription obtenue Ã  partir de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextTip">
+         <segment>
+            <source>Pull transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+         </segment>
+      </unit>
       <unit id="transcriber.reject">
          <segment>
             <source>Reject</source>
@@ -2874,12 +2898,6 @@
          <segment>
             <source>Error</source>
             <target>Erreur</target>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target>Votre jeton de connexion a expiré et ne peut pas être renouvelé automatiquement. Veuillez vous déconnecter et vous reconnecter.</target>
          </segment>
       </unit>
       <unit id="transcriptionTab.export">
