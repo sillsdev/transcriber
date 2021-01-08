@@ -69,7 +69,7 @@ export const AddCard = (props: IProps) => {
     bookSuggestions,
   } = ctx.state;
   const t = cardStrings;
-  const { showMessage, showJSXMessage } = useSnackBar();
+  const { showMessage } = useSnackBar();
   const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
@@ -276,7 +276,6 @@ export const AddCard = (props: IProps) => {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        showJSXMessage={showJSXMessage}
         setComplete={setComplete}
         multiple={true}
         metaData={MetaData}

@@ -184,11 +184,7 @@ export function IntegrationPanel(props: IProps) {
   const [fingerprint] = useGlobal('fingerprint');
 
   const [errorReporter] = useGlobal('errorReporter');
-  const {
-    showMessage,
-    showTitledMessage,
-    showTitledJSXMessage,
-  } = useSnackBar();
+  const { showMessage, showTitledMessage } = useSnackBar();
   const [busy] = useGlobal('remoteBusy');
   const [ptPath, setPtPath] = React.useState('');
   const syncing = React.useRef<boolean>(false);
@@ -560,10 +556,7 @@ export function IntegrationPanel(props: IProps) {
   useEffect(() => {
     if (paratext_syncStatus) {
       if (paratext_syncStatus.errStatus) {
-        showTitledJSXMessage(
-          t.syncError,
-          translateSyncError(paratext_syncStatus)
-        );
+        showTitledMessage(t.syncError, translateSyncError(paratext_syncStatus));
         resetSync();
         setSyncing(false);
       } else if (paratext_syncStatus.statusMsg !== '') {

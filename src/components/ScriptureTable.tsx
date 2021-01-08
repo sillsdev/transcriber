@@ -158,7 +158,7 @@ export function ScriptureTable(props: IProps) {
 
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
-  const { showMessage, showJSXMessage } = useSnackBar();
+  const { showMessage } = useSnackBar();
   const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
   const [inlinePassages, setInlinePassages] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
@@ -436,7 +436,7 @@ export function ScriptureTable(props: IProps) {
       doDelete(where);
       return true;
     } else {
-      showJSXMessage(<span>{what}...</span>);
+      showMessage(<span>{what}...</span>);
       return false;
     }
   };
@@ -521,7 +521,7 @@ export function ScriptureTable(props: IProps) {
       )
       .map((row) => row[cols.SectionSeq]);
     if (invalidSec.length > 0) {
-      showJSXMessage(
+      showMessage(
         <span>
           {t.pasteInvalidSections} {invalidSec.join()}
         </span>
@@ -535,7 +535,7 @@ export function ScriptureTable(props: IProps) {
       )
       .map((row) => row[cols.PassageSeq]);
     if (invalidPas.length > 0) {
-      showJSXMessage(
+      showMessage(
         <span>
           {t.pasteInvalidSections} {invalidPas.join()}.
         </span>
@@ -1182,7 +1182,6 @@ export function ScriptureTable(props: IProps) {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        showJSXMessage={showJSXMessage}
         setComplete={setComplete}
         multiple={false}
         finish={afterUpload}
