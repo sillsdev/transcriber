@@ -49,7 +49,7 @@ export const useFlatAdd = () => {
           },
         } as any;
         await memory.update(
-          AddFlatPassage(passage, secRec, planId, mediaRec[0], userId, memory)
+          AddFlatPassage(passage, secRec, planId, mediaRec[0], user, memory)
         );
       }
     }

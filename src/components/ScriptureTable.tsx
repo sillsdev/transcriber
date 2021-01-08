@@ -966,7 +966,7 @@ export function ScriptureTable(props: IProps) {
               plan,
               ActivityStates.NoMedia,
               'created',
-              remoteIdNum('user', user, memory.keyMap),
+              user,
               t,
               ops,
               memory

@@ -421,7 +421,7 @@ const doChapter = async (
   pass: Passage[],
   ptProjName: string,
   memory: Memory,
-  userid: number,
+  userId: string,
   addNumberToSection: boolean
 ) => {
   if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
@@ -466,7 +466,7 @@ const doChapter = async (
       plan,
       ActivityStates.Done,
       'Paratext',
-      userid,
+      userId,
       tb,
       ops,
       memory
@@ -481,7 +481,7 @@ export const localSync = async (
   ptProjName: string,
   passages: Passage[],
   memory: Memory,
-  userid: number,
+  userId: string,
   addNumberToSection: boolean = true
 ) => {
   let chapChg: { [key: string]: Passage[] } = {};
@@ -508,7 +508,7 @@ export const localSync = async (
         chapChg[c],
         ptProjName,
         memory,
-        userid,
+        userId,
         addNumberToSection
       );
     } catch (error) {

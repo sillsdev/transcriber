@@ -388,7 +388,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         plan,
         pass.attributes.state,
         pass.attributes.lastComment,
-        remoteIdNum('user', user, memory.keyMap),
+        user,
         new TransformBuilder(),
         [],
         memory
@@ -488,7 +488,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         plan,
         nextState,
         postComment ? comment : '',
-        userid,
+        user,
         tb,
         ops,
         memory
@@ -586,7 +586,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           plan,
           previous[state],
           comment,
-          remoteIdNum('user', user, memory.keyMap),
+          user,
           new TransformBuilder(),
           [],
           memory

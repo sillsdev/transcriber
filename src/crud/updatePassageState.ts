@@ -3,7 +3,7 @@ import Memory from '@orbit/memory';
 import { PassageStateChange, ActivityStates, Passage } from '../model';
 import { AddRecord } from '../model/baseModel';
 import { currentDateTime } from '../utils';
-import { remoteIdGuid } from '.';
+import { remoteIdNum } from '.';
 
 const AddPassageStateChangeToOps = (
   t: TransformBuilder,
@@ -11,7 +11,7 @@ const AddPassageStateChangeToOps = (
   passage: string,
   state: string,
   comment: string,
-  userid: number,
+  userId: string,
   memory: Memory
 ) => {
   const psc = {
@@ -22,13 +22,14 @@ const AddPassageStateChangeToOps = (
     },
   } as PassageStateChange;
 
+  const userid = remoteIdNum('user', userId, memory.keyMap);
   ops.push(AddRecord(t, psc, userid, memory));
   const passRecId = { type: 'passage', id: passage };
   ops.push(t.replaceRelatedRecord(psc, 'passage', passRecId));
   ops.push(
     t.replaceRelatedRecord(psc, 'user', {
       type: 'user',
-      id: remoteIdGuid('user', userid.toString(), memory.keyMap),
+      id: userId,
     })
   );
 };
@@ -38,12 +39,13 @@ export const AddFlatPassage = (
   section: RecordIdentity,
   planid: string,
   media: RecordIdentity,
-  user: number,
+  userId: string,
   memory: Memory
 ): Operation[] => {
   var t = new TransformBuilder();
   var ops: Operation[] = [];
-  ops.push(AddRecord(t, rec, user, memory));
+  const userRemId = remoteIdNum('user', userId, memory.keyMap);
+  ops.push(AddRecord(t, rec, userRemId, memory));
   const passRecId = { type: 'passage', id: rec.id };
   ops.push(t.replaceRelatedRecord(passRecId, 'section', section));
   AddPassageStateChangeToOps(
@@ -52,23 +54,10 @@ export const AddFlatPassage = (
     rec.id,
     ActivityStates.TranscribeReady,
     '',
-    user,
+    userId,
     memory
   );
   ops.push(t.replaceRelatedRecord(media, 'passage', passRecId));
-  return ops;
-};
-
-export const AddPassageStateCommentOps = (
-  passage: string,
-  state: string,
-  comment: string,
-  userid: number,
-  t: TransformBuilder,
-  ops: Operation[],
-  memory: Memory
-): Operation[] => {
-  AddPassageStateChangeToOps(t, ops, passage, state, comment, userid, memory);
   return ops;
 };
 
@@ -78,7 +67,7 @@ export const UpdatePassageStateOps = (
   plan: string,
   state: string,
   comment: string,
-  userid: number,
+  userId: string,
   t: TransformBuilder,
   ops: Operation[],
   memory: Memory
@@ -90,10 +79,11 @@ export const UpdatePassageStateOps = (
   const secRecId = { type: 'section', id: section };
   const planRecId = { type: 'plan', id: plan };
   const curTime = currentDateTime();
+  const userid = remoteIdNum('user', userId, memory.keyMap);
   ops.push(t.replaceAttribute(passRecId, 'dateUpdated', curTime));
   ops.push(t.replaceAttribute(passRecId, 'lastmodifiedby', userid));
   ops.push(t.replaceAttribute(secRecId, 'dateUpdated', curTime));
   ops.push(t.replaceAttribute(planRecId, 'dateUpdated', curTime));
-  AddPassageStateChangeToOps(t, ops, passage, state, comment, userid, memory);
+  AddPassageStateChangeToOps(t, ops, passage, state, comment, userId, memory);
   return ops;
 };

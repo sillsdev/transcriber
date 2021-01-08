@@ -320,13 +320,7 @@ export function IntegrationPanel(props: IProps) {
   const handleLocalSync = async () => {
     setSyncing(true);
     showMessage(t.syncPending);
-    var err = await localSync(
-      plan,
-      ptShortName,
-      passages,
-      memory,
-      remoteIdNum('user', user, memory.keyMap)
-    );
+    var err = await localSync(plan, ptShortName, passages, memory, user);
     showMessage(err || t.syncComplete);
     resetCount();
     setSyncing(false);
