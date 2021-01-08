@@ -2815,7 +2815,14 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="taskItem.assign">
+      	<trans-unit id="shared.importMediaSingular">
+      		<source>Import Media</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="taskItem.assign">
             <source>Assign {0}</source>
             <target/>
             <context-group>

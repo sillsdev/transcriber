@@ -2416,6 +2416,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.importMediaSingular">
+         <segment>
+            <source>Import Media</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="taskItem.assign">
          <segment>
             <source>Assign {0}</source>

@@ -522,6 +522,7 @@ const initialState = {
 			"transcriber": "Transcriber",
 			"uploadMediaPlural": "Upload Media",
 			"uploadMediaSingular": "Upload Media",
+			"importMediaSingular": "Import Media",
 		}
 	}),
 	"taskItem": new LocalizedStrings({

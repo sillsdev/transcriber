@@ -2402,7 +2402,13 @@
             <target>Télécharger des médias</target>
          </segment>
       </unit>
-      <unit id="taskItem.assign">
+   	<unit id="shared.importMediaSingular">
+   		<segment>
+   			<source>Import Media</source>
+   			<target>Importer des médias</target>
+   		</segment>
+   	</unit>
+   	<unit id="taskItem.assign">
          <segment>
             <source>Assign {0}</source>
             <target>Assigner {0}</target>

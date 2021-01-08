@@ -488,6 +488,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "transcriber": string;
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
+    "importMediaSingular": string;
 };
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
