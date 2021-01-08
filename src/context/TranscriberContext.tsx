@@ -36,6 +36,9 @@ import {
   remoteIdGuid,
 } from '../crud';
 import StickyRedirect from '../components/StickyRedirect';
+import { IAxiosStatus } from '../store/AxiosStatus';
+import { useSnackBar } from '../hoc/SnackBar';
+import { translateParatextError } from '../utils/translateParatextError';
 
 export const getPlanName = (plan: Plan) => {
   return plan.attributes ? plan.attributes.name : '';
@@ -54,6 +57,7 @@ interface IStateProps {
   hasUrl: boolean;
   mediaUrl: string;
   trackedTask: string;
+  paratext_textStatus?: IAxiosStatus;
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   todoStr: localStrings(state, { layout: 'toDoTable' }),
@@ -68,12 +72,16 @@ const mapStateToProps = (state: IState): IStateProps => ({
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
   trackedTask: state.media.trackedTask,
+  paratext_textStatus: state.paratext.textStatus,
 });
 
 interface IDispatchProps {
   fetchBooks: typeof actions.fetchBooks;
   fetchMediaUrl: typeof actions.fetchMediaUrl;
   setTrackedTask: typeof actions.setTrackedTask;
+  getParatextText: typeof actions.getParatextText;
+  getParatextTextLocal: typeof actions.getParatextTextLocal;
+  resetParatextText: typeof actions.resetParatextText;
 }
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
@@ -81,6 +89,9 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       fetchBooks: actions.fetchBooks,
       fetchMediaUrl: actions.fetchMediaUrl,
       setTrackedTask: actions.setTrackedTask,
+      getParatextText: actions.getParatextText,
+      getParatextTextLocal: actions.getParatextTextLocal,
+      resetParatextText: actions.resetParatextText,
     },
     dispatch
   ),
@@ -142,7 +153,11 @@ const initState = {
   projButtonStr: {} as IProjButtonsStrings,
   hasUrl: false,
   mediaUrl: '',
+  paratext_textStatus: {} as IAxiosStatus,
   fetchMediaUrl: actions.fetchMediaUrl,
+  getParatextText: actions.getParatextText,
+  getParatextTextLocal: actions.getParatextTextLocal,
+  resetParatextText: actions.resetParatextText,
 };
 
 export type ICtxState = typeof initState;
@@ -177,7 +192,15 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       projButtonStr,
       sharedStr,
     } = props;
-    const { hasUrl, mediaUrl, fetchMediaUrl } = props;
+    const {
+      hasUrl,
+      mediaUrl,
+      fetchMediaUrl,
+      getParatextText,
+      getParatextTextLocal,
+      resetParatextText,
+      paratext_textStatus,
+    } = props;
     const { trackedTask, setTrackedTask } = props;
     const { prjId, pasId } = useParams<ParamTypes>();
     const [memory] = useGlobal('memory');
@@ -186,6 +209,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
     const [devPlan] = useGlobal('plan');
     const [projRole] = useGlobal('projRole');
     const view = React.useRef('');
+    const { showMessage } = useSnackBar();
     const [state, setState] = useState({
       ...initState,
       selected: '',
@@ -199,6 +223,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       hasUrl,
       mediaUrl,
       fetchMediaUrl,
+      getParatextText,
+      getParatextTextLocal,
+      resetParatextText,
     });
 
     const setRows = (rowData: IRowData[]) => {
@@ -470,6 +497,17 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         }
       }
     };
+    useEffect(() => {
+      if (paratext_textStatus?.errStatus) {
+        showMessage(translateParatextError(paratext_textStatus, sharedStr));
+        resetParatextText();
+      } else if (
+        !paratext_textStatus?.complete &&
+        paratext_textStatus?.statusMsg
+      )
+        showMessage(paratext_textStatus?.statusMsg);
+      /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    }, [paratext_textStatus]);
 
     useEffect(() => {
       const playItem = state.playItem;

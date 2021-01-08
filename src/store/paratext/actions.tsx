@@ -15,11 +15,20 @@ import {
   SYNC_PENDING,
   SYNC_SUCCESS,
   SYNC_ERROR,
+  TEXT_PENDING,
+  TEXT_ERROR,
+  TEXT_SUCCESS,
 } from './types';
 import { ParatextProject } from '../../model/paratextProject';
 import { pendingStatus, errStatus, errorStatus } from '../AxiosStatus';
 import { getMediaProjRec, getMediaRec } from '../../crud';
-import { fileJson, infoMsg, logError, Severity } from '../../utils';
+import {
+  fileJson,
+  getLocalParatextText,
+  infoMsg,
+  logError,
+  Severity,
+} from '../../utils';
 import MemorySource from '@orbit/memory';
 
 export const resetUserName = () => (dispatch: any) => {
@@ -27,6 +36,71 @@ export const resetUserName = () => (dispatch: any) => {
     payload: undefined,
     type: USERNAME_PENDING,
   });
+};
+export const resetParatextText = () => async (dispatch: any) => {
+  dispatch({
+    payload: undefined,
+    type: TEXT_PENDING,
+  });
+};
+export const getParatextText = (
+  auth: Auth,
+  passageId: number,
+  errorReporter: any,
+  pendingmsg: string
+) => async (dispatch: any) => {
+  dispatch({
+    payload: pendingStatus(pendingmsg),
+    type: TEXT_PENDING,
+  });
+  try {
+    let response = await Axios.get(
+      API_CONFIG.host + '/api/paratext/passage/' + passageId.toString(),
+      {
+        headers: {
+          Authorization: 'Bearer ' + auth.accessToken,
+        },
+      }
+    );
+    dispatch({ payload: response.data, type: TEXT_SUCCESS });
+  } catch (err) {
+    logError(
+      Severity.info,
+      errorReporter,
+      infoMsg(err, 'Paratext Text failed')
+    );
+    dispatch({ payload: errStatus(err), type: TEXT_ERROR });
+  }
+};
+export const getParatextTextLocal = (
+  ptPath: string,
+  passage: Passage,
+  ptProjName: string,
+  errorReporter: any,
+  pendingmsg: string
+) => async (dispatch: any) => {
+  dispatch({
+    payload: pendingStatus(pendingmsg),
+    type: TEXT_PENDING,
+  });
+  try {
+    var pt = localProjects(ptPath, undefined, ptProjName);
+    if (pt && pt.length > 0) {
+      let response = await getLocalParatextText(passage, pt[0].ShortName);
+      dispatch({ payload: response, type: TEXT_SUCCESS });
+    } else
+      dispatch({
+        payload: errorStatus(undefined, 'No Local Project' + ptProjName),
+        type: TEXT_ERROR,
+      });
+  } catch (err) {
+    logError(
+      Severity.info,
+      errorReporter,
+      infoMsg(err, 'Paratext Text failed')
+    );
+    dispatch({ payload: errStatus(err), type: TEXT_ERROR });
+  }
 };
 
 export const getUserName = (
@@ -119,15 +193,11 @@ export const getProjects = (
     });
 };
 
-export const getLocalProjects = (
+const localProjects = (
   ptPath: string,
-  pendingmsg: string,
-  languageTag?: string
-) => (dispatch: any) => {
-  dispatch({
-    payload: pendingStatus(pendingmsg),
-    type: PROJECTS_PENDING,
-  });
+  languageTag?: string,
+  projName?: string
+) => {
   if (ptPath === '') return;
   const fs = require('fs');
   const path = require('path');
@@ -140,7 +210,10 @@ export const getLocalProjects = (
       if (settingsJson) {
         const setting = settingsJson.ScriptureText;
         const langIso = setting.LanguageIsoCode._text.split(':')[0];
-        if (!languageTag || langIso === languageTag) {
+        if (
+          (!languageTag || langIso === languageTag) &&
+          (!projName || setting.FullName._text === projName)
+        ) {
           pt.push({
             Name: setting.FullName._text,
             ShortName: setting.Name._text,
@@ -155,7 +228,30 @@ export const getLocalProjects = (
         }
       }
     });
-  dispatch({ payload: pt, type: PROJECTS_SUCCESS });
+  return pt;
+};
+
+export const getLocalProjects = (
+  ptPath: string,
+  pendingmsg: string,
+  projIds: {
+    Name: string;
+    Id: number;
+  }[],
+  languageTag?: string
+) => (dispatch: any) => {
+  dispatch({
+    payload: pendingStatus(pendingmsg),
+    type: PROJECTS_PENDING,
+  });
+  if (ptPath === '') return;
+  let pts = localProjects(ptPath, languageTag);
+  pts?.forEach((pt) => {
+    pt.ProjectIds = pt.ProjectIds.concat(
+      projIds.filter((pi) => pi.Name === pt.Name).map((pi) => pi.Id)
+    );
+  });
+  dispatch({ payload: pts, type: PROJECTS_SUCCESS });
 };
 
 export const resetCount = () => (dispatch: any) => {
@@ -201,7 +297,9 @@ export const getLocalCount = (
     type: COUNT_PENDING,
   });
   const ready = passages
-    .filter((p) => p.attributes.state === ActivityStates.Approved)
+    .filter(
+      (p) => p.attributes && p.attributes?.state === ActivityStates.Approved
+    )
     .filter((p) => {
       const projRec = getMediaProjRec(getMediaRec(p.id, memory), memory);
       return projRec && projRec.id === project;

@@ -11,6 +11,7 @@ export interface IParatextState {
   projects: ParatextProject[];
   projectsStatus?: IAxiosStatus;
   syncStatus?: IAxiosStatus;
+  textStatus?: IAxiosStatus;
 }
 
 // Describing the different ACTION NAMES available
@@ -29,6 +30,9 @@ export const UPDPROJECTS_ERROR = 'UPDPROJECTS_ERROR';
 export const SYNC_PENDING = 'SYNC_PENDING';
 export const SYNC_SUCCESS = 'SYNC_SUCCESS';
 export const SYNC_ERROR = 'SYNC_ERROR';
+export const TEXT_PENDING = 'TEXT_PENDING';
+export const TEXT_SUCCESS = 'TEXT_SUCCESS';
+export const TEXT_ERROR = 'TEXT_ERROR';
 
 interface UserNamePendingMsg {
   type: typeof USERNAME_PENDING;
@@ -44,6 +48,7 @@ interface UserNameFailedMsg {
   type: typeof USERNAME_ERROR;
   payload: IAxiosStatus;
 }
+
 interface ProjectsPendingMsg {
   type: typeof PROJECTS_PENDING;
   payload: IAxiosStatus;
@@ -100,6 +105,21 @@ interface SyncFailedMsg {
   type: typeof SYNC_ERROR;
   payload: IAxiosStatus;
 }
+
+interface ParatextTextPendingMsg {
+  type: typeof TEXT_PENDING;
+  payload: IAxiosStatus;
+}
+
+interface ParatextTextSucceededMsg {
+  type: typeof TEXT_SUCCESS;
+  payload: string;
+}
+
+interface ParatextTextFailedMsg {
+  type: typeof TEXT_ERROR;
+  payload: IAxiosStatus;
+}
 export type ParatextMsgs =
   | UserNamePendingMsg
   | UserNameSucceededMsg
@@ -115,4 +135,7 @@ export type ParatextMsgs =
   | CountFailedMsg
   | SyncPendingMsg
   | SyncSucceededMsg
-  | SyncFailedMsg;
+  | SyncFailedMsg
+  | ParatextTextPendingMsg
+  | ParatextTextSucceededMsg
+  | ParatextTextFailedMsg;

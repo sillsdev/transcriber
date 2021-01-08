@@ -25,6 +25,7 @@ const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   let planRec: Plan | undefined = undefined;
   if (rec) {
     const planId = related(rec, 'plan') as string;
+    if (planId)
     planRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'plan', id: planId })
     ) as Plan;
