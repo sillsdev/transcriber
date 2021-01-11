@@ -222,18 +222,14 @@ const addParatextVerse = (
 
   return first;
 };
-
-const ReplaceText = (doc: Document, para: Element, transcript: string) => {
-  //remove text
-  var verse = firstVerse(para);
-  var next = verse?.nextSibling;
+const RemoveText = (next: ChildNode|undefined|null) =>
+{
   var rem = next;
-
   while (next) {
     rem = next;
     if (isText(next)) {
-      if (next.nextSibling) next = next.nextSibling;
-      else next = next.parentNode?.nextSibling;
+      RemoveText(next.nextSibling);
+      next = next.parentNode?.nextSibling;
       var removeParent =
         rem.parentNode?.childNodes.length === 1 ? rem.parentNode : null;
       rem.parentNode?.removeChild(rem);
@@ -248,6 +244,12 @@ const ReplaceText = (doc: Document, para: Element, transcript: string) => {
     else if (next.nextSibling) next = next.nextSibling;
     else next = next.parentNode?.nextSibling;
   }
+}
+const ReplaceText = (doc: Document, para: Element, transcript: string) => {
+  //remove text
+  var verse = firstVerse(para);
+  var next = verse?.nextSibling;
+  RemoveText(next);
   var lines: string[] = removeTimestamps(transcript).split('\n');
   var last = addAfter(doc, verse, doc.createTextNode(lines[0]));
   //var last = para;

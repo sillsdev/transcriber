@@ -82,6 +82,7 @@ import { withData } from 'react-orbitjs';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import { bindActionCreators } from 'redux';
+import { translateParatextError } from '../utils/translateParatextError';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -154,6 +155,9 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
       getUserName: action.getUserName,
+      getParatextText: action.getParatextText,
+      getParatextTextLocal: action.getParatextTextLocal,
+      resetParatextText: action.resetParatextText,
     },
     dispatch
   ),
@@ -161,6 +165,9 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 interface IDispatchProps {
   getUserName: typeof action.getUserName;
+  getParatextText: typeof action.getParatextText;
+  getParatextTextLocal: typeof action.getParatextTextLocal;
+  resetParatextText: typeof action.resetParatextText;
 }
 interface IStateProps {
   paratext_textStatus?: IAxiosStatus;
@@ -186,6 +193,9 @@ export function Transcriber(props: IProps) {
     paratext_username,
     paratext_usernameStatus,
     getUserName,
+    getParatextText,
+    getParatextTextLocal,
+    resetParatextText,
   } = props;
   const {
     rowData,
@@ -199,9 +209,6 @@ export function Transcriber(props: IProps) {
     selected,
     playing,
     setPlaying,
-    getParatextText,
-    getParatextTextLocal,
-    resetParatextText,
   } = useTodo();
   const {
     section,
@@ -348,7 +355,12 @@ export function Transcriber(props: IProps) {
   }, [mediaId]);
 
   useEffect(() => {
-    if (paratext_textStatus?.complete && !paratext_textStatus.errStatus) {
+    if (paratext_textStatus?.errStatus) {
+      showMessage(translateParatextError(paratext_textStatus, sharedStr));
+      resetParatextText();
+    } else if (!paratext_textStatus?.complete && paratext_textStatus?.statusMsg)
+      showMessage(paratext_textStatus?.statusMsg);
+    else if (paratext_textStatus?.complete) {
       showTranscription({
         transcription: paratext_textStatus.statusMsg,
         position: 0,
@@ -677,6 +689,7 @@ export function Transcriber(props: IProps) {
     done: ActivityStates.TranscribeReady,
     synced: ActivityStates.TranscribeReady,
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const reopenSynced = async () => {
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
@@ -709,9 +722,9 @@ export function Transcriber(props: IProps) {
       return;
     }
     if (previous.hasOwnProperty(state)) {
-      if (state === ActivityStates.Synced || state === ActivityStates.Done) {
-        await reopenSynced();
-      }
+      //if (state === ActivityStates.Synced || state === ActivityStates.Done) {
+      //  await reopenSynced();
+      //}
       await memory.update(
         UpdatePassageStateOps(
           passage.id,
