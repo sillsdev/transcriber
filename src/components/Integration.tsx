@@ -226,7 +226,7 @@ export function IntegrationPanel(props: IProps) {
       },
     } as any;
     await memory.update((t: TransformBuilder) => [
-      AddRecord(t, pi, user, memory),
+      ...AddRecord(t, pi, user, memory),
       t.replaceRelatedRecord(
         { type: 'projectintegration', id: pi.id },
         'project',
