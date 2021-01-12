@@ -214,6 +214,7 @@ export function PlanSheet(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [connected, setConnected] = useGlobal('connected');
   const [changed, setChanged] = useGlobal('changed');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
   const currentRow = useRef<number>(-1);
@@ -224,7 +225,9 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-  const [readonly, setReadOnly] = useState(isOffline || projRole !== 'admin');
+  const [readonly, setReadOnly] = useState(
+    (isOffline && !offlineOnly) || projRole !== 'admin'
+  );
   const [warning, setWarning] = useState<string>();
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
@@ -442,7 +445,7 @@ export function PlanSheet(props: IProps) {
     }, auth);
 
   useEffect(() => {
-    const newValue = isOffline || projRole !== 'admin';
+    const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
     if (readonly !== newValue) setReadOnly(newValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projRole]);
@@ -450,7 +453,7 @@ export function PlanSheet(props: IProps) {
   useEffect(() => {
     if (changed) {
       if (saveTimer.current === undefined) startSaveTimer();
-      if (!connected) showMessage(ts.NoSaveOffline);
+      if (!connected && !offlineOnly) showMessage(ts.NoSaveOffline);
     } else {
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = undefined;
@@ -516,14 +519,14 @@ export function PlanSheet(props: IProps) {
                 return cellIndex === bookCol && passage
                   ? {
                       value: e,
-                      readOnly: isOffline,
+                      readOnly: isOffline && !offlineOnly,
                       className: 'book ' + (section ? ' setp' : 'pass'),
                       dataEditor: bookEditor,
                     }
                   : {
                       value: e,
                       readOnly:
-                        isOffline ||
+                        (isOffline && !offlineOnly) ||
                         (section
                           ? passage
                             ? false
@@ -553,7 +556,7 @@ export function PlanSheet(props: IProps) {
                     onPlayStatus={handlePlayStatus}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
-                    online={connected}
+                    online={connected || offlineOnly}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
@@ -666,7 +669,10 @@ export function PlanSheet(props: IProps) {
                   color="primary"
                   className={classes.button}
                   disabled={
-                    pasting || readonly || isOffline || projRole !== 'admin'
+                    pasting ||
+                    readonly ||
+                    (isOffline && !offlineOnly) ||
+                    projRole !== 'admin'
                   }
                   onClick={handleTablePaste}
                 >

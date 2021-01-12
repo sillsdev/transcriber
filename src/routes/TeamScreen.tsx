@@ -30,6 +30,7 @@ export const TeamScreen = (props: IProps) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [project, setProject] = useGlobal('project');
   const [projRole, setProjRole] = useGlobal('projRole');
   const [memory] = useGlobal('memory');
@@ -40,7 +41,7 @@ export const TeamScreen = (props: IProps) => {
     if (project !== '' && projRole !== '') {
       const remProjId = remoteId('plan', plan, memory.keyMap);
       const loc =
-        projRole === 'admin' && !isOffline
+        projRole === 'admin' && (!isOffline || offlineOnly)
           ? `/plan/${remProjId}/0`
           : `/work/${remProjId}`;
       if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {

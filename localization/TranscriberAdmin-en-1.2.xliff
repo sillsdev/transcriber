@@ -2,22 +2,8 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" version="1.2">
    <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
       <body>
-         <trans-unit id="access.accessFirst">
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.accessSilTranscriber">
-            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Access.tsx</context>
-            </context-group>
-         </trans-unit>
-      	<trans-unit id="access.goOnline">
-      		<source>Go Online</source>
+      	<trans-unit id="access.availableUsers">
+      		<source>Available Offline Users</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -25,6 +11,48 @@
       	</trans-unit>
       	<trans-unit id="access.cancel">
       		<source>Cancel</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.createUser">
+      		<source>Create a new user</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.logIn">
+      		<source>Log In</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.screenTitle">
+      		<source>I want to work...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.uploadArchive">
+      		<source>Upload a Project Archive</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.withInternet">
+      		<source>With an Internet connection</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.withoutInternet">
+      		<source>Without an Internet connection</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -2787,7 +2815,14 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="taskItem.assign">
+      	<trans-unit id="shared.importMediaSingular">
+      		<source>Import Media</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="taskItem.assign">
             <source>Assign {0}</source>
             <target/>
             <context-group>

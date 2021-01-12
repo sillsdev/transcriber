@@ -8,11 +8,11 @@ interface IProps {
   name: string;
   plan: RecordIdentity;
   memory: Memory;
-  userId: number;
+  user: string;
 }
 
 export const saveNewSection = async (props: IProps) => {
-  const { sequencenum, name, plan, memory, userId } = props;
+  const { sequencenum, name, plan, memory, user } = props;
   const sec: Section = {
     type: 'section',
     attributes: {
@@ -21,7 +21,7 @@ export const saveNewSection = async (props: IProps) => {
     },
   } as any;
   await memory.update((t: TransformBuilder) => [
-    AddRecord(t, sec, userId, memory),
+    ...AddRecord(t, sec, user, memory),
     t.replaceRelatedRecord(sec, 'plan', plan),
   ]);
   return sec;

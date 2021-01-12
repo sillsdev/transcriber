@@ -2,6 +2,7 @@ import { isElectron } from '../api-variable';
 import moment from 'moment';
 import { join } from 'path';
 import { Stats } from 'fs';
+import { createFolder } from '.';
 var fs = isElectron ? require('fs-extra') : undefined;
 
 export enum Severity {
@@ -42,15 +43,6 @@ const isToday = (s: Date) => dayFormat(s) === dayFormat();
 
 const homedir = require('os').homedir();
 const LogFolder = join(homedir, '.transcriber-logs');
-
-const createLogFolder = () => {
-  // Create folder if it doesn't exist
-  try {
-    fs.statSync(LogFolder);
-  } catch (err) {
-    if (err.code === 'ENOENT') fs.mkdirSync(LogFolder);
-  }
-};
 
 const logFileHeader = (logFullName: string) => {
   // Add file header
@@ -114,7 +106,7 @@ export function logFile() {
   const logFullName = join(LogFolder, logName);
   fs.stat(logFullName, (err: IStatErr, stats: Stats) => {
     if (err?.code === 'ENOENT') {
-      createLogFolder();
+      createFolder(LogFolder);
       logFileHeader(err.path);
     } else if (err) {
       console.log(JSON.stringify(err));

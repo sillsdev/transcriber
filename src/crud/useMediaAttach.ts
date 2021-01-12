@@ -1,11 +1,10 @@
 import { useGlobal } from 'reactn';
 import { ISharedStrings, ActivityStates, MediaFile } from '../model';
 import { orbitErr } from '../utils';
-
 import * as actions from '../store';
 import { TransformBuilder, Operation } from '@orbit/data';
 import { UpdatePassageStateOps } from '../crud/updatePassageState';
-import { getMediaInPlans, related, remoteIdNum } from '.';
+import { getMediaInPlans, related } from '.';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -54,7 +53,7 @@ export const useMediaAttach = (props: IProps) => {
       plan,
       ActivityStates.TranscribeReady,
       'Media Attached',
-      remoteIdNum('user', user, memory.keyMap),
+      user,
       tb,
       ops,
       memory
@@ -87,7 +86,7 @@ export const useMediaAttach = (props: IProps) => {
       plan,
       ActivityStates.NoMedia,
       'Media Detached',
-      remoteIdNum('user', user, memory.keyMap),
+      user,
       tb,
       ops,
       memory

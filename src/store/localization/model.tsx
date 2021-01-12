@@ -2,10 +2,14 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
-    "accessFirst": string;
-    "accessSilTranscriber": string;
-    "goOnline": string;
+    "availableUsers": string;
     "cancel": string;
+    "createUser": string;
+    "logIn": string;
+    "screenTitle": string;
+    "uploadArchive": string;
+    "withInternet": string;
+    "withoutInternet": string;
     "importProject": string;
     "download": string;
     "downloadLater": string;
@@ -484,6 +488,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "transcriber": string;
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
+    "importMediaSingular": string;
 };
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {

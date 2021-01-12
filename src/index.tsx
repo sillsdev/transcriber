@@ -134,6 +134,7 @@ Promise.all(promises)
       orbitRetries: OrbitNetworkErrorRetries,
       enableOffsite: false,
       connected: true,
+      offlineOnly: false,
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })

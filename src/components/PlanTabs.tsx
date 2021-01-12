@@ -22,7 +22,7 @@ import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { HeadHeight } from '../App';
-import { getMediaInPlans, related, useOrganizedBy } from '../crud';
+import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 
 export const TabHeight = 48;
 export enum tabs {
@@ -86,37 +86,24 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
   } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [plan] = useGlobal('plan');
   const [tab, setTab] = useGlobal('tab');
   const [busy] = useGlobal('remoteBusy');
   const { prjId, tabNm } = useParams<ParamTypes>();
   const { getOrganizedBy } = useOrganizedBy();
+  const [planMedia, attached, trans] = useMediaCounts(plan, mediafiles);
+  const [planSectionIds, assigned, planPassages] = useSectionCounts(
+    plan,
+    sections,
+    passages
+  );
 
   const handleChange = (event: any, value: number) => {
     if (busy) return;
     setTab(value);
   };
   const organizedBy = getOrganizedBy(false);
-
-  const planSections = plan
-    ? sections.filter((s) => related(s, 'plan') === plan)
-    : ([] as Section[]);
-  const planSectionIds = planSections.map((p) => p.id);
-  const planPassages = passages.filter((p) =>
-    planSectionIds.includes(related(p, 'section'))
-  );
-  const planMedia = (plan
-    ? getMediaInPlans([plan], mediafiles)
-    : []) as MediaFile[];
-  const attached = planMedia
-    .map((m) => related(m, 'passage'))
-    .filter((p) => p && p !== '');
-  const assigned = planSections.filter(
-    (s) => related(s, 'transcriber') || related(s, 'editor')
-  );
-  const trans = planMedia
-    .map((m) => m.attributes.transcription)
-    .filter((t) => t && t !== '');
 
   interface ITitle {
     text: string;
@@ -168,7 +155,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isOffline}
+            disabled={isOffline && !offlineOnly}
           />
           <Tab
             label={
@@ -181,7 +168,7 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isOffline}
+            disabled={isOffline && !offlineOnly}
           />
           <Tab
             label={

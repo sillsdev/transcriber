@@ -3,6 +3,7 @@ import { Project } from '../model';
 import { Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { offlineProjectCreate } from './offlineProjectCreate';
+import { isElectron } from '../api-variable';
 
 export const useOfflnProjCreate = () => {
   const [memory] = useGlobal('memory');
@@ -20,7 +21,7 @@ export const useOfflnProjCreate = () => {
       fingerprint,
       project.attributes.dateCreated,
       project.attributes.dateCreated,
-      false
+      isElectron
     );
     await memory.sync(await backup.push(ops));
   };

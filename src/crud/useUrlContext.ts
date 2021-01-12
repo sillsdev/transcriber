@@ -11,8 +11,9 @@ export const useUrlContext = () => {
   const vProject = useVProjectRead();
 
   return (planRemId: string) => {
-    const planId = remoteIdGuid('plan', planRemId, memory.keyMap);
-    if (planId !== plan) setPlan(planId);
+    let planId = remoteIdGuid('plan', planRemId, memory.keyMap);
+    if (planId && planId !== plan) setPlan(planId);
+    else planId = plan;
     const planRec = getPlan(planId);
     if (planRec) {
       const projectId = related(planRec, 'project');

@@ -89,6 +89,7 @@ export function ProjectMenu(props: IProps) {
   const { inProject, action, t, tpb, td, isOwner, project } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
 
@@ -124,7 +125,7 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!inProject && isOwner && !isOffline && (
+        {!inProject && isOwner && (!isOffline || offlineOnly) && (
           <StyledMenuItem onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
@@ -186,7 +187,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={td.filter} />
           </StyledMenuItem>
         ) : (
-          !isOffline &&
+          (!isOffline || offlineOnly) &&
           isOwner && (
             <StyledMenuItem onClick={handle('delete')}>
               <ListItemIcon>

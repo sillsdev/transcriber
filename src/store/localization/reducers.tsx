@@ -8,10 +8,14 @@ const initialState = {
 	"lang": 'en',
 	"access": new LocalizedStrings({
 		"en": {
-			"accessFirst": "Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.",
-			"accessSilTranscriber": "To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)",
-			"goOnline": "Go Online",
+			"availableUsers": "Available Offline Users",
 			"cancel": "Cancel",
+			"createUser": "Create a new user",
+			"logIn": "Log In",
+			"screenTitle": "I want to work...",
+			"uploadArchive": "Upload a Project Archive",
+			"withInternet": "With an Internet connection",
+			"withoutInternet": "Without an Internet connection",
 			"importProject": "Import PTF File",
 			"download": "Download?",
 			"downloadLater": "Download Later",
@@ -518,6 +522,7 @@ const initialState = {
 			"transcriber": "Transcriber",
 			"uploadMediaPlural": "Upload Media",
 			"uploadMediaSingular": "Upload Media",
+			"importMediaSingular": "Import Media",
 		}
 	}),
 	"taskItem": new LocalizedStrings({

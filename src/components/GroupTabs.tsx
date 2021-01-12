@@ -32,6 +32,7 @@ const GroupTabs = (props: IProps) => {
   const { t, changeTab } = props;
   const classes = useStyles();
   const [tab, setTab] = useGlobal('tab');
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   const handleChange = (event: any, value: number) => {
     setTab(value);
@@ -53,7 +54,7 @@ const GroupTabs = (props: IProps) => {
         >
           <Tab label={t.users} />
           <Tab label={t.roles} />
-          <Tab label={t.invitations} />
+          {!offlineOnly && <Tab label={t.invitations} />}
         </Tabs>
       </AppBar>
       {((tab || 0) === 0 || tab > 2) && <UserTable {...props} />}

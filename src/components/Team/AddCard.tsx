@@ -58,6 +58,7 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = React.useContext(TeamContext);
   const {
     projectCreate,
@@ -183,7 +184,8 @@ export const AddCard = (props: IProps) => {
       team
     );
     setPlan(planId);
-    await waitForRemoteId({ type: 'plan', id: planId }, memory.keyMap);
+    if (!offlineOnly)
+      await waitForRemoteId({ type: 'plan', id: planId }, memory.keyMap);
     setStep(1);
     return planId;
   };

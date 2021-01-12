@@ -1,28 +1,52 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
-      <unit id="access.accessFirst">
-         <segment>
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
-         	<target>Bienvenue à {0}. Tout d'abord, un projet est créé en ligne sur le site {1}. Ensuite, il faut exporter un fichier au format Portable Transcriber Format (PTF) et l'importer ici.</target>
-         </segment>
-      </unit>
-      <unit id="access.accessSilTranscriber">
-         <segment>
-         	<source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
-         	<target>Pour transcrire ou réviser sans Internet, cliquez sur votre avatar. Pour transcrire, réviser ou effectuer des tâches administratives en collaboration, cliquez sur 'Aller en ligne'. Pour configurer le programme avec les utilisateurs, le projet et les fichiers multimédia sans utiliser Internet, cliquez sur 'Importer un fichier PTF'. (Les fichiers PTF peuvent être exportés pendant qu'ils sont en ligne).</target>
-         </segment>
-      </unit>
-   	  <unit id="access.goOnline">
+   	<unit id="access.availableUsers">
    		<segment>
-   			<source>Go Online</source>
-   			<target>Aller en ligne</target>
+   			<source>Available Offline Users</source>
+   			<target>Utilisateurs hors ligne disponibles</target>
    		</segment>
-   	  </unit>
+   	</unit>
    	<unit id="access.cancel">
    		<segment>
    			<source>Cancel</source>
    			<target>Annuler</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.createUser">
+   		<segment>
+   			<source>Create a new user</source>
+   			<target>Créer un nouvel utilisateur</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.logIn">
+   		<segment>
+   			<source>Log In</source>
+   			<target>Connexion</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.screenTitle">
+   		<segment>
+   			<source>I want to work...</source>
+   			<target>Je veux travailler...</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.uploadArchive">
+   		<segment>
+   			<source>Upload a Project Archive</source>
+   			<target>Télécharger une archive de projet</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.withInternet">
+   		<segment>
+   			<source>With an Internet connection</source>
+   			<target>Avec une connexion Internet</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.withoutInternet">
+   		<segment>
+   			<source>Without an Internet connection</source>
+   			<target>Sans connexion Internet</target>
    		</segment>
    	</unit>
    	<unit id="access.importProject">
@@ -2378,7 +2402,13 @@
             <target>Télécharger des médias</target>
          </segment>
       </unit>
-      <unit id="taskItem.assign">
+   	<unit id="shared.importMediaSingular">
+   		<segment>
+   			<source>Import Media</source>
+   			<target>Importer des médias</target>
+   		</segment>
+   	</unit>
+   	<unit id="taskItem.assign">
          <segment>
             <source>Assign {0}</source>
             <target>Assigner {0}</target>

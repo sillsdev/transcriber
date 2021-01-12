@@ -50,11 +50,10 @@ import {
   sectionDescription,
   passageDescription,
   related,
-  remoteIdGuid,
-  remoteIdNum,
   FontData,
   getFontData,
   UpdatePassageStateOps,
+  remoteIdGuid,
 } from '../crud';
 import {
   relMouseCoords,
@@ -389,7 +388,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         plan,
         pass.attributes.state,
         pass.attributes.lastComment,
-        remoteIdNum('user', user, memory.keyMap),
+        user,
         new TransformBuilder(),
         [],
         memory
@@ -448,7 +447,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           role,
           'user',
           user,
-          remoteIdNum('user', user, memory.keyMap)
+          user
         )
       );
     }
@@ -464,7 +463,11 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   const handleSave = async (postComment: boolean = false) => {
     //this needs to use the refs because it is called from a timer, which
     //apparently remembers the values when it is kicked off...not when it is run
-    await save(nextOnSave[stateRef.current] ?? stateRef.current, playedSecsRef.current, postComment);
+    await save(
+      nextOnSave[stateRef.current] ?? stateRef.current,
+      playedSecsRef.current,
+      postComment
+    );
   };
 
   const save = async (
@@ -475,7 +478,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     if (transcriptionRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
-      const userid = remoteIdNum('user', user, memory.keyMap);
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
       //always update the state, because we need the dateupdated to be updated
@@ -485,7 +487,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         plan,
         nextState,
         postComment ? comment : '',
-        userid,
+        user,
         tb,
         ops,
         memory
@@ -501,7 +503,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
               position: newPosition,
             },
           } as MediaFile,
-          userid
+          user
         )
       );
       //have to do this before the mediafiles useEffect kicks in
@@ -552,7 +554,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     } as MediaFile;
     newMedia.attributes.versionNumber += 1;
     await memory.update((t) => [
-      AddRecord(t, newMedia, remoteIdNum('user', user, memory.keyMap), memory),
+      ...AddRecord(t, newMedia, user, memory),
       t.replaceRelatedRecord(
         { type: 'mediafile', id: newMedia.id },
         'passage',
@@ -583,7 +585,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           plan,
           previous[state],
           comment,
-          remoteIdNum('user', user, memory.keyMap),
+          user,
           new TransformBuilder(),
           [],
           memory
@@ -684,8 +686,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     }, 1000 * 30);
   };
 
-
-
   const textAreaStyle = {
     overflow: 'auto',
     backgroundColor: '#cfe8fc',
@@ -701,15 +701,28 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
 
   moment.locale(lang);
   const curZone = moment.tz.guess();
-  const userFromId = (remoteId: number) => {
-    const id = remoteIdGuid('user', remoteId.toString(), memory.keyMap);
+  const userFromId = (psc: PassageStateChange): User => {
+    var id = related(psc, 'lastModifiedByUser');
+    if (!id) {
+      id = remoteIdGuid(
+        'user',
+        psc.attributes.lastModifiedBy.toString(),
+        memory.keyMap
+      );
+    }
+    if (!id) {
+      return {
+        id: '',
+        attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
+      } as any;
+    }
     const user = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'user', id })
     ) as User;
     return user;
   };
-  const nameFromId = (remoteId: number) => {
-    const user = userFromId(remoteId);
+  const nameFromId = (psc: PassageStateChange) => {
+    const user = userFromId(psc);
     return user ? user.attributes.name : '';
   };
   const historyItem = (
@@ -717,18 +730,15 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     comment: JSX.Element | string
   ) => {
     return (
-      <ListItem key={`${psc?.keys?.remoteId}-${(comment || '').toString()}`}>
+      <ListItem key={`${psc.id}-${comment}`}>
         <ListItemIcon>
-          <UserAvatar
-            {...props}
-            userRec={userFromId(psc.attributes.lastModifiedBy)}
-          />
+          <UserAvatar {...props} userRec={userFromId(psc)} />
         </ListItemIcon>
         <ListItemText
           primary={
             <>
               <Typography variant="h6" component="span">
-                {nameFromId(psc.attributes.lastModifiedBy)}
+                {nameFromId(psc)}
               </Typography>
               {'\u00A0\u00A0 '}
               <Typography component="span">
