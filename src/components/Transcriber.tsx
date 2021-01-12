@@ -493,7 +493,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         memory
       );
       ops.push(
-        UpdateRecord(
+        ...UpdateRecord(
           tb,
           {
             type: 'mediafile',
