@@ -267,9 +267,9 @@ export function Loading(props: IProps) {
     let fromUrl = localStorage.getItem(localUserKey(LocalKey.url, memory));
     if (fromUrl && !/^\/profile|^\/work|^\/plan/.test(fromUrl)) fromUrl = null;
     if (fromUrl) {
-      const m = /^\/[workplan]+\/([0-9]+)/.exec(fromUrl);
+      const m = /^\/[workplan]+\/([0-9a-f-]+)/.exec(fromUrl);
       if (m) {
-        const planId = remoteIdGuid('plan', m[1], memory.keyMap);
+        const planId = remoteIdGuid('plan', m[1], memory.keyMap) || m[1];
         const planRec = getPlan(planId);
         if (offline) {
           const oProjRec = planRec && getOfflineProject(planRec);

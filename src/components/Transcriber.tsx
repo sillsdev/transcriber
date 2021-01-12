@@ -305,6 +305,25 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData]);
 
+  React.useEffect(() => {
+    if (
+      (!duration || duration !== totalSeconds) &&
+      totalSeconds &&
+      totalSeconds !== 0
+    ) {
+      const mediaRecs = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('mediafile')
+      ) as MediaFile[];
+      const oldRec = mediaRecs.filter((m) => m.id === mediaId);
+      if (oldRec.length > 0)
+        memory.update((t: TransformBuilder) =>
+          t.replaceAttribute(oldRec[0], 'duration', totalSeconds)
+        );
+      console.log(`update duration to ${totalSeconds}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration, totalSeconds]);
+
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
     if (!changed) setChanged(true);

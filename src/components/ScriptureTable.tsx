@@ -698,7 +698,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleTranscribe = (i: number) => {
     const id = passageId(i);
-    const passageRemoteId = remoteIdNum('passage', id, memory.keyMap);
+    const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
     if (changed) {
       startSave();
       waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), 100);

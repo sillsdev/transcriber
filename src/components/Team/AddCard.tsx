@@ -203,8 +203,9 @@ export const AddCard = (props: IProps) => {
       setInProgress(false);
       setStep(0);
       if (book?.value)
-        setView(`/plan/${remoteId('plan', planId, memory.keyMap)}/0`);
-      else setView(`/work/${remoteId('plan', planId, memory.keyMap)}`);
+        setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
+      else
+        setView(`/work/${remoteId('plan', planId, memory.keyMap) || planId}`);
     }, 1000);
   };
 

@@ -228,7 +228,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const r = rowData[i];
         if (r.passage?.id === selected && r.mediaRemoteId !== '') {
           if (state.index !== i || trackedTask !== selected) {
-            const remId = remoteId('passage', selected, memory.keyMap);
+            const remId =
+              remoteId('passage', selected, memory.keyMap) || selected;
             if (pasId !== remId) {
               view.current = `/work/${prjId}/${remId}`;
             }

@@ -11,7 +11,7 @@ export const useUrlContext = () => {
   const vProject = useVProjectRead();
 
   return (planRemId: string) => {
-    let planId = remoteIdGuid('plan', planRemId, memory.keyMap);
+    let planId = remoteIdGuid('plan', planRemId, memory.keyMap) || planRemId;
     if (planId && planId !== plan) setPlan(planId);
     else planId = plan;
     const planRec = getPlan(planId);

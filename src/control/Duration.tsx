@@ -3,6 +3,7 @@ import * as React from 'react';
 const pad = (text: number) => ('0' + text).slice(-2);
 
 export function formatTime(seconds: number, direction?: string) {
+  if (typeof seconds !== 'number') return '';
   const date = new Date(seconds * 1000);
   const hh = date.getUTCHours();
   const mm = date.getUTCMinutes();
