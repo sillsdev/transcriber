@@ -42,8 +42,8 @@ export const TeamScreen = (props: IProps) => {
       const remProjId = remoteId('plan', plan, memory.keyMap);
       const loc =
         projRole === 'admin' && (!isOffline || offlineOnly)
-          ? `/plan/${remProjId}/0`
-          : `/work/${remProjId}`;
+          ? `/plan/${remProjId || plan}/0`
+          : `/work/${remProjId || plan}`;
       if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
         setView(loc);
       } else {

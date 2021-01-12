@@ -140,7 +140,7 @@ export function HelpMenu(props: IProps) {
         )}::${topicWin}`;
         launchCmd(target);
       } else if (topic && !online) {
-        launchCmd(`xchm -c 1 ${path.join(execFolder(), API_CONFIG.chmHelp)}`)
+        launchCmd(`xchm -c 1 ${path.join(execFolder(), API_CONFIG.chmHelp)}`);
       } else {
         const target = !online
           ? path.join(execFolder(), API_CONFIG.chmHelp)
@@ -190,9 +190,10 @@ export function HelpMenu(props: IProps) {
     if (helpRef.current && topic !== undefined) helpRef.current.click();
   }, [topic, helpToggle]);
 
-  const isPlanScreen = React.useMemo(() => /\/plan\/[0-9]+\/0/.test(pathname), [
-    pathname,
-  ]);
+  const isPlanScreen = React.useMemo(
+    () => /\/plan\/[0-9a-f-]+\/0/.test(pathname),
+    [pathname]
+  );
 
   return (
     <div>
