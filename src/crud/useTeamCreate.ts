@@ -1,6 +1,6 @@
 import { useGlobal } from 'reactn';
 import { Organization, ISharedStrings } from '../model';
-import { Online } from '../utils';
+import { Online, cleanFileName } from '../utils';
 import { createOrg, offlineError } from '.';
 import * as actions from '../store';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -41,7 +41,7 @@ export const useTeamCreate = (props: IProps) => {
       type: 'organization',
       attributes: {
         name,
-        slug:name,
+        slug: cleanFileName(name),
         description,
         websiteUrl,
         logoUrl,
