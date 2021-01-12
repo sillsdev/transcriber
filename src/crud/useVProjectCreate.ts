@@ -77,7 +77,7 @@ export const useVProjectCreate = () => {
         id: user,
       }),
     ]);
-    offlineProjectCreate(project);
+    await offlineProjectCreate(project);
     AddProjectLoaded(project.id);
 
     let plan: Plan = {

@@ -20,7 +20,9 @@ export const useFlatAdd = () => {
     for (let seq = 0; seq < total; seq++) {
       if (setComplete) setComplete(Math.floor((100.0 * seq) / total));
       const mediaRemoteId = mediaRemoteIds[seq];
-      const mediaId = remoteIdGuid('mediafile', mediaRemoteId, memory.keyMap);
+      const mediaId =
+        remoteIdGuid('mediafile', mediaRemoteId, memory.keyMap) ||
+        mediaRemoteId;
       const mediaRec = mediaRecs.filter((m) => m.id === mediaId);
       if (mediaRec.length > 0) {
         const mediaAttr = mediaRec[0].attributes;

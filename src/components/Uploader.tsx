@@ -128,7 +128,7 @@ export const Uploader = (props: IProps) => {
           dateUpdated: currentDateTime(),
         },
       } as any;
-      const planRecId = { type: 'plan', id: plan };
+      const planRecId = { type: 'plan', id: planIdRef.current || plan };
       const t = new TransformBuilder();
       await memory.update([
         ...AddRecord(t, mediaRec, user, memory),
