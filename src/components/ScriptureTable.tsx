@@ -42,7 +42,7 @@ import {
   usePlan,
   UpdatePassageStateOps,
 } from '../crud';
-import { Online, useRemoteSave, lookupBook, currentDateTime } from '../utils';
+import { Online, useRemoteSave, lookupBook } from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
 import StickyRedirect from './StickyRedirect';
@@ -917,8 +917,6 @@ export function ScriptureTable(props: IProps) {
                 sequencenum: parseInt(item.sequencenum),
                 name: item.title,
                 state: ActivityStates.NoMedia,
-                dateCreated: currentDateTime(),
-                dateUpdated: currentDateTime(),
               },
             } as any;
             const planRecId = { type: 'plan', id: plan };
@@ -942,7 +940,6 @@ export function ScriptureTable(props: IProps) {
                     book: item.book,
                     reference: item.reference,
                     title: item.title,
-                    dateUpdated: currentDateTime(),
                   },
                 } as Passage,
                 user
@@ -957,8 +954,6 @@ export function ScriptureTable(props: IProps) {
                 reference: item.reference,
                 title: item.title,
                 state: ActivityStates.NoMedia,
-                dateCreated: currentDateTime(),
-                dateUpdated: currentDateTime(),
               },
             } as any;
             const secRecId = { type: 'section', id: lastSec };
@@ -972,7 +967,7 @@ export function ScriptureTable(props: IProps) {
               lastSec,
               plan,
               ActivityStates.NoMedia,
-              'created',
+              '',
               user,
               t,
               ops,

@@ -418,7 +418,7 @@ export function Profile(props: IProps) {
       });
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (changed) {
       let userRec: User = {
         type: 'user',
@@ -439,12 +439,10 @@ export function Profile(props: IProps) {
           newsPreference: news,
           hotKeys,
           avatarUrl,
-          dateCreated: '',
-          dateUpdated: '',
         },
       } as any;
       if (!editId || offlineOnly) {
-        memory.update((t: TransformBuilder) =>
+        await memory.update((t: TransformBuilder) =>
           AddRecord(t, userRec, user, memory)
         );
         if (offlineOnly) setUser(userRec.id);

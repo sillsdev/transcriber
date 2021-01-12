@@ -2,8 +2,6 @@ import { TransformBuilder, Operation, RecordIdentity } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { PassageStateChange, ActivityStates, Passage } from '../model';
 import { AddRecord, UpdateLastModifedBy } from '../model/baseModel';
-import { currentDateTime } from '../utils';
-import { remoteIdNum } from '.';
 
 const AddPassageStateChangeToOps = (
   t: TransformBuilder,
