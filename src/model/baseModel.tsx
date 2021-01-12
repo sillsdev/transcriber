@@ -35,7 +35,6 @@ export const AddRecord = (
   memory: Memory
 ): any => {
   memory.schema.initializeRecord(rec);
-  console.log(rec);
   rec.attributes.dateCreated = currentDateTime();
   rec.attributes.dateUpdated = rec.attributes.dateCreated;
   return [t.addRecord(rec), ...UpdateLastModifedBy(t, rec, user)];
