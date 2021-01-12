@@ -16,6 +16,7 @@ export interface Organization extends Record {
   relationships?: {
     owner: RecordRelationship;
     groups: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 

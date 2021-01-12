@@ -15,9 +15,11 @@ const schemaDefinition: SchemaSettings = {
         sequencenum: { type: 'number' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
-      relationships: {},
+      relationships: {
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
+      },
     },
     group: {
       keys: { remoteId: {} },
@@ -28,7 +30,7 @@ const schemaDefinition: SchemaSettings = {
         allUsers: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         owner: { type: 'hasOne', model: 'organization', inverse: 'groups' },
@@ -38,6 +40,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'groupmembership',
           inverse: 'group',
         },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     groupmembership: {
@@ -47,12 +50,13 @@ const schemaDefinition: SchemaSettings = {
         fontSize: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         user: { type: 'hasOne', model: 'user', inverse: 'groupMemberships' },
         group: { type: 'hasOne', model: 'group', inverse: 'groupMemberships' },
         role: { type: 'hasOne', model: 'role' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     integration: {
@@ -62,7 +66,7 @@ const schemaDefinition: SchemaSettings = {
         url: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         projectIntegrations: {
@@ -70,6 +74,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'projectintegration',
           inverse: 'integration',
         },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     invitation: {
@@ -120,12 +125,13 @@ const schemaDefinition: SchemaSettings = {
         publicByDefault: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },
         users: { type: 'hasMany', model: 'user' },
         groups: { type: 'hasMany', model: 'group', inverse: 'owner' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     organizationmembership: {
@@ -133,7 +139,7 @@ const schemaDefinition: SchemaSettings = {
       attributes: {
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         user: {
@@ -143,6 +149,7 @@ const schemaDefinition: SchemaSettings = {
         },
         organization: { type: 'hasOne', model: 'organization' },
         role: { type: 'hasOne', model: 'role' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     plan: {
@@ -156,7 +163,7 @@ const schemaDefinition: SchemaSettings = {
         slug: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         owner: { type: 'hasOne', model: 'user' },
@@ -164,6 +171,7 @@ const schemaDefinition: SchemaSettings = {
         plantype: { type: 'hasOne', model: 'plantype', inverse: 'plans' },
         sections: { type: 'hasMany', model: 'section', inverse: 'plan' },
         mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'plan' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     plantype: {
@@ -173,10 +181,11 @@ const schemaDefinition: SchemaSettings = {
         description: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         plans: { type: 'hasMany', model: 'plan', inverse: 'plantype' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     project: {
@@ -195,9 +204,9 @@ const schemaDefinition: SchemaSettings = {
         isPublic: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
         dateExported: { type: 'date-time' },
         dateImported: { type: 'date-time' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         projecttype: {
@@ -215,6 +224,7 @@ const schemaDefinition: SchemaSettings = {
         },
         // sections: { type: 'hasMany', model: 'section', inverse: 'project' },
         plans: { type: 'hasMany', model: 'plan', inverse: 'project' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     projectintegration: {
@@ -223,7 +233,7 @@ const schemaDefinition: SchemaSettings = {
         settings: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         integration: {
@@ -236,6 +246,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'project',
           inverse: 'projectIntegrations',
         },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     projecttype: {
@@ -245,10 +256,11 @@ const schemaDefinition: SchemaSettings = {
         description: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         projects: { type: 'hasMany', model: 'project', inverse: 'projecttype' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     role: {
@@ -259,10 +271,11 @@ const schemaDefinition: SchemaSettings = {
         roleName: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         userRoles: { type: 'hasMany', model: 'organizationalmembership' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     section: {
@@ -273,7 +286,7 @@ const schemaDefinition: SchemaSettings = {
         state: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         // projects: { type: 'hasMany', model: 'project', inverse: 'sections' },
@@ -285,6 +298,7 @@ const schemaDefinition: SchemaSettings = {
         },
         editor: { type: 'hasOne', model: 'user' },
         transcriber: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     passage: {
@@ -299,7 +313,7 @@ const schemaDefinition: SchemaSettings = {
         lastComment: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         mediafiles: { type: 'hasMany', model: 'mediafile', inverse: 'passage' },
@@ -308,6 +322,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'section',
           inverse: 'passages',
         },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     passagestatechange: {
@@ -317,11 +332,11 @@ const schemaDefinition: SchemaSettings = {
         comments: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         passage: { type: 'hasOne', model: 'passage' },
-        user: { type: 'hasOne', model: 'user' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     mediafile: {
@@ -341,11 +356,12 @@ const schemaDefinition: SchemaSettings = {
         position: { type: 'number' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         plan: { type: 'hasOne', model: 'plan', inverse: 'mediafiles' },
         passage: { type: 'hasOne', model: 'passage', inverse: 'mediafiles' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     user: {
@@ -372,7 +388,7 @@ const schemaDefinition: SchemaSettings = {
         newsPreference: { type: 'boolean' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         organizationMemberships: {
@@ -385,6 +401,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'groupmembership',
           inverse: 'user',
         },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     currentuser: {
@@ -409,7 +426,7 @@ const schemaDefinition: SchemaSettings = {
         hotKeys: { type: 'string' },
         dateCreated: { type: 'date-time' },
         dateUpdated: { type: 'date-time' },
-        lastModifiedBy: { type: 'number' },
+        lastModifiedBy: { type: 'number' }, //bkwd compat only
       },
       relationships: {
         organizationMemberships: {
@@ -417,6 +434,7 @@ const schemaDefinition: SchemaSettings = {
           model: 'organizationmembership',
         },
         groupMemberships: { type: 'hasMany', model: 'groupmembership' },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     orgdata: {
@@ -459,13 +477,14 @@ if (process.env.REACT_APP_SCHEMAVERSION !== '1' && schemaDefinition.models) {
       exportedDate: { type: 'date-time' },
       dateCreated: { type: 'date-time' },
       dateUpdated: { type: 'date-time' },
-      lastModifiedBy: { type: 'number' },
+      lastModifiedBy: { type: 'number' }, //bkwd compat only
     },
     relationships: {
       project: {
         type: 'hasOne',
         model: 'project',
       },
+      lastModifiedByUser: { type: 'hasOne', model: 'user' },
     },
   };
   delete schemaDefinition.models.project.attributes?.dateImported;

@@ -14,6 +14,7 @@ export interface OfflineProject extends BaseModel {
   };
   relationships?: {
     project: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 export default OfflineProject;

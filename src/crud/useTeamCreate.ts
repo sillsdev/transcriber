@@ -41,6 +41,7 @@ export const useTeamCreate = (props: IProps) => {
       type: 'organization',
       attributes: {
         name,
+        slug:name,
         description,
         websiteUrl,
         logoUrl,

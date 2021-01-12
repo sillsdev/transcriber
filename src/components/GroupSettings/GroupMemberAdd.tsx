@@ -25,6 +25,7 @@ import { useSnackBar } from '../../hoc/SnackBar';
 import { OptionType } from '../../model';
 import useStyles from './GroupSettingsStyles';
 import { addGroupMember, getRoleId } from '../../crud';
+import { UpdateRelatedRecord } from '../../model/baseModel';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -45,6 +46,7 @@ function GroupMemberAdd(props: IProps) {
   const { open, role, orgPeople, t, roles, setOpen } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [group] = useGlobal('group');
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
   const { showMessage } = useSnackBar();
@@ -78,11 +80,7 @@ function GroupMemberAdd(props: IProps) {
     if (groupMemberRecs.length > 0) {
       groupMemberRec = groupMemberRecs[0];
       await memory.update((t: TransformBuilder) =>
-        t.replaceRelatedRecord(
-          { type: 'groupmembership', id: groupMemberRec.id },
-          'role',
-          { type: 'role', id: roleId }
-        )
+        UpdateRelatedRecord(t, groupMemberRec, 'role', 'role', roleId, user)
       );
     } else {
       await addGroupMember(

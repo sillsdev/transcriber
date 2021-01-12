@@ -8,7 +8,7 @@ import { withData, WithDataProps } from '../mods/react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { UpdateRecord } from '../model/baseModel';
+import { AddRecord, UpdateRecord } from '../model/baseModel';
 import Confirm from './AlertDialog';
 import {
   Accordion,
@@ -225,9 +225,8 @@ export function IntegrationPanel(props: IProps) {
         settings: setting,
       },
     } as any;
-    memory.schema.initializeRecord(pi);
     await memory.update((t: TransformBuilder) => [
-      t.addRecord(pi),
+      AddRecord(t, pi, user, memory),
       t.replaceRelatedRecord(
         { type: 'projectintegration', id: pi.id },
         'project',
@@ -255,7 +254,7 @@ export function IntegrationPanel(props: IProps) {
             settings: setting,
           },
         } as ProjectIntegration,
-        remoteIdNum('user', user, memory.keyMap)
+        user
       )
     );
     return projInt;

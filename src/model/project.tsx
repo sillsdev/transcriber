@@ -26,6 +26,7 @@ export interface Project extends Record {
     projectintegrations: RecordRelationship;
     users: RecordRelationship;
     plans: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 export default Project;

@@ -11,6 +11,7 @@ export interface ProjectIntegration extends BaseModel {
   relationships?: {
     project: RecordRelationship;
     integration: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 export default ProjectIntegration;

@@ -16,12 +16,7 @@ import {
   MenuItem,
 } from '@material-ui/core';
 import { TransformBuilder } from '@orbit/data';
-import {
-  sectionNumber,
-  sectionDescription,
-  remoteIdNum,
-  useOrganizedBy,
-} from '../crud';
+import { sectionNumber, sectionDescription, useOrganizedBy } from '../crud';
 import PeopleIconOutline from '@material-ui/icons/PeopleAltOutlined';
 import { TaskAvatar } from './TaskAvatar';
 import { UpdateRelatedRecord } from '../model/baseModel';
@@ -89,7 +84,7 @@ export function TaskHead(props: IProps) {
             role,
             'user',
             action === assignAction ? user : '',
-            remoteIdNum('user', user, memory.keyMap)
+            user
           )
         );
       }

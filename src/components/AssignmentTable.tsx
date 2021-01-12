@@ -36,7 +36,7 @@ import {
 } from '../crud';
 import { HeadHeight } from '../App';
 import { TabHeight } from './PlanTabs';
-import { currentDateTime } from '../utils';
+import { UpdateLastModifedBy } from '../model/baseModel';
 
 const ActionHeight = 52;
 
@@ -170,6 +170,7 @@ export function AssignmentTable(props: IProps) {
     allBookData,
   } = props;
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const classes = useStyles();
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
@@ -246,15 +247,11 @@ export function AssignmentTable(props: IProps) {
           type: 'user',
           id: '',
         }),
-        t.replaceAttribute(
-          { type: 'section', id: s.id },
-          'dateUpdated',
-          currentDateTime()
-        ),
-        t.replaceAttribute(
+        ...UpdateLastModifedBy(t, s, user),
+        ...UpdateLastModifedBy(
+          t,
           { type: 'plan', id: related(s, 'plan') },
-          'dateUpdated',
-          currentDateTime()
+          user
         ),
       ]);
     });

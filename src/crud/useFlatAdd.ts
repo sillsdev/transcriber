@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { Passage, MediaFile, ActivityStates } from '../model';
 import { QueryBuilder } from '@orbit/data';
-import { remoteIdGuid, saveNewSection, remoteIdNum, AddFlatPassage } from '.';
+import { remoteIdGuid, saveNewSection, AddFlatPassage } from '.';
 
 export const useFlatAdd = () => {
   const [memory] = useGlobal('memory');
@@ -16,7 +16,6 @@ export const useFlatAdd = () => {
     const mediaRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('mediafile')
     ) as MediaFile[];
-    const userId = remoteIdNum('user', user, memory.keyMap);
     const total = mediaRemoteIds.length;
     for (let seq = 0; seq < total; seq++) {
       if (setComplete) setComplete(Math.floor((100.0 * seq) / total));
@@ -34,7 +33,7 @@ export const useFlatAdd = () => {
           name,
           plan,
           memory,
-          userId,
+          user,
         });
         const passage: Passage = {
           type: 'passage',

@@ -37,6 +37,7 @@ export interface VProject extends Record {
     group: RecordRelationship;
     projectintegrations: RecordRelationship;
     users: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 export default VProject;

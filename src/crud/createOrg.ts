@@ -11,7 +11,7 @@ import {
 import Coordinator from '@orbit/coordinator';
 import { QueryBuilder, TransformBuilder, RecordIdentity } from '@orbit/data';
 import { setDefaultProj, getRoleRec, allUsersRec } from '.';
-import { orbitErr, currentDateTime } from '../utils';
+import { AddRecord } from '../model/baseModel';
 
 export const ReloadOrgTables = async (coordinator: Coordinator) => {
   const memory = coordinator.getSource('memory') as Memory;
@@ -42,12 +42,13 @@ const OrgRelated = async (
 
   let orgMember: OrganizationMembership = {
     type: 'organizationmembership',
-  } as any;
-  memory.schema.initializeRecord(orgMember);
+    attributes: {
+    },
+  } as OrganizationMembership;
   let groupMbr: GroupMembership = {
     type: 'groupmembership',
-  } as any;
-  memory.schema.initializeRecord(groupMbr);
+    attributes: {
+    },} as GroupMembership;
 
   const roleRecs = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('role')
@@ -62,25 +63,22 @@ const OrgRelated = async (
         name: `All users of ${orgRec.attributes.name}`,
         abbreviation: `all-users`,
         allUsers: true,
-        dateCreated: currentDateTime(),
-        dateUpdated: currentDateTime(),
       },
-    } as any;
-    memory.schema.initializeRecord(group);
+    } as Group;
     await memory.update((t: TransformBuilder) => [
-      t.addRecord(group),
+      ...AddRecord(t, group, userRecId.id, memory),
       t.replaceRelatedRecord(group, 'owner', orgRec),
     ]);
     allUsersGroup.push(group);
   }
-  await memory.update((t: TransformBuilder) => [
-    t.addRecord(orgMember),
+    await memory.update((t: TransformBuilder) => [
+    ...AddRecord(t, orgMember, userRecId.id, memory),
     t.replaceRelatedRecord(orgMember, 'user', userRecId),
     t.replaceRelatedRecord(orgMember, 'organization', orgRec),
     t.replaceRelatedRecord(orgMember, 'role', orgRoleRec[0]),
   ]);
   await memory.update((t: TransformBuilder) => [
-    t.addRecord(groupMbr),
+    ...AddRecord(t, groupMbr, userRecId.id, memory),
     t.replaceRelatedRecord(groupMbr, 'user', userRecId),
     t.replaceRelatedRecord(groupMbr, 'group', allUsersGroup[0]),
     t.replaceRelatedRecord(groupMbr, 'role', grpRoleRec[0]),
@@ -99,36 +97,18 @@ export interface ICreateOrgProps {
 }
 
 export const createOrg = async (props: ICreateOrgProps) => {
-  const { orgRec, user, coordinator, online, offlineOnly } = props;
-  const { setOrganization, setProject, doOrbitError } = props;
+  const { orgRec, user, coordinator } = props;
+  const { setOrganization, setProject } = props;
 
   const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
-  memory.schema.initializeRecord(orgRec);
-
   const userRecId = { type: 'user', id: user };
 
-  if (offlineOnly) {
-    await memory.update((t: TransformBuilder) => [
-      t.addRecord(orgRec),
+  await memory.update((t: TransformBuilder) => [
+      ...AddRecord(t, orgRec, user, memory),
       t.replaceRelatedRecord(orgRec, 'owner', userRecId),
     ]);
     await OrgRelated(coordinator, orgRec, userRecId);
-  } else if (!remote || !online) {
-    throw new Error('Creating an Org is not available offline');
-  } else {
-    await remote
-      .update((t: TransformBuilder) => [
-        t.addRecord(orgRec),
-        t.replaceRelatedRecord(orgRec, 'owner', userRecId),
-      ])
-      .catch((err: Error) => {
-        var x = orbitErr(err, 'CreateOrg');
-        doOrbitError(x);
-        console.log(err.message);
-      });
-    await ReloadOrgTables(coordinator);
-  }
+
   setOrganization(orgRec.id);
   setDefaultProj(orgRec.id, memory, setProject);
   return orgRec.id;

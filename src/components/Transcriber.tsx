@@ -50,10 +50,10 @@ import {
   sectionDescription,
   passageDescription,
   related,
-  remoteIdNum,
   FontData,
   getFontData,
   UpdatePassageStateOps,
+  remoteIdGuid,
 } from '../crud';
 import {
   relMouseCoords,
@@ -447,7 +447,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
           role,
           'user',
           user,
-          remoteIdNum('user', user, memory.keyMap)
+          user
         )
       );
     }
@@ -478,7 +478,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     if (transcriptionRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
-      const userid = remoteIdNum('user', user, memory.keyMap);
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
       //always update the state, because we need the dateupdated to be updated
@@ -504,7 +503,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
               position: newPosition,
             },
           } as MediaFile,
-          userid
+          user
         )
       );
       //have to do this before the mediafiles useEffect kicks in
@@ -555,7 +554,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     } as MediaFile;
     newMedia.attributes.versionNumber += 1;
     await memory.update((t) => [
-      AddRecord(t, newMedia, remoteIdNum('user', user, memory.keyMap), memory),
+      ...AddRecord(t, newMedia, user, memory),
       t.replaceRelatedRecord(
         { type: 'mediafile', id: newMedia.id },
         'passage',
@@ -703,12 +702,20 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   moment.locale(lang);
   const curZone = moment.tz.guess();
   const userFromId = (psc: PassageStateChange): User => {
-    const id = related(psc, 'user');
-    if (!id)
+    var id = related(psc, 'lastModifiedByUser');
+    if (!id) {
+      id = remoteIdGuid(
+        'user',
+        psc.attributes.lastModifiedBy.toString(),
+        memory.keyMap
+      );
+    }
+    if (!id) {
       return {
         id: '',
         attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
       } as any;
+    }
     const user = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'user', id })
     ) as User;

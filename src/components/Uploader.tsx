@@ -13,6 +13,7 @@ import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
 import { currentDateTime } from '../utils';
 import { TransformBuilder } from '@orbit/data';
+import { AddRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,6 +67,7 @@ export const Uploader = (props: IProps) => {
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
+  const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
   const planIdRef = React.useRef<string>();
   const successCount = React.useRef<number>(0);
@@ -126,11 +128,10 @@ export const Uploader = (props: IProps) => {
           dateUpdated: currentDateTime(),
         },
       } as any;
-      memory.schema.initializeRecord(mediaRec);
       const planRecId = { type: 'plan', id: plan };
       const t = new TransformBuilder();
       await memory.update([
-        t.addRecord(mediaRec),
+        ...AddRecord(t, mediaRec, user, memory),
         t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
       ]);
       mediaIdRef.current.push(mediaRec.id);

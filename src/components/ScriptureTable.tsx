@@ -50,6 +50,7 @@ import Auth from '../auth/Auth';
 import Uploader, { statusInit } from './Uploader';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import { keyMap } from '../schema';
+import { AddRecord, UpdateRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -730,7 +731,6 @@ export function ScriptureTable(props: IProps) {
   const updateLastModified = async () => {
     var planRec = getPlan(plan);
     if (planRec !== null) {
-      planRec.attributes.dateUpdated = currentDateTime();
       //don't use sections here, it hasn't been updated yet
       var plansections = memory.cache.query((qb) =>
         qb.findRecords('section')
@@ -739,7 +739,9 @@ export function ScriptureTable(props: IProps) {
         (s) => related(s, 'plan') === plan
       ).length;
       const myplan = planRec; //assure typescript that the plan isn't null :/
-      await memory.update((t: TransformBuilder) => t.updateRecord(myplan));
+      await memory.update((t: TransformBuilder) =>
+        UpdateRecord(t, myplan, user)
+      );
       setLastSaved(planRec.attributes.dateUpdated);
     }
   };
@@ -893,15 +895,18 @@ export function ScriptureTable(props: IProps) {
           if (secRecs.length > 0) {
             if (item.changed) {
               await memory.update((t: TransformBuilder) =>
-                t.updateRecord({
-                  ...secRecs[0],
-                  attributes: {
-                    ...secRecs[0].attributes,
-                    sequencenum: parseInt(item.sequencenum),
-                    name: item.title,
-                    dateUpdated: currentDateTime(),
-                  },
-                } as Section)
+                UpdateRecord(
+                  t,
+                  {
+                    ...secRecs[0],
+                    attributes: {
+                      ...secRecs[0].attributes,
+                      sequencenum: parseInt(item.sequencenum),
+                      name: item.title,
+                    },
+                  } as Section,
+                  user
+                )
               );
             }
             lastSec = secRecs[0].id;
@@ -916,10 +921,9 @@ export function ScriptureTable(props: IProps) {
                 dateUpdated: currentDateTime(),
               },
             } as any;
-            memory.schema.initializeRecord(secRec);
             const planRecId = { type: 'plan', id: plan };
             await memory.update((t: TransformBuilder) => [
-              t.addRecord(secRec),
+              ...AddRecord(t, secRec, user, memory),
               t.replaceRelatedRecord(secRec, 'plan', planRecId),
             ]);
             lastSec = secRec.id;
@@ -928,17 +932,21 @@ export function ScriptureTable(props: IProps) {
           const passRecs = passages.filter((p) => p.id === item.id);
           if (passRecs.length > 0) {
             await memory.update((t: TransformBuilder) =>
-              t.updateRecord({
-                ...passRecs[0],
-                attributes: {
-                  ...passRecs[0].attributes,
-                  sequencenum: parseInt(item.sequencenum),
-                  book: item.book,
-                  reference: item.reference,
-                  title: item.title,
-                  dateUpdated: currentDateTime(),
-                },
-              } as Passage)
+              UpdateRecord(
+                t,
+                {
+                  ...passRecs[0],
+                  attributes: {
+                    ...passRecs[0].attributes,
+                    sequencenum: parseInt(item.sequencenum),
+                    book: item.book,
+                    reference: item.reference,
+                    title: item.title,
+                    dateUpdated: currentDateTime(),
+                  },
+                } as Passage,
+                user
+              )
             );
           } else {
             const passRec: Passage = {
@@ -953,11 +961,10 @@ export function ScriptureTable(props: IProps) {
                 dateUpdated: currentDateTime(),
               },
             } as any;
-            memory.schema.initializeRecord(passRec);
             const secRecId = { type: 'section', id: lastSec };
             const t = new TransformBuilder();
             const ops: Operation[] = [
-              t.addRecord(passRec),
+              ...AddRecord(t, passRec, user, memory),
               t.replaceRelatedRecord(passRec, 'section', secRecId),
             ];
             UpdatePassageStateOps(
