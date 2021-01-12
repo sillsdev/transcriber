@@ -319,35 +319,36 @@ export function Profile(props: IProps) {
   const handleSave = () => {
     if (changed) {
       const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
-      memory.update((t: TransformBuilder) => [
-        UpdateRecord(
-          t,
-          {
-            type: 'user',
-            id: currentUserId,
-            attributes: {
-              name,
-              givenName: given,
-              familyName: family,
-              email,
-              phone,
-              timezone,
-              locale,
-              isLocked: locked,
-              uilanguagebcp47: bcp47,
-              timercountUp: timerDir,
-              playbackSpeed: speed,
-              progressbarTypeid: progBar,
-              digestPreference: digest,
-              newsPreference: news,
-              hotKeys,
-              avatarUrl,
-            },
-          } as User,
-          currentUser !== undefined ? currentUser.id : ''
-        ),
+      memory.update(
+        (t: TransformBuilder) =>
+          UpdateRecord(
+            t,
+            {
+              type: 'user',
+              id: currentUserId,
+              attributes: {
+                name,
+                givenName: given,
+                familyName: family,
+                email,
+                phone,
+                timezone,
+                locale,
+                isLocked: locked,
+                uilanguagebcp47: bcp47,
+                timercountUp: timerDir,
+                playbackSpeed: speed,
+                progressbarTypeid: progBar,
+                digestPreference: digest,
+                newsPreference: news,
+                hotKeys,
+                avatarUrl,
+              },
+            } as User,
+            currentUser !== undefined ? currentUser.id : ''
+          )
         // we aren't allowing them to change owner oraganization currently
-      ]);
+      );
       const roleRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('role')
       ) as Role[];
