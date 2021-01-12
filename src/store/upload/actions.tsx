@@ -9,7 +9,14 @@ import {
   UPLOAD_ITEM_FAILED,
   UPLOAD_COMPLETE,
 } from './types';
-import { dataPath, infoMsg, logError, PathType, Severity } from '../../utils';
+import {
+  dataPath,
+  infoMsg,
+  logError,
+  PathType,
+  Severity,
+  createFolder,
+} from '../../utils';
 var fs = require('fs');
 var path = require('path');
 
@@ -46,10 +53,12 @@ export const nextUpload = (
     var local = { localname: '' };
     dataPath(`http://${files[n].path}`, PathType.MEDIA, local);
     try {
-      fs.copyFileSync(files[n].path, local.localname);
+      const fullName = local.localname;
+      createFolder(fullName.substring(0, fullName.lastIndexOf(path.sep)));
+      fs.copyFileSync(files[n].path, fullName);
       const filename = path.join(
         PathType.MEDIA,
-        files[n].path.split('\\').pop()?.split('/').pop()
+        files[n].path.split(path.sep).pop()
       );
       if (cb) cb(n, true, { ...record, audioUrl: filename });
     } catch (err) {

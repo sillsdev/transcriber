@@ -35,3 +35,4 @@ export * from './downloadFile';
 export * from './useProjectsLoaded';
 export * from './useMounted';
 export * from './execFolder';
+export * from './createFolder';
