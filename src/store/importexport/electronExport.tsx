@@ -436,7 +436,9 @@ export async function electronExport(
     var ids = offlineprojects
       .filter((o) => o.attributes.offlineAvailable)
       .map((o) => related(o, 'project')) as string[];
-    projects = projects.filter((p) => ids.includes(p.id));
+    projects = projects
+      .filter((p) => ids.includes(p.id))
+      .filter((p) => remoteId('project', p.id, memory.keyMap) !== undefined);
     backupZip = new AdmZip();
     if (exportType === ExportType.FULLBACKUP) exportType = ExportType.PTF;
     else exportType = ExportType.ITF;
