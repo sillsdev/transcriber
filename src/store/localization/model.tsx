@@ -7,7 +7,7 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "createUser": string;
     "logIn": string;
     "screenTitle": string;
-    "uploadArchive": string;
+    "importSnapshot": string;
     "withInternet": string;
     "withoutInternet": string;
     "importProject": string;

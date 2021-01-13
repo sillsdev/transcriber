@@ -347,7 +347,7 @@ export function Access(props: IProps) {
                 className={classes.button}
                 onClick={handleImport}
               >
-                {t.uploadArchive}
+                {t.importSnapshot}
               </Button>
             </div>
           </Paper>
