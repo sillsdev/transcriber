@@ -111,6 +111,7 @@ const schemaDefinition: SchemaSettings = {
           type: 'hasOne',
           model: 'role',
         },
+        lastModifiedByUser: { type: 'hasOne', model: 'user' },
       },
     },
     organization: {

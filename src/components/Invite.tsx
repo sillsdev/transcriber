@@ -135,8 +135,6 @@ function Invite(props: IProps) {
         strings: JSON.stringify(strings),
       },
     } as any;
-    memory.schema.initializeRecord(invitation);
-
     await memory.update((t: TransformBuilder) => [
       ...AddRecord(t, invitation, user, memory),
       t.replaceRelatedRecord(
