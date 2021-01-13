@@ -31,10 +31,10 @@
    			<target>Je veux travailler...</target>
    		</segment>
    	</unit>
-   	<unit id="access.uploadArchive">
+   	<unit id="access.importSnapshot">
    		<segment>
-   			<source>Upload a Project Archive</source>
-   			<target>Télécharger une archive de projet</target>
+   			<source>Import a Project Snapshot</source>
+   			<target>Importer un instantané de projet</target>
    		</segment>
    	</unit>
    	<unit id="access.withInternet">
@@ -51,8 +51,8 @@
    	</unit>
    	<unit id="access.importProject">
          <segment>
-            <source>Import PTF File</source>
-            <target>Importation un fichier de PTF</target>
+            <source>Import a Project Snapshot</source>
+         	<target>Importer un instantané de projet</target>
          </segment>
       </unit>
    	<unit id="access.download">
@@ -309,8 +309,8 @@
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import PTF File</source>
-            <target>Importer un fichier PTF</target>
+            <source>Import a Project Snapshot</source>
+         	<target>Importer un instantané de projet</target>
          </segment>
       </unit>
       <unit id="cards.language">

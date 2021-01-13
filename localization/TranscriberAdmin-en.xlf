@@ -34,9 +34,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="access.uploadArchive">
+      <unit id="access.importSnapshot">
          <segment>
-            <source>Upload a Project Archive</source>
+            <source>Import a Project Snapshot</source>
             <target/>
          </segment>
       </unit>
@@ -54,7 +54,7 @@
       </unit>
       <unit id="access.importProject">
          <segment>
-            <source>Import PTF File</source>
+            <source>Import a Project Snapshot</source>
             <target/>
          </segment>
       </unit>
@@ -312,7 +312,7 @@
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import PTF File</source>
+            <source>Import a Project Snapshot</source>
             <target/>
          </segment>
       </unit>
