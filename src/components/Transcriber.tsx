@@ -306,18 +306,14 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   }, [index, rowData]);
 
   React.useEffect(() => {
-    if (
-      (!duration || duration !== totalSeconds) &&
-      totalSeconds &&
-      totalSeconds !== 0
-    ) {
+    if (totalSeconds && (!duration || duration !== Math.round(totalSeconds))) {
       const mediaRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('mediafile')
       ) as MediaFile[];
       const oldRec = mediaRecs.filter((m) => m.id === mediaId);
       if (oldRec.length > 0)
         memory.update((t: TransformBuilder) =>
-          t.replaceAttribute(oldRec[0], 'duration', totalSeconds)
+          t.replaceAttribute(oldRec[0], 'duration', Math.round(totalSeconds))
         );
       console.log(`update duration to ${totalSeconds}`);
     }
