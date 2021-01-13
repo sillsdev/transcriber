@@ -986,7 +986,7 @@ export function ScriptureTable(props: IProps) {
         setComplete(10);
         const anyNew = changedRows.includes(true);
         const recs = getChangedRecs(changedRows);
-        if (!offlineOnly) onlineSaveFn(recs, anyNew);
+        if (!offlineOnly) await onlineSaveFn(recs, anyNew);
         else localSaveFn(recs, anyNew);
       };
 
