@@ -59,6 +59,7 @@ import {
   getFontData,
   UpdatePassageStateOps,
   remoteIdGuid,
+  remoteIdNum,
 } from '../crud';
 import {
   relMouseCoords,
@@ -632,7 +633,7 @@ export function Transcriber(props: IProps) {
         section.id,
         plan,
         nextState,
-        postComment ? comment : '',
+        thiscomment,
         user,
         tb,
         ops,
