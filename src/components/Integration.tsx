@@ -2,7 +2,13 @@ import React, { useEffect } from 'react';
 import * as actions from '../store';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IIntegrationStrings, Project, Passage } from '../model';
+import {
+  IState,
+  IIntegrationStrings,
+  Project,
+  Passage,
+  ISharedStrings,
+} from '../model';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
@@ -34,7 +40,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 import RenderLogo from '../control/RenderLogo';
-import { remoteIdNum, related, useOfflnProjRead } from '../crud';
+import { remoteIdNum, related, useOfflnProjRead, remoteId } from '../crud';
 import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
@@ -46,6 +52,7 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
 import { doDataChanges } from '../hoc/DataChanges';
 import Memory from '@orbit/memory';
+import { translateParatextError } from '../utils/translateParatextError';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -107,6 +114,7 @@ interface IStateProps {
   paratext_usernameStatus?: IAxiosStatus;
   paratext_syncStatus?: IAxiosStatus; // state.paratext.syncStatus,
   t: IIntegrationStrings;
+  ts: ISharedStrings;
 }
 
 interface IDispatchProps {
@@ -138,6 +146,7 @@ interface IProps
 export function IntegrationPanel(props: IProps) {
   const {
     t,
+    ts,
     auth,
     paratext_username,
     paratext_usernameStatus,
@@ -273,7 +282,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_projects[index].ProjectIds = paratext_projects[
       index
     ].ProjectIds.filter(
-      (p) => p !== remoteIdNum('project', project, memory.keyMap)
+      (p) => p !== remoteId('project', project, memory.keyMap) || project
     );
   };
   const handleParatextProjectChange = (e: any) => {
@@ -287,8 +296,8 @@ export function IntegrationPanel(props: IProps) {
     if (ptProj >= 0) removeProjectFromParatextList(ptProj);
     setPtProj(index);
     setPtProjName(e.target.value);
-    setPtShortName(paratext_projects[index].ShortName);
     if (index >= 0) {
+      setPtShortName(paratext_projects[index].ShortName);
       const paratextProject: ParatextProject = paratext_projects[index];
       const setting = {
         Name: paratextProject.Name,
@@ -303,7 +312,7 @@ export function IntegrationPanel(props: IProps) {
         updateProjectIntegration(projint, JSON.stringify(setting));
       }
       paratext_projects[index].ProjectIds.push(
-        remoteIdNum('project', project, memory.keyMap)
+        remoteId('project', project, memory.keyMap) || project
       );
     }
   };
@@ -346,89 +355,24 @@ export function IntegrationPanel(props: IProps) {
           ? paratext_projects.length > 0
             ? t.selectProject
             : formatWithLanguage(t.noProject)
-          : translateError(paratext_projectsStatus)
+          : (translateParatextError(paratext_projectsStatus, ts) as string)
         : t.projectsPending
       : t.offline;
   };
   const findConnectedProject = () => {
     let index = paratext_projects.findIndex(
       (p) =>
-        p.ProjectIds.indexOf(remoteIdNum('project', project, memory.keyMap)) >=
-        0
+        p.ProjectIds.indexOf(
+          remoteId('project', project, memory.keyMap) || project
+        ) >= 0
     );
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
+    setPtShortName(index >= 0 ? paratext_projects[index].ShortName : '');
     if (pRef && pRef.current) pRef.current.focus();
   };
   const translateSyncError = (err: IAxiosStatus): JSX.Element => {
-    if (err.errMsg.includes('ReferenceError')) {
-      const errs = err.errMsg.split('||');
-      let localizedErr: JSX.Element[] = [];
-      errs.forEach((referr) => {
-        var parts = referr.split('|');
-        var str = '';
-        switch (parts[0]) {
-          case 'Empty Book':
-            str = t.emptyBook.replace('{0}', parts[1]).replace('{1}', parts[2]);
-            localizedErr.push(
-              <>
-                {str}
-                <br />
-              </>
-            );
-            break;
-          case 'Missing Book':
-            str = t.bookNotInParatext
-              .replace('{0}', parts[1])
-              .replace('{1}', parts[2])
-              .replace('{2}', parts[3]);
-            localizedErr.push(
-              <>
-                {str}
-                <br />
-              </>
-            );
-            break;
-          case 'Chapter':
-            str = t.chapterSpan
-              .replace('{0}', parts[1])
-              .replace('{1}', parts[2])
-              .replace('{2}', parts[3]);
-            localizedErr.push(
-              <>
-                {str}
-                <br />
-              </>
-            );
-            break;
-          case 'Reference':
-            str = t.invalidReference
-              .replace('{0}', parts[1])
-              .replace('{1}', parts[2])
-              .replace('{2}', parts[3]);
-            localizedErr.push(
-              <>
-                {str}
-                <br />
-              </>
-            );
-        }
-      });
-      return <span>{localizedErr}</span>;
-    } else return <span>{translateError(err)}</span>;
-  };
-
-  const translateError = (err: IAxiosStatus): string => {
-    if (err.errStatus === 401) return t.expiredToken;
-    if (err.errStatus === 500) {
-      if (err.errMsg.includes('401') || err.errMsg.includes('400'))
-        return t.expiredParatextToken;
-      if (err.errMsg.includes('logged in')) return t.invalidParatextLogin;
-      if (err.errMsg.includes('Book not included'))
-        return t.bookNotFound + err.errMsg.substr(err.errMsg.lastIndexOf(':'));
-      return err.errMsg;
-    }
-    return err.errMsg;
+    return <span>{translateParatextError(err, ts)}</span>;
   };
 
   const canEditParatextText = (role: string): boolean => {
@@ -494,7 +438,10 @@ export function IntegrationPanel(props: IProps) {
             t.countPending
           );
     } else if (paratext_countStatus.errStatus)
-      showTitledMessage(t.countError, translateError(paratext_countStatus));
+      showTitledMessage(
+        t.countError,
+        translateParatextError(paratext_countStatus, ts)
+      );
 
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [paratext_count, paratext_countStatus]);
@@ -506,7 +453,7 @@ export function IntegrationPanel(props: IProps) {
       } else if (paratext_usernameStatus.errStatus)
         showTitledMessage(
           t.usernameError,
-          translateError(paratext_usernameStatus)
+          translateParatextError(paratext_usernameStatus, ts)
         );
 
       setHasParatext(paratext_username !== '');
@@ -521,9 +468,23 @@ export function IntegrationPanel(props: IProps) {
         const langTag =
           proj && proj.attributes ? proj.attributes.language : undefined;
         if (offline) {
-          getParatextDataPath().then((ptPath) =>
-            getLocalProjects(ptPath, t.projectsPending, langTag)
+          const localprojs: ProjectIntegration[] = projectintegrations.filter(
+            (pi) =>
+              related(pi, 'integration') === paratextIntegration &&
+              pi.attributes
           );
+          var projIds = localprojs.map((pi) => {
+            var settings = JSON.parse(pi.attributes.settings);
+            return {
+              Name: settings.Name,
+              Id:
+                remoteId('project', related(pi, 'project'), memory.keyMap) ||
+                project,
+            };
+          });
+          getParatextDataPath().then((ptPath) => {
+            getLocalProjects(ptPath, t.projectsPending, projIds, langTag);
+          });
         } else {
           getProjects(auth, t.projectsPending, errorReporter, langTag);
         }
@@ -531,7 +492,7 @@ export function IntegrationPanel(props: IProps) {
         if (paratext_projectsStatus.errStatus) {
           showTitledMessage(
             t.projectError,
-            translateError(paratext_projectsStatus)
+            translateParatextError(paratext_projectsStatus, ts)
           );
         } else if (paratext_projectsStatus.complete) {
           findConnectedProject();
@@ -931,6 +892,7 @@ export function IntegrationPanel(props: IProps) {
 }
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'integration' }),
+  ts: localStrings(state, { layout: 'shared' }),
   paratext_count: state.paratext.count,
   paratext_countStatus: state.paratext.countStatus,
   paratext_username: state.paratext.username,

@@ -304,7 +304,7 @@ export function ImportTab(props: IProps) {
       case 301:
         return t.projectDeleted.replace('{0}', err.errMsg);
       case 401:
-        return t.expiredToken;
+        return ts.expiredToken;
       case 406:
         return t.projectNotFound.replace('{0}', err.errMsg);
       case 422:

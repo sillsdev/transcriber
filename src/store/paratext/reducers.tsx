@@ -9,9 +9,10 @@ export const paratextCleanState = {
   projects: [] as any,
   projectsStatus: undefined,
   syncStatus: undefined,
+  textStatus: undefined,
 } as type.IParatextState;
 
-export default function(
+export default function (
   state = paratextCleanState,
   action: type.ParatextMsgs
 ): type.IParatextState {
@@ -81,6 +82,21 @@ export default function(
       return {
         ...state,
         syncStatus: action.payload,
+      };
+    case type.TEXT_PENDING:
+      return {
+        ...state,
+        textStatus: action.payload,
+      };
+    case type.TEXT_SUCCESS:
+      return {
+        ...state,
+        textStatus: successStatus(action.payload),
+      };
+    case type.TEXT_ERROR:
+      return {
+        ...state,
+        textStatus: action.payload,
       };
     default:
       return { ...state };

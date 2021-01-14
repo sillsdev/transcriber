@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
+import { connect } from 'react-redux';
 import ReactPlayer from 'react-player';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import keycode from 'keycode';
@@ -14,6 +15,9 @@ import {
   Plan,
   PlanType,
   User,
+  IState,
+  Integration,
+  ProjectIntegration,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -35,6 +39,7 @@ import {
   ListItemText,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
+import PullIcon from '@material-ui/icons/GetAppOutlined';
 import SkipBackIcon from '@material-ui/icons/FastRewind';
 import PlayIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
@@ -54,6 +59,7 @@ import {
   getFontData,
   UpdatePassageStateOps,
   remoteIdGuid,
+  remoteIdNum,
 } from '../crud';
 import {
   relMouseCoords,
@@ -62,6 +68,7 @@ import {
   logError,
   Severity,
   currentDateTime,
+  getParatextDataPath,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -73,6 +80,10 @@ import {
   AddRecord,
 } from '../model/baseModel';
 import { withData } from 'react-orbitjs';
+import { IAxiosStatus } from '../store/AxiosStatus';
+import * as action from '../store';
+import { bindActionCreators } from 'redux';
+import { translateParatextError } from '../utils/translateParatextError';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -132,16 +143,61 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface IRecordProps {
   mediafiles: MediaFile[];
+  integrations: Integration[];
+  projintegrations: ProjectIntegration[];
 }
 const mapRecordsToProps = {
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
+  integrations: (q: QueryBuilder) => q.findRecords('integration'),
+  projintegrations: (q: QueryBuilder) => q.findRecords('projectintegration'),
 };
-interface IProps extends IRecordProps {
+
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      getUserName: action.getUserName,
+      getParatextText: action.getParatextText,
+      getParatextTextLocal: action.getParatextTextLocal,
+      resetParatextText: action.resetParatextText,
+    },
+    dispatch
+  ),
+});
+
+interface IDispatchProps {
+  getUserName: typeof action.getUserName;
+  getParatextText: typeof action.getParatextText;
+  getParatextTextLocal: typeof action.getParatextTextLocal;
+  resetParatextText: typeof action.resetParatextText;
+}
+interface IStateProps {
+  paratext_textStatus?: IAxiosStatus;
+  paratext_username: string; // state.paratext.username
+  paratext_usernameStatus?: IAxiosStatus;
+}
+const mapStateToProps = (state: IState): IStateProps => ({
+  paratext_textStatus: state.paratext.textStatus,
+  paratext_username: state.paratext.username,
+  paratext_usernameStatus: state.paratext.usernameStatus,
+});
+interface IProps extends IStateProps, IRecordProps, IDispatchProps {
   auth: Auth;
 }
 
-const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
-  const { auth, mediafiles } = props;
+export function Transcriber(props: IProps) {
+  const {
+    auth,
+    mediafiles,
+    projintegrations,
+    integrations,
+    paratext_textStatus,
+    paratext_username,
+    paratext_usernameStatus,
+    getUserName,
+    getParatextText,
+    getParatextTextLocal,
+    resetParatextText,
+  } = props;
   const {
     rowData,
     index,
@@ -212,6 +268,9 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   const [showHistory, setShowHistory] = useState(false);
   const [historyContent, setHistoryContent] = useState<any[]>();
   const [rejectVisible, setRejectVisible] = useState(false);
+  const [hasParatextName, setHasParatextName] = useState(false);
+  const [paratextProject, setParatextProject] = React.useState('');
+  const [paratextIntegration, setParatextIntegration] = React.useState('');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
@@ -224,7 +283,18 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
   const t = transcriberStr;
   const ta = activityStateStr;
 
-  React.useEffect(() => {
+  const getParatextIntegration = () => {
+    const intfind = integrations.findIndex(
+      (i) =>
+        i.attributes &&
+        i.attributes.name === (offline ? 'paratextLocal' : 'paratext')
+    );
+    if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+  };
+
+  useEffect(() => {
+    getParatextIntegration();
+
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
@@ -237,14 +307,14 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (doSave) {
       handleSave();
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [doSave]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!makeComment) setComment('');
     const commentHeight =
       commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
@@ -253,12 +323,12 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [height, makeComment, comment, commentRef.current]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const trans = getTranscription();
     if (trans.transcription !== transcriptionIn.current) {
       //show warning if changed
@@ -269,7 +339,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediafiles]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (autosaveTimer.current === undefined) {
       launchTimer();
     } else {
@@ -285,7 +355,40 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediaId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (paratext_textStatus?.errStatus) {
+      showMessage(translateParatextError(paratext_textStatus, sharedStr));
+      resetParatextText();
+    } else if (!paratext_textStatus?.complete && paratext_textStatus?.statusMsg)
+      showMessage(paratext_textStatus?.statusMsg);
+    else if (paratext_textStatus?.complete) {
+      showTranscription({
+        transcription: paratext_textStatus.statusMsg,
+        position: 0,
+      });
+      setChanged(true);
+      save(passage.attributes.state, 0, t.pullParatextStatus);
+      resetParatextText();
+    }
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [paratext_textStatus]);
+
+  useEffect(() => {
+    var thisint = projintegrations.findIndex(
+      (pi) =>
+        related(pi, 'project') === project &&
+        related(pi, 'integration') === paratextIntegration
+    );
+    if (
+      thisint > -1 &&
+      projintegrations[thisint].attributes.settings !== '{}'
+    ) {
+      var settings = JSON.parse(projintegrations[thisint].attributes.settings);
+      setParatextProject(settings.Name);
+    } else setParatextProject('');
+  }, [paratextIntegration, project, projintegrations]);
+
+  useEffect(() => {
     if (project && project !== '') {
       var r = memory.cache.query((q) =>
         q.findRecord({ type: 'project', id: project })
@@ -295,7 +398,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [project]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (passage?.id && !saving.current) {
       loadHistory();
     }
@@ -319,6 +422,15 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
+  useEffect(() => {
+    if (!offline) {
+      if (!paratext_usernameStatus) {
+        getUserName(auth, errorReporter, '');
+      }
+      setHasParatextName(paratext_username !== '');
+    } else setHasParatextName(true);
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+  }, [paratext_username, paratext_usernameStatus]);
 
   const handleChange = (e: any) => {
     setTextValue(e.target.value);
@@ -386,6 +498,26 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       insertAtCursor(textArea, timeStamp);
     }
   };
+  const handlePullParatext = () => {
+    if (offline)
+      getParatextDataPath().then((ptPath: string) =>
+        getParatextTextLocal(
+          ptPath,
+          passage,
+          paratextProject,
+          errorReporter,
+          t.pullParatextStart
+        )
+      );
+    else
+      getParatextText(
+        auth,
+        remoteIdNum('passage', selected, memory.keyMap),
+        errorReporter,
+        t.pullParatextStart
+      );
+  };
+
   const handleReject = () => {
     if (busy) {
       showMessage(t.saving);
@@ -443,7 +575,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       let nextState = next[state];
       if (nextState === ActivityStates.Approved && getType() !== 'scripture')
         nextState = ActivityStates.Done;
-      await save(nextState, 0, true);
+      await save(nextState, 0, comment);
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -481,14 +613,14 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     await save(
       nextOnSave[stateRef.current] ?? stateRef.current,
       playedSecsRef.current,
-      postComment
+      postComment ? comment : ''
     );
   };
 
   const save = async (
     nextState: string,
     newPosition: number,
-    postComment: boolean = false
+    thiscomment: string = ''
   ) => {
     if (transcriptionRef.current) {
       saving.current = true;
@@ -501,7 +633,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         section.id,
         plan,
         nextState,
-        postComment ? comment : '',
+        thiscomment,
         user,
         tb,
         ops,
@@ -527,7 +659,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
-          if (postComment) setComment('');
+          setComment(thiscomment);
           loadHistory();
           saveCompleted('');
           setLastSaved(currentDateTime());
@@ -558,6 +690,7 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
     done: ActivityStates.TranscribeReady,
     synced: ActivityStates.TranscribeReady,
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const reopenSynced = async () => {
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
@@ -804,7 +937,6 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       setHistoryContent(historyList(curStateChanges));
     }
   };
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
@@ -835,6 +967,23 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
             </Grid>
           </Grid>
           <Grid container direction="row" className={classes.row}>
+            {role === 'transcriber' && hasParatextName && paratextProject && (
+              <Grid item>
+                <Tooltip title={t.pullParatextTip}>
+                  <span>
+                    <IconButton
+                      onClick={handlePullParatext}
+                      disabled={selected === ''}
+                    >
+                      <>
+                        <PullIcon />{' '}
+                        <Typography>{t.pullParatextCaption}</Typography>
+                      </>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </Grid>
+            )}
             <Grid item xs>
               <Grid container justify="center">
                 <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
@@ -1093,6 +1242,8 @@ const Transcriber = withData(mapRecordsToProps)((props: IProps) => {
       </div>
     </div>
   );
-});
+}
 
-export default Transcriber;
+export default withData(mapRecordsToProps)(
+  connect(mapStateToProps, mapDispatchToProps)(Transcriber) as any
+) as any;

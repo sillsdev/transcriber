@@ -273,7 +273,7 @@ export function TranscriptionTab(props: IProps) {
 
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
-    if (err.errStatus === 401) return t.expiredToken;
+    if (err.errStatus === 401) return ts.expiredToken;
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };

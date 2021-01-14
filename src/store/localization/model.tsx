@@ -154,7 +154,6 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "close": string;
     "continue": string;
     "error": string;
-    "expiredToken": string;
     "family": string;
     "filter": string;
     "fontsize": string;
@@ -187,17 +186,10 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
 
 export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "allCriteria": string;
-    "bookNotFound": string;
-    "bookNotInParatext": string;
-    "chapterSpan": string;
     "countError": string;
     "countPending": string;
     "countReady": string;
     "emptyBook": string;
-    "expiredParatextToken": string;
-    "expiredToken": string;
-    "invalidParatextLogin": string;
-    "invalidReference": string;
     "no": string;
     "noProject": string;
     "offline": string;
@@ -486,6 +478,13 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "editor": string;
     "lastEdit": string;
     "NoSaveOffline": string;
+    "bookNotInParatext": string;
+    "paratextchapterSpan": string;
+    "invalidReference": string;
+    "BookNotSet": string;
+    "expiredParatextToken": string;
+    "expiredToken": string;
+    "invalidParatextLogin": string;
     "transcriber": string;
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
@@ -543,6 +542,10 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "noMedia": string;
     "pauseTip": string;
     "playTip": string;
+    "pullParatextCaption": string;
+    "pullParatextStart": string;
+    "pullParatextStatus": string;
+    "pullParatextTip": string;
     "reject": string;
     "reopen": string;
     "reviewing": string;
@@ -586,7 +589,6 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "elan": string;
     "electronBackup": string;
     "error": string;
-    "expiredToken": string;
     "export": string;
     "exportExplanation": string;
     "exportingProject": string;
