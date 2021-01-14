@@ -45,7 +45,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="access.importSnapshot">
-      		<source>Import a Project Snapshot</source>
+      		<source>Import Project</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -66,7 +66,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="access.importProject">
-            <source>Import a Project Snapshot</source>
+            <source>ImportProject</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">electronImport.tsx</context>
@@ -366,7 +366,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.import">
-            <source>Import a Project Snapshot</source>
+            <source>Import Project</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
