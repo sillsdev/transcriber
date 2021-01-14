@@ -4,9 +4,15 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.availableUsers">
+      <unit id="access.availableOfflineUsers">
          <segment>
             <source>Available Offline Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.availableOnlineUsers">
+         <segment>
+            <source>Available Online Users</source>
             <target/>
          </segment>
       </unit>
@@ -2062,9 +2068,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.addOfflineUser">
+      <unit id="profile.addMember">
          <segment>
-            <source>Add Offline Desktop Member</source>
+            <source>Add Member</source>
             <target/>
          </segment>
       </unit>
@@ -3052,9 +3058,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="usertable.offline">
+      <unit id="usertable.addMember">
          <segment>
-            <source>Offline Desktop Member</source>
+            <source>Add Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.addNewUser">
+         <segment>
+            <source>Add New User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.selectUser">
+         <segment>
+            <source>Select User</source>
             <target/>
          </segment>
       </unit>
