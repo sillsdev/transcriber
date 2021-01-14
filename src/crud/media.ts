@@ -37,10 +37,13 @@ export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
   let projRec: Project | undefined = undefined;
   if (rec) {
     const planRec = getMediaPlanRec(rec, memory);
-    const projId = related(planRec, 'project') as string;
-    projRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'project', id: projId })
-    ) as Project;
+    if (planRec)
+    {
+      const projId = related(planRec, 'project') as string;
+      projRec = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'project', id: projId })
+      ) as Project;
+    }
   }
   return projRec;
 };

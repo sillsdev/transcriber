@@ -221,7 +221,7 @@ const localProjects = (
             LanguageTag: langIso,
             CurrentUserRole:
               setting.Editable._text === 'T' ? 'pt_translator' : '',
-            ProjectIds: Array<number>(),
+            ProjectIds: Array<string>(),
             IsConnected: true,
             IsConnectable: true,
           } as ParatextProject);
@@ -236,7 +236,7 @@ export const getLocalProjects = (
   pendingmsg: string,
   projIds: {
     Name: string;
-    Id: number;
+    Id: string;
   }[],
   languageTag?: string
 ) => (dispatch: any) => {

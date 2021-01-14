@@ -129,12 +129,16 @@ export const Uploader = (props: IProps) => {
         },
       } as any;
       const planRecId = { type: 'plan', id: planIdRef.current || plan };
-      const t = new TransformBuilder();
-      await memory.update([
-        ...AddRecord(t, mediaRec, user, memory),
-        t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
-      ]);
-      mediaIdRef.current.push(mediaRec.id);
+      if (planRecId) {
+        const t = new TransformBuilder();
+        await memory.update([
+          ...AddRecord(t, mediaRec, user, memory),
+          t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
+        ]);
+        mediaIdRef.current.push(mediaRec.id);
+      } else {
+        throw new Error('Plan Id not set.  Media not created.');
+      }
     }
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;

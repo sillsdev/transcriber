@@ -40,7 +40,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
 import RenderLogo from '../control/RenderLogo';
-import { remoteIdNum, related, useOfflnProjRead } from '../crud';
+import { remoteIdNum, related, useOfflnProjRead, remoteId } from '../crud';
 import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
 import { bindActionCreators } from 'redux';
@@ -282,7 +282,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_projects[index].ProjectIds = paratext_projects[
       index
     ].ProjectIds.filter(
-      (p) => p !== remoteIdNum('project', project, memory.keyMap)
+      (p) => p !== remoteId('project', project, memory.keyMap) || project
     );
   };
   const handleParatextProjectChange = (e: any) => {
@@ -312,7 +312,7 @@ export function IntegrationPanel(props: IProps) {
         updateProjectIntegration(projint, JSON.stringify(setting));
       }
       paratext_projects[index].ProjectIds.push(
-        remoteIdNum('project', project, memory.keyMap)
+        remoteId('project', project, memory.keyMap) || project
       );
     }
   };
@@ -362,8 +362,9 @@ export function IntegrationPanel(props: IProps) {
   const findConnectedProject = () => {
     let index = paratext_projects.findIndex(
       (p) =>
-        p.ProjectIds.indexOf(remoteIdNum('project', project, memory.keyMap)) >=
-        0
+        p.ProjectIds.indexOf(
+          remoteId('project', project, memory.keyMap) || project
+        ) >= 0
     );
     setPtProj(index);
     setPtProjName(index >= 0 ? paratext_projects[index].Name : '');
@@ -476,7 +477,9 @@ export function IntegrationPanel(props: IProps) {
             var settings = JSON.parse(pi.attributes.settings);
             return {
               Name: settings.Name,
-              Id: remoteIdNum('project', related(pi, 'project'), memory.keyMap),
+              Id:
+                remoteId('project', related(pi, 'project'), memory.keyMap) ||
+                project,
             };
           });
           getParatextDataPath().then((ptPath) => {
