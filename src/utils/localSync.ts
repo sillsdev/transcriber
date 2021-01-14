@@ -2,8 +2,8 @@ import xpath from 'xpath';
 import { DOMParser, XMLSerializer } from 'xmldom';
 import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
-import { QueryBuilder, TransformBuilder, Record, Operation } from '@orbit/data';
-import { related, getMediaRec, parseRef, UpdatePassageStateOps } from '../crud';
+import { QueryBuilder, Record, } from '@orbit/data';
+import { related, getMediaRec, parseRef } from '../crud';
 import { getParatextProgPath } from './paratextPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';

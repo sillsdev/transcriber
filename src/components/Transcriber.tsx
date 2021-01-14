@@ -723,9 +723,9 @@ export function Transcriber(props: IProps) {
       return;
     }
     if (previous.hasOwnProperty(state)) {
-      //if (state === ActivityStates.Synced || state === ActivityStates.Done) {
-      //  await reopenSynced();
-      //}
+      if (state === ActivityStates.Synced || state === ActivityStates.Done) {
+        await reopenSynced();
+      }
       await memory.update(
         UpdatePassageStateOps(
           passage.id,
