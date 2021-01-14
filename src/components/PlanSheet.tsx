@@ -346,7 +346,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && !isOffline && projRole === 'admin') {
+    if (i > 0 && (!isOffline || offlineOnly) && projRole === 'admin') {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
