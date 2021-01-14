@@ -39,8 +39,8 @@
    	</unit>
    	<unit id="access.importSnapshot">
    		<segment>
-   			<source>Import a Project Snapshot</source>
-   			<target>Importer un instantané de projet</target>
+   			<source>Import Project</source>
+   			<target>Importer un projet</target>
    		</segment>
    	</unit>
    	<unit id="access.withInternet">
@@ -57,8 +57,8 @@
    	</unit>
    	<unit id="access.importProject">
          <segment>
-            <source>Import a Project Snapshot</source>
-         	<target>Importer un instantané de projet</target>
+            <source>Import Project</source>
+         	<target>Importer un projet</target>
          </segment>
       </unit>
    	<unit id="access.download">
@@ -315,8 +315,8 @@
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import a Project Snapshot</source>
-         	<target>Importer un instantané de projet</target>
+            <source>Import Project</source>
+         	<target>Importer un projet</target>
          </segment>
       </unit>
       <unit id="cards.language">

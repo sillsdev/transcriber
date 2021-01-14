@@ -42,7 +42,7 @@
       </unit>
       <unit id="access.importSnapshot">
          <segment>
-            <source>Import a Project Snapshot</source>
+            <source>Import Project</source>
             <target/>
          </segment>
       </unit>
@@ -60,7 +60,7 @@
       </unit>
       <unit id="access.importProject">
          <segment>
-            <source>Import a Project Snapshot</source>
+            <source>ImportProject</source>
             <target/>
          </segment>
       </unit>
@@ -318,7 +318,7 @@
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import a Project Snapshot</source>
+            <source>Import Project</source>
             <target/>
          </segment>
       </unit>
