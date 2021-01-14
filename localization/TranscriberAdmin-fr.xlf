@@ -1,10 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xlf">
-   	<unit id="access.availableUsers">
+   	<unit id="access.availableOfflineUsers">
    		<segment>
    			<source>Available Offline Users</source>
    			<target>Utilisateurs hors ligne disponibles</target>
+   		</segment>
+   	</unit>
+   	<unit id="access.availableOnlineUsers">
+   		<segment>
+   			<source>Available Online Users</source>
+   			<target>Utilisateurs en ligne disponibles</target>
    		</segment>
    	</unit>
    	<unit id="access.cancel">
@@ -2042,10 +2048,10 @@
             <target>Ajouter</target>
          </segment>
       </unit>
-      <unit id="profile.addOfflineUser">
+      <unit id="profile.addMember">
          <segment>
-            <source>Add Offline Desktop Member</source>
-            <target>Ajouter un Membre de bureau hors ligne</target>
+            <source>Add Member</source>
+            <target>Ajouter un Membre</target>
          </segment>
       </unit>
       <unit id="profile.cancel">
@@ -3050,13 +3056,25 @@
             <target>Nom</target>
          </segment>
       </unit>
-      <unit id="usertable.offline">
+      <unit id="usertable.addMember">
          <segment>
-            <source>Offline Desktop Member</source>
-            <target>Membre de bureau hors ligne</target>
+            <source>Add Member</source>
+            <target>Ajouter Membre</target>
          </segment>
       </unit>
-      <unit id="usertable.phone">
+   	<unit id="usertable.addNewUser">
+   		<segment>
+   			<source>Add New User</source>
+   			<target>Ajouter un nouvel utilisateur</target>
+   		</segment>
+   	</unit>
+   	<unit id="usertable.selectUser">
+   		<segment>
+   			<source>Select User</source>
+   			<target>Sélectionnez l'utilisateur</target>
+   		</segment>
+   	</unit>
+   	<unit id="usertable.phone">
          <segment>
             <source>Phone</source>
             <target>Téléphone</target>

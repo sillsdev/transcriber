@@ -2,7 +2,8 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
-    "availableUsers": string;
+    "availableOfflineUsers": string;
+    "availableOnlineUsers": string;
     "cancel": string;
     "createUser": string;
     "logIn": string;
@@ -417,7 +418,7 @@ export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "add": string;
-    "addOfflineUser": string;
+    "addMember": string;
     "cancel": string;
     "checkingParatext": string;
     "nameNotEmail": string;
@@ -624,7 +625,9 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "invite": string;
     "locale": string;
     "name": string;
-    "offline": string;
+    "addMember": string;
+    "addNewUser": string;
+    "selectUser": string;
     "phone": string;
     "role": string;
     "selectRows": string;

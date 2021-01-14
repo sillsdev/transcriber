@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import ScriptureIcon from '@material-ui/icons/MenuBook';
 import { BsPencilSquare } from 'react-icons/bs';
 import { TeamContext } from '../../../context/TeamContext';
@@ -19,6 +20,7 @@ export const ProjectType = (props: IProps) => {
   const ctx = React.useContext(TeamContext);
   const { planTypes, vProjectStrings } = ctx.state;
   const t = vProjectStrings;
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   return (
     <Options
@@ -26,6 +28,7 @@ export const ProjectType = (props: IProps) => {
       label={t.type}
       defaultValue={type}
       options={planTypes
+        .filter((t) => (offlineOnly ? !t?.keys?.remoteId : t?.keys?.remoteId))
         .sort((i, j) => (i.attributes.name < j.attributes.name ? -1 : 1))
         .map((t) => t.attributes.name.toLowerCase())}
       onChange={onChange}

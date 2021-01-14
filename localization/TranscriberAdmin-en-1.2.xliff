@@ -2,8 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" version="1.2">
    <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
       <body>
-      	<trans-unit id="access.availableUsers">
+      	<trans-unit id="access.availableOfflineUsers">
       		<source>Available Offline Users</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.availableOnlineUsers">
+      		<source>Available Online Users</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -2402,8 +2409,8 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="profile.addOfflineUser">
-            <source>Add Offline Desktop Member</source>
+         <trans-unit id="profile.addMember">
+            <source>Add Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
@@ -3557,14 +3564,28 @@
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="usertable.offline">
-            <source>Offline Desktop Member</source>
+         <trans-unit id="usertable.addMember">
+            <source>Add Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="usertable.phone">
+      	<trans-unit id="usertable.addNewUser">
+      		<source>Add New User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">UserAdd.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="usertable.selectUser">
+      		<source>Select User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">UserAdd.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="usertable.phone">
             <source>Phone</source>
             <target/>
             <context-group>

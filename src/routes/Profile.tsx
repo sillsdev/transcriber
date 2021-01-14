@@ -11,7 +11,6 @@ import {
   DigestPreference,
   OrganizationMembership,
   Role,
-  GroupMembership,
   Invitation,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
@@ -42,7 +41,12 @@ import SaveIcon from '@material-ui/icons/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
-import { related, getRoleRec, getMbrRoleRec, allUsersRec } from '../crud';
+import {
+  related,
+  getRoleRec,
+  getMbrRoleRec,
+  useAddToOrgAndGroup,
+} from '../crud';
 import {
   makeAbbr,
   uiLang,
@@ -231,6 +235,7 @@ export function Profile(props: IProps) {
   const [, saveCompleted] = useRemoteSave();
   const [ptPath, setPtPath] = React.useState('');
   const { showMessage } = useSnackBar();
+  const addToOrgAndGroup = useAddToOrgAndGroup();
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -385,40 +390,6 @@ export function Profile(props: IProps) {
     setView('Team');
   };
 
-  const addToOrgAndGroup = (userRec: User) => {
-    let orgMember: OrganizationMembership = {
-      type: 'organizationmembership',
-    } as any;
-    const roleRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('role')
-    ) as Role[];
-    const memberRec = getRoleRec(roleRecs, 'member', true);
-    const allUsersGroup = allUsersRec(memory, organization);
-    const editorRec = getRoleRec(roleRecs, 'editor', false);
-    let groupMbr: GroupMembership = {
-      type: 'groupmembership',
-    } as any;
-    memory
-      .update((t: TransformBuilder) => AddRecord(t, userRec, user, memory))
-      .then(() => {
-        memory.update((t: TransformBuilder) => [
-          ...AddRecord(t, orgMember, user, memory),
-          t.replaceRelatedRecord(orgMember, 'user', userRec),
-          t.replaceRelatedRecord(orgMember, 'organization', {
-            type: 'organization',
-            id: organization,
-          }),
-          t.replaceRelatedRecord(orgMember, 'role', memberRec[0]),
-        ]);
-        memory.update((t: TransformBuilder) => [
-          ...AddRecord(t, groupMbr, user, memory),
-          t.replaceRelatedRecord(groupMbr, 'user', userRec),
-          t.replaceRelatedRecord(groupMbr, 'group', allUsersGroup[0]),
-          t.replaceRelatedRecord(groupMbr, 'role', editorRec[0]),
-        ]);
-      });
-  };
-
   const handleAdd = async () => {
     if (changed) {
       let userRec: User = {
@@ -442,13 +413,13 @@ export function Profile(props: IProps) {
           avatarUrl,
         },
       } as any;
-      if (!editId || offlineOnly) {
+      if (!editId || !organization) {
         await memory.update((t: TransformBuilder) =>
           AddRecord(t, userRec, user, memory)
         );
         if (offlineOnly) setUser(userRec.id);
       } else {
-        addToOrgAndGroup(userRec);
+        addToOrgAndGroup(userRec, true);
       }
       setChanged(false);
     }
@@ -660,7 +631,7 @@ export function Profile(props: IProps) {
             </StyledGrid>
             <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
-                <Typography variant="h6">{t.addOfflineUser}</Typography>
+                <Typography variant="h6">{t.addMember}</Typography>
               ) : userNotComplete() ? (
                 <Typography variant="h6">{t.completeProfile}</Typography>
               ) : (

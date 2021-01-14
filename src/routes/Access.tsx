@@ -15,27 +15,17 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Paper,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, Paper } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
-import { UserAvatar } from '../components/UserAvatar';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
 import { isElectron, API_CONFIG } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
+import UserList from '../control/UserList';
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -147,7 +137,7 @@ export function Access(props: IProps) {
     React.MouseEvent<HTMLElement>
   >();
 
-  const handleSelect = (uId: string) => () => {
+  const handleSelect = (uId: string) => {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
       if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
@@ -200,10 +190,10 @@ export function Access(props: IProps) {
     }
   };
 
-  const hasUserProjects = (userId: string) => {
+  const isOnlineUserWithOfflineProjects = (userId: string) => {
     const userRec = users.filter((u) => u.id === userId);
     if (userRec.length > 0 && userRec[0]?.keys?.remoteId === undefined)
-      return true;
+      return false;
     const grpIds = groupMemberships
       .filter((gm) => related(gm, 'user') === userId)
       .map((gm) => related(gm, 'group'));
@@ -221,6 +211,22 @@ export function Access(props: IProps) {
       planIds.includes(related(s, 'plan'))
     );
     return userSections.length > 0;
+  };
+
+  const hasOnlineUser = () => {
+    for (let i = users.length; i >= 0; i -= 1)
+      if (isOnlineUserWithOfflineProjects(users[i]?.id)) return true;
+    return false;
+  };
+
+  const isOfflineUserWithProjects = (userId: string) => {
+    const userRec = users.filter((u) => u.id === userId);
+    return userRec.length > 0 && userRec[0]?.keys?.remoteId === undefined;
+  };
+
+  const hasOfflineUser = () => {
+    for (let i = users.length; i >= 0; i -= 1)
+      if (isOfflineUserWithProjects(users[i]?.id)) return true;
   };
 
   useEffect(() => {
@@ -307,30 +313,19 @@ export function Access(props: IProps) {
             <Typography className={classes.sectionHead}>
               {t.withoutInternet}
             </Typography>
-            {importStatus?.complete !== false && users && users.length > 0 && (
-              <>
-                <div className={classes.listHead}>{t.availableUsers}</div>
-                <List>
-                  {users
-                    .filter((u) => hasUserProjects(u.id))
-                    .sort((i, j) =>
-                      (i.attributes ? i.attributes.name : '') <
-                      (j.attributes ? j.attributes.name : '')
-                        ? -1
-                        : 1
-                    )
-                    .map((u) => (
-                      <ListItem key={u.id} onClick={handleSelect(u.id)}>
-                        <ListItemIcon>
-                          <UserAvatar {...props} users={users} userRec={u} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={u.attributes ? u.attributes.name : ''}
-                        />
-                      </ListItem>
-                    ))}
-                </List>
-              </>
+            {importStatus?.complete !== false && hasOnlineUser() && (
+              <UserList
+                isSelected={isOnlineUserWithOfflineProjects}
+                select={handleSelect}
+                title={t.availableOnlineUsers}
+              />
+            )}
+            {importStatus?.complete !== false && hasOfflineUser() && (
+              <UserList
+                isSelected={isOfflineUserWithProjects}
+                select={handleSelect}
+                title={t.availableOfflineUsers}
+              />
             )}
             <div className={classes.actions}>
               <Button

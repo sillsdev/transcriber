@@ -8,7 +8,8 @@ const initialState = {
 	"lang": 'en',
 	"access": new LocalizedStrings({
 		"en": {
-			"availableUsers": "Available Offline Users",
+			"availableOfflineUsers": "Available Offline Users",
+			"availableOnlineUsers": "Available Online Users",
 			"cancel": "Cancel",
 			"createUser": "Create a new user",
 			"logIn": "Log In",
@@ -447,7 +448,7 @@ const initialState = {
 	"profile": new LocalizedStrings({
 		"en": {
 			"add": "Add",
-			"addOfflineUser": "Add Offline Desktop Member",
+			"addMember": "Add Member",
 			"cancel": "Cancel",
 			"checkingParatext": "Checking for Paratext account...",
 			"nameNotEmail": "Please choose a name other than your email address.",
@@ -668,7 +669,9 @@ const initialState = {
 			"invite": "Invite",
 			"locale": "Locale",
 			"name": "Name",
-			"offline": "Offline Desktop Member",
+			"addMember": "Add Member",
+			"addNewUser": "Add New User",
+			"selectUser": "Select User",
 			"phone": "Phone",
 			"role": "Team Role",
 			"selectRows": "Please select row(s) to {0}.",
