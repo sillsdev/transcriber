@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { DialogMode, Organization } from '../../model';
-import { TeamDialog } from '.';
+import TeamDialog from './TeamDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import Auth from '../../auth/Auth';

@@ -78,6 +78,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "personalProjects": string;
     "projectCreated": string;
     "save": string;
+    "nameInUse": string;
     "sectionStatus": string;
     "settings": string;
     "offlineAvail": string;

@@ -428,7 +428,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.sectionStatus">
+      	<trans-unit id="cards.nameInUse">
+      		<source>Name in use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.sectionStatus">
             <source>{0} {1}</source>
             <target/>
             <context-group>
