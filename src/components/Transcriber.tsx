@@ -408,20 +408,21 @@ export function Transcriber(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [index, rowData]);
 
-  React.useEffect(() => {
-    if (totalSeconds && (!duration || duration !== Math.round(totalSeconds))) {
+  useEffect(() => {
+    if (totalSeconds && (!duration || duration !== Math.ceil(totalSeconds))) {
       const mediaRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('mediafile')
       ) as MediaFile[];
       const oldRec = mediaRecs.filter((m) => m.id === mediaId);
       if (oldRec.length > 0)
         memory.update((t: TransformBuilder) =>
-          t.replaceAttribute(oldRec[0], 'duration', Math.round(totalSeconds))
+          t.replaceAttribute(oldRec[0], 'duration', Math.ceil(totalSeconds))
         );
-      console.log(`update duration to ${totalSeconds}`);
+      console.log(`update duration to ${Math.ceil(totalSeconds)}`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
+
   useEffect(() => {
     if (!offline) {
       if (!paratext_usernameStatus) {
