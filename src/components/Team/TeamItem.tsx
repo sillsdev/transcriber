@@ -7,7 +7,8 @@ import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import { BigDialog, BigDialogBp } from '../../hoc/BigDialog';
 import GroupTabs from '../GroupTabs';
-import { ProjectCard, AddCard, TeamDialog } from '.';
+import { ProjectCard, AddCard } from '.';
+import TeamDialog from './TeamDialog';
 import { useRole, useAllUserGroup } from '../../crud';
 import Confirm from '../AlertDialog';
 

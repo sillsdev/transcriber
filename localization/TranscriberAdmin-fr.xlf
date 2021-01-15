@@ -367,7 +367,13 @@
             <target>Sauvegarder</target>
          </segment>
       </unit>
-      <unit id="cards.sectionStatus">
+   	<unit id="cards.nameInUse">
+   		<segment>
+   			<source>Name in use</source>
+   			<target>Nom utilisé</target>
+   		</segment>
+   	</unit>
+   	<unit id="cards.sectionStatus">
          <segment>
             <source>{0} {1}</source>
             <target>{1} {0}</target>

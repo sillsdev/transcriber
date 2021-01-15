@@ -370,6 +370,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="cards.nameInUse">
+         <segment>
+            <source>Name in use</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.sectionStatus">
          <segment>
             <source>{0} {1}</source>

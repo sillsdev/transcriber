@@ -89,6 +89,7 @@ const initialState = {
 			"personalProjects": "Personal Projects",
 			"projectCreated": "Project Created",
 			"save": "Save",
+			"nameInUse": "Name in use",
 			"sectionStatus": "{0} {1}",
 			"settings": "Settings",
 			"offlineAvail": "Offline Available",

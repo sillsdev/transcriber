@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { withData } from '../../mods/react-orbitjs';
+import { QueryBuilder } from '@orbit/data';
 import {
   Button,
   TextField,
@@ -11,12 +13,24 @@ import { Organization, IDialog, DialogMode } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
 
-interface IProps extends IDialog<Organization> {
+interface IRecordProps {
+  organizations: Array<Organization>;
+}
+
+interface IProps extends IRecordProps, IDialog<Organization> {
   onDelete?: (team: Organization) => void;
 }
 
 export function TeamDialog(props: IProps) {
-  const { mode, values, isOpen, onOpen, onCommit, onDelete } = props;
+  const {
+    mode,
+    values,
+    isOpen,
+    organizations,
+    onOpen,
+    onCommit,
+    onDelete,
+  } = props;
   const [name, setName] = React.useState('');
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
@@ -50,6 +64,13 @@ export function TeamDialog(props: IProps) {
     onDelete && onDelete(team);
   };
 
+  const nameInUse = (newName: string): boolean => {
+    const sameNameRec = organizations.filter(
+      (o) => o?.attributes?.name === newName
+    );
+    return sameNameRec.length > 0;
+  };
+
   useEffect(() => {
     setName(values?.attributes?.name || '');
   }, [values, isOpen]);
@@ -70,6 +91,7 @@ export function TeamDialog(props: IProps) {
           id="name"
           label={t.teamName}
           value={name}
+          helperText={nameInUse(name) && t.nameInUse}
           onChange={handleChange}
           fullWidth
         />
@@ -85,7 +107,11 @@ export function TeamDialog(props: IProps) {
         <Button onClick={handleClose} color="primary">
           {t.cancel}
         </Button>
-        <Button onClick={handleCommit} color="primary" disabled={name === ''}>
+        <Button
+          onClick={handleCommit}
+          color="primary"
+          disabled={name === '' || nameInUse(name)}
+        >
           {mode === DialogMode.add ? t.add : t.save}
         </Button>
       </DialogActions>
@@ -93,4 +119,8 @@ export function TeamDialog(props: IProps) {
   );
 }
 
-export default TeamDialog;
+const mapRecordsToProps = {
+  organizations: (q: QueryBuilder) => q.findRecords('organization'),
+};
+
+export default withData(mapRecordsToProps)(TeamDialog) as any;
