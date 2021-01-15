@@ -345,11 +345,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                         passage: { ...p },
                         state: curState,
                         sectPass: secNum + '.' + passageNumber(p).trim(),
-                        mediaRemoteId: remoteId(
-                          'mediafile',
+                        mediaRemoteId:
+                          remoteId('mediafile', mediaRec.id, memory.keyMap) ||
                           mediaRec.id,
-                          memory.keyMap
-                        ),
                         mediaId: mediaRec.id,
                         playItem,
                         duration: mediaRec.attributes.duration,
