@@ -13,10 +13,11 @@ export const useOfflineSetup = () => {
     const memory = coordinator.getSource('memory') as Memory;
     const backup = coordinator.getSource('backup') as IndexedDBSource;
 
-    const typeRecs = memory.cache.query((q: QueryBuilder) =>
+    const allTypeRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords(`${kind}type`)
     ) as ProjectType[];
-    if (typeRecs.length === 0) {
+    const offlineTypeRecs = allTypeRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineTypeRecs.length === 0) {
       let scriptureRec: ProjectType = {
         type: `${kind}type`,
         attributes: {
@@ -44,10 +45,11 @@ export const useOfflineSetup = () => {
     // local update only, migrate offlineproject to include offlineAvailable
     const backup = coordinator.getSource('backup') as IndexedDBSource;
 
-    const roleRecs = memory.cache.query((q: QueryBuilder) =>
+    const allRoleRecs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('role')
     ) as Role[];
-    if (roleRecs.length === 0) {
+    const offlineRoleRecs = allRoleRecs.filter((r) => !r?.keys?.remoteId);
+    if (offlineRoleRecs.length === 0) {
       let adminRec = {
         type: 'role',
         attributes: {
