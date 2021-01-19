@@ -26,9 +26,9 @@ const getMediaPlanRec = (rec: MediaFile | null, memory: Memory) => {
   if (rec) {
     const planId = related(rec, 'plan') as string;
     if (planId)
-    planRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'plan', id: planId })
-    ) as Plan;
+      planRec = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'plan', id: planId })
+      ) as Plan;
   }
   return planRec;
 };
@@ -37,8 +37,7 @@ export const getMediaProjRec = (rec: MediaFile | null, memory: Memory) => {
   let projRec: Project | undefined = undefined;
   if (rec) {
     const planRec = getMediaPlanRec(rec, memory);
-    if (planRec)
-    {
+    if (planRec) {
       const projId = related(planRec, 'project') as string;
       projRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'project', id: projId })
@@ -109,7 +108,9 @@ export const getMediaEaf = (
   );
   const durationNum = mediaAttr && mediaAttr.duration;
   logError(Severity.info, reporter, `durationNum=${durationNum}`);
-  const duration = durationNum ? (durationNum * 1000).toPrecision(0).toString() : '0';
+  const duration = durationNum
+    ? Math.round(durationNum * 1000).toString()
+    : '0';
   logError(Severity.info, reporter, `duration=${duration}`);
   const lang = getMediaLang(mediaRec, memory);
   logError(Severity.info, reporter, `lang=${lang}`);
