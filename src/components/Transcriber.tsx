@@ -74,11 +74,7 @@ import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
 import { LastEdit } from '../control';
-import {
-  UpdateRecord,
-  UpdateRelatedRecord,
-  AddRecord,
-} from '../model/baseModel';
+import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { withData } from 'react-orbitjs';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
@@ -691,42 +687,13 @@ export function Transcriber(props: IProps) {
     done: ActivityStates.TranscribeReady,
     synced: ActivityStates.TranscribeReady,
   };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const reopenSynced = async () => {
-    const mediaRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'mediafile', id: mediaId })
-    ) as MediaFile;
-    const planId = related(mediaRec, 'plan');
-    const newMedia = {
-      attributes: { ...mediaRec.attributes },
-      type: 'mediafile',
-    } as MediaFile;
-    newMedia.attributes.versionNumber += 1;
-    await memory.update((t) => [
-      ...AddRecord(t, newMedia, user, memory),
-      t.replaceRelatedRecord(
-        { type: 'mediafile', id: newMedia.id },
-        'passage',
-        {
-          type: 'passage',
-          id: passage.id,
-        }
-      ),
-      t.replaceRelatedRecord({ type: 'mediafile', id: newMedia.id }, 'plan', {
-        type: 'plan',
-        id: planId,
-      }),
-    ]);
-  };
+
   const handleReopen = async () => {
     if (busy) {
       showMessage(t.saving);
       return;
     }
     if (previous.hasOwnProperty(state)) {
-      if (state === ActivityStates.Synced || state === ActivityStates.Done) {
-        await reopenSynced();
-      }
       await memory.update(
         UpdatePassageStateOps(
           passage.id,
