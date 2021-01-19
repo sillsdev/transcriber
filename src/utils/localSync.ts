@@ -2,8 +2,8 @@ import xpath from 'xpath';
 import { DOMParser, XMLSerializer } from 'xmldom';
 import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
-import { QueryBuilder, Record, } from '@orbit/data';
-import { related, getMediaRec, parseRef } from '../crud';
+import { Operation, QueryBuilder, Record, TransformBuilder, } from '@orbit/data';
+import { related, getMediaRec, parseRef, UpdatePassageStateOps } from '../crud';
 import { getParatextProgPath } from './paratextPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
@@ -561,8 +561,6 @@ const doChapter = async (
 
   const { stdoutw } = await writeChapter(paths, ptProjName, usxDom);
   if (stdoutw) console.log(stdoutw);
-  //TEMP
-  /*
   var ops: Operation[] = [];
   var tb = new TransformBuilder();
   for (let p of pass) {
@@ -579,7 +577,7 @@ const doChapter = async (
     );
   }
   await memory.update(ops);
-  */
+
   fs.unlinkSync(paths.chapterFile);
 };
 
