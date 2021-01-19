@@ -26,7 +26,7 @@ function createAuthWindow() {
       label: 'Back',
       submenu: [
         {
-          label: 'Abort Go Online',
+          label: 'Abort Login',
           click() {
             return workOffline();
           },
