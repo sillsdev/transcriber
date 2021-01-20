@@ -2,13 +2,12 @@ import xpath from 'xpath';
 import { DOMParser, XMLSerializer } from 'xmldom';
 import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
-import { Operation, QueryBuilder, Record, TransformBuilder, } from '@orbit/data';
+import { Operation, QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related, getMediaRec, parseRef, UpdatePassageStateOps } from '../crud';
-import { getParatextProgPath } from './paratextPath';
+import { getReadWriteProg } from './paratextPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 var temp = isElectron ? require('electron').remote.getGlobal('temp') : '';
-const execa = isElectron ? require('execa') : null;
 const path = require('path');
 const fs = isElectron ? require('fs-extra') : null;
 
@@ -222,8 +221,7 @@ const addParatextVerse = (
 
   return first;
 };
-const RemoveText = (next: ChildNode|undefined|null) =>
-{
+const RemoveText = (next: ChildNode | undefined | null) => {
   var rem = next;
   while (next) {
     rem = next;
@@ -244,7 +242,7 @@ const RemoveText = (next: ChildNode|undefined|null) =>
     else if (next.nextSibling) next = next.nextSibling;
     else next = next.parentNode?.nextSibling;
   }
-}
+};
 const ReplaceText = (doc: Document, para: Element, transcript: string) => {
   //remove text
   var verse = firstVerse(para);
@@ -487,34 +485,39 @@ const getPassageVerses = (doc: Document, p: Passage) => {
 };
 
 const paratextPaths = async (chap: string) => {
-  const ptProg = await getParatextProgPath();
+  const ptProg = await getReadWriteProg();
   const pt = chap.split('-');
   return {
     chapterFile: path.join(temp, chap + '.usx'),
     book: pt[0],
     chapter: pt[1],
-    programName: path.join(ptProg, 'rdwrtp8'),
+    program: ptProg,
   };
 };
+
 const getChapter = async (
   paths: {
     chapterFile: string;
     book: string;
     chapter: string;
-    programName: string;
+    program: (args: string[]) => Promise<any>;
   },
   ptProjName: string
 ) => {
   if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
-  const { stdout } = await execa(paths.programName, [
-    '-r',
-    ptProjName,
-    paths.book,
-    paths.chapter,
-    paths.chapterFile,
-    '-x',
-  ]);
-  if (stdout) console.log(stdout);
+  try {
+    const { stdout } = await paths.program([
+      '-r',
+      ptProjName,
+      paths.book,
+      paths.chapter,
+      paths.chapterFile,
+      '-x',
+    ]);
+    if (stdout) console.log(stdout);
+  } catch (error) {
+    console.log(error);
+  }
   const usx: string = fs.readFileSync(paths.chapterFile, 'utf-8');
   return domParser.parseFromString(usx);
 };
@@ -524,14 +527,14 @@ const writeChapter = async (
     chapterFile: string;
     book: string;
     chapter: string;
-    programName: string;
+    program: (args: string[]) => Promise<any>;
   },
   ptProjName: string,
   usxDom: Document
 ) => {
   const usxXml: string = xmlSerializer.serializeToString(usxDom);
   fs.writeFileSync(paths.chapterFile, usxXml, { encoding: 'utf-8' });
-  return await execa(paths.programName, [
+  return await paths.program([
     '-w',
     ptProjName,
     paths.book,
