@@ -205,7 +205,7 @@ const localProjects = (
   fs.readdirSync(ptPath)
     .filter((n: string) => n.indexOf('.') === -1 && n[0] !== '_')
     .forEach((n: string) => {
-      const settingsPath = path.join(ptPath, n, 'settings.xml');
+      const settingsPath = path.join(ptPath, n, 'Settings.xml');
       const settingsJson = fileJson(settingsPath);
       if (settingsJson) {
         const setting = settingsJson.ScriptureText;
