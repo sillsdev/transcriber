@@ -26,6 +26,7 @@ import { isElectron, API_CONFIG } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
+import { useSnackBar } from '../hoc/SnackBar';
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -134,6 +135,7 @@ export function Access(props: IProps) {
   const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
+  const { showMessage } = useSnackBar();
   const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
     React.MouseEvent<HTMLElement>
   >();
@@ -152,7 +154,17 @@ export function Access(props: IProps) {
   };
 
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
-    setGoOnlineConfirmation(event);
+    Online(
+      (online) => {
+        if (online) {
+          setGoOnlineConfirmation(event);
+        } else {
+          showMessage(t.mustBeOnline);
+        }
+      },
+      auth,
+      true
+    );
   };
   const handleGoOnlineConfirmed = () => {
     if (isElectron) {

@@ -58,6 +58,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.mustBeOnline">
+         <segment>
+            <source>You must be connected to the Internet to Log In!</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.importProject">
          <segment>
             <source>ImportProject</source>

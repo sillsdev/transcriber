@@ -11,6 +11,7 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "importSnapshot": string;
     "withInternet": string;
     "withoutInternet": string;
+    "mustBeOnline": string;
     "importProject": string;
     "download": string;
     "downloadLater": string;
