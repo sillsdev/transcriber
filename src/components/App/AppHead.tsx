@@ -55,12 +55,14 @@ const ProjectName = ({ setView }: INameProps) => {
   const { getPlanName } = usePlan();
   const [, setProject] = useGlobal('project');
   const [, setProjRole] = useGlobal('projRole');
+  const [, setProjType] = useGlobal('projType');
   const [plan, setPlan] = useGlobal('plan');
 
   const handleHome = () => {
     setProject('');
     setPlan('');
     setProjRole('');
+    setProjType('');
     setView('Home');
   };
 

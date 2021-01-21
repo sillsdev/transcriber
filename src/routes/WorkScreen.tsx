@@ -14,7 +14,7 @@ import TaskTable from '../components/TaskTable';
 import Transcriber from '../components/Transcriber';
 import StickyRedirect from '../components/StickyRedirect';
 import { UnsavedContext } from '../context/UnsavedContext';
-import { useRole, useUrlContext } from '../crud';
+import { useProjectType, useRole, useUrlContext } from '../crud';
 import Auth from '../auth/Auth';
 import { HeadHeight } from '../App';
 
@@ -68,6 +68,8 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   const [organization] = useGlobal('organization');
   const setUrlContext = useUrlContext();
   const [projRole] = useGlobal('projRole');
+  const [projType] = useGlobal('projType');
+  const { setProjectType } = useProjectType();
   const [topFilter, setTopFilter] = React.useState(false);
   const { setMyProjRole } = useRole();
   const uctx = React.useContext(UnsavedContext);
@@ -94,6 +96,7 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
     if (projRole === '') setMyProjRole(projectId);
+    if (projType === '') setProjectType(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

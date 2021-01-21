@@ -45,6 +45,7 @@ import {
   useRole,
   useOfflnProjRead,
   useLoadProjectData,
+  useProjectType,
 } from '../crud';
 import Auth from '../auth/Auth';
 
@@ -232,6 +233,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const vProject = useVProjectRead();
     const oProjRead = useOfflnProjRead();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
+    const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
     const LoadData = useLoadProjectData(auth, t, doOrbitError);
 
@@ -260,8 +262,9 @@ const TeamProvider = withData(mapRecordsToProps)(
     ) => {
       const [projectId] = setProjectParams(plan);
       LoadData(projectId, () => {
-        if (!cb) setMyProjRole(projectId);
-        else cb();
+        setMyProjRole(projectId);
+        setProjectType(projectId);
+        if (cb) cb();
       });
     };
 

@@ -33,6 +33,7 @@ export const TeamScreen = (props: IProps) => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [project, setProject] = useGlobal('project');
   const [projRole, setProjRole] = useGlobal('projRole');
+  const [projType, setProjType] = useGlobal('projType');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [view, setView] = useState('');
@@ -50,6 +51,7 @@ export const TeamScreen = (props: IProps) => {
         localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
         if (project !== '') setProject('');
         if (projRole !== '') setProjRole('');
+        if (projType !== '') setProjType('');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

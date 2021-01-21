@@ -109,6 +109,7 @@ Promise.all(promises)
       orgRole: '',
       project: '',
       projRole: '',
+      projType: '',
       plan: '',
       tab: undefined,
       group: '',
