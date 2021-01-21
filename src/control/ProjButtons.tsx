@@ -43,6 +43,7 @@ export const ProjButtons = (props: IProps) => {
   const { getPlanName } = usePlan();
   const [plan] = useGlobal('plan');
   const [project] = useGlobal('project');
+  const [projType] = useGlobal('projType');
   const [isOffline] = useGlobal('offline');
   const projectPlans = useProjectPlans();
   const [actionMenuItem, setActionMenuItem] = React.useState(null);
@@ -95,17 +96,19 @@ export const ProjButtons = (props: IProps) => {
         )}
         <MenuItem onClick={handleExport}>{t.export}</MenuItem>
       </Menu>
-      <Button
-        key="integrations"
-        aria-label={t.integrations}
-        variant="outlined"
-        color="primary"
-        className={classes.button}
-        disabled={noIntegrate}
-        onClick={handleIntegrations}
-      >
-        {t.integrations}
-      </Button>
+      {projType === 'Scripture' && (
+        <Button
+          key="integrations"
+          aria-label={t.integrations}
+          variant="outlined"
+          color="primary"
+          className={classes.button}
+          disabled={noIntegrate}
+          onClick={handleIntegrations}
+        >
+          {t.integrations}
+        </Button>
+      )}
       <BigDialog
         title={t.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}

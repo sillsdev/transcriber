@@ -9,7 +9,7 @@ import AppHead from '../components/App/AppHead';
 import { PlanProvider, PlanContext } from '../context/PlanContext';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';
-import { useUrlContext, useRole } from '../crud';
+import { useUrlContext, useRole, useProjectType } from '../crud';
 import Auth from '../auth/Auth';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from '../components/StickyRedirect';
@@ -65,6 +65,8 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { checkSavedFn } = uctx.state;
   const [projRole] = useGlobal('projRole');
   const { setMyProjRole } = useRole();
+  const [projType] = useGlobal('projType');
+  const { setProjectType } = useProjectType();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
   const [view, setView] = React.useState('');
@@ -82,6 +84,7 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
     if (projRole === '') setMyProjRole(projectId);
+    if (projType === '') setProjectType(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

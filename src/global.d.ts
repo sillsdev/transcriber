@@ -8,6 +8,7 @@ declare module 'reactn/default' {
     orgRole: string;
     project: string;
     projRole: string;
+    projType: string;
     plan: string;
     tab: number;
     group: string;
