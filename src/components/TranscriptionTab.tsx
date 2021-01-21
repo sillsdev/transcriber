@@ -410,14 +410,12 @@ export function TranscriptionTab(props: IProps) {
   const handleAudioFn = (passageId: string) => {
     logError(Severity.info, globalStore.errorReporter, `handleAudioFn`);
     const mediaRec = getMediaRec(passageId, memory);
-    const id = remoteId(
-      'mediafile',
-      mediaRec ? mediaRec.id : '',
-      memory.keyMap
-    );
+    const id =
+      remoteId('mediafile', mediaRec ? mediaRec.id : '', memory.keyMap) ||
+      mediaRec?.id;
     logError(Severity.info, globalStore.errorReporter, `rem Media Id=${id}`);
     const name = getMediaName(mediaRec, memory);
-    fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
+    if (id) fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
     setAudName(name);
   };
 
