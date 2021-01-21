@@ -65,7 +65,7 @@ export const getReadWriteProg = async () => {
       (await getRegVal(regKey, progVal9)) ||
       (await getRegVal(regKey, progVal8));
     return async (args: string[]) => {
-      return await execa(progPath, args);
+      return await execa(path.join(progPath, 'rdwrtp8'), args);
     };
   } else {
     return async (args: string[]) => {
