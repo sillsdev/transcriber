@@ -17,6 +17,7 @@ const initialState = {
 			"importSnapshot": "Import Project",
 			"withInternet": "With an Internet connection",
 			"withoutInternet": "Without an Internet connection",
+			"mustBeOnline": "You must be connected to the Internet to Log In!",
 			"importProject": "ImportProject",
 			"download": "Download?",
 			"downloadLater": "Download Later",

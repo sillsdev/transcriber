@@ -6,7 +6,6 @@ import {
   ICardsStrings,
   IProjButtonsStrings,
   IToDoTableStrings,
-  VProject,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withStyles } from '@material-ui/core/styles';

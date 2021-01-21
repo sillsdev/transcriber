@@ -13,10 +13,10 @@ export function Online(
           headers: {
             Authorization: 'Bearer ' + auth.accessToken,
           },
-          timeout: 5000,
+          timeout: 10000,
         }
       : {
-          timeout: 5000,
+          timeout: 10000,
         };
 
   //if we're electron, don't be using the internet even if it's available

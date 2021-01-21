@@ -55,6 +55,12 @@
    			<target>Sans connexion Internet</target>
    		</segment>
    	</unit>
+   	<unit id="access.mustBeOnline">
+   		<segment>
+   			<source>You must be connected to the Internet to Log In!</source>
+   			<target>Vous devez être connecté à Internet pour vous connecter !</target>
+   		</segment>
+   	</unit>
    	<unit id="access.importProject">
          <segment>
             <source>Import Project</source>

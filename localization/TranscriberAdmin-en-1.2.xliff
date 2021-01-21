@@ -65,6 +65,13 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="access.mustBeOnline">
+      		<source>You must be connected to the Internet to Log In!</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="access.importProject">
             <source>ImportProject</source>
             <target/>
