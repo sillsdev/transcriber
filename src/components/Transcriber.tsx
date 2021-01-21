@@ -229,6 +229,7 @@ export function Transcriber(props: IProps) {
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
+  const [projType] = useGlobal('projType');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [projRole] = useGlobal('projRole');
@@ -421,7 +422,7 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (!offline) {
-      if (!paratext_usernameStatus) {
+      if (!paratext_usernameStatus && projType === 'Scripture') {
         getUserName(auth, errorReporter, '');
       }
       setHasParatextName(paratext_username !== '');

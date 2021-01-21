@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -6,6 +6,7 @@ import {
   ICardsStrings,
   IProjButtonsStrings,
   IToDoTableStrings,
+  VProject,
 } from '../../model';
 import localStrings from '../../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
@@ -31,7 +32,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import UncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
-import { useOfflnProjRead } from '../../crud';
+import { useOfflnProjRead, useProjectType } from '../../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -90,13 +91,18 @@ export function ProjectMenu(props: IProps) {
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const { getProjType } = useProjectType();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
-
+  const [projectType, setProjectType] = useState('');
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    setProjectType(getProjType(project));
+  }, [getProjType, project]);
 
   const handle = (what: string) => (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -159,12 +165,14 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.reports} />
         </StyledMenuItem>
-        <StyledMenuItem onClick={handle('integration')}>
-          <ListItemIcon>
-            <ParatextLogo />
-          </ListItemIcon>
-          <ListItemText primary={tpb.integrations} />
-        </StyledMenuItem>
+        {projectType === 'Scripture' && (
+          <StyledMenuItem onClick={handle('integration')}>
+            <ListItemIcon>
+              <ParatextLogo />
+            </ListItemIcon>
+            <ListItemText primary={tpb.integrations} />
+          </StyledMenuItem>
+        )}
         {isOwner && (!isElectron || isOffline) && (
           <StyledMenuItem onClick={handle('import')}>
             <ListItemIcon>

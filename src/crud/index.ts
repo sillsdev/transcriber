@@ -47,3 +47,4 @@ export * from './useOfflineSetup';
 export * from './useMediaCounts';
 export * from './useSectionCounts';
 export * from './useAddToOrgAndGroup';
+export * from './useProjectType';

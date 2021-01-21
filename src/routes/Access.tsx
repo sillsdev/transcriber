@@ -130,6 +130,7 @@ export function Access(props: IProps) {
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
   const [, setProjRole] = useGlobal('projRole');
+  const [, setProjType] = useGlobal('projType');
   const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
@@ -240,6 +241,7 @@ export function Access(props: IProps) {
     setProject('');
     setPlan('');
     setProjRole('');
+    setProjType('');
 
     if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
