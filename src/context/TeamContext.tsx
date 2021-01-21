@@ -262,9 +262,9 @@ const TeamProvider = withData(mapRecordsToProps)(
     ) => {
       const [projectId] = setProjectParams(plan);
       LoadData(projectId, () => {
-        setMyProjRole(projectId);
         setProjectType(projectId);
-        if (cb) cb();
+        if (!cb) setMyProjRole(projectId);
+        else cb();
       });
     };
 
