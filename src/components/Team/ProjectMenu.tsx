@@ -101,10 +101,6 @@ export function ProjectMenu(props: IProps) {
   };
 
   useEffect(() => {
-    console.log(
-      'setprojectetype',
-      typeof project === 'string' ? project : (project as VProject).id
-    );
     setProjectType(getProjType(project));
   }, [getProjType, project]);
 
