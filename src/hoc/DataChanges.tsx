@@ -15,12 +15,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { DataChange } from '../model/dataChange';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
-import {
-  offlineProjectUpdateSnapshot,
-  remoteId,
-  remoteIdGuid,
-  remoteIdNum,
-} from '../crud';
+import { offlineProjectUpdateSnapshot, remoteId, remoteIdGuid } from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { getSerializer } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
@@ -220,16 +215,13 @@ export default function DataChanges(props: IProps) {
   };
   const backupElectron = () => {
     if (!busy && !doSave && project !== '') {
-      var projectid = remoteIdNum('project', project, memory.keyMap);
-      var userid = remoteIdNum('user', user, memory.keyMap);
-
       electronExport(
         ExportType.ITFBACKUP,
         memory,
         undefined,
-        projectid,
+        project,
         fingerprint,
-        userid,
+        user,
         getSerializer(memory),
         getOfflineProject
       ).catch((err: Error) => {

@@ -39,7 +39,7 @@ import Memory from '@orbit/memory';
 import { TransformBuilder, Operation } from '@orbit/data';
 import IndexedDBSource from '@orbit/indexeddb';
 import { electronExport } from './electronExport';
-import { remoteIdGuid, related, insertData } from '../../crud';
+import { remoteIdGuid, related, insertData, remoteId } from '../../crud';
 import { infoMsg, orbitInfo, logError, Severity } from '../../utils';
 import Coordinator from '@orbit/coordinator';
 
@@ -54,9 +54,9 @@ export const exportProject = (
   exportType: ExportType,
   memory: Memory,
   backup: IndexedDBSource,
-  projectid: number,
+  projectid: number | string,
   fingerprint: string,
-  userid: number,
+  userid: number | string,
   numberOfMedia: number,
   auth: Auth,
   errorReporter: any,
@@ -94,12 +94,16 @@ export const exportProject = (
       });
   } else {
     /* ignore export type for now -- online is always ptf */
+    const remProjectId =
+      typeof projectid === 'number'
+        ? projectid.toString()
+        : remoteId('project', projectid, memory.keyMap);
     let start = 0;
     do {
       await Axios.get(
         API_CONFIG.host +
           '/api/offlineData/project/export/' +
-          projectid +
+          remProjectId +
           '/' +
           start,
         {

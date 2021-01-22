@@ -37,9 +37,9 @@ export async function electronExport(
   exportType: ExportType,
   memory: Memory,
   backup: IndexedDBSource | undefined,
-  projectid: number,
+  projectid: number | string,
   fingerprint: string,
-  userid: number,
+  userid: number | string,
   ser: JSONAPISerializerCustom,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ): Promise<FileResponse | null> {
@@ -64,9 +64,14 @@ export async function electronExport(
     };
   };
 
+  const remUserId =
+    typeof userid === 'number'
+      ? userid.toString()
+      : remoteId('user', userid, memory.keyMap);
+
   const fileName = (projRec: Project, ext: string) =>
     'Transcriber' +
-    userid +
+    remUserId +
     '_' +
     remoteId('project', projRec.id, memory.keyMap) +
     '_' +
@@ -80,13 +85,16 @@ export async function electronExport(
     '_' +
     fileName(projRec, 'itf');
 
-  const backupName = 'Transcriber' + userid + '_backup.' + exportType;
+  const backupName = 'Transcriber' + remUserId + '_backup.' + exportType;
 
-  const getProjRec = (projectid: string): Project => {
+  const getProjRec = (projectid: number | string): Project => {
     return memory.cache.query((q: QueryBuilder) =>
       q.findRecord({
         type: 'project',
-        id: remoteIdGuid('project', projectid, memory.keyMap),
+        id:
+          typeof projectid === 'number'
+            ? remoteIdGuid('project', projectid.toString(), memory.keyMap)
+            : projectid,
       })
     ) as Project;
   };
@@ -141,7 +149,7 @@ export async function electronExport(
       recs.forEach((u) => {
         var user = u as User;
         if (
-          user.attributes &&
+          user?.attributes?.avatarUrl &&
           user.attributes.avatarUrl !== null &&
           user.attributes.avatarUrl !== ''
         ) {
@@ -160,7 +168,7 @@ export async function electronExport(
       recs.forEach((o) => {
         var org = o as Organization;
         if (
-          org.attributes &&
+          org?.attributes?.logoUrl &&
           org.attributes.logoUrl !== null &&
           org.attributes.logoUrl !== ''
         ) {
@@ -443,7 +451,7 @@ export async function electronExport(
     if (exportType === ExportType.FULLBACKUP) exportType = ExportType.PTF;
     else exportType = ExportType.ITF;
   } else {
-    projects = [getProjRec(projectid.toString())];
+    projects = [getProjRec(projectid)];
   }
   var changedRecs = 0;
   for (var ix: number = 0; ix < projects.length; ix++) {
