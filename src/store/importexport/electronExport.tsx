@@ -37,9 +37,9 @@ export async function electronExport(
   exportType: ExportType,
   memory: Memory,
   backup: IndexedDBSource | undefined,
-  projectid: number,
+  projectid: number | string,
   fingerprint: string,
-  userid: number,
+  userid: number | string,
   ser: JSONAPISerializerCustom,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ): Promise<FileResponse | null> {
@@ -64,11 +64,16 @@ export async function electronExport(
     };
   };
 
+  const idStr = (id: number | string) =>
+    typeof id === 'number'
+      ? id.toString()
+      : remoteId('user', id, memory.keyMap) || id.split('-')[0];
+
   const fileName = (projRec: Project, ext: string) =>
     'Transcriber' +
-    userid +
+    idStr(userid) +
     '_' +
-    remoteId('project', projRec.id, memory.keyMap) +
+    idStr(projRec.id) +
     '_' +
     cleanFileName(projRec.attributes.name) +
     '.' +
@@ -80,13 +85,16 @@ export async function electronExport(
     '_' +
     fileName(projRec, 'itf');
 
-  const backupName = 'Transcriber' + userid + '_backup.' + exportType;
+  const backupName = 'Transcriber' + idStr(userid) + '_backup.' + exportType;
 
-  const getProjRec = (projectid: string): Project => {
+  const getProjRec = (projectid: number | string): Project => {
     return memory.cache.query((q: QueryBuilder) =>
       q.findRecord({
         type: 'project',
-        id: remoteIdGuid('project', projectid, memory.keyMap),
+        id:
+          typeof projectid === 'number'
+            ? remoteIdGuid('project', projectid.toString(), memory.keyMap)
+            : projectid,
       })
     ) as Project;
   };
@@ -121,6 +129,9 @@ export async function electronExport(
       );
       return ver;
     };
+    const AddOfflineEntry = (): void => {
+      zip.addFile('Offline', Buffer.alloc(0, ''), 'Present if Offline project');
+    };
     const AddJsonEntry = (table: string, recs: Record[], sort: string) => {
       //put in the remoteIds for everything, then stringify
       var json = '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}';
@@ -141,7 +152,7 @@ export async function electronExport(
       recs.forEach((u) => {
         var user = u as User;
         if (
-          user.attributes &&
+          user?.attributes?.avatarUrl &&
           user.attributes.avatarUrl !== null &&
           user.attributes.avatarUrl !== ''
         ) {
@@ -160,7 +171,7 @@ export async function electronExport(
       recs.forEach((o) => {
         var org = o as Organization;
         if (
-          org.attributes &&
+          org?.attributes?.logoUrl &&
           org.attributes.logoUrl !== null &&
           org.attributes.logoUrl !== ''
         ) {
@@ -395,6 +406,7 @@ export async function electronExport(
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
     AddSourceEntry(imported.toISOString());
     AddVersionEntry('2'); //TODO: ask what version indexeddb is
+    if (typeof projectid === 'string') AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
     var numRecs = 0;
     switch (exportType) {
@@ -443,7 +455,7 @@ export async function electronExport(
     if (exportType === ExportType.FULLBACKUP) exportType = ExportType.PTF;
     else exportType = ExportType.ITF;
   } else {
-    projects = [getProjRec(projectid.toString())];
+    projects = [getProjRec(projectid)];
   }
   var changedRecs = 0;
   for (var ix: number = 0; ix < projects.length; ix++) {

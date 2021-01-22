@@ -16,14 +16,16 @@ export class JSONAPISerializerCustom extends JSONAPISerializer {
   }
 }
 
-export function getSerializer(memory: Memory) {
+export function getSerializer(memory: Memory, offline?: boolean) {
   const s: JSONAPISerializerSettings = {
     schema: memory.schema,
     keyMap: memory.keyMap,
   };
   const ser = new JSONAPISerializerCustom(s);
-  ser.resourceKey = () => {
-    return 'remoteId';
-  };
+  if (!offline) {
+    ser.resourceKey = () => {
+      return 'remoteId';
+    };
+  }
   return ser;
 }

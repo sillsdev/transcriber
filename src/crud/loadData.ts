@@ -122,7 +122,7 @@ export async function insertData(
       }
     } else {
       try {
-        memory.schema.initializeRecord(item);
+        if (typeof item.id === 'number') memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
         if (item.type === 'project') {
           await saveOfflineProject(
@@ -283,7 +283,7 @@ export async function LoadProjectData(
 
   const projectid = remoteIdNum('project', project, memory.keyMap);
   var tb: TransformBuilder = new TransformBuilder();
-  const ser = getSerializer(memory);
+  const ser = getSerializer(memory, !online);
 
   try {
     let start = 0;

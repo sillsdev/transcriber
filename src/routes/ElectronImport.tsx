@@ -38,6 +38,7 @@ export const useElectronImport = (
 ) => {
   const [coordinator] = useGlobal('coordinator');
   const [memory] = useGlobal('memory');
+  const isOfflinePtf = useRef<boolean>(false);
   const { showTitledMessage } = useSnackBar();
   const getOfflineProject = useOfflnProjRead();
   const AddProjectLoaded = useProjectsLoaded();
@@ -85,12 +86,16 @@ export const useElectronImport = (
           exportDate = entry.getData().toString('utf8');
           exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
           valid = true;
-          break;
+          if (isOfflinePtf.current) break;
+        } else if (entry.entryName === 'Offline') {
+          isOfflinePtf.current = true;
+          if (valid) break;
         }
       }
       if (!valid) {
         showTitledMessage(t.importProject, t.ptfError);
         zipRef.current = undefined;
+        isOfflinePtf.current = false;
         return {
           valid: false,
           warnMsg: '',
@@ -220,6 +225,7 @@ export const useElectronImport = (
           path.join(where, 'data'),
           dataDate,
           coordinator,
+          isOfflinePtf.current,
           AddProjectLoaded,
           orbitError,
           t.importPending,
@@ -231,6 +237,7 @@ export const useElectronImport = (
         if (!lastTime || moment(lastTime) > moment(dataDate)) {
           localStorage.setItem(userLastTimeKey, dataDate);
         }
+        isOfflinePtf.current = false;
       }
     };
   }
