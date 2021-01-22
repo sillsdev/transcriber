@@ -16,10 +16,16 @@ export const useProjectType = () => {
     }
     else
       proj = project;
+    var ptId = related(proj, 'projecttype');
+    if (ptId) {
     var pt = memory.cache.query((q) =>
-        q.findRecord({ type: 'projecttype', id: related(proj, 'projecttype') })
+        q.findRecord({ type: 'projecttype', id: ptId })
       ) as ProjectType;
-    return pt.attributes.name;
+      return pt.attributes.name;
+    }
+    else
+      console.log('MISSING PROJECT TYPE!', proj);
+    return '';
 };
 
   const setProjectType = (projectId: string) => {

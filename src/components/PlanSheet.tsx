@@ -319,7 +319,7 @@ export function PlanSheet(props: IProps) {
 
   const numCol = [2, 4]; // Section num = col 2, Passage num = col 4
   const handleCellsChanged = (changes: Array<IChange>) => {
-    if (projRole !== 'admin') return; //readonly
+    if (readonly) return; //readonly
 
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
@@ -380,7 +380,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const parsePaste = (clipBoard: string) => {
-    if (projRole !== 'admin' || isOffline) return Array<Array<string>>();
+    if (readonly) return Array<Array<string>>();
     if (currentRow.current === 0) {
       setPasting(true);
       showMessage(t.pasting);
@@ -411,7 +411,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const bookEditor = (props: any) => {
-    if (projRole !== 'admin') return <></>;
+    if (readonly) return <></>;
     return (
       <BookSelect
         id="book"
@@ -668,12 +668,7 @@ export function PlanSheet(props: IProps) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
-                  disabled={
-                    pasting ||
-                    readonly ||
-                    (isOffline && !offlineOnly) ||
-                    projRole !== 'admin'
-                  }
+                  disabled={pasting || readonly}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}
