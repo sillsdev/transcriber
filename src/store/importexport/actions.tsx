@@ -76,7 +76,7 @@ export const exportProject = (
       projectid,
       fingerprint,
       userid,
-      getSerializer(memory),
+      getSerializer(memory, typeof projectid === 'string'),
       getOfflineProject
     )
       .then((response) => {
@@ -310,6 +310,7 @@ export const importProjectToElectron = (
   filepath: string,
   dataDate: string,
   coordinator: Coordinator,
+  offlineOnly: boolean,
   AddProjectLoaded: (project: string) => void,
   orbitError: (ex: IApiError) => void,
   pendingmsg: string,
@@ -506,7 +507,7 @@ export const importProjectToElectron = (
         type: IMPORT_ERROR,
       });
     } else {
-      const ser = getSerializer(memory);
+      const ser = getSerializer(memory, offlineOnly);
       try {
         //remove all project data
         await removeProject(ser);

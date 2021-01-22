@@ -129,6 +129,9 @@ export async function electronExport(
       );
       return ver;
     };
+    const AddOfflineEntry = (): void => {
+      zip.addFile('Offline', Buffer.alloc(0, ''), 'Present if Offline project');
+    };
     const AddJsonEntry = (table: string, recs: Record[], sort: string) => {
       //put in the remoteIds for everything, then stringify
       var json = '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}';
@@ -403,6 +406,7 @@ export async function electronExport(
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
     AddSourceEntry(imported.toISOString());
     AddVersionEntry('2'); //TODO: ask what version indexeddb is
+    if (typeof projectid === 'string') AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
     var numRecs = 0;
     switch (exportType) {
