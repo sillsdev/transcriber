@@ -86,9 +86,10 @@ export const useElectronImport = (
           exportDate = entry.getData().toString('utf8');
           exportTime = moment.utc(exportDate, 'YYYY-MM-DDTHH:MM:SS.SSSSSSSZ');
           valid = true;
-          break;
+          if (isOfflinePtf.current) break;
         } else if (entry.entryName === 'Offline') {
           isOfflinePtf.current = true;
+          if (valid) break;
         }
       }
       if (!valid) {
