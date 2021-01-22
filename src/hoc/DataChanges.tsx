@@ -166,6 +166,7 @@ export const doDataChanges = async (
 export default function DataChanges(props: IProps) {
   const { auth, children } = props;
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -222,7 +223,7 @@ export default function DataChanges(props: IProps) {
         project,
         fingerprint,
         user,
-        getSerializer(memory),
+        getSerializer(memory, offlineOnly),
         getOfflineProject
       ).catch((err: Error) => {
         logError(
