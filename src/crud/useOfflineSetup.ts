@@ -28,7 +28,7 @@ export const useOfflineSetup = () => {
       let otherRec: ProjectType = {
         type: `${kind}type`,
         attributes: {
-          name: 'Other',
+          name: kind === 'project' ? 'Generic' : 'Other',
         },
       } as any;
       memory.schema.initializeRecord(otherRec);
