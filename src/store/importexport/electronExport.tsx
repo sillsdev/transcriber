@@ -64,16 +64,16 @@ export async function electronExport(
     };
   };
 
-  const remUserId =
-    typeof userid === 'number'
-      ? userid.toString()
-      : remoteId('user', userid, memory.keyMap);
+  const idStr = (id: number | string) =>
+    typeof id === 'number'
+      ? id.toString()
+      : remoteId('user', id, memory.keyMap) || id.split('-')[0];
 
   const fileName = (projRec: Project, ext: string) =>
     'Transcriber' +
-    remUserId +
+    idStr(userid) +
     '_' +
-    remoteId('project', projRec.id, memory.keyMap) +
+    idStr(projRec.id) +
     '_' +
     cleanFileName(projRec.attributes.name) +
     '.' +
@@ -85,7 +85,7 @@ export async function electronExport(
     '_' +
     fileName(projRec, 'itf');
 
-  const backupName = 'Transcriber' + remUserId + '_backup.' + exportType;
+  const backupName = 'Transcriber' + idStr(userid) + '_backup.' + exportType;
 
   const getProjRec = (projectid: number | string): Project => {
     return memory.cache.query((q: QueryBuilder) =>
