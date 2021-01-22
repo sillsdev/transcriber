@@ -76,7 +76,11 @@ export const exportProject = (
       projectid,
       fingerprint,
       userid,
-      getSerializer(memory, typeof projectid === 'string'),
+      getSerializer(
+        memory,
+        typeof projectid !== 'number' &&
+          !remoteId('project', projectid, memory.keyMap)
+      ),
       getOfflineProject
     )
       .then((response) => {

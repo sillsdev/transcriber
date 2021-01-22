@@ -64,16 +64,16 @@ export async function electronExport(
     };
   };
 
-  const idStr = (id: number | string) =>
+  const idStr = (kind: string, id: number | string) =>
     typeof id === 'number'
       ? id.toString()
-      : remoteId('user', id, memory.keyMap) || id.split('-')[0];
+      : remoteId(kind, id, memory.keyMap) || id.split('-')[0];
 
   const fileName = (projRec: Project, ext: string) =>
     'Transcriber' +
-    idStr(userid) +
+    idStr('user', userid) +
     '_' +
-    idStr(projRec.id) +
+    idStr('project', projRec.id) +
     '_' +
     cleanFileName(projRec.attributes.name) +
     '.' +
@@ -85,7 +85,8 @@ export async function electronExport(
     '_' +
     fileName(projRec, 'itf');
 
-  const backupName = 'Transcriber' + idStr(userid) + '_backup.' + exportType;
+  const backupName =
+    'Transcriber' + idStr('user', userid) + '_backup.' + exportType;
 
   const getProjRec = (projectid: number | string): Project => {
     return memory.cache.query((q: QueryBuilder) =>
@@ -406,7 +407,11 @@ export async function electronExport(
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
     AddSourceEntry(imported.toISOString());
     AddVersionEntry('2'); //TODO: ask what version indexeddb is
-    if (typeof projectid === 'string') AddOfflineEntry();
+    if (
+      typeof projectid === 'string' &&
+      !remoteId('project', projectid, memory.keyMap)
+    )
+      AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
     var numRecs = 0;
     switch (exportType) {
