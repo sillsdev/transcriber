@@ -123,7 +123,10 @@ function MediaUpload(props: IProps) {
             )
         );
         showMessage(
-          t.invalidFile + rejectedFiles.map((f) => f.name).join(', ')
+          t.invalidFile.replace(
+            '{0}',
+            rejectedFiles.map((f) => f.name).join(', ')
+          )
         );
       }
       setName(fileName(goodFiles));

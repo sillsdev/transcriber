@@ -1804,8 +1804,8 @@
       </unit>
       <unit id="mediaUpload.invalidFile">
          <segment>
-            <source>Not valid for this operation:  </source>
-            <target>Non valide pour cette opération:</target>
+            <source>Not valid for this operation:  {0}</source>
+            <target>Non valide pour cette opération:  {0}</target>
          </segment>
       </unit>
        <unit id="mediaUpload.ITFtask">

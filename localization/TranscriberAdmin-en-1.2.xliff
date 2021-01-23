@@ -2109,7 +2109,7 @@
             </context-group>
          </trans-unit>
           <trans-unit id="mediaUpload.invalidFile">
-            <source>Not valid for this operation:  </source>
+            <source>Not valid for this operation: {0} </source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
