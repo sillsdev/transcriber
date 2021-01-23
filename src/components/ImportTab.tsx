@@ -249,7 +249,7 @@ export function ImportTab(props: IProps) {
     handleClose();
   };
 
-  const uploadITF = (files: FileList) => {
+  const uploadITF = (files: File[]) => {
     if (!files || files.length === 0) {
       showMessage(t.noFile);
     } else {

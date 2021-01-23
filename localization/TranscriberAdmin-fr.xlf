@@ -1802,7 +1802,13 @@
             <target>Glissez et déposez un fichier ici, ou cliquez ici pour rechercher le fichier.</target>
          </segment>
       </unit>
-      <unit id="mediaUpload.ITFtask">
+      <unit id="mediaUpload.invalidFile">
+         <segment>
+            <source>Not valid for this operation:  {0}</source>
+            <target>Non valide pour cette opération:  {0}</target>
+         </segment>
+      </unit>
+       <unit id="mediaUpload.ITFtask">
          <segment>
             <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
             <target>Téléchargez un fichier incrémentiel de transcripteur (fichier itf) exporté à partir de l'application de bureau.</target>

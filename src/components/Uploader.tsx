@@ -47,7 +47,7 @@ interface IProps extends IStateProps, IDispatchProps {
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
-  createProject?: (file: FileList) => Promise<any>;
+  createProject?: (file: File[]) => Promise<any>;
   status: typeof statusInit;
   multiple?: boolean;
 }
@@ -71,7 +71,7 @@ export const Uploader = (props: IProps) => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const planIdRef = React.useRef<string>();
   const successCount = React.useRef<number>(0);
-  const fileList = React.useRef<FileList>();
+  const fileList = React.useRef<File[]>();
   const authRef = React.useRef<Auth>(auth);
   const mediaIdRef = React.useRef<string[]>([]);
 
@@ -169,7 +169,7 @@ export const Uploader = (props: IProps) => {
     );
   };
 
-  const uploadMedia = async (files: FileList) => {
+  const uploadMedia = async (files: File[]) => {
     if (!files || files.length === 0) {
       showMessage(t.selectFiles);
       return;

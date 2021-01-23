@@ -290,7 +290,7 @@ export const importSyncFromElectron = (
 };
 
 export const importProjectFromElectron = (
-  files: FileList,
+  files: File[],
   projectid: number,
   auth: Auth,
   errorReporter: any,
