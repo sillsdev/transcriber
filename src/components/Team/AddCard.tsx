@@ -161,9 +161,8 @@ export const AddCard = (props: IProps) => {
     );
   };
 
-  const createProject = async (files: FileList) => {
+  const createProject = async (fileList: File[]) => {
     setStep(0);
-    const fileList = (files as any) as File[];
     const name = fileList[0]?.name.split('.')[0];
     const planId = await projectCreate(
       {

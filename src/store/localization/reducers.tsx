@@ -385,6 +385,7 @@ const initialState = {
 			"cancel": "Cancel",
 			"dragDropMultiple": "Drag and drop files here, or click here to browse for the files.",
 			"dragDropSingle": "Drag and drop a file here, or click here to browse for the file.",
+			"invalidFile": "Not valid for this operation:  ",
 			"ITFtask": "Upload an Incremental Transcriber File (itf file) exported from the Desktop app.",
 			"ITFtitle": "Upload Change Data from Desktop app.",
 			"PTFtask": "Upload a Portable Transcriber File (ptf).",

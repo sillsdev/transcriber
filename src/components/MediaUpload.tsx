@@ -11,6 +11,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
+import path from 'path';
+import { useSnackBar } from '../hoc/SnackBar';
 const FileDrop =
   process.env.NODE_ENV !== 'test' ? require('../mods/FileDrop').default : <></>;
 
@@ -48,7 +50,7 @@ export enum UploadType {
 interface IProps extends IStateProps {
   visible: boolean;
   uploadType: UploadType;
-  uploadMethod?: (files: FileList) => void;
+  uploadMethod?: (files: File[]) => void;
   multiple?: boolean;
   cancelMethod?: () => void;
   metaData?: JSX.Element;
@@ -69,8 +71,8 @@ function MediaUpload(props: IProps) {
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [name, setName] = useState('');
-  const [files, setFiles] = useState<FileList>();
-
+  const [files, setFiles] = useState<File[]>([]);
+  const { showMessage } = useSnackBar();
   const acceptextension = [
     '.mp3, .m4a, .wav, .ogg',
     '.itf',
@@ -78,7 +80,7 @@ function MediaUpload(props: IProps) {
     '.jpg, .svg, .png',
   ];
   const acceptmime = [
-    'audio/mpeg, audio/wav, audio/m4a, audio/ogg',
+    'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg',
     'application/itf',
     'application/ptf',
     'image/jpeg, image/svg+xml, image/png',
@@ -90,37 +92,58 @@ function MediaUpload(props: IProps) {
     if (uploadMethod && files) {
       uploadMethod(files);
     }
-    setFiles(undefined);
-    setName('');
+    handleFiles(undefined);
     setOpen(false);
   };
   const handleCancel = () => {
     if (cancelMethod) {
-      setFiles(undefined);
-      setName('');
+      handleFiles(undefined);
       cancelMethod();
     }
     setOpen(false);
   };
-  const fileName = (files: FileList) => {
+  const fileName = (files: File[]) => {
     return files.length === 1
       ? files[0].name
       : files.length.toString() + ' files selected';
   };
 
+  const handleFiles = (files: FileList | undefined) => {
+    if (files) {
+      var goodFiles = Array.from(files).filter((s) =>
+        acceptextension[uploadType].includes(
+          (path.extname(s.name) || '.xxx').substring(1)
+        )
+      );
+      if (goodFiles.length < files.length) {
+        var rejectedFiles = Array.from(files).filter(
+          (s) =>
+            !acceptextension[uploadType].includes(
+              (path.extname(s.name) || '.xxx').substring(1)
+            )
+        );
+        showMessage(
+          t.invalidFile + rejectedFiles.map((f) => f.name).join(', ')
+        );
+      }
+      setName(fileName(goodFiles));
+      setFiles(goodFiles);
+    } else {
+      setFiles([]);
+      setName('');
+    }
+  };
   const handleNameChange = (
     e: React.FormEvent<HTMLInputElement | HTMLLabelElement>
   ) => {
     const inputEl = e.target as HTMLInputElement;
     if (inputEl && inputEl.files) {
-      setName(fileName(inputEl.files));
-      setFiles(inputEl.files);
+      handleFiles(inputEl.files);
     }
   };
 
   const handleDrop = (files: FileList) => {
-    setName(fileName(files));
-    setFiles(files);
+    handleFiles(files);
   };
 
   useEffect(() => {

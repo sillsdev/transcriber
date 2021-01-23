@@ -2108,6 +2108,13 @@
                <context context-type="sourcefile">MediaUpload.tsx</context>
             </context-group>
          </trans-unit>
+          <trans-unit id="mediaUpload.invalidFile">
+            <source>Not valid for this operation:  </source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="mediaUpload.ITFtask">
             <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
             <target/>

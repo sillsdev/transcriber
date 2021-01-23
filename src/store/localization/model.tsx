@@ -360,6 +360,7 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
+    "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
     "PTFtask": string;

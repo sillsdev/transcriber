@@ -2,7 +2,7 @@
 export interface IUploadState {
   current: number;
   loaded: boolean;
-  files: FileList;
+  files: File[];
   errmsg: string;
   success: boolean[];
 }
@@ -17,7 +17,7 @@ export const UPLOAD_COMPLETE = 'UPLOAD_COMPLETE';
 
 interface UploadMsg {
   type: typeof UPLOAD_LIST;
-  payload: FileList;
+  payload: File[];
 }
 
 interface UploadPendingMsg {

@@ -20,7 +20,7 @@ import {
 var fs = require('fs');
 var path = require('path');
 
-export const uploadFiles = (files: FileList) => (dispatch: any) => {
+export const uploadFiles = (files: File[]) => (dispatch: any) => {
   dispatch({
     payload: files,
     type: UPLOAD_LIST,
@@ -29,7 +29,7 @@ export const uploadFiles = (files: FileList) => (dispatch: any) => {
 
 export const nextUpload = (
   record: any,
-  files: FileList,
+  files: File[],
   n: number,
   auth: Auth,
   errorReporter: any,
