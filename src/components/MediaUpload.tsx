@@ -112,14 +112,14 @@ function MediaUpload(props: IProps) {
     if (files) {
       var goodFiles = Array.from(files).filter((s) =>
         acceptextension[uploadType].includes(
-          (path.extname(s.name) || '.xxx').substring(1)
+          (path.extname(s.name) || '.xxx').substring(1).toLowerCase()
         )
       );
       if (goodFiles.length < files.length) {
         var rejectedFiles = Array.from(files).filter(
           (s) =>
             !acceptextension[uploadType].includes(
-              (path.extname(s.name) || '.xxx').substring(1)
+              (path.extname(s.name) || '.xxx').substring(1).toLowerCase()
             )
         );
         showMessage(
