@@ -21,8 +21,8 @@
    	</unit>
    	<unit id="access.createUser">
    		<segment>
-   			<source>Create a new user</source>
-   			<target>Créer un nouvel utilisateur</target>
+   			<source>Add a new user</source>
+   			<target>Ajouter un nouvel utilisateur</target>
    		</segment>
    	</unit>
    	<unit id="access.logIn">
@@ -2026,8 +2026,8 @@
       </unit>
       <unit id="profile.addMember">
          <segment>
-            <source>Add User</source>
-            <target>Ajouter un utilisateur</target>
+            <source>Complete User Profile</source>
+            <target>Remplir le profil du utilisateur</target>
          </segment>
       </unit>
       <unit id="profile.cancel">

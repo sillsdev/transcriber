@@ -24,7 +24,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="access.createUser">
-      		<source>Create a new user</source>
+      		<source>Add a new user</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -2375,7 +2375,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.addMember">
-            <source>Add User</source>
+            <source>Complete User Profile</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>

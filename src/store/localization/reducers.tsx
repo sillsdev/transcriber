@@ -11,7 +11,7 @@ const initialState = {
 			"availableOfflineUsers": "Available Offline Users",
 			"availableOnlineUsers": "Available Online Users",
 			"cancel": "Cancel",
-			"createUser": "Create a new user",
+			"createUser": "Add a new user",
 			"logIn": "Log In",
 			"screenTitle": "I want to work...",
 			"importSnapshot": "Import Project",
@@ -443,7 +443,7 @@ const initialState = {
 	"profile": new LocalizedStrings({
 		"en": {
 			"add": "Add",
-			"addMember": "Add User",
+			"addMember": "Complete User Profile",
 			"cancel": "Cancel",
 			"checkingParatext": "Checking for Paratext account...",
 			"nameNotEmail": "Please choose a name other than your email address.",
