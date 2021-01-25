@@ -267,8 +267,8 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0} to Members</source>
-            <target>Assigner {0} aux membres</target>
+            <source>Assign {0}</source>
+            <target>Assigner {0}</target>
          </segment>
       </unit>
       <unit id="assignSection.users">
@@ -2026,8 +2026,8 @@
       </unit>
       <unit id="profile.addMember">
          <segment>
-            <source>Add Member</source>
-            <target>Ajouter un Membre</target>
+            <source>Add User</source>
+            <target>Ajouter un utilisateur</target>
          </segment>
       </unit>
       <unit id="profile.cancel">
@@ -2062,20 +2062,20 @@
       </unit>
       <unit id="profile.completeProfile">
          <segment>
-            <source>Complete Member Profile</source>
-            <target>Remplir le profil du membre</target>
+            <source>Complete User Profile</source>
+            <target>Remplir le profil du utilisateur</target>
          </segment>
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your member will block you from using the program and remove references to your work.</source>
-            <target>La suppression de votre membre vous empêchera d'utiliser le programme et supprimera les références à votre travail.</target>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
+            <target>La suppression de votre utilisateur vous empêchera d'utiliser le programme et supprimera les références à votre travail.</target>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
          <segment>
-            <source>Delete Member</source>
-            <target>Supprimer un membre</target>
+            <source>Delete User</source>
+            <target>Supprimer un utilisateur</target>
          </segment>
       </unit>
       <unit id="profile.email">
@@ -2194,14 +2194,14 @@
       </unit>
       <unit id="profile.userExists">
          <segment>
-            <source>This offline member exists.</source>
-            <target>Cet membre hors ligne existe.</target>
+            <source>This offline user exists.</source>
+            <target>Cet utilisateur hors ligne existe.</target>
          </segment>
       </unit>
       <unit id="profile.userProfile">
          <segment>
-            <source>Member Profile</source>
-            <target>Profil du membre</target>
+            <source>User Profile</source>
+            <target>Profil du utilisateur</target>
          </segment>
       </unit>
       <unit id="projButtons.export">
@@ -3095,7 +3095,7 @@
       <unit id="usertable.addMember">
          <segment>
             <source>Add Member</source>
-            <target>Ajouter Membre</target>
+            <target>Ajouter utilisateur</target>
          </segment>
       </unit>
    	<unit id="usertable.addNewUser">
