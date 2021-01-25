@@ -68,7 +68,7 @@ const initialState = {
 		"en": {
 			"close": "Close",
 			"role": "Role",
-			"title": "Assign {0} to Members",
+			"title": "Assign {0}",
 			"users": "Members",
 		}
 	}),
@@ -443,15 +443,15 @@ const initialState = {
 	"profile": new LocalizedStrings({
 		"en": {
 			"add": "Add",
-			"addMember": "Add Member",
+			"addMember": "Add User",
 			"cancel": "Cancel",
 			"checkingParatext": "Checking for Paratext account...",
 			"nameNotEmail": "Please choose a name other than your email address.",
 			"notLinked": "Not linked to Paratext",
 			"close": "Close",
-			"completeProfile": "Complete Member Profile",
-			"deleteExplained": "Deleting your member will block you from using the program and remove references to your work.",
-			"deleteUser": "Delete Member",
+			"completeProfile": "Complete User Profile",
+			"deleteExplained": "Deleting your user will block you from using the program and remove references to your work.",
+			"deleteUser": "Delete User",
 			"email": "Email",
 			"family": "Family Name",
 			"given": "Given Name",
@@ -471,8 +471,8 @@ const initialState = {
 			"sendDigest": "Receive daily digests",
 			"sendNews": "Receive {0} and Language Technology news",
 			"timezone": "Time zone",
-			"userExists": "This offline member exists.",
-			"userProfile": "Member profile",
+			"userExists": "This offline user exists.",
+			"userProfile": "User profile",
 		}
 	}),
 	"projButtons": new LocalizedStrings({
