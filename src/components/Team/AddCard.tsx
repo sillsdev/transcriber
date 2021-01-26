@@ -68,6 +68,8 @@ export const AddCard = (props: IProps) => {
     sharedStrings,
     vProjectStrings,
     bookSuggestions,
+    teamProjects,
+    personalProjects,
   } = ctx.state;
   const t = cardStrings;
   const { showMessage } = useSnackBar();
@@ -129,6 +131,12 @@ export const AddCard = (props: IProps) => {
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
     e.stopPropagation();
+  };
+
+  const nameInUse = (newName: string) => {
+    const projects = team ? teamProjects(team.id) : personalProjects();
+    const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
+    return sameNameRec.length > 0;
   };
 
   const handleCommit = (values: IProjectDialog) => {
@@ -264,6 +272,7 @@ export const AddCard = (props: IProps) => {
                 isOpen={open}
                 onOpen={handleOpen}
                 onCommit={handleCommit}
+                nameInUse={nameInUse}
               />
             </div>
           ) : (

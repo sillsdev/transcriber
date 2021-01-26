@@ -3218,7 +3218,13 @@
             <target>Mise en page</target>
          </segment>
       </unit>
-      <unit id="vProject.new">
+   	<unit id="vProject.nameInUse">
+   		<segment>
+   			<source>Name in use</source>
+   			<target>Nom utilisé</target>
+   		</segment>
+   	</unit>
+   	<unit id="vProject.new">
          <segment>
             <source>New</source>
             <target>Nouveau</target>
