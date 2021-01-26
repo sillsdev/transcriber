@@ -3753,7 +3753,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.new">
+      	<trans-unit id="vProject.nameInUse">
+      		<source>Name in use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="vProject.new">
             <source>New</source>
             <target/>
             <context-group>

@@ -655,6 +655,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "hierarchical": string;
     "language": string;
     "layout": string;
+    "nameInUse": string;
     "new": string;
     "newProject": string;
     "organizedBy": string;

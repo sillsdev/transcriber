@@ -3220,6 +3220,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="vProject.nameInUse">
+         <segment>
+            <source>Name in use</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="vProject.new">
          <segment>
             <source>New</source>

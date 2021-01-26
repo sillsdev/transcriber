@@ -700,6 +700,7 @@ const initialState = {
 			"hierarchical": "Hierarchical",
 			"language": "Language",
 			"layout": "Layout",
+			"nameInUse": "Name in use",
 			"new": "New",
 			"newProject": "{0} Project",
 			"organizedBy": "Term for organizing layout",
