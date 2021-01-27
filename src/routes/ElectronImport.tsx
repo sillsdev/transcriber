@@ -126,7 +126,8 @@ export const useElectronImport = (
           importProjs.data.forEach((p: any) => {
             var id = p.id;
             const proj = projectRecs.find(
-              (pr) => pr.id === remoteIdGuid('project', id, memory.keyMap) || id
+              (pr) =>
+                pr.id === (remoteIdGuid('project', id, memory.keyMap) || id)
             );
 
             if (project !== '' && project !== proj?.id) {
