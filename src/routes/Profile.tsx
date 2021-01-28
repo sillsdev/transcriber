@@ -873,7 +873,7 @@ export function Profile(props: IProps) {
               </div>
             </Grid>
           </Grid>
-          {!isOffline &&
+          {(!isOffline || offlineOnly) &&
             !editId &&
             currentUser &&
             currentUser.attributes.name !== currentUser.attributes.email && (
