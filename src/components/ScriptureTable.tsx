@@ -191,7 +191,7 @@ export function ScriptureTable(props: IProps) {
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
-  const [uploadPassage, setUploadPassage] = useState('');
+  const [uploadRow, setUploadRow] = useState<number>();
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
   const [attachPassage, detachPassage] = useMediaAttach({
@@ -719,7 +719,7 @@ export function ScriptureTable(props: IProps) {
 
   const showUpload = (i: number) => {
     setUploadVisible(true);
-    setUploadPassage(passageId(i));
+    setUploadRow(i);
   };
   const handleUpload = (i: number) => () => {
     if (passageId(i) === '') {
@@ -1247,11 +1247,11 @@ export function ScriptureTable(props: IProps) {
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    if (mediaRemoteIds && mediaRemoteIds.length > 0) {
+    if (mediaRemoteIds && mediaRemoteIds.length > 0 && uploadRow) {
       await attachPassage(
-        uploadPassage,
+        passageId(uploadRow),
         related(
-          passages.find((p) => p.id === uploadPassage),
+          passages.find((p) => p.id === passageId(uploadRow)),
           'section'
         ),
         plan,
