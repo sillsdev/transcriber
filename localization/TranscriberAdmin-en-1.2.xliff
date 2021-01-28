@@ -2557,7 +2557,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sendNews">
-            <source>Receive {0} and Language Technology news</source>
+            <source>Use Internet for {0} information</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>

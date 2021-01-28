@@ -2196,7 +2196,7 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Receive {0} and Language Technology news</source>
+            <source>Use Internet for {0} information</source>
             <target/>
          </segment>
       </unit>

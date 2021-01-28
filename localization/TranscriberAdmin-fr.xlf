@@ -2182,8 +2182,8 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Receive {0} and Language Technology news</source>
-            <target>Recevez les nouvelles de {0} et de Language Technology</target>
+            <source>Use Internet for {0} information</source>
+         	<target>Utiliser Internet pour les informations {0}.</target>
          </segment>
       </unit>
       <unit id="profile.timezone">

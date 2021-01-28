@@ -779,7 +779,7 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {email !== '' && showDetail && (
+                  {isOffline && (
                     <FormControlLabel
                       className={classes.textField}
                       control={

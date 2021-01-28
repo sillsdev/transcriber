@@ -469,7 +469,7 @@ const initialState = {
 			"role": "Team Role",
 			"save": "Save",
 			"sendDigest": "Receive daily digests",
-			"sendNews": "Receive {0} and Language Technology news",
+			"sendNews": "Use Internet for {0} information",
 			"timezone": "Time zone",
 			"userExists": "This offline user exists.",
 			"userProfile": "User profile",
