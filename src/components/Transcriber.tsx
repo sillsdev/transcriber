@@ -579,22 +579,32 @@ export function Transcriber(props: IProps) {
     }
   };
 
+  const stateRole: { [key: string]: string } = {
+    transcribing: 'transcriber',
+    reviewing: 'editor',
+    transcribeReady: 'transcriber',
+    transcribed: 'editor',
+  };
+
   const handleAssign = async () => {
     const secRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord(section)
     );
-    const assigned = related(secRec, role);
-    if (!assigned || assigned === '') {
-      await memory.update(
-        UpdateRelatedRecord(
-          new TransformBuilder(),
-          section,
-          role,
-          'user',
-          user,
-          user
-        )
-      );
+    const role = stateRole[stateRef.current];
+    if (role) {
+      const assigned = related(secRec, role);
+      if (!assigned || assigned === '') {
+        await memory.update(
+          UpdateRelatedRecord(
+            new TransformBuilder(),
+            section,
+            role,
+            'user',
+            user,
+            user
+          )
+        );
+      }
     }
   };
 
