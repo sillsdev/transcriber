@@ -223,7 +223,7 @@ function MediaUpload(props: IProps) {
             onClick={handleAddOrSave}
             variant="contained"
             color="primary"
-            disabled={(ready && !ready()) || !files}
+            disabled={(ready && !ready()) || !files || files.length === 0}
           >
             {t.upload}
           </Button>
