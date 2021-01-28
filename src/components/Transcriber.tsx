@@ -611,14 +611,14 @@ export function Transcriber(props: IProps) {
     await save(
       nextOnSave[stateRef.current] ?? stateRef.current,
       playedSecsRef.current,
-      postComment ? comment : ''
+      postComment ? comment : undefined
     );
   };
 
   const save = async (
     nextState: string,
     newPosition: number,
-    thiscomment: string = ''
+    thiscomment: string | undefined
   ) => {
     if (transcriptionRef.current) {
       saving.current = true;
@@ -631,7 +631,7 @@ export function Transcriber(props: IProps) {
         section.id,
         plan,
         nextState,
-        thiscomment,
+        thiscomment || '',
         user,
         tb,
         ops,
@@ -657,7 +657,7 @@ export function Transcriber(props: IProps) {
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
-          setComment(thiscomment);
+          if (thiscomment) setComment('');
           loadHistory();
           saveCompleted('');
           setLastSaved(currentDateTime());
