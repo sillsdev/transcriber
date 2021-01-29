@@ -27,4 +27,10 @@ export const API_CONFIG = {
   hierarchicalSample: process.env.REACT_APP_HIERARCHICAL
     ? process.env.REACT_APP_HIERARCHICAL
     : '',
+  genFlatSample: process.env.REACT_APP_GEN_FLAT
+    ? process.env.REACT_APP_GEN_FLAT
+    : '',
+  genHierarchicalSample: process.env.REACT_APP_GEN_HIERARCHICAL
+    ? process.env.REACT_APP_GEN_HIERARCHICAL
+    : '',
 };

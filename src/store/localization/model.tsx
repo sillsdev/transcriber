@@ -291,6 +291,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "helpSpreadsheet": string;
     "flatSample": string;
     "hierarchicalSample": string;
+    "genFlatSample": string;
+    "genHierarchicalSample": string;
     "reportWhenOnline": string;
     "import": string;
     "integrations": string;
