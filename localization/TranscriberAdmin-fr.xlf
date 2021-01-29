@@ -1592,13 +1592,49 @@
             <target>Données non enregistrées</target>
          </segment>
       </unit>
-      <unit id="main.version">
-         <segment>
-            <source>Version: </source>
-            <target>Version: </target>
-         </segment>
-      </unit>
-      <unit id="mediaTab.action">
+   	<unit id="main.about">
+   		<segment>
+   			<source>About</source>
+   			<target>À propos de</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.version">
+   		<segment>
+   			<source>Version: {0} - {1}</source>
+   			<target>Version : {0} - {1}</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.copyClipboard">
+   		<segment>
+   			<source>Copy Version to Clipboard</source>
+   			<target>Copier la version dans le presse-papiers</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.team">
+   		<segment>
+   			<source>Team</source>
+   			<target>Équipe</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.reliesOn">
+   		<segment>
+   			<source>{0} relies on other works</source>
+   			<target>{0} s'appuie sur d'autres travaux</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.thanks">
+   		<segment>
+   			<source>Thanks to</source>
+   			<target>Grâce à</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.cantCopy">
+   		<segment>
+   			<source>Unable to copy to clipboard</source>
+   			<target>Impossible de copier dans le presse-papiers</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.action">
          <segment>
             <source>Action</source>
             <target>Action</target>
@@ -2182,8 +2218,8 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Use Internet for {0} information</source>
-         	<target>Utiliser Internet pour les informations {0}.</target>
+            <source>Check for updates using the Internet</source>
+         	<target>Vérifiez les mises à jour en utilisant l'Internet</target>
          </segment>
       </unit>
       <unit id="profile.timezone">

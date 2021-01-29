@@ -1588,9 +1588,45 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.about">
+         <segment>
+            <source>About</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.version">
          <segment>
-            <source>Version: </source>
+            <source>Version: {0} - {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.copyClipboard">
+         <segment>
+            <source>Copy Version to Clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.reliesOn">
+         <segment>
+            <source>{0} relies on other works</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.thanks">
+         <segment>
+            <source>Thanks to</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
@@ -2196,7 +2232,7 @@
       </unit>
       <unit id="profile.sendNews">
          <segment>
-            <source>Use Internet for {0} information</source>
+            <source>Check for updates using the Internet</source>
             <target/>
          </segment>
       </unit>

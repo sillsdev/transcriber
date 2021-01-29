@@ -1849,14 +1849,56 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.version">
-            <source>Version: </source>
+         <trans-unit id="main.about">
+            <source>About</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">HelpMenu.tsx</context>
+               <context context-type="sourcefile">AboutDialog.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.action">
+      	<trans-unit id="main.version">
+      		<source>Version: {0} - {1}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.copyClipboard">
+      		<source>Copy Version to Clipboard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.team">
+      		<source>Team</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.reliesOn">
+      		<source>{0} relies on other works</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.thanks">
+      		<source>Thanks to</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.cantCopy">
+      		<source>Unable to copy to clipboard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.action">
             <source>Action</source>
             <target/>
             <context-group>
@@ -2557,7 +2599,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.sendNews">
-            <source>Use Internet for {0} information</source>
+         	<source>Check for updates using the Internet</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>

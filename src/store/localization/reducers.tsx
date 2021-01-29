@@ -340,7 +340,13 @@ const initialState = {
 			"tasks": "Tasks",
 			"transcribe": "Transcribe",
 			"UnsavedData": "Unsaved Data",
-			"version": "Version: ",
+			"about": "About",
+			"version": "Version: {0} - {1}",
+			"copyClipboard": "Copy Version to Clipboard",
+			"team": "Team",
+			"reliesOn": "{0} relies on other works",
+			"thanks": "Thanks to",
+			"cantCopy": "Unable to copy to clipboard",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
@@ -469,7 +475,7 @@ const initialState = {
 			"role": "Team Role",
 			"save": "Save",
 			"sendDigest": "Receive daily digests",
-			"sendNews": "Use Internet for {0} information",
+			"sendNews": "Check for updates using the Internet",
 			"timezone": "Time zone",
 			"userExists": "This offline user exists.",
 			"userProfile": "User profile",
