@@ -128,28 +128,32 @@ function AboutDialog(props: AboutDialogProps) {
     title: string;
     url: string;
     text: string[];
+    product: string[];
   }
 
   const LicenseAccordion = (lic: LicenseProps) => {
     return (
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-        >
-          <Typography className={classes.heading}>
-            {
-              <Link href="#" onClick={handleLaunch(lic.url)}>
-                {lic.title}
-              </Link>
-            }
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <ParaItems items={lic.text} />
-        </AccordionDetails>
-      </Accordion>
+      <>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1-content"
+            id="panel1-header"
+          >
+            <Typography className={classes.heading}>
+              {
+                <Link href="#" onClick={handleLaunch(lic.url)}>
+                  {lic.title}
+                </Link>
+              }
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <ParaItems items={lic.text} />
+          </AccordionDetails>
+        </Accordion>
+        <ListItems items={lic.product} />
+      </>
     );
   };
 
@@ -180,12 +184,11 @@ function AboutDialog(props: AboutDialogProps) {
         </Tooltip>
         <Typography variant="h6">{t.team}</Typography>
         <ListItems items={about.people} />
+        <Typography variant="h6">{t.thanks}</Typography>
+        <ListItems items={about.thanks} />
         <Typography variant="h6">
           {t.reliesOn.replace('{0}', API_CONFIG.productName)}
         </Typography>
-        <ListItems items={about.product} />
-        <Typography variant="h6">{t.thanks}</Typography>
-        <ListItems items={about.thanks} />
         <LicenseAccordion {...about.mit} />
         <LicenseAccordion {...about.bsd} />
         <LicenseAccordion {...about.apache} />
