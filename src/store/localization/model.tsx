@@ -317,7 +317,13 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "tasks": string;
     "transcribe": string;
     "UnsavedData": string;
+    "about": string;
     "version": string;
+    "copyClipboard": string;
+    "team": string;
+    "reliesOn": string;
+    "thanks": string;
+    "cantCopy": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {

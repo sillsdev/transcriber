@@ -16,6 +16,7 @@ import {
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ReportIcon from '@material-ui/icons/Report';
 import HelpIcon from '@material-ui/icons/Help';
+import InfoIcon from '@material-ui/icons/Info';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -30,8 +31,7 @@ import {
   execFolder,
 } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
-const version = require('../../package.json').version;
-const buildDate = require('../buildDate.json').date;
+import AboutDialog from './AboutDialog';
 const os = require('os');
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -92,6 +92,7 @@ export function HelpMenu(props: IProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
   const [developer, setDeveloper] = useGlobal('developer');
+  const [aboutOpen, setAboutOpen] = React.useState(false);
   const [topic, setTopic] = React.useState<string>();
   const [helpToggle, setHelpToggle] = React.useState(false);
   const { showMessage } = useSnackBar();
@@ -175,6 +176,10 @@ export function HelpMenu(props: IProps) {
     localStorage.setItem('developer', !developer ? 'true' : 'false');
     setDeveloper(!developer);
     setAnchorEl(null);
+  };
+
+  const handleAbout = (visible: boolean) => () => {
+    if (visible !== aboutOpen) setAboutOpen(visible);
   };
 
   const handle = (what: string) => () => {
@@ -305,19 +310,15 @@ export function HelpMenu(props: IProps) {
             <ListItemText primary={t.developer} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem>
-          <ListItemText
-            primary={
-              <div className={classes.version}>
-                {t.version + ' ' + version}
-                <br />
-                {buildDate}
-              </div>
-            }
-          />
+        <StyledMenuItem onClick={handleAbout(true)}>
+          <ListItemIcon>
+            <InfoIcon />
+          </ListItemIcon>
+          <ListItemText primary={t.about} />
         </StyledMenuItem>
       </StyledMenu>
       <HelpLink topic={topic} />
+      <AboutDialog open={aboutOpen} onClose={handleAbout(false)} />
     </div>
   );
 }
