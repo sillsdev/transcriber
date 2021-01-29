@@ -282,7 +282,7 @@ export function IntegrationPanel(props: IProps) {
     paratext_projects[index].ProjectIds = paratext_projects[
       index
     ].ProjectIds.filter(
-      (p) => p !== remoteId('project', project, memory.keyMap) || project
+      (p) => p !== (remoteId('project', project, memory.keyMap) || project)
     );
   };
   const handleParatextProjectChange = (e: any) => {
