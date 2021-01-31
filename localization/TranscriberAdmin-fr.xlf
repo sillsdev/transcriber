@@ -1426,14 +1426,26 @@
    	</unit>
    	<unit id="main.flatSample">
    		<segment>
-   			<source>Download flat sample spreadsheet</source>
-   			<target>Télécharger un exemple de tableur plat</target>
+   			<source>Scripture Flat sample spreadsheet</source>
+   			<target>Feuille de calcul de l'échantillon plat d'écritures</target>
    		</segment>
    	</unit>
    	<unit id="main.hierarchicalSample">
    		<segment>
-   			<source>Download hierarchical sample spreadsheet</source>
-   			<target>Télécharger un exemple de tableur hiérarchique</target>
+   			<source>Scripture hierarchical sample spreadsheet</source>
+   			<target>Exemple de tableur hiérarchique des écritures</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.genFlatSample">
+   		<segment>
+   			<source>General Flat sample spreadsheet</source>
+   			<target>Général Feuille de calcul de l'échantillon plat</target>
+   		</segment>
+   	</unit>
+   	<unit id="main.GenHierarchicalSample">
+   		<segment>
+   			<source>General hierarchical sample spreadsheet</source>
+   			<target>Exemple de tableur hiérarchique général</target>
    		</segment>
    	</unit>
    	<unit id="main.reportWhenOnline">

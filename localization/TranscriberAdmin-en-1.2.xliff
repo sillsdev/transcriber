@@ -1654,14 +1654,28 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="main.flatSample">
-      		<source>Download flat sample spreadsheet</source>
+      		<source>Scripture flat sample spreadsheet</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">HelpMenu.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="main.hierarchicalSample">
-      		<source>Download hierarchical sample spreadsheet</source>
+      		<source>Scripture hierarchical sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.genFlatSample">
+      		<source>General flat sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.genHierarchicalSample">
+      		<source>General hierarchical sample spreadsheet</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">HelpMenu.tsx</context>

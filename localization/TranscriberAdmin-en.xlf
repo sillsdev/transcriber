@@ -1422,13 +1422,25 @@
       </unit>
       <unit id="main.flatSample">
          <segment>
-            <source>Download flat sample spreadsheet</source>
+            <source>Scripture flat sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.hierarchicalSample">
          <segment>
-            <source>Download hierarchical sample spreadsheet</source>
+            <source>Scripture hierarchical sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.genFlatSample">
+         <segment>
+            <source>General flat sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.genHierarchicalSample">
+         <segment>
+            <source>General hierarchical sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
