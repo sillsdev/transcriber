@@ -183,10 +183,11 @@ export class ErrorBoundary extends React.Component<IProps, typeof initState> {
 
   private async cleanUpAndGo(goNext: string) {
     const { resetOrbitError, resetRequests } = this.props;
-    await resetRequests();
-    resetOrbitError(); //this resets state and sends us back to loading
-    this.setState(initState);
-    history.replace(goNext);
+    resetRequests().finally(() => {
+      resetOrbitError(); //this resets state and sends us back to loading
+      this.setState(initState);
+      history.replace(goNext);
+    });
   }
 
   private continue() {
