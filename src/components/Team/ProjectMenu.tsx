@@ -164,7 +164,7 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.reports} />
         </StyledMenuItem>
-        {projectType === 'Scripture' && (
+        {projectType.toLowerCase() === 'scripture' && (
           <StyledMenuItem onClick={handle('integration')}>
             <ListItemIcon>
               <ParatextLogo />
