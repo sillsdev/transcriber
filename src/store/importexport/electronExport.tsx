@@ -368,6 +368,7 @@ export async function electronExport(
             AddMediaFiles(recs);
         }
       }
+      return recs?.length || 0;
     };
 
     const onlyOneProject = (): boolean => {
@@ -426,7 +427,7 @@ export async function electronExport(
         }
         break;
       default:
-        updateableFiles.forEach((info) => AddAll(info, limit));
+        updateableFiles.forEach((info) => (numRecs += AddAll(info, limit)));
         staticFiles.forEach((info) => AddAll(info, limit));
         AddFonts();
     }
@@ -453,12 +454,15 @@ export async function electronExport(
     var ids = offlineprojects
       .filter((o) => o.attributes.offlineAvailable)
       .map((o) => related(o, 'project')) as string[];
-    projects = projects
-      .filter((p) => ids.includes(p.id))
-      .filter((p) => remoteId('project', p.id, memory.keyMap) !== undefined);
+    projects = projects.filter((p) => ids.includes(p.id));
     backupZip = new AdmZip();
     if (exportType === ExportType.FULLBACKUP) exportType = ExportType.PTF;
-    else exportType = ExportType.ITF;
+    else {
+      projects = projects.filter(
+        (p) => remoteId('project', p.id, memory.keyMap) !== undefined
+      );
+      exportType = ExportType.ITF;
+    }
   } else {
     projects = [getProjRec(projectid)];
   }
