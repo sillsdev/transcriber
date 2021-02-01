@@ -327,7 +327,7 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     const trans = getTranscription();
-    if (trans.transcription !== transcriptionIn.current) {
+    if (trans.transcription !== transcriptionIn.current && !saving.current) {
       //show warning if changed
       if (changed) showMessage(t.updateByOther);
       //but do it either way
