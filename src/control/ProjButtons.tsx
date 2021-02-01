@@ -96,7 +96,7 @@ export const ProjButtons = (props: IProps) => {
         )}
         <MenuItem onClick={handleExport}>{t.export}</MenuItem>
       </Menu>
-      {projType === 'Scripture' && (
+      {projType.toLowerCase() === 'scripture' && (
         <Button
           key="integrations"
           aria-label={t.integrations}

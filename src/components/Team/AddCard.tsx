@@ -229,7 +229,7 @@ export const AddCard = (props: IProps) => {
       return (
         <>
           <ProjectType type={type} onChange={setType} />
-          {type === 'scripture' && (
+          {type.toLowerCase() === 'scripture' && (
             <BookCombobox
               value={book}
               suggestions={bookSuggestions}

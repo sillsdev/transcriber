@@ -422,7 +422,7 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     if (!offline) {
-      if (!paratext_usernameStatus && projType === 'Scripture') {
+      if (!paratext_usernameStatus && projType.toLowerCase() === 'scripture') {
         getUserName(auth, errorReporter, '');
       }
       setHasParatextName(paratext_username !== '');
