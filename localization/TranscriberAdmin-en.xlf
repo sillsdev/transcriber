@@ -2392,9 +2392,45 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
+      <unit id="shapingTable.avg">
+         <segment>
+            <source>Avg</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.count">
+         <segment>
+            <source>Count</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.max">
+         <segment>
+            <source>Max</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.min">
+         <segment>
+            <source>Min</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.noColumns">
          <segment>
             <source>No columns visible</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.noData">
+         <segment>
+            <source>No data</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.sum">
+         <segment>
+            <source>Sum</source>
             <target/>
          </segment>
       </unit>
@@ -3058,9 +3094,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="treeChart.contributions">
+         <segment>
+            <source>Contributions toward</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="treeChart.noData">
          <segment>
             <source>No Transcription Data Yet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="treeChart.status">
+         <segment>
+            <source>Status of</source>
             <target/>
          </segment>
       </unit>

@@ -1661,7 +1661,7 @@
       <unit id="mediaTab.autoMatch">
          <segment>
             <source>Auto Match</source>
-            <target>Auto Match</target>
+            <target>Correspondance Automatique</target>
          </segment>
       </unit>
       <unit id="mediaTab.availablePassages">
@@ -2384,10 +2384,46 @@
             <target>Titre</target>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
+      <unit id="shapingTable.avg">
+         <segment>
+            <source>Avg</source>
+            <target>l' avarie</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.count">
+         <segment>
+            <source>Count</source>
+            <target>Dénombrer</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.max">
+         <segment>
+            <source>Max</source>
+            <target>Max</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.min">
+         <segment>
+            <source>Min</source>
+            <target>Min</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.noColumns">
          <segment>
             <source>No columns visible</source>
             <target>Aucune colonne visible</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.noData">
+         <segment>
+            <source>No data</source>
+            <target>Pas de données</target>
+         </segment>
+      </unit>
+      <unit id="shapingTable.sum">
+         <segment>
+            <source>Sum</source>
+            <target>Somme</target>
          </segment>
       </unit>
       <unit id="shared.admin">
@@ -3062,10 +3098,22 @@
             <target>Mise à jour</target>
          </segment>
       </unit>
+      <unit id="treeChart.contributions">
+         <segment>
+            <source>Contributions toward</source>
+            <target>Contributions vers</target>
+         </segment>
+      </unit>
       <unit id="treeChart.noData">
          <segment>
             <source>No Transcription Data Yet</source>
             <target>Pas encore de données de transcription</target>
+         </segment>
+      </unit>
+      <unit id="treeChart.status">
+         <segment>
+            <source>Status of</source>
+            <target>Statut de</target>
          </segment>
       </unit>
       <unit id="uploadProgress.cancel">

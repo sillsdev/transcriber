@@ -514,7 +514,13 @@ const initialState = {
 	}),
 	"shapingTable": new LocalizedStrings({
 		"en": {
-			"NoColumns": "No columns visible",
+			"avg": "Avg",
+			"count": "Count",
+			"max": "Max",
+			"min": "Min",
+			"noColumns": "No columns visible",
+			"noData": "No data",
+			"sum": "Sum",
 		}
 	}),
 	"shared": new LocalizedStrings({
@@ -661,7 +667,9 @@ const initialState = {
 	}),
 	"treeChart": new LocalizedStrings({
 		"en": {
+			"contributions": "Contributions toward",
 			"noData": "No Transcription Data Yet",
+			"status": "Status of",
 		}
 	}),
 	"uploadProgress": new LocalizedStrings({
