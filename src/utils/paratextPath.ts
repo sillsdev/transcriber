@@ -4,6 +4,7 @@ const path = require('path');
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const execa = isElectron ? require('execa') : null;
 
+const progVal91 = 'Paratext9_Full_Release_AppPath';
 const progVal9 = 'Program_Files_Directory_Ptw9';
 const progVal8 = 'Program_Files_Directory_Ptw8';
 const dataVal = 'Settings_Directory';
@@ -62,6 +63,7 @@ export const getParatextDataPath = async () => {
 export const getReadWriteProg = async () => {
   if (os.platform() === 'win32') {
     const progPath =
+      (await getRegVal(regKey, progVal91)) ||
       (await getRegVal(regKey, progVal9)) ||
       (await getRegVal(regKey, progVal8));
     return async (args: string[]) => {
