@@ -205,7 +205,17 @@ export function ShapingTable(props: IProps) {
     }
   };
   const noRow = () => <></>;
-  const noCols = () => <span>{t.NoColumns}</span>;
+  const noCols = () => <span>{t.noColumns}</span>;
+  const tableMessages = {
+    noData: t.noData,
+  };
+  const tableSummaryRowMessages = {
+    avg: t.avg,
+    count: t.count,
+    max: t.max,
+    min: t.min,
+    sum: t.sum,
+  };
   return (
     <Grid rows={rows} columns={columns}>
       {onFiltersChange /* when set filter looses focus on typing */ ? (
@@ -253,26 +263,36 @@ export function ShapingTable(props: IProps) {
       <DragDropProvider />
 
       {dataCell && noDataCell && !columnFormatting ? (
-        <Table cellComponent={dataCell} noDataCellComponent={noDataCell} />
+        <Table
+          messages={tableMessages}
+          cellComponent={dataCell}
+          noDataCellComponent={noDataCell}
+        />
       ) : dataCell && !noDataCell && !columnFormatting ? (
-        <Table cellComponent={dataCell} />
+        <Table messages={tableMessages} cellComponent={dataCell} />
       ) : !dataCell && noDataCell && !columnFormatting ? (
-        <Table noDataCellComponent={noDataCell} />
+        <Table messages={tableMessages} noDataCellComponent={noDataCell} />
       ) : dataCell && noDataCell && columnFormatting ? (
         <Table
+          messages={tableMessages}
           cellComponent={dataCell}
           noDataCellComponent={noDataCell}
           columnExtensions={columnFormatting}
         />
       ) : dataCell && !noDataCell && columnFormatting ? (
-        <Table cellComponent={dataCell} columnExtensions={columnFormatting} />
+        <Table
+          messages={tableMessages}
+          cellComponent={dataCell}
+          columnExtensions={columnFormatting}
+        />
       ) : !dataCell && noDataCell && columnFormatting ? (
         <Table
+          messages={tableMessages}
           noDataCellComponent={noDataCell}
           columnExtensions={columnFormatting}
         />
       ) : !dataCell && !noDataCell && columnFormatting ? (
-        <Table columnExtensions={columnFormatting} />
+        <Table messages={tableMessages} columnExtensions={columnFormatting} />
       ) : (
         <Table />
       )}
@@ -309,7 +329,7 @@ export function ShapingTable(props: IProps) {
       )}
 
       <TableGroupRow />
-      {summaryItems && <TableSummaryRow />}
+      {summaryItems && <TableSummaryRow messages={tableSummaryRowMessages} />}
       {bandHeader && <TableBandHeader columnBands={bandHeader} />}
       {(shaping !== null && !shaping) || expandedGroups ? (
         <Toolbar rootComponent={noRow} />

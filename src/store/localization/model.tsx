@@ -481,7 +481,13 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
-    "NoColumns": string;
+    "avg": string;
+    "count": string;
+    "max": string;
+    "min": string;
+    "noColumns": string;
+    "noData": string;
+    "sum": string;
 };
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
@@ -619,7 +625,9 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
 };
 
 export interface ITreeChartStrings extends Localize.LocalizedStringsMethods {
+    "contributions": string;
     "noData": string;
+    "status": string;
 };
 
 export interface IUploadProgressStrings extends Localize.LocalizedStringsMethods {

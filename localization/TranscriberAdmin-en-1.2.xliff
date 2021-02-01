@@ -2787,8 +2787,50 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.NoColumns">
+         <trans-unit id="shapingTable.avg">
+            <source>Avg</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.count">
+            <source>Count</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.max">
+            <source>Max</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.min">
+            <source>Min</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.noColumns">
             <source>No columns visible</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.noData">
+            <source>No data</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.sum">
+            <source>Sum</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
@@ -3564,8 +3606,22 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="treeChart.contributions">
+            <source>Contributions toward</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">treeChart.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="treeChart.noData">
             <source>No Transcription Data Yet</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">treeChart.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="treeChart.status">
+            <source>Status of</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">treeChart.tsx</context>

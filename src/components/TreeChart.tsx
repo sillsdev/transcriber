@@ -101,10 +101,11 @@ const barSeriesForTask = (planwork: any) => {
   return acc;
 };
 
-const gridDetailContainerBase = (data1: any, data2: any) => ({
-  row,
-  classes,
-}: any) => {
+const gridDetailContainerBase = (
+  t: ITreeChartStrings,
+  data1: any,
+  data2: any
+) => ({ row, classes }: any) => {
   const planwork1 = data1.reduce((acc: any, item: any) => {
     const currentwork = item.work.reduce((current: any, itemTarget: any) => {
       let currentObj = {};
@@ -166,7 +167,9 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
   */
   return (
     <div className={classes.detailContainer}>
-      <h5 className={classes.title}>{`Contributions toward ${row.plan}`}</h5>
+      <h5 className={classes.title}>
+        {t.contributions} {row.plan}
+      </h5>
       <Paper className={classes.paper}>
         <Chart data={planwork1} height={300}>
           <ArgumentScale factory={scaleBand} />
@@ -181,7 +184,9 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
           />
         </Chart>
       </Paper>
-      <h5 className={classes.title}>{`Status of ${row.plan}`}</h5>
+      <h5 className={classes.title}>
+        {t.status} {row.plan}
+      </h5>
       <Paper className={classes.paper}>
         <Chart data={planwork2} height={300}>
           <ArgumentScale factory={scaleBand} />
@@ -199,9 +204,13 @@ const gridDetailContainerBase = (data1: any, data2: any) => ({
     </div>
   );
 };
-const gridDetailContainer: any = (data1: any, data2: any) =>
+const gridDetailContainer: any = (
+  t: ITreeChartStrings,
+  data1: any,
+  data2: any
+) =>
   withStyles(detailContainerStyles, { name: 'ChartContainer' })(
-    gridDetailContainerBase(data1, data2)
+    gridDetailContainerBase(t, data1, data2)
   );
 
 interface IStateProps {
@@ -246,15 +255,17 @@ const useStyles = makeStyles({
     },
   },
 });
-
-interface IProps {
+interface IStateProps {
+  t: ITreeChartStrings;
+}
+interface IProps extends IStateProps {
   rows: Array<IPlanRow>;
   data1: Array<IWork>;
   data2: Array<IWork>;
 }
 
 export const TreeChart = (props: IProps) => {
-  const { rows, data1, data2 } = props;
+  const { t, rows, data1, data2 } = props;
   const classes = useStyles();
   const [columns] = React.useState([{ name: 'plan', title: 'Plan' }]);
 
@@ -265,9 +276,11 @@ export const TreeChart = (props: IProps) => {
         <RowDetailState expandedRowIds={rows.map((v, i) => i)} />
         <Table noDataCellComponent={NoDataCell} />
         <TableHeaderRow />
-        <TableRowDetail contentComponent={gridDetailContainer(data1, data2)} />
+        <TableRowDetail
+          contentComponent={gridDetailContainer(t, data1, data2)}
+        />
       </Grid>
     </Paper>
   );
 };
-export default TreeChart;
+export default (connect(mapStateToProps)(TreeChart) as any) as any;
