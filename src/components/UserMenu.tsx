@@ -20,7 +20,7 @@ import UserAvatar from './UserAvatar';
 import { isElectron } from '../api-variable';
 import { useLocation } from 'react-router-dom';
 import { QueryBuilder } from '@orbit/data';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 
 const StyledMenu = withStyles({
   paper: {

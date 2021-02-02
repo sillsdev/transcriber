@@ -75,7 +75,7 @@ import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
-import { withData } from 'react-orbitjs';
+import { withData } from '../mods/react-orbitjs';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import { bindActionCreators } from 'redux';
