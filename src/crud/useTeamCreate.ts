@@ -1,7 +1,7 @@
 import { useGlobal } from 'reactn';
 import { Organization, ISharedStrings } from '../model';
 import { Online, cleanFileName } from '../utils';
-import { createOrg, offlineError } from '.';
+import { createOrg, offlineError, useProjectType } from '.';
 import * as actions from '../store';
 import { useSnackBar } from '../hoc/SnackBar';
 import Auth from '../auth/Auth';
@@ -27,6 +27,7 @@ export const useTeamCreate = (props: IProps) => {
   const [, setConnected] = useGlobal('connected');
   const [offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
+  const { setProjectType } = useProjectType();
 
   return (organization: Organization, cb?: (org: string) => void) => {
     const {
@@ -59,6 +60,7 @@ export const useTeamCreate = (props: IProps) => {
         offlineOnly,
         setOrganization,
         setProject,
+        setProjectType,
         doOrbitError,
       })
         .then((org: string) => {
