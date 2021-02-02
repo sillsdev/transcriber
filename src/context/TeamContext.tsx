@@ -243,6 +243,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       const orgId = related(team, 'organization');
       setOrganization(orgId);
       setProject(projectId);
+      setProjectType(team.attributes.type);
       setPlan(plan.id);
       return [projectId, orgId];
     };

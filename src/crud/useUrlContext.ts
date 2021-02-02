@@ -1,6 +1,6 @@
 import { remoteIdGuid } from './remoteId';
 import { useGlobal } from 'reactn';
-import { usePlan, useVProjectRead, related } from '.';
+import { usePlan, useVProjectRead, related, useProjectType } from '.';
 
 export const useUrlContext = () => {
   const [memory] = useGlobal('memory');
@@ -9,6 +9,7 @@ export const useUrlContext = () => {
   const [project, setProject] = useGlobal('project');
   const { getPlan } = usePlan();
   const vProject = useVProjectRead();
+  const { setProjectType } = useProjectType();
 
   return (planRemId: string) => {
     let planId = remoteIdGuid('plan', planRemId, memory.keyMap) || planRemId;
@@ -21,6 +22,7 @@ export const useUrlContext = () => {
       const orgId = related(team, 'organization');
       if (orgId !== organization) setOrganization(orgId);
       if (projectId !== project) setProject(projectId);
+      setProjectType(projectId);
       return projectId;
     }
     return project;

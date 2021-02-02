@@ -93,12 +93,13 @@ export interface ICreateOrgProps {
   offlineOnly: boolean;
   setOrganization: (id: string) => void;
   setProject: (id: string) => void;
+  setProjectType: (id: string) => string;
   doOrbitError: (ex: IApiError) => void;
 }
 
 export const createOrg = async (props: ICreateOrgProps) => {
   const { orgRec, user, coordinator } = props;
-  const { setOrganization, setProject } = props;
+  const { setOrganization, setProject, setProjectType} = props;
 
   const memory = coordinator.getSource('memory') as Memory;
   const userRecId = { type: 'user', id: user };
@@ -110,7 +111,7 @@ export const createOrg = async (props: ICreateOrgProps) => {
     await OrgRelated(coordinator, orgRec, userRecId);
 
   setOrganization(orgRec.id);
-  setDefaultProj(orgRec.id, memory, setProject);
+  setDefaultProj(orgRec.id, memory, setProject, setProjectType);
   return orgRec.id;
 };
 
