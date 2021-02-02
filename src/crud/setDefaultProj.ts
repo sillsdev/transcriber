@@ -7,7 +7,8 @@ import { remoteIdGuid } from '.';
 export const setDefaultProj = async (
   orgId: string,
   memory: Memory,
-  setProject: (value: string) => void
+  setProject: (value: string) => void,
+  setProjectType: (projectId: string) => string,
 ) => {
   let projs: Project[] | null = memory.cache.query((q: QueryBuilder) =>
     q.findRecords('project')
@@ -24,7 +25,8 @@ export const setDefaultProj = async (
         localStorage.getItem('lastProj') || '',
         memory.keyMap
       ) || '';
-    if (projs.findIndex((p) => p.id === projKey) !== -1) setProject(projKey);
-    else setProject(projs[0].id);
+    var p = projs.find(p => p.id === projKey) || projs[0];
+    setProject(p.id);
+    setProjectType(p.id);
   }
 };
