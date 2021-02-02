@@ -35,5 +35,7 @@ declare module 'reactn/default' {
     enableOffsite: boolean;
     connected: boolean;
     offlineOnly: boolean;
+    latestVersion: string;
+    releaseDate: string;
   }
 }

@@ -22,9 +22,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.checkForUpdates">
+         <segment>
+            <source>Check for Updates</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.createUser">
          <segment>
             <source>Add a new user</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.downloadHere">
+         <segment>
+            <source>Download here</source>
             <target/>
          </segment>
       </unit>
@@ -43,6 +55,12 @@
       <unit id="access.importSnapshot">
          <segment>
             <source>Import Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.updateAvailable">
+         <segment>
+            <source>Update available: Version {0} was released {1}</source>
             <target/>
          </segment>
       </unit>
@@ -2239,12 +2257,6 @@
       <unit id="profile.sendDigest">
          <segment>
             <source>Receive daily digests</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="profile.sendNews">
-         <segment>
-            <source>Check for updates using the Internet</source>
             <target/>
          </segment>
       </unit>

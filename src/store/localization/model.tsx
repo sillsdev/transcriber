@@ -5,10 +5,13 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "availableOfflineUsers": string;
     "availableOnlineUsers": string;
     "cancel": string;
+    "checkForUpdates": string;
     "createUser": string;
+    "downloadHere": string;
     "logIn": string;
     "screenTitle": string;
     "importSnapshot": string;
+    "updateAvailable": string;
     "withInternet": string;
     "withoutInternet": string;
     "mustBeOnline": string;
@@ -447,7 +450,6 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "role": string;
     "save": string;
     "sendDigest": string;
-    "sendNews": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;

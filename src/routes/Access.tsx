@@ -15,7 +15,15 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Button, Paper } from '@material-ui/core';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Paper,
+  Checkbox,
+  FormControlLabel,
+} from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
@@ -27,6 +35,8 @@ import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
+import { axiosPost } from '../utils/axios';
+import moment from 'moment';
 
 const version = require('../../package.json').version;
 const buildDate = require('../buildDate.json').date;
@@ -54,6 +64,9 @@ const useStyles = makeStyles((theme: Theme) =>
     version: {
       alignSelf: 'center',
     },
+    updateversion: {
+      display: 'contents',
+    },
     paper: {
       padding: theme.spacing(3),
       display: 'flex',
@@ -77,6 +90,10 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginRight: theme.spacing(1),
       minWidth: theme.spacing(20),
+    },
+    checkbox: {
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
     },
   })
 );
@@ -133,9 +150,14 @@ export function Access(props: IProps) {
   const [, setProjRole] = useGlobal('projRole');
   const [, setProjType] = useGlobal('projType');
   const [, setPlan] = useGlobal('plan');
+  const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
+  const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
+  const [updates, setUpdates] = useState(
+    (localStorage.getItem('updates') || 'true') === 'true'
+  );
   const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
     React.MouseEvent<HTMLElement>
   >();
@@ -152,7 +174,11 @@ export function Access(props: IProps) {
   const handleImport = () => {
     setImportOpen(true);
   };
-
+  const handleUpdatesChange = () => {
+    //save it to local storage
+    localStorage.setItem('updates', (!updates).toString());
+    setUpdates(!updates);
+  };
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
     Online(
       (online) => {
@@ -183,6 +209,9 @@ export function Access(props: IProps) {
       localStorage.setItem('developer', !isDeveloper ? 'true' : 'false');
       setIsDeveloper(!isDeveloper);
     }
+  };
+  const handleUpdateVersionClick = (e: React.MouseEvent) => {
+    if (e.shiftKey) setLatestVersion('');
   };
 
   const handleCreateUser = async () => {
@@ -263,6 +292,22 @@ export function Access(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    if (latestVersion === '' && updates) {
+      axiosPost('userversions/' + version, undefined, auth).then((response) => {
+        var lv = response?.data.data.attributes['desktop-version'];
+        var lr = response?.data.data.attributes['date-updated'].toString();
+        if (!lr.endsWith('Z')) lr += 'Z';
+        lr = moment(lr)
+          .locale(Intl.NumberFormat().resolvedOptions().locale)
+          .format('L');
+        setLatestVersion(lv);
+        setLatestRelease(lr);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updates]);
 
   useEffect(() => {
     if (isElectron && selectedUser === '') {
@@ -359,6 +404,35 @@ export function Access(props: IProps) {
                 {t.importSnapshot}
               </Button>
             </div>
+            <FormControlLabel
+              className={classes.checkbox}
+              control={
+                <Checkbox
+                  id="updates"
+                  checked={updates === true}
+                  onChange={handleUpdatesChange}
+                />
+              }
+              label={t.checkForUpdates}
+            />
+            {latestVersion !== '' && latestVersion !== version && (
+              <div
+                className={classes.updateversion}
+                onClick={handleUpdateVersionClick}
+              >
+                {t.updateAvailable
+                  .replace('{0}', latestVersion)
+                  .replace('{1}', latestRelease)}
+                <br />
+                <a
+                  href="https://software.sil.org/siltranscriber/download/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t.downloadHere}
+                </a>
+              </div>
+            )}
           </Paper>
           {importOpen && (
             <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />

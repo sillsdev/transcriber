@@ -19,13 +19,25 @@
    			<target>Annuler</target>
    		</segment>
    	</unit>
-   	<unit id="access.createUser">
+      <unit id="access.checkForUpdates">
+         <segment>
+            <source>Check for Updates</source>
+            <target>Vérifier les mises à jour</target>
+         </segment>
+      </unit>
+      <unit id="access.createUser">
    		<segment>
    			<source>Add a new user</source>
    			<target>Ajouter un nouvel utilisateur</target>
    		</segment>
    	</unit>
-   	<unit id="access.logIn">
+      <unit id="access.downloadHere">
+         <segment>
+            <source>Download here</source>
+            <target>Télécharger ici</target>
+         </segment>
+      </unit>
+      <unit id="access.logIn">
    		<segment>
    			<source>Log In</source>
    			<target>Connexion</target>
@@ -43,7 +55,13 @@
    			<target>Importer un projet</target>
    		</segment>
    	</unit>
-   	<unit id="access.withInternet">
+       <unit id="access.updateAvailable">
+         <segment>
+            <source>Update available: Version {0} was released {1}</source>
+            <target>Mise à jour disponible: la version {0} a été publiée {1}</target>
+         </segment>
+      </unit>
+      <unit id="access.withInternet">
    		<segment>
    			<source>With an Internet connection</source>
    			<target>Avec une connexion Internet</target>
@@ -2226,12 +2244,6 @@
          <segment>
             <source>Receive daily digest</source>
             <target>Recevoir les résumés quotidiens</target>
-         </segment>
-      </unit>
-      <unit id="profile.sendNews">
-         <segment>
-            <source>Check for updates using the Internet</source>
-         	<target>Vérifiez les mises à jour en utilisant l'Internet</target>
          </segment>
       </unit>
       <unit id="profile.timezone">

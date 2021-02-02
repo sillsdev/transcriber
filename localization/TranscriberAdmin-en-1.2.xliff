@@ -23,8 +23,22 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="access.checkForUpdates">
+      		<source>Check for Updates</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="access.createUser">
       		<source>Add a new user</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.downloadHere">
+      		<source>Download here</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -46,6 +60,13 @@
       	</trans-unit>
       	<trans-unit id="access.importSnapshot">
       		<source>Import Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.updateAvailable">
+      		<source>Update available: Version {0} was released {1}</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -2607,13 +2628,6 @@
          </trans-unit>
          <trans-unit id="profile.sendDigest">
             <source>Receive daily digests</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="profile.sendNews">
-         	<source>Check for updates using the Internet</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>

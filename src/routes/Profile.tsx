@@ -74,7 +74,6 @@ import {
 } from '../model/baseModel';
 import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
-import { API_CONFIG } from '../api-variable';
 import { useSnackBar } from '../hoc/SnackBar';
 
 interface ILangDes {
@@ -301,11 +300,6 @@ export function Profile(props: IProps) {
   const handleLockedChange = () => {
     setChanged(true);
     setLocked(!locked);
-  };
-
-  const handleNewsChange = () => {
-    setChanged(true);
-    setNews(!news);
   };
 
   const handleDigestChange = () => {
@@ -779,19 +773,7 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {isOffline && (
-                    <FormControlLabel
-                      className={classes.textField}
-                      control={
-                        <Checkbox
-                          id="news"
-                          checked={news === true}
-                          onChange={handleNewsChange}
-                        />
-                      }
-                      label={t.sendNews.replace('{0}', API_CONFIG.productName)}
-                    />
-                  )}
+
                   {email !== '' && (
                     <FormControlLabel
                       className={classes.textField}
