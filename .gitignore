@@ -19,6 +19,7 @@ localization/bin
 localization/packages
 
 # misc
+.eslintcache
 .DS_Store
 .env.local
 .env.*.local
