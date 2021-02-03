@@ -1600,6 +1600,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.updateAvailable">
+         <segment>
+            <source>Update available: Version {0} was released {1}</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.about">
          <segment>
             <source>About</source>
@@ -2239,12 +2245,6 @@
       <unit id="profile.sendDigest">
          <segment>
             <source>Receive daily digests</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="profile.sendNews">
-         <segment>
-            <source>Check for updates using the Internet</source>
             <target/>
          </segment>
       </unit>

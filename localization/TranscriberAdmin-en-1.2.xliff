@@ -51,7 +51,7 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="access.withInternet">
+     	<trans-unit id="access.withInternet">
       		<source>With an Internet connection</source>
       		<target/>
       		<context-group>
@@ -1863,7 +1863,14 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.about">
+      	<trans-unit id="main.updateAvailable">
+      		<source>Update available: Version {0} was released {1}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">apphead.tsx</context>
+      		</context-group>
+      	</trans-unit>
+          <trans-unit id="main.about">
             <source>About</source>
             <target/>
             <context-group>
@@ -2607,13 +2614,6 @@
          </trans-unit>
          <trans-unit id="profile.sendDigest">
             <source>Receive daily digests</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="profile.sendNews">
-         	<source>Check for updates using the Internet</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>

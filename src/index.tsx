@@ -136,6 +136,8 @@ Promise.all(promises)
       enableOffsite: false,
       connected: true,
       offlineOnly: false,
+      latestVersion: '',
+      releaseDate: '',
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })

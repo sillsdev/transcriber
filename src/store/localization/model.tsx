@@ -319,6 +319,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "tasks": string;
     "transcribe": string;
     "UnsavedData": string;
+    "updateAvailable": string;
     "about": string;
     "version": string;
     "copyClipboard": string;
@@ -447,7 +448,6 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "role": string;
     "save": string;
     "sendDigest": string;
-    "sendNews": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;

@@ -15,21 +15,19 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Typography, Button, Paper } from '@material-ui/core';
+import { Typography, Button, Paper } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { isElectron, API_CONFIG } from '../api-variable';
+import { isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
-
-const version = require('../../package.json').version;
-const buildDate = require('../buildDate.json').date;
+import AppHead from '../components/App/AppHead';
 
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const { remote } = isElectron ? require('electron') : { remote: null };
@@ -121,7 +119,7 @@ export function Access(props: IProps) {
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
-  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [isDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -136,6 +134,7 @@ export function Access(props: IProps) {
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
+
   const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
     React.MouseEvent<HTMLElement>
   >();
@@ -176,13 +175,6 @@ export function Access(props: IProps) {
   };
   const handleGoOnlineRefused = () => {
     setGoOnlineConfirmation(undefined);
-  };
-
-  const handleVersionClick = (e: React.MouseEvent) => {
-    if (e.shiftKey) {
-      localStorage.setItem('developer', !isDeveloper ? 'true' : 'false');
-      setIsDeveloper(!isDeveloper);
-    }
   };
 
   const handleCreateUser = async () => {
@@ -292,21 +284,7 @@ export function Access(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <>
-          <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              {API_CONFIG.productName}
-            </Typography>
-          </Toolbar>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <div className={classes.version} onClick={handleVersionClick}>
-            {version}
-            <br />
-            {buildDate}
-          </div>
-        </>
-      </AppBar>
+      <AppHead {...props} />
       {isElectron && (
         <div className={classes.container}>
           <Paper className={classes.paper}>
