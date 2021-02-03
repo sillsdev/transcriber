@@ -52,9 +52,6 @@ const useStyles = makeStyles((theme: Theme) =>
     version: {
       alignSelf: 'center',
     },
-    updateversion: {
-      display: 'contents',
-    },
     paper: {
       padding: theme.spacing(3),
       display: 'flex',
@@ -78,10 +75,6 @@ const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginRight: theme.spacing(1),
       minWidth: theme.spacing(20),
-    },
-    checkbox: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
     },
   })
 );
