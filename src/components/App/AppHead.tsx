@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
-import SystemUpdateIcon from '@material-ui/icons/SystemUpdateOutlined';
+import SystemUpdateIcon from '@material-ui/icons/SystemUpdateAlt';
 import Auth from '../../auth/Auth';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -121,7 +121,7 @@ export const AppHead = (props: IProps) => {
   const [pathDescription, setPathDescription] = React.useState('');
   const [version, setVersion] = useState('');
   const [updates] = useState(
-    (localStorage.getItem('updates') || 'true') === 'true'
+    isElectron && (localStorage.getItem('updates') || 'true') === 'true'
   );
   const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
