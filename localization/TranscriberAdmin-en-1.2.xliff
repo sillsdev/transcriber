@@ -23,22 +23,8 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="access.checkForUpdates">
-      		<source>Check for Updates</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">access.tsx</context>
-      		</context-group>
-      	</trans-unit>
       	<trans-unit id="access.createUser">
       		<source>Add a new user</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">access.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="access.downloadHere">
-      		<source>Download here</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -65,14 +51,7 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="access.updateAvailable">
-      		<source>Update available: Version {0} was released {1}</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">access.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="access.withInternet">
+     	<trans-unit id="access.withInternet">
       		<source>With an Internet connection</source>
       		<target/>
       		<context-group>
@@ -1884,7 +1863,14 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.about">
+      	<trans-unit id="main.updateAvailable">
+      		<source>Update available: Version {0} was released {1}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">apphead.tsx</context>
+      		</context-group>
+      	</trans-unit>
+          <trans-unit id="main.about">
             <source>About</source>
             <target/>
             <context-group>

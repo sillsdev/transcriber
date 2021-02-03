@@ -15,31 +15,19 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Paper,
-  Checkbox,
-  FormControlLabel,
-} from '@material-ui/core';
+import { Typography, Button, Paper } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
 import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { isElectron, API_CONFIG } from '../api-variable';
+import { isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
-import { axiosPost } from '../utils/axios';
-import moment from 'moment';
-
-const version = require('../../package.json').version;
-const buildDate = require('../buildDate.json').date;
+import AppHead from '../components/App/AppHead';
 
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const { remote } = isElectron ? require('electron') : { remote: null };
@@ -138,7 +126,7 @@ export function Access(props: IProps) {
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
-  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
+  const [isDeveloper] = useGlobal('developer');
   const [, setConnected] = useGlobal('connected');
   const [, setEditId] = useGlobal('editUserId');
   const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
@@ -150,14 +138,10 @@ export function Access(props: IProps) {
   const [, setProjRole] = useGlobal('projRole');
   const [, setProjType] = useGlobal('projType');
   const [, setPlan] = useGlobal('plan');
-  const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
-  const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
   const offlineProjRead = useOfflnProjRead();
   const offlineSetup = useOfflineSetup();
   const { showMessage } = useSnackBar();
-  const [updates, setUpdates] = useState(
-    (localStorage.getItem('updates') || 'true') === 'true'
-  );
+
   const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
     React.MouseEvent<HTMLElement>
   >();
@@ -174,11 +158,7 @@ export function Access(props: IProps) {
   const handleImport = () => {
     setImportOpen(true);
   };
-  const handleUpdatesChange = () => {
-    //save it to local storage
-    localStorage.setItem('updates', (!updates).toString());
-    setUpdates(!updates);
-  };
+
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
     Online(
       (online) => {
@@ -202,16 +182,6 @@ export function Access(props: IProps) {
   };
   const handleGoOnlineRefused = () => {
     setGoOnlineConfirmation(undefined);
-  };
-
-  const handleVersionClick = (e: React.MouseEvent) => {
-    if (e.shiftKey) {
-      localStorage.setItem('developer', !isDeveloper ? 'true' : 'false');
-      setIsDeveloper(!isDeveloper);
-    }
-  };
-  const handleUpdateVersionClick = (e: React.MouseEvent) => {
-    if (e.shiftKey) setLatestVersion('');
   };
 
   const handleCreateUser = async () => {
@@ -294,22 +264,6 @@ export function Access(props: IProps) {
   }, []);
 
   useEffect(() => {
-    if (latestVersion === '' && updates) {
-      axiosPost('userversions/' + version, undefined, auth).then((response) => {
-        var lv = response?.data.data.attributes['desktop-version'];
-        var lr = response?.data.data.attributes['date-updated'].toString();
-        if (!lr.endsWith('Z')) lr += 'Z';
-        lr = moment(lr)
-          .locale(Intl.NumberFormat().resolvedOptions().locale)
-          .format('L');
-        setLatestVersion(lv);
-        setLatestRelease(lr);
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updates]);
-
-  useEffect(() => {
     if (isElectron && selectedUser === '') {
       ipc?.invoke('get-profile').then((result) => {
         if (result) {
@@ -337,21 +291,7 @@ export function Access(props: IProps) {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <>
-          <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              {API_CONFIG.productName}
-            </Typography>
-          </Toolbar>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <div className={classes.version} onClick={handleVersionClick}>
-            {version}
-            <br />
-            {buildDate}
-          </div>
-        </>
-      </AppBar>
+      <AppHead {...props} />
       {isElectron && (
         <div className={classes.container}>
           <Paper className={classes.paper}>
@@ -404,35 +344,6 @@ export function Access(props: IProps) {
                 {t.importSnapshot}
               </Button>
             </div>
-            <FormControlLabel
-              className={classes.checkbox}
-              control={
-                <Checkbox
-                  id="updates"
-                  checked={updates === true}
-                  onChange={handleUpdatesChange}
-                />
-              }
-              label={t.checkForUpdates}
-            />
-            {latestVersion !== '' && latestVersion !== version && (
-              <div
-                className={classes.updateversion}
-                onClick={handleUpdateVersionClick}
-              >
-                {t.updateAvailable
-                  .replace('{0}', latestVersion)
-                  .replace('{1}', latestRelease)}
-                <br />
-                <a
-                  href="https://software.sil.org/siltranscriber/download/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t.downloadHere}
-                </a>
-              </div>
-            )}
           </Paper>
           {importOpen && (
             <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />

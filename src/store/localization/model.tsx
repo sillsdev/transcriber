@@ -5,13 +5,10 @@ export interface IAccessStrings extends Localize.LocalizedStringsMethods {
     "availableOfflineUsers": string;
     "availableOnlineUsers": string;
     "cancel": string;
-    "checkForUpdates": string;
     "createUser": string;
-    "downloadHere": string;
     "logIn": string;
     "screenTitle": string;
     "importSnapshot": string;
-    "updateAvailable": string;
     "withInternet": string;
     "withoutInternet": string;
     "mustBeOnline": string;
@@ -322,6 +319,7 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "tasks": string;
     "transcribe": string;
     "UnsavedData": string;
+    "updateAvailable": string;
     "about": string;
     "version": string;
     "copyClipboard": string;

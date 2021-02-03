@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../../model';
@@ -10,9 +10,11 @@ import {
   Typography,
   IconButton,
   LinearProgress,
+  Tooltip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
+import SystemUpdateIcon from '@material-ui/icons/SystemUpdateOutlined';
 import Auth from '../../auth/Auth';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -31,6 +33,8 @@ import { usePlan } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
+import { axiosPost } from '../../utils/axios';
+import moment from 'moment';
 
 const useStyles = makeStyles({
   appBar: {
@@ -105,7 +109,7 @@ export const AppHead = (props: IProps) => {
   const [connected] = useGlobal('connected');
   const ctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
-  const [view, setView] = React.useState('');
+  const [view, setView] = useState('');
   const [busy] = useGlobal('remoteBusy');
   const [importexportBusy] = useGlobal('importexportBusy');
   const [doSave] = useGlobal('doSave');
@@ -115,6 +119,12 @@ export const AppHead = (props: IProps) => {
   const [dosave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted();
   const [pathDescription, setPathDescription] = React.useState('');
+  const [version, setVersion] = useState('');
+  const [updates] = useState(
+    (localStorage.getItem('updates') || 'true') === 'true'
+  );
+  const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
+  const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
 
   const handleUserMenuAction = (
     what: string,
@@ -174,11 +184,29 @@ export const AppHead = (props: IProps) => {
   useEffect(() => {
     const description =
       pathname &&
+      pathname !== '/' &&
       pathname.indexOf('team') < 0 &&
       `${pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin} - `;
     isMounted.current && setPathDescription(description || '');
+    isMounted.current && setVersion(require('../../../package.json').version);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, t.admin, t.transcribe, isMounted]);
+
+  useEffect(() => {
+    if (latestVersion === '' && version !== '' && updates) {
+      axiosPost('userversions/' + version, undefined, auth).then((response) => {
+        var lv = response?.data.data.attributes['desktop-version'];
+        var lr = response?.data.data.attributes['date-updated'].toString();
+        if (!lr.endsWith('Z')) lr += 'Z';
+        lr = moment(lr)
+          .locale(Intl.NumberFormat().resolvedOptions().locale)
+          .format('L');
+        setLatestVersion(lv);
+        setLatestRelease(lr);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updates, version]);
 
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
@@ -203,6 +231,24 @@ export const AppHead = (props: IProps) => {
           {'\u00A0'}
           {SwitchTo && <SwitchTo />}
           <HelpMenu online={!isOffline} />
+          {latestVersion !== '' && latestVersion !== version && (
+            <Tooltip
+              title={t.updateAvailable
+                .replace('{0}', latestVersion)
+                .replace('{1}', latestRelease)}
+            >
+              <IconButton
+                aria-controls="customized-menu"
+                aria-haspopup="true"
+                color="primary"
+                href="https://software.sil.org/siltranscriber/download/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SystemUpdateIcon />
+              </IconButton>
+            </Tooltip>
+          )}
           <UserMenu action={handleUserMenu} auth={auth} />
         </Toolbar>
         {!importexportBusy || <Busy />}
