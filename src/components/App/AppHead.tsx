@@ -159,6 +159,7 @@ export const AppHead = (props: IProps) => {
 
   React.useEffect(() => {
     const handleUnload = (e: any) => {
+      if (pathname === '/') return true;
       if (!exitAlert && isElectron && isMounted.current) setExitAlert(true);
       if (!globalStore.enableOffsite) {
         e.preventDefault();
@@ -238,9 +239,6 @@ export const AppHead = (props: IProps) => {
                 .replace('{1}', latestRelease)}
             >
               <IconButton
-                aria-controls="customized-menu"
-                aria-haspopup="true"
-                color="primary"
                 href="https://software.sil.org/siltranscriber/download/"
                 target="_blank"
                 rel="noopener noreferrer"
