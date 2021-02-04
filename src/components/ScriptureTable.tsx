@@ -42,7 +42,7 @@ import {
   usePlan,
   UpdatePassageStateOps,
 } from '../crud';
-import { Online, useRemoteSave, lookupBook } from '../utils';
+import { Online, useRemoteSave, lookupBook, waitForIt } from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
 import StickyRedirect from './StickyRedirect';
@@ -767,16 +767,26 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
-  const getChangedRecs = (changedRows: boolean[]) => {
+  const getRemoteId = async (table: string, localid: string) => {
+    await waitForIt(
+      'remoteId',
+      () => remoteId(table, localid, memory.keyMap) !== undefined,
+      () => false,
+      100
+    );
+    return remoteId(table, localid, memory.keyMap);
+  };
+  const getChangedRecs = async (changedRows: boolean[]) => {
     let recs: IRecord[][] = [];
-    rowInfo.forEach((row, index) => {
+    for (var index = 0; index < rowInfo.length; index++) {
+      var row = rowInfo[index];
       var rec = [];
       if (isSectionRow(row)) {
+        var id = row.sectionId?.id || '';
+        if (!offlineOnly && id !== '') id = await getRemoteId('section', id);
         rec.push({
           issection: true,
-          id:
-            remoteId('section', row.sectionId?.id || '', memory.keyMap) ||
-            (row.sectionId?.id as string),
+          id: id,
           changed: changedRows[index],
           sequencenum: data[index][cols.SectionSeq],
           book: showBook(cols) ? data[index][cols.Book] : '',
@@ -785,18 +795,19 @@ export function ScriptureTable(props: IProps) {
         });
       }
       if (isPassageRow(row)) {
-        if (changedRows[index])
+        if (changedRows[index]) {
+          id = row.passageId?.id || '';
+          if (!offlineOnly && id !== '') id = await getRemoteId('passage', id);
           rec.push({
             issection: false,
-            id:
-              remoteId('passage', row.passageId?.id || '', memory.keyMap) ||
-              (row.passageId?.id as string),
+            id: id,
             changed: true,
             sequencenum: data[index][cols.PassageSeq],
             book: showBook(cols) ? data[index][cols.Book] : '',
             reference: data[index][cols.Reference],
             title: data[index][cols.Title],
           });
+        }
         //don't bother to push all the passage if not changed
         else
           rec.push({
@@ -805,7 +816,7 @@ export function ScriptureTable(props: IProps) {
           } as IRecord);
       }
       recs.push(rec);
-    });
+    }
     return recs;
   };
 
@@ -883,8 +894,7 @@ export function ScriptureTable(props: IProps) {
     }
   };
 
-  const localSaveFn = async (recs: IRecord[][], anyNew: boolean) => {
-    if (!anyNew) return;
+  const localSaveFn = async (recs: IRecord[][]) => {
     let lastSec: string = '';
     for (let rIdx = 0; rIdx < recs.length; rIdx += 1) {
       const table = recs[rIdx];
@@ -982,17 +992,17 @@ export function ScriptureTable(props: IProps) {
 
   useEffect(() => {
     const handleSave = async () => {
-      const saveFn = async (changedRows: boolean[]) => {
+      const saveFn = async (changedRows: boolean[], anyNew: boolean) => {
         setComplete(10);
-        const anyNew = changedRows.includes(true);
-        const recs = getChangedRecs(changedRows);
+        const recs = await getChangedRecs(changedRows);
         if (!offlineOnly) await onlineSaveFn(recs, anyNew);
-        else localSaveFn(recs, anyNew);
+        else localSaveFn(recs);
       };
 
       let changedRows: boolean[] = rowInfo.map(
         (row) => row.sectionId?.id === '' || row.passageId?.id === ''
       );
+      const anyNew = changedRows.includes(true);
       changedRows.forEach((row, index) => {
         if (!row) {
           //if not new, see if altered
@@ -1020,10 +1030,10 @@ export function ScriptureTable(props: IProps) {
             }
           } else someChangedRows[index] = false;
         });
-        await saveFn(someChangedRows);
+        await saveFn(someChangedRows, anyNew);
         numChanges = changedRows.filter((r) => r).length;
       }
-      await saveFn(changedRows);
+      await saveFn(changedRows, anyNew);
       setBusy(false);
       setComplete(0);
     };
