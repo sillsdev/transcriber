@@ -387,6 +387,20 @@ const TeamProvider = withData(mapRecordsToProps)(
       orbitTeamDelete(team);
     };
 
+    interface IUniqueTypes {
+      [key: string]: PlanType;
+    }
+
+    const getPlanTypes = React.useMemo(() => {
+      const uniqueTypes = {} as IUniqueTypes;
+      planTypes.forEach((t) => {
+        if (offlineOnly !== Boolean(t?.keys?.remoteId)) {
+          if (t?.attributes?.name) uniqueTypes[t.attributes.name] = t;
+        }
+      });
+      return Object.values(uniqueTypes);
+    }, [offlineOnly, planTypes]);
+
     const flatAdd = async (
       planId: string,
       mediaRemoteIds: string[],
@@ -434,7 +448,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             bookSuggestions,
             bookMap,
             allBookData,
-            planTypes,
+            planTypes: getPlanTypes,
             teams,
             personalProjects,
             teamProjects,
