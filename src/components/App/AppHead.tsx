@@ -47,6 +47,9 @@ const useStyles = makeStyles({
   progress: {
     width: '100%',
   },
+  spacing: {
+    padding: '12px',
+  },
 });
 
 interface INameProps {
@@ -226,12 +229,11 @@ export const AppHead = (props: IProps) => {
             {API_CONFIG.productName}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          {(isOffline || orbitStatus !== undefined || !connected) && (
-            <CloudOffIcon />
-          )}
-          {'\u00A0'}
           {SwitchTo && <SwitchTo />}
-          <HelpMenu online={!isOffline} />
+          {'\u00A0'}
+          {(isOffline || orbitStatus !== undefined || !connected) && (
+            <CloudOffIcon className={classes.spacing} color="action" />
+          )}
           {latestVersion !== '' && latestVersion !== version && (
             <Tooltip
               title={t.updateAvailable
@@ -243,11 +245,12 @@ export const AppHead = (props: IProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <SystemUpdateIcon />
+                <SystemUpdateIcon color="primary" />
               </IconButton>
             </Tooltip>
           )}
-          <UserMenu action={handleUserMenu} auth={auth} />
+          <HelpMenu online={!isOffline} />
+          {pathname !== '/' && <UserMenu action={handleUserMenu} auth={auth} />}
         </Toolbar>
         {!importexportBusy || <Busy />}
         {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}
