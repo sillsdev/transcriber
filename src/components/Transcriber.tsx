@@ -12,8 +12,6 @@ import {
   Passage,
   PassageStateChange,
   Section,
-  Plan,
-  PlanType,
   User,
   IState,
   Integration,
@@ -554,26 +552,14 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Approved,
     needsNewTranscription: ActivityStates.Transcribed,
   };
-  const getType = () => {
-    const planRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'plan', id: plan })
-    ) as Plan;
-    const planTypeId = related(planRec, 'plantype');
-    if (!planTypeId) return null;
-    const planTypeRec = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'plantype', id: planTypeId })
-    ) as PlanType;
-    const planType =
-      planTypeRec &&
-      planTypeRec.attributes &&
-      planTypeRec.attributes.name &&
-      planTypeRec.attributes.name.toLowerCase();
-    return planType;
-  };
+
   const handleSubmit = async () => {
     if (next.hasOwnProperty(state)) {
       let nextState = next[state];
-      if (nextState === ActivityStates.Approved && getType() !== 'scripture')
+      if (
+        nextState === ActivityStates.Approved &&
+        projType.toLowerCase() !== 'scripture'
+      )
         nextState = ActivityStates.Done;
       await save(nextState, 0, comment);
     } else {
