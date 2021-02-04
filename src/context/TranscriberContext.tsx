@@ -486,7 +486,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       setExpandedGroups(exGrp);
 
       if (rowList.length > 0) {
-        let selected = remoteIdGuid('passage', pasId, memory.keyMap);
+        let selected = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
         selected =
           state.selected !== '' ? state.selected : selected || trackedTask;
         if (selected !== '') {

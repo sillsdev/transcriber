@@ -321,7 +321,7 @@ export function Transcriber(props: IProps) {
   }, [height, makeComment, comment, commentRef.current]);
 
   useEffect(() => {
-    showTranscription(getTranscription());
+    if (!saving.current) showTranscription(getTranscription());
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [selected]);
 
@@ -416,6 +416,7 @@ export function Transcriber(props: IProps) {
           t.replaceAttribute(oldRec[0], 'duration', Math.ceil(totalSeconds))
         );
       console.log(`update duration to ${Math.ceil(totalSeconds)}`);
+      transcriptionRef.current.firstChild.focus();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [duration, totalSeconds]);
@@ -494,6 +495,7 @@ export function Transcriber(props: IProps) {
       const textArea = transcriptionRef.current
         .firstChild as HTMLTextAreaElement;
       insertAtCursor(textArea, timeStamp);
+      setTextValue(textArea.value);
     }
   };
   const handlePullParatext = () => {
