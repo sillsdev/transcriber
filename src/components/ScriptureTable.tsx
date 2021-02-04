@@ -1247,7 +1247,11 @@ export function ScriptureTable(props: IProps) {
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    if (mediaRemoteIds && mediaRemoteIds.length > 0 && uploadRow) {
+    if (
+      mediaRemoteIds &&
+      mediaRemoteIds.length > 0 &&
+      uploadRow !== undefined
+    ) {
       await attachPassage(
         passageId(uploadRow),
         related(
