@@ -25,8 +25,8 @@ export const useVProjectUpdate = () => {
       tags,
       organizedBy,
     } = vProject.attributes;
-    await memory.update((t: TransformBuilder) =>
-      UpdateRecord(t, {
+    await memory.update((t: TransformBuilder) => [
+      ...UpdateRecord(t, {
         type: 'project',
         id,
         attributes: {
@@ -41,12 +41,15 @@ export const useVProjectUpdate = () => {
         },
       } as Project, user),
       // We use the plan type and not the project type
-      // t.replaceRelatedRecord({ type: 'project', id }, 'projecttype', {
-      //   type: 'projecttype',
-      //   id: getTypeId(type, 'project'),
-      // }),
+      t.replaceRelatedRecord({type: 'project', id: id}, 'projecttype', {
+        type: 'projecttype',
+        id: getTypeId(
+          type.toLowerCase() === 'scripture' ? type : 'generic',
+          'project'
+        ),
+      }),
       //we aren't allowing them to change group, owner or oraganization currently
-    );
+    ]);
 
     await memory.update((t: TransformBuilder) => [
       ...UpdateRecord(t, {
