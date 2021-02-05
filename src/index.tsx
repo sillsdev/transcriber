@@ -109,6 +109,7 @@ Promise.all(promises)
       orgRole: '',
       project: '',
       projRole: '',
+      projType: '',
       plan: '',
       tab: undefined,
       group: '',
@@ -134,6 +135,9 @@ Promise.all(promises)
       orbitRetries: OrbitNetworkErrorRetries,
       enableOffsite: false,
       connected: true,
+      offlineOnly: false,
+      latestVersion: '',
+      releaseDate: '',
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })

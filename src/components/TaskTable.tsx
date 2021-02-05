@@ -387,10 +387,10 @@ export function TaskTable(props: IProps) {
     const { row, column, value } = props;
     if (!filter) {
       if (column.name === 'composite') {
-        const curId =
-          typeof value?.props?.item === 'number' && row.length !== ''
-            ? rowData[value.props.item]?.passage?.id
-            : '';
+        let curId = '';
+        if (typeof value?.props?.item === 'number')
+          if (row.mediaRemoteId !== '')
+            curId = rowData[value.props.item]?.passage?.id;
         return (
           <td
             ref={curId === selected ? selectedRef : notSelectedRef}

@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
-import { IState, IMediaTabStrings, ISharedStrings } from '../model';
+import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
@@ -11,6 +11,9 @@ import { remoteIdNum } from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
+import { currentDateTime } from '../utils';
+import { TransformBuilder } from '@orbit/data';
+import { AddRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,28 +42,18 @@ interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
-  showMessage: (msg: string) => void;
-  showJSXMessage: (msg: JSX.Element) => void;
+  showMessage: (msg: string | JSX.Element) => void;
   setComplete: (amount: number) => void; // 0 to 100
   finish?: (planId: string, mediaRemoteIds?: string[]) => void; // logic when upload complete
   metaData?: JSX.Element; // component embeded in dialog
   ready?: () => boolean; // if false control is disabled
-  createProject?: (file: FileList) => Promise<any>;
+  createProject?: (file: File[]) => Promise<any>;
   status: typeof statusInit;
   multiple?: boolean;
 }
 
 export const Uploader = (props: IProps) => {
-  const {
-    auth,
-    t,
-    isOpen,
-    onOpen,
-    showMessage,
-    showJSXMessage,
-    status,
-    multiple,
-  } = props;
+  const { auth, t, isOpen, onOpen, showMessage, status, multiple } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
   const { uploadComplete, setComplete, finish } = props;
@@ -74,9 +67,11 @@ export const Uploader = (props: IProps) => {
   const [errorReporter] = useGlobal('errorReporter');
   const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
+  const [user] = useGlobal('user');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const planIdRef = React.useRef<string>();
   const successCount = React.useRef<number>(0);
-  const fileList = React.useRef<FileList>();
+  const fileList = React.useRef<File[]>();
   const authRef = React.useRef<Auth>(auth);
   const mediaIdRef = React.useRef<string[]>([]);
 
@@ -114,17 +109,45 @@ export const Uploader = (props: IProps) => {
     }
   };
 
-  const itemComplete = (n: number, success: boolean, data?: any) => {
+  const itemComplete = async (n: number, success: boolean, data?: any) => {
     if (success) successCount.current += 1;
-    if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     const uploadList = fileList.current;
     if (!uploadList) return; // This should never happen
+    if (data?.stringId) mediaIdRef.current.push(data?.stringId);
+    else {
+      // offlineOnly
+      const mediaRec: MediaFile = {
+        type: 'mediafile',
+        attributes: {
+          ...data,
+          versionNumber: 1,
+          transcription: '',
+          filesize: uploadList[n].size,
+          position: 0,
+          dateCreated: currentDateTime(),
+          dateUpdated: currentDateTime(),
+        },
+      } as any;
+      const planRecId = { type: 'plan', id: planIdRef.current || plan };
+      if (planRecId) {
+        const t = new TransformBuilder();
+        await memory.update([
+          ...AddRecord(t, mediaRec, user, memory),
+          t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
+        ]);
+        mediaIdRef.current.push(mediaRec.id);
+      } else {
+        throw new Error('Plan Id not set.  Media not created.');
+      }
+    }
     setComplete(Math.min((n * 100) / uploadList.length, 100));
     const next = n + 1;
     if (next < uploadList.length && !status.canceled) {
       doUpload(next);
-    } else {
+    } else if (!offlineOnly) {
       pullPlanMedia().then(() => finishMessage());
+    } else {
+      finishMessage();
     }
   };
 
@@ -146,7 +169,7 @@ export const Uploader = (props: IProps) => {
     );
   };
 
-  const uploadMedia = async (files: FileList) => {
+  const uploadMedia = async (files: File[]) => {
     if (!files || files.length === 0) {
       showMessage(t.selectFiles);
       return;
@@ -171,7 +194,7 @@ export const Uploader = (props: IProps) => {
   React.useEffect(() => {
     if (uploadError !== '') {
       if (uploadError.indexOf('unsupported') > 0)
-        showJSXMessage(
+        showMessage(
           <span className={classes.unsupported}>
             {t.unsupported.replace(
               '{0}',

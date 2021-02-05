@@ -22,8 +22,6 @@ import {
   IProjButtonsStrings,
   BookNameMap,
   BookName,
-  Role,
-  RoleNames,
 } from '../model';
 import { isElectron } from '../api-variable';
 import { OptionType } from '../model';
@@ -45,10 +43,9 @@ import {
   useTableType,
   usePlan,
   useRole,
-  allUsersRec,
-  getRoleId,
   useOfflnProjRead,
   useLoadProjectData,
+  useProjectType,
 } from '../crud';
 import Auth from '../auth/Auth';
 
@@ -101,7 +98,6 @@ interface IRecordProps {
   organizations: Organization[];
   orgMembers: OrganizationMembership[];
   groupMemberships: GroupMembership[];
-  roles: Role[];
   projects: Project[];
   plans: Plan[];
   planTypes: PlanType[];
@@ -110,7 +106,6 @@ const mapRecordsToProps = {
   organizations: (q: QueryBuilder) => q.findRecords('organization'),
   orgMembers: (q: QueryBuilder) => q.findRecords('organizationmembership'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   plans: (q: QueryBuilder) => q.findRecords('plan'),
   planTypes: (q: QueryBuilder) => q.findRecords('plantype'),
@@ -188,7 +183,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       orgMembers,
       projects,
       groupMemberships,
-      roles,
       plans,
       planTypes,
       lang,
@@ -205,15 +199,12 @@ const TeamProvider = withData(mapRecordsToProps)(
       fetchBooks,
       doOrbitError,
     } = props;
-    const [isOffline] = useGlobal('offline');
-
-    // const [orgRole, setOrgRole] = useGlobal('orgRole');
     const [, setOrganization] = useGlobal('organization');
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
-    const [memory] = useGlobal('memory');
     const [user] = useGlobal('user');
-    const [offline] = useGlobal('offline');
+    const [isOffline] = useGlobal('offline');
+    const [offlineOnly] = useGlobal('offlineOnly');
     const [userProjects, setUserProjects] = useState(projects);
     const [userOrgs, setUserOrgs] = useState(organizations);
     const [importOpen, setImportOpen] = useState(false);
@@ -221,7 +212,6 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [state, setState] = useState({
       ...initState,
       auth,
-      planTypes,
       controlStrings,
       lang,
       cardStrings,
@@ -243,6 +233,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const vProject = useVProjectRead();
     const oProjRead = useOfflnProjRead();
     const { setMyProjRole, getMyProjRole, getMyOrgRole } = useRole();
+    const { setProjectType } = useProjectType();
     const { getPlan } = usePlan();
     const LoadData = useLoadProjectData(auth, t, doOrbitError);
 
@@ -252,6 +243,7 @@ const TeamProvider = withData(mapRecordsToProps)(
       const orgId = related(team, 'organization');
       setOrganization(orgId);
       setProject(projectId);
+      setProjectType(projectId);
       setPlan(plan.id);
       return [projectId, orgId];
     };
@@ -271,6 +263,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     ) => {
       const [projectId] = setProjectParams(plan);
       LoadData(projectId, () => {
+        setProjectType(projectId);
         if (!cb) setMyProjRole(projectId);
         else cb();
       });
@@ -287,20 +280,6 @@ const TeamProvider = withData(mapRecordsToProps)(
       return /admin/i.test(role);
     };
 
-    const isProjectAdmin = (team: Organization) => {
-      const allUsersGroup = allUsersRec(memory, team.id);
-      const adminId = getRoleId(roles, RoleNames.Admin);
-      if (!allUsersGroup || allUsersGroup.length === 0) return false;
-      return (
-        groupMemberships.filter(
-          (gm) =>
-            related(gm, 'group') === allUsersGroup[0].id &&
-            related(gm, 'role') === adminId &&
-            related(gm, 'user') === user
-        ).length > 0
-      );
-    };
-
     const teamMembers = (teamId: string) => {
       const recs = orgMembers.filter(
         (o) => related(o, 'organization') === teamId
@@ -312,7 +291,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       return userOrgs
         .filter(
           (o) =>
-            !isPersonal(o.id) && (!offline || teamProjects(o.id).length > 0)
+            !isPersonal(o.id) &&
+            (!isOffline || offlineOnly || teamProjects(o.id).length > 0)
         )
         .sort((i, j) => (i?.attributes?.name < j?.attributes?.name ? -1 : 1));
     };
@@ -407,6 +387,20 @@ const TeamProvider = withData(mapRecordsToProps)(
       orbitTeamDelete(team);
     };
 
+    interface IUniqueTypes {
+      [key: string]: PlanType;
+    }
+
+    const getPlanTypes = React.useMemo(() => {
+      const uniqueTypes = {} as IUniqueTypes;
+      planTypes.forEach((t) => {
+        if (offlineOnly !== Boolean(t?.keys?.remoteId)) {
+          if (t?.attributes?.name) uniqueTypes[t.attributes.name] = t;
+        }
+      });
+      return Object.values(uniqueTypes);
+    }, [offlineOnly, planTypes]);
+
     const flatAdd = async (
       planId: string,
       mediaRemoteIds: string[],
@@ -454,6 +448,7 @@ const TeamProvider = withData(mapRecordsToProps)(
             bookSuggestions,
             bookMap,
             allBookData,
+            planTypes: getPlanTypes,
             teams,
             personalProjects,
             teamProjects,
@@ -473,7 +468,6 @@ const TeamProvider = withData(mapRecordsToProps)(
             teamUpdate,
             teamDelete,
             isAdmin,
-            isProjectAdmin,
             flatAdd,
             importOpen,
             setImportOpen,

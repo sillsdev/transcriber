@@ -13,6 +13,7 @@ export interface GroupMembership extends BaseModel {
     user: RecordRelationship;
     group: RecordRelationship;
     role: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 export default GroupMembership;

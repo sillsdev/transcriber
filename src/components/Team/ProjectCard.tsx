@@ -257,7 +257,7 @@ export const ProjectCard = (props: IProps) => {
         <CardContent className={classes.content}>
           <div className={classes.firstLine}>
             <Typography variant="h6" component="h2" className={classes.name}>
-              {project?.attributes?.type === 'scripture' ? (
+              {project?.attributes?.type.toLowerCase() === 'scripture' ? (
                 <ScriptureIcon />
               ) : (
                 <BsPencilSquare />

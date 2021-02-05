@@ -4,21 +4,15 @@
        trgLang="en"
        version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.accessFirst">
+      <unit id="access.availableOfflineUsers">
          <segment>
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
+            <source>Available Offline Users</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.accessSilTranscriber">
+      <unit id="access.availableOnlineUsers">
          <segment>
-            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="access.goOnline">
-         <segment>
-            <source>Go Online</source>
+            <source>Available Online Users</source>
             <target/>
          </segment>
       </unit>
@@ -28,9 +22,51 @@
             <target/>
          </segment>
       </unit>
+      <unit id="access.createUser">
+         <segment>
+            <source>Add a new user</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.logIn">
+         <segment>
+            <source>Log In</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.screenTitle">
+         <segment>
+            <source>I want to work...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.importSnapshot">
+         <segment>
+            <source>Import Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withInternet">
+         <segment>
+            <source>With an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withoutInternet">
+         <segment>
+            <source>Without an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.mustBeOnline">
+         <segment>
+            <source>You must be connected to the Internet to Log In!</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="access.importProject">
          <segment>
-            <source>Import PTF File</source>
+            <source>ImportProject</source>
             <target/>
          </segment>
       </unit>
@@ -234,7 +270,7 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0} to Members</source>
+            <source>Assign {0}</source>
             <target/>
          </segment>
       </unit>
@@ -288,7 +324,7 @@
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import PTF File</source>
+            <source>Import Project</source>
             <target/>
          </segment>
       </unit>
@@ -337,6 +373,12 @@
       <unit id="cards.save">
          <segment>
             <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.nameInUse">
+         <segment>
+            <source>Name in use</source>
             <target/>
          </segment>
       </unit>
@@ -670,12 +712,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="import.expiredToken">
-         <segment>
-            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="import.family">
          <segment>
             <source>Family Name</source>
@@ -850,24 +886,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="integration.bookNotFound">
-         <segment>
-            <source>Book not included in this project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.bookNotInParatext">
-         <segment>
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.chapterSpan">
-         <segment>
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="integration.countError">
          <segment>
             <source>Count query error: </source>
@@ -889,30 +907,6 @@
       <unit id="integration.emptyBook">
          <segment>
             <source>Passage {0}.{1}: Book is missing.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.expiredParatextToken">
-         <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.invalidParatextLogin">
-         <segment>
-            <source>You must login with a valid paratext login to sync projects.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.invalidReference">
-         <segment>
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
             <target/>
          </segment>
       </unit>
@@ -1428,13 +1422,25 @@
       </unit>
       <unit id="main.flatSample">
          <segment>
-            <source>Download flat sample spreadsheet</source>
+            <source>Scripture flat sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
       <unit id="main.hierarchicalSample">
          <segment>
-            <source>Download hierarchical sample spreadsheet</source>
+            <source>Scripture hierarchical sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.genFlatSample">
+         <segment>
+            <source>General flat sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.genHierarchicalSample">
+         <segment>
+            <source>General hierarchical sample spreadsheet</source>
             <target/>
          </segment>
       </unit>
@@ -1594,9 +1600,51 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.updateAvailable">
+         <segment>
+            <source>Update available: Version {0} was released {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.about">
+         <segment>
+            <source>About</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.version">
          <segment>
-            <source>Version: </source>
+            <source>Version: {0} - {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.copyClipboard">
+         <segment>
+            <source>Copy Version to Clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.reliesOn">
+         <segment>
+            <source>{0} relies on other works</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.thanks">
+         <segment>
+            <source>Thanks to</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
@@ -1813,6 +1861,12 @@
       <unit id="mediaUpload.dragDropSingle">
          <segment>
             <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaUpload.invalidFile">
+         <segment>
+            <source>Not valid for this operation: {0} </source>
             <target/>
          </segment>
       </unit>
@@ -2038,9 +2092,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.addOfflineUser">
+      <unit id="profile.addMember">
          <segment>
-            <source>Add Offline Desktop Member</source>
+            <source>Complete User Profile</source>
             <target/>
          </segment>
       </unit>
@@ -2076,19 +2130,19 @@
       </unit>
       <unit id="profile.completeProfile">
          <segment>
-            <source>Complete Member Profile</source>
+            <source>Complete User Profile</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your member will block you from using the program and remove references to your work.</source>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
          <segment>
-            <source>Delete Member</source>
+            <source>Delete User</source>
             <target/>
          </segment>
       </unit>
@@ -2194,12 +2248,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.sendNews">
-         <segment>
-            <source>Receive {0} and Language Technology news</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
@@ -2208,13 +2256,13 @@
       </unit>
       <unit id="profile.userExists">
          <segment>
-            <source>This offline member exists.</source>
+            <source>This offline user exists.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.userProfile">
          <segment>
-            <source>Member profile</source>
+            <source>User profile</source>
             <target/>
          </segment>
       </unit>
@@ -2344,9 +2392,45 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
+      <unit id="shapingTable.avg">
+         <segment>
+            <source>Avg</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.count">
+         <segment>
+            <source>Count</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.max">
+         <segment>
+            <source>Max</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.min">
+         <segment>
+            <source>Min</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.noColumns">
          <segment>
             <source>No columns visible</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.noData">
+         <segment>
+            <source>No data</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shapingTable.sum">
+         <segment>
+            <source>Sum</source>
             <target/>
          </segment>
       </unit>
@@ -2374,6 +2458,48 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.bookNotInParatext">
+         <segment>
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.paratextchapterSpan">
+         <segment>
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.invalidReference">
+         <segment>
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.BookNotSet">
+         <segment>
+            <source>Book was not set for Section {0} Passage {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredParatextToken">
+         <segment>
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.expiredToken">
+         <segment>
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.invalidParatextLogin">
+         <segment>
+            <source>You must login with a valid paratext login.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
@@ -2389,6 +2515,12 @@
       <unit id="shared.uploadMediaSingular">
          <segment>
             <source>Upload Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.importMediaSingular">
+         <segment>
+            <source>Import Media</source>
             <target/>
          </segment>
       </unit>
@@ -2638,6 +2770,30 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.pullParatextCaption">
+         <segment>
+            <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStart">
+         <segment>
+            <source>Getting transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStatus">
+         <segment>
+            <source>Transcription pulled from Paratext</source>
+            <target>Transcription obtenue à partir de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextTip">
+         <segment>
+            <source>Pull transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+         </segment>
+      </unit>
       <unit id="transcriber.reject">
          <segment>
             <source>Reject</source>
@@ -2842,12 +2998,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriptionTab.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriptionTab.export">
          <segment>
             <source>Export</source>
@@ -2944,9 +3094,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="treeChart.contributions">
+         <segment>
+            <source>Contributions toward</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="treeChart.noData">
          <segment>
             <source>No Transcription Data Yet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="treeChart.status">
+         <segment>
+            <source>Status of</source>
             <target/>
          </segment>
       </unit>
@@ -3022,9 +3184,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="usertable.offline">
+      <unit id="usertable.addMember">
          <segment>
-            <source>Offline Desktop Member</source>
+            <source>Add Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.addNewUser">
+         <segment>
+            <source>Add New User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.selectUser">
+         <segment>
+            <source>Select User</source>
             <target/>
          </segment>
       </unit>
@@ -3139,6 +3313,12 @@
       <unit id="vProject.layout">
          <segment>
             <source>Layout</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.nameInUse">
+         <segment>
+            <source>Name in use</source>
             <target/>
          </segment>
       </unit>

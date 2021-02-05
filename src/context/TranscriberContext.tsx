@@ -228,7 +228,8 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const r = rowData[i];
         if (r.passage?.id === selected && r.mediaRemoteId !== '') {
           if (state.index !== i || trackedTask !== selected) {
-            const remId = remoteId('passage', selected, memory.keyMap);
+            const remId =
+              remoteId('passage', selected, memory.keyMap) || selected;
             if (pasId !== remId) {
               view.current = `/work/${prjId}/${remId}`;
             }
@@ -344,11 +345,9 @@ const TranscriberProvider = withData(mapRecordsToProps)(
                         passage: { ...p },
                         state: curState,
                         sectPass: secNum + '.' + passageNumber(p).trim(),
-                        mediaRemoteId: remoteId(
-                          'mediafile',
+                        mediaRemoteId:
+                          remoteId('mediafile', mediaRec.id, memory.keyMap) ||
                           mediaRec.id,
-                          memory.keyMap
-                        ),
                         mediaId: mediaRec.id,
                         playItem,
                         duration: mediaRec.attributes.duration,
@@ -487,7 +486,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       setExpandedGroups(exGrp);
 
       if (rowList.length > 0) {
-        let selected = remoteIdGuid('passage', pasId, memory.keyMap);
+        let selected = remoteIdGuid('passage', pasId, memory.keyMap) || pasId;
         selected =
           state.selected !== '' ? state.selected : selected || trackedTask;
         if (selected !== '') {

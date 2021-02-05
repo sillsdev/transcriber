@@ -11,7 +11,6 @@ import {
   DigestPreference,
   OrganizationMembership,
   Role,
-  GroupMembership,
   Invitation,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
@@ -43,12 +42,10 @@ import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
 import {
-  remoteId,
   related,
-  remoteIdNum,
   getRoleRec,
   getMbrRoleRec,
-  allUsersRec,
+  useAddToOrgAndGroup,
 } from '../crud';
 import {
   makeAbbr,
@@ -70,11 +67,13 @@ import ru from '../assets/ru.json';
 import sw from '../assets/sw.json';
 import pt from '../assets/pt.json';
 import ta from '../assets/ta.json';
-import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
-import { currentDateTime } from '../utils/currentDateTime';
+import {
+  AddRecord,
+  UpdateRecord,
+  UpdateRelatedRecord,
+} from '../model/baseModel';
 import AppHead from '../components/App/AppHead';
 import StickyRedirect from '../components/StickyRedirect';
-import { API_CONFIG } from '../api-variable';
 import { useSnackBar } from '../hoc/SnackBar';
 
 interface ILangDes {
@@ -201,8 +200,9 @@ export function Profile(props: IProps) {
   const [memory] = useGlobal('memory');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
-  const [user] = useGlobal('user');
+  const [user, setUser] = useGlobal('user');
   const [orgRole] = useGlobal('orgRole');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
@@ -234,6 +234,7 @@ export function Profile(props: IProps) {
   const [, saveCompleted] = useRemoteSave();
   const [ptPath, setPtPath] = React.useState('');
   const { showMessage } = useSnackBar();
+  const addToOrgAndGroup = useAddToOrgAndGroup();
 
   const handleNameClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.shiftKey) setShowDetail(!showDetail);
@@ -301,11 +302,6 @@ export function Profile(props: IProps) {
     setLocked(!locked);
   };
 
-  const handleNewsChange = () => {
-    setChanged(true);
-    setNews(!news);
-  };
-
   const handleDigestChange = () => {
     setChanged(true);
     setDigest(
@@ -322,39 +318,36 @@ export function Profile(props: IProps) {
   const handleSave = () => {
     if (changed) {
       const currentUserId = currentUser === undefined ? user : currentUser.id; //currentuser will not be undefined here
-      memory.update((t: TransformBuilder) => [
-        UpdateRecord(
-          t,
-          {
-            type: 'user',
-            id: currentUserId,
-            attributes: {
-              name,
-              givenName: given,
-              familyName: family,
-              email,
-              phone,
-              timezone,
-              locale,
-              isLocked: locked,
-              uilanguagebcp47: bcp47,
-              timercountUp: timerDir,
-              playbackSpeed: speed,
-              progressbarTypeid: progBar,
-              digestPreference: digest,
-              newsPreference: news,
-              hotKeys,
-              avatarUrl,
-            },
-          } as User,
-          remoteIdNum(
-            'user',
-            currentUser !== undefined ? currentUser.id : '',
-            memory.keyMap
+      memory.update(
+        (t: TransformBuilder) =>
+          UpdateRecord(
+            t,
+            {
+              type: 'user',
+              id: currentUserId,
+              attributes: {
+                name,
+                givenName: given,
+                familyName: family,
+                email,
+                phone,
+                timezone,
+                locale,
+                isLocked: locked,
+                uilanguagebcp47: bcp47,
+                timercountUp: timerDir,
+                playbackSpeed: speed,
+                progressbarTypeid: progBar,
+                digestPreference: digest,
+                newsPreference: news,
+                hotKeys,
+                avatarUrl,
+              },
+            } as User,
+            currentUser !== undefined ? currentUser.id : ''
           )
-        ),
         // we aren't allowing them to change owner oraganization currently
-      ]);
+      );
       const roleRecs = memory.cache.query((q: QueryBuilder) =>
         q.findRecords('role')
       ) as Role[];
@@ -375,7 +368,7 @@ export function Profile(props: IProps) {
               'role',
               'role',
               newRoleRec[0].id,
-              remoteIdNum('user', user, memory.keyMap)
+              user
             )
           );
           // setOrgRole(role);
@@ -391,43 +384,7 @@ export function Profile(props: IProps) {
     setView('Team');
   };
 
-  const addToOrgAndGroup = (userRec: User) => {
-    let orgMember: OrganizationMembership = {
-      type: 'organizationmembership',
-    } as any;
-    memory.schema.initializeRecord(orgMember);
-    const roleRecs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('role')
-    ) as Role[];
-    const memberRec = getRoleRec(roleRecs, 'member', true);
-    const allUsersGroup = allUsersRec(memory, organization);
-    const editorRec = getRoleRec(roleRecs, 'editor', false);
-    let groupMbr: GroupMembership = {
-      type: 'groupmembership',
-    } as any;
-    memory.schema.initializeRecord(groupMbr);
-    memory
-      .update((t: TransformBuilder) => [t.addRecord(userRec)])
-      .then(() => {
-        memory.update((t: TransformBuilder) => [
-          t.addRecord(orgMember),
-          t.replaceRelatedRecord(orgMember, 'user', userRec),
-          t.replaceRelatedRecord(orgMember, 'organization', {
-            type: 'organization',
-            id: organization,
-          }),
-          t.replaceRelatedRecord(orgMember, 'role', memberRec[0]),
-        ]);
-        memory.update((t: TransformBuilder) => [
-          t.addRecord(groupMbr),
-          t.replaceRelatedRecord(groupMbr, 'user', userRec),
-          t.replaceRelatedRecord(groupMbr, 'group', allUsersGroup[0]),
-          t.replaceRelatedRecord(groupMbr, 'role', editorRec[0]),
-        ]);
-      });
-  };
-
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (changed) {
       let userRec: User = {
         type: 'user',
@@ -448,16 +405,15 @@ export function Profile(props: IProps) {
           newsPreference: news,
           hotKeys,
           avatarUrl,
-          dateCreated: currentDateTime(),
-          dateUpdated: currentDateTime(),
-          lastModifiedBy: remoteId('user', user, memory.keyMap),
         },
       } as any;
-      memory.schema.initializeRecord(userRec);
-      if (!editId) {
-        memory.update((t: TransformBuilder) => t.addRecord(userRec));
+      if (!editId || !organization) {
+        await memory.update((t: TransformBuilder) =>
+          AddRecord(t, userRec, user, memory)
+        );
+        if (offlineOnly) setUser(userRec.id);
       } else {
-        addToOrgAndGroup(userRec);
+        addToOrgAndGroup(userRec, true);
       }
       setChanged(false);
     }
@@ -471,10 +427,15 @@ export function Profile(props: IProps) {
   };
 
   const handleCancel = () => {
+    setChanged(false);
     if (editId) {
       setEditId(null);
+      const userId = localStorage.getItem('user-id');
+      if (!userId && offlineOnly) {
+        setView('Logout');
+        return;
+      }
     }
-    setChanged(false);
     setView('Team');
   };
 
@@ -553,11 +514,8 @@ export function Profile(props: IProps) {
         newsPreference: false,
         hotKeys,
         avatarUrl,
-        dateCreated: currentDateTime(),
-        dateUpdated: currentDateTime(),
-        lastModifiedBy: remoteIdNum('user', user, memory.keyMap),
       },
-    };
+    } as User;
     if (!editId || !/Add/i.test(editId)) {
       const current = users.filter((u) => u.id === (editId ? editId : user));
       if (current.length === 1) {
@@ -667,7 +625,7 @@ export function Profile(props: IProps) {
             </StyledGrid>
             <Grid item xs={12} md={7}>
               {editId && /Add/i.test(editId) ? (
-                <Typography variant="h6">{t.addOfflineUser}</Typography>
+                <Typography variant="h6">{t.addMember}</Typography>
               ) : userNotComplete() ? (
                 <Typography variant="h6">{t.completeProfile}</Typography>
               ) : (
@@ -815,19 +773,7 @@ export function Profile(props: IProps) {
                     }
                     label=""
                   />
-                  {email !== '' && showDetail && (
-                    <FormControlLabel
-                      className={classes.textField}
-                      control={
-                        <Checkbox
-                          id="news"
-                          checked={news === true}
-                          onChange={handleNewsChange}
-                        />
-                      }
-                      label={t.sendNews.replace('{0}', API_CONFIG.productName)}
-                    />
-                  )}
+
                   {email !== '' && (
                     <FormControlLabel
                       className={classes.textField}
@@ -909,7 +855,7 @@ export function Profile(props: IProps) {
               </div>
             </Grid>
           </Grid>
-          {!isOffline &&
+          {(!isOffline || offlineOnly) &&
             !editId &&
             currentUser &&
             currentUser.attributes.name !== currentUser.attributes.email && (

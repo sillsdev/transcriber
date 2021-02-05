@@ -214,6 +214,7 @@ export function PlanSheet(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [connected, setConnected] = useGlobal('connected');
   const [changed, setChanged] = useGlobal('changed');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
   const preventSave = useRef<boolean>(false);
   const currentRow = useRef<number>(-1);
@@ -224,7 +225,9 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-  const [readonly, setReadOnly] = useState(isOffline || projRole !== 'admin');
+  const [readonly, setReadOnly] = useState(
+    (isOffline && !offlineOnly) || projRole !== 'admin'
+  );
   const [warning, setWarning] = useState<string>();
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
@@ -316,7 +319,7 @@ export function PlanSheet(props: IProps) {
 
   const numCol = [2, 4]; // Section num = col 2, Passage num = col 4
   const handleCellsChanged = (changes: Array<IChange>) => {
-    if (projRole !== 'admin') return; //readonly
+    if (readonly) return; //readonly
 
     const grid = data.map((row: Array<ICell>) => [...row]);
     changes.forEach(({ cell, row, col, value }: IChange) => {
@@ -343,7 +346,7 @@ export function PlanSheet(props: IProps) {
     j: number
   ) => {
     e.preventDefault();
-    if (i > 0 && !isOffline && projRole === 'admin') {
+    if (i > 0 && (!isOffline || offlineOnly) && projRole === 'admin') {
       setPosition({ mouseX: e.clientX - 2, mouseY: e.clientY - 4, i, j });
     }
   };
@@ -377,7 +380,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const parsePaste = (clipBoard: string) => {
-    if (projRole !== 'admin' || isOffline) return Array<Array<string>>();
+    if (readonly) return Array<Array<string>>();
     if (currentRow.current === 0) {
       setPasting(true);
       showMessage(t.pasting);
@@ -408,7 +411,7 @@ export function PlanSheet(props: IProps) {
   };
 
   const bookEditor = (props: any) => {
-    if (projRole !== 'admin') return <></>;
+    if (readonly) return <></>;
     return (
       <BookSelect
         id="book"
@@ -442,7 +445,7 @@ export function PlanSheet(props: IProps) {
     }, auth);
 
   useEffect(() => {
-    const newValue = isOffline || projRole !== 'admin';
+    const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
     if (readonly !== newValue) setReadOnly(newValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projRole]);
@@ -450,7 +453,7 @@ export function PlanSheet(props: IProps) {
   useEffect(() => {
     if (changed) {
       if (saveTimer.current === undefined) startSaveTimer();
-      if (!connected) showMessage(ts.NoSaveOffline);
+      if (!connected && !offlineOnly) showMessage(ts.NoSaveOffline);
     } else {
       if (saveTimer.current) clearTimeout(saveTimer.current);
       saveTimer.current = undefined;
@@ -516,14 +519,14 @@ export function PlanSheet(props: IProps) {
                 return cellIndex === bookCol && passage
                   ? {
                       value: e,
-                      readOnly: isOffline,
+                      readOnly: isOffline && !offlineOnly,
                       className: 'book ' + (section ? ' setp' : 'pass'),
                       dataEditor: bookEditor,
                     }
                   : {
                       value: e,
                       readOnly:
-                        isOffline ||
+                        (isOffline && !offlineOnly) ||
                         (section
                           ? passage
                             ? false
@@ -553,7 +556,7 @@ export function PlanSheet(props: IProps) {
                     onPlayStatus={handlePlayStatus}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
-                    online={connected}
+                    online={connected || offlineOnly}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
@@ -665,9 +668,7 @@ export function PlanSheet(props: IProps) {
                   variant="outlined"
                   color="primary"
                   className={classes.button}
-                  disabled={
-                    pasting || readonly || isOffline || projRole !== 'admin'
-                  }
+                  disabled={pasting || readonly}
                   onClick={handleTablePaste}
                 >
                   {t.tablePaste}

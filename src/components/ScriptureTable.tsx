@@ -15,13 +15,19 @@ import {
   ISharedStrings,
   MediaFile,
   OptionType,
+  ActivityStates,
 } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
-import { TransformBuilder, RecordIdentity, QueryBuilder } from '@orbit/data';
+import {
+  TransformBuilder,
+  RecordIdentity,
+  QueryBuilder,
+  Operation,
+} from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { LinearProgress } from '@material-ui/core';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -34,8 +40,9 @@ import {
   getMediaRec,
   useOrganizedBy,
   usePlan,
+  UpdatePassageStateOps,
 } from '../crud';
-import { Online, useRemoteSave, lookupBook, currentDateTime } from '../utils';
+import { Online, useRemoteSave, lookupBook, waitForIt } from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
 import StickyRedirect from './StickyRedirect';
@@ -43,6 +50,7 @@ import Auth from '../auth/Auth';
 import Uploader, { statusInit } from './Uploader';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import { keyMap } from '../schema';
+import { AddRecord, UpdateRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -152,13 +160,15 @@ export function ScriptureTable(props: IProps) {
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
+  const [user] = useGlobal('user');
   const [doSave, setDoSave] = useGlobal('doSave');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [busy, setBusy] = useGlobal('importexportBusy');
   const [, setConnected] = useGlobal('connected');
 
   const [saving, setSaving] = useState(false);
   const [changed, setChanged] = useGlobal('changed');
-  const { showMessage, showJSXMessage } = useSnackBar();
+  const { showMessage } = useSnackBar();
   const [rowInfo, setRowInfo] = useState(Array<IRowInfo>());
   const [inlinePassages, setInlinePassages] = useState(false);
   const { getOrganizedBy } = useOrganizedBy();
@@ -181,7 +191,7 @@ export function ScriptureTable(props: IProps) {
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
-  const [uploadPassage, setUploadPassage] = useState('');
+  const [uploadRow, setUploadRow] = useState<number>();
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
   const [attachPassage, detachPassage] = useMediaAttach({
@@ -436,7 +446,7 @@ export function ScriptureTable(props: IProps) {
       doDelete(where);
       return true;
     } else {
-      showJSXMessage(<span>{what}...</span>);
+      showMessage(<span>{what}...</span>);
       return false;
     }
   };
@@ -521,7 +531,7 @@ export function ScriptureTable(props: IProps) {
       )
       .map((row) => row[cols.SectionSeq]);
     if (invalidSec.length > 0) {
-      showJSXMessage(
+      showMessage(
         <span>
           {t.pasteInvalidSections} {invalidSec.join()}
         </span>
@@ -535,7 +545,7 @@ export function ScriptureTable(props: IProps) {
       )
       .map((row) => row[cols.PassageSeq]);
     if (invalidPas.length > 0) {
-      showJSXMessage(
+      showMessage(
         <span>
           {t.pasteInvalidSections} {invalidPas.join()}.
         </span>
@@ -688,7 +698,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleTranscribe = (i: number) => {
     const id = passageId(i);
-    const passageRemoteId = remoteIdNum('passage', id, memory.keyMap);
+    const passageRemoteId = remoteIdNum('passage', id, memory.keyMap) || id;
     if (changed) {
       startSave();
       waitForSave(() => setView(`/work/${prjId}/${passageRemoteId}`), 100);
@@ -709,7 +719,7 @@ export function ScriptureTable(props: IProps) {
 
   const showUpload = (i: number) => {
     setUploadVisible(true);
-    setUploadPassage(passageId(i));
+    setUploadRow(i);
   };
   const handleUpload = (i: number) => () => {
     if (passageId(i) === '') {
@@ -721,7 +731,6 @@ export function ScriptureTable(props: IProps) {
   const updateLastModified = async () => {
     var planRec = getPlan(plan);
     if (planRec !== null) {
-      planRec.attributes.dateUpdated = currentDateTime();
       //don't use sections here, it hasn't been updated yet
       var plansections = memory.cache.query((qb) =>
         qb.findRecords('section')
@@ -730,15 +739,19 @@ export function ScriptureTable(props: IProps) {
         (s) => related(s, 'plan') === plan
       ).length;
       const myplan = planRec; //assure typescript that the plan isn't null :/
-      await memory.update((t: TransformBuilder) => t.updateRecord(myplan));
+      await memory.update((t: TransformBuilder) =>
+        UpdateRecord(t, myplan, user)
+      );
       setLastSaved(planRec.attributes.dateUpdated);
     }
   };
 
-  const getLastModified = () => {
-    var planRec = getPlan(plan);
-    if (planRec !== null) setLastSaved(planRec.attributes.dateUpdated);
-    else setLastSaved('');
+  const getLastModified = (plan: string) => {
+    if (plan) {
+      var planRec = getPlan(plan);
+      if (planRec !== null) setLastSaved(planRec.attributes.dateUpdated);
+      else setLastSaved('');
+    }
   };
 
   useEffect(() => {
@@ -754,122 +767,242 @@ export function ScriptureTable(props: IProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); //do this once to get the default;
 
-  useEffect(() => {
-    const handleSave = async () => {
-      const doSave = async (changedRows: boolean[]) => {
-        setComplete(10);
-        let planid = remoteIdNum('plan', plan, memory.keyMap);
-        var anyNew = changedRows.includes(true);
-        let recs: IRecord[][] = [];
-        rowInfo.forEach((row, index) => {
-          var rec = [];
-          if (isSectionRow(row)) {
-            rec.push({
-              issection: true,
-              id: remoteId('section', row.sectionId?.id || '', memory.keyMap),
-              changed: changedRows[index],
-              sequencenum: data[index][cols.SectionSeq],
-              book: showBook(cols) ? data[index][cols.Book] : '',
-              reference: data[index][cols.Reference],
-              title: data[index][cols.SectionnName],
-            });
-          }
-          if (isPassageRow(row)) {
-            if (changedRows[index])
-              rec.push({
-                issection: false,
-                id: remoteId('passage', row.passageId?.id || '', memory.keyMap),
-                changed: true,
-                sequencenum: data[index][cols.PassageSeq],
-                book: showBook(cols) ? data[index][cols.Book] : '',
-                reference: data[index][cols.Reference],
-                title: data[index][cols.Title],
-              });
-            //don't bother to push all the passage if not changed
-            else
-              rec.push({
-                issection: false,
-                changed: false,
-              } as IRecord);
-          }
-          recs.push(rec);
+  const getRemoteId = async (table: string, localid: string) => {
+    await waitForIt(
+      'remoteId',
+      () => remoteId(table, localid, memory.keyMap) !== undefined,
+      () => false,
+      100
+    );
+    return remoteId(table, localid, memory.keyMap);
+  };
+  const getChangedRecs = async (changedRows: boolean[]) => {
+    let recs: IRecord[][] = [];
+    for (var index = 0; index < rowInfo.length; index++) {
+      var row = rowInfo[index];
+      var rec = [];
+      if (isSectionRow(row)) {
+        var id = row.sectionId?.id || '';
+        if (!offlineOnly && id !== '') id = await getRemoteId('section', id);
+        rec.push({
+          issection: true,
+          id: id,
+          changed: changedRows[index],
+          sequencenum: data[index][cols.SectionSeq],
+          book: showBook(cols) ? data[index][cols.Book] : '',
+          reference: data[index][cols.Reference],
+          title: data[index][cols.SectionnName],
         });
-        let sp: SectionPassage = {
-          attributes: {
-            data: JSON.stringify(recs),
-            planId: planid,
-            uuid: generateUUID(),
-          },
-          type: 'sectionpassage',
-        } as SectionPassage;
-        memory.schema.initializeRecord(sp);
-        setComplete(20);
-        var dumbrec = await memory.update(
-          (t: TransformBuilder) => t.addRecord(sp),
-          {
-            label: 'Update Plan Section and Passages',
-            sources: {
-              remote: {
-                settings: {
-                  timeout: 2000000,
-                },
-              },
-            },
-          }
-        );
-        //null only if sent twice by orbit
-        if (dumbrec) {
-          setComplete(50);
-          //dumbrec does not contain the new data...just the new id so go get it
-          var filterrec = {
-            attribute: 'plan-id',
-            value: remoteId('plan', plan, memory.keyMap),
-          };
-          //must wait for these...in case they they navigate away before done
-          await memory.sync(
-            await remote.pull((q) => q.findRecords('section').filter(filterrec))
-          );
-          await memory.sync(
-            await remote.pull((q) => q.findRecords('passage').filter(filterrec))
-          );
-          await memory.sync(
-            await remote.pull((q) => q.findRecord({ type: 'plan', id: plan }))
-          );
-          if (anyNew) {
-            var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
-              q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
-            )) as any;
-            if (rec !== undefined) {
-              //outrecs is an array of arrays of IRecords
-              var outrecs = JSON.parse(rec.attributes.data);
-              var newrowinfo = rowInfo.map((r) => {
-                return { ...r };
-              }); // _.cloneDeep(r));
+      }
+      if (isPassageRow(row)) {
+        if (changedRows[index]) {
+          id = row.passageId?.id || '';
+          if (!offlineOnly && id !== '') id = await getRemoteId('passage', id);
+          rec.push({
+            issection: false,
+            id: id,
+            changed: true,
+            sequencenum: data[index][cols.PassageSeq],
+            book: showBook(cols) ? data[index][cols.Book] : '',
+            reference: data[index][cols.Reference],
+            title: data[index][cols.Title],
+          });
+        }
+        //don't bother to push all the passage if not changed
+        else
+          rec.push({
+            issection: false,
+            changed: false,
+          } as IRecord);
+      }
+      recs.push(rec);
+    }
+    return recs;
+  };
 
-              newrowinfo.forEach((row, index) => {
-                if (isSectionRow(row) && row.sectionId?.id === '')
-                  row.sectionId.id = remoteIdGuid(
-                    'section',
-                    (outrecs[index][0] as IRecord).id,
-                    memory.keyMap
-                  );
-                if (isPassageRow(row) && row.passageId?.id === '')
-                  row.passageId.id = remoteIdGuid(
-                    'passage',
-                    (outrecs[index][isSectionRow(row) ? 1 : 0] as IRecord).id,
-                    memory.keyMap
-                  );
-              });
-              setRowInfo(newrowinfo);
-              setInData(data.map((row: Array<any>) => [...row]));
+  const onlineSaveFn = async (recs: IRecord[][], anyNew: boolean) => {
+    const sp: SectionPassage = {
+      attributes: {
+        data: JSON.stringify(recs),
+        planId: remoteIdNum('plan', plan, memory.keyMap),
+        uuid: generateUUID(),
+      },
+      type: 'sectionpassage',
+    } as SectionPassage;
+    memory.schema.initializeRecord(sp);
+    setComplete(20);
+    var dumbrec = await memory.update(
+      (t: TransformBuilder) => t.addRecord(sp),
+      {
+        label: 'Update Plan Section and Passages',
+        sources: {
+          remote: {
+            settings: {
+              timeout: 2000000,
+            },
+          },
+        },
+      }
+    );
+    //null only if sent twice by orbit
+    if (dumbrec) {
+      setComplete(50);
+      //dumbrec does not contain the new data...just the new id so go get it
+      var filterrec = {
+        attribute: 'plan-id',
+        value: remoteId('plan', plan, memory.keyMap),
+      };
+      //must wait for these...in case they they navigate away before done
+      await memory.sync(
+        await remote.pull((q) => q.findRecords('section').filter(filterrec))
+      );
+      await memory.sync(
+        await remote.pull((q) => q.findRecords('passage').filter(filterrec))
+      );
+      await memory.sync(
+        await remote.pull((q) => q.findRecord({ type: 'plan', id: plan }))
+      );
+      if (anyNew) {
+        var rec: SectionPassage = (await remote.query((q: QueryBuilder) =>
+          q.findRecord({ type: 'sectionpassage', id: dumbrec.id })
+        )) as any;
+        if (rec !== undefined) {
+          //outrecs is an array of arrays of IRecords
+          var outrecs = JSON.parse(rec.attributes.data);
+          var newrowinfo = rowInfo.map((r) => {
+            return { ...r };
+          }); // _.cloneDeep(r));
+
+          newrowinfo.forEach((row, index) => {
+            if (isSectionRow(row) && row.sectionId?.id === '')
+              row.sectionId.id = remoteIdGuid(
+                'section',
+                (outrecs[index][0] as IRecord).id,
+                memory.keyMap
+              );
+            if (isPassageRow(row) && row.passageId?.id === '')
+              row.passageId.id = remoteIdGuid(
+                'passage',
+                (outrecs[index][isSectionRow(row) ? 1 : 0] as IRecord).id,
+                memory.keyMap
+              );
+          });
+          setRowInfo(newrowinfo);
+          setInData(data.map((row: Array<any>) => [...row]));
+        }
+      }
+    }
+  };
+
+  const localSaveFn = async (recs: IRecord[][]) => {
+    let lastSec: string = '';
+    for (let rIdx = 0; rIdx < recs.length; rIdx += 1) {
+      const table = recs[rIdx];
+      for (let tIdx = 0; tIdx < table.length; tIdx += 1) {
+        const item = table[tIdx];
+        if (item.issection) {
+          const secRecs = sections.filter((s) => s.id === item.id);
+          if (secRecs.length > 0) {
+            if (item.changed) {
+              await memory.update((t: TransformBuilder) =>
+                UpdateRecord(
+                  t,
+                  {
+                    ...secRecs[0],
+                    attributes: {
+                      ...secRecs[0].attributes,
+                      sequencenum: parseInt(item.sequencenum),
+                      name: item.title,
+                    },
+                  } as Section,
+                  user
+                )
+              );
             }
+            lastSec = secRecs[0].id;
+          } else {
+            const secRec: Section = {
+              type: 'section',
+              attributes: {
+                sequencenum: parseInt(item.sequencenum),
+                name: item.title,
+                state: ActivityStates.NoMedia,
+              },
+            } as any;
+            const planRecId = { type: 'plan', id: plan };
+            await memory.update((t: TransformBuilder) => [
+              ...AddRecord(t, secRec, user, memory),
+              t.replaceRelatedRecord(secRec, 'plan', planRecId),
+            ]);
+            lastSec = secRec.id;
+          }
+        } else if (item.changed) {
+          const passRecs = passages.filter((p) => p.id === item.id);
+          if (passRecs.length > 0) {
+            await memory.update((t: TransformBuilder) =>
+              UpdateRecord(
+                t,
+                {
+                  ...passRecs[0],
+                  attributes: {
+                    ...passRecs[0].attributes,
+                    sequencenum: parseInt(item.sequencenum),
+                    book: item.book,
+                    reference: item.reference,
+                    title: item.title,
+                  },
+                } as Passage,
+                user
+              )
+            );
+          } else {
+            const passRec: Passage = {
+              type: 'passage',
+              attributes: {
+                sequencenum: parseInt(item.sequencenum),
+                book: item.book,
+                reference: item.reference,
+                title: item.title,
+                state: ActivityStates.NoMedia,
+              },
+            } as any;
+            const secRecId = { type: 'section', id: lastSec };
+            const t = new TransformBuilder();
+            const ops: Operation[] = [
+              ...AddRecord(t, passRec, user, memory),
+              t.replaceRelatedRecord(passRec, 'section', secRecId),
+            ];
+            UpdatePassageStateOps(
+              passRec.id,
+              lastSec,
+              plan,
+              ActivityStates.NoMedia,
+              '',
+              user,
+              t,
+              ops,
+              memory
+            );
+            await memory.update(ops);
           }
         }
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleSave = async () => {
+      const saveFn = async (changedRows: boolean[], anyNew: boolean) => {
+        setComplete(10);
+        const recs = await getChangedRecs(changedRows);
+        if (!offlineOnly) await onlineSaveFn(recs, anyNew);
+        else localSaveFn(recs);
       };
 
       let changedRows: boolean[] = rowInfo.map(
         (row) => row.sectionId?.id === '' || row.passageId?.id === ''
       );
+      const anyNew = changedRows.includes(true);
       changedRows.forEach((row, index) => {
         if (!row) {
           //if not new, see if altered
@@ -897,10 +1030,10 @@ export function ScriptureTable(props: IProps) {
             }
           } else someChangedRows[index] = false;
         });
-        await doSave(someChangedRows);
+        await saveFn(someChangedRows, anyNew);
         numChanges = changedRows.filter((r) => r).length;
       }
-      await doSave(changedRows);
+      await saveFn(changedRows, anyNew);
       setBusy(false);
       setComplete(0);
     };
@@ -908,7 +1041,7 @@ export function ScriptureTable(props: IProps) {
     if (doSave && !saving) {
       Online((online) => {
         setConnected(online);
-        if (!online) {
+        if (!online && !offlineOnly) {
           saveCompleted(ts.NoSaveOffline);
           setSaving(false);
         } else {
@@ -1062,12 +1195,12 @@ export function ScriptureTable(props: IProps) {
         }
       }
     };
-    if (!saving && !changed && plan !== '') {
+    if (!saving && !changed && plan) {
       getSections(plan as string).then(() => {
         setData(initData);
         setInData(initData.map((row: Array<any>) => [...row]));
         setRowInfo(rowInfo);
-        getLastModified();
+        getLastModified(plan);
       });
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -1124,15 +1257,20 @@ export function ScriptureTable(props: IProps) {
   if (view !== '') return <StickyRedirect to={view} />;
 
   const afterUpload = async (planId: string, mediaRemoteIds?: string[]) => {
-    if (mediaRemoteIds && mediaRemoteIds.length > 0) {
+    if (
+      mediaRemoteIds &&
+      mediaRemoteIds.length > 0 &&
+      uploadRow !== undefined
+    ) {
       await attachPassage(
-        uploadPassage,
+        passageId(uploadRow),
         related(
-          passages.find((p) => p.id === uploadPassage),
+          passages.find((p) => p.id === passageId(uploadRow)),
           'section'
         ),
         plan,
-        remoteIdGuid('mediafile', mediaRemoteIds[0], keyMap)
+        remoteIdGuid('mediafile', mediaRemoteIds[0], keyMap) ||
+          mediaRemoteIds[0]
       );
     }
     setDoSave(true);
@@ -1182,7 +1320,6 @@ export function ScriptureTable(props: IProps) {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        showJSXMessage={showJSXMessage}
         setComplete={setComplete}
         multiple={false}
         finish={afterUpload}

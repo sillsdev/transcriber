@@ -2,22 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-strict.xsd" version="1.2">
    <file original="TranscriberAdmin-en.xliff" source-language="en" target-language="en" datatype="plaintext">
       <body>
-         <trans-unit id="access.accessFirst">
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Access.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="access.accessSilTranscriber">
-            <source>To transcribe or review without the Internet, click your avatar. To transcribe, review, or do administrative tasks collaboratively, click 'Go Online'. To setup the program with users, project, and media files without using the Internet, click 'Import PTF file'. (PTF files can be exported while online.)</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Access.tsx</context>
-            </context-group>
-         </trans-unit>
-      	<trans-unit id="access.goOnline">
-      		<source>Go Online</source>
+      	<trans-unit id="access.availableOfflineUsers">
+      		<source>Available Offline Users</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.availableOnlineUsers">
+      		<source>Available Online Users</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">access.tsx</context>
@@ -30,8 +23,57 @@
       			<context context-type="sourcefile">access.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="access.createUser">
+      		<source>Add a new user</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.logIn">
+      		<source>Log In</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.screenTitle">
+      		<source>I want to work...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.importSnapshot">
+      		<source>Import Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+     	<trans-unit id="access.withInternet">
+      		<source>With an Internet connection</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.withoutInternet">
+      		<source>Without an Internet connection</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="access.mustBeOnline">
+      		<source>You must be connected to the Internet to Log In!</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">access.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="access.importProject">
-            <source>Import PTF File</source>
+            <source>ImportProject</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">electronImport.tsx</context>
@@ -268,7 +310,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="assignSection.title">
-            <source>Assign {0} to Members</source>
+            <source>Assign {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AssignSection.tsx</context>
@@ -331,7 +373,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.import">
-            <source>Import PTF File</source>
+            <source>Import Project</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>
@@ -393,7 +435,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.sectionStatus">
+      	<trans-unit id="cards.nameInUse">
+      		<source>Name in use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TeamDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.sectionStatus">
             <source>{0} {1}</source>
             <target/>
             <context-group>
@@ -778,13 +827,6 @@
                <context context-type="sourcefile">Import.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="import.expiredToken">
-            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ExportTab.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="import.family">
             <source>Family Name</source>
             <target/>
@@ -988,27 +1030,6 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="integration.bookNotFound">
-            <source>Book not included in this project</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.bookNotInParatext">
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.chapterSpan">
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="integration.countError">
             <source>Count query error: </source>
             <target/>
@@ -1032,34 +1053,6 @@
          </trans-unit>
          <trans-unit id="integration.emptyBook">
             <source>Passage {0}.{1}: Book is missing.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.expiredParatextToken">
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.expiredToken">
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.invalidParatextLogin">
-            <source>You must login with a valid paratext login to sync projects.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">integration.tsx</context>
-            </context-group>
-         </trans-unit>
-         <trans-unit id="integration.invalidReference">
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">integration.tsx</context>
@@ -1661,14 +1654,28 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="main.flatSample">
-      		<source>Download flat sample spreadsheet</source>
+      		<source>Scripture flat sample spreadsheet</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">HelpMenu.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="main.hierarchicalSample">
-      		<source>Download hierarchical sample spreadsheet</source>
+      		<source>Scripture hierarchical sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.genFlatSample">
+      		<source>General flat sample spreadsheet</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">HelpMenu.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.genHierarchicalSample">
+      		<source>General hierarchical sample spreadsheet</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">HelpMenu.tsx</context>
@@ -1856,14 +1863,63 @@
                <context context-type="sourcefile">drawer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="main.version">
-            <source>Version: </source>
+      	<trans-unit id="main.updateAvailable">
+      		<source>Update available: Version {0} was released {1}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">apphead.tsx</context>
+      		</context-group>
+      	</trans-unit>
+          <trans-unit id="main.about">
+            <source>About</source>
             <target/>
             <context-group>
-               <context context-type="sourcefile">HelpMenu.tsx</context>
+               <context context-type="sourcefile">AboutDialog.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.action">
+      	<trans-unit id="main.version">
+      		<source>Version: {0} - {1}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.copyClipboard">
+      		<source>Copy Version to Clipboard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.team">
+      		<source>Team</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.reliesOn">
+      		<source>{0} relies on other works</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.thanks">
+      		<source>Thanks to</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="main.cantCopy">
+      		<source>Unable to copy to clipboard</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AboutDialog.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.action">
             <source>Action</source>
             <target/>
             <context-group>
@@ -2110,6 +2166,13 @@
          </trans-unit>
          <trans-unit id="mediaUpload.dragDropSingle">
             <source>Drag and drop a file here, or click here to browse for the file.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaUpload.tsx</context>
+            </context-group>
+         </trans-unit>
+          <trans-unit id="mediaUpload.invalidFile">
+            <source>Not valid for this operation: {0} </source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -2374,8 +2437,8 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="profile.addOfflineUser">
-            <source>Add Offline Desktop Member</source>
+         <trans-unit id="profile.addMember">
+            <source>Complete User Profile</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
@@ -2417,21 +2480,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.completeProfile">
-            <source>Complete Member Profile</source>
+            <source>Complete User Profile</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.deleteExplained">
-            <source>Deleting your member will block you from using the program and remove references to your work.</source>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.deleteUser">
-            <source>Delete Member</source>
+            <source>Delete User</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
@@ -2556,13 +2619,6 @@
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="profile.sendNews">
-            <source>Receive {0} and Language Technology news</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Profile.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="profile.timezone">
             <source>Time zone</source>
             <target/>
@@ -2571,14 +2627,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="profile.userExists">
-            <source>This offline member exists.</source>
+            <source>This offline user exists.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="profile.userProfile">
-            <source>Member profile</source>
+            <source>User profile</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Profile.tsx</context>
@@ -2731,8 +2787,50 @@
                <context context-type="sourcefile">ScriptureTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shapingTable.NoColumns">
+         <trans-unit id="shapingTable.avg">
+            <source>Avg</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.count">
+            <source>Count</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.max">
+            <source>Max</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.min">
+            <source>Min</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.noColumns">
             <source>No columns visible</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.noData">
+            <source>No data</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">shapingTable.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shapingTable.sum">
+            <source>Sum</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">shapingTable.tsx</context>
@@ -2766,6 +2864,55 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="shared.bookNotInParatext">
+            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.paratextchapterSpan">
+            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.invalidReference">
+            <source>Passage {0}.{1} {2}: Invalid Reference</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.BookNotSet">
+            <source>Book was not set for Section {0} Passage {1}</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.expiredParatextToken">
+            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+       <trans-unit id="shared.expiredToken">
+            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="shared.invalidParatextLogin">
+            <source>You must login with a valid paratext login.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">integration.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="shared.transcriber">
             <source>Transcriber</source>
             <target/>
@@ -2787,7 +2934,14 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="taskItem.assign">
+      	<trans-unit id="shared.importMediaSingular">
+      		<source>Import Media</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="taskItem.assign">
             <source>Assign {0}</source>
             <target/>
             <context-group>
@@ -3074,6 +3228,34 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcriber.pullParatextCaption">
+            <source>Paratext</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.pullParatextStart">
+            <source>Getting transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.pullParatextStatus">
+            <source>Transcription pulled from Paratext</source>
+            <target>Transcription obtenue à partir de Paratext</target>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcriber.pullParatextTip">
+            <source>Pull transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+            <context-group>
+               <context context-type="sourcefile">Transcriber.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="transcriber.reject">
             <source>Reject</source>
             <target/>
@@ -3312,13 +3494,6 @@
                <context context-type="sourcefile">ExportTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriptionTab.expiredToken">
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">ExportTab.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriptionTab.export">
             <source>Export</source>
             <target/>
@@ -3431,8 +3606,22 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="treeChart.contributions">
+            <source>Contributions toward</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">treeChart.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="treeChart.noData">
             <source>No Transcription Data Yet</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">treeChart.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="treeChart.status">
+            <source>Status of</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">treeChart.tsx</context>
@@ -3522,14 +3711,28 @@
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="usertable.offline">
-            <source>Offline Desktop Member</source>
+         <trans-unit id="usertable.addMember">
+            <source>Add Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">UserTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="usertable.phone">
+      	<trans-unit id="usertable.addNewUser">
+      		<source>Add New User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">UserAdd.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="usertable.selectUser">
+      		<source>Select User</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">UserAdd.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="usertable.phone">
             <source>Phone</source>
             <target/>
             <context-group>
@@ -3662,7 +3865,14 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="vProject.new">
+      	<trans-unit id="vProject.nameInUse">
+      		<source>Name in use</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectName.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="vProject.new">
             <source>New</source>
             <target/>
             <context-group>

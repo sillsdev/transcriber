@@ -1,10 +1,11 @@
+import React from 'react';
+import { useGlobal } from 'reactn';
 import { ISharedStrings, IPlanActionsStrings, IState } from '../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import React from 'react';
 import AssignIcon from '@material-ui/icons/PeopleAltOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import TranscribeIcon from '@material-ui/icons/EditOutlined';
-import UploadIcon from '@material-ui/icons/CloudUploadOutlined';
+import AddIcon from '@material-ui/icons/AddCircleOutline';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
 import StopIcon from '@material-ui/icons/Stop';
 import localStrings from '../selector/localize';
@@ -63,6 +64,7 @@ export function PlanActions(props: IProps) {
     canDelete,
   } = props;
   const classes = useStyles();
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   const handlePlayStatus = () => () => {
     onPlayStatus(isPlaying ? '' : mediaId);
@@ -85,9 +87,11 @@ export function PlanActions(props: IProps) {
           <IconButton
             className={classes.actionButton}
             onClick={onUpload(rowIndex)}
-            title={ts.uploadMediaSingular}
+            title={
+              !offlineOnly ? ts.uploadMediaSingular : ts.importMediaSingular
+            }
           >
-            <UploadIcon />
+            <AddIcon />
           </IconButton>
         )}
       {isPassage && (isElectron || online) && (

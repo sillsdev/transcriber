@@ -72,11 +72,7 @@ export const Language = (props: IProps) => {
   const CTRL = 17;
 
   const handleChangeFont = (e: any) => {
-    if (
-      langEl.current &&
-      e.keyCode &&
-      [TAB, SHIFT, CTRL].indexOf(e.keyCode) !== -1
-    )
+    if (langEl.current && e.keyCode && ![TAB, SHIFT, CTRL].includes(e.keyCode))
       langEl.current.click();
     e.stopPropagation();
   };

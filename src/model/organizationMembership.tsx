@@ -11,6 +11,7 @@ export interface OrganizationMembership extends BaseModel {
     user: RecordRelationship;
     role: RecordRelationship;
     organiztion: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 

@@ -3,7 +3,7 @@ import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { DialogMode, Organization } from '../../model';
-import { TeamDialog } from '.';
+import TeamDialog from './TeamDialog';
 import { TeamContext } from '../../context/TeamContext';
 import { isElectron } from '../../api-variable';
 import Auth from '../../auth/Auth';
@@ -32,6 +32,7 @@ const TeamActions = (props: IProps) => {
   const { auth } = props;
   const classes = useStyles();
   const [offline] = useGlobal('offline');
+  const [isDeveloper] = useGlobal('developer');
   const [openAdd, setOpenAdd] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const ctx = React.useContext(TeamContext);
@@ -51,7 +52,7 @@ const TeamActions = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      {!offline && (
+      {(!offline || isDeveloper) && (
         <Button
           variant="contained"
           color="default"

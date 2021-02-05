@@ -9,10 +9,18 @@ import {
   UPLOAD_ITEM_FAILED,
   UPLOAD_COMPLETE,
 } from './types';
-import { dataPath, infoMsg, logError, PathType, Severity } from '../../utils';
+import {
+  dataPath,
+  infoMsg,
+  logError,
+  PathType,
+  Severity,
+  createFolder,
+} from '../../utils';
 var fs = require('fs');
+var path = require('path');
 
-export const uploadFiles = (files: FileList) => (dispatch: any) => {
+export const uploadFiles = (files: File[]) => (dispatch: any) => {
   dispatch({
     payload: files,
     type: UPLOAD_LIST,
@@ -21,7 +29,7 @@ export const uploadFiles = (files: FileList) => (dispatch: any) => {
 
 export const nextUpload = (
   record: any,
-  files: FileList,
+  files: File[],
   n: number,
   auth: Auth,
   errorReporter: any,
@@ -38,6 +46,25 @@ export const nextUpload = (
       type: UPLOAD_ITEM_FAILED,
     });
     if (cb) cb(n, false);
+    return;
+  }
+  if (!auth.accessToken) {
+    // offlineOnly
+    var local = { localname: '' };
+    dataPath(`http://${files[n].path}`, PathType.MEDIA, local);
+    try {
+      const fullName = local.localname;
+      createFolder(fullName.substring(0, fullName.lastIndexOf(path.sep)));
+      fs.copyFileSync(files[n].path, fullName);
+      const filename = path.join(
+        PathType.MEDIA,
+        files[n].path.split(path.sep).pop()
+      );
+      if (cb) cb(n, true, { ...record, audioUrl: filename });
+    } catch (err) {
+      if (cb) cb(n, false);
+      console.log(err);
+    }
     return;
   }
   Axios.post(API_CONFIG.host + '/api/mediafiles', record, {

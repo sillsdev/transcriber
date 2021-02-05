@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { Redirect, useLocation } from 'react-router-dom';
 import { IState, IMainStrings } from '../../model';
@@ -10,9 +10,11 @@ import {
   Typography,
   IconButton,
   LinearProgress,
+  Tooltip,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
+import SystemUpdateIcon from '@material-ui/icons/SystemUpdateAlt';
 import Auth from '../../auth/Auth';
 import { API_CONFIG, isElectron } from '../../api-variable';
 import { UnsavedContext } from '../../context/UnsavedContext';
@@ -31,6 +33,8 @@ import { usePlan } from '../../crud';
 import Busy from '../Busy';
 import StickyRedirect from '../StickyRedirect';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
+import { axiosPost } from '../../utils/axios';
+import moment from 'moment';
 
 const useStyles = makeStyles({
   appBar: {
@@ -42,6 +46,9 @@ const useStyles = makeStyles({
   },
   progress: {
     width: '100%',
+  },
+  spacing: {
+    padding: '12px',
   },
 });
 
@@ -55,12 +62,14 @@ const ProjectName = ({ setView }: INameProps) => {
   const { getPlanName } = usePlan();
   const [, setProject] = useGlobal('project');
   const [, setProjRole] = useGlobal('projRole');
+  const [, setProjType] = useGlobal('projType');
   const [plan, setPlan] = useGlobal('plan');
 
   const handleHome = () => {
     setProject('');
     setPlan('');
     setProjRole('');
+    setProjType('');
     setView('Home');
   };
 
@@ -103,7 +112,7 @@ export const AppHead = (props: IProps) => {
   const [connected] = useGlobal('connected');
   const ctx = React.useContext(UnsavedContext);
   const { checkSavedFn } = ctx.state;
-  const [view, setView] = React.useState('');
+  const [view, setView] = useState('');
   const [busy] = useGlobal('remoteBusy');
   const [importexportBusy] = useGlobal('importexportBusy');
   const [doSave] = useGlobal('doSave');
@@ -113,6 +122,12 @@ export const AppHead = (props: IProps) => {
   const [dosave, setDoSave] = useGlobal('doSave');
   const isMounted = useMounted();
   const [pathDescription, setPathDescription] = React.useState('');
+  const [version, setVersion] = useState('');
+  const [updates] = useState(
+    isElectron && (localStorage.getItem('updates') || 'true') === 'true'
+  );
+  const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
+  const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
 
   const handleUserMenuAction = (
     what: string,
@@ -147,6 +162,7 @@ export const AppHead = (props: IProps) => {
 
   React.useEffect(() => {
     const handleUnload = (e: any) => {
+      if (pathname === '/') return true;
       if (!exitAlert && isElectron && isMounted.current) setExitAlert(true);
       if (!globalStore.enableOffsite) {
         e.preventDefault();
@@ -172,11 +188,29 @@ export const AppHead = (props: IProps) => {
   useEffect(() => {
     const description =
       pathname &&
+      pathname !== '/' &&
       pathname.indexOf('team') < 0 &&
       `${pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin} - `;
     isMounted.current && setPathDescription(description || '');
+    isMounted.current && setVersion(require('../../../package.json').version);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, t.admin, t.transcribe, isMounted]);
+
+  useEffect(() => {
+    if (latestVersion === '' && version !== '' && updates) {
+      axiosPost('userversions/' + version, undefined, auth).then((response) => {
+        var lv = response?.data.data.attributes['desktop-version'];
+        var lr = response?.data.data.attributes['date-updated'].toString();
+        if (!lr.endsWith('Z')) lr += 'Z';
+        lr = moment(lr)
+          .locale(Intl.NumberFormat().resolvedOptions().locale)
+          .format('L');
+        setLatestVersion(lv);
+        setLatestRelease(lr);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updates, version]);
 
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
@@ -195,13 +229,28 @@ export const AppHead = (props: IProps) => {
             {API_CONFIG.productName}
           </Typography>
           <div className={classes.grow}>{'\u00A0'}</div>
-          {(isOffline || orbitStatus !== undefined || !connected) && (
-            <CloudOffIcon />
-          )}
-          {'\u00A0'}
           {SwitchTo && <SwitchTo />}
+          {'\u00A0'}
+          {(isOffline || orbitStatus !== undefined || !connected) && (
+            <CloudOffIcon className={classes.spacing} color="action" />
+          )}
+          {latestVersion !== '' && latestVersion !== version && (
+            <Tooltip
+              title={t.updateAvailable
+                .replace('{0}', latestVersion)
+                .replace('{1}', latestRelease)}
+            >
+              <IconButton
+                href="https://software.sil.org/siltranscriber/download/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <SystemUpdateIcon color="primary" />
+              </IconButton>
+            </Tooltip>
+          )}
           <HelpMenu online={!isOffline} />
-          <UserMenu action={handleUserMenu} auth={auth} />
+          {pathname !== '/' && <UserMenu action={handleUserMenu} auth={auth} />}
         </Toolbar>
         {!importexportBusy || <Busy />}
         {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}

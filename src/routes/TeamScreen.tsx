@@ -30,8 +30,10 @@ export const TeamScreen = (props: IProps) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [project, setProject] = useGlobal('project');
   const [projRole, setProjRole] = useGlobal('projRole');
+  const [projType, setProjType] = useGlobal('projType');
   const [memory] = useGlobal('memory');
   const [plan] = useGlobal('plan');
   const [view, setView] = useState('');
@@ -40,15 +42,16 @@ export const TeamScreen = (props: IProps) => {
     if (project !== '' && projRole !== '') {
       const remProjId = remoteId('plan', plan, memory.keyMap);
       const loc =
-        projRole === 'admin' && !isOffline
-          ? `/plan/${remProjId}/0`
-          : `/work/${remProjId}`;
+        projRole === 'admin' && (!isOffline || offlineOnly)
+          ? `/plan/${remProjId || plan}/0`
+          : `/work/${remProjId || plan}`;
       if (loc !== localStorage.getItem(localUserKey(LocalKey.url, memory))) {
         setView(loc);
       } else {
         localStorage.setItem(localUserKey(LocalKey.url, memory), '/team');
         if (project !== '') setProject('');
         if (projRole !== '') setProjRole('');
+        if (projType !== '') setProjType('');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

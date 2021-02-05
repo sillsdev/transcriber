@@ -47,7 +47,7 @@ import {
   useOrganizedBy,
 } from '../crud';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
-import { currentDateTime } from '../utils';
+import { UpdateLastModifedBy, UpdateRelatedRecord } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,6 +95,7 @@ function AssignSection(props: IProps) {
   const classes = useStyles();
   const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
+  const [user] = useGlobal('user');
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
@@ -110,23 +111,18 @@ function AssignSection(props: IProps) {
 
   const assign = async (section: Section, userId: string, role: RoleNames) => {
     await memory.update((t: TransformBuilder) => [
-      t.replaceRelatedRecord(
-        { type: 'section', id: section.id },
+      ...UpdateRelatedRecord(
+        t,
+        section,
         role.toLowerCase(),
-        {
-          type: 'user',
-          id: userId,
-        }
+        'user',
+        userId,
+        user
       ),
-      t.replaceAttribute(
-        { type: 'section', id: section.id },
-        'dateUpdated',
-        currentDateTime()
-      ),
-      t.replaceAttribute(
+      ...UpdateLastModifedBy(
+        t,
         { type: 'plan', id: related(section, 'plan') },
-        'dateUpdated',
-        currentDateTime()
+        user
       ),
     ]);
   };

@@ -23,6 +23,7 @@ export interface MediaFile extends BaseModel {
   relationships?: {
     passage: RecordRelationship;
     plan: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 export default MediaFile;

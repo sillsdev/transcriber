@@ -10,6 +10,7 @@ import {
   FileResponse,
   ExportType,
   Project,
+  ISharedStrings,
 } from '../model';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import localStrings from '../selector/localize';
@@ -30,6 +31,7 @@ enum Steps {
 
 interface IStateProps {
   t: ITranscriptionTabStrings;
+  ts: ISharedStrings;
   exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
 }
@@ -47,7 +49,7 @@ interface IProps extends IStateProps, IDispatchProps {
 }
 
 export const ProjectDownload = (props: IProps) => {
-  const { open, projectIds, auth, t, finish } = props;
+  const { open, projectIds, auth, t, ts, finish } = props;
   const { exportProject, exportComplete, exportStatus, exportFile } = props;
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
@@ -69,7 +71,7 @@ export const ProjectDownload = (props: IProps) => {
   const backup = coordinator.getSource('backup') as IndexedDBSource;
 
   const translateError = (err: IAxiosStatus): string => {
-    if (err.errStatus === 401) return t.expiredToken;
+    if (err.errStatus === 401) return ts.expiredToken;
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
@@ -189,6 +191,7 @@ export const ProjectDownload = (props: IProps) => {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
+  ts: localStrings(state, { layout: 'shared' }),
   exportFile: state.importexport.exportFile,
   exportStatus: state.importexport.importexportStatus,
 });

@@ -54,8 +54,12 @@ export interface IProjectDialogState {
   setState: React.Dispatch<React.SetStateAction<IProjectDialog>>;
 }
 
-export function ProjectDialog(props: IDialog<IProjectDialog>) {
-  const { mode, values, isOpen, onOpen, onCommit, onCancel } = props;
+interface IProps extends IDialog<IProjectDialog> {
+  nameInUse?: (newName: string) => boolean;
+}
+
+export function ProjectDialog(props: IProps) {
+  const { mode, values, isOpen, onOpen, onCommit, onCancel, nameInUse } = props;
   const classes = useStyles();
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
@@ -97,7 +101,7 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
         {t.newProject.replace('{0}', mode === Mode.add ? t.new : t.edit)}
       </DialogTitle>
       <DialogContent>
-        <ProjectName state={state} setState={setState} />
+        <ProjectName state={state} setState={setState} inUse={nameInUse} />
         <ProjectDescription state={state} setState={setState} />
         <ProjectType type={type} onChange={handleTypeChange} />
         <Language {...state} onChange={handleLanguageChange} />
@@ -111,7 +115,12 @@ export function ProjectDialog(props: IDialog<IProjectDialog>) {
         <Button
           onClick={handleAdd}
           color="primary"
-          disabled={name === '' || bcp47 === 'und' || type === ''}
+          disabled={
+            (nameInUse && nameInUse(name)) ||
+            name === '' ||
+            bcp47 === 'und' ||
+            type === ''
+          }
         >
           {mode === Mode.add ? t.add : t.save}
         </Button>

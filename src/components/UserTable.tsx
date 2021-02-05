@@ -28,8 +28,9 @@ import { Table } from '@devexpress/dx-react-grid-material-ui';
 import Invite, { IInviteData } from './Invite';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
+import UserAdd from './UserAdd';
 import StickyRedirect from './StickyRedirect';
-import { related } from '../crud';
+import { related, useAddToOrgAndGroup } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -100,7 +101,7 @@ const getMedia = (
       if (u.attributes) {
         rowData.push({
           name: u.attributes.name,
-          email: u.attributes.email ? u.attributes.email : t.offline,
+          email: u.attributes.email ? u.attributes.email : t.addMember,
           locale: u.attributes.locale ? u.attributes.locale : '',
           // phone: u.attributes.phone ? u.attributes.phone : '',
           timezone: u.attributes.timezone ? u.attributes.timezone : '',
@@ -137,6 +138,7 @@ export function UserTable(props: IProps) {
   const [, setEditId] = useGlobal('editUserId');
   const [memory] = useGlobal('memory');
   const [orgRole] = useGlobal('orgRole');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [data, setData] = useState(Array<IRow>());
   const columnDefs = [
     { name: 'name', title: t.name },
@@ -164,23 +166,48 @@ export function UserTable(props: IProps) {
   const [filter, setFilter] = useState(false);
   const [deleteItem, setDeleteItem] = useState('');
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
   const [view, setView] = useState('');
+  const addToOrgAndGroup = useAddToOrgAndGroup();
 
-  const handleAdd = () => {
+  const handleInvite = () => {
     setDialogVisible(true);
   };
-  const handleAddComplete = async (invite: IInviteData) => {
+  const handleInviteComplete = async (invite: IInviteData) => {
     setDialogVisible(false);
   };
 
-  const handleAddCancel = () => {
+  const handleInviteCancel = () => {
     setDialogVisible(false);
   };
 
-  const handleEdit = (userId: string) => (e: any) => {
+  const doEdit = (userId: string) => {
     localStorage.setItem(localUserKey(LocalKey.url, memory), pathname);
     setEditId(userId);
     setView('Profile');
+  };
+
+  const handleEdit = (userId: string) => (e: any) => {
+    doEdit(userId);
+  };
+
+  const handleAddOpen = () => {
+    setAddOpen(true);
+  };
+
+  const handleSetAddOpen = (val: boolean) => {
+    setAddOpen(val);
+  };
+
+  const handleAddNew = () => {
+    setAddOpen(false);
+    doEdit('Add');
+  };
+
+  const handleAddExisting = (userId: string) => {
+    setAddOpen(false);
+    const userRec = users.filter((u) => u?.id === userId);
+    if (userRec.length > 0) addToOrgAndGroup(userRec[0], false);
   };
 
   const handleDelete = (value: string) => () => {
@@ -300,28 +327,32 @@ export function UserTable(props: IProps) {
         <div className={classes.actions}>
           {orgRole === 'admin' && (
             <>
-              <Button
-                key="add"
-                aria-label={t.invite}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleAdd}
-              >
-                {t.invite}
-                <AddIcon className={classes.buttonIcon} />
-              </Button>
-              <Button
-                key="offline"
-                aria-label={t.offline}
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={handleEdit('Add')}
-              >
-                {t.offline}
-                <AddIcon className={classes.buttonIcon} />
-              </Button>
+              {!offlineOnly && (
+                <Button
+                  key="add"
+                  aria-label={t.invite}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleInvite}
+                >
+                  {t.invite}
+                  <AddIcon className={classes.buttonIcon} />
+                </Button>
+              )}
+              {offlineOnly && (
+                <Button
+                  key="add-member"
+                  aria-label={t.addMember}
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAddOpen}
+                >
+                  {t.addMember}
+                  <AddIcon className={classes.buttonIcon} />
+                </Button>
+              )}
             </>
           )}
           <div className={classes.grow}>{'\u00A0'}</div>
@@ -355,8 +386,14 @@ export function UserTable(props: IProps) {
       <Invite
         visible={dialogVisible}
         inviteIn={null}
-        addCompleteMethod={handleAddComplete}
-        cancelMethod={handleAddCancel}
+        addCompleteMethod={handleInviteComplete}
+        cancelMethod={handleInviteCancel}
+      />
+      <UserAdd
+        open={addOpen}
+        setOpen={handleSetAddOpen}
+        select={handleAddExisting}
+        add={handleAddNew}
       />
       {deleteItem !== '' ? (
         <Confirm

@@ -14,13 +14,14 @@ export const useLoadProjectData = (
   const [coordinator] = useGlobal('coordinator');
   const [, setConnected] = useGlobal('connected');
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [projectsLoaded] = useGlobal('projectsLoaded');
   const [, setBusy] = useGlobal('importexportBusy');
   const AddProjectLoaded = useProjectsLoaded();
   const { showMessage } = useSnackBar();
 
   return (projectId: string, cb?: () => void) => {
-    if (projectsLoaded.includes(projectId)) {
+    if (projectsLoaded.includes(projectId) || offlineOnly) {
       if (cb) cb();
       return;
     }

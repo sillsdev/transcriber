@@ -3,7 +3,10 @@
 export function insertAtCursor(myField: HTMLTextAreaElement, myValue: string) {
   //IE support is not handled
   //MOZILLA and others
-  if (myField.selectionStart || myField.selectionStart === 0) {
+  if (
+    myField.selectionStart ||
+    myField.selectionStart !== myField.selectionEnd
+  ) {
     var startPos = myField.selectionStart;
     var endPos = myField.selectionEnd;
     myField.value =

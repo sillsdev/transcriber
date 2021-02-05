@@ -8,6 +8,7 @@ declare module 'reactn/default' {
     orgRole: string;
     project: string;
     projRole: string;
+    projType: string;
     plan: string;
     tab: number;
     group: string;
@@ -33,5 +34,8 @@ declare module 'reactn/default' {
     orbitRetries: number;
     enableOffsite: boolean;
     connected: boolean;
+    offlineOnly: boolean;
+    latestVersion: string;
+    releaseDate: string;
   }
 }

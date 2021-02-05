@@ -58,6 +58,7 @@ export const AddCard = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = React.useContext(TeamContext);
   const {
     projectCreate,
@@ -67,9 +68,11 @@ export const AddCard = (props: IProps) => {
     sharedStrings,
     vProjectStrings,
     bookSuggestions,
+    teamProjects,
+    personalProjects,
   } = ctx.state;
   const t = cardStrings;
-  const { showMessage, showJSXMessage } = useSnackBar();
+  const { showMessage } = useSnackBar();
   const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
@@ -130,6 +133,12 @@ export const AddCard = (props: IProps) => {
     e.stopPropagation();
   };
 
+  const nameInUse = (newName: string) => {
+    const projects = team ? teamProjects(team.id) : personalProjects();
+    const sameNameRec = projects.filter((p) => p?.attributes?.name === newName);
+    return sameNameRec.length > 0;
+  };
+
   const handleCommit = (values: IProjectDialog) => {
     const {
       name,
@@ -160,9 +169,8 @@ export const AddCard = (props: IProps) => {
     );
   };
 
-  const createProject = async (files: FileList) => {
+  const createProject = async (fileList: File[]) => {
     setStep(0);
-    const fileList = (files as any) as File[];
     const name = fileList[0]?.name.split('.')[0];
     const planId = await projectCreate(
       {
@@ -183,7 +191,8 @@ export const AddCard = (props: IProps) => {
       team
     );
     setPlan(planId);
-    await waitForRemoteId({ type: 'plan', id: planId }, memory.keyMap);
+    if (!offlineOnly)
+      await waitForRemoteId({ type: 'plan', id: planId }, memory.keyMap);
     setStep(1);
     return planId;
   };
@@ -201,8 +210,9 @@ export const AddCard = (props: IProps) => {
       setInProgress(false);
       setStep(0);
       if (book?.value)
-        setView(`/plan/${remoteId('plan', planId, memory.keyMap)}/0`);
-      else setView(`/work/${remoteId('plan', planId, memory.keyMap)}`);
+        setView(`/plan/${remoteId('plan', planId, memory.keyMap) || planId}/0`);
+      else
+        setView(`/work/${remoteId('plan', planId, memory.keyMap) || planId}`);
     }, 1000);
   };
 
@@ -219,7 +229,7 @@ export const AddCard = (props: IProps) => {
       return (
         <>
           <ProjectType type={type} onChange={setType} />
-          {type === 'scripture' && (
+          {type.toLowerCase() === 'scripture' && (
             <BookCombobox
               value={book}
               suggestions={bookSuggestions}
@@ -262,6 +272,7 @@ export const AddCard = (props: IProps) => {
                 isOpen={open}
                 onOpen={handleOpen}
                 onCommit={handleCommit}
+                nameInUse={nameInUse}
               />
             </div>
           ) : (
@@ -276,7 +287,6 @@ export const AddCard = (props: IProps) => {
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}
-        showJSXMessage={showJSXMessage}
         setComplete={setComplete}
         multiple={true}
         metaData={MetaData}

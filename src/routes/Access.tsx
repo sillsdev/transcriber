@@ -15,36 +15,20 @@ import {
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Paper,
-  Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@material-ui/core';
+import { Typography, Button, Paper } from '@material-ui/core';
 import Auth from '../auth/Auth';
 import { Online, localeDefault } from '../utils';
-import { related, useOfflnProjRead } from '../crud';
-import { UserAvatar } from '../components/UserAvatar';
+import { related, useOfflnProjRead, useOfflineSetup } from '../crud';
 import { IAxiosStatus } from '../store/AxiosStatus';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { isElectron, API_CONFIG } from '../api-variable';
+import { isElectron } from '../api-variable';
 import ImportTab from '../components/ImportTab';
 import Confirm from '../components/AlertDialog';
+import UserList from '../control/UserList';
+import { useSnackBar } from '../hoc/SnackBar';
+import AppHead from '../components/App/AppHead';
 
-const reactStringReplace = require('react-string-replace');
-
-const version = require('../../package.json').version;
-const buildDate = require('../buildDate.json').date;
-
-const noop = { openExternal: () => {} };
-const { shell } = isElectron ? require('electron') : { shell: noop };
 const ipc = isElectron ? require('electron').ipcRenderer : null;
 const { remote } = isElectron ? require('electron') : { remote: null };
 
@@ -68,34 +52,29 @@ const useStyles = makeStyles((theme: Theme) =>
     version: {
       alignSelf: 'center',
     },
-    paper: theme.mixins.gutters({
-      paddingTop: 16,
-      paddingBottom: 16,
-      marginTop: theme.spacing(3),
-      width: '40%',
+    paper: {
+      padding: theme.spacing(3),
       display: 'flex',
       flexDirection: 'column',
-      alignContent: 'center',
-      [theme.breakpoints.down('md')]: {
-        width: '100%',
-      },
-    }) as any,
-    dialogHeader: theme.mixins.gutters({
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-    }) as any,
-    actions: theme.mixins.gutters({
-      paddingTop: 16,
-      paddingBottom: 16,
-      marginTop: theme.spacing(2),
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
       alignItems: 'center',
-    }) as any,
+    },
+    screenHead: {
+      fontSize: '14pt',
+    },
+    sectionHead: {
+      fontSize: '16pt',
+      paddingTop: theme.spacing(4),
+      paddingBottom: theme.spacing(2),
+    },
+    listHead: {
+      fontWeight: 'bold',
+    },
+    actions: {
+      paddingTop: theme.spacing(2),
+    },
     button: {
       marginRight: theme.spacing(1),
+      minWidth: theme.spacing(20),
     },
   })
 );
@@ -140,23 +119,30 @@ export function Access(props: IProps) {
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
   const [offline, setOffline] = useGlobal('offline');
-  const [isDeveloper, setIsDeveloper] = useGlobal('developer');
-  const [connected, setConnected] = useGlobal('connected');
+  const [isDeveloper] = useGlobal('developer');
+  const [, setConnected] = useGlobal('connected');
+  const [, setEditId] = useGlobal('editUserId');
+  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const [importOpen, setImportOpen] = useState(false);
   const handleLogin = () => auth.login();
   const [selectedUser, setSelectedUser] = useState('');
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
   const [, setProjRole] = useGlobal('projRole');
+  const [, setProjType] = useGlobal('projType');
   const [, setPlan] = useGlobal('plan');
   const offlineProjRead = useOfflnProjRead();
+  const offlineSetup = useOfflineSetup();
+  const { showMessage } = useSnackBar();
+
   const [goOnlineConfirmation, setGoOnlineConfirmation] = useState<
     React.MouseEvent<HTMLElement>
   >();
 
-  const handleSelect = (uId: string) => () => {
+  const handleSelect = (uId: string) => {
     const selected = users.filter((u) => u.id === uId);
     if (selected.length > 0) {
+      if (selected[0]?.keys?.remoteId === undefined) setOfflineOnly(true);
       localStorage.setItem('user-id', selected[0].id);
       setSelectedUser(uId);
     }
@@ -167,7 +153,17 @@ export function Access(props: IProps) {
   };
 
   const handleGoOnline = (event: React.MouseEvent<HTMLElement>) => {
-    setGoOnlineConfirmation(event);
+    Online(
+      (online) => {
+        if (online) {
+          setGoOnlineConfirmation(event);
+        } else {
+          showMessage(t.mustBeOnline);
+        }
+      },
+      auth,
+      true
+    );
   };
   const handleGoOnlineConfirmed = () => {
     if (isElectron) {
@@ -181,14 +177,12 @@ export function Access(props: IProps) {
     setGoOnlineConfirmation(undefined);
   };
 
-  const handleVersionClick = (e: React.MouseEvent) => {
-    if (e.shiftKey) {
-      localStorage.setItem('developer', !isDeveloper ? 'true' : 'false');
-      setIsDeveloper(!isDeveloper);
-    }
+  const handleCreateUser = async () => {
+    console.log('create user');
+    await offlineSetup();
+    setOfflineOnly(true);
+    setEditId('Add');
   };
-
-  const handleAdmin = () => shell.openExternal(API_CONFIG.endpoint);
 
   // see: https://web.dev/persistent-storage/
   const persistData = async () => {
@@ -201,7 +195,10 @@ export function Access(props: IProps) {
     }
   };
 
-  const hasUserProjects = (userId: string) => {
+  const isOnlineUserWithOfflineProjects = (userId: string) => {
+    const userRec = users.filter((u) => u.id === userId);
+    if (userRec.length > 0 && userRec[0]?.keys?.remoteId === undefined)
+      return false;
     const grpIds = groupMemberships
       .filter((gm) => related(gm, 'user') === userId)
       .map((gm) => related(gm, 'group'));
@@ -221,6 +218,22 @@ export function Access(props: IProps) {
     return userSections.length > 0;
   };
 
+  const hasOnlineUser = () => {
+    for (let i = users.length; i >= 0; i -= 1)
+      if (isOnlineUserWithOfflineProjects(users[i]?.id)) return true;
+    return false;
+  };
+
+  const isOfflineUserWithProjects = (userId: string) => {
+    const userRec = users.filter((u) => u.id === userId);
+    return userRec.length > 0 && userRec[0]?.keys?.remoteId === undefined;
+  };
+
+  const hasOfflineUser = () => {
+    for (let i = users.length; i >= 0; i -= 1)
+      if (isOfflineUserWithProjects(users[i]?.id)) return true;
+  };
+
   useEffect(() => {
     if (isElectron) persistData();
     setLanguage(localeDefault(isDeveloper));
@@ -232,6 +245,7 @@ export function Access(props: IProps) {
     setProject('');
     setPlan('');
     setProjRole('');
+    setProjType('');
 
     if (!auth?.isAuthenticated()) {
       if (!offline && !isElectron) {
@@ -263,104 +277,66 @@ export function Access(props: IProps) {
     return <Redirect to="/emailunverified" />;
   } else if (
     (!isElectron && auth?.isAuthenticated()) ||
+    offlineOnly ||
     (isElectron && selectedUser !== '')
   )
     return <Redirect to="/loading" />;
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <>
-          <Toolbar>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              {API_CONFIG.productName}
-            </Typography>
-          </Toolbar>
-          <div className={classes.grow}>{'\u00A0'}</div>
-          <div className={classes.version} onClick={handleVersionClick}>
-            {version}
-            <br />
-            {buildDate}
-          </div>
-        </>
-      </AppBar>
+      <AppHead {...props} />
       {isElectron && (
         <div className={classes.container}>
           <Paper className={classes.paper}>
-            <Typography variant="body1" className={classes.dialogHeader}>
-              {users.length > 0 ? (
-                t.accessSilTranscriber
-              ) : (
-                <span>
-                  {reactStringReplace(
-                    t.accessFirst.replace('{0}', API_CONFIG.productName),
-                    '{1}',
-                    () => {
-                      return connected ? (
-                        <Button key="launch" onClick={handleAdmin}>
-                          SIL Transcriber
-                        </Button>
-                      ) : (
-                        'SIL Transcriber'
-                      );
-                    }
-                  )}
-                </span>
-              )}
+            <Typography className={classes.screenHead}>
+              {t.screenTitle}
             </Typography>
-            <Grid container direction="row">
-              {importStatus?.complete !== false && users && users.length > 0 && (
-                <Grid item xs={12} md={6}>
-                  <div className={classes.actions}>
-                    <List>
-                      {users
-                        .filter((u) => hasUserProjects(u.id))
-                        .sort((i, j) =>
-                          (i.attributes ? i.attributes.name : '') <
-                          (j.attributes ? j.attributes.name : '')
-                            ? -1
-                            : 1
-                        )
-                        .map((u) => (
-                          <ListItem key={u.id} onClick={handleSelect(u.id)}>
-                            <ListItemIcon>
-                              <UserAvatar
-                                {...props}
-                                users={users}
-                                userRec={u}
-                              />
-                            </ListItemIcon>
-                            <ListItemText
-                              primary={u.attributes ? u.attributes.name : ''}
-                            />
-                          </ListItem>
-                        ))}
-                    </List>
-                  </div>
-                </Grid>
-              )}
-              <Grid item xs={12} md={6}>
-                <div className={classes.actions}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleImport}
-                  >
-                    {t.importProject}
-                  </Button>
-                  <p> </p>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleGoOnline}
-                  >
-                    {t.goOnline}
-                  </Button>
-                </div>
-              </Grid>
-            </Grid>
+            <Typography className={classes.sectionHead}>
+              {t.withInternet}
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleGoOnline}
+            >
+              {t.logIn}
+            </Button>
+            <Typography className={classes.sectionHead}>
+              {t.withoutInternet}
+            </Typography>
+            {importStatus?.complete !== false && hasOnlineUser() && (
+              <UserList
+                isSelected={isOnlineUserWithOfflineProjects}
+                select={handleSelect}
+                title={t.availableOnlineUsers}
+              />
+            )}
+            {importStatus?.complete !== false && hasOfflineUser() && (
+              <UserList
+                isSelected={isOfflineUserWithProjects}
+                select={handleSelect}
+                title={t.availableOfflineUsers}
+              />
+            )}
+            <div className={classes.actions}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleCreateUser}
+              >
+                {t.createUser}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleImport}
+              >
+                {t.importSnapshot}
+              </Button>
+            </div>
           </Paper>
           {importOpen && (
             <ImportTab auth={auth} isOpen={importOpen} onOpen={setImportOpen} />
@@ -369,7 +345,7 @@ export function Access(props: IProps) {
       )}
       {isElectron && goOnlineConfirmation && (
         <Confirm
-          title={t.goOnline}
+          title={t.logIn}
           yesResponse={handleGoOnlineConfirmed}
           noResponse={handleGoOnlineRefused}
           no={t.cancel}

@@ -16,6 +16,7 @@ import {
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import ReportIcon from '@material-ui/icons/Report';
 import HelpIcon from '@material-ui/icons/Help';
+import InfoIcon from '@material-ui/icons/Info';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -30,8 +31,8 @@ import {
   execFolder,
 } from '../utils';
 import { useSnackBar } from '../hoc/SnackBar';
-const version = require('../../package.json').version;
-const buildDate = require('../buildDate.json').date;
+import AboutDialog from './AboutDialog';
+import { usePlan, remoteIdGuid } from '../crud';
 const os = require('os');
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -88,13 +89,17 @@ export function HelpMenu(props: IProps) {
   const { online, action, t } = props;
   const { pathname } = useLocation();
   const [offline] = useGlobal('offline');
+  const [projType] = useGlobal('projType');
+  const [memory] = useGlobal('memory');
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [shift, setShift] = React.useState(false);
   const [developer, setDeveloper] = useGlobal('developer');
+  const [aboutOpen, setAboutOpen] = React.useState(false);
   const [topic, setTopic] = React.useState<string>();
   const [helpToggle, setHelpToggle] = React.useState(false);
   const { showMessage } = useSnackBar();
+  const { getPlan } = usePlan();
   const helpRef = React.useRef<any>();
 
   interface IHelpLinkProps {
@@ -140,7 +145,7 @@ export function HelpMenu(props: IProps) {
         )}::${topicWin}`;
         launchCmd(target);
       } else if (topic && !online) {
-        launchCmd(`xchm -c 1 ${path.join(execFolder(), API_CONFIG.chmHelp)}`)
+        launchCmd(`xchm -c 1 ${path.join(execFolder(), API_CONFIG.chmHelp)}`);
       } else {
         const target = !online
           ? path.join(execFolder(), API_CONFIG.chmHelp)
@@ -177,6 +182,10 @@ export function HelpMenu(props: IProps) {
     setAnchorEl(null);
   };
 
+  const handleAbout = (visible: boolean) => () => {
+    if (visible !== aboutOpen) setAboutOpen(visible);
+  };
+
   const handle = (what: string) => () => {
     setAnchorEl(null);
     if (action) {
@@ -190,9 +199,55 @@ export function HelpMenu(props: IProps) {
     if (helpRef.current && topic !== undefined) helpRef.current.click();
   }, [topic, helpToggle]);
 
-  const isPlanScreen = React.useMemo(() => /\/plan\/[0-9]+\/0/.test(pathname), [
-    pathname,
-  ]);
+  const planRec = React.useMemo(
+    () => {
+      const match = /\/plan\/([0-9a-f-]+)\/0/.exec(pathname);
+      const planId =
+        match && (remoteIdGuid('plan', match[1], memory.keyMap) || match[1]);
+      return planId && getPlan(planId);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pathname]
+  );
+
+  const sampleHref = React.useMemo(
+    () => {
+      if (!planRec) return '#';
+      if (planRec.attributes.flat) {
+        if (projType.toLowerCase() === 'scripture') {
+          return API_CONFIG.flatSample;
+        } else {
+          return API_CONFIG.genFlatSample;
+        }
+      } else {
+        if (projType.toLowerCase() === 'scripture') {
+          return API_CONFIG.hierarchicalSample;
+        } else {
+          return API_CONFIG.genHierarchicalSample;
+        }
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [planRec, projType]
+  );
+
+  const sampleDesc = React.useMemo(() => {
+    if (!planRec) return '';
+    if (planRec.attributes.flat) {
+      if (projType.toLowerCase() === 'scripture') {
+        return t.flatSample;
+      } else {
+        return t.genFlatSample;
+      }
+    } else {
+      if (projType.toLowerCase() === 'scripture') {
+        return t.hierarchicalSample;
+      } else {
+        return t.genHierarchicalSample;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planRec, projType]);
 
   return (
     <div>
@@ -217,7 +272,7 @@ export function HelpMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={t.helpCenter} />
         </StyledMenuItem>
-        {isPlanScreen && (
+        {planRec && (
           <StyledMenuItem onClick={handleHelp(spreadsheetTopic)}>
             <ListItemIcon>
               <HelpIcon />
@@ -225,9 +280,9 @@ export function HelpMenu(props: IProps) {
             <ListItemText primary={t.helpSpreadsheet} />
           </StyledMenuItem>
         )}
-        {isPlanScreen && !isElectron && (
+        {planRec && !isElectron && (
           <a
-            href={API_CONFIG.flatSample}
+            href={sampleHref}
             style={{ textDecoration: 'none' }}
             target="_blank"
             rel="noopener noreferrer"
@@ -236,41 +291,16 @@ export function HelpMenu(props: IProps) {
               <ListItemIcon>
                 <DownloadIcon />
               </ListItemIcon>
-              <ListItemText primary={t.flatSample} />
+              <ListItemText primary={sampleDesc} />
             </StyledMenuItem>
           </a>
         )}
-        {isPlanScreen && isElectron && (
-          <StyledMenuItem onClick={handleDownload(API_CONFIG.flatSample)}>
+        {planRec && isElectron && (
+          <StyledMenuItem onClick={handleDownload(sampleHref)}>
             <ListItemIcon>
               <DownloadIcon />
             </ListItemIcon>
-            <ListItemText primary={t.flatSample} />
-          </StyledMenuItem>
-        )}
-        {isPlanScreen && !isElectron && (
-          <a
-            href={API_CONFIG.hierarchicalSample}
-            style={{ textDecoration: 'none' }}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <StyledMenuItem>
-              <ListItemIcon>
-                <DownloadIcon />
-              </ListItemIcon>
-              <ListItemText primary={t.hierarchicalSample} />
-            </StyledMenuItem>
-          </a>
-        )}
-        {isPlanScreen && isElectron && (
-          <StyledMenuItem
-            onClick={handleDownload(API_CONFIG.hierarchicalSample)}
-          >
-            <ListItemIcon>
-              <DownloadIcon />
-            </ListItemIcon>
-            <ListItemText primary={t.hierarchicalSample} />
+            <ListItemText primary={sampleDesc} />
           </StyledMenuItem>
         )}
         {isElectron && (
@@ -304,19 +334,15 @@ export function HelpMenu(props: IProps) {
             <ListItemText primary={t.developer} />
           </StyledMenuItem>
         )}
-        <StyledMenuItem>
-          <ListItemText
-            primary={
-              <div className={classes.version}>
-                {t.version + ' ' + version}
-                <br />
-                {buildDate}
-              </div>
-            }
-          />
+        <StyledMenuItem onClick={handleAbout(true)}>
+          <ListItemIcon>
+            <InfoIcon />
+          </ListItemIcon>
+          <ListItemText primary={t.about} />
         </StyledMenuItem>
       </StyledMenu>
       <HelpLink topic={topic} />
+      <AboutDialog open={aboutOpen} onClose={handleAbout(false)} />
     </div>
   );
 }

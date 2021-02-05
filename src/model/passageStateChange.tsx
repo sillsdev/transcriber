@@ -12,6 +12,7 @@ export interface PassageStateChange extends BaseModel {
   };
   relationships?: {
     passage: RecordRelationship;
+    lastModifiedByUser: RecordRelationship;
   };
 }
 export default PassageStateChange;

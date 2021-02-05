@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import {
@@ -31,7 +31,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import UncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckedIcon from '@material-ui/icons/RadioButtonChecked';
 import { isElectron } from '../../api-variable';
-import { useOfflnProjRead } from '../../crud';
+import { useOfflnProjRead, useProjectType } from '../../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,13 +89,19 @@ export function ProjectMenu(props: IProps) {
   const { inProject, action, t, tpb, td, isOwner, project } = props;
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
+  const { getProjType } = useProjectType();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const offlineProjectRead = useOfflnProjRead();
-
+  const [projectType, setProjectType] = useState('');
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
+
+  useEffect(() => {
+    setProjectType(getProjType(project));
+  }, [getProjType, project]);
 
   const handle = (what: string) => (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -124,7 +130,7 @@ export function ProjectMenu(props: IProps) {
         open={Boolean(anchorEl)}
         onClose={handle('Close')}
       >
-        {!inProject && isOwner && !isOffline && (
+        {!inProject && isOwner && (!isOffline || offlineOnly) && (
           <StyledMenuItem onClick={handle('settings')}>
             <ListItemIcon>
               <SettingsIcon />
@@ -158,12 +164,14 @@ export function ProjectMenu(props: IProps) {
           </ListItemIcon>
           <ListItemText primary={tpb.reports} />
         </StyledMenuItem>
-        <StyledMenuItem onClick={handle('integration')}>
-          <ListItemIcon>
-            <ParatextLogo />
-          </ListItemIcon>
-          <ListItemText primary={tpb.integrations} />
-        </StyledMenuItem>
+        {projectType.toLowerCase() === 'scripture' && (
+          <StyledMenuItem onClick={handle('integration')}>
+            <ListItemIcon>
+              <ParatextLogo />
+            </ListItemIcon>
+            <ListItemText primary={tpb.integrations} />
+          </StyledMenuItem>
+        )}
         {isOwner && (!isElectron || isOffline) && (
           <StyledMenuItem onClick={handle('import')}>
             <ListItemIcon>
@@ -186,7 +194,7 @@ export function ProjectMenu(props: IProps) {
             <ListItemText primary={td.filter} />
           </StyledMenuItem>
         ) : (
-          !isOffline &&
+          (!isOffline || offlineOnly) &&
           isOwner && (
             <StyledMenuItem onClick={handle('delete')}>
               <ListItemIcon>

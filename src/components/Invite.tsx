@@ -32,7 +32,7 @@ import {
   ListItem,
   ListItemText,
 } from '@material-ui/core';
-import { related, getRoleId, getUserById, remoteIdNum } from '../crud';
+import { related, getRoleId, getUserById } from '../crud';
 import { validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord } from '../model/baseModel';
@@ -135,15 +135,8 @@ function Invite(props: IProps) {
         strings: JSON.stringify(strings),
       },
     } as any;
-    memory.schema.initializeRecord(invitation);
-
     await memory.update((t: TransformBuilder) => [
-      AddRecord(
-        t,
-        invitation,
-        remoteIdNum('user', user, memory.keyMap),
-        memory
-      ),
+      ...AddRecord(t, invitation, user, memory),
       t.replaceRelatedRecord(
         { type: 'invitation', id: invitation.id },
         'organization',

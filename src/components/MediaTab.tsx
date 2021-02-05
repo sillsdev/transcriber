@@ -38,10 +38,10 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
 import { tabs } from './PlanTabs';
-import MediaUpload, { UploadType } from './MediaUpload';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
+import Uploader, { statusInit } from './Uploader';
 import Busy from './Busy';
 import Template from '../control/template';
 import Auth from '../auth/Auth';
@@ -49,7 +49,6 @@ import moment from 'moment';
 
 import {
   related,
-  remoteIdNum,
   remoteId,
   passageReference,
   sectionDescription,
@@ -70,7 +69,6 @@ import { TabHeight } from './PlanTabs';
 import MediaPlayer from './MediaPlayer';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import Memory from '@orbit/memory';
-import JSONAPISource from '@orbit/jsonapi';
 
 const ActionHeight = 52;
 
@@ -305,18 +303,10 @@ const getPassages = (
 interface IStateProps {
   t: IMediaTabStrings;
   ts: ISharedStrings;
-  uploadList: FileList;
-  loaded: boolean;
-  currentlyLoading: number;
-  uploadError: string;
-  uploadSuccess: boolean[];
   allBookData: BookName[];
 }
 
 interface IDispatchProps {
-  uploadFiles: typeof actions.uploadFiles;
-  nextUpload: typeof actions.nextUpload;
-  uploadComplete: typeof actions.uploadComplete;
   doOrbitError: typeof actions.doOrbitError;
 }
 
@@ -341,15 +331,7 @@ export function MediaTab(props: IProps) {
     t,
     ts,
     doOrbitError,
-    uploadList,
-    loaded,
-    currentlyLoading,
-    uploadError,
-    uploadSuccess,
     action,
-    uploadFiles,
-    nextUpload,
-    uploadComplete,
     mediaFiles,
     passages,
     sections,
@@ -362,16 +344,15 @@ export function MediaTab(props: IProps) {
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
-  const remote = coordinator.getSource('remote') as JSONAPISource;
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [, setTab] = useGlobal('tab');
   const [, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
-  const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
@@ -481,6 +462,7 @@ export function MediaTab(props: IProps) {
   );
   const [pageSizes, setPageSizes] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [status] = useState(statusInit);
   const [complete, setComplete] = useState(0);
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -502,17 +484,6 @@ export function MediaTab(props: IProps) {
 
   const handleUpload = () => {
     setUploadVisible(true);
-  };
-  const uploadMedia = (files: FileList) => {
-    if (!files) {
-      showMessage(t.selectFiles);
-      return;
-    }
-    uploadFiles(files);
-    setUploadVisible(false);
-  };
-  const uploadCancel = () => {
-    setUploadVisible(false);
   };
   const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
   const handleConfirmAction = (what: string) => (e: any) => {
@@ -756,77 +727,12 @@ export function MediaTab(props: IProps) {
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [attachMap]);
 
-  useEffect(() => {
-    if (loaded && currentlyLoading + 1 === uploadList.length) {
-      // wait to do this to give time for duration calc
-      setTimeout(() => {
-        let numsuccess = uploadSuccess.filter((x) => x === true).length;
-        showMessage(
-          t.uploadComplete
-            .replace('{0}', numsuccess.toString())
-            .replace('{1}', uploadSuccess.length.toString())
-        );
-        uploadComplete();
-        setComplete(0);
-        if (numsuccess > 0) {
-          setAttachVisible(true);
-          setTab(tabs.associate);
-        }
-      }, 10000);
-    } else if (loaded || currentlyLoading < 0) {
-      if (uploadList.length > 0 && currentlyLoading + 1 < uploadList.length) {
-        setComplete(
-          Math.min((currentlyLoading * 100) / uploadList.length, 100)
-        );
-        const planId = remoteIdNum('plan', plan, memory.keyMap);
-        const mediaFile = {
-          planId: planId,
-          originalFile: uploadList[currentlyLoading + 1].name,
-          contentType: uploadList[currentlyLoading + 1].type,
-        } as any;
-        nextUpload(
-          mediaFile,
-          uploadList,
-          currentlyLoading + 1,
-          auth,
-          errorReporter
-        );
-      }
+  const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
+    if (mediaRemoteIds && mediaRemoteIds.length > 0) {
+      setAttachVisible(true);
+      setTab(tabs.associate);
     }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [uploadList, loaded, currentlyLoading, uploadSuccess, planRec, auth]);
-
-  useEffect(() => {
-    if (currentlyLoading === -2 /* all are done */) {
-      var remoteid = remoteId('plan', plan, memory.keyMap);
-
-      if (remoteid !== undefined) {
-        var filterrec = {
-          attribute: 'plan-id',
-          value: remoteid,
-        };
-        remote
-          .pull((q) => q.findRecords('mediafile').filter(filterrec))
-          .then((transform) => memory.sync(transform));
-      }
-      uploadFiles([] as any); //set current back to -1
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [currentlyLoading]);
-
-  useEffect(() => {
-    if (uploadError !== '') {
-      if (uploadError.indexOf('unsupported') > 0)
-        showMessage(
-          t.unsupported.replace(
-            '{0}',
-            uploadError.substr(0, uploadError.indexOf(':unsupported'))
-          )
-        );
-      else showMessage(uploadError);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploadError]);
+  };
 
   const matchMap = (pat: string, terms?: string[]) => {
     if (pdata.length === 0 || data.length === 0) return;
@@ -1040,7 +946,7 @@ export function MediaTab(props: IProps) {
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {!attachVisible && !isOffline && (
+                {!attachVisible && (!isOffline || offlineOnly) && (
                   <Button
                     key="upload"
                     aria-label={ts.uploadMediaPlural}
@@ -1053,7 +959,7 @@ export function MediaTab(props: IProps) {
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {!attachVisible && !isOffline && (
+                {!attachVisible && (!isOffline || offlineOnly) && (
                   <>
                     <Button
                       key="action"
@@ -1194,12 +1100,15 @@ export function MediaTab(props: IProps) {
           </div>
         </div>
       </div>
-      <MediaUpload
-        visible={uploadVisible}
-        uploadType={UploadType.Media}
-        uploadMethod={uploadMedia}
-        cancelMethod={uploadCancel}
+      <Uploader
+        auth={auth}
+        isOpen={uploadVisible}
+        onOpen={setUploadVisible}
+        showMessage={showMessage}
+        setComplete={setComplete}
         multiple={true}
+        finish={afterUpload}
+        status={status}
       />
       {confirmAction === '' || (
         <Confirm
@@ -1216,20 +1125,12 @@ export function MediaTab(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
   ts: localStrings(state, { layout: 'shared' }),
-  uploadList: state.upload.files,
-  currentlyLoading: state.upload.current,
-  uploadError: state.upload.errmsg,
-  uploadSuccess: state.upload.success,
-  loaded: state.upload.loaded,
   allBookData: state.books.bookData,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
-      uploadFiles: actions.uploadFiles,
-      nextUpload: actions.nextUpload,
-      uploadComplete: actions.uploadComplete,
       doOrbitError: actions.doOrbitError,
     },
     dispatch

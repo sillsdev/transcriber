@@ -2,13 +2,12 @@ import xpath from 'xpath';
 import { DOMParser, XMLSerializer } from 'xmldom';
 import { Passage, ActivityStates, MediaFile, Section } from '../model';
 import Memory from '@orbit/memory';
-import { QueryBuilder, TransformBuilder, Record, Operation } from '@orbit/data';
+import { Operation, QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related, getMediaRec, parseRef, UpdatePassageStateOps } from '../crud';
-import { getParatextProgPath } from './paratextPath';
+import { getReadWriteProg } from './paratextPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 var temp = isElectron ? require('electron').remote.getGlobal('temp') : '';
-const execa = isElectron ? require('execa') : null;
 const path = require('path');
 const fs = isElectron ? require('fs-extra') : null;
 
@@ -122,7 +121,7 @@ const getVerses = (node: Node) => {
     return verses;
   }
 };
-
+/*
 const getElementsWithAttribute = (
   node: Node,
   name: string,
@@ -134,6 +133,7 @@ const getElementsWithAttribute = (
     node
   ) as Element[];
 };
+*/
 const paratextPara = (
   doc: Document,
   style: string,
@@ -159,12 +159,12 @@ const paratextVerse = (doc: Document, verses: string, transcript: string) => {
     para.appendChild(doc.createTextNode(transcript));
   return para;
 };
-
+/*
 const getVerse = (doc: Document, verses: string) => {
   var v = getElementsWithAttribute(doc, 'verse', 'number', verses);
   if (v.length > 0) return v[0];
 };
-
+*/
 const addSection = (
   doc: Document,
   passage: Passage,
@@ -221,18 +221,13 @@ const addParatextVerse = (
 
   return first;
 };
-
-const ReplaceText = (doc: Document, para: Element, transcript: string) => {
-  //remove text
-  var verse = firstVerse(para);
-  var next = verse?.nextSibling;
+const RemoveText = (next: ChildNode | undefined | null) => {
   var rem = next;
-
   while (next) {
     rem = next;
     if (isText(next)) {
-      if (next.nextSibling) next = next.nextSibling;
-      else next = next.parentNode?.nextSibling;
+      RemoveText(next.nextSibling);
+      next = next.parentNode?.nextSibling;
       var removeParent =
         rem.parentNode?.childNodes.length === 1 ? rem.parentNode : null;
       rem.parentNode?.removeChild(rem);
@@ -247,9 +242,15 @@ const ReplaceText = (doc: Document, para: Element, transcript: string) => {
     else if (next.nextSibling) next = next.nextSibling;
     else next = next.parentNode?.nextSibling;
   }
+};
+const ReplaceText = (doc: Document, para: Element, transcript: string) => {
+  //remove text
+  var verse = firstVerse(para);
+  var next = verse?.nextSibling;
+  RemoveText(next);
   var lines: string[] = removeTimestamps(transcript).split('\n');
-  addAfter(doc, verse, doc.createTextNode(lines[0]));
-  var last = para;
+  var last = addAfter(doc, verse, doc.createTextNode(lines[0]));
+  //var last = para;
   for (var ix = 1; ix < lines.length; ix++) {
     addAfter(doc, last, paratextPara(doc, 'p', doc.createTextNode(lines[ix])));
     last = last?.nextSibling as HTMLElement;
@@ -317,9 +318,41 @@ const findNodeAfterVerse = (
   return after;
 };
 
-const postPass = (doc: Document, p: Passage, memory: Memory) => {
+const ParseTranscription = (currentPassage: Passage, transcription: string) => {
+  var pattern = /(\\v\s*[1-9+]-*[1-9+]*)/g;
+  var internalverses = Array.from(transcription.matchAll(pattern));
+  // Get all matches
+  if (internalverses.length <= 1) {
+    currentPassage.attributes.lastComment = transcription.trimEnd();
+    return [currentPassage];
+  }
+  var ret: Passage[] = [];
+  var start = 0;
+  internalverses.forEach((match, index) => {
+    start = match.index! + match[0].length;
+    var t =
+      index < internalverses.length - 1
+        ? transcription.substring(start, internalverses![index + 1].index!)
+        : transcription.substring(start);
+    ret.push({
+      attributes: {
+        book: currentPassage.attributes.book,
+        reference:
+          currentPassage.startChapter.toString() +
+          ':' +
+          match[0].replace('\\v', '').trimStart(),
+        lastComment: t.trimStart().trimEnd(),
+      },
+      relationships: currentPassage.relationships,
+    } as Passage);
+  });
+  ret[0].attributes.sequencenum = currentPassage.attributes.sequencenum;
+  ret.forEach((p) => parseRef(p));
+  return ret;
+};
+const postPass = (doc: Document, currentPassage: Passage, memory: Memory) => {
   //get transcription
-  const media = related(p, 'mediafiles') as Record[];
+  const media = related(currentPassage, 'mediafiles') as Record[];
   const sortedMedia = media
     .map(
       (m) =>
@@ -328,25 +361,38 @@ const postPass = (doc: Document, p: Passage, memory: Memory) => {
     .sort((i, j) =>
       i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
     );
-  //remove existing verses
-  var thisVerse = removeOverlappingVerses(doc, p);
-  if (thisVerse) {
-    thisVerse = moveToPara(doc, thisVerse);
-    ReplaceText(doc, thisVerse, sortedMedia[0].attributes.transcription || '');
-  } else {
-    let verses = getVerses(doc.documentElement);
-    var nextVerse = findNodeAfterVerse(doc, verses, p.startVerse, p.endVerse);
-    thisVerse = addParatextVerse(
-      doc,
-      nextVerse,
-      passageVerses(p),
-      sortedMedia[0].attributes.transcription || '',
-      true
-    );
+  var transcription = sortedMedia[0].attributes.transcription || '';
+  var parsed = ParseTranscription(currentPassage, transcription);
+  if (parsed.length > 1) {
+    //remove original range if it exists and we're replacing with multiple
+    var existing = getExistingVerses(doc, currentPassage);
+    if (existing.exactVerse) removeVerse(existing.exactVerse);
+    existing.allVerses.forEach((v) => {
+      if (isSection(v)) removeSection(v);
+    });
   }
-  if (p.attributes.sequencenum === 1) {
-    addSection(doc, p, thisVerse, memory, true);
-  }
+  parsed.forEach((p) => {
+    //remove existing verses
+    var thisVerse = removeOverlappingVerses(doc, p);
+
+    if (thisVerse) {
+      thisVerse = moveToPara(doc, thisVerse);
+      ReplaceText(doc, thisVerse, p.attributes.lastComment);
+    } else {
+      let verses = getVerses(doc.documentElement);
+      var nextVerse = findNodeAfterVerse(doc, verses, p.startVerse, p.endVerse);
+      thisVerse = addParatextVerse(
+        doc,
+        nextVerse,
+        passageVerses(p),
+        p.attributes.lastComment,
+        true
+      );
+    }
+    if (p.attributes.sequencenum === 1) {
+      addSection(doc, p, thisVerse, memory, true);
+    }
+  });
 };
 
 /*
@@ -361,7 +407,6 @@ const removeSection = (v: Element) => v.parentNode?.removeChild(v);
 
 const removeVerse = (v: Element) => {
   if (!isVerse(v)) return;
-
   var removeParent =
     v.parentNode !== null &&
     isPara(v.parentNode) &&
@@ -387,32 +432,116 @@ const removeVerse = (v: Element) => {
   if (removeParent != null) removeParent.parentNode?.removeChild(removeParent);
 };
 
-const removeOverlappingVerses = (doc: Document, p: Passage) => {
+const getExistingVerses = (
+  doc: Document,
+  p: Passage,
+  includeExact: boolean = false
+) => {
   var verses = getVerses(doc.documentElement);
-  const existing = Array<Element>();
+  const allVerses = Array<Element>();
   var first = p.startVerse;
   var last = p.endVerse;
+  var exactVerse: Element | undefined;
   verses.forEach((v) => {
     var [vstart, vend] = domVnum(v);
-    var result = false;
     if (vstart) {
       if (vstart === first && vend === last) {
-        if (p.attributes.sequencenum === 1 && isAfterSection(v))
-          existing.push(isAfterSection(v) as Element);
-      } else {
-        if (vstart <= p.startVerse) result = vend >= p.startVerse;
-        else result = vstart <= p.endVerse;
-        if (result && verseText(v).trim() === '') {
-          existing.push(v);
+        exactVerse = v;
+        if (!includeExact) {
+          vstart = 0;
+          if (p.attributes.sequencenum === 1 && isAfterSection(v))
+            allVerses.push(isAfterSection(v) as Element);
         }
+      }
+      if (vstart >= first && vend <= last && !allVerses.includes(v)) {
+        allVerses.push(v);
+        if (p.attributes.sequencenum === 1 && isAfterSection(v))
+          allVerses.push(isAfterSection(v) as Element);
       }
     }
   });
-  existing.forEach((v) => {
+  return { allVerses, exactVerse };
+};
+const removeOverlappingVerses = (doc: Document, p: Passage) => {
+  const existing = getExistingVerses(doc, p);
+  existing.allVerses.forEach((v) => {
     if (isVerse(v)) removeVerse(v);
     else removeSection(v);
   });
-  return getVerse(doc, passageVerses(p));
+  return existing.exactVerse;
+};
+const getPassageVerses = (doc: Document, p: Passage) => {
+  const existing = getExistingVerses(doc, p, true);
+  var transcription = '';
+  existing.allVerses.forEach((v) => {
+    if (isVerse(v))
+      transcription +=
+        '\\v ' +
+        v.getAttribute('number') +
+        ' ' +
+        verseText(v).replace('\\p', '\r');
+  });
+  return transcription;
+};
+
+const paratextPaths = async (chap: string) => {
+  const ptProg = await getReadWriteProg();
+  const pt = chap.split('-');
+  return {
+    chapterFile: path.join(temp, chap + '.usx'),
+    book: pt[0],
+    chapter: pt[1],
+    program: ptProg,
+  };
+};
+
+const getChapter = async (
+  paths: {
+    chapterFile: string;
+    book: string;
+    chapter: string;
+    program: (args: string[]) => Promise<any>;
+  },
+  ptProjName: string
+) => {
+  if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
+  try {
+    const { stdout } = await paths.program([
+      '-r',
+      ptProjName,
+      paths.book,
+      paths.chapter,
+      paths.chapterFile,
+      '-x',
+    ]);
+    if (stdout) console.log(stdout);
+  } catch (error) {
+    console.log(error);
+  }
+  const usx: string = fs.readFileSync(paths.chapterFile, 'utf-8');
+  return domParser.parseFromString(usx);
+};
+
+const writeChapter = async (
+  paths: {
+    chapterFile: string;
+    book: string;
+    chapter: string;
+    program: (args: string[]) => Promise<any>;
+  },
+  ptProjName: string,
+  usxDom: Document
+) => {
+  const usxXml: string = xmlSerializer.serializeToString(usxDom);
+  fs.writeFileSync(paths.chapterFile, usxXml, { encoding: 'utf-8' });
+  return await paths.program([
+    '-w',
+    ptProjName,
+    paths.book,
+    paths.chapter,
+    paths.chapterFile,
+    '-x',
+  ]);
 };
 
 const doChapter = async (
@@ -421,41 +550,19 @@ const doChapter = async (
   pass: Passage[],
   ptProjName: string,
   memory: Memory,
-  userid: number,
+  userId: string,
   addNumberToSection: boolean
 ) => {
-  if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
-  const tempName = path.join(temp, chap + '.usx');
-  const pt = chap.split('-');
-  const ptProg = await getParatextProgPath();
-  const progName = path.join(ptProg, 'rdwrtp8');
-  const { stdout } = await execa(progName, [
-    '-r',
-    ptProjName,
-    pt[0],
-    pt[1],
-    tempName,
-    '-x',
-  ]);
-  if (stdout) console.log(stdout);
-  const usx: string = fs.readFileSync(tempName, 'utf-8');
-  let usxDom: Document = domParser.parseFromString(usx);
+  const paths = await paratextPaths(chap);
+
+  let usxDom: Document = await getChapter(paths, ptProjName);
 
   pass = pass.sort((i, j) => (i.startVerse < j.startVerse ? -1 : 1));
   pass.forEach((p) => {
     postPass(usxDom, p, memory);
   });
 
-  const usxXml: string = xmlSerializer.serializeToString(usxDom);
-  fs.writeFileSync(tempName, usxXml, { encoding: 'utf-8' });
-  const { stdoutw } = await execa(progName, [
-    '-w',
-    ptProjName,
-    pt[0],
-    pt[1],
-    tempName,
-    '-x',
-  ]);
+  const { stdoutw } = await writeChapter(paths, ptProjName, usxDom);
   if (stdoutw) console.log(stdoutw);
   var ops: Operation[] = [];
   var tb = new TransformBuilder();
@@ -466,14 +573,27 @@ const doChapter = async (
       plan,
       ActivityStates.Done,
       'Paratext',
-      userid,
+      userId,
       tb,
       ops,
       memory
     );
   }
   await memory.update(ops);
-  fs.unlinkSync(tempName);
+
+  fs.unlinkSync(paths.chapterFile);
+};
+
+export const getLocalParatextText = async (
+  pass: Passage,
+  ptProjName: string
+) => {
+  parseRef(pass);
+  const chap = pass.attributes.book + '-' + pass.startChapter;
+  const paths = await paratextPaths(chap);
+
+  let usxDom: Document = await getChapter(paths, ptProjName);
+  return getPassageVerses(usxDom, pass);
 };
 
 export const localSync = async (
@@ -481,7 +601,7 @@ export const localSync = async (
   ptProjName: string,
   passages: Passage[],
   memory: Memory,
-  userid: number,
+  userId: string,
   addNumberToSection: boolean = true
 ) => {
   let chapChg: { [key: string]: Passage[] } = {};
@@ -508,7 +628,7 @@ export const localSync = async (
         chapChg[c],
         ptProjName,
         memory,
-        userid,
+        userId,
         addNumberToSection
       );
     } catch (error) {

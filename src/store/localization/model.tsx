@@ -2,10 +2,16 @@
 import * as Localize from 'react-localization';
 
 export interface IAccessStrings extends Localize.LocalizedStringsMethods {
-    "accessFirst": string;
-    "accessSilTranscriber": string;
-    "goOnline": string;
+    "availableOfflineUsers": string;
+    "availableOnlineUsers": string;
     "cancel": string;
+    "createUser": string;
+    "logIn": string;
+    "screenTitle": string;
+    "importSnapshot": string;
+    "withInternet": string;
+    "withoutInternet": string;
+    "mustBeOnline": string;
     "importProject": string;
     "download": string;
     "downloadLater": string;
@@ -73,6 +79,7 @@ export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "personalProjects": string;
     "projectCreated": string;
     "save": string;
+    "nameInUse": string;
     "sectionStatus": string;
     "settings": string;
     "offlineAvail": string;
@@ -149,7 +156,6 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "close": string;
     "continue": string;
     "error": string;
-    "expiredToken": string;
     "family": string;
     "filter": string;
     "fontsize": string;
@@ -182,17 +188,10 @@ export interface IImportStrings extends Localize.LocalizedStringsMethods {
 
 export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "allCriteria": string;
-    "bookNotFound": string;
-    "bookNotInParatext": string;
-    "chapterSpan": string;
     "countError": string;
     "countPending": string;
     "countReady": string;
     "emptyBook": string;
-    "expiredParatextToken": string;
-    "expiredToken": string;
-    "invalidParatextLogin": string;
-    "invalidReference": string;
     "no": string;
     "noProject": string;
     "offline": string;
@@ -292,6 +291,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "helpSpreadsheet": string;
     "flatSample": string;
     "hierarchicalSample": string;
+    "genFlatSample": string;
+    "genHierarchicalSample": string;
     "reportWhenOnline": string;
     "import": string;
     "integrations": string;
@@ -318,7 +319,14 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "tasks": string;
     "transcribe": string;
     "UnsavedData": string;
+    "updateAvailable": string;
+    "about": string;
     "version": string;
+    "copyClipboard": string;
+    "team": string;
+    "reliesOn": string;
+    "thanks": string;
+    "cantCopy": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
@@ -361,6 +369,7 @@ export interface IMediaUploadStrings extends Localize.LocalizedStringsMethods {
     "cancel": string;
     "dragDropMultiple": string;
     "dragDropSingle": string;
+    "invalidFile": string;
     "ITFtask": string;
     "ITFtitle": string;
     "PTFtask": string;
@@ -413,7 +422,7 @@ export interface IPlanTabsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "add": string;
-    "addOfflineUser": string;
+    "addMember": string;
     "cancel": string;
     "checkingParatext": string;
     "nameNotEmail": string;
@@ -439,7 +448,6 @@ export interface IProfileStrings extends Localize.LocalizedStringsMethods {
     "role": string;
     "save": string;
     "sendDigest": string;
-    "sendNews": string;
     "timezone": string;
     "userExists": string;
     "userProfile": string;
@@ -473,7 +481,13 @@ export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods
 };
 
 export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
-    "NoColumns": string;
+    "avg": string;
+    "count": string;
+    "max": string;
+    "min": string;
+    "noColumns": string;
+    "noData": string;
+    "sum": string;
 };
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
@@ -481,9 +495,17 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "editor": string;
     "lastEdit": string;
     "NoSaveOffline": string;
+    "bookNotInParatext": string;
+    "paratextchapterSpan": string;
+    "invalidReference": string;
+    "BookNotSet": string;
+    "expiredParatextToken": string;
+    "expiredToken": string;
+    "invalidParatextLogin": string;
     "transcriber": string;
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
+    "importMediaSingular": string;
 };
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
@@ -537,6 +559,10 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "noMedia": string;
     "pauseTip": string;
     "playTip": string;
+    "pullParatextCaption": string;
+    "pullParatextStart": string;
+    "pullParatextStatus": string;
+    "pullParatextTip": string;
     "reject": string;
     "reopen": string;
     "reviewing": string;
@@ -580,7 +606,6 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "elan": string;
     "electronBackup": string;
     "error": string;
-    "expiredToken": string;
     "export": string;
     "exportExplanation": string;
     "exportingProject": string;
@@ -600,7 +625,9 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
 };
 
 export interface ITreeChartStrings extends Localize.LocalizedStringsMethods {
+    "contributions": string;
     "noData": string;
+    "status": string;
 };
 
 export interface IUploadProgressStrings extends Localize.LocalizedStringsMethods {
@@ -619,7 +646,9 @@ export interface IUsertableStrings extends Localize.LocalizedStringsMethods {
     "invite": string;
     "locale": string;
     "name": string;
-    "offline": string;
+    "addMember": string;
+    "addNewUser": string;
+    "selectUser": string;
     "phone": string;
     "role": string;
     "selectRows": string;
@@ -642,6 +671,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "hierarchical": string;
     "language": string;
     "layout": string;
+    "nameInUse": string;
     "new": string;
     "newProject": string;
     "organizedBy": string;

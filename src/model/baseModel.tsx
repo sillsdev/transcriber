@@ -1,8 +1,8 @@
 import {
   Record,
   TransformBuilder,
-  UpdateRecordOperation,
-  AddRecordOperation,
+  RecordRelationship,
+  RecordIdentity,
 } from '@orbit/data';
 import Memory from '@orbit/memory';
 import { related } from '../crud';
@@ -14,50 +14,78 @@ export interface BaseModel extends Record {
     dateUpdated: string;
     lastModifiedBy: number;
   };
-  relationships?: {};
+  relationships?: {
+    lastModifiedByUser: RecordRelationship;
+  };
 }
 
 export const UpdateRecord = (
   t: TransformBuilder,
   rec: BaseModel,
-  user: number
-): UpdateRecordOperation => {
+  user: string
+): any => {
   rec.attributes.dateUpdated = currentDateTime();
-  rec.attributes.lastModifiedBy = user;
-  return t.updateRecord(rec);
+  return [t.updateRecord(rec), ...UpdateLastModifedBy(t, rec, user)];
 };
 
 export const AddRecord = (
   t: TransformBuilder,
   rec: BaseModel,
-  user: number,
+  user: string,
   memory: Memory
-): AddRecordOperation => {
+): any => {
   memory.schema.initializeRecord(rec);
+  if (!rec.attributes) rec.attributes = {} as any;
   rec.attributes.dateCreated = currentDateTime();
   rec.attributes.dateUpdated = rec.attributes.dateCreated;
-  rec.attributes.lastModifiedBy = user;
-  return t.addRecord(rec);
+  return [t.addRecord(rec), ...UpdateLastModifedBy(t, rec, user)];
 };
-
+export const UpdateLastModifedBy = (
+  t: TransformBuilder,
+  rec: RecordIdentity,
+  user: string
+): any => {
+  var updDate = t.replaceAttribute(rec, 'dateUpdated', currentDateTime());
+  if (related(rec, 'lastModifiedByUser') !== undefined)
+    return [
+      updDate,
+      t.replaceRelatedRecord(rec, 'lastModifiedByUser', {
+        type: 'user',
+        id: user,
+      }),
+    ];
+  else
+    return [
+      updDate,
+      t.addToRelatedRecords(rec, 'lastModifiedByUser', {
+        type: 'user',
+        id: user,
+      }),
+    ];
+};
 export const UpdateRelatedRecord = (
   t: TransformBuilder,
   rec: BaseModel,
   relationship: string,
   relatedType: string,
   newId: string,
-  user: number
+  user: string
 ): any => {
   rec.attributes.dateUpdated = currentDateTime();
-  rec.attributes.lastModifiedBy = user;
   if (related(rec, relationship) !== undefined)
-    return t.replaceRelatedRecord(rec, relationship, {
-      type: relatedType,
-      id: newId,
-    });
+    return [
+      ...UpdateLastModifedBy(t, rec, user),
+      t.replaceRelatedRecord(rec, relationship, {
+        type: relatedType,
+        id: newId,
+      }),
+    ];
   else
-    return t.addToRelatedRecords(rec, relationship, {
-      type: relatedType,
-      id: newId,
-    });
+    return [
+      ...UpdateLastModifedBy(t, rec, user),
+      t.addToRelatedRecords(rec, relationship, {
+        type: relatedType,
+        id: newId,
+      }),
+    ];
 };

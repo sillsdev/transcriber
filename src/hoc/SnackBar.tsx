@@ -23,38 +23,34 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 export const useSnackBar = () => {
   const [message, setMessage] = useGlobal('snackMessage');
-  const [messageText, setMessageText] = useState('');
 
-  const showMessage = (msg: string) => {
-    if (msg !== messageText) {
-      setMessage(<span>{msg}</span>);
-      setMessageText(msg);
-    }
+  const messageReset = () => {
+    setMessage(<></>);
   };
-  const showJSXMessage = (msg: JSX.Element) => {
-    if (msg !== message) setMessage(msg);
+
+  const showMessage = (msg: string | JSX.Element) => {
+    if (typeof msg === 'string') {
+      if (message.props.children !== msg) setMessage(<span>{msg}</span>);
+    } else if (message.props.children !== msg.props.children) setMessage(msg);
   };
-  const showTitledJSXMessage = (title: string, msg: JSX.Element) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
+
+  const showTitledMessage = (title: string, msg: JSX.Element | string) => {
+    if (
+      message.props.children !==
+      (typeof msg === 'string' ? msg : msg.props.children)
+    )
+      setMessage(
+        <span>
+          {title}
+          <br />
+          {msg}
+        </span>
+      );
   };
-  const showTitledMessage = (title: string, msg: string) => {
-    setMessage(
-      <span>
-        {title}
-        <br />
-        {msg}
-      </span>
-    );
-  };
-  const messageReset = () => setMessage(<></>);
+
   interface ISBProps {
     message: JSX.Element;
   }
@@ -62,18 +58,17 @@ export const useSnackBar = () => {
   function SimpleSnackbar(props: ISBProps) {
     const { message } = props;
     const classes = useStyles();
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
 
     const handleClose = () => {
       messageReset();
-      setOpen(false);
     };
 
     useEffect(() => {
-      setOpen(
-        message.type === 'span' ||
-          (message.type === 'string' && message.toString() !== '')
-      );
+      if ((message.type === 'span') !== open) {
+        setOpen(!open);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [message]);
 
     return open ? (
@@ -110,11 +105,10 @@ export const useSnackBar = () => {
     SnackBar: SimpleSnackbar,
     message,
     showMessage,
-    showJSXMessage,
     showTitledMessage,
-    showTitledJSXMessage,
   };
 };
+
 export default function SnackBarProvider(props: IProps) {
   const { children } = props;
   const { SnackBar } = useSnackBar();

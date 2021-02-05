@@ -3,15 +3,22 @@ import { TextField } from '@material-ui/core';
 import { TeamContext } from '../../../context/TeamContext';
 import { IProjectDialogState } from './ProjectDialog';
 
-export const ProjectName = (props: IProjectDialogState) => {
-  const { state, setState } = props;
+interface IProps extends IProjectDialogState {
+  inUse?: (newName: string) => boolean;
+}
+
+export const ProjectName = (props: IProps) => {
+  const { state, setState, inUse } = props;
   const { name } = state;
   const ctx = React.useContext(TeamContext);
   const t = ctx.state.vProjectStrings;
+  const [nameInUse, setInUse] = React.useState(false);
 
   const handleChangeName = (e: any) => {
     e.persist();
-    setState((state) => ({ ...state, name: e.target?.value || '' }));
+    const name = e.target?.value || '';
+    setInUse((inUse && inUse(name)) === true);
+    setState((state) => ({ ...state, name }));
   };
 
   return (
@@ -22,6 +29,7 @@ export const ProjectName = (props: IProjectDialogState) => {
       required
       label={t.projectName}
       value={name}
+      helperText={nameInUse && t.nameInUse}
       onChange={handleChangeName}
       fullWidth
     />

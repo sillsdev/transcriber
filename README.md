@@ -93,8 +93,10 @@ REACT_APP_ENDPOINT= (url of app)
 REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
 REACT_APP_COMMUNITY= (url of site for community discussion)
-REACT_APP_FLAT= (url of flat spreadsheet sample)
-REACT_APP_HIERARCHICAL= (url of flat spreadsheet sample)
+REACT_APP_FLAT= (url of Scripture flat spreadsheet sample)
+REACT_APP_HIERARCHICAL= (url of Scripture hierarchical spreadsheet sample)
+REACT_APP_GEN_FLAT= (url of general flat spreadsheet sample)
+REACT_APP_GEN_HIERARCHICAL= (url of general hierarchical spreadsheet sample)
 REACT_APP_SNAGID=(bugsnag client id)
 REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
 
@@ -114,8 +116,10 @@ REACT_APP_ENDPOINT= (url of app)
 REACT_APP_HOST= (url of host api)
 REACT_APP_HELP= (url of help online)
 REACT_APP_COMMUNITY= (url of site for community discussion)
-REACT_APP_FLAT= (url of flat spreadsheet sample)
-REACT_APP_HIERARCHICAL= (url of flat spreadsheet sample)
+REACT_APP_FLAT= (url of Scripture flat spreadsheet sample)
+REACT_APP_HIERARCHICAL= (url of Scripture hierarchical spreadsheet sample)
+REACT_APP_GEN_FLAT= (url of general flat spreadsheet sample)
+REACT_APP_GEN_HIERARCHICAL= (url of general hierarchical spreadsheet sample)
 REACT_APP_SITE_TITLE= (title for browser tab)
 REACT_APP_SNAGID=(bugsnag client id)
 REACT_APP_BIGSAVE_THRESHOLD=(number of changes to force a full save vs row by row)
@@ -196,6 +200,10 @@ module.exports = electronExtension;
 The _dist_ command creates a folder in the dist folder with an executable that can be launched directly by clicking on it. it also creates an installer in the _dist_ folder that can be distributed.
 
 ## creating the Linux .deb package
+
+To get setup to do this on you Linux installations you will need:
+
+- `sudo apt-get -a install devscripts debhelper autotools-dev`
 
 The electron-builder program doesn't include the icon as part of the .deb package. It also doesn't install the help file reader. In order to create a more complete .deb package for Linux, use this command:
 

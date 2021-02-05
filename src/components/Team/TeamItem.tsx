@@ -7,7 +7,8 @@ import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import { BigDialog, BigDialogBp } from '../../hoc/BigDialog';
 import GroupTabs from '../GroupTabs';
-import { ProjectCard, AddCard, TeamDialog } from '.';
+import { ProjectCard, AddCard } from '.';
+import TeamDialog from './TeamDialog';
 import { useRole, useAllUserGroup } from '../../crud';
 import Confirm from '../AlertDialog';
 
@@ -48,7 +49,8 @@ interface IProps {
 export const TeamItem = (props: IProps) => {
   const { team } = props;
   const classes = useStyles();
-  const [isOffline] = useGlobal('offline');
+  const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrganization] = useGlobal('organization');
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteItem, setDeleteItem] = React.useState<Organization>();
@@ -59,7 +61,6 @@ export const TeamItem = (props: IProps) => {
     teamUpdate,
     teamDelete,
     isAdmin,
-    isProjectAdmin,
   } = ctx.state;
   const t = ctx.state.cardStrings;
   const [openMember, setOpenMember] = React.useState(false);
@@ -92,6 +93,13 @@ export const TeamItem = (props: IProps) => {
   };
 
   const handleDeleteRefused = () => setDeleteItem(undefined);
+
+  const canModify = (
+    offline: boolean,
+    team: Organization,
+    offlineOnly: boolean
+  ) => (!offline && isAdmin(team)) || offlineOnly;
+
   return (
     <Paper id="TeamItem" className={classes.root}>
       <div className={classes.teamHead}>
@@ -100,13 +108,13 @@ export const TeamItem = (props: IProps) => {
           {team?.attributes?.name}
         </Typography>
         <div>
-          {!isOffline && isAdmin(team) && (
+          {canModify(offline, team, offlineOnly) && (
             <Button variant="contained" onClick={handleMembers(team)}>
               {t.members.replace('{0}', teamMembers(team.id).toString())}
             </Button>
           )}
           {' \u00A0'}
-          {!isOffline && isAdmin(team) && (
+          {canModify(offline, team, offlineOnly) && (
             <Button variant="contained" onClick={handleSettings(team)}>
               {t.settings}
             </Button>
@@ -139,7 +147,7 @@ export const TeamItem = (props: IProps) => {
         {teamProjects(team.id).map((i) => {
           return <ProjectCard key={i.id} project={i} />;
         })}
-        {!isOffline && isProjectAdmin(team) && <AddCard team={team} />}
+        {canModify(offline, team, offlineOnly) && <AddCard team={team} />}
       </Grid>
     </Paper>
   );

@@ -15,12 +15,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { DataChange } from '../model/dataChange';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
-import {
-  offlineProjectUpdateSnapshot,
-  remoteId,
-  remoteIdGuid,
-  remoteIdNum,
-} from '../crud';
+import { offlineProjectUpdateSnapshot, remoteId, remoteIdGuid } from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { getSerializer } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
@@ -171,6 +166,7 @@ export const doDataChanges = async (
 export default function DataChanges(props: IProps) {
   const { auth, children } = props;
   const [isOffline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -220,17 +216,14 @@ export default function DataChanges(props: IProps) {
   };
   const backupElectron = () => {
     if (!busy && !doSave && project !== '') {
-      var projectid = remoteIdNum('project', project, memory.keyMap);
-      var userid = remoteIdNum('user', user, memory.keyMap);
-
       electronExport(
         ExportType.ITFBACKUP,
         memory,
         undefined,
-        projectid,
+        project,
         fingerprint,
-        userid,
-        getSerializer(memory),
+        user,
+        getSerializer(memory, offlineOnly),
         getOfflineProject
       ).catch((err: Error) => {
         logError(

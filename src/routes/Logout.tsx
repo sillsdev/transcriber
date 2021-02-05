@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { IState, MediaFile, IAccessStrings, OfflineProject } from '../model';
+import {
+  IState,
+  MediaFile,
+  IAccessStrings,
+  OfflineProject,
+  Project,
+} from '../model';
 import localStrings from '../selector/localize';
 import * as action from '../store';
 import { withData } from '../mods/react-orbitjs';
@@ -58,6 +64,7 @@ interface IDispatchProps {
 
 interface IRecordProps {
   offlineProjects: Array<OfflineProject>;
+  projects: Array<Project>;
   mediafiles: Array<MediaFile>;
 }
 
@@ -69,10 +76,12 @@ export function Logout(props: IProps) {
   const { auth, t } = props;
   const classes = useStyles();
   const { fetchLocalization, setLanguage } = props;
-  const { offlineProjects, mediafiles } = props;
+  const { offlineProjects, mediafiles, projects } = props;
   const [coordinator] = useGlobal('coordinator');
+  const [, setUser] = useGlobal('user');
   const [isDeveloper] = useGlobal('developer');
   const [, setIsOffline] = useGlobal('offline');
+  const [offlineOnly, setOfflineOnly] = useGlobal('offlineOnly');
   const [view, setView] = React.useState('');
   const [alert, setAlert] = React.useState(false);
   const [downloadSize, setDownloadSize] = React.useState(0);
@@ -85,11 +94,14 @@ export function Logout(props: IProps) {
     let planIds = Array<string>();
     const planProject: PlanProject = {};
     ops.forEach((offlineProjRec) => {
-      var p = related(offlineProjRec, 'project');
-      projectPlans(p).forEach((pl) => {
-        planIds.push(pl.id);
-        planProject[pl.id] = p;
-      });
+      var projectId = related(offlineProjRec, 'project');
+      const project = projects.find((pr) => pr.id === projectId);
+      if (project?.keys?.remoteId) {
+        projectPlans(projectId).forEach((pl) => {
+          planIds.push(pl.id);
+          planProject[pl.id] = projectId;
+        });
+      }
     });
     const mediaRecs = getMediaInPlans(planIds, mediafiles);
     const needyProject = new Set<string>();
@@ -109,6 +121,9 @@ export function Logout(props: IProps) {
   };
 
   const handleLogout = async () => {
+    if (offlineOnly) setOfflineOnly(false);
+    setUser('');
+    localStorage.removeItem('user-id');
     if (auth.accessToken) {
       localStorage.removeItem('isLoggedIn');
       setIsOffline(isElectron);
@@ -206,6 +221,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 const mapRecordsToProps = {
   offlineProjects: (q: QueryBuilder) => q.findRecords('offlineproject'),
+  projects: (q: QueryBuilder) => q.findRecords('project'),
   mediafiles: (q: QueryBuilder) => q.findRecords('mediafile'),
 };
 

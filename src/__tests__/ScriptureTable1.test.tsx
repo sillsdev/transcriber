@@ -1,6 +1,6 @@
 import React from 'react';
 import { setGlobal } from 'reactn';
-import { DataProvider } from 'react-orbitjs';
+import { DataProvider } from '../mods/react-orbitjs';
 import { Provider } from 'react-redux';
 import configureStore from '../store';
 import { memory } from '../schema';

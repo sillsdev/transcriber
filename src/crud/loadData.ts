@@ -20,7 +20,12 @@ import {
 } from '@orbit/data';
 import Memory from '@orbit/memory';
 import OrgData from '../model/orgData';
-import { Project, IApiError } from '../model';
+import {
+  Project,
+  IApiError,
+  OrganizationMembership,
+  GroupMembership,
+} from '../model';
 import { orbitInfo } from '../utils/infoMsg';
 import ProjData from '../model/projData';
 import Coordinator from '@orbit/coordinator';
@@ -122,7 +127,7 @@ export async function insertData(
       }
     } else {
       try {
-        memory.schema.initializeRecord(item);
+        if (typeof item.id === 'number') memory.schema.initializeRecord(item);
         oparray.push(tb.addRecord(item));
         if (item.type === 'project') {
           await saveOfflineProject(
@@ -209,7 +214,25 @@ async function processData(
     orbitError(orbitInfo(err, 'Backup update error'));
   }
 }
-
+async function cleanUpMemberships(memory: Memory, backup: IndexedDBSource) {
+  var t = new TransformBuilder();
+  var ops: Operation[] = [];
+  const orgmems: OrganizationMembership[] = memory.cache.query(
+    (q: QueryBuilder) => q.findRecords('organizationmembership')
+  ) as any;
+  const badom = orgmems.filter((om) => !om.attributes);
+  badom.forEach((i) => {
+    ops.push(t.removeRecord({ type: 'organizationmembership', id: i.id }));
+  });
+  const grpmems: GroupMembership[] = memory.cache.query((q: QueryBuilder) =>
+    q.findRecords('groupmembership')
+  ) as any;
+  const badgm = grpmems.filter((om) => !om.attributes);
+  badgm.forEach((i) => {
+    ops.push(t.removeRecord({ type: 'groupmembership', id: i.id }));
+  });
+  await memory.sync(await backup.push(ops));
+}
 export async function LoadData(
   coordinator: Coordinator,
   setCompleted: (valud: number) => void,
@@ -261,6 +284,7 @@ export async function LoadData(
         start = -1;
       }
     } while (start > -1);
+    await cleanUpMemberships(memory, backup);
   } catch (rejected) {
     console.log(rejected);
   }
@@ -283,7 +307,7 @@ export async function LoadProjectData(
 
   const projectid = remoteIdNum('project', project, memory.keyMap);
   var tb: TransformBuilder = new TransformBuilder();
-  const ser = getSerializer(memory);
+  const ser = getSerializer(memory, !online);
 
   try {
     let start = 0;

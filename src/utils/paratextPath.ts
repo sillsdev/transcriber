@@ -1,8 +1,10 @@
+import { fileJson } from '../utils';
 const os = require('os');
 const path = require('path');
 const isElectron = process.env.REACT_APP_MODE === 'electron';
 const execa = isElectron ? require('execa') : null;
 
+const progVal91 = 'Paratext9_Full_Release_AppPath';
 const progVal9 = 'Program_Files_Directory_Ptw9';
 const progVal8 = 'Program_Files_Directory_Ptw8';
 const dataVal = 'Settings_Directory';
@@ -40,7 +42,6 @@ export const getParatextDataPath = async () => {
       'values.xml'
     );
     let dir = null;
-    const fileJson = require('./fileJson');
     const keyJson = fileJson(regKeyFile);
     if (keyJson) {
       const vals = keyJson.values.value;
@@ -59,12 +60,20 @@ export const getParatextDataPath = async () => {
   }
 };
 
-export const getParatextProgPath = async () => {
+export const getReadWriteProg = async () => {
   if (os.platform() === 'win32') {
-    return (
-      (await getRegVal(regKey, progVal9)) || (await getRegVal(regKey, progVal8))
-    );
+    const progPath =
+      (await getRegVal(regKey, progVal91)) ||
+      (await getRegVal(regKey, progVal9)) ||
+      (await getRegVal(regKey, progVal8));
+    return async (args: string[]) => {
+      return await execa(path.join(progPath, 'rdwrtp8'), args);
+    };
   } else {
-    return '/usr/bin/paratext/';
+    return async (args: string[]) => {
+      return await execa('/usr/bin/paratext9', ['--rdwrtp8'].concat(args), {
+        env: { ...{ ...process }.env, DISPLAY: ':0' },
+      });
+    };
   }
 };

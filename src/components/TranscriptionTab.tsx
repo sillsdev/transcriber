@@ -50,7 +50,6 @@ import Auth from '../auth/Auth';
 import {
   remoteId,
   related,
-  remoteIdNum,
   sectionNumber,
   sectionEditorName,
   sectionTranscriberName,
@@ -273,7 +272,7 @@ export function TranscriptionTab(props: IProps) {
 
   const handleFilter = () => setFilter(!filter);
   const translateError = (err: IAxiosStatus): string => {
-    if (err.errStatus === 401) return t.expiredToken;
+    if (err.errStatus === 401) return ts.expiredToken;
     if (err.errMsg.includes('RangeError')) return t.exportTooLarge;
     return err.errMsg;
   };
@@ -296,9 +295,9 @@ export function TranscriptionTab(props: IProps) {
       exportType,
       memory,
       backup,
-      remoteIdNum('project', project, memory.keyMap),
+      project,
       fingerprint,
-      remoteIdNum('user', user, memory.keyMap),
+      user,
       media.length,
       auth,
       errorReporter,
@@ -410,14 +409,12 @@ export function TranscriptionTab(props: IProps) {
   const handleAudioFn = (passageId: string) => {
     logError(Severity.info, globalStore.errorReporter, `handleAudioFn`);
     const mediaRec = getMediaRec(passageId, memory);
-    const id = remoteId(
-      'mediafile',
-      mediaRec ? mediaRec.id : '',
-      memory.keyMap
-    );
+    const id =
+      remoteId('mediafile', mediaRec ? mediaRec.id : '', memory.keyMap) ||
+      mediaRec?.id;
     logError(Severity.info, globalStore.errorReporter, `rem Media Id=${id}`);
     const name = getMediaName(mediaRec, memory);
-    fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
+    if (id) fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
     setAudName(name);
   };
 
