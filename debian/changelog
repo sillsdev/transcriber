@@ -131,7 +131,7 @@ sil-transcriber (2.11.0.0)  experimental; urgency=high
   * TT-1875 don't check for unattached files to download (#1)
   * Update start up instructions
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 5 February 2021 11:04:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 5 Feb 2021 11:04:00 -0600
 
 sil-transcriber (2.10.0.0)  experimental; urgency=high
 
