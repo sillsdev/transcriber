@@ -1,3 +1,138 @@
+sil-transcriber (2.11.0.0)  experimental; urgency=high
+
+  * update project type on project settings (#56)
+  * use project type on activity state update
+  * TT-1980 Unique plan types (#55)
+  * Update help for 2.11 release (#54)
+  * TT-1961 make sure to use the correct project type (#53)
+  * TT-1982 wait for remoteId to be populated before remote save (#52)
+  * TT-1983 no user menu on landing screen, color, spacing (#51)
+  * TT-1969 enable play button after upload
+  * TT-1979 Transcription disappears
+    - also fixes highlight of task
+    - also fixes tab in font select
+    - also fixes disappearing time stamp
+  * TT-1950 store desktop version, check for updates (#50)
+  * pass in project id (#49)
+  * TT-1976b set the project type some more places! (#48)
+  * Update language picker
+    - handle phonetic fonts
+    - fix script picker
+  * Fix Intermittent/Inappropriate "Transcription Updated by another user" message (#47)
+  * TT-1976 always lowercase project type (#46)
+  * TT-550 add localized strings to reports, shaping Table (#45)
+  * TT-1975 Add new key for 64-bit Paratext (v9.1) (#44)
+  * TT-1939 only ignore all off line projects for itfs.  send # of recs back from add all (#43)
+  * TT-1959 Improve Sample Spreadsheets (#41)
+    - only show sample for current plan
+    - adjust menu option to clarify multiple samples
+  * cleanup archived memberships that come down in linked relationships (#42)
+  * carry on to logout if resetRequests gets an error
+  * TT-1933 About box (#40)
+    - Rearrange dialog
+    - put thanks above products
+    - list products by license
+  * TT-1965 Handle changing Paratext project integration (#39)
+  * TT-1958 Delete Off line User
+  * TT-1960 Check box for Internet use
+  * TT-1952 set role based on state
+    - do assignment based on current state of transcriber
+  * TT-1954 Update comment on save
+    - but not on auto save
+  * TT-1955 only upload if valid file
+  * TT-1951 upload before save
+    - save row so we get passage after its saved
+  * TT-1957 no download of off line projects
+  * TT-1953 get parentheses right
+  * remove unused localization files
+  * TT-1646 No duplicate project name
+  * TT-1944 fix import project lookup
+  * TT-1945 Attach project to right personal team
+  * TT-1942 lowercase extensions before checking (#35)
+  * user/member create/add
+  * user/member consistency
+  * TT-1940 Off line Team is a developer only function
+  * Filter for allowed files on media upload
+  * improve invalid file
+  * Filter for allowed files on media upload
+  * TT-1929 consistently use read only (#30)
+  * TT-1937 General project type is Generic
+  * TT-1930 Off line Export (#27)
+    - Logic to export and import off line data
+    - auto backup for off line
+  * TT-1927 Msg when Log in off line
+  * TT-1931 global project type to avoid Paratext options for general projects (#28)
+    - Only allow Paratext integrations for Scripture projects (#26)
+    - only set project role if no cb
+  * TT-1799, TT-1934 Fetch only real id (#25)
+  * TT-1917, TT-1333 Windows off line sync (#24)
+  * update read-me with Linux build dependencies
+  * TT-1333 Sync to local Paratext on Linux
+  * TT-1915 abort login
+  * TT-1894 No special processing on Reopen (#21)
+  * put sync to done back in (#20)
+  * TT-1916 convert duration to milliseconds
+  * TT-1918 always create off line types
+  * TT-1645 No duplicate team names (#18)
+  * TT-1897 set media id for off line only (#17)
+    - use ceil function so media duration is always greater than current
+  * TT-1878f Insert section
+  * TT-1771 Paratext local sync  (#3)
+    - process Paratext errors in shared location
+    - send project ids so it can find connected project
+    - Pull Paratext text. Process \v# within transcription
+    - pull transcription from Paratext, move Paratext errors to shared location
+    - project ids to strings for local
+    - reopen sync back in
+  * TT-1910b Import Project revised (#15)
+  * TT-1906 Add off line User
+  * TT-1908 ignore off line only projects during sync (#13)
+  * TT-1905 add last modified relationship (#12)
+  * TT-1904 wait for the on line save before continuing (#11)
+  * TT-1903 duration is int in database (#10)
+  * TT-1910 Import Snapshot
+  * off line deep linking (#8)
+  * TT-1878 desktop homepage (#4)
+    - desktop homepage update
+    - Add off line user
+    - off line setup
+    - create team - update setup
+    - Add project
+    - display off line users
+    - no cancel profile
+    - create project
+    - fix logic for sections and passages
+    - partial fix URL logic
+    - Handle Media file pt1
+    - enable media
+    - adjust path
+    - Media Tab buttons
+    - Update Project Menu for off line only
+    - address issues
+    - transcriber history uses user relation
+    - plan shows spreadsheet paste
+    - tabs all enabled
+    - re-factor plan save and update for off line
+    - await uploader
+    - re-factor passage state change
+    - clear user on logout
+    - handle cancel on user page
+    - Fix transcriber history
+    - attach user relation
+    - cache counts
+    - fix routing on admin login
+    - Circle Add and tool tips
+    - Fix media tab upload
+    - use lastModifiedByUser relationship instead of lastModifiedBy remote id
+    - remove currentDateTime
+    - Fix upload media project create
+    - Fix setting user 1st time
+  * reduce flicker but allow for same message to show again (#2)
+  * TT-1875 don't check for unattached files to download (#1)
+  * Update start up instructions
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 5 February 2021 11:04:00 -0600
+
 sil-transcriber (2.10.0.0)  experimental; urgency=high
 
   * TT-1738 Adjust browser back again (#686)
