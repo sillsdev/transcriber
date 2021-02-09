@@ -1,3 +1,9 @@
+sil-transcriber (2.11.1.0)  experimental; urgency=high
+
+  * TT-1991 create folder on upload (#57)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 9 Feb 2021 14:07:00 -0600
+
 sil-transcriber (2.11.0.0)  experimental; urgency=high
 
   * update project type on project settings (#56)
