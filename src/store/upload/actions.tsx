@@ -15,7 +15,7 @@ import {
   logError,
   PathType,
   Severity,
-  createFolder,
+  createPathFolder,
 } from '../../utils';
 var fs = require('fs');
 var path = require('path');
@@ -54,7 +54,7 @@ export const nextUpload = (
     dataPath(`http://${files[n].path}`, PathType.MEDIA, local);
     try {
       const fullName = local.localname;
-      createFolder(fullName.substring(0, fullName.lastIndexOf(path.sep)));
+      createPathFolder(fullName);
       fs.copyFileSync(files[n].path, fullName);
       const filename = path.join(
         PathType.MEDIA,
@@ -80,7 +80,9 @@ export const nextUpload = (
         var local = { localname: '' };
         dataPath(response.data.audioUrl, PathType.MEDIA, local);
         try {
-          fs.copyFileSync(files[n].path, local.localname);
+          const fullName = local.localname;
+          createPathFolder(fullName);
+          fs.copyFileSync(files[n].path, fullName);
         } catch (err) {
           console.log(err);
         }
