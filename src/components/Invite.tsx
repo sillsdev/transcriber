@@ -96,6 +96,7 @@ function Invite(props: IProps) {
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
+  const [offline] = useGlobal('offline');
   const [currentUser, setcurrentUser] = useState('');
   const [open, setOpen] = useState(visible);
   const [email, setEmail] = useState('');
@@ -364,7 +365,12 @@ function Invite(props: IProps) {
                 required
               >
                 {roles
-                  .filter((r) => r.attributes && r.attributes.orgRole)
+                  .filter(
+                    (r) =>
+                      r.attributes &&
+                      r.attributes.orgRole &&
+                      Boolean(r?.keys?.remoteId) !== offline
+                  )
                   .sort((i, j) =>
                     i.attributes.roleName < j.attributes.roleName ? -1 : 1
                   )
@@ -397,7 +403,12 @@ function Invite(props: IProps) {
                 required
               >
                 {roles
-                  .filter((r) => r.attributes && r.attributes.groupRole)
+                  .filter(
+                    (r) =>
+                      r.attributes &&
+                      r.attributes.groupRole &&
+                      Boolean(r?.keys?.remoteId) !== offline
+                  )
                   .sort((i, j) =>
                     i.attributes.roleName < j.attributes.roleName ? -1 : 1
                   )
