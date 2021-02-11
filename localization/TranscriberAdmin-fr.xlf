@@ -3098,7 +3098,13 @@
             <target>Mise à jour</target>
          </segment>
       </unit>
-      <unit id="treeChart.contributions">
+   	<unit id="transcriptionTab.incompletePlan">
+   		<segment>
+   			<source>Plan is incomplete: attach media to passages.</source>
+   			<target>Le plan est incomplet : joindre les médias aux passages.</target>
+   		</segment>
+   	</unit>
+   	<unit id="treeChart.contributions">
          <segment>
             <source>Contributions toward</source>
             <target>Contributions vers</target>
