@@ -8,7 +8,6 @@ import {
   User,
   Project,
   GroupMembership,
-  Role,
   RoleNames,
   ISharedStrings,
 } from '../model';
@@ -40,7 +39,7 @@ import {
 import UserAvatar from './UserAvatar';
 import {
   related,
-  getRoleId,
+  useRole,
   sectionTranscriberName,
   sectionEditorName,
   sectionNumber,
@@ -71,7 +70,6 @@ interface IRecordProps {
   users: Array<User>;
   projects: Array<Project>;
   groupMemberships: Array<GroupMembership>;
-  roles: Array<Role>;
 }
 
 interface IProps extends IStateProps, IRecordProps {
@@ -85,7 +83,6 @@ function AssignSection(props: IProps) {
     users,
     projects,
     groupMemberships,
-    roles,
     sections,
     t,
     ts,
@@ -96,6 +93,7 @@ function AssignSection(props: IProps) {
   const [project] = useGlobal('project');
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const { getRoleId } = useRole();
   const [open, setOpen] = useState(visible);
   const [selectedTranscriber, setSelectedTranscriber] = useState('');
   const [selectedReviewer, setSelectedReviewer] = useState('');
@@ -148,7 +146,7 @@ function AssignSection(props: IProps) {
 
   const projectRec = projects.filter((p) => p.id === project);
   const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
-  const transcriberRoleId = getRoleId(roles, RoleNames.Transcriber);
+  const transcriberRoleId = getRoleId(RoleNames.Transcriber);
 
   const transcriberIds = groupMemberships
     .filter((gm) => related(gm, 'group') === groupId)
@@ -314,7 +312,6 @@ const mapRecordsToProps = {
   users: (q: QueryBuilder) => q.findRecords('user'),
   projects: (q: QueryBuilder) => q.findRecords('project'),
   groupMemberships: (q: QueryBuilder) => q.findRecords('groupmembership'),
-  roles: (q: QueryBuilder) => q.findRecords('role'),
 };
 
 export default withData(mapRecordsToProps)(

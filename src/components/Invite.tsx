@@ -32,7 +32,7 @@ import {
   ListItem,
   ListItemText,
 } from '@material-ui/core';
-import { related, getRoleId, getUserById } from '../crud';
+import { related, useRole, getUserById } from '../crud';
 import { validateEmail } from '../utils';
 import { API_CONFIG } from '../api-variable';
 import { AddRecord } from '../model/baseModel';
@@ -97,6 +97,7 @@ function Invite(props: IProps) {
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
   const [offline] = useGlobal('offline');
+  const { getRoleId } = useRole();
   const [currentUser, setcurrentUser] = useState('');
   const [open, setOpen] = useState(visible);
   const [email, setEmail] = useState('');
@@ -110,10 +111,10 @@ function Invite(props: IProps) {
 
   const resetFields = () => {
     setEmail('');
-    setRole(getRoleId(roles, RoleNames.Member));
+    setRole(getRoleId(RoleNames.Member));
     setGroup('');
     setGroupRole('');
-    setAllUsersRole(getRoleId(roles, RoleNames.Transcriber));
+    setAllUsersRole(getRoleId(RoleNames.Transcriber));
   };
   const handleAdd = async () => {
     const strings = {
