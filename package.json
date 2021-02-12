@@ -1,6 +1,6 @@
 {
   "name": "sil-transcriber",
-  "version": "2.11.2",
+  "version": "2.11.3",
   "description": "transcribe audio files for Paratext or Elan",
   "private": true,
   "dependencies": {
@@ -189,5 +189,7 @@
         "filter": "resetData.*"
       }
     ]
-  }
+  },
+  "main": "public/electron-dev.js",
+  "homepage": "./"
 }

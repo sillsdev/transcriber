@@ -14,6 +14,7 @@ interface IProps {
 export const TeamProjects = (props: IProps) => {
   const { auth } = props;
   const [offline] = useGlobal('offline');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const ctx = React.useContext(TeamContext);
   const {
     teams,
@@ -26,7 +27,7 @@ export const TeamProjects = (props: IProps) => {
   return (
     <>
       <Grid container>
-        {(personalProjects().length > 0 || !offline) && (
+        {(personalProjects().length > 0 || !offline || offlineOnly) && (
           <PersonalItem key={1} />
         )}
         {teams().map((i) => {
