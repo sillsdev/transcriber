@@ -1,3 +1,9 @@
+sil-transcriber (2.11.3.0)  experimental; urgency=high
+
+  * allow creation of new offline only projects (TT-1974)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 12 Feb 2021 14:39:00 -0600
+
 sil-transcriber (2.11.2.0)  experimental; urgency=high
 
   * TT-1993 filter role list for online roles (#59)
