@@ -24,7 +24,7 @@ import TeamCol from './TeamCol';
 import GroupMemberAdd from './GroupMemberAdd';
 import Confirm from '../AlertDialog';
 import { OptionType } from '../../model';
-import { related, getRoleId } from '../../crud';
+import { related, useRole } from '../../crud';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
@@ -57,6 +57,7 @@ function Team(props: IProps) {
   const [project] = useGlobal('project');
   const [group, setGroup] = useGlobal('group');
   const [organization] = useGlobal('organization');
+  const { getRoleId } = useRole();
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState('');
   const [orgPeople, setOrgPeople] = useState(Array<OptionType>());
@@ -89,7 +90,7 @@ function Team(props: IProps) {
 
   const handleUpdate = (id: string, role: RoleNames) => {
     const ids = getGroups(id);
-    const roleId = getRoleId(roles, role);
+    const roleId = getRoleId(role);
     if (ids.length > 0 && roleId.length > 0) {
       memory.update((t: TransformBuilder) =>
         t.replaceRelatedRecord(

@@ -1,18 +1,18 @@
 import { useGlobal } from 'reactn';
-import { GroupMembership, Role, RoleNames } from '../../model';
-import { related, getRoleId } from '../../crud';
+import { GroupMembership, RoleNames } from '../../model';
+import { related, useRole } from '../../crud';
 import { IPerson } from './TeamCol';
 
 interface IProps {
   groupMemberships: GroupMembership[];
-  roles: Role[];
 }
 
 function useOwnerIds(props: IProps): IPerson[] {
-  const { groupMemberships, roles } = props;
+  const { groupMemberships } = props;
+  const { getRoleId } = useRole();
   const [group] = useGlobal('group');
 
-  const adminId = getRoleId(roles, RoleNames.Admin);
+  const adminId = getRoleId(RoleNames.Admin);
 
   return groupMemberships
     .filter(

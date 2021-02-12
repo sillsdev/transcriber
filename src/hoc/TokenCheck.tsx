@@ -53,13 +53,19 @@ function TokenCheck(props: IProps) {
   }, []);
 
   const checkTokenExpired = () => {
-    if (expireAt && !offline) {
-      const currentUnix = moment().format('X');
-      const expires = moment.unix(expireAt).format('X');
-      const secondsLeft = Number(expires) - Number(currentUnix);
-      if (secondsLeft < Expires + 30) {
-        setSecondsToExpire(secondsLeft);
-        setModalOpen(true);
+    if (!offline) {
+      if (localStorage.getItem('isLoggedIn') !== 'true' && auth.accessToken) {
+        auth.logout();
+        view.current = 'loggedOut';
+      }
+      if (expireAt) {
+        const currentUnix = moment().format('X');
+        const expires = moment.unix(expireAt).format('X');
+        const secondsLeft = Number(expires) - Number(currentUnix);
+        if (secondsLeft < Expires + 30) {
+          setSecondsToExpire(secondsLeft);
+          setModalOpen(true);
+        }
       }
     }
   };

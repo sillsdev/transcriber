@@ -663,6 +663,7 @@ const initialState = {
 			"sectionstate": "State",
 			"showHideFilter": "Show/Hide filter rows",
 			"updated": "Updated",
+			"incompletePlan": "Plan is incomplete: attach media to passages.",
 		}
 	}),
 	"treeChart": new LocalizedStrings({

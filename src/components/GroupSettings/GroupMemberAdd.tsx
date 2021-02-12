@@ -4,12 +4,10 @@ import { connect } from 'react-redux';
 import {
   IState,
   GroupMembership,
-  Role,
   IGroupSettingsStrings,
   RoleNames,
 } from '../../model';
 import localStrings from '../../selector/localize';
-import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import {
   Button,
@@ -24,18 +22,14 @@ import {
 import { useSnackBar } from '../../hoc/SnackBar';
 import { OptionType } from '../../model';
 import useStyles from './GroupSettingsStyles';
-import { addGroupMember, getRoleId } from '../../crud';
+import { addGroupMember, useRole } from '../../crud';
 import { UpdateRelatedRecord } from '../../model/baseModel';
 
 interface IStateProps {
   t: IGroupSettingsStrings;
 }
 
-interface IRecordProps {
-  roles: Array<Role>;
-}
-
-interface IProps extends IStateProps, IRecordProps {
+interface IProps extends IStateProps {
   open: boolean;
   role: string;
   orgPeople: OptionType[];
@@ -43,11 +37,12 @@ interface IProps extends IStateProps, IRecordProps {
 }
 
 function GroupMemberAdd(props: IProps) {
-  const { open, role, orgPeople, t, roles, setOpen } = props;
+  const { open, role, orgPeople, t, setOpen } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
   const [group] = useGlobal('group');
+  const { getRoleId } = useRole();
   const [currentPerson, setCurrentPerson] = useState<string | null>(null);
   const { showMessage } = useSnackBar();
   const inProcess = React.useRef<boolean>(false);
@@ -65,7 +60,7 @@ function GroupMemberAdd(props: IProps) {
     inProcess.current = true;
     const fileRole: RoleNames =
       role === 'owner' ? RoleNames.Admin : (role as RoleNames);
-    const roleId = getRoleId(roles, fileRole);
+    const roleId = getRoleId(fileRole);
     const groupMemberRecs: GroupMembership[] = memory.cache.query(
       (q: QueryBuilder) =>
         q.findRecords('groupmembership').filter(
@@ -162,10 +157,4 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'groupSettings' }),
 });
 
-const mapRecordsToProps = {
-  roles: (q: QueryBuilder) => q.findRecords('role'),
-};
-
-export default withData(mapRecordsToProps)(
-  connect(mapStateToProps)(GroupMemberAdd) as any
-) as any;
+export default connect(mapStateToProps)(GroupMemberAdd) as any;

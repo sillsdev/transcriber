@@ -446,11 +446,11 @@ export function Transcriber(props: IProps) {
   const handleProgress = (ctrl: any) => {
     if (!seeking) {
       if (!totalSeconds || totalSeconds < ctrl.loadedSeconds) {
-        setTotalSeconds(ctrl.loadedSeconds);
+        setTotalSeconds(Math.ceil(ctrl.loadedSeconds));
       } else {
         setTotalSeconds(duration);
       }
-      setPlayedSeconds(ctrl.playedSeconds);
+      setPlayedSeconds(Math.ceil(ctrl.playedSeconds));
       playedSecsRef.current = ctrl.playedSeconds;
     }
   };

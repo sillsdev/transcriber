@@ -3094,6 +3094,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.incompletePlan">
+         <segment>
+            <source>Plan is incomplete: attach media to passages.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="treeChart.contributions">
          <segment>
             <source>Contributions toward</source>

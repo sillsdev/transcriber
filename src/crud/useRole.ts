@@ -1,13 +1,57 @@
+import React from 'react';
 import { useGlobal } from 'reactn';
-import { Role, Project } from '../model';
+import { Role, Project, RoleNames } from '../model';
 import { QueryBuilder, Record } from '@orbit/data';
 import { related } from '../crud';
 
 export const useRole = () => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
+  const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProjRole] = useGlobal('projRole');
+
+  interface IUniqueRoles {
+    [key: string]: Role;
+  }
+
+  const roles = React.useMemo(() => {
+    const uniqueRoles = {} as IUniqueRoles;
+    const allRoles = memory.cache.query((q: QueryBuilder) =>
+      q.findRecords('role')
+    ) as Role[];
+    allRoles.forEach((r) => {
+      if (offlineOnly !== Boolean(r?.keys?.remoteId)) {
+        if (r?.attributes?.roleName) uniqueRoles[r.attributes.roleName] = r;
+      }
+    });
+    return Object.values(uniqueRoles);
+  }, [offlineOnly, memory]);
+
+  const getRoleId = function (role: RoleNames): string {
+    let findit = roles.filter(
+      (r) => r.attributes && r.attributes.roleName === role
+    );
+    if (findit.length > 0) return findit[0].id;
+    return '';
+  };
+
+  const getRoleRec = (kind: string, orgRole: boolean) => {
+    const lcKind = kind.toLowerCase();
+    return orgRole
+      ? roles.filter(
+          (r) =>
+            r.attributes.orgRole &&
+            r.attributes.roleName &&
+            r.attributes.roleName.toLowerCase() === lcKind
+        )
+      : roles.filter(
+          (r) =>
+            r.attributes.groupRole &&
+            r.attributes.roleName &&
+            r.attributes.roleName.toLowerCase() === lcKind
+        );
+  };
 
   const getMbrRoleRec = (relate: string, id: string, userId: string) => {
     const tableName =
@@ -58,5 +102,13 @@ export const useRole = () => {
     return role;
   };
 
-  return { setMyOrgRole, setMyProjRole, getMyOrgRole, getMyProjRole };
+  return {
+    getRoleId,
+    getRoleRec,
+    getMbrRoleRec,
+    setMyOrgRole,
+    setMyProjRole,
+    getMyOrgRole,
+    getMyProjRole,
+  };
 };

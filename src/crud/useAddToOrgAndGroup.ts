@@ -1,25 +1,23 @@
 import { useGlobal } from 'reactn';
-import { QueryBuilder, TransformBuilder } from '@orbit/data';
-import { User, OrganizationMembership, Role, GroupMembership } from '../model';
-import { getRoleRec, allUsersRec } from '.';
+import { TransformBuilder } from '@orbit/data';
+import { User, OrganizationMembership, GroupMembership } from '../model';
+import { useRole, allUsersRec } from '.';
 import { AddRecord } from '../model/baseModel';
 
 export const useAddToOrgAndGroup = () => {
   const [memory] = useGlobal('memory');
   const [organization] = useGlobal('organization');
   const [user] = useGlobal('user');
+  const { getRoleRec } = useRole();
 
   return (userRec: User, newRec: boolean) => {
     const addMemberships = () => {
       let orgMember: OrganizationMembership = {
         type: 'organizationmembership',
       } as any;
-      const roleRecs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('role')
-      ) as Role[];
-      const memberRec = getRoleRec(roleRecs, 'member', true);
+      const memberRec = getRoleRec('member', true);
       const allUsersGroup = allUsersRec(memory, organization);
-      const editorRec = getRoleRec(roleRecs, 'editor', false);
+      const editorRec = getRoleRec('editor', false);
       let groupMbr: GroupMembership = {
         type: 'groupmembership',
       } as any;

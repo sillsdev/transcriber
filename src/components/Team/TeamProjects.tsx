@@ -1,4 +1,5 @@
 import React from 'react';
+import { useGlobal } from 'reactn';
 import { Grid } from '@material-ui/core';
 import { TeamContext } from '../../context/TeamContext';
 import { PersonalItem, TeamItem } from '.';
@@ -12,13 +13,22 @@ interface IProps {
 }
 export const TeamProjects = (props: IProps) => {
   const { auth } = props;
+  const [offline] = useGlobal('offline');
   const ctx = React.useContext(TeamContext);
-  const { teams, importOpen, setImportOpen, importProject } = ctx.state;
+  const {
+    teams,
+    importOpen,
+    setImportOpen,
+    importProject,
+    personalProjects,
+  } = ctx.state;
 
   return (
     <>
       <Grid container>
-        <PersonalItem key={1} />
+        {(personalProjects().length > 0 || !offline) && (
+          <PersonalItem key={1} />
+        )}
         {teams().map((i) => {
           return <TeamItem key={i.id} team={i} />;
         })}

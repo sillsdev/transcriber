@@ -41,12 +41,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import Confirm from '../components/AlertDialog';
 import ParatextLinked from '../components/ParatextLinked';
 import DeleteExpansion from '../components/DeleteExpansion';
-import {
-  related,
-  getRoleRec,
-  getMbrRoleRec,
-  useAddToOrgAndGroup,
-} from '../crud';
+import { related, useRole, useAddToOrgAndGroup } from '../crud';
 import {
   makeAbbr,
   uiLang,
@@ -205,6 +200,7 @@ export function Profile(props: IProps) {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [errorReporter] = useGlobal('errorReporter');
   const [isDeveloper] = useGlobal('developer');
+  const { getRoleRec, getMbrRoleRec } = useRole();
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
   const [currentUser, setCurrentUser] = useState<User | undefined>();
   const [name, setName] = useState('');
@@ -348,12 +344,8 @@ export function Profile(props: IProps) {
           )
         // we aren't allowing them to change owner oraganization currently
       );
-      const roleRecs = memory.cache.query((q: QueryBuilder) =>
-        q.findRecords('role')
-      ) as Role[];
-      const newRoleRec = getRoleRec(roleRecs, role, true);
+      const newRoleRec = getRoleRec(role, true);
       const mbrRec = getMbrRoleRec(
-        memory,
         'organization',
         organization,
         currentUserId

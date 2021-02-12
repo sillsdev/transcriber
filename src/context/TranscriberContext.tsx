@@ -511,6 +511,7 @@ const TranscriberProvider = withData(mapRecordsToProps)(
       [ActivityStates.Transcribing]: 'transcriber',
       [ActivityStates.Transcribed]: 'editor',
       [ActivityStates.Incomplete]: 'transcriber',
+      [ActivityStates.NeedsNewTranscription]: 'transcriber',
       '': 'view',
     };
 
@@ -550,12 +551,14 @@ const TranscriberProvider = withData(mapRecordsToProps)(
         const passRecs = passages.filter((p) => p.id === r.passage.id);
         if (passRecs.length > 0) {
           const passage = { ...passRecs[0] };
+          let role = r.role;
           const newState = passage?.attributes?.state;
           if (newState !== r.passage?.attributes?.state) {
             changed = true;
             if (noNewSelection.indexOf(newState) === -1) selected = '';
+            role = actor[newState] || 'view';
           }
-          rowData.push({ ...r, passage });
+          rowData.push({ ...r, passage, role });
         }
       });
       if (changed) {

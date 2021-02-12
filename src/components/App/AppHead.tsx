@@ -36,6 +36,9 @@ import CloudOffIcon from '@material-ui/icons/CloudOff';
 import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 
+const shell = isElectron ? require('electron').shell : null;
+// const { remote } = isElectron ? require('electron') : { remote: null };
+
 const useStyles = makeStyles({
   appBar: {
     width: '100%',
@@ -212,6 +215,12 @@ export const AppHead = (props: IProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updates, version]);
 
+  const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (shell)
+      shell.openExternal('https://software.sil.org/siltranscriber/download/');
+    // remote?.getCurrentWindow().close();
+  };
+
   if (view === 'Error') return <Redirect to="/error" />;
   if (view === 'Profile') return <StickyRedirect to="/profile" />;
   if (view === 'Logout') return <Redirect to="/logout" />;
@@ -240,11 +249,7 @@ export const AppHead = (props: IProps) => {
                 .replace('{0}', latestVersion)
                 .replace('{1}', latestRelease)}
             >
-              <IconButton
-                href="https://software.sil.org/siltranscriber/download/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <IconButton onClick={handleDownloadClick}>
                 <SystemUpdateIcon color="primary" />
               </IconButton>
             </Tooltip>
