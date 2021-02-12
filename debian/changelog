@@ -1,3 +1,16 @@
+sil-transcriber (2.11.2.0)  experimental; urgency=high
+
+  * TT-1993 filter role list for online roles (#59)
+  * TT-1973 Round up play seconds and total seconds
+  * TT-1990 Use correct role when online and offline (#60)
+  * TT-1781 logout affects all browser tabs (#61)
+  * TT-1274 only export if project setup complete (#62)
+  * TT-1992 open browser tab when upgrading
+  * TT-1503 rejecting task removes buttons for bad recording
+  * TT-1974 No personal header offline if no personal projects
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 12 Feb 2021 12:51:00 -0600
+
 sil-transcriber (2.11.1.0)  experimental; urgency=high
 
   * TT-1991 create folder on upload (#57)
