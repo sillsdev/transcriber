@@ -1,5 +1,4 @@
 export * from './allUsers';
-export * from './createOrg';
 export * from './fontChoice';
 export * from './getMediaInPlans';
 export * from './getOrgs';
@@ -11,7 +10,6 @@ export * from './offlineError';
 export * from './passage';
 export * from './related';
 export * from './remoteId';
-export * from './role';
 export * from './saveNewSection';
 export * from './section';
 export * from './setDefaultProj';
