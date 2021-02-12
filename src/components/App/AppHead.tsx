@@ -37,7 +37,7 @@ import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 
 const shell = isElectron ? require('electron').shell : null;
-const { remote } = isElectron ? require('electron') : { remote: null };
+// const { remote } = isElectron ? require('electron') : { remote: null };
 
 const useStyles = makeStyles({
   appBar: {
@@ -218,7 +218,7 @@ export const AppHead = (props: IProps) => {
   const handleDownloadClick = (event: React.MouseEvent<HTMLElement>) => {
     if (shell)
       shell.openExternal('https://software.sil.org/siltranscriber/download/');
-    remote?.getCurrentWindow().close();
+    // remote?.getCurrentWindow().close();
   };
 
   if (view === 'Error') return <Redirect to="/error" />;
