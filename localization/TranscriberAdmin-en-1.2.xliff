@@ -3606,7 +3606,14 @@
                <context context-type="sourcefile">TranscriptionTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="treeChart.contributions">
+      	<trans-unit id="transcriptionTab.incompletePlan">
+      		<source>Plan is incomplete: attach media to passages.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">TranscriptionTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="treeChart.contributions">
             <source>Contributions toward</source>
             <target/>
             <context-group>

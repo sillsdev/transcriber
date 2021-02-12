@@ -622,6 +622,7 @@ export interface ITranscriptionTabStrings extends Localize.LocalizedStringsMetho
     "sectionstate": string;
     "showHideFilter": string;
     "updated": string;
+    "incompletePlan": string;
 };
 
 export interface ITreeChartStrings extends Localize.LocalizedStringsMethods {

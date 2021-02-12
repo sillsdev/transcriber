@@ -291,6 +291,14 @@ export function TranscriptionTab(props: IProps) {
       projectplans.map((p) => p.id),
       mediaFiles
     );
+    const attached = media
+      .map((m) => related(m, 'passage'))
+      .filter((p) => p && p !== '');
+    if (!attached.length) {
+      showMessage(t.incompletePlan);
+      setBusy(false);
+      return;
+    }
     exportProject(
       exportType,
       memory,
