@@ -217,7 +217,8 @@ export function IntegrationPanel(props: IProps) {
   };
   const getParatextIntegration = (local: string) => {
     const intfind: Integration[] = integrations.filter(
-      (i) => i.attributes && i.attributes.name === local
+      (i) =>
+        i.attributes?.name === local && Boolean(i.keys?.remoteId) !== offline
     );
     if (intfind.length === 0)
       addParatextIntegration(local).then((res) => setParatextIntegration(res));
