@@ -282,7 +282,8 @@ export function Transcriber(props: IProps) {
     const intfind = integrations.findIndex(
       (i) =>
         i.attributes &&
-        i.attributes.name === (offline ? 'paratextLocal' : 'paratext')
+        i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
+        Boolean(i.keys?.remoteId) !== offline
     );
     if (intfind > -1) setParatextIntegration(integrations[intfind].id);
   };
@@ -772,7 +773,10 @@ export function Transcriber(props: IProps) {
     setTextValue(val.transcription);
     setDefaultPosition(val.position);
     //focus on player
-    if (transcriptionRef.current) transcriptionRef.current.firstChild.focus();
+    if (transcriptionRef.current) {
+      transcriptionRef.current.firstChild.value = val.transcription;
+      transcriptionRef.current.firstChild.focus();
+    }
     setLastSaved(passage.attributes?.dateUpdated || '');
     setComment(passage.attributes?.lastComment || '');
     setTotalSeconds(duration);
@@ -904,6 +908,7 @@ export function Transcriber(props: IProps) {
       setHistoryContent(historyList(curStateChanges));
     }
   };
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
