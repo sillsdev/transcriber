@@ -87,9 +87,9 @@ export const TeamItem = (props: IProps) => {
     setDeleteItem(team);
   };
 
-  const handleDeleteConfirmed = () => {
+  const handleDeleteConfirmed = async () => {
     setEditOpen(false);
-    deleteItem && teamDelete(deleteItem);
+    deleteItem && (await teamDelete(deleteItem));
   };
 
   const handleDeleteRefused = () => setDeleteItem(undefined);
