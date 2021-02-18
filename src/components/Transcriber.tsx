@@ -16,6 +16,7 @@ import {
   IState,
   Integration,
   ProjectIntegration,
+  RoleNames,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -67,6 +68,7 @@ import {
   Severity,
   currentDateTime,
   getParatextDataPath,
+  camel2Title,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -575,12 +577,22 @@ export function Transcriber(props: IProps) {
     transcribed: 'editor',
   };
 
+  const roleHierarchy = [
+    RoleNames.Transcriber,
+    RoleNames.Editor,
+    RoleNames.Admin,
+  ];
+
   const handleAssign = async () => {
     const secRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord(section)
     );
     const role = stateRole[stateRef.current];
-    if (role) {
+    if (
+      role &&
+      roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
+        roleHierarchy.indexOf(camel2Title(projRole) as RoleNames)
+    ) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
         await memory.update(
