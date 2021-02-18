@@ -203,6 +203,7 @@ const TeamProvider = withData(mapRecordsToProps)(
     const [, setProject] = useGlobal('project');
     const [, setPlan] = useGlobal('plan');
     const [user] = useGlobal('user');
+    const [memory] = useGlobal('memory');
     const [isOffline] = useGlobal('offline');
     const [offlineOnly] = useGlobal('offlineOnly');
     const [userProjects, setUserProjects] = useState(projects);
@@ -383,8 +384,8 @@ const TeamProvider = withData(mapRecordsToProps)(
       orbitTeamUpdate(team);
     };
 
-    const teamDelete = (team: Organization) => {
-      orbitTeamDelete(team);
+    const teamDelete = async (team: Organization) => {
+      await orbitTeamDelete(team);
     };
 
     interface IUniqueTypes {
@@ -418,14 +419,21 @@ const TeamProvider = withData(mapRecordsToProps)(
     }, [lang, allBookData]);
 
     useEffect(() => {
+      /* after deleting a project, sometimes we get here before the projects
+       ** list is updated.  So, get an updated list all the time
+       */
+      var projs = memory.cache.query((q: QueryBuilder) =>
+        q.findRecords('project')
+      ) as Project[];
       if (isElectron) {
         const grpIds = groupMemberships
           .filter((gm) => related(gm, 'user') === user)
           .map((gm) => related(gm, 'group'));
         setUserProjects(
-          projects.filter((p) => grpIds.includes(related(p, 'group')))
+          projs.filter((p) => grpIds.includes(related(p, 'group')))
         );
-      } else setUserProjects(projects);
+      } else setUserProjects(projs);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projects, groupMemberships, user, isOffline]);
 
     useEffect(() => {
