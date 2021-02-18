@@ -536,6 +536,12 @@
             <target>Votre e-mail n'est pas vérifié.</target>
          </segment>
       </unit>
+      <unit id="emailUnverified.logout">
+         <segment>
+            <source>Logout</source>
+            <target>Déconnexion</target>
+         </segment>
+      </unit>
       <unit id="emailUnverified.resend">
          <segment>
             <source>Resend the authorization email</source>

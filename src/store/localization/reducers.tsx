@@ -133,6 +133,7 @@ const initialState = {
 	"emailUnverified": new LocalizedStrings({
 		"en": {
 			"emailUnverified": "Your email is unverified.",
+			"logout": "Logout",
 			"resend": "Resend the authorization email",
 			"verified": "I'm verified!  Carry on!",
 			"verify": "Please verify by clicking on the link in the authorization email sent to your account.",
