@@ -583,11 +583,11 @@ export function Transcriber(props: IProps) {
     RoleNames.Admin,
   ];
 
-  const handleAssign = async () => {
+  const handleAssign = async (curState: string) => {
     const secRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord(section)
     );
-    const role = stateRole[stateRef.current];
+    const role = stateRole[curState];
     if (
       role &&
       roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
@@ -634,6 +634,7 @@ export function Transcriber(props: IProps) {
     if (transcriptionRef.current) {
       saving.current = true;
       let transcription = transcriptionRef.current.firstChild.value;
+      const curState = stateRef.current;
       const tb = new TransformBuilder();
       let ops: Operation[] = [];
       //always update the state, because we need the dateupdated to be updated
@@ -673,7 +674,7 @@ export function Transcriber(props: IProps) {
           saveCompleted('');
           setLastSaved(currentDateTime());
           saving.current = false;
-          handleAssign();
+          handleAssign(curState);
         })
         .catch((err) => {
           //so we don't come here...we go to continue/logout
