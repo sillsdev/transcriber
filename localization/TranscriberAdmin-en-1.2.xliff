@@ -624,6 +624,13 @@
                <context context-type="sourcefile">EmailUnverified.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="emailUnverified.logout">
+            <source>Logout</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">EmailUnverified.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="emailUnverified.resend">
             <source>Resend the authorization email</source>
             <target/>

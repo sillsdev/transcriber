@@ -118,6 +118,7 @@ export interface IElectronImportStrings extends Localize.LocalizedStringsMethods
 
 export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethods {
     "emailUnverified": string;
+    "logout": string;
     "resend": string;
     "verified": string;
     "verify": string;

@@ -67,7 +67,9 @@ export const EmailUnverified = (props: IProps) => {
     if (isElectron) goOnline();
     else setView('Logout');
   };
-
+  const handleLogout = (e: any) => {
+    setView('Logout');
+  };
   if (/Logout/i.test(view)) return <Redirect to="/logout" />;
 
   return (
@@ -105,6 +107,16 @@ export const EmailUnverified = (props: IProps) => {
             onClick={handleVerified}
           >
             {t.verified}
+          </Button>
+        </div>
+        <div className={classes.actions}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            onClick={handleLogout}
+          >
+            {t.logout}
           </Button>
         </div>
       </Grid>
