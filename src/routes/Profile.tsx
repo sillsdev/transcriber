@@ -450,7 +450,10 @@ export function Profile(props: IProps) {
     );
     ops.push(tb.removeRecord({ type: 'user', id: deleteItem }));
     await memory.update(ops);
-    setView('Logout');
+    //wait to be sure orbit remote is done also
+    setTimeout(() => {
+      setView('Logout');
+    }, 2000);
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
