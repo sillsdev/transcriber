@@ -174,6 +174,8 @@ const initialState = {
 		"en": {
 			"close": "Close",
 			"continue": "Continue?",
+			"copy": "Copy Report",
+			"copyfail": "Copy Failed",
 			"error": "Import Error",
 			"family": "Family Name",
 			"filter": "Filter",

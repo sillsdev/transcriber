@@ -140,6 +140,39 @@ export function ImportTab(props: IProps) {
     importComplete
   );
   const handleFilter = () => setFilter(!filter);
+  const headerRow = () =>
+    t.plan +
+    '\t' +
+    getOrganizedBy(true) +
+    '\t' +
+    t.passage +
+    '\t' +
+    t.other +
+    '\t' +
+    t.old +
+    '\t' +
+    t.imported;
+  const copyRow = (row: IRow) =>
+    row.plan +
+    '\t' +
+    row.section +
+    '\t' +
+    row.passage +
+    '\t' +
+    row.other +
+    '\t' +
+    row.old +
+    '\t' +
+    row.imported;
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(
+        [headerRow()].concat(changeData.map((r) => copyRow(r))).join('\n')
+      )
+      .catch((err) => {
+        showMessage(t.copyfail);
+      });
+  };
   const columnDefs = [
     { name: 'plan', title: t.plan },
     { name: 'section', title: getOrganizedBy(true) },
@@ -702,7 +735,17 @@ export function ImportTab(props: IProps) {
           {changeData.length > 0 && (
             <div className={classes.actions}>
               <div className={classes.grow}>{'\u00A0'}</div>
-
+              <Button
+                key="filter"
+                aria-label={t.copy}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleCopy}
+                title={t.copy}
+              >
+                {t.copy}
+              </Button>
               <Button
                 key="filter"
                 aria-label={t.filter}

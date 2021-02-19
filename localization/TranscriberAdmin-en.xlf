@@ -712,6 +712,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.copy">
+         <segment>
+            <source>Copy Report</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.copyfail">
+         <segment>
+            <source>Copy Failed</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.error">
          <segment>
             <source>Import Error</source>

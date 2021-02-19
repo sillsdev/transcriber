@@ -827,6 +827,20 @@
                <context context-type="sourcefile">Import.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="import.copy">
+            <source>Copy Report</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Import.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.copyfail">
+            <source>Copy Failed</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Import.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="import.error">
             <source>Import Error</source>
             <target/>
