@@ -20,10 +20,7 @@ import { Bucket } from '@orbit/core';
 import Memory from '@orbit/memory';
 import Auth from './auth/Auth';
 import { API_CONFIG, isElectron } from './api-variable';
-import {
-  getSerializer,
-  JSONAPISerializerCustom,
-} from './serializers/JSONAPISerializerCustom';
+import { JSONAPISerializerCustom } from './serializers/JSONAPISerializerCustom';
 import { orbitRetry, orbitErr, logError, infoMsg, Severity } from './utils';
 import { electronExport } from './store/importexport/electronExport';
 import { restoreBackup } from '.';
@@ -271,7 +268,6 @@ export const Sources = async (
       0,
       fingerprint,
       0,
-      getSerializer(memory),
       getOfflineProject
     ).catch((err: Error) => {
       logError(
