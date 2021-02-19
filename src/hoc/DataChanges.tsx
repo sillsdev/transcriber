@@ -17,7 +17,6 @@ import { API_CONFIG, isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
 import { offlineProjectUpdateSnapshot, remoteId, remoteIdGuid } from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
-import { getSerializer } from '../serializers/JSONAPISerializerCustom';
 import { electronExport } from '../store/importexport/electronExport';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import { ExportType, OfflineProject, Plan, VProject } from '../model';
@@ -166,7 +165,6 @@ export const doDataChanges = async (
 export default function DataChanges(props: IProps) {
   const { auth, children } = props;
   const [isOffline] = useGlobal('offline');
-  const [offlineOnly] = useGlobal('offlineOnly');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -223,7 +221,6 @@ export default function DataChanges(props: IProps) {
         project,
         fingerprint,
         user,
-        getSerializer(memory, offlineOnly),
         getOfflineProject
       ).catch((err: Error) => {
         logError(

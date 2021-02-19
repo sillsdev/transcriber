@@ -17,7 +17,7 @@ import {
   VProject,
 } from '../../model';
 import Memory from '@orbit/memory';
-import { JSONAPISerializerCustom } from '../../serializers/JSONAPISerializerCustom';
+import { getSerializer } from '../../serializers/JSONAPISerializerCustom';
 import {
   QueryBuilder,
   RecordIdentity,
@@ -40,9 +40,10 @@ export async function electronExport(
   projectid: number | string,
   fingerprint: string,
   userid: number | string,
-  ser: JSONAPISerializerCustom,
   getOfflineProject: (plan: Plan | VProject | string) => OfflineProject
 ): Promise<FileResponse | null> {
+  const onlineSerlzr = getSerializer(memory, false);
+  const offlineSrlzr = getSerializer(memory, true);
   const BuildFileResponse = (
     fullpath: string,
     fileName: string,
@@ -135,6 +136,7 @@ export async function electronExport(
     };
     const AddJsonEntry = (table: string, recs: Record[], sort: string) => {
       //put in the remoteIds for everything, then stringify
+      const ser = recs[0]?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
       var json = '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}';
       zip.addFile(
         'data/' + sort + '_' + table + '.json',
@@ -314,9 +316,12 @@ export async function electronExport(
 
           default:
             //activitystate,integration,plantype,projecttype,role
-            return memory.cache.query((q: QueryBuilder) =>
+            const needsRemId = Boolean(projRec?.keys?.remoteId);
+            return (memory.cache.query((q: QueryBuilder) =>
               q.findRecords(info.table)
-            ) as Record[];
+            ) as Record[]).filter(
+              (r) => Boolean(r?.keys?.remoteId) === needsRemId
+            );
         }
       } else {
         return memory.cache.query((q: QueryBuilder) =>
@@ -408,11 +413,7 @@ export async function electronExport(
     const imported = moment.utc(op.attributes.snapshotDate || '01/01/1900');
     AddSourceEntry(imported.toISOString());
     AddVersionEntry('2'); //TODO: ask what version indexeddb is
-    if (
-      typeof projectid === 'string' &&
-      !remoteId('project', projectid, memory.keyMap)
-    )
-      AddOfflineEntry();
+    if (!projRec?.keys?.remoteId) AddOfflineEntry();
     const limit = onlyOneProject() ? undefined : projRec;
     var numRecs = 0;
     switch (exportType) {
