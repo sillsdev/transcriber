@@ -710,6 +710,18 @@
             <target>Continuer?</target>
          </segment>
       </unit>
+      <unit id="import.copy">
+         <segment>
+            <source>Copy Report</source>
+            <target>Copier le rapport</target>
+         </segment>
+      </unit>
+      <unit id="import.copyfail">
+         <segment>
+            <source>Copy Failed</source>
+            <target>La copie a échoué</target>
+         </segment>
+      </unit>
       <unit id="import.email">
          <segment>
             <source>Email</source>

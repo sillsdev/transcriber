@@ -156,6 +156,8 @@ export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
 export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "close": string;
     "continue": string;
+    "copy": string;
+    "copyfail": string;
     "error": string;
     "family": string;
     "filter": string;
