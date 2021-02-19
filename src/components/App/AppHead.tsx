@@ -142,9 +142,11 @@ export const AppHead = (props: IProps) => {
       resetData();
       exitElectronApp();
     }
-    if (isElectron && /logout/i.test(what)) {
+    if (isElectron && /Logout/i.test(what)) {
       checkSavedFn(() => {
-        setView('Logout');
+        setTimeout(() => {
+          setView('Logout');
+        }, 2000);
       });
       return;
     }
@@ -155,6 +157,12 @@ export const AppHead = (props: IProps) => {
         setView('Logout');
       } else if (/Clear/i.test(what)) {
         if (resetRequests) resetRequests().then(() => setView(what));
+      } else if (/Logout/i.test(what)) {
+        checkSavedFn(() => {
+          setTimeout(() => {
+            setView('Logout');
+          }, 2000);
+        });
       } else checkSavedFn(() => setView(what));
     }
   };

@@ -103,7 +103,7 @@ const UnsavedProvider = connect(
     showMessage(t.saving);
     startSave();
     setAlertOpen(false);
-    finishConfirmed(savedMethod, 8);
+    finishConfirmed(savedMethod, 18);
   };
 
   return (
