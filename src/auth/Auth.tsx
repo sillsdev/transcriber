@@ -3,6 +3,7 @@ import auth0 from 'auth0-js';
 import jwtDecode from 'jwt-decode';
 import { AUTH_CONFIG } from './auth0-variables';
 import { isElectron } from '../api-variable';
+import { localeDefault } from '../utils';
 
 export default class Auth {
   accessToken: any;
@@ -33,14 +34,14 @@ export default class Auth {
 
   login() {
     this.auth0.authorize({
-      language: navigator.language.split('-')[0],
+      language: localeDefault(false, navigator.language.split('-')[0]),
     });
   }
 
   signup() {
     this.auth0.authorize({
       mode: 'signUp',
-      language: navigator.language.split('-')[0],
+      language: localeDefault(false, navigator.language.split('-')[0]),
     });
   }
 
@@ -113,7 +114,7 @@ export default class Auth {
       this.auth0.checkSession({}, (err, authResult) => {
         if (err) return reject(err);
         this.setSession(authResult);
-        resolve();
+        resolve({});
       });
     });
   }
