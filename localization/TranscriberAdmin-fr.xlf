@@ -1154,7 +1154,13 @@
             <target>Inviter un membre</target>
          </segment>
       </unit>
-      <unit id="invite.allUsersProjects">
+   	<unit id="invite.admin">
+   		<segment>
+   			<source>Admin</source>
+   			<target>Admin</target>
+   		</segment>
+   	</unit>
+   	<unit id="invite.allUsersProjects">
          <segment>
             <source>Projects</source>
             <target>Projets</target>
@@ -1226,7 +1232,13 @@
             <target>Rejoindre</target>
          </segment>
       </unit>
-      <unit id="invite.newInviteTask">
+   	<unit id="invite.member">
+   		<segment>
+   			<source>Member</source>
+   			<target>Membre</target>
+   		</segment>
+   	</unit>
+   	<unit id="invite.newInviteTask">
          <segment>
             <source>Enter the email address of the member to invite.</source>
             <target>Entrez le adresse électronique du membre à inviter.</target>
@@ -2532,6 +2544,18 @@
    		<segment>
    			<source>Import Media</source>
    			<target>Importer des médias</target>
+   		</segment>
+   	</unit>
+   	<unit id="shared.mediaAttached">
+   		<segment>
+   			<source>Media Attached</source>
+   			<target>Médias attachés</target>
+   		</segment>
+   	</unit>
+   	<unit id="shared.part">
+   		<segment>
+   			<source>Part {0}</source>
+   			<target>Partie {0}</target>
    		</segment>
    	</unit>
    	<unit id="taskItem.assign">

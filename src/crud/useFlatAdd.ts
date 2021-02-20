@@ -1,9 +1,9 @@
 import { useGlobal } from 'reactn';
-import { Passage, MediaFile, ActivityStates } from '../model';
+import { Passage, MediaFile, ActivityStates, ISharedStrings } from '../model';
 import { QueryBuilder } from '@orbit/data';
 import { remoteIdGuid, saveNewSection, AddFlatPassage } from '.';
 
-export const useFlatAdd = () => {
+export const useFlatAdd = (ts: ISharedStrings) => {
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
@@ -42,7 +42,7 @@ export const useFlatAdd = () => {
           attributes: {
             sequencenum: seq + 1,
             book: book,
-            reference: `Part ${seq + 1}`,
+            reference: ts.part.replace('{0}', (seq + 1).toString()),
             title: '',
             position: 0,
             hold: false,

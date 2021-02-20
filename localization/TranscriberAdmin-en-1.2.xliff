@@ -1324,14 +1324,21 @@
                <context context-type="sourcefile">InvitationTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.addInvite">
+      	<trans-unit id="invite.addInvite">
             <source>Invite Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.allUsersProjects">
+      	<trans-unit id="invite.admin">
+      		<source>Admin</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Invite.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="invite.allUsersProjects">
             <source>Projects</source>
             <target/>
             <context-group>
@@ -1415,7 +1422,14 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.newInviteTask">
+      	<trans-unit id="invite.member">
+      		<source>Member</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Invite.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="invite.newInviteTask">
             <source>Enter the email address of the member to invite.</source>
             <target/>
             <context-group>
@@ -2934,7 +2948,7 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shared.transcriber">
+      	<trans-unit id="shared.transcriber">
             <source>Transcriber</source>
             <target/>
             <context-group>
@@ -2960,6 +2974,20 @@
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="shared.mediaAttached">
+      		<source>Media Attached</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useMediaAttach.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="shared.part">
+      		<source>Part {0}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useFlatAdd.ts</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="taskItem.assign">
