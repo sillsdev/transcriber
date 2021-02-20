@@ -258,6 +258,7 @@ const initialState = {
 	"invite": new LocalizedStrings({
 		"en": {
 			"addInvite": "Invite Member",
+			"admin": "Admin",
 			"allUsersProjects": "Projects",
 			"alreadyInvited": "Already invited!",
 			"cancel": "Cancel",
@@ -270,6 +271,7 @@ const initialState = {
 			"invalidEmail": "Invalid email address",
 			"invitation": "has invited you to join",
 			"join": "Join",
+			"member": "Member",
 			"newInviteTask": "Enter the email address of the member to invite.",
 			"noProjects": "No Projects are associated with this group.",
 			"organization": "Team",
@@ -543,6 +545,8 @@ const initialState = {
 			"uploadMediaPlural": "Upload Media",
 			"uploadMediaSingular": "Upload Media",
 			"importMediaSingular": "Import Media",
+			"mediaAttached": "Media Attached",
+			"part": "Part {0}",
 		}
 	}),
 	"taskItem": new LocalizedStrings({

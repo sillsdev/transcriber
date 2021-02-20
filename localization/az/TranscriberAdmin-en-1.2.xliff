@@ -625,6 +625,13 @@
           <context context-type="sourcefile">EmailUnverified.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="emailUnverified.logout">
+        <source>Logout</source>
+        <target state="needs-translation">Logout</target>
+        <context-group>
+          <context context-type="sourcefile">EmailUnverified.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="emailUnverified.resend">
         <source>Resend the authorization email</source>
         <target state="needs-translation">Resend the authorization email</target>
@@ -817,6 +824,20 @@
       <trans-unit id="import.continue">
         <source>Continue?</source>
         <target state="needs-translation">Continue?</target>
+        <context-group>
+          <context context-type="sourcefile">Import.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="import.copy">
+        <source>Copy Report</source>
+        <target state="needs-translation">Copy Report</target>
+        <context-group>
+          <context context-type="sourcefile">Import.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="import.copyfail">
+        <source>Copy Failed</source>
+        <target state="needs-translation">Copy Failed</target>
         <context-group>
           <context context-type="sourcefile">Import.tsx</context>
         </context-group>
@@ -1311,6 +1332,13 @@
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="invite.admin">
+        <source>Admin</source>
+        <target state="needs-translation">Admin</target>
+        <context-group>
+          <context context-type="sourcefile">Invite.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="invite.allUsersProjects">
         <source>Projects</source>
         <target state="needs-translation">Projects</target>
@@ -1391,6 +1419,13 @@
       <trans-unit id="invite.join">
         <source>Join</source>
         <target state="needs-translation">Join</target>
+        <context-group>
+          <context context-type="sourcefile">Invite.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="invite.member">
+        <source>Member</source>
+        <target state="needs-translation">Member</target>
         <context-group>
           <context context-type="sourcefile">Invite.tsx</context>
         </context-group>
@@ -1655,15 +1690,29 @@
         </context-group>
       </trans-unit>
       <trans-unit id="main.flatSample">
-        <source>Download flat sample spreadsheet</source>
-        <target state="needs-translation">Download flat sample spreadsheet</target>
+        <source>Scripture flat sample spreadsheet</source>
+        <target state="needs-translation">Scripture flat sample spreadsheet</target>
         <context-group>
           <context context-type="sourcefile">HelpMenu.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.hierarchicalSample">
-        <source>Download hierarchical sample spreadsheet</source>
-        <target state="needs-translation">Download hierarchical sample spreadsheet</target>
+        <source>Scripture hierarchical sample spreadsheet</source>
+        <target state="needs-translation">Scripture hierarchical sample spreadsheet</target>
+        <context-group>
+          <context context-type="sourcefile">HelpMenu.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main.genFlatSample">
+        <source>General flat sample spreadsheet</source>
+        <target state="needs-translation">General flat sample spreadsheet</target>
+        <context-group>
+          <context context-type="sourcefile">HelpMenu.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main.genHierarchicalSample">
+        <source>General hierarchical sample spreadsheet</source>
+        <target state="needs-translation">General hierarchical sample spreadsheet</target>
         <context-group>
           <context context-type="sourcefile">HelpMenu.tsx</context>
         </context-group>
@@ -1848,6 +1897,13 @@
         <target state="needs-translation">Unsaved Data</target>
         <context-group>
           <context context-type="sourcefile">drawer.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="main.updateAvailable">
+        <source>Update available: Version {0} was released {1}</source>
+        <target state="needs-translation">Update available: Version {0} was released {1}</target>
+        <context-group>
+          <context context-type="sourcefile">apphead.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="main.about">
@@ -2599,13 +2655,6 @@
           <context context-type="sourcefile">Profile.tsx</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="profile.sendNews">
-        <source>Check for updates using the Internet</source>
-        <target state="needs-translation">Check for updates using the Internet</target>
-        <context-group>
-          <context context-type="sourcefile">Profile.tsx</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="profile.timezone">
         <source>Time zone</source>
         <target state="needs-translation">Time zone</target>
@@ -2774,9 +2823,51 @@
           <context context-type="sourcefile">ScriptureTable.tsx</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="shapingTable.NoColumns">
+      <trans-unit id="shapingTable.avg">
+        <source>Avg</source>
+        <target state="needs-translation">Avg</target>
+        <context-group>
+          <context context-type="sourcefile">shapingTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shapingTable.count">
+        <source>Count</source>
+        <target state="needs-translation">Count</target>
+        <context-group>
+          <context context-type="sourcefile">shapingTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shapingTable.max">
+        <source>Max</source>
+        <target state="needs-translation">Max</target>
+        <context-group>
+          <context context-type="sourcefile">shapingTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shapingTable.min">
+        <source>Min</source>
+        <target state="needs-translation">Min</target>
+        <context-group>
+          <context context-type="sourcefile">shapingTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shapingTable.noColumns">
         <source>No columns visible</source>
         <target state="needs-translation">No columns visible</target>
+        <context-group>
+          <context context-type="sourcefile">shapingTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shapingTable.noData">
+        <source>No data</source>
+        <target state="needs-translation">No data</target>
+        <context-group>
+          <context context-type="sourcefile">shapingTable.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shapingTable.sum">
+        <source>Sum</source>
+        <target state="needs-translation">Sum</target>
         <context-group>
           <context context-type="sourcefile">shapingTable.tsx</context>
         </context-group>
@@ -2884,6 +2975,20 @@
         <target state="needs-translation">Import Media</target>
         <context-group>
           <context context-type="sourcefile">PlanSheet.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared.mediaAttached">
+        <source>Media Attached</source>
+        <target state="needs-translation">Media Attached</target>
+        <context-group>
+          <context context-type="sourcefile">useMediaAttach.ts</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="shared.part">
+        <source>Part {0}</source>
+        <target state="needs-translation">Part {0}</target>
+        <context-group>
+          <context context-type="sourcefile">useFlatAdd.ts</context>
         </context-group>
       </trans-unit>
       <trans-unit id="taskItem.assign">
@@ -3551,9 +3656,30 @@
           <context context-type="sourcefile">TranscriptionTab.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="transcriptionTab.incompletePlan">
+        <source>Plan is incomplete: attach media to passages.</source>
+        <target state="needs-translation">Plan is incomplete: attach media to passages.</target>
+        <context-group>
+          <context context-type="sourcefile">TranscriptionTab.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="treeChart.contributions">
+        <source>Contributions toward</source>
+        <target state="needs-translation">Contributions toward</target>
+        <context-group>
+          <context context-type="sourcefile">treeChart.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="treeChart.noData">
         <source>No Transcription Data Yet</source>
         <target state="needs-translation">No Transcription Data Yet</target>
+        <context-group>
+          <context context-type="sourcefile">treeChart.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="treeChart.status">
+        <source>Status of</source>
+        <target state="needs-translation">Status of</target>
         <context-group>
           <context context-type="sourcefile">treeChart.tsx</context>
         </context-group>

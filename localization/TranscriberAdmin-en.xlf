@@ -1144,6 +1144,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="invite.admin">
+         <segment>
+            <source>Admin</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="invite.allUsersProjects">
          <segment>
             <source>Projects</source>
@@ -1213,6 +1219,12 @@
       <unit id="invite.join">
          <segment>
             <source>Join</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="invite.member">
+         <segment>
+            <source>Member</source>
             <target/>
          </segment>
       </unit>
@@ -2539,6 +2551,18 @@
       <unit id="shared.importMediaSingular">
          <segment>
             <source>Import Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.mediaAttached">
+         <segment>
+            <source>Media Attached</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.part">
+         <segment>
+            <source>Part {0}</source>
             <target/>
          </segment>
       </unit>

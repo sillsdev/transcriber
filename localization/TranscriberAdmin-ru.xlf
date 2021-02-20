@@ -1069,7 +1069,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.allUsersProjects">
+   	<unit id="invite.admin">
+   		<segment>
+   			<source>Admin</source>
+   			<target>Администратор</target>
+   		</segment>
+   	</unit>
+   	<unit id="invite.allUsersProjects">
          <segment>
             <source>Projects</source>
             <target/>
@@ -1141,7 +1147,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="invite.newInviteTask">
+   	<unit id="invite.member">
+   		<segment>
+   			<source>Member</source>
+   			<target>Член</target>
+   		</segment>
+   	</unit>
+   	<unit id="invite.newInviteTask">
          <segment>
             <source>Enter the email address of the member to invite.</source>
             <target/>
@@ -2245,13 +2257,49 @@
             <target/>
          </segment>
       </unit>
-      <unit id="shapingTable.NoColumns">
-         <segment>
-            <source>No columns visible</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="shared.admin">
+   	<unit id="shapingTable.avg">
+   		<segment>
+   			<source>Avg</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="shapingTable.count">
+   		<segment>
+   			<source>Count</source>
+   			<target>Посчитать</target>
+   		</segment>
+   	</unit>
+   	<unit id="shapingTable.max">
+   		<segment>
+   			<source>Max</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="shapingTable.min">
+   		<segment>
+   			<source>Min</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="shapingTable.noColumns">
+   		<segment>
+   			<source>No columns visible</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="shapingTable.noData">
+   		<segment>
+   			<source>No data</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="shapingTable.sum">
+   		<segment>
+   			<source>Sum</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="shared.admin">
          <segment>
             <source>Owner</source>
             <target/>
@@ -2293,7 +2341,19 @@
             <target/>
          </segment>
       </unit>
-      <unit id="taskItem.assign">
+   	<unit id="shared.mediaAttached">
+   		<segment>
+   			<source>Media Attached</source>
+   			<target>Медиа-Адаптированный</target>
+   		</segment>
+   	</unit>
+   	<unit id="shared.part">
+   		<segment>
+   			<source>Part {0}</source>
+   			<target>Часть {0}</target>
+   		</segment>
+   	</unit>
+   	<unit id="taskItem.assign">
          <segment>
             <source>Assign {0}</source>
             <target/>

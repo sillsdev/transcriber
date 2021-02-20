@@ -237,6 +237,7 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
 
 export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "addInvite": string;
+    "admin": string;
     "allUsersProjects": string;
     "alreadyInvited": string;
     "cancel": string;
@@ -249,6 +250,7 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "invalidEmail": string;
     "invitation": string;
     "join": string;
+    "member": string;
     "newInviteTask": string;
     "noProjects": string;
     "organization": string;
@@ -509,6 +511,8 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
     "importMediaSingular": string;
+    "mediaAttached": string;
+    "part": string;
 };
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
