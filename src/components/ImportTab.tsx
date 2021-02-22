@@ -58,6 +58,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { doDataChanges } from '../hoc/DataChanges';
 import { HeadHeight } from '../App';
+import { localUserKey, LocalKey } from '../utils';
 
 interface IStateProps {
   t: IImportStrings;
@@ -335,6 +336,7 @@ export function ImportTab(props: IProps) {
     console.log(err.errMsg);
     switch (err.errStatus) {
       case 301:
+        localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
         return t.projectDeleted.replace('{0}', err.errMsg);
       case 401:
         return ts.expiredToken;
@@ -406,6 +408,13 @@ export function ImportTab(props: IProps) {
         var other = '';
         var plan = '';
         switch (c.type) {
+          case 'project':
+            //expecting only deleted
+            var project = c.imported.data as Project;
+            imported = ' ';
+            old = t.projectDeleted.replace('{0}', project.attributes.name);
+            localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
+            break;
           case 'mediafile':
             var mediafile = c.imported.data as MediaFile;
             var passageid = mediafile.relationships?.passage
