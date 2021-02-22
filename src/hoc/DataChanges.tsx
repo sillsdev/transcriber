@@ -15,21 +15,41 @@ import JSONAPISource from '@orbit/jsonapi';
 import { DataChange } from '../model/dataChange';
 import { API_CONFIG, isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
-import { offlineProjectUpdateSnapshot, remoteId, remoteIdGuid } from '../crud';
+import {
+  offlineProjectUpdateSnapshot,
+  remoteId,
+  remoteIdGuid,
+  SetUserLanguage,
+} from '../crud';
 import { currentDateTime, localUserKey, LocalKey } from '../utils';
 import { electronExport } from '../store/importexport/electronExport';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
-import { ExportType, OfflineProject, Plan, VProject } from '../model';
+import { ExportType, IState, OfflineProject, Plan, VProject } from '../model';
 import IndexedDBSource from '@orbit/indexeddb';
+import * as actions from '../store';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 interface IStateProps {}
 
-interface IDispatchProps {}
+interface IDispatchProps {
+  setLanguage: typeof actions.setLanguage;
+}
 
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   children: JSX.Element;
 }
+const mapStateToProps = (state: IState): IStateProps => ({});
+
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      setLanguage: actions.setLanguage,
+    },
+    dispatch
+  ),
+});
 
 export const doDataChanges = async (
   auth: Auth,
@@ -37,7 +57,9 @@ export const doDataChanges = async (
   fingerprint: string,
   projectsLoaded: string[],
   getOfflineProject: (plan: string | Plan | VProject) => OfflineProject,
-  errorReporter: any
+  errorReporter: any,
+  user: string,
+  setLanguage: typeof actions.setLanguage
 ) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
@@ -130,6 +152,10 @@ export const doDataChanges = async (
                     case 'mediafile':
                       if (upRec.record.relationships?.passage === undefined)
                         resetRelated(newOps, tb, 'passage', upRec);
+                      break;
+                    case 'user':
+                      SetUserLanguage(memory, user, setLanguage);
+                      break;
                   }
                 }
               });
@@ -162,8 +188,8 @@ export const doDataChanges = async (
   }
 };
 
-export default function DataChanges(props: IProps) {
-  const { auth, children } = props;
+export function DataChanges(props: IProps) {
+  const { auth, children, setLanguage } = props;
   const [isOffline] = useGlobal('offline');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
@@ -208,7 +234,9 @@ export default function DataChanges(props: IProps) {
         fingerprint,
         projectsLoaded,
         getOfflineProject,
-        errorReporter
+        errorReporter,
+        user,
+        setLanguage
       );
     }
   };
@@ -237,3 +265,4 @@ export default function DataChanges(props: IProps) {
   // render the children component.
   return children;
 }
+export default connect(mapStateToProps, mapDispatchToProps)(DataChanges) as any;
