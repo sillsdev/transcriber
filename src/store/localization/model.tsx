@@ -193,6 +193,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "allCriteria": string;
     "countError": string;
     "countPending": string;
+    "invalidReferences": string;
     "countReady": string;
     "emptyBook": string;
     "no": string;

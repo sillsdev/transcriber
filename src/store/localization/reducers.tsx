@@ -212,6 +212,7 @@ const initialState = {
 			"allCriteria": "You must satisfy all criteria to sync.",
 			"countError": "Count query error: ",
 			"countPending": "Querying count...",
+			"invalidReferences": "{0} passages have invalid references",
 			"countReady": "Passages ready to sync: ",
 			"emptyBook": "Passage {0}.{1}: Book is missing.",
 			"no": "No",

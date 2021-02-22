@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import { API_CONFIG } from '../../api-variable';
 import Auth from '../../auth/Auth';
-import { Passage, ActivityStates } from '../../model';
+import { Passage, ActivityStates, IIntegrationStrings } from '../../model';
 import {
   USERNAME_PENDING,
   USERNAME_SUCCESS,
@@ -28,6 +28,7 @@ import {
   infoMsg,
   logError,
   Severity,
+  refMatch,
 } from '../../utils';
 import MemorySource from '@orbit/memory';
 
@@ -290,10 +291,11 @@ export const getLocalCount = (
   passages: Passage[],
   project: string,
   memory: MemorySource,
-  pendingmsg: string
+  errorReporter: any,
+  t: IIntegrationStrings
 ) => (dispatch: any) => {
   dispatch({
-    payload: pendingStatus(pendingmsg),
+    payload: pendingStatus(t.countPending),
     type: COUNT_PENDING,
   });
   const ready = passages
@@ -304,7 +306,20 @@ export const getLocalCount = (
       const projRec = getMediaProjRec(getMediaRec(p.id, memory), memory);
       return projRec && projRec.id === project;
     });
-  dispatch({ payload: ready.length, type: COUNT_SUCCESS });
+  const refMissing = ready.filter(
+    (r) => !refMatch(r?.attributes?.reference || 'Err') || !r?.attributes?.book
+  );
+  if (refMissing.length > 0) {
+    const err = errorStatus(
+      101,
+      t.invalidReferences.replace('{0}', `${refMissing.length}`)
+    );
+    logError(Severity.info, errorReporter, err.errMsg);
+    dispatch({
+      type: COUNT_ERROR,
+      payload: err,
+    });
+  } else dispatch({ payload: ready.length, type: COUNT_SUCCESS });
 };
 
 export const resetSync = () => (dispatch: any) => {

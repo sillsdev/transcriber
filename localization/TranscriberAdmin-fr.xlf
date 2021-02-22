@@ -920,7 +920,13 @@
             <target>Requête de nombre ...</target>
          </segment>
       </unit>
-      <unit id="integration.countReady">
+   	<unit id="integration.invalidReferences">
+   		<segment>
+   			<source>{0} passages have invalid references</source>
+   			<target>Les passages ({0}) ont des références non valables</target>
+   		</segment>
+   	</unit>
+   	<unit id="integration.countReady">
          <segment>
             <source>Passages ready to sync: </source>
             <target>Passages prêts à être synchronisés:</target>
