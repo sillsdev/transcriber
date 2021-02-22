@@ -134,14 +134,9 @@ export async function electronExport(
     const AddOfflineEntry = (): void => {
       zip.addFile('Offline', Buffer.alloc(0, ''), 'Present if Offline project');
     };
-    const isItf = (type: ExportType) =>
-      [ExportType.ITF, ExportType.ITFBACKUP, ExportType.ITFSYNC].includes(type);
     const AddJsonEntry = (table: string, recs: Record[], sort: string) => {
       //put in the remoteIds for everything, then stringify
-      const ser =
-        recs[0]?.keys?.remoteId || isItf(exportType)
-          ? onlineSerlzr
-          : offlineSrlzr;
+      const ser = projRec?.keys?.remoteId ? onlineSerlzr : offlineSrlzr;
       var json = '{"data":' + JSON.stringify(ser.serializeRecords(recs)) + '}';
       zip.addFile(
         'data/' + sort + '_' + table + '.json',
