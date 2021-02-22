@@ -1065,7 +1065,14 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="integration.countReady">
+      	<trans-unit id="integration.invalidReferences">
+      		<source>{0} passages have invalid references</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">integration.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="integration.countReady">
             <source>Passages ready to sync: </source>
             <target/>
             <context-group>

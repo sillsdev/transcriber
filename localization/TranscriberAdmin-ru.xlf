@@ -817,7 +817,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="integration.countReady">
+   	<unit id="integration.invalidReferences">
+   		<segment>
+   			<source>{0} passages have invalid references</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="integration.countReady">
          <segment>
             <source>Passages ready to sync: </source>
             <target/>

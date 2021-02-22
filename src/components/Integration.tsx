@@ -121,7 +121,6 @@ interface IDispatchProps {
   getUserName: typeof actions.getUserName;
   getProjects: typeof actions.getProjects;
   getLocalProjects: typeof actions.getLocalProjects;
-  getCount: typeof actions.getCount;
   getLocalCount: typeof actions.getLocalCount;
   syncProject: typeof actions.syncProject;
   resetSync: typeof actions.resetSync;
@@ -158,7 +157,6 @@ export function IntegrationPanel(props: IProps) {
   } = props;
   const {
     getUserName,
-    getCount,
     getLocalCount,
     getProjects,
     getLocalProjects,
@@ -430,14 +428,7 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     if (!paratext_countStatus) {
-      offline
-        ? getLocalCount(passages, project, memory, t.countPending)
-        : getCount(
-            auth,
-            remoteIdNum('project', project, memory.keyMap),
-            errorReporter,
-            t.countPending
-          );
+      getLocalCount(passages, project, memory, errorReporter, t);
     } else if (paratext_countStatus.errStatus)
       showTitledMessage(
         t.countError,
@@ -908,7 +899,6 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       getUserName: actions.getUserName,
       getProjects: actions.getProjects,
       getLocalProjects: actions.getLocalProjects,
-      getCount: actions.getCount,
       getLocalCount: actions.getLocalCount,
       syncProject: actions.syncProject,
       resetSync: actions.resetSync,
