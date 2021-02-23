@@ -82,7 +82,6 @@ const UnsavedProvider = connect(
   };
 
   const handleSaveRefused = () => {
-    if (saveConfirm.current) saveConfirm.current();
     saveConfirm.current = undefined;
     setAlertOpen(false);
     setChanged(false);
