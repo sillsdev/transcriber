@@ -69,6 +69,7 @@ function TranscribeAddNote(props: IProps) {
     setInProcess(false);
   };
   const handleCancel = () => {
+    setComment('');
     if (cancelMethod) {
       cancelMethod();
     }
