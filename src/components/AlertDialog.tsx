@@ -26,6 +26,7 @@ interface IStateProps {
 interface IProps extends IStateProps {
   title: string;
   text: string;
+  jsx: JSX.Element;
   no: string;
   yes: string;
   noResponse: () => {};
@@ -34,7 +35,17 @@ interface IProps extends IStateProps {
 }
 
 function AlertDialog(props: IProps) {
-  const { title, text, no, yes, yesResponse, noResponse, noOnLeft, t } = props;
+  const {
+    title,
+    text,
+    jsx,
+    no,
+    yes,
+    yesResponse,
+    noResponse,
+    noOnLeft,
+    t,
+  } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(true);
 
@@ -69,6 +80,7 @@ function AlertDialog(props: IProps) {
           {title || t.confirmation}
         </DialogTitle>
         <DialogContent>
+          <DialogContent id="alert-dialog-jsx">{jsx}</DialogContent>
           <DialogContentText id="alert-dialog-description">
             {text || t.areYouSure}
           </DialogContentText>

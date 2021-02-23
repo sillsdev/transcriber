@@ -493,6 +493,24 @@
             <target>Importation en cours...{0}%</target>
          </segment>
       </unit>
+      <unit id="electronImport.project">
+         <segment>
+            <source>Project</source>
+            <target>Projet</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.members">
+         <segment>
+            <source>Members</source>
+            <target>Membres</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.userWontSeeProject">
+         <segment>
+            <source>You are not a member of this project group. This project will not be accessible after import.</source>
+            <target>Vous n'êtes pas membre de ce groupe de projet. Ce projet ne sera pas accessible après l'importation.</target>
+         </segment>
+      </unit>
       <unit id="electronImport.importProject">
          <segment>
             <source>Import Project</source>

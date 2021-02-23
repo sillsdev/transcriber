@@ -108,6 +108,9 @@ export interface IElectronImportStrings extends Localize.LocalizedStringsMethods
     "importCreated": string;
     "importOldFile": string;
     "importPending": string;
+    "project": string;
+    "members": string;
+    "userWontSeeProject": string;
     "importProject": string;
     "invalidProject": string;
     "lastExported": string;

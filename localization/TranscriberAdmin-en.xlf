@@ -496,6 +496,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="electronImport.project">
+         <segment>
+            <source>Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.members">
+         <segment>
+            <source>Members</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="electronImport.userWontSeeProject">
+         <segment>
+            <source>You are not a member of this project team. This project will not be accessible after import.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="electronImport.importProject">
          <segment>
             <source>Import Project</source>

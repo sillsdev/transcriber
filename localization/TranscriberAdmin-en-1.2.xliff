@@ -575,6 +575,27 @@
                <context context-type="sourcefile">electronImport.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="electronImport.project">
+            <source>Project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="electronImport.members">
+            <source>Members</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="electronImport.userWontSeeProject">
+            <source>You are not a member of this project team. This project will not be accessible after import.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="electronImport.importProject">
             <source>Import Project</source>
             <target/>
