@@ -127,6 +127,7 @@ interface IDispatchProps {
   resetCount: typeof actions.resetCount;
   resetProjects: typeof actions.resetProjects;
   resetUserName: typeof actions.resetUserName;
+  setLanguage: typeof actions.setLanguage;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -165,6 +166,7 @@ export function IntegrationPanel(props: IProps) {
     resetCount,
     resetProjects,
     resetUserName,
+    setLanguage,
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
@@ -518,7 +520,9 @@ export function IntegrationPanel(props: IProps) {
           fingerprint,
           projectsLoaded,
           getOfflineProject,
-          errorReporter
+          errorReporter,
+          user,
+          setLanguage
         );
       }
     }
@@ -905,6 +909,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       resetCount: actions.resetCount,
       resetProjects: actions.resetProjects,
       resetUserName: actions.resetUserName,
+      setLanguage: actions.setLanguage,
     },
     dispatch
   ),

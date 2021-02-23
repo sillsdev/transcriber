@@ -51,6 +51,7 @@ import {
   remoteIdGuid,
   useOrganizedBy,
   useOfflnProjRead,
+  SetUserLanguage,
 } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
@@ -74,6 +75,7 @@ interface IDispatchProps {
   importSyncFromElectron: typeof actions.importSyncFromElectron;
   importComplete: typeof actions.importComplete;
   orbitError: typeof actions.doOrbitError;
+  setLanguage: typeof actions.setLanguage;
 }
 
 interface IRecordProps {
@@ -110,6 +112,7 @@ export function ImportTab(props: IProps) {
     importSyncFromElectron,
     orbitError,
     allBookData,
+    setLanguage,
   } = props;
   interface IRow {
     plan: string;
@@ -126,6 +129,7 @@ export function ImportTab(props: IProps) {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
+  const [user] = useGlobal('user');
 
   const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
@@ -703,8 +707,12 @@ export function ImportTab(props: IProps) {
               fingerprint,
               projectsLoaded,
               getOfflineProject,
-              errorReporter
+              errorReporter,
+              user,
+              setLanguage
             );
+          else SetUserLanguage(memory, user, setLanguage);
+
           setBusy(false);
         }
       }
@@ -840,6 +848,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       importSyncFromElectron: actions.importSyncFromElectron,
       importComplete: actions.importComplete,
       orbitError: actions.doOrbitError,
+      setLanguage: actions.setLanguage,
     },
     dispatch
   ),

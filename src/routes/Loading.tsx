@@ -36,6 +36,7 @@ import {
   remoteIdGuid,
   usePlan,
   useLoadProjectData,
+  SetUserLanguage,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -225,12 +226,7 @@ export function Loading(props: IProps) {
       //fetchOrbitData is complete
 
       //set user language
-      const userRec: User = GetUser(memory, user);
-      if (userRec.attributes === null) {
-        console.log('No user information.  Never expect to get here.');
-      }
-      const locale = userRec.attributes?.locale || 'en';
-      if (locale) setLanguage(locale);
+      SetUserLanguage(memory, user, setLanguage);
 
       if (orbitFetchResults?.syncBuffer) {
         setImportOpen(true);
