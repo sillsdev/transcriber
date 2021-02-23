@@ -124,11 +124,11 @@ const initialState = {
 			"importPending": "Import In Progress...{0}%",
 			"project": "Project",
 			"members": "Members",
-			"userWontSeeProject": "You are not a member of this project group. This project will not be accessible after import.",
+			"userWontSeeProject": "You are not a member of this project team. This project will not be accessible after import.",
 			"importProject": "Import Project",
 			"invalidProject": "Import File does not contain current project.",
 			"lastExported": "Current data in project {name0} was last exported {date0}.",
-			"neverExported": "Current data in project {name0} has never been exported.",
+			"neverExported": "Current data in project {name0} has never been exported to an itf file to preserve changes.",
 			"projectImported": "Project {name0} was previously imported with a newer file: {date1} ",
 			"ptfError": "Not a valid Portable Transcriber File",
 		}
@@ -602,7 +602,7 @@ const initialState = {
 			"fasterTip": "Faster ({0})",
 			"historyTip": "History ({0})",
 			"incomplete": "Incomplete transcripiton",
-			"makeComment": "Make Comment",
+			"addNote": "Add Note",
 			"needsNewRecording": "Rejected recording",
 			"needsNewTranscription": "Rejected transcription",
 			"noMedia": "Created task",
@@ -626,6 +626,13 @@ const initialState = {
 			"timerTip": "Timestamp ({0})",
 			"transcribing": "Started to transcribe",
 			"updateByOther": "Transcription updated by another person or process.",
+		}
+	}),
+	"transcribeAddNote": new LocalizedStrings({
+		"en": {
+			"cancel": "Cancel",
+			"save": "Save",
+			"addNoteTitle": "Add Note",
 		}
 	}),
 	"transcribeReject": new LocalizedStrings({
@@ -791,6 +798,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"template" : new LocalizedStrings(action.payload.data.template),
 				"toDoTable" : new LocalizedStrings(action.payload.data.toDoTable),
 				"transcriber" : new LocalizedStrings(action.payload.data.transcriber),
+				"transcribeAddNote" : new LocalizedStrings(action.payload.data.transcribeAddNote),
 				"transcribeReject" : new LocalizedStrings(action.payload.data.transcribeReject),
 				"transcriptionShow" : new LocalizedStrings(action.payload.data.transcriptionShow),
 				"transcriptionTab" : new LocalizedStrings(action.payload.data.transcriptionTab),

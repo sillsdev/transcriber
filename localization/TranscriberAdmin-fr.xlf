@@ -2804,10 +2804,10 @@
             <target>Transcription incomplètes</target>
          </segment>
       </unit>
-      <unit id="transcriber.makeComment">
+      <unit id="transcriber.addNote">
          <segment>
-            <source>Make Comment</source>
-            <target>Faire un commentaire</target>
+            <source>Add Note</source>
+            <target>Ajouter une note</target>
          </segment>
       </unit>
       <unit id="transcriber.needsNewRecording">
@@ -2946,6 +2946,24 @@
          <segment>
             <source>Transcription updated by another person or process.</source>
             <target>Transcription mise à jour par une autre personne ou processus.</target>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.cancel">
+         <segment>
+            <source>Cancel</source>
+           <target>Annuler</target>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.save">
+         <segment>
+            <source>Save</source>
+            <target>Sauvegarder</target>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.AddNoteTitle">
+         <segment>
+            <source>Add Note</source>
+            <target>Ajouter une note</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">

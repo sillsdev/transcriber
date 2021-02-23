@@ -618,7 +618,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="electronImport.neverExported">
-            <source>Current data in project {name0} has never been exported.</source>
+            <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">electronImport.tsx</context>
@@ -3263,8 +3263,8 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.makeComment">
-            <source>Make Comment</source>
+         <trans-unit id="transcriber.addNote">
+            <source>Add Note</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -3431,6 +3431,28 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcribeAddNote.cancel">
+            <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">transcribeAddNote.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcribeAddNote.save">
+            <source>Save</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">transcribeAddNote.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcribeAddNote.addNoteTitle">
+            <source>Add Note</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">transcribeAddNote.tsx</context>
+            </context-group>
+         </trans-unit>
+
          <trans-unit id="transcribeReject.cancel">
             <source>Cancel</source>
             <target/>

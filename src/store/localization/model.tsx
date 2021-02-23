@@ -564,7 +564,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "fasterTip": string;
     "historyTip": string;
     "incomplete": string;
-    "makeComment": string;
+    "addNote": string;
     "needsNewRecording": string;
     "needsNewTranscription": string;
     "noMedia": string;
@@ -588,6 +588,12 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "timerTip": string;
     "transcribing": string;
     "updateByOther": string;
+};
+
+export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "save": string;
+    "addNoteTitle": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
@@ -741,6 +747,7 @@ export interface ILocalizedStrings {
 	template: ITemplateStrings;
 	toDoTable: IToDoTableStrings;
 	transcriber: ITranscriberStrings;
+	transcribeAddNote: ITranscribeAddNoteStrings;
 	transcribeReject: ITranscribeRejectStrings;
 	transcriptionShow: ITranscriptionShowStrings;
 	transcriptionTab: ITranscriptionTabStrings;
