@@ -22,7 +22,7 @@ export function SetUserLanguage(memory: Memory, user: string, setLanguage: typeo
 {
   var userrec = GetUser(memory, user);
   setLanguage(
-    userrec.attributes.locale
+    userrec.attributes?.locale
       ? userrec.attributes?.locale
       : localeDefault(false)
   );
