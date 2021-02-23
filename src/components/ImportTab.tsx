@@ -134,7 +134,9 @@ export function ImportTab(props: IProps) {
   const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
-  const [confirmAction, setConfirmAction] = useState('');
+  const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
+  const [fileName, setFileName] = useState<string>('');
+  const [importProject, setImportProject] = useState<string>('');
   const [uploadVisible, setUploadVisible] = useState(false);
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
@@ -259,6 +261,8 @@ export function ImportTab(props: IProps) {
     const electronImport = () => {
       var importData = getElectronImportData(project || '');
       if (importData.valid) {
+        setFileName(importData.fileName);
+        setImportProject(importData.projectName);
         if (importData.warnMsg) {
           setConfirmAction(importData.warnMsg);
         } else {
@@ -727,6 +731,7 @@ export function ImportTab(props: IProps) {
   const handleClose = () => {
     onOpen && onOpen(false);
   };
+  const isString = (what: any) => typeof what === 'string';
 
   return (
     <Dialog
@@ -743,6 +748,14 @@ export function ImportTab(props: IProps) {
       <DialogContent>
         <div>
           <Typography variant="h5">{importTitle}</Typography>
+          <br />
+          <Typography variant="subtitle2" className={classes.dialogHeader}>
+            {fileName}
+          </Typography>
+          <Typography variant="h4" className={classes.dialogHeader}>
+            {importProject}
+          </Typography>
+          <br />
           <Typography variant="body1" className={classes.dialogHeader}>
             {importStatus
               ? importStatus.statusMsg +
@@ -812,7 +825,11 @@ export function ImportTab(props: IProps) {
           />
           {confirmAction === '' || (
             <Confirm
-              text={confirmAction + '  ' + t.continue}
+              jsx={isString(confirmAction) ? <span></span> : confirmAction}
+              text={
+                (isString(confirmAction) ? confirmAction + '  ' : '') +
+                t.continue
+              }
               yesResponse={handleActionConfirmed}
               noResponse={handleActionRefused}
             />
