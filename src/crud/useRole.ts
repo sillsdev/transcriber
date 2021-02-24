@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { Role, Project, RoleNames } from '../model';
 import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';
+import { logError, Severity } from '../utils';
 
 export const useRole = () => {
   const [memory] = useGlobal('memory');
@@ -10,6 +11,7 @@ export const useRole = () => {
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setOrgRole] = useGlobal('orgRole');
   const [, setProjRole] = useGlobal('projRole');
+  const [errorReporter] = useGlobal('errorReporter');
 
   interface IUniqueRoles {
     [key: string]: Role;
@@ -68,6 +70,8 @@ export const useRole = () => {
     if (memberRecs.length === 1) {
       var roleId = related(memberRecs[0], 'role');
       if (!roleId) {
+        //default to Admin
+        logError(Severity.error, errorReporter, `missing role:${memberRecs[0].keys?.remoteId}`);
         roleId = getRoleId(RoleNames.Admin);
         memory.update((t: TransformBuilder) =>
           t.replaceRelatedRecord(memberRecs[0], 'role', {

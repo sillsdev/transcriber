@@ -2,10 +2,12 @@ import { TransformBuilder } from '@orbit/data';
 import { useGlobal } from 'reactn';
 import { related } from '.';
 import { Project, ProjectType, VProject } from '../model';
+import { logError, Severity } from '../utils';
 
 export const useProjectType = () => {
   const [memory] = useGlobal('memory');
   const [, setProjType] = useGlobal('projType');
+  const [errorReporter] = useGlobal('errorReporter');
 
   const getProjType = (project: string | VProject) => {
     var proj: Project;
@@ -26,7 +28,9 @@ export const useProjectType = () => {
       ) as ProjectType;
       return pt.attributes.name;
     } else {
+      //default to scripture so they don't lose any book info they have
       console.log('MISSING PROJECT TYPE!', proj);
+      logError(Severity.error, errorReporter, `missing project type=project${proj.attributes.name}${proj.keys?.remoteId}`);
       var pts = memory.cache.query((q) =>
         q.findRecords('projecttype')
       ) as ProjectType[];

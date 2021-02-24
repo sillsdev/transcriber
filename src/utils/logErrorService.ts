@@ -83,7 +83,7 @@ const logMessage = (
     if (err) throw err;
     fs.writeFile(
       fd,
-      `${levelText(level)}: ${msgText(msg)}\n`,
+      `${new Date().toISOString()} ${levelText(level)}: ${msgText(msg)}\n`,
       (err: IStatErr) => {
         fs.close(fd, (err: IStatErr) => {
           if (err) throw err;
