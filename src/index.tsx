@@ -138,6 +138,7 @@ Promise.all(promises)
       offlineOnly: false,
       latestVersion: '',
       releaseDate: '',
+      progress: 0,
     });
     ReactDOM.render(<Root />, document.getElementById('root'));
   })

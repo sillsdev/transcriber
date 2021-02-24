@@ -22,7 +22,6 @@ import {
   Menu,
   MenuItem,
   IconButton,
-  LinearProgress,
   AppBar,
   Typography,
   Radio,
@@ -42,7 +41,6 @@ import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import Uploader, { statusInit } from './Uploader';
-import Busy from './Busy';
 import Template from '../control/template';
 import Auth from '../auth/Auth';
 import moment from 'moment';
@@ -450,7 +448,7 @@ export function MediaTab(props: IProps) {
   const [pageSizes, setPageSizes] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
-  const [complete, setComplete] = useState(0);
+  const [, setComplete] = useGlobal('progress');
   const [autoMatch, setAutoMatch] = useState(false);
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
@@ -1027,15 +1025,6 @@ export function MediaTab(props: IProps) {
           </div>
         </AppBar>
         <div className={classes.content}>
-          {complete === 0 || (
-            <>
-              <div className={classes.progress}>
-                <LinearProgress variant="determinate" value={complete} />
-              </div>
-              <Busy />
-            </>
-          )}
-
           {attachVisible && autoMatch && (
             <div className={classes.template}>
               <Template matchMap={matchMap} />

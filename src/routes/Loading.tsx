@@ -15,7 +15,7 @@ import {
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Typography, Paper, LinearProgress } from '@material-ui/core';
+import { Typography, Paper } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import Memory from '@orbit/memory';
@@ -130,7 +130,7 @@ export function Loading(props: IProps) {
   const [, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
-  const [completed, setCompleted] = useState(0);
+  const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
   const { push } = useHistory();
   const getOfflineProject = useOfflnProjRead();
@@ -340,7 +340,6 @@ export function Loading(props: IProps) {
               onOpen={setImportOpen}
             />
           )}
-          <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
     </div>

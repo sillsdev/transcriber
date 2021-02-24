@@ -29,7 +29,6 @@ import {
   Operation,
 } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { LinearProgress } from '@material-ui/core';
 import { useSnackBar } from '../hoc/SnackBar';
 import PlanSheet from './PlanSheet';
 import {
@@ -183,7 +182,7 @@ export function ScriptureTable(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
-  const [complete, setComplete] = useState(0);
+  const [, setComplete] = useGlobal('progress');
   const [view, setView] = useState('');
   const [lastSaved, setLastSaved] = React.useState<string>();
   const [startSave, saveCompleted, waitForSave] = useRemoteSave();
@@ -1282,11 +1281,6 @@ export function ScriptureTable(props: IProps) {
 
   return (
     <div className={classes.container}>
-      {complete === 0 || (
-        <div className={classes.progress}>
-          <LinearProgress variant="determinate" value={complete} />
-        </div>
-      )}
       <PlanSheet
         {...props}
         columns={columns}
