@@ -21,7 +21,7 @@ import TranscriptionTab from './TranscriptionTab';
 import StickyRedirect from './StickyRedirect';
 import { QueryBuilder } from '@orbit/data';
 import { withData } from '../mods/react-orbitjs';
-import { HeadHeight } from '../App';
+//import { HeadHeight } from '../App';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 
 export const TabHeight = 48;
@@ -32,6 +32,22 @@ export enum tabs {
   assignment = 3,
   transcription = 4,
 }
+export const ActionHeight = 42;
+const HeadHeight = 64; //can't get the one from app on initialization?!
+export const tabBar = {
+  top: `calc(${TabHeight}px + ${HeadHeight}px)`,
+  height: `${ActionHeight}px`,
+  left: 0,
+  width: '100%',
+};
+export const tabActions = {
+  paddingBottom: 16,
+  display: 'flex',
+  justifyContent: 'flex-end',
+  '& .MuiButton-label': { fontSize: '.8rem' },
+  '& .MuiButtonBase-root': { margin: '5px', padding: '2px 10px' },
+  '& .MuiSvgIcon-root': { fontSize: '.9rem' },
+};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -43,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }) as any,
     bar: {
       top: `${HeadHeight}px`,
-
+      height: `${ActionHeight}px`,
       left: 0,
       width: '100%',
     },

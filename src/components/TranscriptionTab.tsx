@@ -62,13 +62,10 @@ import {
   getMediaInPlans,
   useOrganizedBy,
 } from '../crud';
-import { HeadHeight } from '../App';
-import { TabHeight } from './PlanTabs';
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from '../utils';
-
-const ActionHeight = 52;
+import { ActionHeight, tabActions, tabBar } from './PlanTabs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,12 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    bar: {
-      top: `calc(${TabHeight}px + ${HeadHeight}px)`,
-      height: `${ActionHeight}px`,
-      left: 0,
-      width: '100%',
-    },
+    bar: tabBar,
     highBar: {
       left: 'auto',
       top: 'auto',
@@ -91,12 +83,7 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
-    actions: theme.mixins.gutters({
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    }) as any,
+    actions: theme.mixins.gutters(tabActions) as any,
     grow: {
       flexGrow: 1,
     },

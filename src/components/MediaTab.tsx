@@ -37,7 +37,7 @@ import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
-import { tabs } from './PlanTabs';
+import { ActionHeight, tabActions, tabBar, tabs } from './PlanTabs';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
@@ -65,12 +65,9 @@ import {
   refMatch,
 } from '../utils';
 import { HeadHeight } from '../App';
-import { TabHeight } from './PlanTabs';
 import MediaPlayer from './MediaPlayer';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import Memory from '@orbit/memory';
-
-const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,12 +75,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    bar: {
-      top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      height: `${ActionHeight}px`,
-      left: 0,
-      width: '100%',
-    },
+    bar: tabBar,
     highBar: {
       top: `${HeadHeight}px`,
     },
@@ -93,12 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
     progress: {
       width: '100%',
     },
-    actions: theme.mixins.gutters({
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    }) as any,
+    actions: theme.mixins.gutters(tabActions) as any,
     grow: {
       flexGrow: 1,
     },
