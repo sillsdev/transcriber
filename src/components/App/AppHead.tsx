@@ -131,6 +131,7 @@ export const AppHead = (props: IProps) => {
   );
   const [latestVersion, setLatestVersion] = useGlobal('latestVersion');
   const [latestRelease, setLatestRelease] = useGlobal('releaseDate');
+  const [complete] = useGlobal('progress');
 
   const handleUserMenuAction = (
     what: string,
@@ -238,6 +239,11 @@ export const AppHead = (props: IProps) => {
   return (
     <AppBar position="fixed" className={classes.appBar} color="inherit">
       <>
+        {complete === 0 || complete === 100 || (
+          <div className={classes.progress}>
+            <LinearProgress variant="determinate" value={complete} />
+          </div>
+        )}
         <Toolbar>
           {projRole !== '' && <ProjectName setView={setView} />}
           <div className={classes.grow}>{'\u00A0'}</div>

@@ -80,7 +80,7 @@ export const AddCard = (props: IProps) => {
   const [type, setType] = React.useState('');
   const [language, setLanguage] = React.useState<ILanguage>(initLang);
   const [book, setBook] = React.useState<OptionType | null>(null);
-  const [complete, setComplete] = React.useState(0);
+  const [complete, setComplete] = useGlobal('progress');
   const [steps] = React.useState([
     t.projectCreated,
     t.mediaUploaded,

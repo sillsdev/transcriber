@@ -37,5 +37,6 @@ declare module 'reactn/default' {
     offlineOnly: boolean;
     latestVersion: string;
     releaseDate: string;
+    progress: number;
   }
 }

@@ -65,7 +65,7 @@ export const Uploader = (props: IProps) => {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [errorReporter] = useGlobal('errorReporter');
-  const [, setBusy] = useGlobal('remoteBusy');
+  const [, setBusy] = useGlobal('importexportBusy');
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
