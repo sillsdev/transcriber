@@ -209,16 +209,20 @@ export const AppHead = (props: IProps) => {
 
   useEffect(() => {
     if (latestVersion === '' && version !== '' && updates) {
-      axiosPost('userversions/' + version, undefined, auth).then((response) => {
-        var lv = response?.data.data.attributes['desktop-version'];
-        var lr = response?.data.data.attributes['date-updated'].toString();
-        if (!lr.endsWith('Z')) lr += 'Z';
-        lr = moment(lr)
-          .locale(Intl.NumberFormat().resolvedOptions().locale)
-          .format('L');
-        setLatestVersion(lv);
-        setLatestRelease(lr);
-      });
+      var bodyFormData = new FormData();
+      bodyFormData.append('env', navigator.userAgent);
+      axiosPost('userversions/2/' + version, bodyFormData, auth).then(
+        (response) => {
+          var lv = response?.data['desktopVersion'];
+          var lr = response?.data['dateUpdated'];
+          if (!lr.endsWith('Z')) lr += 'Z';
+          lr = moment(lr)
+            .locale(Intl.NumberFormat().resolvedOptions().locale)
+            .format('L');
+          setLatestVersion(lv);
+          setLatestRelease(lr);
+        }
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updates, version]);
