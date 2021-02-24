@@ -534,7 +534,7 @@
       </unit>
       <unit id="electronImport.neverExported">
          <segment>
-            <source>Current data in project {name0} has never been exported.</source>
+            <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
             <target/>
          </segment>
       </unit>
@@ -2800,9 +2800,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.makeComment">
+      <unit id="transcriber.addNote">
          <segment>
-            <source>Make Comment</source>
+            <source>Add Note</source>
             <target/>
          </segment>
       </unit>
@@ -2941,6 +2941,24 @@
       <unit id="transcriber.updateByOther">
          <segment>
             <source>Transcription updated by another person or process.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.save">
+         <segment>
+            <source>Save</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.addNoteTitle">
+         <segment>
+            <source>Add Note</source>
             <target/>
          </segment>
       </unit>

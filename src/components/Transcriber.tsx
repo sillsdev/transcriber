@@ -29,9 +29,6 @@ import {
   LinearProgress,
   TextareaAutosize,
   Tooltip,
-  Checkbox,
-  FormControlLabel,
-  TextField,
   List,
   ListItem,
   ListItemIcon,
@@ -80,6 +77,7 @@ import { IAxiosStatus } from '../store/AxiosStatus';
 import * as action from '../store';
 import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
+import TranscribeAddNote from './TranscribeAddNote';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -254,17 +252,16 @@ export function Transcriber(props: IProps) {
       state === ActivityStates.TranscribeReady
   );
   const [height, setHeight] = useState(window.innerHeight);
-  const [width, setWidth] = useState(window.innerWidth);
   const [boxHeight, setBoxHeight] = useState(height - NON_BOX_HEIGHT);
+  const [width, setWidth] = useState(window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
   const [defaultPosition, setDefaultPosition] = useState(0.0);
   const { showMessage } = useSnackBar();
-  const [makeComment, setMakeComment] = useState(false);
-  const [comment, setComment] = useState('');
   const [showHistory, setShowHistory] = useState(false);
   const [historyContent, setHistoryContent] = useState<any[]>();
   const [rejectVisible, setRejectVisible] = useState(false);
+  const [addNoteVisible, setAddNoteVisible] = useState(false);
   const [hasParatextName, setHasParatextName] = useState(false);
   const [paratextProject, setParatextProject] = React.useState('');
   const [paratextIntegration, setParatextIntegration] = React.useState('');
@@ -275,7 +272,6 @@ export function Transcriber(props: IProps) {
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
-  const commentRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const t = transcriberStr;
   const ta = activityStateStr;
@@ -313,13 +309,9 @@ export function Transcriber(props: IProps) {
   }, [doSave]);
 
   useEffect(() => {
-    if (!makeComment) setComment('');
-    const commentHeight =
-      commentRef && commentRef.current ? commentRef.current.clientHeight : 0;
-    const newBoxHeight = height - NON_BOX_HEIGHT - commentHeight;
+    const newBoxHeight = height - NON_BOX_HEIGHT;
     if (newBoxHeight !== boxHeight) setBoxHeight(newBoxHeight);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [height, makeComment, comment, commentRef.current]);
+  }, [height, boxHeight]);
 
   useEffect(() => {
     if (!saving.current) showTranscription(getTranscription());
@@ -484,10 +476,7 @@ export function Transcriber(props: IProps) {
   const handleFaster = () => {
     if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
   };
-  const handleMakeComment = () => setMakeComment(!makeComment);
-  const handleCommentChange = (e: any) => {
-    setComment(e.target.value);
-  };
+
   const handleShowHistory = () => setShowHistory(!showHistory);
   const handleTimer = () => {
     if (transcriptionRef.current) {
@@ -518,13 +507,18 @@ export function Transcriber(props: IProps) {
         t.pullParatextStart
       );
   };
-
+  const handleShowAddNote = () => {
+    if (busy) {
+      showMessage(t.saving);
+      return;
+    }
+    setAddNoteVisible(true);
+  };
   const handleReject = () => {
     if (busy) {
       showMessage(t.saving);
       return;
     }
-    setMakeComment(true);
     setRejectVisible(true);
   };
   const handleRejected = async (pass: Passage) => {
@@ -546,6 +540,24 @@ export function Transcriber(props: IProps) {
     setLastSaved(currentDateTime());
   };
   const handleRejectCancel = () => setRejectVisible(false);
+  const handleAddNote = async (pass: Passage) => {
+    setAddNoteVisible(false);
+    await memory.update(
+      UpdatePassageStateOps(
+        pass.id,
+        section.id,
+        plan,
+        pass.attributes.state,
+        pass.attributes.lastComment,
+        user,
+        new TransformBuilder(),
+        [],
+        memory
+      )
+    );
+    pass.attributes.lastComment = '';
+  };
+  const handleAddNoteCancel = () => setAddNoteVisible(false);
 
   const next: { [key: string]: string } = {
     incomplete: ActivityStates.Transcribed,
@@ -564,7 +576,7 @@ export function Transcriber(props: IProps) {
         projType.toLowerCase() !== 'scripture'
       )
         nextState = ActivityStates.Done;
-      await save(nextState, 0, comment);
+      await save(nextState, 0, '');
     } else {
       logError(Severity.error, errorReporter, `Unhandled state: ${state}`);
     }
@@ -616,13 +628,13 @@ export function Transcriber(props: IProps) {
     transcribed: ActivityStates.Reviewing,
   };
 
-  const handleSave = async (postComment: boolean = false) => {
+  const handleSave = async () => {
     //this needs to use the refs because it is called from a timer, which
     //apparently remembers the values when it is kicked off...not when it is run
     await save(
       nextOnSave[stateRef.current] ?? stateRef.current,
       playedSecsRef.current,
-      postComment ? comment : undefined
+      undefined
     );
   };
 
@@ -669,7 +681,6 @@ export function Transcriber(props: IProps) {
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
-          if (thiscomment) setComment('');
           loadHistory();
           saveCompleted('');
           setLastSaved(currentDateTime());
@@ -688,7 +699,7 @@ export function Transcriber(props: IProps) {
       showMessage(t.saving);
       return;
     }
-    handleSave(true);
+    handleSave();
   };
 
   const previous: { [key: string]: string } = {
@@ -713,14 +724,13 @@ export function Transcriber(props: IProps) {
           section.id,
           plan,
           previous[state],
-          comment,
+          '',
           user,
           new TransformBuilder(),
           [],
           memory
         )
       );
-      setComment('');
       setLastSaved(currentDateTime());
     }
   };
@@ -791,7 +801,6 @@ export function Transcriber(props: IProps) {
       transcriptionRef.current.firstChild.focus();
     }
     setLastSaved(passage.attributes?.dateUpdated || '');
-    setComment(passage.attributes?.lastComment || '');
     setTotalSeconds(duration);
     if (mediaRemoteId && mediaRemoteId !== '') {
       fetchMediaUrl(mediaRemoteId, memory, offline, auth);
@@ -1042,6 +1051,16 @@ export function Transcriber(props: IProps) {
               </Grid>
             </Grid>
             <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleShowAddNote}
+                disabled={selected === '' || playing}
+              >
+                {t.addNote}
+              </Button>
+
               <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
                 <span>
                   <IconButton
@@ -1106,34 +1125,7 @@ export function Transcriber(props: IProps) {
               </Grid>
             )}
           </Grid>
-          <Grid container direction="row">
-            {makeComment && (
-              <TextField
-                ref={commentRef}
-                label={t.comment}
-                variant="filled"
-                multiline
-                rowsMax={5}
-                className={classes.comment}
-                value={comment}
-                onChange={handleCommentChange}
-              />
-            )}
-          </Grid>
           <Grid container direction="row" className={classes.padRow}>
-            <Grid item>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value={makeComment}
-                    onChange={handleMakeComment}
-                    disabled={selected === ''}
-                    color="primary"
-                  />
-                }
-                label={t.makeComment}
-              />
-            </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
                 <div>
@@ -1211,6 +1203,12 @@ export function Transcriber(props: IProps) {
           passageIn={passage}
           editMethod={handleRejected}
           cancelMethod={handleRejectCancel}
+        />
+        <TranscribeAddNote
+          visible={addNoteVisible}
+          passageIn={passage}
+          editMethod={handleAddNote}
+          cancelMethod={handleAddNoteCancel}
         />
       </Paper>
       <div className={classes.player}>
