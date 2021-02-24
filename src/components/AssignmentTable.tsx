@@ -34,11 +34,8 @@ import {
   passageCompare,
   useOrganizedBy,
 } from '../crud';
-import { HeadHeight } from '../App';
-import { TabHeight } from './PlanTabs';
+import { ActionHeight, tabActions, tabBar } from './PlanTabs';
 import { UpdateLastModifedBy } from '../model/baseModel';
-
-const ActionHeight = 52;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,21 +46,11 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     paper: {},
-    bar: {
-      top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      height: `${ActionHeight}px`,
-      left: 0,
-      width: '100%',
-    },
+    bar: tabBar,
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
-    actions: theme.mixins.gutters({
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    }) as any,
+    actions: theme.mixins.gutters(tabActions) as any,
     grow: {
       flexGrow: 1,
     },

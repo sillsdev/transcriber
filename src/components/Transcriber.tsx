@@ -470,11 +470,12 @@ export function Transcriber(props: IProps) {
   };
   const handleJumpFn = (amount: number) => {
     if (!playerRef.current) return;
-    if (amount > 0) {
-      playerRef.current.seekTo(Math.min(playedSeconds + amount, totalSeconds));
-    } else {
-      playerRef.current.seekTo(Math.max(playedSeconds + amount, 0));
-    }
+    var newPosition =
+      amount > 0
+        ? Math.min(playedSeconds + amount, totalSeconds)
+        : Math.max(playedSeconds + amount, 0);
+    console.log(playedSeconds, amount, newPosition);
+    playerRef.current.seekTo(newPosition);
   };
   const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
   const rnd1 = (val: number) => Math.round(val * 10) / 10;
