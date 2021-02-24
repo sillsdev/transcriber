@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import { Role, Project, RoleNames } from '../model';
-import { QueryBuilder, Record } from '@orbit/data';
+import { QueryBuilder, Record, TransformBuilder } from '@orbit/data';
 import { related } from '../crud';
 
 export const useRole = () => {
@@ -66,10 +66,20 @@ export const useRole = () => {
 
   const getMbrRole = (memberRecs: Record[]) => {
     if (memberRecs.length === 1) {
-      const roleId = related(memberRecs[0], 'role');
+      var roleId = related(memberRecs[0], 'role');
+      if (!roleId) {
+        roleId = getRoleId(RoleNames.Admin);
+        memory.update((t: TransformBuilder) =>
+          t.replaceRelatedRecord(memberRecs[0], 'role', {
+            type: 'role',
+            id: roleId,
+          })
+        );
+      }
       const roleRec = memory.cache.query((q: QueryBuilder) =>
         q.findRecord({ type: 'role', id: roleId })
       ) as Role;
+
       const roleName = roleRec?.attributes?.roleName;
       if (roleName) return roleName.toLocaleLowerCase();
     }
