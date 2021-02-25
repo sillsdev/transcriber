@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default () => {
+const Busy = () => {
   const classes = useStyles();
   return (
     <div className={classes.busy}>
@@ -23,3 +23,5 @@ export default () => {
     </div>
   );
 };
+
+export default Busy;
