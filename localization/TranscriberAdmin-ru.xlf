@@ -37,7 +37,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="activityState.needsNewRecording">
+   	<unit id="transcriber.addNote">
+   		<segment>
+   			<source>Add Note</source>
+   			<target>Добавить Примечание</target>
+   		</segment>
+   	</unit>
+   	<unit id="activityState.needsNewRecording">
          <segment>
             <source>Recording Needed</source>
             <target/>
