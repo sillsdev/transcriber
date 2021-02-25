@@ -1,21 +1,87 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="en" version="1.0">
    <file id="TranscriberAdmin" original="TranscriberAdmin-en.xliff">
-      <unit id="access.accessFirst">
+      <unit id="access.availableOfflineUsers">
          <segment>
-            <source>Welcome to {0}. First, a project is created online at the {1} site. Then, export a Portable Transcriber Format (PTF) file and import it here.</source>
+            <source>Available Offline Users</source>
             <target/>
          </segment>
       </unit>
-      <unit id="access.accessSilTranscriber">
+      <unit id="access.availableOnlineUsers">
          <segment>
-            <source>Click your avatar to transcribe or review.</source>
+            <source>Available Online Users</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.createUser">
+         <segment>
+            <source>Add a new user</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.logIn">
+         <segment>
+            <source>Log In</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.screenTitle">
+         <segment>
+            <source>I want to work...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.importSnapshot">
+         <segment>
+            <source>Import Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withInternet">
+         <segment>
+            <source>With an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.withoutInternet">
+         <segment>
+            <source>Without an Internet connection</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.mustBeOnline">
+         <segment>
+            <source>You must be connected to the Internet to Log In!</source>
             <target/>
          </segment>
       </unit>
       <unit id="access.importProject">
          <segment>
-            <source>Import PTF File</source>
+            <source>ImportProject</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.download">
+         <segment>
+            <source>Download?</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.downloadLater">
+         <segment>
+            <source>Download Later</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="access.downloadMb">
+         <segment>
+            <source>Download {0}MB of offline project files?</source>
             <target/>
          </segment>
       </unit>
@@ -37,13 +103,7 @@
             <target/>
          </segment>
       </unit>
-   	<unit id="transcriber.addNote">
-   		<segment>
-   			<source>Add Note</source>
-   			<target>Добавить Примечание</target>
-   		</segment>
-   	</unit>
-   	<unit id="activityState.needsNewRecording">
+      <unit id="activityState.needsNewRecording">
          <segment>
             <source>Recording Needed</source>
             <target/>
@@ -70,6 +130,12 @@
       <unit id="activityState.reviewing">
          <segment>
             <source>Reviewing</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="activityState.synced">
+         <segment>
+            <source>Synced</source>
             <target/>
          </segment>
       </unit>
@@ -201,7 +267,7 @@
       </unit>
       <unit id="assignSection.title">
          <segment>
-            <source>Assign {0} to Members</source>
+            <source>Assign {0}</source>
             <target/>
          </segment>
       </unit>
@@ -255,7 +321,7 @@
       </unit>
       <unit id="cards.import">
          <segment>
-            <source>Import PTF File</source>
+            <source>Import Project</source>
             <target/>
          </segment>
       </unit>
@@ -307,6 +373,12 @@
             <target>Сохранить</target>
          </segment>
       </unit>
+      <unit id="cards.nameInUse">
+         <segment>
+            <source>Name in use</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="cards.sectionStatus">
          <segment>
             <source>{0} {1}</source>
@@ -316,6 +388,18 @@
       <unit id="cards.settings">
          <segment>
             <source>Settings</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.offlineAvail">
+         <segment>
+            <source>Offline Available</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="cards.offline">
+         <segment>
+            <source>Offline</source>
             <target/>
          </segment>
       </unit>
@@ -409,6 +493,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="electronImport.project">
+         <segment>
+            <source>Project</source>
+         	<target>Проект</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.members">
+         <segment>
+            <source>Members</source>
+         	<target>Члены</target>
+         </segment>
+      </unit>
+      <unit id="electronImport.userWontSeeProject">
+         <segment>
+            <source>You are not a member of this project team. This project will not be accessible after import.</source>
+         	<target>Вы не являетесь членом этой проектной команды. Этот проект будет недоступен после импорта.</target>
+         </segment>
+      </unit>
       <unit id="electronImport.importProject">
          <segment>
             <source>Import Project</source>
@@ -429,8 +531,8 @@
       </unit>
       <unit id="electronImport.neverExported">
          <segment>
-            <source>Current data in project {name0} has never been exported.</source>
-            <target/>
+            <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
+         	<target>Текущие данные в проекте {name0} никогда не экспортировались в itf-файл для сохранения изменений.</target>
          </segment>
       </unit>
       <unit id="electronImport.projectImported">
@@ -448,6 +550,12 @@
       <unit id="emailUnverified.emailUnverified">
          <segment>
             <source>Your email is unverified.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="emailUnverified.logout">
+         <segment>
+            <source>Logout</source>
             <target/>
          </segment>
       </unit>
@@ -619,15 +727,21 @@
             <target/>
          </segment>
       </unit>
-      <unit id="import.error">
+      <unit id="import.copy">
          <segment>
-            <source>Import Error</source>
+            <source>Copy Report</source>
             <target/>
          </segment>
       </unit>
-      <unit id="import.expiredToken">
+      <unit id="import.copyfail">
          <segment>
-            <source>Your log in token has expired and can't be automatically renewed.  Please log out and login again.</source>
+            <source>Copy Failed</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.error">
+         <segment>
+            <source>Import Error</source>
             <target/>
          </segment>
       </unit>
@@ -751,6 +865,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="import.projectDeleted">
+         <segment>
+            <source>Project {0} has been deleted online.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="import.projectNotFound">
+         <segment>
+            <source>ITF does not contain current project.  It contains project {0}.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="import.showHideFilter">
          <segment>
             <source>Show/Hide filter rows</source>
@@ -784,30 +910,12 @@
       <unit id="import.username">
          <segment>
             <source>Name</source>
-            <target>Фамилия Имя</target>
+            <target/>
          </segment>
       </unit>
       <unit id="integration.allCriteria">
          <segment>
             <source>You must satisfy all criteria to sync.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.bookNotFound">
-         <segment>
-            <source>Book not included in this project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.bookNotInParatext">
-         <segment>
-            <source>Passage {0}.{1}: Paratext project does not contain book {2}.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.chapterSpan">
-         <segment>
-            <source>Passage {0}.{1} {2}: Passage must not span chapters.</source>
             <target/>
          </segment>
       </unit>
@@ -826,7 +934,7 @@
    	<unit id="integration.invalidReferences">
    		<segment>
    			<source>{0} passages have invalid references</source>
-   			<target/>
+   			<target>{0} отрывки имеют недействительные ссылки</target>
    		</segment>
    	</unit>
    	<unit id="integration.countReady">
@@ -838,30 +946,6 @@
       <unit id="integration.emptyBook">
          <segment>
             <source>Passage {0}.{1}: Book is missing.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.expiredParatextToken">
-         <segment>
-            <source>Your paratext login has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.invalidParatextLogin">
-         <segment>
-            <source>You must login with a valid paratext login to sync projects.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="integration.invalidReference">
-         <segment>
-            <source>Passage {0}.{1} {2}: Invalid Reference</source>
             <target/>
          </segment>
       </unit>
@@ -1381,6 +1465,42 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.helpSpreadsheet">
+         <segment>
+            <source>View spreadsheet convention</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.flatSample">
+         <segment>
+            <source>Scripture flat sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.hierarchicalSample">
+         <segment>
+            <source>Scripture hierarchical sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.genFlatSample">
+         <segment>
+            <source>General flat sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.genHierarchicalSample">
+         <segment>
+            <source>General hierarchical sample spreadsheet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.reportWhenOnline">
+         <segment>
+            <source>You must be online to report an problem.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.import">
          <segment>
             <source>Import</source>
@@ -1531,9 +1651,51 @@
             <target/>
          </segment>
       </unit>
+      <unit id="main.updateAvailable">
+         <segment>
+            <source>Update available: Version {0} was released {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.about">
+         <segment>
+            <source>About</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="main.version">
          <segment>
-            <source>Version: </source>
+            <source>Version: {0} - {1}</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.copyClipboard">
+         <segment>
+            <source>Copy Version to Clipboard</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.team">
+         <segment>
+            <source>Team</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.reliesOn">
+         <segment>
+            <source>{0} relies on other works</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.thanks">
+         <segment>
+            <source>Thanks to</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="main.cantCopy">
+         <segment>
+            <source>Unable to copy to clipboard</source>
             <target/>
          </segment>
       </unit>
@@ -1753,15 +1915,21 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaUpload.invalidFile">
+         <segment>
+            <source>Not valid for this operation: {0} </source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaUpload.ITFtask">
          <segment>
-            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop Extension.</source>
+            <source>Upload an Incremental Transcriber File (itf file) exported from the Desktop app.</source>
             <target/>
          </segment>
       </unit>
       <unit id="mediaUpload.ITFtitle">
          <segment>
-            <source>Upload Change Data from Desktop Extension</source>
+            <source>Upload Change Data from Desktop app.</source>
             <target/>
          </segment>
       </unit>
@@ -1875,7 +2043,7 @@
       </unit>
       <unit id="planSheet.refErr">
          <segment>
-            <source>This project contains invalid references and will not sync to Paratext properly.</source>
+            <source>This project contains invalid references and will not sync to Paratext properly. (A valid reference would be 3:2-5 or similar.)</source>
             <target/>
          </segment>
       </unit>
@@ -1911,7 +2079,7 @@
       </unit>
       <unit id="planSheet.tablePaste">
          <segment>
-            <source>Paste Table</source>
+            <source>Paste Spreadsheet</source>
             <target/>
          </segment>
       </unit>
@@ -1975,9 +2143,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.addOfflineUser">
+      <unit id="profile.addMember">
          <segment>
-            <source>Add Offline Desktop Member</source>
+            <source>Complete User Profile</source>
             <target/>
          </segment>
       </unit>
@@ -1993,6 +2161,18 @@
             <target/>
          </segment>
       </unit>
+      <unit id="profile.nameNotEmail">
+         <segment>
+            <source>Please choose a name other than your email address.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="profile.notLinked">
+         <segment>
+            <source>Not linked to Paratext</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="profile.close">
          <segment>
             <source>Close</source>
@@ -2001,19 +2181,19 @@
       </unit>
       <unit id="profile.completeProfile">
          <segment>
-            <source>Complete Member Profile</source>
+            <source>Complete User Profile</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteExplained">
          <segment>
-            <source>Deleting your member will block you from using the program and remove references to your work.</source>
+            <source>Deleting your user will block you from using the program and remove references to your work.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.deleteUser">
          <segment>
-            <source>Delete Member</source>
+            <source>Delete User</source>
             <target/>
          </segment>
       </unit>
@@ -2119,12 +2299,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="profile.sendNews">
-         <segment>
-            <source>Receive {0} and Language Technology news</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="profile.timezone">
          <segment>
             <source>Time zone</source>
@@ -2133,13 +2307,13 @@
       </unit>
       <unit id="profile.userExists">
          <segment>
-            <source>This offline member exists.</source>
+            <source>This offline user exists.</source>
             <target/>
          </segment>
       </unit>
       <unit id="profile.userProfile">
          <segment>
-            <source>Member profile</source>
+            <source>User profile</source>
             <target/>
          </segment>
       </unit>
@@ -2353,7 +2527,13 @@
             <target/>
          </segment>
       </unit>
-   	<unit id="shared.mediaAttached">
+   	<unit id="shared.importMediaSingular">
+         <segment>
+            <source>Import Media</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.mediaAttached">
    		<segment>
    			<source>Media Attached</source>
    			<target>Медиа-Адаптированный</target>
@@ -2581,7 +2761,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.needsNewRecording">
+   	<unit id="transcriber.addNote">
+   		<segment>
+   			<source>Add Note</source>
+   			<target>Добавить Примечание</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcriber.needsNewRecording">
          <segment>
             <source>Rejected recording</source>
             <target/>
@@ -2609,6 +2795,30 @@
          <segment>
             <source>Pause ({0})</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextCaption">
+         <segment>
+            <source>Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStart">
+         <segment>
+            <source>Getting transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextStatus">
+         <segment>
+            <source>Transcription pulled from Paratext</source>
+            <target>Transcription obtenue à partir de Paratext</target>
+         </segment>
+      </unit>
+      <unit id="transcriber.pullParatextTip">
+         <segment>
+            <source>Pull transcription from Paratext</source>
+            <target>Obtenir la transcription de Paratext</target>
          </segment>
       </unit>
       <unit id="transcriber.reject">
@@ -2693,6 +2903,24 @@
          <segment>
             <source>Transcription updated by another person or process.</source>
             <target/>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.cancel">
+         <segment>
+            <source>Cancel</source>
+         	<target>Отменить</target>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.save">
+         <segment>
+            <source>Save</source>
+         	<target>Сохранить</target>
+         </segment>
+      </unit>
+      <unit id="transcribeAddNote.addNoteTitle">
+         <segment>
+            <source>Add Note</source>
+         	<target>Добавить Примечание</target>
          </segment>
       </unit>
       <unit id="transcribeReject.cancel">
@@ -2805,19 +3033,13 @@
       </unit>
       <unit id="transcriptionTab.electronBackup">
          <segment>
-            <source>Backup All Projects</source>
+            <source>Back up All Projects</source>
             <target/>
          </segment>
       </unit>
       <unit id="transcriptionTab.error">
          <segment>
             <source>Export Error</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriptionTab.expiredToken">
-         <segment>
-            <source>Your login token has expired and can't be automatically renewed.  Please log out and login again.</source>
             <target/>
          </segment>
       </unit>
@@ -2839,6 +3061,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.downloadingProject">
+         <segment>
+            <source>Downloading...{0}%</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriptionTab.exportITFtype">
          <segment>
             <source>Incremental Changes (itf)</source>
@@ -2848,6 +3076,12 @@
       <unit id="transcriptionTab.exportProject">
          <segment>
             <source>Export Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="transcriptionTab.downloadProject">
+         <segment>
+            <source>Download Project</source>
             <target/>
          </segment>
       </unit>
@@ -2905,9 +3139,27 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriptionTab.incompletePlan">
+         <segment>
+            <source>Plan is incomplete: attach media to passages.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="treeChart.contributions">
+         <segment>
+            <source>Contributions toward</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="treeChart.noData">
          <segment>
             <source>No Transcription Data Yet</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="treeChart.status">
+         <segment>
+            <source>Status of</source>
             <target/>
          </segment>
       </unit>
@@ -2983,9 +3235,21 @@
             <target>Фамилия Имя</target>
          </segment>
       </unit>
-      <unit id="usertable.offline">
+      <unit id="usertable.addMember">
          <segment>
-            <source>Offline Desktop Member</source>
+            <source>Add Member</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.addNewUser">
+         <segment>
+            <source>Add New User</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="usertable.selectUser">
+         <segment>
+            <source>Select User</source>
             <target/>
          </segment>
       </unit>
@@ -3100,6 +3364,12 @@
       <unit id="vProject.layout">
          <segment>
             <source>Layout</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="vProject.nameInUse">
+         <segment>
+            <source>Name in use</source>
             <target/>
          </segment>
       </unit>

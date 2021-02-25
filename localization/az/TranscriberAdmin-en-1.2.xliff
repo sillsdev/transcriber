@@ -576,6 +576,27 @@
           <context context-type="sourcefile">electronImport.tsx</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="electronImport.project">
+        <source>Project</source>
+        <target state="needs-translation">Project</target>
+        <context-group>
+          <context context-type="sourcefile">electronImport.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="electronImport.members">
+        <source>Members</source>
+        <target state="needs-translation">Members</target>
+        <context-group>
+          <context context-type="sourcefile">electronImport.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="electronImport.userWontSeeProject">
+        <source>You are not a member of this project team. This project will not be accessible after import.</source>
+        <target state="needs-translation">You are not a member of this project team. This project will not be accessible after import.</target>
+        <context-group>
+          <context context-type="sourcefile">electronImport.tsx</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="electronImport.importProject">
         <source>Import Project</source>
         <target state="needs-translation">Import Project</target>
@@ -598,8 +619,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="electronImport.neverExported">
-        <source>Current data in project {name0} has never been exported.</source>
-        <target state="needs-translation">Current data in project {name0} has never been exported.</target>
+        <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
+        <target state="needs-translation">Current data in project {name0} has never been exported to an itf file to preserve changes.</target>
         <context-group>
           <context context-type="sourcefile">electronImport.tsx</context>
         </context-group>
@@ -1062,6 +1083,13 @@
       <trans-unit id="integration.countPending">
         <source>Querying count...</source>
         <target state="needs-translation">Querying count...</target>
+        <context-group>
+          <context context-type="sourcefile">integration.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="integration.invalidReferences">
+        <source>{0} passages have invalid references</source>
+        <target state="needs-translation">{0} passages have invalid references</target>
         <context-group>
           <context context-type="sourcefile">integration.tsx</context>
         </context-group>
@@ -3236,9 +3264,9 @@
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="transcriber.makeComment">
-        <source>Make Comment</source>
-        <target state="needs-translation">Make Comment</target>
+      <trans-unit id="transcriber.addNote">
+        <source>Add Note</source>
+        <target state="needs-translation">Add Note</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -3402,6 +3430,27 @@
         <target state="needs-translation">Transcription updated by another person or process.</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcribeAddNote.cancel">
+        <source>Cancel</source>
+        <target state="needs-translation">Cancel</target>
+        <context-group>
+          <context context-type="sourcefile">transcribeAddNote.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcribeAddNote.save">
+        <source>Save</source>
+        <target state="needs-translation">Save</target>
+        <context-group>
+          <context context-type="sourcefile">transcribeAddNote.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcribeAddNote.addNoteTitle">
+        <source>Add Note</source>
+        <target state="needs-translation">Add Note</target>
+        <context-group>
+          <context context-type="sourcefile">transcribeAddNote.tsx</context>
         </context-group>
       </trans-unit>
       <trans-unit id="transcribeReject.cancel">
