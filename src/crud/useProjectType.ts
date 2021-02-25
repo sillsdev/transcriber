@@ -17,9 +17,14 @@ export const useProjectType = () => {
       pId = project;
     } else pId = related(project, 'project');
 
-    proj = memory.cache.query((q) =>
-      q.findRecord({ type: 'project', id: pId })
-    ) as Project;
+    try {
+      proj = memory.cache.query((q) =>
+        q.findRecord({ type: 'project', id: pId })
+      ) as Project;
+    } catch (error) {
+      // During refresh the project might not be found
+      return 'Scripture';
+    }
     var ptId = related(proj, 'projecttype');
     var pt: ProjectType;
     if (ptId) {
@@ -30,7 +35,11 @@ export const useProjectType = () => {
     } else {
       //default to scripture so they don't lose any book info they have
       console.log('MISSING PROJECT TYPE!', proj);
-      logError(Severity.error, errorReporter, `missing project type=project${proj.attributes.name}${proj.keys?.remoteId}`);
+      logError(
+        Severity.error,
+        errorReporter,
+        `missing project type=project${proj.attributes.name}${proj.keys?.remoteId}`
+      );
       var pts = memory.cache.query((q) =>
         q.findRecords('projecttype')
       ) as ProjectType[];
