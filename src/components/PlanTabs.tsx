@@ -24,7 +24,6 @@ import { withData } from '../mods/react-orbitjs';
 //import { HeadHeight } from '../App';
 import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 
-export const TabHeight = 48;
 export enum tabs {
   sectionPassage = 0,
   media = 1,
@@ -32,16 +31,17 @@ export enum tabs {
   assignment = 3,
   transcription = 4,
 }
-export const ActionHeight = 42;
+export const TabHeight = 52;
+export const ActionHeight = 38;
 const HeadHeight = 64; //can't get the one from app on initialization?!
-export const tabBar = {
+export const actionBar = {
   top: `calc(${TabHeight}px + ${HeadHeight}px)`,
   height: `${ActionHeight}px`,
   left: 0,
   width: '100%',
 };
 export const tabActions = {
-  paddingBottom: 16,
+  paddingBottom: 14,
   display: 'flex',
   justifyContent: 'flex-end',
   '& .MuiButton-label': { fontSize: '.8rem' },
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }) as any,
     bar: {
       top: `${HeadHeight}px`,
-      height: `${ActionHeight}px`,
+      height: `${TabHeight}px`,
       left: 0,
       width: '100%',
     },

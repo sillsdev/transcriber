@@ -27,7 +27,7 @@ import Auth from '../auth/Auth';
 import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActions from './PlanActions';
-import { ActionHeight, tabActions, tabBar } from './PlanTabs';
+import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    bar: tabBar,
+    bar: actionBar,
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
       '& .data-grid-container .data-grid .cell': {

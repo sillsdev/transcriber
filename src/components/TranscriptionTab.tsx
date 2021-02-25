@@ -65,7 +65,7 @@ import {
 import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from '../utils';
-import { ActionHeight, tabActions, tabBar } from './PlanTabs';
+import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    bar: tabBar,
+    bar: actionBar,
     highBar: {
       left: 'auto',
       top: 'auto',

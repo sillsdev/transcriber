@@ -36,7 +36,7 @@ import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
-import { ActionHeight, tabActions, tabBar, tabs } from './PlanTabs';
+import { ActionHeight, tabActions, actionBar, tabs } from './PlanTabs';
 import { useSnackBar } from '../hoc/SnackBar';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    bar: tabBar,
+    bar: actionBar,
     highBar: {
       top: `${HeadHeight}px`,
     },

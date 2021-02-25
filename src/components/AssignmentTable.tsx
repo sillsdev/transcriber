@@ -34,7 +34,7 @@ import {
   passageCompare,
   useOrganizedBy,
 } from '../crud';
-import { ActionHeight, tabActions, tabBar } from './PlanTabs';
+import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import { UpdateLastModifedBy } from '../model/baseModel';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     paper: {},
-    bar: tabBar,
+    bar: actionBar,
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
     },
