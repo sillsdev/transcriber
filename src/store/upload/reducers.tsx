@@ -16,7 +16,7 @@ export const uploadCleanState = {
   errmsg: '',
 };
 
-export default function (
+const UploadReducers = function (
   state = uploadCleanState,
   action: UploadMsgs
 ): IUploadState {
@@ -69,4 +69,6 @@ export default function (
     default:
       return { ...state };
   }
-}
+};
+
+export default UploadReducers;

@@ -7,7 +7,7 @@ import { related, getMediaRec, parseRef, UpdatePassageStateOps } from '../crud';
 import { getReadWriteProg } from './paratextPath';
 
 const isElectron = process.env.REACT_APP_MODE === 'electron';
-var temp = isElectron ? require('electron').remote.getGlobal('temp') : '';
+const ipc = isElectron ? require('electron').ipcRenderer : null;
 const path = require('path');
 const fs = isElectron ? require('fs-extra') : null;
 
@@ -487,6 +487,7 @@ const getPassageVerses = (doc: Document, p: Passage) => {
 const paratextPaths = async (chap: string) => {
   const ptProg = await getReadWriteProg();
   const pt = chap.split('-');
+  const temp = await ipc?.invoke('temp');
   return {
     chapterFile: path.join(temp, chap + '.usx'),
     book: pt[0],
@@ -504,6 +505,7 @@ const getChapter = async (
   },
   ptProjName: string
 ) => {
+  const temp = await ipc?.invoke('temp');
   if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
   try {
     const { stdout } = await paths.program([
@@ -574,7 +576,7 @@ const doChapter = async (
       related(p, 'section'),
       plan,
       ActivityStates.Done,
-      'Paratext-'+cmt ,
+      'Paratext-' + cmt,
       userId,
       tb,
       ops,

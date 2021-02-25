@@ -12,8 +12,6 @@ async function showWindow() {
   return createAppWindow();
 }
 
-global['temp'] = app.getPath('temp');
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -26,6 +24,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin' && !isLogingIn) {
     app.quit();
   }
+});
+
+ipcMain.handle('temp', async () => {
+  return app.getPath('temp');
 });
 
 ipcMain.handle('login', async () => {
