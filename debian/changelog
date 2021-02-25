@@ -1,3 +1,47 @@
+sil-transcriber (2.11.4.0)  experimental; urgency=high
+
+  * TT-2032 Update localization
+  * TT-2030 adjust row heights
+  * If project not found return Scripture type
+  * TT-1970 notice if they change flat/hierarchical for help (#91)
+  * TT-2028 send environment to userversion (#90)
+  * update help
+  * get correct projecttype or role if missing (#87)
+  * - log error if missing data
+  * add time to local logs
+  * TT-1919 put progress in app header (#89)
+  * - use different busy flag to prevent screen fill by importexportbusy
+  * - move progress bar to AppHead so it shows
+  * TT-2017 centralize tab bar and action styles (#86)
+  * TT-2018 change make comment to add note (#85)
+  * - clear comment on cancel
+  * TT-2022 Canceling Unsaved dialog (#84)
+  * TT-2010 give more info on electron import (#83)
+  * TT-1718 update section count on localSave (#82)
+  * new user locale bug (#81)
+  * TT-1266 set User Language whenever it might change (#80)
+  * TT-2013 ITF fix (#78)
+  * - use off and on line for export
+  * TT-1962 report deleted project (#79)
+  * TT-1966 Invalid Reference error on sync (#77)
+  * TT-2009 Add new localization strings (#76)
+  * TT-1357 Fall back to en for auth0 (#75)
+  * TT-1890 wait before logging out, increase save time (#74)
+  * TT-1996, TT-1995 Backup all for on line and off line (#73)
+  * TT-1876 Copy conflict report to clipboard (#72)
+  * TT-1282 wait before logout after user delete (#71)
+  * TT-1999 remove team memberships and projects when deleting team (#70)
+  * TT-2002 auto assign current state (#69)
+  * TT-2008 only assign by role (#68)
+  * add logout on email Unverified screen in case of unverifiable email (#67)
+  * TT-2003,2004 fix pull Paratext save and select correct online/offline integration (#66)
+  * TT-1985 set version and passage if duplicate name (#65)
+  * TT-2007 Add Russian and Portuguese localization
+  * TT-1981 when syncing, save comment to history and reset it (#64)
+  * TT-2001 check for off line (#63)
+
+ -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Feb 2021 11:52:00 -0600
+
 sil-transcriber (2.11.3.0)  experimental; urgency=high
 
   * allow creation of new offline only projects (TT-1974)
