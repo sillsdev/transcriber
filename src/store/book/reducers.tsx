@@ -25,7 +25,7 @@ const makeMap = (books: BookName[]) => {
   return result;
 };
 
-export default function (
+const BookReducers = function (
   state = bookCleanState,
   action: BookNameMsgs | LocalizationMsgs
 ): IBookNameData {
@@ -50,4 +50,6 @@ export default function (
     default:
       return state;
   }
-}
+};
+
+export default BookReducers;

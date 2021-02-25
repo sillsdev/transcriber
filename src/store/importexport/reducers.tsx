@@ -18,7 +18,7 @@ export const exportCleanState = {
   importexportStatus: undefined,
 } as IImportExportState;
 
-export default function(
+const ImportExportReducers = function (
   state = exportCleanState,
   action: ExportMsgs | ImportMsgs
 ): IImportExportState {
@@ -76,4 +76,6 @@ export default function(
     default:
       return { ...state };
   }
-}
+};
+
+export default ImportExportReducers;

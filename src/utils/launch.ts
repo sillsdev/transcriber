@@ -1,5 +1,5 @@
 import { isElectron } from '../api-variable';
-var temp = isElectron ? require('electron').remote.getGlobal('temp') : '';
+const ipc = isElectron ? require('electron').ipcRenderer : null;
 const fs = isElectron ? require('fs-extra') : null;
 const path = require('path');
 
@@ -10,9 +10,9 @@ const os = require('os');
 
 export const launch = (target: string, online: boolean) => {
   if (online) shell.openExternal(target);
-  else if (os.platform() === 'win32') shell.openItem(target);
+  else if (os.platform() === 'win32') shell.openPath(target);
   else {
-    console.log(target)
+    console.log(target);
     const cmd = /\.sh/i.test(target) ? '' : 'xdg-open ';
     execa.command(`${cmd}${target}`, {
       env: { ...{ ...process }.env, DISPLAY: ':0' },
@@ -20,7 +20,8 @@ export const launch = (target: string, online: boolean) => {
   }
 };
 
-export const launchCmd = (target: string) => {
+export const launchCmd = async (target: string) => {
+  const temp = await ipc?.invoke('temp');
   if (!temp) throw new Error('Unable to find temp directory.'); //this is app.getPath('temp')
   if (os.platform() === 'win32') {
     const tempName = path.join(temp, 'transcriber-cmd.ps1');
@@ -28,15 +29,15 @@ export const launchCmd = (target: string) => {
     execa(`powershell`, [tempName]).finally(() => {
       fs.unlinkSync(tempName);
     });
-    } else {
-      const tempName = path.join(temp, 'transcriber-cmd.sh');
-      fs.writeFileSync(tempName, target, {encoding: 'utf-8'});
-      execa(`sh`, [tempName], {
-        env: { ...{ ...process }.env, DISPLAY: ':0' },
-      }).finally(() => {
-        fs.unlinkSync(tempName);
-      })
-    }
+  } else {
+    const tempName = path.join(temp, 'transcriber-cmd.sh');
+    fs.writeFileSync(tempName, target, { encoding: 'utf-8' });
+    execa(`sh`, [tempName], {
+      env: { ...{ ...process }.env, DISPLAY: ':0' },
+    }).finally(() => {
+      fs.unlinkSync(tempName);
+    });
+  }
 };
 
 export default launch;

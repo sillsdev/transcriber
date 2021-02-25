@@ -4,7 +4,7 @@ export const authCleanState = {
   expireAt: undefined,
 } as type.IAuthState;
 
-export default function(
+const AuthReducers = function (
   state = authCleanState,
   action: type.AuthMsgs
 ): type.IAuthState {
@@ -17,4 +17,6 @@ export default function(
     default:
       return state;
   }
-}
+};
+
+export default AuthReducers;

@@ -14,10 +14,10 @@ export const orbitCleanState = {
   message: '',
   saving: false,
   retry: 0,
-  fetchResults: undefined
+  fetchResults: undefined,
 } as IOrbitState;
 
-export default function (
+const OrbitReducers = function (
   state = orbitCleanState,
   action: OrbitMsgs
 ): IOrbitState {
@@ -25,13 +25,13 @@ export default function (
     case FETCH_ORBIT_DATA:
       return {
         ...state,
-        fetchResults:action.payload,
+        fetchResults: action.payload,
       };
     case FETCH_ORBIT_DATA_COMPLETE:
-        return {
-          ...state,
-          fetchResults:undefined,
-        };
+      return {
+        ...state,
+        fetchResults: undefined,
+      };
     case ORBIT_ERROR:
       const response = action.payload.response as any;
       const url: string = response?.url;
@@ -63,4 +63,6 @@ export default function (
     default:
       return { ...state };
   }
-}
+};
+
+export default OrbitReducers;

@@ -107,7 +107,7 @@ function createAppWindow() {
         {
           label: 'Learn More',
           click: () => {
-            shell.openItem(
+            shell.openPath(
               path.join(execFolder(), 'help/SIL_Transcriber_Help.chm')
             );
           },

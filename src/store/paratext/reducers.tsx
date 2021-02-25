@@ -12,7 +12,7 @@ export const paratextCleanState = {
   textStatus: undefined,
 } as type.IParatextState;
 
-export default function (
+const ParatextReducers = function (
   state = paratextCleanState,
   action: type.ParatextMsgs
 ): type.IParatextState {
@@ -101,4 +101,6 @@ export default function (
     default:
       return { ...state };
   }
-}
+};
+
+export default ParatextReducers;

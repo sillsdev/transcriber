@@ -6,7 +6,7 @@ export const mediaCleanState: type.IMediaState = {
   trackedTask: '',
 };
 
-export default function(
+const MediaReducers = function (
   state = mediaCleanState,
   action: type.MediaMsgs
 ): type.IMediaState {
@@ -31,4 +31,6 @@ export default function(
     default:
       return { ...state };
   }
-}
+};
+
+export default MediaReducers;
