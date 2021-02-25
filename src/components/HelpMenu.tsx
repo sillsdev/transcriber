@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMainStrings } from '../model';
+import { IState, IMainStrings, Plan } from '../model';
 import localStrings from '../selector/localize';
 import { withStyles } from '@material-ui/core/styles';
 import { MenuProps } from '@material-ui/core/Menu';
@@ -247,7 +247,7 @@ export function HelpMenu(props: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [planRec, projType]);
+  }, [planRec, projType, (planRec as Plan)?.attributes?.flat]);
 
   return (
     <div>
