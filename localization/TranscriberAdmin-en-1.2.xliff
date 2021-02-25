@@ -575,6 +575,27 @@
                <context context-type="sourcefile">electronImport.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="electronImport.project">
+            <source>Project</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="electronImport.members">
+            <source>Members</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="electronImport.userWontSeeProject">
+            <source>You are not a member of this project team. This project will not be accessible after import.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">electronImport.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="electronImport.importProject">
             <source>Import Project</source>
             <target/>
@@ -597,7 +618,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="electronImport.neverExported">
-            <source>Current data in project {name0} has never been exported.</source>
+            <source>Current data in project {name0} has never been exported to an itf file to preserve changes.</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">electronImport.tsx</context>
@@ -619,6 +640,13 @@
          </trans-unit>
          <trans-unit id="emailUnverified.emailUnverified">
             <source>Your email is unverified.</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">EmailUnverified.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="emailUnverified.logout">
+            <source>Logout</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">EmailUnverified.tsx</context>
@@ -815,6 +843,20 @@
          </trans-unit>
          <trans-unit id="import.continue">
             <source>Continue?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Import.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.copy">
+            <source>Copy Report</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">Import.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="import.copyfail">
+            <source>Copy Failed</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Import.tsx</context>
@@ -1044,7 +1086,14 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="integration.countReady">
+      	<trans-unit id="integration.invalidReferences">
+      		<source>{0} passages have invalid references</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">integration.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="integration.countReady">
             <source>Passages ready to sync: </source>
             <target/>
             <context-group>
@@ -1303,14 +1352,21 @@
                <context context-type="sourcefile">InvitationTable.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.addInvite">
+      	<trans-unit id="invite.addInvite">
             <source>Invite Member</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.allUsersProjects">
+      	<trans-unit id="invite.admin">
+      		<source>Admin</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Invite.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="invite.allUsersProjects">
             <source>Projects</source>
             <target/>
             <context-group>
@@ -1394,7 +1450,14 @@
                <context context-type="sourcefile">Invite.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="invite.newInviteTask">
+      	<trans-unit id="invite.member">
+      		<source>Member</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Invite.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="invite.newInviteTask">
             <source>Enter the email address of the member to invite.</source>
             <target/>
             <context-group>
@@ -2913,7 +2976,7 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="shared.transcriber">
+      	<trans-unit id="shared.transcriber">
             <source>Transcriber</source>
             <target/>
             <context-group>
@@ -2939,6 +3002,20 @@
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="shared.mediaAttached">
+      		<source>Media Attached</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useMediaAttach.ts</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="shared.part">
+      		<source>Part {0}</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">useFlatAdd.ts</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="taskItem.assign">
@@ -3186,8 +3263,8 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.makeComment">
-            <source>Make Comment</source>
+         <trans-unit id="transcriber.addNote">
+            <source>Add Note</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -3354,6 +3431,28 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="transcribeAddNote.cancel">
+            <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">transcribeAddNote.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcribeAddNote.save">
+            <source>Save</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">transcribeAddNote.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="transcribeAddNote.addNoteTitle">
+            <source>Add Note</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">transcribeAddNote.tsx</context>
+            </context-group>
+         </trans-unit>
+
          <trans-unit id="transcribeReject.cancel">
             <source>Cancel</source>
             <target/>

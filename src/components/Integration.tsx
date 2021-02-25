@@ -121,13 +121,13 @@ interface IDispatchProps {
   getUserName: typeof actions.getUserName;
   getProjects: typeof actions.getProjects;
   getLocalProjects: typeof actions.getLocalProjects;
-  getCount: typeof actions.getCount;
   getLocalCount: typeof actions.getLocalCount;
   syncProject: typeof actions.syncProject;
   resetSync: typeof actions.resetSync;
   resetCount: typeof actions.resetCount;
   resetProjects: typeof actions.resetProjects;
   resetUserName: typeof actions.resetUserName;
+  setLanguage: typeof actions.setLanguage;
 }
 interface IRecordProps {
   projectintegrations: Array<ProjectIntegration>;
@@ -158,7 +158,6 @@ export function IntegrationPanel(props: IProps) {
   } = props;
   const {
     getUserName,
-    getCount,
     getLocalCount,
     getProjects,
     getLocalProjects,
@@ -167,6 +166,7 @@ export function IntegrationPanel(props: IProps) {
     resetCount,
     resetProjects,
     resetUserName,
+    setLanguage,
   } = props;
   const { projectintegrations, integrations, projects, passages } = props;
   const classes = useStyles();
@@ -217,7 +217,8 @@ export function IntegrationPanel(props: IProps) {
   };
   const getParatextIntegration = (local: string) => {
     const intfind: Integration[] = integrations.filter(
-      (i) => i.attributes && i.attributes.name === local
+      (i) =>
+        i.attributes?.name === local && Boolean(i.keys?.remoteId) !== offline
     );
     if (intfind.length === 0)
       addParatextIntegration(local).then((res) => setParatextIntegration(res));
@@ -429,14 +430,7 @@ export function IntegrationPanel(props: IProps) {
 
   useEffect(() => {
     if (!paratext_countStatus) {
-      offline
-        ? getLocalCount(passages, project, memory, t.countPending)
-        : getCount(
-            auth,
-            remoteIdNum('project', project, memory.keyMap),
-            errorReporter,
-            t.countPending
-          );
+      getLocalCount(passages, project, memory, errorReporter, t);
     } else if (paratext_countStatus.errStatus)
       showTitledMessage(
         t.countError,
@@ -526,7 +520,9 @@ export function IntegrationPanel(props: IProps) {
           fingerprint,
           projectsLoaded,
           getOfflineProject,
-          errorReporter
+          errorReporter,
+          user,
+          setLanguage
         );
       }
     }
@@ -907,13 +903,13 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       getUserName: actions.getUserName,
       getProjects: actions.getProjects,
       getLocalProjects: actions.getLocalProjects,
-      getCount: actions.getCount,
       getLocalCount: actions.getLocalCount,
       syncProject: actions.syncProject,
       resetSync: actions.resetSync,
       resetCount: actions.resetCount,
       resetProjects: actions.resetProjects,
       resetUserName: actions.resetUserName,
+      setLanguage: actions.setLanguage,
     },
     dispatch
   ),

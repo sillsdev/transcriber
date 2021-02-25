@@ -82,7 +82,6 @@ const UnsavedProvider = connect(
   };
 
   const handleSaveRefused = () => {
-    if (saveConfirm.current) saveConfirm.current();
     saveConfirm.current = undefined;
     setAlertOpen(false);
     setChanged(false);
@@ -103,7 +102,7 @@ const UnsavedProvider = connect(
     showMessage(t.saving);
     startSave();
     setAlertOpen(false);
-    finishConfirmed(savedMethod, 8);
+    finishConfirmed(savedMethod, 18);
   };
 
   return (

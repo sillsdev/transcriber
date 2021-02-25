@@ -567,12 +567,14 @@ const doChapter = async (
   var ops: Operation[] = [];
   var tb = new TransformBuilder();
   for (let p of pass) {
+    var cmt = p.attributes.lastComment;
+    p.attributes.lastComment = '';
     UpdatePassageStateOps(
       p.id,
       related(p, 'section'),
       plan,
       ActivityStates.Done,
-      'Paratext',
+      'Paratext-'+cmt ,
       userId,
       tb,
       ops,

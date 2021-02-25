@@ -51,6 +51,7 @@ import {
   remoteIdGuid,
   useOrganizedBy,
   useOfflnProjRead,
+  SetUserLanguage,
 } from '../crud';
 import ShapingTable from './ShapingTable';
 import { isElectron } from '../api-variable';
@@ -58,6 +59,7 @@ import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import { doDataChanges } from '../hoc/DataChanges';
 import { HeadHeight } from '../App';
+import { localUserKey, LocalKey } from '../utils';
 
 interface IStateProps {
   t: IImportStrings;
@@ -73,6 +75,7 @@ interface IDispatchProps {
   importSyncFromElectron: typeof actions.importSyncFromElectron;
   importComplete: typeof actions.importComplete;
   orbitError: typeof actions.doOrbitError;
+  setLanguage: typeof actions.setLanguage;
 }
 
 interface IRecordProps {
@@ -109,6 +112,7 @@ export function ImportTab(props: IProps) {
     importSyncFromElectron,
     orbitError,
     allBookData,
+    setLanguage,
   } = props;
   interface IRow {
     plan: string;
@@ -125,11 +129,14 @@ export function ImportTab(props: IProps) {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [fingerprint] = useGlobal('fingerprint');
   const [errorReporter] = useGlobal('errorReporter');
+  const [user] = useGlobal('user');
 
   const { showMessage } = useSnackBar();
   const [changeData, setChangeData] = useState(Array<IRow>());
   const [importTitle, setImportTitle] = useState('');
-  const [confirmAction, setConfirmAction] = useState('');
+  const [confirmAction, setConfirmAction] = useState<string | JSX.Element>('');
+  const [fileName, setFileName] = useState<string>('');
+  const [importProject, setImportProject] = useState<string>('');
   const [uploadVisible, setUploadVisible] = useState(false);
   const [filter, setFilter] = useState(false);
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
@@ -140,6 +147,39 @@ export function ImportTab(props: IProps) {
     importComplete
   );
   const handleFilter = () => setFilter(!filter);
+  const headerRow = () =>
+    t.plan +
+    '\t' +
+    getOrganizedBy(true) +
+    '\t' +
+    t.passage +
+    '\t' +
+    t.other +
+    '\t' +
+    t.old +
+    '\t' +
+    t.imported;
+  const copyRow = (row: IRow) =>
+    row.plan +
+    '\t' +
+    row.section +
+    '\t' +
+    row.passage +
+    '\t' +
+    row.other +
+    '\t' +
+    row.old +
+    '\t' +
+    row.imported;
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(
+        [headerRow()].concat(changeData.map((r) => copyRow(r))).join('\n')
+      )
+      .catch((err) => {
+        showMessage(t.copyfail);
+      });
+  };
   const columnDefs = [
     { name: 'plan', title: t.plan },
     { name: 'section', title: getOrganizedBy(true) },
@@ -221,6 +261,8 @@ export function ImportTab(props: IProps) {
     const electronImport = () => {
       var importData = getElectronImportData(project || '');
       if (importData.valid) {
+        setFileName(importData.fileName);
+        setImportProject(importData.projectName);
         if (importData.warnMsg) {
           setConfirmAction(importData.warnMsg);
         } else {
@@ -302,6 +344,7 @@ export function ImportTab(props: IProps) {
     console.log(err.errMsg);
     switch (err.errStatus) {
       case 301:
+        localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
         return t.projectDeleted.replace('{0}', err.errMsg);
       case 401:
         return ts.expiredToken;
@@ -373,6 +416,13 @@ export function ImportTab(props: IProps) {
         var other = '';
         var plan = '';
         switch (c.type) {
+          case 'project':
+            //expecting only deleted
+            var project = c.imported.data as Project;
+            imported = ' ';
+            old = t.projectDeleted.replace('{0}', project.attributes.name);
+            localStorage.setItem(localUserKey(LocalKey.url, memory), '/');
+            break;
           case 'mediafile':
             var mediafile = c.imported.data as MediaFile;
             var passageid = mediafile.relationships?.passage
@@ -661,8 +711,12 @@ export function ImportTab(props: IProps) {
               fingerprint,
               projectsLoaded,
               getOfflineProject,
-              errorReporter
+              errorReporter,
+              user,
+              setLanguage
             );
+          else SetUserLanguage(memory, user, setLanguage);
+
           setBusy(false);
         }
       }
@@ -677,6 +731,7 @@ export function ImportTab(props: IProps) {
   const handleClose = () => {
     onOpen && onOpen(false);
   };
+  const isString = (what: any) => typeof what === 'string';
 
   return (
     <Dialog
@@ -693,6 +748,14 @@ export function ImportTab(props: IProps) {
       <DialogContent>
         <div>
           <Typography variant="h5">{importTitle}</Typography>
+          <br />
+          <Typography variant="subtitle2" className={classes.dialogHeader}>
+            {fileName}
+          </Typography>
+          <Typography variant="h4" className={classes.dialogHeader}>
+            {importProject}
+          </Typography>
+          <br />
           <Typography variant="body1" className={classes.dialogHeader}>
             {importStatus
               ? importStatus.statusMsg +
@@ -702,7 +765,17 @@ export function ImportTab(props: IProps) {
           {changeData.length > 0 && (
             <div className={classes.actions}>
               <div className={classes.grow}>{'\u00A0'}</div>
-
+              <Button
+                key="filter"
+                aria-label={t.copy}
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleCopy}
+                title={t.copy}
+              >
+                {t.copy}
+              </Button>
               <Button
                 key="filter"
                 aria-label={t.filter}
@@ -752,7 +825,11 @@ export function ImportTab(props: IProps) {
           />
           {confirmAction === '' || (
             <Confirm
-              text={confirmAction + '  ' + t.continue}
+              jsx={isString(confirmAction) ? <span></span> : confirmAction}
+              text={
+                (isString(confirmAction) ? confirmAction + '  ' : '') +
+                t.continue
+              }
               yesResponse={handleActionConfirmed}
               noResponse={handleActionRefused}
             />
@@ -788,6 +865,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
       importSyncFromElectron: actions.importSyncFromElectron,
       importComplete: actions.importComplete,
       orbitError: actions.doOrbitError,
+      setLanguage: actions.setLanguage,
     },
     dispatch
   ),

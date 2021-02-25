@@ -29,7 +29,6 @@ import {
   Operation,
 } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { LinearProgress } from '@material-ui/core';
 import { useSnackBar } from '../hoc/SnackBar';
 import PlanSheet from './PlanSheet';
 import {
@@ -183,7 +182,7 @@ export function ScriptureTable(props: IProps) {
   const [projRole] = useGlobal('projRole');
   const [data, setData] = useState(Array<Array<any>>());
   const [inData, setInData] = useState(Array<Array<any>>());
-  const [complete, setComplete] = useState(0);
+  const [, setComplete] = useGlobal('progress');
   const [view, setView] = useState('');
   const [lastSaved, setLastSaved] = React.useState<string>();
   const [startSave, saveCompleted, waitForSave] = useRemoteSave();
@@ -893,9 +892,11 @@ export function ScriptureTable(props: IProps) {
       }
     }
   };
-
+  const updateSection = async (sec: Section) => {
+    await memory.update((t: TransformBuilder) => UpdateRecord(t, sec, user));
+  };
   const localSaveFn = async (recs: IRecord[][]) => {
-    let lastSec: string = '';
+    let lastSec: Section = { id: 'never here' } as Section;
     for (let rIdx = 0; rIdx < recs.length; rIdx += 1) {
       const table = recs[rIdx];
       for (let tIdx = 0; tIdx < table.length; tIdx += 1) {
@@ -904,22 +905,16 @@ export function ScriptureTable(props: IProps) {
           const secRecs = sections.filter((s) => s.id === item.id);
           if (secRecs.length > 0) {
             if (item.changed) {
-              await memory.update((t: TransformBuilder) =>
-                UpdateRecord(
-                  t,
-                  {
-                    ...secRecs[0],
-                    attributes: {
-                      ...secRecs[0].attributes,
-                      sequencenum: parseInt(item.sequencenum),
-                      name: item.title,
-                    },
-                  } as Section,
-                  user
-                )
-              );
+              await updateSection({
+                ...secRecs[0],
+                attributes: {
+                  ...secRecs[0].attributes,
+                  sequencenum: parseInt(item.sequencenum),
+                  name: item.title,
+                },
+              } as Section);
             }
-            lastSec = secRecs[0].id;
+            lastSec = secRecs[0];
           } else {
             const secRec: Section = {
               type: 'section',
@@ -934,9 +929,10 @@ export function ScriptureTable(props: IProps) {
               ...AddRecord(t, secRec, user, memory),
               t.replaceRelatedRecord(secRec, 'plan', planRecId),
             ]);
-            lastSec = secRec.id;
+            lastSec = secRec;
           }
         } else if (item.changed) {
+          //passage
           const passRecs = passages.filter((p) => p.id === item.id);
           if (passRecs.length > 0) {
             await memory.update((t: TransformBuilder) =>
@@ -966,7 +962,7 @@ export function ScriptureTable(props: IProps) {
                 state: ActivityStates.NoMedia,
               },
             } as any;
-            const secRecId = { type: 'section', id: lastSec };
+            const secRecId = { type: 'section', id: lastSec.id };
             const t = new TransformBuilder();
             const ops: Operation[] = [
               ...AddRecord(t, passRec, user, memory),
@@ -974,7 +970,7 @@ export function ScriptureTable(props: IProps) {
             ];
             UpdatePassageStateOps(
               passRec.id,
-              lastSec,
+              lastSec.id,
               plan,
               ActivityStates.NoMedia,
               '',
@@ -985,9 +981,13 @@ export function ScriptureTable(props: IProps) {
             );
             await memory.update(ops);
           }
+          //update section last modified
+          await updateSection(lastSec);
         }
       }
     }
+    //update plan section count and lastmodified
+    updateLastModified();
   };
 
   useEffect(() => {
@@ -1281,11 +1281,6 @@ export function ScriptureTable(props: IProps) {
 
   return (
     <div className={classes.container}>
-      {complete === 0 || (
-        <div className={classes.progress}>
-          <LinearProgress variant="determinate" value={complete} />
-        </div>
-      )}
       <PlanSheet
         {...props}
         columns={columns}

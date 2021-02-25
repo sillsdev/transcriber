@@ -76,11 +76,6 @@ export const exportProject = (
       projectid,
       fingerprint,
       userid,
-      getSerializer(
-        memory,
-        typeof projectid !== 'number' &&
-          !remoteId('project', projectid, memory.keyMap)
-      ),
       getOfflineProject
     )
       .then((response) => {
@@ -334,12 +329,10 @@ export const importProjectToElectron = (
     var project: any;
     if (Array.isArray(json.data)) project = json.data[0];
     else project = json.data;
-    if (project.keys === undefined) return;
-    var id = remoteIdGuid(
-      project.type,
-      project.keys['remoteId'],
-      memory.keyMap
-    );
+    var id = project.id;
+    if (project.keys) {
+      id = remoteIdGuid(project.type, project.keys['remoteId'], memory.keyMap);
+    }
     try {
       var rec = memory.cache.query((q) =>
         q.findRecord({ type: project.type, id: id })

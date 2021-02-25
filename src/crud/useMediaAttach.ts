@@ -16,7 +16,7 @@ interface IStateProps {
 interface IProps extends IStateProps, IDispatchProps {}
 
 export const useMediaAttach = (props: IProps) => {
-  const { doOrbitError } = props;
+  const { doOrbitError, ts } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
@@ -52,7 +52,7 @@ export const useMediaAttach = (props: IProps) => {
       section,
       plan,
       ActivityStates.TranscribeReady,
-      'Media Attached',
+      ts.mediaAttached,
       user,
       tb,
       ops,

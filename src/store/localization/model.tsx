@@ -108,6 +108,9 @@ export interface IElectronImportStrings extends Localize.LocalizedStringsMethods
     "importCreated": string;
     "importOldFile": string;
     "importPending": string;
+    "project": string;
+    "members": string;
+    "userWontSeeProject": string;
     "importProject": string;
     "invalidProject": string;
     "lastExported": string;
@@ -118,6 +121,7 @@ export interface IElectronImportStrings extends Localize.LocalizedStringsMethods
 
 export interface IEmailUnverifiedStrings extends Localize.LocalizedStringsMethods {
     "emailUnverified": string;
+    "logout": string;
     "resend": string;
     "verified": string;
     "verify": string;
@@ -155,6 +159,8 @@ export interface IGroupTabsStrings extends Localize.LocalizedStringsMethods {
 export interface IImportStrings extends Localize.LocalizedStringsMethods {
     "close": string;
     "continue": string;
+    "copy": string;
+    "copyfail": string;
     "error": string;
     "family": string;
     "filter": string;
@@ -190,6 +196,7 @@ export interface IIntegrationStrings extends Localize.LocalizedStringsMethods {
     "allCriteria": string;
     "countError": string;
     "countPending": string;
+    "invalidReferences": string;
     "countReady": string;
     "emptyBook": string;
     "no": string;
@@ -234,6 +241,7 @@ export interface IInvitationTableStrings extends Localize.LocalizedStringsMethod
 
 export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "addInvite": string;
+    "admin": string;
     "allUsersProjects": string;
     "alreadyInvited": string;
     "cancel": string;
@@ -246,6 +254,7 @@ export interface IInviteStrings extends Localize.LocalizedStringsMethods {
     "invalidEmail": string;
     "invitation": string;
     "join": string;
+    "member": string;
     "newInviteTask": string;
     "noProjects": string;
     "organization": string;
@@ -506,6 +515,8 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
     "importMediaSingular": string;
+    "mediaAttached": string;
+    "part": string;
 };
 
 export interface ITaskItemStrings extends Localize.LocalizedStringsMethods {
@@ -553,7 +564,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "fasterTip": string;
     "historyTip": string;
     "incomplete": string;
-    "makeComment": string;
+    "addNote": string;
     "needsNewRecording": string;
     "needsNewTranscription": string;
     "noMedia": string;
@@ -577,6 +588,12 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "timerTip": string;
     "transcribing": string;
     "updateByOther": string;
+};
+
+export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMethods {
+    "cancel": string;
+    "save": string;
+    "addNoteTitle": string;
 };
 
 export interface ITranscribeRejectStrings extends Localize.LocalizedStringsMethods {
@@ -730,6 +747,7 @@ export interface ILocalizedStrings {
 	template: ITemplateStrings;
 	toDoTable: IToDoTableStrings;
 	transcriber: ITranscriberStrings;
+	transcribeAddNote: ITranscribeAddNoteStrings;
 	transcribeReject: ITranscribeRejectStrings;
 	transcriptionShow: ITranscriptionShowStrings;
 	transcriptionTab: ITranscriptionTabStrings;

@@ -15,7 +15,7 @@ import {
 import { TransformBuilder, QueryBuilder } from '@orbit/data';
 import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { Typography, Paper, LinearProgress } from '@material-ui/core';
+import { Typography, Paper } from '@material-ui/core';
 import * as action from '../store';
 import logo from './LogoNoShadow-4x.png';
 import Memory from '@orbit/memory';
@@ -36,6 +36,7 @@ import {
   remoteIdGuid,
   usePlan,
   useLoadProjectData,
+  SetUserLanguage,
 } from '../crud';
 import { useSnackBar } from '../hoc/SnackBar';
 import { API_CONFIG, isElectron } from '../api-variable';
@@ -129,7 +130,7 @@ export function Loading(props: IProps) {
   const [, setLoadComplete] = useGlobal('loadComplete');
   const [isDeveloper] = useGlobal('developer');
   const [uiLanguages] = useState(isDeveloper ? uiLangDev : uiLang);
-  const [completed, setCompleted] = useState(0);
+  const [, setCompleted] = useGlobal('progress');
   const { showMessage } = useSnackBar();
   const { push } = useHistory();
   const getOfflineProject = useOfflnProjRead();
@@ -225,12 +226,7 @@ export function Loading(props: IProps) {
       //fetchOrbitData is complete
 
       //set user language
-      const userRec: User = GetUser(memory, user);
-      if (userRec.attributes === null) {
-        console.log('No user information.  Never expect to get here.');
-      }
-      const locale = userRec.attributes?.locale || 'en';
-      if (locale) setLanguage(locale);
+      SetUserLanguage(memory, user, setLanguage);
 
       if (orbitFetchResults?.syncBuffer) {
         setImportOpen(true);
@@ -344,7 +340,6 @@ export function Loading(props: IProps) {
               onOpen={setImportOpen}
             />
           )}
-          <LinearProgress variant="determinate" value={completed} />
         </Paper>
       </div>
     </div>

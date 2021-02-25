@@ -16,8 +16,6 @@ import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import { ProjButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { HeadHeight } from '../App';
-import { TabHeight } from './PlanTabs';
 import { Online, refMatch } from '../utils';
 import { useOrganizedBy } from '../crud';
 import { useInterval } from '../utils/useInterval';
@@ -29,8 +27,7 @@ import Auth from '../auth/Auth';
 import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActions from './PlanActions';
-
-const ActionHeight = 52;
+import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -38,12 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     paper: {},
-    bar: {
-      top: `calc(${HeadHeight}px + ${TabHeight}px)`,
-      left: 0,
-      width: '100%',
-      height: '42px',
-    },
+    bar: actionBar,
     content: {
       paddingTop: `calc(${ActionHeight}px + ${theme.spacing(2)}px)`,
       '& .data-grid-container .data-grid .cell': {
@@ -90,15 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
         justifyContent: 'center',
       },
     },
-    actions: theme.mixins.gutters({
-      paddingBottom: 16,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-      '& .MuiButton-label': { fontSize: '.8rem' },
-      '& .MuiButtonBase-root': { margin: '5px', padding: '2px 10px' },
-      '& .MuiSvgIcon-root': { fontSize: '.9rem' },
-    }) as any,
+    actions: theme.mixins.gutters(tabActions) as any,
     text: {},
     grow: {
       flexGrow: 1,

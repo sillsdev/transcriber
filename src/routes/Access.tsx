@@ -197,7 +197,7 @@ export function Access(props: IProps) {
 
   const isOnlineUserWithOfflineProjects = (userId: string) => {
     const userRec = users.filter((u) => u.id === userId);
-    if (userRec.length > 0 && userRec[0]?.keys?.remoteId === undefined)
+    if (userRec.length === 0 || userRec[0]?.keys?.remoteId === undefined)
       return false;
     const grpIds = groupMemberships
       .filter((gm) => related(gm, 'user') === userId)

@@ -1,6 +1,8 @@
 import { User } from '../model';
 import Memory from '@orbit/memory';
 import { QueryBuilder } from '@orbit/data';
+import { localeDefault } from '../utils';
+import * as actions from '../store';
 
 export function getUserById(users: User[], id: string): User {
   let findit = users.filter((u) => u.id === id);
@@ -14,4 +16,14 @@ export function GetUser(memory: Memory, user: string): User {
     q.findRecords('user')
   ) as any;
   return getUserById(userRec, user);
+}
+
+export function SetUserLanguage(memory: Memory, user: string, setLanguage: typeof actions.setLanguage)
+{
+  var userrec = GetUser(memory, user);
+  setLanguage(
+    userrec.attributes?.locale
+      ? userrec.attributes?.locale
+      : localeDefault(false)
+  );
 }

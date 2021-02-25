@@ -7,7 +7,7 @@ import { IState, IMediaTabStrings, ISharedStrings, MediaFile } from '../model';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import localStrings from '../selector/localize';
 import MediaUpload, { UploadType } from './MediaUpload';
-import { remoteIdNum } from '../crud';
+import { getMediaInPlans, related, remoteIdNum } from '../crud';
 import Auth from '../auth/Auth';
 import Memory from '@orbit/memory';
 import JSONAPISource from '@orbit/jsonapi';
@@ -116,25 +116,45 @@ export const Uploader = (props: IProps) => {
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     else {
       // offlineOnly
-      const mediaRec: MediaFile = {
-        type: 'mediafile',
-        attributes: {
-          ...data,
-          versionNumber: 1,
-          transcription: '',
-          filesize: uploadList[n].size,
-          position: 0,
-          dateCreated: currentDateTime(),
-          dateUpdated: currentDateTime(),
-        },
-      } as any;
       const planRecId = { type: 'plan', id: planIdRef.current || plan };
-      if (planRecId) {
+      if (planRecId.id) {
+        var media = getMediaInPlans(
+          [planRecId.id],
+          memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
+        ).filter((m) => m.attributes.originalFile === data.originalFile);
+        var num = 1;
+        var psg = '';
+        if (media.length > 0) {
+          var last = media.sort((i, j) =>
+            i.attributes.versionNumber > j.attributes.versionNumber ? -1 : 1
+          )[0];
+          num = last.attributes.versionNumber + 1;
+          psg = related(last, 'passage');
+        }
+        const mediaRec: MediaFile = {
+          type: 'mediafile',
+          attributes: {
+            ...data,
+            versionNumber: num,
+            transcription: '',
+            filesize: uploadList[n].size,
+            position: 0,
+            dateCreated: currentDateTime(),
+            dateUpdated: currentDateTime(),
+          },
+        } as any;
         const t = new TransformBuilder();
         await memory.update([
           ...AddRecord(t, mediaRec, user, memory),
           t.replaceRelatedRecord(mediaRec, 'plan', planRecId),
         ]);
+        if (psg !== '')
+          await memory.update([
+            t.replaceRelatedRecord(mediaRec, 'passage', {
+              type: 'passage',
+              id: psg,
+            }),
+          ]);
         mediaIdRef.current.push(mediaRec.id);
       } else {
         throw new Error('Plan Id not set.  Media not created.');
