@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { shell } = require('electron');
+require('@electron/remote/main').initialize();
 
 let mainWindow;
 
@@ -10,7 +11,11 @@ function createAppWindow() {
     width: 1220,
     height: 768,
     icon: path.join(__dirname, 'favicon.ico'),
-    webPreferences: { webSecurity: false, nodeIntegration: true },
+    webPreferences: {
+      webSecurity: false,
+      nodeIntegration: true,
+      enableRemoteModule: true,
+    },
   });
 
   const isMac = process.platform === 'darwin';

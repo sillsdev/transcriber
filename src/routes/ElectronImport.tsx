@@ -71,13 +71,14 @@ export const useElectronImport = (
 
   if (isElectron) {
     getElectronImportData = (project: string): IImportData => {
-      var electron = require('electron');
+      const electronremote = require('@electron/remote');
+
       const options = {
         //: OpenDialogSyncOptions
         filters: [{ name: 'ptf', extensions: ['ptf'] }],
         properties: ['openFile'],
       } as OpenDialogSyncOptions;
-      const filePaths = electron.remote.dialog.showOpenDialogSync(options);
+      const filePaths = electronremote.dialog.showOpenDialogSync(options);
       if (!filePaths || filePaths.length === 0) {
         zipRef.current = undefined;
         //they didn't pick a file
