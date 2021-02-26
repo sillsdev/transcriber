@@ -26,7 +26,7 @@ import { related } from './crud';
 import { Section, Plan } from './model';
 const appVersion = require('../package.json').version;
 
-const OrbitNetworkErrorRetries = 16;
+export const OrbitNetworkErrorRetries = 5;
 
 const prodOrQa = API_CONFIG.snagId !== '' && !isElectron;
 const prod = API_CONFIG.host.indexOf('prod') !== -1;
