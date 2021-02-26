@@ -553,7 +553,8 @@ export function Transcriber(props: IProps) {
         user,
         new TransformBuilder(),
         [],
-        memory
+        memory,
+        pass.attributes.lastComment !== ''
       )
     );
     pass.attributes.lastComment = '';
@@ -660,7 +661,8 @@ export function Transcriber(props: IProps) {
         user,
         tb,
         ops,
-        memory
+        memory,
+        nextState !== stateRef.current || (thiscomment || '') !== ''
       );
       ops.push(
         ...UpdateRecord(

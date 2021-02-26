@@ -60,7 +60,8 @@ export const UpdatePassageStateOps = (
   userId: string,
   t: TransformBuilder,
   ops: Operation[],
-  memory: Memory
+  memory: Memory,
+  psc = true,
 ): Operation[] => {
   ops.push(
     t.replaceAttribute({ type: 'passage', id: passage }, 'state', state)
@@ -71,6 +72,6 @@ export const UpdatePassageStateOps = (
   ops.push(...UpdateLastModifedBy(t, passRecId, userId));
   ops.push(...UpdateLastModifedBy(t, secRecId, userId));
   ops.push(...UpdateLastModifedBy(t, planRecId, userId));
-  AddPassageStateChangeToOps(t, ops, passage, state, comment, userId, memory);
+  if (psc) AddPassageStateChangeToOps(t, ops, passage, state, comment, userId, memory);
   return ops;
 };
