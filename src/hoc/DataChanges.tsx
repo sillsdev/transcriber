@@ -1,5 +1,5 @@
 import { useGlobal, useState, useEffect } from 'reactn';
-import { infoMsg, logError, Severity } from '../utils';
+import { infoMsg, logError, Online, Severity } from '../utils';
 import { useInterval } from '../utils/useInterval';
 import Axios from 'axios';
 import {
@@ -29,6 +29,7 @@ import IndexedDBSource from '@orbit/indexeddb';
 import * as actions from '../store';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { OrbitNetworkErrorRetries } from '..';
 
 interface IStateProps {}
 
@@ -196,6 +197,7 @@ export function DataChanges(props: IProps) {
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [loadComplete] = useGlobal('loadComplete');
   const [busy, setBusy] = useGlobal('remoteBusy');
+  const [connected, setConnected] = useGlobal('connected');
   const [user] = useGlobal('user');
   const [doSave] = useGlobal('doSave');
   const [fingerprint] = useGlobal('fingerprint');
@@ -204,6 +206,8 @@ export function DataChanges(props: IProps) {
   const [dataDelay, setDataDelay] = useState<number | null>(null);
   const [project] = useGlobal('project');
   const [projectsLoaded] = useGlobal('projectsLoaded');
+  const [orbitRetries, setOrbitRetries] = useGlobal('orbitRetries');
+
   const getOfflineProject = useOfflnProjRead();
 
   const defaultBackupDelay = isOffline ? 1000 * 60 * 30 : null; //30 minutes;
@@ -213,18 +217,33 @@ export function DataChanges(props: IProps) {
     const defaultDataDelay = 1000 * 100;
 
     if (!remote) setBusy(false);
-    setBusyDelay(remote && auth?.isAuthenticated() ? defaultBusyDelay : null);
+    setBusyDelay(
+      remote && auth?.isAuthenticated()
+        ? defaultBusyDelay * (connected ? 1 : 10)
+        : null
+    );
     setDataDelay(
-      loadComplete && remote && auth?.isAuthenticated()
+      connected && loadComplete && remote && auth?.isAuthenticated()
         ? defaultDataDelay
         : null
     );
-  }, [remote, auth, loadComplete, setBusy]);
+  }, [remote, auth, loadComplete, connected, setBusy]);
 
   const updateBusy = () => {
     const checkBusy =
       user === '' || (remote && remote.requestQueue.length !== 0);
-    if (checkBusy !== busy) setBusy(checkBusy);
+    if (checkBusy && orbitRetries < OrbitNetworkErrorRetries) {
+      Online((result) => {
+        if (connected !== result) {
+          setConnected(result);
+          if (result) {
+            setOrbitRetries(OrbitNetworkErrorRetries);
+            remote.requestQueue.retry();
+          }
+        }
+        if ((checkBusy && result) !== busy) setBusy(checkBusy && result);
+      });
+    } else if (checkBusy !== busy) setBusy(checkBusy);
   };
   const updateData = () => {
     if (!busy && !doSave) {
