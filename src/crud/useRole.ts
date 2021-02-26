@@ -71,7 +71,11 @@ export const useRole = () => {
       var roleId = related(memberRecs[0], 'role');
       if (!roleId) {
         //default to Admin
-        logError(Severity.error, errorReporter, `missing role:${memberRecs[0].keys?.remoteId}`);
+        logError(
+          Severity.error,
+          errorReporter,
+          `missing role:${memberRecs[0].keys?.remoteId}`
+        );
         roleId = getRoleId(RoleNames.Admin);
         memory.update((t: TransformBuilder) =>
           t.replaceRelatedRecord(memberRecs[0], 'role', {
@@ -103,11 +107,17 @@ export const useRole = () => {
 
   const getMyProjRole = (projectId: string) => {
     if (projectId === '') return '';
-    const proj = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'project', id: projectId })
-    ) as Project;
-    const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
-    return getMbrRole(gMbrRecs);
+    try {
+      const proj = memory.cache.query((q: QueryBuilder) =>
+        q.findRecord({ type: 'project', id: projectId })
+      ) as Project;
+
+      const gMbrRecs = getMbrRoleRec('group', related(proj, 'group'), user);
+      return getMbrRole(gMbrRecs);
+    } catch {
+      console.log('project not found in useRole');
+      return 'Admin';
+    }
   };
 
   const setMyProjRole = (projectId: string) => {
