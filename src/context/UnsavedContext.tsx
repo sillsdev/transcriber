@@ -82,9 +82,11 @@ const UnsavedProvider = connect(
   };
 
   const handleSaveRefused = () => {
+    const savedMethod = saveConfirm.current;
     saveConfirm.current = undefined;
     setAlertOpen(false);
     setChanged(false);
+    if (savedMethod) savedMethod();
   };
 
   const finishConfirmed = (
