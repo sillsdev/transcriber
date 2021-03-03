@@ -28,9 +28,9 @@ import Confirm from '../components/AlertDialog';
 import UserList from '../control/UserList';
 import { useSnackBar } from '../hoc/SnackBar';
 import AppHead from '../components/App/AppHead';
-
+const noop = {} as any;
 const ipc = isElectron ? require('electron').ipcRenderer : null;
-const { remote } = isElectron ? require('electron') : { remote: null };
+const electronremote = isElectron ? require('@electron/remote') : noop;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -102,7 +102,7 @@ interface IProps extends IRecordProps, IStateProps, IDispatchProps {
 export const goOnline = () => {
   localStorage.removeItem('auth-id');
   ipc?.invoke('login');
-  remote?.getCurrentWindow().close();
+  electronremote?.getCurrentWindow().close();
 };
 
 export function Access(props: IProps) {
@@ -156,7 +156,8 @@ export function Access(props: IProps) {
     Online(
       (online) => {
         if (online) {
-          setGoOnlineConfirmation(event);
+          //setGoOnlineConfirmation(event);
+          handleGoOnlineConfirmed();
         } else {
           showMessage(t.mustBeOnline);
         }

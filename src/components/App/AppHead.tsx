@@ -37,7 +37,6 @@ import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 
 const shell = isElectron ? require('electron').shell : null;
-// const { remote } = isElectron ? require('electron') : { remote: null };
 
 const useStyles = makeStyles({
   appBar: {
