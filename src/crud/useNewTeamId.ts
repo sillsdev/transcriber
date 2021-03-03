@@ -42,7 +42,7 @@ export const useNewTeamId = (props: IProps) => {
     const orgs = memory.cache.query((q: QueryBuilder) =>
       q.findRecords('organization')
     ) as Organization[];
-    const orgRecs = orgs.filter((o) => o.attributes.name === personalOrg);
+    const orgRecs = orgs.filter((o) => related(o, 'owner') === user && o.attributes?.name === personalOrg);
     if (orgRecs.length > 0) {
       teamRef.current = orgRecs[0].id;
     } else
