@@ -162,7 +162,7 @@ export function ScriptureTable(props: IProps) {
   const [user] = useGlobal('user');
   const [doSave, setDoSave] = useGlobal('doSave');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [busy, setBusy] = useGlobal('importexportBusy');
+  const [, setBusy] = useGlobal('importexportBusy');
   const [, setConnected] = useGlobal('connected');
 
   const [saving, setSaving] = useState(false);
@@ -897,13 +897,18 @@ export function ScriptureTable(props: IProps) {
   };
   const localSaveFn = async (recs: IRecord[][]) => {
     let lastSec: Section = { id: 'never here' } as Section;
-    for (let rIdx = 0; rIdx < recs.length; rIdx += 1) {
+    const numRecs = recs.length;
+    for (let rIdx = 0; rIdx < numRecs; rIdx += 1) {
+      if (rIdx % 20 === 0) {
+        //this is slow...so find a happy medium between info and speed
+        setComplete(((rIdx / numRecs) * 100) | 0);
+      }
       const table = recs[rIdx];
       for (let tIdx = 0; tIdx < table.length; tIdx += 1) {
         const item = table[tIdx];
         if (item.issection) {
-          const secRecs = sections.filter((s) => s.id === item.id);
-          if (secRecs.length > 0) {
+          if (item.id !== '') {
+            const secRecs = sections.filter((s) => s.id === item.id);
             if (item.changed) {
               await updateSection({
                 ...secRecs[0],
@@ -933,8 +938,8 @@ export function ScriptureTable(props: IProps) {
           }
         } else if (item.changed) {
           //passage
-          const passRecs = passages.filter((p) => p.id === item.id);
-          if (passRecs.length > 0) {
+          if (item.id !== '') {
+            const passRecs = passages.filter((p) => p.id === item.id);
             await memory.update((t: TransformBuilder) =>
               UpdateRecord(
                 t,
@@ -996,7 +1001,7 @@ export function ScriptureTable(props: IProps) {
         setComplete(10);
         const recs = await getChangedRecs(changedRows);
         if (!offlineOnly) await onlineSaveFn(recs, anyNew);
-        else localSaveFn(recs);
+        else await localSaveFn(recs);
       };
 
       let changedRows: boolean[] = rowInfo.map(
@@ -1018,24 +1023,25 @@ export function ScriptureTable(props: IProps) {
       if (numChanges === 0) {
         return;
       }
-      if (numChanges > 200 && !busy) setBusy(true);
-      while (numChanges > 200) {
-        let someChangedRows = [...changedRows];
-        let count = 0;
-        someChangedRows.forEach((row, index) => {
-          if (count <= 200) {
-            if (row) {
-              count++;
-              changedRows[index] = false;
-            }
-          } else someChangedRows[index] = false;
-        });
-        await saveFn(someChangedRows, anyNew);
-        numChanges = changedRows.filter((r) => r).length;
+      if (!offlineOnly || numChanges > 50) setBusy(true);
+      if (!offlineOnly) {
+        while (numChanges > 200) {
+          let someChangedRows = [...changedRows];
+          let count = 0;
+          someChangedRows.forEach((row, index) => {
+            if (count <= 200) {
+              if (row) {
+                count++;
+                changedRows[index] = false;
+              }
+            } else someChangedRows[index] = false;
+          });
+          await saveFn(someChangedRows, anyNew);
+          numChanges = changedRows.filter((r) => r).length;
+        }
       }
       await saveFn(changedRows, anyNew);
       setBusy(false);
-      setComplete(0);
     };
 
     if (doSave && !saving) {
@@ -1074,7 +1080,6 @@ export function ScriptureTable(props: IProps) {
     if (showBook(cols) && allBookData.length === 0) fetchBooks(lang);
     let initData = Array<Array<any>>();
     let rowInfo = Array<IRowInfo>();
-
     const getPassage = async (
       passage: Passage,
       list: (string | number)[][],
