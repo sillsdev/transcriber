@@ -49,6 +49,7 @@ import {
   localeDefault,
   useRemoteSave,
   getParatextDataPath,
+  waitForIt,
 } from '../utils';
 import { Redirect } from 'react-router';
 import moment from 'moment-timezone';
@@ -193,6 +194,8 @@ export function Profile(props: IProps) {
   const classes = useStyles();
   const [isOffline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
+  const [coordinator] = useGlobal('coordinator');
+  const [connected] = useGlobal('connected');
   const [editId, setEditId] = useGlobal('editUserId');
   const [organization] = useGlobal('organization');
   const [user, setUser] = useGlobal('user');
@@ -450,10 +453,15 @@ export function Profile(props: IProps) {
     );
     ops.push(tb.removeRecord({ type: 'user', id: deleteItem }));
     await memory.update(ops);
+    const remote = coordinator.getSource('remote');
     //wait to be sure orbit remote is done also
-    setTimeout(() => {
-      setView('Logout');
-    }, 2000);
+    await waitForIt(
+      'logout after user delete',
+      () => !remote || !connected || remote.requestQueue.length === 0,
+      () => false,
+      20
+    );
+    setView('Logout');
   };
   const handleDeleteRefused = () => {
     setDeleteItem('');
