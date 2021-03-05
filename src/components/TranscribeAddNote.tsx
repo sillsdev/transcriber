@@ -77,12 +77,8 @@ function TranscribeAddNote(props: IProps) {
   };
 
   useEffect(() => {
-    setComment(passageIn?.attributes?.lastComment);
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passageIn]);
-
-  useEffect(() => {
     setOpen(visible);
+    setComment('');
   }, [visible]);
 
   return (
