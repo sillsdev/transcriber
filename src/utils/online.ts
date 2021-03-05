@@ -26,7 +26,7 @@ export function Online(
     return;
   }
 
-  Axios.get(API_CONFIG.host + '/api/dashboards/', opts)
+  Axios.get(API_CONFIG.host + '/api/AmIOnline/', opts)
     .then(() => {
       cb(true);
     })
