@@ -8,9 +8,9 @@ import TranscribeIcon from '@material-ui/icons/EditOutlined';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
 import StopIcon from '@material-ui/icons/Stop';
+import MicIcon from '@material-ui/icons/Mic';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
-import { isElectron } from '../api-variable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +40,7 @@ interface IProps extends IStateProps {
   onTranscribe: (i: number) => () => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
+  onRecord: (i: number) => () => void;
   onPlayStatus: (mediaId: string) => void;
   onDelete: (i: number) => () => void;
 }
@@ -57,6 +58,7 @@ export function PlanActions(props: IProps) {
     onTranscribe,
     onAssign,
     onUpload,
+    onRecord,
     onPlayStatus,
     onDelete,
     isPlaying,
@@ -83,7 +85,7 @@ export function PlanActions(props: IProps) {
       )}
       {isPassage &&
         !readonly &&
-        online && ( //for now just online
+        online && ( //online here is really connected or offlineOnly
           <IconButton
             className={classes.actionButton}
             onClick={onUpload(rowIndex)}
@@ -94,7 +96,16 @@ export function PlanActions(props: IProps) {
             <AddIcon />
           </IconButton>
         )}
-      {isPassage && (isElectron || online) && (
+      {isPassage && !readonly && (
+        <IconButton
+          className={classes.actionButton}
+          onClick={onRecord(rowIndex)}
+          title={'Record Audio'}
+        >
+          <MicIcon />
+        </IconButton>
+      )}
+      {isPassage && (
         <IconButton
           className={classes.actionButton}
           title={t.playpause}

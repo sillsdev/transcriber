@@ -189,6 +189,7 @@ export function ScriptureTable(props: IProps) {
   const [assignSectionVisible, setAssignSectionVisible] = useState(false);
   const [assignSections, setAssignSections] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [recordAudio, setRecordAudio] = useState(true);
   const [status] = useState(statusInit);
   const [uploadRow, setUploadRow] = useState<number>();
   const showBook = (cols: ICols) => cols.Book >= 0;
@@ -716,17 +717,23 @@ export function ScriptureTable(props: IProps) {
   };
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
-  const showUpload = (i: number) => {
-    setUploadVisible(true);
+  const showUpload = (i: number, record: boolean) => {
     setUploadRow(i);
+    setRecordAudio(record);
+    setUploadVisible(true);
   };
   const handleUpload = (i: number) => () => {
     if (passageId(i) === '') {
       startSave();
-      waitForSave(() => showUpload(i), 100);
-    } else showUpload(i);
+      waitForSave(() => showUpload(i, false), 100);
+    } else showUpload(i, false);
   };
-
+  const handleRecord = (i: number) => () => {
+    if (passageId(i) === '') {
+      startSave();
+      waitForSave(() => showUpload(i, true), 100);
+    } else showUpload(i, true);
+  };
   const updateLastModified = async () => {
     var planRec = getPlan(plan);
     if (planRec !== null) {
@@ -1314,6 +1321,7 @@ export function ScriptureTable(props: IProps) {
         onTranscribe={handleTranscribe}
         onAssign={handleAssign}
         onUpload={handleUpload}
+        onRecord={handleRecord}
         lastSaved={lastSaved}
         auth={auth}
         t={s}
@@ -1325,6 +1333,7 @@ export function ScriptureTable(props: IProps) {
         closeMethod={handleAssignClose()}
       />
       <Uploader
+        recordAudio={recordAudio}
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}

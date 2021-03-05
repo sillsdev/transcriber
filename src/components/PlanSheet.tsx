@@ -151,6 +151,7 @@ interface IProps extends IStateProps {
   onTranscribe: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
+  onRecord: (i: number) => () => void;
   auth: Auth;
 }
 

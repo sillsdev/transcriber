@@ -1077,6 +1077,7 @@ export function MediaTab(props: IProps) {
         </div>
       </div>
       <Uploader
+        recordAudio={false}
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}

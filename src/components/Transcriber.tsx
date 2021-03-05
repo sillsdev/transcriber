@@ -80,6 +80,7 @@ import * as action from '../store';
 import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
+import WSAudioPlayer from './WSAudioPlayer';
 
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 2.0;
@@ -274,7 +275,7 @@ export function Transcriber(props: IProps) {
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
-
+  const [audioBlob, setAudioBlob] = useState<Blob>();
   const playerRef = React.useRef<any>();
   const progressRef = React.useRef<any>();
   const transcriptionRef = React.useRef<any>();
@@ -283,6 +284,25 @@ export function Transcriber(props: IProps) {
   const ta = activityStateStr;
 
   useEffect(() => {
+    fetch(mediaUrl).then(async (r) => setAudioBlob(await r.blob()));
+  }, [mediaUrl]);
+  useEffect(() => {
+    console.log('got a blob?', audioBlob ? audioBlob.size : 'nope');
+  }, [audioBlob]);
+
+  useEffect(() => {
+    const getParatextIntegration = () => {
+      const intfind = integrations.findIndex(
+        (i) =>
+          i.attributes &&
+          i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
+          Boolean(i.keys?.remoteId) !== offline
+      );
+      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+    };
+
+    getParatextIntegration();
+
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
@@ -980,6 +1000,8 @@ export function Transcriber(props: IProps) {
               </div>
             </Grid>
           </Grid>
+          <WSAudioPlayer allowRecord={false} blob={audioBlob} />
+
           <Grid container direction="row" className={classes.row}>
             {role === 'transcriber' && hasParatextName && paratextProject && (
               <Grid item>
