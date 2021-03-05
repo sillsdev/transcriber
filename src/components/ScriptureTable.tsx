@@ -910,18 +910,19 @@ export function ScriptureTable(props: IProps) {
           if (item.id !== '') {
             const secRecs = sections.filter((s) => s.id === item.id);
             if (item.changed) {
-              await updateSection({
+              const secRec = {
                 ...secRecs[0],
                 attributes: {
                   ...secRecs[0].attributes,
                   sequencenum: parseInt(item.sequencenum),
                   name: item.title,
                 },
-              } as Section);
+              };
+              await updateSection(secRec);
+              lastSec = secRec;
             }
-            lastSec = secRecs[0];
           } else {
-            const secRec: Section = {
+            const newRec = {
               type: 'section',
               attributes: {
                 sequencenum: parseInt(item.sequencenum),
@@ -931,10 +932,10 @@ export function ScriptureTable(props: IProps) {
             } as any;
             const planRecId = { type: 'plan', id: plan };
             await memory.update((t: TransformBuilder) => [
-              ...AddRecord(t, secRec, user, memory),
-              t.replaceRelatedRecord(secRec, 'plan', planRecId),
+              ...AddRecord(t, newRec, user, memory),
+              t.replaceRelatedRecord(newRec, 'plan', planRecId),
             ]);
-            lastSec = secRec;
+            lastSec = newRec;
           }
         } else if (item.changed) {
           //passage
