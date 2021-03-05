@@ -509,10 +509,6 @@ export function Transcriber(props: IProps) {
       );
   };
   const handleShowAddNote = () => {
-    if (busy) {
-      showMessage(t.saving);
-      return;
-    }
     setAddNoteVisible(true);
   };
   const handleReject = () => {
@@ -737,6 +733,7 @@ export function Transcriber(props: IProps) {
       setLastSaved(currentDateTime());
     }
   };
+
   const handleKey = (e: React.KeyboardEvent) => {
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
     const JumpBackKey = keycode(BACK_KEY);
@@ -1059,7 +1056,7 @@ export function Transcriber(props: IProps) {
                 color="primary"
                 className={classes.button}
                 onClick={handleShowAddNote}
-                disabled={selected === '' || playing}
+                disabled={selected === ''}
               >
                 {t.addNote}
               </Button>
