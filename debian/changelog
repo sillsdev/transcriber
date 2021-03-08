@@ -1,5 +1,19 @@
 sil-transcriber (2.11.4.0)  experimental; urgency=high
 
+  * put in some console logs to help with 2044 (#105)
+  * TT-2043 use correct project id in Paratext project list (#104)
+  * get integration again if integrations change (#103)
+  * always show add note (#102)
+  * remember last section with updated info (#101)
+  * wait for local save, set complete percent
+  * check for current user for personal team
+  * duplicate on line/off line name causes problem
+  * wait for remote queue to be done before logout (#98)
+  * electron.remote deprecated (#96)
+  * prevent passage state change when updating passage date updated (#95)
+  * TT-1539 restart orbit retries when coming back on line (#94)
+  * TT-2036 - go to new place if user doesn't want to save (#93)
+  * handle missing project in useRole also (#92)
   * TT-2032 Update localization
   * TT-2030 adjust row heights
   * If project not found return Scripture type
@@ -40,7 +54,7 @@ sil-transcriber (2.11.4.0)  experimental; urgency=high
   * TT-1981 when syncing, save comment to history and reset it (#64)
   * TT-2001 check for off line (#63)
 
- -- Greg Trihus <greg_trihus@sil.org>  Thu, 25 Feb 2021 11:52:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 8 Mar 2021 14:42:00 -0600
 
 sil-transcriber (2.11.3.0)  experimental; urgency=high
 
