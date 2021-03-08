@@ -11,6 +11,7 @@ export const useRemoteSave = (): [
   const [saveResult, setSaveResult] = useGlobal('saveResult');
   const [, setChanged] = useGlobal('changed');
   const [, setDoSave] = useGlobal('doSave');
+  const [, setComplete] = useGlobal('progress');
 
   useEffect(() => {
     saveErr.current = saveResult;
@@ -27,6 +28,7 @@ export const useRemoteSave = (): [
     }
     setSaveResult(err);
     setDoSave(false);
+    setComplete(0);
   };
   const saveError = () => saveErr.current || '';
 

@@ -27,6 +27,7 @@ import {
   localUserKey,
   LocalKey,
   useMounted,
+  waitForIt,
 } from '../../utils';
 import { withBucket } from '../../hoc/withBucket';
 import { usePlan } from '../../crud';
@@ -37,7 +38,6 @@ import { axiosPost } from '../../utils/axios';
 import moment from 'moment';
 
 const shell = isElectron ? require('electron').shell : null;
-// const { remote } = isElectron ? require('electron') : { remote: null };
 
 const useStyles = makeStyles({
   appBar: {
@@ -110,6 +110,7 @@ export const AppHead = (props: IProps) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const [memory] = useGlobal('memory');
+  const [coordinator] = useGlobal('coordinator');
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [connected] = useGlobal('connected');
@@ -143,11 +144,15 @@ export const AppHead = (props: IProps) => {
       resetData();
       exitElectronApp();
     }
+    const remote = coordinator.getSource('remote');
     if (isElectron && /Logout/i.test(what)) {
-      checkSavedFn(() => {
-        setTimeout(() => {
-          setView('Logout');
-        }, 2000);
+      checkSavedFn(async () => {
+        waitForIt(
+          'logout after user delete',
+          () => !remote || !connected || remote.requestQueue.length === 0,
+          () => false,
+          20
+        ).then(() => setView('Logout'));
       });
       return;
     }
@@ -160,9 +165,12 @@ export const AppHead = (props: IProps) => {
         if (resetRequests) resetRequests().then(() => setView(what));
       } else if (/Logout/i.test(what)) {
         checkSavedFn(() => {
-          setTimeout(() => {
-            setView('Logout');
-          }, 2000);
+          waitForIt(
+            'logout after user delete',
+            () => !remote || !connected || remote.requestQueue.length === 0,
+            () => false,
+            20
+          ).then(() => setView('Logout'));
         });
       } else checkSavedFn(() => setView(what));
     }

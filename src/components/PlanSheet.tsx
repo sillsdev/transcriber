@@ -684,7 +684,7 @@ export function PlanSheet(props: IProps) {
                   color={connected ? 'primary' : 'secondary'}
                   className={classes.button}
                   onClick={handleSave}
-                  disabled={!changed}
+                  disabled={doSave || !changed}
                 >
                   {t.save}
                   <SaveIcon className={classes.icon} />

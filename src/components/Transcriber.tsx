@@ -276,19 +276,7 @@ export function Transcriber(props: IProps) {
   const t = transcriberStr;
   const ta = activityStateStr;
 
-  const getParatextIntegration = () => {
-    const intfind = integrations.findIndex(
-      (i) =>
-        i.attributes &&
-        i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
-        Boolean(i.keys?.remoteId) !== offline
-    );
-    if (intfind > -1) setParatextIntegration(integrations[intfind].id);
-  };
-
   useEffect(() => {
-    getParatextIntegration();
-
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
@@ -300,6 +288,21 @@ export function Transcriber(props: IProps) {
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
+
+  useEffect(() => {
+    const getParatextIntegration = () => {
+      const intfind = integrations.findIndex(
+        (i) =>
+          i.attributes &&
+          i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
+          Boolean(i.keys?.remoteId) !== offline
+      );
+      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+    };
+
+    getParatextIntegration();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [integrations]);
 
   useEffect(() => {
     if (doSave) {
@@ -466,7 +469,7 @@ export function Transcriber(props: IProps) {
       amount > 0
         ? Math.min(playedSeconds + amount, totalSeconds)
         : Math.max(playedSeconds + amount, 0);
-    console.log(playedSeconds, amount, newPosition);
+
     playerRef.current.seekTo(newPosition);
   };
   const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
@@ -509,10 +512,6 @@ export function Transcriber(props: IProps) {
       );
   };
   const handleShowAddNote = () => {
-    if (busy) {
-      showMessage(t.saving);
-      return;
-    }
     setAddNoteVisible(true);
   };
   const handleReject = () => {
@@ -553,7 +552,8 @@ export function Transcriber(props: IProps) {
         user,
         new TransformBuilder(),
         [],
-        memory
+        memory,
+        pass.attributes.lastComment !== ''
       )
     );
     pass.attributes.lastComment = '';
@@ -660,7 +660,8 @@ export function Transcriber(props: IProps) {
         user,
         tb,
         ops,
-        memory
+        memory,
+        nextState !== stateRef.current || (thiscomment || '') !== ''
       );
       ops.push(
         ...UpdateRecord(
@@ -735,6 +736,7 @@ export function Transcriber(props: IProps) {
       setLastSaved(currentDateTime());
     }
   };
+
   const handleKey = (e: React.KeyboardEvent) => {
     const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
     const JumpBackKey = keycode(BACK_KEY);
@@ -1057,7 +1059,7 @@ export function Transcriber(props: IProps) {
                 color="primary"
                 className={classes.button}
                 onClick={handleShowAddNote}
-                disabled={selected === '' || playing}
+                disabled={selected === ''}
               >
                 {t.addNote}
               </Button>

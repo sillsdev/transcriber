@@ -473,7 +473,7 @@ export function IntegrationPanel(props: IProps) {
               Name: settings.Name,
               Id:
                 remoteId('project', related(pi, 'project'), memory.keyMap) ||
-                project,
+                pi.id,
             };
           });
           getParatextDataPath().then((ptPath) => {

@@ -8,7 +8,7 @@ ifndef binsrc
 binsrc=${PWD}
 endif
 build:
-	npm i
+	npx yarn
 	npm run stamp
 	npm run electron-pack
 	npm run dist

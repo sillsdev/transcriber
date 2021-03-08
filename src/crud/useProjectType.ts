@@ -23,6 +23,7 @@ export const useProjectType = () => {
       ) as Project;
     } catch (error) {
       // During refresh the project might not be found
+      console.log('project not found in useProjectType')
       return 'Scripture';
     }
     var ptId = related(proj, 'projecttype');
