@@ -816,6 +816,7 @@ export function ScriptureTable(props: IProps) {
       }
       recs.push(rec);
     }
+    console.log('getChangedRecs numRows:', rowInfo.length, recs.length);
     return recs;
   };
 
@@ -1004,7 +1005,14 @@ export function ScriptureTable(props: IProps) {
         if (!offlineOnly) await onlineSaveFn(recs, anyNew);
         else await localSaveFn(recs);
       };
-
+      console.log(
+        'rowinfo',
+        rowInfo.length,
+        'inData',
+        inData.length,
+        'data',
+        data.length
+      );
       let changedRows: boolean[] = rowInfo.map(
         (row) => row.sectionId?.id === '' || row.passageId?.id === ''
       );
