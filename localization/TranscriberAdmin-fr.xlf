@@ -2804,6 +2804,12 @@
             <target>Transcription incomplètes</target>
          </segment>
       </unit>
+      <unit id="transcriber.invalidReference">
+         <segment>
+            <source>Book or Reference is invalid.</source>
+            <target>Le livre ou la référence n'est pas valide.</target>
+         </segment>
+      </unit>
       <unit id="transcriber.addNote">
          <segment>
             <source>Add Note</source>

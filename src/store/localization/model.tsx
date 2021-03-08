@@ -564,6 +564,7 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "fasterTip": string;
     "historyTip": string;
     "incomplete": string;
+    "invalidReference": string;
     "addNote": string;
     "needsNewRecording": string;
     "needsNewTranscription": string;
