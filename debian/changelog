@@ -1,5 +1,9 @@
 sil-transcriber (2.11.4.0)  experimental; urgency=high
 
+  * Updated localization strings
+  * TC224 remove all references to lastComment (#107)
+  * Update Help file
+  * TT-2037 Invalid Reference error on pullParatext (#106)
   * put in some console logs to help with 2044 (#105)
   * TT-2043 use correct project id in Paratext project list (#104)
   * get integration again if integrations change (#103)
@@ -54,7 +58,7 @@ sil-transcriber (2.11.4.0)  experimental; urgency=high
   * TT-1981 when syncing, save comment to history and reset it (#64)
   * TT-2001 check for off line (#63)
 
- -- Greg Trihus <greg_trihus@sil.org>  Mon, 8 Mar 2021 14:42:00 -0600
+ -- Greg Trihus <greg_trihus@sil.org>  Mon, 9 Mar 2021 10:00:00 -0600
 
 sil-transcriber (2.11.3.0)  experimental; urgency=high
 
