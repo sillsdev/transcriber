@@ -66,6 +66,7 @@ import {
   currentDateTime,
   getParatextDataPath,
   camel2Title,
+  refMatch,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -493,6 +494,13 @@ export function Transcriber(props: IProps) {
     }
   };
   const handlePullParatext = () => {
+    if (
+      !refMatch(passage?.attributes?.reference || 'Err') ||
+      !passage?.attributes?.book
+    ) {
+      showMessage(t.invalidReference);
+      return;
+    }
     if (offline)
       getParatextDataPath().then((ptPath: string) =>
         getParatextTextLocal(
