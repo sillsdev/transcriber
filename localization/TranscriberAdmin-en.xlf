@@ -2800,6 +2800,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.invalidReference">
+         <segment>
+            <source>Book or Reference is invalid.</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="transcriber.addNote">
          <segment>
             <source>Add Note</source>

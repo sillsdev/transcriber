@@ -3263,7 +3263,14 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.addNote">
+      <trans-unit id="transcriber.invalidReference">
+        <source>Book or Reference is invalid.</source>
+        <target/>
+         <context-group>
+            <context context-type="sourcefile">Transcriber.tsx</context>
+         </context-group>
+      </trans-unit>
+      <trans-unit id="transcriber.addNote">
             <source>Add Note</source>
             <target/>
             <context-group>

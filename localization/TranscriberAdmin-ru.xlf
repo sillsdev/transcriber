@@ -2755,6 +2755,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="transcriber.invalidReference">
+         <segment>
+            <source>Book or Reference is invalid.</source>
+            <target>Книга или справочник недействительны.</target>
+         </segment>
+      </unit>
       <unit id="transcriber.makeComment">
          <segment>
             <source>Make Comment</source>
