@@ -126,7 +126,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/react-select": "^3.0.21",
     "@types/request": "^2.48.5",
-    "@types/wavesurfer.js": "^3.3.1",
+    "@types/wavesurfer.js": "^4.5.0",
     "concurrently": "^5.2.0",
     "craco-plugin-react-hot-reload": "^0.1.0",
     "electron": "^11.3.0",
