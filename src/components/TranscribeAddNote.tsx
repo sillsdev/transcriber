@@ -44,7 +44,7 @@ function TranscribeAddNote(props: IProps) {
   const { t, visible, editMethod, cancelMethod, passageIn } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
-  const [comment, setComment] = useState(passageIn?.attributes?.lastComment);
+  const [comment, setComment] = useState('');
   const [inProcess, setInProcess] = useState(false);
 
   const handleSave = () => {
@@ -53,7 +53,7 @@ function TranscribeAddNote(props: IProps) {
   const handleCommentChange = (e: any) => setComment(e.target.value);
   const doAddOrSave = async () => {
     setInProcess(true);
-    if (comment !== passageIn.attributes.lastComment) {
+    if (comment !== '') {
       let passage = {
         ...passageIn,
         attributes: {
