@@ -36,13 +36,8 @@ import {
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
-import SkipBackIcon from '@material-ui/icons/FastRewind';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipAheadIcon from '@material-ui/icons/FastForward';
 import HistoryIcon from '@material-ui/icons/History';
 import TimerIcon from '@material-ui/icons/AccessTime';
-import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 import { Duration, formatTime } from '../control';
 import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
@@ -498,7 +493,6 @@ export function Transcriber(props: IProps) {
 
     playerRef.current.seekTo(newPosition);
   };
-  const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
   const rnd1 = (val: number) => Math.round(val * 10) / 10;
   const handleSlower = () => {
     if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
@@ -1000,7 +994,6 @@ export function Transcriber(props: IProps) {
               </div>
             </Grid>
           </Grid>
-          <WSAudioPlayer allowRecord={false} blob={audioBlob} />
 
           <Grid container direction="row" className={classes.row}>
             {role === 'transcriber' && hasParatextName && paratextProject && (
@@ -1022,74 +1015,7 @@ export function Transcriber(props: IProps) {
             )}
             <Grid item xs>
               <Grid container justify="center">
-                <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleJumpEv(-1 * jump)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip
-                  title={(playing ? t.playTip : t.pauseTip).replace(
-                    '{0}',
-                    PLAY_PAUSE_KEY
-                  )}
-                >
-                  <span>
-                    <IconButton
-                      onClick={handlePlayStatus(!playing)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        {playing ? <PauseIcon /> : <PlayIcon />}{' '}
-                        <Typography>{PLAY_PAUSE_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleJumpEv(jump)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleSlower}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <FaAngleDoubleDown />{' '}
-                        <Typography>{SLOWER_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleFaster}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <FaAngleDoubleUp />{' '}
-                        <Typography>{FASTER_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
+                <WSAudioPlayer allowRecord={false} blob={audioBlob} />
               </Grid>
             </Grid>
             <Grid item>

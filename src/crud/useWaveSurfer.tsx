@@ -1,66 +1,50 @@
 import { useState, useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-//import * as WaveSurferRegions from "wavesurfer.js/dist/plugin/wavesurfer.regions.js";
+import { createWaveSurfer } from '../components/WSAudioPlugins';
 
 const noop = () => {};
 
 export function useWaveSurfer(
   container: any,
   onReady: () => void = noop,
+  onProgress: (progress: number) => void,
   onStop: () => void = noop,
   onError: (e: any) => void = noop,
-  height: number = 128
+  height: number = 128,
+  timelineContainer?: any
 ) {
   const [wavesurfer, setWaveSurfer] = useState<WaveSurfer>();
   const [playing, setPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [oneRegion, setOneRegion] = useState<any>();
   const playingRef = useRef(false);
 
   useEffect(() => {
     function create(container: any, height: number) {
-      var ws = WaveSurfer.create({
-        container: container,
-        scrollParent: true,
-        waveColor: '#A8DBA8',
-        progressColor: '#3B8686',
-        height: height,
-        /*
-      plugins: [
-        WaveSurferRegions.create({
-          regionsMinLength: 2,
-          regions: [
-            {
-              start: 1,
-              end: 3,
-              loop: false,
-              color: "hsla(400, 100%, 30%, 0.5)",
-            },
-            {
-              start: 5,
-              end: 7,
-              loop: false,
-              color: "hsla(200, 50%, 70%, 0.4)",
-              minLength: 1,
-            },
-          ],
-          dragSelection: {
-            slop: 5,
-          },
-        }),
-      ],*/
-      });
+      var ws = createWaveSurfer(container, height, timelineContainer);
       setWaveSurfer(ws);
       ws.on('ready', function () {
         onReady();
-        console.log('ready - playing:', playingRef.current, ws.isPlaying());
         if (playingRef.current) ws.play();
-        console.log('started?', playingRef.current, ws.isPlaying());
+        setDuration(ws.getDuration());
       });
-      //ws.on("audioprocess", function (e: number) {
-      //  setProgress(e);
-      //  //console.log(e);
-      //});
+      ws.on('audioprocess', function (e: number) {
+        setProgress(e);
+        console.log('audioprocess', e);
+      });
+      ws.on('seek', function (e: number) {
+        setProgress(e * duration);
+        console.log('seek', e, e * duration);
+      });
       ws.on('finish', function () {
         setPlaying(false);
+      });
+      ws.on('region-created', function (r: any) {
+        console.log('region-created', r);
+        console.log('existing', oneRegion);
+        if (oneRegion) oneRegion.remove();
+        setOneRegion(r);
       });
 
       return ws;
@@ -98,12 +82,12 @@ export function useWaveSurfer(
   }, [playing, wavesurfer]);
 
   function wsIsReady() {
+    console.log(wavesurfer?.isReady);
     return wavesurfer?.isReady || false;
   }
   function wsIsPlaying() {
     return playing;
   }
-
   function wsTogglePlay() {
     console.log('toggle to', !playing);
     setPlaying(!playing);
@@ -115,9 +99,11 @@ export function useWaveSurfer(
     setPlaying(false);
   }
   function wsDuration() {
-    return wavesurfer?.getDuration() || 0;
+    return duration || wavesurfer?.getDuration() || 0;
   }
-
+  function wsPosition() {
+    return progress;
+  }
   function wsGoto(position: number) {
     if (position && wsDuration()) position = position / wsDuration();
     wavesurfer?.seekAndCenter(position);
@@ -144,6 +130,7 @@ export function useWaveSurfer(
     wsGoto,
     wsSetPlaybackRate,
     wsDuration,
+    wsPosition,
     wsSkip,
     wsSetHeight,
   };

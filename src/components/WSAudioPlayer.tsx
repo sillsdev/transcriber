@@ -21,6 +21,7 @@ import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
 //import { createWaveSurfer } from './WSAudioRegion';
 import { useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
+import { Duration } from '../control';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,19 +78,22 @@ function WSAudioPlayer(props: IProps) {
   const { blob, allowRecord } = props;
   const [audioBlob, setAudioBlob] = useState<Blob | undefined>();
   const waveformRef = useRef<any>();
+  const timelineRef = useRef<any>();
+
   const classes = useStyles();
   const [jump] = useState(2);
   const [paused, setPaused] = useState(false);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [recording, setRecording] = useState(false);
+  const [ready, setReady] = useState(false);
   const {
     wsLoad,
-    wsIsReady,
     wsIsPlaying,
     wsTogglePlay,
     wsPlay,
     wsPause,
     wsDuration,
+    wsPosition,
     wsSetPlaybackRate,
     wsSkip,
     wsGoto,
@@ -97,9 +101,11 @@ function WSAudioPlayer(props: IProps) {
   } = useWaveSurfer(
     waveformRef.current,
     onWSReady,
+    onWSProgress,
     () => {},
     () => {},
-    50
+    50,
+    timelineRef.current
   );
   const {
     startRecording,
@@ -148,6 +154,10 @@ function WSAudioPlayer(props: IProps) {
   }
   function onWSReady() {
     console.log('wavesurfer loaded');
+    setReady(true);
+  }
+  function onWSProgress(progress: number) {
+    console.log('wavesurfer progress', progress);
   }
   function handleRecorder() {
     if (!recording) {
@@ -183,7 +193,7 @@ function WSAudioPlayer(props: IProps) {
     setPlaybackRate(1);
   };
   const handleJumpFn = (amount: number) => {
-    if (!wsIsReady()) return;
+    if (!ready) return;
     wsSkip(amount);
   };
   const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
@@ -232,6 +242,11 @@ function WSAudioPlayer(props: IProps) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
+        <Typography>
+          <Duration seconds={wsPosition()} /> {' / '}
+          <Duration seconds={wsDuration()} />
+        </Typography>
+        <div ref={timelineRef} />
         <div ref={waveformRef} />
         {allowRecord && (
           <>
@@ -258,7 +273,7 @@ function WSAudioPlayer(props: IProps) {
           <Grid container justify="center">
             <Tooltip title={'t.beginning'}>
               <span>
-                <IconButton onClick={handleGotoEv(0)} disabled={!wsIsReady()}>
+                <IconButton onClick={handleGotoEv(0)} disabled={!ready}>
                   <>
                     <SkipPreviousIcon />
                   </>
@@ -267,10 +282,7 @@ function WSAudioPlayer(props: IProps) {
             </Tooltip>
             <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
               <span>
-                <IconButton
-                  onClick={handleJumpEv(-1 * jump)}
-                  disabled={!wsIsReady()}
-                >
+                <IconButton onClick={handleJumpEv(-1 * jump)} disabled={!ready}>
                   <>
                     <ReplayIcon /> <Typography>{BACK_KEY}</Typography>
                   </>
@@ -297,10 +309,7 @@ function WSAudioPlayer(props: IProps) {
             </Tooltip>
             <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
               <span>
-                <IconButton
-                  onClick={handleJumpEv(jump)}
-                  disabled={!wsIsReady()}
-                >
+                <IconButton onClick={handleJumpEv(jump)} disabled={!ready}>
                   <>
                     <ForwardIcon /> <Typography>{AHEAD_KEY}</Typography>
                   </>
@@ -312,7 +321,7 @@ function WSAudioPlayer(props: IProps) {
               <span>
                 <IconButton
                   onClick={handleGotoEv(wsDuration())}
-                  disabled={!wsIsReady()}
+                  disabled={!ready}
                 >
                   <>
                     <SkipNextIcon />{' '}
