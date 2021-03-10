@@ -31,6 +31,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
+  onEnded: () => void;
 }
 interface IProps
   extends IStateProps,
@@ -41,7 +42,7 @@ interface IProps
 }
 
 export function MediaPlayer(props: IProps) {
-  const { hasUrl, mediaUrl, fetchMediaUrl, auth, srcMediaId } = props;
+  const { hasUrl, mediaUrl, fetchMediaUrl, auth, srcMediaId, onEnded } = props;
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
@@ -69,7 +70,13 @@ export function MediaPlayer(props: IProps) {
       audioRef.current.play();
     }
   }, [hasUrl, playing, playItem]);
-
-  return hasUrl ? <audio ref={audioRef} src={mediaUrl} /> : <></>;
+  const ended = () => {
+    if (onEnded) onEnded();
+  };
+  return hasUrl ? (
+    <audio onEnded={ended} ref={audioRef} src={mediaUrl} />
+  ) : (
+    <></>
+  );
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MediaPlayer) as any;

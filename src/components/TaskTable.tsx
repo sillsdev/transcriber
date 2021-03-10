@@ -410,7 +410,9 @@ export function TaskTable(props: IProps) {
       return <Table.Cell {...props} />;
     }
   };
-
+  const playEnded = () => {
+    setPlayItem('');
+  };
   return (
     <div
       id="TaskTable"
@@ -459,7 +461,7 @@ export function TaskTable(props: IProps) {
           />
         </div>
       </div>
-      <MediaPlayer auth={auth} srcMediaId={playItem} />
+      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
       <BigDialog
         title={tpb.integrationsTitle.replace('{0}', planName)}
         isOpen={openIntegration}

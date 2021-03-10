@@ -614,6 +614,9 @@ export function PlanSheet(props: IProps) {
   //do this every 30 seconds to warn they can't save
   useInterval(() => tryOnline(), 1000 * 30);
 
+  const playEnded = () => {
+    setSrcMediaId('');
+  };
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -746,7 +749,7 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
-      <MediaPlayer auth={auth} srcMediaId={srcMediaId} />
+      <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
     </div>
   );
 }
