@@ -18,7 +18,12 @@ import {
   RoleNames,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  withStyles,
+} from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -36,7 +41,10 @@ import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
 import HistoryIcon from '@material-ui/icons/History';
 import TimerIcon from '@material-ui/icons/AccessTime';
-import { formatTime } from '../control';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+
+import { Duration, formatTime } from '../control';
 import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -112,6 +120,29 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     history: {
       overflow: 'auto',
+      backgroundColor: theme.palette.background.paper,
+    },
+    active: {
+      textDecoration: 'none',
+      backgroundColor: theme.palette.action.hover,
+      color: 'red', // This is just to make the change easier to see
+    },
+    historyitem: {
+      root: {
+        '&$selected': {
+          backgroundColor: 'red',
+          color: 'white',
+        },
+        '&$selected:hover': {
+          backgroundColor: 'purple',
+          color: 'white',
+        },
+        '&:hover': {
+          backgroundColor: 'blue',
+          color: 'white',
+        },
+      },
+      selected: {},
     },
     button: {
       marginLeft: theme.spacing(1),
@@ -120,6 +151,7 @@ const useStyles = makeStyles((theme: Theme) =>
     player: {
       display: 'none',
     },
+    actionIcon: {},
   })
 );
 interface IRecordProps {
@@ -251,7 +283,8 @@ export function Transcriber(props: IProps) {
   const [connected] = useGlobal('connected');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote');
-
+  const [selectedId, setSelectedId] = React.useState('');
+  const hoverRef = React.useRef('');
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
@@ -814,12 +847,55 @@ export function Transcriber(props: IProps) {
     const user = userFromId(psc);
     return user ? user.attributes.name : '';
   };
+  const handleListItemClick = (e: any, id: string) => {
+    setSelectedId(id);
+    console.log('click', id);
+  };
+
+  const StyledListItem = withStyles((theme) => ({
+    root: {
+      '&$selected': {
+        backgroundColor: 'purple',
+        color: 'white',
+      },
+      '&$selected:hover': {
+        backgroundColor: theme.palette.action.selected,
+        color: 'white',
+      },
+      '&:hover': {
+        textDecoration: 'bold',
+        backgroundColor: 'red',
+      },
+    },
+  }))(ListItem);
+  const handleEdit = (id: string) => () => {
+    console.log('edit', id);
+  };
+  const handleDelete = (id: string) => () => {
+    console.log('edit', id);
+  };
+  const handleMouseEnter = (id: string) => {
+    console.log('mouse enter', id);
+    hoverRef.current = id;
+    console.log(hoverRef.current);
+  };
+  const handleMouseLeave = (id: string) => {
+    console.log('mouse exit', id);
+    if (hoverRef.current === id) hoverRef.current = '';
+  };
   const historyItem = (
     psc: PassageStateChange,
     comment: JSX.Element | string
   ) => {
     return (
-      <ListItem key={`${psc.id}-${comment}`}>
+      <StyledListItem
+        key={psc.id}
+        button
+        selected={selectedId === psc.id}
+        onClick={(event: any) => handleListItemClick(event, psc.id)}
+        onMouseEnter={() => handleMouseEnter(psc.id)}
+        onMouseLeave={() => handleMouseLeave(psc.id)}
+      >
         <ListItemIcon>
           <UserAvatar {...props} userRec={userFromId(psc)} />
         </ListItemIcon>
@@ -839,7 +915,31 @@ export function Transcriber(props: IProps) {
           }
           secondary={comment}
         />
-      </ListItem>
+        {hoverRef.current === psc.id && (
+          <div>
+            <IconButton
+              id={'edit-' + psc.id}
+              key={'edit-' + psc.id}
+              aria-label={'edit-' + psc.id}
+              color="default"
+              className={classes.actionIcon}
+              onClick={handleEdit(psc.id)}
+            >
+              <EditIcon />
+            </IconButton>
+            <IconButton
+              id={'del-' + psc.id}
+              key={'del-' + psc.id}
+              aria-label={'del-' + psc.id}
+              color="default"
+              className={classes.actionIcon}
+              onClick={handleDelete(psc.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </div>
+        )}
+      </StyledListItem>
     );
   };
 
