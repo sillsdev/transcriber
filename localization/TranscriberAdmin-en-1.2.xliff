@@ -1982,6 +1982,27 @@
       			<context context-type="sourcefile">AboutDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="mediaActions.attach">
+      		<source>Attach</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.delete">
+      		<source>Delete</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.playpause">
+      		<source>Play / Pause</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="mediaTab.action">
             <source>Action</source>
             <target/>

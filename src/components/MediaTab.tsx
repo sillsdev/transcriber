@@ -12,6 +12,7 @@ import {
   Plan,
   BookName,
   ISharedStrings,
+  IMediaActionsStrings,
 } from '../model';
 import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
@@ -38,6 +39,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
 import { ActionHeight, tabActions, actionBar, tabs } from './PlanTabs';
 import { useSnackBar } from '../hoc/SnackBar';
+import MediaActions from './MediaActions';
 import Confirm from './AlertDialog';
 import ShapingTable from './ShapingTable';
 import Uploader, { statusInit } from './Uploader';
@@ -61,6 +63,8 @@ import {
   localeDefault,
   useRemoteSave,
   refMatch,
+  Online,
+  useInterval,
 } from '../utils';
 import { HeadHeight } from '../App';
 import MediaPlayer from './MediaPlayer';
@@ -144,6 +148,7 @@ interface IRow {
   size: number;
   version: string;
   date: string;
+  actions: typeof MediaActions;
   isAttaching?: boolean;
   status: StatusL.No | StatusL.Proposed | StatusL.Yes;
 }
@@ -168,77 +173,6 @@ interface IPRow {
 interface IAttachMap {
   [key: string]: number;
 }
-
-const getSection = (section: Section[]) => {
-  if (section.length === 0) return '';
-  return sectionDescription(section[0]);
-};
-
-const getReference = (passage: Passage[], bookData: BookName[] = []) => {
-  if (passage.length === 0) return '';
-  return passageReference(passage[0], bookData);
-};
-
-const getMedia = (
-  planName: string,
-  media: Array<MediaFile>,
-  passages: Array<Passage>,
-  sections: Array<Section>,
-  playItem: string,
-  allBookData: BookName[],
-  slider: StatusN,
-  attachMap: IAttachMap,
-  pdata: IPRow[],
-  locale: string
-) => {
-  let rowData: IRow[] = [];
-
-  media.forEach((f) => {
-    let status = attachMap.hasOwnProperty(f.id) ? StatusN.Proposed : -1;
-    const passageId =
-      status > 0 ? pdata[attachMap[f.id]].id : related(f, 'passage');
-    const passage = passageId ? passages.filter((p) => p.id === passageId) : [];
-    if (status < 0) status = passage.length > 0 ? StatusN.Yes : StatusN.No;
-    if (status <= slider) {
-      const sectionId = related(passage[0], 'section');
-      const section = sections.filter((s) => s.id === sectionId);
-      var updateddt = passageId
-        ? passage[0]?.attributes?.dateUpdated || ''
-        : f?.attributes?.dateUpdated || '';
-      if (!updateddt.endsWith('Z')) updateddt += 'Z';
-      const updated = moment(updateddt);
-      const date = updated ? updated.format('YYYY-MM-DD') : '';
-      const displayDate = updated ? updated.locale(locale).format('L') : '';
-      const displayTime = updated ? updated.locale(locale).format('LT') : '';
-      const today = moment().format('YYYY-MM-DD');
-      rowData.push({
-        planid: related(f, 'plan'),
-        passId: passageId,
-        planName,
-        id: f.id,
-        playIcon: playItem,
-        fileName: f.attributes.originalFile,
-        sectionId: sectionId,
-        sectionDesc: getSection(section),
-        reference: getReference(passage, allBookData),
-        status:
-          status === StatusN.Yes
-            ? StatusL.Yes
-            : status === StatusN.Proposed
-            ? StatusL.Proposed
-            : StatusL.No,
-        isAttaching: status === StatusN.Proposed,
-        duration: f.attributes.duration ? f.attributes.duration.toString() : '',
-        size: f.attributes.filesize,
-        version: f.attributes.versionNumber
-          ? f.attributes.versionNumber.toString()
-          : '',
-        date: date === today ? displayTime : displayDate,
-      } as IRow);
-    }
-  });
-  return rowData;
-};
 
 const isAttached = (p: Passage, media: MediaFile[]) => {
   return media.filter((m) => related(m, 'passage') === p.id).length > 0;
@@ -287,6 +221,7 @@ const getPassages = (
 
 interface IStateProps {
   t: IMediaTabStrings;
+  tma: IMediaActionsStrings;
   ts: ISharedStrings;
   allBookData: BookName[];
 }
@@ -314,6 +249,7 @@ interface IProps
 export function MediaTab(props: IProps) {
   const {
     t,
+    tma,
     ts,
     doOrbitError,
     action,
@@ -331,8 +267,12 @@ export function MediaTab(props: IProps) {
   const memory = coordinator.getSource('memory') as Memory;
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
+  const [connected, setConnected] = useGlobal('connected');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
+  const [readonly, setReadOnly] = useState(
+    (isOffline && !offlineOnly) || projRole !== 'admin'
+  );
   const [, setTab] = useGlobal('tab');
   const [, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -636,6 +576,91 @@ export function MediaTab(props: IProps) {
 
   const locale = localeDefault(isDeveloper);
 
+  const getSection = (section: Section[]) => {
+    if (section.length === 0) return '';
+    return sectionDescription(section[0]);
+  };
+
+  const getReference = (passage: Passage[], bookData: BookName[] = []) => {
+    if (passage.length === 0) return '';
+    return passageReference(passage[0], bookData);
+  };
+
+  const getMedia = (
+    planName: string,
+    media: Array<MediaFile>,
+    passages: Array<Passage>,
+    sections: Array<Section>,
+    playItem: string,
+    allBookData: BookName[],
+    slider: StatusN,
+    attachMap: IAttachMap,
+    pdata: IPRow[],
+    locale: string,
+    t: IMediaActionsStrings
+  ) => {
+    let rowData: IRow[] = [];
+
+    media.forEach((f) => {
+      let status = attachMap.hasOwnProperty(f.id) ? StatusN.Proposed : -1;
+      const passageId =
+        status > 0 ? pdata[attachMap[f.id]].id : related(f, 'passage');
+      const passage = passageId
+        ? passages.filter((p) => p.id === passageId)
+        : [];
+      if (status < 0) status = passage.length > 0 ? StatusN.Yes : StatusN.No;
+      if (status <= slider) {
+        const sectionId = related(passage[0], 'section');
+        const section = sections.filter((s) => s.id === sectionId);
+        var updateddt = passageId
+          ? passage[0]?.attributes?.dateUpdated || ''
+          : f?.attributes?.dateUpdated || '';
+        if (!updateddt.endsWith('Z')) updateddt += 'Z';
+        const updated = moment(updateddt);
+        const date = updated ? updated.format('YYYY-MM-DD') : '';
+        const displayDate = updated ? updated.locale(locale).format('L') : '';
+        const displayTime = updated ? updated.locale(locale).format('LT') : '';
+        const today = moment().format('YYYY-MM-DD');
+        rowData.push({
+          planid: related(f, 'plan'),
+          passId: passageId,
+          planName,
+          id: f.id,
+          playIcon: playItem,
+          fileName: f.attributes.originalFile,
+          sectionId: sectionId,
+          sectionDesc: getSection(section),
+          reference: getReference(passage, allBookData),
+          status:
+            status === StatusN.Yes
+              ? StatusL.Yes
+              : status === StatusN.Proposed
+              ? StatusL.Proposed
+              : StatusL.No,
+          isAttaching: status === StatusN.Proposed,
+          duration: f.attributes.duration
+            ? f.attributes.duration.toString()
+            : '',
+          size: f.attributes.filesize,
+          version: f.attributes.versionNumber
+            ? f.attributes.versionNumber.toString()
+            : '',
+          date: date === today ? displayTime : displayDate,
+          actions: (
+            <MediaActions
+              t={t}
+              rowIndex={rowData.length}
+              mediaId={f.id}
+              online={connected || offlineOnly}
+              readonly={readonly}
+            />
+          ),
+        } as IRow);
+      }
+    });
+    return rowData;
+  };
+
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = getMediaInPlans([planRec.id], mediaFiles);
@@ -650,7 +675,8 @@ export function MediaTab(props: IProps) {
       slider,
       attachMap,
       pdata,
-      locale
+      locale,
+      tma
     );
     const medAttach = new Set<number>();
     newData.forEach((r, i) => {
@@ -771,6 +797,23 @@ export function MediaTab(props: IProps) {
       showMessage(t.noMatch);
     }
   };
+
+  useEffect(() => {
+    const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
+    if (readonly !== newValue) setReadOnly(newValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projRole]);
+
+  const tryOnline = () =>
+    Online((result) => {
+      setConnected(result);
+    }, auth);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => tryOnline(), []);
+
+  //do this every 30 seconds to warn they can't save
+  useInterval(() => tryOnline(), 1000 * 30);
 
   interface ICell {
     value: string;
@@ -1103,6 +1146,7 @@ export function MediaTab(props: IProps) {
 
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaTab' }),
+  tma: localStrings(state, { layout: 'mediaActions' }),
   ts: localStrings(state, { layout: 'shared' }),
   allBookData: state.books.bookData,
 });

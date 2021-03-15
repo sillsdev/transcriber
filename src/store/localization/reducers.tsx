@@ -361,6 +361,13 @@ const initialState = {
 			"cantCopy": "Unable to copy to clipboard",
 		}
 	}),
+	"mediaActions": new LocalizedStrings({
+		"en": {
+			"attach": "Attach",
+			"delete": "Delete",
+			"playpause": "Play / Pause",
+		}
+	}),
 	"mediaTab": new LocalizedStrings({
 		"en": {
 			"action": "Action",
@@ -790,6 +797,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"invite" : new LocalizedStrings(action.payload.data.invite),
 				"languagePicker" : new LocalizedStrings(action.payload.data.languagePicker),
 				"main" : new LocalizedStrings(action.payload.data.main),
+				"mediaActions" : new LocalizedStrings(action.payload.data.mediaActions),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),

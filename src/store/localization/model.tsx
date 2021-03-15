@@ -338,6 +338,12 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "cantCopy": string;
 };
 
+export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
+    "attach": string;
+    "delete": string;
+    "playpause": string;
+};
+
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "all": string;
@@ -738,6 +744,7 @@ export interface ILocalizedStrings {
 	invite: IInviteStrings;
 	languagePicker: ILanguagePickerStrings;
 	main: IMainStrings;
+	mediaActions: IMediaActionsStrings;
 	mediaTab: IMediaTabStrings;
 	mediaUpload: IMediaUploadStrings;
 	passageMedia: IPassageMediaStrings;
