@@ -1250,7 +1250,7 @@ export function ScriptureTable(props: IProps) {
     let nx = 3;
     if (showBook(cols)) {
       colHead = colHead.concat([
-        { value: t.book, readOnly: true, width: 170 + colAdd[3] },
+        { value: t.book, readOnly: true, width: 170 + colAdd[4] },
       ]);
       nx += 1;
     }
@@ -1263,7 +1263,7 @@ export function ScriptureTable(props: IProps) {
       {
         value: t.action,
         readOnly: true,
-        width: projRole === 'admin' ? (inlinePassages ? 250 : 200) : 50,
+        width: projRole === 'admin' ? (inlinePassages ? 150 : 100) : 50,
       },
     ]);
     if (
@@ -1335,6 +1335,7 @@ export function ScriptureTable(props: IProps) {
       <Uploader
         recordAudio={recordAudio}
         auth={auth}
+        mediaId={(uploadRow && rowInfo[uploadRow].mediaId) || ''}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}

@@ -1,136 +1,207 @@
 import React, { useState, useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMediaUploadStrings } from '../model';
+import { IState, IMediaUploadStrings, MediaFile } from '../model';
 import localStrings from '../selector/localize';
+import * as actions from '../store';
+import Auth from '../auth/Auth';
 import {
   Button,
   createStyles,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
+  FormControl,
+  InputLabel,
   makeStyles,
+  MenuItem,
+  Select,
+  TextField,
   Theme,
 } from '@material-ui/core';
-import path from 'path';
-import { useSnackBar } from '../hoc/SnackBar';
 import WSAudioPlayer from './WSAudioPlayer';
+import { bindActionCreators } from 'redux';
+import { QueryBuilder } from '@orbit/data';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      '& .MuiDialog-paper': {
+        maxWidth: '90%',
+        minWidth: '60%',
+        minHeight: '80%',
+      },
     },
     paper: {
       padding: theme.spacing(2),
       margin: 'auto',
     },
-    description: {
-      overflow: 'hidden',
-      textOverflow: 'ellipsis',
-    },
-    progress: {
-      flexGrow: 1,
-      margin: theme.spacing(2),
-      cursor: 'pointer',
-    },
     button: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
-    player: {
-      display: 'none',
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
     },
   })
 );
 interface IStateProps {
   t: IMediaUploadStrings;
+  mediaUrl: string;
+  hasUrl: boolean;
 }
 
-interface IProps extends IStateProps {
+interface IDispatchProps {
+  fetchMediaUrl: typeof actions.fetchMediaUrl;
+}
+
+interface IProps extends IStateProps, IDispatchProps {
   visible: boolean;
+  mediaId: string;
+  auth: Auth;
+  ready: () => boolean;
   uploadMethod?: (files: File[]) => void;
   multiple?: boolean;
   cancelMethod?: () => void;
   metaData?: JSX.Element;
-  ready?: () => boolean;
 }
 
 function PassageRecord(props: IProps) {
-  const { t, visible, uploadMethod, cancelMethod, metaData, ready } = props;
-  const [, setName] = useState('');
-  const [audioBlob] = useState<Blob>();
+  const {
+    t,
+    visible,
+    mediaId,
+    auth,
+    uploadMethod,
+    cancelMethod,
+    ready,
+  } = props;
+  const { hasUrl, fetchMediaUrl, mediaUrl } = props;
+  const [name, setName] = useState('');
+  const [filetype, setFiletype] = useState('mp3');
+  const [originalBlob, setOriginalBlob] = useState<Blob>();
+  const [audioBlob, setAudioBlob] = useState<Blob>();
   const [open, setOpen] = useState(visible);
-  const [files, setFiles] = useState<File[]>([]);
-  const { showMessage } = useSnackBar();
-  const acceptextension = '.mp3, .m4a, .wav, .ogg';
-  //const acceptmime = 'audio/mpeg, audio/wav, audio/x-m4a, audio/ogg';
+  const [loading, setLoading] = useState(false);
+  const [offline] = useGlobal('offline');
+  const [memory] = useGlobal('memory');
+  const [filechanged, setFilechanged] = useState(false);
+  const acceptextension = ['mp3', 'm4a', 'wav', 'ogg', 'flac'];
+  const acceptmime = [
+    'audio/mpeg',
+    'audio/x-m4a',
+    'audio/wav',
+    'audio/ogg',
+    'audio/flac',
+  ];
   const classes = useStyles();
+
+  useEffect(() => {
+    fetchMediaUrl(mediaId, memory, offline, auth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediaId]);
 
   useEffect(() => {
     setOpen(visible);
   }, [visible]);
 
+  function recordingReady(blob: Blob) {
+    setAudioBlob(blob);
+    setFilechanged(true);
+  }
+  const reset = () => {
+    setName('');
+    setFilechanged(false);
+    setOriginalBlob(undefined);
+  };
   const handleAddOrSave = () => {
-    if (uploadMethod && files) {
-      uploadMethod(files);
+    if (audioBlob) {
+      var files = [
+        new File([audioBlob], name, {
+          type: acceptmime[acceptextension.findIndex((e) => e === filetype)],
+        }),
+      ];
+      if (uploadMethod && files) {
+        uploadMethod(files);
+      }
     }
-    handleFiles(undefined);
+    reset();
     setOpen(false);
   };
   const handleCancel = () => {
     if (cancelMethod) {
-      handleFiles(undefined);
       cancelMethod();
     }
+    reset();
     setOpen(false);
   };
-
-  const fileName = (files: File[]) => {
-    return files.length === 1
-      ? files[0].name
-      : files.length.toString() + ' files selected';
+  const handleChangeFileName = (e: any) => {
+    e.persist();
+    setName(e.target.value);
   };
-  const handleFiles = (files: FileList | undefined) => {
-    if (files) {
-      var goodFiles = Array.from(files).filter((s) =>
-        acceptextension.includes(
-          (path.extname(s.name) || '.xxx').substring(1).toLowerCase()
-        )
-      );
-      if (goodFiles.length < files.length) {
-        var rejectedFiles = Array.from(files).filter(
-          (s) =>
-            !acceptextension.includes(
-              (path.extname(s.name) || '.xxx').substring(1).toLowerCase()
-            )
-        );
-        showMessage(
-          t.invalidFile.replace(
-            '{0}',
-            rejectedFiles.map((f) => f.name).join(', ')
-          )
-        );
-      }
-      setName(fileName(goodFiles));
-      setFiles(goodFiles);
-    } else {
-      setFiles([]);
-      setName('');
-    }
+  const handleChangeFiletype = (e: any) => {
+    setFiletype(e.target.value);
   };
-
+  const handleLoadAudio = () => {
+    console.log('load audio');
+    setLoading(true);
+    fetch(mediaUrl).then(async (r) => {
+      setOriginalBlob(await r.blob());
+      setLoading(false);
+    });
+    const mediaRec = memory.cache.query((q: QueryBuilder) =>
+      q.findRecord({ type: 'mediafile', id: mediaId })
+    ) as MediaFile;
+    setName(mediaRec.attributes.originalFile);
+    var index = acceptmime.findIndex(
+      (m) => m === mediaRec.attributes.contentType
+    );
+    if (index > -1) setFiletype(acceptextension[index]);
+  };
   return (
     <Dialog
+      className={classes.root}
       open={open}
       onClose={handleCancel}
       aria-labelledby="form-dialog-title"
     >
       <DialogTitle id="form-dialog-title">{'Record!'}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{'Do things here!'}</DialogContentText>
-        {metaData}
-        <WSAudioPlayer allowRecord={true} blob={audioBlob} />
+        <Button onClick={handleLoadAudio} disabled={!hasUrl}>
+          {loading ? 't.loading' : 't.loadFile'}
+        </Button>
+        <WSAudioPlayer
+          allowRecord={true}
+          blob={originalBlob}
+          recordingReady={recordingReady}
+          setChanged={setFilechanged}
+        />
+        <TextField
+          className={classes.formControl}
+          id="filename"
+          label={'t.filename'}
+          value={name}
+          onChange={handleChangeFileName}
+          fullWidth
+          required={true}
+        />
+        <FormControl className={classes.formControl}>
+          <InputLabel id="demo-simple-select-label" required={true}>
+            t.fileType
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={filetype}
+            onChange={handleChangeFiletype}
+          >
+            {acceptextension.map((e) => (
+              <MenuItem value={e}>{e}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button
@@ -146,7 +217,7 @@ function PassageRecord(props: IProps) {
           onClick={handleAddOrSave}
           variant="contained"
           color="primary"
-          disabled={(ready && !ready()) || !files || files.length === 0}
+          disabled={(ready && !ready()) || !filechanged || name === ''}
         >
           {'todo.save'}
         </Button>
@@ -154,9 +225,21 @@ function PassageRecord(props: IProps) {
     </Dialog>
   );
 }
-
+const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
+  ...bindActionCreators(
+    {
+      fetchMediaUrl: actions.fetchMediaUrl,
+    },
+    dispatch
+  ),
+});
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaUpload' }),
+  hasUrl: state.media.loaded,
+  mediaUrl: state.media.url,
 });
 
-export default connect(mapStateToProps)(PassageRecord) as any;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PassageRecord) as any;

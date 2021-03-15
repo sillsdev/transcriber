@@ -2332,6 +2332,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="planSheet.audio">
+            <source>Audio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planSheet.addPassage">
             <source>Add Passage</source>
             <target/>
@@ -4118,6 +4125,13 @@
                <context context-type="sourcefile">addCard.tsx</context>
             </context-group>
          </trans-unit>
-      </body>
+         <trans-unit id="wsAudioPlayer.fileName">
+            <source>Filename</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         </body>
    </file>
 </xliff>

@@ -429,6 +429,7 @@ const initialState = {
 	"planSheet": new LocalizedStrings({
 		"en": {
 			"action": "Action",
+			"audio": "Audio",
 			"addPassage": "Add Passage",
 			"addSection": "Add {0}",
 			"bookSelect": "Select Book...",
@@ -758,6 +759,11 @@ const initialState = {
 			"type": "Project Type",
 		}
 	}),
+	"wsAudioPlayer": new LocalizedStrings({
+		"en": {
+			"fileName": "Filename",
+		}
+	}),
 };
 
 export default function (state = initialState, action: any): ILocalizedStrings {
@@ -807,6 +813,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"uploadProgress" : new LocalizedStrings(action.payload.data.uploadProgress),
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
+				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
 			};
 		case SET_LANGUAGE:
 			return {

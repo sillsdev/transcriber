@@ -401,6 +401,7 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IPlanSheetStrings extends Localize.LocalizedStringsMethods {
     "action": string;
+    "audio": string;
     "addPassage": string;
     "addSection": string;
     "bookSelect": string;
@@ -712,6 +713,10 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "type": string;
 };
 
+export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
+    "fileName": string;
+};
+
 export interface ILocalizedStrings {
 	loaded: boolean;
 	lang: string;
@@ -756,5 +761,6 @@ export interface ILocalizedStrings {
 	uploadProgress: IUploadProgressStrings;
 	usertable: IUsertableStrings;
 	vProject: IVProjectStrings;
+	wsAudioPlayer: IWsAudioPlayerStrings;
 	[key: string]: any;
 };

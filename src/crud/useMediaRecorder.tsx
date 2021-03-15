@@ -12,7 +12,7 @@ export function useMediaRecorder(
   onStart: () => void = noop,
   onStop: (blob: Blob) => void = noop,
   onError: (e: any) => void = noop,
-  onDataAvailable: (e: any, blob?: Blob) => void = noop
+  onDataAvailable: (e: any, blob: Blob) => void = noop
 ) {
   const mediaChunks = useRef<any>([]);
   const [playerUrl, setPlayerUrl] = useState('');
@@ -26,9 +26,7 @@ export function useMediaRecorder(
   }, []);
 
   function createBlob() {
-    const blob = new Blob(mediaChunks.current, {
-      type: 'audio/ogg; codecs=opus',
-    });
+    const blob = new Blob(mediaChunks.current);
     setPlayerUrl(window.URL.createObjectURL(blob));
     setMediaBlob(blob);
     return blob;
@@ -37,7 +35,7 @@ export function useMediaRecorder(
     if (e.data.size) {
       mediaChunks.current.push(e.data);
       onDataAvailable(e.data, createBlob());
-    } else onDataAvailable(e.data);
+    }
   }
 
   function handleStopped() {

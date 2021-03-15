@@ -52,11 +52,13 @@ interface IProps extends IStateProps, IDispatchProps {
   createProject?: (file: File[]) => Promise<any>;
   status: typeof statusInit;
   multiple?: boolean;
+  mediaId?: string;
 }
 
 export const Uploader = (props: IProps) => {
   const {
     auth,
+    mediaId,
     recordAudio,
     t,
     isOpen,
@@ -244,6 +246,8 @@ export const Uploader = (props: IProps) => {
       {recordAudio && (
         <PassageRecord
           visible={isOpen}
+          mediaId={mediaId}
+          auth={auth}
           multiple={multiple}
           uploadMethod={uploadMedia}
           cancelMethod={uploadCancel}
