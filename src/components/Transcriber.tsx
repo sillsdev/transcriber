@@ -67,6 +67,7 @@ import {
   getParatextDataPath,
   camel2Title,
   refMatch,
+  waitForIt,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -266,6 +267,10 @@ export function Transcriber(props: IProps) {
   const [hasParatextName, setHasParatextName] = useState(false);
   const [paratextProject, setParatextProject] = React.useState('');
   const [paratextIntegration, setParatextIntegration] = React.useState('');
+  const [connected] = useGlobal('connected');
+  const [coordinator] = useGlobal('coordinator');
+  const remote = coordinator.getSource('remote');
+
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
@@ -722,11 +727,7 @@ export function Transcriber(props: IProps) {
     synced: ActivityStates.TranscribeReady,
   };
 
-  const handleReopen = async () => {
-    if (busy) {
-      showMessage(t.saving);
-      return;
-    }
+  const doReopen = async () => {
     if (previous.hasOwnProperty(state)) {
       await memory.update(
         UpdatePassageStateOps(
@@ -743,6 +744,14 @@ export function Transcriber(props: IProps) {
       );
       setLastSaved(currentDateTime());
     }
+  };
+  const handleReopen = async () => {
+    await waitForIt(
+      'busy before reopen',
+      () => !remote || !connected || remote.requestQueue.length === 0,
+      () => false,
+      20
+    ).then(() => doReopen());
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
