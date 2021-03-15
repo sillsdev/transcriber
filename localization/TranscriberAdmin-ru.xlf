@@ -933,8 +933,8 @@
       </unit>
    	<unit id="integration.invalidReferences">
    		<segment>
-   			<source>{0} passages have invalid references</source>
-   			<target>{0} отрывки имеют недействительные ссылки</target>
+   			<source>{0} passages have invalid book or reference.</source>
+   			<target>{0} отрывки имеют недействительную книгу или ссылку</target>
    		</segment>
    	</unit>
    	<unit id="integration.countReady">

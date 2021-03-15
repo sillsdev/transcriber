@@ -1087,7 +1087,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="integration.invalidReferences">
-      		<source>{0} passages have invalid references</source>
+      		<source>{0} passages have invalid book or reference.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">integration.tsx</context>

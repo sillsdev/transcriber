@@ -940,8 +940,8 @@
       </unit>
    	<unit id="integration.invalidReferences">
    		<segment>
-   			<source>{0} passages have invalid references</source>
-   			<target>Les passages ({0}) ont des références non valables</target>
+   			<source>{0} passages have invalid book or reference.</source>
+   			<target>Les passages ({0}) ont un livre ou une référence invalide.</target>
    		</segment>
    	</unit>
    	<unit id="integration.countReady">
