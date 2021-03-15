@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import ReactPlayer from 'react-player';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import keycode from 'keycode';
 import moment from 'moment-timezone';
@@ -26,7 +25,6 @@ import {
   Typography,
   Button,
   IconButton,
-  LinearProgress,
   TextareaAutosize,
   Tooltip,
   List,
@@ -36,14 +34,9 @@ import {
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
-import SkipBackIcon from '@material-ui/icons/FastRewind';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipAheadIcon from '@material-ui/icons/FastForward';
 import HistoryIcon from '@material-ui/icons/History';
 import TimerIcon from '@material-ui/icons/AccessTime';
-import { FaAngleDoubleUp, FaAngleDoubleDown } from 'react-icons/fa';
-import { Duration, formatTime } from '../control';
+import { formatTime } from '../control';
 import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -58,7 +51,6 @@ import {
   remoteIdNum,
 } from '../crud';
 import {
-  relMouseCoords,
   insertAtCursor,
   useRemoteSave,
   logError,
@@ -80,15 +72,8 @@ import * as action from '../store';
 import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
+import WSAudioPlayer from './WSAudioPlayer';
 
-const MIN_SPEED = 0.5;
-const MAX_SPEED = 2.0;
-const SPEED_STEP = 0.1;
-const PLAY_PAUSE_KEY = 'ESC';
-const BACK_KEY = 'F2';
-const AHEAD_KEY = 'F3';
-const SLOWER_KEY = 'F4';
-const FASTER_KEY = 'F5';
 const HISTORY_KEY = 'F6';
 const TIMER_KEY = 'F7';
 const NON_BOX_HEIGHT = 304;
@@ -240,15 +225,11 @@ export function Transcriber(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const [playSpeed, setPlaySpeed] = useState(1);
-  // playedSeconds is needed to update progress bar
   const [playedSeconds, setPlayedSeconds] = useState(0);
   // playedSecsRef is needed for autosave
   const playedSecsRef = React.useRef<number>(0);
   const stateRef = React.useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
-  const [seeking, setSeeking] = useState(false);
-  const [jump] = useState(2);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
       state === ActivityStates.TranscribeReady
@@ -258,7 +239,7 @@ export function Transcriber(props: IProps) {
   const [width, setWidth] = useState(window.innerWidth);
   const [textValue, setTextValue] = useState('');
   const [lastSaved, setLastSaved] = useState('');
-  const [defaultPosition, setDefaultPosition] = useState(0.0);
+  const [, setDefaultPosition] = useState(0.0);
   const { showMessage } = useSnackBar();
   const [showHistory, setShowHistory] = useState(false);
   const [historyContent, setHistoryContent] = useState<any[]>();
@@ -274,15 +255,33 @@ export function Transcriber(props: IProps) {
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
-
-  const playerRef = React.useRef<any>();
-  const progressRef = React.useRef<any>();
+  const [audioBlob, setAudioBlob] = useState<Blob>();
   const transcriptionRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const t = transcriberStr;
   const ta = activityStateStr;
 
   useEffect(() => {
+    fetch(mediaUrl).then(async (r) => setAudioBlob(await r.blob()));
+  }, [mediaUrl]);
+
+  useEffect(() => {
+    console.log('got a blob?', audioBlob ? audioBlob.size : 'nope');
+  }, [audioBlob]);
+
+  useEffect(() => {
+    const getParatextIntegration = () => {
+      const intfind = integrations.findIndex(
+        (i) =>
+          i.attributes &&
+          i.attributes.name === (offline ? 'paratextLocal' : 'paratext') &&
+          Boolean(i.keys?.remoteId) !== offline
+      );
+      if (intfind > -1) setParatextIntegration(integrations[intfind].id);
+    };
+
+    getParatextIntegration();
+
     setDimensions();
     const handleResize = debounce(() => {
       setDimensions();
@@ -437,54 +436,8 @@ export function Transcriber(props: IProps) {
     setTextValue(e.target.value);
     if (!changed) setChanged(true);
   };
-  const handlePlayStatus = (status: boolean) => () => setPlaying(status);
   const loadStatus = (status: string) => {
     setFontStatus(status);
-  };
-  const handleReady = () => {
-    if (defaultPosition > 0) {
-      playerRef.current.seekTo(defaultPosition);
-      setDefaultPosition(0);
-    }
-  };
-  const handleProgress = (ctrl: any) => {
-    if (!seeking) {
-      if (!totalSeconds || totalSeconds < ctrl.loadedSeconds) {
-        setTotalSeconds(Math.ceil(ctrl.loadedSeconds));
-      } else {
-        setTotalSeconds(duration);
-      }
-      setPlayedSeconds(Math.ceil(ctrl.playedSeconds));
-      playedSecsRef.current = ctrl.playedSeconds;
-    }
-  };
-  const handleMouseDown = () => {
-    setSeeking(true);
-  };
-  const handleMouseUp = (e: React.MouseEvent) => {
-    setSeeking(false);
-    if (progressRef.current && playerRef.current) {
-      const clientWidth = progressRef.current.clientWidth;
-      const { x } = relMouseCoords(e, progressRef.current);
-      playerRef.current.seekTo(x / clientWidth);
-    }
-  };
-  const handleJumpFn = (amount: number) => {
-    if (!playerRef.current) return;
-    var newPosition =
-      amount > 0
-        ? Math.min(playedSeconds + amount, totalSeconds)
-        : Math.max(playedSeconds + amount, 0);
-
-    playerRef.current.seekTo(newPosition);
-  };
-  const handleJumpEv = (amount: number) => () => handleJumpFn(amount);
-  const rnd1 = (val: number) => Math.round(val * 10) / 10;
-  const handleSlower = () => {
-    if (playSpeed > MIN_SPEED) setPlaySpeed(rnd1(playSpeed - SPEED_STEP));
-  };
-  const handleFaster = () => {
-    if (playSpeed < MAX_SPEED) setPlaySpeed(rnd1(playSpeed + SPEED_STEP));
   };
 
   const handleShowHistory = () => setShowHistory(!showHistory);
@@ -755,34 +708,9 @@ export function Transcriber(props: IProps) {
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
-    const PlayPauseKey = keycode(PLAY_PAUSE_KEY);
-    const JumpBackKey = keycode(BACK_KEY);
-    const JumpAheadKey = keycode(AHEAD_KEY);
-    const SlowerKey = keycode(SLOWER_KEY);
-    const FasterKey = keycode(FASTER_KEY);
     const HistoryKey = keycode(HISTORY_KEY);
     const TimerKey = keycode(TIMER_KEY);
     switch (e.keyCode) {
-      case PlayPauseKey:
-        setPlaying(!playing);
-        e.preventDefault();
-        return;
-      case JumpBackKey:
-        handleJumpFn(-1 * jump);
-        e.preventDefault();
-        return;
-      case JumpAheadKey:
-        handleJumpFn(jump);
-        e.preventDefault();
-        return;
-      case SlowerKey:
-        handleSlower();
-        e.preventDefault();
-        return;
-      case FasterKey:
-        handleFaster();
-        e.preventDefault();
-        return;
       case HistoryKey:
         handleShowHistory();
         e.preventDefault();
@@ -950,7 +878,8 @@ export function Transcriber(props: IProps) {
       setHistoryContent(historyList(curStateChanges));
     }
   };
-
+  const onProgress = (progress: number) => setPlayedSeconds(progress);
+  const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
@@ -960,25 +889,6 @@ export function Transcriber(props: IProps) {
               {sectionDescription(section)}
             </Grid>
             <Grid item>{passageDescription(passage, allBookData)}</Grid>
-          </Grid>
-          <Grid container direction="row" className={classes.row}>
-            <Grid item>
-              <Typography>
-                <Duration seconds={playedSeconds} /> {' / '}
-                <Duration seconds={totalSeconds} />
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              <div className={classes.progress}>
-                <LinearProgress
-                  ref={progressRef}
-                  variant="determinate"
-                  value={Math.min((playedSeconds * 100) / totalSeconds, 100)}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
-                />
-              </div>
-            </Grid>
           </Grid>
           <Grid container direction="row" className={classes.row}>
             {role === 'transcriber' && hasParatextName && paratextProject && (
@@ -1000,74 +910,12 @@ export function Transcriber(props: IProps) {
             )}
             <Grid item xs>
               <Grid container justify="center">
-                <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleJumpEv(-1 * jump)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <SkipBackIcon /> <Typography>{BACK_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip
-                  title={(playing ? t.playTip : t.pauseTip).replace(
-                    '{0}',
-                    PLAY_PAUSE_KEY
-                  )}
-                >
-                  <span>
-                    <IconButton
-                      onClick={handlePlayStatus(!playing)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        {playing ? <PauseIcon /> : <PlayIcon />}{' '}
-                        <Typography>{PLAY_PAUSE_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleJumpEv(jump)}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <SkipAheadIcon /> <Typography>{AHEAD_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleSlower}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <FaAngleDoubleDown />{' '}
-                        <Typography>{SLOWER_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
-                <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                  <span>
-                    <IconButton
-                      onClick={handleFaster}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <FaAngleDoubleUp />{' '}
-                        <Typography>{FASTER_KEY}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
+                <WSAudioPlayer
+                  allowRecord={false}
+                  blob={audioBlob}
+                  onProgress={onProgress}
+                  onPlayStatus={onPlayStatus}
+                />
               </Grid>
             </Grid>
             <Grid item>
@@ -1231,18 +1079,6 @@ export function Transcriber(props: IProps) {
           cancelMethod={handleAddNoteCancel}
         />
       </Paper>
-      <div className={classes.player}>
-        <ReactPlayer
-          ref={playerRef}
-          url={mediaUrl}
-          controls={true}
-          onEnded={handlePlayStatus(false)}
-          playbackRate={playSpeed}
-          playing={playing}
-          onProgress={handleProgress}
-          onReady={handleReady}
-        />
-      </div>
     </div>
   );
 }

@@ -283,6 +283,7 @@ export const AddCard = (props: IProps) => {
         </CardContent>
       </Card>
       <Uploader
+        recordAudio={false}
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}

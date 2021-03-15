@@ -2002,6 +2002,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="planSheet.audio">
+         <segment>
+            <source>Audio</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="planSheet.addPassage">
          <segment>
             <source>Add Passage</source>
@@ -3529,6 +3535,12 @@
       <unit id="vProject.type">
          <segment>
             <source>Project Type</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.fileName">
+         <segment>
+            <source>Filename</source>
             <target/>
          </segment>
       </unit>

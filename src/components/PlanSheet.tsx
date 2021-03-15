@@ -28,6 +28,7 @@ import { IRowInfo } from './ScriptureTable';
 import { TranscriberIcon, EditorIcon } from './RoleIcons';
 import PlanActions from './PlanActions';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
+import PlanAudioActions from './PlanAudioActions';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -151,6 +152,7 @@ interface IProps extends IStateProps {
   onTranscribe: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
+  onRecord: (i: number) => () => void;
   auth: Auth;
 }
 
@@ -234,7 +236,7 @@ export function PlanSheet(props: IProps) {
     return data
       .filter((row, rowIndex) => rowIndex > 0)
       .map((row) =>
-        row.filter((row, rowIndex) => rowIndex > 1).map((col) => col.value)
+        row.filter((row, rowIndex) => rowIndex > 2).map((col) => col.value)
       );
   };
 
@@ -301,7 +303,7 @@ export function PlanSheet(props: IProps) {
     );
   };
 
-  const numCol = [2, 4]; // Section num = col 2, Passage num = col 4
+  const numCol = [3, 5]; // Section num = col 2, Passage num = col 4
   const handleCellsChanged = (changes: Array<IChange>) => {
     if (readonly) return; //readonly
 
@@ -471,6 +473,11 @@ export function PlanSheet(props: IProps) {
             value: <TranscriberIcon />,
             readOnly: true,
           } as ICell,
+          {
+            value: t.audio,
+            readOnly: true,
+            width: projRole === 'admin' ? 50 : 20,
+          } as ICell,
         ].concat(
           columns.map((col) => {
             return { ...col, readOnly: true };
@@ -498,6 +505,43 @@ export function PlanSheet(props: IProps) {
               className: section ? 'set' + (passage ? 'p' : '') : 'pass',
             } as ICell,
           ]
+            .concat(
+              passage
+                ? [
+                    {
+                      value: (
+                        <PlanAudioActions
+                          {...props}
+                          rowIndex={rowIndex}
+                          isPassage={passage}
+                          mediaId={rowInfo[rowIndex].mediaId}
+                          onPlayStatus={handlePlayStatus}
+                          onDelete={handleConfirmDelete}
+                          onTranscribe={handleTranscribe}
+                          online={connected || offlineOnly}
+                          readonly={readonly}
+                          canAssign={projRole === 'admin'}
+                          canDelete={projRole === 'admin'}
+                          isPlaying={
+                            rowInfo[rowIndex].mediaId !== '' &&
+                            srcMediaId === rowInfo[rowIndex].mediaId
+                          }
+                        />
+                      ),
+                      readOnly: true,
+                      className: section
+                        ? 'set' + (passage ? 'p' : ' ')
+                        : 'pass',
+                    } as ICell,
+                  ]
+                : [
+                    {
+                      value: <></>,
+                      readOnly: true,
+                      className: 'set',
+                    } as ICell,
+                  ]
+            )
             .concat(
               row.slice(0, LastCol).map((e, cellIndex) => {
                 return cellIndex === bookCol && passage
@@ -613,6 +657,9 @@ export function PlanSheet(props: IProps) {
   //do this every 30 seconds to warn they can't save
   useInterval(() => tryOnline(), 1000 * 30);
 
+  const playEnded = () => {
+    setSrcMediaId('');
+  };
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -745,7 +792,7 @@ export function PlanSheet(props: IProps) {
       ) : (
         <></>
       )}
-      <MediaPlayer auth={auth} srcMediaId={srcMediaId} />
+      <MediaPlayer auth={auth} srcMediaId={srcMediaId} onEnded={playEnded} />
     </div>
   );
 }

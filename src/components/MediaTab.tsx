@@ -917,7 +917,9 @@ export function MediaTab(props: IProps) {
       <TableCell className={classes.cell} />
     );
   };
-
+  const playEnded = () => {
+    setPlayItem('');
+  };
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -1077,6 +1079,7 @@ export function MediaTab(props: IProps) {
         </div>
       </div>
       <Uploader
+        recordAudio={false}
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
@@ -1093,7 +1096,7 @@ export function MediaTab(props: IProps) {
           noResponse={handleActionRefused}
         />
       )}
-      <MediaPlayer auth={auth} srcMediaId={playItem} />
+      <MediaPlayer auth={auth} srcMediaId={playItem} onEnded={playEnded} />
     </div>
   );
 }

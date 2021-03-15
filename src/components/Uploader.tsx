@@ -14,6 +14,7 @@ import JSONAPISource from '@orbit/jsonapi';
 import { currentDateTime } from '../utils';
 import { TransformBuilder } from '@orbit/data';
 import { AddRecord } from '../model/baseModel';
+import PassageRecord from './PassageRecord';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -40,6 +41,7 @@ interface IDispatchProps {
 
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
+  recordAudio: boolean;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
   showMessage: (msg: string | JSX.Element) => void;
@@ -50,10 +52,21 @@ interface IProps extends IStateProps, IDispatchProps {
   createProject?: (file: File[]) => Promise<any>;
   status: typeof statusInit;
   multiple?: boolean;
+  mediaId?: string;
 }
 
 export const Uploader = (props: IProps) => {
-  const { auth, t, isOpen, onOpen, showMessage, status, multiple } = props;
+  const {
+    auth,
+    mediaId,
+    recordAudio,
+    t,
+    isOpen,
+    onOpen,
+    showMessage,
+    status,
+    multiple,
+  } = props;
   const { nextUpload } = props;
   const { uploadError } = props;
   const { uploadComplete, setComplete, finish } = props;
@@ -229,15 +242,31 @@ export const Uploader = (props: IProps) => {
   }, [uploadError]);
 
   return (
-    <MediaUpload
-      visible={isOpen}
-      uploadType={UploadType.Media}
-      multiple={multiple}
-      uploadMethod={uploadMedia}
-      cancelMethod={uploadCancel}
-      metaData={metaData}
-      ready={ready}
-    />
+    <div>
+      {recordAudio && (
+        <PassageRecord
+          visible={isOpen}
+          mediaId={mediaId}
+          auth={auth}
+          multiple={multiple}
+          uploadMethod={uploadMedia}
+          cancelMethod={uploadCancel}
+          metaData={metaData}
+          ready={ready}
+        />
+      )}
+      {recordAudio || (
+        <MediaUpload
+          visible={isOpen}
+          uploadType={UploadType.Media}
+          multiple={multiple}
+          uploadMethod={uploadMedia}
+          cancelMethod={uploadCancel}
+          metaData={metaData}
+          ready={ready}
+        />
+      )}
+    </div>
   );
 };
 
