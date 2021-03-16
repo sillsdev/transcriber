@@ -84,11 +84,6 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     },
-    progress: {
-      flexGrow: 1,
-      margin: theme.spacing(2),
-      cursor: 'pointer',
-    },
     row: {
       alignItems: 'center',
       whiteSpace: 'nowrap',
@@ -96,47 +91,10 @@ const useStyles = makeStyles((theme: Theme) =>
     padRow: {
       paddingTop: '16px',
     },
-    comment: {
-      paddingTop: '16px',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      overflow: 'auto',
-    },
-    history: {
-      overflow: 'auto',
-      backgroundColor: theme.palette.background.paper,
-    },
-    active: {
-      textDecoration: 'none',
-      backgroundColor: theme.palette.action.hover,
-      color: 'red', // This is just to make the change easier to see
-    },
-    historyitem: {
-      root: {
-        '&$selected': {
-          backgroundColor: 'red',
-          color: 'white',
-        },
-        '&$selected:hover': {
-          backgroundColor: 'purple',
-          color: 'white',
-        },
-        '&:hover': {
-          backgroundColor: 'blue',
-          color: 'white',
-        },
-      },
-      selected: {},
-    },
     button: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
-    player: {
-      display: 'none',
-    },
-    actionIcon: {},
   })
 );
 interface IRecordProps {
