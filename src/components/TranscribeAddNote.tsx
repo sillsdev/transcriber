@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { IState, Passage, ITranscribeAddNoteStrings } from '../model';
+import {
+  IState,
+  Passage,
+  ITranscribeAddNoteStrings,
+  PassageStateChange,
+} from '../model';
 import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
@@ -34,14 +39,24 @@ interface IStateProps {
 }
 
 interface IProps extends IStateProps {
-  passageIn: Passage;
+  passageIn?: Passage;
+  pscIn?: PassageStateChange;
   visible: boolean;
-  editMethod?: (passageRec: Passage) => void;
+  addMethod?: (passageRec: Passage) => void;
+  editMethod?: (psc: PassageStateChange) => void;
   cancelMethod?: () => void;
 }
 
 function TranscribeAddNote(props: IProps) {
-  const { t, visible, editMethod, cancelMethod, passageIn } = props;
+  const {
+    t,
+    visible,
+    addMethod,
+    editMethod,
+    cancelMethod,
+    passageIn,
+    pscIn,
+  } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(visible);
   const [comment, setComment] = useState('');
@@ -53,18 +68,23 @@ function TranscribeAddNote(props: IProps) {
   const handleCommentChange = (e: any) => setComment(e.target.value);
   const doAddOrSave = async () => {
     setInProcess(true);
-    if (comment !== '') {
+
+    if (pscIn) {
+      pscIn.attributes.comments = comment;
+      if (editMethod) editMethod(pscIn);
+    } else if (comment !== '') {
       let passage = {
         ...passageIn,
         attributes: {
-          ...passageIn.attributes,
+          ...passageIn?.attributes,
           lastComment: comment,
         },
       } as Passage;
-      if (editMethod) {
-        editMethod(passage);
+      if (addMethod) {
+        addMethod(passage);
       }
     }
+
     setOpen(false);
     setInProcess(false);
   };
@@ -78,8 +98,8 @@ function TranscribeAddNote(props: IProps) {
 
   useEffect(() => {
     setOpen(visible);
-    setComment('');
-  }, [visible]);
+    setComment(pscIn?.attributes.comments || '');
+  }, [visible, pscIn]);
 
   return (
     <div>

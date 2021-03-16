@@ -3,15 +3,12 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
 import keycode from 'keycode';
-import moment from 'moment-timezone';
 import {
   MediaFile,
   Project,
   ActivityStates,
   Passage,
-  PassageStateChange,
   Section,
-  User,
   IState,
   Integration,
   ProjectIntegration,
@@ -27,17 +24,13 @@ import {
   IconButton,
   TextareaAutosize,
   Tooltip,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
 import HistoryIcon from '@material-ui/icons/History';
 import TimerIcon from '@material-ui/icons/AccessTime';
+
 import { formatTime } from '../control';
-import UserAvatar from './UserAvatar';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -47,7 +40,6 @@ import {
   FontData,
   getFontData,
   UpdatePassageStateOps,
-  remoteIdGuid,
   remoteIdNum,
 } from '../crud';
 import {
@@ -73,6 +65,7 @@ import { bindActionCreators } from 'redux';
 import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
 import WSAudioPlayer from './WSAudioPlayer';
+import PassageHistory from './PassageHistory';
 
 const HISTORY_KEY = 'F6';
 const TIMER_KEY = 'F7';
@@ -91,11 +84,6 @@ const useStyles = makeStyles((theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
     },
-    progress: {
-      flexGrow: 1,
-      margin: theme.spacing(2),
-      cursor: 'pointer',
-    },
     row: {
       alignItems: 'center',
       whiteSpace: 'nowrap',
@@ -103,22 +91,9 @@ const useStyles = makeStyles((theme: Theme) =>
     padRow: {
       paddingTop: '16px',
     },
-    comment: {
-      paddingTop: '16px',
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: 1,
-      overflow: 'auto',
-    },
-    history: {
-      overflow: 'auto',
-    },
     button: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-    },
-    player: {
-      display: 'none',
     },
   })
 );
@@ -183,7 +158,6 @@ export function Transcriber(props: IProps) {
     rowData,
     index,
     transcriberStr,
-    activityStateStr,
     sharedStr,
     mediaUrl,
     fetchMediaUrl,
@@ -210,7 +184,7 @@ export function Transcriber(props: IProps) {
     role: '',
   };
   const classes = useStyles();
-  const [lang] = useGlobal('lang');
+
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
   const [project] = useGlobal('project');
@@ -242,7 +216,7 @@ export function Transcriber(props: IProps) {
   const [, setDefaultPosition] = useState(0.0);
   const { showMessage } = useSnackBar();
   const [showHistory, setShowHistory] = useState(false);
-  const [historyContent, setHistoryContent] = useState<any[]>();
+
   const [rejectVisible, setRejectVisible] = useState(false);
   const [addNoteVisible, setAddNoteVisible] = useState(false);
   const [hasParatextName, setHasParatextName] = useState(false);
@@ -251,7 +225,6 @@ export function Transcriber(props: IProps) {
   const [connected] = useGlobal('connected');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote');
-
   const transcriptionIn = React.useRef<string>();
   const saving = React.useRef(false);
   const [, saveCompleted] = useRemoteSave();
@@ -259,7 +232,6 @@ export function Transcriber(props: IProps) {
   const transcriptionRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
   const t = transcriberStr;
-  const ta = activityStateStr;
 
   useEffect(() => {
     fetch(mediaUrl).then(async (r) => setAudioBlob(await r.blob()));
@@ -397,9 +369,6 @@ export function Transcriber(props: IProps) {
   }, [project]);
 
   useEffect(() => {
-    if (passage?.id && !saving.current) {
-      loadHistory();
-    }
     const newAssigned = rowData[index]?.assigned;
     if (newAssigned !== assigned) setAssigned(newAssigned);
     stateRef.current = rowData[index]?.state;
@@ -649,7 +618,6 @@ export function Transcriber(props: IProps) {
         .update(ops)
         .then(() => {
           //we come here before we get an error because we're non-blocking
-          loadHistory();
           saveCompleted('');
           setLastSaved(currentDateTime());
           saving.current = false;
@@ -786,98 +754,7 @@ export function Transcriber(props: IProps) {
   };
 
   const paperStyle = { width: width - 36 };
-  const historyStyle = { height: boxHeight };
 
-  moment.locale(lang);
-  const curZone = moment.tz.guess();
-  const userFromId = (psc: PassageStateChange): User => {
-    var id = related(psc, 'lastModifiedByUser');
-    if (!id) {
-      id = remoteIdGuid(
-        'user',
-        psc.attributes.lastModifiedBy.toString(),
-        memory.keyMap
-      );
-    }
-    if (!id) {
-      return {
-        id: '',
-        attributes: { avatarUrl: null, name: 'Unknown', familyName: '' },
-      } as any;
-    }
-    const user = memory.cache.query((q: QueryBuilder) =>
-      q.findRecord({ type: 'user', id })
-    ) as User;
-    return user;
-  };
-  const nameFromId = (psc: PassageStateChange) => {
-    const user = userFromId(psc);
-    return user ? user.attributes.name : '';
-  };
-  const historyItem = (
-    psc: PassageStateChange,
-    comment: JSX.Element | string
-  ) => {
-    return (
-      <ListItem key={`${psc.id}-${comment}`}>
-        <ListItemIcon>
-          <UserAvatar {...props} userRec={userFromId(psc)} />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            <>
-              <Typography variant="h6" component="span">
-                {nameFromId(psc)}
-              </Typography>
-              {'\u00A0\u00A0 '}
-              <Typography component="span">
-                {moment
-                  .tz(moment.tz(psc.attributes.dateCreated, 'utc'), curZone)
-                  .calendar()}
-              </Typography>
-            </>
-          }
-          secondary={comment}
-        />
-      </ListItem>
-    );
-  };
-
-  const historyList = (passageStateChanges: PassageStateChange[]) => {
-    const results: Array<JSX.Element> = [];
-    let curState: ActivityStates;
-    let curComment = '';
-    passageStateChanges
-      .sort((i, j) =>
-        i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
-      )
-      .forEach((psc) => {
-        const comment = psc.attributes.comments;
-        if (comment && comment !== '' && comment !== curComment) {
-          curComment = comment;
-          results.push(
-            historyItem(psc, <span style={{ color: 'black' }}>{comment}</span>)
-          );
-        }
-        if (psc.attributes.state !== curState) {
-          curState = psc.attributes.state;
-          results.push(historyItem(psc, ta.getString(curState)));
-        }
-      });
-    return results;
-  };
-
-  const loadHistory = async () => {
-    const recs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('passagestatechange')
-    ) as PassageStateChange[];
-    if (recs && passage?.id) {
-      const curStateChanges = recs.filter(
-        (r) => related(r, 'passage') === passage.id
-      );
-      setHistoryContent(historyList(curStateChanges));
-    }
-  };
   const onProgress = (progress: number) => setPlayedSeconds(progress);
   const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
   return (
@@ -931,10 +808,7 @@ export function Transcriber(props: IProps) {
 
               <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
                 <span>
-                  <IconButton
-                    onClick={handleShowHistory}
-                    disabled={historyContent === undefined}
-                  >
+                  <IconButton onClick={handleShowHistory}>
                     <>
                       <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
                     </>
@@ -987,9 +861,7 @@ export function Transcriber(props: IProps) {
             </Grid>
             {showHistory && (
               <Grid item xs={6} container direction="column">
-                <List style={historyStyle} className={classes.history}>
-                  {historyContent}
-                </List>
+                <PassageHistory passageId={passage?.id} boxHeight={boxHeight} />
               </Grid>
             )}
           </Grid>
@@ -1075,7 +947,7 @@ export function Transcriber(props: IProps) {
         <TranscribeAddNote
           visible={addNoteVisible}
           passageIn={passage}
-          editMethod={handleAddNote}
+          addMethod={handleAddNote}
           cancelMethod={handleAddNoteCancel}
         />
       </Paper>
