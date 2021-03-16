@@ -29,10 +29,8 @@ import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
 import HistoryIcon from '@material-ui/icons/History';
 import TimerIcon from '@material-ui/icons/AccessTime';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 
-import { Duration, formatTime } from '../control';
+import { formatTime } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -799,132 +797,6 @@ export function Transcriber(props: IProps) {
 
   const paperStyle = { width: width - 36 };
 
-  const StyledListItem = withStyles((theme) => ({
-    root: {
-      '&$selected': {
-        backgroundColor: 'purple',
-        color: 'white',
-      },
-      '&$selected:hover': {
-        backgroundColor: theme.palette.action.selected,
-        color: 'white',
-      },
-      '&:hover': {
-        textDecoration: 'bold',
-        backgroundColor: 'red',
-      },
-    },
-  }))(ListItem);
-  const handleEdit = (id: string) => () => {
-    console.log('edit', id);
-  };
-  const handleDelete = (id: string) => () => {
-    console.log('edit', id);
-  };
-  const handleMouseEnter = (id: string) => {
-    console.log('mouse enter', id);
-    hoverRef.current = id;
-    console.log(hoverRef.current);
-  };
-  const handleMouseLeave = (id: string) => {
-    console.log('mouse exit', id);
-    if (hoverRef.current === id) hoverRef.current = '';
-  };
-  const historyItem = (
-    psc: PassageStateChange,
-    comment: JSX.Element | string
-  ) => {
-    return (
-      <StyledListItem
-        key={psc.id}
-        button
-        selected={selectedId === psc.id}
-        onClick={(event: any) => handleListItemClick(event, psc.id)}
-        onMouseEnter={() => handleMouseEnter(psc.id)}
-        onMouseLeave={() => handleMouseLeave(psc.id)}
-      >
-        <ListItemIcon>
-          <UserAvatar {...props} userRec={userFromId(psc)} />
-        </ListItemIcon>
-        <ListItemText
-          primary={
-            <>
-              <Typography variant="h6" component="span">
-                {nameFromId(psc)}
-              </Typography>
-              {'\u00A0\u00A0 '}
-              <Typography component="span">
-                {moment
-                  .tz(moment.tz(psc.attributes.dateCreated, 'utc'), curZone)
-                  .calendar()}
-              </Typography>
-            </>
-          }
-          secondary={comment}
-        />
-        {hoverRef.current === psc.id && (
-          <div>
-            <IconButton
-              id={'edit-' + psc.id}
-              key={'edit-' + psc.id}
-              aria-label={'edit-' + psc.id}
-              color="default"
-              className={classes.actionIcon}
-              onClick={handleEdit(psc.id)}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              id={'del-' + psc.id}
-              key={'del-' + psc.id}
-              aria-label={'del-' + psc.id}
-              color="default"
-              className={classes.actionIcon}
-              onClick={handleDelete(psc.id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        )}
-      </StyledListItem>
-    );
-  };
-
-  const historyList = (passageStateChanges: PassageStateChange[]) => {
-    const results: Array<JSX.Element> = [];
-    let curState: ActivityStates;
-    let curComment = '';
-    passageStateChanges
-      .sort((i, j) =>
-        i.attributes.dateCreated < j.attributes.dateCreated ? -1 : 1
-      )
-      .forEach((psc) => {
-        const comment = psc.attributes.comments;
-        if (comment && comment !== '' && comment !== curComment) {
-          curComment = comment;
-          results.push(
-            historyItem(psc, <span style={{ color: 'black' }}>{comment}</span>)
-          );
-        }
-        if (psc.attributes.state !== curState) {
-          curState = psc.attributes.state;
-          results.push(historyItem(psc, ta.getString(curState)));
-        }
-      });
-    return results;
-  };
-
-  const loadHistory = async () => {
-    const recs = memory.cache.query((q: QueryBuilder) =>
-      q.findRecords('passagestatechange')
-    ) as PassageStateChange[];
-    if (recs && passage?.id) {
-      const curStateChanges = recs.filter(
-        (r) => related(r, 'passage') === passage.id
-      );
-      setHistoryContent(historyList(curStateChanges));
-    }
-  };
   const onProgress = (progress: number) => setPlayedSeconds(progress);
   const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
   return (
