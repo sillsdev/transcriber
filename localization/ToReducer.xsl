@@ -31,7 +31,7 @@
 			<xsl:text>&#9;}),&#10;</xsl:text>
 		</xsl:for-each>
 		<xsl:text>};&#10;&#10;</xsl:text>
-		<xsl:text>export default function (state = initialState, action: any): ILocalizedStrings {&#10;</xsl:text>
+		<xsl:text>const localizationReducer = function (state = initialState, action: any): ILocalizedStrings {&#10;</xsl:text>
 		<xsl:text>&#9;switch (action.type) {&#10;</xsl:text>
 		<xsl:text>&#9;&#9;case FETCH_LOCALIZATION:&#10;</xsl:text>
 		<xsl:text>&#9;&#9;&#9;return {&#10;</xsl:text>
@@ -55,5 +55,6 @@
 		<xsl:text>&#9;&#9;&#9;return state;&#10;</xsl:text>
 		<xsl:text>&#9;}&#10;</xsl:text>
 		<xsl:text>}&#10;</xsl:text>
+		<xsl:text>&#10;export default localizationReducer;&#10;</xsl:text>
 	</xsl:template>
 </xsl:stylesheet>

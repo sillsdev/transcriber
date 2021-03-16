@@ -1702,6 +1702,24 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaActions.attach">
+         <segment>
+            <source>Attach</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.delete">
+         <segment>
+            <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.playpause">
+         <segment>
+            <source>Play / Pause</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.action">
          <segment>
             <source>Action</source>
@@ -1759,6 +1777,12 @@
       <unit id="mediaTab.fileAttached">
          <segment>
             <source>File already attached</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.actions">
+         <segment>
+            <source>Actions</source>
             <target/>
          </segment>
       </unit>

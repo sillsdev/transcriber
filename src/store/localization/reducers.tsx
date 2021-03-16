@@ -380,6 +380,7 @@ const initialState = {
 			"detach": "Detach",
 			"duration": "Length (s)",
 			"fileAttached": "File already attached",
+			"actions": "Actions",
 			"fileName": "File Name",
 			"filter": "Filter",
 			"loadingTable": "Loading data",
@@ -773,7 +774,7 @@ const initialState = {
 	}),
 };
 
-export default function (state = initialState, action: any): ILocalizedStrings {
+const localizationReducer = function (state = initialState, action: any): ILocalizedStrings {
 	switch (action.type) {
 		case FETCH_LOCALIZATION:
 			return {
@@ -832,3 +833,5 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 			return state;
 	}
 }
+
+export default localizationReducer;

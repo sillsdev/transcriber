@@ -2073,7 +2073,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.fileName">
+      	<trans-unit id="mediaTab.actions">
+      		<source>Actions</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.fileName">
             <source>File Name</source>
             <target/>
             <context-group>

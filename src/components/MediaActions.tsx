@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme: Theme) =>
     actionButton: {
       color: theme.palette.primary.light,
     },
+    icon: {
+      fontSize: '16px',
+    },
   })
 );
 interface IStateProps {
@@ -52,8 +55,16 @@ export function MediaActions(props: IProps) {
   } = props;
   const classes = useStyles();
 
-  const handlePlayStatus = () => () => {
+  const handlePlayStatus = () => {
     onPlayStatus(isPlaying ? '' : mediaId);
+  };
+
+  const handleAttach = () => {
+    onAttach([rowIndex], !attached);
+  };
+
+  const handleDelete = () => {
+    onDelete(rowIndex);
   };
 
   return (
@@ -63,7 +74,7 @@ export function MediaActions(props: IProps) {
           className={classes.actionButton}
           title={t.playpause}
           disabled={(mediaId || '') === ''}
-          onClick={handlePlayStatus()}
+          onClick={handlePlayStatus}
         >
           {isPlaying ? <StopIcon /> : <PlayIcon />}
         </IconButton>
@@ -72,16 +83,20 @@ export function MediaActions(props: IProps) {
         <IconButton
           className={classes.actionButton}
           title={t.attach}
-          onClick={onAttach([rowIndex], !attached)}
+          onClick={handleAttach}
         >
-          {!attached ? <FaPaperclip /> : <FaUnlink />}
+          {!attached ? (
+            <FaPaperclip className={classes.icon} />
+          ) : (
+            <FaUnlink className={classes.icon} />
+          )}
         </IconButton>
       )}
       {canDelete && !readonly && (
         <IconButton
           className={classes.actionButton}
           title={t.delete}
-          onClick={onDelete(rowIndex)}
+          onClick={handleDelete}
         >
           <DeleteIcon />
         </IconButton>

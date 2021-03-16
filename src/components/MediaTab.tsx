@@ -20,8 +20,8 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
-  Menu,
-  MenuItem,
+  // Menu,
+  // MenuItem,
   IconButton,
   AppBar,
   Typography,
@@ -29,11 +29,9 @@ import {
   Slider,
   TableCell,
 } from '@material-ui/core';
-import DropDownIcon from '@material-ui/icons/ArrowDropDown';
+// import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
-import PlayIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
@@ -97,9 +95,6 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
     },
     link: {},
-    playIcon: {
-      fontSize: 16,
-    },
     unsupported: {
       color: theme.palette.secondary.light,
     },
@@ -134,6 +129,7 @@ enum StatusN {
 }
 
 interface IRow {
+  index: number;
   planid: string;
   passId: string;
   id: string;
@@ -235,7 +231,7 @@ export function MediaTab(props: IProps) {
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
   const [attachVisible, setAttachVisible] = useState(attachTool);
-  const [actionMenuItem, setActionMenuItem] = useState(null);
+  // const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
   const [mcheck, setMCheck] = useState(-1);
   const [pcheck, setPCheck] = useState(-1);
@@ -245,7 +241,7 @@ export function MediaTab(props: IProps) {
 
   const columnDefs = [
     { name: 'planName', title: t.planName },
-    { name: 'playIcon', title: '\u00A0' },
+    { name: 'actions', title: 't.actions' },
     { name: 'fileName', title: t.fileName },
     { name: 'sectionDesc', title: organizedBy },
     {
@@ -260,7 +256,7 @@ export function MediaTab(props: IProps) {
   ];
   const columnWidths = [
     { columnName: 'planName', width: 150 },
-    { columnName: 'playIcon', width: 50 },
+    { columnName: 'actions', width: 150 },
     { columnName: 'fileName', width: 220 },
     { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: attachVisible ? 165 : 150 },
@@ -271,6 +267,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'detach', width: 50 },
   ];
   const columnFormatting = [
+    { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
   ];
   const mSorting = [
@@ -284,7 +281,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'date', compare: dateCompare },
   ];
   const sortingEnabled = [
-    { columnName: 'playIcon', sortingEnabled: false },
+    { columnName: 'actions', sortingEnabled: false },
     { columnName: 'detach', sortingEnabled: false },
   ];
   const numCols = ['duration', 'size', 'version'];
@@ -332,7 +329,7 @@ export function MediaTab(props: IProps) {
   const pSummaryItems = [{ columnName: 'reference', type: 'count' }];
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const [filteringEnabled, setFilteringEnabled] = useState([
-    { columnName: 'playIcon', filteringEnabled: false },
+    { columnName: 'actions', filteringEnabled: false },
   ]);
   const [slider, setSlider] = useState<StatusN>(
     attachTool ? StatusN.Proposed : StatusN.Yes
@@ -362,16 +359,31 @@ export function MediaTab(props: IProps) {
   const handleUpload = () => {
     setUploadVisible(true);
   };
-  const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
-  const handleConfirmAction = (what: string) => (e: any) => {
-    setActionMenuItem(null);
-    if (!/Close/i.test(what)) {
-      if (check.length === 0) {
-        showMessage(t.selectRows.replace('{0}', what));
-      } else {
-        setConfirmAction(what);
-      }
-    }
+  // const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
+  // const handleConfirmAction = (what: string) => (e: any) => {
+  //   setActionMenuItem(null);
+  //   if (!/Close/i.test(what)) {
+  //     if (check.length === 0) {
+  //       showMessage(t.selectRows.replace('{0}', what));
+  //     } else {
+  //       setConfirmAction(what);
+  //     }
+  //   }
+  // };
+  const handleDelete = (i: number) => {
+    let versions = mediaFiles.filter(
+      (f) =>
+        related(f, 'plan') === data[i].planid &&
+        f.attributes.originalFile === data[i].fileName
+    );
+    versions.forEach((v) => {
+      memory.update((t: TransformBuilder) =>
+        t.removeRecord({
+          type: 'mediafile',
+          id: v.id,
+        })
+      );
+    });
   };
   const handleActionConfirmed = () => {
     if (action != null) {
@@ -381,19 +393,7 @@ export function MediaTab(props: IProps) {
     }
     if (confirmAction === 'Delete') {
       check.forEach((i) => {
-        let versions = mediaFiles.filter(
-          (f) =>
-            related(f, 'plan') === data[i].planid &&
-            f.attributes.originalFile === data[i].fileName
-        );
-        versions.forEach((v) => {
-          memory.update((t: TransformBuilder) =>
-            t.removeRecord({
-              type: 'mediafile',
-              id: v.id,
-            })
-          );
-        });
+        handleDelete(i);
       });
       setCheck(Array<number>());
     }
@@ -456,19 +456,19 @@ export function MediaTab(props: IProps) {
     setChanged(true);
   };
 
-  const handleMCheck = (checks: Array<number>) => {
-    if (attachVisible) {
-      const newCheck = checks[0] === mcheck ? checks[1] : checks[0];
-      if (checks.length === 1 && pcheck >= 0) {
-        doAttach(checks[0], pcheck);
-        return;
-      }
-      setCheck([newCheck]);
-      setMCheck(newCheck);
-    } else {
-      setCheck(checks);
-    }
-  };
+  // const handleMCheck = (checks: Array<number>) => {
+  //   if (attachVisible) {
+  //     const newCheck = checks[0] === mcheck ? checks[1] : checks[0];
+  //     if (checks.length === 1 && pcheck >= 0) {
+  //       doAttach(checks[0], pcheck);
+  //       return;
+  //     }
+  //     setCheck([newCheck]);
+  //     setMCheck(newCheck);
+  //   } else {
+  //     setCheck(checks);
+  //   }
+  // };
   const handleFilter = () => setFilter(!filter);
   const handlePCheck = (checks: Array<number>) => {
     if (attachVisible && checks.length === 1 && mcheck >= 0) {
@@ -477,7 +477,7 @@ export function MediaTab(props: IProps) {
     }
     setPCheck(checks[0] === pcheck ? checks[1] : checks[0]);
   };
-  const handleSelect = (id: string) => () => {
+  const handleSelect = (id: string) => {
     if (id === playItem) setPlayItem('');
     else setPlayItem(id);
   };
@@ -500,11 +500,11 @@ export function MediaTab(props: IProps) {
   const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
   const noPlanNoFilt = ['planName', 'detach'];
   const noPlayFilt = [
-    { columnName: 'playIcon', filteringEnabled: false },
+    { columnName: 'actions', filteringEnabled: false },
     { columnName: 'detach', filteringEnabled: false },
   ];
   const attachFilt = [
-    { columnName: 'playIcon', filteringEnabled: false },
+    { columnName: 'actions', filteringEnabled: false },
     { columnName: 'sectionDesc', filteringEnabled: false },
     { columnName: 'reference', filteringEnabled: false },
     { columnName: 'detach', filteringEnabled: false },
@@ -538,6 +538,10 @@ export function MediaTab(props: IProps) {
     return passageReference(passage[0], bookData);
   };
 
+  const onAttach = () => {
+    console.log('onAttach');
+  };
+
   const getMedia = (
     planName: string,
     media: Array<MediaFile>,
@@ -553,6 +557,7 @@ export function MediaTab(props: IProps) {
   ) => {
     let rowData: IRow[] = [];
 
+    let index = 0;
     media.forEach((f) => {
       let status = attachMap.hasOwnProperty(f.id) ? StatusN.Proposed : -1;
       const passageId =
@@ -574,6 +579,7 @@ export function MediaTab(props: IProps) {
         const displayTime = updated ? updated.locale(locale).format('LT') : '';
         const today = moment().format('YYYY-MM-DD');
         rowData.push({
+          index,
           planid: related(f, 'plan'),
           passId: passageId,
           planName,
@@ -598,16 +604,8 @@ export function MediaTab(props: IProps) {
             ? f.attributes.versionNumber.toString()
             : '',
           date: date === today ? displayTime : displayDate,
-          actions: (
-            <MediaActions
-              t={t}
-              rowIndex={rowData.length}
-              mediaId={f.id}
-              online={connected || offlineOnly}
-              readonly={readonly}
-            />
-          ),
         } as IRow);
+        index += 1;
       }
     });
     return rowData;
@@ -808,21 +806,21 @@ export function MediaTab(props: IProps) {
     children?: Array<any>;
   }
 
-  const PlayCell = ({ value, style, mediaId, ...restProps }: ICell) => (
-    <Table.Cell {...restProps} style={{ ...style }} value>
-      <IconButton
-        key={'audio-' + mediaId}
-        aria-label={'audio-' + mediaId}
-        color="primary"
-        className={classes.link}
-        onClick={handleSelect(mediaId ? mediaId : '')}
-      >
-        {value === mediaId ? (
-          <StopIcon className={classes.playIcon} />
-        ) : (
-          <PlayIcon className={classes.playIcon} />
-        )}
-      </IconButton>
+  const PlayCell = ({ value, style, row, mediaId, ...restProps }: ICell) => (
+    <Table.Cell row={row} {...restProps} style={{ ...style }} value>
+      <MediaActions
+        t={t}
+        rowIndex={row.index}
+        mediaId={mediaId}
+        online={connected || offlineOnly}
+        readonly={readonly}
+        canDelete={!readonly}
+        attached={row.passId !== null}
+        onAttach={onAttach}
+        onPlayStatus={handleSelect}
+        onDelete={handleDelete}
+        isPlaying={mediaId !== '' && playItem === mediaId}
+      />
     </Table.Cell>
   );
 
@@ -858,7 +856,7 @@ export function MediaTab(props: IProps) {
 
   const Cell = (props: ICell) => {
     const { column, row } = props;
-    if (column.name === 'playIcon') {
+    if (column.name === 'actions') {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap);
       return <PlayCell {...props} mediaId={mediaId} />;
     }
@@ -969,7 +967,7 @@ export function MediaTab(props: IProps) {
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {!attachVisible && (!isOffline || offlineOnly) && (
+                {/* {!attachVisible && (!isOffline || offlineOnly) && (
                   <>
                     <Button
                       key="action"
@@ -996,7 +994,7 @@ export function MediaTab(props: IProps) {
                       </MenuItem>
                     </Menu>
                   </>
-                )}
+                )} */}
                 {attachVisible && (
                   <Button
                     key={t.autoMatch}
@@ -1069,9 +1067,9 @@ export function MediaTab(props: IProps) {
               sorting={mSorting}
               numCols={numCols}
               rows={data}
-              select={handleMCheck}
-              selectCell={attachVisible ? SelectCell : undefined}
-              checks={check}
+              // select={handleMCheck}
+              // selectCell={attachVisible ? SelectCell : undefined}
+              // checks={check}
               shaping={attachVisible || filter}
               hiddenColumnNames={hiddenColumnNames}
               expandedGroups={!filter ? [] : undefined} // shuts off toolbar row
