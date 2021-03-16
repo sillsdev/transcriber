@@ -38,6 +38,7 @@ import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
 import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
 import { ActionHeight, tabActions, actionBar, tabs } from './PlanTabs';
+import { PlanContext } from '../context/PlanContext';
 import { useSnackBar } from '../hoc/SnackBar';
 import MediaActions from './MediaActions';
 import Confirm from './AlertDialog';
@@ -63,8 +64,6 @@ import {
   localeDefault,
   useRemoteSave,
   refMatch,
-  Online,
-  useInterval,
 } from '../utils';
 import { HeadHeight } from '../App';
 import MediaPlayer from './MediaPlayer';
@@ -174,51 +173,6 @@ interface IAttachMap {
   [key: string]: number;
 }
 
-const isAttached = (p: Passage, media: MediaFile[]) => {
-  return media.filter((m) => related(m, 'passage') === p.id).length > 0;
-};
-
-const pad = (text: number) => ('00' + text).slice(-2);
-
-const getPassages = (
-  projectplans: Array<Plan>,
-  media: MediaFile[],
-  passages: Array<Passage>,
-  sections: Array<Section>,
-  allBookData: BookName[]
-) => {
-  const prowData: IPRow[] = [];
-  projectplans.forEach((plan) => {
-    const planId = plan.id;
-    const selSects = sections.filter((s) => related(s, 'plan') === planId);
-    selSects.forEach((section) => {
-      const sectionId = section.id;
-      passages
-        .filter((p) => related(p, 'section') === sectionId)
-        .forEach((passage) => {
-          const refMat = refMatch(passage.attributes.reference);
-          prowData.push({
-            id: passage.id,
-            sectionId: section.id,
-            sectionDesc: getSection([section]),
-            reference: getReference([passage], allBookData),
-            attached: isAttached(passage, media) ? StatusL.Yes : StatusL.No,
-            sort: `${pad(section.attributes.sequencenum)}.${pad(
-              passage.attributes.sequencenum
-            )}`,
-            book: passage.attributes.book,
-            chap: (refMat && parseInt(refMat[1])) || -1,
-            beg: (refMat && refMat.length > 2 && parseInt(refMat[2])) || -1,
-            end: (refMat && refMat.length > 3 && parseInt(refMat[3])) || -1,
-            pasNum: passage.attributes.sequencenum,
-            secNum: section.attributes.sequencenum,
-          });
-        });
-    });
-  });
-  return prowData;
-};
-
 interface IStateProps {
   t: IMediaTabStrings;
   tma: IMediaActionsStrings;
@@ -261,18 +215,16 @@ export function MediaTab(props: IProps) {
     attachTool,
   } = props;
   const classes = useStyles();
+  const ctx = React.useContext(PlanContext);
+  const { connected, readonly } = ctx.state;
   const [projRole] = useGlobal('projRole');
   const [plan] = useGlobal('plan');
   const [coordinator] = useGlobal('coordinator');
   const memory = coordinator.getSource('memory') as Memory;
   const { getPlan } = usePlan();
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
-  const [connected, setConnected] = useGlobal('connected');
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [readonly, setReadOnly] = useState(
-    (isOffline && !offlineOnly) || projRole !== 'admin'
-  );
   const [, setTab] = useGlobal('tab');
   const [, setChanged] = useGlobal('changed');
   const [doSave] = useGlobal('doSave');
@@ -661,6 +613,51 @@ export function MediaTab(props: IProps) {
     return rowData;
   };
 
+  const isAttached = (p: Passage, media: MediaFile[]) => {
+    return media.filter((m) => related(m, 'passage') === p.id).length > 0;
+  };
+
+  const pad = (text: number) => ('00' + text).slice(-2);
+
+  const getPassages = (
+    projectplans: Array<Plan>,
+    media: MediaFile[],
+    passages: Array<Passage>,
+    sections: Array<Section>,
+    allBookData: BookName[]
+  ) => {
+    const prowData: IPRow[] = [];
+    projectplans.forEach((plan) => {
+      const planId = plan.id;
+      const selSects = sections.filter((s) => related(s, 'plan') === planId);
+      selSects.forEach((section) => {
+        const sectionId = section.id;
+        passages
+          .filter((p) => related(p, 'section') === sectionId)
+          .forEach((passage) => {
+            const refMat = refMatch(passage.attributes.reference);
+            prowData.push({
+              id: passage.id,
+              sectionId: section.id,
+              sectionDesc: getSection([section]),
+              reference: getReference([passage], allBookData),
+              attached: isAttached(passage, media) ? StatusL.Yes : StatusL.No,
+              sort: `${pad(section.attributes.sequencenum)}.${pad(
+                passage.attributes.sequencenum
+              )}`,
+              book: passage.attributes.book,
+              chap: (refMat && parseInt(refMat[1])) || -1,
+              beg: (refMat && refMat.length > 2 && parseInt(refMat[2])) || -1,
+              end: (refMat && refMat.length > 3 && parseInt(refMat[3])) || -1,
+              pasNum: passage.attributes.sequencenum,
+              secNum: section.attributes.sequencenum,
+            });
+          });
+      });
+    });
+    return prowData;
+  };
+
   useEffect(() => {
     const playChange = data[0]?.playIcon !== playItem;
     const media: MediaFile[] = getMediaInPlans([planRec.id], mediaFiles);
@@ -797,23 +794,6 @@ export function MediaTab(props: IProps) {
       showMessage(t.noMatch);
     }
   };
-
-  useEffect(() => {
-    const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
-    if (readonly !== newValue) setReadOnly(newValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projRole]);
-
-  const tryOnline = () =>
-    Online((result) => {
-      setConnected(result);
-    }, auth);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => tryOnline(), []);
-
-  //do this every 30 seconds to warn they can't save
-  useInterval(() => tryOnline(), 1000 * 30);
 
   interface ICell {
     value: string;

@@ -14,6 +14,8 @@ import localStrings from '../selector/localize';
 import { withData } from '../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import { related } from '../crud';
+import { Online, useInterval } from '../utils';
+import Auth from '../auth/Auth';
 
 interface IStateProps {
   projButtonStr: IProjButtonsStrings;
@@ -34,6 +36,8 @@ export interface IRowData {}
 
 const initState = {
   t: {} as IMainStrings,
+  readonly: false,
+  connected: false,
   projButtonStr: {} as IProjButtonsStrings,
   isScripture: () => false,
 };
@@ -48,6 +52,7 @@ interface IContext {
 const PlanContext = React.createContext({} as IContext);
 
 interface IProps extends IStateProps, IDispatchProps, IRecordProps {
+  auth: Auth;
   children: React.ReactElement;
 }
 
@@ -56,9 +61,16 @@ const PlanProvider = withData(mapRecordsToProps)(
     mapStateToProps,
     mapDispatchToProps
   )((props: IProps) => {
-    const { projButtonStr } = props;
+    const { projButtonStr, auth } = props;
     const [memory] = useGlobal('memory');
     const [plan] = useGlobal('plan');
+    const [connected, setConnected] = useGlobal('connected');
+    const [projRole] = useGlobal('projRole');
+    const [isOffline] = useGlobal('offline');
+    const [offlineOnly] = useGlobal('offlineOnly');
+    const [readonly, setReadOnly] = useState(
+      (isOffline && !offlineOnly) || projRole !== 'admin'
+    );
     const [state, setState] = useState({
       ...initState,
       projButtonStr,
@@ -84,11 +96,30 @@ const PlanProvider = withData(mapRecordsToProps)(
       return false;
     };
 
+    React.useEffect(() => {
+      const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
+      if (readonly !== newValue) setReadOnly(newValue);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [projRole]);
+
+    const tryOnline = () =>
+      Online((result) => {
+        setConnected(result);
+      }, auth);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    React.useEffect(() => tryOnline(), []);
+
+    //do this every 30 seconds to warn they can't save
+    useInterval(() => tryOnline(), 1000 * 30);
+
     return (
       <PlanContext.Provider
         value={{
           state: {
             ...state,
+            connected,
+            readonly,
             isScripture,
           },
           setState,
