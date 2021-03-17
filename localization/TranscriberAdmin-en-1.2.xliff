@@ -2508,7 +2508,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planTabs.mediaStatus">
-            <source>{1} of {2} media files</source>
+            <source>{1} of {2} associations</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanTabs.tsx</context>

@@ -462,7 +462,7 @@ const initialState = {
 			"assignments": "Assignments",
 			"associations": "Associations",
 			"media": "Media",
-			"mediaStatus": "{1} of {2} media files",
+			"mediaStatus": "{1} of {2} associations",
 			"passageStatus": "{1} of {2} passages",
 			"sectionsPassages": "{0} & Passages",
 			"sectionStatus": "{1} of {2} {0}",

@@ -2154,7 +2154,7 @@
       </unit>
       <unit id="planTabs.mediaStatus">
          <segment>
-            <source>{1} of {2} media files</source>
+            <source>{1} of {2} associations</source>
             <target/>
          </segment>
       </unit>

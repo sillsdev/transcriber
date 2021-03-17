@@ -18,19 +18,12 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import {
-  Button,
-  IconButton,
-  AppBar,
-  Typography,
-  Radio,
-} from '@material-ui/core';
+import { Button, AppBar, Typography, Radio } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
-import ClearIcon from '@material-ui/icons/Clear';
 import { Table } from '@devexpress/dx-react-grid-material-ui';
-import { ActionHeight, tabActions, actionBar, tabs } from './PlanTabs';
+import { ActionHeight, tabActions, actionBar } from './PlanTabs';
 import { PlanContext } from '../context/PlanContext';
 import { useSnackBar } from '../hoc/SnackBar';
 import MediaActions from './MediaActions';
@@ -119,12 +112,6 @@ enum StatusL {
   Yes = 'Y',
 }
 
-enum StatusN {
-  No = 0,
-  Proposed = 1,
-  Yes = 2,
-}
-
 interface IRow {
   index: number;
   planid: string;
@@ -141,8 +128,6 @@ interface IRow {
   version: string;
   date: string;
   actions: typeof MediaActions;
-  isAttaching?: boolean;
-  status: StatusL.No | StatusL.Proposed | StatusL.Yes;
 }
 
 interface IPRow {
@@ -151,7 +136,6 @@ interface IPRow {
   sectionDesc: string;
   reference: string;
   attached: string;
-  isAttaching?: boolean;
   sort: string;
   book: string;
   chap: number;
@@ -218,9 +202,7 @@ export function MediaTab(props: IProps) {
   const [planRec] = useState(getPlan(plan) || ({} as Plan));
   const [isOffline] = useGlobal('offline');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const [, setTab] = useGlobal('tab');
   const [, setChanged] = useGlobal('changed');
-  const [doSave] = useGlobal('doSave');
   const [, saveCompleted] = useRemoteSave();
   const [urlOpen, setUrlOpen] = useGlobal('autoOpenAddMedia');
   const [isDeveloper] = useGlobal('developer');
@@ -412,17 +394,18 @@ export function MediaTab(props: IProps) {
     setPCheck(-1);
   };
 
-  const handleSave = async () => {
+  const handleSave = async (argMap?: IAttachMap) => {
+    const map = argMap || attachMap;
     inProcess.current = true;
     showMessage(t.saving);
     const handleRow = async (mediaId: string) => {
-      const pRow = attachMap[mediaId];
+      const pRow = map[mediaId];
       await attachPassage(pdata[pRow].id, pdata[pRow].sectionId, plan, mediaId);
     };
-    for (let mediaId of Object.keys(attachMap)) {
+    for (let mediaId of Object.keys(map)) {
       await handleRow(mediaId);
     }
-    setAttachMap((map) => ({}));
+    setAttachMap({});
     showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted('');
@@ -448,10 +431,6 @@ export function MediaTab(props: IProps) {
     }
   };
 
-  const handleDetach = (mediaId: string) => () => {
-    doDetach(mediaId);
-  };
-
   const doAttach = (mRow: number, pRow: number) => {
     if (attachMap.hasOwnProperty(data[mRow].id) || dataAttach.has(mRow)) {
       showMessage(t.fileAttached);
@@ -460,11 +439,10 @@ export function MediaTab(props: IProps) {
       showMessage(t.passageAttached);
       return;
     }
-    setAttachMap({ ...attachMap, [data[mRow].id]: pRow });
+    handleSave({ ...attachMap, [data[mRow].id]: pRow });
     setMCheck(-1);
     setPCheck(-1);
     setCheck([]);
-    setChanged(true);
   };
 
   const handleMCheck = (checks: Array<number>, visible?: boolean) => {
@@ -501,13 +479,6 @@ export function MediaTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [urlOpen]);
-
-  React.useEffect(() => {
-    if (doSave && !inProcess.current) {
-      handleSave();
-    }
-    /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [doSave]);
 
   const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
   const noPlanNoFilt = ['planName'];
@@ -569,61 +540,45 @@ export function MediaTab(props: IProps) {
     locale: string,
     t: IMediaActionsStrings
   ) => {
-    // eslint-disable-next-line @typescript-eslint/no-array-constructor
-    let rowData: IRow[] = new Array();
+    let rowData: IRow[] = [];
 
     let index = 0;
     media.forEach((f) => {
-      let status = attachMap.hasOwnProperty(f.id) ? StatusN.Proposed : -1;
-      const passageId =
-        status > 0 ? pdata[attachMap[f.id]].id : related(f, 'passage');
+      const passageId = related(f, 'passage');
       const passage = passageId
         ? passages.filter((p) => p.id === passageId)
         : [];
-      if (status < 0) status = passage.length > 0 ? StatusN.Yes : StatusN.No;
-      const slider = status;
-      if (status <= slider) {
-        const sectionId = related(passage[0], 'section');
-        const section = sections.filter((s) => s.id === sectionId);
-        var updateddt = passageId
-          ? passage[0]?.attributes?.dateUpdated || ''
-          : f?.attributes?.dateUpdated || '';
-        if (!updateddt.endsWith('Z')) updateddt += 'Z';
-        const updated = moment(updateddt);
-        const date = updated ? updated.format('YYYY-MM-DD') : '';
-        const displayDate = updated ? updated.locale(locale).format('L') : '';
-        const displayTime = updated ? updated.locale(locale).format('LT') : '';
-        const today = moment().format('YYYY-MM-DD');
-        console.log('data load', status);
-        rowData.push({
-          index,
-          planid: related(f, 'plan'),
-          passId: passageId,
-          planName,
-          id: f.id,
-          playIcon: playItem,
-          fileName: f.attributes.originalFile,
-          sectionId: sectionId,
-          sectionDesc: getSection(section),
-          reference: getReference(passage, allBookData),
-          status:
-            status === StatusN.Yes
-              ? StatusL.Yes
-              : status === StatusN.Proposed
-              ? StatusL.Proposed
-              : StatusL.No,
-          isAttaching: status === StatusN.Proposed,
-          duration: f.attributes.duration
-            ? f.attributes.duration.toString()
-            : '',
-          size: f.attributes.filesize,
-          version: f.attributes.versionNumber
-            ? f.attributes.versionNumber.toString()
-            : '',
-          date: date === today ? displayTime : displayDate,
-        } as IRow);
-        index += 1;
-      }
+      const sectionId = related(passage[0], 'section');
+      const section = sections.filter((s) => s.id === sectionId);
+      var updateddt = passageId
+        ? passage[0]?.attributes?.dateUpdated || ''
+        : f?.attributes?.dateUpdated || '';
+      if (!updateddt.endsWith('Z')) updateddt += 'Z';
+      const updated = moment(updateddt);
+      const date = updated ? updated.format('YYYY-MM-DD') : '';
+      const displayDate = updated ? updated.locale(locale).format('L') : '';
+      const displayTime = updated ? updated.locale(locale).format('LT') : '';
+      const today = moment().format('YYYY-MM-DD');
+      console.log('data load', status);
+      rowData.push({
+        index,
+        planid: related(f, 'plan'),
+        passId: passageId,
+        planName,
+        id: f.id,
+        playIcon: playItem,
+        fileName: f.attributes.originalFile,
+        sectionId: sectionId,
+        sectionDesc: getSection(section),
+        reference: getReference(passage, allBookData),
+        duration: f.attributes.duration ? f.attributes.duration.toString() : '',
+        size: f.attributes.filesize,
+        version: f.attributes.versionNumber
+          ? f.attributes.versionNumber.toString()
+          : '',
+        date: date === today ? displayTime : displayDate,
+      } as IRow);
+      index += 1;
     });
     return rowData;
   };
@@ -727,8 +682,6 @@ export function MediaTab(props: IProps) {
     const newPData = pdata.map((r, i) => {
       const newRow = hasPassage(i)
         ? { ...r, attached: 'Y', isAttaching: true }
-        : r.isAttaching
-        ? { ...r, attached: 'N', isAttaching: false }
         : null;
       if (newRow) {
         dataChange = true;
@@ -741,9 +694,8 @@ export function MediaTab(props: IProps) {
   }, [attachMap]);
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
-    if (mediaRemoteIds && mediaRemoteIds.length > 0) {
+    if (mediaRemoteIds && mediaRemoteIds.length === 1) {
       setAttachVisible(true);
-      setTab(tabs.associate);
     }
   };
 
@@ -755,7 +707,7 @@ export function MediaTab(props: IProps) {
     Object.keys(newMap).forEach((k) => usedPass.add(newMap[k]));
     let found = 0;
     data.forEach((dr, dn) => {
-      if (!dr.isAttaching && dr.reference === '') {
+      if (dr.reference === '') {
         const m = rpat.exec(dr.fileName);
         if (m) {
           for (let i = 0; i < pdata.length; i++) {
@@ -795,6 +747,7 @@ export function MediaTab(props: IProps) {
     if (found) {
       setAttachMap(newMap);
       showMessage(t.matchAdded.replace('{0}', found.toString()));
+      handleSave(newMap);
     } else {
       showMessage(t.noMatch);
     }
@@ -833,37 +786,16 @@ export function MediaTab(props: IProps) {
     const { row } = props;
     return (
       <Table.Cell {...props}>
-        {row.isAttaching ? (
-          <IconButton
-            key={'detach-' + row.id}
-            aria-label={'detach-' + row.id}
-            color="primary"
-            className={classes.link}
-            onClick={handleDetach(row.id)}
-            title={t.detach}
-          >
-            <ClearIcon />
-          </IconButton>
-        ) : (
-          <MediaActions2
-            t={t}
-            rowIndex={row.index}
-            mediaId={mediaId}
-            online={connected || offlineOnly}
-            readonly={readonly}
-            canDelete={!readonly}
-            onDelete={handleConfirmAction}
-            onDownload={handleDownload}
-          />
-        )}
-      </Table.Cell>
-    );
-  };
-
-  const HighlightCell = (props: Table.DataCellProps) => {
-    return (
-      <Table.Cell {...props}>
-        <strong>{props.value}</strong>
+        <MediaActions2
+          t={t}
+          rowIndex={row.index}
+          mediaId={mediaId}
+          online={connected || offlineOnly}
+          readonly={readonly}
+          canDelete={!readonly}
+          onDelete={handleConfirmAction}
+          onDownload={handleDownload}
+        />
       </Table.Cell>
     );
   };
@@ -878,18 +810,10 @@ export function MediaTab(props: IProps) {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap);
       return <DetachCell {...props} mediaId={mediaId} />;
     }
-    if (['reference', 'sectionDesc'].includes(column.name) && row.isAttaching) {
-      console.log('highlight', column.name);
-      return <HighlightCell {...props} />;
-    }
     return <Table.Cell {...props} />;
   };
 
   const PCell = (props: ICell) => {
-    const { column, row } = props;
-    if (column.name === 'attached' && row.isAttaching) {
-      return <HighlightCell {...props} />;
-    }
     return <Table.Cell {...props} />;
   };
 
@@ -908,52 +832,6 @@ export function MediaTab(props: IProps) {
     );
   };
 
-  // const marks = [
-  //   {
-  //     value: 0,
-  //     label: t.none,
-  //   },
-  //   {
-  //     value: 1,
-  //     label: t.proposed,
-  //   },
-  //   {
-  //     value: 2,
-  //     label: t.all,
-  //   },
-  // ];
-
-  // const handleSlider = (e: any, val: number | number[]) => {
-  //   const newVal =
-  //     val === StatusN.No || val === StatusN.Proposed || val === StatusN.Yes
-  //       ? val
-  //       : 1;
-  //   setSlider(newVal);
-  // };
-
-  // see https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/filtering/#customize-filter-row-appearance
-  // const FilterCell = (props: TableFilterRow.CellProps) => {
-  //   const { column } = props;
-  //   let filtered = filteringEnabled.reduce((v, i) => {
-  //     return i.columnName === column.name || v;
-  //   }, false);
-  //   return !filtered ? (
-  //     <TableFilterRow.Cell {...props} />
-  //   ) : column.name === 'reference' ? (
-  //     <TableCell className={classes.cell}>
-  //       <Slider
-  //         className={classes.slider}
-  //         value={slider}
-  //         onChange={handleSlider}
-  //         valueLabelDisplay="off"
-  //         max={2}
-  //         marks={marks}
-  //       />
-  //     </TableCell>
-  //   ) : (
-  //     <TableCell className={classes.cell} />
-  //   );
-  // };
   const playEnded = () => {
     setPlayItem('');
   };
@@ -1012,21 +890,6 @@ export function MediaTab(props: IProps) {
                 <FilterIcon className={classes.icon} />
               )}
             </Button>
-            <Button
-              key="save"
-              aria-label={t.save}
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleSave}
-              disabled={
-                check.length > 1 ||
-                Object.keys(attachMap).length === 0 ||
-                inProcess.current
-              }
-            >
-              {t.save}
-            </Button>
           </div>
         </AppBar>
         <div className={classes.content}>
@@ -1044,14 +907,10 @@ export function MediaTab(props: IProps) {
               sortingEnabled={sortingEnabled}
               pageSizes={pageSizes}
               filteringEnabled={filteringEnabled}
-              // filterCell={FilterCell}
               dataCell={Cell}
               sorting={mSorting}
               numCols={numCols}
               rows={data}
-              // select={handleMCheck}
-              // selectCell={attachVisible ? SelectCell : undefined}
-              // checks={check}
               shaping={attachVisible || filter}
               hiddenColumnNames={hiddenColumnNames}
               expandedGroups={!filter ? [] : undefined} // shuts off toolbar row
