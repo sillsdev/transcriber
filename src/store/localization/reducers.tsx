@@ -363,7 +363,9 @@ const initialState = {
 	}),
 	"mediaActions": new LocalizedStrings({
 		"en": {
-			"attach": "Attach",
+			"attach": "Associate",
+			"detach": "Unassociate",
+			"download": "Download",
 			"delete": "Delete",
 			"playpause": "Play / Pause",
 		}

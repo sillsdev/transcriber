@@ -1983,7 +1983,21 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="mediaActions.attach">
-      		<source>Attach</source>
+      		<source>Associate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.detach">
+      		<source>Unassociate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.download">
+      		<source>Download</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaActions.tsx</context>

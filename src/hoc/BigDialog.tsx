@@ -5,8 +5,10 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import {
   Dialog,
   DialogContent,
+  DialogActions,
   DialogTitle,
   IconButton,
+  Button,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -58,10 +60,20 @@ interface IProps {
   children: JSX.Element;
   isOpen: boolean;
   onOpen: (isOpen: boolean) => void;
+  onCancel?: () => void;
+  onSave?: () => void;
   bp?: BigDialogBp;
 }
 
-export function BigDialog({ title, children, isOpen, onOpen, bp }: IProps) {
+export function BigDialog({
+  title,
+  children,
+  isOpen,
+  onOpen,
+  onCancel,
+  onSave,
+  bp,
+}: IProps) {
   const classes = useStyles();
   const [isExportBusy] = useGlobal('importexportBusy');
   const [enableOffsite, setEnableOffsite] = useGlobal('enableOffsite');
@@ -69,6 +81,7 @@ export function BigDialog({ title, children, isOpen, onOpen, bp }: IProps) {
   const handleClose = () => {
     if (enableOffsite) setEnableOffsite(false);
     if (!isExportBusy) onOpen && onOpen(false);
+    if (onCancel) onCancel();
   };
 
   return (
@@ -96,6 +109,12 @@ export function BigDialog({ title, children, isOpen, onOpen, bp }: IProps) {
         </div>
       </DialogTitle>
       <DialogContent>{children}</DialogContent>
+      {(onCancel || onSave) && (
+        <DialogActions>
+          {onCancel && <Button onClick={onCancel}>{'Cancel'}</Button>}
+          {onSave && <Button>{'Save'}</Button>}
+        </DialogActions>
+      )}
     </Dialog>
   );
 }

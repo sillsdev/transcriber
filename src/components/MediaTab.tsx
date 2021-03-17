@@ -20,26 +20,23 @@ import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Button,
-  // Menu,
-  // MenuItem,
   IconButton,
   AppBar,
   Typography,
   Radio,
-  Slider,
-  TableCell,
 } from '@material-ui/core';
-// import DropDownIcon from '@material-ui/icons/ArrowDropDown';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ClearIcon from '@material-ui/icons/Clear';
-import { Table, TableFilterRow } from '@devexpress/dx-react-grid-material-ui';
+import { Table } from '@devexpress/dx-react-grid-material-ui';
 import { ActionHeight, tabActions, actionBar, tabs } from './PlanTabs';
 import { PlanContext } from '../context/PlanContext';
 import { useSnackBar } from '../hoc/SnackBar';
 import MediaActions from './MediaActions';
+import MediaActions2 from './MediaActions2';
 import Confirm from './AlertDialog';
+import BigDialog from '../hoc/BigDialog';
 import ShapingTable from './ShapingTable';
 import Uploader, { statusInit } from './Uploader';
 import Template from '../control/template';
@@ -241,7 +238,7 @@ export function MediaTab(props: IProps) {
 
   const columnDefs = [
     { name: 'planName', title: t.planName },
-    { name: 'actions', title: 't.actions' },
+    { name: 'actions', title: t.actions },
     { name: 'fileName', title: t.fileName },
     { name: 'sectionDesc', title: organizedBy },
     {
@@ -256,7 +253,7 @@ export function MediaTab(props: IProps) {
   ];
   const columnWidths = [
     { columnName: 'planName', width: 150 },
-    { columnName: 'actions', width: 150 },
+    { columnName: 'actions', width: 120 },
     { columnName: 'fileName', width: 220 },
     { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: attachVisible ? 165 : 150 },
@@ -264,7 +261,7 @@ export function MediaTab(props: IProps) {
     { columnName: 'size', width: 100 },
     { columnName: 'version', width: 100 },
     { columnName: 'date', width: 100 },
-    { columnName: 'detach', width: 50 },
+    { columnName: 'detach', width: 120 },
   ];
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
@@ -331,9 +328,6 @@ export function MediaTab(props: IProps) {
   const [filteringEnabled, setFilteringEnabled] = useState([
     { columnName: 'actions', filteringEnabled: false },
   ]);
-  const [slider, setSlider] = useState<StatusN>(
-    attachTool ? StatusN.Proposed : StatusN.Yes
-  );
   const [pageSizes, setPageSizes] = useState<number[]>([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [status] = useState(statusInit);
@@ -370,6 +364,14 @@ export function MediaTab(props: IProps) {
   //     }
   //   }
   // };
+  const handleConfirmAction = (i: number) => {
+    setCheck((check) => {
+      return [...check, i];
+    });
+    setConfirmAction('Delete');
+  };
+  const handleDownload = () => {};
+
   const handleDelete = (i: number) => {
     let versions = mediaFiles.filter(
       (f) =>
@@ -405,6 +407,11 @@ export function MediaTab(props: IProps) {
   // const handleAttach = () => setAttachVisible(!attachVisible);
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
 
+  const handleAttachCancel = () => {
+    setAttachVisible(false);
+    setPCheck(-1);
+  };
+
   const handleSave = async () => {
     inProcess.current = true;
     showMessage(t.saving);
@@ -415,13 +422,13 @@ export function MediaTab(props: IProps) {
     for (let mediaId of Object.keys(attachMap)) {
       await handleRow(mediaId);
     }
-    setAttachMap({});
+    setAttachMap((map) => ({}));
     showMessage(t.savingComplete);
     inProcess.current = false;
     saveCompleted('');
   };
 
-  const handleDetach = (mediaId: string) => () => {
+  const doDetach = (mediaId: string) => {
     const mRow = data.reduce((m, r, j) => {
       return r.id === mediaId ? j : m;
     }, -1);
@@ -441,6 +448,10 @@ export function MediaTab(props: IProps) {
     }
   };
 
+  const handleDetach = (mediaId: string) => () => {
+    doDetach(mediaId);
+  };
+
   const doAttach = (mRow: number, pRow: number) => {
     if (attachMap.hasOwnProperty(data[mRow].id) || dataAttach.has(mRow)) {
       showMessage(t.fileAttached);
@@ -456,23 +467,24 @@ export function MediaTab(props: IProps) {
     setChanged(true);
   };
 
-  // const handleMCheck = (checks: Array<number>) => {
-  //   if (attachVisible) {
-  //     const newCheck = checks[0] === mcheck ? checks[1] : checks[0];
-  //     if (checks.length === 1 && pcheck >= 0) {
-  //       doAttach(checks[0], pcheck);
-  //       return;
-  //     }
-  //     setCheck([newCheck]);
-  //     setMCheck(newCheck);
-  //   } else {
-  //     setCheck(checks);
-  //   }
-  // };
+  const handleMCheck = (checks: Array<number>, visible?: boolean) => {
+    if (visible || attachVisible) {
+      const newCheck = checks[0] === mcheck ? checks[1] : checks[0];
+      if (checks.length === 1 && pcheck >= 0) {
+        doAttach(checks[0], pcheck);
+        return;
+      }
+      setCheck([newCheck]);
+      setMCheck(newCheck);
+    } else {
+      setCheck(checks);
+    }
+  };
   const handleFilter = () => setFilter(!filter);
   const handlePCheck = (checks: Array<number>) => {
     if (attachVisible && checks.length === 1 && mcheck >= 0) {
       doAttach(mcheck, checks[0]);
+      setAttachVisible(false);
       return;
     }
     setPCheck(checks[0] === pcheck ? checks[1] : checks[0]);
@@ -498,7 +510,7 @@ export function MediaTab(props: IProps) {
   }, [doSave]);
 
   const noPlanFilt = ['duration', 'size', 'version', 'date', 'planName'];
-  const noPlanNoFilt = ['planName', 'detach'];
+  const noPlanNoFilt = ['planName'];
   const noPlayFilt = [
     { columnName: 'actions', filteringEnabled: false },
     { columnName: 'detach', filteringEnabled: false },
@@ -538,8 +550,11 @@ export function MediaTab(props: IProps) {
     return passageReference(passage[0], bookData);
   };
 
-  const onAttach = () => {
-    console.log('onAttach');
+  const onAttach = (checks: number[], attach: boolean) => {
+    if (attach) {
+      setAttachVisible(true);
+      handleMCheck(checks, true);
+    } else doDetach(data[checks[0]].id);
   };
 
   const getMedia = (
@@ -549,13 +564,13 @@ export function MediaTab(props: IProps) {
     sections: Array<Section>,
     playItem: string,
     allBookData: BookName[],
-    slider: StatusN,
     attachMap: IAttachMap,
     pdata: IPRow[],
     locale: string,
     t: IMediaActionsStrings
   ) => {
-    let rowData: IRow[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-array-constructor
+    let rowData: IRow[] = new Array();
 
     let index = 0;
     media.forEach((f) => {
@@ -566,6 +581,7 @@ export function MediaTab(props: IProps) {
         ? passages.filter((p) => p.id === passageId)
         : [];
       if (status < 0) status = passage.length > 0 ? StatusN.Yes : StatusN.No;
+      const slider = status;
       if (status <= slider) {
         const sectionId = related(passage[0], 'section');
         const section = sections.filter((s) => s.id === sectionId);
@@ -578,6 +594,7 @@ export function MediaTab(props: IProps) {
         const displayDate = updated ? updated.locale(locale).format('L') : '';
         const displayTime = updated ? updated.locale(locale).format('LT') : '';
         const today = moment().format('YYYY-MM-DD');
+        console.log('data load', status);
         rowData.push({
           index,
           planid: related(f, 'plan'),
@@ -667,7 +684,6 @@ export function MediaTab(props: IProps) {
       sections,
       playItem,
       allBookData,
-      slider,
       attachMap,
       pdata,
       locale,
@@ -704,16 +720,7 @@ export function MediaTab(props: IProps) {
       setPData(newPassData);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [
-    mediaFiles,
-    passages,
-    sections,
-    playItem,
-    allBookData,
-    slider,
-    attachMap,
-    pdata,
-  ]);
+  }, [mediaFiles, passages, sections, playItem, allBookData, attachMap, pdata]);
 
   useEffect(() => {
     let dataChange = false;
@@ -814,21 +821,19 @@ export function MediaTab(props: IProps) {
         mediaId={mediaId}
         online={connected || offlineOnly}
         readonly={readonly}
-        canDelete={!readonly}
-        attached={row.passId !== null}
+        attached={Boolean(row.passId)}
         onAttach={onAttach}
         onPlayStatus={handleSelect}
-        onDelete={handleDelete}
         isPlaying={mediaId !== '' && playItem === mediaId}
       />
     </Table.Cell>
   );
 
-  const DetachCell = (props: ICell) => {
+  const DetachCell = ({ mediaId, ...props }: ICell) => {
     const { row } = props;
     return (
       <Table.Cell {...props}>
-        {row.reference !== '' || row.isAttaching ? (
+        {row.isAttaching ? (
           <IconButton
             key={'detach-' + row.id}
             aria-label={'detach-' + row.id}
@@ -840,7 +845,16 @@ export function MediaTab(props: IProps) {
             <ClearIcon />
           </IconButton>
         ) : (
-          <></>
+          <MediaActions2
+            t={t}
+            rowIndex={row.index}
+            mediaId={mediaId}
+            online={connected || offlineOnly}
+            readonly={readonly}
+            canDelete={!readonly}
+            onDelete={handleConfirmAction}
+            onDownload={handleDownload}
+          />
         )}
       </Table.Cell>
     );
@@ -861,9 +875,11 @@ export function MediaTab(props: IProps) {
       return <PlayCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'detach' && projRole === 'admin') {
-      return <DetachCell {...props} />;
+      const mediaId = remoteId('mediafile', row.id, memory.keyMap);
+      return <DetachCell {...props} mediaId={mediaId} />;
     }
     if (['reference', 'sectionDesc'].includes(column.name) && row.isAttaching) {
+      console.log('highlight', column.name);
       return <HighlightCell {...props} />;
     }
     return <Table.Cell {...props} />;
@@ -892,52 +908,52 @@ export function MediaTab(props: IProps) {
     );
   };
 
-  const marks = [
-    {
-      value: 0,
-      label: t.none,
-    },
-    {
-      value: 1,
-      label: t.proposed,
-    },
-    {
-      value: 2,
-      label: t.all,
-    },
-  ];
+  // const marks = [
+  //   {
+  //     value: 0,
+  //     label: t.none,
+  //   },
+  //   {
+  //     value: 1,
+  //     label: t.proposed,
+  //   },
+  //   {
+  //     value: 2,
+  //     label: t.all,
+  //   },
+  // ];
 
-  const handleSlider = (e: any, val: number | number[]) => {
-    const newVal =
-      val === StatusN.No || val === StatusN.Proposed || val === StatusN.Yes
-        ? val
-        : 1;
-    setSlider(newVal);
-  };
+  // const handleSlider = (e: any, val: number | number[]) => {
+  //   const newVal =
+  //     val === StatusN.No || val === StatusN.Proposed || val === StatusN.Yes
+  //       ? val
+  //       : 1;
+  //   setSlider(newVal);
+  // };
 
   // see https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/filtering/#customize-filter-row-appearance
-  const FilterCell = (props: TableFilterRow.CellProps) => {
-    const { column } = props;
-    let filtered = filteringEnabled.reduce((v, i) => {
-      return i.columnName === column.name || v;
-    }, false);
-    return !filtered ? (
-      <TableFilterRow.Cell {...props} />
-    ) : column.name === 'reference' ? (
-      <TableCell className={classes.cell}>
-        <Slider
-          className={classes.slider}
-          value={slider}
-          onChange={handleSlider}
-          valueLabelDisplay="off"
-          max={2}
-          marks={marks}
-        />
-      </TableCell>
-    ) : (
-      <TableCell className={classes.cell} />
-    );
-  };
+  // const FilterCell = (props: TableFilterRow.CellProps) => {
+  //   const { column } = props;
+  //   let filtered = filteringEnabled.reduce((v, i) => {
+  //     return i.columnName === column.name || v;
+  //   }, false);
+  //   return !filtered ? (
+  //     <TableFilterRow.Cell {...props} />
+  //   ) : column.name === 'reference' ? (
+  //     <TableCell className={classes.cell}>
+  //       <Slider
+  //         className={classes.slider}
+  //         value={slider}
+  //         onChange={handleSlider}
+  //         valueLabelDisplay="off"
+  //         max={2}
+  //         marks={marks}
+  //       />
+  //     </TableCell>
+  //   ) : (
+  //     <TableCell className={classes.cell} />
+  //   );
+  // };
   const playEnded = () => {
     setPlayItem('');
   };
@@ -954,7 +970,7 @@ export function MediaTab(props: IProps) {
           <div className={classes.actions}>
             {projRole === 'admin' && (
               <>
-                {!attachVisible && (!isOffline || offlineOnly) && (
+                {(!isOffline || offlineOnly) && (
                   <Button
                     key="upload"
                     aria-label={ts.uploadMediaPlural}
@@ -967,46 +983,16 @@ export function MediaTab(props: IProps) {
                     <AddIcon className={classes.icon} />
                   </Button>
                 )}
-                {/* {!attachVisible && (!isOffline || offlineOnly) && (
-                  <>
-                    <Button
-                      key="action"
-                      aria-owns={
-                        actionMenuItem !== '' ? 'action-menu' : undefined
-                      }
-                      aria-label={t.action}
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleMenu}
-                    >
-                      {t.action}
-                      <DropDownIcon className={classes.icon} />
-                    </Button>
-                    <Menu
-                      id="action-menu"
-                      anchorEl={actionMenuItem}
-                      open={Boolean(actionMenuItem)}
-                      onClose={handleConfirmAction('Close')}
-                    >
-                      <MenuItem onClick={handleConfirmAction('Delete')}>
-                        {t.delete}
-                      </MenuItem>
-                    </Menu>
-                  </>
-                )} */}
-                {attachVisible && (
-                  <Button
-                    key={t.autoMatch}
-                    aria-label={t.autoMatch}
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleAutoMatch}
-                  >
-                    {t.autoMatch}
-                  </Button>
-                )}
+                <Button
+                  key={t.autoMatch}
+                  aria-label={t.autoMatch}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleAutoMatch}
+                >
+                  {t.autoMatch}
+                </Button>
               </>
             )}
             <div className={classes.grow}>{'\u00A0'}</div>
@@ -1026,29 +1012,25 @@ export function MediaTab(props: IProps) {
                 <FilterIcon className={classes.icon} />
               )}
             </Button>
-            {attachVisible && (
-              <>
-                <Button
-                  key="save"
-                  aria-label={t.save}
-                  variant="contained"
-                  color="primary"
-                  className={classes.button}
-                  onClick={handleSave}
-                  disabled={
-                    check.length > 1 ||
-                    Object.keys(attachMap).length === 0 ||
-                    inProcess.current
-                  }
-                >
-                  {t.save}
-                </Button>
-              </>
-            )}
+            <Button
+              key="save"
+              aria-label={t.save}
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={handleSave}
+              disabled={
+                check.length > 1 ||
+                Object.keys(attachMap).length === 0 ||
+                inProcess.current
+              }
+            >
+              {t.save}
+            </Button>
           </div>
         </AppBar>
         <div className={classes.content}>
-          {attachVisible && autoMatch && (
+          {autoMatch && (
             <div className={classes.template}>
               <Template matchMap={matchMap} />
             </div>
@@ -1062,7 +1044,7 @@ export function MediaTab(props: IProps) {
               sortingEnabled={sortingEnabled}
               pageSizes={pageSizes}
               filteringEnabled={filteringEnabled}
-              filterCell={FilterCell}
+              // filterCell={FilterCell}
               dataCell={Cell}
               sorting={mSorting}
               numCols={numCols}
@@ -1076,7 +1058,12 @@ export function MediaTab(props: IProps) {
               bandHeader={attachVisible ? mBandHead : null}
               summaryItems={mSummaryItems}
             />
-            {attachVisible && mcheck !== -1 && (
+            <BigDialog
+              title={'Choose Passage'}
+              isOpen={attachVisible || false}
+              onOpen={setAttachVisible}
+              onCancel={handleAttachCancel}
+            >
               <ShapingTable
                 columns={pColumnDefs}
                 columnWidths={pColumnWidths}
@@ -1095,7 +1082,7 @@ export function MediaTab(props: IProps) {
                 bandHeader={pBandHead}
                 summaryItems={pSummaryItems}
               />
-            )}
+            </BigDialog>
           </div>
         </div>
       </div>

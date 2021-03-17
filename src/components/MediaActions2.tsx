@@ -1,9 +1,8 @@
 import React from 'react';
 import { IMediaActionsStrings, IState } from '../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import PlayIcon from '@material-ui/icons/PlayArrowOutlined';
-import { FaPaperclip, FaUnlink } from 'react-icons/fa';
-import StopIcon from '@material-ui/icons/Stop';
+import DownloadIcon from '@material-ui/icons/GetAppOutlined';
+import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../api-variable';
@@ -16,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     actionButton: {
       color: theme.palette.primary.light,
+    },
+    download: {
+      fill: theme.palette.primary.light,
     },
     icon: {
       fontSize: '16px',
@@ -31,56 +33,51 @@ interface IProps extends IStateProps {
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
-  attached: boolean;
-  onAttach: (where: number[], attach: boolean) => () => void;
-  onPlayStatus: (mediaId: string) => void;
+  canDelete: boolean;
+  onDownload: (mediaId: string) => void;
+  onDelete: (i: number) => () => void;
 }
 
-export function MediaActions(props: IProps) {
+export function MediaActions2(props: IProps) {
   const {
     t,
     rowIndex,
     mediaId,
     online,
     readonly,
-    onAttach,
-    onPlayStatus,
-    isPlaying,
-    attached,
+    onDownload,
+    onDelete,
+    canDelete,
   } = props;
   const classes = useStyles();
 
-  const handlePlayStatus = () => {
-    onPlayStatus(isPlaying ? '' : mediaId);
+  const handleDownload = () => {
+    onDownload(mediaId);
   };
 
-  const handleAttach = () => {
-    onAttach([rowIndex], !attached);
+  const handleDelete = () => {
+    onDelete(rowIndex);
   };
 
   return (
     <div className={classes.arrangeActions}>
-      {!readonly && (
-        <IconButton
-          className={classes.actionButton}
-          title={!attached ? t.attach : t.detach}
-          onClick={handleAttach}
-        >
-          {!attached ? (
-            <FaPaperclip className={classes.icon} />
-          ) : (
-            <FaUnlink className={classes.icon} />
-          )}
-        </IconButton>
-      )}
       {(isElectron || online) && (
         <IconButton
           className={classes.actionButton}
-          title={t.playpause}
+          title={t.download}
           disabled={(mediaId || '') === ''}
-          onClick={handlePlayStatus}
+          onClick={handleDownload}
         >
-          {isPlaying ? <StopIcon /> : <PlayIcon />}
+          <DownloadIcon />
+        </IconButton>
+      )}
+      {canDelete && !readonly && (
+        <IconButton
+          className={classes.actionButton}
+          title={t.delete}
+          onClick={handleDelete}
+        >
+          <DeleteIcon />
         </IconButton>
       )}
     </div>
@@ -89,4 +86,4 @@ export function MediaActions(props: IProps) {
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'mediaActions' }),
 });
-export default (connect(mapStateToProps)(MediaActions) as any) as any;
+export default (connect(mapStateToProps)(MediaActions2) as any) as any;

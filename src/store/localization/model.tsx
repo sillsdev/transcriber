@@ -340,6 +340,8 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
 
 export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
     "attach": string;
+    "detach": string;
+    "download": string;
     "delete": string;
     "playpause": string;
 };

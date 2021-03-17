@@ -1704,7 +1704,19 @@
       </unit>
       <unit id="mediaActions.attach">
          <segment>
-            <source>Attach</source>
+            <source>Associate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.detach">
+         <segment>
+            <source>Unassociate</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.download">
+         <segment>
+            <source>Download</source>
             <target/>
          </segment>
       </unit>
