@@ -1,11 +1,12 @@
 import React from 'react';
 import { IMediaActionsStrings, IState } from '../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
-import DownloadIcon from '@material-ui/icons/GetAppOutlined';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
 import { isElectron } from '../api-variable';
+import AudioDownload from './AudioDownload';
+import Auth from '../auth/Auth';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,12 +31,14 @@ interface IStateProps {
 interface IProps extends IStateProps {
   rowIndex: number;
   mediaId: string;
+  passageId: string;
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
   canDelete: boolean;
   onDownload: (mediaId: string) => void;
   onDelete: (i: number) => () => void;
+  auth: Auth;
 }
 
 export function MediaActions2(props: IProps) {
@@ -43,17 +46,14 @@ export function MediaActions2(props: IProps) {
     t,
     rowIndex,
     mediaId,
+    passageId,
     online,
     readonly,
-    onDownload,
     onDelete,
     canDelete,
+    auth,
   } = props;
   const classes = useStyles();
-
-  const handleDownload = () => {
-    onDownload(mediaId);
-  };
 
   const handleDelete = () => {
     onDelete(rowIndex);
@@ -62,14 +62,12 @@ export function MediaActions2(props: IProps) {
   return (
     <div className={classes.arrangeActions}>
       {(isElectron || online) && (
-        <IconButton
-          className={classes.actionButton}
+        <AudioDownload
+          auth={auth}
           title={t.download}
-          disabled={(mediaId || '') === ''}
-          onClick={handleDownload}
-        >
-          <DownloadIcon />
-        </IconButton>
+          passageId={passageId}
+          mediaId={mediaId}
+        />
       )}
       {canDelete && !readonly && (
         <IconButton

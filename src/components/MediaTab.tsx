@@ -352,8 +352,6 @@ export function MediaTab(props: IProps) {
     });
     setConfirmAction('Delete');
   };
-  const handleDownload = () => {};
-
   const handleDelete = (i: number) => {
     let versions = mediaFiles.filter(
       (f) =>
@@ -559,7 +557,6 @@ export function MediaTab(props: IProps) {
       const displayDate = updated ? updated.locale(locale).format('L') : '';
       const displayTime = updated ? updated.locale(locale).format('LT') : '';
       const today = moment().format('YYYY-MM-DD');
-      console.log('data load', status);
       rowData.push({
         index,
         planid: related(f, 'plan'),
@@ -789,12 +786,13 @@ export function MediaTab(props: IProps) {
         <MediaActions2
           t={t}
           rowIndex={row.index}
+          passageId={row.passId}
           mediaId={mediaId}
+          auth={auth}
           online={connected || offlineOnly}
           readonly={readonly}
           canDelete={!readonly}
           onDelete={handleConfirmAction}
-          onDownload={handleDownload}
         />
       </Table.Cell>
     );
