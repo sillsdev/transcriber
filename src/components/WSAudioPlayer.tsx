@@ -10,6 +10,7 @@ import {
   Slider,
   Box,
   InputLabel,
+  Divider,
 } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
@@ -38,6 +39,7 @@ import { useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration } from '../control';
 import { connect } from 'react-redux';
+import { useSnackBar } from '../hoc/SnackBar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,6 +85,23 @@ interface IProps extends IStateProps {
   recordingReady?: (blob: Blob) => void;
   setChanged?: (changed: boolean) => void;
 }
+interface VLC_Props {
+  children: any;
+  open: boolean;
+  value: number;
+}
+function ValueLabelComponent(props: VLC_Props) {
+  const { children, open, value } = props;
+
+  function valuetext(value: number) {
+    return `${Math.floor(value)}%`;
+  }
+  return (
+    <Tooltip open={open} enterTouchDelay={0} placement="top" title={valuetext(value)}>
+      {children}
+    </Tooltip>
+  );
+}
 
 const SPEED_STEP = 0.2;
 const MIN_SPEED = 0;
@@ -115,15 +134,17 @@ function WSAudioPlayer(props: IProps) {
   const [looping, setLooping] = useState(false);
   const [hasRegion, setHasRegion] = useState(false);
   const recordStartPosition = useRef(0);
+  const recordOverwritePosition = useRef<number | undefined>(0);
   const [overwrite, setOverwrite] = useState(false);
   const [recording, setRecording] = useState(false);
   const [recordingPaused, setRecordingPaused] = useState(false);
   const [ready, setReady] = useState(false);
   const [silence, setSilence] = useState(1.0);
+  const { showMessage } = useSnackBar();
   const {
     wsLoad,
     wsTogglePlay,
-    // wsPlay,
+    //wsPlay,
     wsPause,
     wsDuration,
     wsPosition,
@@ -140,21 +161,23 @@ function WSAudioPlayer(props: IProps) {
     onWSProgress,
     onWSRegion,
     onWSStop,
-    () => {},
+    () => { },
     allowRecord ? 200 : 50,
     timelineRef.current
   );
+  //because we have to call hooks consistently, call this even if we aren't going to record
   const {
     startRecording,
     stopRecording,
     pauseRecording,
     resumeRecording,
   } = useMediaRecorder(
+    allowRecord,
     onRecordStart,
     onRecordStop,
     onRecordError,
     onRecordDataAvailable
-  );
+  )
 
   const paperStyle = {};
   useEffect(() => {
@@ -180,22 +203,26 @@ function WSAudioPlayer(props: IProps) {
   function onRecordStart() {
     console.log('do something on start?');
   }
-  function onRecordStop(blob: Blob) {
-    wsInsertAudio(blob, recordStartPosition.current, overwrite);
+  async function onRecordStop(blob: Blob) {
+    console.log('do something on stop?', blob?.size);
+    var newPos = await wsInsertAudio(blob, recordStartPosition.current, recordOverwritePosition.current);
+    if (!overwrite)
+      recordOverwritePosition.current = newPos;
     //wsPlay();
     if (recordingReady) recordingReady(blob);
-    console.log('do something on stop?', blob?.size);
   }
   function onRecordError(e: any) {
-    console.log(e.error);
+    console.log('onRecordError', e.error);
+    showMessage(e.error);
   }
-  function onRecordDataAvailable(e: any, blob: Blob) {
+  async function onRecordDataAvailable(e: any, blob: Blob) {
     console.log('data available', blob?.size, recordStartPosition.current);
-    wsInsertAudio(blob, recordStartPosition.current, overwrite);
+    var newPos = await wsInsertAudio(blob, recordStartPosition.current, recordOverwritePosition.current);
+    if (!overwrite)
+      recordOverwritePosition.current = newPos;
     //setAudioBlob(blob);
   }
   function onWSReady() {
-    console.log('wavesurfer loaded');
     setReady(true);
   }
   function onWSProgress(progress: number) {
@@ -254,6 +281,7 @@ function WSAudioPlayer(props: IProps) {
       wsPause();
       console.log('start record', wsPosition());
       recordStartPosition.current = wsPosition();
+      recordOverwritePosition.current = overwrite ? undefined : recordStartPosition.current;
       startRecording(100);
     } else {
       stopRecording();
@@ -310,9 +338,7 @@ function WSAudioPlayer(props: IProps) {
     fasterTip: 'Faster {0}',
     resetTip: 'Reset Speed {0}',
   };
-  function valuetext(value: number) {
-    return `${Math.floor(value)}%`;
-  }
+
   const handleChangeSilence = (e: any) => {
     //check if its a number
     e.persist();
@@ -321,74 +347,78 @@ function WSAudioPlayer(props: IProps) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
-        <Grid item xs>
-          <Grid container>
-            {allowRecord && (
-              <>
-                <Tooltip title={overwrite ? 't.overwrite' : 't.insert'}>
-                  <IconButton onClick={handleInsertOverwrite}>
-                    {overwrite ? <OverwriteIcon /> : <InsertIcon />}
+
+        <Grid container justify="flex-start">
+          {allowRecord && (
+            <>
+              <Tooltip title={overwrite ? 't.overwrite' : 't.insert'}>
+                <IconButton onClick={handleInsertOverwrite}>
+                  {overwrite ? <OverwriteIcon /> : <InsertIcon />}
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={recording ? 't.stop' : 't.record'}>
+                <IconButton
+                  className={classes.record}
+                  onClick={handleRecorder}
+                >
+                  {recording ? <FaStopCircle /> : <FaDotCircle />}
+                </IconButton>
+              </Tooltip>
+              {recording && (
+                <Tooltip title={recordingPaused ? 't.resume' : 't.pause'}>
+                  <IconButton onClick={handlePause}>
+                    {recordingPaused ? (
+                      <FaPauseCircle className={classes.record} />
+                    ) : (
+                      <FaPauseCircle />
+                    )}
                   </IconButton>
                 </Tooltip>
-                <Tooltip title={recording ? 't.stop' : 't.record'}>
-                  <IconButton
-                    className={classes.record}
-                    onClick={handleRecorder}
-                  >
-                    {recording ? <FaStopCircle /> : <FaDotCircle />}
+              )}
+              <Divider orientation="vertical" flexItem />
+              <Grid item xs>
+                <Grid container direction="column">
+                  <InputLabel shrink>t.addSilence</InputLabel>
+                  <Tooltip title={'t.silence'}>
+                    <span>
+                      <IconButton
+                        className={classes.togglebutton}
+                        onClick={handleAddSilence()}
+                        disabled={!ready}
+                      >
+                        <SilenceIcon />
+                      </IconButton></span>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+              <Grid item xs>
+                <Grid container direction="column">
+                  <InputLabel shrink>seconds</InputLabel>
+                  <input
+                    className={classes.formControl}
+                    type="number"
+                    min="0.1"
+                    step="0.1"
+                    value={silence}
+                    onChange={handleChangeSilence}
+                  />
+                </Grid>
+              </Grid>
+              <Divider orientation="vertical" flexItem />
+              {hasRegion && (
+                <Tooltip title={'t.deleteregion'}>
+                  <IconButton onClick={handleDeleteRegion()}>
+                    <DeleteIcon />
                   </IconButton>
                 </Tooltip>
-                {recording && (
-                  <Tooltip title={recordingPaused ? 't.resume' : 't.pause'}>
-                    <IconButton onClick={handlePause}>
-                      {recordingPaused ? (
-                        <FaPauseCircle className={classes.record} />
-                      ) : (
-                        <FaPauseCircle />
-                      )}
-                    </IconButton>
-                  </Tooltip>
-                )}
-                <Box display="flex" border={1}>
-                  <Grid item xs>
-                    <Grid container direction="column">
-                      <InputLabel shrink>t.addSilence</InputLabel>
-                      <Tooltip title={'t.silence'}>
-                        <IconButton
-                          className={classes.togglebutton}
-                          onClick={handleAddSilence()}
-                          disabled={!ready}
-                        >
-                          <SilenceIcon />
-                        </IconButton>
-                      </Tooltip>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs>
-                    <Grid container direction="column">
-                      <InputLabel shrink>seconds</InputLabel>
-                      <input
-                        className={classes.formControl}
-                        type="number"
-                        min="0.1"
-                        step="0.1"
-                        value={silence}
-                        onChange={handleChangeSilence}
-                      />
-                    </Grid>
-                  </Grid>
-                </Box>
-                {hasRegion && (
-                  <Tooltip title={'t.deleteregion'}>
-                    <IconButton onClick={handleDeleteRegion()}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </>
-            )}
-          </Grid>
+
+              )}
+              <Grid item xs >
+                <span></span>                  </Grid>
+            </>
+          )}
         </Grid>
+
         <Typography>
           <Duration seconds={wsPosition()} /> {' / '}
           <Duration seconds={wsDuration()} />
@@ -396,67 +426,72 @@ function WSAudioPlayer(props: IProps) {
         <div ref={timelineRef} />
         <div ref={waveformRef} />
         <Grid item xs>
-          <Grid container justify="center">
+          <Grid container justify="flex-start">
             {allowRecord || (
               <Tooltip title={'t.loop' + looping ? ' on' : ' off'}>
-                <ToggleButton
-                  className={classes.togglebutton}
-                  value="loop"
-                  selected={looping}
-                  onChange={handleToggleLoop()}
-                  disabled={!hasRegion}
-                >
-                  <LoopIcon />
-                </ToggleButton>
+                <span>
+                  <ToggleButton
+                    className={classes.togglebutton}
+                    value="loop"
+                    selected={looping}
+                    onChange={handleToggleLoop()}
+                    disabled={!hasRegion}
+                  >
+                    <LoopIcon />
+                  </ToggleButton>
+                </span>
               </Tooltip>
             )}
             <Tooltip title={'t.beginning'}>
-              <IconButton onClick={handleGotoEv(0)} disabled={!ready}>
-                <SkipPreviousIcon />
-              </IconButton>
+              <span>
+                <IconButton onClick={handleGotoEv(0)} disabled={!ready}>
+                  <SkipPreviousIcon />
+                </IconButton></span>
             </Tooltip>
             <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-              <IconButton onClick={handleJumpEv(-1 * jump)} disabled={!ready}>
-                <ReplayIcon /> <Typography>{BACK_KEY}</Typography>
-              </IconButton>
+              <span>
+                <IconButton onClick={handleJumpEv(-1 * jump)} disabled={!ready}>
+                  <ReplayIcon /> <Typography>{BACK_KEY}</Typography>
+                </IconButton></span>
             </Tooltip>
             <Tooltip
               title={(playing ? t.pauseTip : t.playTip).replace(
                 '{0}',
                 PLAY_PAUSE_KEY
               )}
-            >
-              <IconButton
-                onClick={handlePlayStatus}
-                disabled={wsDuration() === 0}
-              >
-                <>
-                  {playing ? <PauseIcon /> : <PlayIcon />}
-                  <Typography>{PLAY_PAUSE_KEY}</Typography>
-                </>
-              </IconButton>
+            ><span>
+                <IconButton
+                  onClick={handlePlayStatus}
+                  disabled={wsDuration() === 0}
+                >
+                  <>
+                    {playing ? <PauseIcon /> : <PlayIcon />}
+                    <Typography>{PLAY_PAUSE_KEY}</Typography>
+                  </>
+                </IconButton></span>
             </Tooltip>
             <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-              <IconButton onClick={handleJumpEv(jump)} disabled={!ready}>
-                <ForwardIcon /> <Typography>{AHEAD_KEY}</Typography>
-              </IconButton>
+              <span>
+                <IconButton onClick={handleJumpEv(jump)} disabled={!ready}>
+                  <ForwardIcon /> <Typography>{AHEAD_KEY}</Typography>
+                </IconButton></span>
             </Tooltip>
-
             <Tooltip title={'t.end'}>
-              <IconButton
-                onClick={handleGotoEv(wsDuration())}
-                disabled={!ready}
-              >
-                <SkipNextIcon />{' '}
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleGotoEv(wsDuration())}
+                  disabled={!ready}
+                >
+                  <SkipNextIcon />{' '}
+                </IconButton></span>
             </Tooltip>
-            <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
+            <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}><span>
               <IconButton
                 onClick={handleSlower}
                 disabled={playbackRate === MIN_SPEED}
               >
-                <FaAngleDoubleDown /> <Typography>{SLOWER_KEY}</Typography>
-              </IconButton>
+                <FaAngleDoubleDown fontSize="small" /> <Typography>{SLOWER_KEY}</Typography>
+              </IconButton></span>
             </Tooltip>
             <Slider
               className={classes.slider}
@@ -466,22 +501,22 @@ function WSAudioPlayer(props: IProps) {
               min={MIN_SPEED * 100}
               max={MAX_SPEED * 100}
               onChange={handleSliderChange}
-              valueLabelDisplay="auto"
-              valueLabelFormat={valuetext}
+              ValueLabelComponent={ValueLabelComponent}
             />
 
             <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-              <IconButton
-                onClick={handleFaster}
-                disabled={playbackRate === MAX_SPEED}
-              >
-                <FaAngleDoubleUp /> <Typography>{FASTER_KEY}</Typography>
-              </IconButton>
+              <span>
+                <IconButton
+                  onClick={handleFaster}
+                  disabled={playbackRate === MAX_SPEED}
+                >
+                  <FaAngleDoubleUp fontSize="small" /> <Typography>{FASTER_KEY}</Typography>
+                </IconButton></span>
             </Tooltip>
           </Grid>
         </Grid>
       </Paper>
-    </div>
+    </div >
   );
 }
 

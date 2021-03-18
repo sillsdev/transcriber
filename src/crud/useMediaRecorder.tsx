@@ -6,9 +6,10 @@ const CAPTURE_OPTIONS = {
   audio: true,
   video: false,
 };
-const noop = () => {};
+const noop = () => { };
 
 export function useMediaRecorder(
+  allowRecord: boolean = true,
   onStart: () => void = noop,
   onStop: (blob: Blob) => void = noop,
   onError: (e: any) => void = noop,
@@ -17,13 +18,23 @@ export function useMediaRecorder(
   const mediaChunks = useRef<any>([]);
   const [playerUrl, setPlayerUrl] = useState('');
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
-  const mediaStream = useUserMedia(CAPTURE_OPTIONS);
+  const getMediaStream = useUserMedia(CAPTURE_OPTIONS);
+  const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
+    undefined
+  );
   const [mediaBlob, setMediaBlob] = React.useState<Blob>();
+
+  useEffect(() => {
+    getMediaStream().then(stream => {
+      setMediaStream(stream);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     startRecorder();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [mediaStream]);
 
   function createBlob() {
     const blob = new Blob(mediaChunks.current);
@@ -50,6 +61,7 @@ export function useMediaRecorder(
     onError(e.error);
   }
 
+
   function startRecorder() {
     if (mediaStream) {
       const recorder = new MediaRecorder(mediaStream);
@@ -61,7 +73,7 @@ export function useMediaRecorder(
         return recorder;
       }
     }
-  }
+  };
 
   function startRecording(timeSlice?: number) {
     var recorder = mediaRecorder || startRecorder();
@@ -97,10 +109,10 @@ export function useMediaRecorder(
     }
   }
   return {
-    startRecording,
-    stopRecording,
-    pauseRecording,
-    resumeRecording,
+    startRecording: allowRecord ? startRecording : noop,
+    stopRecording: allowRecord ? stopRecording : noop,
+    pauseRecording: allowRecord ? pauseRecording : noop,
+    resumeRecording: allowRecord ? resumeRecording : noop,
     playerUrl,
     mediaBlob,
   };
