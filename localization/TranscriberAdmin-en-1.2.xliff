@@ -2185,6 +2185,13 @@
       			<context context-type="sourcefile">MediaTab.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="mediaTab.alreadyAssociated">
+            <source>Show Passages Already Associated</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">MediaTab.tsx</context>
+            </context-group>
+         </trans-unit>
       	<trans-unit id="mediaTab.save">
             <source>Save</source>
             <target/>

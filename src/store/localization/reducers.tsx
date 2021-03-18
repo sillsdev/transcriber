@@ -396,6 +396,7 @@ const initialState = {
 			"proposed": "Proposed",
 			"reference": "Reference",
 			"associated": "Associated",
+			"alreadyAssociated": "Show Passages Already Associated",
 			"save": "Save",
 			"saving": "Saving...",
 			"savingComplete": "Saving complete.",

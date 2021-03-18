@@ -18,7 +18,7 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, AppBar, Typography, Radio } from '@material-ui/core';
+import { Button, AppBar, Typography, Radio, Switch, FormControlLabel } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
@@ -169,9 +169,9 @@ interface IRecordProps {
 
 interface IProps
   extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+  IDispatchProps,
+  IRecordProps,
+  WithDataProps {
   action?: (what: string, where: number[]) => boolean;
   auth: Auth;
   attachTool?: boolean;
@@ -286,15 +286,13 @@ export function MediaTab(props: IProps) {
   const pColumnWidths = [
     { columnName: 'sectionDesc', width: 150 },
     { columnName: 'reference', width: 150 },
-    { columnName: 'attached', width: 105 },
   ];
   const pColumnFormatting = [
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
     { columnName: 'reference', aligh: 'left', wordWrapEnabled: true },
   ];
-  const pFilters = [{ columnName: 'attached', operation: 'equal', value: 'N' }];
   const pSorting = [{ columnName: 'sort', direction: 'asc' }];
-  const pHiddenColumnNames = ['sort'];
+  const pHiddenColumnNames = ['sort', 'attached'];
   const pSummaryItems = [{ columnName: 'reference', type: 'count' }];
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const [filteringEnabled, setFilteringEnabled] = useState([
@@ -309,6 +307,7 @@ export function MediaTab(props: IProps) {
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
   const [passAttach, setPassAttach] = useState(new Set<number>());
+  const [attachedFilter, setAttachedFilter] = useState({ columnName: 'attached', operation: 'equal', value: 'N' })
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
@@ -420,9 +419,6 @@ export function MediaTab(props: IProps) {
   const doAttach = (mRow: number, pRow: number) => {
     if (attachMap.hasOwnProperty(data[mRow].id) || dataAttach.has(mRow)) {
       showMessage(t.fileAttached);
-      return;
-    } else if (hasPassage(pRow) || passAttach.has(pRow)) {
-      showMessage(t.passageAttached);
       return;
     }
     handleSave({ ...attachMap, [data[mRow].id]: pRow });
@@ -816,10 +812,14 @@ export function MediaTab(props: IProps) {
       <Table.Cell {...props} />
     );
   };
+  const handleAttachedFilterChange = (e: any) => {
+    setAttachedFilter({ columnName: 'attached', operation: 'equal', value: e.target.checked ? 'Y' : 'N' })
+  };
 
   const playEnded = () => {
     setPlayItem('');
   };
+
   return (
     <div className={classes.container}>
       <div className={classes.paper}>
@@ -908,23 +908,32 @@ export function MediaTab(props: IProps) {
               onOpen={setAttachVisible}
               onCancel={handleAttachCancel}
             >
-              <ShapingTable
-                columns={pColumnDefs}
-                columnWidths={pColumnWidths}
-                columnFormatting={pColumnFormatting}
-                filters={pFilters}
-                dataCell={PCell}
-                sorting={pSorting}
-                pageSizes={pageSizes}
-                rows={pdata}
-                select={handlePCheck}
-                selectCell={SelectCell}
-                checks={pcheck >= 0 ? [pcheck] : []}
-                shaping={true}
-                hiddenColumnNames={pHiddenColumnNames}
-                expandedGroups={[]} // shuts off toolbar row
-                summaryItems={pSummaryItems}
-              />
+              <span>
+                <FormControlLabel
+                  value="attached"
+                  labelPlacement="end"
+                  control={<Switch checked={attachedFilter.value == 'Y'}
+                    onChange={handleAttachedFilterChange} />}
+                  label={t.alreadyAssociated}
+                />
+                <ShapingTable
+                  columns={pColumnDefs}
+                  columnWidths={pColumnWidths}
+                  columnFormatting={pColumnFormatting}
+                  filters={[attachedFilter]}
+                  dataCell={PCell}
+                  sorting={pSorting}
+                  pageSizes={pageSizes}
+                  rows={pdata}
+                  select={handlePCheck}
+                  selectCell={SelectCell}
+                  checks={pcheck >= 0 ? [pcheck] : []}
+                  shaping={true}
+                  hiddenColumnNames={pHiddenColumnNames}
+                  expandedGroups={[]} // shuts off toolbar row
+                  summaryItems={pSummaryItems}
+                />
+              </span>
             </BigDialog>
           </div>
         </div>
