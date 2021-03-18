@@ -786,7 +786,6 @@ export function MediaTab(props: IProps) {
         <MediaActions2
           t={t}
           rowIndex={row.index}
-          passageId={row.passId}
           mediaId={mediaId}
           auth={auth}
           online={connected || offlineOnly}

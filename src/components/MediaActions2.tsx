@@ -31,7 +31,6 @@ interface IStateProps {
 interface IProps extends IStateProps {
   rowIndex: number;
   mediaId: string;
-  passageId: string;
   online: boolean;
   readonly: boolean;
   isPlaying: boolean;
@@ -46,7 +45,6 @@ export function MediaActions2(props: IProps) {
     t,
     rowIndex,
     mediaId,
-    passageId,
     online,
     readonly,
     onDelete,
@@ -62,12 +60,7 @@ export function MediaActions2(props: IProps) {
   return (
     <div className={classes.arrangeActions}>
       {(isElectron || online) && (
-        <AudioDownload
-          auth={auth}
-          title={t.download}
-          passageId={passageId}
-          mediaId={mediaId}
-        />
+        <AudioDownload auth={auth} title={t.download} mediaId={mediaId} />
       )}
       {canDelete && !readonly && (
         <IconButton

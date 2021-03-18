@@ -3,10 +3,10 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
-import { IState } from '../model';
+import { IState, MediaFile } from '../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import DownloadIcon from '@material-ui/icons/GetAppOutlined';
-import { getMediaRec, getMediaName, remoteId } from '../crud';
+import { getMediaName, remoteIdGuid } from '../crud';
 import { logError, Severity } from '../utils';
 import Auth from '../auth/Auth';
 
@@ -33,12 +33,11 @@ interface IDispatchProps {
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   title: string;
-  passageId: string;
   mediaId: string;
 }
 
 export const AudioDownload = (props: IProps) => {
-  const { passageId, mediaId, title } = props;
+  const { mediaId, title } = props;
   const { hasUrl, mediaUrl, auth, fetchMediaUrl } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -50,13 +49,13 @@ export const AudioDownload = (props: IProps) => {
 
   const handleDownload = () => {
     logError(Severity.info, globalStore.errorReporter, `handleDownload`);
-    const mediaRec = getMediaRec(passageId, memory);
-    const id =
-      remoteId('mediafile', mediaRec ? mediaRec.id : '', memory.keyMap) ||
-      mediaRec?.id;
-    logError(Severity.info, globalStore.errorReporter, `rem Media Id=${id}`);
-    const name = getMediaName(mediaRec, memory);
+    const id = remoteIdGuid('mediafile', mediaId, memory.keyMap) || mediaId;
+    const mediaRec = memory.cache.query((q) =>
+      q.findRecord({ type: 'mediafile', id })
+    ) as MediaFile;
+    logError(Severity.info, globalStore.errorReporter, `Media Id=${mediaId}`);
     if (id) fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
+    const name = mediaRec?.attributes?.originalFile || `media-${id}`;
     setAudName(name);
   };
 
