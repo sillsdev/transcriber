@@ -1831,7 +1831,13 @@
             <target>Справка</target>
          </segment>
       </unit>
-      <unit id="mediaTab.save">
+   	<unit id="mediaTab.associated">
+   		<segment>
+   			<source>Associated</source>
+   			<target>Ассоциированный</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.save">
          <segment>
             <source>Save</source>
             <target>Сохранить</target>

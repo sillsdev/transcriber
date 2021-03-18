@@ -1513,7 +1513,37 @@
             <target>Versão: </target>
          </segment>
       </unit>
-      <unit id="mediaTab.action">
+   	<unit id="mediaActions.attach">
+   		<segment>
+   			<source>Associate</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.detach">
+   		<segment>
+   			<source>Unassociate</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.download">
+   		<segment>
+   			<source>Download</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.delete">
+   		<segment>
+   			<source>Delete</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.playpause">
+   		<segment>
+   			<source>Play / Stop</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.action">
          <segment>
             <source>Action</source>
             <target>Ação</target>
@@ -1573,7 +1603,13 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.fileName">
+   	<unit id="mediaTab.actions">
+   		<segment>
+   			<source>Actions</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.fileName">
          <segment>
             <source>File Name</source>
             <target>Nome do Arquivo</target>
@@ -1645,7 +1681,13 @@
             <target>Referência</target>
          </segment>
       </unit>
-      <unit id="mediaTab.save">
+   	<unit id="mediaTab.associated">
+   		<segment>
+   			<source>Associated</source>
+   			<target>Associado</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.save">
          <segment>
             <source>Save</source>
             <target>Salvar</target>

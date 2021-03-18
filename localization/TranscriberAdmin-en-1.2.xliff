@@ -1982,6 +1982,41 @@
       			<context context-type="sourcefile">AboutDialog.tsx</context>
       		</context-group>
       	</trans-unit>
+      	<trans-unit id="mediaActions.attach">
+      		<source>Associate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.detach">
+      		<source>Unassociate</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.download">
+      		<source>Download</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.delete">
+      		<source>Delete</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.playpause">
+      		<source>Play / Stop</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
       	<trans-unit id="mediaTab.action">
             <source>Action</source>
             <target/>
@@ -2052,7 +2087,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.fileName">
+      	<trans-unit id="mediaTab.actions">
+      		<source>Actions</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.fileName">
             <source>File Name</source>
             <target/>
             <context-group>
@@ -2136,7 +2178,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.save">
+      	<trans-unit id="mediaTab.associated">
+      		<source>Associated</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.save">
             <source>Save</source>
             <target/>
             <context-group>
@@ -2466,7 +2515,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planTabs.mediaStatus">
-            <source>{1} of {2} media files</source>
+            <source>{1} of {2} associations</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanTabs.tsx</context>

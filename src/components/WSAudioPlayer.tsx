@@ -123,7 +123,7 @@ function WSAudioPlayer(props: IProps) {
   const {
     wsLoad,
     wsTogglePlay,
-    wsPlay,
+    // wsPlay,
     wsPause,
     wsDuration,
     wsPosition,

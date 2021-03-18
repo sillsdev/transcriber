@@ -16,9 +16,8 @@ import Confirm from './AlertDialog';
 import BookSelect from './BookSelect';
 import { ProjButtons, LastEdit } from '../control';
 import 'react-datasheet/lib/react-datasheet.css';
-import { Online, refMatch } from '../utils';
+import { refMatch } from '../utils';
 import { useOrganizedBy } from '../crud';
-import { useInterval } from '../utils/useInterval';
 import { useRemoteSave } from '../utils/useRemoteSave';
 import TaskAvatar from './TaskAvatar';
 import MediaPlayer from './MediaPlayer';
@@ -180,7 +179,7 @@ export function PlanSheet(props: IProps) {
   } = props;
   const classes = useStyles();
   const ctx = React.useContext(PlanContext);
-  const { projButtonStr } = ctx.state;
+  const { projButtonStr, connected, readonly } = ctx.state;
   const [isOffline] = useGlobal('offline');
   const [projRole] = useGlobal('projRole');
   const [global] = useGlobal();
@@ -198,7 +197,6 @@ export function PlanSheet(props: IProps) {
   const suggestionRef = useRef<Array<OptionType>>();
   const saveTimer = React.useRef<NodeJS.Timeout>();
   const [doSave] = useGlobal('doSave');
-  const [connected, setConnected] = useGlobal('connected');
   const [changed, setChanged] = useGlobal('changed');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [pasting, setPasting] = useState(false);
@@ -211,9 +209,6 @@ export function PlanSheet(props: IProps) {
   const [savingGrid, setSavingGrid] = useState<ICell[][]>();
   const [startSave] = useRemoteSave();
   const [srcMediaId, setSrcMediaId] = useState('');
-  const [readonly, setReadOnly] = useState(
-    (isOffline && !offlineOnly) || projRole !== 'admin'
-  );
   const [warning, setWarning] = useState<string>();
   const SectionSeqCol = 0;
   const PassageSeqCol = 2;
@@ -424,17 +419,6 @@ export function PlanSheet(props: IProps) {
       handleAutoSave();
     }, 1000 * 30);
   };
-
-  const tryOnline = () =>
-    Online((result) => {
-      setConnected(result);
-    }, auth);
-
-  useEffect(() => {
-    const newValue = (isOffline && !offlineOnly) || projRole !== 'admin';
-    if (readonly !== newValue) setReadOnly(newValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [projRole]);
 
   useEffect(() => {
     if (changed) {
@@ -650,12 +634,6 @@ export function PlanSheet(props: IProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doSave, busy, savingGrid]);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => tryOnline(), []);
-
-  //do this every 30 seconds to warn they can't save
-  useInterval(() => tryOnline(), 1000 * 30);
 
   const playEnded = () => {
     setSrcMediaId('');

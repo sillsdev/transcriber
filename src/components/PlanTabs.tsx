@@ -27,9 +27,8 @@ import { useOrganizedBy, useMediaCounts, useSectionCounts } from '../crud';
 export enum tabs {
   sectionPassage = 0,
   media = 1,
-  associate = 2,
-  assignment = 3,
-  transcription = 4,
+  assignment = 2,
+  transcription = 3,
 }
 export const TabHeight = 52;
 export const ActionHeight = 38;
@@ -159,11 +158,10 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           scrollButtons="auto"
         >
           <Tab label={t.sectionsPassages.replace('{0}', organizedBy)} />
-          <Tab label={t.media} />
           <Tab
             label={
               <Title
-                text={t.associations}
+                text={t.media}
                 status={statusMessage(
                   t.mediaStatus,
                   attached.length,
@@ -171,7 +169,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
                 )}
               />
             }
-            disabled={isOffline && !offlineOnly}
           />
           <Tab
             label={
@@ -234,13 +231,6 @@ const ScrollableTabsButtonAuto = (props: IProps) => {
           <MediaTab
             {...props}
             projectplans={plans.filter((p) => p.id === plan)}
-          />
-        )}
-        {tab === tabs.associate && (
-          <MediaTab
-            {...props}
-            projectplans={plans.filter((p) => p.id === plan)}
-            attachTool={true}
           />
         )}
         {tab === tabs.assignment && <AssignmentTable {...props} />}

@@ -361,6 +361,15 @@ const initialState = {
 			"cantCopy": "Unable to copy to clipboard",
 		}
 	}),
+	"mediaActions": new LocalizedStrings({
+		"en": {
+			"attach": "Associate",
+			"detach": "Unassociate",
+			"download": "Download",
+			"delete": "Delete",
+			"playpause": "Play / Stop",
+		}
+	}),
 	"mediaTab": new LocalizedStrings({
 		"en": {
 			"action": "Action",
@@ -373,6 +382,7 @@ const initialState = {
 			"detach": "Detach",
 			"duration": "Length (s)",
 			"fileAttached": "File already attached",
+			"actions": "Actions",
 			"fileName": "File Name",
 			"filter": "Filter",
 			"loadingTable": "Loading data",
@@ -385,6 +395,7 @@ const initialState = {
 			"planName": "Plan",
 			"proposed": "Proposed",
 			"reference": "Reference",
+			"associated": "Associated",
 			"save": "Save",
 			"saving": "Saving...",
 			"savingComplete": "Saving complete.",
@@ -452,7 +463,7 @@ const initialState = {
 			"assignments": "Assignments",
 			"associations": "Associations",
 			"media": "Media",
-			"mediaStatus": "{1} of {2} media files",
+			"mediaStatus": "{1} of {2} associations",
 			"passageStatus": "{1} of {2} passages",
 			"sectionsPassages": "{0} & Passages",
 			"sectionStatus": "{1} of {2} {0}",
@@ -766,7 +777,7 @@ const initialState = {
 	}),
 };
 
-export default function (state = initialState, action: any): ILocalizedStrings {
+const localizationReducer = function (state = initialState, action: any): ILocalizedStrings {
 	switch (action.type) {
 		case FETCH_LOCALIZATION:
 			return {
@@ -790,6 +801,7 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 				"invite" : new LocalizedStrings(action.payload.data.invite),
 				"languagePicker" : new LocalizedStrings(action.payload.data.languagePicker),
 				"main" : new LocalizedStrings(action.payload.data.main),
+				"mediaActions" : new LocalizedStrings(action.payload.data.mediaActions),
 				"mediaTab" : new LocalizedStrings(action.payload.data.mediaTab),
 				"mediaUpload" : new LocalizedStrings(action.payload.data.mediaUpload),
 				"passageMedia" : new LocalizedStrings(action.payload.data.passageMedia),
@@ -824,3 +836,5 @@ export default function (state = initialState, action: any): ILocalizedStrings {
 			return state;
 	}
 }
+
+export default localizationReducer;

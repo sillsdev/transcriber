@@ -338,6 +338,14 @@ export interface IMainStrings extends Localize.LocalizedStringsMethods {
     "cantCopy": string;
 };
 
+export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
+    "attach": string;
+    "detach": string;
+    "download": string;
+    "delete": string;
+    "playpause": string;
+};
+
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "all": string;
@@ -349,6 +357,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "detach": string;
     "duration": string;
     "fileAttached": string;
+    "actions": string;
     "fileName": string;
     "filter": string;
     "loadingTable": string;
@@ -361,6 +370,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "planName": string;
     "proposed": string;
     "reference": string;
+    "associated": string;
     "save": string;
     "saving": string;
     "savingComplete": string;
@@ -738,6 +748,7 @@ export interface ILocalizedStrings {
 	invite: IInviteStrings;
 	languagePicker: ILanguagePickerStrings;
 	main: IMainStrings;
+	mediaActions: IMediaActionsStrings;
 	mediaTab: IMediaTabStrings;
 	mediaUpload: IMediaUploadStrings;
 	passageMedia: IPassageMediaStrings;
