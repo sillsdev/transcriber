@@ -1728,7 +1728,7 @@
       </unit>
       <unit id="mediaActions.playpause">
          <segment>
-            <source>Play / Pause</source>
+            <source>Play / Stop</source>
             <target/>
          </segment>
       </unit>

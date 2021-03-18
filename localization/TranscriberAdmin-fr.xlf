@@ -1706,6 +1706,36 @@
    			<target>Impossible de copier dans le presse-papiers</target>
    		</segment>
    	</unit>
+   	<unit id="mediaActions.attach">
+   		<segment>
+   			<source>Associate</source>
+   			<target>Associé</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.detach">
+   		<segment>
+   			<source>Unassociate</source>
+   			<target>Non associé</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.download">
+   		<segment>
+   			<source>Download</source>
+   			<target>Télécharger</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.delete">
+   		<segment>
+   			<source>Delete</source>
+   			<target>Supprimer</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.playpause">
+   		<segment>
+   			<source>Play / Pause</source>
+   			<target>Jouer / Arrêter</target>
+   		</segment>
+   	</unit>
    	<unit id="mediaTab.action">
          <segment>
             <source>Action</source>
@@ -1766,7 +1796,13 @@
             <target>Fichier déjà joint</target>
          </segment>
       </unit>
-      <unit id="mediaTab.fileName">
+   	<unit id="mediaTab.actions">
+   		<segment>
+   			<source>Actions</source>
+   			<target>Actions</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.fileName">
          <segment>
             <source>File Name</source>
             <target>Nom du fichier</target>
@@ -2098,8 +2134,8 @@
       </unit>
       <unit id="planTabs.mediaStatus">
          <segment>
-            <source>{1} of {2} media files</source>
-            <target>{1} de {2} fichiers médias</target>
+            <source>{1} of {2} associations</source>
+         	<target>{1} de {2} associations</target>
          </segment>
       </unit>
       <unit id="planTabs.passageStatus">

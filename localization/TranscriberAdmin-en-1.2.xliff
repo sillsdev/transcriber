@@ -2011,7 +2011,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="mediaActions.playpause">
-      		<source>Play / Pause</source>
+      		<source>Play / Stop</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaActions.tsx</context>

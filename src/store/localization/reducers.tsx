@@ -367,7 +367,7 @@ const initialState = {
 			"detach": "Unassociate",
 			"download": "Download",
 			"delete": "Delete",
-			"playpause": "Play / Pause",
+			"playpause": "Play / Stop",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
