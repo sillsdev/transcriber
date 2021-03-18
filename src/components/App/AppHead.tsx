@@ -256,6 +256,9 @@ export const AppHead = (props: IProps) => {
             <LinearProgress variant="determinate" value={complete} />
           </div>
         )}
+        {(!busy && !doSave) || complete !== 0 || (
+          <LinearProgress variant="indeterminate" />
+        )}
         <Toolbar>
           {projRole !== '' && <ProjectName setView={setView} />}
           <div className={classes.grow}>{'\u00A0'}</div>
@@ -284,7 +287,6 @@ export const AppHead = (props: IProps) => {
           {pathname !== '/' && <UserMenu action={handleUserMenu} auth={auth} />}
         </Toolbar>
         {!importexportBusy || <Busy />}
-        {(!busy && !doSave) || <LinearProgress variant="indeterminate" />}
       </>
     </AppBar>
   );

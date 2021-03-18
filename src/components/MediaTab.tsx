@@ -391,7 +391,6 @@ export function MediaTab(props: IProps) {
       n += 1;
       setComplete(Math.min((n * 100) / total, 100));
     }
-    setComplete(100);
     setAttachMap({});
     showMessage(t.savingComplete);
     inProcess.current = false;
