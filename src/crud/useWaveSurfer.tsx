@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { promisify } from 'util';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 
-const noop = () => {};
-const noop1 = (x: any) => {};
+const noop = () => { };
+const noop1 = (x: any) => { };
 
 export function useWaveSurfer(
   container: any,
@@ -102,7 +103,7 @@ export function useWaveSurfer(
     playingRef.current = playing;
     if (playingRef.current) {
       if (wsRef.current?.isReady) {
-        if (regionRef.current && regionRef.current.loop)
+        if (regionRef.current && regionRef.current.loop)//this still needs work
           regionRef.current.playLoop();
         else wsRef.current?.play();
       }
@@ -168,31 +169,37 @@ export function useWaveSurfer(
   }
   const insertBuffer = (
     newBuffer: any,
-    position: number,
-    overwrite: boolean
+    startposition: number,
+    endposition?: number
   ) => {
-    if (!wsRef.current) return;
+    if (!wsRef.current) return 0;
     var wavesurfer = wsRef.current;
     var backend = wavesurfer?.backend as any;
     var originalBuffer = backend.buffer;
-
+    console.log('insertBuffer', startposition, endposition);
     if (
-      position === 0 &&
-      overwrite &&
-      newBuffer.length > originalBuffer.length
+      startposition === 0 &&
+      !endposition &&
+      newBuffer.length > (originalBuffer?.length | 0)
     ) {
       loadDecoded(newBuffer);
-      return;
+      return newBuffer.length / originalBuffer.sampleRate;
     }
-    var offset = ((position / 1) * originalBuffer.sampleRate) >> 0;
-    var after_len = originalBuffer.length - offset;
-    var after_start = offset;
-    if (overwrite) {
-      after_len -= newBuffer.length;
-      if (after_len < 0) after_len = 0;
-      after_start = offset + newBuffer.length;
+    var start_offset = ((startposition / 1) * originalBuffer.sampleRate) >> 0;
+
+    var after_len = 0;
+    var after_offset = 0;
+
+    if (endposition) {
+      after_offset = (endposition * originalBuffer.sampleRate) >> 0;
     }
-    var new_len = offset + newBuffer.length + after_len;
+    else {
+      after_offset = start_offset + newBuffer.length;
+    }
+    after_len = originalBuffer.length - after_offset;
+    if (after_len < 0) after_len = 0;
+    console.log(start_offset, after_offset, after_len, newBuffer.length)
+    var new_len = start_offset + newBuffer.length + after_len;
     var uberSegment = null;
     uberSegment = backend.ac.createBuffer(
       originalBuffer.numberOfChannels,
@@ -205,20 +212,24 @@ export function useWaveSurfer(
       var new_data = newBuffer.getChannelData(ix);
       var uber_chan_data = uberSegment.getChannelData(ix);
 
-      uber_chan_data.set(chan_data.slice(0, offset));
-      uber_chan_data.set(new_data, offset);
+      console.log('adding 0 to ', start_offset, 'newData', newBuffer.length, 'after_len', after_len, 'after_offset', after_offset)
+      uber_chan_data.set(chan_data.slice(0, start_offset));
+      uber_chan_data.set(new_data, start_offset);
       if (after_len)
         uber_chan_data.set(
-          chan_data.slice(after_start),
-          offset + newBuffer.length
+          chan_data.slice(after_offset),
+          start_offset + newBuffer.length
         );
     }
     loadDecoded(uberSegment);
+    return (start_offset + newBuffer.length) / originalBuffer.sampleRate;
+
   };
+
   const wsInsertAudio = async (
     blob: Blob,
     position: number,
-    overwrite: boolean
+    overwriteToPosition?: number
   ) => {
     if (!wsRef.current) return;
     var wavesurfer = wsRef.current;
@@ -229,9 +240,12 @@ export function useWaveSurfer(
       return;
     }
     var buffer = await blob.arrayBuffer();
-    wavesurfer.decodeArrayBuffer(buffer, function (newBuffer: any) {
-      insertBuffer(newBuffer, position, overwrite);
-    });
+
+    return await new Promise<number>((resolve, reject) => {
+      wavesurfer.decodeArrayBuffer(buffer, function (newBuffer: any) {
+        resolve(insertBuffer(newBuffer, position, overwriteToPosition));
+      })
+    })
   };
   const wsInsertSilence = (seconds: number, position: number) => {
     if (!wsRef.current) return;
@@ -244,7 +258,7 @@ export function useWaveSurfer(
       new_len,
       originalBuffer.sampleRate
     );
-    insertBuffer(newBuffer, position, false);
+    insertBuffer(newBuffer, position, position);
   };
 
   const wsRegionDelete = () => {
@@ -311,3 +325,4 @@ export function useWaveSurfer(
     wsInsertSilence,
   };
 }
+
