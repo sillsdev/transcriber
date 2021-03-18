@@ -1868,7 +1868,13 @@
             <target>Référence</target>
          </segment>
       </unit>
-      <unit id="mediaTab.save">
+   	<unit id="mediaTab.associated">
+   		<segment>
+   			<source>Associated</source>
+   			<target>Associé</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.save">
          <segment>
             <source>Save</source>
             <target>Enregistrer</target>

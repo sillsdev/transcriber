@@ -370,6 +370,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "planName": string;
     "proposed": string;
     "reference": string;
+    "associated": string;
     "save": string;
     "saving": string;
     "savingComplete": string;

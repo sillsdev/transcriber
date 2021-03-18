@@ -2178,7 +2178,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.save">
+      	<trans-unit id="mediaTab.associated">
+      		<source>Associated</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.save">
             <source>Save</source>
             <target/>
             <context-group>

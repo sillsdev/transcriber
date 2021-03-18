@@ -280,7 +280,7 @@ export function MediaTab(props: IProps) {
   const pColumnDefs = [
     { name: 'sectionDesc', title: organizedBy },
     { name: 'reference', title: t.reference },
-    { name: 'attached', title: 'Attached' },
+    { name: 'attached', title: t.associated },
     { name: 'sort', title: '\u00A0' },
   ];
   const pColumnWidths = [
@@ -295,16 +295,6 @@ export function MediaTab(props: IProps) {
   const pFilters = [{ columnName: 'attached', operation: 'equal', value: 'N' }];
   const pSorting = [{ columnName: 'sort', direction: 'asc' }];
   const pHiddenColumnNames = ['sort'];
-  const pBandHead = [
-    {
-      title: <Typography variant="h6">{t.availablePassages}</Typography>,
-      children: [
-        { columnName: 'sectionDesc' },
-        { columnName: 'reference' },
-        { columnName: 'attached' },
-      ],
-    },
-  ];
   const pSummaryItems = [{ columnName: 'reference', type: 'count' }];
   const [hiddenColumnNames, setHiddenColumnNames] = useState<string[]>([]);
   const [filteringEnabled, setFilteringEnabled] = useState([
@@ -935,7 +925,6 @@ export function MediaTab(props: IProps) {
                 shaping={true}
                 hiddenColumnNames={pHiddenColumnNames}
                 expandedGroups={[]} // shuts off toolbar row
-                bandHeader={pBandHead}
                 summaryItems={pSummaryItems}
               />
             </BigDialog>

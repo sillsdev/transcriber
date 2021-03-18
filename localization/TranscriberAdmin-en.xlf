@@ -1870,6 +1870,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="mediaTab.associated">
+         <segment>
+            <source>Associated</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="mediaTab.save">
          <segment>
             <source>Save</source>

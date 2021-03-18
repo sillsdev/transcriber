@@ -395,6 +395,7 @@ const initialState = {
 			"planName": "Plan",
 			"proposed": "Proposed",
 			"reference": "Reference",
+			"associated": "Associated",
 			"save": "Save",
 			"saving": "Saving...",
 			"savingComplete": "Saving complete.",

@@ -1681,7 +1681,13 @@
             <target>Referência</target>
          </segment>
       </unit>
-      <unit id="mediaTab.save">
+   	<unit id="mediaTab.associated">
+   		<segment>
+   			<source>Associated</source>
+   			<target>Associado</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.save">
          <segment>
             <source>Save</source>
             <target>Salvar</target>
