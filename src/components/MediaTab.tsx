@@ -325,23 +325,14 @@ export function MediaTab(props: IProps) {
   const handleUpload = () => {
     setUploadVisible(true);
   };
-  // const handleMenu = (e: any) => setActionMenuItem(e.currentTarget);
-  // const handleConfirmAction = (what: string) => (e: any) => {
-  //   setActionMenuItem(null);
-  //   if (!/Close/i.test(what)) {
-  //     if (check.length === 0) {
-  //       showMessage(t.selectRows.replace('{0}', what));
-  //     } else {
-  //       setConfirmAction(what);
-  //     }
-  //   }
-  // };
+
   const handleConfirmAction = (i: number) => {
     setCheck((check) => {
       return [...check, i];
     });
     setConfirmAction('Delete');
   };
+
   const handleDelete = (i: number) => {
     let versions = mediaFiles.filter(
       (f) =>
@@ -357,6 +348,7 @@ export function MediaTab(props: IProps) {
       );
     });
   };
+
   const handleActionConfirmed = () => {
     if (action != null) {
       if (action(confirmAction, check)) {
@@ -371,10 +363,11 @@ export function MediaTab(props: IProps) {
     }
     setConfirmAction('');
   };
+
   const handleActionRefused = () => {
     setConfirmAction('');
   };
-  // const handleAttach = () => setAttachVisible(!attachVisible);
+
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
 
   const handleAttachCancel = () => {
@@ -390,9 +383,15 @@ export function MediaTab(props: IProps) {
       const pRow = map[mediaId];
       await attachPassage(pdata[pRow].id, pdata[pRow].sectionId, plan, mediaId);
     };
+    const total = Object.keys(map).length;
+    let n = 0;
+    setComplete(n);
     for (let mediaId of Object.keys(map)) {
       await handleRow(mediaId);
+      n += 1;
+      setComplete(Math.min((n * 100) / total, 100));
     }
+    setComplete(100);
     setAttachMap({});
     showMessage(t.savingComplete);
     inProcess.current = false;
