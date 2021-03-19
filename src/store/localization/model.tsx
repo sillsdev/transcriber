@@ -371,6 +371,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "proposed": string;
     "reference": string;
     "associated": string;
+    "alreadyAssociated": string;
     "save": string;
     "saving": string;
     "savingComplete": string;

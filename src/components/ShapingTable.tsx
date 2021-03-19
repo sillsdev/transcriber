@@ -47,6 +47,7 @@ import {
 import { IState, IShapingTableStrings } from '../model';
 import localStrings from '../selector/localize';
 import { connect } from 'react-redux';
+import { useEffect } from 'reactn';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -193,7 +194,10 @@ export function ShapingTable(props: IProps) {
     bandHeader,
     summaryItems,
   } = props;
+
   const [myGroups, setMyGroups] = React.useState<string[]>();
+  const [currentFilters, setCurrentFilters] = React.useState(filters || []);
+
 
   const handleExpGrp = (groups: string[]) => {
     setMyGroups(groups);
@@ -216,6 +220,10 @@ export function ShapingTable(props: IProps) {
     min: t.min,
     sum: t.sum,
   };
+  useEffect(() => {
+    setCurrentFilters(filters || [])
+  }, [filters])
+
   return (
     <Grid rows={rows} columns={columns}>
       {onFiltersChange /* when set filter looses focus on typing */ ? (
@@ -227,7 +235,8 @@ export function ShapingTable(props: IProps) {
       ) : (
         <FilteringState
           columnExtensions={filteringEnabled || []}
-          defaultFilters={filters || []}
+          filters={currentFilters}
+          onFiltersChange={setCurrentFilters}
         />
       )}
 

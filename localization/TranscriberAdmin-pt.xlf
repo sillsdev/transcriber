@@ -1687,7 +1687,13 @@
    			<target>Associado</target>
    		</segment>
    	</unit>
-   	<unit id="mediaTab.save">
+       <unit id="mediaTab.alreadyAssociated">
+         <segment>
+            <source>Show Passages Already Associated</source>
+            <target>Mostrar passagens já associadas</target>
+         </segment>
+      </unit>
+      <unit id="mediaTab.save">
          <segment>
             <source>Save</source>
             <target>Salvar</target>
