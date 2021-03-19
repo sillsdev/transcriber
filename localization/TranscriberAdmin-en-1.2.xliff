@@ -1990,7 +1990,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="mediaActions.detach">
-      		<source>Unassociate</source>
+      		<source>Disassociate</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaActions.tsx</context>
@@ -2010,8 +2010,15 @@
       			<context context-type="sourcefile">MediaActions.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="mediaActions.playpause">
-      		<source>Play / Stop</source>
+      	<trans-unit id="mediaActions.play">
+      		<source>Play</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaActions.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaActions.stop">
+      		<source>Stop</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">MediaActions.tsx</context>
@@ -2066,7 +2073,14 @@
                <context context-type="sourcefile">MediaTab.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="mediaTab.detach">
+      	<trans-unit id="mediaTab.deleteConfirm">
+      		<source>Delete {0}? Are you sure?</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">MediaTab.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="mediaTab.detach">
             <source>Detach</source>
             <target/>
             <context-group>

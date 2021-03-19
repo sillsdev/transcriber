@@ -1521,8 +1521,8 @@
    	</unit>
    	<unit id="mediaActions.detach">
    		<segment>
-   			<source>Unassociate</source>
-   			<target/>
+   			<source>Disassociate</source>
+   			<target>Desassociar</target>
    		</segment>
    	</unit>
    	<unit id="mediaActions.download">
@@ -1537,9 +1537,15 @@
    			<target/>
    		</segment>
    	</unit>
-   	<unit id="mediaActions.playpause">
+   	<unit id="mediaActions.play">
    		<segment>
-   			<source>Play / Stop</source>
+   			<source>Play</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.stop">
+   		<segment>
+   			<source>Stop</source>
    			<target/>
    		</segment>
    	</unit>
@@ -1585,7 +1591,13 @@
             <target>Excluir</target>
          </segment>
       </unit>
-      <unit id="mediaTab.detach">
+   	<unit id="mediaTab.deleteConfirm">
+   		<segment>
+   			<source>Delete {0}? Are you sure?</source>
+   			<target>Eliminar {0}? Tem a certeza?</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.detach">
          <segment>
             <source>Detach</source>
             <target/>

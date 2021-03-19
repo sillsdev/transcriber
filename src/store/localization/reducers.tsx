@@ -364,10 +364,11 @@ const initialState = {
 	"mediaActions": new LocalizedStrings({
 		"en": {
 			"attach": "Associate",
-			"detach": "Unassociate",
+			"detach": "Disassociate",
 			"download": "Download",
 			"delete": "Delete",
-			"playpause": "Play / Stop",
+			"play": "Play",
+			"stop": "Stop",
 		}
 	}),
 	"mediaTab": new LocalizedStrings({
@@ -379,6 +380,7 @@ const initialState = {
 			"book": "Book",
 			"date": "Date",
 			"delete": "Delete",
+			"deleteConfirm": "Delete {0}? Are you sure?",
 			"detach": "Detach",
 			"duration": "Length (s)",
 			"fileAttached": "File already attached",

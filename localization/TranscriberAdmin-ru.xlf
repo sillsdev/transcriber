@@ -1699,7 +1699,43 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaTab.action">
+   	<unit id="mediaActions.attach">
+   		<segment>
+   			<source>Associate</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.detach">
+   		<segment>
+   			<source>Disassociate</source>
+   			<target>Диссоциировать</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.download">
+   		<segment>
+   			<source>Download</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.delete">
+   		<segment>
+   			<source>Delete</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.play">
+   		<segment>
+   			<source>Play</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaActions.stop">
+   		<segment>
+   			<source>Stop</source>
+   			<target/>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.action">
          <segment>
             <source>Action</source>
             <target/>
@@ -1741,7 +1777,13 @@
             <target>Удалить</target>
          </segment>
       </unit>
-      <unit id="mediaTab.detach">
+   	<unit id="mediaTab.deleteConfirm">
+   		<segment>
+   			<source>Delete {0}? Are you sure?</source>
+   			<target>Удалить {0}? Ты уверен?</target>
+   		</segment>
+   	</unit>
+   	<unit id="mediaTab.detach">
          <segment>
             <source>Detach</source>
             <target/>

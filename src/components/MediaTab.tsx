@@ -18,7 +18,14 @@ import localStrings from '../selector/localize';
 import { withData, WithDataProps } from '../mods/react-orbitjs';
 import { QueryBuilder, TransformBuilder } from '@orbit/data';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Button, AppBar, Typography, Radio, Switch, FormControlLabel } from '@material-ui/core';
+import {
+  Button,
+  AppBar,
+  Typography,
+  Radio,
+  Switch,
+  FormControlLabel,
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
@@ -169,10 +176,9 @@ interface IRecordProps {
 
 interface IProps
   extends IStateProps,
-  IDispatchProps,
-  IRecordProps,
-  WithDataProps {
-  action?: (what: string, where: number[]) => boolean;
+    IDispatchProps,
+    IRecordProps,
+    WithDataProps {
   auth: Auth;
   attachTool?: boolean;
 }
@@ -183,7 +189,6 @@ export function MediaTab(props: IProps) {
     tma,
     ts,
     doOrbitError,
-    action,
     mediaFiles,
     passages,
     sections,
@@ -307,7 +312,11 @@ export function MediaTab(props: IProps) {
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
   const [passAttach, setPassAttach] = useState(new Set<number>());
-  const [attachedFilter, setAttachedFilter] = useState({ columnName: 'attached', operation: 'equal', value: 'N' })
+  const [attachedFilter, setAttachedFilter] = useState({
+    columnName: 'attached',
+    operation: 'equal',
+    value: 'N',
+  });
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
@@ -349,11 +358,6 @@ export function MediaTab(props: IProps) {
   };
 
   const handleActionConfirmed = () => {
-    if (action != null) {
-      if (action(confirmAction, check)) {
-        setCheck(Array<number>());
-      }
-    }
     if (confirmAction === 'Delete') {
       check.forEach((i) => {
         handleDelete(i);
@@ -813,7 +817,11 @@ export function MediaTab(props: IProps) {
     );
   };
   const handleAttachedFilterChange = (e: any) => {
-    setAttachedFilter({ columnName: 'attached', operation: 'equal', value: e.target.checked ? 'Y' : 'N' })
+    setAttachedFilter({
+      columnName: 'attached',
+      operation: 'equal',
+      value: e.target.checked ? 'Y' : 'N',
+    });
   };
 
   const playEnded = () => {
@@ -912,8 +920,12 @@ export function MediaTab(props: IProps) {
                 <FormControlLabel
                   value="attached"
                   labelPlacement="end"
-                  control={<Switch checked={attachedFilter.value == 'Y'}
-                    onChange={handleAttachedFilterChange} />}
+                  control={
+                    <Switch
+                      checked={attachedFilter.value == 'Y'}
+                      onChange={handleAttachedFilterChange}
+                    />
+                  }
                   label={t.alreadyAssociated}
                 />
                 <ShapingTable
@@ -951,7 +963,7 @@ export function MediaTab(props: IProps) {
       />
       {confirmAction === '' || (
         <Confirm
-          text={confirmAction + ' ' + check.length + ' Item(s). Are you sure?'}
+          text={t.deleteConfirm.replace('{0}', data[check[0]].fileName)}
           yesResponse={handleActionConfirmed}
           noResponse={handleActionRefused}
         />

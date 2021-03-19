@@ -343,7 +343,8 @@ export interface IMediaActionsStrings extends Localize.LocalizedStringsMethods {
     "detach": string;
     "download": string;
     "delete": string;
-    "playpause": string;
+    "play": string;
+    "stop": string;
 };
 
 export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
@@ -354,6 +355,7 @@ export interface IMediaTabStrings extends Localize.LocalizedStringsMethods {
     "book": string;
     "date": string;
     "delete": string;
+    "deleteConfirm": string;
     "detach": string;
     "duration": string;
     "fileAttached": string;

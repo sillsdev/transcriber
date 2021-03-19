@@ -6,7 +6,7 @@ import * as actions from '../store';
 import { IState, MediaFile } from '../model';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import DownloadIcon from '@material-ui/icons/GetAppOutlined';
-import { getMediaName, remoteIdGuid } from '../crud';
+import { remoteIdGuid } from '../crud';
 import { logError, Severity } from '../utils';
 import Auth from '../auth/Auth';
 
