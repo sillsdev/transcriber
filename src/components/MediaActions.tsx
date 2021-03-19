@@ -76,7 +76,7 @@ export function MediaActions(props: IProps) {
       {(isElectron || online) && (
         <IconButton
           className={classes.actionButton}
-          title={t.playpause}
+          title={isPlaying ? t.stop : t.play}
           disabled={(mediaId || '') === ''}
           onClick={handlePlayStatus}
         >

@@ -1710,7 +1710,7 @@
       </unit>
       <unit id="mediaActions.detach">
          <segment>
-            <source>Unassociate</source>
+            <source>Disassociate</source>
             <target/>
          </segment>
       </unit>
@@ -1726,9 +1726,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="mediaActions.playpause">
+      <unit id="mediaActions.play">
          <segment>
-            <source>Play / Stop</source>
+            <source>Play</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaActions.stop">
+         <segment>
+            <source>Stop</source>
             <target/>
          </segment>
       </unit>
@@ -1771,6 +1777,12 @@
       <unit id="mediaTab.delete">
          <segment>
             <source>Delete</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="mediaTab.deleteConfirm">
+         <segment>
+            <source>Delete {0}? Are you sure?</source>
             <target/>
          </segment>
       </unit>
