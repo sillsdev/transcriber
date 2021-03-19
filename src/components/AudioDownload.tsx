@@ -3,7 +3,8 @@ import { useGlobal } from 'reactn';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../store';
-import { IState, MediaFile } from '../model';
+import { IState, MediaFile, IAudioDownloadStrings } from '../model';
+import localStrings from '../selector/localize';
 import { makeStyles, Theme, createStyles, IconButton } from '@material-ui/core';
 import DownloadIcon from '@material-ui/icons/GetAppOutlined';
 import { remoteIdGuid } from '../crud';
@@ -22,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IStateProps {
+  t: IAudioDownloadStrings;
   hasUrl: boolean;
   mediaUrl: string;
 }
@@ -32,12 +34,12 @@ interface IDispatchProps {
 
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
-  title: string;
+  title?: string;
   mediaId: string;
 }
 
 export const AudioDownload = (props: IProps) => {
-  const { mediaId, title } = props;
+  const { mediaId, title, t } = props;
   const { hasUrl, mediaUrl, auth, fetchMediaUrl } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
@@ -91,7 +93,7 @@ export const AudioDownload = (props: IProps) => {
     <div>
       <IconButton
         className={classes.actionButton}
-        title={title}
+        title={title || t.downloadMedia}
         disabled={(mediaId || '') === ''}
         onClick={handleDownload}
       >
@@ -110,6 +112,7 @@ export const AudioDownload = (props: IProps) => {
 };
 
 const mapStateToProps = (state: IState): IStateProps => ({
+  t: localStrings(state, { layout: 'audioDownload' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
 });

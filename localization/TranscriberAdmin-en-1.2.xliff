@@ -323,7 +323,14 @@
                <context context-type="sourcefile">AssignSection.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="cards.add">
+      	<trans-unit id="audioDownload.downloadMedia">
+      		<source>Download Media</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AudioDownload.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="cards.add">
             <source>Add</source>
             <target/>
             <context-group>

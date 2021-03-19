@@ -62,6 +62,10 @@ export interface IAssignSectionStrings extends Localize.LocalizedStringsMethods 
     "users": string;
 };
 
+export interface IAudioDownloadStrings extends Localize.LocalizedStringsMethods {
+    "downloadMedia": string;
+};
+
 export interface ICardsStrings extends Localize.LocalizedStringsMethods {
     "add": string;
     "addTeam": string;
@@ -738,6 +742,7 @@ export interface ILocalizedStrings {
 	alert: IAlertStrings;
 	assignmentTable: IAssignmentTableStrings;
 	assignSection: IAssignSectionStrings;
+	audioDownload: IAudioDownloadStrings;
 	cards: ICardsStrings;
 	control: IControlStrings;
 	deleteExpansion: IDeleteExpansionStrings;

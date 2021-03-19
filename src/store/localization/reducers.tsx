@@ -72,6 +72,11 @@ const initialState = {
 			"users": "Members",
 		}
 	}),
+	"audioDownload": new LocalizedStrings({
+		"en": {
+			"downloadMedia": "Download Media",
+		}
+	}),
 	"cards": new LocalizedStrings({
 		"en": {
 			"add": "Add",
@@ -791,6 +796,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"alert" : new LocalizedStrings(action.payload.data.alert),
 				"assignmentTable" : new LocalizedStrings(action.payload.data.assignmentTable),
 				"assignSection" : new LocalizedStrings(action.payload.data.assignSection),
+				"audioDownload" : new LocalizedStrings(action.payload.data.audioDownload),
 				"cards" : new LocalizedStrings(action.payload.data.cards),
 				"control" : new LocalizedStrings(action.payload.data.control),
 				"deleteExpansion" : new LocalizedStrings(action.payload.data.deleteExpansion),

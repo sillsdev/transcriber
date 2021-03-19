@@ -277,13 +277,19 @@
             <target>Membres</target>
          </segment>
       </unit>
-      <unit id="cards.add">
+      <unit id="audioDownload.downloadMedia">
          <segment>
-            <source>Add</source>
-            <target>Ajouter</target>
+            <source>Download Media</source>
+         	<target>Télécharger le média</target>
          </segment>
       </unit>
-      <unit id="cards.addTeam">
+   	<unit id="cards.add">
+   		<segment>
+   			<source>Add</source>
+   			<target>Ajouter</target>
+   		</segment>
+   	</unit>
+   	<unit id="cards.addTeam">
          <segment>
             <source>Add Team</source>
             <target>Ajouter une équipe</target>

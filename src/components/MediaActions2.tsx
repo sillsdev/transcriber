@@ -60,7 +60,7 @@ export function MediaActions2(props: IProps) {
   return (
     <div className={classes.arrangeActions}>
       {(isElectron || online) && (
-        <AudioDownload auth={auth} title={t.download} mediaId={mediaId} />
+        <AudioDownload auth={auth} mediaId={mediaId} />
       )}
       {canDelete && !readonly && (
         <IconButton

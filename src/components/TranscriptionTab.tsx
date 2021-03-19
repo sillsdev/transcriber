@@ -37,7 +37,6 @@ import {
   AppBar,
 } from '@material-ui/core';
 // import CopyIcon from '@material-ui/icons/FileCopy';
-import SoundIcon from '@material-ui/icons/Audiotrack';
 import FilterIcon from '@material-ui/icons/FilterList';
 import SelectAllIcon from '@material-ui/icons/SelectAll';
 import ViewIcon from '@material-ui/icons/RemoveRedEye';
@@ -48,7 +47,6 @@ import TreeGrid from './TreeGrid';
 import TranscriptionShow from './TranscriptionShow';
 import Auth from '../auth/Auth';
 import {
-  remoteId,
   related,
   sectionNumber,
   sectionEditorName,
@@ -66,6 +64,7 @@ import { useOfflnProjRead } from '../crud/useOfflnProjRead';
 import IndexedDBSource from '@orbit/indexeddb';
 import { logError, Severity } from '../utils';
 import { ActionHeight, tabActions, actionBar } from './PlanTabs';
+import AudioDownload from './AudioDownload';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -102,6 +101,10 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: 16,
     },
     link: {},
+    downloadButtons: {
+      display: 'flex',
+      alignItems: 'center',
+    },
   })
 );
 
@@ -145,8 +148,6 @@ interface IStateProps {
   t: ITranscriptionTabStrings;
   ts: ISharedStrings;
   activityState: IActivityStateStrings;
-  hasUrl: boolean;
-  mediaUrl: string;
   exportFile: FileResponse;
   exportStatus: IAxiosStatus | undefined;
   allBookData: BookName[];
@@ -190,9 +191,6 @@ export function TranscriptionTab(props: IProps) {
     roles,
     projectPlans,
     planColumn,
-    hasUrl,
-    mediaUrl,
-    fetchMediaUrl,
     exportProject,
     exportComplete,
     exportStatus,
@@ -216,9 +214,6 @@ export function TranscriptionTab(props: IProps) {
   const eafAnchor = React.useRef<HTMLAnchorElement>(null);
   const [dataUrl, setDataUrl] = useState<string | undefined>();
   const [dataName, setDataName] = useState('');
-  const audAnchor = React.useRef<HTMLAnchorElement>(null);
-  const [audUrl, setAudUrl] = useState<string | undefined>();
-  const [audName, setAudName] = useState('');
   const exportAnchor = React.useRef<HTMLAnchorElement>(null);
   const [exportUrl, setExportUrl] = useState<string | undefined>();
   const [exportName, setExportName] = useState('');
@@ -397,20 +392,6 @@ export function TranscriptionTab(props: IProps) {
     logError(Severity.info, globalStore.errorReporter, `name=${name}`);
     setDataUrl('data:text/xml;base64,' + eafCode);
     setDataName(name + '.eaf');
-    handleAudioFn(passageId);
-  };
-
-  const handleAudio = (passageId: string) => () => handleAudioFn(passageId);
-  const handleAudioFn = (passageId: string) => {
-    logError(Severity.info, globalStore.errorReporter, `handleAudioFn`);
-    const mediaRec = getMediaRec(passageId, memory);
-    const id =
-      remoteId('mediafile', mediaRec ? mediaRec.id : '', memory.keyMap) ||
-      mediaRec?.id;
-    logError(Severity.info, globalStore.errorReporter, `rem Media Id=${id}`);
-    const name = getMediaName(mediaRec, memory);
-    if (id) fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
-    setAudName(name);
   };
 
   useEffect(() => {
@@ -469,34 +450,6 @@ export function TranscriptionTab(props: IProps) {
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [exportStatus]);
-
-  useEffect(() => {
-    if (audUrl && audName !== '') {
-      if (audAnchor?.current) {
-        logError(
-          Severity.info,
-          globalStore.errorReporter,
-          `audName=${audName}, audUrl=${audUrl}, audAnchor=${audAnchor?.current}`
-        );
-        audAnchor.current.click();
-        setAudUrl(undefined);
-        setAudName('');
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audUrl, audName]);
-
-  useEffect(() => {
-    if (audName !== '' && !audUrl && mediaUrl && mediaUrl !== '') {
-      logError(
-        Severity.info,
-        globalStore.errorReporter,
-        `audName=${audName}, audUrl=${audUrl} mediaUrl=${mediaUrl}`
-      );
-      setAudUrl(mediaUrl);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasUrl, mediaUrl, audName]);
 
   useEffect(() => {
     logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
@@ -592,6 +545,7 @@ export function TranscriptionTab(props: IProps) {
   interface ICell {
     value: string;
     style?: React.CSSProperties;
+    mediaId: string;
     row: IRow;
     column: any;
     tableRow: any;
@@ -614,31 +568,24 @@ export function TranscriptionTab(props: IProps) {
     </Table.Cell>
   );
 
-  const ActionCell = ({ value, style, ...restProps }: ICell) => (
+  const ActionCell = ({ value, style, mediaId, ...restProps }: ICell) => (
     <Table.Cell {...restProps} style={{ ...style }} value>
-      <IconButton
-        id={'eaf-' + value}
-        key={'eaf-' + value}
-        aria-label={'eaf-' + value}
-        color="default"
-        className={classes.actionWords}
-        onClick={handleEaf(value)}
-        disabled={!hasTranscription(value)}
-      >
-        {t.elan}
-        <br />
-        {t.export}
-      </IconButton>
-      <IconButton
-        id={'aud-' + value}
-        key={'aud-' + value}
-        aria-label={'aud-' + value}
-        color="default"
-        className={classes.actionIcon}
-        onClick={handleAudio(value)}
-      >
-        <SoundIcon />
-      </IconButton>
+      <div className={classes.downloadButtons}>
+        <IconButton
+          id={'eaf-' + value}
+          key={'eaf-' + value}
+          aria-label={'eaf-' + value}
+          color="default"
+          className={classes.actionWords}
+          onClick={handleEaf(value)}
+          disabled={!hasTranscription(value)}
+        >
+          {t.elan}
+          <br />
+          {t.export}
+        </IconButton>
+        <AudioDownload auth={auth} mediaId={mediaId} />
+      </div>
     </Table.Cell>
   );
 
@@ -668,7 +615,7 @@ export function TranscriptionTab(props: IProps) {
             .filter({ relation: 'passage', record: passRec })
         ) as MediaFile[];
         if (state !== ActivityStates.NoMedia && media.length > 0)
-          return <ActionCell {...props} />;
+          return <ActionCell {...props} mediaId={media[0].id} />;
         else return <td className="MuiTableCell-root" />;
       }
     }
@@ -828,13 +775,6 @@ export function TranscriptionTab(props: IProps) {
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
       <a ref={eafAnchor} href={dataUrl} download={dataName} />
       {/* eslint-disable-next-line jsx-a11y/anchor-has-content */}
-      <a
-        ref={audAnchor}
-        href={audUrl}
-        download={audName}
-        target="_blank"
-        rel="noopener noreferrer"
-      />
       <WhichExportDlg />
     </div>
   );
@@ -844,8 +784,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'transcriptionTab' }),
   ts: localStrings(state, { layout: 'shared' }),
   activityState: localStrings(state, { layout: 'activityState' }),
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
   exportFile: state.importexport.exportFile,
   exportStatus: state.importexport.importexportStatus,
   allBookData: state.books.bookData,

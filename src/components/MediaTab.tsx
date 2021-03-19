@@ -922,7 +922,7 @@ export function MediaTab(props: IProps) {
                   labelPlacement="end"
                   control={
                     <Switch
-                      checked={attachedFilter.value == 'Y'}
+                      checked={attachedFilter.value === 'Y'}
                       onChange={handleAttachedFilterChange}
                     />
                   }
