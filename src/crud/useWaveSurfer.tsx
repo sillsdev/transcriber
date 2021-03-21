@@ -1,5 +1,5 @@
+import _ from 'lodash';
 import { useState, useEffect, useRef } from 'react';
-import { promisify } from 'util';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 
@@ -28,46 +28,49 @@ export function useWaveSurfer(
     function create(container: any, height: number) {
       var ws = createWaveSurfer(container, height, timelineContainer);
       wsRef.current = ws;
-      ws.on('loading ', function (progress) {
+      ws.on('loading', function (progress) {
         console.log('loading', progress);
       });
       ws.on('ready', function () {
         onReady();
-        if (playingRef.current) ws.play();
         console.log('ready', ws.getDuration());
         durationRef.current = ws.getDuration();
       });
-      ws.on('audioprocess', function (e: number) {
+      ws.on('audioprocess', _.throttle(function (e: number) {
         setProgress(e);
-        onProgress(e);
-      });
+        onProgress(e)
+      }, 150));
       ws.on('seek', function (e: number) {
         setProgress(e * durationRef.current);
         onProgress(e * durationRef.current);
-        console.log('seek', e, durationRef.current, e * durationRef.current);
+        if (!regionInProgressRef.current && regionRef.current) {
+          regionRef.current?.remove();
+          regionRef.current = undefined;
+          if (onRegion) onRegion(false);
+        }
       });
       ws.on('finish', function () {
         setPlaying(false);
         onStop();
       });
       ws.on('region-created', function (r: any) {
-        console.log('region-created', r, regionRef.current);
         if (regionRef.current) regionRef.current?.remove();
         regionRef.current = r;
         regionInProgressRef.current = true;
         if (onRegion) onRegion(true);
       });
       ws.on('region-update-end', function (r: any) {
-        console.log('region-update-end', r);
-        regionInProgressRef.current = false;
         wsGoto(regionRef.current.start);
+        regionInProgressRef.current = false;
       });
+      /* other potentially useful messages 
       ws.on('region-play', function (r: any) {
         console.log('region-play', r);
       });
       ws.on('region-out', function (r: any) {
-        console.log('region-out', r);
-      });
+        console.log('region-out', r.loop, playingRef.current)
+      }); 
+      */
       return ws;
     }
 
@@ -88,27 +91,14 @@ export function useWaveSurfer(
   }, []);
 
   useEffect(() => {
-    console.log(
-      'new playing',
-      playing,
-      'ready?',
-      wsRef.current?.isReady,
-      'playing?',
-      wsRef.current?.isPlaying(),
-      'hasregion?',
-      regionRef.current !== undefined,
-      'looping?',
-      regionRef.current?.loop
-    );
     playingRef.current = playing;
     if (playingRef.current) {
       if (wsRef.current?.isReady) {
         if (regionRef.current && regionRef.current.loop)//this still needs work
           regionRef.current.playLoop();
-        else wsRef.current?.play();
+        else wsRef.current?.play(progress);
       }
     } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
-    console.log('playing?', wsRef.current?.isPlaying());
   }, [playing, wsRef.current?.isReady]);
 
   const wsIsReady = () => wsRef.current?.isReady || false;
@@ -130,10 +120,8 @@ export function useWaveSurfer(
   const wsPosition = () => progress;
 
   const wsGoto = (position: number) => {
-    console.log('goto', position, durationRef.current);
     if (position && durationRef.current)
       position = position / durationRef.current;
-    console.log('seekto', position);
     wsRef.current?.seekAndCenter(position);
   };
   const wsSetPlaybackRate = (rate: number) =>
@@ -150,14 +138,12 @@ export function useWaveSurfer(
   const wsLoopRegion = (loop: boolean) => {
     if (!regionRef.current) return false;
     regionRef.current.loop = loop;
-    console.log('loop', regionRef.current.loop);
     if (regionRef.current.loop) wsGoto(regionRef.current.start);
     return regionRef.current.loop;
   };
 
   const wsRegionIsLooping = (): boolean => {
     if (!regionRef.current) return false;
-    console.log('islooping?', regionRef.current.loop);
     return regionRef.current.loop;
   };
   const trimTo = (val: number, places: number) => {
@@ -179,7 +165,7 @@ export function useWaveSurfer(
     console.log('insertBuffer', startposition, endposition);
     if (
       startposition === 0 &&
-      !endposition &&
+      endposition === undefined &&
       newBuffer.length > (originalBuffer?.length | 0)
     ) {
       loadDecoded(newBuffer);
@@ -190,7 +176,7 @@ export function useWaveSurfer(
     var after_len = 0;
     var after_offset = 0;
 
-    if (endposition) {
+    if (endposition !== undefined) {
       after_offset = (endposition * originalBuffer.sampleRate) >> 0;
     }
     else {
@@ -209,7 +195,7 @@ export function useWaveSurfer(
 
     for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
       var chan_data = originalBuffer.getChannelData(ix);
-      var new_data = newBuffer.getChannelData(ix);
+      var new_data = newBuffer.getChannelData(0);  //we're not recording in stereo currently
       var uber_chan_data = uberSegment.getChannelData(ix);
 
       console.log('adding 0 to ', start_offset, 'newData', newBuffer.length, 'after_len', after_len, 'after_offset', after_offset)

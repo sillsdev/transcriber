@@ -2443,18 +2443,6 @@
             <target>Sim</target>
          </segment>
       </unit>
-      <unit id="transcriber.aheadTip">
-         <segment>
-            <source>Skip ahead ({0})</source>
-            <target>Avançar ({0})</target>
-         </segment>
-      </unit>
-      <unit id="transcriber.backTip">
-         <segment>
-            <source>Skip back ({0})</source>
-            <target>Voltar ({0})</target>
-         </segment>
-      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -2465,12 +2453,6 @@
          <segment>
             <source>Completed</source>
             <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
-            <target>Mais rápido ({0})</target>
          </segment>
       </unit>
       <unit id="transcriber.historyTip">
@@ -2507,18 +2489,6 @@
          <segment>
             <source>Created task</source>
             <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.pauseTip">
-         <segment>
-            <source>Play ({0})</source>
-            <target>Executar ({0})</target>
-         </segment>
-      </unit>
-      <unit id="transcriber.playTip">
-         <segment>
-            <source>Pause ({0})</source>
-            <target>Pausar ({0})</target>
          </segment>
       </unit>
       <unit id="transcriber.reject">
@@ -2561,12 +2531,6 @@
          <segment>
             <source>Saving...</source>
             <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.slowerTip">
-         <segment>
-            <source>Slower ({0})</source>
-            <target>Mais lento ({0})</target>
          </segment>
       </unit>
       <unit id="transcriber.submit">
@@ -3125,6 +3089,48 @@
          <segment>
             <source>Project Type</source>
             <target>Tipo de Projeto</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.aheadTip">
+         <segment>
+            <source>Skip ahead ({0})</source>
+            <target>AvanÃ§ar ({0})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.backTip">
+         <segment>
+            <source>Skip back ({0})</source>
+            <target>Voltar ({0})</target>
+         </segment>
+      </unit>
+       <unit id="wsAudioPlayer.fasterTip">
+         <segment>
+            <source>Faster ({0})</source>
+            <target>Mais rÃ¡pido ({0})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.slowerTip">
+         <segment>
+            <source>Slower ({0})</source>
+            <target>Mais lento ({0})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.pauseTip">
+         <segment>
+            <source>Play ({0})</source>
+            <target>Executar ({0})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.playTip">
+         <segment>
+            <source>Pause ({0})</source>
+            <target>Pausar ({0})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.slowerTip">
+         <segment>
+            <source>Slower ({0})</source>
+            <target>Mais lento ({0})</target>
          </segment>
       </unit>
    </file>

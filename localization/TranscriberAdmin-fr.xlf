@@ -2828,18 +2828,7 @@
             <target>Oui</target>
          </segment>
       </unit>
-      <unit id="transcriber.aheadTip">
-         <segment>
-            <source>Skip ahead ({0})</source>
-            <target>Sauter en avant ({0})</target>
-         </segment>
-      </unit>
-      <unit id="transcriber.backTip">
-         <segment>
-            <source>Skip back ({0})</source>
-            <target>Saut en arrière ({0})</target>
-         </segment>
-      </unit>
+
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -2850,12 +2839,6 @@
          <segment>
             <source>Completed</source>
             <target>Terminé</target>
-         </segment>
-      </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
-            <target>Plus rapide ({1})</target>
          </segment>
       </unit>
       <unit id="transcriber.historyTip">
@@ -2900,18 +2883,7 @@
             <target>Tâche créée</target>
          </segment>
       </unit>
-      <unit id="transcriber.pauseTip">
-         <segment>
-            <source>Play ({0})</source>
-            <target>Ecouter ({0})</target>
-         </segment>
-      </unit>
-      <unit id="transcriber.playTip">
-         <segment>
-            <source>Pause ({0})</source>
-            <target>Pause ({0})</target>
-         </segment>
-      </unit>
+
       <unit id="transcriber.pullParatextCaption">
          <segment>
             <source>Paratext</source>
@@ -2978,12 +2950,7 @@
             <target>Sauvegarder...</target>
          </segment>
       </unit>
-      <unit id="transcriber.slowerTip">
-         <segment>
-            <source>Slower ({0})</source>
-            <target>Plus lente ({0})</target>
-         </segment>
-      </unit>
+
       <unit id="transcriber.submit">
          <segment>
             <source>Submit</source>
@@ -3596,5 +3563,143 @@
             <target>Type de projet</target>
          </segment>
       </unit>
-   </file>
+      <unit id="wsAudioPlayer.aheadTip">
+         <segment>
+            <source>Skip ahead ({0})</source>
+            <target>Sauter en avant ({0})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.backTip">
+         <segment>
+            <source>Skip back ({0})</source>
+            <target>Saut en arrière ({0})</target>
+         </segment>
+      </unit>   
+      <unit id="wsAudioPlayer.beginning">
+         <segment>
+            <source>Beginning</source>
+            <target>Début</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.deleteRegion">
+         <segment>
+            <source>Delete Region</source>
+            <target>Supprimer la région</target>
+        </segment>
+      </unit>
+      <unit id="wsAudioPlayer.end">
+         <segment>
+            <source>End</source>
+           <target>Finir</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.fasterTip">
+         <segment>
+            <source>Faster ({0})</source>
+            <target>Plus rapide ({1})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.loopoff">
+         <segment>
+            <source>Loop Off</source>
+             <target>Boucle désactivée</target>
+          </segment>
+      </unit>
+      <unit id="wsAudioPlayer.loopon">
+         <segment>
+            <source>Loop On</source>
+            <target>Boucle sur</target>
+           </segment>
+      </unit>
+      <unit id="wsAudioPlayer.pauseTip">
+         <segment>
+            <source>Pause ({0})</source>
+            <target>Pause ({0})</target>
+         </segment>
+      </unit>
+       <unit id="wsAudioPlayer.pauseRecord">
+         <segment>
+            <source>Pause</source>
+            <target>Pause</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.playTip">
+         <segment>
+            <source>Play ({0})</source>
+            <target>Ecouter ({0})</target>
+         </segment>
+      </unit>   
+      <unit id="wsAudioPlayer.record">
+         <segment>
+            <source>Record</source>
+             <target>Record</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.resume">
+         <segment>
+            <source>Resume</source>
+            <target>Reprendre</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.seconds">
+         <segment>
+            <source>Seconds</source>
+            <target>Seconds</target>
+        </segment>
+      </unit>
+      <unit id="wsAudioPlayer.silence">
+         <segment>
+            <source>Silence</source>
+            <target>Silence</target>
+        </segment>
+      </unit>
+      <unit id="wsAudioPlayer.slowerTip">
+         <segment>
+            <source>Slower ({0})</source>
+            <target>Plus lente ({0})</target>
+         </segment>
+      </unit>
+      <unit id="wsAudioPlayer.stop">
+         <segment>
+            <source>Stop</source>
+            <target>Arrêter</target>
+         </segment>
+      </unit>         
+         <unit id="passageRecord.fileName">
+         <segment>
+            <source>Filename</source>
+            <target>Nom de fichier</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.fileType">
+         <segment>
+            <source>File Type</source>
+            <target>Type de fichier</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.loadfile">
+         <segment>
+            <source>Load Existing File</source>
+            <target>Charger un fichier existant</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.loading">
+         <segment>
+            <source>Loading...</source>
+            <target>Chargement...</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.save">
+         <segment>
+            <source>Save</source>
+            <target>Sauvegarder</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target>Annuler</target>
+         </segment>
+      </unit>
+</file>
 </xliff>

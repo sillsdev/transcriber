@@ -575,8 +575,6 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
-    "aheadTip": string;
-    "backTip": string;
     "comment": string;
     "done": string;
     "fasterTip": string;
@@ -587,8 +585,6 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "needsNewRecording": string;
     "needsNewTranscription": string;
     "noMedia": string;
-    "pauseTip": string;
-    "playTip": string;
     "pullParatextCaption": string;
     "pullParatextStart": string;
     "pullParatextStatus": string;
@@ -600,7 +596,6 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "saveReviewTip": string;
     "saveTip": string;
     "saving": string;
-    "slowerTip": string;
     "submit": string;
     "submitReviewTip": string;
     "submitTranscriptionTip": string;
@@ -731,7 +726,32 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
 };
 
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
+    "aheadTip": string;
+    "backTip": string;
+    "beginning": string;
+    "deleteRegion": string;
+    "end": string;
+    "fasterTip": string;
+    "loopoff": string;
+    "loopon": string;
+    "pauseTip": string;
+    "pauseRecord": string;
+    "playTip": string;
+    "record": string;
+    "resume": string;
+    "seconds": string;
+    "silence": string;
+    "slowerTip": string;
+    "stop": string;
+};
+
+export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods {
     "fileName": string;
+    "fileType": string;
+    "loadfile": string;
+    "loading": string;
+    "save": string;
+    "cancel": string;
 };
 
 export interface ILocalizedStrings {
@@ -781,5 +801,6 @@ export interface ILocalizedStrings {
 	usertable: IUsertableStrings;
 	vProject: IVProjectStrings;
 	wsAudioPlayer: IWsAudioPlayerStrings;
+	passageRecord: IPassageRecordStrings;
 	[key: string]: any;
 };

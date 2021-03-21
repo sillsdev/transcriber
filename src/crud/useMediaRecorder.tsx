@@ -25,10 +25,10 @@ export function useMediaRecorder(
   const [mediaBlob, setMediaBlob] = React.useState<Blob>();
 
   useEffect(() => {
-    getMediaStream().then(stream => {
-      setMediaStream(stream);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (allowRecord)
+      getMediaStream().then(stream => {
+        setMediaStream(stream);
+      });
   }, []);
 
   useEffect(() => {
