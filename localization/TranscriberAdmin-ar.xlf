@@ -2455,18 +2455,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.aheadTip">
-         <segment>
-            <source>Skip ahead ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.backTip">
-         <segment>
-            <source>Skip back ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -2476,12 +2464,6 @@
       <unit id="transcriber.done">
          <segment>
             <source>Completed</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
             <target/>
          </segment>
       </unit>
@@ -2518,18 +2500,6 @@
       <unit id="transcriber.noMedia">
          <segment>
             <source>Created task</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.pauseTip">
-         <segment>
-            <source>Play ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.playTip">
-         <segment>
-            <source>Pause ({0})</source>
             <target/>
          </segment>
       </unit>
@@ -2575,13 +2545,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.slowerTip">
-         <segment>
-            <source>Slower ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.submit">
+       <unit id="transcriber.submit">
          <segment>
             <source>Submit</source>
             <target>إرسال</target>

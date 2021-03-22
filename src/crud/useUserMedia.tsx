@@ -1,34 +1,33 @@
 import { useState, useEffect } from 'react';
 
 export function useUserMedia(
-  requestedMedia: MediaStreamConstraints | undefined
+  requestedMedia: MediaStreamConstraints
 ) {
   const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
     undefined
   );
-
-  useEffect(() => {
-    async function enableStream() {
+  async function getStream() {
+    if (mediaStream) return mediaStream;
+    else
       try {
         const stream = await navigator.mediaDevices.getUserMedia(
           requestedMedia
         );
+        console.log('got stream');
         setMediaStream(stream);
+        return stream;
       } catch (err) {
         return err;
       }
-    }
+  }
 
-    if (!mediaStream) {
-      enableStream();
-    } else {
-      return function cleanup() {
-        mediaStream.getTracks().forEach((track) => {
-          track.stop();
-        });
-      };
-    }
-  }, [mediaStream, requestedMedia]);
+  useEffect(() => {
+    return function cleanup() {
+      mediaStream?.getTracks().forEach((track) => {
+        track.stop();
+      });
+    };
+  }, []);
 
-  return mediaStream;
+  return getStream;
 }

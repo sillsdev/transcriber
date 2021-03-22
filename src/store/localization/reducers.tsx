@@ -615,8 +615,6 @@ const initialState = {
 	}),
 	"transcriber": new LocalizedStrings({
 		"en": {
-			"aheadTip": "Skip ahead ({0})",
-			"backTip": "Skip back ({0})",
 			"comment": "Comment",
 			"done": "Completed",
 			"fasterTip": "Faster ({0})",
@@ -627,8 +625,6 @@ const initialState = {
 			"needsNewRecording": "Rejected recording",
 			"needsNewTranscription": "Rejected transcription",
 			"noMedia": "Created task",
-			"pauseTip": "Play ({0})",
-			"playTip": "Pause ({0})",
 			"pullParatextCaption": "Paratext",
 			"pullParatextStart": "Getting transcription from Paratext",
 			"pullParatextStatus": "Transcription pulled from Paratext",
@@ -640,7 +636,6 @@ const initialState = {
 			"saveReviewTip": "Save position and comment",
 			"saveTip": "Save changes and comment",
 			"saving": "Saving...",
-			"slowerTip": "Slower ({0})",
 			"submit": "Submit",
 			"submitReviewTip": "Submit as complete",
 			"submitTranscriptionTip": "Submit for review",
@@ -780,7 +775,33 @@ const initialState = {
 	}),
 	"wsAudioPlayer": new LocalizedStrings({
 		"en": {
+			"aheadTip": "Ahead {0}",
+			"backTip": "Back {0}",
+			"beginning": "Beginning",
+			"deleteRegion": "Delete Region",
+			"end": "End",
+			"fasterTip": "Faster ({0})",
+			"loopoff": "Loop Off",
+			"loopon": "Loop On",
+			"pauseTip": "Pause {0}",
+			"pauseRecord": "Pause",
+			"playTip": "Play {0}",
+			"record": "Record",
+			"resume": "Resume",
+			"seconds": "Seconds",
+			"silence": "Silence",
+			"slowerTip": "Slower ({0})",
+			"stop": "Stop",
+		}
+	}),
+	"passageRecord": new LocalizedStrings({
+		"en": {
 			"fileName": "Filename",
+			"fileType": "File Type",
+			"loadfile": "Load Existing File",
+			"loading": "Loading...",
+			"save": "Save",
+			"cancel": "Cancel",
 		}
 	}),
 };
@@ -835,6 +856,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"usertable" : new LocalizedStrings(action.payload.data.usertable),
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
+				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
 			};
 		case SET_LANGUAGE:
 			return {

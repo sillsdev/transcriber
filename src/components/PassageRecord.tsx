@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
-import { IState, IMediaUploadStrings, MediaFile } from '../model';
+import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
 import * as actions from '../store';
 import Auth from '../auth/Auth';
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 interface IStateProps {
-  t: IMediaUploadStrings;
+  t: IPassageRecordStrings;
   mediaUrl: string;
   hasUrl: boolean;
 }
@@ -99,7 +99,7 @@ function PassageRecord(props: IProps) {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchMediaUrl(mediaId, memory, offline, auth);
+    if (mediaId) fetchMediaUrl(mediaId, memory, offline, auth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -160,6 +160,7 @@ function PassageRecord(props: IProps) {
     );
     if (index > -1) setFiletype(acceptextension[index]);
   };
+
   return (
     <Dialog
       className={classes.root}
@@ -169,8 +170,8 @@ function PassageRecord(props: IProps) {
     >
       <DialogTitle id="form-dialog-title">{'Record!'}</DialogTitle>
       <DialogContent>
-        <Button onClick={handleLoadAudio} disabled={!hasUrl}>
-          {loading ? 't.loading' : 't.loadFile'}
+        <Button variant="contained" onClick={handleLoadAudio} disabled={!hasUrl}>
+          {loading ? t.loading : t.loadfile}
         </Button>
         <WSAudioPlayer
           allowRecord={true}
@@ -181,7 +182,7 @@ function PassageRecord(props: IProps) {
         <TextField
           className={classes.formControl}
           id="filename"
-          label={'t.filename'}
+          label={t.fileName}
           value={name}
           onChange={handleChangeFileName}
           fullWidth
@@ -189,7 +190,7 @@ function PassageRecord(props: IProps) {
         />
         <FormControl className={classes.formControl}>
           <InputLabel id="demo-simple-select-label" required={true}>
-            t.fileType
+            {t.fileType}
           </InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -198,7 +199,7 @@ function PassageRecord(props: IProps) {
             onChange={handleChangeFiletype}
           >
             {acceptextension.map((e) => (
-              <MenuItem value={e}>{e}</MenuItem>
+              <MenuItem key={e} value={e}>{e}</MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -217,9 +218,9 @@ function PassageRecord(props: IProps) {
           onClick={handleAddOrSave}
           variant="contained"
           color="primary"
-          disabled={(ready && !ready()) || !filechanged || name === ''}
+          disabled={(ready && !ready()) || name === ''} //|| !filechanged}
         >
-          {'todo.save'}
+          {t.save}
         </Button>
       </DialogActions>
     </Dialog>
@@ -234,7 +235,7 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ),
 });
 const mapStateToProps = (state: IState): IStateProps => ({
-  t: localStrings(state, { layout: 'mediaUpload' }),
+  t: localStrings(state, { layout: 'passageRecord' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
 });

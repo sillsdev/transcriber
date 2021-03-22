@@ -176,9 +176,9 @@ interface IRecordProps {
 
 interface IProps
   extends IStateProps,
-    IDispatchProps,
-    IRecordProps,
-    WithDataProps {
+  IDispatchProps,
+  IRecordProps,
+  WithDataProps {
   auth: Auth;
   attachTool?: boolean;
 }
@@ -311,12 +311,7 @@ export function MediaTab(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
-  const [passAttach, setPassAttach] = useState(new Set<number>());
-  const [attachedFilter, setAttachedFilter] = useState({
-    columnName: 'attached',
-    operation: 'equal',
-    value: 'N',
-  });
+  const [attachedFilter, setAttachedFilter] = useState({ columnName: 'attached', operation: 'equal', value: 'N' })
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
@@ -648,15 +643,7 @@ export function MediaTab(props: IProps) {
       sections,
       allBookData
     );
-    const pasAttach = new Set<number>();
-    newPassData.forEach((r, i) => {
-      if (r.attached === 'Y') pasAttach.add(i);
-    });
-    if (
-      pasAttach.size !== passAttach.size ||
-      pdata.length !== newPassData.length
-    ) {
-      setPassAttach(pasAttach);
+    if (pdata.length !== newPassData.length) {
       setPData(newPassData);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -920,12 +907,8 @@ export function MediaTab(props: IProps) {
                 <FormControlLabel
                   value="attached"
                   labelPlacement="end"
-                  control={
-                    <Switch
-                      checked={attachedFilter.value === 'Y'}
-                      onChange={handleAttachedFilterChange}
-                    />
-                  }
+                  control={<Switch checked={attachedFilter.value === 'Y'}
+                    onChange={handleAttachedFilterChange} />}
                   label={t.alreadyAssociated}
                 />
                 <ShapingTable

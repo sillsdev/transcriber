@@ -2,5 +2,7 @@
   "dotnet-test-explorer.testProjectPath": "test/**/*.Tests.csproj",
   "editor.formatOnSave": true,
   "editor.rulers": [80],
-  "editor.wordWrapColumn": 80
+  "editor.wordWrapColumn": 80,
+  "explorer.openEditors.sortOrder": "alphabetical",
+  "explorer.openEditors.visible": 8
 }

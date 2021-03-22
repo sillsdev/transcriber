@@ -199,14 +199,13 @@ export function Transcriber(props: IProps) {
   const [doSave] = useGlobal('doSave');
   const [projData, setProjData] = useState<FontData>();
   const [fontStatus, setFontStatus] = useState<string>();
-  const [playedSeconds, setPlayedSeconds] = useState(0);
   // playedSecsRef is needed for autosave
   const playedSecsRef = React.useRef<number>(0);
   const stateRef = React.useRef<string>(state);
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
-      state === ActivityStates.TranscribeReady
+    state === ActivityStates.TranscribeReady
   );
   const [height, setHeight] = useState(window.innerHeight);
   const [boxHeight, setBoxHeight] = useState(height - NON_BOX_HEIGHT);
@@ -413,7 +412,7 @@ export function Transcriber(props: IProps) {
   const handleTimer = () => {
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.focus();
-      const timeStamp = '(' + formatTime(playedSeconds) + ')';
+      const timeStamp = '(' + formatTime(playedSecsRef.current) + ')';
       const textArea = transcriptionRef.current
         .firstChild as HTMLTextAreaElement;
       insertAtCursor(textArea, timeStamp);
@@ -539,7 +538,7 @@ export function Transcriber(props: IProps) {
     if (
       role &&
       roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
-        roleHierarchy.indexOf(camel2Title(projRole) as RoleNames)
+      roleHierarchy.indexOf(camel2Title(projRole) as RoleNames)
     ) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
@@ -755,7 +754,7 @@ export function Transcriber(props: IProps) {
 
   const paperStyle = { width: width - 36 };
 
-  const onProgress = (progress: number) => setPlayedSeconds(progress);
+  const onProgress = (progress: number) => playedSecsRef.current = progress;
   const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
   return (
     <div className={classes.root}>

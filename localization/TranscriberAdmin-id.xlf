@@ -2461,18 +2461,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.aheadTip">
-         <segment>
-            <source>Skip ahead ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.backTip">
-         <segment>
-            <source>Skip back ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.comment">
          <segment>
             <source>Comment</source>
@@ -2485,13 +2473,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.historyTip">
+       <unit id="transcriber.historyTip">
          <segment>
             <source>History ({0})</source>
             <target/>
@@ -2524,18 +2506,6 @@
       <unit id="transcriber.noMedia">
          <segment>
             <source>Created task</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.pauseTip">
-         <segment>
-            <source>Play ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.playTip">
-         <segment>
-            <source>Pause ({0})</source>
             <target/>
          </segment>
       </unit>
@@ -2578,12 +2548,6 @@
       <unit id="transcriber.saving">
          <segment>
             <source>Saving...</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.slowerTip">
-         <segment>
-            <source>Slower ({0})</source>
             <target/>
          </segment>
       </unit>

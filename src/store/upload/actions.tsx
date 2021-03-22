@@ -26,7 +26,18 @@ export const uploadFiles = (files: File[]) => (dispatch: any) => {
     type: UPLOAD_LIST,
   });
 };
-
+export const writeFileLocal = (file: File) => {
+  var local = { localname: '' };
+  dataPath(`http://${file.path}`, PathType.MEDIA, local);
+  var fullName = local.localname;
+  if (file.path === '') fullName += path.sep + file.name;
+  createPathFolder(fullName);
+  fs.writeFileSync(fullName, file);
+  return path.join(
+    PathType.MEDIA,
+    file.path.split(path.sep).pop()
+  );
+}
 export const nextUpload = (
   record: any,
   files: File[],
@@ -50,16 +61,8 @@ export const nextUpload = (
   }
   if (!auth.accessToken) {
     // offlineOnly
-    var local = { localname: '' };
-    dataPath(`http://${files[n].path}`, PathType.MEDIA, local);
     try {
-      const fullName = local.localname;
-      createPathFolder(fullName);
-      fs.copyFileSync(files[n].path, fullName);
-      const filename = path.join(
-        PathType.MEDIA,
-        files[n].path.split(path.sep).pop()
-      );
+      var filename = writeFileLocal(files[n]);
       if (cb) cb(n, true, { ...record, audioUrl: filename });
     } catch (err) {
       if (cb) cb(n, false);
@@ -77,12 +80,8 @@ export const nextUpload = (
       const xhr = new XMLHttpRequest();
       xhr.open('PUT', response.data.audioUrl, true);
       if (isElectron) {
-        var local = { localname: '' };
-        dataPath(response.data.audioUrl, PathType.MEDIA, local);
         try {
-          const fullName = local.localname;
-          createPathFolder(fullName);
-          fs.copyFileSync(files[n].path, fullName);
+          writeFileLocal(files[n]);
         } catch (err) {
           console.log(err);
         }
