@@ -2473,13 +2473,7 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.historyTip">
+       <unit id="transcriber.historyTip">
          <segment>
             <source>History ({0})</source>
             <target/>
@@ -2554,12 +2548,6 @@
       <unit id="transcriber.saving">
          <segment>
             <source>Saving...</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="transcriber.slowerTip">
-         <segment>
-            <source>Slower ({0})</source>
             <target/>
          </segment>
       </unit>

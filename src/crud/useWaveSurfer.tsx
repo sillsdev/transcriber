@@ -21,7 +21,7 @@ export function useWaveSurfer(
   const wsRef = useRef<WaveSurfer>();
   const playingRef = useRef(false);
   const regionRef = useRef<any>();
-  const regionInProgressRef = useRef(false);
+  const keepRegion = useRef(false);
   const durationRef = useRef(0);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function useWaveSurfer(
       ws.on('seek', function (e: number) {
         setProgress(e * durationRef.current);
         onProgress(e * durationRef.current);
-        if (!regionInProgressRef.current && regionRef.current) {
+        if (!keepRegion.current && regionRef.current) {
           regionRef.current?.remove();
           regionRef.current = undefined;
           if (onRegion) onRegion(false);
@@ -56,12 +56,12 @@ export function useWaveSurfer(
       ws.on('region-created', function (r: any) {
         if (regionRef.current) regionRef.current?.remove();
         regionRef.current = r;
-        regionInProgressRef.current = true;
+        keepRegion.current = true;
         if (onRegion) onRegion(true);
       });
       ws.on('region-update-end', function (r: any) {
         wsGoto(regionRef.current.start);
-        regionInProgressRef.current = false;
+        keepRegion.current = false;
       });
       /* other potentially useful messages 
       ws.on('region-play', function (r: any) {
@@ -94,9 +94,7 @@ export function useWaveSurfer(
     playingRef.current = playing;
     if (playingRef.current) {
       if (wsRef.current?.isReady) {
-        if (regionRef.current && regionRef.current.loop)//this still needs work
-          regionRef.current.playLoop();
-        else wsRef.current?.play(progress);
+        wsRef.current?.play(progress);
       }
     } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
   }, [playing, wsRef.current?.isReady]);
@@ -122,7 +120,9 @@ export function useWaveSurfer(
   const wsGoto = (position: number) => {
     if (position && durationRef.current)
       position = position / durationRef.current;
+    keepRegion.current = true;
     wsRef.current?.seekAndCenter(position);
+    keepRegion.current = false;
   };
   const wsSetPlaybackRate = (rate: number) =>
     wsRef.current?.setPlaybackRate(rate);

@@ -129,8 +129,8 @@ const PLAY_PAUSE_KEY = 'ESC';
 const BACK_KEY = 'F2';
 const AHEAD_KEY = 'F3';
 const SLOWER_KEY = 'F4';
-const RESET_KEY = 'F5';
-const FASTER_KEY = 'F6';
+const RESET_KEY = 'F8';
+const FASTER_KEY = 'F5';
 
 function WSAudioPlayer(props: IProps) {
   const {
