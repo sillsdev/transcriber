@@ -2395,6 +2395,13 @@
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
+          <trans-unit id="planActions.recordAudio">
+            <source>Record Audio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">PlanSheet.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="planActions.transcribe">
             <source>Transcribe</source>
             <target/>
@@ -3606,13 +3613,6 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.timerTip">
-            <source>Timestamp ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriber.transcribing">
             <source>Started to transcribe</source>
             <target/>
@@ -4320,28 +4320,28 @@
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.beginning">
             <source>Beginning</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.deleteRegion">
             <source>Delete Region</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.end">
             <source>End</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.fasterTip">
             <source>Faster ({0})</source>
             <target/>
@@ -4362,7 +4362,7 @@
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
-         </trans-unit>  
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.pauseTip">
             <source>Pause {0}</source>
             <target/>
@@ -4376,7 +4376,7 @@
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.playTip">
             <source>Play {0}</source>
             <target/>
@@ -4411,7 +4411,7 @@
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
-         </trans-unit>         
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.slowerTip">
             <source>Slower ({0})</source>
             <target/>
@@ -4421,6 +4421,13 @@
          </trans-unit>
          <trans-unit id="wsAudioPlayer.stop">
             <source>Stop</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="wsAudioPlayer.timerTip">
+            <source>Timestamp ({0})</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4463,6 +4470,20 @@
          </trans-unit>
          <trans-unit id="passageRecord.cancel">
             <source>Cancel</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="passageRecord.title">
+            <source>Record/Edit Audio</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">passageRecord.tsx</context>
+            </context-group>
+         </trans-unit>
+        <trans-unit id="passageRecord.defaultFilename">
+            <source>MyRecording</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageRecord.tsx</context>

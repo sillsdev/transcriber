@@ -2048,6 +2048,12 @@
             <target>Jeu / Pause</target>
          </segment>
       </unit>
+       <unit id="planActions.recordAudio">
+         <segment>
+            <source>Record Audio</source>
+            <target>Créer de l'audio</target>
+          </segment>
+      </unit>
       <unit id="planActions.transcribe">
          <segment>
             <source>Transcribe</source>
@@ -2969,12 +2975,6 @@
             <target>Soumettre pour examen</target>
          </segment>
       </unit>
-      <unit id="transcriber.timerTip">
-         <segment>
-            <source>Timestamp ({0})</source>
-            <target>Horodatage ({1})</target>
-         </segment>
-      </unit>
       <unit id="transcriber.transcribing">
          <segment>
             <source>Started to transcribe</source>
@@ -3574,7 +3574,7 @@
             <source>Skip back ({0})</source>
             <target>Saut en arrière ({0})</target>
          </segment>
-      </unit>   
+      </unit>
       <unit id="wsAudioPlayer.beginning">
          <segment>
             <source>Beginning</source>
@@ -3628,7 +3628,7 @@
             <source>Play ({0})</source>
             <target>Ecouter ({0})</target>
          </segment>
-      </unit>   
+      </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
             <source>Record</source>
@@ -3664,8 +3664,14 @@
             <source>Stop</source>
             <target>Arrêter</target>
          </segment>
-      </unit>         
-         <unit id="passageRecord.fileName">
+      </unit>
+      <unit id="wsAudioPlayer.timerTip">
+         <segment>
+            <source>Timestamp ({0})</source>
+            <target>Horodatage ({1})</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.fileName">
          <segment>
             <source>Filename</source>
             <target>Nom de fichier</target>
@@ -3701,5 +3707,17 @@
             <target>Annuler</target>
          </segment>
       </unit>
-</file>
+      <unit id="passageRecord.title">
+         <segment>
+            <source>Record/Edit Audio</source>
+            <target>Créer / modifier l'audio</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.defaultFilename">
+         <segment>
+            <source>MyRecording</source>
+            <target>MonAudio</target>
+         </segment>
+      </unit>
+   </file>
 </xliff>

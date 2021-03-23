@@ -2047,6 +2047,12 @@
             <target>Играть / Пауза</target>
          </segment>
       </unit>
+       <unit id="planActions.recordAudio">
+         <segment>
+            <source>Record Audio</source>
+            <target>Запись аудио</target>
+          </segment>
+      </unit>
       <unit id="planActions.transcribe">
          <segment>
             <source>Transcribe</source>
@@ -2917,12 +2923,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.timerTip">
-         <segment>
-            <source>Timestamp ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.transcribing">
          <segment>
             <source>Started to transcribe</source>
@@ -3528,7 +3528,7 @@
             <source>Skip back ({0})</source>
             <target>Перейти назад ({0})</target>
          </segment>
-      </unit>        
+      </unit>
       <unit id="wsAudioPlayer.beginning">
          <segment>
             <source>Beginning</source>
@@ -3619,6 +3619,12 @@
             <target>Останавливаться</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.timerTip">
+         <segment>
+            <source>Timestamp ({0})</source>
+            <target>Отметка времени ({0})</target>
+         </segment>
+      </unit>
       <unit id="passageRecord.fileName">
          <segment>
             <source>Filename</source>
@@ -3655,5 +3661,17 @@
             <target>Отмена</target>
          </segment>
       </unit>
-      </file>
+      <unit id="passageRecord.title">
+         <segment>
+            <source>Record/Edit Audio</source>
+            <target>Запись / редактирование аудио</target>
+         </segment>
+      </unit>
+       <unit id="passageRecord.defaultFilename">
+         <segment>
+            <source>MyRecording</source>
+            <target>МоеAудио</target>
+         </segment>
+      </unit>
+  </file>
 </xliff>

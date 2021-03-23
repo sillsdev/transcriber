@@ -823,7 +823,6 @@ export function ScriptureTable(props: IProps) {
       }
       recs.push(rec);
     }
-    console.log('getChangedRecs numRows:', rowInfo.length, recs.length);
     return recs;
   };
 
@@ -1012,14 +1011,6 @@ export function ScriptureTable(props: IProps) {
         if (!offlineOnly) await onlineSaveFn(recs, anyNew);
         else await localSaveFn(recs);
       };
-      console.log(
-        'rowinfo',
-        rowInfo.length,
-        'inData',
-        inData.length,
-        'data',
-        data.length
-      );
       let changedRows: boolean[] = rowInfo.map(
         (row) => row.sectionId?.id === '' || row.passageId?.id === ''
       );
@@ -1299,7 +1290,6 @@ export function ScriptureTable(props: IProps) {
 
   const handleLookupBook = (book: string) =>
     lookupBook({ book, allBookData, bookMap });
-
   return (
     <div className={classes.container}>
       <PlanSheet
@@ -1335,7 +1325,7 @@ export function ScriptureTable(props: IProps) {
       <Uploader
         recordAudio={recordAudio}
         auth={auth}
-        mediaId={(uploadRow && rowInfo[uploadRow].mediaId) || ''}
+        mediaId={uploadRow !== undefined ? rowInfo[uploadRow].mediaId : ''}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}
         showMessage={showMessage}

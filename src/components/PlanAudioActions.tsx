@@ -83,7 +83,7 @@ export function PlanAudioActions(props: IProps) {
         <IconButton
           className={classes.actionButton}
           onClick={onRecord(rowIndex)}
-          title={'t.recordAudio'}
+          title={t.recordAudio}
         >
           <MicIcon />
         </IconButton>
