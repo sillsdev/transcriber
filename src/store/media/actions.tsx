@@ -16,6 +16,7 @@ export const fetchMediaUrl = (
   reporter?: any
 ) => (dispatch: any) => {
   dispatch({ type: type.FETCH_AUDIO_URL_PENDING });
+  if (!id) return;
   if (isElectron) {
     logError(Severity.info, reporter, `fetchMediaUrl`);
     if (!isNaN(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);

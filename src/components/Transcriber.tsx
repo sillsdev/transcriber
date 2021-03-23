@@ -203,7 +203,7 @@ export function Transcriber(props: IProps) {
   const [totalSeconds, setTotalSeconds] = useState(duration);
   const [transcribing] = useState(
     state === ActivityStates.Transcribing ||
-    state === ActivityStates.TranscribeReady
+      state === ActivityStates.TranscribeReady
   );
   const [height, setHeight] = useState(window.innerHeight);
   const [boxHeight, setBoxHeight] = useState(height - NON_BOX_HEIGHT);
@@ -527,7 +527,7 @@ export function Transcriber(props: IProps) {
     if (
       role &&
       roleHierarchy.indexOf(camel2Title(role) as RoleNames) <=
-      roleHierarchy.indexOf(camel2Title(projRole) as RoleNames)
+        roleHierarchy.indexOf(camel2Title(projRole) as RoleNames)
     ) {
       const assigned = related(secRec, role);
       if (!assigned || assigned === '') {
@@ -702,9 +702,7 @@ export function Transcriber(props: IProps) {
     }
     setLastSaved(passage.attributes?.dateUpdated || '');
     setTotalSeconds(duration);
-    if (mediaRemoteId && mediaRemoteId !== '') {
-      fetchMediaUrl(mediaRemoteId, memory, offline, auth);
-    }
+    fetchMediaUrl(mediaRemoteId, memory, offline, auth);
   };
 
   const handleAutosave = async () => {
@@ -739,7 +737,7 @@ export function Transcriber(props: IProps) {
 
   const paperStyle = { width: width - 36 };
 
-  const onProgress = (progress: number) => playedSecsRef.current = progress;
+  const onProgress = (progress: number) => (playedSecsRef.current = progress);
   const onSaveProgress = (progress: number) => {
     if (transcriptionRef.current) {
       transcriptionRef.current.firstChild.focus();
@@ -749,7 +747,7 @@ export function Transcriber(props: IProps) {
       insertAtCursor(textArea, timeStamp);
       setTextValue(textArea.value);
     }
-  }
+  };
   const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
   return (
     <div className={classes.root}>
@@ -786,7 +784,11 @@ export function Transcriber(props: IProps) {
                   blob={audioBlob}
                   onProgress={onProgress}
                   onPlayStatus={onPlayStatus}
-                  onSaveProgress={selected === '' || role === 'view' ? undefined : onSaveProgress}
+                  onSaveProgress={
+                    selected === '' || role === 'view'
+                      ? undefined
+                      : onSaveProgress
+                  }
                 />
               </Grid>
             </Grid>
@@ -827,7 +829,7 @@ export function Transcriber(props: IProps) {
             )}
           </Grid>
           <Grid container direction="row" className={classes.padRow}>
-          <Grid item>
+            <Grid item>
               <Button
                 variant="outlined"
                 color="primary"

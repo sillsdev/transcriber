@@ -57,7 +57,7 @@ export function MediaPlayer(props: IProps) {
       }
     }
     setPlaying(false);
-    if (srcMediaId !== '' && srcMediaId !== playItem) {
+    if (srcMediaId !== playItem) {
       fetchMediaUrl(srcMediaId, memory, offline, auth);
     }
     setPlayItem(srcMediaId);
