@@ -17,6 +17,11 @@ yarn.lock
 localization/obj
 localization/bin
 localization/packages
+localization/SILTranscriberTranslations.zip
+localization/az/*
+localization/hi/*
+localization/nl/*
+localization/tl/*
 
 # misc
 .eslintcache

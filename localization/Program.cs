@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Xml;
+using ICSharpCode.SharpZipLib.Zip;
 using Newtonsoft.Json;
 using Saxon.Api;
 
@@ -14,6 +15,7 @@ namespace updateLocalization
 		static void Main(string[] args)
 		{
 			// Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
+            ExtractCrowdIn();
 			CreateEnglish20Xlf();
 			AddMissing12LangFolders();
 			CreateModel();
@@ -25,7 +27,19 @@ namespace updateLocalization
 			FollowUp();
 		}
 
-		private static void CreateEnglish20Xlf()
+        private static void ExtractCrowdIn()
+        {
+            var info =
+                new DirectoryInfo(@"..\..").GetFiles(
+                    "SILTranscriberTranslations.zip");
+            if (info.Length > 0)
+            {
+                new FastZip().ExtractZip(info[0].FullName, info[0].DirectoryName,
+                    ".*");
+            }
+        }
+
+        private static void CreateEnglish20Xlf()
 		{
 			XsltProcess(@"From12To20.xsl", @"TranscriberAdmin-en.xlf");
 		}
