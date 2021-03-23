@@ -3215,7 +3215,21 @@
           <context context-type="sourcefile">ToDoTable.tsx</context>
         </context-group>
       </trans-unit>
-       <trans-unit id="transcriber.comment">
+      <trans-unit id="transcriber.aheadTip">
+        <source>Skip ahead ({0})</source>
+        <target state="needs-translation">Skip ahead ({0})</target>
+        <context-group>
+          <context context-type="sourcefile">Transcriber.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcriber.backTip">
+        <source>Skip back ({0})</source>
+        <target state="needs-translation">Skip back ({0})</target>
+        <context-group>
+          <context context-type="sourcefile">Transcriber.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcriber.comment">
         <source>Comment</source>
         <target state="needs-translation">Comment</target>
         <context-group>
@@ -3225,6 +3239,13 @@
       <trans-unit id="transcriber.done">
         <source>Completed</source>
         <target state="needs-translation">Completed</target>
+        <context-group>
+          <context context-type="sourcefile">Transcriber.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcriber.fasterTip">
+        <source>Faster ({0})</source>
+        <target state="needs-translation">Faster ({0})</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
@@ -3271,7 +3292,21 @@
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>
       </trans-unit>
-       <trans-unit id="transcriber.pullParatextCaption">
+      <trans-unit id="transcriber.pauseTip">
+        <source>Play ({0})</source>
+        <target state="needs-translation">Play ({0})</target>
+        <context-group>
+          <context context-type="sourcefile">Transcriber.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcriber.playTip">
+        <source>Pause ({0})</source>
+        <target state="needs-translation">Pause ({0})</target>
+        <context-group>
+          <context context-type="sourcefile">Transcriber.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcriber.pullParatextCaption">
         <source>Paratext</source>
         <target state="needs-translation">Paratext</target>
         <context-group>
@@ -3344,6 +3379,13 @@
       <trans-unit id="transcriber.saving">
         <source>Saving...</source>
         <target state="needs-translation">Saving...</target>
+        <context-group>
+          <context context-type="sourcefile">Transcriber.tsx</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="transcriber.slowerTip">
+        <source>Slower ({0})</source>
+        <target state="needs-translation">Slower ({0})</target>
         <context-group>
           <context context-type="sourcefile">Transcriber.tsx</context>
         </context-group>

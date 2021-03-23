@@ -2440,6 +2440,126 @@
             <target/>
          </segment>
       </unit>
+      <unit id="projectSolution.selectType">
+         <segment>
+            <source>I want to set up this kind of project...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.audioProduct">
+         <segment>
+            <source>Audio Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.textProduct">
+         <segment>
+            <source>Text Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.other">
+         <segment>
+            <source>Other</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.general">
+         <segment>
+            <source>General Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.generalTip">
+         <segment>
+            <source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.obt">
+         <segment>
+            <source>Oral Bible Translation - OBT</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.obtTip">
+         <segment>
+            <source>Oral Bible translation produces an audio product using oral methods.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.storying">
+         <segment>
+            <source>Storying</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.storyingTip">
+         <segment>
+            <source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.adaptation">
+         <segment>
+            <source>Oral Adaptation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.adaptationTip">
+         <segment>
+            <source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.drafting">
+         <segment>
+            <source>Oral Drafting for Scripture</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.draftingTip">
+         <segment>
+            <source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.blank">
+         <segment>
+            <source>Blank Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.paratextIntegration">
+         <segment>
+            <source>Integrated with Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.oneStoryIntegration">
+         <segment>
+            <source>Integrated with OneStory Editor</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.newProject">
+         <segment>
+            <source>New Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.uploadAudio">
+         <segment>
+            <source>Upload Audio</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.startRecording">
+         <segment>
+            <source>Start Recording</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="scriptureTable.action">
          <segment>
             <source>Action</source>

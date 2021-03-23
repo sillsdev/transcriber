@@ -491,6 +491,29 @@ export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
     "reportsTitle": string;
 };
 
+export interface IProjectSolutionStrings extends Localize.LocalizedStringsMethods {
+    "selectType": string;
+    "audioProduct": string;
+    "textProduct": string;
+    "other": string;
+    "general": string;
+    "generalTip": string;
+    "obt": string;
+    "obtTip": string;
+    "storying": string;
+    "storyingTip": string;
+    "adaptation": string;
+    "adaptationTip": string;
+    "drafting": string;
+    "draftingTip": string;
+    "blank": string;
+    "paratextIntegration": string;
+    "oneStoryIntegration": string;
+    "newProject": string;
+    "uploadAudio": string;
+    "startRecording": string;
+};
+
 export interface IScriptureTableStrings extends Localize.LocalizedStringsMethods {
     "action": string;
     "book": string;
@@ -785,6 +808,7 @@ export interface ILocalizedStrings {
 	planTabs: IPlanTabsStrings;
 	profile: IProfileStrings;
 	projButtons: IProjButtonsStrings;
+	projectSolution: IProjectSolutionStrings;
 	scriptureTable: IScriptureTableStrings;
 	shapingTable: IShapingTableStrings;
 	shared: ISharedStrings;
