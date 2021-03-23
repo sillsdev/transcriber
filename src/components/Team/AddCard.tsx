@@ -267,7 +267,7 @@ export const AddCard = (props: IProps) => {
           <div className={classes.icon}>
             <AddIcon fontSize="large" />
             <ProjectSolution
-              open={pickOpen}
+              open={pickOpen && !open && !uploadVisible}
               onOpen={handleShow}
               doUpload={handleUpload}
               doRecord={handleRecord}
