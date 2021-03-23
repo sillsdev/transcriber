@@ -1,13 +1,18 @@
 import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
+import AudioRecorder from 'audio-recorder-polyfill';
+import mpegEncoder from 'audio-recorder-polyfill/mpeg-encoder';
 
 const CAPTURE_OPTIONS = {
   audio: true,
   video: false,
 };
 const noop = () => {};
-
+export interface MimeInfo {
+  mimeType: string;
+  extension: string;
+}
 export function useMediaRecorder(
   allowRecord: boolean = true,
   onStart: () => void = noop,
@@ -23,6 +28,33 @@ export function useMediaRecorder(
     undefined
   );
   const [mediaBlob, setMediaBlob] = React.useState<Blob>();
+  const [acceptedMimes, setAcceptedMimes] = useState<MimeInfo[]>([]);
+
+  useEffect(() => {
+    AudioRecorder.encoder = mpegEncoder;
+    AudioRecorder.prototype.mimeType = 'audio/mpeg';
+    window.MediaRecorder = AudioRecorder; //use this polyfill so we can save to mp3
+
+    const acceptextension = ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'];
+    const defaultacceptmime = [
+      'audio/mpeg',
+      'audio/webm;codecs=opus',
+      'audio/webm;codecs=pcm',
+      'audio/x-m4a',
+      'audio/wav',
+      'audio/ogg;codecs=opus',
+    ];
+    var mimes: MimeInfo[] = [];
+    for (var i in defaultacceptmime) {
+      if (MediaRecorder.isTypeSupported(defaultacceptmime[i])) {
+        mimes.push({
+          mimeType: defaultacceptmime[i],
+          extension: acceptextension[i],
+        });
+      }
+    }
+    setAcceptedMimes(mimes);
+  }, []);
 
   useEffect(() => {
     if (allowRecord)
@@ -112,5 +144,6 @@ export function useMediaRecorder(
     resumeRecording: allowRecord ? resumeRecording : noop,
     playerUrl,
     mediaBlob,
+    acceptedMimes,
   };
 }
