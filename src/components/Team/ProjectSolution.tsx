@@ -1,5 +1,11 @@
 import React from 'react';
-import { makeStyles, createStyles, Theme, Tooltip } from '@material-ui/core';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  Tooltip,
+  ListSubheader,
+} from '@material-ui/core';
 import {
   List,
   ListItem,
@@ -58,11 +64,14 @@ export const ProjectSolution = (props: IProps) => {
     oneStory,
   }
 
-  const typeOptions = [
-    {
-      name: t.general,
-      tip: t.generalTip,
-    },
+  interface Solution {
+    name: string;
+    kind?: integration;
+    tip?: string;
+    buttons?: number;
+  }
+
+  const audioProduct: Solution[] = [
     {
       name: t.obt,
       kind: integration.pt,
@@ -78,11 +87,21 @@ export const ProjectSolution = (props: IProps) => {
       kind: integration.pt,
       tip: t.adaptationTip,
     },
+  ];
+
+  const textProduct: Solution[] = [
     {
       name: t.drafting,
       kind: integration.pt,
       tip: t.draftingTip,
     },
+    {
+      name: t.general,
+      tip: t.generalTip,
+    },
+  ];
+
+  const otherProduct: Solution[] = [
     {
       name: t.blank,
       buttons: 1,
@@ -112,6 +131,72 @@ export const ProjectSolution = (props: IProps) => {
     onOpen(false);
   };
 
+  const listFormatter = (to: Solution, i: number) => (
+    <>
+      <ListItem key={i} component="div" className={classes.listItem}>
+        <ListItemText
+          primary={
+            <Typography component="div" className={classes.primary}>
+              {to.name}
+              {spacer}
+              {to.tip && (
+                <Tooltip title={to.tip}>
+                  <span style={{ fontSize: 'small' }}>
+                    <InfoIcon color="primary" fontSize="inherit" />
+                  </span>
+                </Tooltip>
+              )}
+            </Typography>
+          }
+          secondary={
+            to.kind === integration.pt ? (
+              <span className={classes.secondary}>
+                <ParatextLogo />
+                {spacer}
+                <Typography component="span">
+                  {t.paratextIntegration}
+                </Typography>
+              </span>
+            ) : to.kind === integration.oneStory ? (
+              <span className={classes.secondary}>
+                <OneStoryLogo />
+                {spacer}
+                <Typography component="span">
+                  {t.oneStoryIntegration}
+                </Typography>
+              </span>
+            ) : (
+              <span />
+            )
+          }
+        />
+        <ListItemSecondaryAction className={classes.actionButtons}>
+          {to.buttons ? (
+            <Button variant="contained" onClick={handleNewProj}>
+              {t.newProject}
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="contained"
+                onClick={handleUpload(to.kind || integration.none)}
+              >
+                {t.uploadAudio}
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleRecord(to.kind || integration.none)}
+              >
+                {t.startRecording}
+              </Button>
+            </>
+          )}
+        </ListItemSecondaryAction>
+      </ListItem>
+      <Divider component="li" />
+    </>
+  );
+
   return (
     <BigDialog
       title={t.selectType}
@@ -119,73 +204,19 @@ export const ProjectSolution = (props: IProps) => {
       onOpen={onOpen}
       bp={BigDialogBp.md}
     >
-      <List>
-        {typeOptions.map((to, i) => (
-          <>
-            <ListItem key={i} component="div" className={classes.listItem}>
-              <ListItemText
-                primary={
-                  <Typography component="div" className={classes.primary}>
-                    {to.name}
-                    {spacer}
-                    {to.tip && (
-                      <Tooltip title={to.tip}>
-                        <span style={{ fontSize: 'small' }}>
-                          <InfoIcon color="primary" fontSize="inherit" />
-                        </span>
-                      </Tooltip>
-                    )}
-                  </Typography>
-                }
-                secondary={
-                  to.kind === integration.pt ? (
-                    <span className={classes.secondary}>
-                      <Typography component="span">
-                        {t.paratextIntegration}
-                      </Typography>
-                      {spacer}
-                      <ParatextLogo />
-                    </span>
-                  ) : to.kind === integration.oneStory ? (
-                    <span className={classes.secondary}>
-                      <OneStoryLogo />
-                      {spacer}
-                      <Typography component="span">
-                        {t.oneStoryIntegration}
-                      </Typography>
-                    </span>
-                  ) : (
-                    <span />
-                  )
-                }
-              />
-              <ListItemSecondaryAction className={classes.actionButtons}>
-                {to.buttons ? (
-                  <Button variant="contained" onClick={handleNewProj}>
-                    {t.newProject}
-                  </Button>
-                ) : (
-                  <>
-                    <Button
-                      variant="contained"
-                      onClick={handleUpload(to.kind || integration.none)}
-                    >
-                      {t.uploadAudio}
-                    </Button>
-                    <Button
-                      variant="contained"
-                      onClick={handleRecord(to.kind || integration.none)}
-                    >
-                      {t.startRecording}
-                    </Button>
-                  </>
-                )}
-              </ListItemSecondaryAction>
-            </ListItem>
-            <Divider component="li" />
-          </>
-        ))}
-      </List>
+      <>
+        <List subheader={<ListSubheader>{t.audioProduct}</ListSubheader>}>
+          {audioProduct.map(listFormatter)}
+          <Divider component="li" />
+        </List>
+        <List subheader={<ListSubheader>{t.textProduct}</ListSubheader>}>
+          {textProduct.map(listFormatter)}
+          <Divider component="li" />
+        </List>
+        <List subheader={<ListSubheader>{t.other}</ListSubheader>}>
+          {otherProduct.map(listFormatter)}
+        </List>
+      </>
     </BigDialog>
   );
 };

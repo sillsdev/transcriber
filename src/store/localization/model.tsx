@@ -493,6 +493,9 @@ export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
 
 export interface IProjectSolutionStrings extends Localize.LocalizedStringsMethods {
     "selectType": string;
+    "audioProduct": string;
+    "textProduct": string;
+    "other": string;
     "general": string;
     "generalTip": string;
     "obt": string;

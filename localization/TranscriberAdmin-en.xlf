@@ -2442,13 +2442,31 @@
       </unit>
       <unit id="projectSolution.selectType">
          <segment>
-            <source>Select Project Type</source>
+            <source>I want to set up this kind of project...</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.audioProduct">
+         <segment>
+            <source>Audio Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.textProduct">
+         <segment>
+            <source>Text Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="projectSolution.other">
+         <segment>
+            <source>Other</source>
             <target/>
          </segment>
       </unit>
       <unit id="projectSolution.general">
          <segment>
-            <source>General Transcription (Text Product)</source>
+            <source>General Transcription</source>
             <target/>
          </segment>
       </unit>
@@ -2460,7 +2478,7 @@
       </unit>
       <unit id="projectSolution.obt">
          <segment>
-            <source>Oral Bible Translation - OBT (Audio Product)</source>
+            <source>Oral Bible Translation - OBT</source>
             <target/>
          </segment>
       </unit>
@@ -2472,7 +2490,7 @@
       </unit>
       <unit id="projectSolution.storying">
          <segment>
-            <source>Storying (Audio Product)</source>
+            <source>Storying</source>
             <target/>
          </segment>
       </unit>
@@ -2484,7 +2502,7 @@
       </unit>
       <unit id="projectSolution.adaptation">
          <segment>
-            <source>Oral Adaptation (Audio Product)</source>
+            <source>Oral Adaptation</source>
             <target/>
          </segment>
       </unit>
@@ -2496,7 +2514,7 @@
       </unit>
       <unit id="projectSolution.drafting">
          <segment>
-            <source>Oral Drafting for Scription (Text Product)</source>
+            <source>Oral Drafting for Scription</source>
             <target/>
          </segment>
       </unit>

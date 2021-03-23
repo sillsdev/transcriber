@@ -2844,14 +2844,35 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="projectSolution.selectType">
-      		<source>Select Project Type</source>
+      		<source>I want to set up this kind of project...</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectSolution.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="projectSolution.audioProduct">
+      		<source>Audio Product</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectSolution.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="projectSolution.textProduct">
+      		<source>Text Product</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">ProjectSolution.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="projectSolution.other">
+      		<source>Other</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ProjectSolution.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="projectSolution.general">
-      		<source>General Transcription (Text Product)</source>
+      		<source>General Transcription</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ProjectSolution.tsx</context>
@@ -2865,7 +2886,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="projectSolution.obt">
-      		<source>Oral Bible Translation - OBT (Audio Product)</source>
+      		<source>Oral Bible Translation - OBT</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ProjectSolution.tsx</context>
@@ -2879,7 +2900,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="projectSolution.storying">
-      		<source>Storying (Audio Product)</source>
+      		<source>Storying</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ProjectSolution.tsx</context>
@@ -2893,7 +2914,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="projectSolution.adaptation">
-      		<source>Oral Adaptation (Audio Product)</source>
+      		<source>Oral Adaptation</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ProjectSolution.tsx</context>
@@ -2907,7 +2928,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="projectSolution.drafting">
-      		<source>Oral Drafting for Scription (Text Product)</source>
+      		<source>Oral Drafting for Scription</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ProjectSolution.tsx</context>
