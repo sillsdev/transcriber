@@ -2432,7 +2432,127 @@
             <target>Sync ({0})</target>
          </segment>
       </unit>
-      <unit id="scriptureTable.action">
+   	<unit id="projectSolution.selectType">
+   		<segment>
+   			<source>I want to set up this kind of project...</source>
+   			<target>Je veux mettre en place ce genre de projet...</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.audioProduct">
+   		<segment>
+   			<source>Audio Product</source>
+   			<target>Produit audio</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.textProduct">
+   		<segment>
+   			<source>Text Product</source>
+   			<target>Produit texte</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.other">
+   		<segment>
+   			<source>Other</source>
+   			<target>Autre</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.general">
+   		<segment>
+   			<source>General Transcription</source>
+   			<target>General Transcription</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.generalTip">
+   		<segment>
+   			<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+   			<target>La transcription générale peut couvrir un large éventail de scénarios de travail et de solutions de produits.</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.obt">
+   		<segment>
+   			<source>Oral Bible Translation - OBT</source>
+   			<target>Traduction orale de la Bible</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.obtTip">
+   		<segment>
+   			<source>Oral Bible translation produces an audio product using oral methods.</source>
+   			<target>La traduction orale de la Bible produit un produit audio en utilisant des méthodes orales.</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.storying">
+   		<segment>
+   			<source>Storying</source>
+   			<target>Histoire narrative</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.storyingTip">
+   		<segment>
+   			<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+   			<target>L'histoire narrative restructure le contenu de l'Écriture pour en faire un produit plus facile à retenir et à comprendre.</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.adaptation">
+   		<segment>
+   			<source>Oral Adaptation</source>
+   			<target>Adaptation orale</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.adaptationTip">
+   		<segment>
+   			<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+   			<target>La solution d'adaptation est un hybride entre la rédaction orale et une solution d'adaptation traditionnelle basée sur le texte.</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.drafting">
+   		<segment>
+   			<source>Oral Drafting for Scripture</source>
+   			<target>Rédaction orale pour créer un produit scriptural</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.draftingTip">
+   		<segment>
+   			<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+   			<target>La rédaction orale utilise des enregistrements audio pour obtenir une traduction écrite au son naturel.</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.blank">
+   		<segment>
+   			<source>Blank Project</source>
+   			<target>Projet vierge</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.paratextIntegration">
+   		<segment>
+   			<source>Integrated with Paratext</source>
+   			<target>Intégré avec Paratext</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.oneStoryIntegration">
+   		<segment>
+   			<source>Integrated with OneStory Editor</source>
+   			<target>Intégré à l'éditeur OneStory</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.newProject">
+   		<segment>
+   			<source>New Project</source>
+   			<target>Nouveau projet</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.uploadAudio">
+   		<segment>
+   			<source>Upload Audio</source>
+   			<target>Télécharger l'audio</target>
+   		</segment>
+   	</unit>
+   	<unit id="projectSolution.startRecording">
+   		<segment>
+   			<source>Start Recording</source>
+   			<target>Démarrer l'enregistrement</target>
+   		</segment>
+   	</unit>
+   	<unit id="scriptureTable.action">
          <segment>
             <source>Action</source>
             <target>Action</target>
