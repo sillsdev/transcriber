@@ -66,26 +66,22 @@ export const ProjectSolution = (props: IProps) => {
     {
       name: t.obt,
       kind: integration.pt,
-      tip:
-        t.obtTip,
+      tip: t.obtTip,
     },
     {
       name: t.storying,
       kind: integration.oneStory,
-      tip:
-        t.storyingTip,
+      tip: t.storyingTip,
     },
     {
       name: t.adaptation,
       kind: integration.pt,
-      tip:
-        t.adaptationTip,
+      tip: t.adaptationTip,
     },
     {
       name: t.drafting,
       kind: integration.pt,
-      tip:
-        t.draftingTip,
+      tip: t.draftingTip,
     },
     {
       name: t.blank,
@@ -152,11 +148,11 @@ export const ProjectSolution = (props: IProps) => {
                     </span>
                   ) : to.kind === integration.oneStory ? (
                     <span className={classes.secondary}>
+                      <OneStoryLogo />
+                      {spacer}
                       <Typography component="span">
                         {t.oneStoryIntegration}
                       </Typography>
-                      {spacer}
-                      <OneStoryLogo />
                     </span>
                   ) : (
                     <span />
