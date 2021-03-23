@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     primary: {
       display: 'flex',
       alignItems: 'center',
+      fontWeight: 500,
     },
     secondary: {
       display: 'flex',
@@ -95,13 +96,13 @@ export const ProjectSolution = (props: IProps) => {
       kind: integration.pt,
       tip: t.draftingTip,
     },
+  ];
+
+  const otherProduct: Solution[] = [
     {
       name: t.general,
       tip: t.generalTip,
     },
-  ];
-
-  const otherProduct: Solution[] = [
     {
       name: t.blank,
       buttons: 1,
