@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useGlobal } from 'reactn';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { Card, CardContent, Button } from '@material-ui/core';
+import { Card, CardContent } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { VProject, DialogMode, OptionType } from '../../model';
 import { ProjectDialog, IProjectDialog, ProjectType } from './ProjectDialog';
@@ -13,6 +13,7 @@ import { waitForRemoteId, remoteId, useOrganizedBy } from '../../crud';
 import BookCombobox from '../../control/BookCombobox';
 import { useSnackBar } from '../../hoc/SnackBar';
 import StickyRedirect from '../StickyRedirect';
+import ProjectSolution from './ProjectSolution';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,7 +66,6 @@ export const AddCard = (props: IProps) => {
     cardStrings,
     auth,
     flatAdd,
-    sharedStrings,
     vProjectStrings,
     bookSuggestions,
     teamProjects,
@@ -73,7 +73,6 @@ export const AddCard = (props: IProps) => {
   } = ctx.state;
   const t = cardStrings;
   const { showMessage } = useSnackBar();
-  const [show, setShow] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [inProgress, setInProgress] = React.useState(false);
   const [uploadVisible, setUploadVisible] = React.useState(false);
@@ -90,7 +89,10 @@ export const AddCard = (props: IProps) => {
   const [step, setStep] = React.useState(0);
   const [status] = React.useState({ ...statusInit });
   const [, setPlan] = useGlobal('plan');
+  const [pickOpen, setPickOpen] = React.useState(false);
   const [view, setView] = React.useState('');
+  const [forceType, setForceType] = React.useState(false);
+  const [recordAudio, setRecordAudio] = React.useState(false);
 
   useEffect(() => {
     if (status.canceled) {
@@ -101,20 +103,32 @@ export const AddCard = (props: IProps) => {
   }, [status, status.canceled]);
 
   useEffect(() => {
-    setType('');
     setLanguage(initLang);
     setBook(null);
   }, [uploadVisible]);
 
+  const handleForceType = (type: string) => {
+    setType(type);
+    setForceType(true);
+  };
+
   const handleShow = () => {
-    if (!open) setShow(!show);
+    // if (!open) setShow(!show);
+    setPickOpen(!pickOpen);
   };
 
   const handleOpen = (val: boolean) => {
     setOpen(val);
   };
 
-  const handleUpload = (team: TeamIdType) => (e: any) => {
+  const handleUpload = () => {
+    setRecordAudio(false);
+    setUploadVisible(true);
+    setInProgress(true);
+  };
+
+  const handleRecord = () => {
+    setRecordAudio(true);
     setUploadVisible(true);
     setInProgress(true);
   };
@@ -228,7 +242,7 @@ export const AddCard = (props: IProps) => {
     () => {
       return (
         <>
-          <ProjectType type={type} onChange={setType} />
+          {forceType || <ProjectType type={type} onChange={setType} />}
           {type.toLowerCase() === 'scripture' && (
             <BookCombobox
               value={book}
@@ -241,7 +255,7 @@ export const AddCard = (props: IProps) => {
       );
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [bookSuggestions, language, type, book]
+    [bookSuggestions, language, type, book, forceType]
   );
 
   if (view !== '') return <StickyRedirect to={view} />;
@@ -250,40 +264,28 @@ export const AddCard = (props: IProps) => {
     <>
       <Card className={classes.root} onClick={handleShow}>
         <CardContent className={classes.content}>
-          {show ? (
-            <div className={classes.buttons}>
-              <Button variant="contained" onClick={handleUpload(team)}>
-                {sharedStrings.uploadMediaPlural}
-              </Button>
-              <Button
-                variant="contained"
-                color="default"
-                onClick={handleClickOpen}
-              >
-                {t.newProject}
-              </Button>
-              {/* TODO: revisit in the future
-              <Button variant="contained" onClick={handleConnect(team)}>
-                {t.connectParatext}
-              </Button>
-              */}
-              <ProjectDialog
-                mode={DialogMode.add}
-                isOpen={open}
-                onOpen={handleOpen}
-                onCommit={handleCommit}
-                nameInUse={nameInUse}
-              />
-            </div>
-          ) : (
-            <div className={classes.icon}>
-              <AddIcon fontSize="large" />
-            </div>
-          )}
+          <div className={classes.icon}>
+            <AddIcon fontSize="large" />
+            <ProjectSolution
+              open={pickOpen}
+              onOpen={handleShow}
+              doUpload={handleUpload}
+              doRecord={handleRecord}
+              doNewProj={handleClickOpen}
+              setType={handleForceType}
+            />
+            <ProjectDialog
+              mode={DialogMode.add}
+              isOpen={open}
+              onOpen={handleOpen}
+              onCommit={handleCommit}
+              nameInUse={nameInUse}
+            />
+          </div>
         </CardContent>
       </Card>
       <Uploader
-        recordAudio={false}
+        recordAudio={recordAudio}
         auth={auth}
         isOpen={uploadVisible}
         onOpen={setUploadVisible}

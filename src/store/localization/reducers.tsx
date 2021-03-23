@@ -524,6 +524,27 @@ const initialState = {
 			"reportsTitle": "{0} Reports",
 		}
 	}),
+	"projectSolution": new LocalizedStrings({
+		"en": {
+			"selectType": "Select Project Type",
+			"general": "General Transcription (Text Product)",
+			"generalTip": "General Transcription can cover a wide range of working scenarios and product solutions.",
+			"obt": "Oral Bible Translation - OBT (Audio Product)",
+			"obtTip": "Oral Bible translation produces an audio product using oral methods.",
+			"storying": "Storying (Audio Product)",
+			"storyingTip": "Storying will restructure Scripture content to produce a product that is easier to remember and understand.",
+			"adaptation": "Oral Adaptation (Audio Product)",
+			"adaptationTip": "The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.",
+			"drafting": "Oral Drafting for Scription (Text Product)",
+			"draftingTip": "Oral drafting uses audio recordings to achieve a natural sounding written translation.",
+			"blank": "Blank Project",
+			"paratextIntegration": "Integrated with Paratext",
+			"oneStoryIntegration": "Integrated with OneStory Editor",
+			"newProject": "New Project",
+			"uploadAudio": "Upload Audio",
+			"startRecording": "Start Recording",
+		}
+	}),
 	"scriptureTable": new LocalizedStrings({
 		"en": {
 			"action": "Action",
@@ -840,6 +861,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
+				"projectSolution" : new LocalizedStrings(action.payload.data.projectSolution),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"shapingTable" : new LocalizedStrings(action.payload.data.shapingTable),
 				"shared" : new LocalizedStrings(action.payload.data.shared),
