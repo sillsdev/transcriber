@@ -56,7 +56,7 @@ export const AudioDownload = (props: IProps) => {
       q.findRecord({ type: 'mediafile', id })
     ) as MediaFile;
     logError(Severity.info, globalStore.errorReporter, `Media Id=${mediaId}`);
-    if (id) fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
+    fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
     const name = mediaRec?.attributes?.originalFile || `media-${id}`;
     setAudName(name);
   };
