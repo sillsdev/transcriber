@@ -442,6 +442,7 @@ const initialState = {
 			"assign": "Assign",
 			"delete": "Delete",
 			"playpause": "Play / Pause",
+			"recordAudio": "Record Audio",
 			"transcribe": "Transcribe",
 		}
 	}),
@@ -663,7 +664,6 @@ const initialState = {
 			"submit": "Submit",
 			"submitReviewTip": "Submit as complete",
 			"submitTranscriptionTip": "Submit for review",
-			"timerTip": "Timestamp ({0})",
 			"transcribing": "Started to transcribe",
 			"updateByOther": "Transcription updated by another person or process.",
 		}
@@ -816,6 +816,7 @@ const initialState = {
 			"silence": "Silence",
 			"slowerTip": "Slower ({0})",
 			"stop": "Stop",
+			"timerTip": "Timestamp ({0})",
 		}
 	}),
 	"passageRecord": new LocalizedStrings({
@@ -826,6 +827,8 @@ const initialState = {
 			"loading": "Loading...",
 			"save": "Save",
 			"cancel": "Cancel",
+			"title": "Record/Edit Audio",
+			"defaultFilename": "MyRecording",
 		}
 	}),
 };

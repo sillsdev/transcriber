@@ -27,6 +27,7 @@ export function useUserMedia(
         track.stop();
       });
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return getStream;

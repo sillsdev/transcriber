@@ -33,11 +33,8 @@ export const writeFileLocal = (file: File) => {
   if (file.path === '') fullName += path.sep + file.name;
   createPathFolder(fullName);
   fs.writeFileSync(fullName, file);
-  return path.join(
-    PathType.MEDIA,
-    file.path.split(path.sep).pop()
-  );
-}
+  return path.join(PathType.MEDIA, file.path.split(path.sep).pop());
+};
 export const nextUpload = (
   record: any,
   files: File[],
@@ -47,7 +44,7 @@ export const nextUpload = (
   cb?: (n: number, success: boolean, data?: any) => void
 ) => (dispatch: any) => {
   dispatch({ payload: n, type: UPLOAD_ITEM_PENDING });
-  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$/i;
+  const acceptExtPat = /\.wav$|\.mp3$|\.m4a$|\.ogg$|\.webm$/i;
   if (!acceptExtPat.test(record.originalFile)) {
     dispatch({
       payload: {

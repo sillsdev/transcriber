@@ -413,6 +413,7 @@ export interface IPlanActionsStrings extends Localize.LocalizedStringsMethods {
     "assign": string;
     "delete": string;
     "playpause": string;
+    "recordAudio": string;
     "transcribe": string;
 };
 
@@ -622,7 +623,6 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submit": string;
     "submitReviewTip": string;
     "submitTranscriptionTip": string;
-    "timerTip": string;
     "transcribing": string;
     "updateByOther": string;
 };
@@ -766,6 +766,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "silence": string;
     "slowerTip": string;
     "stop": string;
+    "timerTip": string;
 };
 
 export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods {
@@ -775,6 +776,8 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
     "loading": string;
     "save": string;
     "cancel": string;
+    "title": string;
+    "defaultFilename": string;
 };
 
 export interface ILocalizedStrings {

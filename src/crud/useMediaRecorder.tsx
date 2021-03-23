@@ -6,7 +6,7 @@ const CAPTURE_OPTIONS = {
   audio: true,
   video: false,
 };
-const noop = () => { };
+const noop = () => {};
 
 export function useMediaRecorder(
   allowRecord: boolean = true,
@@ -26,10 +26,10 @@ export function useMediaRecorder(
 
   useEffect(() => {
     if (allowRecord)
-      getMediaStream().then(stream => {
+      getMediaStream().then((stream) => {
         setMediaStream(stream);
       });
-  }, []);
+  }, [allowRecord, getMediaStream]);
 
   useEffect(() => {
     startRecorder();
@@ -50,8 +50,6 @@ export function useMediaRecorder(
   }
 
   function handleStopped() {
-    let [sampleChunk] = mediaChunks.current;
-    if (sampleChunk && sampleChunk.type) console.log(sampleChunk.type);
     const blob = createBlob();
     mediaChunks.current = [];
     onStop(blob);
@@ -60,7 +58,6 @@ export function useMediaRecorder(
     console.log(e.error);
     onError(e.error);
   }
-
 
   function startRecorder() {
     if (mediaStream) {
@@ -73,7 +70,7 @@ export function useMediaRecorder(
         return recorder;
       }
     }
-  };
+  }
 
   function startRecording(timeSlice?: number) {
     var recorder = mediaRecorder || startRecorder();

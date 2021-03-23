@@ -63,13 +63,13 @@ export function useWaveSurfer(
         wsGoto(regionRef.current.start);
         keepRegion.current = false;
       });
-      /* other potentially useful messages 
+      /* other potentially useful messages
       ws.on('region-play', function (r: any) {
         console.log('region-play', r);
       });
       ws.on('region-out', function (r: any) {
         console.log('region-out', r.loop, playingRef.current)
-      }); 
+      });
       */
       return ws;
     }
@@ -97,6 +97,7 @@ export function useWaveSurfer(
         wsRef.current?.play(progress);
       }
     } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing, wsRef.current?.isReady]);
 
   const wsIsReady = () => wsRef.current?.isReady || false;

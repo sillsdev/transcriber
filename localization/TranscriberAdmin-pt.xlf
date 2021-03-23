@@ -1861,6 +1861,12 @@
             <target>Tocar / Pausar gravação</target>
          </segment>
       </unit>
+      <unit id="planActions.recordAudio">
+         <segment>
+            <source>Record Audio</source>
+            <target>Gravar audio</target>
+          </segment>
+      </unit>
       <unit id="planActions.transcribe">
          <segment>
             <source>Transcribe</source>
@@ -2636,12 +2642,6 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.timerTip">
-         <segment>
-            <source>Timestamp ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.transcribing">
          <segment>
             <source>Started to transcribe</source>
@@ -3278,6 +3278,12 @@
             <target>Pare</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.timerTip">
+         <segment>
+            <source>Timestamp ({0})</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="passageRecord.fileName">
          <segment>
             <source>Filename</source>
@@ -3312,6 +3318,18 @@
          <segment>
             <source>Cancel</source>
             <target>Cancelar</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.title">
+         <segment>
+            <source>Record/Edit Audio</source>
+            <target>Gravar / editar áudio</target>
+         </segment>
+      </unit>
+      <unit id="passageRecord.defaultFilename">
+         <segment>
+            <source>MyRecording</source>
+            <target>MeuAudio</target>
          </segment>
       </unit>
    </file>

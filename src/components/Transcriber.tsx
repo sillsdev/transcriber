@@ -28,7 +28,6 @@ import {
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
 import HistoryIcon from '@material-ui/icons/History';
-import TimerIcon from '@material-ui/icons/AccessTime';
 
 import { formatTime } from '../control';
 import TranscribeReject from './TranscribeReject';
@@ -67,8 +66,7 @@ import TranscribeAddNote from './TranscribeAddNote';
 import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 
-const HISTORY_KEY = 'F6';
-const TIMER_KEY = 'F7';
+const HISTORY_KEY = 'F7';
 const NON_BOX_HEIGHT = 304;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -409,16 +407,7 @@ export function Transcriber(props: IProps) {
   };
 
   const handleShowHistory = () => setShowHistory(!showHistory);
-  const handleTimer = () => {
-    if (transcriptionRef.current) {
-      transcriptionRef.current.firstChild.focus();
-      const timeStamp = '(' + formatTime(playedSecsRef.current) + ')';
-      const textArea = transcriptionRef.current
-        .firstChild as HTMLTextAreaElement;
-      insertAtCursor(textArea, timeStamp);
-      setTextValue(textArea.value);
-    }
-  };
+
   const handlePullParatext = () => {
     if (
       !refMatch(passage?.attributes?.reference || 'Err') ||
@@ -676,15 +665,11 @@ export function Transcriber(props: IProps) {
 
   const handleKey = (e: React.KeyboardEvent) => {
     const HistoryKey = keycode(HISTORY_KEY);
-    const TimerKey = keycode(TIMER_KEY);
     switch (e.keyCode) {
       case HistoryKey:
         handleShowHistory();
         e.preventDefault();
         return;
-      case TimerKey:
-        handleTimer();
-        e.preventDefault();
     }
   };
 
@@ -755,6 +740,16 @@ export function Transcriber(props: IProps) {
   const paperStyle = { width: width - 36 };
 
   const onProgress = (progress: number) => playedSecsRef.current = progress;
+  const onSaveProgress = (progress: number) => {
+    if (transcriptionRef.current) {
+      transcriptionRef.current.firstChild.focus();
+      const timeStamp = '(' + formatTime(progress) + ')';
+      const textArea = transcriptionRef.current
+        .firstChild as HTMLTextAreaElement;
+      insertAtCursor(textArea, timeStamp);
+      setTextValue(textArea.value);
+    }
+  }
   const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
   return (
     <div className={classes.root}>
@@ -791,42 +786,9 @@ export function Transcriber(props: IProps) {
                   blob={audioBlob}
                   onProgress={onProgress}
                   onPlayStatus={onPlayStatus}
+                  onSaveProgress={selected === '' || role === 'view' ? undefined : onSaveProgress}
                 />
               </Grid>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleShowAddNote}
-                disabled={selected === ''}
-              >
-                {t.addNote}
-              </Button>
-
-              <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
-                <span>
-                  <IconButton onClick={handleShowHistory}>
-                    <>
-                      <HistoryIcon /> <Typography>{HISTORY_KEY}</Typography>
-                    </>
-                  </IconButton>
-                </span>
-              </Tooltip>
-
-              <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
-                <span>
-                  <IconButton
-                    onClick={handleTimer}
-                    disabled={selected === '' || role === 'view' || playing}
-                  >
-                    <>
-                      <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
-                    </>
-                  </IconButton>
-                </span>
-              </Tooltip>
             </Grid>
           </Grid>
           <Grid item xs={12} sm container>
@@ -865,6 +827,27 @@ export function Transcriber(props: IProps) {
             )}
           </Grid>
           <Grid container direction="row" className={classes.padRow}>
+          <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                className={classes.button}
+                onClick={handleShowAddNote}
+                disabled={selected === ''}
+              >
+                {t.addNote}
+              </Button>
+
+              <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
+                <span>
+                  <IconButton onClick={handleShowHistory}>
+                    <>
+                      <HistoryIcon />
+                    </>
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </Grid>
             <Grid item xs>
               <Grid container justify="flex-end">
                 <div>
