@@ -538,7 +538,7 @@ const initialState = {
 			"storyingTip": "Storying will restructure Scripture content to produce a product that is easier to remember and understand.",
 			"adaptation": "Oral Adaptation",
 			"adaptationTip": "The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.",
-			"drafting": "Oral Drafting for Scription",
+			"drafting": "Oral Drafting for Scripture",
 			"draftingTip": "Oral drafting uses audio recordings to achieve a natural sounding written translation.",
 			"blank": "Blank Project",
 			"paratextIntegration": "Integrated with Paratext",

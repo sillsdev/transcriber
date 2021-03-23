@@ -2928,7 +2928,7 @@
       		</context-group>
       	</trans-unit>
       	<trans-unit id="projectSolution.drafting">
-      		<source>Oral Drafting for Scription</source>
+      		<source>Oral Drafting for Scripture</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">ProjectSolution.tsx</context>
