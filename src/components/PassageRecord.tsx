@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
@@ -20,6 +20,7 @@ import {
 import WSAudioPlayer from './WSAudioPlayer';
 import { bindActionCreators } from 'redux';
 import { QueryBuilder } from '@orbit/data';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -27,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '& .MuiDialog-paper': {
         maxWidth: '90%',
         minWidth: '60%',
-        minHeight: '80%',
       },
     },
     paper: {
@@ -85,14 +85,27 @@ function PassageRecord(props: IProps) {
   const [offline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
-  const [acceptedMimes, setAcceptedMimes] = useState<string[]>([]);
-  const [acceptedExtension, setAcceptedExtensions] = useState<string[]>([]);
   const [mimeType, setMimeType] = useState('');
+
+  const extensions = useMemo(
+    () => ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
+    []
+  );
+  const mimes = useMemo(
+    () => [
+      'audio/mpeg',
+      'audio/webm;codecs=opus',
+      'audio/webm;codecs=pcm',
+      'audio/x-m4a',
+      'audio/wav',
+      'audio/ogg;codecs=opus',
+    ],
+    []
+  );
   const classes = useStyles();
 
   useEffect(() => {
-    console.log('mediaId useEffect', mediaId);
-    if (mediaId) fetchMediaUrl(mediaId, memory, offline, auth);
+    fetchMediaUrl(mediaId, memory, offline, auth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -101,52 +114,33 @@ function PassageRecord(props: IProps) {
   }, [visible]);
 
   useEffect(() => {
-    const acceptextension = ['webm', 'mka', 'mp3', 'm4a', 'wav', 'ogg'];
-    const defaultacceptmime = [
-      'audio/webm;codecs=opus',
-      'audio/webm;codecs=pcm',
-      'audio/mpeg;',
-      'audio/x-m4a',
-      'audio/wav',
-      'audio/ogg;codecs=opus',
-    ];
-    var mimes: string[] = [];
-    var extensions: string[] = [];
-    for (var i in defaultacceptmime) {
-      if (MediaRecorder.isTypeSupported(defaultacceptmime[i])) {
-        mimes.push(defaultacceptmime[i]);
-        extensions.push(acceptextension[i]);
-      }
-    }
-    console.log(mimes, extensions);
-    setAcceptedMimes(mimes);
-    setAcceptedExtensions(extensions);
-  }, []);
-  useEffect(() => {
     var i = 0;
     if (mimeType) {
-      i = acceptedMimes.findIndex((m) => m === mimeType);
+      i = mimes.findIndex((m) => m === mimeType);
     }
-    setFiletype(acceptedExtension[i]);
-  }, [acceptedExtension, acceptedMimes, mimeType]);
+    setFiletype(extensions[i]);
+  }, [extensions, mimeType, mimes]);
 
   function recordingReady(blob: Blob) {
     setAudioBlob(blob);
     setFilechanged(true);
   }
   const reset = () => {
-    setName('');
+    setName(t.defaultFilename);
     setFilechanged(false);
     setOriginalBlob(undefined);
   };
-  const fileName = () => name + '.' + filetype; //TODO make this smarter
-
+  const fileName = () => name + '.' + filetype;
+  const removeExtension = (filename: string) => {
+    var x = filename.split('.');
+    if (x.length > 1) x.pop();
+    return x.join('.');
+  };
   const handleAddOrSave = () => {
     if (audioBlob) {
       var files = [
         new File([audioBlob], fileName(), {
-          type:
-            acceptedMimes[acceptedExtension.findIndex((e) => e === filetype)],
+          type: mimeType,
         }),
       ];
       if (uploadMethod && files) {
@@ -165,11 +159,10 @@ function PassageRecord(props: IProps) {
   };
   const handleChangeFileName = (e: any) => {
     e.persist();
-    setName(e.target.value);
+    setName(removeExtension(e.target.value));
   };
 
   const handleLoadAudio = () => {
-    console.log('load audio');
     setLoading(true);
     fetch(mediaUrl).then(async (r) => {
       var b = await r.blob();
@@ -180,11 +173,9 @@ function PassageRecord(props: IProps) {
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
     ) as MediaFile;
-    setName(mediaRec.attributes.originalFile);
-    var index = acceptedMimes.findIndex(
-      (m) => m === mediaRec.attributes.contentType
-    );
-    if (index > -1) setFiletype(acceptedExtension[index]);
+    setName(removeExtension(mediaRec.attributes.originalFile));
+    var index = mimes.findIndex((m) => m === mediaRec.attributes.contentType);
+    if (index > -1) setFiletype(extensions[index]);
   };
 
   return (

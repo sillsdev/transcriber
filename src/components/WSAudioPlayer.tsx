@@ -35,7 +35,7 @@ import {
   FaPauseCircle,
 } from 'react-icons/fa';
 //import { createWaveSurfer } from './WSAudioRegion';
-import { useMediaRecorder } from '../crud/useMediaRecorder';
+import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
 import { Duration } from '../control';
 import { connect } from 'react-redux';
@@ -100,6 +100,7 @@ interface IProps extends IStateProps {
   blob?: Blob;
   allowRecord?: boolean;
   setMimeType?: (type: string) => void;
+  setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
   onProgress?: (progress: number) => void;
   recordingReady?: (blob: Blob) => void;
@@ -146,6 +147,7 @@ function WSAudioPlayer(props: IProps) {
     blob,
     allowRecord,
     setMimeType,
+    setAcceptedMimes,
     onProgress,
     onPlayStatus,
     recordingReady,
@@ -169,7 +171,7 @@ function WSAudioPlayer(props: IProps) {
   const [recording, setRecording] = useState(false);
   const [recordingPaused, setRecordingPaused] = useState(false);
   const [ready, setReady] = useState(false);
-  const [silence, setSilence] = useState(1.0);
+  const [silence, setSilence] = useState(0.5);
   const { showMessage } = useSnackBar();
   const {
     wsLoad,
@@ -201,6 +203,7 @@ function WSAudioPlayer(props: IProps) {
     stopRecording,
     pauseRecording,
     resumeRecording,
+    acceptedMimes,
   } = useMediaRecorder(
     allowRecord,
     onRecordStart,
@@ -210,12 +213,16 @@ function WSAudioPlayer(props: IProps) {
   );
 
   const paperStyle = {};
+
   useEffect(() => {
     setAudioBlob(blob);
   }, [blob]);
 
   useEffect(() => {
-    console.log('loading blob', audioBlob?.size);
+    if (setAcceptedMimes) setAcceptedMimes(acceptedMimes);
+  }, [acceptedMimes, setAcceptedMimes]);
+
+  useEffect(() => {
     if (audioBlob) wsLoad(audioBlob);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioBlob]);
@@ -245,12 +252,6 @@ function WSAudioPlayer(props: IProps) {
     showMessage(e.error);
   }
   async function onRecordDataAvailable(e: any, blob: Blob) {
-    console.log(
-      'data available',
-      e.type,
-      blob?.size,
-      recordStartPosition.current
-    );
     if (setMimeType) setMimeType(e.type);
     var newPos = await wsInsertAudio(
       blob,
@@ -321,7 +322,6 @@ function WSAudioPlayer(props: IProps) {
   const handleRecorder = () => {
     if (!recording) {
       wsPause();
-      console.log('start record', wsPosition());
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = overwrite
         ? undefined

@@ -3,8 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
 
-const noop = () => { };
-const noop1 = (x: any) => { };
+const noop = () => {};
+const noop1 = (x: any) => {};
 
 export function useWaveSurfer(
   container: any,
@@ -28,18 +28,19 @@ export function useWaveSurfer(
     function create(container: any, height: number) {
       var ws = createWaveSurfer(container, height, timelineContainer);
       wsRef.current = ws;
-      ws.on('loading', function (progress) {
-        console.log('loading', progress);
-      });
+
       ws.on('ready', function () {
         onReady();
         console.log('ready', ws.getDuration());
         durationRef.current = ws.getDuration();
       });
-      ws.on('audioprocess', _.throttle(function (e: number) {
-        setProgress(e);
-        onProgress(e)
-      }, 150));
+      ws.on(
+        'audioprocess',
+        _.throttle(function (e: number) {
+          setProgress(e);
+          onProgress(e);
+        }, 150)
+      );
       ws.on('seek', function (e: number) {
         setProgress(e * durationRef.current);
         onProgress(e * durationRef.current);
@@ -64,6 +65,9 @@ export function useWaveSurfer(
         keepRegion.current = false;
       });
       /* other potentially useful messages
+      ws.on('loading', function (progress) {
+        console.log('loading', progress);
+      });
       ws.on('region-play', function (r: any) {
         console.log('region-play', r);
       });
@@ -97,7 +101,7 @@ export function useWaveSurfer(
         wsRef.current?.play(progress);
       }
     } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing, wsRef.current?.isReady]);
 
   const wsIsReady = () => wsRef.current?.isReady || false;
@@ -163,7 +167,7 @@ export function useWaveSurfer(
     var wavesurfer = wsRef.current;
     var backend = wavesurfer?.backend as any;
     var originalBuffer = backend.buffer;
-    console.log('insertBuffer', startposition, endposition);
+
     if (
       startposition === 0 &&
       endposition === undefined &&
@@ -179,13 +183,12 @@ export function useWaveSurfer(
 
     if (endposition !== undefined) {
       after_offset = (endposition * originalBuffer.sampleRate) >> 0;
-    }
-    else {
+    } else {
       after_offset = start_offset + newBuffer.length;
     }
     after_len = originalBuffer.length - after_offset;
     if (after_len < 0) after_len = 0;
-    console.log(start_offset, after_offset, after_len, newBuffer.length)
+
     var new_len = start_offset + newBuffer.length + after_len;
     var uberSegment = null;
     uberSegment = backend.ac.createBuffer(
@@ -196,10 +199,9 @@ export function useWaveSurfer(
 
     for (var ix = 0; ix < originalBuffer.numberOfChannels; ++ix) {
       var chan_data = originalBuffer.getChannelData(ix);
-      var new_data = newBuffer.getChannelData(0);  //we're not recording in stereo currently
+      var new_data = newBuffer.getChannelData(0); //we're not recording in stereo currently
       var uber_chan_data = uberSegment.getChannelData(ix);
 
-      console.log('adding 0 to ', start_offset, 'newData', newBuffer.length, 'after_len', after_len, 'after_offset', after_offset)
       uber_chan_data.set(chan_data.slice(0, start_offset));
       uber_chan_data.set(new_data, start_offset);
       if (after_len)
@@ -210,7 +212,6 @@ export function useWaveSurfer(
     }
     loadDecoded(uberSegment);
     return (start_offset + newBuffer.length) / originalBuffer.sampleRate;
-
   };
 
   const wsInsertAudio = async (
@@ -231,8 +232,8 @@ export function useWaveSurfer(
     return await new Promise<number>((resolve, reject) => {
       wavesurfer.decodeArrayBuffer(buffer, function (newBuffer: any) {
         resolve(insertBuffer(newBuffer, position, overwriteToPosition));
-      })
-    })
+      });
+    });
   };
   const wsInsertSilence = (seconds: number, position: number) => {
     if (!wsRef.current) return;
@@ -312,4 +313,3 @@ export function useWaveSurfer(
     wsInsertSilence,
   };
 }
-

@@ -31,8 +31,9 @@ export const writeFileLocal = (file: File) => {
   dataPath(`http://${file.path}`, PathType.MEDIA, local);
   var fullName = local.localname;
   if (file.path === '') fullName += path.sep + file.name;
+
   createPathFolder(fullName);
-  fs.writeFileSync(fullName, file);
+  fs.writeFileSync(fullName, file, { encoding: 'binary' });
   return path.join(PathType.MEDIA, file.path.split(path.sep).pop());
 };
 export const nextUpload = (
