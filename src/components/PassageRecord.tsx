@@ -74,6 +74,7 @@ function PassageRecord(props: IProps) {
     uploadMethod,
     cancelMethod,
     ready,
+    metaData,
   } = props;
   const { hasUrl, fetchMediaUrl, mediaUrl } = props;
   const [name, setName] = useState(t.defaultFilename);
@@ -177,7 +178,6 @@ function PassageRecord(props: IProps) {
     var index = mimes.findIndex((m) => m === mediaRec.attributes.contentType);
     if (index > -1) setFiletype(extensions[index]);
   };
-
   return (
     <Dialog
       className={classes.root}
@@ -208,6 +208,7 @@ function PassageRecord(props: IProps) {
           fullWidth
           required={true}
         />
+        {metaData}
       </DialogContent>
       <DialogActions>
         <Button
