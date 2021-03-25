@@ -45,7 +45,7 @@ export function MediaPlayer(props: IProps) {
   const { hasUrl, mediaUrl, fetchMediaUrl, auth, srcMediaId, onEnded } = props;
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
-  const [playItem, setPlayItem] = useState('');
+  const [playItem, setPlayItem] = useState('none');
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
 

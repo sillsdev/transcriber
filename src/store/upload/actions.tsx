@@ -26,15 +26,23 @@ export const uploadFiles = (files: File[]) => (dispatch: any) => {
     type: UPLOAD_LIST,
   });
 };
-export const writeFileLocal = (file: File) => {
+export const writeFileLocal = (file: File, remoteName?: string) => {
   var local = { localname: '' };
-  dataPath(`http://${file.path}`, PathType.MEDIA, local);
+  dataPath(
+    remoteName ? remoteName : `http://${file.path}`,
+    PathType.MEDIA,
+    local
+  );
   var fullName = local.localname;
-  if (file.path === '') fullName += path.sep + file.name;
-
+  if (!remoteName && file.path === '') fullName += path.sep + file.name;
   createPathFolder(fullName);
-  fs.writeFileSync(fullName, file, { encoding: 'binary' });
-  return path.join(PathType.MEDIA, file.path.split(path.sep).pop());
+  var fileReader = new FileReader();
+  fileReader.onload = function () {
+    if (this.result)
+      fs.writeFileSync(fullName, Buffer.from(this.result as any));
+  };
+  fileReader.readAsArrayBuffer(file);
+  return path.join(PathType.MEDIA, file.name);
 };
 export const nextUpload = (
   record: any,
@@ -79,7 +87,7 @@ export const nextUpload = (
       xhr.open('PUT', response.data.audioUrl, true);
       if (isElectron) {
         try {
-          writeFileLocal(files[n]);
+          writeFileLocal(files[n], response.data.audioUrl);
         } catch (err) {
           console.log(err);
         }
