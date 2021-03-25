@@ -1,8 +1,6 @@
 import React, { useRef } from 'react';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
-import AudioRecorder from 'audio-recorder-polyfill';
-import mpegEncoder from 'audio-recorder-polyfill/mpeg-encoder';
 
 const CAPTURE_OPTIONS = {
   audio: true,
@@ -31,10 +29,6 @@ export function useMediaRecorder(
   const [acceptedMimes, setAcceptedMimes] = useState<MimeInfo[]>([]);
 
   useEffect(() => {
-    AudioRecorder.encoder = mpegEncoder;
-    AudioRecorder.prototype.mimeType = 'audio/mpeg';
-    window.MediaRecorder = AudioRecorder; //use this polyfill so we can save to mp3
-
     const acceptextension = ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'];
     const defaultacceptmime = [
       'audio/mpeg',

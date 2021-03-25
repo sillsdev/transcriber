@@ -82,7 +82,7 @@ export const Uploader = (props: IProps) => {
   const [plan] = useGlobal('plan');
   const [user] = useGlobal('user');
   const [offlineOnly] = useGlobal('offlineOnly');
-  const planIdRef = React.useRef<string>();
+  const planIdRef = React.useRef<string>(plan);
   const successCount = React.useRef<number>(0);
   const fileList = React.useRef<File[]>();
   const authRef = React.useRef<Auth>(auth);
@@ -100,13 +100,13 @@ export const Uploader = (props: IProps) => {
       setComplete(0);
       setBusy(false);
       if (successCount.current > 0 && finish)
-        finish(planIdRef.current || plan, mediaIdRef.current);
+        finish(planIdRef.current, mediaIdRef.current);
       else if (status) status.canceled = true;
     }, 1000);
   };
 
   const getPlanId = () =>
-    remoteIdNum('plan', planIdRef.current || plan, memory.keyMap);
+    remoteIdNum('plan', planIdRef.current, memory.keyMap) || planIdRef.current;
 
   const pullPlanMedia = async () => {
     const planId = getPlanId();
@@ -129,7 +129,7 @@ export const Uploader = (props: IProps) => {
     if (data?.stringId) mediaIdRef.current.push(data?.stringId);
     else {
       // offlineOnly
-      const planRecId = { type: 'plan', id: planIdRef.current || plan };
+      const planRecId = { type: 'plan', id: planIdRef.current };
       if (planRecId.id) {
         var media = getMediaInPlans(
           [planRecId.id],
