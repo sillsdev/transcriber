@@ -206,15 +206,15 @@ export const ProjectSolution = (props: IProps) => {
       bp={BigDialogBp.md}
     >
       <>
-        <List subheader={<ListSubheader>{t.audioProduct}</ListSubheader>}>
+        <List dense subheader={<ListSubheader>{t.audioProduct}</ListSubheader>}>
           {audioProduct.map(listFormatter)}
           <Divider component="li" />
         </List>
-        <List subheader={<ListSubheader>{t.textProduct}</ListSubheader>}>
+        <List dense subheader={<ListSubheader>{t.textProduct}</ListSubheader>}>
           {textProduct.map(listFormatter)}
           <Divider component="li" />
         </List>
-        <List subheader={<ListSubheader>{t.other}</ListSubheader>}>
+        <List dense subheader={<ListSubheader>{t.other}</ListSubheader>}>
           {otherProduct.map(listFormatter)}
         </List>
       </>
