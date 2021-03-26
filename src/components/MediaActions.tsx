@@ -58,7 +58,6 @@ export function MediaActions(props: IProps) {
     onAttach([rowIndex], !attached);
   };
 
-  console.log(`mediaTab: isElectron=${isElectron}, mediaId=${mediaId}`);
   return (
     <div className={classes.arrangeActions}>
       {!readonly && (
