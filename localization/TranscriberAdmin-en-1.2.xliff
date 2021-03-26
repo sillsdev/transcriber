@@ -324,7 +324,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="audioDownload.downloadMedia">
-      		<source>Download Media</source>
+      		<source>Download Audio</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">AudioDownload.tsx</context>
@@ -394,7 +394,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="cards.mediaUploaded">
-            <source>Media Uploaded</source>
+            <source>Audio Uploaded</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">AddCard.tsx</context>
@@ -1808,7 +1808,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="main.media">
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">drawer.tsx</context>
@@ -2144,7 +2144,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaTab.mediaAssociations">
-            <source>Media Associations</source>
+            <source>Audio Associations</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaTab.tsx</context>
@@ -2354,7 +2354,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="mediaUpload.title">
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">MediaUpload.tsx</context>
@@ -2543,7 +2543,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="planTabs.media">
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanTabs.tsx</context>
@@ -3215,28 +3215,28 @@
             </context-group>
          </trans-unit>
          <trans-unit id="shared.uploadMediaPlural">
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="shared.uploadMediaSingular">
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">PlanSheet.tsx</context>
             </context-group>
          </trans-unit>
       	<trans-unit id="shared.importMediaSingular">
-      		<source>Import Media</source>
+      		<source>Import Audio</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">PlanSheet.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="shared.mediaAttached">
-      		<source>Media Attached</source>
+      		<source>Audio Attached</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">useMediaAttach.ts</context>
@@ -3902,7 +3902,7 @@
             </context-group>
          </trans-unit>
       	<trans-unit id="transcriptionTab.incompletePlan">
-      		<source>Plan is incomplete: attach media to passages.</source>
+      		<source>Plan is incomplete: attach audio to passages.</source>
       		<target/>
       		<context-group>
       			<context context-type="sourcefile">TranscriptionTab.tsx</context>
