@@ -133,7 +133,7 @@ export const ProjectSolution = (props: IProps) => {
   };
 
   const listFormatter = (to: Solution, i: number) => (
-    <>
+    <div key={i}>
       <ListItem key={i} component="div" className={classes.listItem}>
         <ListItemText
           primary={
@@ -195,7 +195,7 @@ export const ProjectSolution = (props: IProps) => {
         </ListItemSecondaryAction>
       </ListItem>
       <Divider component="li" />
-    </>
+    </div>
   );
 
   return (

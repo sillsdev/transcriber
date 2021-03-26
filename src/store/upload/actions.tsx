@@ -36,12 +36,11 @@ export const writeFileLocal = (file: File, remoteName?: string) => {
   var fullName = local.localname;
   if (!remoteName && file.path === '') fullName += path.sep + file.name;
   createPathFolder(fullName);
-  var fileReader = new FileReader();
-  fileReader.onload = function () {
-    if (this.result)
-      fs.writeFileSync(fullName, Buffer.from(this.result as any));
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    fs.writeFileSync(fullName, evt?.target?.result, { encoding: 'binary' });
   };
-  fileReader.readAsArrayBuffer(file);
+  reader.readAsBinaryString(file);
   return path.join(PathType.MEDIA, file.name);
 };
 export const nextUpload = (

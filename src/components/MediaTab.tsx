@@ -176,9 +176,9 @@ interface IRecordProps {
 
 interface IProps
   extends IStateProps,
-  IDispatchProps,
-  IRecordProps,
-  WithDataProps {
+    IDispatchProps,
+    IRecordProps,
+    WithDataProps {
   auth: Auth;
   attachTool?: boolean;
 }
@@ -311,7 +311,11 @@ export function MediaTab(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
-  const [attachedFilter, setAttachedFilter] = useState({ columnName: 'attached', operation: 'equal', value: 'N' })
+  const [attachedFilter, setAttachedFilter] = useState({
+    columnName: 'attached',
+    operation: 'equal',
+    value: 'N',
+  });
   const inProcess = React.useRef<boolean>(false);
   const [attachPassage, detachPassage] = useMediaAttach({
     ...props,
@@ -775,11 +779,11 @@ export function MediaTab(props: IProps) {
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
-      const mediaId = remoteId('mediafile', row.id, memory.keyMap);
+      const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <PlayCell {...props} mediaId={mediaId} />;
     }
     if (column.name === 'detach' && projRole === 'admin') {
-      const mediaId = remoteId('mediafile', row.id, memory.keyMap);
+      const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
     return <Table.Cell {...props} />;
@@ -907,8 +911,12 @@ export function MediaTab(props: IProps) {
                 <FormControlLabel
                   value="attached"
                   labelPlacement="end"
-                  control={<Switch checked={attachedFilter.value === 'Y'}
-                    onChange={handleAttachedFilterChange} />}
+                  control={
+                    <Switch
+                      checked={attachedFilter.value === 'Y'}
+                      onChange={handleAttachedFilterChange}
+                    />
+                  }
                   label={t.alreadyAssociated}
                 />
                 <ShapingTable
