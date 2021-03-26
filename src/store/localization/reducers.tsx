@@ -74,7 +74,7 @@ const initialState = {
 	}),
 	"audioDownload": new LocalizedStrings({
 		"en": {
-			"downloadMedia": "Download Media",
+			"downloadMedia": "Download Audio",
 		}
 	}),
 	"cards": new LocalizedStrings({
@@ -88,7 +88,7 @@ const initialState = {
 			"explainTeamDelete": "Deleting the team will delete all projects of the team.",
 			"import": "Import Project",
 			"language": "Language: {0}",
-			"mediaUploaded": "Media Uploaded",
+			"mediaUploaded": "Audio Uploaded",
 			"members": "Members ({0})",
 			"newProject": "New Project",
 			"passagesCreated": "Passages Created",
@@ -338,7 +338,7 @@ const initialState = {
 			"loadingTranscriber": "Loading {0}",
 			"logout": "Log Out",
 			"logoutRequired": "Log out of other tab required",
-			"media": "Media",
+			"media": "Audio",
 			"myAccount": "My Account",
 			"NoLoadOffline": "Unable to load project data offline.",
 			"owner": "Owner",
@@ -394,7 +394,7 @@ const initialState = {
 			"filter": "Filter",
 			"loadingTable": "Loading data",
 			"matchAdded": "Match complete: {0} new associations",
-			"mediaAssociations": "Media Associations",
+			"mediaAssociations": "Audio Associations",
 			"noMatch": "Match complete: no new associations",
 			"none": "None",
 			"noPassageAttached": "{0} has no passage attached",
@@ -428,7 +428,7 @@ const initialState = {
 			"PTFtask": "Upload a Portable Transcriber File (ptf).",
 			"PTFtitle": "Upload complete Project Data from PTF",
 			"task": "You can upload audio files in .mp3, .m4a, .wav or .ogg format.",
-			"title": "Upload Media",
+			"title": "Upload Audio",
 			"upload": "Upload",
 		}
 	}),
@@ -471,7 +471,7 @@ const initialState = {
 		"en": {
 			"assignments": "Assignments",
 			"associations": "Associations",
-			"media": "Media",
+			"media": "Audio",
 			"mediaStatus": "{1} of {2} associations",
 			"passageStatus": "{1} of {2} passages",
 			"sectionsPassages": "{0} & Passages",
@@ -591,10 +591,10 @@ const initialState = {
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
 			"invalidParatextLogin": "You must login with a valid paratext login.",
 			"transcriber": "Transcriber",
-			"uploadMediaPlural": "Upload Media",
-			"uploadMediaSingular": "Upload Media",
-			"importMediaSingular": "Import Media",
-			"mediaAttached": "Media Attached",
+			"uploadMediaPlural": "Upload Audio",
+			"uploadMediaSingular": "Upload Audio",
+			"importMediaSingular": "Import Audio",
+			"mediaAttached": "Audio Attached",
 			"part": "Part {0}",
 		}
 	}),
@@ -721,7 +721,7 @@ const initialState = {
 			"sectionstate": "State",
 			"showHideFilter": "Show/Hide filter rows",
 			"updated": "Updated",
-			"incompletePlan": "Plan is incomplete: attach media to passages.",
+			"incompletePlan": "Plan is incomplete: attach audio to passages.",
 		}
 	}),
 	"treeChart": new LocalizedStrings({

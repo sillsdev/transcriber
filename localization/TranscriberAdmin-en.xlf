@@ -282,7 +282,7 @@
       </unit>
       <unit id="audioDownload.downloadMedia">
          <segment>
-            <source>Download Media</source>
+            <source>Download Audio</source>
             <target/>
          </segment>
       </unit>
@@ -342,7 +342,7 @@
       </unit>
       <unit id="cards.mediaUploaded">
          <segment>
-            <source>Media Uploaded</source>
+            <source>Audio Uploaded</source>
             <target/>
          </segment>
       </unit>
@@ -1554,7 +1554,7 @@
       </unit>
       <unit id="main.media">
          <segment>
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
@@ -1842,7 +1842,7 @@
       </unit>
       <unit id="mediaTab.mediaAssociations">
          <segment>
-            <source>Media Associations</source>
+            <source>Audio Associations</source>
             <target/>
          </segment>
       </unit>
@@ -2022,7 +2022,7 @@
       </unit>
       <unit id="mediaUpload.title">
          <segment>
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>
@@ -2184,7 +2184,7 @@
       </unit>
       <unit id="planTabs.media">
          <segment>
-            <source>Media</source>
+            <source>Audio</source>
             <target/>
          </segment>
       </unit>
@@ -2760,25 +2760,25 @@
       </unit>
       <unit id="shared.uploadMediaPlural">
          <segment>
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.uploadMediaSingular">
          <segment>
-            <source>Upload Media</source>
+            <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.importMediaSingular">
          <segment>
-            <source>Import Media</source>
+            <source>Import Audio</source>
             <target/>
          </segment>
       </unit>
       <unit id="shared.mediaAttached">
          <segment>
-            <source>Media Attached</source>
+            <source>Audio Attached</source>
             <target/>
          </segment>
       </unit>
@@ -3348,7 +3348,7 @@
       </unit>
       <unit id="transcriptionTab.incompletePlan">
          <segment>
-            <source>Plan is incomplete: attach media to passages.</source>
+            <source>Plan is incomplete: attach audio to passages.</source>
             <target/>
          </segment>
       </unit>
