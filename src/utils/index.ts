@@ -36,4 +36,3 @@ export * from './useProjectsLoaded';
 export * from './useMounted';
 export * from './execFolder';
 export * from './createFolder';
-export * from './fileAsUrl';
