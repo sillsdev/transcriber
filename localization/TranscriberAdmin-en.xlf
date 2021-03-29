@@ -2058,7 +2058,7 @@
       </unit>
       <unit id="planActions.recordAudio">
          <segment>
-            <source>Record Audio</source>
+            <source>Record/Edit Audio</source>
             <target/>
          </segment>
       </unit>
