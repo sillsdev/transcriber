@@ -830,21 +830,19 @@ export function MediaTab(props: IProps) {
           color="default"
         >
           <div className={classes.actions}>
-            {projRole === 'admin' && (
+            {projRole === 'admin' && (!isOffline || offlineOnly) && (
               <>
-                {(!isOffline || offlineOnly) && (
-                  <Button
-                    key="upload"
-                    aria-label={ts.uploadMediaPlural}
-                    variant="outlined"
-                    color="primary"
-                    className={classes.button}
-                    onClick={handleUpload}
-                  >
-                    {ts.uploadMediaPlural}
-                    <AddIcon className={classes.icon} />
-                  </Button>
-                )}
+                <Button
+                  key="upload"
+                  aria-label={ts.uploadMediaPlural}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleUpload}
+                >
+                  {ts.uploadMediaPlural}
+                  <AddIcon className={classes.icon} />
+                </Button>
                 <Button
                   key={t.autoMatch}
                   aria-label={t.autoMatch}
