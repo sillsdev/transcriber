@@ -4,6 +4,7 @@ const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
 const electronExtensions = require('./electronExtensions.js');
+const fileReadProtocol = require('./file-read-protocol');
 
 //ToDo: Remove thiss and follow instructions here:
 //https://github.com/electron/electron/blob/master/docs/tutorial/security.md#electron-security-warnings
@@ -11,6 +12,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 async function showWindow() {
   electronExtensions(BrowserWindow);
+  fileReadProtocol();
   return createAppWindow();
 }
 

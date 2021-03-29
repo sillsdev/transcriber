@@ -3,12 +3,14 @@ const { app, ipcMain } = require('electron');
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
+const fileReadProtocol = require('./file-read-protocol');
 
 //ToDo: Remove this and follow instructions here:
 //https://github.com/electron/electron/blob/master/docs/tutorial/security.md#electron-security-warnings
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 async function showWindow() {
+  fileReadProtocol();
   return createAppWindow();
 }
 

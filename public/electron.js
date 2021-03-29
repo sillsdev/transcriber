@@ -3,12 +3,14 @@ const { app, ipcMain } = require('electron');
 const createAppWindow = require('./app-process');
 const { createAuthWindow, createLogoutWindow } = require('./auth-process');
 const authService = require('./auth-service');
+const fileReadProtocol = require('./file-read-protocol');
 
 if (!app.requestSingleInstanceLock()) {
   app.quit();
 }
 
 async function showWindow() {
+  fileReadProtocol();
   return createAppWindow();
 }
 
