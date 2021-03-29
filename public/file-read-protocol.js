@@ -7,7 +7,6 @@ function fileReadProtocol() {
   protocol.registerFileProtocol(protocolName, (request, callback) => {
     const url = request.url.replace(`${protocolName}://`, '');
     try {
-      console.log(`fileReadProtocol: url=${url}`);
       return callback(decodeURIComponent(url));
     } catch (error) {
       // Handle the error as needed
