@@ -6,7 +6,7 @@ import MemorySource from '@orbit/memory';
 import { remoteIdGuid, remoteId } from '../../crud';
 import { dataPath, PathType } from '../../utils/dataPath';
 import { MediaFile } from '../../model';
-import { fileAsUrl, infoMsg, logError, Severity } from '../../utils';
+import { infoMsg, logError, Severity } from '../../utils';
 
 export const fetchMediaUrl = (
   id: string,
@@ -37,8 +37,9 @@ export const fetchMediaUrl = (
         );
         var path = dataPath(mediarec.attributes.audioUrl, PathType.MEDIA);
         if (!path.startsWith('http')) {
+          const url = new URL(path).toString().slice(8);
           dispatch({
-            payload: fileAsUrl(path, reporter),
+            payload: `transcribe-safe://${url}`,
             type: type.FETCH_AUDIO_URL,
           });
           return;

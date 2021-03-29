@@ -8,9 +8,11 @@ interface MimeMap {
 
 const mimeMap: MimeMap = {
   mp3: 'audio/mpeg',
+  webm: 'audio/webm;codecs=opus',
+  mka: 'audio/webm;codecs=pcm',
   wav: 'audio/wav',
   m4a: 'audio/x-m4a',
-  ogg: 'audio/ogg',
+  ogg: 'audio/ogg;codecs=opus',
   itf: 'application/itf',
   ptf: 'application/ptf',
   jpg: 'image/jpeg',

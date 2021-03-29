@@ -31,14 +31,8 @@ const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
 
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
-  onEnded: () => void;
-}
-interface IProps
-  extends IStateProps,
-    //  IRecordProps,
-    IDispatchProps {
-  auth: Auth;
   srcMediaId: string;
+  onEnded: () => void;
 }
 
 export function MediaPlayer(props: IProps) {
