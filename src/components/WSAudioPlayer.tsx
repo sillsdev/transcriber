@@ -33,7 +33,6 @@ import {
   FaAngleDoubleDown,
   FaDotCircle,
   FaStopCircle,
-  FaPauseCircle,
 } from 'react-icons/fa';
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
@@ -111,7 +110,8 @@ interface IProps extends IStateProps {
   setAcceptedMimes?: (types: MimeInfo[]) => void;
   onPlayStatus?: (playing: boolean) => void;
   onProgress?: (progress: number) => void;
-  recordingReady?: (blob: Blob) => void;
+  onBlobReady?: (blob: Blob) => void;
+  setBlobReady?: (ready: boolean) => void;
   setChanged?: (changed: boolean) => void;
   onSaveProgress?: (progress: number) => void; //user initiated
 }
@@ -158,11 +158,11 @@ function WSAudioPlayer(props: IProps) {
     setAcceptedMimes,
     onProgress,
     onPlayStatus,
-    recordingReady,
+    onBlobReady,
+    setBlobReady,
     setChanged,
     onSaveProgress,
   } = props;
-  const [audioBlob, setAudioBlob] = useState<Blob | undefined>();
   const waveformRef = useRef<any>();
   const timelineRef = useRef<any>();
 
@@ -177,13 +177,13 @@ function WSAudioPlayer(props: IProps) {
   const recordOverwritePosition = useRef<number | undefined>(0);
   const [overwrite, setOverwrite] = useState(false);
   const [recording, setRecording] = useState(false);
-  const [recordingPaused, setRecordingPaused] = useState(false);
   const [ready, setReady] = useState(false);
   const [silence, setSilence] = useState(0.5);
   const { showMessage } = useSnackBar();
   const {
     wsLoad,
     wsTogglePlay,
+    wsBlob,
     //wsPlay,
     wsPause,
     wsDuration,
@@ -202,17 +202,11 @@ function WSAudioPlayer(props: IProps) {
     onWSRegion,
     onWSStop,
     () => {},
-    allowRecord ? 200 : 50,
+    allowRecord ? 150 : 50,
     timelineRef.current
   );
   //because we have to call hooks consistently, call this even if we aren't going to record
-  const {
-    startRecording,
-    stopRecording,
-    pauseRecording,
-    resumeRecording,
-    acceptedMimes,
-  } = useMediaRecorder(
+  const { startRecording, stopRecording, acceptedMimes } = useMediaRecorder(
     allowRecord,
     onRecordStart,
     onRecordStop,
@@ -223,17 +217,18 @@ function WSAudioPlayer(props: IProps) {
   const paperStyle = {};
 
   useEffect(() => {
-    setAudioBlob(blob);
-  }, [blob]);
+    //we're always going to convert it to wav to send to caller
+    if (setMimeType) setMimeType('audio/wav');
+  }, [setMimeType]);
+
+  useEffect(() => {
+    if (blob) wsLoad(blob);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [blob]); //passed in by user
 
   useEffect(() => {
     if (setAcceptedMimes) setAcceptedMimes(acceptedMimes);
   }, [acceptedMimes, setAcceptedMimes]);
-
-  useEffect(() => {
-    if (audioBlob) wsLoad(audioBlob);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [audioBlob]);
 
   useEffect(() => {
     wsSetPlaybackRate(playbackRate);
@@ -245,6 +240,7 @@ function WSAudioPlayer(props: IProps) {
     setPlaying(playing);
     if (onPlayStatus) onPlayStatus(playing);
   };
+
   function onRecordStart() {}
   async function onRecordStop(blob: Blob) {
     var newPos = await wsInsertAudio(
@@ -253,21 +249,20 @@ function WSAudioPlayer(props: IProps) {
       recordOverwritePosition.current
     );
     if (!overwrite) recordOverwritePosition.current = newPos;
-    //wsPlay();
-    if (recordingReady) recordingReady(blob);
+    handleChanged();
   }
+
   function onRecordError(e: any) {
     showMessage(e.error);
   }
   async function onRecordDataAvailable(e: any, blob: Blob) {
-    if (setMimeType) setMimeType(e.type);
     var newPos = await wsInsertAudio(
       blob,
       recordStartPosition.current,
-      recordOverwritePosition.current
+      recordOverwritePosition.current,
+      e.type
     );
     if (!overwrite) recordOverwritePosition.current = newPos;
-    //setAudioBlob(blob);
   }
   function onWSReady() {
     setReady(true);
@@ -285,14 +280,6 @@ function WSAudioPlayer(props: IProps) {
     if (onPlayStatus) onPlayStatus(false);
   }
 
-  function handlePause() {
-    if (recordingPaused) {
-      resumeRecording();
-    } else {
-      pauseRecording();
-    }
-    setRecordingPaused(!recordingPaused);
-  }
   const handleSliderChange = (
     event: ChangeEvent<{}>,
     value: number | number[]
@@ -341,14 +328,24 @@ function WSAudioPlayer(props: IProps) {
     setRecording(!recording);
   };
 
+  const handleChanged = async () => {
+    if (setChanged) setChanged(true);
+    if (setBlobReady) setBlobReady(false);
+    wsBlob().then((newblob) => {
+      console.log('new blob', newblob?.size, newblob?.type);
+      if (onBlobReady && newblob) onBlobReady(newblob);
+      if (setBlobReady) setBlobReady(true);
+      if (setMimeType && newblob?.type) setMimeType(newblob?.type);
+    });
+  };
   const handleDeleteRegion = () => () => {
     //var cutbuffer =
     wsRegionDelete();
-    if (setChanged) setChanged(true);
+    handleChanged();
   };
   const handleAddSilence = () => () => {
     wsInsertSilence(silence, wsPosition());
-    if (setChanged) setChanged(true);
+    handleChanged();
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -400,17 +397,6 @@ function WSAudioPlayer(props: IProps) {
                     onClick={handleRecorder}
                   >
                     {recording ? <FaStopCircle /> : <FaDotCircle />}
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title={recordingPaused ? t.resume : t.pauseRecord}>
-                <span>
-                  <IconButton onClick={handlePause} disabled={!recording}>
-                    {recordingPaused ? (
-                      <FaPauseCircle className={classes.record} />
-                    ) : (
-                      <FaPauseCircle />
-                    )}
                   </IconButton>
                 </span>
               </Tooltip>

@@ -232,12 +232,11 @@ export function Transcriber(props: IProps) {
   const t = transcriberStr;
 
   useEffect(() => {
-    loadBlob(mediaUrl, setAudioBlob);
+    loadBlob(mediaUrl, (b) => {
+      //not sure what this intermediary file is, but causes console errors
+      if (b.type !== 'text/html') setAudioBlob(b);
+    });
   }, [mediaUrl]);
-
-  useEffect(() => {
-    console.log('got a blob?', audioBlob ? audioBlob.size : 'nope');
-  }, [audioBlob]);
 
   useEffect(() => {
     const getParatextIntegration = () => {
