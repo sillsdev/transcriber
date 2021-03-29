@@ -51,6 +51,7 @@ import {
   camel2Title,
   refMatch,
   waitForIt,
+  loadBlob,
 } from '../utils';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
@@ -231,7 +232,7 @@ export function Transcriber(props: IProps) {
   const t = transcriberStr;
 
   useEffect(() => {
-    fetch(mediaUrl).then(async (r) => setAudioBlob(await r.blob()));
+    loadBlob(mediaUrl, setAudioBlob);
   }, [mediaUrl]);
 
   useEffect(() => {

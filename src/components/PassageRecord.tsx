@@ -20,6 +20,7 @@ import {
 import WSAudioPlayer from './WSAudioPlayer';
 import { bindActionCreators } from 'redux';
 import { QueryBuilder } from '@orbit/data';
+import { loadBlob } from '../utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -165,8 +166,7 @@ function PassageRecord(props: IProps) {
 
   const handleLoadAudio = () => {
     setLoading(true);
-    fetch(mediaUrl).then(async (r) => {
-      var b = await r.blob();
+    loadBlob(mediaUrl, (b) => {
       setOriginalBlob(b);
       setLoading(false);
       setAudioBlob(b);
