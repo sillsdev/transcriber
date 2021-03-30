@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
@@ -49,6 +49,7 @@ interface IStateProps {
   t: IPassageRecordStrings;
   mediaUrl: string;
   hasUrl: boolean;
+  urlMediaId: string;
 }
 
 interface IDispatchProps {
@@ -77,7 +78,7 @@ function PassageRecord(props: IProps) {
     ready,
     metaData,
   } = props;
-  const { hasUrl, fetchMediaUrl, mediaUrl } = props;
+  const { hasUrl, urlMediaId, fetchMediaUrl, mediaUrl } = props;
   const [name, setName] = useState(t.defaultFilename);
   const [filetype, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
@@ -87,7 +88,8 @@ function PassageRecord(props: IProps) {
   const [offline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
-  const [mimeType, setMimeType] = useState('');
+  const [blobReady, setBlobReady] = useState(true);
+  const mimeTypeRef = useRef('audio/wav');
 
   const extensions = useMemo(
     () => ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'],
@@ -107,7 +109,7 @@ function PassageRecord(props: IProps) {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchMediaUrl(mediaId, memory, offline, auth);
+    if (mediaId !== urlMediaId) fetchMediaUrl(mediaId, memory, offline, auth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -115,16 +117,26 @@ function PassageRecord(props: IProps) {
     setOpen(visible);
   }, [visible]);
 
-  useEffect(() => {
-    var i = 0;
-    if (mimeType) {
-      i = mimes.findIndex((m) => m === mimeType);
+  const setMimeType = (mimeType: string) => {
+    mimeTypeRef.current = mimeType;
+    setExtension();
+  };
+  const setExtension = () => {
+    if (mimeTypeRef.current) {
+      var i = mimes.findIndex((m) => m === mimeTypeRef.current);
+      setFiletype(extensions[i]);
     }
-    setFiletype(extensions[i]);
-  }, [extensions, mimeType, mimes]);
+  };
+  useEffect(() => {
+    setExtension();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [extensions, mimes]);
 
-  function recordingReady(blob: Blob) {
+  function onBlobReady(blob: Blob) {
     setAudioBlob(blob);
+    if (blob.type) {
+      setMimeType(blob.type);
+    }
     setFilechanged(true);
   }
   const reset = () => {
@@ -142,7 +154,7 @@ function PassageRecord(props: IProps) {
     if (audioBlob) {
       var files = [
         new File([audioBlob], fileName(), {
-          type: mimeType,
+          type: mimeTypeRef.current,
         }),
       ];
       if (uploadMethod && files) {
@@ -178,6 +190,7 @@ function PassageRecord(props: IProps) {
     var index = mimes.findIndex((m) => m === mediaRec.attributes.contentType);
     if (index > -1) setFiletype(extensions[index]);
   };
+
   return (
     <Dialog
       className={classes.root}
@@ -196,8 +209,9 @@ function PassageRecord(props: IProps) {
           allowRecord={true}
           blob={originalBlob}
           setMimeType={setMimeType}
-          recordingReady={recordingReady}
+          onBlobReady={onBlobReady}
           setChanged={setFilechanged}
+          setBlobReady={setBlobReady}
         />
         <TextField
           className={classes.formControl}
@@ -224,7 +238,9 @@ function PassageRecord(props: IProps) {
           onClick={handleAddOrSave}
           variant="contained"
           color="primary"
-          disabled={(ready && !ready()) || name === '' || !filechanged}
+          disabled={
+            !blobReady || (ready && !ready()) || name === '' || !filechanged
+          }
         >
           {t.save}
         </Button>
@@ -244,6 +260,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageRecord' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  urlMediaId: state.media.urlMediaId,
 });
 
 export default connect(

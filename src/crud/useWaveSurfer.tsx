@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { useState, useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
+//import { convertToMP3 } from '../utils/mp3';
+import { convertToWav } from '../utils/wav';
 
 const noop = () => {};
 const noop1 = (x: any) => {};
@@ -19,6 +21,7 @@ export function useWaveSurfer(
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const wsRef = useRef<WaveSurfer>();
+  const blobTypeRef = useRef('');
   const playingRef = useRef(false);
   const regionRef = useRef<any>();
   const keepRegion = useRef(false);
@@ -31,7 +34,6 @@ export function useWaveSurfer(
 
       ws.on('ready', function () {
         onReady();
-        console.log('ready', ws.getDuration());
         durationRef.current = ws.getDuration();
       });
       ws.on(
@@ -100,7 +102,9 @@ export function useWaveSurfer(
       if (wsRef.current?.isReady) {
         wsRef.current?.play(progress);
       }
-    } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
+    } else if (wsRef.current?.isPlaying()) {
+      wsRef.current?.pause();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing, wsRef.current?.isReady]);
 
@@ -132,8 +136,35 @@ export function useWaveSurfer(
   const wsSetPlaybackRate = (rate: number) =>
     wsRef.current?.setPlaybackRate(rate);
 
-  const wsLoad = (blob: Blob) => wsRef.current?.loadBlob(blob);
+  const wsLoad = (blob: Blob, mimeType?: string) => {
+    wsRef.current?.loadBlob(blob);
+    blobTypeRef.current = mimeType || blob.type;
+  };
 
+  const wsBlob = async () => {
+    var wavesurfer = wsRef.current;
+    var backend = wavesurfer?.backend as any;
+    if (backend) {
+      var originalBuffer = backend.buffer;
+      var channels = originalBuffer.numberOfChannels;
+      var data_left = originalBuffer.getChannelData(0);
+      var data_right = null;
+      if (channels === 2) {
+        data_right = originalBuffer.getChannelData(1);
+        if (!data_left && data_right) {
+          data_left = data_right;
+          data_right = null;
+          channels = 1;
+        }
+      }
+      return convertToWav(data_left, data_right, {
+        isFloat: true, // floating point or 16-bit integer (WebAudio API decodes to Float32Array) ???
+        numChannels: channels,
+        sampleRate: originalBuffer.sampleRate,
+      });
+    }
+    return undefined;
+  };
   const wsSkip = (amt: number) => wsRef.current?.skip(amt);
 
   const wsSetHeight = (height: number) => wsRef.current?.setHeight(height);
@@ -158,6 +189,7 @@ export function useWaveSurfer(
   function loadDecoded(new_buffer: any) {
     wsRef.current?.loadDecodedBuffer(new_buffer);
   }
+
   const insertBuffer = (
     newBuffer: any,
     startposition: number,
@@ -188,7 +220,6 @@ export function useWaveSurfer(
     }
     after_len = originalBuffer.length - after_offset;
     if (after_len < 0) after_len = 0;
-
     var new_len = start_offset + newBuffer.length + after_len;
     var uberSegment = null;
     uberSegment = backend.ac.createBuffer(
@@ -217,14 +248,16 @@ export function useWaveSurfer(
   const wsInsertAudio = async (
     blob: Blob,
     position: number,
-    overwriteToPosition?: number
+    overwriteToPosition?: number,
+    mimeType?: string
   ) => {
     if (!wsRef.current) return;
     var wavesurfer = wsRef.current;
     var backend = wavesurfer?.backend as any;
+    if (!backend) return; //throw?
     var originalBuffer = backend.buffer;
     if (!originalBuffer) {
-      wavesurfer.loadBlob(blob);
+      wsLoad(blob, mimeType);
       return;
     }
     var buffer = await blob.arrayBuffer();
@@ -294,6 +327,7 @@ export function useWaveSurfer(
 
   return {
     wsLoad,
+    wsBlob,
     wsIsReady,
     wsIsPlaying,
     wsTogglePlay,

@@ -151,7 +151,7 @@ interface IProps extends IStateProps {
   onTranscribe: (i: number) => void;
   onAssign: (where: number[]) => () => void;
   onUpload: (i: number) => () => void;
-  onRecord: (i: number) => () => void;
+  onRecord: (i: number) => void;
   auth: Auth;
 }
 
@@ -500,12 +500,8 @@ export function PlanSheet(props: IProps) {
                           isPassage={passage}
                           mediaId={rowInfo[rowIndex].mediaId}
                           onPlayStatus={handlePlayStatus}
-                          onDelete={handleConfirmDelete}
-                          onTranscribe={handleTranscribe}
                           online={connected || offlineOnly}
                           readonly={readonly}
-                          canAssign={projRole === 'admin'}
-                          canDelete={projRole === 'admin'}
                           isPlaying={
                             rowInfo[rowIndex].mediaId !== '' &&
                             srcMediaId === rowInfo[rowIndex].mediaId
@@ -565,17 +561,11 @@ export function PlanSheet(props: IProps) {
                     isSection={section}
                     isPassage={passage}
                     mediaId={rowInfo[rowIndex].mediaId}
-                    onPlayStatus={handlePlayStatus}
                     onDelete={handleConfirmDelete}
                     onTranscribe={handleTranscribe}
-                    online={connected || offlineOnly}
                     readonly={readonly}
                     canAssign={projRole === 'admin'}
                     canDelete={projRole === 'admin'}
-                    isPlaying={
-                      rowInfo[rowIndex].mediaId !== '' &&
-                      srcMediaId === rowInfo[rowIndex].mediaId
-                    }
                   />
                 ),
                 readOnly: true,

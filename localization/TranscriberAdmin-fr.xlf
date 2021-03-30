@@ -2050,8 +2050,8 @@
       </unit>
        <unit id="planActions.recordAudio">
          <segment>
-            <source>Record Audio</source>
-            <target>Créer de l'audio</target>
+            <source>Record/Edit Audio</source>
+            <target>Créer/Éditer de l'audio</target>
           </segment>
       </unit>
       <unit id="planActions.transcribe">

@@ -442,7 +442,7 @@ const initialState = {
 			"assign": "Assign",
 			"delete": "Delete",
 			"playpause": "Play / Pause",
-			"recordAudio": "Record Audio",
+			"recordAudio": "Record/Edit Audio",
 			"transcribe": "Transcribe",
 		}
 	}),

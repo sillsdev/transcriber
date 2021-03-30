@@ -2049,8 +2049,8 @@
 		</unit>
 		<unit id="planActions.recordAudio">
 			<segment>
-				<source>Record Audio</source>
-				<target>Запись аудио</target>
+			    <source>Record/Edit Audio</source>
+                <target>Запись/Редактировать аудио</target>
 			</segment>
 		</unit>
 		<unit id="planActions.transcribe">

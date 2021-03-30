@@ -728,7 +728,7 @@ export function ScriptureTable(props: IProps) {
       waitForSave(() => showUpload(i, false), 100);
     } else showUpload(i, false);
   };
-  const handleRecord = (i: number) => () => {
+  const handleRecord = (i: number) => {
     if (passageId(i) === '') {
       startSave();
       waitForSave(() => showUpload(i, true), 100);

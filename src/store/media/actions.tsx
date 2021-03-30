@@ -15,12 +15,14 @@ export const fetchMediaUrl = (
   auth: Auth,
   reporter?: any
 ) => (dispatch: any) => {
-  dispatch({ type: type.FETCH_AUDIO_URL_PENDING });
   if (!id) return;
+  var remoteid = id;
+  if (!isNaN(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
+  console.log('fetching url for mediaId', id);
+  dispatch({ payload: id, type: type.FETCH_AUDIO_URL_PENDING });
+
   if (isElectron) {
-    logError(Severity.info, reporter, `fetchMediaUrl`);
     if (!isNaN(Number(id))) id = remoteIdGuid('mediafile', id, memory.keyMap);
-    logError(Severity.info, reporter, `id=${id}`);
     try {
       var mediarec = memory.cache.query((q) =>
         q.findRecord({
@@ -28,7 +30,6 @@ export const fetchMediaUrl = (
           id: id,
         })
       ) as MediaFile;
-      logError(Severity.info, reporter, `mediaRec=${JSON.stringify(mediarec)}`);
       if (mediarec && mediarec.attributes) {
         logError(
           Severity.info,
@@ -51,8 +52,9 @@ export const fetchMediaUrl = (
       logError(Severity.error, reporter, infoMsg(ex, ''));
     }
   }
-  if (isNaN(Number(id))) id = remoteId('mediafile', id, memory.keyMap);
-  Axios.get(API_CONFIG.host + '/api/mediafiles/' + id + '/fileurl', {
+  if (isNaN(Number(remoteid)))
+    remoteid = remoteId('mediafile', id, memory.keyMap);
+  Axios.get(API_CONFIG.host + '/api/mediafiles/' + remoteid + '/fileurl', {
     headers: {
       Authorization: 'Bearer ' + auth.accessToken,
     },
