@@ -80,8 +80,8 @@ export const ProjectSolution = (props: IProps) => {
     },
     {
       name: t.storying,
-      kind: integration.oneStory,
-      tip: t.storyingTip,
+      // kind: integration.oneStory,
+      // tip: t.storyingTip,
     },
     {
       name: t.adaptation,

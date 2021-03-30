@@ -39,7 +39,7 @@ import SyncIcon from '@material-ui/icons/Sync';
 import CheckIcon from '@material-ui/icons/Check';
 import { useSnackBar } from '../hoc/SnackBar';
 import ParatextLogo from '../control/ParatextLogo';
-import RenderLogo from '../control/RenderLogo';
+// import RenderLogo from '../control/RenderLogo';
 import { remoteIdNum, related, useOfflnProjRead, remoteId } from '../crud';
 import { Online, localSync, getParatextDataPath } from '../utils';
 import Auth from '../auth/Auth';
@@ -849,7 +849,7 @@ export function IntegrationPanel(props: IProps) {
           </FormControl>
         </AccordionDetails>
       </Accordion>
-      <Accordion>
+      {/* <Accordion>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel2a-content"
@@ -863,8 +863,8 @@ export function IntegrationPanel(props: IProps) {
         <AccordionDetails>
           <Typography>{'Not Implemented'}</Typography>
         </AccordionDetails>
-      </Accordion>
-      <Accordion disabled>
+      </Accordion> */}
+      {/* <Accordion disabled>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel3a-content"
@@ -872,7 +872,7 @@ export function IntegrationPanel(props: IProps) {
         >
           <Typography className={classes.heading}>{t.onestory}</Typography>
         </AccordionSummary>
-      </Accordion>
+      </Accordion> */}
       {confirmItem !== null ? (
         <Confirm
           title={t.removeProject}
