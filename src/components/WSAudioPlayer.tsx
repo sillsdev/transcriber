@@ -184,7 +184,6 @@ function WSAudioPlayer(props: IProps) {
     wsLoad,
     wsTogglePlay,
     wsBlob,
-    //wsPlay,
     wsPause,
     wsDuration,
     wsPosition,
@@ -463,145 +462,153 @@ function WSAudioPlayer(props: IProps) {
           <Grid container className={classes.toolbar}>
             {allowRecord || (
               <Grid item>
-                <Tooltip title={looping ? t.loopon : t.loopoff}>
-                  <span>
-                    <ToggleButton
-                      className={classes.togglebutton}
-                      value="loop"
-                      selected={looping}
-                      onChange={handleToggleLoop()}
-                      disabled={!hasRegion}
-                    >
-                      <LoopIcon />
-                    </ToggleButton>
-                  </span>
-                </Tooltip>
-                <Divider orientation="vertical" flexItem />
+                <>
+                  <Tooltip title={looping ? t.loopon : t.loopoff}>
+                    <span>
+                      <ToggleButton
+                        className={classes.togglebutton}
+                        value="loop"
+                        selected={looping}
+                        onChange={handleToggleLoop()}
+                        disabled={!hasRegion}
+                      >
+                        <LoopIcon />
+                      </ToggleButton>
+                    </span>
+                  </Tooltip>
+                  <Divider orientation="vertical" flexItem />
+                </>
               </Grid>
             )}
             <Grid item>
-              <Tooltip title={t.beginning}>
-                <span>
-                  <IconButton onClick={handleGotoEv(0)} disabled={!ready}>
-                    <SkipPreviousIcon />
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
-                <span>
-                  <IconButton
-                    onClick={handleJumpEv(-1 * jump)}
-                    disabled={!ready}
-                  >
-                    <ReplayIcon />
-                    <Typography className={classes.smallFont}>
-                      {BACK_KEY}
-                    </Typography>
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip
-                title={(playing ? t.pauseTip : t.playTip).replace(
-                  '{0}',
-                  PLAY_PAUSE_KEY
-                )}
-              >
-                <span>
-                  <IconButton
-                    onClick={handlePlayStatus}
-                    disabled={wsDuration() === 0}
-                  >
-                    <>
-                      {playing ? <PauseIcon /> : <PlayIcon />}
+              <>
+                <Tooltip title={t.beginning}>
+                  <span>
+                    <IconButton onClick={handleGotoEv(0)} disabled={!ready}>
+                      <SkipPreviousIcon />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
+                  <span>
+                    <IconButton
+                      onClick={handleJumpEv(-1 * jump)}
+                      disabled={!ready}
+                    >
+                      <ReplayIcon />
                       <Typography className={classes.smallFont}>
-                        {PLAY_PAUSE_KEY}
+                        {BACK_KEY}
                       </Typography>
-                    </>
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
-                <span>
-                  <IconButton onClick={handleJumpEv(jump)} disabled={!ready}>
-                    <ForwardIcon />{' '}
-                    <Typography className={classes.smallFont}>
-                      {AHEAD_KEY}
-                    </Typography>
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Tooltip title={t.end}>
-                <span>
-                  <IconButton
-                    onClick={handleGotoEv(wsDuration())}
-                    disabled={!ready}
-                  >
-                    <SkipNextIcon />{' '}
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Divider
-                className={classes.divider}
-                orientation="vertical"
-                flexItem
-              />
-            </Grid>
-            <Grid item className={classes.toolbar}>
-              <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
-                <span>
-                  <IconButton
-                    onClick={handleSlower}
-                    disabled={playbackRate === MIN_SPEED}
-                  >
-                    <FaAngleDoubleDown fontSize="small" />{' '}
-                    <Typography className={classes.smallFont}>
-                      {SLOWER_KEY}
-                    </Typography>
-                  </IconButton>
-                </span>
-              </Tooltip>
-              <Slider
-                className={classes.slider}
-                value={
-                  typeof playbackRate === 'number' ? playbackRate * 100 : 0
-                }
-                step={SPEED_STEP * 100}
-                marks
-                min={MIN_SPEED * 100}
-                max={MAX_SPEED * 100}
-                onChange={handleSliderChange}
-                ValueLabelComponent={ValueLabelComponent}
-              />
-              <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
-                <span>
-                  <IconButton
-                    onClick={handleFaster}
-                    disabled={playbackRate === MAX_SPEED}
-                  >
-                    <FaAngleDoubleUp fontSize="small" />{' '}
-                    <Typography className={classes.smallFont}>
-                      {FASTER_KEY}
-                    </Typography>
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
-            {onSaveProgress && (
-              <Grid item>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip
+                  title={(playing ? t.pauseTip : t.playTip).replace(
+                    '{0}',
+                    PLAY_PAUSE_KEY
+                  )}
+                >
+                  <span>
+                    <IconButton
+                      onClick={handlePlayStatus}
+                      disabled={wsDuration() === 0}
+                    >
+                      <>
+                        {playing ? <PauseIcon /> : <PlayIcon />}
+                        <Typography className={classes.smallFont}>
+                          {PLAY_PAUSE_KEY}
+                        </Typography>
+                      </>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
+                  <span>
+                    <IconButton onClick={handleJumpEv(jump)} disabled={!ready}>
+                      <ForwardIcon />{' '}
+                      <Typography className={classes.smallFont}>
+                        {AHEAD_KEY}
+                      </Typography>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+                <Tooltip title={t.end}>
+                  <span>
+                    <IconButton
+                      onClick={handleGotoEv(wsDuration())}
+                      disabled={!ready}
+                    >
+                      <SkipNextIcon />{' '}
+                    </IconButton>
+                  </span>
+                </Tooltip>
                 <Divider
                   className={classes.divider}
                   orientation="vertical"
                   flexItem
                 />
-                <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
+              </>
+            </Grid>
+            <Grid item className={classes.toolbar}>
+              <>
+                <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
                   <span>
-                    <IconButton onClick={handleSendProgress}>
-                      <>
-                        <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
-                      </>
+                    <IconButton
+                      onClick={handleSlower}
+                      disabled={playbackRate === MIN_SPEED}
+                    >
+                      <FaAngleDoubleDown fontSize="small" />{' '}
+                      <Typography className={classes.smallFont}>
+                        {SLOWER_KEY}
+                      </Typography>
                     </IconButton>
                   </span>
                 </Tooltip>
+                <Slider
+                  className={classes.slider}
+                  value={
+                    typeof playbackRate === 'number' ? playbackRate * 100 : 0
+                  }
+                  step={SPEED_STEP * 100}
+                  marks
+                  min={MIN_SPEED * 100}
+                  max={MAX_SPEED * 100}
+                  onChange={handleSliderChange}
+                  ValueLabelComponent={ValueLabelComponent}
+                />
+                <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
+                  <span>
+                    <IconButton
+                      onClick={handleFaster}
+                      disabled={playbackRate === MAX_SPEED}
+                    >
+                      <FaAngleDoubleUp fontSize="small" />{' '}
+                      <Typography className={classes.smallFont}>
+                        {FASTER_KEY}
+                      </Typography>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </>
+            </Grid>
+            {onSaveProgress && (
+              <Grid item>
+                <>
+                  <Divider
+                    className={classes.divider}
+                    orientation="vertical"
+                    flexItem
+                  />
+                  <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
+                    <span>
+                      <IconButton onClick={handleSendProgress}>
+                        <>
+                          <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
+                        </>
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                </>
               </Grid>
             )}
             <Grid item className={classes.grow}>
