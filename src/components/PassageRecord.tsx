@@ -49,6 +49,7 @@ interface IStateProps {
   t: IPassageRecordStrings;
   mediaUrl: string;
   hasUrl: boolean;
+  urlMediaId: string;
 }
 
 interface IDispatchProps {
@@ -77,7 +78,7 @@ function PassageRecord(props: IProps) {
     ready,
     metaData,
   } = props;
-  const { hasUrl, fetchMediaUrl, mediaUrl } = props;
+  const { hasUrl, urlMediaId, fetchMediaUrl, mediaUrl } = props;
   const [name, setName] = useState(t.defaultFilename);
   const [filetype, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
@@ -108,7 +109,7 @@ function PassageRecord(props: IProps) {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchMediaUrl(mediaId, memory, offline, auth);
+    if (mediaId !== urlMediaId) fetchMediaUrl(mediaId, memory, offline, auth);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -189,6 +190,7 @@ function PassageRecord(props: IProps) {
     var index = mimes.findIndex((m) => m === mediaRec.attributes.contentType);
     if (index > -1) setFiletype(extensions[index]);
   };
+
   return (
     <Dialog
       className={classes.root}
@@ -258,6 +260,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageRecord' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  urlMediaId: state.media.urlMediaId,
 });
 
 export default connect(

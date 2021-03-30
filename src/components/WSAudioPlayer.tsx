@@ -174,7 +174,7 @@ function WSAudioPlayer(props: IProps) {
   const [looping, setLooping] = useState(false);
   const [hasRegion, setHasRegion] = useState(false);
   const recordStartPosition = useRef(0);
-  const recordOverwritePosition = useRef<number | undefined>(0);
+  const recordOverwritePosition = useRef<number | undefined>(undefined);
   const [overwrite, setOverwrite] = useState(false);
   const [recording, setRecording] = useState(false);
   const [ready, setReady] = useState(false);

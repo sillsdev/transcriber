@@ -63,6 +63,10 @@ export function PlanAudioActions(props: IProps) {
   const handlePlayStatus = () => () => {
     onPlayStatus(isPlaying ? '' : mediaId);
   };
+  const handleRecord = (index: number) => () => {
+    onPlayStatus('');
+    onRecord(index);
+  };
 
   return (
     <div className={classes.arrangeActions}>
@@ -82,7 +86,7 @@ export function PlanAudioActions(props: IProps) {
       {isPassage && !readonly && (
         <IconButton
           className={classes.actionButton}
-          onClick={onRecord(rowIndex)}
+          onClick={handleRecord(rowIndex)}
           title={t.recordAudio}
         >
           <MicIcon />

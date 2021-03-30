@@ -3,7 +3,8 @@ import * as type from './types';
 export const mediaCleanState: type.IMediaState = {
   loaded: false,
   url: '',
-  trackedTask: '',
+  urlMediaId: '', //mediaid
+  trackedTask: '', //passageid
 };
 
 const MediaReducers = function (
@@ -14,6 +15,7 @@ const MediaReducers = function (
     case type.FETCH_AUDIO_URL_PENDING:
       return {
         ...state,
+        urlMediaId: action.payload,
         loaded: false,
         url: '',
       };

@@ -26,6 +26,7 @@ interface IStateProps {
   t: IAudioDownloadStrings;
   hasUrl: boolean;
   mediaUrl: string;
+  urlMediaId: string;
 }
 
 interface IDispatchProps {
@@ -40,7 +41,7 @@ interface IProps extends IStateProps, IDispatchProps {
 
 export const AudioDownload = (props: IProps) => {
   const { mediaId, title, t } = props;
-  const { hasUrl, mediaUrl, auth, fetchMediaUrl } = props;
+  const { hasUrl, urlMediaId, mediaUrl, auth, fetchMediaUrl } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -56,7 +57,8 @@ export const AudioDownload = (props: IProps) => {
       q.findRecord({ type: 'mediafile', id })
     ) as MediaFile;
     logError(Severity.info, globalStore.errorReporter, `Media Id=${mediaId}`);
-    fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
+    if (id !== urlMediaId)
+      fetchMediaUrl(id, memory, offline, auth, globalStore.errorReporter);
     const name = mediaRec?.attributes?.originalFile || `media-${id}`;
     setAudName(name);
   };
@@ -64,11 +66,6 @@ export const AudioDownload = (props: IProps) => {
   useEffect(() => {
     if (audUrl && audName !== '') {
       if (audAnchor?.current) {
-        logError(
-          Severity.info,
-          globalStore.errorReporter,
-          `audName=${audName}, audUrl=${audUrl}, audAnchor=${audAnchor?.current}`
-        );
         audAnchor.current.click();
         setAudUrl(undefined);
         setAudName('');
@@ -78,7 +75,7 @@ export const AudioDownload = (props: IProps) => {
   }, [audUrl, audName]);
 
   useEffect(() => {
-    if (audName !== '' && !audUrl && mediaUrl && mediaUrl !== '') {
+    if (audName !== '' && !audUrl && hasUrl && mediaUrl && mediaUrl !== '') {
       logError(
         Severity.info,
         globalStore.errorReporter,
@@ -115,6 +112,7 @@ const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'audioDownload' }),
   hasUrl: state.media.loaded,
   mediaUrl: state.media.url,
+  urlMediaId: state.media.urlMediaId,
 });
 
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
