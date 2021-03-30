@@ -95,6 +95,7 @@ export const WorkScreen = connect(mapStateToProps)((props: IProps) => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
+    if (projectId === '') setView('/team');
     if (projRole === '') setMyProjRole(projectId);
     if (projType === '') setProjectType(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
