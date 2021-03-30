@@ -68,7 +68,7 @@ import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 
 const HISTORY_KEY = 'F7';
-const NON_BOX_HEIGHT = 304;
+const NON_BOX_HEIGHT = 360;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
