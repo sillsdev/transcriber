@@ -100,17 +100,9 @@ export function useWaveSurfer(
     playingRef.current = playing;
     if (playingRef.current) {
       if (wsRef.current?.isReady) {
-        console.log('asking to play');
-        var playPromise = wsRef.current?.play(progress);
-        if (playPromise)
-          playPromise
-            .then(() => {
-              console.log('now Im playing');
-            })
-            .catch((err) => console.log('play error', err));
+        wsRef.current?.play(progress);
       }
     } else if (wsRef.current?.isPlaying()) {
-      console.log('pausing');
       wsRef.current?.pause();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,7 +138,6 @@ export function useWaveSurfer(
 
   const wsLoad = (blob: Blob, mimeType?: string) => {
     wsRef.current?.loadBlob(blob);
-    console.log('loading blob', blob.size, blob.type, mimeType);
     blobTypeRef.current = mimeType || blob.type;
   };
 
