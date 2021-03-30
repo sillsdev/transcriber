@@ -1,6 +1,6 @@
 import Transcriber from '@material-ui/icons/ReceiptOutlined';
 import Editor from '@material-ui/icons/RateReviewOutlined';
-import { IconButton } from '@material-ui/core';
+import { Tooltip } from '@material-ui/core';
 import React, { FunctionComponent } from 'react';
 import { connect } from 'react-redux';
 import { IState } from '../model/state';
@@ -17,15 +17,21 @@ const mapStateToProps = (state: IState): IStateProps => ({
 });
 
 const TranscriberIconSnippet: FunctionComponent<IProps> = ({ ts }) => (
-  <IconButton title={ts.transcriber}>
-    <Transcriber />
-  </IconButton>
+  <Tooltip title={ts.transcriber}>
+    <>
+      <Transcriber />
+      {'\u00A0'}
+    </>
+  </Tooltip>
 );
 export const TranscriberIcon = connect(mapStateToProps)(TranscriberIconSnippet);
 
 const EditorIconSnippet: FunctionComponent<IProps> = ({ ts }) => (
-  <IconButton title={ts.editor}>
-    <Editor />
-  </IconButton>
+  <Tooltip title={ts.editor}>
+    <>
+      <Editor />
+      {'\u00A0'}
+    </>
+  </Tooltip>
 );
 export const EditorIcon = connect(mapStateToProps)(EditorIconSnippet);
