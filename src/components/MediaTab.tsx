@@ -368,6 +368,7 @@ export function MediaTab(props: IProps) {
 
   const handleActionRefused = () => {
     setConfirmAction('');
+    setCheck(Array<number>());
   };
 
   const handleAutoMatch = () => setAutoMatch(!autoMatch);
