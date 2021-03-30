@@ -54,6 +54,10 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: 'auto',
     },
     paper: {},
+    headerCell: {
+      display: 'flex',
+      alignItems: 'center',
+    },
     grids: { minWidth: 650 },
     avatar: {
       margin: 10,
@@ -126,23 +130,29 @@ function AssignSection(props: IProps) {
   };
 
   const handleSelectTranscriber = (id: string) => () => {
-    setSelectedTranscriber(id);
+    const newVal = id !== selectedTranscriber ? id : '';
+    setSelectedTranscriber(newVal);
     sections.forEach(function (s) {
-      assign(s, id, RoleNames.Transcriber);
+      assign(s, newVal, RoleNames.Transcriber);
     });
   };
   const handleSelectReviewer = (id: string) => () => {
-    setSelectedReviewer(id);
+    const newVal = id !== selectedReviewer ? id : '';
+    setSelectedReviewer(newVal);
     sections.forEach(function (s) {
-      assign(s, id, RoleNames.Editor);
+      assign(s, newVal, RoleNames.Editor);
     });
+  };
+
+  const doSetSelected = (section: Section) => {
+    setSelectedTranscriber(related(section, 'transcriber'));
+    setSelectedReviewer(related(section, 'editor'));
   };
 
   useEffect(() => {
     setOpen(visible);
-    setSelectedTranscriber('');
-    setSelectedReviewer('');
-  }, [visible]);
+    doSetSelected(sections[0]);
+  }, [visible, sections]);
 
   const projectRec = projects.filter((p) => p.id === project);
   const groupId = projectRec.length > 0 ? related(projectRec[0], 'group') : '';
@@ -160,7 +170,6 @@ function AssignSection(props: IProps) {
         <ListItem
           key={index}
           role="listitem"
-          button
           onClick={handleSelectTranscriber(m.id)}
         >
           <ListItemIcon>
@@ -193,7 +202,6 @@ function AssignSection(props: IProps) {
         <ListItem
           key={index}
           role="listitem"
-          button
           onClick={handleSelectReviewer(m.id)}
         >
           <ListItemIcon>
@@ -247,12 +255,16 @@ function AssignSection(props: IProps) {
                   <TableRow>
                     <TableCell>{organizedBy}</TableCell>
                     <TableCell align="right">
-                      <EditorIcon />
-                      {ts.editor}
+                      <div className={classes.headerCell}>
+                        <EditorIcon />
+                        {ts.editor}
+                      </div>
                     </TableCell>
                     <TableCell align="right">
-                      <TranscriberIcon />
-                      {ts.transcriber}
+                      <div className={classes.headerCell}>
+                        <TranscriberIcon />
+                        {ts.transcriber}
+                      </div>
                     </TableCell>
                   </TableRow>
                 </TableHead>
