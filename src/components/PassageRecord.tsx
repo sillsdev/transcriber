@@ -200,7 +200,7 @@ function PassageRecord(props: IProps) {
     >
       <DialogTitle id="form-dialog-title">{t.title}</DialogTitle>
       <DialogContent>
-        {hasUrl && (
+        {hasUrl && urlMediaId === mediaId && (
           <Button variant="contained" onClick={handleLoadAudio}>
             {loading ? t.loading : t.loadfile}
           </Button>
