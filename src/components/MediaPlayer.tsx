@@ -1,47 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Auth from '../auth/Auth';
-import { IState } from '../model';
-import { connect } from 'react-redux';
-import * as actions from '../store';
 import { useGlobal } from 'reactn';
-import { bindActionCreators } from 'redux';
+import { useFetchMediaUrl, MediaSt } from '../crud';
 
-interface IStateProps {
-  hasUrl: boolean;
-  mediaUrl: string;
-  trackedTask: string;
-}
-const mapStateToProps = (state: IState): IStateProps => ({
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
-  trackedTask: state.media.trackedTask,
-});
-interface IDispatchProps {
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
-}
-
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchMediaUrl: actions.fetchMediaUrl,
-    },
-    dispatch
-  ),
-});
-
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps {
   auth: Auth;
   srcMediaId: string;
   onEnded: () => void;
 }
 
 export function MediaPlayer(props: IProps) {
-  const { hasUrl, mediaUrl, fetchMediaUrl, auth, srcMediaId, onEnded } = props;
+  const { auth, srcMediaId, onEnded } = props;
+  const [reporter] = useGlobal('errorReporter');
+  const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
-  const [memory] = useGlobal('memory');
-  const [offline] = useGlobal('offline');
 
   useEffect(() => {
     if (playing) {
@@ -52,25 +26,30 @@ export function MediaPlayer(props: IProps) {
     }
     setPlaying(false);
     if (srcMediaId !== playItem) {
-      fetchMediaUrl(srcMediaId, memory, offline, auth);
+      fetchMediaUrl({ id: srcMediaId, auth });
     }
     setPlayItem(srcMediaId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcMediaId]);
 
   useEffect(() => {
-    if (hasUrl && audioRef.current && !playing && playItem !== '') {
+    if (
+      mediaState.status === MediaSt.FETCHED &&
+      audioRef.current &&
+      !playing &&
+      playItem !== ''
+    ) {
       setPlaying(true);
       audioRef.current.play();
     }
-  }, [hasUrl, playing, playItem]);
+  }, [mediaState.status, playing, playItem]);
   const ended = () => {
     if (onEnded) onEnded();
   };
-  return hasUrl ? (
-    <audio onEnded={ended} ref={audioRef} src={mediaUrl} />
+  return mediaState.status === MediaSt.FETCHED ? (
+    <audio onEnded={ended} ref={audioRef} src={mediaState.url} />
   ) : (
     <></>
   );
 }
-export default connect(mapStateToProps, mapDispatchToProps)(MediaPlayer) as any;
+export default MediaPlayer;
