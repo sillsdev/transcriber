@@ -46,3 +46,4 @@ export * from './useMediaCounts';
 export * from './useSectionCounts';
 export * from './useAddToOrgAndGroup';
 export * from './useProjectType';
+export * from './useFetchMediaUrl';
