@@ -57,9 +57,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     toolbar: {
       flexDirection: 'row',
-      justify: 'flex-start',
       alignItems: 'center',
       justifyItems: 'flex-start',
+      display: 'flex',
     },
     labeledControl: {
       display: 'flex',
@@ -72,8 +72,8 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: 'pointer',
     },
     slider: {
-      width: '80px',
-      paddingTop: '20px',
+      width: '50px',
+      display: 'flex',
     },
     record: {
       color: 'red',
@@ -549,8 +549,8 @@ function WSAudioPlayer(props: IProps) {
                 />
               </>
             </Grid>
-            <Grid item className={classes.toolbar}>
-              <>
+            <Grid item>
+              <div className={classes.toolbar}>
                 <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
                   <span>
                     <IconButton
@@ -589,7 +589,7 @@ function WSAudioPlayer(props: IProps) {
                     </IconButton>
                   </span>
                 </Tooltip>
-              </>
+              </div>
             </Grid>
             {onSaveProgress && (
               <Grid item>
