@@ -10,6 +10,7 @@ import { PlanProvider, PlanContext } from '../context/PlanContext';
 import { TranscribeSwitch } from '../components/App/TranscribeSwitch';
 import PlanTabs from '../components/PlanTabs';
 import { useUrlContext, useRole, useProjectType } from '../crud';
+import { forceLogin, localUserKey, LocalKey } from '../utils';
 import Auth from '../auth/Auth';
 import { UnsavedContext } from '../context/UnsavedContext';
 import StickyRedirect from '../components/StickyRedirect';
@@ -69,6 +70,7 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
   const { setProjectType } = useProjectType();
   const [project] = useGlobal('project');
   const [organization] = useGlobal('organization');
+  const [memory] = useGlobal('memory');
   const [view, setView] = React.useState('');
 
   const handleSwitchTo = () => {
@@ -83,8 +85,13 @@ export const PlanScreen = connect(mapStateToProps)((props: IProps) => {
 
   React.useEffect(() => {
     const projectId = setUrlContext(prjId);
-    if (projectId === '') setView('/team');
-    if (projRole === '') setMyProjRole(projectId);
+    if (projRole === '')
+      if (setMyProjRole(projectId) === '') {
+        // If after proj role set there is none, force reload
+        localStorage.removeItem(localUserKey(LocalKey.url, memory));
+        forceLogin();
+        setView('/logout');
+      }
     if (projType === '') setProjectType(projectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
