@@ -3055,6 +3055,18 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="transcriber.congratulation">
+			<segment>
+				<source>Congratulations</source>
+				<target>Поздравляем</target>
+			</segment>
+		</unit>
+		<unit id="transcriber.noMoreTasks">
+			<segment>
+				<source>You have no more tasks to work on!</source>
+				<target>Вам больше не над чем работать!</target>
+			</segment>
+		</unit>
 		<unit id="transcribeAddNote.cancel">
 			<segment>
 				<source>Cancel</source>

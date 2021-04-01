@@ -666,6 +666,8 @@ const initialState = {
 			"submitTranscriptionTip": "Submit for review",
 			"transcribing": "Started to transcribe",
 			"updateByOther": "Transcription updated by another person or process.",
+			"congratulation": "Congratulations",
+			"noMoreTasks": "You have no more tasks to work on!",
 		}
 	}),
 	"transcribeAddNote": new LocalizedStrings({

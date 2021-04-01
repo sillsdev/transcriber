@@ -2774,7 +2774,19 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcribeReject.cancel">
+   	<unit id="transcriber.congratulation">
+   		<segment>
+   			<source>Congratulations</source>
+   			<target>Parabéns</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcriber.noMoreTasks">
+   		<segment>
+   			<source>You have no more tasks to work on!</source>
+   			<target>Você não tem mais tarefas para trabalhar!</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcribeReject.cancel">
          <segment>
             <source>Cancel</source>
             <target>Cancelar</target>

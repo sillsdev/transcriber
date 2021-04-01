@@ -56,6 +56,7 @@ import {
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
+import { AllDone } from './AllDone';
 import { LastEdit } from '../control';
 import { UpdateRecord, UpdateRelatedRecord } from '../model/baseModel';
 import { withData } from '../mods/react-orbitjs';
@@ -164,6 +165,7 @@ export function Transcriber(props: IProps) {
     selected,
     playing,
     setPlaying,
+    allDone,
   } = useTodo();
   const {
     section,
@@ -752,176 +754,183 @@ export function Transcriber(props: IProps) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
-        <Grid container direction="column">
-          <Grid container direction="row" className={classes.row}>
-            <Grid item xs={9} className={classes.description}>
-              {sectionDescription(section)}
-            </Grid>
-            <Grid item>{passageDescription(passage, allBookData)}</Grid>
-          </Grid>
-          <Grid container direction="row" className={classes.row}>
-            {role === 'transcriber' && hasParatextName && paratextProject && (
-              <Grid item>
-                <Tooltip title={t.pullParatextTip}>
-                  <span>
-                    <IconButton
-                      onClick={handlePullParatext}
-                      disabled={selected === ''}
-                    >
-                      <>
-                        <PullIcon />{' '}
-                        <Typography>{t.pullParatextCaption}</Typography>
-                      </>
-                    </IconButton>
-                  </span>
-                </Tooltip>
+        {allDone ? (
+          <AllDone />
+        ) : (
+          <Grid container direction="column">
+            <Grid container direction="row" className={classes.row}>
+              <Grid item xs={9} className={classes.description}>
+                {sectionDescription(section)}
               </Grid>
-            )}
-            <Grid item xs>
-              <Grid container justify="center">
-                <WSAudioPlayer
-                  allowRecord={false}
-                  blob={audioBlob}
-                  onProgress={onProgress}
-                  onPlayStatus={onPlayStatus}
-                  onSaveProgress={
-                    selected === '' || role === 'view'
-                      ? undefined
-                      : onSaveProgress
-                  }
-                />
+              <Grid item>{passageDescription(passage, allBookData)}</Grid>
+            </Grid>
+            <Grid container direction="row" className={classes.row}>
+              {role === 'transcriber' && hasParatextName && paratextProject && (
+                <Grid item>
+                  <Tooltip title={t.pullParatextTip}>
+                    <span>
+                      <IconButton
+                        onClick={handlePullParatext}
+                        disabled={selected === ''}
+                      >
+                        <>
+                          <PullIcon />{' '}
+                          <Typography>{t.pullParatextCaption}</Typography>
+                        </>
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                </Grid>
+              )}
+              <Grid item xs>
+                <Grid container justify="center">
+                  <WSAudioPlayer
+                    allowRecord={false}
+                    blob={audioBlob}
+                    onProgress={onProgress}
+                    onPlayStatus={onPlayStatus}
+                    onSaveProgress={
+                      selected === '' || role === 'view'
+                        ? undefined
+                        : onSaveProgress
+                    }
+                  />
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item xs={12} sm container>
-            <Grid
-              ref={transcriptionRef}
-              item
-              xs={showHistory ? 6 : 12}
-              container
-              direction="column"
-            >
-              {projData && !fontStatus?.endsWith('active') ? (
-                <WebFontLoader
-                  config={projData.fontConfig}
-                  onStatus={loadStatus}
-                >
+            <Grid item xs={12} sm container>
+              <Grid
+                ref={transcriptionRef}
+                item
+                xs={showHistory ? 6 : 12}
+                container
+                direction="column"
+              >
+                {projData && !fontStatus?.endsWith('active') ? (
+                  <WebFontLoader
+                    config={projData.fontConfig}
+                    onStatus={loadStatus}
+                  >
+                    <TextareaAutosize
+                      value={textValue}
+                      readOnly={selected === '' || role === 'view'}
+                      style={textAreaStyle}
+                      onChange={handleChange}
+                    />
+                  </WebFontLoader>
+                ) : (
                   <TextareaAutosize
                     value={textValue}
                     readOnly={selected === '' || role === 'view'}
                     style={textAreaStyle}
                     onChange={handleChange}
                   />
-                </WebFontLoader>
-              ) : (
-                <TextareaAutosize
-                  value={textValue}
-                  readOnly={selected === '' || role === 'view'}
-                  style={textAreaStyle}
-                  onChange={handleChange}
-                />
+                )}
+              </Grid>
+              {showHistory && (
+                <Grid item xs={6} container direction="column">
+                  <PassageHistory
+                    passageId={passage?.id}
+                    boxHeight={boxHeight}
+                  />
+                </Grid>
               )}
             </Grid>
-            {showHistory && (
-              <Grid item xs={6} container direction="column">
-                <PassageHistory passageId={passage?.id} boxHeight={boxHeight} />
-              </Grid>
-            )}
-          </Grid>
-          <Grid container direction="row" className={classes.padRow}>
-            <Grid item>
-              <Button
-                variant="outlined"
-                color="primary"
-                className={classes.button}
-                onClick={handleShowAddNote}
-                disabled={selected === ''}
-              >
-                {t.addNote}
-              </Button>
+            <Grid container direction="row" className={classes.padRow}>
+              <Grid item>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                  onClick={handleShowAddNote}
+                  disabled={selected === ''}
+                >
+                  {t.addNote}
+                </Button>
 
-              <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
-                <span>
-                  <IconButton onClick={handleShowHistory}>
-                    <>
-                      <HistoryIcon />
-                    </>
-                  </IconButton>
-                </span>
-              </Tooltip>
-            </Grid>
-            <Grid item xs>
-              <Grid container justify="flex-end">
-                <div>
-                  <LastEdit when={lastSaved} t={sharedStr} />
-                  {role !== 'view' ? (
-                    <>
+                <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
+                  <span>
+                    <IconButton onClick={handleShowHistory}>
+                      <>
+                        <HistoryIcon />
+                      </>
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              </Grid>
+              <Grid item xs>
+                <Grid container justify="flex-end">
+                  <div>
+                    <LastEdit when={lastSaved} t={sharedStr} />
+                    {role !== 'view' ? (
+                      <>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          className={classes.button}
+                          onClick={handleReject}
+                          disabled={selected === '' || playing}
+                        >
+                          {t.reject}
+                        </Button>
+                        <Tooltip
+                          title={transcribing ? t.saveTip : t.saveReviewTip}
+                        >
+                          <span>
+                            <Button
+                              variant="outlined"
+                              color="primary"
+                              className={classes.button}
+                              onClick={handleSaveButton}
+                              disabled={selected === '' || playing}
+                            >
+                              {t.save}
+                            </Button>
+                          </span>
+                        </Tooltip>
+                        <Tooltip
+                          title={
+                            transcribing
+                              ? t.submitTranscriptionTip
+                              : t.submitReviewTip
+                          }
+                        >
+                          <span>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                              onClick={handleSubmit}
+                              disabled={selected === '' || playing}
+                            >
+                              {t.submit}
+                            </Button>
+                          </span>
+                        </Tooltip>
+                      </>
+                    ) : (
                       <Button
                         variant="outlined"
                         color="primary"
                         className={classes.button}
-                        onClick={handleReject}
-                        disabled={selected === '' || playing}
-                      >
-                        {t.reject}
-                      </Button>
-                      <Tooltip
-                        title={transcribing ? t.saveTip : t.saveReviewTip}
-                      >
-                        <span>
-                          <Button
-                            variant="outlined"
-                            color="primary"
-                            className={classes.button}
-                            onClick={handleSaveButton}
-                            disabled={selected === '' || playing}
-                          >
-                            {t.save}
-                          </Button>
-                        </span>
-                      </Tooltip>
-                      <Tooltip
-                        title={
-                          transcribing
-                            ? t.submitTranscriptionTip
-                            : t.submitReviewTip
+                        onClick={handleReopen}
+                        disabled={
+                          selected === '' ||
+                          !previous.hasOwnProperty(state) ||
+                          playing ||
+                          (user !== related(section, 'transcriber') &&
+                            !/admin/i.test(projRole))
                         }
                       >
-                        <span>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                            onClick={handleSubmit}
-                            disabled={selected === '' || playing}
-                          >
-                            {t.submit}
-                          </Button>
-                        </span>
-                      </Tooltip>
-                    </>
-                  ) : (
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      className={classes.button}
-                      onClick={handleReopen}
-                      disabled={
-                        selected === '' ||
-                        !previous.hasOwnProperty(state) ||
-                        playing ||
-                        (user !== related(section, 'transcriber') &&
-                          !/admin/i.test(projRole))
-                      }
-                    >
-                      {t.reopen}
-                    </Button>
-                  )}
-                </div>
+                        {t.reopen}
+                      </Button>
+                    )}
+                  </div>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
         <TranscribeReject
           visible={rejectVisible}
           passageIn={passage}

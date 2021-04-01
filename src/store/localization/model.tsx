@@ -625,6 +625,8 @@ export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "submitTranscriptionTip": string;
     "transcribing": string;
     "updateByOther": string;
+    "congratulation": string;
+    "noMoreTasks": string;
 };
 
 export interface ITranscribeAddNoteStrings extends Localize.LocalizedStringsMethods {
