@@ -132,6 +132,10 @@ export const ProjectSolution = (props: IProps) => {
     onOpen(false);
   };
 
+  const handleCancel = () => {
+    onOpen(false);
+  };
+
   const listFormatter = (to: Solution, i: number) => (
     <div key={i}>
       <ListItem key={i} component="div" className={classes.listItem}>
@@ -202,7 +206,8 @@ export const ProjectSolution = (props: IProps) => {
     <BigDialog
       title={t.selectType}
       isOpen={open}
-      onOpen={onOpen}
+      onOpen={handleCancel}
+      onCancel={handleCancel}
       bp={BigDialogBp.md}
     >
       <>
