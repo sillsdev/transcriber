@@ -783,7 +783,7 @@ export function MediaTab(props: IProps) {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <PlayCell {...props} mediaId={mediaId} />;
     }
-    if (column.name === 'detach' && projRole === 'admin') {
+    if (column.name === 'detach') {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
     }
