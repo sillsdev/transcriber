@@ -13,7 +13,6 @@ export enum MediaSt {
   'IDLE',
   'PENDING',
   'FETCHED',
-  'SELECTED',
   'ERROR',
 }
 
@@ -35,7 +34,6 @@ export const mediaClean: IMediaState = {
 type Action =
   | { type: MediaSt.PENDING; payload: string } // mediaId
   | { type: MediaSt.FETCHED; payload: string } // temporary url
-  | { type: MediaSt.SELECTED; payload: string } // passageId
   | { type: MediaSt.ERROR; payload: string };
 
 const stateReducer = (state: IMediaState, action: Action): IMediaState => {
@@ -48,8 +46,6 @@ const stateReducer = (state: IMediaState, action: Action): IMediaState => {
       };
     case MediaSt.FETCHED:
       return { ...state, status: MediaSt.FETCHED, url: action.payload };
-    case MediaSt.SELECTED:
-      return { ...state, status: MediaSt.FETCHED, trackedTask: action.payload };
     case MediaSt.ERROR:
       return { ...state, status: MediaSt.ERROR, error: action.payload };
     default:
