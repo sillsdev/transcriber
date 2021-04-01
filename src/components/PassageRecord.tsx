@@ -3,7 +3,6 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
-import * as actions from '../store';
 import Auth from '../auth/Auth';
 //import lamejs from 'lamejs';
 import {
@@ -18,9 +17,9 @@ import {
   Theme,
 } from '@material-ui/core';
 import WSAudioPlayer from './WSAudioPlayer';
-import { bindActionCreators } from 'redux';
 import { QueryBuilder } from '@orbit/data';
 import { loadBlob } from '../utils';
+import { MediaSt, useFetchMediaUrl } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,16 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface IStateProps {
   t: IPassageRecordStrings;
-  mediaUrl: string;
-  hasUrl: boolean;
-  urlMediaId: string;
 }
 
-interface IDispatchProps {
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
-}
-
-interface IProps extends IStateProps, IDispatchProps {
+interface IProps extends IStateProps {
   visible: boolean;
   mediaId: string;
   auth: Auth;
@@ -78,14 +70,14 @@ function PassageRecord(props: IProps) {
     ready,
     metaData,
   } = props;
-  const { hasUrl, urlMediaId, fetchMediaUrl, mediaUrl } = props;
+  const [reporter] = useGlobal('errorReporter');
+  const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
   const [filetype, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const [open, setOpen] = useState(visible);
   const [loading, setLoading] = useState(false);
-  const [offline] = useGlobal('offline');
   const [memory] = useGlobal('memory');
   const [filechanged, setFilechanged] = useState(false);
   const [blobReady, setBlobReady] = useState(true);
@@ -109,7 +101,7 @@ function PassageRecord(props: IProps) {
   const classes = useStyles();
 
   useEffect(() => {
-    if (mediaId !== urlMediaId) fetchMediaUrl(mediaId, memory, offline, auth);
+    if (mediaId !== mediaState.urlMediaId) fetchMediaUrl({ id: mediaId, auth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaId]);
 
@@ -178,7 +170,7 @@ function PassageRecord(props: IProps) {
 
   const handleLoadAudio = () => {
     setLoading(true);
-    loadBlob(mediaUrl, (b) => {
+    loadBlob(mediaState.url, (b) => {
       setOriginalBlob(b);
       setLoading(false);
       setAudioBlob(b);
@@ -200,11 +192,12 @@ function PassageRecord(props: IProps) {
     >
       <DialogTitle id="form-dialog-title">{t.title}</DialogTitle>
       <DialogContent>
-        {hasUrl && urlMediaId === mediaId && (
-          <Button variant="contained" onClick={handleLoadAudio}>
-            {loading ? t.loading : t.loadfile}
-          </Button>
-        )}
+        {mediaState.status === MediaSt.FETCHED &&
+          mediaState.urlMediaId === mediaId && (
+            <Button variant="contained" onClick={handleLoadAudio}>
+              {loading ? t.loading : t.loadfile}
+            </Button>
+          )}
         <WSAudioPlayer
           allowRecord={true}
           blob={originalBlob}
@@ -248,22 +241,8 @@ function PassageRecord(props: IProps) {
     </Dialog>
   );
 }
-const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
-  ...bindActionCreators(
-    {
-      fetchMediaUrl: actions.fetchMediaUrl,
-    },
-    dispatch
-  ),
-});
 const mapStateToProps = (state: IState): IStateProps => ({
   t: localStrings(state, { layout: 'passageRecord' }),
-  hasUrl: state.media.loaded,
-  mediaUrl: state.media.url,
-  urlMediaId: state.media.urlMediaId,
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PassageRecord) as any;
+export default connect(mapStateToProps)(PassageRecord) as any;

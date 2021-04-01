@@ -154,7 +154,6 @@ interface IStateProps {
 }
 
 interface IDispatchProps {
-  fetchMediaUrl: typeof actions.fetchMediaUrl;
   exportProject: typeof actions.exportProject;
   exportComplete: typeof actions.exportComplete;
 }
@@ -172,7 +171,6 @@ interface IProps
     IDispatchProps,
     IRecordProps,
     WithDataProps {
-  action?: (what: string, where: number[]) => boolean;
   auth: Auth;
   projectPlans: Plan[];
   planColumn?: boolean;
@@ -452,7 +450,7 @@ export function TranscriptionTab(props: IProps) {
   }, [exportStatus]);
 
   useEffect(() => {
-    logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
+    // logError(Severity.info, globalStore.errorReporter, `planColumn useEffect`);
     if (planColumn) {
       if (defaultHiddenColumnNames.length > 0)
         //assume planName is only one
@@ -461,7 +459,8 @@ export function TranscriptionTab(props: IProps) {
       if (plan === '') {
         setPlan(projectPlans[0].id); //set the global plan
       }
-      setDefaultHiddenColumnNames(['planName']);
+      if (defaultHiddenColumnNames.length !== 1)
+        setDefaultHiddenColumnNames(['planName']);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [projectPlans, plan, planColumn]);
@@ -792,7 +791,6 @@ const mapStateToProps = (state: IState): IStateProps => ({
 const mapDispatchToProps = (dispatch: any): IDispatchProps => ({
   ...bindActionCreators(
     {
-      fetchMediaUrl: actions.fetchMediaUrl,
       exportProject: actions.exportProject,
       exportComplete: actions.exportComplete,
     },
