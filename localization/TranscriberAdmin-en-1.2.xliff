@@ -3627,7 +3627,21 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcribeAddNote.cancel">
+      	<trans-unit id="transcriber.congratulation">
+      		<source>Congratulations</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AllDone.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcriber.noMoreTasks">
+      		<source>You have no more tasks to work on!</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">AllDone.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="transcribeAddNote.cancel">
             <source>Cancel</source>
             <target/>
             <context-group>

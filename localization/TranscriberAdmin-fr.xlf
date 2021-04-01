@@ -3107,7 +3107,19 @@
             <target>Transcription mise à jour par une autre personne ou processus.</target>
          </segment>
       </unit>
-      <unit id="transcribeAddNote.cancel">
+   	<unit id="transcriber.congratulation">
+   		<segment>
+   			<source>Congratulations</source>
+   			<target>Félicitations</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcriber.noMoreTasks">
+   		<segment>
+   			<source>You have no more tasks to work on!</source>
+   			<target>Vous n'avez plus de tâches à accomplir !</target>
+   		</segment>
+   	</unit>
+   	<unit id="transcribeAddNote.cancel">
          <segment>
             <source>Cancel</source>
            <target>Annuler</target>
