@@ -1030,7 +1030,7 @@ export function ScriptureTable(props: IProps) {
       if (numChanges === 0) {
         return;
       }
-      if (!offlineOnly || numChanges > 50) setBusy(true);
+      if (numChanges > 50) setBusy(true);
       if (!offlineOnly) {
         while (numChanges > 200) {
           let someChangedRows = [...changedRows];
