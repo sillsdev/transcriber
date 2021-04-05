@@ -214,6 +214,7 @@ export function MediaTab(props: IProps) {
   const { showMessage } = useSnackBar();
   const [data, setData] = useState(Array<IRow>());
   const [pdata, setPData] = useState(Array<IPRow>());
+  const [attachCount, setAttachCount] = useState(0);
   const [attachVisible, setAttachVisible] = useState(attachTool);
   // const [actionMenuItem, setActionMenuItem] = useState(null);
   const [check, setCheck] = useState(Array<number>());
@@ -653,8 +654,9 @@ export function MediaTab(props: IProps) {
       sections,
       allBookData
     );
-    if (pdata.length !== newPassData.length) {
+    if (pdata.length !== newPassData.length || medAttach.size !== attachCount) {
       setPData(newPassData);
+      setAttachCount(medAttach.size);
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, [mediaFiles, passages, sections, playItem, allBookData, attachMap, pdata]);
