@@ -677,6 +677,7 @@ export function MediaTab(props: IProps) {
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
+      setMCheck(0);
       setAttachVisible(true);
     }
   };
