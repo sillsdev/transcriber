@@ -12,6 +12,7 @@ import {
 import { Organization, IDialog, DialogMode } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
+import { useTeamApiRead } from '../../crud';
 
 interface IRecordProps {
   organizations: Array<Organization>;
@@ -35,15 +36,16 @@ export function TeamDialog(props: IProps) {
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
+  const teamApiRead = useTeamApiRead();
 
   const handleClose = () => {
     onOpen && onOpen(false);
   };
 
-  const handleCommit = () => {
+  const handleCommit = async () => {
     const current =
       mode === DialogMode.edit && values
-        ? { ...values }
+        ? await teamApiRead(values.id) // Force read to update slug
         : ({ attributes: {} } as Organization);
     if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {

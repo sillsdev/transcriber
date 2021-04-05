@@ -27,6 +27,7 @@ export * from './useTableType';
 export * from './useTeamCreate';
 export * from './useTeamDelete';
 export * from './useTeamRead';
+export * from './useTeamApiRead';
 export * from './useTeamUpdate';
 export * from './useTypeId';
 export * from './useVProjectCreate';
