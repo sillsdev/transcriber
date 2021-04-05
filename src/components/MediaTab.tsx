@@ -322,6 +322,8 @@ export function MediaTab(props: IProps) {
     ts,
     doOrbitError,
   });
+  const [deleteFlag, setDeleteFlag] = useState(false);
+
   const hasPassage = (pRow: number) => {
     for (let mediaId of Object.keys(attachMap)) {
       if (attachMap[mediaId] === pRow) return true;
@@ -354,6 +356,7 @@ export function MediaTab(props: IProps) {
         })
       );
     });
+    if (versions.length > 0) setDeleteFlag(true);
   };
 
   const handleActionConfirmed = () => {
@@ -636,10 +639,12 @@ export function MediaTab(props: IProps) {
     if (
       medAttach.size !== dataAttach.size ||
       newData.length !== data.length ||
-      playChange
+      playChange ||
+      deleteFlag
     ) {
       setDataAttach(medAttach);
       setData(newData);
+      setDeleteFlag(false);
     }
     const newPassData = getPassages(
       [planRec],
