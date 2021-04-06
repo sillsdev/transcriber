@@ -15,16 +15,25 @@ import {
   Button,
   Divider,
 } from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
+// import InfoIcon from '@material-ui/icons/Info';
 import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import { ParatextLogo, OneStoryLogo } from '../../control';
 import { TeamContext } from '../../context/TeamContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    listRoot: {
+      '& .MuiListSubheader-root': {
+        lineHeight: '24px',
+      },
+    },
     listItem: {
       display: 'flex',
       alignItems: 'center',
+      '& .MuiListItemText-secondary': {
+        fontSize: 'small',
+        width: '500px',
+      },
     },
     actionButtons: {
       display: 'flex',
@@ -81,7 +90,7 @@ export const ProjectSolution = (props: IProps) => {
     {
       name: t.storying,
       // kind: integration.oneStory,
-      // tip: t.storyingTip,
+      tip: t.storyingTip,
     },
     {
       name: t.adaptation,
@@ -144,36 +153,24 @@ export const ProjectSolution = (props: IProps) => {
             <Typography component="div" className={classes.primary}>
               {to.name}
               {spacer}
-              {to.tip && (
-                <Tooltip title={to.tip}>
-                  <span style={{ fontSize: 'small' }}>
-                    <InfoIcon color="primary" fontSize="inherit" />
+              {to.kind === integration.pt ? (
+                <Tooltip title={t.paratextIntegration}>
+                  <span>
+                    <ParatextLogo />
                   </span>
                 </Tooltip>
+              ) : to.kind === integration.oneStory ? (
+                <Tooltip title={t.oneStoryIntegration}>
+                  <span>
+                    <OneStoryLogo />
+                  </span>
+                </Tooltip>
+              ) : (
+                <span />
               )}
             </Typography>
           }
-          secondary={
-            to.kind === integration.pt ? (
-              <span className={classes.secondary}>
-                <ParatextLogo />
-                {spacer}
-                <Typography component="span">
-                  {t.paratextIntegration}
-                </Typography>
-              </span>
-            ) : to.kind === integration.oneStory ? (
-              <span className={classes.secondary}>
-                <OneStoryLogo />
-                {spacer}
-                <Typography component="span">
-                  {t.oneStoryIntegration}
-                </Typography>
-              </span>
-            ) : (
-              <span />
-            )
-          }
+          secondary={to.tip ? to.tip : <></>}
         />
         <ListItemSecondaryAction className={classes.actionButtons}>
           {to.buttons ? (
@@ -210,7 +207,7 @@ export const ProjectSolution = (props: IProps) => {
       onCancel={handleCancel}
       bp={BigDialogBp.md}
     >
-      <>
+      <div className={classes.listRoot}>
         <List dense subheader={<ListSubheader>{t.audioProduct}</ListSubheader>}>
           {audioProduct.map(listFormatter)}
           <Divider component="li" />
@@ -222,7 +219,7 @@ export const ProjectSolution = (props: IProps) => {
         <List dense subheader={<ListSubheader>{t.other}</ListSubheader>}>
           {otherProduct.map(listFormatter)}
         </List>
-      </>
+      </div>
     </BigDialog>
   );
 };
