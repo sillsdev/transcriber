@@ -90,6 +90,7 @@ export const AddCard = (props: IProps) => {
   const [status] = React.useState({ ...statusInit });
   const [, setPlan] = useGlobal('plan');
   const [pickOpen, setPickOpen] = React.useState(false);
+  const preventBoth = React.useRef(false);
   const [view, setView] = React.useState('');
   const [forceType, setForceType] = React.useState(false);
   const [recordAudio, setRecordAudio] = React.useState(false);
@@ -112,13 +113,19 @@ export const AddCard = (props: IProps) => {
     setForceType(true);
   };
 
-  const handleShow = () => {
-    // if (!open) setShow(!show);
-    setPickOpen(!pickOpen);
+  const handleSolutionShow = () => {
+    if (!preventBoth.current) setPickOpen(true);
+    preventBoth.current = false;
   };
 
-  const handleOpen = (val: boolean) => {
+  const handleSolutionHide = () => {
+    setPickOpen(false);
+    preventBoth.current = true;
+  };
+
+  const handleProject = (val: boolean) => {
     setOpen(val);
+    handleSolutionHide();
   };
 
   const handleUpload = () => {
@@ -145,6 +152,7 @@ export const AddCard = (props: IProps) => {
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
     setPickOpen(false);
+    preventBoth.current = true;
     e.stopPropagation();
   };
 
@@ -263,13 +271,13 @@ export const AddCard = (props: IProps) => {
 
   return (
     <>
-      <Card className={classes.root} onClick={handleShow}>
+      <Card className={classes.root} onClick={handleSolutionShow}>
         <CardContent className={classes.content}>
           <div className={classes.icon}>
             <AddIcon fontSize="large" />
             <ProjectSolution
               open={pickOpen && !open && !uploadVisible}
-              onOpen={handleShow}
+              onOpen={handleSolutionHide}
               doUpload={handleUpload}
               doRecord={handleRecord}
               doNewProj={handleClickOpen}
@@ -278,7 +286,7 @@ export const AddCard = (props: IProps) => {
             <ProjectDialog
               mode={DialogMode.add}
               isOpen={open}
-              onOpen={handleOpen}
+              onOpen={handleProject}
               onCommit={handleCommit}
               nameInUse={nameInUse}
             />
