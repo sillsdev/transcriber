@@ -144,6 +144,7 @@ export const AddCard = (props: IProps) => {
 
   const handleClickOpen = (e: React.MouseEvent) => {
     setOpen(true);
+    setPickOpen(false);
     e.stopPropagation();
   };
 

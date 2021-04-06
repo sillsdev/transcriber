@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
         tableLayout: 'auto',
         paddingRight: theme.spacing(1),
       },
+      '& .MuiDialogTitle-root': {
+        paddingBottom: 0,
+      },
     },
     rootMd: {
       '& .MuiDialog-paper': {
