@@ -73,7 +73,7 @@ function PassageRecord(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
-  const [, setFiletype] = useState('');
+  const [filetype, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const [open, setOpen] = useState(visible);
@@ -145,7 +145,7 @@ function PassageRecord(props: IProps) {
   const handleAddOrSave = () => {
     if (audioBlob) {
       var files = [
-        new File([audioBlob], fileName(), {
+        new File([audioBlob], fileName() + '.' + filetype, {
           type: mimeTypeRef.current,
         }),
       ];
