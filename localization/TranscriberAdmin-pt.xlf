@@ -97,6 +97,12 @@
             <target>Você tem certeza?</target>
          </segment>
       </unit>
+      <unit id="alert.delete">
+         <segment>
+            <source>Continue with Delete?</source>
+            <target>Continuar com Excluir?</target>
+         </segment>
+      </unit>
       <unit id="alert.confirmation">
          <segment>
             <source>Confirmation</source>
