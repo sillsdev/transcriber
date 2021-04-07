@@ -18,7 +18,6 @@ import {
   makeStyles,
   createStyles,
   Theme,
-  withStyles,
 } from '@material-ui/core/styles';
 import {
   Grid,
@@ -27,13 +26,12 @@ import {
   Button,
   IconButton,
   TextareaAutosize,
-  Tooltip,
 } from '@material-ui/core';
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
 import HistoryIcon from '@material-ui/icons/History';
 
-import { formatTime } from '../control';
+import { formatTime, LightTooltip } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
 import {
@@ -75,14 +73,7 @@ import { HotKeyContext } from '../context/HotKeyContext';
 
 const HISTORY_KEY = 'F7,CTRL+7';
 const NON_BOX_HEIGHT = 360;
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 11,
-  },
-}))(Tooltip);
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

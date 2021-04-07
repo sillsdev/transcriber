@@ -5,7 +5,6 @@ import {
   createStyles,
   Paper,
   IconButton,
-  Tooltip,
   Typography,
   Slider,
   InputLabel,
@@ -44,7 +43,7 @@ import {
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
-import { Duration } from '../control';
+import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
@@ -106,14 +105,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-const LightTooltip = withStyles((theme) => ({
-  tooltip: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 11,
-  },
-}))(Tooltip);
+
 const iOSBoxShadow =
   '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
 
