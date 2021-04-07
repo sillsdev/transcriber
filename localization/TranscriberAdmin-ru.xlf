@@ -2913,7 +2913,7 @@
 		</unit>
 		<unit id="transcriber.historyTip">
 			<segment>
-				<source>History ({0})</source>
+				<source>History [{0}]</source>
 				<target/>
 			</segment>
 		</unit>
@@ -3651,17 +3651,17 @@
 		</unit>
 		<unit id="wsAudioPlayer.aheadTip">
 			<segment>
-				<source>Skip ahead ({0})</source>
-				<target>Перейти вперед ({0})</target>
+				<source>Skip ahead {jump} {1} [{0}]</source>
+				<target>Перейти вперед {jump} {1} [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.backTip">
 			<segment>
-				<source>Skip back ({0})</source>
-				<target>Перейти назад ({0})</target>
+				<source>Skip back {jump} {1} [{0}]</source>
+				<target>Перейти назад {jump} {1} [{0}]</target>
 			</segment>
 		</unit>
-		<unit id="wsAudioPlayer.beginning">
+		<unit id="wsAudioPlayer.beginningTip">
 			<segment>
 				<source>Beginning</source>
 				<target>SНачало</target>
@@ -3673,7 +3673,7 @@
 				<target>Удалить регион</target>
 			</segment>
 		</unit>
-		<unit id="wsAudioPlayer.end">
+		<unit id="wsAudioPlayer.endTip">
 			<segment>
 				<source>End</source>
 				<target>Конец</target>
@@ -3681,8 +3681,8 @@
 		</unit>
 		<unit id="wsAudioPlayer.fasterTip">
 			<segment>
-				<source>Faster ({0})</source>
-				<target>Быстрее ({0})</target>
+				<source>Faster [{0}]</source>
+				<target>Быстрее [{0}]</target>
 			</segment>
 		</unit>
       <unit id="wsAudioPlayer.insertoverwrite">
@@ -3705,8 +3705,8 @@
 		</unit>
 		<unit id="wsAudioPlayer.pauseTip">
 			<segment>
-				<source>Pause ({0})</source>
-				<target>Пауза ({0})</target>
+				<source>Pause [{0}]</source>
+				<target>Пауза [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.pauseRecord">
@@ -3717,20 +3717,20 @@
 		</unit>
 		<unit id="wsAudioPlayer.playTip">
 			<segment>
-				<source>Play ({0})</source>
-				<target>Играть в ({0})</target>
+				<source>Play [{0}]</source>
+				<target>Играть в [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.record">
 			<segment>
-				<source>Record {0}</source>
-				<target>Записывать {0}</target>
+				<source>Record [{0}]</source>
+				<target>Записывать [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.resume">
 			<segment>
-				<source>Resume</source>
-				<target>Продолжить</target>
+				<source>Resume [{0}]</source>
+				<target>Продолжить[{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.seconds">
@@ -3747,20 +3747,20 @@
 		</unit>
 		<unit id="wsAudioPlayer.slowerTip">
 			<segment>
-				<source>Slower ({0})</source>
-				<target>Помедленнее</target>
+				<source>Slower [{0}]</source>
+				<target>Помедленнее [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.stop">
 			<segment>
-				<source>Stop {0}</source>
-				<target>Останавливаться {0}</target>
+				<source>Stop [{0}]</source>
+				<target>Останавливаться [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.timerTip">
 			<segment>
-				<source>Timestamp ({0})</source>
-				<target>Отметка времени ({0})</target>
+				<source>Timestamp [{0}]</source>
+				<target>Отметка времени [{0}]</target>
 			</segment>
 		</unit>
 		<unit id="passageRecord.fileName">
@@ -3811,5 +3811,36 @@
 				<target>МоеAудио</target>
 			</segment>
 		</unit>
+      <unit id="hotKey.ctrlKey">
+         <segment>
+            <source>Ctrl</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.endKey">
+         <segment>
+            <source>End</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.homeKey">
+         <segment>
+            <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.or">
+         <segment>
+            <source>or</source>
+            <target>or</target>
+         </segment>
+      </unit>
+      <unit id="hotKey.spaceKey">
+         <segment>
+            <source>Space</source>
+            <target/>
+         </segment>
+      </unit>
+
 	</file>
 </xliff>

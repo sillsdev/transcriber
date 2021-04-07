@@ -14,7 +14,12 @@ import {
   RoleNames,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  makeStyles,
+  createStyles,
+  Theme,
+  withStyles,
+} from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -68,9 +73,16 @@ import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
 import { HotKeyContext } from '../context/HotKeyContext';
 
-const HISTORY_KEY = 'F7';
+const HISTORY_KEY = 'F7,CTRL+7';
 const NON_BOX_HEIGHT = 360;
-
+const LightTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}))(Tooltip);
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -231,7 +243,9 @@ export function Transcriber(props: IProps) {
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const transcriptionRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
-  const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
+  const { subscribe, unsubscribe, localizeHotKey } = useContext(
+    HotKeyContext
+  ).state;
   const t = transcriberStr;
 
   useEffect(() => {
@@ -764,7 +778,7 @@ export function Transcriber(props: IProps) {
             <Grid container direction="row" className={classes.row}>
               {role === 'transcriber' && hasParatextName && paratextProject && (
                 <Grid item>
-                  <Tooltip title={t.pullParatextTip}>
+                  <LightTooltip title={t.pullParatextTip}>
                     <span>
                       <IconButton
                         onClick={handlePullParatext}
@@ -776,7 +790,7 @@ export function Transcriber(props: IProps) {
                         </>
                       </IconButton>
                     </span>
-                  </Tooltip>
+                  </LightTooltip>
                 </Grid>
               )}
               <Grid item xs>
@@ -845,7 +859,12 @@ export function Transcriber(props: IProps) {
                   {t.addNote}
                 </Button>
 
-                <Tooltip title={t.historyTip.replace('{0}', HISTORY_KEY)}>
+                <LightTooltip
+                  title={t.historyTip.replace(
+                    '{0}',
+                    localizeHotKey(HISTORY_KEY)
+                  )}
+                >
                   <span>
                     <IconButton onClick={handleShowHistory}>
                       <>
@@ -853,7 +872,7 @@ export function Transcriber(props: IProps) {
                       </>
                     </IconButton>
                   </span>
-                </Tooltip>
+                </LightTooltip>
               </Grid>
               <Grid item xs>
                 <Grid container justify="flex-end">
@@ -870,7 +889,7 @@ export function Transcriber(props: IProps) {
                         >
                           {t.reject}
                         </Button>
-                        <Tooltip
+                        <LightTooltip
                           title={transcribing ? t.saveTip : t.saveReviewTip}
                         >
                           <span>
@@ -884,8 +903,8 @@ export function Transcriber(props: IProps) {
                               {t.save}
                             </Button>
                           </span>
-                        </Tooltip>
-                        <Tooltip
+                        </LightTooltip>
+                        <LightTooltip
                           title={
                             transcribing
                               ? t.submitTranscriptionTip
@@ -903,7 +922,7 @@ export function Transcriber(props: IProps) {
                               {t.submit}
                             </Button>
                           </span>
-                        </Tooltip>
+                        </LightTooltip>
                       </>
                     ) : (
                       <Button

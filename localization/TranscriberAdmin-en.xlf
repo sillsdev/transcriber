@@ -2968,15 +2968,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="transcriber.fasterTip">
-         <segment>
-            <source>Faster ({0})</source>
-            <target/>
-         </segment>
-      </unit>
       <unit id="transcriber.historyTip">
          <segment>
-            <source>History ({0})</source>
+            <source>History [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -3708,19 +3702,19 @@
       </unit>
       <unit id="wsAudioPlayer.aheadTip">
          <segment>
-            <source>Ahead {0}</source>
+            <source>Ahead {jump} {1} [{0}]</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.backTip">
          <segment>
-            <source>Back {0}</source>
+            <source>Rewind {jump} {1} [{0}]</source>
             <target/>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.beginning">
+      <unit id="wsAudioPlayer.beginningTip">
          <segment>
-            <source>Beginning</source>
+            <source>Go to Beginning [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -3730,15 +3724,15 @@
             <target/>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.end">
+      <unit id="wsAudioPlayer.endTip">
          <segment>
-            <source>End</source>
+            <source>Go to End [{0}]</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.fasterTip">
          <segment>
-            <source>Faster ({0})</source>
+            <source>Faster [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -3762,7 +3756,7 @@
       </unit>
       <unit id="wsAudioPlayer.pauseTip">
          <segment>
-            <source>Pause {0}</source>
+            <source>Pause [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -3774,13 +3768,13 @@
       </unit>
       <unit id="wsAudioPlayer.playTip">
          <segment>
-            <source>Play {0}</source>
+            <source>Play [{0}]</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
-            <source>Record {0}</source>
+            <source>Record [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -3804,19 +3798,19 @@
       </unit>
       <unit id="wsAudioPlayer.slowerTip">
          <segment>
-            <source>Slower ({0})</source>
+            <source>Slower [{0}])</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.stop">
          <segment>
-            <source>Stop {0}</source>
+            <source>Stop [{0}]</source>
             <target/>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.timerTip">
          <segment>
-            <source>Timestamp ({0})</source>
+            <source>Timestamp [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -3865,6 +3859,42 @@
       <unit id="passageRecord.defaultFilename">
          <segment>
             <source>MyRecording</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.altKey">
+         <segment>
+            <source>Alt</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.ctrlKey">
+         <segment>
+            <source>Ctrl</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.endKey">
+         <segment>
+            <source>End</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.homeKey">
+         <segment>
+            <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.or">
+         <segment>
+            <source>or</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.spaceKey">
+         <segment>
+            <source>Space</source>
             <target/>
          </segment>
       </unit>

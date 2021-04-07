@@ -642,8 +642,7 @@ const initialState = {
 		"en": {
 			"comment": "Comment",
 			"done": "Completed",
-			"fasterTip": "Faster ({0})",
-			"historyTip": "History ({0})",
+			"historyTip": "History [{0}]",
 			"incomplete": "Incomplete transcripiton",
 			"invalidReference": "Book or Reference is invalid.",
 			"addNote": "Add Note",
@@ -801,25 +800,25 @@ const initialState = {
 	}),
 	"wsAudioPlayer": new LocalizedStrings({
 		"en": {
-			"aheadTip": "Ahead {0}",
-			"backTip": "Back {0}",
-			"beginning": "Beginning",
+			"aheadTip": "Ahead {jump} {1} [{0}]",
+			"backTip": "Rewind {jump} {1} [{0}]",
+			"beginningTip": "Go to Beginning [{0}]",
 			"deleteRegion": "Delete Region",
-			"end": "End",
-			"fasterTip": "Faster ({0})",
+			"endTip": "Go to End [{0}]",
+			"fasterTip": "Faster [{0}]",
 			"insertoverwrite": "Insert/Overwrite",
 			"loopoff": "Loop Off",
 			"loopon": "Loop On",
-			"pauseTip": "Pause {0}",
+			"pauseTip": "Pause [{0}]",
 			"pauseRecord": "Pause",
-			"playTip": "Play {0}",
-			"record": "Record {0}",
+			"playTip": "Play [{0}]",
+			"record": "Record [{0}]",
 			"resume": "Resume",
 			"seconds": "Seconds",
 			"silence": "Silence",
-			"slowerTip": "Slower ({0})",
-			"stop": "Stop {0}",
-			"timerTip": "Timestamp ({0})",
+			"slowerTip": "Slower [{0}])",
+			"stop": "Stop [{0}]",
+			"timerTip": "Timestamp [{0}]",
 		}
 	}),
 	"passageRecord": new LocalizedStrings({
@@ -832,6 +831,16 @@ const initialState = {
 			"cancel": "Cancel",
 			"title": "Record/Edit Audio",
 			"defaultFilename": "MyRecording",
+		}
+	}),
+	"hotKey": new LocalizedStrings({
+		"en": {
+			"altKey": "Alt",
+			"ctrlKey": "Ctrl",
+			"endKey": "End",
+			"homeKey": "Home",
+			"or": "or",
+			"spaceKey": "Space",
 		}
 	}),
 };
@@ -888,6 +897,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"vProject" : new LocalizedStrings(action.payload.data.vProject),
 				"wsAudioPlayer" : new LocalizedStrings(action.payload.data.wsAudioPlayer),
 				"passageRecord" : new LocalizedStrings(action.payload.data.passageRecord),
+				"hotKey" : new LocalizedStrings(action.payload.data.hotKey),
 			};
 		case SET_LANGUAGE:
 			return {

@@ -3459,15 +3459,8 @@
                <context context-type="sourcefile">Transcriber.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="transcriber.fasterTip">
-            <source>Faster ({0})</source>
-            <target/>
-            <context-group>
-               <context context-type="sourcefile">Transcriber.tsx</context>
-            </context-group>
-         </trans-unit>
          <trans-unit id="transcriber.historyTip">
-            <source>History ({0})</source>
+            <source>History [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Transcriber.tsx</context>
@@ -4322,21 +4315,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.aheadTip">
-            <source>Ahead {0}</source>
+            <source>Ahead {jump} {1} [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.backTip">
-            <source>Back {0}</source>
+            <source>Rewind {jump} {1} [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="wsAudioPlayer.beginning">
-            <source>Beginning</source>
+         <trans-unit id="wsAudioPlayer.beginningTip">
+            <source>Go to Beginning [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4349,15 +4342,15 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
-         <trans-unit id="wsAudioPlayer.end">
-            <source>End</source>
+         <trans-unit id="wsAudioPlayer.endTip">
+            <source>Go to End [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.fasterTip">
-            <source>Faster ({0})</source>
+            <source>Faster [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4385,7 +4378,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.pauseTip">
-            <source>Pause {0}</source>
+            <source>Pause [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4399,14 +4392,14 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.playTip">
-            <source>Play {0}</source>
+            <source>Play [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.record">
-            <source>Record {0}</source>
+            <source>Record [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4434,21 +4427,21 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.slowerTip">
-            <source>Slower ({0})</source>
+            <source>Slower [{0}])</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.stop">
-            <source>Stop {0}</source>
+            <source>Stop [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.timerTip">
-            <source>Timestamp ({0})</source>
+            <source>Timestamp [{0}]</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4510,6 +4503,49 @@
                <context context-type="sourcefile">passageRecord.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="hotKey.altKey">
+            <source>Alt</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.ctrlKey">
+            <source>Ctrl</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.endKey">
+            <source>End</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.homeKey">
+            <source>Home</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.or">
+            <source>or</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+         <trans-unit id="hotKey.spaceKey">
+            <source>Space</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
+
       </body>
    </file>
 </xliff>
