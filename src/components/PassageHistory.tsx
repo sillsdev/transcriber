@@ -6,6 +6,7 @@ import { related, remoteIdGuid } from '../crud';
 import { ActivityStates, PassageStateChange, User } from '../model';
 import withData from '../mods/react-orbitjs/components/withData';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Confirm from './AlertDialog';
 import {
   IconButton,
   List,
@@ -63,6 +64,8 @@ export function PassageHistory(props: IProps) {
   const [selectedId, setSelectedId] = React.useState('');
   const [hoveredId, setHoveredId] = React.useState('');
   const { activityStateStr } = useTodo();
+  const [confirmItem, setConfirmItem] = React.useState<string | null>(null);
+
   const classes = useStyles();
   useEffect(() => {
     if (passageId) {
@@ -197,10 +200,10 @@ export function PassageHistory(props: IProps) {
   }, [curStateChanges, selectedId]);
 
   useEffect(() => {
-    if (!editNoteVisible) {
+    if (!editNoteVisible && !confirmItem) {
       setSelectedId(hoveredId);
     }
-  }, [hoveredId, editNoteVisible]);
+  }, [hoveredId, editNoteVisible, confirmItem]);
 
   const handleMouseEnter = (id: string, editable: boolean) => {
     if (editable) setHoveredId(id);
@@ -222,13 +225,21 @@ export function PassageHistory(props: IProps) {
   const handleEdit = (id: string) => () => {
     setEditNoteVisible(true);
   };
-  const handleDelete = (id: string) => () => {
+  const handleDeleteConfirmed = () => {
+    setConfirmItem(null);
+    console.log('confirm', selectedId);
     const psc = curStateChanges.find((psc) => psc.id === selectedId);
     //this may be a comment on a state change, so just hide the comment but leave the record
     if (psc) {
       psc.attributes.comments = '';
       handleEditNote(psc);
     }
+  };
+  const handleDeleteRefused = () => setConfirmItem(null);
+
+  const handleDelete = (id: string) => () => {
+    const psc = curStateChanges.find((psc) => psc.id === selectedId);
+    setConfirmItem(psc?.attributes.comments || '');
   };
 
   return (
@@ -242,6 +253,16 @@ export function PassageHistory(props: IProps) {
         editMethod={handleEditNote}
         cancelMethod={handleEditNoteCancel}
       />
+      {confirmItem !== null ? (
+        <Confirm
+          isDelete={true}
+          text={confirmItem}
+          yesResponse={handleDeleteConfirmed}
+          noResponse={handleDeleteRefused}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 }

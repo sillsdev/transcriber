@@ -32,6 +32,7 @@ interface IProps extends IStateProps {
   noResponse: () => {};
   yesResponse: () => {};
   noOnLeft?: boolean;
+  isDelete?: boolean;
 }
 
 function AlertDialog(props: IProps) {
@@ -44,6 +45,7 @@ function AlertDialog(props: IProps) {
     yesResponse,
     noResponse,
     noOnLeft,
+    isDelete,
     t,
   } = props;
   const classes = useStyles();
@@ -77,7 +79,7 @@ function AlertDialog(props: IProps) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {title || t.confirmation}
+          {title || (isDelete ? t.delete : t.confirmation)}
         </DialogTitle>
         <DialogContent>
           <DialogContent id="alert-dialog-jsx">{jsx}</DialogContent>

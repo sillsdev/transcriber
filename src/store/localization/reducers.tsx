@@ -44,6 +44,7 @@ const initialState = {
 	"alert": new LocalizedStrings({
 		"en": {
 			"areYouSure": "Are you sure?",
+			"delete": "Continue with Delete?",
 			"confirmation": "Confirmation",
 			"no": "No",
 			"yes": "Yes",

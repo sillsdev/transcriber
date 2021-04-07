@@ -197,6 +197,13 @@
                <context context-type="sourcefile">AlertDialog.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="alert.delete">
+            <source>Continue with Delete?</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">AlertDialog.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="alert.confirmation">
             <source>Confirmation</source>
             <target/>

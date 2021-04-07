@@ -36,6 +36,7 @@ export interface IActivityStateStrings extends Localize.LocalizedStringsMethods 
 
 export interface IAlertStrings extends Localize.LocalizedStringsMethods {
     "areYouSure": string;
+    "delete": string;
     "confirmation": string;
     "no": string;
     "yes": string;
