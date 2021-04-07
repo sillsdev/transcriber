@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
-import keycode from 'keycode';
 import {
   MediaFile,
   Project,
@@ -67,6 +66,7 @@ import { translateParatextError } from '../utils/translateParatextError';
 import TranscribeAddNote from './TranscribeAddNote';
 import WSAudioPlayer from './WSAudioPlayer';
 import PassageHistory from './PassageHistory';
+import { HotKeyContext } from '../context/HotKeyContext';
 
 const HISTORY_KEY = 'F7';
 const NON_BOX_HEIGHT = 360;
@@ -231,6 +231,7 @@ export function Transcriber(props: IProps) {
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const transcriptionRef = React.useRef<any>();
   const autosaveTimer = React.useRef<NodeJS.Timeout>();
+  const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
   const t = transcriberStr;
 
   useEffect(() => {
@@ -257,9 +258,12 @@ export function Transcriber(props: IProps) {
     const handleResize = debounce(() => {
       setDimensions();
     }, 100);
+    const keys = [{ key: HISTORY_KEY, cb: handleShowHistory }];
+    keys.forEach((k) => subscribe(k.key, k.cb));
 
     window.addEventListener('resize', handleResize);
     return () => {
+      keys.forEach((k) => unsubscribe(k.key));
       window.removeEventListener('resize', handleResize);
     };
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -408,7 +412,10 @@ export function Transcriber(props: IProps) {
     setFontStatus(status);
   };
 
-  const handleShowHistory = () => setShowHistory(!showHistory);
+  const handleShowHistory = () => {
+    setShowHistory(!showHistory);
+    return true;
+  };
 
   const handlePullParatext = () => {
     if (
@@ -665,16 +672,6 @@ export function Transcriber(props: IProps) {
     ).then(() => doReopen());
   };
 
-  const handleKey = (e: React.KeyboardEvent) => {
-    const HistoryKey = keycode(HISTORY_KEY);
-    switch (e.keyCode) {
-      case HistoryKey:
-        handleShowHistory();
-        e.preventDefault();
-        return;
-    }
-  };
-
   const setDimensions = () => {
     setHeight(window.innerHeight);
     setWidth(window.innerWidth - TaskItemWidth - 16);
@@ -753,7 +750,7 @@ export function Transcriber(props: IProps) {
   const onPlayStatus = (newPlaying: boolean) => setPlaying(newPlaying);
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper} onKeyDown={handleKey} style={paperStyle}>
+      <Paper className={classes.paper} style={paperStyle}>
         {allDone ? (
           <AllDone />
         ) : (

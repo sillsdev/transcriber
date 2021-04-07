@@ -3742,6 +3742,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.insertoverwrite">
+         <segment>
+            <source>Insert/Overwrite</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.loopoff">
          <segment>
             <source>Loop Off</source>
@@ -3774,7 +3780,7 @@
       </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
-            <source>Record</source>
+            <source>Record {0}</source>
             <target/>
          </segment>
       </unit>
@@ -3804,7 +3810,7 @@
       </unit>
       <unit id="wsAudioPlayer.stop">
          <segment>
-            <source>Stop</source>
+            <source>Stop {0}</source>
             <target/>
          </segment>
       </unit>
@@ -3816,7 +3822,7 @@
       </unit>
       <unit id="passageRecord.fileName">
          <segment>
-            <source>Filename</source>
+            <source>Name</source>
             <target/>
          </segment>
       </unit>

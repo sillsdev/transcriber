@@ -136,7 +136,7 @@ function PassageRecord(props: IProps) {
     setFilechanged(false);
     setOriginalBlob(undefined);
   };
-  const fileName = () => name + '.' + filetype;
+  const fileName = () => name; // + '.' + filetype;
   const removeExtension = (filename: string) => {
     var x = filename.split('.');
     if (x.length > 1) x.pop();
@@ -145,7 +145,7 @@ function PassageRecord(props: IProps) {
   const handleAddOrSave = () => {
     if (audioBlob) {
       var files = [
-        new File([audioBlob], fileName(), {
+        new File([audioBlob], fileName() + '.' + filetype, {
           type: mimeTypeRef.current,
         }),
       ];

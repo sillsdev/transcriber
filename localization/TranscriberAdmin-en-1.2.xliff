@@ -4363,6 +4363,13 @@
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
             </context-group>
          </trans-unit>
+         <trans-unit id="wsAudioPlayer.insertoverwrite">
+            <source>Insert/Overwrite</source>
+            <target/>
+            <context-group>
+               <context context-type="sourcefile">wsAudioPlayer.tsx</context>
+            </context-group>
+         </trans-unit>
          <trans-unit id="wsAudioPlayer.loopoff">
             <source>Loop Off</source>
             <target/>
@@ -4399,7 +4406,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.record">
-            <source>Record</source>
+            <source>Record {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4434,7 +4441,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="wsAudioPlayer.stop">
-            <source>Stop</source>
+            <source>Stop {0}</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">wsAudioPlayer.tsx</context>
@@ -4448,7 +4455,7 @@
             </context-group>
          </trans-unit>
          <trans-unit id="passageRecord.fileName">
-            <source>Filename</source>
+            <source>Name</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">passageRecord.tsx</context>

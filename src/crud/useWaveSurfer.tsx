@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { createWaveSurfer } from '../components/WSAudioPlugins';
+import { useMounted } from '../utils';
 //import { convertToMP3 } from '../utils/mp3';
 import { convertToWav } from '../utils/wav';
 
@@ -18,8 +19,8 @@ export function useWaveSurfer(
   height: number = 128,
   timelineContainer?: any
 ) {
-  const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const isMounted = useMounted('wavesurfer');
+  const progressRef = useRef(0);
   const wsRef = useRef<WaveSurfer>();
   const blobTypeRef = useRef('');
   const playingRef = useRef(false);
@@ -79,42 +80,53 @@ export function useWaveSurfer(
       */
       return ws;
     }
-
     if (container && !wsRef.current) create(container, height);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [container]);
 
   useEffect(() => {
-    // Removes events, elements and disconnects Web Audio nodes.
-    // when component unmount
+    // Removes events, elements and disconnects Web Audio nodes on component unmount
     return () => {
       if (wsRef.current) {
         wsRef.current.unAll();
         wsRef.current.destroy();
+        wsRef.current = undefined;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    playingRef.current = playing;
+    if (!isMounted()) return;
+    if (wsRef.current?.isReady && playingRef.current) setPlaying(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wsRef.current?.isReady]);
+  const setProgress = (value: number) => {
+    progressRef.current = value;
+  };
+  const setPlaying = (value: boolean) => {
+    //if (!isMounted()) return;
+    playingRef.current = value;
     if (playingRef.current) {
       if (wsRef.current?.isReady) {
-        wsRef.current?.play(progress);
+        if (
+          regionRef.current &&
+          regionRef.current.start <= progressRef.current &&
+          regionRef.current.end >= progressRef.current
+        )
+          regionRef.current.play(progressRef.current);
+        else wsRef.current?.play(progressRef.current);
       }
-    } else if (wsRef.current?.isPlaying()) {
-      wsRef.current?.pause();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing, wsRef.current?.isReady]);
+    } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
+  };
 
   const wsIsReady = () => wsRef.current?.isReady || false;
 
-  const wsIsPlaying = () => playing;
+  const wsIsPlaying = () => playingRef.current;
 
   const wsTogglePlay = () => {
-    setPlaying(!playing);
-    return !playing;
+    setPlaying(!playingRef.current);
+    return playingRef.current;
   };
 
   const wsPlay = () => setPlaying(true);
@@ -124,7 +136,7 @@ export function useWaveSurfer(
   const wsDuration = () =>
     durationRef.current || wsRef.current?.getDuration() || 0;
 
-  const wsPosition = () => progress;
+  const wsPosition = () => progressRef.current;
 
   const wsGoto = (position: number) => {
     if (position && durationRef.current)
