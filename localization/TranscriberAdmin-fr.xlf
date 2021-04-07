@@ -3731,6 +3731,12 @@
             <target>Plus rapide ({1})</target>
          </segment>
       </unit>
+      <unit id="wsAudioPlayer.insertoverwrite">
+         <segment>
+            <source>Insert/Overwrite</source>
+            <target>Insérer/écraser</target>
+         </segment>
+      </unit>
       <unit id="wsAudioPlayer.loopoff">
          <segment>
             <source>Loop Off</source>
@@ -3763,8 +3769,8 @@
       </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
-            <source>Record</source>
-             <target>Record</target>
+            <source>Record {0}</source>
+             <target>Record {0}</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.resume">
@@ -3793,8 +3799,8 @@
       </unit>
       <unit id="wsAudioPlayer.stop">
          <segment>
-            <source>Stop</source>
-            <target>Arrêter</target>
+            <source>Stop {0}</source>
+            <target>Arrêter {0}</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.timerTip">
@@ -3805,8 +3811,8 @@
       </unit>
       <unit id="passageRecord.fileName">
          <segment>
-            <source>Filename</source>
-            <target>Nom de fichier</target>
+            <source>Name</source>
+            <target>Nom</target>
          </segment>
       </unit>
       <unit id="passageRecord.fileType">

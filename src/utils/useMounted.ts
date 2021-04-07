@@ -1,13 +1,17 @@
 import { useRef, useEffect } from 'react';
 
-export const useMounted = () => {
-  const isMounted = useRef<Boolean>(false);
+export const useMounted = (title?:string) => {
+  const mounted = useRef<Boolean>(false);
 
+  const isMounted = () => {
+    return mounted.current;
+  }
   useEffect(() => {
-    isMounted.current = true;
+    mounted.current = true;
     return () => {
-      isMounted.current = false;
+      mounted.current = false;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return isMounted;

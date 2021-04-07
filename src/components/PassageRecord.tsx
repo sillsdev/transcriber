@@ -73,7 +73,7 @@ function PassageRecord(props: IProps) {
   const [reporter] = useGlobal('errorReporter');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
-  const [filetype, setFiletype] = useState('');
+  const [, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
   const [open, setOpen] = useState(visible);
@@ -136,7 +136,7 @@ function PassageRecord(props: IProps) {
     setFilechanged(false);
     setOriginalBlob(undefined);
   };
-  const fileName = () => name + '.' + filetype;
+  const fileName = () => name; // + '.' + filetype;
   const removeExtension = (filename: string) => {
     var x = filename.split('.');
     if (x.length > 1) x.pop();

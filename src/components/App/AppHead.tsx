@@ -124,7 +124,7 @@ export const AppHead = (props: IProps) => {
   const [isChanged] = useGlobal('changed');
   const [exitAlert, setExitAlert] = React.useState(false);
   const [dosave, setDoSave] = useGlobal('doSave');
-  const isMounted = useMounted();
+  const isMounted = useMounted('apphead');
   const [pathDescription, setPathDescription] = React.useState('');
   const [version, setVersion] = useState('');
   const [updates] = useState(
@@ -183,7 +183,7 @@ export const AppHead = (props: IProps) => {
   React.useEffect(() => {
     const handleUnload = (e: any) => {
       if (pathname === '/') return true;
-      if (!exitAlert && isElectron && isMounted.current) setExitAlert(true);
+      if (!exitAlert && isElectron && isMounted()) setExitAlert(true);
       if (!globalStore.enableOffsite) {
         e.preventDefault();
         e.returnValue = '';
@@ -200,7 +200,7 @@ export const AppHead = (props: IProps) => {
   useEffect(() => {
     if (exitAlert)
       if (!isChanged) {
-        if (isMounted.current) setView('Logout');
+        if (isMounted()) setView('Logout');
       } else if (!dosave) setDoSave(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exitAlert, isChanged, dosave]);
@@ -211,8 +211,8 @@ export const AppHead = (props: IProps) => {
       pathname !== '/' &&
       pathname.indexOf('team') < 0 &&
       `${pathname && pathname.indexOf('work') > 0 ? t.transcribe : t.admin} - `;
-    isMounted.current && setPathDescription(description || '');
-    isMounted.current && setVersion(require('../../../package.json').version);
+    isMounted() && setPathDescription(description || '');
+    isMounted() && setVersion(require('../../../package.json').version);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, t.admin, t.transcribe, isMounted]);
 

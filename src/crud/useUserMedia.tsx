@@ -1,17 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 export function useUserMedia(requestedMedia: MediaStreamConstraints) {
-  const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
-    undefined
-  );
+  const mediaStreamRef = useRef<MediaStream | undefined>(undefined);
   async function getStream() {
-    if (mediaStream) return mediaStream;
+    if (mediaStreamRef.current) return mediaStreamRef.current;
     else
       try {
         const stream = await navigator.mediaDevices.getUserMedia(
           requestedMedia
         );
-        setMediaStream(stream);
+        mediaStreamRef.current = stream;
         return stream;
       } catch (err) {
         return err;
@@ -20,9 +18,15 @@ export function useUserMedia(requestedMedia: MediaStreamConstraints) {
 
   useEffect(() => {
     return function cleanup() {
-      mediaStream?.getTracks().forEach((track) => {
+      console.log(
+        'userMedia cleanup',
+        mediaStreamRef.current?.getTracks().length
+      );
+      mediaStreamRef.current?.getTracks().forEach((track) => {
+        console.log('usermedia stop');
         track.stop();
       });
+      mediaStreamRef.current = undefined;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

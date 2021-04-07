@@ -3685,6 +3685,12 @@
 				<target>Быстрее ({0})</target>
 			</segment>
 		</unit>
+      <unit id="wsAudioPlayer.insertoverwrite">
+         <segment>
+            <source>Insert/Overwrite</source>
+            <target>Вставить/перезаписать</target>
+         </segment>
+      </unit>
 		<unit id="wsAudioPlayer.loopoff">
 			<segment>
 				<source>Loop Off</source>
@@ -3717,8 +3723,8 @@
 		</unit>
 		<unit id="wsAudioPlayer.record">
 			<segment>
-				<source>Record</source>
-				<target>Записывать</target>
+				<source>Record {0}</source>
+				<target>Записывать {0}</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.resume">
@@ -3747,8 +3753,8 @@
 		</unit>
 		<unit id="wsAudioPlayer.stop">
 			<segment>
-				<source>Stop</source>
-				<target>Останавливаться</target>
+				<source>Stop {0}</source>
+				<target>Останавливаться {0}</target>
 			</segment>
 		</unit>
 		<unit id="wsAudioPlayer.timerTip">
@@ -3760,7 +3766,7 @@
 		<unit id="passageRecord.fileName">
 			<segment>
 				<source>Filename</source>
-				<target>Имя файла</target>
+				<target>Имя</target>
 			</segment>
 		</unit>
 		<unit id="passageRecord.fileType">

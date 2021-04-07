@@ -48,6 +48,14 @@ export function useMediaRecorder(
       }
     }
     setAcceptedMimes(mimes);
+    return () => {
+      console.log('cleanup recorder');
+      mediaStream?.getTracks().forEach((track) => {
+        console.log('stop track');
+        track.stop();
+      });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

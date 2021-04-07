@@ -757,6 +757,7 @@ export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods 
     "deleteRegion": string;
     "end": string;
     "fasterTip": string;
+    "insertoverwrite": string;
     "loopoff": string;
     "loopon": string;
     "pauseTip": string;
