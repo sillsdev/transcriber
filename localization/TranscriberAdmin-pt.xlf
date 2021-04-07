@@ -2668,8 +2668,8 @@
       </unit>
       <unit id="transcriber.historyTip">
          <segment>
-            <source>History ({0})</source>
-            <target>Histórico ({0})</target>
+            <source>History [{0}]</source>
+            <target>Histórico [{0}]</target>
          </segment>
       </unit>
       <unit id="transcriber.incomplete">
@@ -3310,17 +3310,17 @@
       </unit>
       <unit id="wsAudioPlayer.aheadTip">
          <segment>
-            <source>Skip ahead ({0})</source>
-            <target>Avançar ({0})</target>
+            <source>Skip ahead {jump} {1} [{0}]</source>
+            <target>Avançar {jump} {1} [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.backTip">
          <segment>
-            <source>Skip back ({0})</source>
-            <target>Voltar ({0})</target>
+            <source>Skip back {jump} {1} [{0}]</source>
+            <target>Voltar {jump} {1} [{0}]</target>
          </segment>
       </unit>
-      <unit id="wsAudioPlayer.beginning">
+      <unit id="wsAudioPlayer.beginningTip">
          <segment>
             <source>Beginning</source>
             <target>Começo</target>
@@ -3332,7 +3332,7 @@
             <target>Excluir região</target>
         </segment>
       </unit>
-      <unit id="wsAudioPlayer.end">
+      <unit id="wsAudioPlayer.endTip">
          <segment>
             <source>End</source>
            <target>Fim</target>
@@ -3340,8 +3340,8 @@
       </unit>
       <unit id="wsAudioPlayer.fasterTip">
          <segment>
-            <source>Faster ({0})</source>
-            <target>Mais rápido ({0})</target>
+            <source>Faster [{0}]</source>
+            <target>Mais rápido [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.insertoverwrite">
@@ -3364,8 +3364,8 @@
       </unit>
       <unit id="wsAudioPlayer.pauseTip">
          <segment>
-            <source>Pause ({0})</source>
-            <target>Pausa ({0})</target>
+            <source>Pause [{0}]</source>
+            <target>Pausa [{0}]</target>
          </segment>
       </unit>
        <unit id="wsAudioPlayer.pauseRecord">
@@ -3376,20 +3376,20 @@
       </unit>
      <unit id="wsAudioPlayer.playTip">
          <segment>
-            <source>Play ({0})</source>
-            <target>Toque ({0})</target>
+            <source>Play [{0}]</source>
+            <target>Toque [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.record">
          <segment>
-            <source>Record {0}</source>
-             <target>Registro {0}</target>
+            <source>Record [{0}]</source>
+             <target>Registro [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.resume">
          <segment>
-            <source>Resume</source>
-            <target>Retomar</target>
+            <source>Resume [{0}]</source>
+            <target>Retomar [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.seconds">
@@ -3406,19 +3406,19 @@
       </unit>
       <unit id="wsAudioPlayer.slowerTip">
          <segment>
-            <source>Slower ({0})</source>
-            <target>Mais lento ({0})</target>
+            <source>Slower [{0}]</source>
+            <target>Mais lento [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.stop">
          <segment>
-            <source>Stop {0}</source>
-            <target>Pare {0}</target>
+            <source>Stop [{0}]</source>
+            <target>Pare [{0}]</target>
          </segment>
       </unit>
       <unit id="wsAudioPlayer.timerTip">
          <segment>
-            <source>Timestamp ({0})</source>
+            <source>Timestamp [{0}]</source>
             <target/>
          </segment>
       </unit>
@@ -3470,5 +3470,36 @@
             <target>MeuAudio</target>
          </segment>
       </unit>
+      <unit id="hotKey.ctrlKey">
+         <segment>
+            <source>Ctrl</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.endKey">
+         <segment>
+            <source>End</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.homeKey">
+         <segment>
+            <source>Home</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="hotKey.or">
+         <segment>
+            <source>or</source>
+            <target>or</target>
+         </segment>
+      </unit>
+      <unit id="hotKey.spaceKey">
+         <segment>
+            <source>Space</source>
+            <target/>
+         </segment>
+      </unit>
+
    </file>
 </xliff>

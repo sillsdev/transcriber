@@ -7,3 +7,4 @@ export * from './LastEdit';
 export * from './ParatextLogo';
 export * from './OneStoryLogo';
 export * from './RenderLogo';
+export * from './LightTooltip';

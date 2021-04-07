@@ -5,7 +5,6 @@ import {
   createStyles,
   Paper,
   IconButton,
-  Tooltip,
   Typography,
   Slider,
   InputLabel,
@@ -44,7 +43,7 @@ import {
 //import { createWaveSurfer } from './WSAudioRegion';
 import { MimeInfo, useMediaRecorder } from '../crud/useMediaRecorder';
 import { useWaveSurfer } from '../crud/useWaveSurfer';
-import { Duration } from '../control';
+import { Duration, LightTooltip } from '../control';
 import { connect } from 'react-redux';
 import { useSnackBar } from '../hoc/SnackBar';
 import { HotKeyContext } from '../context/HotKeyContext';
@@ -106,6 +105,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
 const iOSBoxShadow =
   '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)';
 
@@ -179,15 +179,15 @@ function valuetext(value: number) {
 const SPEED_STEP = 0.1;
 const MIN_SPEED = 0.5;
 const MAX_SPEED = 1.5;
-const PLAY_PAUSE_KEY = 'F1';
-const HOME_KEY = 'HOME';
-const BACK_KEY = 'F2';
-const AHEAD_KEY = 'F3';
-const END_KEY = 'END';
-const SLOWER_KEY = 'F4';
-const FASTER_KEY = 'F5';
-const TIMER_KEY = 'F6';
-const RECORD_KEY = 'F9';
+const PLAY_PAUSE_KEY = 'F1,CTRL+SPACE';
+const HOME_KEY = 'CTRL+HOME';
+const BACK_KEY = 'F2,CTRL+2';
+const AHEAD_KEY = 'F3,CTRL+3';
+const END_KEY = 'CTRL+END';
+const SLOWER_KEY = 'F4,CTRL+4';
+const FASTER_KEY = 'F5,CTRL+5';
+const TIMER_KEY = 'F6,CTRL+6';
+const RECORD_KEY = 'F9,CTRL+9';
 
 function WSAudioPlayer(props: IProps) {
   const {
@@ -226,7 +226,9 @@ function WSAudioPlayer(props: IProps) {
   const { showMessage } = useSnackBar();
   //const isMounted = useMounted('wsaudioplayer');
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
-  const { subscribe, unsubscribe } = useContext(HotKeyContext).state;
+  const { subscribe, unsubscribe, localizeHotKey } = useContext(
+    HotKeyContext
+  ).state;
   const {
     wsLoad,
     wsTogglePlay,
@@ -404,10 +406,7 @@ function WSAudioPlayer(props: IProps) {
     setPlaybackRate(Math.min(MAX_SPEED, playbackRef.current + SPEED_STEP));
     return true;
   };
-  const handleResetPlayback = () => {
-    setPlaybackRate(1);
-    return true;
-  };
+
   const handleJumpForward = () => {
     return handleJumpFn(jump);
   };
@@ -483,7 +482,7 @@ function WSAudioPlayer(props: IProps) {
         <div className={classes.main}>
           {allowRecord && (
             <Grid container className={classes.toolbar}>
-              <Tooltip
+              <LightTooltip
                 title={(recording ? t.stop : t.record).replace(
                   '{0}',
                   RECORD_KEY
@@ -497,7 +496,7 @@ function WSAudioPlayer(props: IProps) {
                     {recording ? <FaStopCircle /> : <FaDotCircle />}
                   </IconButton>
                 </span>
-              </Tooltip>
+              </LightTooltip>
               <div className={classes.labeledControl}>
                 <InputLabel className={classes.smallFont}>
                   {t.insertoverwrite}
@@ -517,7 +516,7 @@ function WSAudioPlayer(props: IProps) {
                 <InputLabel className={classes.smallFont}>
                   {t.silence}
                 </InputLabel>
-                <Tooltip title={t.silence}>
+                <LightTooltip title={t.silence}>
                   <span>
                     <IconButton
                       className={classes.togglebutton}
@@ -527,7 +526,7 @@ function WSAudioPlayer(props: IProps) {
                       <SilenceIcon />
                     </IconButton>
                   </span>
-                </Tooltip>
+                </LightTooltip>
               </div>
               <div className={classes.labeledControl}>
                 <InputLabel className={classes.smallFont}>
@@ -547,11 +546,11 @@ function WSAudioPlayer(props: IProps) {
                 flexItem
               />
               {hasRegion && (
-                <Tooltip title={t.deleteRegion}>
+                <LightTooltip title={t.deleteRegion}>
                   <IconButton onClick={handleDeleteRegion()}>
                     <DeleteIcon />
                   </IconButton>
-                </Tooltip>
+                </LightTooltip>
               )}
               <div className={classes.grow}>{'\u00A0'}</div>
             </Grid>
@@ -566,7 +565,7 @@ function WSAudioPlayer(props: IProps) {
             <>
               {allowRecord || (
                 <Grid item>
-                  <Tooltip title={looping ? t.loopon : t.loopoff}>
+                  <LightTooltip title={looping ? t.loopon : t.loopoff}>
                     <span>
                       <ToggleButton
                         className={classes.togglebutton}
@@ -578,7 +577,7 @@ function WSAudioPlayer(props: IProps) {
                         <LoopIcon />
                       </ToggleButton>
                     </span>
-                  </Tooltip>
+                  </LightTooltip>
                 </Grid>
               )}
               {allowRecord || (
@@ -592,30 +591,37 @@ function WSAudioPlayer(props: IProps) {
 
             <Grid item>
               <>
-                <Tooltip title={t.beginning}>
+                <LightTooltip
+                  title={t.beginningTip.replace(
+                    '{0}',
+                    localizeHotKey(HOME_KEY)
+                  )}
+                >
                   <span>
                     <IconButton onClick={handleGotoEv(0)} disabled={!ready}>
                       <SkipPreviousIcon />
                     </IconButton>
                   </span>
-                </Tooltip>
-                <Tooltip title={t.backTip.replace('{0}', BACK_KEY)}>
+                </LightTooltip>
+                <LightTooltip
+                  title={t.backTip
+                    .replace('{jump}', jump.toString())
+                    .replace('{1}', t.seconds)
+                    .replace('{0}', localizeHotKey(BACK_KEY))}
+                >
                   <span>
                     <IconButton
                       onClick={handleJumpEv(-1 * jump)}
                       disabled={!ready}
                     >
                       <ReplayIcon />
-                      <Typography className={classes.smallFont}>
-                        {BACK_KEY}
-                      </Typography>
                     </IconButton>
                   </span>
-                </Tooltip>
-                <Tooltip
+                </LightTooltip>
+                <LightTooltip
                   title={(playing ? t.pauseTip : t.playTip).replace(
                     '{0}',
-                    PLAY_PAUSE_KEY
+                    localizeHotKey(PLAY_PAUSE_KEY)
                   )}
                 >
                   <span>
@@ -623,26 +629,25 @@ function WSAudioPlayer(props: IProps) {
                       onClick={handlePlayStatus}
                       disabled={wsDuration() === 0}
                     >
-                      <>
-                        {playing ? <PauseIcon /> : <PlayIcon />}
-                        <Typography className={classes.smallFont}>
-                          {PLAY_PAUSE_KEY}
-                        </Typography>
-                      </>
+                      <>{playing ? <PauseIcon /> : <PlayIcon />}</>
                     </IconButton>
                   </span>
-                </Tooltip>
-                <Tooltip title={t.aheadTip.replace('{0}', AHEAD_KEY)}>
+                </LightTooltip>
+                <LightTooltip
+                  title={t.aheadTip
+                    .replace('{jump}', jump.toString())
+                    .replace('{1}', t.seconds)
+                    .replace('{0}', localizeHotKey(AHEAD_KEY))}
+                >
                   <span>
                     <IconButton onClick={handleJumpEv(jump)} disabled={!ready}>
                       <ForwardIcon />{' '}
-                      <Typography className={classes.smallFont}>
-                        {AHEAD_KEY}
-                      </Typography>
                     </IconButton>
                   </span>
-                </Tooltip>
-                <Tooltip title={t.end}>
+                </LightTooltip>
+                <LightTooltip
+                  title={t.endTip.replace('{0}', localizeHotKey(END_KEY))}
+                >
                   <span>
                     <IconButton
                       onClick={handleGotoEv(wsDuration())}
@@ -651,7 +656,7 @@ function WSAudioPlayer(props: IProps) {
                       <SkipNextIcon />{' '}
                     </IconButton>
                   </span>
-                </Tooltip>
+                </LightTooltip>
               </>
             </Grid>
             <Divider
@@ -661,19 +666,18 @@ function WSAudioPlayer(props: IProps) {
             />
             <Grid item>
               <div className={classes.toolbar}>
-                <Tooltip title={t.slowerTip.replace('{0}', SLOWER_KEY)}>
+                <LightTooltip
+                  title={t.slowerTip.replace('{0}', localizeHotKey(SLOWER_KEY))}
+                >
                   <span>
                     <IconButton
                       onClick={handleSlower}
                       disabled={playbackRate === MIN_SPEED}
                     >
                       <FaAngleDoubleDown fontSize="small" />{' '}
-                      <Typography className={classes.smallFont}>
-                        {SLOWER_KEY}
-                      </Typography>
                     </IconButton>
                   </span>
-                </Tooltip>
+                </LightTooltip>
                 <IOSSlider
                   aria-label="ios slider"
                   value={
@@ -689,19 +693,18 @@ function WSAudioPlayer(props: IProps) {
                   onChange={handleSliderChange}
                 />
 
-                <Tooltip title={t.fasterTip.replace('{0}', FASTER_KEY)}>
+                <LightTooltip
+                  title={t.fasterTip.replace('{0}', localizeHotKey(FASTER_KEY))}
+                >
                   <span>
                     <IconButton
                       onClick={handleFaster}
                       disabled={playbackRate === MAX_SPEED}
                     >
                       <FaAngleDoubleUp fontSize="small" />{' '}
-                      <Typography className={classes.smallFont}>
-                        {FASTER_KEY}
-                      </Typography>
                     </IconButton>
                   </span>
-                </Tooltip>
+                </LightTooltip>
               </div>
             </Grid>
             {onSaveProgress && (
@@ -712,15 +715,17 @@ function WSAudioPlayer(props: IProps) {
                   flexItem
                 />{' '}
                 <Grid item>
-                  <Tooltip title={t.timerTip.replace('{0}', TIMER_KEY)}>
+                  <LightTooltip
+                    title={t.timerTip.replace('{0}', localizeHotKey(TIMER_KEY))}
+                  >
                     <span>
                       <IconButton onClick={handleSendProgress}>
                         <>
-                          <TimerIcon /> <Typography>{TIMER_KEY}</Typography>
+                          <TimerIcon />
                         </>
                       </IconButton>
                     </span>
-                  </Tooltip>
+                  </LightTooltip>
                 </Grid>
               </>
             )}

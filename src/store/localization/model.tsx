@@ -601,7 +601,6 @@ export interface IToDoTableStrings extends Localize.LocalizedStringsMethods {
 export interface ITranscriberStrings extends Localize.LocalizedStringsMethods {
     "comment": string;
     "done": string;
-    "fasterTip": string;
     "historyTip": string;
     "incomplete": string;
     "invalidReference": string;
@@ -753,9 +752,9 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
 export interface IWsAudioPlayerStrings extends Localize.LocalizedStringsMethods {
     "aheadTip": string;
     "backTip": string;
-    "beginning": string;
+    "beginningTip": string;
     "deleteRegion": string;
-    "end": string;
+    "endTip": string;
     "fasterTip": string;
     "insertoverwrite": string;
     "loopoff": string;
@@ -781,6 +780,15 @@ export interface IPassageRecordStrings extends Localize.LocalizedStringsMethods 
     "cancel": string;
     "title": string;
     "defaultFilename": string;
+};
+
+export interface IHotKeyStrings extends Localize.LocalizedStringsMethods {
+    "altKey": string;
+    "ctrlKey": string;
+    "endKey": string;
+    "homeKey": string;
+    "or": string;
+    "spaceKey": string;
 };
 
 export interface ILocalizedStrings {
@@ -832,5 +840,6 @@ export interface ILocalizedStrings {
 	vProject: IVProjectStrings;
 	wsAudioPlayer: IWsAudioPlayerStrings;
 	passageRecord: IPassageRecordStrings;
+	hotKey: IHotKeyStrings;
 	[key: string]: any;
 };

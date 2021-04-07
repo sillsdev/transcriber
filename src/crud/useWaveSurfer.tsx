@@ -25,6 +25,7 @@ export function useWaveSurfer(
   const blobTypeRef = useRef('');
   const playingRef = useRef(false);
   const regionRef = useRef<any>();
+  const regionPlayingRef = useRef(false);
   const keepRegion = useRef(false);
   const durationRef = useRef(0);
 
@@ -75,9 +76,9 @@ export function useWaveSurfer(
         console.log('region-play', r);
       });
       ws.on('region-out', function (r: any) {
-        console.log('region-out', r.loop, playingRef.current)
-      });
-      */
+        console.log('region-out');
+      }); */
+
       return ws;
     }
     if (container && !wsRef.current) create(container, height);
@@ -103,6 +104,15 @@ export function useWaveSurfer(
   }, [wsRef.current?.isReady]);
   const setProgress = (value: number) => {
     progressRef.current = value;
+    if (
+      regionPlayingRef.current &&
+      progressRef.current >= regionRef.current.end - 0.01
+    ) {
+      //turning off region play
+      regionPlayingRef.current = false;
+      playingRef.current = false;
+      onStop();
+    }
   };
   const setPlaying = (value: boolean) => {
     //if (!isMounted()) return;
@@ -111,11 +121,17 @@ export function useWaveSurfer(
       if (wsRef.current?.isReady) {
         if (
           regionRef.current &&
+          !regionRef.current.loop &&
           regionRef.current.start <= progressRef.current &&
-          regionRef.current.end >= progressRef.current
-        )
+          regionRef.current.end > progressRef.current + 0.01
+        ) {
+          //play region once
+          regionPlayingRef.current = true;
           regionRef.current.play(progressRef.current);
-        else wsRef.current?.play(progressRef.current);
+        } else {
+          //default play (which will loop region if looping is on)
+          wsRef.current?.play(progressRef.current);
+        }
       }
     } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
   };
