@@ -1,6 +1,9 @@
 import React, { useRef } from 'react';
+import { useGlobal } from 'reactn';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
+import { useSnackBar } from '../hoc/SnackBar';
+import { logError, Severity } from '../utils';
 
 const CAPTURE_OPTIONS = {
   audio: true,
@@ -22,11 +25,14 @@ export function useMediaRecorder(
   const [playerUrl, setPlayerUrl] = useState('');
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const getMediaStream = useUserMedia(CAPTURE_OPTIONS);
+  const streamRequested = React.useRef<boolean>(false);
   const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
     undefined
   );
   const [mediaBlob, setMediaBlob] = React.useState<Blob>();
   const [acceptedMimes, setAcceptedMimes] = useState<MimeInfo[]>([]);
+  const [reporter] = useGlobal('errorReporter');
+  const { showMessage } = useSnackBar();
 
   useEffect(() => {
     const acceptextension = ['mp3', 'webm', 'mka', 'm4a', 'wav', 'ogg'];
@@ -60,10 +66,20 @@ export function useMediaRecorder(
 
   useEffect(() => {
     if (allowRecord)
-      getMediaStream().then((stream) => {
-        setMediaStream(stream);
-      });
-  }, [allowRecord, getMediaStream]);
+      if (!mediaStream && !streamRequested.current) {
+        streamRequested.current = true;
+        getMediaStream().then((stream) => {
+          if (stream && stream.id && stream.active) {
+            setMediaStream(stream);
+          } else {
+            const err = stream.toString();
+            logError(Severity.info, reporter, err);
+            showMessage(err);
+          }
+        });
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowRecord, getMediaStream, mediaStream]);
 
   useEffect(() => {
     startRecorder();
