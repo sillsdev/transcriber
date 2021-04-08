@@ -483,6 +483,7 @@ function WSAudioPlayer(props: IProps) {
           {allowRecord && (
             <Grid container className={classes.toolbar}>
               <LightTooltip
+                id="wsAudioRecordTip"
                 title={(recording ? t.stop : t.record).replace(
                   '{0}',
                   RECORD_KEY
@@ -490,6 +491,7 @@ function WSAudioPlayer(props: IProps) {
               >
                 <span>
                   <IconButton
+                    id="wsAudioRecord"
                     className={classes.record}
                     onClick={handleRecorder}
                   >
@@ -498,27 +500,36 @@ function WSAudioPlayer(props: IProps) {
                 </span>
               </LightTooltip>
               <div className={classes.labeledControl}>
-                <InputLabel className={classes.smallFont}>
+                <InputLabel
+                  id="wsAudioInsertOverwriteLabel"
+                  className={classes.smallFont}
+                >
                   {t.insertoverwrite}
                 </InputLabel>
                 <Switch
+                  id="wsAudioInsertOverwrite"
                   checked={overwrite}
                   onChange={handleInsertOverwrite}
                   name="insertoverwrite"
                 />
               </div>
               <Divider
+                id="wsAudioDiv1"
                 className={classes.divider}
                 orientation="vertical"
                 flexItem
               />
               <div className={classes.labeledControl}>
-                <InputLabel className={classes.smallFont}>
+                <InputLabel
+                  id="wsAudioAddSilenceLabel"
+                  className={classes.smallFont}
+                >
                   {t.silence}
                 </InputLabel>
-                <LightTooltip title={t.silence}>
+                <LightTooltip id="wsAudioAddSilenceTip" title={t.silence}>
                   <span>
                     <IconButton
+                      id="wsAudioAddSilence"
                       className={classes.togglebutton}
                       onClick={handleAddSilence()}
                       disabled={!ready}
@@ -529,10 +540,14 @@ function WSAudioPlayer(props: IProps) {
                 </LightTooltip>
               </div>
               <div className={classes.labeledControl}>
-                <InputLabel className={classes.smallFont}>
+                <InputLabel
+                  id="wsAudioSilenceLabel"
+                  className={classes.smallFont}
+                >
                   {t.seconds}
                 </InputLabel>
                 <Input
+                  id="wsAudioSilence"
                   className={classes.formControl}
                   type="number"
                   inputProps={{ min: '0.1', step: '0.1' }}
@@ -541,13 +556,20 @@ function WSAudioPlayer(props: IProps) {
                 />
               </div>
               <Divider
+                id="wsAudioDiv2"
                 className={classes.divider}
                 orientation="vertical"
                 flexItem
               />
               {hasRegion && (
-                <LightTooltip title={t.deleteRegion}>
-                  <IconButton onClick={handleDeleteRegion()}>
+                <LightTooltip
+                  id="wsAudioDeleteRegionTip"
+                  title={t.deleteRegion}
+                >
+                  <IconButton
+                    id="wsAudioDeleteRegion"
+                    onClick={handleDeleteRegion()}
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </LightTooltip>
@@ -556,18 +578,22 @@ function WSAudioPlayer(props: IProps) {
             </Grid>
           )}
           <Typography>
-            <Duration seconds={wsPosition()} /> {' / '}
-            <Duration seconds={wsDuration()} />
+            <Duration id="wsAudioPosition" seconds={wsPosition()} /> {' / '}
+            <Duration id="wsAudioDuration" seconds={wsDuration()} />
           </Typography>
-          <div ref={timelineRef} />
-          <div ref={waveformRef} />
+          <div id="wsAudioTimeline" ref={timelineRef} />
+          <div id="wsAudioWaveform" ref={waveformRef} />
           <Grid container className={classes.toolbar}>
             <>
               {allowRecord || (
                 <Grid item>
-                  <LightTooltip title={looping ? t.loopon : t.loopoff}>
+                  <LightTooltip
+                    id="wsAudioLoopTip"
+                    title={looping ? t.loopon : t.loopoff}
+                  >
                     <span>
                       <ToggleButton
+                        id="wsAudioLoop"
                         className={classes.togglebutton}
                         value="loop"
                         selected={looping}
@@ -582,6 +608,7 @@ function WSAudioPlayer(props: IProps) {
               )}
               {allowRecord || (
                 <Divider
+                  id="wsAudioDiv3"
                   className={classes.divider}
                   orientation="vertical"
                   flexItem
@@ -592,18 +619,24 @@ function WSAudioPlayer(props: IProps) {
             <Grid item>
               <>
                 <LightTooltip
+                  id="wsAudioHomeTip"
                   title={t.beginningTip.replace(
                     '{0}',
                     localizeHotKey(HOME_KEY)
                   )}
                 >
                   <span>
-                    <IconButton onClick={handleGotoEv(0)} disabled={!ready}>
+                    <IconButton
+                      id="wsAudioHome"
+                      onClick={handleGotoEv(0)}
+                      disabled={!ready}
+                    >
                       <SkipPreviousIcon />
                     </IconButton>
                   </span>
                 </LightTooltip>
                 <LightTooltip
+                  id="wsAudioBackTip"
                   title={t.backTip
                     .replace('{jump}', jump.toString())
                     .replace('{1}', t.seconds)
@@ -611,6 +644,7 @@ function WSAudioPlayer(props: IProps) {
                 >
                   <span>
                     <IconButton
+                      id="wsAudioBack"
                       onClick={handleJumpEv(-1 * jump)}
                       disabled={!ready}
                     >
@@ -619,6 +653,7 @@ function WSAudioPlayer(props: IProps) {
                   </span>
                 </LightTooltip>
                 <LightTooltip
+                  id="wsAudioPlayTip"
                   title={(playing ? t.pauseTip : t.playTip).replace(
                     '{0}',
                     localizeHotKey(PLAY_PAUSE_KEY)
@@ -626,6 +661,7 @@ function WSAudioPlayer(props: IProps) {
                 >
                   <span>
                     <IconButton
+                      id="wsAudioPlay"
                       onClick={handlePlayStatus}
                       disabled={wsDuration() === 0}
                     >
@@ -634,22 +670,29 @@ function WSAudioPlayer(props: IProps) {
                   </span>
                 </LightTooltip>
                 <LightTooltip
+                  id="wsAudioForwardTip"
                   title={t.aheadTip
                     .replace('{jump}', jump.toString())
                     .replace('{1}', t.seconds)
                     .replace('{0}', localizeHotKey(AHEAD_KEY))}
                 >
                   <span>
-                    <IconButton onClick={handleJumpEv(jump)} disabled={!ready}>
+                    <IconButton
+                      id="wsAudioForward"
+                      onClick={handleJumpEv(jump)}
+                      disabled={!ready}
+                    >
                       <ForwardIcon />{' '}
                     </IconButton>
                   </span>
                 </LightTooltip>
                 <LightTooltip
+                  id="wsAudioEndTip"
                   title={t.endTip.replace('{0}', localizeHotKey(END_KEY))}
                 >
                   <span>
                     <IconButton
+                      id="wsAudioEnd"
                       onClick={handleGotoEv(wsDuration())}
                       disabled={!ready}
                     >
@@ -660,6 +703,7 @@ function WSAudioPlayer(props: IProps) {
               </>
             </Grid>
             <Divider
+              id="wsAudioDiv4"
               className={classes.divider}
               orientation="vertical"
               flexItem
@@ -667,10 +711,12 @@ function WSAudioPlayer(props: IProps) {
             <Grid item>
               <div className={classes.toolbar}>
                 <LightTooltip
+                  id="wsAudioSlowerTip"
                   title={t.slowerTip.replace('{0}', localizeHotKey(SLOWER_KEY))}
                 >
                   <span>
                     <IconButton
+                      id="wsAudioSlower"
                       onClick={handleSlower}
                       disabled={playbackRate === MIN_SPEED}
                     >
@@ -679,6 +725,7 @@ function WSAudioPlayer(props: IProps) {
                   </span>
                 </LightTooltip>
                 <IOSSlider
+                  id="wsAudioPlaybackSpeed"
                   aria-label="ios slider"
                   value={
                     typeof playbackRate === 'number' ? playbackRate * 100 : 0
@@ -694,10 +741,12 @@ function WSAudioPlayer(props: IProps) {
                 />
 
                 <LightTooltip
+                  id="wsAudioFasterTip"
                   title={t.fasterTip.replace('{0}', localizeHotKey(FASTER_KEY))}
                 >
                   <span>
                     <IconButton
+                      id="wsAudioFaster"
                       onClick={handleFaster}
                       disabled={playbackRate === MAX_SPEED}
                     >
@@ -710,16 +759,21 @@ function WSAudioPlayer(props: IProps) {
             {onSaveProgress && (
               <>
                 <Divider
+                  id="wsAudioDiv5"
                   className={classes.divider}
                   orientation="vertical"
                   flexItem
                 />{' '}
                 <Grid item>
                   <LightTooltip
+                    id="wsAudioTimestampTip"
                     title={t.timerTip.replace('{0}', localizeHotKey(TIMER_KEY))}
                   >
                     <span>
-                      <IconButton onClick={handleSendProgress}>
+                      <IconButton
+                        id="wsAudioTimestamp"
+                        onClick={handleSendProgress}
+                      >
                         <>
                           <TimerIcon />
                         </>
