@@ -140,7 +140,10 @@ export function useMediaRecorder(
   }
 
   function stopRecording() {
-    if (mediaRecorderRef.current) {
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== 'inactive'
+    ) {
       mediaRecorderRef.current.stop();
       mediaRecorderRef.current.removeEventListener(
         'dataavailable',

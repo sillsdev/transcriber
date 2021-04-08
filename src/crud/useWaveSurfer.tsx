@@ -292,6 +292,7 @@ export function useWaveSurfer(
     var buffer = await blob.arrayBuffer();
 
     return await new Promise<number>((resolve, reject) => {
+      if (!wsRef.current?.backend) return; //closed while we were working on the blob
       wavesurfer.decodeArrayBuffer(buffer, function (newBuffer: any) {
         resolve(insertBuffer(newBuffer, position, overwriteToPosition));
       });
