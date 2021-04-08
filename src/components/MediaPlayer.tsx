@@ -16,6 +16,7 @@ export function MediaPlayer(props: IProps) {
   const audioRef = useRef<any>();
   const [playing, setPlaying] = useState(false);
   const [playItem, setPlayItem] = useState('');
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (playing) {
@@ -26,6 +27,7 @@ export function MediaPlayer(props: IProps) {
     }
     setPlaying(false);
     if (srcMediaId !== playItem) {
+      setReady(false);
       fetchMediaUrl({ id: srcMediaId, auth });
     }
     setPlayItem(srcMediaId);
@@ -33,20 +35,20 @@ export function MediaPlayer(props: IProps) {
   }, [srcMediaId]);
 
   useEffect(() => {
-    if (
-      mediaState.status === MediaSt.FETCHED &&
-      audioRef.current &&
-      !playing &&
-      playItem !== ''
-    ) {
+    if (mediaState.status === MediaSt.FETCHED) setReady(true);
+  }, [mediaState.status]);
+
+  useEffect(() => {
+    if (ready && audioRef.current && !playing && playItem !== '') {
       setPlaying(true);
       audioRef.current.play();
     }
-  }, [mediaState.status, playing, playItem]);
+  }, [ready, playing, playItem]);
+
   const ended = () => {
     if (onEnded) onEnded();
   };
-  return mediaState.status === MediaSt.FETCHED ? (
+  return ready ? (
     <audio onEnded={ended} ref={audioRef} src={mediaState.url} />
   ) : (
     <></>
