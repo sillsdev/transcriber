@@ -153,10 +153,16 @@ function TranscribeReject(props: IProps) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} variant="outlined" color="primary">
+          <Button
+            id="transcriberReject.cancel"
+            onClick={handleCancel}
+            variant="outlined"
+            color="primary"
+          >
             {t.cancel}
           </Button>
           <Button
+            id="transcriberReject.save"
             onClick={handleSave}
             variant="contained"
             color="primary"

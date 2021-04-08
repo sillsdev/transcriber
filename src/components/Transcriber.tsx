@@ -768,6 +768,7 @@ export function Transcriber(props: IProps) {
                   <LightTooltip title={t.pullParatextTip}>
                     <span>
                       <IconButton
+                        id="transcriber.pullParatext"
                         onClick={handlePullParatext}
                         disabled={selected === ''}
                       >
@@ -810,6 +811,7 @@ export function Transcriber(props: IProps) {
                     onStatus={loadStatus}
                   >
                     <TextareaAutosize
+                      id="transcriber.text"
                       value={textValue}
                       readOnly={selected === '' || role === 'view'}
                       style={textAreaStyle}
@@ -818,6 +820,7 @@ export function Transcriber(props: IProps) {
                   </WebFontLoader>
                 ) : (
                   <TextareaAutosize
+                    id="transcriber.text"
                     value={textValue}
                     readOnly={selected === '' || role === 'view'}
                     style={textAreaStyle}
@@ -837,6 +840,7 @@ export function Transcriber(props: IProps) {
             <Grid container direction="row" className={classes.padRow}>
               <Grid item>
                 <Button
+                  id="transcriber.showNote"
                   variant="outlined"
                   color="primary"
                   className={classes.button}
@@ -871,6 +875,7 @@ export function Transcriber(props: IProps) {
                     {role !== 'view' ? (
                       <>
                         <Button
+                          id="transcriber.reject"
                           variant="outlined"
                           color="primary"
                           className={classes.button}
@@ -884,6 +889,7 @@ export function Transcriber(props: IProps) {
                         >
                           <span>
                             <Button
+                              id="transcriber.save"
                               variant="outlined"
                               color="primary"
                               className={classes.button}
@@ -903,6 +909,7 @@ export function Transcriber(props: IProps) {
                         >
                           <span>
                             <Button
+                              id="transcriber.submit"
                               variant="contained"
                               color="primary"
                               className={classes.button}
@@ -916,6 +923,7 @@ export function Transcriber(props: IProps) {
                       </>
                     ) : (
                       <Button
+                        id="transcriber.reopen"
                         variant="outlined"
                         color="primary"
                         className={classes.button}

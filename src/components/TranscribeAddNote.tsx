@@ -121,10 +121,16 @@ function TranscribeAddNote(props: IProps) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCancel} variant="outlined" color="primary">
+          <Button
+            id="transcriberNote.cancel"
+            onClick={handleCancel}
+            variant="outlined"
+            color="primary"
+          >
             {t.cancel}
           </Button>
           <Button
+            id="transcriberNote.save"
             onClick={handleSave}
             variant="contained"
             color="primary"
