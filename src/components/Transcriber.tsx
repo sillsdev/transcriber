@@ -14,11 +14,7 @@ import {
   RoleNames,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -240,6 +236,7 @@ export function Transcriber(props: IProps) {
   const t = transcriberStr;
 
   useEffect(() => {
+    setAudioBlob(undefined);
     loadBlob(mediaUrl, (b) => {
       //not sure what this intermediary file is, but causes console errors
       if (b.type !== 'text/html') setAudioBlob(b);

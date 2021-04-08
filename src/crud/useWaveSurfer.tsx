@@ -135,6 +135,7 @@ export function useWaveSurfer(
       }
     } else if (wsRef.current?.isPlaying()) wsRef.current?.pause();
   };
+  const wsClear = () => wsRef.current?.empty();
 
   const wsIsReady = () => wsRef.current?.isReady || false;
 
@@ -356,6 +357,7 @@ export function useWaveSurfer(
   return {
     wsLoad,
     wsBlob,
+    wsClear,
     wsIsReady,
     wsIsPlaying,
     wsTogglePlay,

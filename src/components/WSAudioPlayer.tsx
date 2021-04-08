@@ -231,6 +231,7 @@ function WSAudioPlayer(props: IProps) {
   ).state;
   const {
     wsLoad,
+    wsClear,
     wsTogglePlay,
     wsBlob,
     wsPause,
@@ -315,6 +316,7 @@ function WSAudioPlayer(props: IProps) {
 
   useEffect(() => {
     if (blob) wsLoad(blob);
+    else wsClear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blob]); //passed in by user
 
