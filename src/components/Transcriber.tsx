@@ -14,11 +14,7 @@ import {
   RoleNames,
 } from '../model';
 import { QueryBuilder, TransformBuilder, Operation } from '@orbit/data';
-import {
-  makeStyles,
-  createStyles,
-  Theme,
-} from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid,
   Paper,
@@ -857,7 +853,10 @@ export function Transcriber(props: IProps) {
                   )}
                 >
                   <span>
-                    <IconButton onClick={handleShowHistory}>
+                    <IconButton
+                      id="transcriber.showHistory"
+                      onClick={handleShowHistory}
+                    >
                       <>
                         <HistoryIcon />
                       </>
