@@ -223,6 +223,8 @@ function WSAudioPlayer(props: IProps) {
   const readyRef = useRef(false);
   const [ready, setReadyx] = useState(false);
   const [silence, setSilence] = useState(0.5);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
   const { showMessage } = useSnackBar();
   //const isMounted = useMounted('wsaudioplayer');
   const onSaveProgressRef = useRef<(progress: number) => void | undefined>();
@@ -287,7 +289,7 @@ function WSAudioPlayer(props: IProps) {
       {
         key: END_KEY,
         cb: () => {
-          wsGoto(wsDuration());
+          wsGoto(duration);
           return true;
         },
       },
@@ -315,6 +317,7 @@ function WSAudioPlayer(props: IProps) {
   }, [setMimeType]);
 
   useEffect(() => {
+    setDuration(0);
     if (blob) wsLoad(blob);
     else wsClear();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -346,7 +349,7 @@ function WSAudioPlayer(props: IProps) {
       recordStartPosition.current,
       recordOverwritePosition.current
     );
-    if (!overwrite) recordOverwritePosition.current = newPos;
+    if (!overwriteRef.current) recordOverwritePosition.current = newPos;
     handleChanged();
   }
 
@@ -360,12 +363,14 @@ function WSAudioPlayer(props: IProps) {
       recordOverwritePosition.current,
       e.type
     );
-    if (!overwrite) recordOverwritePosition.current = newPos;
+    if (!overwriteRef.current) recordOverwritePosition.current = newPos;
   }
   function onWSReady() {
     setReady(true);
+    setDuration(wsDuration());
   }
   function onWSProgress(progress: number) {
+    setProgress(progress);
     if (onProgress) onProgress(progress);
   }
   function onWSRegion(region: boolean) {
@@ -446,7 +451,7 @@ function WSAudioPlayer(props: IProps) {
     if (!recordingRef.current) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
-      recordOverwritePosition.current = overwrite
+      recordOverwritePosition.current = overwriteRef.current
         ? undefined
         : recordStartPosition.current;
       startRecording(300);
@@ -464,6 +469,7 @@ function WSAudioPlayer(props: IProps) {
       if (onBlobReady && newblob) onBlobReady(newblob);
       if (setBlobReady) setBlobReady(true);
       if (setMimeType && newblob?.type) setMimeType(newblob?.type);
+      setDuration(wsDuration());
     });
   };
   const handleDeleteRegion = () => () => {
@@ -583,8 +589,8 @@ function WSAudioPlayer(props: IProps) {
             </Grid>
           )}
           <Typography>
-            <Duration id="wsAudioPosition" seconds={wsPosition()} /> {' / '}
-            <Duration id="wsAudioDuration" seconds={wsDuration()} />
+            <Duration id="wsAudioPosition" seconds={progress} /> {' / '}
+            <Duration id="wsAudioDuration" seconds={duration} />
           </Typography>
           <div id="wsAudioTimeline" ref={timelineRef} />
           <div id="wsAudioWaveform" ref={waveformRef} />
@@ -668,7 +674,7 @@ function WSAudioPlayer(props: IProps) {
                     <IconButton
                       id="wsAudioPlay"
                       onClick={handlePlayStatus}
-                      disabled={wsDuration() === 0}
+                      disabled={duration === 0}
                     >
                       <>{playing ? <PauseIcon /> : <PlayIcon />}</>
                     </IconButton>
@@ -698,7 +704,7 @@ function WSAudioPlayer(props: IProps) {
                   <span>
                     <IconButton
                       id="wsAudioEnd"
-                      onClick={handleGotoEv(wsDuration())}
+                      onClick={handleGotoEv(duration)}
                       disabled={!ready}
                     >
                       <SkipNextIcon />{' '}
