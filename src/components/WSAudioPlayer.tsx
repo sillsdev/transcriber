@@ -219,7 +219,7 @@ function WSAudioPlayer(props: IProps) {
   const overwriteRef = useRef(false);
   const [overwrite, setOverwrite] = useState(false);
   const recordingRef = useRef(false);
-  const [recording, setRecording] = useState(false);
+  const [recording, setRecordingx] = useState(false);
   const readyRef = useRef(false);
   const [ready, setReadyx] = useState(false);
   const [silence, setSilence] = useState(0.5);
@@ -437,6 +437,10 @@ function WSAudioPlayer(props: IProps) {
     setOverwrite(!overwrite);
   };
 
+  const setRecording = (value: boolean) => {
+    recordingRef.current = value;
+    setRecordingx(value);
+  };
   const handleRecorder = () => {
     if (!allowRecord) return false;
     if (!recordingRef.current) {
@@ -449,7 +453,6 @@ function WSAudioPlayer(props: IProps) {
     } else {
       stopRecording();
     }
-    recordingRef.current = !recordingRef.current;
     setRecording(!recordingRef.current);
     return true;
   };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import WebFontLoader from '@dr-kobros/react-webfont-loader';
@@ -214,8 +214,8 @@ export function Transcriber(props: IProps) {
   const [lastSaved, setLastSaved] = useState('');
   const [, setDefaultPosition] = useState(0.0);
   const { showMessage } = useSnackBar();
-  const [showHistory, setShowHistory] = useState(false);
-
+  const showHistoryRef = useRef(false);
+  const [showHistory, setShowHistoryx] = useState(false);
   const [rejectVisible, setRejectVisible] = useState(false);
   const [addNoteVisible, setAddNoteVisible] = useState(false);
   const [hasParatextName, setHasParatextName] = useState(false);
@@ -414,8 +414,12 @@ export function Transcriber(props: IProps) {
     setFontStatus(status);
   };
 
+  const setShowHistory = (value: boolean) => {
+    showHistoryRef.current = value;
+    setShowHistoryx(value);
+  };
   const handleShowHistory = () => {
-    setShowHistory(!showHistory);
+    setShowHistory(!showHistoryRef.current);
     return true;
   };
 
