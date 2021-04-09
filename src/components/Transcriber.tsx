@@ -26,7 +26,6 @@ import {
 import useTodo from '../context/useTodo';
 import PullIcon from '@material-ui/icons/GetAppOutlined';
 import HistoryIcon from '@material-ui/icons/History';
-
 import { formatTime, LightTooltip } from '../control';
 import TranscribeReject from './TranscribeReject';
 import { useSnackBar } from '../hoc/SnackBar';
@@ -51,6 +50,7 @@ import {
   waitForIt,
   loadBlob,
 } from '../utils';
+import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
 import { debounce } from 'lodash';
 import { TaskItemWidth } from '../components/TaskTable';
@@ -237,11 +237,11 @@ export function Transcriber(props: IProps) {
 
   useEffect(() => {
     setAudioBlob(undefined);
-    loadBlob(mediaUrl, (b) => {
+    loadBlob(mediaUrl, !isElectron || !offline, (b) => {
       //not sure what this intermediary file is, but causes console errors
       if (b.type !== 'text/html') setAudioBlob(b);
     });
-  }, [mediaUrl]);
+  }, [mediaUrl, offline]);
 
   useEffect(() => {
     const getParatextIntegration = () => {

@@ -3,6 +3,7 @@ import { useGlobal } from 'reactn';
 import { connect } from 'react-redux';
 import { IState, MediaFile, IPassageRecordStrings } from '../model';
 import localStrings from '../selector/localize';
+import { isElectron } from '../api-variable';
 import Auth from '../auth/Auth';
 //import lamejs from 'lamejs';
 import {
@@ -71,6 +72,7 @@ function PassageRecord(props: IProps) {
     metaData,
   } = props;
   const [reporter] = useGlobal('errorReporter');
+  const [isOffline] = useGlobal('offline');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
   const [filetype, setFiletype] = useState('');
@@ -170,7 +172,7 @@ function PassageRecord(props: IProps) {
 
   const handleLoadAudio = () => {
     setLoading(true);
-    loadBlob(mediaState.url, (b) => {
+    loadBlob(mediaState.url, !isElectron || !isOffline, (b) => {
       setOriginalBlob(b);
       setLoading(false);
       setAudioBlob(b);
