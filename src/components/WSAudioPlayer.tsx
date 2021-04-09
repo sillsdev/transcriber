@@ -439,7 +439,7 @@ function WSAudioPlayer(props: IProps) {
 
   const handleRecorder = () => {
     if (!allowRecord) return false;
-    if (!recording) {
+    if (!recordingRef.current) {
       wsPause(); //stop if playing
       recordStartPosition.current = wsPosition();
       recordOverwritePosition.current = overwrite
@@ -449,8 +449,8 @@ function WSAudioPlayer(props: IProps) {
     } else {
       stopRecording();
     }
-    recordingRef.current = !recording;
-    setRecording(!recording);
+    recordingRef.current = !recordingRef.current;
+    setRecording(!recordingRef.current);
     return true;
   };
 

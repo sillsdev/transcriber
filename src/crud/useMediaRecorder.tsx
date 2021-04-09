@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useGlobal } from 'reactn';
 import { useState, useEffect } from 'react';
 import { useUserMedia } from './useUserMedia';
@@ -23,13 +23,11 @@ export function useMediaRecorder(
 ) {
   const mediaChunks = useRef<any>([]);
   const [playerUrl, setPlayerUrl] = useState('');
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
+  const mediaRecorderRef = useRef<MediaRecorder>();
   const getMediaStream = useUserMedia(CAPTURE_OPTIONS);
-  const streamRequested = React.useRef<boolean>(false);
-  const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
-    undefined
-  );
-  const [mediaBlob, setMediaBlob] = React.useState<Blob>();
+  const streamRequested = useRef<boolean>(false);
+  const mediaStreamRef = useRef<MediaStream | undefined>(undefined);
+  const [mediaBlob, setMediaBlob] = useState<Blob>();
   const [acceptedMimes, setAcceptedMimes] = useState<MimeInfo[]>([]);
   const [reporter] = useGlobal('errorReporter');
   const { showMessage } = useSnackBar();
@@ -56,7 +54,7 @@ export function useMediaRecorder(
     setAcceptedMimes(mimes);
     return () => {
       console.log('cleanup recorder');
-      mediaStream?.getTracks().forEach((track) => {
+      mediaStreamRef.current?.getTracks().forEach((track) => {
         console.log('stop track');
         track.stop();
       });
@@ -66,11 +64,11 @@ export function useMediaRecorder(
 
   useEffect(() => {
     if (allowRecord)
-      if (!mediaStream && !streamRequested.current) {
+      if (!mediaStreamRef.current && !streamRequested.current) {
         streamRequested.current = true;
         getMediaStream().then((stream) => {
           if (stream && stream.id && stream.active) {
-            setMediaStream(stream);
+            mediaStreamRef.current = stream;
           } else {
             const err = stream.toString();
             logError(Severity.info, reporter, err);
@@ -79,12 +77,7 @@ export function useMediaRecorder(
         });
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowRecord, getMediaStream, mediaStream]);
-
-  useEffect(() => {
-    startRecorder();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mediaStream]);
+  }, [allowRecord, getMediaStream]);
 
   function createBlob() {
     const blob = new Blob(mediaChunks.current);
@@ -110,20 +103,20 @@ export function useMediaRecorder(
   }
 
   function startRecorder() {
-    if (mediaStream) {
-      const recorder = new MediaRecorder(mediaStream);
+    if (mediaStreamRef.current) {
+      const recorder = new MediaRecorder(mediaStreamRef.current);
       if (recorder) {
         recorder.addEventListener('dataavailable', handleDataAvailable);
         recorder.addEventListener('error', handleError);
         recorder.addEventListener('stop', handleStopped);
-        setMediaRecorder(recorder);
+        mediaRecorderRef.current = recorder;
         return recorder;
       }
     }
   }
 
   function startRecording(timeSlice?: number) {
-    var recorder = mediaRecorder || startRecorder();
+    var recorder = mediaRecorderRef.current || startRecorder();
     setPlayerUrl('');
     mediaChunks.current = [];
     if (recorder) {
@@ -135,24 +128,30 @@ export function useMediaRecorder(
   }
 
   function pauseRecording() {
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-      mediaRecorder.pause();
+    if (mediaRecorderRef.current?.state === 'recording') {
+      mediaRecorderRef.current.pause();
     }
   }
 
   function resumeRecording() {
-    if (mediaRecorder && mediaRecorder.state === 'paused') {
-      mediaRecorder.resume();
+    if (mediaRecorderRef.current?.state === 'paused') {
+      mediaRecorderRef.current.resume();
     }
   }
 
   function stopRecording() {
-    if (mediaRecorder) {
-      mediaRecorder.stop();
-      mediaRecorder.removeEventListener('dataavailable', handleDataAvailable);
-      mediaRecorder.removeEventListener('error', handleError);
-      mediaRecorder.removeEventListener('stop', handleStopped);
-      setMediaRecorder(undefined);
+    if (
+      mediaRecorderRef.current &&
+      mediaRecorderRef.current.state !== 'inactive'
+    ) {
+      mediaRecorderRef.current.stop();
+      mediaRecorderRef.current.removeEventListener(
+        'dataavailable',
+        handleDataAvailable
+      );
+      mediaRecorderRef.current.removeEventListener('error', handleError);
+      mediaRecorderRef.current.removeEventListener('stop', handleStopped);
+      mediaRecorderRef.current = undefined;
     }
   }
   return {
