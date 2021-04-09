@@ -24,9 +24,13 @@ const urlType = (url: string) => {
   return mimeMap.hasOwnProperty(ext) ? mimeMap[ext] : '';
 };
 
-export const loadBlob = (url: string, setBlob: (blob: Blob) => void) => {
+export const loadBlob = (
+  url: string,
+  online: boolean,
+  setBlob: (blob: Blob) => void
+) => {
   if (!url) return;
-  if (!isElectron) {
+  if (online) {
     fetch(url).then(async (r) => setBlob(await r.blob()));
   } else {
     const source = fs.readFileSync(url.replace(`transcribe-safe://`, ``));

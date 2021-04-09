@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
@@ -37,6 +38,7 @@ export function TeamDialog(props: IProps) {
   const { cardStrings } = ctx.state;
   const t = cardStrings;
   const teamApiRead = useTeamApiRead();
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   const handleClose = () => {
     onOpen && onOpen(false);
@@ -45,7 +47,9 @@ export function TeamDialog(props: IProps) {
   const handleCommit = async () => {
     const current =
       mode === DialogMode.edit && values
-        ? await teamApiRead(values.id) // Force read to update slug
+        ? offlineOnly
+          ? values
+          : await teamApiRead(values.id) // update slug for migration
         : ({ attributes: {} } as Organization);
     if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {
