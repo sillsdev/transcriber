@@ -488,6 +488,7 @@ export function ScriptureTable(props: IProps) {
     );
     setRowInfo(rowInfo.filter((row, rowIndex) => !where.includes(rowIndex)));
     setInData(inData.filter((row, rowIndex) => !where.includes(rowIndex)));
+    setUploadRow(undefined);
     return true;
   };
 
