@@ -51,6 +51,7 @@ import {
   getMediaInPlans,
   usePlan,
   useOrganizedBy,
+  remoteIdGuid,
 } from '../crud';
 import { useGlobal } from 'reactn';
 import {
@@ -312,6 +313,7 @@ export function MediaTab(props: IProps) {
   const [playItem, setPlayItem] = useState('');
   const [attachMap, setAttachMap] = useState<IAttachMap>({});
   const [dataAttach, setDataAttach] = useState(new Set<number>());
+  const [uploadMedia, setUploadMedia] = useState<string>();
   const [attachedFilter, setAttachedFilter] = useState({
     columnName: 'attached',
     operation: 'equal',
@@ -404,10 +406,14 @@ export function MediaTab(props: IProps) {
     saveCompleted('');
   };
 
-  const doDetach = (mediaId: string) => {
-    const mRow = data.reduce((m, r, j) => {
+  const mediaRow = (mediaId: string) => {
+    return data.reduce((m, r, j) => {
       return r.id === mediaId ? j : m;
     }, -1);
+  };
+
+  const doDetach = (mediaId: string) => {
+    const mRow = mediaRow(mediaId);
     if (attachMap.hasOwnProperty(mediaId)) {
       const newMap = { ...attachMap };
       delete newMap[mediaId];
@@ -450,8 +456,13 @@ export function MediaTab(props: IProps) {
   };
   const handleFilter = () => setFilter(!filter);
   const handlePCheck = (checks: Array<number>) => {
-    if (attachVisible && checks.length === 1 && mcheck >= 0) {
-      doAttach(mcheck, checks[0]);
+    let mRow = mcheck;
+    if (uploadMedia) {
+      mRow = mediaRow(uploadMedia);
+      setUploadMedia(undefined);
+    }
+    if (attachVisible && checks.length === 1 && mRow >= 0) {
+      doAttach(mRow, checks[0]);
       setAttachVisible(false);
       return;
     }
@@ -679,7 +690,10 @@ export function MediaTab(props: IProps) {
 
   const afterUpload = (planId: string, mediaRemoteIds?: string[]) => {
     if (mediaRemoteIds && mediaRemoteIds.length === 1) {
-      setMCheck(0);
+      setUploadMedia(
+        remoteIdGuid('mediafile', mediaRemoteIds[0], memory.keyMap) ||
+          mediaRemoteIds[0]
+      );
       setAttachVisible(true);
     }
   };
