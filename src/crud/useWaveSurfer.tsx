@@ -35,19 +35,17 @@ export function useWaveSurfer(
       wsRef.current = ws;
 
       ws.on('ready', function () {
-        onReady();
         durationRef.current = ws.getDuration();
+        onReady();
       });
       ws.on(
         'audioprocess',
         _.throttle(function (e: number) {
           setProgress(e);
-          onProgress(e);
         }, 150)
       );
       ws.on('seek', function (e: number) {
         setProgress(e * durationRef.current);
-        onProgress(e * durationRef.current);
         if (!keepRegion.current && regionRef.current) {
           regionRef.current?.remove();
           regionRef.current = undefined;
@@ -104,6 +102,7 @@ export function useWaveSurfer(
   }, [wsRef.current?.isReady]);
   const setProgress = (value: number) => {
     progressRef.current = value;
+    onProgress(value);
     if (
       regionPlayingRef.current &&
       progressRef.current >= regionRef.current.end - 0.01
@@ -271,6 +270,7 @@ export function useWaveSurfer(
         );
     }
     loadDecoded(uberSegment);
+    durationRef.current = wavesurfer.getDuration();
     return (start_offset + newBuffer.length) / originalBuffer.sampleRate;
   };
 
@@ -352,6 +352,7 @@ export function useWaveSurfer(
     var tmp = start - 0.03;
     if (tmp < 0) tmp = 0;
     wsGoto(tmp);
+    durationRef.current = wavesurfer.getDuration();
     return emptySegment;
   };
 
