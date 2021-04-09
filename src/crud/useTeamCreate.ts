@@ -31,6 +31,7 @@ export const useTeamCreate = (props: IProps) => {
   const [, setOrganization] = useGlobal('organization');
   const [, setProject] = useGlobal('project');
   const [, setConnected] = useGlobal('connected');
+  const [, offlineOnly] = useGlobal('offlineOnly');
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleRec } = useRole();
@@ -98,7 +99,7 @@ export const useTeamCreate = (props: IProps) => {
       ...AddRecord(t, orgRec, user, memory),
       t.replaceRelatedRecord(orgRec, 'owner', userRecId),
     ]);
-    await teamApiRead(orgRec.id); // Update slug value
+    if (!offlineOnly) await teamApiRead(orgRec.id); // Update slug value
     await OrgRelated(coordinator, orgRec, userRecId);
 
     setOrganization(orgRec.id);
