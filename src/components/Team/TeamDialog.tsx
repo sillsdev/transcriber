@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useGlobal } from 'reactn';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
@@ -13,7 +12,7 @@ import {
 import { Organization, IDialog, DialogMode } from '../../model';
 import DeleteExpansion from '../DeleteExpansion';
 import { TeamContext } from '../../context/TeamContext';
-import { useTeamApiRead } from '../../crud';
+import { useTeamApiPull } from '../../crud';
 
 interface IRecordProps {
   organizations: Array<Organization>;
@@ -37,8 +36,7 @@ export function TeamDialog(props: IProps) {
   const ctx = React.useContext(TeamContext);
   const { cardStrings } = ctx.state;
   const t = cardStrings;
-  const teamApiRead = useTeamApiRead();
-  const [offlineOnly] = useGlobal('offlineOnly');
+  const teamApiPull = useTeamApiPull();
 
   const handleClose = () => {
     onOpen && onOpen(false);
@@ -47,9 +45,7 @@ export function TeamDialog(props: IProps) {
   const handleCommit = async () => {
     const current =
       mode === DialogMode.edit && values
-        ? offlineOnly
-          ? values
-          : await teamApiRead(values.id) // update slug for migration
+        ? values
         : ({ attributes: {} } as Organization);
     if (current.hasOwnProperty('relationships')) delete current?.relationships;
     const team = {
@@ -78,7 +74,11 @@ export function TeamDialog(props: IProps) {
   };
 
   useEffect(() => {
-    setName(values?.attributes?.name || '');
+    if (!name) {
+      setName(values?.attributes?.name || '');
+      if (values) teamApiPull(values.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
 
   return (

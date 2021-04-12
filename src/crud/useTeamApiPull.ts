@@ -1,19 +1,15 @@
 import JSONAPISource from '@orbit/jsonapi';
 import { useGlobal } from 'reactn';
-import { Organization } from '../model';
 
-export const useTeamApiRead = () => {
+export const useTeamApiPull = () => {
   const [memory] = useGlobal('memory');
   const [coordinator] = useGlobal('coordinator');
   const remote = coordinator.getSource('remote') as JSONAPISource;
 
   const teamRead = async (id: string) => {
-    await memory.sync(
+    return await memory.sync(
       await remote.pull((q) => q.findRecord({ type: 'organization', id }))
     );
-    return (await memory.query((q) =>
-      q.findRecord({ type: 'organization', id })
-    )) as Promise<Organization>;
   };
   return teamRead;
 };
