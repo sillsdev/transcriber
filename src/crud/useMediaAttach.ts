@@ -1,10 +1,10 @@
-import {useGlobal} from 'reactn';
-import {ISharedStrings, ActivityStates, MediaFile} from '../model';
-import { orbitErr} from '../utils';
+import { useGlobal } from 'reactn';
+import { ISharedStrings, ActivityStates, MediaFile } from '../model';
+import { orbitErr } from '../utils';
 import * as actions from '../store';
-import { TransformBuilder, Operation} from '@orbit/data';
-import { UpdatePassageStateOps} from '../crud/updatePassageState';
-import { getMediaInPlans, related} from '.';
+import { TransformBuilder, Operation } from '@orbit/data';
+import { UpdatePassageStateOps } from '../crud/updatePassageState';
+import { getMediaInPlans, related } from '.';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -28,16 +28,16 @@ export const useMediaAttach = (props: IProps) => {
   ) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
-    var mediaRI = {type: 'mediafile', id: mediaId};
-    var mediaRec = memory.cache.query(q => q.findRecord(mediaRI));
-    if (!mediaRec || related(mediaRec, 'passage') === passage)
-      return;
+    var mediaRI = { type: 'mediafile', id: mediaId };
+    var mediaRec = memory.cache.query((q) => q.findRecord(mediaRI));
+    if (!mediaRec || related(mediaRec, 'passage') === passage) return;
     var media = getMediaInPlans(
       [plan],
       memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
     ).filter((m) => related(m, 'passage') === passage);
     ops.push(
-      tb.replaceAttribute(mediaRI,
+      tb.replaceAttribute(
+        mediaRI,
         'versionNumber',
         media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
       )
@@ -75,9 +75,10 @@ export const useMediaAttach = (props: IProps) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     ops.push(
-      tb.replaceRelatedRecord({
+      tb.replaceRelatedRecord(
+        {
           type: 'mediafile',
-          id: mediaId
+          id: mediaId,
         },
         'passage',
         null
