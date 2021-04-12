@@ -493,8 +493,8 @@ export interface IProjButtonsStrings extends Localize.LocalizedStringsMethods {
     "reportsTitle": string;
 };
 
-export interface IProjectSolutionStrings extends Localize.LocalizedStringsMethods {
-    "selectType": string;
+export interface INewProjectStrings extends Localize.LocalizedStringsMethods {
+    "newProject": string;
     "audioProduct": string;
     "textProduct": string;
     "other": string;
@@ -511,7 +511,7 @@ export interface IProjectSolutionStrings extends Localize.LocalizedStringsMethod
     "blank": string;
     "paratextIntegration": string;
     "oneStoryIntegration": string;
-    "newProject": string;
+    "configure": string;
     "uploadAudio": string;
     "startRecording": string;
 };
@@ -544,6 +544,7 @@ export interface IShapingTableStrings extends Localize.LocalizedStringsMethods {
 
 export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "admin": string;
+    "cancel": string;
     "editor": string;
     "lastEdit": string;
     "NoSaveOffline": string;
@@ -554,6 +555,7 @@ export interface ISharedStrings extends Localize.LocalizedStringsMethods {
     "expiredParatextToken": string;
     "expiredToken": string;
     "invalidParatextLogin": string;
+    "save": string;
     "transcriber": string;
     "uploadMediaPlural": string;
     "uploadMediaSingular": string;
@@ -729,7 +731,7 @@ export interface IVProjectStrings extends Localize.LocalizedStringsMethods {
     "language": string;
     "layout": string;
     "nameInUse": string;
-    "new": string;
+    "configure": string;
     "newProject": string;
     "organizedBy": string;
     "other": string;
@@ -823,7 +825,7 @@ export interface ILocalizedStrings {
 	planTabs: IPlanTabsStrings;
 	profile: IProfileStrings;
 	projButtons: IProjButtonsStrings;
-	projectSolution: IProjectSolutionStrings;
+	newProject: INewProjectStrings;
 	scriptureTable: IScriptureTableStrings;
 	shapingTable: IShapingTableStrings;
 	shared: ISharedStrings;

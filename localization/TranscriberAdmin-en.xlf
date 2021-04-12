@@ -2452,121 +2452,121 @@
             <target/>
          </segment>
       </unit>
-      <unit id="projectSolution.selectType">
-         <segment>
-            <source>I want to set up this kind of project...</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.audioProduct">
-         <segment>
-            <source>Audio Product</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.textProduct">
-         <segment>
-            <source>Text Product</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.other">
-         <segment>
-            <source>Other</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.general">
-         <segment>
-            <source>General Transcription</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.generalTip">
-         <segment>
-            <source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.obt">
-         <segment>
-            <source>Oral Bible Translation - OBT</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.obtTip">
-         <segment>
-            <source>Oral Bible translation produces an audio product using oral methods.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.storying">
-         <segment>
-            <source>Storying</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.storyingTip">
-         <segment>
-            <source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.adaptation">
-         <segment>
-            <source>Oral Adaptation</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.adaptationTip">
-         <segment>
-            <source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.drafting">
-         <segment>
-            <source>Oral Drafting for Scripture</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.draftingTip">
-         <segment>
-            <source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.blank">
-         <segment>
-            <source>Blank Project</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.paratextIntegration">
-         <segment>
-            <source>Integrated with Paratext</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.oneStoryIntegration">
-         <segment>
-            <source>Integrated with OneStory Editor</source>
-            <target/>
-         </segment>
-      </unit>
-      <unit id="projectSolution.newProject">
+      <unit id="newProject.newProject">
          <segment>
             <source>New Project</source>
             <target/>
          </segment>
       </unit>
-      <unit id="projectSolution.uploadAudio">
+      <unit id="newProject.audioProduct">
+         <segment>
+            <source>Audio Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.textProduct">
+         <segment>
+            <source>Text Product</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.other">
+         <segment>
+            <source>Other</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.general">
+         <segment>
+            <source>General Transcription</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.generalTip">
+         <segment>
+            <source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.obt">
+         <segment>
+            <source>Oral Bible Translation - OBT</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.obtTip">
+         <segment>
+            <source>Oral Bible translation produces an audio product using oral methods.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.storying">
+         <segment>
+            <source>Storying</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.storyingTip">
+         <segment>
+            <source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.adaptation">
+         <segment>
+            <source>Oral Adaptation</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.adaptationTip">
+         <segment>
+            <source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.drafting">
+         <segment>
+            <source>Oral Drafting for Scripture</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.draftingTip">
+         <segment>
+            <source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.blank">
+         <segment>
+            <source>Blank Project</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.paratextIntegration">
+         <segment>
+            <source>Integrated with Paratext</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.oneStoryIntegration">
+         <segment>
+            <source>Integrated with OneStory Editor</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.configure">
+         <segment>
+            <source>Configure</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="newProject.uploadAudio">
          <segment>
             <source>Upload Audio</source>
             <target/>
          </segment>
       </unit>
-      <unit id="projectSolution.startRecording">
+      <unit id="newProject.startRecording">
          <segment>
             <source>Start Recording</source>
             <target/>
@@ -2698,6 +2698,12 @@
             <target/>
          </segment>
       </unit>
+      <unit id="shared.cancel">
+         <segment>
+            <source>Cancel</source>
+            <target/>
+         </segment>
+      </unit>
       <unit id="shared.editor">
          <segment>
             <source>Editor</source>
@@ -2755,6 +2761,12 @@
       <unit id="shared.invalidParatextLogin">
          <segment>
             <source>You must login with a valid paratext login.</source>
+            <target/>
+         </segment>
+      </unit>
+      <unit id="shared.save">
+         <segment>
+            <source>Save</source>
             <target/>
          </segment>
       </unit>
@@ -3592,9 +3604,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.new">
+      <unit id="vProject.configure">
          <segment>
-            <source>New</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>

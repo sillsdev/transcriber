@@ -2857,144 +2857,144 @@
                <context context-type="sourcefile">ProjButtons.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="projectSolution.selectType">
-      		<source>I want to set up this kind of project...</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.audioProduct">
-      		<source>Audio Product</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.textProduct">
-      		<source>Text Product</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.other">
-      		<source>Other</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.general">
-      		<source>General Transcription</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.generalTip">
-      		<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.obt">
-      		<source>Oral Bible Translation - OBT</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.obtTip">
-      		<source>Oral Bible translation produces an audio product using oral methods.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.storying">
-      		<source>Storying</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.storyingTip">
-      		<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.adaptation">
-      		<source>Oral Adaptation</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.adaptationTip">
-      		<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.drafting">
-      		<source>Oral Drafting for Scripture</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.draftingTip">
-      		<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.blank">
-      		<source>Blank Project</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.paratextIntegration">
-      		<source>Integrated with Paratext</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.oneStoryIntegration">
-      		<source>Integrated with OneStory Editor</source>
-      		<target/>
-      		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
-      		</context-group>
-      	</trans-unit>
-      	<trans-unit id="projectSolution.newProject">
+      	<trans-unit id="newProject.newProject">
       		<source>New Project</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
+      			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="projectSolution.uploadAudio">
+      	<trans-unit id="newProject.audioProduct">
+      		<source>Audio Product</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.textProduct">
+      		<source>Text Product</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.other">
+      		<source>Other</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.general">
+      		<source>General Transcription</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.generalTip">
+      		<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.obt">
+      		<source>Oral Bible Translation - OBT</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.obtTip">
+      		<source>Oral Bible translation produces an audio product using oral methods.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.storying">
+      		<source>Storying</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.storyingTip">
+      		<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.adaptation">
+      		<source>Oral Adaptation</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.adaptationTip">
+      		<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.drafting">
+      		<source>Oral Drafting for Scripture</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.draftingTip">
+      		<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.blank">
+      		<source>Blank Project</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.paratextIntegration">
+      		<source>Integrated with Paratext</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.oneStoryIntegration">
+      		<source>Integrated with OneStory Editor</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.configure">
+      		<source>Configure</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">NewProject.tsx</context>
+      		</context-group>
+      	</trans-unit>
+      	<trans-unit id="newProject.uploadAudio">
       		<source>Upload Audio</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
+      			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="projectSolution.startRecording">
+      	<trans-unit id="newProject.startRecording">
       		<source>Start Recording</source>
       		<target/>
       		<context-group>
-      			<context context-type="sourcefile">ProjectSolution.tsx</context>
+      			<context context-type="sourcefile">NewProject.tsx</context>
       		</context-group>
       	</trans-unit>
       	<trans-unit id="scriptureTable.action">
@@ -3144,6 +3144,13 @@
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
          </trans-unit>
+      	<trans-unit id="shared.cancel">
+      		<source>Cancel</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.editor">
             <source>Editor</source>
             <target/>
@@ -3214,13 +3221,20 @@
                <context context-type="sourcefile">integration.tsx</context>
             </context-group>
          </trans-unit>
-      	<trans-unit id="shared.transcriber">
-            <source>Transcriber</source>
+      	<trans-unit id="shared.save">
+            <source>Save</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">Access.tsx</context>
             </context-group>
-         </trans-unit>
+      	</trans-unit>
+      	<trans-unit id="shared.transcriber">
+      		<source>Transcriber</source>
+      		<target/>
+      		<context-group>
+      			<context context-type="sourcefile">Access.tsx</context>
+      		</context-group>
+      	</trans-unit>
          <trans-unit id="shared.uploadMediaPlural">
             <source>Upload Audio</source>
             <target/>
@@ -4188,8 +4202,8 @@
       			<context context-type="sourcefile">ProjectName.tsx</context>
       		</context-group>
       	</trans-unit>
-      	<trans-unit id="vProject.new">
-            <source>New</source>
+      	<trans-unit id="vProject.configure">
+            <source>Configure</source>
             <target/>
             <context-group>
                <context context-type="sourcefile">addCard.tsx</context>

@@ -61,12 +61,12 @@ interface IProps {
   setType: (type: string) => void;
 }
 
-export const ProjectSolution = (props: IProps) => {
+export const NewProject = (props: IProps) => {
   const { open, onOpen, doUpload, doRecord, doNewProj, setType } = props;
   const classes = useStyles();
   const ctx = React.useContext(TeamContext);
-  const { projSolutionStrings } = ctx.state;
-  const t = projSolutionStrings;
+  const { newProjectStrings } = ctx.state;
+  const t = newProjectStrings;
 
   enum integration {
     none,
@@ -174,19 +174,19 @@ export const ProjectSolution = (props: IProps) => {
         />
         <ListItemSecondaryAction className={classes.actionButtons}>
           {to.buttons ? (
-            <Button variant="contained" onClick={handleNewProj}>
-              {t.newProject}
+            <Button color="primary" onClick={handleNewProj}>
+              {t.configure}
             </Button>
           ) : (
             <>
               <Button
-                variant="contained"
+                color="primary"
                 onClick={handleUpload(to.kind || integration.none)}
               >
                 {t.uploadAudio}
               </Button>
               <Button
-                variant="contained"
+                color="primary"
                 onClick={handleRecord(to.kind || integration.none)}
               >
                 {t.startRecording}
@@ -201,7 +201,7 @@ export const ProjectSolution = (props: IProps) => {
 
   return (
     <BigDialog
-      title={t.selectType}
+      title={t.newProject}
       isOpen={open}
       onOpen={handleCancel}
       onCancel={handleCancel}
@@ -224,4 +224,4 @@ export const ProjectSolution = (props: IProps) => {
   );
 };
 
-export default ProjectSolution;
+export default NewProject;

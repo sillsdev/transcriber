@@ -526,9 +526,9 @@ const initialState = {
 			"reportsTitle": "{0} Reports",
 		}
 	}),
-	"projectSolution": new LocalizedStrings({
+	"newProject": new LocalizedStrings({
 		"en": {
-			"selectType": "I want to set up this kind of project...",
+			"newProject": "New Project",
 			"audioProduct": "Audio Product",
 			"textProduct": "Text Product",
 			"other": "Other",
@@ -545,7 +545,7 @@ const initialState = {
 			"blank": "Blank Project",
 			"paratextIntegration": "Integrated with Paratext",
 			"oneStoryIntegration": "Integrated with OneStory Editor",
-			"newProject": "New Project",
+			"configure": "Configure",
 			"uploadAudio": "Upload Audio",
 			"startRecording": "Start Recording",
 		}
@@ -581,6 +581,7 @@ const initialState = {
 	"shared": new LocalizedStrings({
 		"en": {
 			"admin": "Owner",
+			"cancel": "Cancel",
 			"editor": "Editor",
 			"lastEdit": "Last save {0}",
 			"NoSaveOffline": "Unable to save while offline.",
@@ -591,6 +592,7 @@ const initialState = {
 			"expiredParatextToken": "Your paratext login has expired and can't be automatically renewed.  Please log out and login again.",
 			"expiredToken": "Your login token has expired and can't be automatically renewed.  Please log out and login again.",
 			"invalidParatextLogin": "You must login with a valid paratext login.",
+			"save": "Save",
 			"transcriber": "Transcriber",
 			"uploadMediaPlural": "Upload Audio",
 			"uploadMediaSingular": "Upload Audio",
@@ -778,7 +780,7 @@ const initialState = {
 			"language": "Language",
 			"layout": "Layout",
 			"nameInUse": "Name in use",
-			"new": "New",
+			"configure": "Configure",
 			"newProject": "{0} Project",
 			"organizedBy": "Term for organizing layout",
 			"other": "Other",
@@ -880,7 +882,7 @@ const localizationReducer = function (state = initialState, action: any): ILocal
 				"planTabs" : new LocalizedStrings(action.payload.data.planTabs),
 				"profile" : new LocalizedStrings(action.payload.data.profile),
 				"projButtons" : new LocalizedStrings(action.payload.data.projButtons),
-				"projectSolution" : new LocalizedStrings(action.payload.data.projectSolution),
+				"newProject" : new LocalizedStrings(action.payload.data.newProject),
 				"scriptureTable" : new LocalizedStrings(action.payload.data.scriptureTable),
 				"shapingTable" : new LocalizedStrings(action.payload.data.shapingTable),
 				"shared" : new LocalizedStrings(action.payload.data.shared),

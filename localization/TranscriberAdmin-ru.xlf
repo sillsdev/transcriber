@@ -2437,121 +2437,121 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="projectSolution.selectType">
-			<segment>
-				<source>I want to set up this kind of project...</source>
-				<target>Я хочу создать такой проект... </target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.audioProduct">
-			<segment>
-				<source>Audio Product</source>
-				<target>Аудио Продукт</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.textProduct">
-			<segment>
-				<source>Text Product</source>
-				<target>Текстовый продукт</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.other">
-			<segment>
-				<source>Other</source>
-				<target>Другое</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.general">
-			<segment>
-				<source>General Transcription</source>
-				<target>Общая транскрипция</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.generalTip">
-			<segment>
-				<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
-				<target>Общая транскрипция может охватывать широкий спектр рабочих сценариев и продуктовых решений.</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.obt">
-			<segment>
-				<source>Oral Bible Translation - OBT</source>
-				<target>Перевод устной Библии</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.obtTip">
-			<segment>
-				<source>Oral Bible translation produces an audio product using oral methods.</source>
-				<target>При переводе устной Библии создается аудио-продукт с использованием устных методов.</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.storying">
-			<segment>
-				<source>Storying</source>
-				<target>История</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.storyingTip">
-			<segment>
-				<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
-				<target>История будет реструктурировать содержимое Писания, чтобы создать продукт, который легче запомнить и недооценить ...</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.adaptation">
-			<segment>
-				<source>Oral Adaptation</source>
-				<target>Устная адаптация</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.adaptationTip">
-			<segment>
-				<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
-				<target>Адаптационное решение представляет собой гибрид устной речи и традиционного текстового адаптационного решения ...</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.drafting">
-			<segment>
-				<source>Oral Drafting for Scripture</source>
-				<target>Устный проект для Священного Писания</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.draftingTip">
-			<segment>
-				<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
-				<target>В устной редакции используются аудиозаписи для достижения естественного звучания письменного перевода.</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.blank">
-			<segment>
-				<source>Blank Project</source>
-				<target>Пустой проект</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.paratextIntegration">
-			<segment>
-				<source>Integrated with Paratext</source>
-				<target>Интеграция с Paratext</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.oneStoryIntegration">
-			<segment>
-				<source>Integrated with OneStory Editor</source>
-				<target>Интеграция с редактором OneStory</target>
-			</segment>
-		</unit>
-		<unit id="projectSolution.newProject">
+		<unit id="newProject.newProject">
 			<segment>
 				<source>New Project</source>
 				<target>Новый проект</target>
 			</segment>
 		</unit>
-		<unit id="projectSolution.uploadAudio">
+		<unit id="newProject.audioProduct">
+			<segment>
+				<source>Audio Product</source>
+				<target>Аудио Продукт</target>
+			</segment>
+		</unit>
+		<unit id="newProject.textProduct">
+			<segment>
+				<source>Text Product</source>
+				<target>Текстовый продукт</target>
+			</segment>
+		</unit>
+		<unit id="newProject.other">
+			<segment>
+				<source>Other</source>
+				<target>Другое</target>
+			</segment>
+		</unit>
+		<unit id="newProject.general">
+			<segment>
+				<source>General Transcription</source>
+				<target>Общая транскрипция</target>
+			</segment>
+		</unit>
+		<unit id="newProject.generalTip">
+			<segment>
+				<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
+				<target>Общая транскрипция может охватывать широкий спектр рабочих сценариев и продуктовых решений.</target>
+			</segment>
+		</unit>
+		<unit id="newProject.obt">
+			<segment>
+				<source>Oral Bible Translation - OBT</source>
+				<target>Перевод устной Библии</target>
+			</segment>
+		</unit>
+		<unit id="newProject.obtTip">
+			<segment>
+				<source>Oral Bible translation produces an audio product using oral methods.</source>
+				<target>При переводе устной Библии создается аудио-продукт с использованием устных методов.</target>
+			</segment>
+		</unit>
+		<unit id="newProject.storying">
+			<segment>
+				<source>Storying</source>
+				<target>История</target>
+			</segment>
+		</unit>
+		<unit id="newProject.storyingTip">
+			<segment>
+				<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
+				<target>История будет реструктурировать содержимое Писания, чтобы создать продукт, который легче запомнить и недооценить ...</target>
+			</segment>
+		</unit>
+		<unit id="newProject.adaptation">
+			<segment>
+				<source>Oral Adaptation</source>
+				<target>Устная адаптация</target>
+			</segment>
+		</unit>
+		<unit id="newProject.adaptationTip">
+			<segment>
+				<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
+				<target>Адаптационное решение представляет собой гибрид устной речи и традиционного текстового адаптационного решения ...</target>
+			</segment>
+		</unit>
+		<unit id="newProject.drafting">
+			<segment>
+				<source>Oral Drafting for Scripture</source>
+				<target>Устный проект для Священного Писания</target>
+			</segment>
+		</unit>
+		<unit id="newProject.draftingTip">
+			<segment>
+				<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
+				<target>В устной редакции используются аудиозаписи для достижения естественного звучания письменного перевода.</target>
+			</segment>
+		</unit>
+		<unit id="newProject.blank">
+			<segment>
+				<source>Blank Project</source>
+				<target>Пустой проект</target>
+			</segment>
+		</unit>
+		<unit id="newProject.paratextIntegration">
+			<segment>
+				<source>Integrated with Paratext</source>
+				<target>Интеграция с Paratext</target>
+			</segment>
+		</unit>
+		<unit id="newProject.oneStoryIntegration">
+			<segment>
+				<source>Integrated with OneStory Editor</source>
+				<target>Интеграция с редактором OneStory</target>
+			</segment>
+		</unit>
+		<unit id="newProject.configure">
+			<segment>
+				<source>Configure</source>
+				<target>Настройка</target>
+			</segment>
+		</unit>
+		<unit id="newProject.uploadAudio">
 			<segment>
 				<source>Upload Audio</source>
 				<target>Загрузить аудио</target>
 			</segment>
 		</unit>
-		<unit id="projectSolution.startRecording">
+		<unit id="newProject.startRecording">
 			<segment>
 				<source>Start Recording</source>
 				<target>Начать запись</target>
@@ -2683,6 +2683,12 @@
 				<target/>
 			</segment>
 		</unit>
+		<unit id="shared.cancel">
+			<segment>
+				<source>Cancel</source>
+				<target>Отменить</target>
+			</segment>
+		</unit>
 		<unit id="shared.editor">
 			<segment>
 				<source>Editor</source>
@@ -2699,6 +2705,12 @@
 			<segment>
 				<source>Unable to save while offline.</source>
 				<target/>
+			</segment>
+		</unit>
+		<unit id="shared.save">
+			<segment>
+				<source>Save</source>
+				<target>Сохранить</target>
 			</segment>
 		</unit>
 		<unit id="shared.transcriber">
@@ -3490,7 +3502,7 @@
 		<unit id="vProject.edit">
 			<segment>
 				<source>Edit</source>
-				<target/>
+				<target>Редактирование</target>
 			</segment>
 		</unit>
 		<unit id="vProject.editorSettings">
@@ -3541,10 +3553,10 @@
 				<target/>
 			</segment>
 		</unit>
-		<unit id="vProject.new">
+		<unit id="vProject.configure">
 			<segment>
-				<source>New</source>
-				<target/>
+				<source>Configure</source>
+				<target>Настройка</target>
 			</segment>
 		</unit>
 		<unit id="vProject.newProject">

@@ -98,7 +98,7 @@ export function ProjectDialog(props: IProps) {
       aria-labelledby="add-project-dialog-title"
     >
       <DialogTitle id="add-project-dialog-title">
-        {t.newProject.replace('{0}', mode === Mode.add ? t.new : t.edit)}
+        {t.newProject.replace('{0}', mode === Mode.add ? t.configure : t.edit)}
       </DialogTitle>
       <DialogContent>
         <ProjectName state={state} setState={setState} inUse={nameInUse} />
