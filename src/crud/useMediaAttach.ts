@@ -28,21 +28,22 @@ export const useMediaAttach = (props: IProps) => {
   ) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
+    var mediaRI = { type: 'mediafile', id: mediaId };
+    var mediaRec = memory.cache.query((q) => q.findRecord(mediaRI));
+    if (!mediaRec || related(mediaRec, 'passage') === passage) return;
     var media = getMediaInPlans(
       [plan],
       memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
     ).filter((m) => related(m, 'passage') === passage);
-    if (media.length > 0) {
-      ops.push(
-        tb.replaceAttribute(
-          { type: 'mediafile', id: mediaId },
-          'versionNumber',
-          media[0].attributes.versionNumber + 1
-        )
-      );
-    }
     ops.push(
-      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaId }, 'passage', {
+      tb.replaceAttribute(
+        mediaRI,
+        'versionNumber',
+        media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
+      )
+    );
+    ops.push(
+      tb.replaceRelatedRecord(mediaRI, 'passage', {
         type: 'passage',
         id: passage,
       })
@@ -75,7 +76,10 @@ export const useMediaAttach = (props: IProps) => {
     var ops: Operation[] = [];
     ops.push(
       tb.replaceRelatedRecord(
-        { type: 'mediafile', id: mediaId },
+        {
+          type: 'mediafile',
+          id: mediaId,
+        },
         'passage',
         null
       )

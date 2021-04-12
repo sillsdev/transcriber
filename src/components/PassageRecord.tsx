@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
-import { loadBlob } from '../utils';
+import { loadBlob, removeExtension } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,11 +53,12 @@ interface IProps extends IStateProps {
   visible: boolean;
   mediaId: string;
   auth: Auth;
+  multiple?: boolean;
+  metaData?: JSX.Element;
+  defaultFilename?: string;
   ready: () => boolean;
   uploadMethod?: (files: File[]) => void;
-  multiple?: boolean;
   cancelMethod?: () => void;
-  metaData?: JSX.Element;
 }
 
 function PassageRecord(props: IProps) {
@@ -66,6 +67,7 @@ function PassageRecord(props: IProps) {
     visible,
     mediaId,
     auth,
+    defaultFilename,
     uploadMethod,
     cancelMethod,
     ready,
@@ -75,6 +77,7 @@ function PassageRecord(props: IProps) {
   const [isOffline] = useGlobal('offline');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
+  const [userHasSetName, setUserHasSetName] = useState(false);
   const [filetype, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
@@ -111,6 +114,13 @@ function PassageRecord(props: IProps) {
     setOpen(visible);
   }, [visible]);
 
+  useEffect(() => {
+    if (!userHasSetName) {
+      if (defaultFilename) setName(defaultFilename);
+      else setName(t.defaultFilename);
+    }
+  }, [userHasSetName, defaultFilename, t.defaultFilename]);
+
   const setMimeType = (mimeType: string) => {
     mimeTypeRef.current = mimeType;
     setExtension();
@@ -134,16 +144,12 @@ function PassageRecord(props: IProps) {
     setFilechanged(true);
   }
   const reset = () => {
-    setName(t.defaultFilename);
+    setUserHasSetName(false);
     setFilechanged(false);
     setOriginalBlob(undefined);
   };
   const fileName = () => name; // + '.' + filetype;
-  const removeExtension = (filename: string) => {
-    var x = filename.split('.');
-    if (x.length > 1) x.pop();
-    return x.join('.');
-  };
+
   const handleAddOrSave = () => {
     if (audioBlob) {
       var files = [
@@ -167,7 +173,8 @@ function PassageRecord(props: IProps) {
   };
   const handleChangeFileName = (e: any) => {
     e.persist();
-    setName(removeExtension(e.target.value));
+    setName(e.target.value);
+    setUserHasSetName(true);
   };
 
   const handleLoadAudio = () => {
@@ -180,7 +187,7 @@ function PassageRecord(props: IProps) {
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
     ) as MediaFile;
-    setName(removeExtension(mediaRec.attributes.originalFile));
+    setName(removeExtension(mediaRec.attributes.originalFile).name);
     var index = mimes.findIndex((m) => m === mediaRec.attributes.contentType);
     if (index > -1) setFiletype(extensions[index]);
   };
