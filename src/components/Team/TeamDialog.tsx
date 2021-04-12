@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useGlobal } from 'reactn';
 import { withData } from '../../mods/react-orbitjs';
 import { QueryBuilder } from '@orbit/data';
 import {
@@ -37,6 +38,7 @@ export function TeamDialog(props: IProps) {
   const { cardStrings } = ctx.state;
   const t = cardStrings;
   const teamApiPull = useTeamApiPull();
+  const [offlineOnly] = useGlobal('offlineOnly');
 
   const handleClose = () => {
     onOpen && onOpen(false);
@@ -76,7 +78,7 @@ export function TeamDialog(props: IProps) {
   useEffect(() => {
     if (!name) {
       setName(values?.attributes?.name || '');
-      if (values) teamApiPull(values.id);
+      if (!offlineOnly && values) teamApiPull(values.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values, isOpen]);
