@@ -423,7 +423,6 @@ export function MediaTab(props: IProps) {
       const passId = data[mRow].passId;
       if (passId && passId !== '') {
         detachPassage(passId, data[mRow].sectionId, plan, mediaId);
-        setChanged(true);
       } else {
         showMessage(t.noPassageAttached.replace('{0}', data[mRow].fileName));
       }
