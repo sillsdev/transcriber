@@ -42,6 +42,7 @@ interface IDispatchProps {
 interface IProps extends IStateProps, IDispatchProps {
   auth: Auth;
   recordAudio: boolean;
+  defaultFilename?: string;
   isOpen: boolean;
   onOpen: (visible: boolean) => void;
   showMessage: (msg: string | JSX.Element) => void;
@@ -60,6 +61,7 @@ export const Uploader = (props: IProps) => {
     auth,
     mediaId,
     recordAudio,
+    defaultFilename,
     t,
     isOpen,
     onOpen,
@@ -253,9 +255,10 @@ export const Uploader = (props: IProps) => {
           cancelMethod={uploadCancel}
           metaData={metaData}
           ready={ready}
+          defaultFilename={defaultFilename}
         />
       )}
-      {recordAudio || (
+      {!recordAudio && (
         <MediaUpload
           visible={isOpen}
           uploadType={UploadType.Media}

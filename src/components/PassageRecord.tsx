@@ -53,11 +53,12 @@ interface IProps extends IStateProps {
   visible: boolean;
   mediaId: string;
   auth: Auth;
+  multiple?: boolean;
+  metaData?: JSX.Element;
+  defaultFilename?: string;
   ready: () => boolean;
   uploadMethod?: (files: File[]) => void;
-  multiple?: boolean;
   cancelMethod?: () => void;
-  metaData?: JSX.Element;
 }
 
 function PassageRecord(props: IProps) {
@@ -66,6 +67,7 @@ function PassageRecord(props: IProps) {
     visible,
     mediaId,
     auth,
+    defaultFilename,
     uploadMethod,
     cancelMethod,
     ready,
@@ -110,6 +112,11 @@ function PassageRecord(props: IProps) {
   useEffect(() => {
     setOpen(visible);
   }, [visible]);
+
+  useEffect(() => {
+    if (defaultFilename) setName(defaultFilename);
+    else setName(t.defaultFilename);
+  }, [defaultFilename, t.defaultFilename]);
 
   const setMimeType = (mimeType: string) => {
     mimeTypeRef.current = mimeType;

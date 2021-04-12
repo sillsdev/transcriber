@@ -41,7 +41,13 @@ import {
   usePlan,
   UpdatePassageStateOps,
 } from '../crud';
-import { Online, useRemoteSave, lookupBook, waitForIt } from '../utils';
+import {
+  Online,
+  useRemoteSave,
+  lookupBook,
+  waitForIt,
+  cleanFileName,
+} from '../utils';
 import { debounce } from 'lodash';
 import AssignSection from './AssignSection';
 import StickyRedirect from './StickyRedirect';
@@ -160,7 +166,7 @@ export function ScriptureTable(props: IProps) {
   const memory = coordinator.getSource('memory') as Memory;
   const remote = coordinator.getSource('remote') as JSONAPISource;
   const [user] = useGlobal('user');
-  const [doSave, setDoSave] = useGlobal('doSave');
+  const [doSave] = useGlobal('doSave');
   const [offlineOnly] = useGlobal('offlineOnly');
   const [, setBusy] = useGlobal('importexportBusy');
   const [, setConnected] = useGlobal('connected');
@@ -192,6 +198,7 @@ export function ScriptureTable(props: IProps) {
   const [recordAudio, setRecordAudio] = useState(true);
   const [status] = useState(statusInit);
   const [uploadRow, setUploadRow] = useState<number>();
+  const [defaultFilename, setDefaultFilename] = useState('');
   const showBook = (cols: ICols) => cols.Book >= 0;
   const { getPlan } = usePlan();
   const [attachPassage, detachPassage] = useMediaAttach({
@@ -718,7 +725,29 @@ export function ScriptureTable(props: IProps) {
   };
   const handleAssignClose = () => () => setAssignSectionVisible(false);
 
+  const setFilename = (row: number) => {
+    if (passageId(row)) {
+      var passageRec = memory.cache.query((q) =>
+        q.findRecord({
+          type: 'passage',
+          id: passageId(row),
+        })
+      ) as Passage;
+      setDefaultFilename(
+        cleanFileName(
+          (passageRec.attributes.book || '') + passageRec.attributes.reference
+        )
+      );
+      console.log(
+        'set fileName',
+        cleanFileName(
+          (passageRec.attributes.book || '') + passageRec.attributes.reference
+        )
+      );
+    }
+  };
   const showUpload = (i: number, record: boolean) => {
+    setFilename(i);
     setUploadRow(i);
     setRecordAudio(record);
     setUploadVisible(true);
@@ -1286,7 +1315,6 @@ export function ScriptureTable(props: IProps) {
           mediaRemoteIds[0]
       );
     }
-    setDoSave(true);
   };
 
   const handleLookupBook = (book: string) =>
@@ -1326,6 +1354,7 @@ export function ScriptureTable(props: IProps) {
       />
       <Uploader
         recordAudio={recordAudio}
+        defaultFilename={defaultFilename}
         auth={auth}
         mediaId={uploadRow !== undefined ? rowInfo[uploadRow].mediaId : ''}
         isOpen={uploadVisible}
