@@ -33,7 +33,9 @@ export const loadBlob = (
   if (online) {
     fetch(url).then(async (r) => setBlob(await r.blob()));
   } else {
-    const source = fs.readFileSync(url.replace(`transcribe-safe://`, ``));
+    const source = fs.readFileSync(
+      decodeURIComponent(url.replace(`transcribe-safe://`, ``))
+    );
     setBlob(new Blob([source], { type: urlType(url) }));
   }
 };
