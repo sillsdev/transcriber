@@ -443,6 +443,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleDelete = (what: string, where: number[]) => {
     if (what === 'Delete') {
+      setUploadRow(undefined);
       doDelete(where);
       return true;
     } else {
@@ -488,7 +489,6 @@ export function ScriptureTable(props: IProps) {
     );
     setRowInfo(rowInfo.filter((row, rowIndex) => !where.includes(rowIndex)));
     setInData(inData.filter((row, rowIndex) => !where.includes(rowIndex)));
-    setUploadRow(undefined);
     return true;
   };
 
@@ -1291,6 +1291,7 @@ export function ScriptureTable(props: IProps) {
 
   const handleLookupBook = (book: string) =>
     lookupBook({ book, allBookData, bookMap });
+
   return (
     <div className={classes.container}>
       <PlanSheet
