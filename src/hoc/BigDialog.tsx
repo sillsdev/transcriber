@@ -1,6 +1,9 @@
 import React from 'react';
 import { useGlobal } from 'reactn';
 import clsx from 'clsx';
+import { ISharedStrings, IState } from '../model';
+import { connect } from 'react-redux';
+import localStrings from '../selector/localize';
 import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import {
   Dialog,
@@ -52,13 +55,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+interface IStateProps {
+  ts: ISharedStrings;
+}
+
 export enum BigDialogBp {
   'md',
   'lg',
   'xl',
 }
 
-interface IProps {
+interface IProps extends IStateProps {
   title: string;
   children: JSX.Element;
   isOpen: boolean;
@@ -76,6 +83,7 @@ export function BigDialog({
   onCancel,
   onSave,
   bp,
+  ts,
 }: IProps) {
   const classes = useStyles();
   const [isExportBusy] = useGlobal('importexportBusy');
@@ -114,12 +122,20 @@ export function BigDialog({
       <DialogContent>{children}</DialogContent>
       {(onCancel || onSave) && (
         <DialogActions>
-          {onCancel && <Button onClick={onCancel}>{'Cancel'}</Button>}
-          {onSave && <Button>{'Save'}</Button>}
+          {onCancel && (
+            <Button onClick={onCancel} color="primary">
+              {ts.cancel}
+            </Button>
+          )}
+          {onSave && <Button color="primary">{ts.save}</Button>}
         </DialogActions>
       )}
     </Dialog>
   );
 }
 
-export default BigDialog;
+const mapStateToProps = (state: IState): IStateProps => ({
+  ts: localStrings(state, { layout: 'shared' }),
+});
+
+export default connect(mapStateToProps)(BigDialog);

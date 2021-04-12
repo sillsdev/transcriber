@@ -12,7 +12,7 @@ import useTodo from '../context/useTodo';
 import ShapingTable from './ShapingTable';
 import TaskHead from './TaskHead';
 import TaskItem from './TaskItem';
-import { BigDialog } from '../hoc/BigDialog';
+import BigDialog from '../hoc/BigDialog';
 import IntegrationTab from './Integration';
 import ExportTab from './TranscriptionTab';
 import ImportTab from './ImportTab';

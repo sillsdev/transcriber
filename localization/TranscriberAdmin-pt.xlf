@@ -2245,121 +2245,121 @@
             <target/>
          </segment>
       </unit>
-   	<unit id="projectSolution.selectType">
+   	<unit id="newProject.newProject">
    		<segment>
-   			<source>I want to set up this kind of project...</source>
-   			<target>Quero montar este tipo de projecto...</target>
+   			<source>New Project</source>
+   			<target>Novo projeto</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.audioProduct">
+   	<unit id="newProject.audioProduct">
    		<segment>
    			<source>Audio Product</source>
    			<target>Produto áudio</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.textProduct">
+   	<unit id="newProject.textProduct">
    		<segment>
    			<source>Text Product</source>
    			<target>Texto Produto</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.other">
+   	<unit id="newProject.other">
    		<segment>
    			<source>Other</source>
    			<target>Outros</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.general">
+   	<unit id="newProject.general">
    		<segment>
    			<source>General Transcription</source>
    			<target>Transcrição geral</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.generalTip">
+   	<unit id="newProject.generalTip">
    		<segment>
    			<source>General Transcription can cover a wide range of working scenarios and product solutions.</source>
    			<target>A Transcrição Geral pode cobrir uma vasta gama de cenários de trabalho e soluções de produtos.</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.obt">
+   	<unit id="newProject.obt">
    		<segment>
    			<source>Oral Bible Translation - OBT</source>
    			<target>Tradução Oral da Bíblia</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.obtTip">
+   	<unit id="newProject.obtTip">
    		<segment>
    			<source>Oral Bible translation produces an audio product using oral methods.</source>
    			<target>A tradução oral da Bíblia produz um produto áudio utilizando métodos orais.</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.storying">
+   	<unit id="newProject.storying">
    		<segment>
    			<source>Storying</source>
    			<target>História</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.storyingTip">
+   	<unit id="newProject.storyingTip">
    		<segment>
    			<source>Storying will restructure Scripture content to produce a product that is easier to remember and understand.</source>
    			<target>A narração reestruturará o conteúdo das Escrituras para produzir um produto mais fácil de lembrar e compreender.</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.adaptation">
+   	<unit id="newProject.adaptation">
    		<segment>
    			<source>Oral Adaptation</source>
    			<target>Adaptação</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.adaptationTip">
+   	<unit id="newProject.adaptationTip">
    		<segment>
    			<source>The Adaptation solution is a hybrid of oral drafting and a traditional text based adaptation solution.</source>
    			<target>A solução de Adaptação é um híbrido de redacção oral e uma solução de adaptação tradicional baseada em texto.</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.drafting">
+   	<unit id="newProject.drafting">
    		<segment>
    			<source>Oral Drafting for Scripture</source>
    			<target>Esboço oral para a Escritura</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.draftingTip">
+   	<unit id="newProject.draftingTip">
    		<segment>
    			<source>Oral drafting uses audio recordings to achieve a natural sounding written translation.</source>
    			<target>A redacção oral utiliza gravações áudio para conseguir uma tradução escrita com sonorização natural.</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.blank">
+   	<unit id="newProject.blank">
    		<segment>
    			<source>Blank Project</source>
    			<target>Projecto em branco</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.paratextIntegration">
+   	<unit id="newProject.paratextIntegration">
    		<segment>
    			<source>Integrated with Paratext</source>
    			<target>Integrado com Paratext</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.oneStoryIntegration">
+   	<unit id="newProject.oneStoryIntegration">
    		<segment>
    			<source>Integrated with OneStory Editor</source>
    			<target>Integrado com o editor do OneStory</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.newProject">
+   	<unit id="newProject.configure">
    		<segment>
-   			<source>New Project</source>
-   			<target>New Project</target>
+   			<source>Configure</source>
+   			<target>Configurar</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.uploadAudio">
+   	<unit id="newProject.uploadAudio">
    		<segment>
    			<source>Upload Audio</source>
    			<target>Carregar Áudio</target>
    		</segment>
    	</unit>
-   	<unit id="projectSolution.startRecording">
+   	<unit id="newProject.startRecording">
    		<segment>
    			<source>Start Recording</source>
    			<target>Iniciar Gravação</target>
@@ -2455,6 +2455,12 @@
             <target>Proprietário</target>
          </segment>
       </unit>
+   	<unit id="shared.cancel">
+   		<segment>
+   			<source>Cancel</source>
+   			<target>Cancelar</target>
+   		</segment>
+   	</unit>
       <unit id="shared.editor">
          <segment>
             <source>Editor</source>
@@ -2473,6 +2479,12 @@
             <target/>
          </segment>
       </unit>
+	   	<unit id="shared.save">
+	   		<segment>
+	   			<source>Save</source>
+	   			<target>Salvar</target>
+	   		</segment>
+	   	</unit>
       <unit id="shared.transcriber">
          <segment>
             <source>Transcriber</source>
@@ -3200,9 +3212,9 @@
             <target/>
          </segment>
       </unit>
-      <unit id="vProject.new">
+      <unit id="vProject.configure">
          <segment>
-            <source>New</source>
+            <source>Configure</source>
             <target/>
          </segment>
       </unit>
@@ -3211,6 +3223,18 @@
             <source>{0} Project</source>
             <target/>
          </segment>
+      </unit>
+   	<unit id="vProject.configure">
+      	<segment>
+      		<source>Configure</source>
+      		<target>Configurar</target>
+      	</segment>
+      </unit>
+   	<unit id="vProject.edit">
+      	<segment>
+      		<source>Edit</source>
+      		<target>Editar</target>
+      	</segment>
       </unit>
       <unit id="vProject.organizedBy">
          <segment>

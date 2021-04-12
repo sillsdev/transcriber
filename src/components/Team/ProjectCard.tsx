@@ -14,7 +14,7 @@ import moment from 'moment';
 import { VProject, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
 import ProjectMenu from './ProjectMenu';
-import { BigDialog } from '../../hoc/BigDialog';
+import BigDialog from '../../hoc/BigDialog';
 import IntegrationTab from '../Integration';
 import ExportTab from '../TranscriptionTab';
 import Visualize from '../Visualize';

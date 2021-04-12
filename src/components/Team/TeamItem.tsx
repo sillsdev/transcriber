@@ -5,7 +5,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import GroupIcon from '@material-ui/icons/Group';
 import { Organization, DialogMode } from '../../model';
 import { TeamContext } from '../../context/TeamContext';
-import { BigDialog, BigDialogBp } from '../../hoc/BigDialog';
+import BigDialog, { BigDialogBp } from '../../hoc/BigDialog';
 import GroupTabs from '../GroupTabs';
 import { ProjectCard, AddCard } from '.';
 import TeamDialog from './TeamDialog';
