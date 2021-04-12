@@ -306,6 +306,7 @@ export const AddCard = (props: IProps) => {
         createProject={createProject}
         finish={makeSectionsAndPassages}
         status={status}
+        defaultFilename={book?.value}
       />
       <Progress
         title={t.uploadProgress}

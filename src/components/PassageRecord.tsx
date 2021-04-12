@@ -77,6 +77,7 @@ function PassageRecord(props: IProps) {
   const [isOffline] = useGlobal('offline');
   const { fetchMediaUrl, mediaState } = useFetchMediaUrl(reporter);
   const [name, setName] = useState(t.defaultFilename);
+  const [userHasSetName, setUserHasSetName] = useState(false);
   const [filetype, setFiletype] = useState('');
   const [originalBlob, setOriginalBlob] = useState<Blob>();
   const [audioBlob, setAudioBlob] = useState<Blob>();
@@ -114,9 +115,11 @@ function PassageRecord(props: IProps) {
   }, [visible]);
 
   useEffect(() => {
-    if (defaultFilename) setName(defaultFilename);
-    else setName(t.defaultFilename);
-  }, [defaultFilename, t.defaultFilename]);
+    if (!userHasSetName) {
+      if (defaultFilename) setName(defaultFilename);
+      else setName(t.defaultFilename);
+    }
+  }, [userHasSetName, defaultFilename, t.defaultFilename]);
 
   const setMimeType = (mimeType: string) => {
     mimeTypeRef.current = mimeType;
@@ -141,7 +144,7 @@ function PassageRecord(props: IProps) {
     setFilechanged(true);
   }
   const reset = () => {
-    setName(t.defaultFilename);
+    setUserHasSetName(false);
     setFilechanged(false);
     setOriginalBlob(undefined);
   };
@@ -175,6 +178,7 @@ function PassageRecord(props: IProps) {
   const handleChangeFileName = (e: any) => {
     e.persist();
     setName(removeExtension(e.target.value));
+    setUserHasSetName(true);
   };
 
   const handleLoadAudio = () => {
