@@ -738,12 +738,6 @@ export function ScriptureTable(props: IProps) {
           (passageRec.attributes.book || '') + passageRec.attributes.reference
         )
       );
-      console.log(
-        'set fileName',
-        cleanFileName(
-          (passageRec.attributes.book || '') + passageRec.attributes.reference
-        )
-      );
     }
   };
   const showUpload = (i: number, record: boolean) => {

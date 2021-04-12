@@ -1,5 +1,5 @@
 import {useGlobal} from 'reactn';
-import {ISharedStrings,  ActivityStates,  MediaFile} from '../model';
+import {ISharedStrings, ActivityStates, MediaFile} from '../model';
 import { orbitErr} from '../utils';
 import * as actions from '../store';
 import { TransformBuilder, Operation} from '@orbit/data';
@@ -16,7 +16,7 @@ interface IStateProps {
 interface IProps extends IStateProps, IDispatchProps {}
 
 export const useMediaAttach = (props: IProps) => {
-  const {doOrbitError, ts} = props;
+  const { doOrbitError, ts } = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
@@ -29,7 +29,8 @@ export const useMediaAttach = (props: IProps) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     var mediaRI = {type: 'mediafile', id: mediaId};
-    if (related(memory.cache.query(q => q.findRecord(mediaRI)), 'passage') === passage)
+    var mediaRec = memory.cache.query(q => q.findRecord(mediaRI));
+    if (!mediaRec || related(mediaRec, 'passage') === passage)
       return;
     var media = getMediaInPlans(
       [plan],

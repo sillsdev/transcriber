@@ -49,17 +49,15 @@ export const writeFileLocal = (file: File, remoteName?: string) => {
   createPathFolder(fullName);
   while (fs.existsSync(fullName)) {
     fullName = nextVersion(fullName);
-    console.log(fullName);
   }
   const reader = new FileReader();
   reader.onload = (evt) => {
     fs.writeFileSync(fullName, evt?.target?.result, {
       encoding: 'binary',
-      flag: 'wx',
+      flag: 'wx', //write - fail if file exists
     });
   };
   reader.readAsBinaryString(file);
-  console.log(fullName.split(path.sep).pop());
   return path.join(PathType.MEDIA, fullName.split(path.sep).pop());
 };
 export const nextUpload = (
@@ -87,7 +85,6 @@ export const nextUpload = (
     // offlineOnly
     try {
       var filename = writeFileLocal(files[n]);
-      console.log(filename);
       if (cb) cb(n, true, { ...record, audioUrl: filename });
     } catch (err) {
       if (cb) cb(n, false);
