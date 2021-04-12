@@ -15,7 +15,7 @@ import Coordinator from '@orbit/coordinator';
 import { TransformBuilder, RecordIdentity } from '@orbit/data';
 import { setDefaultProj, allUsersRec } from '.';
 import { AddRecord } from '../model/baseModel';
-import { useTeamApiRead } from './useTeamApiRead';
+import { useTeamApiPull } from './useTeamApiPull';
 
 interface IStateProps {
   ts: ISharedStrings;
@@ -35,7 +35,7 @@ export const useTeamCreate = (props: IProps) => {
   const { showMessage } = useSnackBar();
   const { setProjectType } = useProjectType();
   const { getRoleRec } = useRole();
-  const teamApiRead = useTeamApiRead();
+  const teamApiPull = useTeamApiPull();
 
   const OrgRelated = async (
     coordinator: Coordinator,
@@ -99,7 +99,7 @@ export const useTeamCreate = (props: IProps) => {
       ...AddRecord(t, orgRec, user, memory),
       t.replaceRelatedRecord(orgRec, 'owner', userRecId),
     ]);
-    if (!offlineOnly) await teamApiRead(orgRec.id); // Update slug value
+    if (!offlineOnly) await teamApiPull(orgRec.id); // Update slug value
     await OrgRelated(coordinator, orgRec, userRecId);
 
     setOrganization(orgRec.id);
