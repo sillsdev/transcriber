@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 import WSAudioPlayer from './WSAudioPlayer';
 import { QueryBuilder } from '@orbit/data';
-import { loadBlob } from '../utils';
+import { loadBlob, removeExtension } from '../utils';
 import { MediaSt, useFetchMediaUrl } from '../crud';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -149,11 +149,7 @@ function PassageRecord(props: IProps) {
     setOriginalBlob(undefined);
   };
   const fileName = () => name; // + '.' + filetype;
-  const removeExtension = (filename: string) => {
-    var x = filename.split('.');
-    if (x.length > 1) x.pop();
-    return x.join('.');
-  };
+
   const handleAddOrSave = () => {
     if (audioBlob) {
       var files = [
@@ -177,7 +173,7 @@ function PassageRecord(props: IProps) {
   };
   const handleChangeFileName = (e: any) => {
     e.persist();
-    setName(removeExtension(e.target.value));
+    setName(e.target.value);
     setUserHasSetName(true);
   };
 
@@ -191,7 +187,7 @@ function PassageRecord(props: IProps) {
     const mediaRec = memory.cache.query((q: QueryBuilder) =>
       q.findRecord({ type: 'mediafile', id: mediaId })
     ) as MediaFile;
-    setName(removeExtension(mediaRec.attributes.originalFile));
+    setName(removeExtension(mediaRec.attributes.originalFile).name);
     var index = mimes.findIndex((m) => m === mediaRec.attributes.contentType);
     if (index > -1) setFiletype(extensions[index]);
   };

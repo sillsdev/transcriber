@@ -1,10 +1,10 @@
-import { useGlobal } from 'reactn';
-import { ISharedStrings, ActivityStates, MediaFile } from '../model';
-import { orbitErr } from '../utils';
+import {useGlobal} from 'reactn';
+import {ISharedStrings,  ActivityStates,  MediaFile} from '../model';
+import { orbitErr} from '../utils';
 import * as actions from '../store';
-import { TransformBuilder, Operation } from '@orbit/data';
-import { UpdatePassageStateOps } from '../crud/updatePassageState';
-import { getMediaInPlans, related } from '.';
+import { TransformBuilder, Operation} from '@orbit/data';
+import { UpdatePassageStateOps} from '../crud/updatePassageState';
+import { getMediaInPlans, related} from '.';
 
 interface IDispatchProps {
   doOrbitError: typeof actions.doOrbitError;
@@ -16,7 +16,7 @@ interface IStateProps {
 interface IProps extends IStateProps, IDispatchProps {}
 
 export const useMediaAttach = (props: IProps) => {
-  const { doOrbitError, ts } = props;
+  const {doOrbitError, ts} = props;
   const [memory] = useGlobal('memory');
   const [user] = useGlobal('user');
 
@@ -28,21 +28,21 @@ export const useMediaAttach = (props: IProps) => {
   ) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
+    var mediaRI = {type: 'mediafile', id: mediaId};
+    if (related(memory.cache.query(q => q.findRecord(mediaRI)), 'passage') === passage)
+      return;
     var media = getMediaInPlans(
       [plan],
       memory.cache.query((q) => q.findRecords('mediafile')) as MediaFile[]
     ).filter((m) => related(m, 'passage') === passage);
-    if (media.length > 0) {
-      ops.push(
-        tb.replaceAttribute(
-          { type: 'mediafile', id: mediaId },
-          'versionNumber',
-          media[0].attributes.versionNumber + 1
-        )
-      );
-    }
     ops.push(
-      tb.replaceRelatedRecord({ type: 'mediafile', id: mediaId }, 'passage', {
+      tb.replaceAttribute(mediaRI,
+        'versionNumber',
+        media.length > 0 ? media[0].attributes.versionNumber + 1 : 1
+      )
+    );
+    ops.push(
+      tb.replaceRelatedRecord(mediaRI, 'passage', {
         type: 'passage',
         id: passage,
       })
@@ -74,8 +74,10 @@ export const useMediaAttach = (props: IProps) => {
     var tb = new TransformBuilder();
     var ops: Operation[] = [];
     ops.push(
-      tb.replaceRelatedRecord(
-        { type: 'mediafile', id: mediaId },
+      tb.replaceRelatedRecord({
+          type: 'mediafile',
+          id: mediaId
+        },
         'passage',
         null
       )

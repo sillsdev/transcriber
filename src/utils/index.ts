@@ -37,3 +37,4 @@ export * from './useMounted';
 export * from './execFolder';
 export * from './createFolder';
 export * from './loadBlob';
+export * from './removeExtension';
