@@ -1,6 +1,7 @@
 import { Project } from '../model';
 import { dataPath, PathType } from '../utils';
 import path from 'path';
+import { isElectron } from '../api-variable';
 
 export interface FontData {
   fontFamily: string;
@@ -24,11 +25,13 @@ export const getFontData = (r: Project, offline: boolean) => {
     : 'large';
   const fontDir = r?.attributes?.rtl ? 'rtl' : 'ltr';
   const fileName = fontFamily + '.css';
-  const url = offline
-    ? dataPath(path.join('fonts', fileName), PathType.FONTS, {
-        localname: fileName,
-      })
-    : 'https://s3.amazonaws.com/fonts.siltranscriber.org/' + fileName;
+  var url = 'https://s3.amazonaws.com/fonts.siltranscriber.org/' + fileName;
+  if (isElectron) {
+    var local = dataPath('http', PathType.FONTS, {
+      localname: fileName,
+    });
+    if (local !== 'http') url = 'transcribe-safe://' + local;
+  }
   const data: FontData = {
     fontFamily,
     fontSize,

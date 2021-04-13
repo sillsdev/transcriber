@@ -7,9 +7,10 @@ export const useTeamApiPull = () => {
   const remote = coordinator.getSource('remote') as JSONAPISource;
 
   const teamRead = async (id: string) => {
-    return await memory.sync(
-      await remote.pull((q) => q.findRecord({ type: 'organization', id }))
-    );
+    if (remote)
+      return await memory.sync(
+        await remote.pull((q) => q.findRecord({ type: 'organization', id }))
+      );
   };
   return teamRead;
 };
