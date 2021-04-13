@@ -1,6 +1,5 @@
 import { Project } from '../model';
 import { dataPath, PathType } from '../utils';
-import path from 'path';
 import { isElectron } from '../api-variable';
 
 export interface FontData {
