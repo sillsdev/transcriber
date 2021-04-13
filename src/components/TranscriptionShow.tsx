@@ -40,13 +40,14 @@ interface IRecordProps {
 }
 
 interface IProps extends IRecordProps, IStateProps {
-  passageId: string;
+  id: string;
+  isMediaId?: boolean;
   visible: boolean;
   closeMethod?: () => void;
 }
 
 function TranscriptionShow(props: IProps) {
-  const { passageId, t, visible, closeMethod } = props;
+  const { id, isMediaId, t, visible, closeMethod } = props;
   const classes = useStyles();
   const [memory] = useGlobal('memory');
   const [offline] = useGlobal('offline');
@@ -80,15 +81,20 @@ function TranscriptionShow(props: IProps) {
   }, [visible]);
 
   useEffect(() => {
-    if (passageId) {
-      const mediaRec = getMediaRec(passageId, memory);
+    if (id) {
+      let mediaRec = isMediaId
+        ? (memory.cache.query((q: QueryBuilder) =>
+            q.findRecord({ type: 'mediafile', id })
+          ) as MediaFile)
+        : null;
+      if (!mediaRec) mediaRec = getMediaRec(id, memory);
       const attr = mediaRec && mediaRec.attributes;
       setTranscription(attr && attr.transcription ? attr.transcription : '');
       const projRec = getMediaProjRec(mediaRec, memory);
       if (projRec) setFontData(getFontData(projRec, offline));
     }
     /* eslint-disable-next-line react-hooks/exhaustive-deps */
-  }, [passageId]);
+  }, [id, isMediaId]);
 
   const textStyle = {
     fontFamily: fontData?.fontFamily || 'CharisSIL',

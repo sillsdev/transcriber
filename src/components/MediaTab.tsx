@@ -25,6 +25,7 @@ import {
   Radio,
   Switch,
   FormControlLabel,
+  Link,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import FilterIcon from '@material-ui/icons/FilterList';
@@ -65,6 +66,7 @@ import { HeadHeight } from '../App';
 import MediaPlayer from './MediaPlayer';
 import { useMediaAttach } from '../crud/useMediaAttach';
 import Memory from '@orbit/memory';
+import VersionDlg from './VersionDlg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -224,6 +226,7 @@ export function MediaTab(props: IProps) {
   const [confirmAction, setConfirmAction] = useState('');
   const { getOrganizedBy } = useOrganizedBy();
   const [organizedBy] = useState(getOrganizedBy(true));
+  const [verHist, setVerHist] = useState('');
 
   const columnDefs = [
     { name: 'planName', title: t.planName },
@@ -255,6 +258,7 @@ export function MediaTab(props: IProps) {
   const columnFormatting = [
     { columnName: 'actions', aligh: 'center', wordWrapEnabled: false },
     { columnName: 'sectionDesc', aligh: 'left', wordWrapEnabled: true },
+    { columnName: 'version', align: 'center' },
   ];
   const mSorting = [
     { columnName: 'planName', direction: 'asc' },
@@ -332,6 +336,14 @@ export function MediaTab(props: IProps) {
       if (attachMap[mediaId] === pRow) return true;
     }
     return false;
+  };
+
+  const handleVerHistOpen = (passId: string) => () => {
+    setVerHist(passId);
+  };
+
+  const handleVerHist = () => {
+    setVerHist('');
   };
 
   const handleUpload = () => {
@@ -798,6 +810,12 @@ export function MediaTab(props: IProps) {
     );
   };
 
+  const VersionCell = ({ value, row, ...restProps }: ICell) => (
+    <Table.Cell row={row} {...restProps} value>
+      <Link onClick={handleVerHistOpen(row.passId)}>{value}</Link>
+    </Table.Cell>
+  );
+
   const Cell = (props: ICell) => {
     const { column, row } = props;
     if (column.name === 'actions') {
@@ -807,6 +825,9 @@ export function MediaTab(props: IProps) {
     if (column.name === 'detach') {
       const mediaId = remoteId('mediafile', row.id, memory.keyMap) || row.id;
       return <DetachCell {...props} mediaId={mediaId} />;
+    }
+    if (column.name === 'version' && row.version !== '1') {
+      return <VersionCell {...props} />;
     }
     return <Table.Cell {...props} />;
   };
@@ -975,6 +996,13 @@ export function MediaTab(props: IProps) {
         finish={afterUpload}
         status={status}
       />
+      <BigDialog
+        title={'Version History'}
+        isOpen={Boolean(verHist)}
+        onOpen={handleVerHist}
+      >
+        <VersionDlg auth={auth} passId={verHist} />
+      </BigDialog>
       {confirmAction === '' || (
         <Confirm
           text={t.deleteConfirm.replace('{0}', data[check[0]].fileName)}
