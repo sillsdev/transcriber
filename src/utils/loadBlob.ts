@@ -30,7 +30,7 @@ export const loadBlob = (
   setBlob: (blob: Blob) => void
 ) => {
   if (!url) return;
-  if (online) {
+  if (url.startsWith('http')) {
     fetch(url).then(async (r) => setBlob(await r.blob()));
   } else {
     const source = fs.readFileSync(
